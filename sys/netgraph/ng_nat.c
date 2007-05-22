@@ -328,12 +328,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NGNAT_READY
+name|NGNAT_CONNECTED
 value|0x1
 end_define
 
 begin_comment
-comment|/* We have everything to work */
+comment|/* We have both hooks connected */
 end_comment
 
 begin_define
@@ -549,18 +549,12 @@ operator|->
 name|in
 operator|!=
 name|NULL
-operator|&&
-name|priv
-operator|->
-name|flags
-operator|&
-name|NGNAT_ADDR_DEFINED
 condition|)
 name|priv
 operator|->
 name|flags
 operator||=
-name|NGNAT_READY
+name|NGNAT_CONNECTED
 expr_stmt|;
 return|return
 operator|(
@@ -695,26 +689,6 @@ name|flags
 operator||=
 name|NGNAT_ADDR_DEFINED
 expr_stmt|;
-if|if
-condition|(
-name|priv
-operator|->
-name|out
-operator|!=
-name|NULL
-operator|&&
-name|priv
-operator|->
-name|in
-operator|!=
-name|NULL
-condition|)
-name|priv
-operator|->
-name|flags
-operator||=
-name|NGNAT_READY
-expr_stmt|;
 block|}
 break|break;
 default|default:
@@ -803,6 +777,7 @@ name|char
 modifier|*
 name|c
 decl_stmt|;
+comment|/* We have no required hooks. */
 if|if
 condition|(
 operator|!
@@ -811,7 +786,7 @@ name|priv
 operator|->
 name|flags
 operator|&
-name|NGNAT_READY
+name|NGNAT_CONNECTED
 operator|)
 condition|)
 block|{
@@ -826,6 +801,21 @@ name|ENXIO
 operator|)
 return|;
 block|}
+comment|/* We have no alias address yet to do anything. */
+if|if
+condition|(
+operator|!
+operator|(
+name|priv
+operator|->
+name|flags
+operator|&
+name|NGNAT_ADDR_DEFINED
+operator|)
+condition|)
+goto|goto
+name|send
+goto|;
 name|m
 operator|=
 name|NGI_M
@@ -1186,6 +1176,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|send
+label|:
 if|if
 condition|(
 name|hook
@@ -1303,7 +1295,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-name|NGNAT_READY
+name|NGNAT_CONNECTED
 expr_stmt|;
 if|if
 condition|(
