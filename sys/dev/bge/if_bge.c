@@ -3292,6 +3292,11 @@ name|BGE_MICOMM_BUSY
 operator|)
 condition|)
 break|break;
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3491,6 +3496,11 @@ name|BGE_MICOMM_BUSY
 operator|)
 condition|)
 break|break;
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
