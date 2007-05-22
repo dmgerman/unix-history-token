@@ -2189,6 +2189,12 @@ condition|)
 block|{
 name|next
 label|:
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
