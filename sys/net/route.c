@@ -529,7 +529,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * If we find it and it's not the root node, then 		 * get a refernce on the rtentry associated. 		 */
+comment|/* 		 * If we find it and it's not the root node, then 		 * get a reference on the rtentry associated. 		 */
 name|newrt
 operator|=
 name|rt
@@ -858,16 +858,17 @@ name|radix_node_head
 modifier|*
 name|rnh
 decl_stmt|;
-comment|/* XXX the NULL checks are probably useless */
-if|if
-condition|(
-name|rt
-operator|==
-name|NULL
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"rtfree: NULL rt"
+name|rt
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: NULL rt"
+operator|,
+name|__func__
+operator|)
 argument_list|)
 expr_stmt|;
 name|rnh
@@ -882,15 +883,17 @@ operator|->
 name|sa_family
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|rnh
-operator|==
-name|NULL
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"rtfree: NULL rnh"
+name|rnh
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: NULL rnh"
+operator|,
+name|__func__
+operator|)
 argument_list|)
 expr_stmt|;
 name|RT_LOCK_ASSERT
@@ -898,7 +901,7 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-comment|/* 	 * decrement the reference count by one and if it reaches 0, 	 * and there is a close function defined, call the close function 	 */
+comment|/* 	 * The callers should use RTFREE_LOCKED() or RTFREE(), so 	 * we should come here exactly with the last reference. 	 */
 name|RT_REMREF
 argument_list|(
 name|rt
@@ -912,9 +915,24 @@ name|rt_refcnt
 operator|>
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: %p has %lu refs"
+argument_list|,
+name|__func__
+argument_list|,
+name|rt
+argument_list|,
+name|rt
+operator|->
+name|rt_refcnt
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 comment|/* 	 * On last reference give the "close method" a chance 	 * to cleanup private state.  This also permits (for 	 * IPv4 and IPv6) a chance to decide if the routing table 	 * entry should be purged immediately or at a later time. 	 * When an immediate purge is to happen the close routine 	 * typically calls rtexpunge which clears the RTF_UP flag 	 * on the entry so that the code below reclaims the storage. 	 */
 if|if
 condition|(
@@ -3387,7 +3405,7 @@ name|ret_nrt
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * if this protocol has something to add to this then 		 * allow it to do that as well. 		 */
+comment|/* 		 * If this protocol has something to add to this then 		 * allow it to do that as well. 		 */
 if|if
 condition|(
 name|ifa
@@ -4116,11 +4134,6 @@ operator|==
 name|rt
 condition|)
 block|{
-name|RT_LOCK_ASSERT
-argument_list|(
-name|rt
-argument_list|)
-expr_stmt|;
 name|RT_REMREF
 argument_list|(
 name|rt
@@ -4999,13 +5012,6 @@ modifier|*
 name|dst
 parameter_list|)
 block|{
-define|#
-directive|define
-name|senderr
-parameter_list|(
-name|x
-parameter_list|)
-value|{ error = x ; goto bad; }
 name|struct
 name|rtentry
 modifier|*
@@ -5088,11 +5094,11 @@ expr_stmt|;
 comment|/* XXX what about if change? */
 block|}
 else|else
-name|senderr
-argument_list|(
+return|return
+operator|(
 name|EHOSTUNREACH
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|rt0
 operator|=
 name|rt
@@ -5144,7 +5150,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -5197,11 +5203,11 @@ argument_list|(
 name|rt0
 argument_list|)
 expr_stmt|;
-name|senderr
-argument_list|(
+return|return
+operator|(
 name|ENETUNREACH
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|RT_LOCK
 argument_list|(
@@ -5226,11 +5232,11 @@ argument_list|(
 name|rt0
 argument_list|)
 expr_stmt|;
-name|senderr
-argument_list|(
+return|return
+operator|(
 name|EHOSTUNREACH
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 block|}
 name|RT_UNLOCK
@@ -5278,8 +5284,8 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-name|senderr
-argument_list|(
+return|return
+operator|(
 name|rt
 operator|==
 name|rt0
@@ -5287,8 +5293,8 @@ condition|?
 name|EHOSTDOWN
 else|:
 name|EHOSTUNREACH
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 operator|*
 name|lrt
@@ -5305,17 +5311,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|bad
-label|:
-comment|/* NB: lrt and lrt0 should not be interpreted if error is non-zero */
-return|return
-operator|(
-name|error
-operator|)
-return|;
-undef|#
-directive|undef
-name|senderr
 block|}
 end_function
 
