@@ -202,7 +202,7 @@ name|elf32_freebsd_sysvec
 block|,
 name|NULL
 block|,
-literal|0
+name|BI_CAN_EXEC_DYN
 block|, 					  }
 decl_stmt|;
 end_decl_stmt
@@ -248,7 +248,7 @@ name|elf32_freebsd_sysvec
 block|,
 name|NULL
 block|,
-literal|0
+name|BI_CAN_EXEC_DYN
 block|, 					  }
 decl_stmt|;
 end_decl_stmt

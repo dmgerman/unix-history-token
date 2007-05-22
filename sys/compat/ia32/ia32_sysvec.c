@@ -565,7 +565,7 @@ name|ia32_freebsd_sysvec
 block|,
 literal|"/libexec/ld-elf32.so.1"
 block|,
-literal|0
+name|BI_CAN_EXEC_DYN
 block|, 					  }
 decl_stmt|;
 end_decl_stmt
@@ -611,7 +611,7 @@ name|ia32_freebsd_sysvec
 block|,
 literal|"/libexec/ld-elf32.so.1"
 block|,
-literal|0
+name|BI_CAN_EXEC_DYN
 block|, 					  }
 decl_stmt|;
 end_decl_stmt
