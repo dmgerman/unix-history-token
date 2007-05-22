@@ -2859,10 +2859,6 @@ operator|&
 name|mplist
 argument_list|)
 expr_stmt|;
-name|ncp
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* Scan hash tables for applicable entries */
 name|CACHE_LOCK
 argument_list|()
@@ -2896,7 +2892,7 @@ argument_list|)
 init|;
 name|ncp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|ncp
 operator|=
