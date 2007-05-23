@@ -569,9 +569,6 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 * Set divisors to 1 (normal case) and let the machine-specific 	 * code do its bit. 	 */
-name|cpu_initclocks
-argument_list|()
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -583,6 +580,9 @@ name|NULL
 argument_list|,
 name|MTX_SPIN
 argument_list|)
+expr_stmt|;
+name|cpu_initclocks
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Compute profhz/stathz, and fix profhz if needed. 	 */
 name|i
