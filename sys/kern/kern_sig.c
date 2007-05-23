@@ -10261,7 +10261,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send the signal to the process.  If the signal has an action, the action  * is usually performed by the target process rather than the caller; we add  * the signal to the set of pending signals for the process.  *  * Exceptions:  *   o When a stop signal is sent to a sleeping process that takes the  *     default action, the process is stopped without awakening it.  *   o SIGCONT restarts stopped processes (or puts them back to sleep)  *     regardless of the signal action (eg, blocked or ignored).  *  * Other ignored signals are discarded immediately.  */
+comment|/*  * Send the signal to the process.  If the signal has an action, the action  * is usually performed by the target process rather than the caller; we add  * the signal to the set of pending signals for the process.  *  * Exceptions:  *   o When a stop signal is sent to a sleeping process that takes the  *     default action, the process is stopped without awakening it.  *   o SIGCONT restarts stopped processes (or puts them back to sleep)  *     regardless of the signal action (eg, blocked or ignored).  *  * Other ignored signals are discarded immediately.  *   * NB: This function may be entered from the debugger via the "kill" DDB  * command.  There is little that can be done to mitigate the possibly messy  * side effects of this unwise possibility.  */
 end_comment
 
 begin_function
