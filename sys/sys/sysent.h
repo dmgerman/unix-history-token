@@ -23,6 +23,12 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
+name|rlimit
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
@@ -314,12 +320,14 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|sv_fixlimits
+name|sv_fixlimit
 function_decl|)
 parameter_list|(
 name|struct
-name|image_params
+name|rlimit
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 block|}
