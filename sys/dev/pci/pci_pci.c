@@ -2449,7 +2449,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|dev
+name|pcib
 argument_list|)
 decl_stmt|;
 name|device_t
@@ -2575,7 +2575,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|dev
+name|pcib
 argument_list|)
 decl_stmt|;
 name|device_t
