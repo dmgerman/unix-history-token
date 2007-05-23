@@ -6,13 +6,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MXGE_MAX_ETHER_MTU
-value|9014
-end_define
-
-begin_define
-define|#
-directive|define
 name|MXGE_ETH_STOPPED
 value|0
 end_define
