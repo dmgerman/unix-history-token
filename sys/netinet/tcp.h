@@ -158,7 +158,7 @@ value|(TH_FIN|TH_SYN|TH_RST|TH_PUSH|TH_ACK|TH_URG|TH_ECE|TH_CWR)
 define|#
 directive|define
 name|PRINT_TH_FLAGS
-value|"\20\1FIN\2SYN\3RST\4PUSH\5ACK\6URG\7ECE"
+value|"\20\1FIN\2SYN\3RST\4PUSH\5ACK\6URG\7ECE\8CWR"
 name|u_short
 name|th_win
 decl_stmt|;
