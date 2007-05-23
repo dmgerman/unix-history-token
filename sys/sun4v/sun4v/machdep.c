@@ -889,6 +889,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|BVPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|if (bootverbose) \ 		printf(x);
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -1368,6 +1379,11 @@ argument_list|(
 name|vec
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX 	 */
+name|bootverbose
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Parse metadata if present and fetch parameters.  Must be before the 	 * console is inited so cninit gets the right value of boothowto. 	 */
 if|if
 condition|(
@@ -1456,6 +1472,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_VERBOSE
+condition|)
+name|bootverbose
+operator|=
+literal|1
+expr_stmt|;
 name|init_param1
 argument_list|()
 expr_stmt|;
@@ -1952,22 +1978,42 @@ name|pc
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|BVPRINTF
+argument_list|(
+literal|"initializing cpu regs\n"
+argument_list|)
+expr_stmt|;
 name|cpu_setregs
 argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize tunables. 	 */
+name|BVPRINTF
+argument_list|(
+literal|"initialize tunables\n"
+argument_list|)
+expr_stmt|;
 name|init_param2
 argument_list|(
 name|physmem
 argument_list|)
 expr_stmt|;
 comment|/* 	 * setup trap table and fault status area 	 */
+name|BVPRINTF
+argument_list|(
+literal|"initialize trap tables\n"
+argument_list|)
+expr_stmt|;
 name|trap_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize the message buffer (after setting trap table). 	 */
+name|BVPRINTF
+argument_list|(
+literal|"initialize msgbuf\n"
+argument_list|)
+expr_stmt|;
 name|msgbufinit
 argument_list|(
 name|msgbufp
@@ -1975,11 +2021,26 @@ argument_list|,
 name|MSGBUF_SIZE
 argument_list|)
 expr_stmt|;
+name|BVPRINTF
+argument_list|(
+literal|"initialize mutexes\n"
+argument_list|)
+expr_stmt|;
 name|mutex_init
 argument_list|()
 expr_stmt|;
+name|BVPRINTF
+argument_list|(
+literal|"initialize machine descriptor table\n"
+argument_list|)
+expr_stmt|;
 name|mdesc_init
 argument_list|()
+expr_stmt|;
+name|BVPRINTF
+argument_list|(
+literal|"initialize get model name\n"
+argument_list|)
 expr_stmt|;
 name|OF_getprop
 argument_list|(
@@ -1995,6 +2056,11 @@ name|sparc64_model
 argument_list|)
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|BVPRINTF
+argument_list|(
+literal|"initialize kdb\n"
 argument_list|)
 expr_stmt|;
 name|kdb_init
@@ -2016,6 +2082,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|BVPRINTF
+argument_list|(
+literal|"sparc64_init done\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

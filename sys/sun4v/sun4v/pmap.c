@@ -4821,6 +4821,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"pmap_bootstrap done\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
