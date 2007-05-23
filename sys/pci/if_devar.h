@@ -1617,7 +1617,7 @@ decl_stmt|;
 name|u_int32_t
 name|tulip_txtimer
 range|:
-literal|2
+literal|3
 decl_stmt|;
 comment|/* transmission timer */
 name|u_int32_t
