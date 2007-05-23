@@ -315,6 +315,15 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* XXX: This can change in the future. */
+name|st
+operator|->
+name|grd_dirent
+operator|->
+name|d_type
+operator|=
+name|DT_DIR
+expr_stmt|;
 name|st
 operator|->
 name|grd_dirent
@@ -334,7 +343,6 @@ name|d_namlen
 operator|=
 name|namlen
 expr_stmt|;
-comment|/* TODO: d_type */
 if|if
 condition|(
 name|uiomove
@@ -490,7 +498,6 @@ operator|->
 name|grd_namlen
 argument_list|)
 expr_stmt|;
-comment|/* TODO: d_type */
 comment|/* 	 * Inter-entry offsets are invalid, so we assume a record size of 	 * grd_ureclen and explicitly set the offset appropriately. 	 */
 return|return
 operator|(
