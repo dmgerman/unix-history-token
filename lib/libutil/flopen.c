@@ -162,7 +162,7 @@ name|O_TRUNC
 operator|)
 expr_stmt|;
 name|flags
-operator||=
+operator|&=
 operator|~
 name|O_TRUNC
 expr_stmt|;
