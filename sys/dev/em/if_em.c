@@ -5302,10 +5302,13 @@ operator|=
 literal|9234
 expr_stmt|;
 break|break;
+comment|/* Adapters that do not support jumbo frames */
+case|case
+name|e1000_82542
+case|:
 case|case
 name|e1000_ich8lan
 case|:
-comment|/* ICH8 does not support jumbo frames */
 name|max_frame_size
 operator|=
 name|ETHER_MAX_LEN
@@ -8769,7 +8772,10 @@ name|ctxd
 operator|->
 name|buffer_addr
 operator|=
+name|htole64
+argument_list|(
 name|seg_addr
+argument_list|)
 expr_stmt|;
 name|ctxd
 operator|->
