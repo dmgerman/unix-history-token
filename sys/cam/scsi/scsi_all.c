@@ -2789,12 +2789,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
 begin_if
 if|#
 directive|if
