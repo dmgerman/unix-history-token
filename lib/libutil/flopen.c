@@ -81,7 +81,7 @@ name|operation
 decl_stmt|,
 name|serrno
 decl_stmt|,
-name|truncate
+name|trunc
 decl_stmt|;
 name|struct
 name|stat
@@ -153,7 +153,7 @@ name|operation
 operator||=
 name|LOCK_NB
 expr_stmt|;
-name|truncate
+name|trunc
 operator|=
 operator|(
 name|flags
@@ -317,7 +317,7 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|truncate
+name|trunc
 operator|&&
 name|ftruncate
 argument_list|(
