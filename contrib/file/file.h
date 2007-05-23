@@ -739,7 +739,7 @@ modifier|*
 name|ptr
 decl_stmt|;
 name|size_t
-name|len
+name|left
 decl_stmt|;
 name|size_t
 name|size

@@ -390,6 +390,12 @@ name|ms
 operator|->
 name|o
 operator|.
+name|left
+operator|=
+name|ms
+operator|->
+name|o
+operator|.
 name|size
 operator|=
 literal|1024
@@ -480,14 +486,6 @@ condition|)
 goto|goto
 name|free3
 goto|;
-name|ms
-operator|->
-name|o
-operator|.
-name|len
-operator|=
-literal|0
-expr_stmt|;
 name|ms
 operator|->
 name|haderr
