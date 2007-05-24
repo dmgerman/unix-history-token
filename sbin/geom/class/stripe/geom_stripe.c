@@ -262,7 +262,7 @@ name|G_NULL_OPTS
 block|,
 name|NULL
 block|,
-literal|"dump prov ..."
+literal|"prov ..."
 block|}
 block|,
 block|{
