@@ -242,7 +242,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: file.c,v 1.100 2005/10/17 18:41:44 christos Exp $"
+literal|"@(#)$Id: file.c,v 1.104 2006/11/25 17:28:54 christos Exp $"
 argument_list|)
 end_macro
 
@@ -289,7 +289,7 @@ begin_define
 define|#
 directive|define
 name|USAGE
-value|"Usage: %s [-bcik" SYMLINKFLAG "nNsvz] [-f namefile] [-F separator] [-m magicfiles] file...\n       %s -C -m magicfiles\n"
+value|"Usage: %s [-bcik" SYMLINKFLAG "nNrsvz0] [-f namefile] [-F separator] [-m magicfiles] file...\n       %s -C -m magicfiles\n"
 end_define
 
 begin_ifndef
@@ -327,11 +327,16 @@ comment|/* Don't pad output			*/
 name|nobuffer
 init|=
 literal|0
+decl_stmt|,
+comment|/* Do not buffer stdout 		*/
+name|nulsep
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Do not buffer stdout 		*/
+comment|/* Append '\0' to the separator		*/
 end_comment
 
 begin_decl_stmt
@@ -540,17 +545,26 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+specifier|static
+specifier|const
+name|char
+name|hmagic
+index|[]
+init|=
+literal|"/.magic"
+decl_stmt|;
 define|#
 directive|define
 name|OPTSTRING
-value|"bcCdf:F:hikLm:nNprsvz"
+value|"bcCdf:F:hikLm:nNprsvz0"
 ifdef|#
 directive|ifdef
 name|HAVE_GETOPT_LONG
 name|int
 name|longindex
 decl_stmt|;
-name|private
+specifier|static
+specifier|const
 name|struct
 name|option
 name|long_options
@@ -766,6 +780,16 @@ literal|'C'
 block|}
 block|,
 block|{
+literal|"print0"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'0'
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -886,7 +910,10 @@ argument_list|(
 name|home
 argument_list|)
 operator|+
-literal|8
+sizeof|sizeof
+argument_list|(
+name|hmagic
+argument_list|)
 argument_list|)
 operator|)
 operator|!=
@@ -910,7 +937,7 @@ name|strcat
 argument_list|(
 name|usermagic
 argument_list|,
-literal|"/.magic"
+name|hmagic
 argument_list|)
 expr_stmt|;
 if|if
@@ -1024,6 +1051,14 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+literal|'0'
+case|:
+name|nulsep
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'b'
 case|:
@@ -1796,6 +1831,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Called for each input file on the command line (or in a list of files)  */
+end_comment
+
 begin_function
 name|private
 name|void
@@ -1836,20 +1875,50 @@ operator|&&
 operator|!
 name|bflag
 condition|)
+block|{
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%s%*s "
+literal|"%s"
 argument_list|,
 name|std_in
 condition|?
 literal|"/dev/stdin"
 else|:
 name|inname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nulsep
+condition|)
+operator|(
+name|void
+operator|)
+name|puts
+argument_list|(
+literal|'\0'
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s"
 argument_list|,
 name|separator
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%*s "
 argument_list|,
 call|(
 name|int
@@ -1872,6 +1941,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+block|}
 name|type
 operator|=
 name|magic_file

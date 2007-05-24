@@ -52,7 +52,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: is_tar.c,v 1.25 2004/09/11 19:15:57 christos Exp $"
+literal|"@(#)$Id: is_tar.c,v 1.26 2006/05/03 15:19:25 christos Exp $"
 argument_list|)
 end_macro
 
@@ -187,6 +187,38 @@ condition|?
 literal|"application/x-tar, POSIX"
 else|:
 literal|"POSIX tar archive"
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+literal|1
+return|;
+case|case
+literal|3
+case|:
+if|if
+condition|(
+name|file_printf
+argument_list|(
+name|ms
+argument_list|,
+operator|(
+name|ms
+operator|->
+name|flags
+operator|&
+name|MAGIC_MIME
+operator|)
+condition|?
+literal|"application/x-tar, POSIX (GNU)"
+else|:
+literal|"POSIX tar archive (GNU)"
 argument_list|)
 operator|==
 operator|-
@@ -377,8 +409,25 @@ return|;
 comment|/* Not a tar archive */
 if|if
 condition|(
-literal|0
+name|strcmp
+argument_list|(
+name|header
+operator|->
+name|header
+operator|.
+name|magic
+argument_list|,
+name|GNUTMAGIC
+argument_list|)
 operator|==
+literal|0
+condition|)
+return|return
+literal|3
+return|;
+comment|/* GNU Unix Standard tar archive */
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|header
@@ -389,6 +438,8 @@ name|magic
 argument_list|,
 name|TMAGIC
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 literal|2

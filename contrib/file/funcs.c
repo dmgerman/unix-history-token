@@ -59,6 +59,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_WCTYPE_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<wctype.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -68,7 +88,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: funcs.c,v 1.19 2006/03/02 22:10:26 christos Exp $"
+literal|"@(#)$Id: funcs.c,v 1.23 2006/12/11 21:48:49 christos Exp $"
 argument_list|)
 end_macro
 
@@ -211,6 +231,10 @@ block|{
 name|file_oomem
 argument_list|(
 name|ms
+argument_list|,
+name|len
+operator|+
+literal|1024
 argument_list|)
 expr_stmt|;
 return|return
@@ -486,6 +510,9 @@ name|struct
 name|magic_set
 modifier|*
 name|ms
+parameter_list|,
+name|size_t
+name|len
 parameter_list|)
 block|{
 name|file_error
@@ -494,7 +521,9 @@ name|ms
 argument_list|,
 name|errno
 argument_list|,
-literal|"cannot allocate memory"
+literal|"cannot allocate %zu bytes"
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 block|}
@@ -786,7 +815,9 @@ parameter_list|,
 name|o
 parameter_list|)
 define|\
-value|*(n)++ = '\\', \ 	*(n)++ = (((uint32_t)*(o)>> 6)& 3) + '0', \ 	*(n)++ = (((uint32_t)*(o)>> 3)& 7) + '0', \ 	*(n)++ = (((uint32_t)*(o)>> 0)& 7) + '0', \ 	(o)++
+comment|/*LINTED*/
+define|\
+value|(void)(*(n)++ = '\\', \ 	*(n)++ = (((uint32_t)*(o)>> 6)& 3) + '0', \ 	*(n)++ = (((uint32_t)*(o)>> 3)& 7) + '0', \ 	*(n)++ = (((uint32_t)*(o)>> 0)& 7) + '0', \ 	(o)++)
 end_define
 
 begin_function
@@ -885,6 +916,8 @@ block|{
 name|file_oomem
 argument_list|(
 name|ms
+argument_list|,
+name|nsize
 argument_list|)
 expr_stmt|;
 return|return
@@ -1004,9 +1037,14 @@ name|nextchar
 argument_list|,
 name|op
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|eop
 operator|-
 name|op
+argument_list|)
 argument_list|,
 operator|&
 name|state
@@ -1183,7 +1221,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Yes these suffer from buffer overflows, but if your OS does not have  * these functions, then maybe you should consider replacing your OS?  */
+comment|/*  * Yes these wrappers suffer from buffer overflows, but if your OS does not have  * the real functions, maybe you should consider replacing your OS?  */
 end_comment
 
 begin_ifndef

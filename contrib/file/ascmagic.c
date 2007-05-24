@@ -81,7 +81,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: ascmagic.c,v 1.45 2006/03/12 22:09:33 christos Exp $"
+literal|"@(#)$Id: ascmagic.c,v 1.46 2006/10/20 21:04:15 christos Exp $"
 argument_list|)
 end_macro
 
@@ -421,8 +421,10 @@ condition|(
 operator|(
 name|nbuf
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 operator|(
 name|nbytes
 operator|+
@@ -449,8 +451,10 @@ condition|(
 operator|(
 name|ubuf
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 operator|(
 name|nbytes
 operator|+
