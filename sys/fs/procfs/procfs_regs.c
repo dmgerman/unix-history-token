@@ -222,9 +222,17 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROC_ASSERT_HELD
+name|KASSERT
 argument_list|(
 name|p
+operator|->
+name|p_lock
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"proc not held"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
