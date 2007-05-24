@@ -449,16 +449,12 @@ decl_stmt|;
 name|u_int32_t
 name|alt_t_off
 decl_stmt|,
-name|board_type
-decl_stmt|,
 name|ide_gpin
+decl_stmt|,
+name|ide_gptype
 decl_stmt|,
 name|ide_irq
 decl_stmt|;
-name|board_type
-operator|=
-literal|0
-expr_stmt|;
 name|sc
 operator|->
 name|sc_dev
@@ -493,18 +489,8 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|board_type
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Avila board */
-if|if
-condition|(
-name|board_type
-operator|==
-literal|1
-condition|)
 block|{
+comment|/* Avila board */
 if|if
 condition|(
 name|bus_space_map
@@ -563,6 +549,15 @@ name|ide_gpin
 operator|=
 name|AVILA_IDE_GPIN
 expr_stmt|;
+name|ide_gptype
+operator|=
+name|GPIO_TYPE
+argument_list|(
+name|ide_gpin
+argument_list|,
+name|GPIO_TYPE_EDG_RISING
+argument_list|)
+expr_stmt|;
 name|ide_irq
 operator|=
 name|AVILA_IDE_IRQ
@@ -580,6 +575,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Pronghorn */
 if|if
 condition|(
 name|bus_space_map
@@ -637,6 +633,15 @@ expr_stmt|;
 name|ide_gpin
 operator|=
 name|PRONGHORN_IDE_GPIN
+expr_stmt|;
+name|ide_gptype
+operator|=
+name|GPIO_TYPE
+argument_list|(
+name|ide_gpin
+argument_list|,
+name|GPIO_TYPE_ACT_HIGH
+argument_list|)
 expr_stmt|;
 name|ide_irq
 operator|=
@@ -801,7 +806,7 @@ name|ide_gpin
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* interrupt is active high */
+comment|/* set interrupt type */
 name|GPIO_CONF_WRITE_4
 argument_list|(
 name|sa
@@ -831,12 +836,7 @@ name|GPIO_TYPE_MASK
 argument_list|)
 operator|)
 operator||
-name|GPIO_TYPE
-argument_list|(
-name|ide_gpin
-argument_list|,
-name|GPIO_TYPE_ACT_HIGH
-argument_list|)
+name|ide_gptype
 argument_list|)
 expr_stmt|;
 comment|/* clear ISR */
