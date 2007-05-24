@@ -299,7 +299,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_SSH_ASKPASS_DEFAULT
-value|"/usr/X11R6/bin/ssh-askpass"
+value|"/usr/local/bin/ssh-askpass"
 end_define
 
 begin_endif
@@ -343,7 +343,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_XAUTH
-value|"/usr/X11R6/bin/xauth"
+value|"/usr/local/bin/xauth"
 end_define
 
 begin_endif
