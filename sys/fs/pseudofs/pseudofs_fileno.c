@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/pseudofs/pseudofs.h>
 end_include
 
@@ -129,14 +135,6 @@ operator|->
 name|pi_unrhdr
 operator|=
 name|up
-expr_stmt|;
-name|pi
-operator|->
-name|pi_root
-operator|->
-name|pn_fileno
-operator|=
-literal|2
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
@@ -223,6 +221,20 @@ modifier|*
 name|pn
 parameter_list|)
 block|{
+comment|/* pi is not really necessary as it can be derived */
+name|KASSERT
+argument_list|(
+name|pi
+operator|==
+name|pn
+operator|->
+name|pn_info
+argument_list|,
+operator|(
+literal|"pn / pi mismatch"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* make sure our parent has a file number */
 if|if
 condition|(
@@ -256,6 +268,14 @@ block|{
 case|case
 name|pfstype_root
 case|:
+comment|/* root must always be 2 */
+name|pn
+operator|->
+name|pn_fileno
+operator|=
+literal|2
+expr_stmt|;
+break|break;
 case|case
 name|pfstype_dir
 case|:
@@ -416,6 +436,20 @@ modifier|*
 name|pn
 parameter_list|)
 block|{
+comment|/* pi is not really necessary as it can be derived */
+name|KASSERT
+argument_list|(
+name|pi
+operator|==
+name|pn
+operator|->
+name|pn_info
+argument_list|,
+operator|(
+literal|"pn / pi mismatch"
+operator|)
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|pn
@@ -426,6 +460,8 @@ block|{
 case|case
 name|pfstype_root
 case|:
+comment|/* not allocated from unrhdr */
+return|return;
 case|case
 name|pfstype_dir
 case|:

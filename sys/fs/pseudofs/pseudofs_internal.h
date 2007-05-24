@@ -56,6 +56,11 @@ decl_stmt|,
 modifier|*
 name|pvd_next
 decl_stmt|;
+name|int
+name|pvd_dead
+range|:
+literal|1
+decl_stmt|;
 block|}
 struct|;
 end_struct
