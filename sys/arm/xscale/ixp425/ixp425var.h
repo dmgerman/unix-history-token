@@ -257,6 +257,42 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct
+struct|struct
+name|ixp425_ivar
+block|{
+name|uint32_t
+name|addr
+decl_stmt|;
+name|int
+name|irq
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IXP425_IVAR
+parameter_list|(
+name|d
+parameter_list|)
+value|((struct ixp425_ivar *) device_get_ivars(d))
+end_define
+
+begin_enum
+enum|enum
+block|{
+name|IXP425_IVAR_ADDR
+block|,
+comment|/* base physical address */
+name|IXP425_IVAR_IRQ
+comment|/* irq/gpio pin assignment */
+block|}
+enum|;
+end_enum
+
 begin_endif
 endif|#
 directive|endif
