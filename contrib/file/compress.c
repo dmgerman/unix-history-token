@@ -89,6 +89,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SYS_TIME_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -115,7 +135,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: compress.c,v 1.45 2006/10/31 19:37:17 christos Exp $"
+literal|"@(#)$File: compress.c,v 1.51 2007/03/05 02:41:29 christos Exp $"
 argument_list|)
 end_macro
 
@@ -301,7 +321,7 @@ end_struct
 
 begin_decl_stmt
 name|private
-name|int
+name|size_t
 name|ncompr
 init|=
 sizeof|sizeof
@@ -417,6 +437,11 @@ name|ms
 parameter_list|,
 name|int
 name|fd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|,
 specifier|const
 name|unsigned
@@ -553,6 +578,8 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
+name|name
+argument_list|,
 name|newbuf
 argument_list|,
 name|nsz
@@ -587,6 +614,8 @@ name|ms
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|NULL
 argument_list|,
 name|buf
 argument_list|,
@@ -754,10 +783,15 @@ name|buf
 parameter_list|,
 name|size_t
 name|n
+parameter_list|,
+name|int
+name|canbepipe
 parameter_list|)
 block|{
 name|int
 name|rv
+decl_stmt|,
+name|cnt
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -789,6 +823,9 @@ name|FIONREAD
 if|if
 condition|(
 operator|(
+name|canbepipe
+operator|&&
+operator|(
 name|ioctl
 argument_list|(
 name|fd
@@ -798,8 +835,10 @@ argument_list|,
 operator|&
 name|t
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
+operator|)
 operator|)
 operator|||
 operator|(
@@ -814,8 +853,13 @@ directive|ifdef
 name|FD_ZERO
 for|for
 control|(
+name|cnt
+operator|=
+literal|0
 init|;
 condition|;
+name|cnt
+operator|++
 control|)
 block|{
 name|fd_set
@@ -833,6 +877,9 @@ operator|*
 literal|1000
 block|}
 decl_stmt|;
+name|int
+name|selrv
+decl_stmt|;
 name|FD_ZERO
 argument_list|(
 operator|&
@@ -848,8 +895,8 @@ name|check
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Avoid soft deadlock: do not read if there 			 * is nothing to read from sockets and pipes. 			 */
-if|if
-condition|(
+name|selrv
+operator|=
 name|select
 argument_list|(
 name|fd
@@ -866,8 +913,13 @@ argument_list|,
 operator|&
 name|tout
 argument_list|)
-operator|<=
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|selrv
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 if|if
@@ -881,10 +933,24 @@ operator|==
 name|EAGAIN
 condition|)
 continue|continue;
+block|}
+elseif|else
+if|if
+condition|(
+name|selrv
+operator|==
+literal|0
+operator|&&
+name|cnt
+operator|>=
+literal|5
+condition|)
+block|{
 return|return
 literal|0
 return|;
 block|}
+else|else
 break|break;
 block|}
 endif|#
@@ -1178,6 +1244,8 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 operator|>
@@ -1678,6 +1746,9 @@ name|z
 operator|.
 name|total_out
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|inflateEnd
 argument_list|(
 operator|&
@@ -1979,6 +2050,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
 name|execvp
 argument_list|(
 name|compr
@@ -2128,6 +2202,9 @@ argument_list|,
 name|n
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|n
 condition|)
 block|{
@@ -2283,6 +2360,8 @@ operator|*
 name|newch
 argument_list|,
 name|HOWMANY
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|<=

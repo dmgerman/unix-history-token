@@ -242,7 +242,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: file.c,v 1.104 2006/11/25 17:28:54 christos Exp $"
+literal|"@(#)$File: file.c,v 1.111 2007/05/08 14:44:18 christos Exp $"
 argument_list|)
 end_macro
 
@@ -289,7 +289,7 @@ begin_define
 define|#
 directive|define
 name|USAGE
-value|"Usage: %s [-bcik" SYMLINKFLAG "nNrsvz0] [-f namefile] [-F separator] [-m magicfiles] file...\n       %s -C -m magicfiles\n"
+value|"Usage: %s [-bcik" SYMLINKFLAG "nNrsvz0] [-e test] [-f namefile] [-F separator] [-m magicfiles] file...\n       %s -C -m magicfiles\n"
 end_define
 
 begin_ifndef
@@ -515,6 +515,8 @@ parameter_list|)
 block|{
 name|int
 name|c
+decl_stmt|,
+name|i
 decl_stmt|;
 name|int
 name|action
@@ -556,7 +558,7 @@ decl_stmt|;
 define|#
 directive|define
 name|OPTSTRING
-value|"bcCdf:F:hikLm:nNprsvz0"
+value|"bcCde:f:F:hikLm:nNprsvz0"
 ifdef|#
 directive|ifdef
 name|HAVE_GETOPT_LONG
@@ -619,6 +621,16 @@ block|,
 literal|0
 block|,
 literal|'d'
+block|}
+block|,
+block|{
+literal|"exclude"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|'e'
 block|}
 block|,
 block|{
@@ -802,6 +814,78 @@ block|, 	}
 decl_stmt|;
 endif|#
 directive|endif
+specifier|static
+specifier|const
+struct|struct
+block|{
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|int
+name|value
+decl_stmt|;
+block|}
+name|nv
+index|[]
+init|=
+block|{
+block|{
+literal|"apptype"
+block|,
+name|MAGIC_NO_CHECK_APPTYPE
+block|}
+block|,
+block|{
+literal|"ascii"
+block|,
+name|MAGIC_NO_CHECK_ASCII
+block|}
+block|,
+block|{
+literal|"compress"
+block|,
+name|MAGIC_NO_CHECK_COMPRESS
+block|}
+block|,
+block|{
+literal|"elf"
+block|,
+name|MAGIC_NO_CHECK_ELF
+block|}
+block|,
+block|{
+literal|"fortran"
+block|,
+name|MAGIC_NO_CHECK_FORTRAN
+block|}
+block|,
+block|{
+literal|"soft"
+block|,
+name|MAGIC_NO_CHECK_SOFT
+block|}
+block|,
+block|{
+literal|"tar"
+block|,
+name|MAGIC_NO_CHECK_TAR
+block|}
+block|,
+block|{
+literal|"tokens"
+block|,
+name|MAGIC_NO_CHECK_TOKENS
+block|}
+block|,
+block|{
+literal|"troff"
+block|,
+name|MAGIC_NO_CHECK_TROFF
+block|}
+block|, 	}
+struct|;
 ifdef|#
 directive|ifdef
 name|LC_CTYPE
@@ -1090,6 +1174,81 @@ operator||=
 name|MAGIC_DEBUG
 operator||
 name|MAGIC_CHECK
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|nv
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|nv
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|nv
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|optarg
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|i
+operator|==
+sizeof|sizeof
+argument_list|(
+name|nv
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|nv
+index|[
+literal|0
+index|]
+argument_list|)
+condition|)
+name|errflg
+operator|++
+expr_stmt|;
+else|else
+name|flags
+operator||=
+name|nv
+index|[
+name|i
+index|]
+operator|.
+name|value
 expr_stmt|;
 break|break;
 case|case
@@ -1510,6 +1669,10 @@ block|{
 if|if
 condition|(
 name|magic
+operator|||
+name|m
+operator|==
+name|NULL
 condition|)
 return|return;
 name|magic
@@ -1897,9 +2060,11 @@ condition|)
 operator|(
 name|void
 operator|)
-name|puts
+name|putc
 argument_list|(
 literal|'\0'
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 else|else
@@ -2269,6 +2434,9 @@ literal|"  -b, --brief                do not prepend filenames to output lines\n
 literal|"  -c, --checking-printout    print the parsed form of the magic file, use in\n"
 literal|"                               conjunction with -m to debug a new magic file\n"
 literal|"                               before installing it\n"
+literal|"  -e, --exclude              exclude test from the list of test to be\n"
+literal|"                               performed for file. Valid tests are:\n"
+literal|"                               ascii, apptype, elf, compress, soft, tar\n"
 literal|"  -f, --files-from FILE      read the filenames to be examined from FILE\n"
 literal|"  -F, --separator string     use string as separator instead of `:'\n"
 literal|"  -i, --mime                 output mime type strings\n"
@@ -2280,8 +2448,12 @@ literal|"  -p, --preserve-date        preserve access times on files\n"
 literal|"  -r, --raw                  don't translate unprintable chars to \\ooo\n"
 literal|"  -s, --special-files        treat special (block/char devices) files as\n"
 literal|"                             ordinary ones\n"
+literal|"or\n"
 literal|"      --help                 display this help and exit\n"
+literal|"or\n"
 literal|"      --version              output version information and exit\n"
+literal|"or\n"
+literal|"  -C, --compile              compile file specified by -m\n"
 argument_list|)
 expr_stmt|;
 name|exit

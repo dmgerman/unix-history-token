@@ -52,7 +52,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: is_tar.c,v 1.26 2006/05/03 15:19:25 christos Exp $"
+literal|"@(#)$File: is_tar.c,v 1.27 2007/01/12 17:38:28 christos Exp $"
 argument_list|)
 end_macro
 

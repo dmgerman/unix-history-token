@@ -64,6 +64,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"ERROR: out of memory\n"
@@ -86,6 +89,9 @@ operator|-
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"ERROR: %s\n"
@@ -132,6 +138,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"ERROR: %s\n"
@@ -143,6 +152,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s: %s\n"

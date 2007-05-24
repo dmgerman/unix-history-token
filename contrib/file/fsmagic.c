@@ -171,7 +171,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: fsmagic.c,v 1.46 2005/06/25 15:52:14 christos Exp $"
+literal|"@(#)$File: fsmagic.c,v 1.47 2007/01/12 17:38:28 christos Exp $"
 argument_list|)
 end_macro
 

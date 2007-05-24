@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$Id: file.h,v 1.83 2006/12/11 21:48:49 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.91 2007/03/25 03:13:47 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -99,6 +99,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -111,6 +117,12 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|ENABLE_CONDITIONALS
+end_define
 
 begin_ifndef
 ifndef|#
@@ -193,6 +205,81 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__GNUC_PREREQ__
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__GNUC_PREREQ__
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|((__GNUC__ == (x)&& __GNUC_MINOR__>= (y)) ||			\ 	 (__GNUC__> (x)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__GNUC_PREREQ__
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)< (b)) ? (a) : (b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HOWMANY
 end_ifndef
 
@@ -256,7 +343,7 @@ begin_define
 define|#
 directive|define
 name|VERSIONNO
-value|3
+value|4
 end_define
 
 begin_define
@@ -307,22 +394,22 @@ define|#
 directive|define
 name|INDIR
 value|1
-comment|/* if '>(...)' appears,  */
-define|#
-directive|define
-name|UNSIGNED
-value|2
-comment|/* comparison is unsigned */
+comment|/* if '(...)' appears */
 define|#
 directive|define
 name|OFFADD
-value|4
-comment|/* if '>&' appears,  */
+value|2
+comment|/* if '>&' or '>...(&' appears */
 define|#
 directive|define
 name|INDIROFFADD
+value|4
+comment|/* if '>&(' appears */
+define|#
+directive|define
+name|UNSIGNED
 value|8
-comment|/* if '>&(' appears,  */
+comment|/* comparison is unsigned */
 comment|/* Word 2 */
 name|uint8_t
 name|reln
@@ -342,12 +429,20 @@ decl_stmt|;
 comment|/* type of indirrection */
 define|#
 directive|define
+name|FILE_INVALID
+value|0
+define|#
+directive|define
 name|FILE_BYTE
 value|1
 define|#
 directive|define
 name|FILE_SHORT
 value|2
+define|#
+directive|define
+name|FILE_DEFAULT
+value|3
 define|#
 directive|define
 name|FILE_LONG
@@ -466,74 +561,17 @@ name|FILE_BEQLDATE
 value|32
 define|#
 directive|define
-name|FILE_FORMAT_NAME
+name|FILE_NAMES_SIZE
+value|33
+comment|/* size of array to contain all names */
+define|#
+directive|define
+name|IS_STRING
+parameter_list|(
+name|t
+parameter_list|)
 define|\
-comment|/* 0 */
-value|"invalid 0",		\
-comment|/* 1 */
-value|"byte",			\
-comment|/* 2 */
-value|"short",		\
-comment|/* 3 */
-value|"invalid 3",		\
-comment|/* 4 */
-value|"long",			\
-comment|/* 5 */
-value|"string",		\
-comment|/* 6 */
-value|"date",			\
-comment|/* 7 */
-value|"beshort",		\
-comment|/* 8 */
-value|"belong",		\
-comment|/* 9 */
-value|"bedate",		\
-comment|/* 10 */
-value|"leshort",		\
-comment|/* 11 */
-value|"lelong",		\
-comment|/* 12 */
-value|"ledate",		\
-comment|/* 13 */
-value|"pstring",		\
-comment|/* 14 */
-value|"ldate",		\
-comment|/* 15 */
-value|"beldate",		\
-comment|/* 16 */
-value|"leldate",		\
-comment|/* 17 */
-value|"regex",		\
-comment|/* 18 */
-value|"bestring16",		\
-comment|/* 19 */
-value|"lestring16",		\
-comment|/* 20 */
-value|"search",		\
-comment|/* 21 */
-value|"medate",		\
-comment|/* 22 */
-value|"meldate",		\
-comment|/* 23 */
-value|"melong",		\
-comment|/* 24 */
-value|"quad",			\
-comment|/* 25 */
-value|"lequad",		\
-comment|/* 26 */
-value|"bequad",		\
-comment|/* 27 */
-value|"qdate",		\
-comment|/* 28 */
-value|"leqdate",		\
-comment|/* 29 */
-value|"beqdate",		\
-comment|/* 30 */
-value|"qldate",		\
-comment|/* 31 */
-value|"leqldate",		\
-comment|/* 32 */
-value|"beqldate",
+value|((t) == FILE_STRING || \ 	 (t) == FILE_PSTRING || \ 	 (t) == FILE_BESTRING16 || \ 	 (t) == FILE_LESTRING16 || \ 	 (t) == FILE_REGEX || \ 	 (t) == FILE_SEARCH || \ 	 (t) == FILE_DEFAULT)
 define|#
 directive|define
 name|FILE_FMT_NONE
@@ -553,76 +591,6 @@ directive|define
 name|FILE_FMT_QUAD
 value|3
 comment|/* "ll" */
-define|#
-directive|define
-name|FILE_FORMAT_STRING
-define|\
-comment|/* 0 */
-value|FILE_FMT_NONE,		\
-comment|/* 1 */
-value|FILE_FMT_NUM,		\
-comment|/* 2 */
-value|FILE_FMT_NUM,		\
-comment|/* 3 */
-value|FILE_FMT_NONE,		\
-comment|/* 4 */
-value|FILE_FMT_NUM,		\
-comment|/* 5 */
-value|FILE_FMT_STR,		\
-comment|/* 6 */
-value|FILE_FMT_STR,		\
-comment|/* 7 */
-value|FILE_FMT_NUM,		\
-comment|/* 8 */
-value|FILE_FMT_NUM,		\
-comment|/* 9 */
-value|FILE_FMT_STR,		\
-comment|/* 10 */
-value|FILE_FMT_NUM,		\
-comment|/* 11 */
-value|FILE_FMT_NUM,		\
-comment|/* 12 */
-value|FILE_FMT_STR,		\
-comment|/* 13 */
-value|FILE_FMT_STR,		\
-comment|/* 14 */
-value|FILE_FMT_STR,		\
-comment|/* 15 */
-value|FILE_FMT_STR,		\
-comment|/* 16 */
-value|FILE_FMT_STR,		\
-comment|/* 17 */
-value|FILE_FMT_STR,		\
-comment|/* 18 */
-value|FILE_FMT_STR,		\
-comment|/* 19 */
-value|FILE_FMT_STR,		\
-comment|/* 20 */
-value|FILE_FMT_STR,		\
-comment|/* 21 */
-value|FILE_FMT_STR,		\
-comment|/* 22 */
-value|FILE_FMT_STR,		\
-comment|/* 23 */
-value|FILE_FMT_NUM,		\
-comment|/* 24 */
-value|FILE_FMT_QUAD,		\
-comment|/* 25 */
-value|FILE_FMT_QUAD,		\
-comment|/* 26 */
-value|FILE_FMT_QUAD,		\
-comment|/* 27 */
-value|FILE_FMT_STR,		\
-comment|/* 28 */
-value|FILE_FMT_STR,		\
-comment|/* 29 */
-value|FILE_FMT_STR,		\
-comment|/* 30 */
-value|FILE_FMT_STR,		\
-comment|/* 31 */
-value|FILE_FMT_STR,		\
-comment|/* 32 */
-value|FILE_FMT_STR,
 comment|/* Word 3 */
 name|uint8_t
 name|in_op
@@ -632,12 +600,26 @@ name|uint8_t
 name|mask_op
 decl_stmt|;
 comment|/* operator for mask */
+ifdef|#
+directive|ifdef
+name|ENABLE_CONDITIONALS
+name|uint8_t
+name|cond
+decl_stmt|;
+comment|/* conditional type */
+name|uint8_t
+name|dummy1
+decl_stmt|;
+else|#
+directive|else
 name|uint8_t
 name|dummy1
 decl_stmt|;
 name|uint8_t
 name|dummy2
 decl_stmt|;
+endif|#
+directive|endif
 define|#
 directive|define
 name|FILE_OPS
@@ -676,12 +658,51 @@ name|FILE_OPMODULO
 value|7
 define|#
 directive|define
+name|FILE_OPS_MASK
+value|0x07
+comment|/* mask for above ops */
+define|#
+directive|define
+name|FILE_UNUSED_1
+value|0x08
+define|#
+directive|define
+name|FILE_UNUSED_2
+value|0x10
+define|#
+directive|define
+name|FILE_UNUSED_3
+value|0x20
+define|#
+directive|define
 name|FILE_OPINVERSE
 value|0x40
 define|#
 directive|define
 name|FILE_OPINDIRECT
 value|0x80
+ifdef|#
+directive|ifdef
+name|ENABLE_CONDITIONALS
+define|#
+directive|define
+name|COND_NONE
+value|0
+define|#
+directive|define
+name|COND_IF
+value|1
+define|#
+directive|define
+name|COND_ELIF
+value|2
+define|#
+directive|define
+name|COND_ELSE
+value|3
+endif|#
+directive|endif
+comment|/* ENABLE_CONDITIONALS */
 comment|/* Word 4 */
 name|uint32_t
 name|offset
@@ -698,10 +719,41 @@ name|lineno
 decl_stmt|;
 comment|/* line number in magic file */
 comment|/* Word 7,8 */
+union|union
+block|{
 name|uint64_t
-name|mask
+name|_mask
 decl_stmt|;
-comment|/* mask before comparison with value */
+comment|/* for use with numeric and date types */
+struct|struct
+block|{
+name|uint32_t
+name|_count
+decl_stmt|;
+comment|/* repeat/line count */
+name|uint32_t
+name|_flags
+decl_stmt|;
+comment|/* modifier flags */
+block|}
+name|_s
+struct|;
+comment|/* for use with string types */
+block|}
+name|_u
+union|;
+define|#
+directive|define
+name|num_mask
+value|_u._mask
+define|#
+directive|define
+name|str_count
+value|_u._s._count
+define|#
+directive|define
+name|str_flags
+value|_u._s._flags
 comment|/* Words 9-16 */
 union|union
 name|VALUETYPE
@@ -718,24 +770,6 @@ decl_stmt|;
 name|uint64_t
 name|q
 decl_stmt|;
-name|char
-name|s
-index|[
-name|MAXstring
-index|]
-decl_stmt|;
-struct|struct
-block|{
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|size_t
-name|buflen
-decl_stmt|;
-block|}
-name|search
-struct|;
 name|uint8_t
 name|hs
 index|[
@@ -757,6 +791,13 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* 8 bytes of a fixed-endian "quad" */
+name|char
+name|s
+index|[
+name|MAXstring
+index|]
+decl_stmt|;
+comment|/* the search string or regex pattern */
 block|}
 name|value
 union|;
@@ -786,29 +827,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|STRING_IGNORE_LOWERCASE
+name|STRING_COMPACT_BLANK
 value|BIT(0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|STRING_COMPACT_BLANK
+name|STRING_COMPACT_OPTIONAL_BLANK
 value|BIT(1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|STRING_COMPACT_OPTIONAL_BLANK
+name|STRING_IGNORE_LOWERCASE
 value|BIT(2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CHAR_IGNORE_LOWERCASE
-value|'c'
+name|STRING_IGNORE_UPPERCASE
+value|BIT(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGEX_OFFSET_START
+value|BIT(4)
 end_define
 
 begin_define
@@ -823,6 +871,34 @@ define|#
 directive|define
 name|CHAR_COMPACT_OPTIONAL_BLANK
 value|'b'
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAR_IGNORE_LOWERCASE
+value|'c'
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAR_IGNORE_UPPERCASE
+value|'C'
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAR_REGEX_OFFSET_START
+value|'s'
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRING_IGNORE_CASE
+value|(STRING_IGNORE_LOWERCASE|STRING_IGNORE_UPPERCASE)
 end_define
 
 begin_comment
@@ -874,10 +950,31 @@ block|{
 name|size_t
 name|len
 decl_stmt|;
+struct|struct
+name|level_info
+block|{
 name|int32_t
-modifier|*
 name|off
 decl_stmt|;
+name|int
+name|got_match
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_CONDITIONALS
+name|int
+name|last_match
+decl_stmt|;
+name|int
+name|last_cond
+decl_stmt|;
+comment|/* used for error checking by parse() */
+endif|#
+directive|endif
+block|}
+modifier|*
+name|li
+struct|;
 block|}
 name|c
 struct|;
@@ -894,7 +991,7 @@ modifier|*
 name|ptr
 decl_stmt|;
 name|size_t
-name|len
+name|left
 decl_stmt|;
 name|size_t
 name|size
@@ -930,6 +1027,36 @@ decl_stmt|;
 name|size_t
 name|line
 decl_stmt|;
+comment|/* current magic line number */
+comment|/* data for searches */
+struct|struct
+block|{
+specifier|const
+name|char
+modifier|*
+name|s
+decl_stmt|;
+comment|/* start of search in original source */
+name|size_t
+name|s_len
+decl_stmt|;
+comment|/* length of search region */
+name|size_t
+name|offset
+decl_stmt|;
+comment|/* starting offset in source: XXX - should this be off_t? */
+name|size_t
+name|rm_len
+decl_stmt|;
+comment|/* match length */
+block|}
+name|search
+struct|;
+name|union
+name|VALUETYPE
+name|ms_value
+decl_stmt|;
+comment|/* either number or string */
 block|}
 struct|;
 end_struct
@@ -964,6 +1091,10 @@ name|magic_set
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|,
 specifier|const
 name|void
@@ -1075,6 +1206,10 @@ name|magic_set
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|,
 specifier|const
 name|unsigned
@@ -1260,6 +1395,24 @@ end_function_decl
 begin_function_decl
 name|protected
 name|void
+name|file_magerror
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|void
 name|file_magwarn
 parameter_list|(
 name|struct
@@ -1341,6 +1494,23 @@ name|void
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|file_check_mem
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
