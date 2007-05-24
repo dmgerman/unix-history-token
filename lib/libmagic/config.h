@@ -647,7 +647,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.19"
+value|"4.21"
 end_define
 
 begin_comment
