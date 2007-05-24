@@ -16,8 +16,77 @@ name|_IXP425_NPEVAR_H_
 end_define
 
 begin_comment
-comment|/*  * Intel (R) IXP400 Software NPE Image ID Definition  *  * Firmware Id's for current firmware image.  These are typed by  * NPE ID and the feature set.  Not all features are available  * on all NPE's.  *  * HSS-0: supports 32 channelized and 4 packetized.  * HSS-0 + ATM + SPHY:  *    For HSS, 16/32 channelized and 4/0 packetized.  *    For ATM, AAL5, AAL0 and OAM for UTOPIA SPHY, 1 logical port, 32 VCs.  *    Fast Path support.  * HSS-0 + ATM + MPHY:  *    For HSS, 16/32 channelized and 4/0 packetized.  *    For ATM, AAL5, AAL0 and OAM for UTOPIA MPHY, 1 logical port, 32 VCs.  *    Fast Path support.  * ATM-Only:  *    AAL5, AAL0 and OAM for UTOPIA MPHY, 12 logical ports, 32 VCs.  *    Fast Path support.  * HSS-2:  *    HSS-0 and HSS-1.  *    Each HSS port supports 32 channelized and 4 packetized.  * ETH: Ethernet Rx/Tx which includes:  *    MAC_FILTERING, MAC_LEARNING, SPANNING_TREE, FIREWALL  * ETH+VLAN Ethernet Rx/Tx which includes:  *    MAC_FILTERING, MAC_LEARNING, SPANNING_TREE, FIREWALL, VLAN_QOS  * ETH+VLAN+HDR: Ethernet Rx/Tx which includes:  *    SPANNING_TREE, FIREWALL, VLAN_QOS, HEADER_CONVERSION  */
+comment|/*  * Intel (R) IXP400 Software NPE Image ID Definition  *  * Firmware Id's for current firmware image.  These are typed by  * NPE ID and the feature set.  Not all features are available  * on all NPE's.  The Image ID has the following structure:  *  * Field		[Bit Location]  * -----------------------------------  * Device ID		[28..31]  * NPE ID		[24..27]  * NPE Functionality ID	[16..23]  * Major Release Number	[8..15]  * Minor Release Number	[0..7]  *  * The following "feature sets" are known to exist:  *  * HSS-0: supports 32 channelized and 4 packetized.  * HSS-0 + ATM + SPHY:  *    For HSS, 16/32 channelized and 4/0 packetized.  *    For ATM, AAL5, AAL0 and OAM for UTOPIA SPHY, 1 logical port, 32 VCs.  *    Fast Path support.  * HSS-0 + ATM + MPHY:  *    For HSS, 16/32 channelized and 4/0 packetized.  *    For ATM, AAL5, AAL0 and OAM for UTOPIA MPHY, 1 logical port, 32 VCs.  *    Fast Path support.  * ATM-Only:  *    AAL5, AAL0 and OAM for UTOPIA MPHY, 12 logical ports, 32 VCs.  *    Fast Path support.  * HSS-2:  *    HSS-0 and HSS-1.  *    Each HSS port supports 32 channelized and 4 packetized.  * ETH: Ethernet Rx/Tx which includes:  *    MAC_FILTERING, MAC_LEARNING, SPANNING_TREE, FIREWALL  * ETH+VLAN Ethernet Rx/Tx which includes:  *    MAC_FILTERING, MAC_LEARNING, SPANNING_TREE, FIREWALL, VLAN_QOS  * ETH+VLAN+HDR: Ethernet Rx/Tx which includes:  *    SPANNING_TREE, FIREWALL, VLAN_QOS, HEADER_CONVERSION  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NPEIMAGE_DEVID
+parameter_list|(
+name|id
+parameter_list|)
+value|(((id)>> 28)& 0xf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NPEIMAGE_NPEID
+parameter_list|(
+name|id
+parameter_list|)
+value|(((id)>> 24)& 0xf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NPEIMAGE_FUNCID
+parameter_list|(
+name|id
+parameter_list|)
+value|(((id)>> 16)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NPEIMAGE_MAJOR
+parameter_list|(
+name|id
+parameter_list|)
+value|(((id)>> 8)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NPEIMAGE_MINOR
+parameter_list|(
+name|id
+parameter_list|)
+value|(((id)>> 0)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NPEIMAGE_MAKEID
+parameter_list|(
+name|dev
+parameter_list|,
+name|npe
+parameter_list|,
+name|func
+parameter_list|,
+name|maj
+parameter_list|,
+name|min
+parameter_list|)
+define|\
+value|((((dev)& 0xf)<< 28) | (((npe)& 0xf)<< 24) | \ 	(((func)& 0xff)<< 16) (((maj)& 0xff)<< 8) | (((min)& 0xff)<< 0))
+end_define
 
 begin_comment
 comment|/* XXX not right, revise */
