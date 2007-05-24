@@ -5145,9 +5145,6 @@ block|{
 case|case
 name|SIOCSIFADDR
 case|:
-case|case
-name|SIOCGIFADDR
-case|:
 if|if
 condition|(
 name|ifa
