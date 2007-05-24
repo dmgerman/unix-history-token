@@ -556,9 +556,6 @@ name|pt
 operator|->
 name|fow
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -570,9 +567,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -682,9 +676,6 @@ literal|0
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -887,9 +878,6 @@ name|pt
 operator|->
 name|fow
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -901,9 +889,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -1001,9 +986,6 @@ name|ppt
 operator|->
 name|fow
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -1015,9 +997,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -1524,9 +1503,6 @@ name|pt
 operator|!=
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -1746,9 +1722,6 @@ operator|(
 literal|0
 operator|)
 return|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -1873,9 +1846,6 @@ literal|0
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -1888,9 +1858,6 @@ name|oname
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -3165,9 +3132,6 @@ name|pt
 expr_stmt|;
 return|return;
 block|}
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -3355,9 +3319,6 @@ name|pt
 operator|->
 name|atime
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -3369,9 +3330,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(

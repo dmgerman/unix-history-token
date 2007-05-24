@@ -841,7 +841,6 @@ operator|-
 literal|1
 operator|)
 return|;
-empty_stmt|;
 block|}
 comment|/* 		 * try to get rid of the file, based on the type 		 */
 if|if

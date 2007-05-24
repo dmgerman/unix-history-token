@@ -1484,9 +1484,6 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -1550,9 +1547,6 @@ argument_list|,
 name|up_pt
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -1604,9 +1598,6 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(

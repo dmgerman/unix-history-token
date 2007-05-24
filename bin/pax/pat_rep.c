@@ -567,9 +567,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -614,9 +611,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|NET2_REGEX
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -642,9 +636,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -737,9 +728,6 @@ default|default:
 ifdef|#
 directive|ifdef
 name|NET2_REGEX
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -765,9 +753,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -1421,9 +1406,6 @@ name|pt
 operator|->
 name|fow
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(

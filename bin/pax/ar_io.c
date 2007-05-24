@@ -4168,9 +4168,6 @@ condition|(
 name|freeit
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
