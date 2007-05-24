@@ -270,6 +270,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `strndup' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRNDUP */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `strtoul' function. */
 end_comment
 
@@ -321,6 +329,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_STAT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/time.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_TIME_H
 value|1
 end_define
 
@@ -450,6 +469,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_WCHAR_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<wctype.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCTYPE_H
 value|1
 end_define
 
@@ -617,7 +647,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.17"
+value|"4.19"
 end_define
 
 begin_comment
