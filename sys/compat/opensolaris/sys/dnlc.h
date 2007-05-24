@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|DNLC_NO_VNODE
-value|(NULL)
+value|((void *)(intptr_t)0xdeadc0de)
 end_define
 
 begin_define
