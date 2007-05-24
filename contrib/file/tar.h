@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * Header file for public domain tar (tape archive) program.  *  * @(#)tar.h 1.20 86/10/29	Public Domain.  *  * Created 25 August 1985 by John Gilmore, ihnp4!hoptoad!gnu.  *  * $Id: tar.h,v 1.8 2004/09/11 19:15:58 christos Exp $ # checkin only  */
+comment|/*  * Header file for public domain tar (tape archive) program.  *  * @(#)tar.h 1.20 86/10/29	Public Domain.  *  * Created 25 August 1985 by John Gilmore, ihnp4!hoptoad!gnu.  *  * $Id: tar.h,v 1.9 2006/05/03 15:19:25 christos Exp $ # checkin only  */
 end_comment
 
 begin_comment
@@ -185,6 +185,17 @@ begin_define
 define|#
 directive|define
 name|TMAGIC
+value|"ustar"
+end_define
+
+begin_comment
+comment|/* 5 chars and a null */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GNUTMAGIC
 value|"ustar  "
 end_define
 

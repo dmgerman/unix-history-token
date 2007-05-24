@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$Id: file.h,v 1.73 2005/10/20 14:59:01 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$Id: file.h,v 1.83 2006/12/11 21:48:49 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -95,6 +95,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_comment
 comment|/* Do this here and now, because struct stat gets re-defined on solaris */
@@ -250,7 +256,7 @@ begin_define
 define|#
 directive|define
 name|VERSIONNO
-value|2
+value|3
 end_define
 
 begin_define
@@ -424,6 +430,42 @@ name|FILE_MELONG
 value|23
 define|#
 directive|define
+name|FILE_QUAD
+value|24
+define|#
+directive|define
+name|FILE_LEQUAD
+value|25
+define|#
+directive|define
+name|FILE_BEQUAD
+value|26
+define|#
+directive|define
+name|FILE_QDATE
+value|27
+define|#
+directive|define
+name|FILE_LEQDATE
+value|28
+define|#
+directive|define
+name|FILE_BEQDATE
+value|29
+define|#
+directive|define
+name|FILE_QLDATE
+value|30
+define|#
+directive|define
+name|FILE_LEQLDATE
+value|31
+define|#
+directive|define
+name|FILE_BEQLDATE
+value|32
+define|#
+directive|define
 name|FILE_FORMAT_NAME
 define|\
 comment|/* 0 */
@@ -473,27 +515,56 @@ value|"medate",		\
 comment|/* 22 */
 value|"meldate",		\
 comment|/* 23 */
-value|"melong",
+value|"melong",		\
+comment|/* 24 */
+value|"quad",			\
+comment|/* 25 */
+value|"lequad",		\
+comment|/* 26 */
+value|"bequad",		\
+comment|/* 27 */
+value|"qdate",		\
+comment|/* 28 */
+value|"leqdate",		\
+comment|/* 29 */
+value|"beqdate",		\
+comment|/* 30 */
+value|"qldate",		\
+comment|/* 31 */
+value|"leqldate",		\
+comment|/* 32 */
+value|"beqldate",
+define|#
+directive|define
+name|FILE_FMT_NONE
+value|0
 define|#
 directive|define
 name|FILE_FMT_NUM
-value|"cduxXi"
+value|1
+comment|/* "cduxXi" */
 define|#
 directive|define
 name|FILE_FMT_STR
-value|"s"
+value|2
+comment|/* "s" */
+define|#
+directive|define
+name|FILE_FMT_QUAD
+value|3
+comment|/* "ll" */
 define|#
 directive|define
 name|FILE_FORMAT_STRING
 define|\
 comment|/* 0 */
-value|NULL,			\
+value|FILE_FMT_NONE,		\
 comment|/* 1 */
 value|FILE_FMT_NUM,		\
 comment|/* 2 */
 value|FILE_FMT_NUM,		\
 comment|/* 3 */
-value|NULL,			\
+value|FILE_FMT_NONE,		\
 comment|/* 4 */
 value|FILE_FMT_NUM,		\
 comment|/* 5 */
@@ -533,7 +604,25 @@ value|FILE_FMT_STR,		\
 comment|/* 22 */
 value|FILE_FMT_STR,		\
 comment|/* 23 */
-value|FILE_FMT_NUM,
+value|FILE_FMT_NUM,		\
+comment|/* 24 */
+value|FILE_FMT_QUAD,		\
+comment|/* 25 */
+value|FILE_FMT_QUAD,		\
+comment|/* 26 */
+value|FILE_FMT_QUAD,		\
+comment|/* 27 */
+value|FILE_FMT_STR,		\
+comment|/* 28 */
+value|FILE_FMT_STR,		\
+comment|/* 29 */
+value|FILE_FMT_STR,		\
+comment|/* 30 */
+value|FILE_FMT_STR,		\
+comment|/* 31 */
+value|FILE_FMT_STR,		\
+comment|/* 32 */
+value|FILE_FMT_STR,
 comment|/* Word 3 */
 name|uint8_t
 name|in_op
@@ -605,17 +694,14 @@ decl_stmt|;
 comment|/* offset from indirection */
 comment|/* Word 6 */
 name|uint32_t
+name|lineno
+decl_stmt|;
+comment|/* line number in magic file */
+comment|/* Word 7,8 */
+name|uint64_t
 name|mask
 decl_stmt|;
 comment|/* mask before comparison with value */
-comment|/* Word 7 */
-name|uint32_t
-name|dummy3
-decl_stmt|;
-comment|/* Word 8 */
-name|uint32_t
-name|dummp4
-decl_stmt|;
 comment|/* Words 9-16 */
 union|union
 name|VALUETYPE
@@ -628,6 +714,9 @@ name|h
 decl_stmt|;
 name|uint32_t
 name|l
+decl_stmt|;
+name|uint64_t
+name|q
 decl_stmt|;
 name|char
 name|s
@@ -661,6 +750,13 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* 4 bytes of a fixed-endian "long" */
+name|uint8_t
+name|hq
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* 8 bytes of a fixed-endian "quad" */
 block|}
 name|value
 union|;
@@ -814,6 +910,9 @@ decl_stmt|;
 block|}
 name|o
 struct|;
+name|uint32_t
+name|offset
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1066,7 +1165,7 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|uint32_t
+name|uint64_t
 name|file_signextend
 parameter_list|(
 name|struct
@@ -1077,7 +1176,7 @@ name|struct
 name|magic
 modifier|*
 parameter_list|,
-name|uint32_t
+name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1132,6 +1231,8 @@ parameter_list|(
 name|struct
 name|magic_set
 modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1228,6 +1329,50 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|protected
+name|ssize_t
+name|sread
+parameter_list|(
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPILE_ONLY
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|file_names
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|size_t
+name|file_nnames
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -1380,11 +1525,6 @@ parameter_list|)
 define|\
 value|static const char *rcsid(const char *p) { \ 	return rcsid(p = id); \ }
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_endif
 endif|#
