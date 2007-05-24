@@ -65,7 +65,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: readelf.c,v 1.61 2006/11/15 15:53:23 christos Exp $"
+literal|"@(#)$File: readelf.c,v 1.63 2007/01/16 14:56:45 ljt Exp $"
 argument_list|)
 end_macro
 
@@ -708,7 +708,7 @@ begin_define
 define|#
 directive|define
 name|xph_offset
-value|(class == ELFCLASS32		\ 			 ? getu32(swap, ph32.p_offset)	\ 			 : getu64(swap, ph64.p_offset))
+value|(off_t)(class == ELFCLASS32	\ 			 ? getu32(swap, ph32.p_offset)	\ 			 : getu64(swap, ph64.p_offset))
 end_define
 
 begin_define
@@ -1139,9 +1139,6 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|xph_offset
 argument_list|,
 name|SEEK_SET
@@ -3824,9 +3821,6 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|xph_offset
 argument_list|,
 name|SEEK_SET

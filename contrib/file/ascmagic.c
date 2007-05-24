@@ -81,7 +81,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: ascmagic.c,v 1.46 2006/10/20 21:04:15 christos Exp $"
+literal|"@(#)$File: ascmagic.c,v 1.50 2007/03/15 14:51:00 christos Exp $"
 argument_list|)
 end_macro
 
@@ -386,9 +386,12 @@ name|n_nel
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|size_t
 name|last_line_end
 init|=
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 decl_stmt|;
@@ -737,6 +740,16 @@ block|}
 comment|/* 	 * for troff, look for . + letter + letter or .\"; 	 * this must be done to disambiguate tar archives' ./file 	 * and other trash from real troff input. 	 * 	 * I believe Plan 9 troff allows non-ASCII characters in the names 	 * of macros, so this test might possibly fail on such a file. 	 */
 if|if
 condition|(
+operator|(
+name|ms
+operator|->
+name|flags
+operator|&
+name|MAGIC_NO_CHECK_TROFF
+operator|)
+operator|==
+literal|0
+operator|&&
 operator|*
 name|ubuf
 operator|==
@@ -856,6 +869,16 @@ block|}
 if|if
 condition|(
 operator|(
+name|ms
+operator|->
+name|flags
+operator|&
+name|MAGIC_NO_CHECK_FORTRAN
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
 operator|*
 name|buf
 operator|==
@@ -889,6 +912,21 @@ name|subtype_identified
 goto|;
 block|}
 comment|/* look for tokens from names.h - this is expensive! */
+if|if
+condition|(
+operator|(
+name|ms
+operator|->
+name|flags
+operator|&
+name|MAGIC_NO_CHECK_TOKENS
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|subtype_identified
+goto|;
 name|i
 operator|=
 literal|0
@@ -2361,7 +2399,7 @@ modifier|*
 name|ulen
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 operator|*
@@ -2447,7 +2485,7 @@ modifier|*
 name|ulen
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 operator|*
@@ -2537,7 +2575,7 @@ modifier|*
 name|ulen
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 operator|*
@@ -2631,9 +2669,10 @@ modifier|*
 name|ulen
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|n
 decl_stmt|;
 name|unichar
@@ -3009,7 +3048,7 @@ block|{
 name|int
 name|bigend
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -4308,7 +4347,7 @@ modifier|*
 name|out
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for

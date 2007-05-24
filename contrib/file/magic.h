@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_NONE
-value|0x000
+value|0x000000
 end_define
 
 begin_comment
@@ -36,7 +36,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_DEBUG
-value|0x001
+value|0x000001
 end_define
 
 begin_comment
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_SYMLINK
-value|0x002
+value|0x000002
 end_define
 
 begin_comment
@@ -58,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_COMPRESS
-value|0x004
+value|0x000004
 end_define
 
 begin_comment
@@ -69,7 +69,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_DEVICES
-value|0x008
+value|0x000008
 end_define
 
 begin_comment
@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_MIME
-value|0x010
+value|0x000010
 end_define
 
 begin_comment
@@ -91,7 +91,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_CONTINUE
-value|0x020
+value|0x000020
 end_define
 
 begin_comment
@@ -102,7 +102,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_CHECK
-value|0x040
+value|0x000040
 end_define
 
 begin_comment
@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_PRESERVE_ATIME
-value|0x080
+value|0x000080
 end_define
 
 begin_comment
@@ -124,7 +124,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_RAW
-value|0x100
+value|0x000100
 end_define
 
 begin_comment
@@ -135,11 +135,110 @@ begin_define
 define|#
 directive|define
 name|MAGIC_ERROR
-value|0x200
+value|0x000200
 end_define
 
 begin_comment
 comment|/* Handle ENOENT etc as real errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_COMPRESS
+value|0x001000
+end_define
+
+begin_comment
+comment|/* Don't check for compressed files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_TAR
+value|0x002000
+end_define
+
+begin_comment
+comment|/* Don't check for tar files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_SOFT
+value|0x004000
+end_define
+
+begin_comment
+comment|/* Don't check magic entries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_APPTYPE
+value|0x008000
+end_define
+
+begin_comment
+comment|/* Don't check application type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_ELF
+value|0x010000
+end_define
+
+begin_comment
+comment|/* Don't check for elf details */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_ASCII
+value|0x020000
+end_define
+
+begin_comment
+comment|/* Don't check for ascii files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_TROFF
+value|0x040000
+end_define
+
+begin_comment
+comment|/* Don't check ascii/troff */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_FORTRAN
+value|0x080000
+end_define
+
+begin_comment
+comment|/* Don't check ascii/fortran */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_TOKENS
+value|0x100000
+end_define
+
+begin_comment
+comment|/* Don't check ascii/tokens */
 end_comment
 
 begin_ifdef
