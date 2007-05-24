@@ -188,8 +188,6 @@ decl_stmt|,
 name|sflag
 decl_stmt|,
 name|oflag
-decl_stmt|,
-name|Tflag
 decl_stmt|;
 end_decl_stmt
 
@@ -406,15 +404,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* office info */
-break|break;
-case|case
-literal|'T'
-case|:
-name|Tflag
-operator|=
-literal|1
-expr_stmt|;
-comment|/* disable T/TCP */
 break|break;
 case|case
 literal|'?'
