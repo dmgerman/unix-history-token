@@ -2687,6 +2687,8 @@ name|tp
 operator|->
 name|snd_max
 argument_list|)
+operator|||
+name|sack_rxmit
 condition|)
 block|{
 name|tcpstat
