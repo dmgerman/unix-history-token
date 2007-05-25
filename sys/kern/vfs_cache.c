@@ -1570,6 +1570,8 @@ name|hash
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|ltype
 decl_stmt|;
 if|if
 condition|(
@@ -2034,6 +2036,11 @@ literal|1
 operator|)
 return|;
 block|}
+name|ltype
+operator|=
+literal|0
+expr_stmt|;
+comment|/* silence gcc warning */
 if|if
 condition|(
 name|cnp
@@ -2042,6 +2049,18 @@ name|cn_flags
 operator|&
 name|ISDOTDOT
 condition|)
+block|{
+name|ltype
+operator|=
+name|VOP_ISLOCKED
+argument_list|(
+name|dvp
+argument_list|,
+name|cnp
+operator|->
+name|cn_thread
+argument_list|)
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|dvp
@@ -2053,6 +2072,7 @@ operator|->
 name|cn_thread
 argument_list|)
 expr_stmt|;
+block|}
 name|VI_LOCK
 argument_list|(
 operator|*
@@ -2092,7 +2112,7 @@ name|vn_lock
 argument_list|(
 name|dvp
 argument_list|,
-name|LK_EXCLUSIVE
+name|ltype
 operator||
 name|LK_RETRY
 argument_list|,
