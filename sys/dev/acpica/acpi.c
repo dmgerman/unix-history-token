@@ -1529,6 +1529,34 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|acpi_susp_bounce
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_acpi
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|suspend_bounce
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|acpi_susp_bounce
+argument_list|,
+literal|0
+argument_list|,
+literal|"Don't actually suspend, just test devices."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * ACPI can only be loaded as a module by the loader; activating it after  * system bootstrap time is not useful, and can be fatal to the system.  * It also cannot be unloaded, since the entire system bus heirarchy hangs  * off it.  */
 end_comment
@@ -9800,6 +9828,12 @@ name|slp_state
 operator|=
 name|ACPI_SS_DEV_SUSPEND
 expr_stmt|;
+comment|/* If testing device suspend only, back out of everything here. */
+if|if
+condition|(
+name|acpi_susp_bounce
+condition|)
+break|break;
 name|status
 operator|=
 name|AcpiEnterSleepStatePrep
