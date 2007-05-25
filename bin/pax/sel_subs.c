@@ -1486,10 +1486,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|pt
 argument_list|)
 expr_stmt|;
@@ -1549,10 +1545,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|pt
 argument_list|)
 expr_stmt|;
@@ -1600,10 +1592,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|pt
 argument_list|)
 expr_stmt|;
