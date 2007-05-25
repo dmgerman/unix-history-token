@@ -353,6 +353,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|HASHINFO
 modifier|*
 parameter_list|)
@@ -756,10 +757,6 @@ name|hashp
 argument_list|,
 name|file
 argument_list|,
-operator|(
-name|HASHINFO
-operator|*
-operator|)
 name|info
 argument_list|)
 operator|)
@@ -1484,6 +1481,7 @@ name|char
 modifier|*
 name|file
 decl_stmt|;
+specifier|const
 name|HASHINFO
 modifier|*
 name|info
