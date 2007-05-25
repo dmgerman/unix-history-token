@@ -2382,6 +2382,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|scp
 operator|->
 name|mouse_pos
@@ -2389,10 +2390,17 @@ operator|==
 name|scp
 operator|->
 name|mouse_cut_start
+operator|)
+operator|&&
+operator|(
+name|scp
+operator|->
+name|mouse_pos
 operator|==
 name|scp
 operator|->
 name|mouse_cut_end
+operator|)
 condition|)
 block|{
 name|cut_buffer
