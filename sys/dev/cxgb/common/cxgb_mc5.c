@@ -1589,6 +1589,15 @@ name|adapter
 decl_stmt|;
 if|if
 condition|(
+name|tcam_size
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
 name|nroutes
 operator|>
 name|MAX_ROUTES
