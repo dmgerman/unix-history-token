@@ -1752,17 +1752,21 @@ begin_comment
 comment|/* 100pps */
 end_comment
 
+begin_comment
+comment|/* control how to respond to NI queries */
+end_comment
+
 begin_decl_stmt
 name|int
 name|icmp6_nodeinfo
 init|=
-literal|3
+operator|(
+name|ICMP6_NODEINFO_FQDNOK
+operator||
+name|ICMP6_NODEINFO_NODEADDROK
+operator|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* enable/disable NI response */
-end_comment
 
 begin_comment
 comment|/* UDP on IP6 parameters */
