@@ -3073,6 +3073,34 @@ begin_comment
 comment|/* cache time for redirect routes */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ICMP6_NODEINFO_FQDNOK
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMP6_NODEINFO_NODEADDROK
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMP6_NODEINFO_TMPADDROK
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMP6_NODEINFO_GLOBALOK
+value|0x8
+end_define
+
 begin_endif
 endif|#
 directive|endif

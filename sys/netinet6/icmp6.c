@@ -2573,6 +2573,7 @@ name|maxlen
 decl_stmt|,
 name|maxhlen
 decl_stmt|;
+comment|/* 			 * XXX: this combination of flags is pointless, 			 * but should we keep this for compatibility? 			 */
 if|if
 condition|(
 operator|(
@@ -5106,7 +5107,39 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Validate IPv6 destination address. 	 * 	 * The Responder must discard the Query without further processing 	 * unless it is one of the Responder's unicast or anycast addresses, or 	 * a link-local scope multicast address which the Responder has joined. 	 * [icmp-name-lookups-08, Section 4.] 	 */
+comment|/* 	 * Validate IPv6 source address. 	 * The default configuration MUST be to refuse answering queries from 	 * global-scope addresses according to RFC4602. 	 * Notes: 	 *  - it's not very clear what "refuse" means; this implementation 	 *    simply drops it. 	 *  - it's not very easy to identify global-scope (unicast) addresses 	 *    since there are many prefixes for them.  It should be safer 	 *    and in practice sufficient to check "all" but loopback and 	 *    link-local (note that site-local unicast was deprecated and 	 *    ULA is defined as global scope-wise) 	 */
+if|if
+condition|(
+operator|(
+name|icmp6_nodeinfo
+operator|&
+name|ICMP6_NODEINFO_GLOBALOK
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|!
+name|IN6_IS_ADDR_LOOPBACK
+argument_list|(
+operator|&
+name|ip6
+operator|->
+name|ip6_src
+argument_list|)
+operator|&&
+operator|!
+name|IN6_IS_ADDR_LINKLOCAL
+argument_list|(
+operator|&
+name|ip6
+operator|->
+name|ip6_src
+argument_list|)
+condition|)
+goto|goto
+name|bad
+goto|;
+comment|/* 	 * Validate IPv6 destination address. 	 * 	 * The Responder must discard the Query without further processing 	 * unless it is one of the Responder's unicast or anycast addresses, or 	 * a link-local scope multicast address which the Responder has joined. 	 * [RFC4602, Section 5.] 	 */
 if|if
 condition|(
 name|IN6_IS_ADDR_MULTICAST
@@ -5168,7 +5201,7 @@ operator|!
 operator|(
 name|icmp6_nodeinfo
 operator|&
-literal|4
+name|ICMP6_NODEINFO_TMPADDROK
 operator|)
 condition|)
 block|{
@@ -5575,7 +5608,7 @@ condition|(
 operator|(
 name|icmp6_nodeinfo
 operator|&
-literal|1
+name|ICMP6_NODEINFO_FQDNOK
 operator|)
 operator|==
 literal|0
@@ -5592,7 +5625,7 @@ condition|(
 operator|(
 name|icmp6_nodeinfo
 operator|&
-literal|2
+name|ICMP6_NODEINFO_NODEADDROK
 operator|)
 operator|==
 literal|0
@@ -7302,7 +7335,7 @@ operator|&&
 operator|(
 name|icmp6_nodeinfo
 operator|&
-literal|4
+name|ICMP6_NODEINFO_TMPADDROK
 operator|)
 operator|==
 literal|0
@@ -7683,7 +7716,7 @@ operator|&&
 operator|(
 name|icmp6_nodeinfo
 operator|&
-literal|4
+name|ICMP6_NODEINFO_TMPADDROK
 operator|)
 operator|==
 literal|0
