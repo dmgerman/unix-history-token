@@ -264,26 +264,31 @@ modifier|*
 name|pmatch
 decl_stmt|;
 comment|/* [nsub+1] (0 element unused) */
+specifier|const
 name|char
 modifier|*
 name|offp
 decl_stmt|;
 comment|/* offsets work from here */
+specifier|const
 name|char
 modifier|*
 name|beginp
 decl_stmt|;
 comment|/* start of string -- virtual NUL precedes */
+specifier|const
 name|char
 modifier|*
 name|endp
 decl_stmt|;
 comment|/* end of string -- virtual NUL here */
+specifier|const
 name|char
 modifier|*
 name|coldp
 decl_stmt|;
 comment|/* can be no match starting before here */
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -342,6 +347,7 @@ name|re_guts
 modifier|*
 name|g
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
@@ -358,6 +364,7 @@ name|eflags
 parameter_list|)
 function_decl|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|dissect
@@ -367,10 +374,12 @@ name|match
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|start
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|stop
@@ -383,6 +392,7 @@ name|stopst
 parameter_list|)
 function_decl|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|backref
@@ -392,10 +402,12 @@ name|match
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|start
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|stop
@@ -413,6 +425,7 @@ name|int
 parameter_list|)
 function_decl|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|fast
@@ -422,10 +435,12 @@ name|match
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|start
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|stop
@@ -438,6 +453,7 @@ name|stopst
 parameter_list|)
 function_decl|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|slow
@@ -447,10 +463,12 @@ name|match
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|start
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|stop
@@ -538,6 +556,7 @@ name|match
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|caption
@@ -567,14 +586,17 @@ name|match
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|title
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|start
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|stop
@@ -592,6 +614,7 @@ ifdef|#
 directive|ifdef
 name|REDEBUG
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|pchar
@@ -727,7 +750,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  - matcher - the actual matching engine  == static int matcher(struct re_guts *g, char *string, \  ==	size_t nmatch, regmatch_t pmatch[], int eflags);  */
+comment|/*  - matcher - the actual matching engine  == static int matcher(struct re_guts *g, const char *string, \  ==	size_t nmatch, regmatch_t pmatch[], int eflags);  */
 end_comment
 
 begin_function
@@ -736,36 +759,28 @@ name|int
 comment|/* 0 success, REG_NOMATCH failure */
 name|matcher
 parameter_list|(
-name|g
-parameter_list|,
-name|string
-parameter_list|,
-name|nmatch
-parameter_list|,
-name|pmatch
-parameter_list|,
-name|eflags
-parameter_list|)
 name|struct
 name|re_guts
 modifier|*
 name|g
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|nmatch
-decl_stmt|;
+parameter_list|,
 name|regmatch_t
 name|pmatch
 index|[]
-decl_stmt|;
+parameter_list|,
 name|int
 name|eflags
-decl_stmt|;
+parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|endp
@@ -785,6 +800,7 @@ init|=
 operator|&
 name|mv
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dp
@@ -808,15 +824,18 @@ name|g
 operator|->
 name|laststate
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|start
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|stop
 decl_stmt|;
 comment|/* Boyer-Moore algorithms variables */
+specifier|const
 name|char
 modifier|*
 name|pp
@@ -826,10 +845,12 @@ name|cj
 decl_stmt|,
 name|mj
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|mustfirst
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|mustlast
@@ -1635,11 +1656,6 @@ name|m
 operator|->
 name|lastpos
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -1652,6 +1668,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
+specifier|const
 name|char
 operator|*
 argument_list|)
@@ -2114,45 +2131,38 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - dissect - figure out what matched what, no back references  == static char *dissect(struct match *m, char *start, \  ==	char *stop, sopno startst, sopno stopst);  */
+comment|/*  - dissect - figure out what matched what, no back references  == static const char *dissect(struct match *m, const char *start, \  ==	const char *stop, sopno startst, sopno stopst);  */
 end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 comment|/* == stop (success) always */
 name|dissect
 parameter_list|(
-name|m
-parameter_list|,
-name|start
-parameter_list|,
-name|stop
-parameter_list|,
-name|startst
-parameter_list|,
-name|stopst
-parameter_list|)
 name|struct
 name|match
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|start
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|stop
-decl_stmt|;
+parameter_list|,
 name|sopno
 name|startst
-decl_stmt|;
+parameter_list|,
 name|sopno
 name|stopst
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2165,21 +2175,25 @@ name|sopno
 name|es
 decl_stmt|;
 comment|/* end sop of current subRE */
+specifier|const
 name|char
 modifier|*
 name|sp
 decl_stmt|;
 comment|/* start of string matched by it */
+specifier|const
 name|char
 modifier|*
 name|stp
 decl_stmt|;
 comment|/* string matched by it cannot pass here */
+specifier|const
 name|char
 modifier|*
 name|rest
 decl_stmt|;
 comment|/* start of rest of string */
+specifier|const
 name|char
 modifier|*
 name|tail
@@ -2193,21 +2207,25 @@ name|sopno
 name|esub
 decl_stmt|;
 comment|/* end sop of subsubRE */
+specifier|const
 name|char
 modifier|*
 name|ssp
 decl_stmt|;
 comment|/* start of string matched by subsubRE */
+specifier|const
 name|char
 modifier|*
 name|sep
 decl_stmt|;
 comment|/* end of string matched by subsubRE */
+specifier|const
 name|char
 modifier|*
 name|oldssp
 decl_stmt|;
 comment|/* previous ssp */
+specifier|const
 name|char
 modifier|*
 name|dp
@@ -3191,56 +3209,45 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - backref - figure out what matched what, figuring in back references  == static char *backref(struct match *m, char *start, \  ==	char *stop, sopno startst, sopno stopst, sopno lev);  */
+comment|/*  - backref - figure out what matched what, figuring in back references  == static const char *backref(struct match *m, const char *start, \  ==	const char *stop, sopno startst, sopno stopst, sopno lev);  */
 end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 comment|/* == stop (success) or NULL (failure) */
 name|backref
 parameter_list|(
-name|m
-parameter_list|,
-name|start
-parameter_list|,
-name|stop
-parameter_list|,
-name|startst
-parameter_list|,
-name|stopst
-parameter_list|,
-name|lev
-parameter_list|,
-name|rec
-parameter_list|)
 name|struct
 name|match
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|start
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|stop
-decl_stmt|;
+parameter_list|,
 name|sopno
 name|startst
-decl_stmt|;
+parameter_list|,
 name|sopno
 name|stopst
-decl_stmt|;
+parameter_list|,
 name|sopno
 name|lev
-decl_stmt|;
+parameter_list|,
 comment|/* PLUS nesting level */
 name|int
 name|rec
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3249,6 +3256,7 @@ name|sopno
 name|ss
 decl_stmt|;
 comment|/* start sop of current subRE */
+specifier|const
 name|char
 modifier|*
 name|sp
@@ -3262,11 +3270,13 @@ name|sopno
 name|esub
 decl_stmt|;
 comment|/* end sop of subsubRE */
+specifier|const
 name|char
 modifier|*
 name|ssp
 decl_stmt|;
 comment|/* start of string matched by subsubRE */
+specifier|const
 name|char
 modifier|*
 name|dp
@@ -4782,45 +4792,38 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - fast - step through the string at top speed  == static char *fast(struct match *m, char *start, \  ==	char *stop, sopno startst, sopno stopst);  */
+comment|/*  - fast - step through the string at top speed  == static const char *fast(struct match *m, const char *start, \  ==	const char *stop, sopno startst, sopno stopst);  */
 end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 comment|/* where tentative match ended, or NULL */
 name|fast
 parameter_list|(
-name|m
-parameter_list|,
-name|start
-parameter_list|,
-name|stop
-parameter_list|,
-name|startst
-parameter_list|,
-name|stopst
-parameter_list|)
 name|struct
 name|match
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|start
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|stop
-decl_stmt|;
+parameter_list|,
 name|sopno
 name|startst
-decl_stmt|;
+parameter_list|,
 name|sopno
 name|stopst
-decl_stmt|;
+parameter_list|)
 block|{
 name|states
 name|st
@@ -4843,6 +4846,7 @@ name|m
 operator|->
 name|tmp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -4862,6 +4866,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|coldp
@@ -5441,45 +5446,38 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - slow - step through the string more deliberately  == static char *slow(struct match *m, char *start, \  ==	char *stop, sopno startst, sopno stopst);  */
+comment|/*  - slow - step through the string more deliberately  == static const char *slow(struct match *m, const char *start, \  ==	const char *stop, sopno startst, sopno stopst);  */
 end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 comment|/* where it ended */
 name|slow
 parameter_list|(
-name|m
-parameter_list|,
-name|start
-parameter_list|,
-name|stop
-parameter_list|,
-name|startst
-parameter_list|,
-name|stopst
-parameter_list|)
 name|struct
 name|match
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|start
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|stop
-decl_stmt|;
+parameter_list|,
 name|sopno
 name|startst
-decl_stmt|;
+parameter_list|,
 name|sopno
 name|stopst
-decl_stmt|;
+parameter_list|)
 block|{
 name|states
 name|st
@@ -5502,6 +5500,7 @@ name|m
 operator|->
 name|tmp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -5521,6 +5520,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|matchp
@@ -6068,42 +6068,30 @@ specifier|static
 name|states
 name|step
 parameter_list|(
-name|g
-parameter_list|,
-name|start
-parameter_list|,
-name|stop
-parameter_list|,
-name|bef
-parameter_list|,
-name|ch
-parameter_list|,
-name|aft
-parameter_list|)
 name|struct
 name|re_guts
 modifier|*
 name|g
-decl_stmt|;
+parameter_list|,
 name|sopno
 name|start
-decl_stmt|;
+parameter_list|,
 comment|/* start state within strip */
 name|sopno
 name|stop
-decl_stmt|;
+parameter_list|,
 comment|/* state after stop state within strip */
 name|states
 name|bef
-decl_stmt|;
+parameter_list|,
 comment|/* states reachable before */
 name|wint_t
 name|ch
-decl_stmt|;
+parameter_list|,
 comment|/* character or NONCHAR code */
 name|states
 name|aft
-decl_stmt|;
+parameter_list|)
 comment|/* states already known reachable after */
 block|{
 name|cset
@@ -6743,7 +6731,7 @@ name|REDEBUG
 end_ifdef
 
 begin_comment
-comment|/*  - print - print a set of states  == #ifdef REDEBUG  == static void print(struct match *m, char *caption, states st, \  ==	int ch, FILE *d);  == #endif  */
+comment|/*  - print - print a set of states  == #ifdef REDEBUG  == static void print(struct match *m, const char *caption, states st, \  ==	int ch, FILE *d);  == #endif  */
 end_comment
 
 begin_function
@@ -6751,35 +6739,26 @@ specifier|static
 name|void
 name|print
 parameter_list|(
-name|m
-parameter_list|,
-name|caption
-parameter_list|,
-name|st
-parameter_list|,
-name|ch
-parameter_list|,
-name|d
-parameter_list|)
 name|struct
 name|match
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|caption
-decl_stmt|;
+parameter_list|,
 name|states
 name|st
-decl_stmt|;
+parameter_list|,
 name|int
 name|ch
-decl_stmt|;
+parameter_list|,
 name|FILE
 modifier|*
 name|d
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|re_guts
@@ -6895,7 +6874,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - at - print current situation  == #ifdef REDEBUG  == static void at(struct match *m, char *title, char *start, char *stop, \  ==						sopno startst, sopno stopst);  == #endif  */
+comment|/*  - at - print current situation  == #ifdef REDEBUG  == static void at(struct match *m, const char *title, const char *start, \  ==			 const char *stop, sopno startst, sopno stopst);  == #endif  */
 end_comment
 
 begin_function
@@ -6903,41 +6882,32 @@ specifier|static
 name|void
 name|at
 parameter_list|(
-name|m
-parameter_list|,
-name|title
-parameter_list|,
-name|start
-parameter_list|,
-name|stop
-parameter_list|,
-name|startst
-parameter_list|,
-name|stopst
-parameter_list|)
 name|struct
 name|match
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|title
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|start
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|stop
-decl_stmt|;
+parameter_list|,
 name|sopno
 name|startst
-decl_stmt|;
+parameter_list|,
 name|sopno
 name|stopst
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7010,21 +6980,20 @@ comment|/* never again */
 end_comment
 
 begin_comment
-comment|/*  - pchar - make a character printable  == #ifdef REDEBUG  == static char *pchar(int ch);  == #endif  *  * Is this identical to regchar() over in debug.c?  Well, yes.  But a  * duplicate here avoids having a debugging-capable regexec.o tied to  * a matching debug.o, and this is convenient.  It all disappears in  * the non-debug compilation anyway, so it doesn't matter much.  */
+comment|/*  - pchar - make a character printable  == #ifdef REDEBUG  == static const char *pchar(int ch);  == #endif  *  * Is this identical to regchar() over in debug.c?  Well, yes.  But a  * duplicate here avoids having a debugging-capable regexec.o tied to  * a matching debug.o, and this is convenient.  It all disappears in  * the non-debug compilation anyway, so it doesn't matter much.  */
 end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 comment|/* -> representation */
 name|pchar
 parameter_list|(
-name|ch
-parameter_list|)
 name|int
 name|ch
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
