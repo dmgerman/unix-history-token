@@ -2054,11 +2054,7 @@ name|mmfsa
 operator|=
 name|mmu_fault_status_area
 operator|+
-operator|(
 name|MMFSA_SIZE
-operator|*
-name|curcpu
-operator|)
 expr_stmt|;
 name|BVPRINTF
 argument_list|(
