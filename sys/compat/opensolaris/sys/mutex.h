@@ -90,6 +90,36 @@ name|kmutex_t
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MUTEX_FLAGS
+value|(SX_DUPOK | SX_NOWITNESS)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MUTEX_FLAGS
+value|(SX_DUPOK)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -103,7 +133,7 @@ name|type
 parameter_list|,
 name|arg
 parameter_list|)
-value|do {			\ 	ASSERT((type) == MUTEX_DEFAULT);				\ 	KASSERT(((lock)->lock_object.lo_flags& LO_ALLMASK) !=		\ 	    LO_EXPECTED, ("lock %s already initialized", #lock));	\ 	bzero((lock), sizeof(struct sx));				\ 	sx_init_flags((lock), "zfs:" #lock, SX_DUPOK);			\ } while (0)
+value|do {			\ 	ASSERT((type) == MUTEX_DEFAULT);				\ 	KASSERT(((lock)->lock_object.lo_flags& LO_ALLMASK) !=		\ 	    LO_EXPECTED, ("lock %s already initialized", #lock));	\ 	bzero((lock), sizeof(struct sx));				\ 	sx_init_flags((lock), "zfs:" #lock, MUTEX_FLAGS);		\ } while (0)
 end_define
 
 begin_define
