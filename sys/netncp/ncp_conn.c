@@ -1027,6 +1027,7 @@ condition|)
 return|return
 name|EPROTONOSUPPORT
 return|;
+comment|/* 	 * Only root can change ownership. 	 */
 name|isroot
 operator|=
 name|ncp_suser
@@ -1036,7 +1037,6 @@ argument_list|)
 operator|==
 literal|0
 expr_stmt|;
-comment|/* 	 * Only root can change ownership 	 */
 if|if
 condition|(
 name|cap
@@ -1088,6 +1088,13 @@ name|owner
 operator|=
 name|crget
 argument_list|()
+expr_stmt|;
+name|crcopy
+argument_list|(
+name|owner
+argument_list|,
+name|cred
+argument_list|)
 expr_stmt|;
 name|owner
 operator|->
@@ -1161,7 +1168,7 @@ name|ncp
 operator|->
 name|nc_owner
 operator|=
-name|cred
+name|owner
 expr_stmt|;
 name|ncp
 operator|->
