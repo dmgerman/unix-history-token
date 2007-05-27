@@ -658,7 +658,7 @@ name|assert
 parameter_list|(
 name|expression
 parameter_list|)
-value|{					\ 	if (!(expression)) {					\ 		(void)printf("assertion \"%s\" failed: "	\ 			     "file \"%s\", line %d\n",		\ 			     #expression, __FILE__, __LINE__);	\ 	     kdb_enter("");					\ 	}							\ }
+value|{					\ 	KASSERT(expression, ("%s", #expression));		\ }
 end_define
 
 begin_else
