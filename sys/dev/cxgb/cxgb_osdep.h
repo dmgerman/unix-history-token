@@ -106,7 +106,7 @@ name|m
 parameter_list|,
 name|pri
 parameter_list|)
-value|((m)->m_pkthdr.rcvif = (struct ifnet *)(pri))
+value|((m)->m_pkthdr.rcvif = (struct ifnet *)((uintptr_t)pri))
 end_define
 
 begin_if
@@ -320,7 +320,7 @@ begin_define
 define|#
 directive|define
 name|TX_START_MAX_DESC
-value|(TX_MAX_DESC<< 1)
+value|(TX_MAX_DESC<< 2)
 end_define
 
 begin_comment
@@ -331,7 +331,7 @@ begin_define
 define|#
 directive|define
 name|TX_CLEAN_MAX_DESC
-value|(TX_MAX_DESC<< 2)
+value|(TX_MAX_DESC<< 4)
 end_define
 
 begin_comment

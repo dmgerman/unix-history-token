@@ -284,7 +284,7 @@ begin_define
 define|#
 directive|define
 name|TX_RECLAIM_PERIOD
-value|(hz>> 2)
+value|(hz>> 1)
 end_define
 
 begin_comment
@@ -1636,26 +1636,11 @@ name|rev
 operator|>
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|adap
-operator|->
-name|flags
-operator|&
-name|USING_MSIX
-condition|)
 name|q
 operator|->
 name|coalesce_nsecs
 operator|=
-literal|6000
-expr_stmt|;
-else|else
-name|q
-operator|->
-name|coalesce_nsecs
-operator|=
-literal|3500
+literal|5000
 expr_stmt|;
 name|q
 operator|->
@@ -8038,6 +8023,9 @@ name|printf
 argument_list|(
 literal|"pri=%d cidx=%d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|m_get_priority
 argument_list|(
 name|d
