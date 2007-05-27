@@ -5024,7 +5024,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Since uidinfo structs have a long lifetime, we use an  * opportunistic refcounting scheme to avoid locking the lookup hash  * for each release.  *  * If the refcount hits 0, we need to free the structure,  * which means we need to lock the hash.  * Optimal case:  *   After locking the struct and lowering the refcount, if we find  *   that we don't need to free, simply unlock and return.  * Suboptimal case:  *   If refcount lowering results in need to free, bump the count  *   back up, lose the lock and aquire the locks in the proper  *   order to try again.  */
+comment|/*-  * Since uidinfo structs have a long lifetime, we use an  * opportunistic refcounting scheme to avoid locking the lookup hash  * for each release.  *  * If the refcount hits 0, we need to free the structure,  * which means we need to lock the hash.  * Optimal case:  *   After locking the struct and lowering the refcount, if we find  *   that we don't need to free, simply unlock and return.  * Suboptimal case:  *   If refcount lowering results in need to free, bump the count  *   back up, lose the lock and acquire the locks in the proper  *   order to try again.  */
 end_comment
 
 begin_function

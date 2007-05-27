@@ -9588,7 +9588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Release an already locked vnode.  This give the same effects as  * unlock+vrele(), but takes less time and avoids releasing and  * re-aquiring the lock (as vrele() aquires the lock internally.)  */
+comment|/*  * Release an already locked vnode.  This give the same effects as  * unlock+vrele(), but takes less time and avoids releasing and  * re-aquiring the lock (as vrele() acquires the lock internally.)  */
 end_comment
 
 begin_function

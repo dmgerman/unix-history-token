@@ -3557,7 +3557,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * relookup - lookup a path name component  *    Used by lookup to re-aquire things.  */
+comment|/*  * relookup - lookup a path name component  *    Used by lookup to re-acquire things.  */
 end_comment
 
 begin_function

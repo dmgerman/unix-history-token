@@ -26,7 +26,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * SysKonnect SK-NET gigabit ethernet driver for FreeBSD. Supports  * the SK-984x series adapters, both single port and dual port.  * References:  * 	The XaQti XMAC II datasheet,  *  http://www.freebsd.org/~wpaul/SysKonnect/xmacii_datasheet_rev_c_9-29.pdf  *	The SysKonnect GEnesis manual, http://www.syskonnect.com  *  * Note: XaQti has been aquired by Vitesse, and Vitesse does not have the  * XMAC II datasheet online. I have put my copy at people.freebsd.org as a  * convenience to others until Vitesse corrects this problem:  *  * http://people.freebsd.org/~wpaul/SysKonnect/xmacii_datasheet_rev_c_9-29.pdf  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Department of Electrical Engineering  * Columbia University, New York City  */
+comment|/*  * SysKonnect SK-NET gigabit ethernet driver for FreeBSD. Supports  * the SK-984x series adapters, both single port and dual port.  * References:  * 	The XaQti XMAC II datasheet,  *  http://www.freebsd.org/~wpaul/SysKonnect/xmacii_datasheet_rev_c_9-29.pdf  *	The SysKonnect GEnesis manual, http://www.syskonnect.com  *  * Note: XaQti has been acquired by Vitesse, and Vitesse does not have the  * XMAC II datasheet online. I have put my copy at people.freebsd.org as a  * convenience to others until Vitesse corrects this problem:  *  * http://people.freebsd.org/~wpaul/SysKonnect/xmacii_datasheet_rev_c_9-29.pdf  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Department of Electrical Engineering  * Columbia University, New York City  */
 end_comment
 
 begin_comment

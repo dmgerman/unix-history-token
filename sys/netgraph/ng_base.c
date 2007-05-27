@@ -3139,7 +3139,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find a node by absolute name. The name should NOT end with ':'  * The name "." means "this node" and "[xxx]" means "the node  * with ID (ie, at address) xxx".  *  * Returns the node if found, else NULL.  * Eventually should add something faster than a sequential search.  * Note it aquires a reference on the node so you can be sure it's still there.  */
+comment|/*  * Find a node by absolute name. The name should NOT end with ':'  * The name "." means "this node" and "[xxx]" means "the node  * with ID (ie, at address) xxx".  *  * Returns the node if found, else NULL.  * Eventually should add something faster than a sequential search.  * Note it acquires a reference on the node so you can be sure it's still  * there.  */
 end_comment
 
 begin_function
