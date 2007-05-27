@@ -1245,12 +1245,6 @@ block|}
 block|}
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-block|if (size == 0) 		kdb_enter("zero size malloc");
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|MALLOC_MAKE_FAILURES
