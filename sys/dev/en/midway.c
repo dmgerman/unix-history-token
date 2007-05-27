@@ -10838,21 +10838,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|EN_DEBUG
-name|kdb_enter
+name|panic
 argument_list|(
 literal|"en: unexpected error"
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&=
-operator|~
-name|IFF_DRV_RUNNING
-expr_stmt|;
-comment|/* FREEZE! */
 else|#
 directive|else
 name|en_reset_ul
