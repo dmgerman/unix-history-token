@@ -1988,7 +1988,6 @@ comment|/* 			 * If KDB is enabled, let it handle the debugger trap. 			 * Other
 ifdef|#
 directive|ifdef
 name|KDB
-comment|/* XXX Giant */
 if|if
 condition|(
 name|kdb_trap
