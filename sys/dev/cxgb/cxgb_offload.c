@@ -210,13 +210,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LOG_ERR
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|LOG_NOTICE
 value|2
 end_define
