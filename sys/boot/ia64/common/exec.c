@@ -322,6 +322,8 @@ operator||
 name|PTE_PL_KERN
 operator||
 name|PTE_AR_RWX
+operator||
+name|PTE_ED
 expr_stmt|;
 asm|__asm __volatile("mov cr.ifa=%0" :: "r"(IA64_RR_BASE(7)));
 asm|__asm __volatile("mov cr.itir=%0" :: "r"(28<< 2));

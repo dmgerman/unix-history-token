@@ -4757,7 +4757,7 @@ name|prot
 parameter_list|)
 block|{
 specifier|static
-name|int
+name|long
 name|prot2ar
 index|[
 literal|4
@@ -4771,9 +4771,13 @@ name|PTE_AR_RW
 block|,
 comment|/* VM_PROT_WRITE */
 name|PTE_AR_RX
+operator||
+name|PTE_ED
 block|,
 comment|/* VM_PROT_EXECUTE */
 name|PTE_AR_RWX
+operator||
+name|PTE_ED
 comment|/* VM_PROT_WRITE|VM_PROT_EXECUTE */
 block|}
 decl_stmt|;
@@ -4788,6 +4792,8 @@ operator||
 name|PTE_PL_MASK
 operator||
 name|PTE_AR_MASK
+operator||
+name|PTE_ED
 operator|)
 expr_stmt|;
 name|pte
@@ -4877,6 +4883,8 @@ operator||
 name|PTE_PL_MASK
 operator||
 name|PTE_AR_MASK
+operator||
+name|PTE_ED
 expr_stmt|;
 name|pte
 operator|->
