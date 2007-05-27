@@ -878,23 +878,11 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-block|{
-name|kdb_enter
+name|panic
 argument_list|(
 literal|"root vnode is locked.\n"
 argument_list|)
 expr_stmt|;
-name|vrele
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EDEADLK
-operator|)
-return|;
-block|}
 endif|#
 directive|endif
 name|vn_lock
