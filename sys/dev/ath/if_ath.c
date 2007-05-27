@@ -22355,6 +22355,9 @@ name|xchanmode
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|ath_hal_getregdomain
 argument_list|(
 name|ah
@@ -22659,6 +22662,9 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ath_hal_getregdomain
 argument_list|(
 name|ah
@@ -23046,6 +23052,8 @@ name|ic_txpowlimit
 argument_list|)
 expr_stmt|;
 comment|/* read back in case value is clamped */
+if|if
+condition|(
 name|ath_hal_gettxpowlimit
 argument_list|(
 name|ah
@@ -23053,7 +23061,7 @@ argument_list|,
 operator|&
 name|txpow
 argument_list|)
-expr_stmt|;
+condition|)
 name|ic
 operator|->
 name|ic_txpowlimit
@@ -23066,6 +23074,8 @@ name|txpow
 expr_stmt|;
 block|}
 comment|/*  	 * Fetch max tx power level for status requests. 	 */
+if|if
+condition|(
 name|ath_hal_getmaxtxpow
 argument_list|(
 name|sc
@@ -23075,7 +23085,7 @@ argument_list|,
 operator|&
 name|txpow
 argument_list|)
-expr_stmt|;
+condition|)
 name|ic
 operator|->
 name|ic_bss
@@ -25692,6 +25702,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|ath_hal_gettpscale
 argument_list|(
 name|sc
@@ -25967,6 +25980,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|ath_hal_getrfsilent
 argument_list|(
 name|sc
@@ -26294,6 +26310,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|ath_hal_gettpack
 argument_list|(
 name|sc
@@ -26369,6 +26388,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|ath_hal_gettpcts
 argument_list|(
 name|sc
