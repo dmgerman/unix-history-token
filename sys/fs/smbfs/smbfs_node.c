@@ -554,20 +554,13 @@ name|cp
 operator|!=
 literal|0xfc
 condition|)
-block|{
-name|printf
+name|panic
 argument_list|(
-literal|"First byte of name entry '%s' corrupted\n"
+literal|"First byte of name entry '%s' corrupted"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|kdb_enter
-argument_list|(
-literal|"ditto"
-argument_list|)
-expr_stmt|;
-block|}
 name|cp
 operator|-=
 sizeof|sizeof
@@ -599,10 +592,9 @@ name|nmlen
 operator|!=
 name|slen
 condition|)
-block|{
-name|printf
+name|panic
 argument_list|(
-literal|"Name length mismatch: was %d, now %d name '%s'\n"
+literal|"Name length mismatch: was %d, now %d name '%s'"
 argument_list|,
 name|nmlen
 argument_list|,
@@ -611,12 +603,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|kdb_enter
-argument_list|(
-literal|"ditto"
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|name
@@ -626,20 +612,13 @@ index|]
 operator|!=
 literal|0xfe
 condition|)
-block|{
-name|printf
+name|panic
 argument_list|(
 literal|"Last byte of name entry '%s' corrupted\n"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|kdb_enter
-argument_list|(
-literal|"ditto"
-argument_list|)
-expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|cp
