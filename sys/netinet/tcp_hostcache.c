@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002 Andre Oppermann, Internet Business Solutions A
 end_comment
 
 begin_comment
-comment|/*  * The tcp_hostcache moves the tcp specific cached metrics from the routing  * table into a dedicated structure indexed by the remote IP address. It  * keeps information on the measured tcp parameters of past tcp sessions  * to have better initial start values for following connections from the  * same source. Depending on the network parameters (delay, bandwidth, max  * MTU, congestion window) between local and remote site this can lead to  * significant speedups for new tcp connections after the first one.  *  * Due to this new tcp_hostcache all tcp specific metrics information in  * the routing table has been removed. The INPCB no longer keeps a pointer  * to the routing entry and protocol initiated route cloning has been  * removed as well. With these changes the routing table has gone back  * to being more lightwight and only carries information related to packet  * forwarding.  *  * Tcp_hostcache is designed for multiple concurrent access in SMP  * environments and high contention. All bucket rows have their own  * lock and thus multiple lookups and modifies can be done at the same  * time as long as they are in different bucket rows. If a request for  * insertion of a new record can't be satisfied it simply returns an  * empty structure. Nobody and nothing shall ever point directly to  * any entry in tcp_hostcache. All communication is done in an object  * oriented way and only funtions of tcp_hostcache will manipulate hostcache  * entries. Otherwise we are unable to achieve good behaviour in concurrent  * access situations. Since tcp_hostcache is only caching information there  * are no fatal consequences if we either can't satisfy any particular request  * or have to drop/overwrite an existing entry because of bucket limit  * memory constrains.  */
+comment|/*  * The tcp_hostcache moves the tcp-specific cached metrics from the routing  * table to a dedicated structure indexed by the remote IP address.  It keeps  * information on the measured TCP parameters of past TCP sessions to allow  * better initial start values to be used with later connections to/from the  * same source.  Depending on the network parameters (delay, bandwidth, max  * MTU, congestion window) between local and remote sites, this can lead to  * significant speed-ups for new TCP connections after the first one.  *  * Due to the tcp_hostcache, all TCP-specific metrics information in the  * routing table has been removed.  The inpcb no longer keeps a pointer to  * the routing entry, and protocol-initiated route cloning has been removed  * as well.  With these changes, the routing table has gone back to being  * more lightwight and only carries information related to packet forwarding.  *  * tcp_hostcache is designed for multiple concurrent access in SMP  * environments and high contention.  All bucket rows have their own lock and  * thus multiple lookups and modifies can be done at the same time as long as  * they are in different bucket rows.  If a request for insertion of a new  * record can't be satisfied, it simply returns an empty structure.  Nobody  * and nothing outside of tcp_hostcache.c will ever point directly to any  * entry in the tcp_hostcache.  All communication is done in an  * object-oriented way and only functions of tcp_hostcache will manipulate  * hostcache entries.  Otherwise, we are unable to achieve good behaviour in  * concurrent access situations.  Since tcp_hostcache is only caching  * information, there are no fatal consequences if we either can't satisfy  * any particular request or have to drop/overwrite an existing entry because  * of bucket limit memory constrains.  */
 end_comment
 
 begin_comment
@@ -227,7 +227,7 @@ name|in6_addr
 name|ip6
 decl_stmt|;
 comment|/* IP6 address */
-comment|/* endpoint specific values for tcp */
+comment|/* endpoint specific values for TCP */
 name|u_long
 name|rmx_mtu
 decl_stmt|;
@@ -260,7 +260,7 @@ name|u_long
 name|rmx_recvpipe
 decl_stmt|;
 comment|/* inbound delay-bandwidth product */
-comment|/* tcp hostcache internal data */
+comment|/* TCP hostcache internal data */
 name|int
 name|rmx_expire
 decl_stmt|;
@@ -672,7 +672,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Initialize hostcache structures 	 */
+comment|/* 	 * Initialize hostcache structures. 	 */
 name|tcp_hostcache
 operator|.
 name|cache_count
@@ -773,7 +773,7 @@ name|hashsize
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * Allocate the hash table 	 */
+comment|/* 	 * Allocate the hash table. 	 */
 name|tcp_hostcache
 operator|.
 name|hashbase
@@ -802,7 +802,7 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the hash buckets 	 */
+comment|/* 	 * Initialize the hash buckets. 	 */
 for|for
 control|(
 name|i
@@ -929,7 +929,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal function: lookup an entry in the hostcache or return NULL.  *  * If an entry has been returned, the caller becomes responsible for  * unlocking the bucket row after he is done reading/modifying the entry.  */
+comment|/*  * Internal function: look up an entry in the hostcache or return NULL.  *  * If an entry has been returned, the caller becomes responsible for  * unlocking the bucket row after he is done reading/modifying the entry.  */
 end_comment
 
 begin_function
@@ -1007,7 +1007,7 @@ index|[
 name|hash
 index|]
 expr_stmt|;
-comment|/* 	 * aquire lock for this bucket row 	 * we release the lock if we don't find an entry, 	 * otherwise the caller has to unlock after he is done 	 */
+comment|/* 	 * Acquire lock for this bucket row; we release the lock if we don't 	 * find an entry, otherwise the caller has to unlock after he is 	 * done. 	 */
 name|THC_LOCK
 argument_list|(
 operator|&
@@ -1016,7 +1016,7 @@ operator|->
 name|hch_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * circle through entries in bucket row looking for a match 	 */
+comment|/* 	 * Iterate through entries in bucket row looking for a match. 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|hc_entry
@@ -1092,7 +1092,7 @@ name|hc_entry
 return|;
 block|}
 block|}
-comment|/* 	 * We were unsuccessful and didn't find anything 	 */
+comment|/* 	 * We were unsuccessful and didn't find anything. 	 */
 name|THC_UNLOCK
 argument_list|(
 operator|&
@@ -1108,7 +1108,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal function: insert an entry into the hostcache or return NULL  * if unable to allocate a new one.  *  * If an entry has been returned, the caller becomes responsible for  * unlocking the bucket row after he is done reading/modifying the entry.  */
+comment|/*  * Internal function: insert an entry into the hostcache or return NULL if  * unable to allocate a new one.  *  * If an entry has been returned, the caller becomes responsible for  * unlocking the bucket row after he is done reading/modifying the entry.  */
 end_comment
 
 begin_function
@@ -1148,7 +1148,7 @@ literal|"tcp_hc_insert with NULL in_conninfo pointer"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Hash the foreign ip address 	 */
+comment|/* 	 * Hash the foreign ip address. 	 */
 if|if
 condition|(
 name|inc
@@ -1186,7 +1186,7 @@ index|[
 name|hash
 index|]
 expr_stmt|;
-comment|/* 	 * aquire lock for this bucket row 	 * we release the lock if we don't find an entry, 	 * otherwise the caller has to unlock after he is done 	 */
+comment|/* 	 * Acquire lock for this bucket row; we release the lock if we don't 	 * find an entry, otherwise the caller has to unlock after he is 	 * done. 	 */
 name|THC_LOCK
 argument_list|(
 operator|&
@@ -1195,7 +1195,7 @@ operator|->
 name|hch_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the bucket limit is reached reuse the least used element 	 */
+comment|/* 	 * If the bucket limit is reached, reuse the least-used element. 	 */
 if|if
 condition|(
 name|hc_head
@@ -1227,7 +1227,7 @@ argument_list|,
 name|hc_qhead
 argument_list|)
 expr_stmt|;
-comment|/* 		 * At first we were dropping the last element, just to 		 * reaquire it in the next two lines again which ain't 		 * very efficient. Instead just reuse the least used element. 		 * Maybe we drop something that is still "in-use" but we can 		 * be "lossy". 		 */
+comment|/* 		 * At first we were dropping the last element, just to 		 * reacquire it in the next two lines again, which isn't very 		 * efficient.  Instead just reuse the least used element. 		 * We may drop something that is still "in-use" but we can be 		 * "lossy". 		 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -1269,7 +1269,7 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* 		 * Allocate a new entry, or balk if not possible 		 */
+comment|/* 		 * Allocate a new entry, or balk if not possible. 		 */
 name|hc_entry
 operator|=
 name|uma_zalloc
@@ -1301,7 +1301,7 @@ name|NULL
 return|;
 block|}
 block|}
-comment|/* 	 * Initialize basic information of hostcache entry 	 */
+comment|/* 	 * Initialize basic information of hostcache entry. 	 */
 name|bzero
 argument_list|(
 name|hc_entry
@@ -1362,7 +1362,7 @@ name|tcp_hostcache
 operator|.
 name|expire
 expr_stmt|;
-comment|/* 	 * Put it upfront 	 */
+comment|/* 	 * Put it upfront. 	 */
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
@@ -1402,7 +1402,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * External function: lookup an entry in the hostcache and fill out the  * supplied tcp metrics structure.  Fills in null when no entry was found  * or a value is not set.  */
+comment|/*  * External function: look up an entry in the hostcache and fill out the  * supplied TCP metrics structure.  Fills in NULL when no entry was found or  * a value is not set.  */
 end_comment
 
 begin_function
@@ -1425,7 +1425,7 @@ name|hc_metrics
 modifier|*
 name|hc_entry
 decl_stmt|;
-comment|/* 	 * Find the right bucket 	 */
+comment|/* 	 * Find the right bucket. 	 */
 name|hc_entry
 operator|=
 name|tcp_hc_lookup
@@ -1433,7 +1433,7 @@ argument_list|(
 name|inc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we don't have an existing object 	 */
+comment|/* 	 * If we don't have an existing object. 	 */
 if|if
 condition|(
 name|hc_entry
@@ -1532,7 +1532,7 @@ name|hc_entry
 operator|->
 name|rmx_recvpipe
 expr_stmt|;
-comment|/* 	 * unlock bucket row 	 */
+comment|/* 	 * Unlock bucket row. 	 */
 name|THC_UNLOCK
 argument_list|(
 operator|&
@@ -1547,7 +1547,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * External function: lookup an entry in the hostcache and return the  * discovered path mtu.  Returns null if no entry is found or value is not  * set.  */
+comment|/*  * External function: look up an entry in the hostcache and return the  * discovered path MTU.  Returns NULL if no entry is found or value is not  * set.  */
 end_comment
 
 begin_function
@@ -1623,7 +1623,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * External function: update the mtu value of an entry in the hostcache.  * Creates a new entry if none was found.  */
+comment|/*  * External function: update the MTU value of an entry in the hostcache.  * Creates a new entry if none was found.  */
 end_comment
 
 begin_function
@@ -1644,7 +1644,7 @@ name|hc_metrics
 modifier|*
 name|hc_entry
 decl_stmt|;
-comment|/* 	 * Find the right bucket 	 */
+comment|/* 	 * Find the right bucket. 	 */
 name|hc_entry
 operator|=
 name|tcp_hc_lookup
@@ -1652,7 +1652,7 @@ argument_list|(
 name|inc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we don't have an existing object try to insert a new one 	 */
+comment|/* 	 * If we don't have an existing object, try to insert a new one. 	 */
 if|if
 condition|(
 name|hc_entry
@@ -1695,7 +1695,7 @@ name|rmx_mtu
 operator|=
 name|mtu
 expr_stmt|;
-comment|/* 	 * put it upfront so we find it faster next time 	 */
+comment|/* 	 * Put it upfront so we find it faster next time. 	 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -1724,7 +1724,7 @@ argument_list|,
 name|rmx_q
 argument_list|)
 expr_stmt|;
-comment|/* 	 * unlock bucket row 	 */
+comment|/* 	 * Unlock bucket row. 	 */
 name|THC_UNLOCK
 argument_list|(
 operator|&
@@ -1739,7 +1739,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * External function: update the tcp metrics of an entry in the hostcache.  * Creates a new entry if none was found.  */
+comment|/*  * External function: update the TCP metrics of an entry in the hostcache.  * Creates a new entry if none was found.  */
 end_comment
 
 begin_function
@@ -2475,7 +2475,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Expire and purge (old|all) entries in the tcp_hostcache.  Runs periodically  * from the callout.  */
+comment|/*  * Expire and purge (old|all) entries in the tcp_hostcache.  Runs  * periodically from the callout.  */
 end_comment
 
 begin_function
