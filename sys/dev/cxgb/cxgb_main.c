@@ -5730,6 +5730,11 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+if|if
+condition|(
+name|singleq
+condition|)
+return|return;
 for|for
 control|(
 name|i
