@@ -361,7 +361,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|kqueue_aquire
+name|kqueue_acquire
 parameter_list|(
 name|struct
 name|file
@@ -3253,7 +3253,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|kqueue_aquire
+name|kqueue_acquire
 argument_list|(
 name|fp
 argument_list|,
@@ -3870,7 +3870,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A ref to kq (obtained via kqueue_aquire) must be held.  waitok will  * influence if memory allocation should wait.  Make sure it is 0 if you  * hold any mutexes.  */
+comment|/*  * A ref to kq (obtained via kqueue_acquire) must be held.  waitok will  * influence if memory allocation should wait.  Make sure it is 0 if you  * hold any mutexes.  */
 end_comment
 
 begin_function
@@ -4835,7 +4835,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|kqueue_aquire
+name|kqueue_acquire
 parameter_list|(
 name|struct
 name|file
@@ -6653,7 +6653,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|kqueue_aquire
+name|kqueue_acquire
 argument_list|(
 name|fp
 argument_list|,
@@ -6847,7 +6847,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|kqueue_aquire
+name|kqueue_acquire
 argument_list|(
 name|fp
 argument_list|,
@@ -8409,7 +8409,7 @@ argument_list|)
 expr_stmt|;
 name|again
 label|:
-comment|/* need to reaquire lock since we have dropped it */
+comment|/* need to reacquire lock since we have dropped it */
 name|knl
 operator|->
 name|kl_lock
@@ -9466,7 +9466,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|kqueue_aquire
+name|kqueue_acquire
 argument_list|(
 name|fp
 argument_list|,
@@ -9478,7 +9478,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|noaquire
+name|noacquire
 goto|;
 name|error
 operator|=
@@ -9500,7 +9500,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|noaquire
+name|noacquire
 label|:
 name|fdrop
 argument_list|(
