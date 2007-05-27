@@ -3076,12 +3076,6 @@ argument_list|,
 name|curproc
 operator|->
 name|p_comm
-condition|?
-name|curproc
-operator|->
-name|p_comm
-else|:
-literal|""
 argument_list|)
 expr_stmt|;
 block|}
