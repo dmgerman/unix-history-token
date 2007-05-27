@@ -1578,8 +1578,10 @@ name|free_list
 argument_list|,
 name|link
 argument_list|)
+argument_list|(
 operator|*
 name|free
+argument_list|)
 operator|++
 expr_stmt|;
 name|mtx_unlock
