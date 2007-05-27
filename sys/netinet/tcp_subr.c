@@ -9633,19 +9633,15 @@ directive|endif
 comment|/* INET6 */
 name|s
 operator|=
-name|sp
-operator|=
 name|malloc
 argument_list|(
 name|size
 argument_list|,
 name|M_TCPLOG
 argument_list|,
-operator|(
 name|M_ZERO
 operator||
 name|M_NOWAIT
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
