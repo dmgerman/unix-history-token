@@ -18,13 +18,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|USRTEXT
-value|NBPG
-end_define
-
-begin_define
-define|#
-directive|define
 name|USRSTACK
 value|VM_MAXUSER_ADDRESS
 end_define

@@ -28,15 +28,8 @@ comment|/*  * Machine dependent constants for ia64.  */
 end_comment
 
 begin_comment
-comment|/*  * USRTEXT is the start of the user text/data space, while USRSTACK  * is the top (end) of the user stack.  Immediately above the user stack  * resides the syscall gateway page.  */
+comment|/*  * USRSTACK is the top (end) of the user stack.  Immediately above the user  * stack resides the syscall gateway page.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|USRTEXT
-value|CLBYTES
-end_define
 
 begin_define
 define|#
