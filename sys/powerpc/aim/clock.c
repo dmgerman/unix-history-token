@@ -526,17 +526,6 @@ end_function
 
 begin_function
 name|void
-name|cpu_initclocks
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return;
-block|}
-end_function
-
-begin_function
-name|void
 name|decr_init
 parameter_list|(
 name|void
