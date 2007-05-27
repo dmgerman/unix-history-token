@@ -467,13 +467,10 @@ decl_stmt|;
 name|struct
 name|sysctl_oid
 modifier|*
-name|o
-decl_stmt|,
-modifier|*
 name|random_yarrow_o
 decl_stmt|;
 comment|/* Yarrow parameters. Do not adjust these unless you have 	 * have a very good clue about what they do! 	 */
-name|o
+name|random_yarrow_o
 operator|=
 name|SYSCTL_ADD_NODE
 argument_list|(
@@ -495,12 +492,6 @@ argument_list|,
 literal|"Yarrow Parameters"
 argument_list|)
 expr_stmt|;
-name|random_yarrow_o
-operator|=
-name|o
-expr_stmt|;
-name|o
-operator|=
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|clist
@@ -532,8 +523,6 @@ argument_list|,
 literal|"Generation gate interval"
 argument_list|)
 expr_stmt|;
-name|o
-operator|=
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|clist
@@ -565,8 +554,6 @@ argument_list|,
 literal|"Execution time tuner"
 argument_list|)
 expr_stmt|;
-name|o
-operator|=
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|clist
@@ -609,8 +596,6 @@ argument_list|,
 literal|"Fast reseed threshold"
 argument_list|)
 expr_stmt|;
-name|o
-operator|=
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|clist
@@ -647,8 +632,6 @@ argument_list|,
 literal|"Slow reseed threshold"
 argument_list|)
 expr_stmt|;
-name|o
-operator|=
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|clist
