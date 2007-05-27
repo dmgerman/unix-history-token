@@ -272,7 +272,9 @@ name|bufsize
 decl_stmt|;
 name|int
 name|type
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|duplex
 range|:
 literal|1

@@ -322,6 +322,7 @@ block|{
 name|int
 name|vnum
 decl_stmt|;
+name|unsigned
 name|int
 name|b16
 range|:

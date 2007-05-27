@@ -57,7 +57,7 @@ begin_struct
 struct|struct
 name|ac97mixtable_entry
 block|{
-name|int
+name|unsigned
 name|reg
 range|:
 literal|8

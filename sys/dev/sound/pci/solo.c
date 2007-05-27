@@ -290,6 +290,13 @@ name|simplex_dir
 decl_stmt|,
 name|type
 decl_stmt|,
+name|dmasz
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|unsigned
+name|int
 name|duplex
 range|:
 literal|1
@@ -297,11 +304,6 @@ decl_stmt|,
 name|newspeed
 range|:
 literal|1
-decl_stmt|,
-name|dmasz
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|unsigned
 name|int
