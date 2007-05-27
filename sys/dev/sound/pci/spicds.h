@@ -42,6 +42,13 @@ name|SPICDS_TYPE_AK4381
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|SPICDS_TYPE_AK4396
+value|5
+end_define
+
 begin_comment
 comment|/* AK4524/AK4528 control registers */
 end_comment
@@ -468,6 +475,24 @@ begin_define
 define|#
 directive|define
 name|AK4381_ROATT
+value|0x04
+end_define
+
+begin_comment
+comment|/* AK4396 control registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AK4396_LOATT
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|AK4396_ROATT
 value|0x04
 end_define
 

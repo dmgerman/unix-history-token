@@ -3451,6 +3451,90 @@ name|ENVY24_DELTA_AK4524_CIF
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|I2C_DELAY
+value|1000
+end_define
+
+begin_comment
+comment|/* PCA9554 registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCA9554_I2CDEV
+value|0x40
+end_define
+
+begin_comment
+comment|/* I2C device address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCA9554_IN
+value|0x00
+end_define
+
+begin_comment
+comment|/* input port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCA9554_OUT
+value|0x01
+end_define
+
+begin_comment
+comment|/* output port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCA9554_INVERT
+value|0x02
+end_define
+
+begin_comment
+comment|/* polarity invert */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCA9554_DIR
+value|0x03
+end_define
+
+begin_comment
+comment|/* port directions */
+end_comment
+
+begin_comment
+comment|/* PCF8574 registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCF8574_I2CDEV_DAC
+value|0x48
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCF8574_SENSE_MASK
+value|0x40
+end_define
+
 begin_comment
 comment|/* end of file */
 end_comment
