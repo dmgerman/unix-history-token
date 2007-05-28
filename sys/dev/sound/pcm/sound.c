@@ -89,7 +89,7 @@ begin_decl_stmt
 name|int
 name|snd_maxautovchans
 init|=
-literal|0
+literal|4
 decl_stmt|;
 end_decl_stmt
 
