@@ -1774,6 +1774,17 @@ begin_comment
 comment|/* SACK enabled/disabled */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_sc_rst_sock_fail
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* RST on sock alloc failure */
+end_comment
+
 begin_function_decl
 name|int
 name|tcp_addoptions

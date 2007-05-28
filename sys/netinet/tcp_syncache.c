@@ -984,6 +984,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|tcp_sc_rst_sock_fail
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp_syncache
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|rst_on_sock_fail
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|tcp_sc_rst_sock_fail
+argument_list|,
+literal|0
+argument_list|,
+literal|"Send reset on socket allocation failure"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
