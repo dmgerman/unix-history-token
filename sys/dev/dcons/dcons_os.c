@@ -938,9 +938,6 @@ name|brk_state
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|GDB
 if|if
 condition|(
 operator|(
@@ -954,6 +951,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|GDB
 if|if
 condition|(
 name|gdb_cur
@@ -971,10 +971,10 @@ name|breakpoint
 argument_list|()
 expr_stmt|;
 block|}
-block|}
-else|else
 endif|#
 directive|endif
+block|}
+else|else
 name|breakpoint
 argument_list|()
 expr_stmt|;
