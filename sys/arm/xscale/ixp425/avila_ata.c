@@ -451,8 +451,6 @@ name|alt_t_off
 decl_stmt|,
 name|ide_gpin
 decl_stmt|,
-name|ide_gptype
-decl_stmt|,
 name|ide_irq
 decl_stmt|;
 name|sc
@@ -549,15 +547,6 @@ name|ide_gpin
 operator|=
 name|AVILA_IDE_GPIN
 expr_stmt|;
-name|ide_gptype
-operator|=
-name|GPIO_TYPE
-argument_list|(
-name|ide_gpin
-argument_list|,
-name|GPIO_TYPE_EDG_RISING
-argument_list|)
-expr_stmt|;
 name|ide_irq
 operator|=
 name|AVILA_IDE_IRQ
@@ -633,15 +622,6 @@ expr_stmt|;
 name|ide_gpin
 operator|=
 name|PRONGHORN_IDE_GPIN
-expr_stmt|;
-name|ide_gptype
-operator|=
-name|GPIO_TYPE
-argument_list|(
-name|ide_gpin
-argument_list|,
-name|GPIO_TYPE_ACT_HIGH
-argument_list|)
 expr_stmt|;
 name|ide_irq
 operator|=
@@ -836,7 +816,12 @@ name|GPIO_TYPE_MASK
 argument_list|)
 operator|)
 operator||
-name|ide_gptype
+name|GPIO_TYPE
+argument_list|(
+name|ide_gpin
+argument_list|,
+name|GPIO_TYPE_EDG_RISING
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* clear ISR */
