@@ -471,9 +471,6 @@ decl_stmt|;
 name|struct
 name|sysctl_oid
 modifier|*
-name|o
-decl_stmt|,
-modifier|*
 name|random_o
 decl_stmt|,
 modifier|*
@@ -486,7 +483,7 @@ name|enum
 name|esource
 name|e
 decl_stmt|;
-name|o
+name|random_o
 operator|=
 name|SYSCTL_ADD_NODE
 argument_list|(
@@ -509,10 +506,6 @@ argument_list|,
 literal|"Software Random Number Generator"
 argument_list|)
 expr_stmt|;
-name|random_o
-operator|=
-name|o
-expr_stmt|;
 name|random_yarrow_init_alg
 argument_list|(
 operator|&
@@ -521,7 +514,7 @@ argument_list|,
 name|random_o
 argument_list|)
 expr_stmt|;
-name|o
+name|random_sys_o
 operator|=
 name|SYSCTL_ADD_NODE
 argument_list|(
@@ -544,12 +537,6 @@ argument_list|,
 literal|"Entropy Device Parameters"
 argument_list|)
 expr_stmt|;
-name|random_sys_o
-operator|=
-name|o
-expr_stmt|;
-name|o
-operator|=
 name|SYSCTL_ADD_PROC
 argument_list|(
 operator|&
@@ -582,7 +569,7 @@ argument_list|,
 literal|"Seeded State"
 argument_list|)
 expr_stmt|;
-name|o
+name|random_sys_harvest_o
 operator|=
 name|SYSCTL_ADD_NODE
 argument_list|(
@@ -605,12 +592,6 @@ argument_list|,
 literal|"Entropy Sources"
 argument_list|)
 expr_stmt|;
-name|random_sys_harvest_o
-operator|=
-name|o
-expr_stmt|;
-name|o
-operator|=
 name|SYSCTL_ADD_PROC
 argument_list|(
 operator|&
@@ -643,8 +624,6 @@ argument_list|,
 literal|"Harvest NIC entropy"
 argument_list|)
 expr_stmt|;
-name|o
-operator|=
 name|SYSCTL_ADD_PROC
 argument_list|(
 operator|&
@@ -677,8 +656,6 @@ argument_list|,
 literal|"Harvest serial net entropy"
 argument_list|)
 expr_stmt|;
-name|o
-operator|=
 name|SYSCTL_ADD_PROC
 argument_list|(
 operator|&
@@ -711,8 +688,6 @@ argument_list|,
 literal|"Harvest IRQ entropy"
 argument_list|)
 expr_stmt|;
-name|o
-operator|=
 name|SYSCTL_ADD_PROC
 argument_list|(
 operator|&
