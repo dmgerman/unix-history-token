@@ -396,6 +396,11 @@ name|uint32_t
 name|action
 decl_stmt|;
 comment|/* Used during asconf and adding if no-zero 				 * src-addr selection will not consider this 				 * address. */
+name|struct
+name|timeval
+name|start_time
+decl_stmt|;
+comment|/* time when this address was created */
 block|}
 struct|;
 end_struct
@@ -736,6 +741,11 @@ name|struct
 name|sctp_timer
 name|signature_change
 decl_stmt|;
+comment|/* Zero copy full buffer timer */
+name|struct
+name|sctp_timer
+name|zero_copy_timer
+decl_stmt|;
 name|int
 name|def_cookie_life
 decl_stmt|;
@@ -930,7 +940,7 @@ name|uint32_t
 name|sctp_context
 decl_stmt|;
 name|struct
-name|sctp_sndrcvinfo
+name|sctp_nonpad_sndrcvinfo
 name|def_send
 decl_stmt|;
 comment|/*- 	 * These three are here for the sosend_dgram 	 * (pkt, pkt_last and control). 	 * routine. However, I don't think anyone in 	 * the current FreeBSD kernel calls this. So 	 * they are candidates with sctp_sendm for 	 * de-supporting. 	 */

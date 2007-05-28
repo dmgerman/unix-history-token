@@ -241,7 +241,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_DELAYED_ACK_TIME
+name|SCTP_DELAYED_SACK
 value|0x0000000f
 end_define
 
@@ -320,6 +320,17 @@ begin_define
 define|#
 directive|define
 name|SCTP_MAXBURST
+value|0x00000019
+end_define
+
+begin_comment
+comment|/* rw */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_MAX_BURST
 value|0x00000019
 end_define
 
@@ -1767,6 +1778,17 @@ directive|define
 name|SCTP_PCB_FLAGS_EXPLICIT_EOR
 value|0x00400000
 end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SMALLEST_PMTU
+value|512
+end_define
+
+begin_comment
+comment|/* smallest pmtu allowed when disabling PMTU 				 * discovery */
+end_comment
 
 begin_include
 include|#

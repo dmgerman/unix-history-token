@@ -75,12 +75,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socketvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -1428,20 +1422,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SPP_SACKDELAY_ENABLE
-value|0x00000020
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPP_SACKDELAY_DISABLE
-value|0x00000040
-end_define
-
-begin_define
-define|#
-directive|define
 name|SPP_HB_TIME_IS_ZERO
 value|0x00000080
 end_define
@@ -1531,12 +1511,6 @@ name|sasoc_local_rwnd
 decl_stmt|;
 name|uint32_t
 name|sasoc_cookie_life
-decl_stmt|;
-name|uint32_t
-name|sasoc_sack_delay
-decl_stmt|;
-name|uint32_t
-name|sasoc_sack_freq
 decl_stmt|;
 block|}
 struct|;
@@ -1831,6 +1805,23 @@ name|gaids_assoc_id
 index|[
 literal|0
 index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sctp_sack_info
+block|{
+name|sctp_assoc_t
+name|sack_assoc_id
+decl_stmt|;
+name|uint32_t
+name|sack_delay
+decl_stmt|;
+name|uint32_t
+name|sack_freq
 decl_stmt|;
 block|}
 struct|;
@@ -3124,12 +3115,6 @@ decl_stmt|;
 name|uint16_t
 name|local_port
 decl_stmt|;
-name|uint16_t
-name|number_local_addresses
-decl_stmt|;
-name|uint32_t
-name|number_associations
-decl_stmt|;
 name|uint32_t
 name|flags
 decl_stmt|;
@@ -3148,9 +3133,11 @@ decl_stmt|;
 name|uint32_t
 name|fragmentation_point
 decl_stmt|;
-name|struct
-name|xsocket
-name|xsocket
+name|uint16_t
+name|qlen
+decl_stmt|;
+name|uint16_t
+name|maxqlen
 decl_stmt|;
 comment|/* add more endpoint specific data here */
 block|}
@@ -3161,63 +3148,66 @@ begin_struct
 struct|struct
 name|xsctp_tcb
 block|{
+name|uint32_t
+name|last
+decl_stmt|;
 name|uint16_t
-name|LocalPort
+name|local_port
 decl_stmt|;
 comment|/* sctpAssocEntry 3   */
 name|uint16_t
-name|RemPort
+name|remote_port
 decl_stmt|;
 comment|/* sctpAssocEntry 4   */
 name|union
 name|sctp_sockstore
-name|RemPrimAddr
+name|primary_addr
 decl_stmt|;
 comment|/* sctpAssocEntry 5/6 */
 name|uint32_t
-name|HeartBeatInterval
+name|heartbeat_interval
 decl_stmt|;
 comment|/* sctpAssocEntry 7   */
 name|uint32_t
-name|State
+name|state
 decl_stmt|;
 comment|/* sctpAssocEntry 8   */
 name|uint32_t
-name|InStreams
+name|in_streams
 decl_stmt|;
 comment|/* sctpAssocEntry 9   */
 name|uint32_t
-name|OutStreams
+name|out_streams
 decl_stmt|;
 comment|/* sctpAssocEntry 10  */
 name|uint32_t
-name|MaxRetr
+name|max_nr_retrans
 decl_stmt|;
 comment|/* sctpAssocEntry 11  */
 name|uint32_t
-name|PrimProcess
+name|primary_process
 decl_stmt|;
 comment|/* sctpAssocEntry 12  */
 name|uint32_t
-name|T1expireds
+name|T1_expireries
 decl_stmt|;
 comment|/* sctpAssocEntry 13  */
 name|uint32_t
-name|T2expireds
+name|T2_expireries
 decl_stmt|;
 comment|/* sctpAssocEntry 14  */
 name|uint32_t
-name|RtxChunks
+name|retransmitted_tsns
 decl_stmt|;
 comment|/* sctpAssocEntry 15  */
 name|struct
 name|timeval
-name|StartTime
+name|start_time
 decl_stmt|;
 comment|/* sctpAssocEntry 16  */
 name|struct
 name|timeval
-name|DiscontinuityTime
+name|discontinuity_time
 decl_stmt|;
 comment|/* sctpAssocEntry 17  */
 name|uint32_t
@@ -3248,12 +3238,6 @@ name|uint32_t
 name|mtu
 decl_stmt|;
 comment|/* add more association specific data here */
-name|uint16_t
-name|number_local_addresses
-decl_stmt|;
-name|uint16_t
-name|number_remote_addresses
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3262,14 +3246,17 @@ begin_struct
 struct|struct
 name|xsctp_laddr
 block|{
+name|uint32_t
+name|last
+decl_stmt|;
 name|union
 name|sctp_sockstore
-name|LocalAddr
+name|address
 decl_stmt|;
 comment|/* sctpAssocLocalAddrEntry 1/2 */
 name|struct
 name|timeval
-name|LocalStartTime
+name|start_time
 decl_stmt|;
 comment|/* sctpAssocLocalAddrEntry 3   */
 comment|/* add more local address specific data */
@@ -3281,54 +3268,57 @@ begin_struct
 struct|struct
 name|xsctp_raddr
 block|{
+name|uint32_t
+name|last
+decl_stmt|;
 name|union
 name|sctp_sockstore
-name|RemAddr
+name|address
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 1/2 */
 name|uint8_t
-name|RemAddrActive
+name|active
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 3   */
 name|uint8_t
-name|RemAddrConfirmed
+name|confirmed
 decl_stmt|;
 comment|/* */
 name|uint8_t
-name|RemAddrHBActive
+name|heartbeat_enabled
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 4   */
 name|uint32_t
-name|RemAddrRTO
+name|rto
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 5   */
 name|uint32_t
-name|RemAddrMaxPathRtx
+name|max_path_rtx
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 6   */
 name|uint32_t
-name|RemAddrRtx
+name|rtx
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 7   */
 name|uint32_t
-name|RemAddrErrorCounter
+name|error_counter
 decl_stmt|;
 comment|/* */
 name|uint32_t
-name|RemAddrCwnd
+name|cwnd
 decl_stmt|;
 comment|/* */
 name|uint32_t
-name|RemAddrFlightSize
+name|flight_size
 decl_stmt|;
 comment|/* */
 name|uint32_t
-name|RemAddrMTU
+name|mtu
 decl_stmt|;
 comment|/* */
 name|struct
 name|timeval
-name|RemAddrStartTime
+name|start_time
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 8   */
 comment|/* add more remote address specific data */

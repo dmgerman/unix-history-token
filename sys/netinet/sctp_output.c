@@ -19646,6 +19646,13 @@ name|op_err
 operator|=
 name|NULL
 expr_stmt|;
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"Check for unrecognized param's\n"
+argument_list|)
+expr_stmt|;
 name|phdr
 operator|=
 name|sctp_get_next_param
@@ -19723,6 +19730,15 @@ operator|)
 condition|)
 block|{
 comment|/* wacked parameter */
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"Invalid size - error %d\n"
+argument_list|,
+name|plen
+argument_list|)
+expr_stmt|;
 goto|goto
 name|invalid_size
 goto|;
@@ -19795,6 +19811,15 @@ operator|)
 operator|)
 condition|)
 block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"Invalid size - error chklist %d\n"
+argument_list|,
+name|plen
+argument_list|)
+expr_stmt|;
 goto|goto
 name|invalid_size
 goto|;
@@ -19814,6 +19839,15 @@ operator|>
 name|SCTP_MAX_ADDR_PARAMS_SIZE
 condition|)
 block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"Invalid size - error supaddrtype %d\n"
+argument_list|,
+name|plen
+argument_list|)
+expr_stmt|;
 goto|goto
 name|invalid_size
 goto|;
@@ -19841,6 +19875,15 @@ name|SCTP_RANDOM_MAX_SIZE
 operator|)
 condition|)
 block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"Invalid size - error random %d\n"
+argument_list|,
+name|plen
+argument_list|)
+expr_stmt|;
 goto|goto
 name|invalid_size
 goto|;
@@ -19882,6 +19925,15 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"Invalid size - error setprim %d\n"
+argument_list|,
+name|plen
+argument_list|)
+expr_stmt|;
 goto|goto
 name|invalid_size
 goto|;
@@ -19906,6 +19958,15 @@ name|sctp_ipv4addr_param
 argument_list|)
 condition|)
 block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"Invalid size - error ipv4 addr %d\n"
+argument_list|,
+name|plen
+argument_list|)
+expr_stmt|;
 goto|goto
 name|invalid_size
 goto|;
@@ -19929,6 +19990,15 @@ name|sctp_ipv6addr_param
 argument_list|)
 condition|)
 block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"Invalid size - error ipv6 addr %d\n"
+argument_list|,
+name|plen
+argument_list|)
+expr_stmt|;
 goto|goto
 name|invalid_size
 goto|;
@@ -19952,6 +20022,15 @@ name|sctp_cookie_perserve_param
 argument_list|)
 condition|)
 block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"Invalid size - error cookie-preserve %d\n"
+argument_list|,
+name|plen
+argument_list|)
+expr_stmt|;
 goto|goto
 name|invalid_size
 goto|;
@@ -19978,6 +20057,15 @@ name|sctp_paramhdr
 argument_list|)
 condition|)
 block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"Invalid size - error ecnnonce/prsctp %d\n"
+argument_list|,
+name|plen
+argument_list|)
+expr_stmt|;
 goto|goto
 name|invalid_size
 goto|;
@@ -20001,6 +20089,15 @@ name|sctp_ecn_supported_param
 argument_list|)
 condition|)
 block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"Invalid size - error ecn %d\n"
+argument_list|,
+name|plen
+argument_list|)
+expr_stmt|;
 goto|goto
 name|invalid_size
 goto|;
@@ -20024,6 +20121,15 @@ name|sctp_adaptation_layer_indication
 argument_list|)
 condition|)
 block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"Invalid size - error adapatation %d\n"
+argument_list|,
+name|plen
+argument_list|)
+expr_stmt|;
 goto|goto
 name|invalid_size
 goto|;
@@ -20047,6 +20153,15 @@ name|sctp_asconf_paramhdr
 argument_list|)
 condition|)
 block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"Invalid size - error success %d\n"
+argument_list|,
+name|plen
+argument_list|)
+expr_stmt|;
 goto|goto
 name|invalid_size
 goto|;
@@ -20066,7 +20181,7 @@ name|l_len
 decl_stmt|;
 name|SCTPDBG
 argument_list|(
-name|SCTP_DEBUG_OUTPUT4
+name|SCTP_DEBUG_OUTPUT1
 argument_list|,
 literal|"Can't handle hostname addresses.. abort processing\n"
 argument_list|)
@@ -20352,6 +20467,15 @@ break|break;
 block|}
 default|default:
 comment|/* 			 * we do not recognize the parameter figure out what 			 * we do. 			 */
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"Hit default param %x\n"
+argument_list|,
+name|ptype
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -20364,6 +20488,13 @@ literal|0x4000
 condition|)
 block|{
 comment|/* Report bit is set?? */
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"report op err\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|op_err
@@ -20667,6 +20798,13 @@ operator|==
 literal|0x0000
 condition|)
 block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"stop proc\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|op_err
@@ -20676,6 +20814,13 @@ block|}
 else|else
 block|{
 comment|/* skip this chunk and continue processing */
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"move on\n"
+argument_list|)
+expr_stmt|;
 name|at
 operator|+=
 name|SCTP_SIZE32
@@ -20711,6 +20856,13 @@ operator|)
 return|;
 name|invalid_size
 label|:
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_OUTPUT1
+argument_list|,
+literal|"abort flag set\n"
+argument_list|)
+expr_stmt|;
 operator|*
 name|abort_processing
 operator|=
@@ -25817,8 +25969,8 @@ if|if
 condition|(
 name|stcb
 operator|->
-name|sctp_ep
-operator|->
+name|asoc
+operator|.
 name|sctp_frag_point
 operator|>
 name|asoc
@@ -25839,8 +25991,8 @@ operator|=
 operator|(
 name|stcb
 operator|->
-name|sctp_ep
-operator|->
+name|asoc
+operator|.
 name|sctp_frag_point
 operator|-
 name|ovh
@@ -28539,12 +28691,21 @@ name|inp
 operator|=
 name|inp
 expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
 name|ca
 operator|->
 name|sndrcv
-operator|=
-operator|*
+argument_list|,
 name|srcv
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctp_nonpad_sndrcvinfo
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * take off the sendall flag, it would be bad if we failed to do 	 * this :-0 	 */
 name|ca
@@ -35246,9 +35407,13 @@ name|send_size
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|to_out
 operator|>
 name|mx_mtu
+operator|)
+operator|&&
+name|no_fragmentflg
 condition|)
 block|{
 ifdef|#
@@ -52347,6 +52512,76 @@ name|i_pak
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Pre-screen address, if one is given the sin-len must be set 	 * correctly! 	 */
+if|if
+condition|(
+name|addr
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|addr
+operator|->
+name|sa_family
+operator|==
+name|AF_INET
+operator|)
+operator|&&
+operator|(
+name|addr
+operator|->
+name|sa_len
+operator|!=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
+operator|)
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|out_unlocked
+goto|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|addr
+operator|->
+name|sa_family
+operator|==
+name|AF_INET6
+operator|)
+operator|&&
+operator|(
+name|addr
+operator|->
+name|sa_len
+operator|!=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in6
+argument_list|)
+operator|)
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|out_unlocked
+goto|;
+block|}
+block|}
 name|hold_tcblock
 operator|=
 literal|0
@@ -53857,6 +54092,11 @@ block|{
 comment|/* Grab the default stuff from the asoc */
 name|srcv
 operator|=
+operator|(
+expr|struct
+name|sctp_sndrcvinfo
+operator|*
+operator|)
 operator|&
 name|stcb
 operator|->

@@ -1105,7 +1105,11 @@ modifier|*
 name|error
 parameter_list|,
 name|int
-name|max
+name|limit
+parameter_list|,
+name|int
+modifier|*
+name|bad_addr
 parameter_list|)
 function_decl|;
 end_function_decl

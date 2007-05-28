@@ -91,41 +91,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|sctp_nonpad_sndrcvinfo
-block|{
-name|uint16_t
-name|sinfo_stream
-decl_stmt|;
-name|uint16_t
-name|sinfo_ssn
-decl_stmt|;
-name|uint16_t
-name|sinfo_flags
-decl_stmt|;
-name|uint32_t
-name|sinfo_ppid
-decl_stmt|;
-name|uint32_t
-name|sinfo_context
-decl_stmt|;
-name|uint32_t
-name|sinfo_timetolive
-decl_stmt|;
-name|uint32_t
-name|sinfo_tsn
-decl_stmt|;
-name|uint32_t
-name|sinfo_cumtsn
-decl_stmt|;
-name|sctp_assoc_t
-name|sinfo_assoc_id
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|sctp_foo_stuff
 block|{
 name|struct
@@ -1241,6 +1206,45 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* This struct is here to cut out the compatiabilty  * pad that bulks up both the inp and stcb. The non  * pad portion MUST stay in complete sync with  * sctp_sndrcvinfo... i.e. if sinfo_xxxx is added  * this must be done here too.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sctp_nonpad_sndrcvinfo
+block|{
+name|uint16_t
+name|sinfo_stream
+decl_stmt|;
+name|uint16_t
+name|sinfo_ssn
+decl_stmt|;
+name|uint16_t
+name|sinfo_flags
+decl_stmt|;
+name|uint32_t
+name|sinfo_ppid
+decl_stmt|;
+name|uint32_t
+name|sinfo_context
+decl_stmt|;
+name|uint32_t
+name|sinfo_timetolive
+decl_stmt|;
+name|uint32_t
+name|sinfo_tsn
+decl_stmt|;
+name|uint32_t
+name|sinfo_cumtsn
+decl_stmt|;
+name|sctp_assoc_t
+name|sinfo_assoc_id
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Here we have information about each individual association that we track.  * We probably in production would be more dynamic. But for ease of  * implementation we will have a fixed array that we hunt for in a linear  * fashion.  */
 end_comment
 
@@ -1275,10 +1279,9 @@ name|timeval
 name|time_last_sat_advance
 decl_stmt|;
 name|struct
-name|sctp_sndrcvinfo
+name|sctp_nonpad_sndrcvinfo
 name|def_send
 decl_stmt|;
-comment|/* default send parameters */
 comment|/* timers and such */
 name|struct
 name|sctp_timer
@@ -1614,6 +1617,9 @@ name|my_last_reported_rwnd
 decl_stmt|;
 name|uint32_t
 name|my_rwnd_control_len
+decl_stmt|;
+name|uint32_t
+name|sctp_frag_point
 decl_stmt|;
 name|uint32_t
 name|total_output_queue_size

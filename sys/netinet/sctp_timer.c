@@ -6415,7 +6415,7 @@ block|}
 else|else
 block|{
 comment|/* 		 * this will send out extra hb's up to maxburst if there are 		 * any unconfirmed addresses. 		 */
-name|int
+name|uint32_t
 name|cnt_sent
 init|=
 literal|0

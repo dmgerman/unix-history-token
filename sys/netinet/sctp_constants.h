@@ -66,6 +66,13 @@ name|SCTP_COUNT_LIMIT
 value|40
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_ZERO_COPY_TICK_DELAY
+value|(((100 * hz) + 999) / 1000)
+end_define
+
 begin_comment
 comment|/* Number of ticks to delay before running  * iterator on an address change.  */
 end_comment
@@ -2454,6 +2461,13 @@ name|SCTP_TIMER_TYPE_ADDR_WQ
 value|19
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_TIMER_TYPE_ZERO_COPY
+value|20
+end_define
+
 begin_comment
 comment|/* add new timers here - and increment LAST */
 end_comment
@@ -2462,7 +2476,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_TIMER_TYPE_LAST
-value|20
+value|21
 end_define
 
 begin_define
@@ -2794,7 +2808,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_DEF_MAX_PATH_RTX
-value|4
+value|5
 end_define
 
 begin_define
@@ -3587,6 +3601,13 @@ define|#
 directive|define
 name|SCTP_FROM_SCTP_PEELOFF
 value|0xa0000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_FROM_SCTP_PANDA
+value|0xb0000000
 end_define
 
 begin_comment
