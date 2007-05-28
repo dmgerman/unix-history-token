@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_kdb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_device_polling.h"
 end_include
 
@@ -2009,7 +2015,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle a watchdog timeout by dumping interrupt information and  * then panicking.  */
+comment|/*  * Handle a watchdog timeout by dumping interrupt information and  * then either dropping to DDB or panicking.  */
 end_comment
 
 begin_function
@@ -2106,11 +2112,35 @@ operator|)
 name|inttotal
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KDB
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|KDB_UNATTENDED
+argument_list|)
+name|kdb_backtrace
+argument_list|()
+expr_stmt|;
+name|kdb_enter
+argument_list|(
+literal|"watchdog timeout"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|panic
 argument_list|(
 literal|"watchdog timeout"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
