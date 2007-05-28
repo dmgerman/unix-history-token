@@ -916,7 +916,7 @@ value|((!tcp_timer_active(tp, TT_DELACK)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT
 end_define
 
 begin_comment
-comment|/*  * TCP input routine, follows pages 65-76 of the  * protocol specification dated September, 1981 very closely.  */
+comment|/*  * TCP input handling is split into multiple parts:  *   tcp6_input is a thin wrapper around tcp_input for the extended  *	ip6_protox[] call format in ip6_input  *   tcp_input handles primary segment validation, inpcb lookup and  *	SYN processing on listen sockets  *   tcp_do_segment processes the ACK and text of the segment for  *	establishing, established and closing connections  */
 end_comment
 
 begin_ifdef
@@ -1253,7 +1253,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|INET6
-comment|/* IP6_EXTHDR_CHECK() is already done at tcp6_input() */
+comment|/* IP6_EXTHDR_CHECK() is already done at tcp6_input(). */
 name|ip6
 operator|=
 name|mtod
@@ -1344,7 +1344,7 @@ name|th
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX: avoid compiler warning */
+comment|/* XXX: Avoid compiler warning. */
 endif|#
 directive|endif
 block|}
@@ -1926,7 +1926,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_FORWARD
-comment|/* Grab info from PACKET_TAG_IPFORWARD tag prepended to the chain. */
+comment|/* 	 * Grab info from PACKET_TAG_IPFORWARD tag prepended to the chain. 	 */
 name|fwd_tag
 operator|=
 name|m_tag_find
@@ -2325,7 +2325,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* Check the minimum TTL for socket. */
+comment|/* 	 * Check the minimum TTL for socket. 	 */
 if|if
 condition|(
 name|inp
@@ -2398,7 +2398,7 @@ argument_list|,
 name|TO_SYN
 argument_list|)
 expr_stmt|;
-comment|/* NB: tcp_twcheck unlocks the INP and frees the mbuf. */
+comment|/* 		 * NB: tcp_twcheck unlocks the INP and frees the mbuf. 		 */
 if|if
 condition|(
 name|tcp_twcheck
@@ -2685,7 +2685,7 @@ name|th
 operator|->
 name|th_dport
 expr_stmt|;
-comment|/* 		 * If the state is LISTEN then ignore segment if it contains 		 * a RST.  If the segment contains an ACK then it is bad and 		 * send a RST.  If it does not contain a SYN then it is not 		 * interesting; drop it. 		 * 		 * If the state is SYN_RECEIVED (syncache) and seg contains 		 * an ACK, but not for our SYN/ACK, send a RST.  If the seg 		 * contains a RST, check the sequence number to see if it 		 * is a valid reset segment. 		 */
+comment|/* 		 * Check for an existing connection attempt in syncache if 		 * the flag is only ACK.  A successful lookup creates a new 		 * socket appended to the listen queue in SYN_RECEIVED state. 		 */
 if|if
 condition|(
 operator|(
@@ -2737,7 +2737,7 @@ name|m
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * No syncache entry or ACK was not 				 * for our SYN/ACK.  Send a RST. 				 */
+comment|/* 				 * No syncache entry or ACK was not 				 * for our SYN/ACK.  Send a RST. 				 * NB: syncache did its own logging 				 * of the failure cause. 				 */
 name|rstreason
 operator|=
 name|BANDLIM_RST_OPENPORT
@@ -2777,7 +2777,8 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
-literal|"Socket allocation failure, %s\n"
+literal|"Socket allocation failed due to "
+literal|"limits or memory shortage, %s\n"
 argument_list|,
 name|s
 argument_list|,
@@ -2810,7 +2811,7 @@ goto|goto
 name|dropunlock
 goto|;
 block|}
-comment|/* 			 * Socket is created in state SYN_RECEIVED. 			 * Continue processing segment. 			 */
+comment|/* 			 * Socket is created in state SYN_RECEIVED. 			 * Unlock the listen socket, lock the newly 			 * created socket and update the tp variable. 			 */
 name|INP_UNLOCK
 argument_list|(
 name|inp
@@ -2837,6 +2838,21 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_state
+operator|==
+name|TCPS_SYN_RECEIVED
+argument_list|,
+operator|(
+literal|"%s: "
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Process the segment and the data it 			 * contains.  tcp_do_segment() consumes 			 * the mbuf chain and unlocks the inpcb. 			 */
 name|tcp_do_segment
 argument_list|(
@@ -2861,7 +2877,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * Our (SYN|ACK) response was rejected. 		 * Check with syncache and remove entry to prevent 		 * retransmits. 		 */
+comment|/* 		 * Segment flag validation for new connection attempts: 		 * 		 * Our (SYN|ACK) response was rejected. 		 * Check with syncache and remove entry to prevent 		 * retransmits. 		 */
 if|if
 condition|(
 operator|(
@@ -2904,7 +2920,8 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
-literal|"SYN|ACK was rejected\n"
+literal|"Our SYN|ACK was rejected, connection "
+literal|"attempt aborted by remote endpoint\n"
 argument_list|,
 name|s
 argument_list|,
@@ -2954,7 +2971,7 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
-literal|"Spurious RST\n"
+literal|"Spurious RST, segment rejected\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3000,7 +3017,7 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
-literal|"SYN missing\n"
+literal|"SYN is missing, segment rejected\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3047,7 +3064,7 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
-literal|"SYN|ACK bogus\n"
+literal|"SYN|ACK invalid, segment rejected\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3074,7 +3091,7 @@ goto|goto
 name|dropwithreset
 goto|;
 block|}
-comment|/* 		 * If the drop_synfin option is enabled, drop all 		 * segments with both the SYN and FIN bits set. 		 * This prevents e.g. nmap from identifying the 		 * TCP/IP stack. 		 * XXX: Poor reasoning.  nmap has other methods 		 * and is constantly refining its stack detection 		 * strategies. 		 * 		 * This is a violation of the TCP specification 		 * and was used by RFC1644. 		 */
+comment|/* 		 * If the drop_synfin option is enabled, drop all 		 * segments with both the SYN and FIN bits set. 		 * This prevents e.g. nmap from identifying the 		 * TCP/IP stack. 		 * XXX: Poor reasoning.  nmap has other methods 		 * and is constantly refining its stack detection 		 * strategies. 		 * XXX: This is a violation of the TCP specification 		 * and was used by RFC1644. 		 */
 if|if
 condition|(
 operator|(
@@ -3109,7 +3126,8 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
-literal|"SYN|FIN ignored\n"
+literal|"SYN|FIN segment rejected (based on "
+literal|"sysctl setting)\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3222,7 +3240,8 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
-literal|"Deprecated IPv6 address\n"
+literal|"Connection attempt to deprecated "
+literal|"IPv6 address rejected\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3240,7 +3259,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 		 * Basic sanity checks on incoming SYN requests: 		 * 		 * Don't bother responding if the destination was a 		 * broadcast according to RFC1122 4.2.3.10, p. 104. 		 * 		 * If it is from this socket, drop it, it must be forged. 		 * 		 * Note that it is quite possible to receive unicast 		 * link-layer packets with a broadcast IP address. Use 		 * in_broadcast() to find them. 		 */
+comment|/* 		 * Basic sanity checks on incoming SYN requests: 		 *   Don't respond if the destination is a link layer 		 *	broadcast according to RFC1122 4.2.3.10, p. 104. 		 *   If it is from this socket it must be forged. 		 *   Don't respond if the source or destination is a 		 *	global or subnet broad- or multicast address. 		 *   Note that it is quite possible to receive unicast 		 *	link-layer packets with a broadcast IP address. Use 		 *	in_broadcast() to find them. 		 */
 if|if
 condition|(
 name|m
@@ -3253,9 +3272,42 @@ operator||
 name|M_MCAST
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|s
+operator|=
+name|tcp_log_addrs
+argument_list|(
+operator|&
+name|inc
+argument_list|,
+name|th
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+condition|)
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s; %s: Listen socket: "
+literal|"Connection attempt from broad- or multicast "
+literal|"link layer address rejected\n"
+argument_list|,
+name|s
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 goto|goto
 name|dropunlock
 goto|;
+block|}
 if|if
 condition|(
 name|isipv6
@@ -3311,7 +3363,8 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
-literal|"Connection to self\n"
+literal|"Connection attempt to/from self "
+literal|"rejected\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3364,7 +3417,8 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
-literal|"Connection to multicast address\n"
+literal|"Connection attempt from/to multicast "
+literal|"address rejected\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3426,7 +3480,8 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
-literal|"Connection to self\n"
+literal|"Connection attempt from/to self "
+literal|"rejected\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3511,7 +3566,8 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
-literal|"Connection to multicast address\n"
+literal|"Connection attempt from/to broad- "
+literal|"or multicast address rejected\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3596,7 +3652,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Segment belongs to a connection in SYN_SENT, ESTABLISHED or late 	 * state.  tcp_do_segment() always consumes the mbuf chain, unlocks the 	 * inpcb, and unlocks the pcbinfo. 	 */
+comment|/* 	 * Segment belongs to a connection in SYN_SENT, ESTABLISHED or later 	 * state.  tcp_do_segment() always consumes the mbuf chain, unlocks 	 * the inpcb, and unlocks pcbinfo. 	 */
 name|tcp_do_segment
 argument_list|(
 name|m

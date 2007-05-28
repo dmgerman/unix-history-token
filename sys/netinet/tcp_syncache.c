@@ -3485,7 +3485,8 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s; %s: Spurious ACK\n"
+literal|"%s; %s: Spurious ACK, "
+literal|"segment rejected (syncookies disabled)\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3560,7 +3561,8 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Segment failed "
-literal|"SYNCOOKIE authentication\n"
+literal|"SYNCOOKIE authentication, segment rejected "
+literal|"(probably spoofed)\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3643,7 +3645,8 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s; %s: ACK %u != ISS+1 %u\n"
+literal|"%s; %s: ACK %u != ISS+1 %u, segment "
+literal|"rejected\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3697,7 +3700,8 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s; %s: SEQ %u != IRS+1 %u\n"
+literal|"%s; %s: SEQ %u != IRS+1 %u, segment "
+literal|"rejected\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3758,7 +3762,8 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s; %s: Timestamp missing\n"
+literal|"%s; %s: Timestamp missing, "
+literal|"segment rejected\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3810,7 +3815,8 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s; %s: Timestamp not expected\n"
+literal|"%s; %s: Timestamp not expected, "
+literal|"segment rejected\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3862,7 +3868,8 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s; %s: TSECR %u != TS %u\n"
+literal|"%s; %s: TSECR %u != TS %u, "
+literal|"segment rejected\n"
 argument_list|,
 name|s
 argument_list|,
