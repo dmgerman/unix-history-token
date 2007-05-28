@@ -6948,7 +6948,17 @@ name|buf
 operator|=
 name|concat
 argument_list|(
-literal|"%{static|static-libgcc:"
+literal|"%{pg:"
+argument_list|,
+name|static_name
+argument_list|,
+literal|" "
+argument_list|,
+name|eh_name
+argument_list|,
+literal|"} %{!pg:"
+argument_list|,
+literal|"%{static|static-libgcc|pg:"
 argument_list|,
 name|static_name
 argument_list|,
@@ -7029,7 +7039,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-literal|"}}"
+literal|"}}}"
 argument_list|,
 name|NULL
 argument_list|)
