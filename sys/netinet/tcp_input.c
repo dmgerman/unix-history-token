@@ -2703,7 +2703,7 @@ operator|==
 name|TH_ACK
 condition|)
 block|{
-comment|/* 				 * Parse the TCP options here because 				 * syncookies need access to the reflected 				 * timestamp. 				 */
+comment|/* 			 * Parse the TCP options here because 			 * syncookies need access to the reflected 			 * timestamp. 			 */
 name|tcp_dooptions
 argument_list|(
 operator|&
@@ -2716,7 +2716,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 				 * NB: syncache_expand() doesn't unlock 				 * inp and tcpinfo locks. 				 */
+comment|/* 			 * NB: syncache_expand() doesn't unlock 			 * inp and tcpinfo locks. 			 */
 if|if
 condition|(
 operator|!
@@ -2737,7 +2737,7 @@ name|m
 argument_list|)
 condition|)
 block|{
-comment|/* 					 * No syncache entry or ACK was not 					 * for our SYN/ACK.  Send a RST. 					 */
+comment|/* 				 * No syncache entry or ACK was not 				 * for our SYN/ACK.  Send a RST. 				 */
 name|rstreason
 operator|=
 name|BANDLIM_RST_OPENPORT
@@ -2753,7 +2753,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 					 * We completed the 3-way handshake 					 * but could not allocate a socket 					 * either due to memory shortage, 					 * listen queue length limits or 					 * global socket limits.  Send RST 					 * or wait and have the remote end 					 * retransmit the ACK for another 					 * try. 					 */
+comment|/* 				 * We completed the 3-way handshake 				 * but could not allocate a socket 				 * either due to memory shortage, 				 * listen queue length limits or 				 * global socket limits.  Send RST 				 * or wait and have the remote end 				 * retransmit the ACK for another 				 * try. 				 */
 if|if
 condition|(
 operator|(
@@ -2810,7 +2810,7 @@ goto|goto
 name|dropunlock
 goto|;
 block|}
-comment|/* 				 * Socket is created in state SYN_RECEIVED. 				 * Continue processing segment. 				 */
+comment|/* 			 * Socket is created in state SYN_RECEIVED. 			 * Continue processing segment. 			 */
 name|INP_UNLOCK
 argument_list|(
 name|inp
@@ -2837,7 +2837,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Process the segment and the data it 				 * contains.  tcp_do_segment() consumes 				 * the mbuf chain and unlocks the inpcb. 				 */
+comment|/* 			 * Process the segment and the data it 			 * contains.  tcp_do_segment() consumes 			 * the mbuf chain and unlocks the inpcb. 			 */
 name|tcp_do_segment
 argument_list|(
 name|m
