@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_zero.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -2145,10 +2139,12 @@ name|refcnt
 operator|=
 literal|0
 expr_stmt|;
-name|uma_zfree
+ifdef|#
+directive|ifdef
+name|notyet
+comment|/* XXX M_MBUF is a static */
+name|free
 argument_list|(
-name|zone_ext_refcnt
-argument_list|,
 name|__DEVOLATILE
 argument_list|(
 name|u_int
@@ -2156,8 +2152,12 @@ operator|*
 argument_list|,
 name|refcnt
 argument_list|)
+argument_list|,
+name|M_MBUF
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__i386__

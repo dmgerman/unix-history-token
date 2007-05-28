@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rwlock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -153,6 +147,12 @@ begin_include
 include|#
 directive|include
 file|<dev/cxgb/common/jhash.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/cxgb/cxgb_l2t.h>
 end_include
 
 begin_include

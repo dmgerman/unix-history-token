@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2007, Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   $FreeBSD$  ***************************************************************************/
+comment|/**************************************************************************  Copyright (c) 2007, Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   $FreeBSD$  ***************************************************************************/
 end_comment
 
 begin_include
@@ -77,23 +77,37 @@ name|sge_rspq
 struct_decl|;
 end_struct_decl
 
-begin_struct
-struct|struct
-name|t3_mbuf_hdr
-block|{
-name|struct
-name|mbuf
-modifier|*
-name|mh_head
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|mh_tail
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|PANIC_IF
+parameter_list|(
+name|exp
+parameter_list|)
+value|do {                  \ 	if (exp)                            \ 		panic("BUG: %s", exp);      \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_get_priority
+parameter_list|(
+name|m
+parameter_list|)
+value|((uintptr_t)(m)->m_pkthdr.rcvif)
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_set_priority
+parameter_list|(
+name|m
+parameter_list|,
+name|pri
+parameter_list|)
+value|((m)->m_pkthdr.rcvif = (struct ifnet *)((uintptr_t)pri))
+end_define
 
 begin_if
 if|#
@@ -186,6 +200,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|__read_mostly
+value|__attribute__((__section__(".data.read_mostly")))
+end_define
+
 begin_comment
 comment|/*  * Workaround for weird Chelsio issue  */
 end_comment
@@ -221,6 +242,13 @@ define|#
 directive|define
 name|LOG_WARNING
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOG_ERR
+value|2
 end_define
 
 begin_ifdef
@@ -292,7 +320,7 @@ begin_define
 define|#
 directive|define
 name|TX_START_MAX_DESC
-value|(TX_MAX_DESC<< 1)
+value|(TX_MAX_DESC<< 2)
 end_define
 
 begin_comment
@@ -303,7 +331,7 @@ begin_define
 define|#
 directive|define
 name|TX_CLEAN_MAX_DESC
-value|(TX_MAX_DESC<< 2)
+value|(TX_MAX_DESC<< 4)
 end_define
 
 begin_comment
@@ -377,6 +405,26 @@ block|{
 asm|__asm volatile("prefetcht0 %0" :: "m" (*(unsigned long *)x));
 block|}
 end_function
+
+begin_function_decl
+specifier|extern
+name|void
+name|kdb_backtrace
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|WARN_ON
+parameter_list|(
+name|condition
+parameter_list|)
+value|do { \         if (unlikely((condition)!=0)) { \                 log(LOG_WARNING, "BUG: warning at %s:%d/%s()\n", __FILE__, __LINE__, __FUNCTION__); \                 kdb_backtrace(); \         } \ } while (0)
+end_define
 
 begin_else
 else|#
@@ -559,7 +607,19 @@ name|t3_os_sleep
 parameter_list|(
 name|x
 parameter_list|)
-value|DELAY((x) * 2000)
+value|DELAY((x) * 1000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|test_and_clear_bit
+parameter_list|(
+name|bit
+parameter_list|,
+name|p
+parameter_list|)
+value|atomic_cmpset_int((p), ((*(p)) | bit), ((*(p))& ~bit))
 end_define
 
 begin_define
@@ -574,6 +634,13 @@ parameter_list|,
 name|b
 parameter_list|)
 value|(type)max((a), (b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|net_device
+value|ifnet
 end_define
 
 begin_comment

@@ -64,6 +64,11 @@ init|=
 literal|8
 block|,
 comment|/* # of HW Tx scheduling queues */
+name|TP_TMR_RES
+init|=
+literal|200
+block|,
+comment|/* TP timer resolution in usec */
 block|}
 enum|;
 end_enum
@@ -102,12 +107,6 @@ end_enum
 begin_enum
 enum|enum
 block|{
-name|SUPPORTED_OFFLOAD
-init|=
-literal|1
-operator|<<
-literal|24
-block|,
 name|SUPPORTED_IRQ
 init|=
 literal|1
@@ -138,11 +137,11 @@ enum|enum
 block|{
 name|FW_VERSION_MAJOR
 init|=
-literal|3
+literal|4
 block|,
 name|FW_VERSION_MINOR
 init|=
-literal|2
+literal|0
 block|,
 name|FW_VERSION_MICRO
 init|=
@@ -1038,6 +1037,20 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/* MC5 min active region size */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|MC5_MIN_TIDS
+init|=
+literal|16
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|vpd_params
@@ -1205,6 +1218,10 @@ name|int
 name|rev
 decl_stmt|;
 comment|/* chip revision */
+name|unsigned
+name|int
+name|offload
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1492,11 +1509,21 @@ decl_stmt|;
 comment|/* # of address filters for unicast MACs */
 name|unsigned
 name|int
-name|tcnt
+name|tx_tcnt
 decl_stmt|;
 name|unsigned
 name|int
-name|xcnt
+name|tx_xcnt
+decl_stmt|;
+name|u64
+name|tx_mcnt
+decl_stmt|;
+name|unsigned
+name|int
+name|rx_xcnt
+decl_stmt|;
+name|u64
+name|rx_mcnt
 decl_stmt|;
 name|unsigned
 name|int
@@ -2210,14 +2237,11 @@ ifdef|#
 directive|ifdef
 name|CONFIG_CHELSIO_T3_CORE
 return|return
-name|adapter_info
-argument_list|(
 name|adap
-argument_list|)
 operator|->
-name|caps
-operator|&
-name|SUPPORTED_OFFLOAD
+name|params
+operator|.
+name|offload
 return|;
 else|#
 directive|else
