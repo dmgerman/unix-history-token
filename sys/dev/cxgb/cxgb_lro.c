@@ -113,23 +113,33 @@ directive|include
 file|<netinet/tcp.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/cxgb_osdep.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_DEFINED
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/common/cxgb_common.h>
+file|<cxgb_include.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/common/cxgb_t3_cpl.h>
+file|<dev/cxgb/cxgb_include.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

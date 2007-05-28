@@ -113,17 +113,33 @@ directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/ulp/toecore/toedev.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_DEFINED
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/sys/mbufq.h>
+file|<cxgb_include.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<dev/cxgb/cxgb_include.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct
