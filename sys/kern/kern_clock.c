@@ -2009,7 +2009,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle a watchdog timeout by dumping interrupt information and  * then either dropping to DDB or panicing.  */
+comment|/*  * Handle a watchdog timeout by dumping interrupt information and  * then panicking.  */
 end_comment
 
 begin_function
@@ -2106,27 +2106,11 @@ operator|)
 name|inttotal
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KDB
-name|kdb_backtrace
-argument_list|()
-expr_stmt|;
-name|kdb_enter
-argument_list|(
-literal|"watchdog timeout"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|panic
 argument_list|(
 literal|"watchdog timeout"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* KDB */
 block|}
 end_function
 
