@@ -275,23 +275,6 @@ begin_comment
 comment|/* 1? */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VM_PHYSSEG_STRAT
-value|VM_PSTRAT_BSEARCH
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_PHYSSEG_NOADD
-end_define
-
-begin_comment
-comment|/* can't add RAM after vm_mem_init */
-end_comment
-
 begin_comment
 comment|/*  * The physical address space is densely populated.  */
 end_comment

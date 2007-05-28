@@ -39,10 +39,6 @@ value|0xc0000000
 end_define
 
 begin_comment
-comment|/*  * Override the default pager_map size, there's not enough KVA.  */
-end_comment
-
-begin_comment
 comment|/*  * max number of non-contig chunks of physical RAM you can have  */
 end_comment
 
@@ -51,27 +47,6 @@ define|#
 directive|define
 name|VM_PHYSSEG_MAX
 value|32
-end_define
-
-begin_comment
-comment|/*  * when converting a physical address to a vm_page structure, we  * want to use a binary search on the chunks of physical memory  * to find our RAM  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PHYSSEG_STRAT
-value|VM_PSTRAT_BSEARCH
-end_define
-
-begin_comment
-comment|/*  * this indicates that we can't add RAM to the VM system after the  * vm system is init'd.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PHYSSEG_NOADD
 end_define
 
 begin_comment
