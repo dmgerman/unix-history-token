@@ -13555,6 +13555,13 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
+name|vap
+operator|->
+name|va_mask
+operator|&=
+operator|~
+name|AT_NOSET
+expr_stmt|;
 return|return
 operator|(
 name|zfs_setattr
