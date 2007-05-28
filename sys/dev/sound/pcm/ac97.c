@@ -57,10 +57,8 @@ begin_struct
 struct|struct
 name|ac97mixtable_entry
 block|{
-name|unsigned
+name|int
 name|reg
-range|:
-literal|8
 decl_stmt|;
 comment|/* register index		*/
 comment|/* reg< 0 if inverted polarity	*/
