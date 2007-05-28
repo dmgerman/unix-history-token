@@ -3474,12 +3474,6 @@ argument_list|)
 expr_stmt|;
 name|done_norel
 label|:
-if|if
-condition|(
-name|fp
-operator|!=
-name|NULL
-condition|)
 name|fdrop
 argument_list|(
 name|fp
