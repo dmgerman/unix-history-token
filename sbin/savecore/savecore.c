@@ -1821,6 +1821,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|info
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"fdopen failed: %m"
+argument_list|)
+expr_stmt|;
+name|nerr
+operator|++
+expr_stmt|;
+goto|goto
+name|closefd
+goto|;
+block|}
+if|if
+condition|(
 name|verbose
 condition|)
 name|printheader
