@@ -7998,7 +7998,7 @@ operator|->
 name|m_next
 expr_stmt|;
 block|}
-name|m_sanity
+name|M_SANITY
 argument_list|(
 name|m0
 argument_list|,
