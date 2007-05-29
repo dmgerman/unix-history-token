@@ -21486,6 +21486,7 @@ operator|==
 name|IEEE80211_S_INIT
 condition|)
 block|{
+comment|/* 		 * Shutdown host/driver operation: 		 * o disable interrupts so we don't rx frames 		 * o clean any pending items on the task q 		 * o notify the rate control algorithm 		 */
 name|sc
 operator|->
 name|sc_imask
@@ -21497,7 +21498,6 @@ operator||
 name|HAL_INT_BMISS
 operator|)
 expr_stmt|;
-comment|/* 		 * NB: disable interrupts so we don't rx frames. 		 */
 name|ath_hal_intrset
 argument_list|(
 name|ah
@@ -21510,7 +21510,55 @@ operator|~
 name|HAL_INT_GLOBAL
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Notify the rate control algorithm. 		 */
+comment|/* XXX can't use taskqueue_drain 'cuz we're holding sc_mtx */
+name|taskqueue_drain
+argument_list|(
+name|sc
+operator|->
+name|sc_tq
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_rxtask
+argument_list|)
+expr_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|sc
+operator|->
+name|sc_tq
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_rxorntask
+argument_list|)
+expr_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|sc
+operator|->
+name|sc_tq
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_bmisstask
+argument_list|)
+expr_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|sc
+operator|->
+name|sc_tq
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_bstucktask
+argument_list|)
+expr_stmt|;
 name|ath_rate_newstate
 argument_list|(
 name|sc
