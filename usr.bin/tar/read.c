@@ -410,6 +410,24 @@ operator|=
 name|archive_read_new
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|compress_program
+operator|!=
+name|NULL
+condition|)
+name|archive_read_support_compression_program
+argument_list|(
+name|a
+argument_list|,
+name|bsdtar
+operator|->
+name|compress_program
+argument_list|)
+expr_stmt|;
+else|else
 name|archive_read_support_compression_all
 argument_list|(
 name|a
@@ -1177,8 +1195,12 @@ name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"%d "
+literal|"%lu "
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|st
 operator|->
 name|st_uid
@@ -1271,8 +1293,12 @@ name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"%d"
+literal|"%lu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|st
 operator|->
 name|st_gid
@@ -1317,8 +1343,12 @@ name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"%d,%u"
+literal|"%lu,%lu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|major
 argument_list|(
 name|st
@@ -1328,6 +1358,7 @@ argument_list|)
 argument_list|,
 operator|(
 name|unsigned
+name|long
 operator|)
 name|minor
 argument_list|(

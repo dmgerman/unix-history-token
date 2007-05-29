@@ -98,6 +98,11 @@ name|char
 name|create_compression
 decl_stmt|;
 comment|/* j, y, or z */
+specifier|const
+name|char
+modifier|*
+name|compress_program
+decl_stmt|;
 name|char
 name|option_absolute_paths
 decl_stmt|;
