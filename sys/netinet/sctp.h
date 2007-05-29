@@ -564,7 +564,7 @@ value|0x00003005
 end_define
 
 begin_comment
-comment|/*  * If you enable packet logging you can get  * a poor mans ethereal output in binary  * form. Note this is a compile option to  * the kernel,  SCTP_PACKET_LOGGING, and  * without it in your kernel you  * will get a ENOSUPPORT.  */
+comment|/*  * If you enable packet logging you can get  * a poor mans ethereal output in binary  * form. Note this is a compile option to  * the kernel,  SCTP_PACKET_LOGGING, and  * without it in your kernel you  * will get a EOPNOTSUPP  */
 end_comment
 
 begin_define

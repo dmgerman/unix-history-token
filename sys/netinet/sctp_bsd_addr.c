@@ -110,7 +110,7 @@ comment|/* Declare all of our malloc named types */
 end_comment
 
 begin_comment
-comment|/* Not to Michael/Peter for mac-os,  * I think mac has this to since I  * do see the M_PCB type, so I  * will also put in the mac file the  * MALLOC_DELCARE. If this does not  * work for mac uncomment the defines for  * the strings that we use in Panda, I put  * them in comments in the mac-os file.  */
+comment|/* Note to Michael/Peter for mac-os,  * I think mac has this too since I  * do see the M_PCB type, so I  * will also put in the mac file the  * MALLOC_DECLARE. If this does not  * work for mac uncomment the defines for  * the strings that we use in Panda, I put  * them in comments in the mac-os file.  */
 end_comment
 
 begin_expr_stmt
