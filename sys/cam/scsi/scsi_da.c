@@ -762,24 +762,6 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * This particular Hitachi drive doesn't like the 		 * synchronize cache command. 		 * Reported by:  Joakim Bentholm 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_FIXED
-block|,
-literal|"Hitachi"
-block|,
-literal|"HTS541212H9A*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_SYNC_CACHE
-block|}
-block|,
-block|{
 comment|/*  		 * Creative Nomad MUVO mp3 player (USB)  		 * PR: kern/53094  		 */
 block|{
 name|T_DIRECT
