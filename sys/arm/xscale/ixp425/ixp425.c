@@ -325,7 +325,6 @@ struct|;
 end_struct
 
 begin_function
-specifier|static
 name|int
 name|getvbase
 parameter_list|(
