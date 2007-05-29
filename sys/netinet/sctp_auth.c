@@ -156,7 +156,7 @@ operator|*
 name|chklist
 argument_list|)
 argument_list|,
-literal|"AUTH chklist"
+name|SCTP_M_AUTH_CL
 argument_list|)
 expr_stmt|;
 if|if
@@ -208,6 +208,8 @@ condition|)
 name|SCTP_FREE
 argument_list|(
 name|list
+argument_list|,
+name|SCTP_M_AUTH_CL
 argument_list|)
 expr_stmt|;
 block|}
@@ -973,7 +975,7 @@ argument_list|)
 operator|+
 name|keylen
 argument_list|,
-literal|"AUTH key"
+name|SCTP_M_AUTH_KY
 argument_list|)
 expr_stmt|;
 if|if
@@ -1022,6 +1024,8 @@ condition|)
 name|SCTP_FREE
 argument_list|(
 name|key
+argument_list|,
+name|SCTP_M_AUTH_KY
 argument_list|)
 expr_stmt|;
 block|}
@@ -2000,7 +2004,7 @@ operator|*
 name|new_key
 argument_list|)
 argument_list|,
-literal|"AUTH skey"
+name|SCTP_M_AUTH_KY
 argument_list|)
 expr_stmt|;
 if|if
@@ -2071,6 +2075,8 @@ expr_stmt|;
 name|SCTP_FREE
 argument_list|(
 name|skey
+argument_list|,
+name|SCTP_M_AUTH_KY
 argument_list|)
 expr_stmt|;
 block|}
@@ -2515,7 +2521,7 @@ operator|*
 argument_list|,
 name|alloc_size
 argument_list|,
-literal|"AUTH HMAC list"
+name|SCTP_M_AUTH_HL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2571,6 +2577,8 @@ block|{
 name|SCTP_FREE
 argument_list|(
 name|list
+argument_list|,
+name|SCTP_M_AUTH_HL
 argument_list|)
 expr_stmt|;
 name|list
@@ -3270,7 +3278,7 @@ operator|*
 name|new_authinfo
 argument_list|)
 argument_list|,
-literal|"AUTH info"
+name|SCTP_M_AUTH_IF
 argument_list|)
 expr_stmt|;
 if|if
@@ -3384,7 +3392,7 @@ name|recv_key
 argument_list|)
 expr_stmt|;
 comment|/* We are NOT dynamically allocating authinfo's right now... */
-comment|/* SCTP_FREE(authinfo); */
+comment|/* SCTP_FREE(authinfo, SCTP_M_AUTH_??); */
 block|}
 end_function
 

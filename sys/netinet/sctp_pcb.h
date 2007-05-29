@@ -551,6 +551,10 @@ name|struct
 name|mtx
 name|ipi_addr_mtx
 decl_stmt|;
+name|struct
+name|mtx
+name|ipi_pktlog_mtx
+decl_stmt|;
 name|uint32_t
 name|ipi_count_ep
 decl_stmt|;

@@ -311,7 +311,7 @@ expr|struct
 name|sctp_vrf
 argument_list|)
 argument_list|,
-literal|"SCTP_VRF"
+name|SCTP_M_VRF
 argument_list|)
 expr_stmt|;
 if|if
@@ -414,6 +414,8 @@ directive|endif
 name|SCTP_FREE
 argument_list|(
 name|vrf
+argument_list|,
+name|SCTP_M_VRF
 argument_list|)
 expr_stmt|;
 return|return
@@ -472,6 +474,8 @@ expr_stmt|;
 name|SCTP_FREE
 argument_list|(
 name|vrf
+argument_list|,
+name|SCTP_M_VRF
 argument_list|)
 expr_stmt|;
 return|return
@@ -732,6 +736,8 @@ comment|/* We zero'd the count */
 name|SCTP_FREE
 argument_list|(
 name|sctp_ifnp
+argument_list|,
+name|SCTP_M_IFN
 argument_list|)
 expr_stmt|;
 name|atomic_subtract_int
@@ -855,6 +861,8 @@ comment|/* We zero'd the count */
 name|SCTP_FREE
 argument_list|(
 name|sctp_ifap
+argument_list|,
+name|SCTP_M_IFA
 argument_list|)
 expr_stmt|;
 name|atomic_subtract_int
@@ -1108,7 +1116,7 @@ expr|struct
 name|sctp_ifn
 argument_list|)
 argument_list|,
-literal|"SCTP_IFN"
+name|SCTP_M_IFN
 argument_list|)
 expr_stmt|;
 if|if
@@ -1424,7 +1432,7 @@ expr|struct
 name|sctp_ifa
 argument_list|)
 argument_list|,
-literal|"SCTP_IFA"
+name|SCTP_M_IFA
 argument_list|)
 expr_stmt|;
 if|if
@@ -1898,6 +1906,9 @@ argument_list|,
 name|sctp_nxt_addr
 argument_list|)
 expr_stmt|;
+name|SCTP_IPI_ITERATOR_WQ_UNLOCK
+argument_list|()
+expr_stmt|;
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_ADDR_WQ
@@ -1923,9 +1934,6 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
-expr_stmt|;
-name|SCTP_IPI_ITERATOR_WQ_UNLOCK
-argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -2231,6 +2239,9 @@ argument_list|,
 name|sctp_nxt_addr
 argument_list|)
 expr_stmt|;
+name|SCTP_IPI_ITERATOR_WQ_UNLOCK
+argument_list|()
+expr_stmt|;
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_ADDR_WQ
@@ -2256,9 +2267,6 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
-expr_stmt|;
-name|SCTP_IPI_ITERATOR_WQ_UNLOCK
-argument_list|()
 expr_stmt|;
 block|}
 return|return;
@@ -9823,7 +9831,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|EADDRNOTAVAIL
+name|EADDRINUSE
 operator|)
 return|;
 block|}
@@ -9867,7 +9875,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|EADDRNOTAVAIL
+name|EADDRINUSE
 operator|)
 return|;
 block|}
@@ -9911,7 +9919,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|EADDRNOTAVAIL
+name|EADDRINUSE
 operator|)
 return|;
 block|}
@@ -10130,7 +10138,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|EADDRNOTAVAIL
+name|EADDRINUSE
 operator|)
 return|;
 block|}
@@ -10829,7 +10837,11 @@ block|{
 comment|/* been here before.. eeks.. get out of here */
 name|SCTP_PRINTF
 argument_list|(
-literal|"This conflict in free SHOULD not be happening!\n"
+literal|"This conflict in free SHOULD not be happening! from %d, imm %d\n"
+argument_list|,
+name|from
+argument_list|,
+name|immediate
 argument_list|)
 expr_stmt|;
 name|SCTP_ITERATOR_UNLOCK
@@ -15496,26 +15508,46 @@ name|asoc
 operator|->
 name|strmout
 condition|)
+block|{
 name|SCTP_FREE
 argument_list|(
 name|asoc
 operator|->
 name|strmout
+argument_list|,
+name|SCTP_M_STRMO
 argument_list|)
 expr_stmt|;
+name|asoc
+operator|->
+name|strmout
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|asoc
 operator|->
 name|mapping_array
 condition|)
+block|{
 name|SCTP_FREE
 argument_list|(
 name|asoc
 operator|->
 name|mapping_array
+argument_list|,
+name|SCTP_M_MAP
 argument_list|)
 expr_stmt|;
+name|asoc
+operator|->
+name|mapping_array
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|SCTP_ZONE_FREE
 argument_list|(
 name|sctppcbinfo
@@ -16258,7 +16290,7 @@ expr|struct
 name|sctp_tagblock
 argument_list|)
 argument_list|,
-literal|"TimeWait"
+name|SCTP_M_TIMW
 argument_list|)
 expr_stmt|;
 if|if
@@ -17871,6 +17903,8 @@ expr_stmt|;
 name|SCTP_FREE
 argument_list|(
 name|liste
+argument_list|,
+name|SCTP_M_STRESET
 argument_list|)
 expr_stmt|;
 block|}
@@ -18455,6 +18489,8 @@ argument_list|(
 name|asoc
 operator|->
 name|mapping_array
+argument_list|,
+name|SCTP_M_MAP
 argument_list|)
 expr_stmt|;
 name|asoc
@@ -18477,6 +18513,8 @@ argument_list|(
 name|asoc
 operator|->
 name|strmout
+argument_list|,
+name|SCTP_M_STRMO
 argument_list|)
 expr_stmt|;
 name|asoc
@@ -18639,6 +18677,8 @@ argument_list|(
 name|asoc
 operator|->
 name|strmin
+argument_list|,
+name|SCTP_M_STRMI
 argument_list|)
 expr_stmt|;
 name|asoc
@@ -18797,6 +18837,8 @@ expr_stmt|;
 name|SCTP_FREE
 argument_list|(
 name|aparam
+argument_list|,
+name|SCTP_M_ASC_ADDR
 argument_list|)
 expr_stmt|;
 block|}
@@ -20646,6 +20688,14 @@ expr_stmt|;
 name|SCTP_IPI_ITERATOR_WQ_INIT
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SCTP_PACKET_LOGGING
+name|SCTP_IP_PKTLOG_INIT
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -25309,7 +25359,7 @@ expr|struct
 name|sctp_iterator
 argument_list|)
 argument_list|,
-literal|"Iterator"
+name|SCTP_M_ITER
 argument_list|)
 expr_stmt|;
 if|if

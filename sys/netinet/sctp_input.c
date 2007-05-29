@@ -87,6 +87,12 @@ directive|include
 file|<netinet/sctp_asconf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/sctp_bsd_addr.h>
+end_include
+
 begin_function
 specifier|static
 name|void
@@ -1210,6 +1216,8 @@ argument_list|(
 name|asoc
 operator|->
 name|strmin
+argument_list|,
+name|SCTP_M_STRMI
 argument_list|)
 expr_stmt|;
 block|}
@@ -1260,7 +1268,7 @@ expr|struct
 name|sctp_stream_in
 argument_list|)
 argument_list|,
-literal|"StreamsIn"
+name|SCTP_M_STRMI
 argument_list|)
 expr_stmt|;
 if|if
@@ -14775,7 +14783,7 @@ operator|*
 argument_list|,
 name|siz
 argument_list|,
-literal|"StrRstList"
+name|SCTP_M_STRESET
 argument_list|)
 expr_stmt|;
 if|if
@@ -16884,6 +16892,17 @@ name|chunk_length
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|locked_tcb
+condition|)
+block|{
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -17040,6 +17059,17 @@ name|offset
 operator|=
 name|length
 expr_stmt|;
+if|if
+condition|(
+name|locked_tcb
+condition|)
+block|{
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -17083,6 +17113,17 @@ name|offset
 operator|=
 name|length
 expr_stmt|;
+if|if
+condition|(
+name|locked_tcb
+condition|)
+block|{
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -17224,6 +17265,17 @@ name|offset
 operator|=
 name|length
 expr_stmt|;
+if|if
+condition|(
+name|locked_tcb
+condition|)
+block|{
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|locked_tcb
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -19032,7 +19084,9 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_INPUT3
 argument_list|,
-literal|"SCTP_ABORT\n"
+literal|"SCTP_ABORT, stcb %p\n"
+argument_list|,
+name|stcb
 argument_list|)
 expr_stmt|;
 if|if
@@ -19079,7 +19133,9 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_INPUT3
 argument_list|,
-literal|"SCTP_SHUTDOWN\n"
+literal|"SCTP_SHUTDOWN, stcb %p\n"
+argument_list|,
+name|stcb
 argument_list|)
 expr_stmt|;
 if|if
@@ -19179,7 +19235,9 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_INPUT3
 argument_list|,
-literal|"SCTP_SHUTDOWN-ACK\n"
+literal|"SCTP_SHUTDOWN-ACK, stcb %p\n"
+argument_list|,
+name|stcb
 argument_list|)
 expr_stmt|;
 if|if
@@ -19276,7 +19334,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_INPUT3
 argument_list|,
-literal|"SCTP_COOKIE-ECHO stcb is %p\n"
+literal|"SCTP_COOKIE-ECHO, stcb %p\n"
 argument_list|,
 name|stcb
 argument_list|)
@@ -19756,7 +19814,9 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_INPUT3
 argument_list|,
-literal|"SCTP_COOKIE-ACK\n"
+literal|"SCTP_COOKIE-ACK, stcb %p\n"
+argument_list|,
+name|stcb
 argument_list|)
 expr_stmt|;
 if|if
@@ -20056,7 +20116,9 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_INPUT3
 argument_list|,
-literal|"SCTP_SHUTDOWN-COMPLETE\n"
+literal|"SCTP_SHUTDOWN-COMPLETE, stcb %p\n"
+argument_list|,
+name|stcb
 argument_list|)
 expr_stmt|;
 comment|/* must be first and only chunk */
@@ -22389,6 +22451,23 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|SCTP_PACKET_LOGGING
+name|sctp_packet_log
+argument_list|(
+name|m
+argument_list|,
+name|mlen
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * Must take out the iphlen, since mlen expects this (only effect lb 	 * case) 	 */
+name|mlen
+operator|-=
+name|iphlen
+expr_stmt|;
 comment|/* 	 * Get IP, SCTP, and first chunk header together in first mbuf. 	 */
 name|ip
 operator|=

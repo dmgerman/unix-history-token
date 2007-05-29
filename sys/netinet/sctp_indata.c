@@ -1317,7 +1317,7 @@ operator|*
 argument_list|,
 name|len
 argument_list|,
-literal|"SCTP_CMSG"
+name|SCTP_M_CMSG
 argument_list|)
 expr_stmt|;
 if|if
@@ -7213,6 +7213,11 @@ literal|3
 argument_list|)
 condition|)
 block|{
+name|SCTP_TCB_LOCK_ASSERT
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sctp_expand_mapping_array
@@ -7701,6 +7706,11 @@ block|}
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_badsid
+argument_list|)
+expr_stmt|;
+name|SCTP_TCB_LOCK_ASSERT
+argument_list|(
+name|stcb
 argument_list|)
 expr_stmt|;
 name|SCTP_SET_TSN_PRESENT
@@ -10158,6 +10168,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|SCTP_TCB_LOCK_ASSERT
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 name|SCTP_SET_TSN_PRESENT
 argument_list|(
 name|asoc
@@ -10250,6 +10265,8 @@ expr_stmt|;
 name|SCTP_FREE
 argument_list|(
 name|liste
+argument_list|,
+name|SCTP_M_STRESET
 argument_list|)
 expr_stmt|;
 comment|/* sa_ignore FREED_MEMORY */
@@ -26098,11 +26115,21 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+name|SCTP_STAT_INCR
+argument_list|(
+name|sctps_fwdtsn_map_over
+argument_list|)
+expr_stmt|;
 name|cumack_set_flag
 operator|=
 literal|1
 expr_stmt|;
 block|}
+name|SCTP_TCB_LOCK_ASSERT
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i

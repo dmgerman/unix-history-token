@@ -564,6 +564,17 @@ value|0x00003005
 end_define
 
 begin_comment
+comment|/*  * If you enable packet logging you can get  * a poor mans ethereal output in binary  * form. Note this is a compile option to  * the kernel,  SCTP_PACKET_LOGGING, and  * without it in your kernel you  * will get a ENOSUPPORT.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_GET_PACKET_LOG
+value|0x00004001
+end_define
+
+begin_comment
 comment|/*  * hidden implementation specific options these are NOT user visible (should  * move out of sctp.h)  */
 end_comment
 
@@ -1795,6 +1806,13 @@ include|#
 directive|include
 file|<netinet/sctp_uio.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|SCTP_PACKET_LOG_SIZE
+value|65536
+end_define
 
 begin_endif
 endif|#

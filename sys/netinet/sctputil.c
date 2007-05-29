@@ -6480,7 +6480,7 @@ expr|struct
 name|sctp_stream_out
 argument_list|)
 argument_list|,
-literal|"StreamsOut"
+name|SCTP_M_STRMO
 argument_list|)
 expr_stmt|;
 if|if
@@ -6609,7 +6609,7 @@ name|asoc
 operator|->
 name|mapping_array_size
 argument_list|,
-literal|"MappingArray"
+name|SCTP_M_MAP
 argument_list|)
 expr_stmt|;
 if|if
@@ -6626,6 +6626,8 @@ argument_list|(
 name|asoc
 operator|->
 name|strmout
+argument_list|,
+name|SCTP_M_STRMO
 argument_list|)
 expr_stmt|;
 return|return
@@ -6881,7 +6883,7 @@ operator|*
 argument_list|,
 name|new_size
 argument_list|,
-literal|"MappingArray"
+name|SCTP_M_MAP
 argument_list|)
 expr_stmt|;
 if|if
@@ -6933,6 +6935,8 @@ argument_list|(
 name|asoc
 operator|->
 name|mapping_array
+argument_list|,
+name|SCTP_M_MAP
 argument_list|)
 expr_stmt|;
 name|asoc
@@ -7047,6 +7051,8 @@ block|}
 name|SCTP_FREE
 argument_list|(
 name|it
+argument_list|,
+name|SCTP_M_ITER
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7849,7 +7855,7 @@ expr|struct
 name|sctp_asconf_iterator
 argument_list|)
 argument_list|,
-literal|"SCTP_ASCONF_ITERATOR"
+name|SCTP_M_ASC_IT
 argument_list|)
 expr_stmt|;
 if|if
@@ -7972,6 +7978,8 @@ block|{
 name|SCTP_FREE
 argument_list|(
 name|asc
+argument_list|,
+name|SCTP_M_ASC_IT
 argument_list|)
 expr_stmt|;
 block|}
@@ -8388,6 +8396,25 @@ block|{
 name|SCTP_INP_DECR_REF
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|stcb
+condition|)
+block|{
+name|atomic_add_int
+argument_list|(
+operator|&
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|refcnt
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -24830,6 +24857,15 @@ condition|)
 block|{
 comment|/* you can't free it on me please */
 comment|/* 			 * The lock on the socket buffer protects us so the 			 * free code will stop. But since we used the 			 * socketbuf lock and the sender uses the tcb_lock 			 * to increment, we need to use the atomic add to 			 * the refcnt 			 */
+if|if
+condition|(
+name|freecnt_applied
+condition|)
+name|panic
+argument_list|(
+literal|"refcnt already incremented"
+argument_list|)
+expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&

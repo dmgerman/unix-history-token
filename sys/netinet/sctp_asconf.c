@@ -4367,6 +4367,8 @@ expr_stmt|;
 name|SCTP_FREE
 argument_list|(
 name|aa
+argument_list|,
+name|SCTP_M_ASC_ADDR
 argument_list|)
 expr_stmt|;
 return|return
@@ -4393,7 +4395,7 @@ operator|*
 name|aa
 argument_list|)
 argument_list|,
-literal|"AsconfAddr"
+name|SCTP_M_ASC_ADDR
 argument_list|)
 expr_stmt|;
 if|if
@@ -4690,6 +4692,8 @@ comment|/* invalid family! */
 name|SCTP_FREE
 argument_list|(
 name|aa
+argument_list|,
+name|SCTP_M_ASC_ADDR
 argument_list|)
 expr_stmt|;
 return|return
@@ -5015,6 +5019,8 @@ expr_stmt|;
 name|SCTP_FREE
 argument_list|(
 name|aa
+argument_list|,
+name|SCTP_M_ASC_ADDR
 argument_list|)
 expr_stmt|;
 return|return
@@ -5085,6 +5091,8 @@ expr_stmt|;
 name|SCTP_FREE
 argument_list|(
 name|aa
+argument_list|,
+name|SCTP_M_ASC_ADDR
 argument_list|)
 expr_stmt|;
 return|return
@@ -5158,7 +5166,7 @@ operator|*
 name|aa
 argument_list|)
 argument_list|,
-literal|"AsconfAddr"
+name|SCTP_M_ASC_ADDR
 argument_list|)
 expr_stmt|;
 if|if
@@ -5419,6 +5427,8 @@ comment|/* invalid family! */
 name|SCTP_FREE
 argument_list|(
 name|aa
+argument_list|,
+name|SCTP_M_ASC_ADDR
 argument_list|)
 expr_stmt|;
 return|return
@@ -5887,6 +5897,8 @@ expr_stmt|;
 name|SCTP_FREE
 argument_list|(
 name|aparam
+argument_list|,
+name|SCTP_M_ASC_ADDR
 argument_list|)
 expr_stmt|;
 block|}
@@ -8360,6 +8372,8 @@ block|}
 name|SCTP_FREE
 argument_list|(
 name|asc
+argument_list|,
+name|SCTP_M_ASC_IT
 argument_list|)
 expr_stmt|;
 block|}
@@ -11643,7 +11657,7 @@ expr|struct
 name|sctp_asconf_iterator
 argument_list|)
 argument_list|,
-literal|"SCTP_ASCONF_ITERATOR"
+name|SCTP_M_ASC_IT
 argument_list|)
 expr_stmt|;
 if|if
@@ -11681,6 +11695,8 @@ block|{
 name|SCTP_FREE
 argument_list|(
 name|asc
+argument_list|,
+name|SCTP_M_ASC_IT
 argument_list|)
 expr_stmt|;
 return|return

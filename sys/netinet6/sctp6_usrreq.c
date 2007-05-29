@@ -131,6 +131,12 @@ directive|include
 file|<netinet/sctp_output.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/sctp_bsd_addr.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -317,6 +323,18 @@ name|i_pak
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SCTP_PACKET_LOGGING
+name|sctp_packet_log
+argument_list|(
+name|m
+argument_list|,
+name|pkt_len
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ip6
 operator|=
 name|mtod

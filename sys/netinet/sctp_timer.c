@@ -7388,6 +7388,8 @@ block|}
 name|SCTP_FREE
 argument_list|(
 name|it
+argument_list|,
+name|SCTP_M_ITER
 argument_list|)
 expr_stmt|;
 return|return;

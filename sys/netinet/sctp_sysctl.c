@@ -2135,6 +2135,16 @@ name|asoc
 operator|.
 name|smallest_mtu
 expr_stmt|;
+name|xstcb
+operator|.
+name|refcnt
+operator|=
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|refcnt
+expr_stmt|;
 name|SCTP_INP_RUNLOCK
 argument_list|(
 name|inp

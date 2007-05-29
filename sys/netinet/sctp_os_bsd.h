@@ -375,6 +375,162 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Declare all the malloc names for all the various mallocs */
+end_comment
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_MAP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_STRMI
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_STRMO
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_ASC_ADDR
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_ASC_IT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_AUTH_CL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_AUTH_KY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_AUTH_HL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_AUTH_IF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_STRESET
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_CMSG
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_COPYAL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_VRF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_IFA
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_IFN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_TIMW
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_MVRF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_ITER
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|SCTP_M_SOCKOPT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  *  */
 end_comment
 
@@ -636,7 +792,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|do { \ 	MALLOC(var, type, size, M_PCB, M_NOWAIT); \     } while (0)
+value|do { \ 	MALLOC(var, type, size, name, M_NOWAIT); \     } while (0)
 end_define
 
 begin_define
@@ -645,8 +801,10 @@ directive|define
 name|SCTP_FREE
 parameter_list|(
 name|var
+parameter_list|,
+name|type
 parameter_list|)
-value|FREE(var, M_PCB)
+value|FREE(var, type)
 end_define
 
 begin_define
@@ -860,6 +1018,14 @@ define|#
 directive|define
 name|SCTP_OS_TIMER_DEACTIVATE
 value|callout_deactivate
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_get_tick_count
+parameter_list|()
+value|(ticks)
 end_define
 
 begin_comment
@@ -1270,7 +1436,7 @@ name|dst
 parameter_list|,
 name|m
 parameter_list|)
-value|in_broadcast(dst, m->m_pkthdr.rcvif)
+value|((m->m_flags& M_PKTHDR) ? in_broadcast(dst, m->m_pkthdr.rcvif) : 0)
 end_define
 
 begin_define
@@ -1280,7 +1446,7 @@ name|SCTP_IS_IT_LOOPBACK
 parameter_list|(
 name|m
 parameter_list|)
-value|((m->m_pkthdr.rcvif == NULL) ||(m->m_pkthdr.rcvif->if_type == IFT_LOOP))
+value|((m->m_flags& M_PKTHDR)&& ((m->m_pkthdr.rcvif == NULL) || (m->m_pkthdr.rcvif->if_type == IFT_LOOP)))
 end_define
 
 begin_comment

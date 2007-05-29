@@ -2945,6 +2945,10 @@ name|u_long
 name|sctps_send_cwnd_avoid
 decl_stmt|;
 comment|/* Send cwnd full  avoidance, already 					 * max burst inflight to net */
+name|u_long
+name|sctps_fwdtsn_map_over
+decl_stmt|;
+comment|/* number of map array over-runs via 					 * fwd-tsn's */
 block|}
 struct|;
 end_struct
@@ -3236,6 +3240,9 @@ name|cumulative_tsn_ack
 decl_stmt|;
 name|uint32_t
 name|mtu
+decl_stmt|;
+name|uint32_t
+name|refcnt
 decl_stmt|;
 comment|/* add more association specific data here */
 block|}
