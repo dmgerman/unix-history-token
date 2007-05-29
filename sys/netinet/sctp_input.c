@@ -16728,6 +16728,24 @@ begin_comment
 comment|/*  * handles all control chunks in a packet inputs: - m: mbuf chain, assumed to  * still contain IP/SCTP header - stcb: is the tcb found for this packet -  * offset: offset into the mbuf chain to first chunkhdr - length: is the  * length of the complete packet outputs: - length: modified to remaining  * length after control processing - netp: modified to new sctp_nets after  * cookie-echo processing - return NULL to discard the packet (ie. no asoc,  * bad packet,...) otherwise return the tcb for this packet  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(noinline)
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|struct
