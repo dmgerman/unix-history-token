@@ -1792,6 +1792,13 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
+block|{
+literal|"descriptor tables"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
 endif|#
 directive|endif
 block|{

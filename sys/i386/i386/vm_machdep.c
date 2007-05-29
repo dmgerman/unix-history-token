@@ -652,6 +652,7 @@ name|td1
 argument_list|)
 expr_stmt|;
 block|}
+else|else
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1194,6 +1195,7 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+else|else
 name|mtx_unlock_spin
 argument_list|(
 operator|&

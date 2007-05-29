@@ -2234,7 +2234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Must be called with dt_lock held.  */
+comment|/*  * Must be called with dt_lock held.  Returns with dt_lock unheld.  */
 end_comment
 
 begin_function
@@ -2313,6 +2313,12 @@ operator|->
 name|md_ldt
 operator|=
 name|NULL
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3657,7 +3663,7 @@ name|mdp
 operator|->
 name|md_ldt
 operator|)
-operator|!=
+operator|==
 name|NULL
 operator|||
 name|len
@@ -3752,6 +3758,12 @@ name|new_ldt
 operator|->
 name|ldt_len
 expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
+expr_stmt|;
 name|kmem_free
 argument_list|(
 name|kernel_map
@@ -3777,10 +3789,22 @@ argument_list|,
 name|M_SUBPROC
 argument_list|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* 				 * If other threads already did the work, 				 * do nothing. 				 */
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
+expr_stmt|;
 name|kmem_free
 argument_list|(
 name|kernel_map
@@ -3810,6 +3834,12 @@ argument_list|,
 name|M_SUBPROC
 argument_list|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3829,7 +3859,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* signal other cpus to reload ldt */
+comment|/* 		 * Signal other cpus to reload ldt.  We need to unlock dt_lock 		 * here because other CPU will contest on it since their 		 * curthreads won't hold the lock and will block when trying 		 * to acquire it. 		 */
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
+expr_stmt|;
 name|smp_rendezvous
 argument_list|(
 name|NULL
@@ -3849,6 +3885,12 @@ argument_list|,
 name|NULL
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|dt_lock
 argument_list|)
 expr_stmt|;
 else|#
