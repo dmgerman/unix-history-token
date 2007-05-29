@@ -182,6 +182,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HTTP_TEMP_REDIRECT
+value|307
+end_define
+
+begin_define
+define|#
+directive|define
 name|HTTP_NEED_AUTH
 value|401
 end_define
@@ -214,7 +221,7 @@ name|HTTP_REDIRECT
 parameter_list|(
 name|xyz
 parameter_list|)
-value|((xyz) == HTTP_MOVED_PERM \ 			    || (xyz) == HTTP_MOVED_TEMP \ 			    || (xyz) == HTTP_SEE_OTHER)
+value|((xyz) == HTTP_MOVED_PERM \ 			    || (xyz) == HTTP_MOVED_TEMP \ 			    || (xyz) == HTTP_TEMP_REDIRECT \ 			    || (xyz) == HTTP_SEE_OTHER)
 end_define
 
 begin_define
