@@ -120,6 +120,15 @@ name|x
 operator|)
 return|;
 comment|/* cbrt(NaN,INF) is itself */
+comment|/* rough cbrt to 5 bits */
+if|if
+condition|(
+name|hx
+operator|<
+literal|0x00800000
+condition|)
+block|{
+comment|/* zero or subnormal? */
 if|if
 condition|(
 name|hx
@@ -131,16 +140,7 @@ operator|(
 name|x
 operator|)
 return|;
-comment|/* cbrt(0) is itself */
-comment|/* rough cbrt to 5 bits */
-if|if
-condition|(
-name|hx
-operator|<
-literal|0x00800000
-condition|)
-block|{
-comment|/* subnormal number */
+comment|/* cbrt(+-0) is itself */
 name|SET_FLOAT_WORD
 argument_list|(
 name|t
