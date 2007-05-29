@@ -1550,12 +1550,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|driver_intr_t
-modifier|*
-name|cxgb_intr
-init|=
-name|NULL
-decl_stmt|;
 name|device_t
 name|child
 decl_stmt|;
@@ -2019,6 +2013,8 @@ name|flags
 operator||=
 name|USING_MSIX
 expr_stmt|;
+name|sc
+operator|->
 name|cxgb_intr
 operator|=
 name|t3_intr_msix
@@ -2094,6 +2090,8 @@ name|irq_rid
 operator|=
 literal|1
 expr_stmt|;
+name|sc
+operator|->
 name|cxgb_intr
 operator|=
 name|t3_intr_msi
@@ -2124,6 +2122,8 @@ name|irq_rid
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
 name|cxgb_intr
 operator|=
 name|t3b_intr
