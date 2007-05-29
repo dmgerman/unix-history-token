@@ -4531,7 +4531,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|int
+name|u_long
 name|command
 parameter_list|,
 name|caddr_t
