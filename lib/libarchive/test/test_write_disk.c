@@ -33,6 +33,11 @@ name|struct
 name|archive_entry
 modifier|*
 name|ae
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
 parameter_list|)
 block|{
 name|struct
@@ -57,10 +62,19 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|failure
 argument_list|(
+literal|"%s"
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+name|assertEqualIntA
+argument_list|(
+name|ad
+argument_list|,
 literal|0
-operator|==
+argument_list|,
 name|archive_write_header
 argument_list|(
 name|ad
@@ -69,10 +83,12 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|assertEqualIntA
 argument_list|(
+name|ad
+argument_list|,
 literal|0
-operator|==
+argument_list|,
 name|archive_write_finish_entry
 argument_list|(
 name|ad
@@ -84,10 +100,10 @@ directive|if
 name|ARCHIVE_API_VERSION
 operator|>
 literal|1
-name|assert
+name|assertEqualInt
 argument_list|(
 literal|0
-operator|==
+argument_list|,
 name|archive_write_finish
 argument_list|(
 name|ad
@@ -206,6 +222,8 @@ expr_stmt|;
 name|create
 argument_list|(
 name|ae
+argument_list|,
+literal|"Test creating a regular file"
 argument_list|)
 expr_stmt|;
 name|archive_entry_free
@@ -245,6 +263,8 @@ expr_stmt|;
 name|create
 argument_list|(
 name|ae
+argument_list|,
+literal|"Test creating a file over an existing file."
 argument_list|)
 expr_stmt|;
 name|archive_entry_free
@@ -284,6 +304,8 @@ expr_stmt|;
 name|create
 argument_list|(
 name|ae
+argument_list|,
+literal|"Test creating a regular dir."
 argument_list|)
 expr_stmt|;
 name|archive_entry_free
@@ -323,6 +345,8 @@ expr_stmt|;
 name|create
 argument_list|(
 name|ae
+argument_list|,
+literal|"Test creating a dir over an existing file."
 argument_list|)
 expr_stmt|;
 name|archive_entry_free
@@ -362,6 +386,8 @@ expr_stmt|;
 name|create
 argument_list|(
 name|ae
+argument_list|,
+literal|"Test creating a file over an existing dir."
 argument_list|)
 expr_stmt|;
 name|archive_entry_free

@@ -44,9 +44,6 @@ decl_stmt|;
 name|size_t
 name|used
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 comment|/* Create a new archive in memory. */
 name|assert
 argument_list|(

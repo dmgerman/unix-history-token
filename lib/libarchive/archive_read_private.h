@@ -122,9 +122,18 @@ comment|/* File offset of beginning of most recently-read header. */
 name|off_t
 name|header_position
 decl_stmt|;
-comment|/* 	 * Detection functions for decompression: bid functions are 	 * given a block of data from the beginning of the stream and 	 * can bid on whether or not they support the data stream. 	 * General guideline: bid the number of bits that you actually 	 * test, e.g., 16 if you test a 2-byte magic value.  The 	 * highest bidder will have their init function invoked, which 	 * can set up pointers to specific handlers. 	 */
+comment|/* 	 * Decompressors have a very specific lifecycle: 	 *    public setup function initializes a slot in this table 	 *    'config' holds minimal configuration data 	 *    bid() examines a block of data and returns a bid [1] 	 *    init() is called for successful bidder 	 *    'data' is initialized by init() 	 *    read() returns a pointer to the next block of data 	 *    consume() indicates how much data is used 	 *    skip() ignores bytes of data 	 *    finish() cleans up and frees 'data' and 'config' 	 * 	 * [1] General guideline: bid the number of bits that you actually 	 * test, e.g., 16 if you test a 2-byte magic value. 	 */
 struct|struct
+name|decompressor_t
 block|{
+name|void
+modifier|*
+name|config
+decl_stmt|;
+name|void
+modifier|*
+name|data
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*
@@ -157,22 +166,10 @@ parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
-block|}
-name|decompressors
-index|[
-literal|4
-index|]
-struct|;
-comment|/* Read/write data stream (with compression). */
-name|void
-modifier|*
-name|compression_data
-decl_stmt|;
-comment|/* Data for (de)compressor. */
 name|int
 function_decl|(
 modifier|*
-name|compression_finish
+name|finish
 function_decl|)
 parameter_list|(
 name|struct
@@ -180,11 +177,10 @@ name|archive_read
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* 	 * Read uses a peek/consume I/O model: the decompression code 	 * returns a pointer to the requested block and advances the 	 * file position only when requested by a consume call.  This 	 * reduces copying and also simplifies look-ahead for format 	 * detection. 	 */
 name|ssize_t
 function_decl|(
 modifier|*
-name|compression_read_ahead
+name|read_ahead
 function_decl|)
 parameter_list|(
 name|struct
@@ -197,13 +193,12 @@ modifier|*
 modifier|*
 parameter_list|,
 name|size_t
-name|request
 parameter_list|)
 function_decl|;
 name|ssize_t
 function_decl|(
 modifier|*
-name|compression_read_consume
+name|consume
 function_decl|)
 parameter_list|(
 name|struct
@@ -216,7 +211,7 @@ function_decl|;
 name|off_t
 function_decl|(
 modifier|*
-name|compression_skip
+name|skip
 function_decl|)
 parameter_list|(
 name|struct
@@ -226,10 +221,26 @@ parameter_list|,
 name|off_t
 parameter_list|)
 function_decl|;
+block|}
+name|decompressors
+index|[
+literal|4
+index|]
+struct|;
+comment|/* Pointer to current decompressor. */
+name|struct
+name|decompressor_t
+modifier|*
+name|decompressor
+decl_stmt|;
 comment|/* 	 * Format detection is mostly the same as compression 	 * detection, with two significant differences: The bidders 	 * use the read_ahead calls above to examine the stream rather 	 * than having the supervisor hand them a block of data to 	 * examine, and the auction is repeated for every header. 	 * Winning bidders should set the archive_format and 	 * archive_format_name appropriately.  Bid routines should 	 * check archive_format and decline to bid if the format of 	 * the last header was incompatible. 	 * 	 * Again, write support is considerably simpler because there's 	 * no need for an auction. 	 */
 struct|struct
 name|archive_format_descriptor
 block|{
+name|void
+modifier|*
+name|data
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*
@@ -300,11 +311,6 @@ name|archive_read
 modifier|*
 parameter_list|)
 function_decl|;
-name|void
-modifier|*
-name|format_data
-decl_stmt|;
-comment|/* Format-specific data for readers. */
 block|}
 name|formats
 index|[
@@ -317,18 +323,6 @@ modifier|*
 name|format
 decl_stmt|;
 comment|/* Active format. */
-comment|/* 	 * Storage for format-specific data.  Note that there can be 	 * multiple format readers active at one time, so we need to 	 * allow for multiple format readers to have their data 	 * available.  The pformat_data slot here is the solution: on 	 * read, it is guaranteed to always point to a void* variable 	 * that the format can use. 	 */
-name|void
-modifier|*
-modifier|*
-name|pformat_data
-decl_stmt|;
-comment|/* Pointer to current format_data. */
-name|void
-modifier|*
-name|format_data
-decl_stmt|;
-comment|/* Used by writers. */
 comment|/* 	 * Pointers to format-specific functions for writing.  They're 	 * initialized by archive_write_set_format_XXX() calls. 	 */
 name|int
 function_decl|(
@@ -505,7 +499,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|struct
+name|decompressor_t
+modifier|*
 name|__archive_read_register_compression
 parameter_list|(
 name|struct

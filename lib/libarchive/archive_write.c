@@ -393,17 +393,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Default */
-name|a
-operator|->
-name|pformat_data
-operator|=
-operator|&
-operator|(
-name|a
-operator|->
-name|format_data
-operator|)
-expr_stmt|;
 comment|/* Initialize a block of nulls for padding purposes. */
 name|a
 operator|->
@@ -868,7 +857,9 @@ operator|=
 call|(
 name|a
 operator|->
-name|compression_init
+name|compressor
+operator|.
+name|init
 call|)
 argument_list|(
 name|a
@@ -1009,7 +1000,7 @@ operator|=
 name|r1
 expr_stmt|;
 block|}
-comment|/* Release resources. */
+comment|/* Release format resources. */
 if|if
 condition|(
 name|a
@@ -1046,7 +1037,9 @@ if|if
 condition|(
 name|a
 operator|->
-name|compression_finish
+name|compressor
+operator|.
+name|finish
 operator|!=
 name|NULL
 condition|)
@@ -1056,10 +1049,51 @@ operator|=
 call|(
 name|a
 operator|->
-name|compression_finish
+name|compressor
+operator|.
+name|finish
 call|)
 argument_list|(
 name|a
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r1
+operator|<
+name|r
+condition|)
+name|r
+operator|=
+name|r1
+expr_stmt|;
+block|}
+comment|/* Close out the client stream. */
+if|if
+condition|(
+name|a
+operator|->
+name|client_closer
+operator|!=
+name|NULL
+condition|)
+block|{
+name|r1
+operator|=
+call|(
+name|a
+operator|->
+name|client_closer
+call|)
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|a
+operator|->
+name|client_data
 argument_list|)
 expr_stmt|;
 if|if

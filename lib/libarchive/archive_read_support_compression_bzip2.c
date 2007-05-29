@@ -153,6 +153,10 @@ decl_stmt|;
 name|int64_t
 name|total_out
 decl_stmt|;
+name|char
+name|eof
+decl_stmt|;
+comment|/* True = found end of compressed data. */
 block|}
 struct|;
 end_struct
@@ -225,7 +229,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* These two functions are defined even if we lack bzlib.  See below. */
+comment|/* These two functions are defined even if we lack the library.  See below. */
 end_comment
 
 begin_function_decl
@@ -282,8 +286,8 @@ operator|*
 operator|)
 name|_a
 decl_stmt|;
-return|return
-operator|(
+if|if
+condition|(
 name|__archive_read_register_compression
 argument_list|(
 name|a
@@ -292,6 +296,17 @@ name|bid
 argument_list|,
 name|init
 argument_list|)
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
@@ -480,7 +495,7 @@ name|HAVE_BZLIB_H
 end_ifndef
 
 begin_comment
-comment|/*  * If we don't have bzlib on this system, we can't actually do the  * decompression.  We can, however, still detect bzip2-compressed  * archives and emit a useful message.  */
+comment|/*  * If we don't have the library on this system, we can't actually do the  * decompression.  We can, however, still detect compressed archives  * and emit a useful message.  */
 end_comment
 
 begin_function
@@ -770,26 +785,34 @@ name|n
 expr_stmt|;
 name|a
 operator|->
-name|compression_read_ahead
+name|decompressor
+operator|->
+name|read_ahead
 operator|=
 name|read_ahead
 expr_stmt|;
 name|a
 operator|->
-name|compression_read_consume
+name|decompressor
+operator|->
+name|consume
 operator|=
 name|read_consume
 expr_stmt|;
 name|a
 operator|->
-name|compression_skip
+name|decompressor
+operator|->
+name|skip
 operator|=
 name|NULL
 expr_stmt|;
 comment|/* not supported */
 name|a
 operator|->
-name|compression_finish
+name|decompressor
+operator|->
+name|finish
 operator|=
 name|finish
 expr_stmt|;
@@ -848,7 +871,9 @@ condition|)
 block|{
 name|a
 operator|->
-name|compression_data
+name|decompressor
+operator|->
+name|data
 operator|=
 name|state
 expr_stmt|;
@@ -922,7 +947,7 @@ name|a
 operator|->
 name|archive
 argument_list|,
-name|ARCHIVE_ERRNO_MISC
+name|ENOMEM
 argument_list|,
 literal|"Internal error initializing compression library: "
 literal|"out of memory"
@@ -1001,7 +1026,9 @@ operator|*
 operator|)
 name|a
 operator|->
-name|compression_data
+name|decompressor
+operator|->
+name|data
 expr_stmt|;
 if|if
 condition|(
@@ -1132,7 +1159,7 @@ argument_list|,
 name|state
 argument_list|)
 operator|)
-operator|!=
+operator|<
 name|ARCHIVE_OK
 condition|)
 return|return
@@ -1140,6 +1167,14 @@ operator|(
 name|ret
 operator|)
 return|;
+if|if
+condition|(
+name|ret
+operator|==
+name|ARCHIVE_EOF
+condition|)
+break|break;
+comment|/* Break on EOF even if we haven't met min. */
 name|read_avail
 operator|=
 name|state
@@ -1208,7 +1243,9 @@ operator|*
 operator|)
 name|a
 operator|->
-name|compression_data
+name|decompressor
+operator|->
+name|data
 expr_stmt|;
 name|a
 operator|->
@@ -1284,7 +1321,9 @@ operator|*
 operator|)
 name|a
 operator|->
-name|compression_data
+name|decompressor
+operator|->
+name|data
 expr_stmt|;
 name|ret
 operator|=
@@ -1345,33 +1384,11 @@ argument_list|)
 expr_stmt|;
 name|a
 operator|->
-name|compression_data
+name|decompressor
+operator|->
+name|data
 operator|=
 name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|a
-operator|->
-name|client_closer
-operator|!=
-name|NULL
-condition|)
-call|(
-name|a
-operator|->
-name|client_closer
-call|)
-argument_list|(
-operator|&
-name|a
-operator|->
-name|archive
-argument_list|,
-name|a
-operator|->
-name|client_data
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1418,6 +1435,17 @@ name|void
 modifier|*
 name|read_buf
 decl_stmt|;
+if|if
+condition|(
+name|state
+operator|->
+name|eof
+condition|)
+return|return
+operator|(
+name|ARCHIVE_EOF
+operator|)
+return|;
 name|total_decompressed
 operator|=
 literal|0
@@ -1615,6 +1643,12 @@ case|case
 name|BZ_STREAM_END
 case|:
 comment|/* Found end of stream. */
+name|state
+operator|->
+name|eof
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|ARCHIVE_OK

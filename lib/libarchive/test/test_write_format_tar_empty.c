@@ -44,6 +44,7 @@ decl_stmt|;
 name|size_t
 name|used
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|;

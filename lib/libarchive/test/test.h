@@ -60,6 +60,29 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<wchar.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_DMALLOC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dmalloc.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -249,7 +272,7 @@ value|test_assert(__FILE__, __LINE__, (e), #e, (a))
 end_define
 
 begin_comment
-comment|/* Asserts that two values are the same.  Reports value of each one if not. */
+comment|/* Asserts that two integers are the same.  Reports value of each one if not. */
 end_comment
 
 begin_define
@@ -267,10 +290,6 @@ define|\
 value|test_assert_equal_int(__FILE__, __LINE__, (v1), #v1, (v2), #v2, (a))
 end_define
 
-begin_comment
-comment|/* Asserts that two values are the same.  Reports value of each one if not. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -282,6 +301,55 @@ name|v2
 parameter_list|)
 define|\
 value|test_assert_equal_int(__FILE__, __LINE__, (v1), #v1, (v2), #v2, NULL)
+end_define
+
+begin_comment
+comment|/* Asserts that two strings are the same.  Reports value of each one if not. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|assertEqualStringA
+parameter_list|(
+name|a
+parameter_list|,
+name|v1
+parameter_list|,
+name|v2
+parameter_list|)
+define|\
+value|test_assert_equal_string(__FILE__, __LINE__, (v1), #v1, (v2), #v2, (a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|assertEqualString
+parameter_list|(
+name|v1
+parameter_list|,
+name|v2
+parameter_list|)
+define|\
+value|test_assert_equal_string(__FILE__, __LINE__, (v1), #v1, (v2), #v2, NULL)
+end_define
+
+begin_comment
+comment|/* As above, but v1 and v2 are wchar_t * */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|assertEqualWString
+parameter_list|(
+name|v1
+parameter_list|,
+name|v2
+parameter_list|)
+define|\
+value|test_assert_equal_wstring(__FILE__, __LINE__, (v1), #v1, (v2), #v2, NULL)
 end_define
 
 begin_comment
@@ -342,6 +410,76 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_assert_equal_string
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|v1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|v2
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_assert_equal_wstring
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+name|v1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+name|v2
 parameter_list|,
 specifier|const
 name|char

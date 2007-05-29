@@ -14399,6 +14399,7 @@ name|int
 name|qual
 decl_stmt|;
 comment|/* GID or UID of user/group, depending on tag. */
+specifier|const
 name|char
 modifier|*
 name|name
@@ -14916,8 +14917,6 @@ name|n
 argument_list|)
 decl_stmt|;
 name|int
-name|marker_i
-decl_stmt|,
 name|i
 decl_stmt|;
 name|int
@@ -15334,9 +15333,6 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|i
-decl_stmt|;
 name|struct
 name|archive
 modifier|*
@@ -15660,6 +15656,9 @@ name|assert
 argument_list|(
 name|used
 operator|==
+operator|(
+name|size_t
+operator|)
 name|write
 argument_list|(
 name|fd

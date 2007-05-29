@@ -180,6 +180,9 @@ name|assertA
 argument_list|(
 name|data_size
 operator|==
+operator|(
+name|size_t
+operator|)
 name|archive_write_data
 argument_list|(
 name|a

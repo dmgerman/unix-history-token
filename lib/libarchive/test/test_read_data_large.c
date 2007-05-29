@@ -74,8 +74,9 @@ init|=
 literal|"largefile"
 decl_stmt|;
 name|int
-name|tmpfile
+name|tmpfilefd
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -483,7 +484,7 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|tmpfile
+name|tmpfilefd
 operator|=
 name|open
 argument_list|(
@@ -498,7 +499,7 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|tmpfile
+name|tmpfilefd
 operator|!=
 literal|0
 argument_list|)
@@ -513,7 +514,7 @@ name|archive_read_data_into_fd
 argument_list|(
 name|a
 argument_list|,
-name|tmpfile
+name|tmpfilefd
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -553,10 +554,10 @@ endif|#
 directive|endif
 name|close
 argument_list|(
-name|tmpfile
+name|tmpfilefd
 argument_list|)
 expr_stmt|;
-name|tmpfile
+name|tmpfilefd
 operator|=
 name|open
 argument_list|(
@@ -567,7 +568,7 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|tmpfile
+name|tmpfilefd
 operator|!=
 literal|0
 argument_list|)
@@ -583,7 +584,7 @@ argument_list|)
 argument_list|,
 name|read
 argument_list|(
-name|tmpfile
+name|tmpfilefd
 argument_list|,
 name|buff3
 argument_list|,
@@ -596,7 +597,7 @@ argument_list|)
 expr_stmt|;
 name|close
 argument_list|(
-name|tmpfile
+name|tmpfilefd
 argument_list|)
 expr_stmt|;
 name|assert

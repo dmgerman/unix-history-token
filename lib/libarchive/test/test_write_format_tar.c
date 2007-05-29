@@ -61,7 +61,7 @@ decl_stmt|;
 name|size_t
 name|used
 decl_stmt|;
-name|int
+name|size_t
 name|blocksize
 decl_stmt|;
 comment|/* Repeat the following for a variety of odd blocksizes. */
@@ -143,6 +143,9 @@ name|assertA
 argument_list|(
 name|blocksize
 operator|==
+operator|(
+name|size_t
+operator|)
 name|archive_write_get_bytes_in_last_block
 argument_list|(
 name|a
@@ -173,6 +176,9 @@ name|assertA
 argument_list|(
 name|blocksize
 operator|==
+operator|(
+name|size_t
+operator|)
 name|archive_write_get_bytes_in_last_block
 argument_list|(
 name|a
@@ -211,6 +217,13 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__INTERIX
+argument_list|)
 name|assert
 argument_list|(
 literal|10
@@ -221,6 +234,8 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|p
 operator|=
 name|strdup
@@ -247,18 +262,13 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-literal|0
-operator|==
-name|strcmp
+name|assertEqualString
 argument_list|(
 literal|"file"
 argument_list|,
 name|archive_entry_pathname
 argument_list|(
 name|ae
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -448,7 +458,7 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Not the same as above: ustar doesn't store hi-res timestamps. */
+comment|/* Not the same as above: ustar doesn't store hi-res times. */
 name|assert
 argument_list|(
 literal|0
@@ -479,18 +489,13 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-literal|0
-operator|==
-name|strcmp
+name|assertEqualString
 argument_list|(
 literal|"file"
 argument_list|,
 name|archive_entry_pathname
 argument_list|(
 name|ae
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

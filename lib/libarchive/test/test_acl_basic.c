@@ -21,17 +21,6 @@ begin_comment
 comment|/*  * Exercise the system-independent portion of the ACL support.  * Check that archive_entry objects can save and restore ACL data  * and that pax archive can save and restore ACL data.  *  * This should work on all systems, regardless of whether local  * filesystems support ACLs or not.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|char
-name|buff
-index|[
-literal|16384
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|acl_t
@@ -52,6 +41,7 @@ name|int
 name|qual
 decl_stmt|;
 comment|/* GID or UID of user/group, depending on tag. */
+specifier|const
 name|char
 modifier|*
 name|name
@@ -258,6 +248,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|set_acls
 parameter_list|(
@@ -342,6 +333,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|acl_match
 parameter_list|(
@@ -525,6 +517,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|compare_acls
 parameter_list|(
@@ -563,8 +556,6 @@ name|n
 argument_list|)
 decl_stmt|;
 name|int
-name|marker_i
-decl_stmt|,
 name|i
 decl_stmt|;
 name|int
@@ -981,14 +972,6 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|i
-decl_stmt|;
-name|struct
-name|archive
-modifier|*
-name|a
-decl_stmt|;
 name|struct
 name|archive_entry
 modifier|*

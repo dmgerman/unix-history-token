@@ -54,7 +54,7 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-name|ssize_t
+name|size_t
 name|used
 decl_stmt|;
 name|int

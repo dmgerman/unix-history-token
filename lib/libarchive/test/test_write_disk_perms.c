@@ -26,28 +26,31 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|gid_t
+name|long
 name|_default_gid
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|gid_t
+name|long
 name|_invalid_gid
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|gid_t
+name|long
 name|_alt_gid
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +60,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|searchgid
 parameter_list|(
 name|void
@@ -80,6 +83,7 @@ name|gid
 init|=
 literal|0
 decl_stmt|;
+name|unsigned
 name|int
 name|n
 decl_stmt|;
@@ -147,7 +151,8 @@ expr_stmt|;
 comment|/* Find a GID for which fchown() fails.  This is our "invalid" GID. */
 name|_invalid_gid
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 comment|/* This loop stops when we wrap the gid or examine 10,000 gids. */
 for|for
@@ -199,17 +204,18 @@ block|}
 comment|/* 	 * Find a GID for which fchown() succeeds, but which isn't the 	 * default.  This is the "alternate" gid. 	 */
 name|_alt_gid
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 for|for
 control|(
 name|gid
 operator|=
-literal|1
+literal|0
 operator|,
 name|n
 operator|=
-literal|1
+literal|0
 init|;
 name|gid
 operator|==
@@ -231,6 +237,9 @@ if|if
 condition|(
 name|gid
 operator|==
+operator|(
+name|gid_t
+operator|)
 name|_default_gid
 condition|)
 continue|continue;
@@ -347,6 +356,23 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
+comment|/* 	 * Set ownership of the current directory to the group of this 	 * process.  Otherwise, the SGID tests below fail if the 	 * /tmp directory is owned by a group to which we don't belong 	 * and we're on a system where group ownership is inherited. 	 * (Because we're not allowed to SGID files with defaultgid().) 	 */
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|chown
+argument_list|(
+literal|"."
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|getgid
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Create an archive_write_disk object. */
 name|assert
 argument_list|(
@@ -1091,7 +1117,8 @@ condition|(
 name|altgid
 argument_list|()
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* 		 * Current user must belong to at least two groups or 		 * else we can't test setting the GID to another group. 		 */
@@ -1275,7 +1302,8 @@ condition|(
 name|invalidgid
 argument_list|()
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* This test always fails for root. */
@@ -1808,7 +1836,8 @@ condition|(
 name|altgid
 argument_list|()
 operator|!=
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* SGID should not be set here. */
@@ -1895,7 +1924,8 @@ condition|(
 name|invalidgid
 argument_list|()
 operator|!=
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* SGID should NOT be set here. */

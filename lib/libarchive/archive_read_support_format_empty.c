@@ -168,7 +168,9 @@ operator|=
 call|(
 name|a
 operator|->
-name|compression_read_ahead
+name|decompressor
+operator|->
+name|read_ahead
 call|)
 argument_list|(
 name|a

@@ -275,7 +275,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_POLL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_POLL_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_PWD_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SELECT
 value|1
 end_define
 
@@ -359,6 +380,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_STRUCT_TM_TM_GMTOFF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_SYS_ACL_H
 value|1
 end_define
@@ -367,6 +395,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_IOCTL_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_SELECT_H
 value|1
 end_define
 
