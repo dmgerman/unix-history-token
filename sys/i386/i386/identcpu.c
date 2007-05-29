@@ -3112,6 +3112,7 @@ comment|/* CMPXCHG16B Instruction */
 literal|"\017xTPR"
 comment|/* Send Task Priority Messages*/
 literal|"\020PDCM"
+comment|/* Perf/Debug Capability MSR */
 literal|"\021<b16>"
 literal|"\022<b17>"
 literal|"\023DCA"
