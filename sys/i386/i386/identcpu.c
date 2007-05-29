@@ -3111,7 +3111,7 @@ literal|"\016CX16"
 comment|/* CMPXCHG16B Instruction */
 literal|"\017xTPR"
 comment|/* Send Task Priority Messages*/
-literal|"\020<b15>"
+literal|"\020PDCM"
 literal|"\021<b16>"
 literal|"\022<b17>"
 literal|"\023DCA"
