@@ -513,11 +513,11 @@ argument_list|)
 expr_stmt|;
 name|flags
 operator|=
+name|LO_RECURSABLE
+operator||
 name|LO_SLEEPABLE
 operator||
 name|LO_UPGRADABLE
-operator||
-name|LO_RECURSABLE
 expr_stmt|;
 if|if
 condition|(
