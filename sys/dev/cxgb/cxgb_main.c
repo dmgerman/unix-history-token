@@ -8098,6 +8098,12 @@ operator|==
 name|ENOMEM
 condition|)
 block|{
+name|ifp
+operator|->
+name|if_drv_flags
+operator||=
+name|IFF_DRV_OACTIVE
+expr_stmt|;
 name|IFQ_LOCK
 argument_list|(
 operator|&
@@ -8137,12 +8143,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ifp
-operator|->
-name|if_drv_flags
-operator||=
-name|IFF_DRV_OACTIVE
-expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
