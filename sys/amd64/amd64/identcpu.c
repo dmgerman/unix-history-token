@@ -834,7 +834,8 @@ literal|"\016CX16"
 comment|/* CMPXCHG16B Instruction */
 literal|"\017xTPR"
 comment|/* Send Task Priority Messages*/
-literal|"\020<b15>"
+literal|"\020PDCM"
+comment|/* Perf/Debug Capability MSR */
 literal|"\021<b16>"
 literal|"\022<b17>"
 literal|"\023DCA"
@@ -1008,24 +1009,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|cpu_feature
 operator|&=
 operator|~
 name|CPUID_HTT
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"\nHTT bit cleared - FreeBSD"
-literal|" does not have licensing issues"
-literal|" requiring it.\n"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 			 * If this CPU supports HTT or CMP then mention the 			 * number of physical/logical cores it contains. 			 */
 if|if
 condition|(
