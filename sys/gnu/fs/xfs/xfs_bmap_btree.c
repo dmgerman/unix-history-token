@@ -4666,6 +4666,12 @@ operator|->
 name|bb_numrecs
 argument_list|)
 expr_stmt|;
+name|nkey
+operator|.
+name|br_startoff
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG

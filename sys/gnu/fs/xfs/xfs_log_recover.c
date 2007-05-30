@@ -2151,6 +2151,8 @@ name|xfs_daddr_t
 name|new_blk
 decl_stmt|,
 name|first_blk
+init|=
+literal|0
 decl_stmt|,
 name|start_blk
 decl_stmt|,

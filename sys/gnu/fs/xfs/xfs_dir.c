@@ -1924,6 +1924,12 @@ name|XFS_DATA_FORK
 argument_list|)
 condition|)
 block|{
+name|count
+operator|=
+name|totallen
+operator|=
+literal|0
+expr_stmt|;
 name|retval
 operator|=
 name|xfs_dir_leaf_removename

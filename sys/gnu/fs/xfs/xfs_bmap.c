@@ -25184,6 +25184,8 @@ name|flags
 operator|&
 name|XFS_BMAPI_CONVERT
 operator|)
+operator|!=
+literal|0
 expr_stmt|;
 name|bma
 operator|.

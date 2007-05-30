@@ -854,6 +854,8 @@ decl_stmt|;
 name|xfs_vnode_t
 modifier|*
 name|vp
+init|=
+name|NULL
 decl_stmt|;
 name|__u32
 name|olen

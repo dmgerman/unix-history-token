@@ -1178,7 +1178,6 @@ comment|/*  * xfs_highbit32: get high bit set out of 32-bit argument, -1 if none
 end_comment
 
 begin_function
-specifier|inline
 name|int
 name|xfs_highbit32
 parameter_list|(

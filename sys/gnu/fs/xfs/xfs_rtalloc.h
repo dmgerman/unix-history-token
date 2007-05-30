@@ -645,7 +645,7 @@ name|l
 parameter_list|,
 name|rb
 parameter_list|)
-value|(ENOSYS)
+value|((*rb = 0), ENOSYS)
 end_define
 
 begin_define

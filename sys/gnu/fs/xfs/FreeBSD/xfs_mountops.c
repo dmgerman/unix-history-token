@@ -1758,6 +1758,8 @@ block|{
 name|xfs_vnode_t
 modifier|*
 name|vp
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|error

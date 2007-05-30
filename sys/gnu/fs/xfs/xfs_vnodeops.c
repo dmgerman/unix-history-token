@@ -1638,6 +1638,22 @@ if|#
 directive|if
 literal|0
 block|file_owner = (current_fsuid(credp) == ip->i_d.di_uid);
+else|#
+directive|else
+name|file_owner
+operator|=
+operator|(
+name|credp
+operator|->
+name|cr_uid
+operator|==
+name|ip
+operator|->
+name|i_d
+operator|.
+name|di_uid
+operator|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Change various properties of a file. 	 * Only the owner or users with CAP_FOWNER 	 * capability may do these things. 	 */

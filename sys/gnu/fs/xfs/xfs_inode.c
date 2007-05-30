@@ -7850,6 +7850,8 @@ decl_stmt|;
 name|xfs_dinode_t
 modifier|*
 name|last_dip
+init|=
+name|NULL
 decl_stmt|;
 name|short
 name|bucket_index
@@ -7858,6 +7860,8 @@ name|int
 name|offset
 decl_stmt|,
 name|last_offset
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|error

@@ -7530,6 +7530,8 @@ comment|/* ptr to log operation header */
 name|xlog_in_core_t
 modifier|*
 name|iclog
+init|=
+name|NULL
 decl_stmt|;
 comment|/* ptr to current in-core log */
 name|__psint_t
@@ -7546,6 +7548,8 @@ decl_stmt|;
 comment|/* region index currently copying */
 name|int
 name|log_offset
+init|=
+literal|0
 decl_stmt|;
 comment|/* offset (from 0) into data region */
 name|int

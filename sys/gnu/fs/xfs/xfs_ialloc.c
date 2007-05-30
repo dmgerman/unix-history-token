@@ -2368,6 +2368,8 @@ decl_stmt|;
 comment|/* result code */
 name|int
 name|ialloced
+init|=
+literal|0
 decl_stmt|;
 comment|/* inode allocation status */
 name|int

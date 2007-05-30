@@ -193,7 +193,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|do { \ 		spin_unlock(lock); \ 		if (&s) {} \ 	} while (0)
+value|do { \ 		spin_unlock(lock); \ 		if (s != 0) {} \ 	} while (0)
 end_define
 
 begin_endif
