@@ -11945,22 +11945,13 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Default error if not error == 0 */
+if|#
+directive|if
+literal|0
 comment|/* we may return with the IP fields swapped, ensure its not shared */
-name|KASSERT
-argument_list|(
-name|M_WRITABLE
-argument_list|(
-operator|*
-name|mp
-argument_list|)
-argument_list|,
-operator|(
-literal|"%s: modifying a shared mbuf"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
+block|KASSERT(M_WRITABLE(*mp), ("%s: modifying a shared mbuf", __func__));
+endif|#
+directive|endif
 if|if
 condition|(
 name|pfil_bridge
