@@ -14180,6 +14180,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
+name|int
+operator|)
 name|cmh
 operator|.
 name|cmsg_len
@@ -18926,7 +18929,7 @@ block|{
 name|struct
 name|sctp_auth_random
 modifier|*
-name|random
+name|randp
 decl_stmt|;
 name|struct
 name|sctp_auth_hmac_algo
@@ -18952,7 +18955,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|random
+name|randp
 operator|=
 operator|(
 expr|struct
@@ -18978,7 +18981,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
-name|random
+name|randp
 argument_list|)
 operator|+
 name|stcb
@@ -18992,7 +18995,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SCTP_AUTH_DRAFT_04
-name|random
+name|randp
 operator|->
 name|ph
 operator|.
@@ -19003,7 +19006,7 @@ argument_list|(
 name|SCTP_RANDOM
 argument_list|)
 expr_stmt|;
-name|random
+name|randp
 operator|->
 name|ph
 operator|.
@@ -19026,7 +19029,7 @@ name|random
 operator|->
 name|key
 argument_list|,
-name|random
+name|randp
 operator|->
 name|random_data
 argument_list|,
@@ -19054,7 +19057,7 @@ name|random
 operator|->
 name|key
 argument_list|,
-name|random
+name|randp
 argument_list|,
 name|p_len
 argument_list|)
@@ -19067,7 +19070,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|random
+name|randp
 operator|+
 name|p_len
 argument_list|,
@@ -19470,9 +19473,6 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * The compiler worries that mp_last may not be set even 		 * though I think it is impossible :-> however we add 		 * mp_last here just in case. 		 */
-name|int
-name|ret
-decl_stmt|;
 name|ret
 operator|=
 name|sctp_add_pad_tombuf
@@ -24562,7 +24562,7 @@ block|{
 name|struct
 name|sctp_auth_random
 modifier|*
-name|random
+name|randp
 decl_stmt|;
 name|struct
 name|sctp_auth_hmac_algo
@@ -24582,7 +24582,7 @@ name|random_len
 operator|=
 name|SCTP_AUTH_RANDOM_SIZE_DEFAULT
 expr_stmt|;
-name|random
+name|randp
 operator|=
 operator|(
 expr|struct
@@ -24603,7 +24603,7 @@ name|m
 argument_list|)
 operator|)
 expr_stmt|;
-name|random
+name|randp
 operator|->
 name|ph
 operator|.
@@ -24619,12 +24619,12 @@ operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
-name|random
+name|randp
 argument_list|)
 operator|+
 name|random_len
 expr_stmt|;
-name|random
+name|randp
 operator|->
 name|ph
 operator|.
@@ -24637,7 +24637,7 @@ argument_list|)
 expr_stmt|;
 name|SCTP_READ_RANDOM
 argument_list|(
-name|random
+name|randp
 operator|->
 name|random_data
 argument_list|,
@@ -24650,7 +24650,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|random
+name|randp
 operator|+
 name|p_len
 argument_list|,
@@ -26902,7 +26902,10 @@ operator|&&
 operator|(
 name|sizeofcpy
 operator|<=
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 operator|(
 operator|(
@@ -26916,7 +26919,7 @@ operator|)
 operator|+
 name|MHLEN
 operator|)
-operator|)
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -29954,10 +29957,10 @@ name|sctp_stream_queue_pending
 modifier|*
 name|sp
 parameter_list|,
-name|int
+name|uint32_t
 name|goal_mtu
 parameter_list|,
-name|int
+name|uint32_t
 name|frag_point
 parameter_list|,
 name|int
@@ -30083,7 +30086,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|uint32_t
 name|sctp_move_to_outqueue
 parameter_list|(
 name|struct
@@ -30101,10 +30104,10 @@ name|sctp_stream_out
 modifier|*
 name|strq
 parameter_list|,
-name|int
+name|uint32_t
 name|goal_mtu
 parameter_list|,
-name|int
+name|uint32_t
 name|frag_point
 parameter_list|,
 name|int
@@ -30140,7 +30143,7 @@ name|sctp_data_chunk
 modifier|*
 name|dchkh
 decl_stmt|;
-name|int
+name|uint32_t
 name|to_move
 decl_stmt|;
 name|uint8_t
@@ -31084,6 +31087,9 @@ operator|->
 name|data
 argument_list|)
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -31169,10 +31175,10 @@ block|{
 name|struct
 name|mbuf
 modifier|*
-name|m
+name|m_tmp
 decl_stmt|;
 comment|/* reassemble the data */
-name|m
+name|m_tmp
 operator|=
 name|sp
 operator|->
@@ -31193,7 +31199,7 @@ operator|->
 name|data
 argument_list|)
 operator|=
-name|m
+name|m_tmp
 expr_stmt|;
 block|}
 name|sp
@@ -51852,6 +51858,9 @@ name|uio
 operator|->
 name|uio_resid
 operator|>
+operator|(
+name|int
+operator|)
 name|SCTP_SB_LIMIT_SND
 argument_list|(
 name|stcb
@@ -52032,6 +52041,9 @@ name|sp
 operator|->
 name|length
 operator|==
+operator|(
+name|uint32_t
+operator|)
 name|uio
 operator|->
 name|uio_resid
@@ -54506,7 +54518,7 @@ name|tot_out
 init|=
 literal|0
 decl_stmt|,
-name|max
+name|max_out
 decl_stmt|;
 name|SCTP_STAT_INCR
 argument_list|(
@@ -54677,7 +54689,7 @@ goto|goto
 name|out
 goto|;
 block|}
-name|max
+name|max_out
 operator|=
 name|asoc
 operator|->
@@ -54689,7 +54701,7 @@ expr|struct
 name|sctp_paramhdr
 argument_list|)
 expr_stmt|;
-name|max
+name|max_out
 operator|-=
 sizeof|sizeof
 argument_list|(
@@ -54701,12 +54713,12 @@ if|if
 condition|(
 name|tot_out
 operator|>
-name|max
+name|max_out
 condition|)
 block|{
 name|tot_out
 operator|=
-name|max
+name|max_out
 expr_stmt|;
 block|}
 if|if
@@ -55783,6 +55795,9 @@ name|uio
 operator|->
 name|uio_resid
 operator|<
+operator|(
+name|int
+operator|)
 name|max_len
 operator|)
 operator|)

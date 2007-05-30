@@ -8936,7 +8936,7 @@ block|{
 name|struct
 name|sctp_nets
 modifier|*
-name|net
+name|lnet
 decl_stmt|;
 name|int
 name|cnt_of_unconf
@@ -8974,7 +8974,7 @@ operator|++
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
-argument|net
+argument|lnet
 argument_list|,
 argument|&stcb->asoc.nets
 argument_list|,
@@ -8984,7 +8984,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|net
+name|lnet
 operator|->
 name|dest_state
 operator|&
@@ -8992,7 +8992,7 @@ name|SCTP_ADDR_UNCONFIRMED
 operator|)
 operator|&&
 operator|(
-name|net
+name|lnet
 operator|->
 name|dest_state
 operator|&
@@ -9020,7 +9020,7 @@ name|inp
 argument_list|,
 name|stcb
 argument_list|,
-name|net
+name|lnet
 argument_list|,
 name|cnt_of_unconf
 argument_list|)
@@ -9043,7 +9043,7 @@ name|inp
 argument_list|,
 name|stcb
 argument_list|,
-name|net
+name|lnet
 argument_list|)
 expr_stmt|;
 endif|#
@@ -9058,7 +9058,7 @@ name|sctp_ep
 argument_list|,
 name|stcb
 argument_list|,
-name|net
+name|lnet
 argument_list|)
 expr_stmt|;
 name|sctp_chunk_output
@@ -10458,11 +10458,6 @@ condition|(
 name|net
 condition|)
 block|{
-name|struct
-name|sctp_nets
-modifier|*
-name|lnet
-decl_stmt|;
 name|int
 name|delay
 decl_stmt|;
@@ -12198,7 +12193,7 @@ name|uint32_t
 name|offset
 parameter_list|)
 block|{
-comment|/* 	 * given a mbuf chain with a packetheader offset by 'offset' 	 * pointing at a sctphdr (with csum set to 0) go through the chain 	 * of SCTP_BUF_NEXT()'s and calculate the SCTP checksum. This is 	 * currently Adler32 but will change to CRC32x soon. Also has a side 	 * bonus calculate the total length of the mbuf chain. Note: if 	 * offset is greater than the total mbuf length, checksum=1, 	 * pktlen=0 is returned (ie. no real error code) 	 */
+comment|/* 	 * given a mbuf chain with a packetheader offset by 'offset' 	 * pointing at a sctphdr (with csum set to 0) go through the chain 	 * of SCTP_BUF_NEXT()'s and calculate the SCTP checksum. This also 	 * has a side bonus as it will calculate the total length of the 	 * mbuf chain. Note: if offset is greater than the total mbuf 	 * length, checksum=1, pktlen=0 is returned (ie. no real error code) 	 */
 if|if
 condition|(
 name|pktlen
@@ -12258,7 +12253,7 @@ name|uint32_t
 name|offset
 parameter_list|)
 block|{
-comment|/* 	 * given a mbuf chain with a packetheader offset by 'offset' 	 * pointing at a sctphdr (with csum set to 0) go through the chain 	 * of SCTP_BUF_NEXT()'s and calculate the SCTP checksum. This is 	 * currently Adler32 but will change to CRC32x soon. Also has a side 	 * bonus calculate the total length of the mbuf chain. Note: if 	 * offset is greater than the total mbuf length, checksum=1, 	 * pktlen=0 is returned (ie. no real error code) 	 */
+comment|/* 	 * given a mbuf chain with a packetheader offset by 'offset' 	 * pointing at a sctphdr (with csum set to 0) go through the chain 	 * of SCTP_BUF_NEXT()'s and calculate the SCTP checksum. This also 	 * has a side bonus as it will calculate the total length of the 	 * mbuf chain. Note: if offset is greater than the total mbuf 	 * length, checksum=1, pktlen=0 is returned (ie. no real error code) 	 */
 name|int32_t
 name|tlen
 init|=
@@ -12366,7 +12361,7 @@ name|uint32_t
 name|offset
 parameter_list|)
 block|{
-comment|/* 	 * given a mbuf chain with a packetheader offset by 'offset' 	 * pointing at a sctphdr (with csum set to 0) go through the chain 	 * of SCTP_BUF_NEXT()'s and calculate the SCTP checksum. This is 	 * currently Adler32 but will change to CRC32x soon. Also has a side 	 * bonus calculate the total length of the mbuf chain. Note: if 	 * offset is greater than the total mbuf length, checksum=1, 	 * pktlen=0 is returned (ie. no real error code) 	 */
+comment|/* 	 * given a mbuf chain with a packetheader offset by 'offset' 	 * pointing at a sctphdr (with csum set to 0) go through the chain 	 * of SCTP_BUF_NEXT()'s and calculate the SCTP checksum. This also 	 * has a side bonus as it will calculate the total length of the 	 * mbuf chain. Note: if offset is greater than the total mbuf 	 * length, checksum=1, pktlen=0 is returned (ie. no real error code) 	 */
 name|int32_t
 name|tlen
 init|=
@@ -12389,7 +12384,6 @@ literal|0xffffffff
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* SCTP_USE_ADLER32 */
 name|struct
 name|mbuf
 modifier|*
@@ -12586,7 +12580,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* SCTP_USE_ADLER32 */
 name|tlen
 operator|+=
 name|SCTP_BUF_LEN
@@ -12607,6 +12600,9 @@ if|if
 condition|(
 name|offset
 operator|<
+operator|(
+name|uint32_t
+operator|)
 name|SCTP_BUF_LEN
 argument_list|(
 name|at
@@ -22934,7 +22930,7 @@ name|sctp_tcb
 modifier|*
 name|stcb
 parameter_list|,
-name|int
+name|uint32_t
 modifier|*
 name|freed_so_far
 parameter_list|,
@@ -23493,7 +23489,7 @@ name|block_allowed
 init|=
 literal|1
 decl_stmt|;
-name|int
+name|uint32_t
 name|freed_so_far
 init|=
 literal|0
@@ -23538,7 +23534,7 @@ name|slen
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|uint32_t
 name|held_length
 init|=
 literal|0
@@ -24443,14 +24439,14 @@ comment|/* Hmm there is data here .. fix */
 name|struct
 name|mbuf
 modifier|*
-name|m
+name|m_tmp
 decl_stmt|;
 name|int
 name|cnt
 init|=
 literal|0
 decl_stmt|;
-name|m
+name|m_tmp
 operator|=
 name|control
 operator|->
@@ -24458,21 +24454,21 @@ name|data
 expr_stmt|;
 while|while
 condition|(
-name|m
+name|m_tmp
 condition|)
 block|{
 name|cnt
 operator|+=
 name|SCTP_BUF_LEN
 argument_list|(
-name|m
+name|m_tmp
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|SCTP_BUF_NEXT
 argument_list|(
-name|m
+name|m_tmp
 argument_list|)
 operator|==
 name|NULL
@@ -24482,7 +24478,7 @@ name|control
 operator|->
 name|tail_mbuf
 operator|=
-name|m
+name|m_tmp
 expr_stmt|;
 name|control
 operator|->
@@ -24491,11 +24487,11 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|m
+name|m_tmp
 operator|=
 name|SCTP_BUF_NEXT
 argument_list|(
-name|m
+name|m_tmp
 argument_list|)
 expr_stmt|;
 block|}
@@ -28931,6 +28927,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|size_t
+operator|)
 operator|*
 name|totaddr
 condition|;
@@ -29142,6 +29141,9 @@ operator|+
 name|incr
 operator|)
 operator|>
+operator|(
+name|size_t
+operator|)
 name|limit
 condition|)
 block|{
