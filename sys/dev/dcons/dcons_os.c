@@ -185,12 +185,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ddb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_comconsole.h"
 end_include
 
@@ -198,6 +192,24 @@ begin_include
 include|#
 directive|include
 file|"opt_dcons.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_kdb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_gdb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_ddb.h"
 end_include
 
 begin_ifndef
@@ -791,9 +803,16 @@ end_expr_stmt
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|GDB
+argument_list|)
+operator|&&
+operator|(
 name|__FreeBSD_version
 operator|>=
 literal|502122
+operator|)
 end_if
 
 begin_decl_stmt
@@ -876,12 +895,21 @@ begin_if
 if|#
 directive|if
 operator|(
-name|KDB
+name|defined
+argument_list|(
+name|GDB
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|DDB
+argument_list|)
 operator|)
 operator|&&
+name|defined
+argument_list|(
 name|ALT_BREAK_TO_DEBUGGER
+argument_list|)
 end_if
 
 begin_function
@@ -927,6 +955,9 @@ name|brk_state
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|GDB
 if|if
 condition|(
 operator|(
@@ -959,6 +990,8 @@ expr_stmt|;
 block|}
 block|}
 else|else
+endif|#
+directive|endif
 name|breakpoint
 argument_list|()
 expr_stmt|;
@@ -3389,9 +3422,16 @@ end_function
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|GDB
+argument_list|)
+operator|&&
+operator|(
 name|__FreeBSD_version
 operator|>=
 literal|502122
+operator|)
 end_if
 
 begin_comment
