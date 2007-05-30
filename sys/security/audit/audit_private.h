@@ -479,14 +479,6 @@ name|struct
 name|au_tid_addr
 name|ar_subj_term_addr
 decl_stmt|;
-name|char
-name|ar_subj_comm
-index|[
-name|MAXCOMLEN
-operator|+
-literal|1
-index|]
-decl_stmt|;
 name|struct
 name|au_mask
 name|ar_subj_amask
