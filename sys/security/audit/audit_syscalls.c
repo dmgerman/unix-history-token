@@ -100,7 +100,7 @@ name|AUDIT
 end_ifdef
 
 begin_comment
-comment|/*  * System call to allow a user space application to submit a BSM audit record  * to the kernel for inclusion in the audit log. This function does little  * verification on the audit record that is submitted.  *  * XXXAUDIT: Audit preselection for user records does not currently work,  * since we pre-select only based on the AUE_audit event type, not the event  * type submitted as part of the user audit data.  */
+comment|/*  * System call to allow a user space application to submit a BSM audit record  * to the kernel for inclusion in the audit log.  This function does little  * verification on the audit record that is submitted.  *  * XXXAUDIT: Audit preselection for user records does not currently work,  * since we pre-select only based on the AUE_audit event type, not the event  * type submitted as part of the user audit data.  */
 end_comment
 
 begin_comment
@@ -330,7 +330,7 @@ name|free_out
 goto|;
 endif|#
 directive|endif
-comment|/* 	 * Attach the user audit record to the kernel audit record. Because 	 * this system call is an auditable event, we will write the user 	 * record along with the record for this audit event. 	 * 	 * XXXAUDIT: KASSERT appropriate starting values of k_udata, k_ulen, 	 * k_ar_commit& AR_COMMIT_USER? 	 */
+comment|/* 	 * Attach the user audit record to the kernel audit record.  Because 	 * this system call is an auditable event, we will write the user 	 * record along with the record for this audit event. 	 * 	 * XXXAUDIT: KASSERT appropriate starting values of k_udata, k_ulen, 	 * k_ar_commit& AR_COMMIT_USER? 	 */
 name|ar
 operator|->
 name|k_udata
@@ -351,7 +351,7 @@ name|k_ar_commit
 operator||=
 name|AR_COMMIT_USER
 expr_stmt|;
-comment|/* 	 * Currently we assume that all preselection has been performed in 	 * userspace. We unconditionally set these masks so that the records 	 * get committed both to the trail and pipe.  In the future we will 	 * want to setup kernel based preselection. 	 */
+comment|/* 	 * Currently we assume that all preselection has been performed in 	 * userspace.  We unconditionally set these masks so that the records 	 * get committed both to the trail and pipe.  In the future we will 	 * want to setup kernel based preselection. 	 */
 name|ar
 operator|->
 name|k_ar_commit
