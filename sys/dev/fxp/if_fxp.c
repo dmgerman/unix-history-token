@@ -1336,7 +1336,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|volatile
 name|int
 name|fxp_miibus_readreg
 parameter_list|(
@@ -10398,7 +10397,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|volatile
 name|int
 name|fxp_miibus_readreg
 parameter_list|(
