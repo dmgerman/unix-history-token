@@ -3106,47 +3106,6 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|audit_proc_init
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-name|void
-name|audit_proc_fork
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|parent
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|child
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-name|void
-name|audit_proc_free
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-block|{  }
-end_function
-
 begin_endif
 endif|#
 directive|endif
