@@ -7223,6 +7223,8 @@ condition|(
 name|sctp_expand_mapping_array
 argument_list|(
 name|asoc
+argument_list|,
+name|gap
 argument_list|)
 condition|)
 block|{

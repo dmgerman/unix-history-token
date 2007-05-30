@@ -5706,9 +5706,9 @@ modifier|*
 name|m
 parameter_list|,
 name|struct
-name|sctp_association
+name|sctp_tcb
 modifier|*
-name|asoc
+name|stcb
 parameter_list|,
 name|int
 name|for_a_init
@@ -5720,11 +5720,23 @@ name|uint32_t
 name|vrf_id
 parameter_list|)
 block|{
+name|struct
+name|sctp_association
+modifier|*
+name|asoc
+decl_stmt|;
 comment|/* 	 * Anything set to zero is taken care of by the allocation routine's 	 * bzero 	 */
 comment|/* 	 * Up front select what scoping to apply on addresses I tell my peer 	 * Not sure what to do with these right now, we will need to come up 	 * with a way to set them. We may need to pass them through from the 	 * caller in the sctp_aloc_assoc() function. 	 */
 name|int
 name|i
 decl_stmt|;
+name|asoc
+operator|=
+operator|&
+name|stcb
+operator|->
+name|asoc
+expr_stmt|;
 comment|/* init all variables to a known value. */
 name|asoc
 operator|->
@@ -6856,6 +6868,9 @@ name|struct
 name|sctp_association
 modifier|*
 name|asoc
+parameter_list|,
+name|uint32_t
+name|needed
 parameter_list|)
 block|{
 comment|/* mapping array needs to grow */
@@ -6863,7 +6878,7 @@ name|uint8_t
 modifier|*
 name|new_array
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|new_size
 decl_stmt|;
 name|new_size
@@ -6872,7 +6887,17 @@ name|asoc
 operator|->
 name|mapping_array_size
 operator|+
+operator|(
+operator|(
+name|needed
+operator|+
+literal|7
+operator|)
+operator|/
+literal|8
+operator|+
 name|SCTP_MAPPING_ARRAY_INCR
+operator|)
 expr_stmt|;
 name|SCTP_MALLOC
 argument_list|(
@@ -24816,6 +24841,14 @@ block|{
 if|if
 condition|(
 operator|(
+name|control
+operator|->
+name|do_not_ref_stcb
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
 name|stcb
 operator|->
 name|asoc
@@ -24823,14 +24856,6 @@ operator|.
 name|state
 operator|&
 name|SCTP_STATE_ABOUT_TO_BE_FREED
-operator|)
-operator|&&
-operator|(
-name|control
-operator|->
-name|do_not_ref_stcb
-operator|==
-literal|0
 operator|)
 condition|)
 block|{
@@ -24882,7 +24907,7 @@ name|freecnt_applied
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 			 * Setup to remember how much we have not yet told 			 * the peer our rwnd has opened up. Note we grab the 			 * value from the tcb from last time. Note too that 			 * sack sending clears this when a sack is sent.. 			 * which is fine. Once we hit the rwnd_req, we then 			 * will go to the sctp_user_rcvd() that will not 			 * lock until it KNOWs it MUST send a WUP-SACK. 			 *  			 */
+comment|/* 			 * Setup to remember how much we have not yet told 			 * the peer our rwnd has opened up. Note we grab the 			 * value from the tcb from last time. Note too that 			 * sack sending clears this when a sack is sent, 			 * which is fine. Once we hit the rwnd_req, we then 			 * will go to the sctp_user_rcvd() that will not 			 * lock until it KNOWs it MUST send a WUP-SACK. 			 */
 name|freed_so_far
 operator|=
 name|stcb
@@ -25142,6 +25167,14 @@ block|}
 comment|/* 		 * update off the real current cum-ack, if we have an stcb. 		 */
 if|if
 condition|(
+operator|(
+name|control
+operator|->
+name|do_not_ref_stcb
+operator|==
+literal|0
+operator|)
+operator|&&
 name|stcb
 condition|)
 name|sinfo
@@ -25610,6 +25643,14 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
+name|control
+operator|->
+name|do_not_ref_stcb
+operator|==
+literal|0
+operator|)
+operator|&&
 name|stcb
 operator|&&
 name|stcb
@@ -26203,6 +26244,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|control
+operator|->
+name|do_not_ref_stcb
+operator|==
+literal|0
+operator|)
+operator|&&
 name|stcb
 condition|)
 block|{

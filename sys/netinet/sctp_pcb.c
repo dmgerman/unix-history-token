@@ -15328,7 +15328,7 @@ name|sctp_init_asoc
 argument_list|(
 name|inp
 argument_list|,
-name|asoc
+name|stcb
 argument_list|,
 name|for_a_init
 argument_list|,
@@ -20784,7 +20784,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SCTP_STACK_VTAG_HASH_SIZE
+name|SCTP_STACK_VTAG_HASH_SIZE_A
 condition|;
 name|i
 operator|++

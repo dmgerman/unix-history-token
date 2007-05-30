@@ -58,11 +58,6 @@ name|defined
 argument_list|(
 name|SCTP_LOG_RWND
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SCTP_LOG_RWND
-argument_list|)
 end_if
 
 begin_ifndef
@@ -183,11 +178,6 @@ operator|||
 name|defined
 argument_list|(
 name|SCTP_LOCK_LOGGING
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SCTP_STAT_LOGGING
 argument_list|)
 end_if
 
@@ -550,7 +540,7 @@ name|sctp_inpcb
 modifier|*
 parameter_list|,
 name|struct
-name|sctp_association
+name|sctp_tcb
 modifier|*
 parameter_list|,
 name|int
@@ -938,6 +928,8 @@ parameter_list|(
 name|struct
 name|sctp_association
 modifier|*
+parameter_list|,
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1150,6 +1150,17 @@ value|if(m->m_flags& M_PKTHDR) { \                                      MH_ALIGN
 end_define
 
 begin_comment
+comment|/* We make it so if you have up to 4 threads  * writting based on the default size of  * the packet log 65 k, that would be  * 4 16k packets before we would hit  * a problem.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_PKTLOG_WRITERS_NEED_LOCK
+value|3
+end_define
+
+begin_comment
 comment|/*************************/
 end_comment
 

@@ -46415,6 +46415,19 @@ name|sctp_heartbeat_chunk
 operator|*
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+name|hb
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctp_heartbeat_chunk
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* fill out chunk header */
 name|hb
 operator|->

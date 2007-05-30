@@ -6505,6 +6505,7 @@ name|asoc
 operator|->
 name|mapping_array
 condition|)
+block|{
 name|memset
 argument_list|(
 name|asoc
@@ -6518,6 +6519,7 @@ operator|->
 name|mapping_array_size
 argument_list|)
 expr_stmt|;
+block|}
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|stcb

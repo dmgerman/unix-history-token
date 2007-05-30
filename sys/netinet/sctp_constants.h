@@ -4213,6 +4213,13 @@ name|SCTP_STACK_VTAG_HASH_SIZE
 value|31
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_STACK_VTAG_HASH_SIZE_A
+value|32
+end_define
+
 begin_comment
 comment|/*  * If we use the per-endpoint model than we do not have a hash table of  * entries but instead have a single head pointer and we must crawl through  * the entire list.  */
 end_comment

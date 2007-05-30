@@ -605,7 +605,7 @@ name|struct
 name|sctpvtaghead
 name|vtag_timewait
 index|[
-name|SCTP_STACK_VTAG_HASH_SIZE
+name|SCTP_STACK_VTAG_HASH_SIZE_A
 index|]
 decl_stmt|;
 comment|/* address work queue handling */
