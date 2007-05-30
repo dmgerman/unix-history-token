@@ -5872,6 +5872,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+else|else
 name|mtx_unlock_spin
 argument_list|(
 operator|&
