@@ -76,31 +76,6 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* For Notify handler */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_DOCK_NOTIFY_BUS_CHECK
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DOCK_NOTIFY_DEVICE_CHECK
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DOCK_NOTIFY_EJECT_REQUEST
-value|0x03
-end_define
-
-begin_comment
 comment|/* For Docking status */
 end_comment
 
@@ -1503,10 +1478,10 @@ name|notify
 condition|)
 block|{
 case|case
-name|ACPI_DOCK_NOTIFY_BUS_CHECK
+name|ACPI_NOTIFY_BUS_CHECK
 case|:
 case|case
-name|ACPI_DOCK_NOTIFY_DEVICE_CHECK
+name|ACPI_NOTIFY_DEVICE_CHECK
 case|:
 name|acpi_dock_device_check
 argument_list|(
@@ -1515,7 +1490,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_DOCK_NOTIFY_EJECT_REQUEST
+name|ACPI_NOTIFY_EJECT_REQUEST
 case|:
 name|acpi_dock_removal
 argument_list|(
