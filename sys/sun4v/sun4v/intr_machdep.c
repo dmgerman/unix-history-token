@@ -1172,6 +1172,8 @@ name|int
 name|fast
 decl_stmt|,
 name|thread
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|iv
 operator|=
@@ -1197,6 +1199,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 name|fast
 operator|=
 name|thread
@@ -1259,6 +1265,8 @@ operator|->
 name|ih_argument
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|ih
 operator|->
 name|ih_filter
@@ -1272,6 +1280,24 @@ name|fast
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 		 * Wrapper handler special case: see 		 * i386/intr_machdep.c::intr_execute_handlers() 		 */
+if|if
+condition|(
+operator|!
+name|thread
+condition|)
+block|{
+if|if
+condition|(
+name|ret
+operator|==
+name|FILTER_SCHEDULE_THREAD
+condition|)
+name|thread
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 comment|/* Schedule a heavyweight interrupt process. */
 if|if

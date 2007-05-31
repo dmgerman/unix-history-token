@@ -1323,6 +1323,8 @@ decl_stmt|,
 name|vector
 decl_stmt|,
 name|thread
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|td
 operator|=
@@ -1452,6 +1454,10 @@ operator|->
 name|td_intr_nesting_level
 operator|++
 expr_stmt|;
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 name|thread
 operator|=
 literal|0
@@ -1520,6 +1526,8 @@ name|ih_argument
 operator|==
 name|NULL
 condition|)
+name|ret
+operator|=
 name|ih
 operator|->
 name|ih_filter
@@ -1528,6 +1536,8 @@ name|frame
 argument_list|)
 expr_stmt|;
 else|else
+name|ret
+operator|=
 name|ih
 operator|->
 name|ih_filter
@@ -1537,6 +1547,24 @@ operator|->
 name|ih_argument
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Wrapper handler special case: see 		 * i386/intr_machdep.c::intr_execute_handlers() 		 */
+if|if
+condition|(
+operator|!
+name|thread
+condition|)
+block|{
+if|if
+condition|(
+name|ret
+operator|==
+name|FILTER_SCHEDULE_THREAD
+condition|)
+name|thread
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * If there are any threaded handlers that need to run, 	 * mask the source as well as sending it an EOI.  Otherwise, 	 * just send it an EOI but leave it unmasked. 	 */
 if|if

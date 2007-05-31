@@ -1777,6 +1777,8 @@ name|int
 name|error
 decl_stmt|,
 name|thread
+decl_stmt|,
+name|ret
 decl_stmt|;
 comment|/* 	 * Find the interrupt thread for this vector. 	 */
 name|i
@@ -1839,6 +1841,10 @@ argument_list|)
 condition|)
 return|return;
 comment|/* 	 * Execute all fast interrupt handlers directly without Giant.  Note 	 * that this means that any fast interrupt handler must be MP safe. 	 */
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 name|thread
 operator|=
 literal|0
@@ -1891,6 +1897,8 @@ operator|->
 name|ih_name
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|ih
 operator|->
 name|ih_filter
@@ -1900,6 +1908,24 @@ operator|->
 name|ih_argument
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Wrapper handler special case: see 		 * i386/intr_machdep.c::intr_execute_handlers() 		 */
+if|if
+condition|(
+operator|!
+name|thread
+condition|)
+block|{
+if|if
+condition|(
+name|ret
+operator|==
+name|FILTER_SCHEDULE_THREAD
+condition|)
+name|thread
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 name|critical_exit
 argument_list|()

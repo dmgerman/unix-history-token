@@ -727,6 +727,8 @@ name|int
 name|error
 decl_stmt|,
 name|sched
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|i
 operator|=
@@ -786,6 +788,10 @@ goto|goto
 name|stray
 goto|;
 comment|/* 	 * Execute all fast interrupt handlers directly without Giant.  Note 	 * that this means that any fast interrupt handler must be MP safe. 	 */
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 name|sched
 operator|=
 literal|0
@@ -838,6 +844,8 @@ operator|->
 name|ih_name
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|ih
 operator|->
 name|ih_filter
@@ -847,6 +855,24 @@ operator|->
 name|ih_argument
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Wrapper handler special case: see 		 * i386/intr_machdep.c::intr_execute_handlers() 		 */
+if|if
+condition|(
+operator|!
+name|sched
+condition|)
+block|{
+if|if
+condition|(
+name|ret
+operator|==
+name|FILTER_SCHEDULE_THREAD
+condition|)
+name|sched
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 name|critical_exit
 argument_list|()

@@ -386,6 +386,8 @@ name|int
 name|i
 decl_stmt|,
 name|thread
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|PCPU_LAZY_INC
 argument_list|(
@@ -448,6 +450,10 @@ argument_list|)
 condition|)
 continue|continue;
 comment|/* Execute fast handlers. */
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 name|thread
 operator|=
 literal|0
@@ -474,6 +480,8 @@ operator|=
 literal|1
 expr_stmt|;
 else|else
+name|ret
+operator|=
 name|ih
 operator|->
 name|ih_filter
@@ -489,6 +497,24 @@ else|:
 name|frame
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Wrapper handler special case: see 			 * i386/intr_machdep.c::intr_execute_handlers() 			 */
+if|if
+condition|(
+operator|!
+name|thread
+condition|)
+block|{
+if|if
+condition|(
+name|ret
+operator|==
+name|FILTER_SCHEDULE_THREAD
+condition|)
+name|thread
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 comment|/* Schedule thread if needed. */
 if|if

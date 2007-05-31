@@ -5783,17 +5783,6 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
-name|KASSERT
-argument_list|(
-name|ret
-operator|!=
-name|FILTER_SCHEDULE_THREAD
-argument_list|,
-operator|(
-literal|"intr_filter_loop: FILTER_SCHEDULE_THREAD from filter"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ret

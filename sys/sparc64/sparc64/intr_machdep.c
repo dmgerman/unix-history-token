@@ -949,6 +949,8 @@ name|int
 name|error
 decl_stmt|,
 name|thread
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|iv
 operator|=
@@ -975,6 +977,10 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Execute fast interrupt handlers directly. */
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 name|thread
 operator|=
 literal|0
@@ -1035,6 +1041,8 @@ operator|->
 name|ih_argument
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|ih
 operator|->
 name|ih_filter
@@ -1044,6 +1052,24 @@ operator|->
 name|ih_argument
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Wrapper handler special case: see 		 * i386/intr_machdep.c::intr_execute_handlers() 		 */
+if|if
+condition|(
+operator|!
+name|thread
+condition|)
+block|{
+if|if
+condition|(
+name|ret
+operator|==
+name|FILTER_SCHEDULE_THREAD
+condition|)
+name|thread
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 comment|/* Schedule a heavyweight interrupt process. */
 if|if
