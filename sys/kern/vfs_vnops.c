@@ -271,7 +271,7 @@ name|flagp
 parameter_list|,
 name|cmode
 parameter_list|,
-name|fdidx
+name|fp
 parameter_list|)
 name|struct
 name|nameidata
@@ -283,8 +283,11 @@ modifier|*
 name|flagp
 decl_stmt|,
 name|cmode
-decl_stmt|,
-name|fdidx
+decl_stmt|;
+name|struct
+name|file
+modifier|*
+name|fp
 decl_stmt|;
 block|{
 name|struct
@@ -312,7 +315,7 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
-name|fdidx
+name|fp
 argument_list|)
 operator|)
 return|;
@@ -335,7 +338,7 @@ name|cmode
 parameter_list|,
 name|cred
 parameter_list|,
-name|fdidx
+name|fp
 parameter_list|)
 name|struct
 name|nameidata
@@ -353,8 +356,10 @@ name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-name|int
-name|fdidx
+name|struct
+name|file
+modifier|*
+name|fp
 decl_stmt|;
 block|{
 name|struct
@@ -1076,7 +1081,7 @@ name|cred
 argument_list|,
 name|td
 argument_list|,
-name|fdidx
+name|fp
 argument_list|)
 operator|)
 operator|!=

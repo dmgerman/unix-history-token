@@ -14610,8 +14610,7 @@ name|S_IRUSR
 operator||
 name|S_IWUSR
 argument_list|,
-operator|-
-literal|1
+name|NULL
 argument_list|)
 expr_stmt|;
 name|free

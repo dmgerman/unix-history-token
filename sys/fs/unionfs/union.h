@@ -107,10 +107,6 @@ name|uns_lower_openmode
 decl_stmt|;
 comment|/* open mode of lower */
 name|int
-name|uns_lower_fdidx
-decl_stmt|;
-comment|/* open fdidx of lower */
-name|int
 name|uns_readdir_status
 decl_stmt|;
 comment|/* read status of readdir */

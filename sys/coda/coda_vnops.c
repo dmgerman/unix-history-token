@@ -1004,8 +1004,7 @@ name|cred
 argument_list|,
 name|td
 argument_list|,
-operator|-
-literal|1
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1659,8 +1658,7 @@ name|cred
 argument_list|,
 name|td
 argument_list|,
-operator|-
-literal|1
+name|NULL
 argument_list|)
 expr_stmt|;
 name|printf
@@ -6604,8 +6602,7 @@ name|cred
 argument_list|,
 name|td
 argument_list|,
-operator|-
-literal|1
+name|NULL
 argument_list|)
 expr_stmt|;
 name|printf

@@ -3102,8 +3102,10 @@ parameter_list|,
 name|int
 name|cmode
 parameter_list|,
-name|int
-name|fdidx
+name|struct
+name|file
+modifier|*
+name|fp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3129,8 +3131,10 @@ name|ucred
 modifier|*
 name|cred
 parameter_list|,
-name|int
-name|fdidx
+name|struct
+name|file
+modifier|*
+name|fp
 parameter_list|)
 function_decl|;
 end_function_decl

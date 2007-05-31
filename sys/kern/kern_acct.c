@@ -684,8 +684,7 @@ name|flags
 argument_list|,
 literal|0
 argument_list|,
-operator|-
-literal|1
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

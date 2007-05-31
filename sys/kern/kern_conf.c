@@ -1006,8 +1006,10 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|int
-name|fdidx
+name|struct
+name|file
+modifier|*
+name|fp
 parameter_list|)
 block|{
 name|int
@@ -1035,7 +1037,7 @@ name|oflags
 argument_list|,
 name|td
 argument_list|,
-name|fdidx
+name|fp
 argument_list|)
 expr_stmt|;
 name|mtx_unlock

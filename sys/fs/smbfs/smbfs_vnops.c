@@ -1914,8 +1914,7 @@ name|ap
 operator|->
 name|a_td
 argument_list|,
-operator|-
-literal|1
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

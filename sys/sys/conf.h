@@ -67,6 +67,12 @@ name|cdevsw
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|file
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|cdev
@@ -360,8 +366,10 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|int
-name|fdidx
+name|struct
+name|file
+modifier|*
+name|fp
 parameter_list|)
 function_decl|;
 end_typedef

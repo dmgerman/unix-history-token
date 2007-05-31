@@ -3792,6 +3792,10 @@ name|struct
 name|file
 modifier|*
 name|fp
+init|=
+name|ap
+operator|->
+name|a_fp
 decl_stmt|;
 name|int
 name|error
@@ -3919,9 +3923,7 @@ name|a_mode
 argument_list|,
 name|td
 argument_list|,
-name|ap
-operator|->
-name|a_fdidx
+name|fp
 argument_list|)
 expr_stmt|;
 else|else
@@ -3970,9 +3972,7 @@ name|a_mode
 argument_list|,
 name|td
 argument_list|,
-name|ap
-operator|->
-name|a_fdidx
+name|fp
 argument_list|)
 expr_stmt|;
 else|else
@@ -4023,16 +4023,14 @@ if|#
 directive|if
 literal|0
 comment|/* /dev/console */
-block|KASSERT(ap->a_fdidx>= 0, 	     ("Could not vnode bypass device on fd %d", ap->a_fdidx));
+block|KASSERT(fp != NULL, 	     ("Could not vnode bypass device on NULL fp"));
 else|#
 directive|else
 if|if
 condition|(
-name|ap
-operator|->
-name|a_fdidx
-operator|<
-literal|0
+name|fp
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -4041,24 +4039,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* 	 * This is a pretty disgustingly long chain, but I am not 	 * sure there is any better way.  Passing the fdidx into 	 * VOP_OPEN() offers us more information than just passing 	 * the file *. 	 */
-name|fp
-operator|=
-name|ap
-operator|->
-name|a_td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
-operator|->
-name|fd_ofiles
-index|[
-name|ap
-operator|->
-name|a_fdidx
-index|]
-expr_stmt|;
 name|FILE_LOCK
 argument_list|(
 name|fp

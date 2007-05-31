@@ -2179,7 +2179,7 @@ name|td
 argument_list|,
 name|ap
 operator|->
-name|a_fdidx
+name|a_fp
 argument_list|)
 expr_stmt|;
 if|if
@@ -2228,8 +2228,7 @@ name|cred
 argument_list|,
 name|td
 argument_list|,
-operator|-
-literal|1
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2288,14 +2287,6 @@ operator|=
 name|ap
 operator|->
 name|a_mode
-expr_stmt|;
-name|unsp
-operator|->
-name|uns_lower_fdidx
-operator|=
-name|ap
-operator|->
-name|a_fdidx
 expr_stmt|;
 block|}
 name|ap
@@ -8879,9 +8870,7 @@ name|td_ucred
 argument_list|,
 name|td
 argument_list|,
-name|unsp
-operator|->
-name|uns_lower_fdidx
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
