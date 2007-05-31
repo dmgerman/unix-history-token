@@ -588,6 +588,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID2_PDCM
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID2_DCA
 value|0x00040000
 end_define
