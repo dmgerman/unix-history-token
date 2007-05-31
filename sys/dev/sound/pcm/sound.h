@@ -356,6 +356,18 @@ directive|include
 file|<dev/sound/pcm/dsp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/sound/clone.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/sound/unit.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -399,48 +411,35 @@ value|SOUND_MODVER
 end_define
 
 begin_comment
-comment|/*  * We're abusing the fact that MAXMINOR still have enough room  * for our bit twiddling and nobody ever need 2048 unique soundcards,  * 32 unique device types and 256 unique cloneable devices for the  * next 100 years... or until the NextPCM.  *  * MAXMINOR 0xffff00ff  *             |    |  *             |    +--- PCMMAXCHAN  *             |  *             +-------- ((PCMMAXUNIT<< 5) | PCMMAXDEV)<< 16  */
+comment|/*  * We're abusing the fact that MAXMINOR still have enough room  * for our bit twiddling and nobody ever need 512 unique soundcards,  * 32 unique device types and 1024 unique cloneable devices for the  * next 100 years...  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PCMMAXCHAN
-value|0xff
+name|PCMMAXUNIT
+value|(snd_max_u())
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCMMAXDEV
-value|0x1f
+value|(snd_max_d())
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMMAXUNIT
-value|0x7ff
+name|PCMMAXCHAN
+value|(snd_max_c())
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMMINOR
-parameter_list|(
-name|x
-parameter_list|)
-value|minor(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCHAN
-parameter_list|(
-name|x
-parameter_list|)
-value|(PCMMINOR(x)& PCMMAXCHAN)
+name|PCMMAXCLONE
+value|PCMMAXCHAN
 end_define
 
 begin_define
@@ -450,7 +449,7 @@ name|PCMUNIT
 parameter_list|(
 name|x
 parameter_list|)
-value|((PCMMINOR(x)>> 21)& PCMMAXUNIT)
+value|(snd_unit2u(dev2unit(x)))
 end_define
 
 begin_define
@@ -460,21 +459,35 @@ name|PCMDEV
 parameter_list|(
 name|x
 parameter_list|)
-value|((PCMMINOR(x)>> 16)& PCMMAXDEV)
+value|(snd_unit2d(dev2unit(x)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMMKMINOR
+name|PCMCHAN
 parameter_list|(
-name|u
-parameter_list|,
-name|d
-parameter_list|,
-name|c
+name|x
 parameter_list|)
-value|((((u)& PCMMAXUNIT)<< 21) | 	\ 				(((d)& PCMMAXDEV)<< 16) | ((c)& PCMMAXCHAN))
+value|(snd_unit2c(dev2unit(x)))
+end_define
+
+begin_comment
+comment|/*  * By design, limit possible channels for each direction.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SND_MAXHWCHAN
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|SND_MAXVCHANS
+value|SND_MAXHWCHAN
 end_define
 
 begin_define
@@ -510,6 +523,20 @@ define|#
 directive|define
 name|SD_F_RSWAPLR
 value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|SD_F_DYING
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|SD_F_SUICIDE
+value|0x00000040
 end_define
 
 begin_define
@@ -1774,17 +1801,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* XXX Flawed definition. I'll fix it someday. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SND_MAXVCHANS
-value|PCMMAXCHAN
-end_define
-
-begin_comment
 comment|/*  * Minor numbers for the sound driver.  *  * Unfortunately Creative called the codec chip of SB as a DSP. For this  * reason the /dev/dsp is reserved for digitized audio use. There is a  * device for true DSP processors but it will be called something else.  * In v3.0 it's /dev/sndproc but this could be a temporary solution.  */
 end_comment
 
@@ -1912,12 +1928,45 @@ end_define
 begin_define
 define|#
 directive|define
-name|SND_DEV_DSPHW
+name|SND_DEV_DSPHW_PLAY
 value|11
 end_define
 
 begin_comment
-comment|/* specific channel request */
+comment|/* specific playback channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SND_DEV_DSPHW_VPLAY
+value|12
+end_define
+
+begin_comment
+comment|/* specific virtual playback channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SND_DEV_DSPHW_REC
+value|13
+end_define
+
+begin_comment
+comment|/* specific record channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SND_DEV_DSPHW_VREC
+value|14
+end_define
+
+begin_comment
+comment|/* specific virtual record channel */
 end_comment
 
 begin_define
@@ -2063,7 +2112,7 @@ name|pid_t
 name|pid
 parameter_list|,
 name|int
-name|chnum
+name|devunit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2131,6 +2180,9 @@ name|cls
 parameter_list|,
 name|int
 name|dir
+parameter_list|,
+name|int
+name|num
 parameter_list|,
 name|void
 modifier|*
@@ -2431,7 +2483,10 @@ begin_function_decl
 name|int
 name|sndstat_acquire
 parameter_list|(
-name|void
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2440,7 +2495,10 @@ begin_function_decl
 name|int
 name|sndstat_release
 parameter_list|(
-name|void
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2595,57 +2653,42 @@ end_comment
 
 begin_struct
 struct|struct
-name|snddev_channel
-block|{
-name|SLIST_ENTRY
-argument_list|(
-argument|snddev_channel
-argument_list|)
-name|link
-expr_stmt|;
-name|struct
-name|pcm_channel
-modifier|*
-name|channel
-decl_stmt|;
-name|int
-name|chan_num
-decl_stmt|;
-name|struct
-name|cdev
-modifier|*
-name|dsp_devt
-decl_stmt|;
-name|struct
-name|cdev
-modifier|*
-name|dspW_devt
-decl_stmt|;
-name|struct
-name|cdev
-modifier|*
-name|audio_devt
-decl_stmt|;
-name|struct
-name|cdev
-modifier|*
-name|dspHW_devt
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|snddev_info
+block|{
+struct|struct
+block|{
+struct|struct
 block|{
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|snddev_channel
+argument|pcm_channel
 argument_list|)
-name|channels
+name|head
 expr_stmt|;
+struct|struct
+block|{
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|pcm_channel
+argument_list|)
+name|head
+expr_stmt|;
+block|}
+name|busy
+struct|;
+block|}
+name|pcm
+struct|;
+block|}
+name|channels
+struct|;
+name|struct
+name|snd_clone
+modifier|*
+name|clones
+decl_stmt|;
 name|struct
 name|pcm_channel
 modifier|*
@@ -2658,7 +2701,9 @@ name|playcount
 decl_stmt|,
 name|reccount
 decl_stmt|,
-name|vchancount
+name|pvchancount
+decl_stmt|,
+name|rvchancount
 decl_stmt|;
 name|unsigned
 name|flags
@@ -2692,6 +2737,30 @@ name|struct
 name|cdev
 modifier|*
 name|mixer_dev
+decl_stmt|;
+name|uint32_t
+name|pvchanrate
+decl_stmt|,
+name|pvchanformat
+decl_stmt|;
+name|uint32_t
+name|rvchanrate
+decl_stmt|,
+name|rvchanformat
+decl_stmt|;
+name|struct
+name|sysctl_ctx_list
+name|play_sysctl_ctx
+decl_stmt|,
+name|rec_sysctl_ctx
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|play_sysctl_tree
+decl_stmt|,
+modifier|*
+name|rec_sysctl_tree
 decl_stmt|;
 block|}
 struct|;

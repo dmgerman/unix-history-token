@@ -11,6 +11,9 @@ name|struct
 name|pcm_channel
 modifier|*
 name|parent
+parameter_list|,
+name|int
+name|num
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -36,6 +39,89 @@ name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Default speed / format  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VCHAN_DEFAULT_SPEED
+value|48000
+end_define
+
+begin_define
+define|#
+directive|define
+name|VCHAN_DEFAULT_AFMT
+value|(AFMT_S16_LE | AFMT_STEREO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VCHAN_DEFAULT_STRFMT
+value|"s16le"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VCHAN_PLAY
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VCHAN_REC
+value|1
+end_define
+
+begin_comment
+comment|/*  * Offset by +/- 1 so we can distinguish bogus pointer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VCHAN_SYSCTL_DATA
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|((void *)((intptr_t)(((((x) + 1)& 0xfff)<< 2) |	\ 		(((VCHAN_##y) + 1)& 0x3))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VCHAN_SYSCTL_DATA_SIZE
+value|sizeof(void *)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VCHAN_SYSCTL_UNIT
+parameter_list|(
+name|x
+parameter_list|)
+value|((int)(((intptr_t)(x)>> 2)& 0xfff) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VCHAN_SYSCTL_DIR
+parameter_list|(
+name|x
+parameter_list|)
+value|((int)((intptr_t)(x)& 0x3) - 1)
+end_define
 
 end_unit
 

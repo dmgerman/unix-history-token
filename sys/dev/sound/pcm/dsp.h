@@ -24,6 +24,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|char
+modifier|*
+name|dsp_unit2name
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|dsp_oss_audioinfo
 parameter_list|(

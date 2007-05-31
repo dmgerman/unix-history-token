@@ -3094,6 +3094,7 @@ if|if
 condition|(
 name|cnt
 condition|)
+block|{
 name|sndbuf_acquire
 argument_list|(
 name|to
@@ -3105,11 +3106,11 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
-comment|/* the root feeder has called sndbuf_dispose(from, , bytes fetched) */
 name|count
 operator|-=
 name|cnt
 expr_stmt|;
+block|}
 block|}
 do|while
 condition|(

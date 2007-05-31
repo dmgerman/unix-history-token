@@ -437,11 +437,15 @@ literal|0
 operator|||
 name|snd_verbose
 operator|>
-literal|3
+literal|4
 condition|)
 name|snd_verbose
 operator|=
 literal|1
+expr_stmt|;
+comment|/* initialize unit numbering */
+name|snd_unit_init
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -451,7 +455,7 @@ literal|0
 operator|||
 name|snd_unit
 operator|>
-name|PCMMAXDEV
+name|PCMMAXUNIT
 condition|)
 name|snd_unit
 operator|=
@@ -1581,7 +1585,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * See feeder_fmtchain() for the mumbo-jumbo ridiculous explaination  * of what the heck is this FMT_Q_*  */
+comment|/*  * See feeder_fmtchain() for the mumbo-jumbo ridiculous explanation  * of what the heck is this FMT_Q_*  */
 end_comment
 
 begin_define
