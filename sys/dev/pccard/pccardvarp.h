@@ -316,7 +316,7 @@ name|pf_flags
 decl_stmt|;
 name|driver_filter_t
 modifier|*
-name|filt_handler
+name|intr_filter
 decl_stmt|;
 name|driver_intr_t
 modifier|*

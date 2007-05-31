@@ -11,6 +11,10 @@ begin_struct
 struct|struct
 name|cbb_intrhand
 block|{
+name|driver_filter_t
+modifier|*
+name|filt
+decl_stmt|;
 name|driver_intr_t
 modifier|*
 name|intr
