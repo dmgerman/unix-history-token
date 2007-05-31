@@ -179,7 +179,7 @@ begin_define
 define|#
 directive|define
 name|MINBPS
-value|128
+value|512
 end_define
 
 begin_comment
@@ -4551,9 +4551,7 @@ name|mk2
 argument_list|(
 name|img
 operator|+
-name|bpb
-operator|.
-name|bps
+name|MINBPS
 operator|-
 literal|2
 argument_list|,
@@ -4613,9 +4611,7 @@ name|mk4
 argument_list|(
 name|img
 operator|+
-name|bpb
-operator|.
-name|bps
+name|MINBPS
 operator|-
 literal|28
 argument_list|,
@@ -4626,9 +4622,7 @@ name|mk4
 argument_list|(
 name|img
 operator|+
-name|bpb
-operator|.
-name|bps
+name|MINBPS
 operator|-
 literal|24
 argument_list|,
@@ -4639,9 +4633,7 @@ name|mk4
 argument_list|(
 name|img
 operator|+
-name|bpb
-operator|.
-name|bps
+name|MINBPS
 operator|-
 literal|20
 argument_list|,
@@ -4654,9 +4646,7 @@ name|mk2
 argument_list|(
 name|img
 operator|+
-name|bpb
-operator|.
-name|bps
+name|MINBPS
 operator|-
 literal|2
 argument_list|,
