@@ -1687,7 +1687,7 @@ block|}
 if|if
 condition|(
 name|waittime
-operator|<=
+operator|<
 literal|1
 condition|)
 block|{
@@ -1695,7 +1695,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"traceroute6: wait must be>1 sec.\n"
+literal|"traceroute6: wait must be>= 1 sec.\n"
 argument_list|)
 expr_stmt|;
 name|exit
