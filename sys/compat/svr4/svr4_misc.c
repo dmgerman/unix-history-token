@@ -3628,10 +3628,9 @@ directive|else
 operator|*
 name|retval
 operator|=
-name|VMCNT_GET
-argument_list|(
-name|free_count
-argument_list|)
+name|cnt
+operator|.
+name|v_free_count
 expr_stmt|;
 comment|/* XXX: free instead of total */
 endif|#
@@ -3659,10 +3658,9 @@ directive|else
 operator|*
 name|retval
 operator|=
-name|VMCNT_GET
-argument_list|(
-name|active_count
-argument_list|)
+name|cnt
+operator|.
+name|v_active_count
 expr_stmt|;
 comment|/* XXX: active instead of avg */
 endif|#

@@ -1886,10 +1886,9 @@ name|i
 operator|=
 name|ptoa
 argument_list|(
-name|VMCNT_GET
-argument_list|(
-name|free_count
-argument_list|)
+name|cnt
+operator|.
+name|v_free_count
 argument_list|)
 expr_stmt|;
 name|p

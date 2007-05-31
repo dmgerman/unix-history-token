@@ -994,17 +994,15 @@ name|printf
 argument_list|(
 literal|"avail memory = %lu (%lu MB)\n"
 argument_list|,
-name|VMCNT_GET
-argument_list|(
-name|free_count
-argument_list|)
+name|cnt
+operator|.
+name|v_free_count
 operator|*
 name|PAGE_SIZE
 argument_list|,
-name|VMCNT_GET
-argument_list|(
-name|free_count
-argument_list|)
+name|cnt
+operator|.
+name|v_free_count
 operator|/
 operator|(
 operator|(

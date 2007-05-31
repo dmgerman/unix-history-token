@@ -1379,12 +1379,10 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
-name|VMCNT_ADD
-argument_list|(
-name|swtch
-argument_list|,
-literal|1
-argument_list|)
+name|cnt
+operator|.
+name|v_swtch
+operator|++
 expr_stmt|;
 comment|/* Add our usage into the usage of all our children. */
 if|if

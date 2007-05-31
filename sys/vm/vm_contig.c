@@ -734,10 +734,9 @@ name|start
 init|;
 name|i
 operator|<
-name|VMCNT_GET
-argument_list|(
-name|page_count
-argument_list|)
+name|cnt
+operator|.
+name|v_page_count
 condition|;
 name|i
 operator|++
@@ -845,10 +844,9 @@ condition|(
 operator|(
 name|i
 operator|==
-name|VMCNT_GET
-argument_list|(
-name|page_count
-argument_list|)
+name|cnt
+operator|.
+name|v_page_count
 operator|)
 operator|||
 operator|(
