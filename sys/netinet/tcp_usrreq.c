@@ -6655,8 +6655,6 @@ block|}
 if|if
 condition|(
 name|tp
-operator|&&
-name|tp
 operator|->
 name|t_state
 operator|>=
@@ -6672,7 +6670,7 @@ operator|->
 name|inp_socket
 argument_list|)
 expr_stmt|;
-comment|/* To prevent the connection hanging in FIN_WAIT_2 forever. */
+comment|/* Prevent the connection hanging in FIN_WAIT_2 forever. */
 if|if
 condition|(
 name|tp
