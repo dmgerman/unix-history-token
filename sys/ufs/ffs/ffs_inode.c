@@ -3005,11 +3005,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|curproc
+name|curthread
 operator|->
-name|p_stats
-operator|->
-name|p_ru
+name|td_ru
 operator|.
 name|ru_inblock
 operator|++

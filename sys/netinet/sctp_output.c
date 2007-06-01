@@ -54333,11 +54333,7 @@ condition|)
 block|{
 name|p
 operator|->
-name|td_proc
-operator|->
-name|p_stats
-operator|->
-name|p_ru
+name|td_ru
 operator|.
 name|ru_msgsnd
 operator|++

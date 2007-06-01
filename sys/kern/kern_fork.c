@@ -2090,15 +2090,11 @@ operator|=
 name|fdtol
 expr_stmt|;
 comment|/* 	 * p_limit is copy-on-write.  Bump its refcount. 	 */
-name|p2
-operator|->
-name|p_limit
-operator|=
-name|lim_hold
+name|lim_fork
 argument_list|(
 name|p1
-operator|->
-name|p_limit
+argument_list|,
+name|p2
 argument_list|)
 expr_stmt|;
 name|pstats_fork

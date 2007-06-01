@@ -3451,12 +3451,17 @@ block|}
 endif|#
 directive|endif
 comment|/* INVARIANTS */
-operator|++
+name|td
+operator|=
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+operator|++
+name|td
 operator|->
-name|p_stats
-operator|->
-name|p_ru
+name|td_ru
 operator|.
 name|ru_nswap
 expr_stmt|;

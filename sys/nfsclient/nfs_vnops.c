@@ -16565,11 +16565,7 @@ argument_list|)
 expr_stmt|;
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_stats
-operator|->
-name|p_ru
+name|td_ru
 operator|.
 name|ru_oublock
 operator|++

@@ -401,6 +401,11 @@ name|plimit
 modifier|*
 name|plim
 decl_stmt|;
+name|struct
+name|rusage
+modifier|*
+name|ru
+decl_stmt|;
 name|int
 name|locked
 decl_stmt|;
@@ -489,6 +494,25 @@ name|retry
 goto|;
 comment|/* 		 * All other activity in this process is now stopped. 		 * Threading support has been turned off. 		 */
 block|}
+name|KASSERT
+argument_list|(
+name|p
+operator|->
+name|p_numthreads
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"exit1: proc %p exiting with %d threads"
+operator|,
+name|p
+operator|,
+name|p
+operator|->
+name|p_numthreads
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Wakeup anyone in procfs' PIOCWAIT.  They should have a hold 	 * on our vmspace, so we should block below until they have 	 * released their reference to us.  Note that if they have 	 * requested S_EXIT stops we will block here until they ack 	 * via PIOCCONT. 	 */
 name|_STOPEVENT
 argument_list|(
@@ -545,6 +569,15 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+comment|/* Drain the limit callout while we don't have the proc locked */
+name|callout_drain
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_limco
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -664,9 +697,7 @@ argument_list|)
 expr_stmt|;
 name|MALLOC
 argument_list|(
-name|p
-operator|->
-name|p_ru
+name|ru
 argument_list|,
 expr|struct
 name|rusage
@@ -1509,7 +1540,7 @@ name|q
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Save exit status and finalize rusage info except for times, 	 * adding in child rusage info later when our time is locked. 	 */
+comment|/* Save exit status. */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1527,25 +1558,24 @@ name|p_xthread
 operator|=
 name|td
 expr_stmt|;
-name|p
+comment|/* 	 * All statistics have been aggregated into the final td_ru by 	 * thread_exit().  Copy these into the proc here where wait*() 	 * can find them. 	 * XXX We will miss any statistics gathered between here and 	 * thread_exit() except for those related to clock ticks. 	 */
+operator|*
+name|ru
+operator|=
+name|td
 operator|->
-name|p_stats
+name|td_ru
+expr_stmt|;
+name|ru
 operator|->
-name|p_ru
-operator|.
 name|ru_nvcsw
 operator|++
 expr_stmt|;
-operator|*
 name|p
 operator|->
 name|p_ru
 operator|=
-name|p
-operator|->
-name|p_stats
-operator|->
-name|p_ru
+name|ru
 expr_stmt|;
 comment|/* 	 * Notify interested parties of our demise. 	 */
 name|KNOTE_LOCKED

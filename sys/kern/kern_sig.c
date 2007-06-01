@@ -9688,11 +9688,9 @@ name|sig
 argument_list|)
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_stats
-operator|->
-name|p_ru
+name|td_ru
 operator|.
 name|ru_nsignals
 operator|++
@@ -13381,11 +13379,9 @@ operator|=
 name|SIG_DFL
 expr_stmt|;
 block|}
-name|p
+name|td
 operator|->
-name|p_stats
-operator|->
-name|p_ru
+name|td_ru
 operator|.
 name|ru_nsignals
 operator|++

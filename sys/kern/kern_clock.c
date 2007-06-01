@@ -1366,7 +1366,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Statistics clock.  Grab profile sample, and if divider reaches 0,  * do process and kernel statistics.  Most of the statistics are only  * used by user-level statistics programs.  The main exceptions are  * ke->ke_uticks, p->p_rux.rux_sticks, p->p_rux.rux_iticks, and p->p_estcpu.  * This should be called by all active processors.  */
+comment|/*  * Statistics clock.  Updates rusage information and calls the scheduler  * to adjust priorities of the active thread.  *  * This should be called by all active processors.  */
 end_comment
 
 begin_function
@@ -1623,15 +1623,6 @@ name|MPASS
 argument_list|(
 name|p
 operator|->
-name|p_stats
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
-name|MPASS
-argument_list|(
-name|p
-operator|->
 name|p_vmspace
 operator|!=
 name|NULL
@@ -1646,11 +1637,9 @@ expr_stmt|;
 name|ru
 operator|=
 operator|&
-name|p
+name|td
 operator|->
-name|p_stats
-operator|->
-name|p_ru
+name|td_ru
 expr_stmt|;
 name|ru
 operator|->

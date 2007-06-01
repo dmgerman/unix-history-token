@@ -932,11 +932,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|curproc
+name|curthread
 operator|->
-name|p_stats
-operator|->
-name|p_ru
+name|td_ru
 operator|.
 name|ru_inblock
 operator|++
@@ -1204,11 +1202,9 @@ argument_list|(
 name|rbp
 argument_list|)
 expr_stmt|;
-name|curproc
+name|curthread
 operator|->
-name|p_stats
-operator|->
-name|p_ru
+name|td_ru
 operator|.
 name|ru_inblock
 operator|++

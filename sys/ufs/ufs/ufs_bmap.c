@@ -923,16 +923,13 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|curproc
+name|curthread
 operator|->
-name|p_stats
-operator|->
-name|p_ru
+name|td_ru
 operator|.
 name|ru_inblock
 operator|++
 expr_stmt|;
-comment|/* XXX */
 name|error
 operator|=
 name|bufwait

@@ -95,6 +95,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sigio.h>
 end_include
 
@@ -581,22 +587,31 @@ name|u_int
 name|td_slptime
 decl_stmt|;
 comment|/* (j) How long completely blocked. */
+name|struct
+name|rusage
+name|td_ru
+decl_stmt|;
+comment|/* (j) rusage information */
+name|uint64_t
+name|td_runtime
+decl_stmt|;
+comment|/* (j) How many cpu ticks we've run. */
 name|u_int
 name|td_pticks
 decl_stmt|;
-comment|/* (k) Statclock hits for profiling */
+comment|/* (j) Statclock hits for profiling */
 name|u_int
 name|td_sticks
 decl_stmt|;
-comment|/* (k) Statclock hits in system mode. */
+comment|/* (j) Statclock hits in system mode. */
 name|u_int
 name|td_iticks
 decl_stmt|;
-comment|/* (k) Statclock hits in intr mode. */
+comment|/* (j) Statclock hits in intr mode. */
 name|u_int
 name|td_uticks
 decl_stmt|;
-comment|/* (k) Statclock hits in user mode. */
+comment|/* (j) Statclock hits in user mode. */
 name|u_int
 name|td_uuticks
 decl_stmt|;
@@ -1908,6 +1923,11 @@ name|p_limit
 decl_stmt|;
 comment|/* (c) Process limits. */
 name|struct
+name|callout
+name|p_limco
+decl_stmt|;
+comment|/* (c) Limit callout handle */
+name|struct
 name|sigacts
 modifier|*
 name|p_sigacts
@@ -2221,7 +2241,7 @@ comment|/* (c) Process arguments. */
 name|rlim_t
 name|p_cpulimit
 decl_stmt|;
-comment|/* (j) Current CPU limit in seconds. */
+comment|/* (c) Current CPU limit in seconds. */
 name|signed
 name|char
 name|p_nice
@@ -2264,7 +2284,7 @@ name|rusage
 modifier|*
 name|p_ru
 decl_stmt|;
-comment|/* (a) Exit information. XXX */
+comment|/* (a) Exit information. */
 name|struct
 name|proc
 modifier|*
@@ -2676,17 +2696,6 @@ end_define
 
 begin_comment
 comment|/* Loaded into memory. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_XCPU
-value|0x00002
-end_define
-
-begin_comment
-comment|/* Exceeded CPU limit. */
 end_comment
 
 begin_define
