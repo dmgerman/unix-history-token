@@ -2220,8 +2220,7 @@ name|FSCRED
 argument_list|,
 name|td
 argument_list|,
-operator|-
-literal|1
+name|NULL
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
