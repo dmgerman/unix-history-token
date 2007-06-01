@@ -982,13 +982,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|AUDIT_PRINTF
-argument_list|(
-operator|(
-literal|"Closing old audit file\n"
-operator|)
-argument_list|)
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1038,29 +1031,6 @@ expr_stmt|;
 name|old_vp
 operator|=
 name|NULL
-expr_stmt|;
-name|AUDIT_PRINTF
-argument_list|(
-operator|(
-literal|"Audit file closed\n"
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|*
-name|audit_vpp
-operator|!=
-name|NULL
-condition|)
-block|{
-name|AUDIT_PRINTF
-argument_list|(
-operator|(
-literal|"Opening new audit file\n"
-operator|)
-argument_list|)
 expr_stmt|;
 block|}
 name|do_replacement_signal
@@ -1420,13 +1390,6 @@ decl_stmt|;
 name|int
 name|lowater_signal
 decl_stmt|;
-name|AUDIT_PRINTF
-argument_list|(
-operator|(
-literal|"audit_worker starting\n"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * These are thread-local variables requiring no synchronization. 	 */
 name|TAILQ_INIT
 argument_list|(
@@ -1477,14 +1440,6 @@ operator|&
 name|audit_q
 argument_list|)
 condition|)
-block|{
-name|AUDIT_PRINTF
-argument_list|(
-operator|(
-literal|"audit_worker waiting\n"
-operator|)
-argument_list|)
-expr_stmt|;
 name|cv_wait
 argument_list|(
 operator|&
@@ -1494,26 +1449,6 @@ operator|&
 name|audit_mtx
 argument_list|)
 expr_stmt|;
-name|AUDIT_PRINTF
-argument_list|(
-operator|(
-literal|"audit_worker woken up\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|AUDIT_PRINTF
-argument_list|(
-operator|(
-literal|"audit_worker: new vp = %p; value of "
-literal|"flag %d\n"
-operator|,
-name|audit_replacement_vp
-operator|,
-name|audit_replacement_flag
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 		 * First priority: replace the audit log target if requested. 		 */
 name|audit_worker_rotate
 argument_list|(
@@ -1677,15 +1612,6 @@ name|audit_replacement_flag
 operator|!=
 literal|0
 condition|)
-block|{
-name|AUDIT_PRINTF
-argument_list|(
-operator|(
-literal|"audit_rotate_vnode: sleeping to wait for "
-literal|"flag\n"
-operator|)
-argument_list|)
-expr_stmt|;
 name|cv_wait
 argument_list|(
 operator|&
@@ -1695,16 +1621,6 @@ operator|&
 name|audit_mtx
 argument_list|)
 expr_stmt|;
-name|AUDIT_PRINTF
-argument_list|(
-operator|(
-literal|"audit_rotate_vnode: woken up (flag %d)\n"
-operator|,
-name|audit_replacement_flag
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 name|audit_replacement_cred
 operator|=
 name|cred
@@ -1717,22 +1633,14 @@ name|audit_replacement_vp
 operator|=
 name|vp
 expr_stmt|;
-comment|/* 	 * Wake up the audit worker to perform the exchange once we 	 * release the mutex. 	 */
+comment|/* 	 * Wake up the audit worker to perform the exchange once we release 	 * the mutex. 	 */
 name|cv_signal
 argument_list|(
 operator|&
 name|audit_worker_cv
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait for the audit_worker to broadcast that a replacement has 	 * taken place; we know that once this has happened, our vnode 	 * has been replaced in, so we can return successfully. 	 */
-name|AUDIT_PRINTF
-argument_list|(
-operator|(
-literal|"audit_rotate_vnode: waiting for news of "
-literal|"replacement\n"
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Wait for the audit_worker to broadcast that a replacement has 	 * taken place; we know that once this has happened, our vnode has 	 * been replaced in, so we can return successfully. 	 */
 name|cv_wait
 argument_list|(
 operator|&
@@ -1742,28 +1650,17 @@ operator|&
 name|audit_mtx
 argument_list|)
 expr_stmt|;
-name|AUDIT_PRINTF
-argument_list|(
-operator|(
-literal|"audit_rotate_vnode: change acknowledged by "
-literal|"audit_worker (flag "
-literal|"now %d)\n"
-operator|,
-name|audit_replacement_flag
-operator|)
-argument_list|)
+name|audit_file_rotate_wait
+operator|=
+literal|0
 expr_stmt|;
+comment|/* We can now request another rotation */
 name|mtx_unlock
 argument_list|(
 operator|&
 name|audit_mtx
 argument_list|)
 expr_stmt|;
-name|audit_file_rotate_wait
-operator|=
-literal|0
-expr_stmt|;
-comment|/* We can now request another rotation */
 block|}
 end_function
 

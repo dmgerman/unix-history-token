@@ -1538,7 +1538,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Constrain the number of committed audit records based on 	 * the configurable parameter. 	 */
+comment|/* 	 * Constrain the number of committed audit records based on the 	 * configurable parameter. 	 */
 while|while
 condition|(
 name|audit_q_len
@@ -1547,15 +1547,6 @@ name|audit_qctrl
 operator|.
 name|aq_hiwater
 condition|)
-block|{
-name|AUDIT_PRINTF
-argument_list|(
-operator|(
-literal|"audit_commit: sleeping to wait for "
-literal|"audit queue to drain below high water mark\n"
-operator|)
-argument_list|)
-expr_stmt|;
 name|cv_wait
 argument_list|(
 operator|&
@@ -1565,15 +1556,6 @@ operator|&
 name|audit_mtx
 argument_list|)
 expr_stmt|;
-name|AUDIT_PRINTF
-argument_list|(
-operator|(
-literal|"audit_commit: woke up waiting for "
-literal|"audit queue draining\n"
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1870,27 +1852,6 @@ argument_list|,
 name|error
 argument_list|,
 name|retval
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|td
-operator|->
-name|td_ar
-operator|!=
-name|NULL
-condition|)
-name|AUDIT_PRINTF
-argument_list|(
-operator|(
-literal|"audit record committed by pid %d\n"
-operator|,
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_pid
-operator|)
 argument_list|)
 expr_stmt|;
 name|td
