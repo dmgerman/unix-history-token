@@ -13779,43 +13779,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|uint32_t
-name|table_id
-init|=
-literal|0
-decl_stmt|;
 comment|/* 		 * Need a route to cache. 		 */
-if|if
-condition|(
-name|stcb
-condition|)
-block|{
-name|table_id
-operator|=
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|table_id
-expr_stmt|;
-block|}
-else|else
-block|{
-name|table_id
-operator|=
-name|SCTP_VRF_DEFAULT_TABLEID
-argument_list|(
-name|vrf_id
-argument_list|)
-expr_stmt|;
-block|}
 name|SCTP_RTALLOC
 argument_list|(
 name|ro
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -16302,8 +16271,6 @@ argument_list|,
 name|stcb
 argument_list|,
 name|vrf_id
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|SCTP_STAT_INCR
@@ -17478,8 +17445,6 @@ argument_list|,
 name|stcb
 argument_list|,
 name|vrf_id
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -21975,9 +21940,6 @@ name|init_chk
 parameter_list|,
 name|uint32_t
 name|vrf_id
-parameter_list|,
-name|uint32_t
-name|table_id
 parameter_list|)
 block|{
 name|struct
@@ -22163,8 +22125,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 return|return;
@@ -22222,8 +22182,6 @@ argument_list|,
 name|op_err
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 return|return;
@@ -44954,9 +44912,6 @@ name|sh
 parameter_list|,
 name|uint32_t
 name|vrf_id
-parameter_list|,
-name|uint32_t
-name|table_id
 parameter_list|)
 block|{
 comment|/* formulate and SEND a SHUTDOWN-COMPLETE */
@@ -45568,8 +45523,6 @@ argument_list|,
 name|stcb
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 comment|/* Free the route if we got one back */
@@ -45670,8 +45623,6 @@ argument_list|,
 name|stcb
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 comment|/* Free the route if we got one back */
@@ -49713,9 +49664,6 @@ name|err_cause
 parameter_list|,
 name|uint32_t
 name|vrf_id
-parameter_list|,
-name|uint32_t
-name|table_id
 parameter_list|)
 block|{
 comment|/*- 	 * Formulate the abort message, and send it back down. 	 */
@@ -50511,8 +50459,6 @@ argument_list|,
 name|stcb
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 comment|/* Free the route if we got one back */
@@ -50643,8 +50589,6 @@ argument_list|,
 name|stcb
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 comment|/* Free the route if we got one back */
@@ -50697,9 +50641,6 @@ name|vtag
 parameter_list|,
 name|uint32_t
 name|vrf_id
-parameter_list|,
-name|uint32_t
-name|table_id
 parameter_list|)
 block|{
 name|struct
@@ -51241,8 +51182,6 @@ argument_list|,
 name|stcb
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 name|SCTP_STAT_INCR
@@ -51556,8 +51495,6 @@ argument_list|,
 name|stcb
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 name|SCTP_STAT_INCR

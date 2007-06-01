@@ -238,9 +238,6 @@ name|abort_no_unlock
 parameter_list|,
 name|uint32_t
 name|vrf_id
-parameter_list|,
-name|uint32_t
-name|table_id
 parameter_list|)
 block|{
 name|struct
@@ -325,8 +322,6 @@ argument_list|,
 name|op_err
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -381,8 +376,6 @@ argument_list|,
 name|op_err
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -429,8 +422,6 @@ argument_list|,
 name|op_err
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -479,8 +470,6 @@ argument_list|,
 name|op_err
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 return|return;
@@ -517,8 +506,6 @@ argument_list|,
 name|op_err
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -564,8 +551,6 @@ argument_list|,
 name|op_err
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -626,8 +611,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -666,8 +649,6 @@ argument_list|,
 name|cp
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -1415,9 +1396,6 @@ name|abort_no_unlock
 parameter_list|,
 name|uint32_t
 name|vrf_id
-parameter_list|,
-name|uint32_t
-name|table_id
 parameter_list|)
 block|{
 name|struct
@@ -1613,8 +1591,6 @@ argument_list|,
 name|sh
 argument_list|,
 name|NULL
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1850,8 +1826,6 @@ argument_list|,
 name|sh
 argument_list|,
 name|op_err
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -4005,9 +3979,6 @@ name|abort_no_unlock
 parameter_list|,
 name|uint32_t
 name|vrf_id
-parameter_list|,
-name|uint32_t
-name|table_id
 parameter_list|)
 block|{
 name|struct
@@ -4095,8 +4066,6 @@ argument_list|,
 name|op_err
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4153,8 +4122,6 @@ argument_list|,
 name|op_err
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4206,8 +4173,6 @@ argument_list|,
 name|op_err
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4256,8 +4221,6 @@ argument_list|,
 name|op_err
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4304,8 +4267,6 @@ argument_list|,
 name|sh
 argument_list|,
 name|op_err
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -4411,8 +4372,6 @@ argument_list|,
 name|abort_no_unlock
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 operator|<
 literal|0
@@ -4607,9 +4566,6 @@ name|sac_assoc_id
 parameter_list|,
 name|uint32_t
 name|vrf_id
-parameter_list|,
-name|uint32_t
-name|table_id
 parameter_list|)
 block|{
 name|struct
@@ -4871,8 +4827,6 @@ operator|->
 name|peers_vtag
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -7001,9 +6955,6 @@ name|auth_len
 parameter_list|,
 name|uint32_t
 name|vrf_id
-parameter_list|,
-name|uint32_t
-name|table_id
 parameter_list|)
 block|{
 name|struct
@@ -7344,8 +7295,6 @@ argument_list|,
 name|op_err
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 return|return
@@ -7375,13 +7324,6 @@ operator|&
 name|stcb
 operator|->
 name|asoc
-expr_stmt|;
-comment|/* save the table id (vrf_id is done in aloc_assoc) */
-name|asoc
-operator|->
-name|table_id
-operator|=
-name|table_id
 expr_stmt|;
 comment|/* get scope variables out of cookie */
 name|asoc
@@ -7484,8 +7426,6 @@ argument_list|,
 name|op_err
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 name|atomic_add_int
@@ -8434,9 +8374,6 @@ name|locked_tcb
 parameter_list|,
 name|uint32_t
 name|vrf_id
-parameter_list|,
-name|uint32_t
-name|table_id
 parameter_list|)
 block|{
 name|struct
@@ -9551,8 +9488,6 @@ operator|->
 name|peers_vtag
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 return|return
@@ -9901,8 +9836,6 @@ argument_list|,
 name|auth_len
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -9948,8 +9881,6 @@ operator|&
 name|sac_restart_id
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -10279,8 +10210,6 @@ argument_list|,
 name|op_err
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 name|sctp_free_assoc
@@ -16896,9 +16825,6 @@ name|fwd_tsn_seen
 parameter_list|,
 name|uint32_t
 name|vrf_id
-parameter_list|,
-name|uint32_t
-name|table_id
 parameter_list|)
 block|{
 name|struct
@@ -17434,8 +17360,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 operator|*
@@ -17599,8 +17523,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 return|return
@@ -18500,8 +18422,6 @@ operator|&
 name|abort_no_unlock
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -18709,8 +18629,6 @@ operator|&
 name|abort_no_unlock
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -19544,8 +19462,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 operator|*
@@ -19689,8 +19605,6 @@ argument_list|,
 name|oper
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -19790,8 +19704,6 @@ operator|&
 name|locked_tcb
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -21587,9 +21499,6 @@ name|ecn_bits
 parameter_list|,
 name|uint32_t
 name|vrf_id
-parameter_list|,
-name|uint32_t
-name|table_id
 parameter_list|)
 block|{
 comment|/* 	 * Control chunk processing 	 */
@@ -21723,8 +21632,6 @@ operator|&
 name|fwd_tsn_seen
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -21804,8 +21711,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 return|return;
@@ -21974,8 +21879,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 name|SCTP_TCB_UNLOCK
@@ -22407,10 +22310,6 @@ name|uint32_t
 name|vrf_id
 init|=
 literal|0
-decl_stmt|,
-name|table_id
-init|=
-literal|0
 decl_stmt|;
 name|uint8_t
 name|ecn_bits
@@ -22473,23 +22372,6 @@ argument_list|(
 name|i_pak
 argument_list|,
 name|vrf_id
-argument_list|)
-condition|)
-block|{
-name|SCTP_RELEASE_PKT
-argument_list|(
-name|i_pak
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|SCTP_GET_PKT_TABLEID
-argument_list|(
-name|i_pak
-argument_list|,
-name|table_id
 argument_list|)
 condition|)
 block|{
@@ -23136,8 +23018,6 @@ argument_list|,
 name|sh
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -23178,8 +23058,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -23285,8 +23163,6 @@ argument_list|,
 name|ecn_bits
 argument_list|,
 name|vrf_id
-argument_list|,
-name|table_id
 argument_list|)
 expr_stmt|;
 comment|/* inp's ref-count reduced&& stcb unlocked */

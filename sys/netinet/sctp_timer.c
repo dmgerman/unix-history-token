@@ -1253,7 +1253,7 @@ block|}
 if|if
 condition|(
 name|val
-operator|>
+operator|<
 name|mnet
 operator|->
 name|ssthresh
@@ -3004,6 +3004,7 @@ name|TSN_seq
 expr_stmt|;
 block|}
 block|}
+comment|/* 			 * CMT: Do not allow FRs on retransmitted TSNs. 			 */
 if|if
 condition|(
 name|sctp_cmt_on_off

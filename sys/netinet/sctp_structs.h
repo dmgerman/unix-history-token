@@ -1448,9 +1448,6 @@ name|uint32_t
 name|vrf_id
 decl_stmt|;
 name|uint32_t
-name|table_id
-decl_stmt|;
-name|uint32_t
 name|cookie_preserve_req
 decl_stmt|;
 comment|/* ASCONF next seq I am sending out, inits at init-tsn */

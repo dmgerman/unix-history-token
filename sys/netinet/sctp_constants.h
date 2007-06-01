@@ -73,6 +73,13 @@ name|SCTP_ZERO_COPY_TICK_DELAY
 value|(((100 * hz) + 999) / 1000)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_ZERO_COPY_SENDQ_TICK_DELAY
+value|(((100 * hz) + 999) / 1000)
+end_define
+
 begin_comment
 comment|/* Number of ticks to delay before running  * iterator on an address change.  */
 end_comment
@@ -2468,6 +2475,13 @@ name|SCTP_TIMER_TYPE_ZERO_COPY
 value|20
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_TIMER_TYPE_ZCOPY_SENDQ
+value|21
+end_define
+
 begin_comment
 comment|/* add new timers here - and increment LAST */
 end_comment
@@ -2476,7 +2490,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_TIMER_TYPE_LAST
-value|21
+value|22
 end_define
 
 begin_define
@@ -2926,12 +2940,20 @@ name|SCTP_DEBUG_TIMER2
 value|0x00000002
 end_define
 
+begin_comment
+comment|/* unused */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SCTP_DEBUG_TIMER3
 value|0x00000004
 end_define
+
+begin_comment
+comment|/* unused */
+end_comment
 
 begin_define
 define|#
@@ -2982,6 +3004,10 @@ name|SCTP_DEBUG_UTIL2
 value|0x00000200
 end_define
 
+begin_comment
+comment|/* unused */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2995,6 +3021,10 @@ directive|define
 name|SCTP_DEBUG_AUTH2
 value|0x00000800
 end_define
+
+begin_comment
+comment|/* unused */
+end_comment
 
 begin_define
 define|#
@@ -3024,6 +3054,10 @@ name|SCTP_DEBUG_INPUT4
 value|0x00008000
 end_define
 
+begin_comment
+comment|/* unused */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3045,12 +3079,20 @@ name|SCTP_DEBUG_OUTPUT5
 value|0x00040000
 end_define
 
+begin_comment
+comment|/* unused */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SCTP_DEBUG_XXX
 value|0x00080000
 end_define
+
+begin_comment
+comment|/* unused */
+end_comment
 
 begin_define
 define|#
@@ -3066,6 +3108,10 @@ name|SCTP_DEBUG_PCB2
 value|0x00200000
 end_define
 
+begin_comment
+comment|/* unused */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3079,6 +3125,10 @@ directive|define
 name|SCTP_DEBUG_PCB4
 value|0x00800000
 end_define
+
+begin_comment
+comment|/* unused */
+end_comment
 
 begin_define
 define|#
@@ -3094,12 +3144,20 @@ name|SCTP_DEBUG_INDATA2
 value|0x02000000
 end_define
 
+begin_comment
+comment|/* unused */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SCTP_DEBUG_INDATA3
 value|0x04000000
 end_define
+
+begin_comment
+comment|/* unused */
+end_comment
 
 begin_define
 define|#
@@ -3108,6 +3166,10 @@ name|SCTP_DEBUG_INDATA4
 value|0x08000000
 end_define
 
+begin_comment
+comment|/* unused */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3115,12 +3177,20 @@ name|SCTP_DEBUG_USRREQ1
 value|0x10000000
 end_define
 
+begin_comment
+comment|/* unused */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SCTP_DEBUG_USRREQ2
 value|0x20000000
 end_define
+
+begin_comment
+comment|/* unused */
+end_comment
 
 begin_define
 define|#
@@ -3135,6 +3205,10 @@ directive|define
 name|SCTP_DEBUG_XXXXX
 value|0x80000000
 end_define
+
+begin_comment
+comment|/* unused */
+end_comment
 
 begin_define
 define|#

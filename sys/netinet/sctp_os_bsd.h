@@ -1180,6 +1180,8 @@ parameter_list|(
 name|ifn
 parameter_list|,
 name|ifn_index
+parameter_list|,
+name|af
 parameter_list|)
 value|((struct ifnet *)ifn)->if_mtu
 end_define
@@ -1233,7 +1235,7 @@ name|SCTP_REGISTER_INTERFACE
 parameter_list|(
 name|ifhandle
 parameter_list|,
-name|ifname
+name|af
 parameter_list|)
 end_define
 
@@ -1244,7 +1246,7 @@ name|SCTP_DEREGISTER_INTERFACE
 parameter_list|(
 name|ifhandle
 parameter_list|,
-name|ifname
+name|af
 parameter_list|)
 end_define
 
@@ -1381,32 +1383,6 @@ block|{
 name|vrf_id
 operator|=
 name|SCTP_DEFAULT_VRFID
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|SCTP_GET_PKT_TABLEID
-parameter_list|(
-name|void
-modifier|*
-name|m
-parameter_list|,
-name|uint32_t
-name|table_id
-parameter_list|)
-block|{
-name|table_id
-operator|=
-name|SCTP_DEFAULT_TABLEID
 expr_stmt|;
 return|return
 operator|(
@@ -1661,8 +1637,6 @@ parameter_list|(
 name|ro
 parameter_list|,
 name|vrf_id
-parameter_list|,
-name|table_id
 parameter_list|)
 value|rtalloc_ign((struct route *)ro, 0UL)
 end_define
@@ -1675,6 +1649,21 @@ begin_define
 define|#
 directive|define
 name|SCTP_ZERO_COPY_EVENT
+parameter_list|(
+name|inp
+parameter_list|,
+name|so
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* This is re-pulse ourselves for sendbuf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_ZERO_COPY_SENDQ_EVENT
 parameter_list|(
 name|inp
 parameter_list|,
@@ -1700,8 +1689,6 @@ parameter_list|,
 name|stcb
 parameter_list|,
 name|vrf_id
-parameter_list|,
-name|table_id
 parameter_list|)
 define|\
 value|{ \ 	int o_flgs = 0; \ 	if (stcb&& stcb->sctp_ep&& stcb->sctp_ep->sctp_socket) { \ 		o_flgs = IP_RAWOUTPUT | (stcb->sctp_ep->sctp_socket->so_options& SO_DONTROUTE); \ 	} else { \ 		o_flgs = IP_RAWOUTPUT; \ 	} \ 	result = ip_output(o_pak, NULL, ro, o_flgs, 0, NULL); \ }
@@ -1723,8 +1710,6 @@ parameter_list|,
 name|stcb
 parameter_list|,
 name|vrf_id
-parameter_list|,
-name|table_id
 parameter_list|)
 define|\
 value|{ \  	if (stcb&& stcb->sctp_ep) \ 		result = ip6_output(o_pak, \ 				    ((struct in6pcb *)(stcb->sctp_ep))->in6p_outputopts, \ 				    (ro), 0, 0, ifp, NULL); \ 	else \ 		result = ip6_output(o_pak, NULL, (ro), 0, 0, ifp, NULL); \ }

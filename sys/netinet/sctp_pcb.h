@@ -265,6 +265,18 @@ name|uint32_t
 name|ifa_count
 decl_stmt|;
 comment|/* IFA's we hold (in our list - ifalist) */
+name|uint32_t
+name|num_v6
+decl_stmt|;
+comment|/* number of v6 addresses */
+name|uint32_t
+name|num_v4
+decl_stmt|;
+comment|/* number of v4 addresses */
+name|uint32_t
+name|registered_af
+decl_stmt|;
+comment|/* registered address family for i/f events */
 name|char
 name|ifn_name
 index|[
@@ -750,6 +762,11 @@ name|struct
 name|sctp_timer
 name|zero_copy_timer
 decl_stmt|;
+comment|/* Zero copy app to transport (sendq) read repulse timer */
+name|struct
+name|sctp_timer
+name|zero_copy_sendq_timer
+decl_stmt|;
 name|int
 name|def_cookie_life
 decl_stmt|;
@@ -978,9 +995,6 @@ name|refcount
 decl_stmt|;
 name|uint32_t
 name|def_vrf_id
-decl_stmt|;
-name|uint32_t
-name|def_table_id
 decl_stmt|;
 name|uint32_t
 name|total_sends

@@ -80,8 +80,6 @@ parameter_list|,
 name|uint8_t
 parameter_list|,
 name|uint32_t
-parameter_list|,
-name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
