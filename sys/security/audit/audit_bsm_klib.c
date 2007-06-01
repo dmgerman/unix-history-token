@@ -958,7 +958,7 @@ block|}
 if|#
 directive|if
 literal|0
-comment|/* 	 * Convert chatty errors to better matching events. 	 * Failures to find a file are really just attribute 	 * events - so recast them as such. 	 * 	 * XXXAUDIT: Solaris defines that AUE_OPEN will never be returned, it 	 * is just a placeholder.  However, in Darwin we return that in 	 * preference to other events.  For now, comment this out as we don't 	 * have a BSM conversion routine for AUE_OPEN. 	 */
+comment|/* 	 * Convert chatty errors to better matching events.  Failures to 	 * find a file are really just attribute events -- so recast them as 	 * such. 	 * 	 * XXXAUDIT: Solaris defines that AUE_OPEN will never be returned, it 	 * is just a placeholder.  However, in Darwin we return that in 	 * preference to other events.  For now, comment this out as we don't 	 * have a BSM conversion routine for AUE_OPEN. 	 */
 block|switch (aevent) { 	case AUE_OPEN_R: 	case AUE_OPEN_RT: 	case AUE_OPEN_RW: 	case AUE_OPEN_RWT: 	case AUE_OPEN_W: 	case AUE_OPEN_WT: 		if (error == ENOENT) 			aevent = AUE_OPEN; 	}
 endif|#
 directive|endif
@@ -1012,7 +1012,7 @@ name|AUE_MSGCTL_STAT
 operator|)
 return|;
 default|default:
-comment|/* We will audit a bad command */
+comment|/* We will audit a bad command. */
 return|return
 operator|(
 name|AUE_MSGCTL
@@ -1308,7 +1308,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a canonical path from given path by prefixing either the root  * directory, or the current working directory.  If the process working  * directory is NULL, we could use 'rootvnode' to obtain the root directoty,  * but this results in a volfs name written to the audit log. So we will  * leave the filename starting with '/' in the audit log in this case.  *  * XXXRW: Since we combine two paths here, ideally a buffer of size  * MAXPATHLEN * 2 would be passed in.  */
+comment|/*  * Create a canonical path from given path by prefixing either the root  * directory, or the current working directory.  If the process working  * directory is NULL, we could use 'rootvnode' to obtain the root directory,  * but this results in a volfs name written to the audit log. So we will  * leave the filename starting with '/' in the audit log in this case.  *  * XXXRW: Since we combine two paths here, ideally a buffer of size  * MAXPATHLEN * 2 would be passed in.  */
 end_comment
 
 begin_function
@@ -1595,7 +1595,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|strlcpy
 argument_list|(
 name|cpath
@@ -1605,7 +1604,6 @@ argument_list|,
 name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

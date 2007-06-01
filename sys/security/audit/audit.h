@@ -55,7 +55,7 @@ file|<sys/sysctl.h>
 end_include
 
 begin_comment
-comment|/*  * Audit subsystem condition flags.  The audit_enabled flag is set and  * removed automatically as a result of configuring log files, and  * can be observed but should not be directly manipulated.  The audit  * suspension flag permits audit to be temporarily disabled without  * reconfiguring the audit target.  */
+comment|/*  * Audit subsystem condition flags.  The audit_enabled flag is set and  * removed automatically as a result of configuring log files, and can be  * observed but should not be directly manipulated.  The audit suspension  * flag permits audit to be temporarily disabled without reconfiguring the  * audit target.  */
 end_comment
 
 begin_decl_stmt
@@ -472,7 +472,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * The remaining kernel functions are conditionally compiled in as they  * are wrapped by a macro, and the macro should be the only place in  * the source tree where these functions are referenced.  */
+comment|/*  * The remaining kernel functions are conditionally compiled in as they are  * wrapped by a macro, and the macro should be the only place in the source  * tree where these functions are referenced.  */
 end_comment
 
 begin_ifdef
@@ -1123,7 +1123,7 @@ value|do {				\ 	if (audit_enabled) {						\ 		audit_syscall_enter(code, td);			
 end_define
 
 begin_comment
-comment|/*  * Wrap the audit_syscall_exit() function so that it is called only when  * auditing is enabled, or we have a audit record on the thread. It is  * possible that an audit record was begun before auditing was turned off.  */
+comment|/*  * Wrap the audit_syscall_exit() function so that it is called only when  * auditing is enabled, or we have a audit record on the thread.  It is  * possible that an audit record was begun before auditing was turned off.  */
 end_comment
 
 begin_define

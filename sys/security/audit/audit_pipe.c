@@ -1118,7 +1118,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine whether a specific audit pipe matches a record with these  * properties.  Algorithm is as follows:  *  * - If the pipe is configured to track the default trail configuration, then  *   use the results of global preselection matching.  * - If not, search for a specifically configured auid entry matching the  *   event.  If an entry is found, use that.  * - Otherwise, use the default flags or naflags configured for the pipe.  */
+comment|/*-  * Determine whether a specific audit pipe matches a record with these  * properties.  Algorithm is as follows:  *  * - If the pipe is configured to track the default trail configuration, then  *   use the results of global preselection matching.  * - If not, search for a specifically configured auid entry matching the  *   event.  If an entry is found, use that.  * - Otherwise, use the default flags or naflags configured for the pipe.  */
 end_comment
 
 begin_function
