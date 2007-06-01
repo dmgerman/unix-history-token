@@ -673,7 +673,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ng_apply_item
 parameter_list|(
 name|node_p
@@ -8054,7 +8054,8 @@ name|node
 argument_list|)
 expr_stmt|;
 comment|/* zaps stored node */
-comment|/* Don't report any errors. act as if it had been queued */
+name|error
+operator|=
 name|ng_apply_item
 argument_list|(
 name|node
@@ -8120,7 +8121,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ng_apply_item
 parameter_list|(
 name|node_p
@@ -8603,7 +8604,11 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
