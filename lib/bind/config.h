@@ -12,11 +12,15 @@ comment|/* config.h.in.  Generated from configure.in by autoheader.  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.35.2.4.2.10 2004/12/04 06:50:02 marka Exp $ */
+comment|/* $Id: acconfig.h,v 1.44.18.5 2005/04/29 00:15:20 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_comment
@@ -24,7 +28,7 @@ comment|/***  *** This file is not to be included by any public header files, be
 end_comment
 
 begin_comment
-comment|/* define to `int' if<sys/types.h> doesn't define.  */
+comment|/** define to `int' if<sys/types.h> doesn't define.  */
 end_comment
 
 begin_comment
@@ -32,7 +36,7 @@ comment|/* #undef ssize_t */
 end_comment
 
 begin_comment
-comment|/* define on DEC OSF to enable 4.4BSD style sa_len support */
+comment|/** define on DEC OSF to enable 4.4BSD style sa_len support */
 end_comment
 
 begin_comment
@@ -40,7 +44,7 @@ comment|/* #undef _SOCKADDR_LEN */
 end_comment
 
 begin_comment
-comment|/* define if your system needs pthread_init() before using pthreads */
+comment|/** define if your system needs pthread_init() before using pthreads */
 end_comment
 
 begin_comment
@@ -48,15 +52,18 @@ comment|/* #undef NEED_PTHREAD_INIT */
 end_comment
 
 begin_comment
-comment|/* define if your system has sigwait() */
+comment|/** define if your system has sigwait() */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SIGWAIT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SIGWAIT
+value|1
+end_define
 
 begin_comment
-comment|/* define if sigwait() is the UnixWare flavor */
+comment|/** define if sigwait() is the UnixWare flavor */
 end_comment
 
 begin_comment
@@ -64,7 +71,7 @@ comment|/* #undef HAVE_UNIXWARE_SIGWAIT */
 end_comment
 
 begin_comment
-comment|/* define on Solaris to get sigwait() to work using pthreads semantics */
+comment|/** define on Solaris to get sigwait() to work using pthreads semantics */
 end_comment
 
 begin_comment
@@ -72,7 +79,7 @@ comment|/* #undef _POSIX_PTHREAD_SEMANTICS */
 end_comment
 
 begin_comment
-comment|/* define if LinuxThreads is in use */
+comment|/** define if LinuxThreads is in use */
 end_comment
 
 begin_comment
@@ -80,15 +87,18 @@ comment|/* #undef HAVE_LINUXTHREADS */
 end_comment
 
 begin_comment
-comment|/* define if sysconf() is available */
+comment|/** define if sysconf() is available */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SYSCONF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SYSCONF
+value|1
+end_define
 
 begin_comment
-comment|/* define if sysctlbyname() is available */
+comment|/** define if sysctlbyname() is available */
 end_comment
 
 begin_define
@@ -99,7 +109,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if catgets() is available */
+comment|/** define if catgets() is available */
 end_comment
 
 begin_define
@@ -110,7 +120,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if getifaddrs() exists */
+comment|/** define if getifaddrs() exists */
 end_comment
 
 begin_define
@@ -121,7 +131,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if you have the NET_RT_IFLIST sysctl variable and sys/sysctl.h */
+comment|/** define if you have the NET_RT_IFLIST sysctl variable and sys/sysctl.h */
 end_comment
 
 begin_define
@@ -132,7 +142,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if chroot() is available */
+comment|/** define if chroot() is available */
 end_comment
 
 begin_define
@@ -143,7 +153,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if tzset() is available */
+comment|/** define if tzset() is available */
 end_comment
 
 begin_define
@@ -154,7 +164,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if struct addrinfo exists */
+comment|/** define if struct addrinfo exists */
 end_comment
 
 begin_define
@@ -165,7 +175,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if getaddrinfo() exists */
+comment|/** define if getaddrinfo() exists */
 end_comment
 
 begin_define
@@ -176,7 +186,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if gai_strerror() exists */
+comment|/** define if gai_strerror() exists */
 end_comment
 
 begin_define
@@ -187,7 +197,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if arc4random() exists */
+comment|/** define if arc4random() exists */
 end_comment
 
 begin_define
@@ -198,7 +208,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if pthread_setconcurrency() should be called to tell the  * OS how many threads we might want to run.  */
+comment|/**  * define if pthread_setconcurrency() should be called to tell the  * OS how many threads we might want to run.  */
 end_comment
 
 begin_comment
@@ -206,7 +216,7 @@ comment|/* #undef CALL_PTHREAD_SETCONCURRENCY */
 end_comment
 
 begin_comment
-comment|/* define if IPv6 is not disabled */
+comment|/** define if IPv6 is not disabled */
 end_comment
 
 begin_comment
@@ -214,7 +224,7 @@ comment|/* #undef WANT_IPV6 */
 end_comment
 
 begin_comment
-comment|/* define if flockfile() is available */
+comment|/** define if flockfile() is available */
 end_comment
 
 begin_define
@@ -225,7 +235,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if getc_unlocked() is available */
+comment|/** define if getc_unlocked() is available */
 end_comment
 
 begin_define
@@ -236,7 +246,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Shut up warnings about sputaux in stdio.h on BSD/OS pre-4.1 */
+comment|/** Shut up warnings about sputaux in stdio.h on BSD/OS pre-4.1 */
 end_comment
 
 begin_comment
@@ -278,7 +288,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Shut up warnings about missing sigwait prototype on BSD/OS 4.0* */
+comment|/** Shut up warnings about missing sigwait prototype on BSD/OS 4.0* */
 end_comment
 
 begin_comment
@@ -314,7 +324,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Shut up warnings from gcc -Wcast-qual on BSD/OS 4.1. */
+comment|/** Shut up warnings from gcc -Wcast-qual on BSD/OS 4.1. */
 end_comment
 
 begin_comment
@@ -342,11 +352,11 @@ file|<stdarg.h>
 end_include
 
 begin_comment
-comment|/* Grr.  Must be included *every time*. */
+comment|/** Grr.  Must be included *every time*. */
 end_comment
 
 begin_comment
-comment|/*  * The silly continuation line is to keep configure from  * commenting out the #undef.  */
+comment|/**  * The silly continuation line is to keep configure from  * commenting out the #undef.  */
 end_comment
 
 begin_undef
@@ -375,11 +385,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SHUTUP_STDARG_CAST&& __GNUC__ */
+comment|/** SHUTUP_STDARG_CAST&& __GNUC__ */
 end_comment
 
 begin_comment
-comment|/* define if the system has a random number generating device */
+comment|/** define if the system has a random number generating device */
 end_comment
 
 begin_define
@@ -390,23 +400,29 @@ value|"/dev/random"
 end_define
 
 begin_comment
-comment|/* define if pthread_attr_getstacksize() is available */
+comment|/** define if pthread_attr_getstacksize() is available */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PTHREAD_ATTR_GETSTACKSIZE */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_ATTR_GETSTACKSIZE
+value|1
+end_define
 
 begin_comment
-comment|/* define if pthread_attr_setstacksize() is available */
+comment|/** define if pthread_attr_setstacksize() is available */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PTHREAD_ATTR_SETSTACKSIZE */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_ATTR_SETSTACKSIZE
+value|1
+end_define
 
 begin_comment
-comment|/* define if you have strerror in the C library. */
+comment|/** define if you have strerror in the C library. */
 end_comment
 
 begin_define
@@ -417,7 +433,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you are running under Compaq TruCluster. */
+comment|/** Define if you are running under Compaq TruCluster. */
 end_comment
 
 begin_comment
@@ -469,28 +485,6 @@ end_comment
 begin_comment
 comment|/* #undef BROKEN_TCP_BIND_BEFORE_CONNECT */
 end_comment
-
-begin_comment
-comment|/* Define if libcrypto has DH_generate_parameters */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_DH_GENERATE_PARAMETERS
-value|1
-end_define
-
-begin_comment
-comment|/* Define if libcrypto has DSA_generate_parameters */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_DSA_GENERATE_PARAMETERS
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
@@ -579,6 +573,17 @@ comment|/* #undef HAVE_LINUX_CAPABILITY_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<locale.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOCALE_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<memory.h> header file. */
 end_comment
 
@@ -598,13 +603,13 @@ comment|/* #undef HAVE_NET_IF6_H */
 end_comment
 
 begin_comment
-comment|/* Define if libcrypto has RSA_generate_key */
+comment|/* Define to 1 if you have the `setlocale' function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_RSA_GENERATE_KEY
+name|HAVE_SETLOCALE
 value|1
 end_define
 
@@ -738,6 +743,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/un.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_UN_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if running under Compaq TruCluster */
 end_comment
 
@@ -762,6 +778,14 @@ end_comment
 
 begin_comment
 comment|/* #undef NEED_OPTARG */
+end_comment
+
+begin_comment
+comment|/* Define if connect does not honour the permission on the UNIX domain socket.    */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_SECURE_DIRECTORY */
 end_comment
 
 begin_comment
@@ -858,6 +882,14 @@ end_comment
 
 begin_comment
 comment|/* #undef USE_FIONBIO_IOCTL */
+end_comment
+
+begin_comment
+comment|/* define if idnkit support is to be included. */
+end_comment
+
+begin_comment
+comment|/* #undef WITH_IDN */
 end_comment
 
 begin_comment

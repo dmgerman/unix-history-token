@@ -126,11 +126,12 @@ directive|undef
 name|SOLARIS2
 end_undef
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|DO_PTHREADS
-end_undef
+value|1
+end_define
 
 begin_define
 define|#
@@ -857,6 +858,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 
