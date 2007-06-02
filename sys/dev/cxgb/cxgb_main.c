@@ -6936,11 +6936,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|PORT_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
@@ -6953,11 +6948,6 @@ name|if_drv_flags
 operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
-expr_stmt|;
-name|PORT_UNLOCK
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 block|}
 end_function
