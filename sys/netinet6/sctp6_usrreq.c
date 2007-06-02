@@ -2440,6 +2440,11 @@ name|sctp_inpcb
 modifier|*
 name|inp
 decl_stmt|;
+name|uint32_t
+name|vrf_id
+init|=
+name|SCTP_DEFAULT_VRFID
+decl_stmt|;
 name|inp
 operator|=
 operator|(
@@ -2503,6 +2508,8 @@ operator|=
 name|sctp_inpcb_alloc
 argument_list|(
 name|so
+argument_list|,
+name|vrf_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -2522,6 +2529,11 @@ operator|)
 name|so
 operator|->
 name|so_pcb
+expr_stmt|;
+name|SCTP_INP_WLOCK
+argument_list|(
+name|inp
+argument_list|)
 expr_stmt|;
 name|inp
 operator|->
@@ -2574,6 +2586,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Hmm what about the IPSEC stuff that is missing here but in 	 * sctp_attach()? 	 */
+name|SCTP_INP_WUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

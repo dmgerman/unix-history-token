@@ -2045,6 +2045,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|uint32_t
+name|vrf_id
+init|=
+name|SCTP_DEFAULT_VRFID
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC
@@ -2100,6 +2105,8 @@ operator|=
 name|sctp_inpcb_alloc
 argument_list|(
 name|so
+argument_list|,
+name|vrf_id
 argument_list|)
 expr_stmt|;
 if|if

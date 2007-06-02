@@ -698,13 +698,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_DEFAULT_TABLEID
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_VRF_ADDR_HASH_SIZE
 value|16
 end_define
@@ -719,11 +712,10 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_VRF_DEFAULT_TABLEID
+name|SCTP_INIT_VRF_TABLEID
 parameter_list|(
-name|vrf_id
+name|vrf
 parameter_list|)
-value|0
 end_define
 
 begin_define

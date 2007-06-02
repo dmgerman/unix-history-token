@@ -11681,8 +11681,6 @@ name|sctp_ifn
 operator|=
 name|sctp_find_ifn
 argument_list|(
-name|vrf
-argument_list|,
 name|ifn
 argument_list|,
 name|ifn_index
@@ -12143,8 +12141,6 @@ name|sctp_ifn
 operator|=
 name|sctp_find_ifn
 argument_list|(
-name|vrf
-argument_list|,
 name|ifn
 argument_list|,
 name|ifn_index
@@ -13078,8 +13074,6 @@ name|sctp_ifn
 operator|=
 name|sctp_find_ifn
 argument_list|(
-name|vrf
-argument_list|,
 name|ifn
 argument_list|,
 name|ifn_index
@@ -52349,6 +52343,8 @@ block|{
 name|unsigned
 name|int
 name|sndlen
+init|=
+literal|0
 decl_stmt|,
 name|max_len
 decl_stmt|;

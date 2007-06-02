@@ -2114,9 +2114,6 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Now lets see if we can deliver the next one on 			 * the stream 			 */
-name|uint16_t
-name|nxt_todel
-decl_stmt|;
 name|struct
 name|sctp_stream_in
 modifier|*
