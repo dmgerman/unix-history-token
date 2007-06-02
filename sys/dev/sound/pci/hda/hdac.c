@@ -16612,40 +16612,27 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|struct
-name|snddev_info
-modifier|*
-name|d
-init|=
-name|NULL
-decl_stmt|;
-name|d
-operator|=
-name|device_get_softc
+name|pcm_setflags
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+name|pcm_getflags
 argument_list|(
 name|sc
 operator|->
 name|dev
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|d
-operator|!=
-name|NULL
-condition|)
-block|{
-name|d
-operator|->
-name|flags
-operator||=
+operator||
 name|SD_F_SOFTPCMVOL
+argument_list|)
 expr_stmt|;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"HDA_DEBUG: %s Soft PCM volume\n"
-argument|, 				    (softpcmvol ==
+argument|, 			    (softpcmvol ==
 literal|1
 argument|) ?
 literal|"Forcing"
@@ -16654,7 +16641,6 @@ literal|"Enabling"
 argument|);
 argument_list|)
 empty_stmt|;
-block|}
 name|i
 operator|=
 literal|0
