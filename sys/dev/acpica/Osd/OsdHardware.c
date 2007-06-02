@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<machine/pci_cfgreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/acpica/acpivar.h>
 end_include
 
 begin_include
@@ -815,29 +827,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* XXX should use acpivar.h but too many include dependencies */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|ACPI_STATUS
-name|acpi_GetInteger
-parameter_list|(
-name|ACPI_HANDLE
-name|handle
-parameter_list|,
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|int
-modifier|*
-name|number
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Depth-first recursive case for finding the bus, given the slot/function.  */
 end_comment
 
@@ -1012,18 +1001,11 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"acpi_bus_number: can't get _ADR\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|bus
 operator|)
 return|;
-block|}
 name|slot
 operator|=
 name|ACPI_HIWORD
@@ -1123,6 +1105,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|header
@@ -1278,7 +1261,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"AcpiOsDerivePciId: bus %d dev %d func %d\n"
+literal|"AcpiOsDerivePciId: %s -> bus %d dev %d func %d\n"
+argument_list|,
+name|acpi_name
+argument_list|(
+name|chandle
+argument_list|)
 argument_list|,
 operator|(
 operator|*
