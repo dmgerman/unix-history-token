@@ -17,7 +17,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: hinfo_13.h,v 1.22.206.1 2004/03/06 08:14:05 marka Exp $ */
+comment|/* $Id: hinfo_13.h,v 1.23 2004/03/05 05:10:12 marka Exp $ */
 end_comment
 
 begin_typedef

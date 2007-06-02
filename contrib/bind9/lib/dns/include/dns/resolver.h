@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: resolver.h,v 1.34.12.9 2006/02/01 23:48:51 marka Exp $ */
+comment|/* $Id: resolver.h,v 1.40.18.11 2006/02/01 22:39:17 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * DNS Resolver  *  * This is the BIND 9 resolver, the module responsible for resolving DNS  * requests by iteratively querying authoritative servers and following  * referrals.  This is a "full resolver", not to be confused with  * the stub resolvers most people associate with the word "resolver".  * The full resolver is part of the caching name server or resolver  * daemon the stub resolver talks to.  *  * MP:  *	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *  * Reliability:  *	No anticipated impact.  *  * Resources:  *<TBS>  *  * Security:  *	No anticipated impact.  *  * Standards:  *	RFCs:	1034, 1035, 2181,<TBS>  *	Drafts:<TBS>  */
+comment|/*! \file  *  * \brief  * This is the BIND 9 resolver, the module responsible for resolving DNS  * requests by iteratively querying authoritative servers and following  * referrals.  This is a "full resolver", not to be confused with  * the stub resolvers most people associate with the word "resolver".  * The full resolver is part of the caching name server or resolver  * daemon the stub resolver talks to.  *  * MP:  *\li	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	RFCs:	1034, 1035, 2181, TBS  *\li	Drafts:	TBS  */
 end_comment
 
 begin_include
@@ -57,7 +57,7 @@ name|ISC_LANG_BEGINDECLS
 end_macro
 
 begin_comment
-comment|/*  * A dns_fetchevent_t is sent when a 'fetch' completes.  Any of 'db',  * 'node', 'rdataset', and 'sigrdataset' may be bound.  It is the  * receiver's responsibility to detach before freeing the event.  *  * 'rdataset' and 'sigrdataset' are the values that were supplied when  * dns_resolver_createfetch() was called.  They are returned to the  * caller so that they may be freed.  */
+comment|/*%  * A dns_fetchevent_t is sent when a 'fetch' completes.  Any of 'db',  * 'node', 'rdataset', and 'sigrdataset' may be bound.  It is the  * receiver's responsibility to detach before freeing the event.  * \brief  * 'rdataset', 'sigrdataset', 'client' and 'id' are the values that were  * supplied when dns_resolver_createfetch() was called.  They are returned  *  to the caller so that they may be freed.  */
 end_comment
 
 begin_typedef
@@ -100,6 +100,13 @@ decl_stmt|;
 name|dns_fixedname_t
 name|foundname
 decl_stmt|;
+name|isc_sockaddr_t
+modifier|*
+name|client
+decl_stmt|;
+name|dns_messageid_t
+name|id
+decl_stmt|;
 block|}
 name|dns_fetchevent_t
 typedef|;
@@ -117,7 +124,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Use TCP. */
+comment|/*%< Use TCP. */
 end_comment
 
 begin_define
@@ -128,7 +135,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* See below. */
+comment|/*%< See below. */
 end_comment
 
 begin_define
@@ -139,7 +146,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* Set RD? */
+comment|/*%< Set RD? */
 end_comment
 
 begin_define
@@ -150,7 +157,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* Do not use EDNS. */
+comment|/*%< Do not use EDNS. */
 end_comment
 
 begin_define
@@ -161,7 +168,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Only use forwarders. */
+comment|/*%< Only use forwarders. */
 end_comment
 
 begin_define
@@ -172,8 +179,40 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* Disable validation. */
+comment|/*%< Disable validation. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_FETCHOPT_EDNS512
+value|0x40
+end_define
+
+begin_comment
+comment|/*%< Advertise a 512 byte 						          UDP buffer. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_FETCHOPT_EDNSVERSIONSET
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_FETCHOPT_EDNSVERSIONMASK
+value|0xff000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_FETCHOPT_EDNSVERSIONSHIFT
+value|24
+end_define
 
 begin_comment
 comment|/*  * XXXRTH  Should this API be made semi-private?  (I.e.  * _dns_resolver_create()).  */
@@ -242,7 +281,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a resolver.  *  * Notes:  *  *	Generally, applications should not create a resolver directly, but  *	should instead call dns_view_createresolver().  *  *	No options are currently defined.  *  * Requires:  *  *	'view' is a valid view.  *  *	'taskmgr' is a valid task manager.  *  *	'ntasks'> 0.  *  *	'socketmgr' is a valid socket manager.  *  *	'timermgr' is a valid timer manager.  *  *	'dispatchv4' is a valid dispatcher with an IPv4 UDP socket, or is NULL.  *  *	'dispatchv6' is a valid dispatcher with an IPv6 UDP socket, or is NULL.  *  *	resp != NULL&& *resp == NULL.  *  * Returns:  *  *	ISC_R_SUCCESS				On success.  *  *	Anything else				Failure.  */
+comment|/*%<  * Create a resolver.  *  * Notes:  *  *\li	Generally, applications should not create a resolver directly, but  *	should instead call dns_view_createresolver().  *  *\li	No options are currently defined.  *  * Requires:  *  *\li	'view' is a valid view.  *  *\li	'taskmgr' is a valid task manager.  *  *\li	'ntasks'> 0.  *  *\li	'socketmgr' is a valid socket manager.  *  *\li	'timermgr' is a valid timer manager.  *  *\li	'dispatchv4' is a valid dispatcher with an IPv4 UDP socket, or is NULL.  *  *\li	'dispatchv6' is a valid dispatcher with an IPv6 UDP socket, or is NULL.  *  *\li	resp != NULL&& *resp == NULL.  *  * Returns:  *  *\li	#ISC_R_SUCCESS				On success.  *  *\li	Anything else				Failure.  */
 end_comment
 
 begin_function_decl
@@ -257,7 +296,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Freeze resolver.  *  * Notes:  *  *	Certain configuration changes cannot be made after the resolver  *	is frozen.  Fetches cannot be created until the resolver is frozen.  *  * Requires:  *  *	'res' is a valid, unfrozen resolver.  *  * Ensures:  *  *	'res' is frozen.  */
+comment|/*%<  * Freeze resolver.  *  * Notes:  *  *\li	Certain configuration changes cannot be made after the resolver  *	is frozen.  Fetches cannot be created until the resolver is frozen.  *  * Requires:  *  *\li	'res' is a valid, unfrozen resolver.  *  * Ensures:  *  *\li	'res' is frozen.  */
 end_comment
 
 begin_function_decl
@@ -272,7 +311,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Prime resolver.  *  * Notes:  *  *	Resolvers which have a forwarding policy other than dns_fwdpolicy_only  *	need to be primed with the root nameservers, otherwise the root  *	nameserver hints data may be used indefinitely.  This function requests  *	that the resolver start a priming fetch, if it isn't already priming.  *  * Requires:  *  *	'res' is a valid, frozen resolver.  */
+comment|/*%<  * Prime resolver.  *  * Notes:  *  *\li	Resolvers which have a forwarding policy other than dns_fwdpolicy_only  *	need to be primed with the root nameservers, otherwise the root  *	nameserver hints data may be used indefinitely.  This function requests  *	that the resolver start a priming fetch, if it isn't already priming.  *  * Requires:  *  *\li	'res' is a valid, frozen resolver.  */
 end_comment
 
 begin_function_decl
@@ -296,7 +335,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Send '*eventp' to 'task' when 'res' has completed shutdown.  *  * Notes:  *  *	It is not safe to detach the last reference to 'res' until  *	shutdown is complete.  *  * Requires:  *  *	'res' is a valid resolver.  *  *	'task' is a valid task.  *  *	*eventp is a valid event.  *  * Ensures:  *  *	*eventp == NULL.  */
+comment|/*%<  * Send '*eventp' to 'task' when 'res' has completed shutdown.  *  * Notes:  *  *\li	It is not safe to detach the last reference to 'res' until  *	shutdown is complete.  *  * Requires:  *  *\li	'res' is a valid resolver.  *  *\li	'task' is a valid task.  *  *\li	*eventp is a valid event.  *  * Ensures:  *  *\li	*eventp == NULL.  */
 end_comment
 
 begin_function_decl
@@ -311,7 +350,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Start the shutdown process for 'res'.  *  * Notes:  *  *	This call has no effect if the resolver is already shutting down.  *  * Requires:  *  *	'res' is a valid resolver.  */
+comment|/*%<  * Start the shutdown process for 'res'.  *  * Notes:  *  *\li	This call has no effect if the resolver is already shutting down.  *  * Requires:  *  *\li	'res' is a valid resolver.  */
 end_comment
 
 begin_function_decl
@@ -400,8 +439,73 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_resolver_createfetch2
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|res
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|dns_rdatatype_t
+name|type
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|domain
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|nameservers
+parameter_list|,
+name|dns_forwarders_t
+modifier|*
+name|forwarders
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|client
+parameter_list|,
+name|isc_uint16_t
+name|id
+parameter_list|,
+name|unsigned
+name|int
+name|options
+parameter_list|,
+name|isc_task_t
+modifier|*
+name|task
+parameter_list|,
+name|isc_taskaction_t
+name|action
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|sigrdataset
+parameter_list|,
+name|dns_fetch_t
+modifier|*
+modifier|*
+name|fetchp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * Recurse to answer a question.  *  * Notes:  *  *	This call starts a query for 'name', type 'type'.  *  *	The 'domain' is a parent domain of 'name' for which  *	a set of name servers 'nameservers' is known.  If no  *	such name server information is available, set  * 	'domain' and 'nameservers' to NULL.  *  *	'forwarders' is unimplemented, and subject to change when  *	we figure out how selective forwarding will work.  *  *	When the fetch completes (successfully or otherwise), a  *	DNS_EVENT_FETCHDONE event with action 'action' and arg 'arg' will be  *	posted to 'task'.  *  *	The values of 'rdataset' and 'sigrdataset' will be returned in  *	the FETCHDONE event.  *  * Requires:  *  *	'res' is a valid resolver that has been frozen.  *  *	'name' is a valid name.  *  *	'type' is not a meta type other than ANY.  *  *	'domain' is a valid name or NULL.  *  *	'nameservers' is a valid NS rdataset (whose owner name is 'domain')  *	iff. 'domain' is not NULL.  *  *	'forwarders' is NULL.  *  *	'options' contains valid options.  *  *	'rdataset' is a valid, disassociated rdataset.  *  *	'sigrdataset' is NULL, or is a valid, disassociated rdataset.  *  *	fetchp != NULL&& *fetchp == NULL.  *  * Returns:  *  *	ISC_R_SUCCESS					Success  *  *	Many other values are possible, all of which indicate failure.  */
+comment|/*%<  * Recurse to answer a question.  *  * Notes:  *  *\li	This call starts a query for 'name', type 'type'.  *  *\li	The 'domain' is a parent domain of 'name' for which  *	a set of name servers 'nameservers' is known.  If no  *	such name server information is available, set  * 	'domain' and 'nameservers' to NULL.  *  *\li	'forwarders' is unimplemented, and subject to change when  *	we figure out how selective forwarding will work.  *  *\li	When the fetch completes (successfully or otherwise), a  *	#DNS_EVENT_FETCHDONE event with action 'action' and arg 'arg' will be  *	posted to 'task'.  *  *\li	The values of 'rdataset' and 'sigrdataset' will be returned in  *	the FETCHDONE event.  *  *\li	'client' and 'id' are used for duplicate query detection.  '*client'  *	must remain stable until after 'action' has been called or  *	dns_resolver_cancelfetch() is called.  *  * Requires:  *  *\li	'res' is a valid resolver that has been frozen.  *  *\li	'name' is a valid name.  *  *\li	'type' is not a meta type other than ANY.  *  *\li	'domain' is a valid name or NULL.  *  *\li	'nameservers' is a valid NS rdataset (whose owner name is 'domain')  *	iff. 'domain' is not NULL.  *  *\li	'forwarders' is NULL.  *  *\li	'client' is a valid sockaddr or NULL.  *  *\li	'options' contains valid options.  *  *\li	'rdataset' is a valid, disassociated rdataset.  *  *\li	'sigrdataset' is NULL, or is a valid, disassociated rdataset.  *  *\li	fetchp != NULL&& *fetchp == NULL.  *  * Returns:  *  *\li	#ISC_R_SUCCESS					Success  *\li	#DNS_R_DUPLICATE  *\li	#DNS_R_DROP  *  *\li	Many other values are possible, all of which indicate failure.  */
 end_comment
 
 begin_function_decl
@@ -416,7 +520,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Cancel 'fetch'.  *  * Notes:  *  *	If 'fetch' has not completed, post its FETCHDONE event with a  *	result code of ISC_R_CANCELED.  *  * Requires:  *  *	'fetch' is a valid fetch.  */
+comment|/*%<  * Cancel 'fetch'.  *  * Notes:  *  *\li	If 'fetch' has not completed, post its FETCHDONE event with a  *	result code of #ISC_R_CANCELED.  *  * Requires:  *  *\li	'fetch' is a valid fetch.  */
 end_comment
 
 begin_function_decl
@@ -432,7 +536,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy 'fetch'.  *  * Requires:  *  *	'*fetchp' is a valid fetch.  *  *	The caller has received the FETCHDONE event (either because the  *	fetch completed or because dns_resolver_cancelfetch() was called).  *  * Ensures:  *  *	*fetchp == NULL.  */
+comment|/*%<  * Destroy 'fetch'.  *  * Requires:  *  *\li	'*fetchp' is a valid fetch.  *  *\li	The caller has received the FETCHDONE event (either because the  *	fetch completed or because dns_resolver_cancelfetch() was called).  *  * Ensures:  *  *\li	*fetchp == NULL.  */
 end_comment
 
 begin_function_decl
@@ -507,7 +611,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the resolver's lame-ttl.  zero => no lame processing.  *  * Requires:  *	'resolver' to be valid.  */
+comment|/*%<  * Get the resolver's lame-ttl.  zero => no lame processing.  *  * Requires:  *\li	'resolver' to be valid.  */
 end_comment
 
 begin_function_decl
@@ -525,7 +629,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the resolver's lame-ttl.  zero => no lame processing.  *  * Requires:  *	'resolver' to be valid.  */
+comment|/*%<  * Set the resolver's lame-ttl.  zero => no lame processing.  *  * Requires:  *\li	'resolver' to be valid.  */
 end_comment
 
 begin_function_decl
@@ -541,7 +645,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the number of currently running resolutions in this  * resolver.  This is may be less than the number of outstanding  * fetches due to multiple identical fetches, or more than the  * number of of outstanding fetches due to the fact that resolution  * can continue even though a fetch has been canceled.  */
+comment|/*%<  * Return the number of currently running resolutions in this  * resolver.  This is may be less than the number of outstanding  * fetches due to multiple identical fetches, or more than the  * number of of outstanding fetches due to the fact that resolution  * can continue even though a fetch has been canceled.  */
 end_comment
 
 begin_function_decl
@@ -567,7 +671,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Add alternate addresses to be tried in the event that the nameservers  * for a zone are not available in the address families supported by the  * operating system.  *  * Require:  * 	only one of 'name' or 'alt' to be valid.  */
+comment|/*%<  * Add alternate addresses to be tried in the event that the nameservers  * for a zone are not available in the address families supported by the  * operating system.  *  * Require:  * \li	only one of 'name' or 'alt' to be valid.  */
 end_comment
 
 begin_function_decl
@@ -585,7 +689,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the EDNS UDP buffer size advertised by the server.  */
+comment|/*%<  * Set the EDNS UDP buffer size advertised by the server.  */
 end_comment
 
 begin_function_decl
@@ -600,7 +704,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the current EDNS UDP buffer size.  */
+comment|/*%<  * Get the current EDNS UDP buffer size.  */
 end_comment
 
 begin_function_decl
@@ -615,7 +719,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Clear the disabled DNSSEC algorithms.  */
+comment|/*%<  * Clear the disabled DNSSEC algorithms.  */
 end_comment
 
 begin_function_decl
@@ -638,7 +742,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Mark the give DNSSEC algorithm as disabled and below 'name'.  * Valid algorithms are less than 256.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_RANGE  *	ISC_R_NOMEMORY  */
+comment|/*%<  * Mark the give DNSSEC algorithm as disabled and below 'name'.  * Valid algorithms are less than 256.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_RANGE  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -661,7 +765,26 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Check if the given algorithm is supported by this resolver.  * This checks if the algorithm has been disabled via  * dns_resolver_disable_algorithm() then the underlying  * crypto libraries if not specifically disabled.  */
+comment|/*%<  * Check if the given algorithm is supported by this resolver.  * This checks if the algorithm has been disabled via  * dns_resolver_disable_algorithm() then the underlying  * crypto libraries if not specifically disabled.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_resolver_digest_supported
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|resolver
+parameter_list|,
+name|unsigned
+name|int
+name|digest_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Is this digest type supported.  */
 end_comment
 
 begin_function_decl
@@ -704,6 +827,71 @@ parameter_list|,
 name|dns_name_t
 modifier|*
 name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dns_resolver_setclientsperquery
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|resolver
+parameter_list|,
+name|isc_uint32_t
+name|min
+parameter_list|,
+name|isc_uint32_t
+name|max
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dns_resolver_getclientsperquery
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|resolver
+parameter_list|,
+name|isc_uint32_t
+modifier|*
+name|cur
+parameter_list|,
+name|isc_uint32_t
+modifier|*
+name|min
+parameter_list|,
+name|isc_uint32_t
+modifier|*
+name|max
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_resolver_getzeronosoattl
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|resolver
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dns_resolver_setzeronosoattl
+parameter_list|(
+name|dns_resolver_t
+modifier|*
+name|resolver
+parameter_list|,
+name|isc_boolean_t
+name|state
 parameter_list|)
 function_decl|;
 end_function_decl

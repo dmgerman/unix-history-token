@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: lwres.h,v 1.49.12.3 2004/03/08 09:05:11 marka Exp $ */
+comment|/* $Id: lwres.h,v 1.51.18.2 2005/04/29 00:17:22 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -57,7 +57,11 @@ file|<lwres/platform.h>
 end_include
 
 begin_comment
-comment|/*  * Design notes:  *  * Each opcode has two structures and three functions which operate on each  * structure.  For example, using the "no operation/ping" opcode as an  * example:  *  *	lwres_nooprequest_t:  *  *		lwres_nooprequest_render() takes a lwres_nooprequest_t and  *		and renders it into wire format, storing the allocated  *		buffer information in a passed-in buffer.  When this buffer  *		is no longer needed, it must be freed by  *		lwres_context_freemem().  All other memory used by the  *		caller must be freed manually, including the  *		lwres_nooprequest_t passed in.  *  *		lwres_nooprequest_parse() takes a wire format message and  *		breaks it out into a lwres_nooprequest_t.  The structure  *		must be freed via lwres_nooprequest_free() when it is no longer  *		needed.  *  *		lwres_nooprequest_free() releases into the lwres_context_t  *		any space allocated during parsing.  *  *	lwres_noopresponse_t:  *  *		The functions used are similar to the three used for  *		requests, just with different names.  *  * Typically, the client will use request_render, response_parse, and  * response_free, while the daemon will use request_parse, response_render,  * and request_free.  *  * The basic flow of a typical client is:  *  *	fill in a request_t, and call the render function.  *  *	Transmit the buffer returned to the daemon.  *  *	Wait for a response.  *  *	When a response is received, parse it into a response_t.  *  *	free the request buffer using lwres_context_freemem().  *  *	free the response structure and its associated buffer using  *	response_free().  */
+comment|/*! \file */
+end_comment
+
+begin_comment
+comment|/*!  * Design notes:  *  * Each opcode has two structures and three functions which operate on each  * structure.  For example, using the "no operation/ping" opcode as an  * example:  *  *<ul><li>lwres_nooprequest_t:  *  *		lwres_nooprequest_render() takes a lwres_nooprequest_t and  *		and renders it into wire format, storing the allocated  *		buffer information in a passed-in buffer.  When this buffer  *		is no longer needed, it must be freed by  *		lwres_context_freemem().  All other memory used by the  *		caller must be freed manually, including the  *		lwres_nooprequest_t passed in.<br /><br />  *  *		lwres_nooprequest_parse() takes a wire format message and  *		breaks it out into a lwres_nooprequest_t.  The structure  *		must be freed via lwres_nooprequest_free() when it is no longer  *		needed.<br /><br />  *  *		lwres_nooprequest_free() releases into the lwres_context_t  *		any space allocated during parsing.</li>  *  *<li>lwres_noopresponse_t:  *  *		The functions used are similar to the three used for  *		requests, just with different names.</li></ul>  *  * Typically, the client will use request_render, response_parse, and  * response_free, while the daemon will use request_parse, response_render,  * and request_free.  *  * The basic flow of a typical client is:  *  *	\li fill in a request_t, and call the render function.  *  *	\li Transmit the buffer returned to the daemon.  *  *	\li Wait for a response.  *  *	\li When a response is received, parse it into a response_t.  *  *	\li free the request buffer using lwres_context_freemem().  *  *	\li free the response structure and its associated buffer using  *	response_free().  */
 end_comment
 
 begin_define
@@ -67,12 +71,20 @@ name|LWRES_UDP_PORT
 value|921
 end_define
 
+begin_comment
+comment|/*%< UDP Port Number */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|LWRES_RECVLENGTH
 value|16384
 end_define
+
+begin_comment
+comment|/*%< Maximum Packet Length */
+end_comment
 
 begin_define
 define|#
@@ -82,7 +94,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* changing this breaks ABI */
+comment|/*%< changing this breaks ABI */
 end_comment
 
 begin_define
@@ -93,7 +105,11 @@ value|"/etc/resolv.conf"
 end_define
 
 begin_comment
-comment|/*  * Flags.  *  * 	These flags are only relevant to rrset queries.  *  *	TRUSTNOTREQUIRED:  DNSSEC is not required (input)  *	SECUREDATA: The data was crypto-verified with DNSSEC (output)  *  */
+comment|/*%< Location of resolv.conf */
+end_comment
+
+begin_comment
+comment|/*% DNSSEC is not required (input).  Only relevant to rrset queries. */
 end_comment
 
 begin_define
@@ -103,6 +119,10 @@ name|LWRES_FLAG_TRUSTNOTREQUIRED
 value|0x00000001U
 end_define
 
+begin_comment
+comment|/*% The data was crypto-verified with DNSSEC (output). */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -111,7 +131,7 @@ value|0x00000002U
 end_define
 
 begin_comment
-comment|/*  * no-op  */
+comment|/*% no-op */
 end_comment
 
 begin_define
@@ -120,6 +140,10 @@ directive|define
 name|LWRES_OPCODE_NOOP
 value|0x00000000U
 end_define
+
+begin_comment
+comment|/*% lwres_nooprequest_t */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -138,6 +162,10 @@ block|}
 name|lwres_nooprequest_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*% lwres_noopresponse_t */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -158,7 +186,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * get addresses by name  */
+comment|/*% get addresses by name */
 end_comment
 
 begin_define
@@ -168,6 +196,10 @@ name|LWRES_OPCODE_GETADDRSBYNAME
 value|0x00010001U
 end_define
 
+begin_comment
+comment|/*% lwres_addr_t */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -175,6 +207,10 @@ name|lwres_addr
 name|lwres_addr_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*% LWRES_LIST */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -185,6 +221,10 @@ argument_list|)
 name|lwres_addrlist_t
 expr_stmt|;
 end_typedef
+
+begin_comment
+comment|/*% lwres_addr */
+end_comment
 
 begin_struct
 struct|struct
@@ -213,6 +253,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*% lwres_gabnrequest_t */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -235,6 +279,10 @@ block|}
 name|lwres_gabnrequest_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*% lwres_gabnresponse_t */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -269,7 +317,7 @@ decl_stmt|;
 name|lwres_addrlist_t
 name|addrs
 decl_stmt|;
-comment|/* if base != NULL, it will be freed when this structure is freed. */
+comment|/*! if base != NULL, it will be freed when this structure is freed. */
 name|void
 modifier|*
 name|base
@@ -283,7 +331,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * get name by address  */
+comment|/*% get name by address */
 end_comment
 
 begin_define
@@ -292,6 +340,10 @@ directive|define
 name|LWRES_OPCODE_GETNAMEBYADDR
 value|0x00010002U
 end_define
+
+begin_comment
+comment|/*% lwres_gnbarequest_t */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -308,6 +360,10 @@ block|}
 name|lwres_gnbarequest_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*% lwres_gnbaresponse_t */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -336,7 +392,7 @@ name|lwres_uint16_t
 modifier|*
 name|aliaslen
 decl_stmt|;
-comment|/* if base != NULL, it will be freed when this structure is freed. */
+comment|/*! if base != NULL, it will be freed when this structure is freed. */
 name|void
 modifier|*
 name|base
@@ -350,7 +406,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * get rdata by name  */
+comment|/*% get rdata by name */
 end_comment
 
 begin_define
@@ -359,6 +415,10 @@ directive|define
 name|LWRES_OPCODE_GETRDATABYNAME
 value|0x00010003U
 end_define
+
+begin_comment
+comment|/*% lwres_grbnrequest_t */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -385,6 +445,10 @@ block|}
 name|lwres_grbnrequest_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*% lwres_grbnresponse_t */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -436,7 +500,7 @@ name|lwres_uint16_t
 modifier|*
 name|siglen
 decl_stmt|;
-comment|/* if base != NULL, it will be freed when this structure is freed. */
+comment|/*% if base != NULL, it will be freed when this structure is freed. */
 name|void
 modifier|*
 name|base
@@ -449,6 +513,10 @@ name|lwres_grbnresponse_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*% Used by lwres_getrrsetbyname() */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -457,7 +525,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/*  * resolv.conf data  */
+comment|/*!  * resolv.conf data  */
 end_comment
 
 begin_define
@@ -468,7 +536,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* max 3 "nameserver" entries */
+comment|/*%< max 3 "nameserver" entries */
 end_comment
 
 begin_define
@@ -479,7 +547,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* max 1 "lwserver" entry */
+comment|/*%< max 1 "lwserver" entry */
 end_comment
 
 begin_define
@@ -490,7 +558,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* max 8 domains in "search" entry */
+comment|/*%< max 8 domains in "search" entry */
 end_comment
 
 begin_define
@@ -501,7 +569,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* max size of a line */
+comment|/*%< max size of a line */
 end_comment
 
 begin_define
@@ -510,6 +578,14 @@ directive|define
 name|LWRES_CONFMAXSORTLIST
 value|10
 end_define
+
+begin_comment
+comment|/*%< max 10 */
+end_comment
+
+begin_comment
+comment|/*% lwres_conf_t */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -528,7 +604,7 @@ decl_stmt|;
 name|lwres_uint8_t
 name|nsnext
 decl_stmt|;
-comment|/* index for next free slot */
+comment|/*%< index for next free slot */
 name|lwres_addr_t
 name|lwservers
 index|[
@@ -538,7 +614,7 @@ decl_stmt|;
 name|lwres_uint8_t
 name|lwnext
 decl_stmt|;
-comment|/* index for next free slot */
+comment|/*%< index for next free slot */
 name|char
 modifier|*
 name|domainname
@@ -553,13 +629,13 @@ decl_stmt|;
 name|lwres_uint8_t
 name|searchnxt
 decl_stmt|;
-comment|/* index for next free slot */
+comment|/*%< index for next free slot */
 struct|struct
 block|{
 name|lwres_addr_t
 name|addr
 decl_stmt|;
-comment|/* mask has a non-zero 'family' and 'length' if set */
+comment|/*% mask has a non-zero 'family' and 'length' if set */
 name|lwres_addr_t
 name|mask
 decl_stmt|;
@@ -575,15 +651,15 @@ decl_stmt|;
 name|lwres_uint8_t
 name|resdebug
 decl_stmt|;
-comment|/* non-zero if 'options debug' set */
+comment|/*%< non-zero if 'options debug' set */
 name|lwres_uint8_t
 name|ndots
 decl_stmt|;
-comment|/* set to n in 'options ndots:n' */
+comment|/*%< set to n in 'options ndots:n' */
 name|lwres_uint8_t
 name|no_tld_query
 decl_stmt|;
-comment|/* non-zero if 'options no_tld_query' */
+comment|/*%< non-zero if 'options no_tld_query' */
 block|}
 name|lwres_conf_t
 typedef|;
@@ -597,7 +673,7 @@ value|0x00000001U
 end_define
 
 begin_comment
-comment|/* ipv4 */
+comment|/*%< ipv4 */
 end_comment
 
 begin_define
@@ -608,7 +684,7 @@ value|0x00000002U
 end_define
 
 begin_comment
-comment|/* ipv6 */
+comment|/*%< ipv6 */
 end_comment
 
 begin_define
@@ -619,7 +695,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* max # of aliases */
+comment|/*%< max # of aliases */
 end_comment
 
 begin_define
@@ -630,12 +706,12 @@ value|64
 end_define
 
 begin_comment
-comment|/* max # of addrs */
+comment|/*%< max # of addrs */
 end_comment
 
 begin_decl_stmt
 name|LWRES_LANG_BEGINDECLS
-comment|/*  * This is in host byte order.  */
+comment|/*% This is in host byte order. */
 name|LIBLWRES_EXTERNAL_DATA
 specifier|extern
 name|lwres_uint16_t
@@ -764,7 +840,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Frees any dynamically allocated memory for this structure.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_contextcreate().  *  *	structp != NULL&& *structp != NULL.  *  * Ensures:  *  *	*structp == NULL.  *  *	All memory allocated by this structure will be returned to the  *	system via the context's free function.  */
+comment|/**<  * Frees any dynamically allocated memory for this structure.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_context_create().  *  *	structp != NULL&& *structp != NULL.  *  * Ensures:  *  *	*structp == NULL.  *  *	All memory allocated by this structure will be returned to the  *	system via the context's free function.  */
 end_comment
 
 begin_function_decl
@@ -784,7 +860,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Frees any dynamically allocated memory for this structure.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_contextcreate().  *  *	structp != NULL&& *structp != NULL.  *  * Ensures:  *  *	*structp == NULL.  *  *	All memory allocated by this structure will be returned to the  *	system via the context's free function.  */
+comment|/**<  * Frees any dynamically allocated memory for this structure.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_context_create().  *  *	structp != NULL&& *structp != NULL.  *  * Ensures:  *  *	*structp == NULL.  *  *	All memory allocated by this structure will be returned to the  *	system via the context's free function.  */
 end_comment
 
 begin_function_decl
@@ -898,7 +974,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Frees any dynamically allocated memory for this structure.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_contextcreate().  *  *	structp != NULL&& *structp != NULL.  *  * Ensures:  *  *	*structp == NULL.  *  *	All memory allocated by this structure will be returned to the  *	system via the context's free function.  */
+comment|/**<  * Frees any dynamically allocated memory for this structure.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_context_create().  *  *	structp != NULL&& *structp != NULL.  *  * Ensures:  *  *	*structp == NULL.  *  *	All memory allocated by this structure will be returned to the  *	system via the context's free function.  */
 end_comment
 
 begin_function_decl
@@ -918,7 +994,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Frees any dynamically allocated memory for this structure.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_contextcreate().  *  *	structp != NULL&& *structp != NULL.  *  * Ensures:  *  *	*structp == NULL.  *  *	All memory allocated by this structure will be returned to the  *	system via the context's free function.  */
+comment|/**<  * Frees any dynamically allocated memory for this structure.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_context_create().  *  *	structp != NULL&& *structp != NULL.  *  * Ensures:  *  *	*structp == NULL.  *  *	All memory allocated by this structure will be returned to the  *	system via the context's free function.  */
 end_comment
 
 begin_function_decl
@@ -1032,7 +1108,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Frees any dynamically allocated memory for this structure.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_contextcreate().  *  *	structp != NULL&& *structp != NULL.  *  * Ensures:  *  *	*structp == NULL.  *  *	All memory allocated by this structure will be returned to the  *	system via the context's free function.  */
+comment|/**<  * Frees any dynamically allocated memory for this structure.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_context_create().  *  *	structp != NULL&& *structp != NULL.  *  * Ensures:  *  *	*structp == NULL.  *  *	All memory allocated by this structure will be returned to the  *	system via the context's free function.  */
 end_comment
 
 begin_function_decl
@@ -1052,7 +1128,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Frees any dynamically allocated memory for this structure.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_contextcreate().  *  *	structp != NULL&& *structp != NULL.  *  * Ensures:  *  *	*structp == NULL.  *  *	All memory allocated by this structure will be returned to the  *	system via the context's free function.  */
+comment|/**<  * Frees any dynamically allocated memory for this structure.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_context_create().  *  *	structp != NULL&& *structp != NULL.  *  * Ensures:  *  *	*structp == NULL.  *  *	All memory allocated by this structure will be returned to the  *	system via the context's free function.  */
 end_comment
 
 begin_function_decl
@@ -1079,7 +1155,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Allocate space and render into wire format a noop request packet.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_contextcreate().  *  *	b != NULL, and points to a lwres_buffer_t.  The contents of the  *	buffer structure will be initialized to contain the wire-format  *	noop request packet.  *  *	Caller needs to fill in parts of "pkt" before calling:  *		serial, maxrecv, result.  *  * Returns:  *  *	Returns 0 on success, non-zero on failure.  *  *	On successful return, *b will contain data about the wire-format  *	packet.  It can be transmitted in any way, including lwres_sendblock().  */
+comment|/**<  * Allocate space and render into wire format a noop request packet.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_context_create().  *  *	b != NULL, and points to a lwres_buffer_t.  The contents of the  *	buffer structure will be initialized to contain the wire-format  *	noop request packet.  *  *	Caller needs to fill in parts of "pkt" before calling:  *		serial, maxrecv, result.  *  * Returns:  *  *	Returns 0 on success, non-zero on failure.  *  *	On successful return, *b will contain data about the wire-format  *	packet.  It can be transmitted in any way, including lwres_sendblock().  */
 end_comment
 
 begin_function_decl
@@ -1130,7 +1206,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Parse a noop request.  Note that to get here, the lwpacket must have  * already been parsed and removed by the caller, otherwise it would be  * pretty hard for it to know this is the right function to call.  *  * The function verifies bits of the header, but does not modify it.  */
+comment|/**<  * Parse a noop request.  Note that to get here, the lwpacket must have  * already been parsed and removed by the caller, otherwise it would be  * pretty hard for it to know this is the right function to call.  *  * The function verifies bits of the header, but does not modify it.  */
 end_comment
 
 begin_function_decl
@@ -1190,7 +1266,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Frees any dynamically allocated memory for this structure.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_contextcreate().  *  *	structp != NULL&& *structp != NULL.  *  * Ensures:  *  *	*structp == NULL.  *  *	All memory allocated by this structure will be returned to the  *	system via the context's free function.  */
+comment|/**<  * Frees any dynamically allocated memory for this structure.  *  * Requires:  *  *	ctx != NULL, and be a context returned via lwres_context_create().  *  *	structp != NULL&& *structp != NULL.  *  * Ensures:  *  *	*structp == NULL.  *  *	All memory allocated by this structure will be returned to the  *	system via the context's free function.  */
 end_comment
 
 begin_function_decl
@@ -1210,7 +1286,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * parses a resolv.conf-format file and stores the results in the structure  * pointed to by *ctx.  *  * Requires:  *	ctx != NULL  *	filename != NULL&& strlen(filename)> 0  *  * Returns:  *	LWRES_R_SUCCESS on a successful parse.  *	Anything else on error, although the structure may be partially filled  *	in.  */
+comment|/**<  * parses a resolv.conf-format file and stores the results in the structure  * pointed to by *ctx.  *  * Requires:  *	ctx != NULL  *	filename != NULL&& strlen(filename)> 0  *  * Returns:  *	LWRES_R_SUCCESS on a successful parse.  *	Anything else on error, although the structure may be partially filled  *	in.  */
 end_comment
 
 begin_function_decl
@@ -1229,7 +1305,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Prints a resolv.conf-format of confdata output to fp.  *  * Requires:  *	ctx != NULL  */
+comment|/**<  * Prints a resolv.conf-format of confdata output to fp.  *  * Requires:  *	ctx != NULL  */
 end_comment
 
 begin_function_decl
@@ -1244,7 +1320,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * sets all internal fields to a default state. Used to initialize a new  * lwres_conf_t structure (not reset a used on).  *  * Requires:  *	ctx != NULL  */
+comment|/**<  * sets all internal fields to a default state. Used to initialize a new  * lwres_conf_t structure (not reset a used on).  *  * Requires:  *	ctx != NULL  */
 end_comment
 
 begin_function_decl
@@ -1259,7 +1335,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * frees all internally allocated memory in confdata. Uses the memory  * routines supplied by ctx.  *  * Requires:  *	ctx != NULL  */
+comment|/**<  * frees all internally allocated memory in confdata. Uses the memory  * routines supplied by ctx.  *  * Requires:  *	ctx != NULL  */
 end_comment
 
 begin_function_decl
@@ -1275,7 +1351,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * returns a pointer to the current config structure.  * Be extremely cautions in modifying the contents of this structure; it  * needs an API to return the various bits of data, walk lists, etc.  *  * Requires:  *	ctx != NULL  */
+comment|/**<  * Be extremely cautions in modifying the contents of this structure; it  * needs an API to return the various bits of data, walk lists, etc.  *  * Requires:  *	ctx != NULL  */
 end_comment
 
 begin_comment

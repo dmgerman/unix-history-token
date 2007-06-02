@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: mem.h,v 1.54.12.4 2004/10/11 05:55:51 marka Exp $ */
+comment|/* $Id: mem.h,v 1.59.18.9 2006/01/04 23:50:23 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|ISC_MEM_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -119,7 +123,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Define ISC_MEM_DEBUG=1 to make all functions that free memory  * set the pointer being freed to NULL after being freed.  * This is the default; set ISC_MEM_DEBUG=0 to disable it.  */
+comment|/*%  * Define ISC_MEM_DEBUG=1 to make all functions that free memory  * set the pointer being freed to NULL after being freed.  * This is the default; set ISC_MEM_DEBUG=0 to disable it.  */
 end_comment
 
 begin_ifndef
@@ -141,7 +145,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Define ISC_MEM_TRACKLINES=1 to turn on detailed tracing of memory  * allocation and freeing by file and line number.  */
+comment|/*%  * Define ISC_MEM_TRACKLINES=1 to turn on detailed tracing of memory  * allocation and freeing by file and line number.  */
 end_comment
 
 begin_ifndef
@@ -163,7 +167,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Define ISC_MEM_CHECKOVERRUN=1 to turn on checks for using memory outside  * the requested space.  This will increase the size of each allocation.  */
+comment|/*%  * Define ISC_MEM_CHECKOVERRUN=1 to turn on checks for using memory outside  * the requested space.  This will increase the size of each allocation.  */
 end_comment
 
 begin_ifndef
@@ -185,7 +189,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Define ISC_MEM_FILL=1 to fill each block of memory returned to the system  * with the byte string '0xbe'.  This helps track down uninitialized pointers  * and the like.  On freeing memory, the space is filled with '0xde' for  * the same reasons.  */
+comment|/*%  * Define ISC_MEM_FILL=1 to fill each block of memory returned to the system  * with the byte string '0xbe'.  This helps track down uninitialized pointers  * and the like.  On freeing memory, the space is filled with '0xde' for  * the same reasons.  */
 end_comment
 
 begin_ifndef
@@ -207,7 +211,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Define ISC_MEMPOOL_NAMES=1 to make memory pools store a symbolic  * name so that the leaking pool can be more readily identified in  * case of a memory leak.  */
+comment|/*%  * Define ISC_MEMPOOL_NAMES=1 to make memory pools store a symbolic  * name so that the leaking pool can be more readily identified in  * case of a memory leak.  */
 end_comment
 
 begin_ifndef
@@ -237,6 +241,10 @@ name|isc_mem_debugging
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*@{*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -258,8 +266,33 @@ name|ISC_MEM_DEBUGUSAGE
 value|0x00000004U
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISC_MEM_DEBUGSIZE
+value|0x00000008U
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISC_MEM_DEBUGCTX
+value|0x00000010U
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISC_MEM_DEBUGALL
+value|0x0000001FU
+end_define
+
 begin_comment
-comment|/*  * The variable isc_mem_debugging holds a set of flags for  * turning certain memory debugging options on or off at  * runtime.  Its is intialized to the value ISC_MEM_DEGBUGGING,  * which is 0 by default but may be overridden at compile time.  * The following flags can be specified:  *  * ISC_MEM_DEBUGTRACE  *	Log each allocation and free to isc_lctx.  *  * ISC_MEM_DEBUGRECORD  *	Remember each allocation, and match them up on free.  *	Crash if a free doesn't match an allocation.  *  * ISC_MEM_DEBUGUSAGE  *	If a hi_water mark is set, print the maximium inuse memory  *	every time it is raised once it exceeds the hi_water mark.  */
+comment|/*!<  * The variable isc_mem_debugging holds a set of flags for  * turning certain memory debugging options on or off at  * runtime.  Its is intialized to the value ISC_MEM_DEGBUGGING,  * which is 0 by default but may be overridden at compile time.  * The following flags can be specified:  *  * \li #ISC_MEM_DEBUGTRACE  *	Log each allocation and free to isc_lctx.  *  * \li #ISC_MEM_DEBUGRECORD  *	Remember each allocation, and match them up on free.  *	Crash if a free doesn't match an allocation.  *  * \li #ISC_MEM_DEBUGUSAGE  *	If a hi_water mark is set, print the maximium inuse memory  *	every time it is raised once it exceeds the hi_water mark.  *  * \li #ISC_MEM_DEBUGSIZE  *	Check the size argument being passed to isc_mem_put() matches  *	that passed to isc_mem_get().  *  * \li #ISC_MEM_DEBUGCTX  *	Check the mctx argument being passed to isc_mem_put() matches  *	that passed to isc_mem_get().  */
+end_comment
+
+begin_comment
+comment|/*@}*/
 end_comment
 
 begin_if
@@ -297,6 +330,84 @@ begin_define
 define|#
 directive|define
 name|_ISC_MEM_FLARG
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!  * Define ISC_MEM_USE_INTERNAL_MALLOC=1 to use the internal malloc()  * implementation in preference to the system one.  The internal malloc()  * is very space-efficient, and quite fast on uniprocessor systems.  It  * performs poorly on multiprocessor machines.  * JT: we can overcome the performance issue on multiprocessor machines  * by carefully separating memory contexts.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISC_MEM_USE_INTERNAL_MALLOC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ISC_MEM_USE_INTERNAL_MALLOC
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Flags for isc_mem_create2()calls.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_MEMFLAG_NOLOCK
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* no lock is necessary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_MEMFLAG_INTERNAL
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* use internal malloc */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|ISC_MEM_USE_INTERNAL_MALLOC
+end_if
+
+begin_define
+define|#
+directive|define
+name|ISC_MEMFLAG_DEFAULT
+value|ISC_MEMFLAG_INTERNAL
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISC_MEMFLAG_DEFAULT
+value|0
 end_define
 
 begin_endif
@@ -351,7 +462,7 @@ value|isc__mempool_get((c) _ISC_MEM_FILELINE)
 end_define
 
 begin_comment
-comment|/*  * isc_mem_putanddetach() is a convienence function for use where you  * have a structure with an attached memory context.  *  * Given:  *  * struct {  *	...  *	isc_mem_t *mctx;  *	...  * } *ptr;  *  * isc_mem_t *mctx;  *  * isc_mem_putanddetach(&ptr->mctx, ptr, sizeof(*ptr));  *  * is the equivalent of:  *  * mctx = NULL;  * isc_mem_attach(ptr->mctx,&mctx);  * isc_mem_detach(&ptr->mctx);  * isc_mem_put(mctx, ptr, sizeof(*ptr));  * isc_mem_detach(&mctx);  */
+comment|/*%   * isc_mem_putanddetach() is a convienence function for use where you  * have a structure with an attached memory context.  *  * Given:  *  * \code  * struct {  *	...  *	isc_mem_t *mctx;  *	...  * } *ptr;  *  * isc_mem_t *mctx;  *  * isc_mem_putanddetach(&ptr->mctx, ptr, sizeof(*ptr));  * \endcode  *  * is the equivalent of:  *  * \code  * mctx = NULL;  * isc_mem_attach(ptr->mctx,&mctx);  * isc_mem_detach(&ptr->mctx);  * isc_mem_put(mctx, ptr, sizeof(*ptr));  * isc_mem_detach(&mctx);  * \endcode  */
 end_comment
 
 begin_if
@@ -479,6 +590,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*@{*/
+end_comment
+
 begin_function_decl
 name|isc_result_t
 name|isc_mem_create
@@ -493,6 +608,28 @@ name|isc_mem_t
 modifier|*
 modifier|*
 name|mctxp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|isc_mem_create2
+parameter_list|(
+name|size_t
+name|max_size
+parameter_list|,
+name|size_t
+name|target_size
+parameter_list|,
+name|isc_mem_t
+modifier|*
+modifier|*
+name|mctxp
+parameter_list|,
+name|unsigned
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -525,8 +662,48 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|isc_mem_createx2
+parameter_list|(
+name|size_t
+name|max_size
+parameter_list|,
+name|size_t
+name|target_size
+parameter_list|,
+name|isc_memalloc_t
+name|memalloc
+parameter_list|,
+name|isc_memfree_t
+name|memfree
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|isc_mem_t
+modifier|*
+modifier|*
+name|mctxp
+parameter_list|,
+name|unsigned
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * Create a memory context.  *  * 'max_size' and 'target_size' are tuning parameters.  When  * ISC_MEM_USE_INTERNAL_MALLOC is true, allocations smaller than  * 'max_size' will be satisfied by getting blocks of size  * 'target_size' from the system allocator and breaking them up into  * pieces; larger allocations will use the system allocator directly.  * If 'max_size' and/or 'target_size' are zero, default values will be  * used.  When ISC_MEM_USE_INTERNAL_MALLOC is false, 'target_size' is  * ignored.  *  * 'max_size' is also used to size the statistics arrays and the array  * used to record active memory when ISC_MEM_DEBUGRECORD is set.  Settin  * 'max_size' too low can have detrimental effects on performance.  *  * A memory context created using isc_mem_createx() will obtain  * memory from the system by calling 'memalloc' and 'memfree',  * passing them the argument 'arg'.  A memory context created  * using isc_mem_create() will use the standard library malloc()  * and free().  *  * Requires:  * mctxp != NULL&& *mctxp == NULL */
+comment|/*!<  * \brief Create a memory context.  *  * 'max_size' and 'target_size' are tuning parameters.  When  * ISC_MEMFLAG_INTERNAL is set, allocations smaller than 'max_size'  * will be satisfied by getting blocks of size 'target_size' from the  * system allocator and breaking them up into pieces; larger allocations  * will use the system allocator directly. If 'max_size' and/or  * 'target_size' are zero, default values will be * used.  When  * ISC_MEMFLAG_INTERNAL is not set, 'target_size' is ignored.  *  * 'max_size' is also used to size the statistics arrays and the array  * used to record active memory when ISC_MEM_DEBUGRECORD is set.  Settin  * 'max_size' too low can have detrimental effects on performance.  *  * A memory context created using isc_mem_createx() will obtain  * memory from the system by calling 'memalloc' and 'memfree',  * passing them the argument 'arg'.  A memory context created  * using isc_mem_create() will use the standard library malloc()  * and free().  *  * If ISC_MEMFLAG_NOLOCK is set in 'flags', the corresponding memory context  * will be accessed without locking.  The user who creates the context must  * ensure there be no race.  Since this can be a source of bug, it is generally  * inadvisable to use this flag unless the user is very sure about the race  * condition and the access to the object is highly performance sensitive.  *  * Requires:  * mctxp != NULL&& *mctxp == NULL */
+end_comment
+
+begin_comment
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*@{*/
 end_comment
 
 begin_function_decl
@@ -555,7 +732,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Attach to / detach from a memory context.  *  * This is intended for applications that use multiple memory contexts  * in such a way that it is not obvious when the last allocations from  * a given context has been freed and destroying the context is safe.  *   * Most applications do not need to call these functions as they can  * simply create a single memory context at the beginning of main()  * and destroy it at the end of main(), thereby guaranteeing that it  * is not destroyed while there are outstanding allocations.  */
+comment|/*!<  * \brief Attach to / detach from a memory context.  *  * This is intended for applications that use multiple memory contexts  * in such a way that it is not obvious when the last allocations from  * a given context has been freed and destroying the context is safe.  *   * Most applications do not need to call these functions as they can  * simply create a single memory context at the beginning of main()  * and destroy it at the end of main(), thereby guaranteeing that it  * is not destroyed while there are outstanding allocations.  */
+end_comment
+
+begin_comment
+comment|/*@}*/
 end_comment
 
 begin_function_decl
@@ -570,7 +751,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy a memory context.  */
+comment|/*%<  * Destroy a memory context.  */
 end_comment
 
 begin_function_decl
@@ -594,7 +775,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Request to be notified with an event when a memory context has  * been successfully destroyed.  */
+comment|/*%<  * Request to be notified with an event when a memory context has  * been successfully destroyed.  */
 end_comment
 
 begin_function_decl
@@ -613,7 +794,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Print memory usage statistics for 'mctx' on the stream 'out'.  */
+comment|/*%<  * Print memory usage statistics for 'mctx' on the stream 'out'.  */
 end_comment
 
 begin_function_decl
@@ -631,7 +812,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Iff 'on' is ISC_TRUE, 'mctx' will check for memory leaks when  * destroyed and abort the program if any are present.  */
+comment|/*%<  * If 'on' is ISC_TRUE, 'mctx' will check for memory leaks when  * destroyed and abort the program if any are present.  */
+end_comment
+
+begin_comment
+comment|/*@{*/
 end_comment
 
 begin_function_decl
@@ -657,7 +842,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set/get the memory quota of 'mctx'.  This is a hard limit  * on the amount of memory that may be allocated from mctx;  * if it is exceeded, allocations will fail.  */
+comment|/*%<  * Set/get the memory quota of 'mctx'.  This is a hard limit  * on the amount of memory that may be allocated from mctx;  * if it is exceeded, allocations will fail.  */
+end_comment
+
+begin_comment
+comment|/*@}*/
 end_comment
 
 begin_function_decl
@@ -672,7 +861,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get an estimate of the number of memory in use in 'mctx', in bytes.  * This includes quantization overhead, but does not include memory  * allocated from the system but not yet used.  */
+comment|/*%<  * Get an estimate of the number of memory in use in 'mctx', in bytes.  * This includes quantization overhead, but does not include memory  * allocated from the system but not yet used.  */
 end_comment
 
 begin_function_decl
@@ -700,7 +889,56 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set high and low water marks for this memory context.  When the memory  * usage of 'mctx' exceeds 'hiwater', '(water)(water_arg, ISC_MEM_HIWATER)'  * will be called.  When the usage drops below 'lowater', 'water' will  * again be called, this time with ISC_MEM_LOWATER.  *  * If 'water' is NULL then 'water_arg', 'hi_water' and 'lo_water' are  * ignored and the state is reset.  *  * Requires:  *  *	'water' is not NULL.  *	hi_water>= lo_water  */
+comment|/*%<  * Set high and low water marks for this memory context.    *   * When the memory  * usage of 'mctx' exceeds 'hiwater', '(water)(water_arg, #ISC_MEM_HIWATER)'  * will be called.  When the usage drops below 'lowater', 'water' will  * again be called, this time with #ISC_MEM_LOWATER.  *  * If 'water' is NULL then 'water_arg', 'hi_water' and 'lo_water' are  * ignored and the state is reset.  *  * Requires:  *  *	'water' is not NULL.  *	hi_water>= lo_water  */
+end_comment
+
+begin_function_decl
+name|void
+name|isc_mem_printactive
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|FILE
+modifier|*
+name|file
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Print to 'file' all active memory in 'mctx'.  *  * Requires ISC_MEM_DEBUGRECORD to have been set.  */
+end_comment
+
+begin_function_decl
+name|void
+name|isc_mem_printallactive
+parameter_list|(
+name|FILE
+modifier|*
+name|file
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Print to 'file' all active memory in all contexts.  *  * Requires ISC_MEM_DEBUGRECORD to have been set.  */
+end_comment
+
+begin_function_decl
+name|void
+name|isc_mem_checkdestroyed
+parameter_list|(
+name|FILE
+modifier|*
+name|file
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Check that all memory contexts have been destroyed.  * Prints out those that have not been.  * Fatally fails if there are still active contexts.  */
 end_comment
 
 begin_comment
@@ -727,7 +965,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a memory pool.  *  * Requires:  *	mctx is a valid memory context.  *	size> 0  *	mpctxp != NULL and *mpctxp == NULL  *  * Defaults:  *	maxalloc = UINT_MAX  *	freemax = 1  *	fillcount = 1  *  * Returns:  *	ISC_R_NOMEMORY		-- not enough memory to create pool  *	ISC_R_SUCCESS		-- all is well.  */
+comment|/*%<  * Create a memory pool.  *  * Requires:  *\li	mctx is a valid memory context.  *\li	size> 0  *\li	mpctxp != NULL and *mpctxp == NULL  *  * Defaults:  *\li	maxalloc = UINT_MAX  *\li	freemax = 1  *\li	fillcount = 1  *  * Returns:  *\li	#ISC_R_NOMEMORY		-- not enough memory to create pool  *\li	#ISC_R_SUCCESS		-- all is well.  */
 end_comment
 
 begin_function_decl
@@ -743,7 +981,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy a memory pool.  *  * Requires:  *	mpctxp != NULL&& *mpctxp is a valid pool.  *	The pool has no un"put" allocations outstanding  */
+comment|/*%<  * Destroy a memory pool.  *  * Requires:  *\li	mpctxp != NULL&& *mpctxp is a valid pool.  *\li	The pool has no un"put" allocations outstanding  */
 end_comment
 
 begin_function_decl
@@ -763,7 +1001,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Associate a name with a memory pool.  At most 15 characters may be used.  *  * Requires:  *	mpctx is a valid pool.  *	name != NULL;  */
+comment|/*%<  * Associate a name with a memory pool.  At most 15 characters may be used.  *  * Requires:  *\li	mpctx is a valid pool.  *\li	name != NULL;  */
 end_comment
 
 begin_function_decl
@@ -782,7 +1020,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Associate a lock with this memory pool.  *  * This lock is used when getting or putting items using this memory pool,  * and it is also used to set or get internal state via the isc_mempool_get*()  * and isc_mempool_set*() set of functions.  *  * Mutiple pools can each share a single lock.  For instance, if "manager"  * type object contained pools for various sizes of events, and each of  * these pools used a common lock.  Note that this lock must NEVER be used  * by other than mempool routines once it is given to a pool, since that can  * easily cause double locking.  *  * Requires:  *  *	mpctpx is a valid pool.  *  *	lock != NULL.  *  *	No previous lock is assigned to this pool.  *  *	The lock is initialized before calling this function via the normal  *	means of doing that.  */
+comment|/*%<  * Associate a lock with this memory pool.  *  * This lock is used when getting or putting items using this memory pool,  * and it is also used to set or get internal state via the isc_mempool_get*()  * and isc_mempool_set*() set of functions.  *  * Mutiple pools can each share a single lock.  For instance, if "manager"  * type object contained pools for various sizes of events, and each of  * these pools used a common lock.  Note that this lock must NEVER be used  * by other than mempool routines once it is given to a pool, since that can  * easily cause double locking.  *  * Requires:  *  *\li	mpctpx is a valid pool.  *  *\li	lock != NULL.  *  *\li	No previous lock is assigned to this pool.  *  *\li	The lock is initialized before calling this function via the normal  *	means of doing that.  */
 end_comment
 
 begin_comment
@@ -802,7 +1040,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the maximum allowed size of the free list.  */
+comment|/*%<  * Returns the maximum allowed size of the free list.  */
 end_comment
 
 begin_function_decl
@@ -821,7 +1059,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Sets the maximum allowed size of the free list.  */
+comment|/*%<  * Sets the maximum allowed size of the free list.  */
 end_comment
 
 begin_function_decl
@@ -837,7 +1075,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns current size of the free list.  */
+comment|/*%<  * Returns current size of the free list.  */
 end_comment
 
 begin_function_decl
@@ -853,7 +1091,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the maximum allowed number of allocations.  */
+comment|/*!<  * Returns the maximum allowed number of allocations.  */
 end_comment
 
 begin_function_decl
@@ -872,7 +1110,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Sets the maximum allowed number of allocations.  *  * Additional requirements:  *	limit> 0  */
+comment|/*%<  * Sets the maximum allowed number of allocations.  *  * Additional requirements:  *\li	limit> 0  */
 end_comment
 
 begin_function_decl
@@ -888,7 +1126,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the number of items allocated from this pool.  */
+comment|/*%<  * Returns the number of items allocated from this pool.  */
 end_comment
 
 begin_function_decl
@@ -904,7 +1142,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the number of items allocated as a block from the parent memory  * context when the free list is empty.  */
+comment|/*%<  * Returns the number of items allocated as a block from the parent memory  * context when the free list is empty.  */
 end_comment
 
 begin_function_decl
@@ -923,7 +1161,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Sets the fillcount.  *  * Additional requirements:  *	limit> 0  */
+comment|/*%<  * Sets the fillcount.  *  * Additional requirements:  *\li	limit> 0  */
 end_comment
 
 begin_comment

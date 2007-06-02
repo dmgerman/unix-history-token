@@ -16,7 +16,11 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: ctl.h,v 1.1.2.2.4.1 2004/03/09 08:33:30 marka Exp $  */
+comment|/*  * $Id: ctl.h,v 1.4.18.1 2005/04/27 05:00:51 sra Exp $  */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -49,7 +53,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* More will be / should be sent. */
+comment|/*%< More will be / should be sent. */
 end_comment
 
 begin_define
@@ -60,7 +64,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* Close connection after this. */
+comment|/*%< Close connection after this. */
 end_comment
 
 begin_define
@@ -71,7 +75,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* Go into / this is DATA mode. */
+comment|/*%< Go into / this is DATA mode. */
 end_comment
 
 begin_comment
@@ -579,6 +583,10 @@ end_endif
 
 begin_comment
 comment|/*ISC_CTL_H*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

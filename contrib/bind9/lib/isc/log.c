@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: log.c,v 1.70.2.8.2.14 2006/03/02 00:37:20 marka Exp $ */
+comment|/* $Id: log.c,v 1.84.18.8 2006/03/02 00:37:22 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/* Principal Authors: DCL */
+comment|/*! \file  * \author  Principal Authors: DCL */
 end_comment
 
 begin_include
@@ -191,7 +191,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This is the structure that holds each named channel.  A simple linked  * list chains all of the channels together, so an individual channel is  * found by doing strcmp()s with the names down the list.  Their should  * be no peformance penalty from this as it is expected that the number  * of named channels will be no more than a dozen or so, and name lookups  * from the head of the list are only done when isc_log_usechannel() is  * called, which should also be very infrequent.  */
+comment|/*!  * This is the structure that holds each named channel.  A simple linked  * list chains all of the channels together, so an individual channel is  * found by doing strcmp()s with the names down the list.  Their should  * be no peformance penalty from this as it is expected that the number  * of named channels will be no more than a dozen or so, and name lookups  * from the head of the list are only done when isc_log_usechannel() is  * called, which should also be very infrequent.  */
 end_comment
 
 begin_typedef
@@ -235,7 +235,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The logchannellist structure associates categories and modules with  * channels.  First the appropriate channellist is found based on the  * category, and then each structure in the linked list is checked for  * a matching module.  It is expected that the number of channels  * associated with any given category will be very short, no more than  * three or four in the more unusual cases.  */
+comment|/*!  * The logchannellist structure associates categories and modules with  * channels.  First the appropriate channellist is found based on the  * category, and then each structure in the linked list is checked for  * a matching module.  It is expected that the number of channels  * associated with any given category will be very short, no more than  * three or four in the more unusual cases.  */
 end_comment
 
 begin_typedef
@@ -270,7 +270,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This structure is used to remember messages for pruning via  * isc_log_[v]write1().  */
+comment|/*!  * This structure is used to remember messages for pruning via  * isc_log_[v]write1().  */
 end_comment
 
 begin_typedef
@@ -303,7 +303,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The isc_logconfig structure is used to store the configurable information  * about where messages are actually supposed to be sent -- the information  * that could changed based on some configuration file, as opposed to the  * the category/module specification of isc_log_[v]write[1] that is compiled  * into a program, or the debug_level which is dynamic state information.  */
+comment|/*!  * The isc_logconfig structure is used to store the configurable information  * about where messages are actually supposed to be sent -- the information  * that could changed based on some configuration file, as opposed to the  * the category/module specification of isc_log_[v]write[1] that is compiled  * into a program, or the debug_level which is dynamic state information.  */
 end_comment
 
 begin_struct
@@ -354,7 +354,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This isc_log structure provides the context for the isc_log functions.  * The log context locks itself in isc_log_doit, the internal backend to  * isc_log_write.  The locking is necessary both to provide exclusive access  * to the the buffer into which the message is formatted and to guard against  * competing threads trying to write to the same syslog resource.  (On  * some systems, such as BSD/OS, stdio is thread safe but syslog is not.)  * Unfortunately, the lock cannot guard against a _different_ logging  * context in the same program competing for syslog's attention.  Thus  * There Can Be Only One, but this is not enforced.  * XXXDCL enforce it?  *  * Note that the category and module information is not locked.  * This is because in the usual case, only one isc_log_t is ever created  * in a program, and the category/module registration happens only once.  * XXXDCL it might be wise to add more locking overall.  */
+comment|/*!  * This isc_log structure provides the context for the isc_log functions.  * The log context locks itself in isc_log_doit, the internal backend to  * isc_log_write.  The locking is necessary both to provide exclusive access  * to the the buffer into which the message is formatted and to guard against  * competing threads trying to write to the same syslog resource.  (On  * some systems, such as BSD/OS, stdio is thread safe but syslog is not.)  * Unfortunately, the lock cannot guard against a _different_ logging  * context in the same program competing for syslog's attention.  Thus  * There Can Be Only One, but this is not enforced.  * XXXDCL enforce it?  *  * Note that the category and module information is not locked.  * This is because in the usual case, only one isc_log_t is ever created  * in a program, and the category/module registration happens only once.  * XXXDCL it might be wise to add more locking overall.  */
 end_comment
 
 begin_struct
@@ -414,7 +414,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Used when ISC_LOG_PRINTLEVEL is enabled for a channel.  */
+comment|/*!  * Used when ISC_LOG_PRINTLEVEL is enabled for a channel.  */
 end_comment
 
 begin_decl_stmt
@@ -442,7 +442,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Used to convert ISC_LOG_* priorities into syslog priorities.  * XXXDCL This will need modification for NT.  */
+comment|/*!  * Used to convert ISC_LOG_* priorities into syslog priorities.  * XXXDCL This will need modification for NT.  */
 end_comment
 
 begin_decl_stmt
@@ -469,7 +469,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * When adding new categories, a corresponding ISC_LOGCATEGORY_foo  * definition needs to be added to<isc/log.h>.  *  * The default category is provided so that the internal default can  * be overridden.  Since the default is always looked up as the first  * channellist in the log context, it must come first in isc_categories[].  */
+comment|/*!  * When adding new categories, a corresponding ISC_LOGCATEGORY_foo  * definition needs to be added to<isc/log.h>.  *  * The default category is provided so that the internal default can  * be overridden.  Since the default is always looked up as the first  * channellist in the log context, it must come first in isc_categories[].  */
 end_comment
 
 begin_decl_stmt
@@ -502,7 +502,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * See above comment for categories, and apply it to modules.  */
+comment|/*!  * See above comment for categories on LIBISC_EXTERNAL_DATA, and apply it to modules.  */
 end_comment
 
 begin_decl_stmt
@@ -546,7 +546,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This essentially constant structure must be filled in at run time,  * because its channel member is pointed to a channel that is created  * dynamically with isc_log_createchannel.  */
+comment|/*!  * This essentially constant structure must be filled in at run time,  * because its channel member is pointed to a channel that is created  * dynamically with isc_log_createchannel.  */
 end_comment
 
 begin_decl_stmt
@@ -557,7 +557,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * libisc logs to this context.  */
+comment|/*!  * libisc logs to this context.  */
 end_comment
 
 begin_decl_stmt
@@ -571,7 +571,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Forward declarations.  */
+comment|/*!  * Forward declarations.  */
 end_comment
 
 begin_function_decl
@@ -693,7 +693,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/*  * Convenience macros.  */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * Convenience macros.  */
 end_comment
 
 begin_define
@@ -755,6 +759,10 @@ name|channel
 parameter_list|)
 value|(channel->destination.file.maximum_reached)
 end_define
+
+begin_comment
+comment|/*@}*/
+end_comment
 
 begin_comment
 comment|/****  **** Public interfaces.  ****/
@@ -890,8 +898,8 @@ operator|->
 name|messages
 argument_list|)
 expr_stmt|;
-name|RUNTIME_CHECK
-argument_list|(
+name|result
+operator|=
 name|isc_mutex_init
 argument_list|(
 operator|&
@@ -899,10 +907,33 @@ name|lctx
 operator|->
 name|lock
 argument_list|)
-operator|==
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
 name|ISC_R_SUCCESS
+condition|)
+block|{
+name|isc_mem_put
+argument_list|(
+name|mctx
+argument_list|,
+name|lctx
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|lctx
+argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|result
+operator|)
+return|;
+block|}
 comment|/* 		 * Normally setting the magic number is the last step done 		 * in a creation function, but a valid log context is needed 		 * by isc_log_registercategories and isc_logconfig_create. 		 * If either fails, the lctx is destroyed and not returned 		 * to the caller. 		 */
 name|lctx
 operator|->

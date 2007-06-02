@@ -4,7 +4,11 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: lfsr.c,v 1.11.2.2.2.6 2005/10/14 01:38:50 marka Exp $ */
+comment|/* $Id: lfsr.c,v 1.14.18.4 2005/10/14 01:28:29 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -188,7 +192,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the next state of the lfsr.  */
+comment|/*!  * Return the next state of the lfsr.  */
 end_comment
 
 begin_function

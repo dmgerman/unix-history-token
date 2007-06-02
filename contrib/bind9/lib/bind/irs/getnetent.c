@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetent.c,v 1.4.206.2 2004/03/17 01:49:40 marka Exp $"
+literal|"$Id: getnetent.c,v 1.6.18.1 2005/04/27 05:00:58 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1727,7 +1727,7 @@ name|nwent
 operator|->
 name|n_addrtype
 expr_stmt|;
-comment|/*  * What this code does: Converts net addresses from network to host form.  *  * msbyte: the index of the most significant byte in the n_addr array.  *  * Shift bytes in significant order into addr. When all signicant  * bytes are in, zero out bits in the LSB that are not part of the network.  */
+comment|/*%  * What this code does: Converts net addresses from network to host form.  *  * msbyte: the index of the most significant byte in the n_addr array.  *  * Shift bytes in significant order into addr. When all signicant  * bytes are in, zero out bits in the LSB that are not part of the network.  */
 name|msbyte
 operator|=
 name|nwent
@@ -1850,6 +1850,10 @@ end_endif
 
 begin_comment
 comment|/*__BIND_NOSTATIC*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

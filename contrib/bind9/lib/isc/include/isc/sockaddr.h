@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: sockaddr.h,v 1.35.12.10 2006/03/02 00:37:20 marka Exp $ */
+comment|/* $Id: sockaddr.h,v 1.42.18.8 2006/03/02 00:37:22 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|ISC_SOCKADDR_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -38,6 +42,23 @@ directive|include
 file|<isc/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_HAVESYSUNH
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|isc_sockaddr
@@ -56,6 +77,15 @@ name|struct
 name|sockaddr_in6
 name|sin6
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_HAVESYSUNH
+name|struct
+name|sockaddr_un
+name|sunix
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|type
 union|;
@@ -84,8 +114,77 @@ name|isc_sockaddrlist_t
 expr_stmt|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|ISC_SOCKADDR_CMPADDR
+value|0x0001
+end_define
+
+begin_comment
+comment|/*%< compare the address 						 *   sin_addr/sin6_addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_SOCKADDR_CMPPORT
+value|0x0002
+end_define
+
+begin_comment
+comment|/*%< compare the port 						 *   sin_port/sin6_port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_SOCKADDR_CMPSCOPE
+value|0x0004
+end_define
+
+begin_comment
+comment|/*%< compare the scope 						 *   sin6_scope */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_SOCKADDR_CMPSCOPEZERO
+value|0x0008
+end_define
+
+begin_comment
+comment|/*%< when comparing scopes 						 *   zero scopes always match */
+end_comment
+
 begin_function_decl
 name|ISC_LANG_BEGINDECLS
+name|isc_boolean_t
+name|isc_sockaddr_compare
+parameter_list|(
+specifier|const
+name|isc_sockaddr_t
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|isc_sockaddr_t
+modifier|*
+name|b
+parameter_list|,
+name|unsigned
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Compare the elements of the two address ('a' and 'b') as specified  * by 'flags' and report if they are equal or not.  *  * 'flags' is set from ISC_SOCKADDR_CMP*.  */
+end_comment
+
+begin_function_decl
 name|isc_boolean_t
 name|isc_sockaddr_equal
 parameter_list|(
@@ -103,7 +202,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return ISC_TRUE iff the socket addresses 'a' and 'b' are equal.  */
+comment|/*%<  * Return ISC_TRUE iff the socket addresses 'a' and 'b' are equal.  */
 end_comment
 
 begin_function_decl
@@ -124,7 +223,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return ISC_TRUE iff the address parts of the socket addresses  * 'a' and 'b' are equal, ignoring the ports.  */
+comment|/*%<  * Return ISC_TRUE iff the address parts of the socket addresses  * 'a' and 'b' are equal, ignoring the ports.  */
 end_comment
 
 begin_function_decl
@@ -149,7 +248,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return ISC_TRUE iff the most significant 'prefixlen' bits of the  * socket addresses 'a' and 'b' are equal, ignoring the ports.  */
+comment|/*%<  * Return ISC_TRUE iff the most significant 'prefixlen' bits of the  * socket addresses 'a' and 'b' are equal, ignoring the ports.  */
 end_comment
 
 begin_function_decl
@@ -169,7 +268,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return a hash value for the socket address 'sockaddr'.  If 'address_only'  * is ISC_TRUE, the hash value will not depend on the port.  *  * IPv6 addresses containing mapped IPv4 addresses generate the same hash  * value as the equivalent IPv4 address.  */
+comment|/*%<  * Return a hash value for the socket address 'sockaddr'.  If 'address_only'  * is ISC_TRUE, the hash value will not depend on the port.  *  * IPv6 addresses containing mapped IPv4 addresses generate the same hash  * value as the equivalent IPv4 address.  */
 end_comment
 
 begin_function_decl
@@ -184,7 +283,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the IPv4 wildcard address.  */
+comment|/*%<  * Return the IPv4 wildcard address.  */
 end_comment
 
 begin_function_decl
@@ -199,7 +298,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the IPv6 wildcard address.  */
+comment|/*%<  * Return the IPv6 wildcard address.  */
 end_comment
 
 begin_function_decl
@@ -217,7 +316,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set '*sockaddr' to the wildcard address of protocol family  * 'family'.  *  * Requires:  *	'family' is AF_INET or AF_INET6.  */
+comment|/*%<  * Set '*sockaddr' to the wildcard address of protocol family  * 'family'.  *  * Requires:  * \li	'family' is AF_INET or AF_INET6.  */
 end_comment
 
 begin_function_decl
@@ -241,7 +340,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Construct an isc_sockaddr_t from an IPv4 address and port.  */
+comment|/*%<  * Construct an isc_sockaddr_t from an IPv4 address and port.  */
 end_comment
 
 begin_function_decl
@@ -265,7 +364,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Construct an isc_sockaddr_t from an IPv6 address and port.  */
+comment|/*%<  * Construct an isc_sockaddr_t from an IPv6 address and port.  */
 end_comment
 
 begin_function_decl
@@ -289,7 +388,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Construct an IPv6 isc_sockaddr_t representing a mapped IPv4 address.  */
+comment|/*%<  * Construct an IPv6 isc_sockaddr_t representing a mapped IPv4 address.  */
 end_comment
 
 begin_function_decl
@@ -312,7 +411,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Construct an isc_sockaddr_t from an isc_netaddr_t and port.  */
+comment|/*%<  * Construct an isc_sockaddr_t from an isc_netaddr_t and port.  */
 end_comment
 
 begin_function_decl
@@ -328,7 +427,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the protocol family of 'sockaddr'.  *  * Requires:  *  *	'sockaddr' is a valid sockaddr with an address family of AF_INET  *	or AF_INET6.  *  * Returns:  *  *	The protocol family of 'sockaddr', e.g. PF_INET or PF_INET6.  */
+comment|/*%<  * Get the protocol family of 'sockaddr'.  *  * Requires:  *  *\li	'sockaddr' is a valid sockaddr with an address family of AF_INET  *	or AF_INET6.  *  * Returns:  *  *\li	The protocol family of 'sockaddr', e.g. PF_INET or PF_INET6.  */
 end_comment
 
 begin_function_decl
@@ -346,7 +445,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the port of 'sockaddr' to 'port'.  */
+comment|/*%<  * Set the port of 'sockaddr' to 'port'.  */
 end_comment
 
 begin_function_decl
@@ -362,7 +461,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the port stored in 'sockaddr'.  */
+comment|/*%<  * Get the port stored in 'sockaddr'.  */
 end_comment
 
 begin_function_decl
@@ -382,7 +481,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Append a text representation of 'sockaddr' to the buffer 'target'.  * The text will include both the IP address (v4 or v6) and the port.  * The text is null terminated, but the terminating null is not  * part of the buffer's used region.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOSPACE	The text or the null termination did not fit.  */
+comment|/*%<  * Append a text representation of 'sockaddr' to the buffer 'target'.  * The text will include both the IP address (v4 or v6) and the port.  * The text is null terminated, but the terminating null is not  * part of the buffer's used region.  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	ISC_R_NOSPACE	The text or the null termination did not fit.  */
 end_comment
 
 begin_function_decl
@@ -406,7 +505,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Format a human-readable representation of the socket address '*sa'  * into the character array 'array', which is of size 'size'.  * The resulting string is guaranteed to be null-terminated.  */
+comment|/*%<  * Format a human-readable representation of the socket address '*sa'  * into the character array 'array', which is of size 'size'.  * The resulting string is guaranteed to be null-terminated.  */
 end_comment
 
 begin_function_decl
@@ -422,7 +521,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns ISC_TRUE if the address is a multicast address.  */
+comment|/*%<  * Returns #ISC_TRUE if the address is a multicast address.  */
 end_comment
 
 begin_function_decl
@@ -454,7 +553,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns ISC_TRUE if the address is a link local addresss.  */
+comment|/*%<  * Returns ISC_TRUE if the address is a link local addresss.  */
 end_comment
 
 begin_function_decl
@@ -470,7 +569,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns ISC_TRUE if the address is a sitelocal address.  */
+comment|/*%<  * Returns ISC_TRUE if the address is a sitelocal address.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_sockaddr_frompath
+parameter_list|(
+name|isc_sockaddr_t
+modifier|*
+name|sockaddr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  *  Create a UNIX domain sockaddr that refers to path.  *  * Returns:  * \li	ISC_R_NOSPACE  * \li	ISC_R_NOTIMPLEMENTED  * \li	ISC_R_SUCCESS  */
 end_comment
 
 begin_define
@@ -478,11 +597,11 @@ define|#
 directive|define
 name|ISC_SOCKADDR_FORMATSIZE
 define|\
-value|sizeof("xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:XXX.XXX.XXX.XXX#YYYYY%SSSSSSSSSS")
+value|sizeof("xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:XXX.XXX.XXX.XXX%SSSSSSSSSS#YYYYY")
 end_define
 
 begin_comment
-comment|/*  * Minimum size of array to pass to isc_sockaddr_format().  */
+comment|/*%<  * Minimum size of array to pass to isc_sockaddr_format().  */
 end_comment
 
 begin_macro

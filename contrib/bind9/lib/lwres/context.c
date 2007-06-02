@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: context.c,v 1.41.2.1.2.4 2004/09/17 05:50:31 marka Exp $ */
+comment|/* $Id: context.c,v 1.45.18.3 2005/04/29 00:17:16 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file context.c     lwres_context_create() creates a #lwres_context_t structure for use in    lightweight resolver operations. It holds a socket and other data    needed for communicating with a resolver daemon. The new    lwres_context_t is returned through contextp, a pointer to a    lwres_context_t pointer. This lwres_context_t pointer must initially    be NULL, and is modified to point to the newly created    lwres_context_t.     When the lightweight resolver needs to perform dynamic memory    allocation, it will call malloc_function to allocate memory and    free_function to free it. If malloc_function and free_function are    NULL, memory is allocated using malloc and free. It is not    permitted to have a NULL malloc_function and a non-NULL free_function    or vice versa. arg is passed as the first parameter to the memory    allocation functions. If malloc_function and free_function are NULL,    arg is unused and should be passed as NULL.     Once memory for the structure has been allocated, it is initialized    using lwres_conf_init() and returned via *contextp.     lwres_context_destroy() destroys a #lwres_context_t, closing its    socket. contextp is a pointer to a pointer to the context that is to    be destroyed. The pointer will be set to NULL when the context has    been destroyed.     The context holds a serial number that is used to identify resolver    request packets and associate responses with the corresponding    requests. This serial number is controlled using    lwres_context_initserial() and lwres_context_nextserial().    lwres_context_initserial() sets the serial number for context *ctx to    serial. lwres_context_nextserial() increments the serial number and    returns the previous value.     Memory for a lightweight resolver context is allocated and freed using    lwres_context_allocmem() and lwres_context_freemem(). These use    whatever allocations were defined when the context was created with    lwres_context_create(). lwres_context_allocmem() allocates len bytes    of memory and if successful returns a pointer to the allocated    storage. lwres_context_freemem() frees len bytes of space starting at    location mem.     lwres_context_sendrecv() performs I/O for the context ctx. Data are    read and written from the context's socket. It writes data from    sendbase -- typically a lightweight resolver query packet -- and waits    for a reply which is copied to the receive buffer at recvbase. The    number of bytes that were written to this receive buffer is returned    in *recvd_len.  \section context_return Return Values     lwres_context_create() returns #LWRES_R_NOMEMORY if memory for the    struct lwres_context could not be allocated, #LWRES_R_SUCCESS    otherwise.     Successful calls to the memory allocator lwres_context_allocmem()    return a pointer to the start of the allocated space. It returns NULL    if memory could not be allocated.     #LWRES_R_SUCCESS is returned when lwres_context_sendrecv() completes    successfully. #LWRES_R_IOERROR is returned if an I/O error occurs and    #LWRES_R_TIMEOUT is returned if lwres_context_sendrecv() times out    waiting for a response.  \section context_see See Also     lwres_conf_init(), malloc, free.  */
 end_comment
 
 begin_include
@@ -97,7 +101,7 @@ file|"assert_p.h"
 end_include
 
 begin_comment
-comment|/*  * Some systems define the socket length argument as an int, some as size_t,  * some as socklen_t.  The last is what the current POSIX standard mandates.  * This definition is here so it can be portable but easily changed if needed.  */
+comment|/*!  * Some systems define the socket length argument as an int, some as size_t,  * some as socklen_t.  The last is what the current POSIX standard mandates.  * This definition is here so it can be portable but easily changed if needed.  */
 end_comment
 
 begin_ifndef
@@ -119,7 +123,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Make a socket nonblocking.  */
+comment|/*!  * Make a socket nonblocking.  */
 end_comment
 
 begin_ifndef
@@ -196,6 +200,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*!  * lwres_result_t  */
+end_comment
+
 begin_function_decl
 specifier|static
 name|lwres_result_t
@@ -206,6 +214,10 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*%  * Creates a #lwres_context_t structure for use in  *  lightweight resolver operations.  */
+end_comment
 
 begin_function
 name|lwres_result_t
@@ -371,6 +383,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*% Destroys a #lwres_context_t, closing its socket.  contextp is a pointer to a pointer to the context that is  to be destroyed. The pointer will be set to NULL  when the context has been destroyed.  */
+end_comment
+
 begin_function
 name|void
 name|lwres_context_destroy
@@ -448,6 +464,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*% Increments the serial number and returns the previous value. */
+end_comment
+
 begin_function
 name|lwres_uint32_t
 name|lwres_context_nextserial
@@ -474,6 +494,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*% Sets the serial number for context *ctx to serial. */
+end_comment
 
 begin_function
 name|void
@@ -502,6 +526,10 @@ name|serial
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*% Frees len bytes of space starting at location mem. */
+end_comment
 
 begin_function
 name|void
@@ -542,6 +570,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*% Allocates len bytes of memory and if successful returns a pointer to the allocated storage. */
+end_comment
 
 begin_function
 name|void
@@ -1443,6 +1475,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*% performs I/O for the context ctx. */
+end_comment
 
 begin_function
 name|lwres_result_t

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_ttl.c,v 1.1.206.2 2005/07/28 07:43:21 marka Exp $"
+literal|"$Id: ns_ttl.c,v 1.2.18.2 2005/07/28 07:38:10 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -761,6 +761,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

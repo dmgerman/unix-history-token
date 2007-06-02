@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: nsec.h,v 1.4.2.1 2004/03/08 02:08:00 marka Exp $ */
+comment|/* $Id: nsec.h,v 1.4.20.2 2005/04/29 00:16:16 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|DNS_NSEC_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -79,7 +83,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Build the rdata of a NSEC record.  *  * Requires:  *	buffer	Points to a temporary buffer of at least  * 		DNS_NSEC_BUFFERSIZE bytes.  *	rdata	Points to an initialized dns_rdata_t.  *  * Ensures:  *      *rdata	Contains a valid NSEC rdata.  The 'data' member refers  *		to 'buffer'.  */
+comment|/*%<  * Build the rdata of a NSEC record.  *  * Requires:  *\li	buffer	Points to a temporary buffer of at least  * 		DNS_NSEC_BUFFERSIZE bytes.  *\li	rdata	Points to an initialized dns_rdata_t.  *  * Ensures:  *  \li    *rdata	Contains a valid NSEC rdata.  The 'data' member refers  *		to 'buffer'.  */
 end_comment
 
 begin_function_decl
@@ -109,7 +113,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Build a NSEC record and add it to a database.  */
+comment|/*%<  * Build a NSEC record and add it to a database.  */
 end_comment
 
 begin_function_decl
@@ -127,7 +131,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Determine if a type is marked as present in an NSEC record.  *  * Requires:  *	'nsec' points to a valid rdataset of type NSEC  */
+comment|/*%<  * Determine if a type is marked as present in an NSEC record.  *  * Requires:  *\li	'nsec' points to a valid rdataset of type NSEC  */
 end_comment
 
 begin_macro

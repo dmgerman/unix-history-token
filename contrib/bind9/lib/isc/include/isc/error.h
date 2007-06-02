@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: error.h,v 1.13.206.1 2004/03/06 08:14:40 marka Exp $ */
+comment|/* $Id: error.h,v 1.14.18.2 2005/04/29 00:16:54 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|ISC_ERROR_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -65,6 +69,10 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/*% set unexpected error */
+end_comment
+
 begin_function_decl
 name|void
 name|isc_error_setunexpected
@@ -74,6 +82,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*% set fatal error */
+end_comment
+
 begin_function_decl
 name|void
 name|isc_error_setfatal
@@ -82,6 +94,10 @@ name|isc_errorcallback_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*% unexpected error */
+end_comment
 
 begin_function_decl
 name|void
@@ -111,6 +127,10 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/*% fatal error */
+end_comment
+
 begin_function_decl
 name|void
 name|isc_error_fatal
@@ -138,6 +158,10 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/*% runtimecheck error */
+end_comment
 
 begin_function_decl
 name|void

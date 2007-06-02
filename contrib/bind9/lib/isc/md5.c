@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: md5.c,v 1.9.206.1 2004/03/06 08:14:32 marka Exp $ */
+comment|/* $Id: md5.c,v 1.10.18.2 2005/04/29 00:16:47 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * This code implements the MD5 message-digest algorithm.  * The algorithm is due to Ron Rivest.  This code was  * written by Colin Plumb in 1993, no copyright is claimed.  * This code is in the public domain; do with it what you wish.  *  * Equivalent code is available from RSA Data Security, Inc.  * This code has been tested against that, and is equivalent,  * except that you don't need to include two pages of legalese  * with every copy.  *  * To compute the message digest of a chunk of bytes, declare an  * MD5Context structure, pass it to MD5Init, call MD5Update as  * needed on buffers full of bytes, and then call MD5Final, which  * will fill a supplied 16-byte array with the digest.  */
+comment|/*! \file  * This code implements the MD5 message-digest algorithm.  * The algorithm is due to Ron Rivest.  This code was  * written by Colin Plumb in 1993, no copyright is claimed.  * This code is in the public domain; do with it what you wish.  *  * Equivalent code is available from RSA Data Security, Inc.  * This code has been tested against that, and is equivalent,  * except that you don't need to include two pages of legalese  * with every copy.  *  * To compute the message digest of a chunk of bytes, declare an  * MD5Context structure, pass it to MD5Init, call MD5Update as  * needed on buffers full of bytes, and then call MD5Final, which  * will fill a supplied 16-byte array with the digest.  */
 end_comment
 
 begin_include
@@ -132,7 +132,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start MD5 accumulation.  Set bit count to 0 and buffer to mysterious  * initialization constants.  */
+comment|/*!  * Start MD5 accumulation.  Set bit count to 0 and buffer to mysterious  * initialization constants.  */
 end_comment
 
 begin_function
@@ -226,7 +226,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* The four core functions - F1 is optimized somewhat */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*! The four core functions - F1 is optimized somewhat */
 end_comment
 
 begin_comment
@@ -290,7 +294,11 @@ value|(y ^ (x | ~z))
 end_define
 
 begin_comment
-comment|/* This is the central step in the MD5 algorithm. */
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*! This is the central step in the MD5 algorithm. */
 end_comment
 
 begin_define
@@ -317,7 +325,7 @@ value|(w += f(x,y,z) + in, w = (w<<s | w>>(32-s)) + x)
 end_define
 
 begin_comment
-comment|/*  * The core of the MD5 algorithm, this alters an existing MD5 hash to  * reflect the addition of 16 longwords of new data.  MD5Update blocks  * the data and converts bytes into longwords for this routine.  */
+comment|/*!  * The core of the MD5 algorithm, this alters an existing MD5 hash to  * reflect the addition of 16 longwords of new data.  MD5Update blocks  * the data and converts bytes into longwords for this routine.  */
 end_comment
 
 begin_function
@@ -1817,7 +1825,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update context to reflect the concatenation of another buffer full  * of bytes.  */
+comment|/*!  * Update context to reflect the concatenation of another buffer full  * of bytes.  */
 end_comment
 
 begin_function
@@ -2031,7 +2039,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Final wrapup - pad to 64-byte boundary with the bit pattern  * 1 0* (64-bit count of bits processed, MSB-first)  */
+comment|/*!  * Final wrapup - pad to 64-byte boundary with the bit pattern  * 1 0* (64-bit count of bits processed, MSB-first)  */
 end_comment
 
 begin_function

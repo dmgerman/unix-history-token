@@ -4,11 +4,11 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: gen_p.h,v 1.1.206.1 2004/03/09 08:33:35 marka Exp $  */
+comment|/*  * $Id: gen_p.h,v 1.2.18.1 2005/04/27 05:00:56 sra Exp $  */
 end_comment
 
 begin_comment
-comment|/* Notes:  *	We hope to create a complete set of thread-safe entry points someday,  *	which will mean a set of getXbyY() functions that take as an argument  *	a pointer to the map class, which will have a pointer to the private  *	data, which will be used preferentially to the static variables that  *	are necessary to support the "classic" interface.  This "classic"  *	interface will then be reimplemented as stubs on top of the thread  *	safe modules, and will keep the map class pointers as their only  *	static data.  HOWEVER, we are not there yet.  So while we will call  *	the just-barely-converted map class methods with map class pointers,  *	right now they probably all still use statics.  We're not fooling  *	anybody, and we're not trying to (yet).  */
+comment|/*! \file  *  Notes:  *	We hope to create a complete set of thread-safe entry points someday,  *	which will mean a set of getXbyY() functions that take as an argument  *	a pointer to the map class, which will have a pointer to the private  *	data, which will be used preferentially to the static variables that  *	are necessary to support the "classic" interface.  This "classic"  *	interface will then be reimplemented as stubs on top of the thread  *	safe modules, and will keep the map class pointers as their only  *	static data.  HOWEVER, we are not there yet.  So while we will call  *	the just-barely-converted map class methods with map class pointers,  *	right now they probably all still use statics.  We're not fooling  *	anybody, and we're not trying to (yet).  */
 end_comment
 
 begin_ifndef
@@ -24,7 +24,7 @@ name|_GEN_P_H_INCLUDED
 end_define
 
 begin_comment
-comment|/*  * These are the access methods.  */
+comment|/*%  * These are the access methods.  */
 end_comment
 
 begin_enum
@@ -33,23 +33,23 @@ name|irs_acc_id
 block|{
 name|irs_lcl
 block|,
-comment|/* Local. */
+comment|/*%< Local. */
 name|irs_dns
 block|,
-comment|/* DNS or Hesiod. */
+comment|/*%< DNS or Hesiod. */
 name|irs_nis
 block|,
-comment|/* Sun NIS ("YP"). */
+comment|/*%< Sun NIS ("YP"). */
 name|irs_irp
 block|,
-comment|/* IR protocol.  */
+comment|/*%< IR protocol. */
 name|irs_nacc
 block|}
 enum|;
 end_enum
 
 begin_comment
-comment|/*  * These are the map types.  */
+comment|/*%  * These are the map types.  */
 end_comment
 
 begin_enum
@@ -58,32 +58,32 @@ name|irs_map_id
 block|{
 name|irs_gr
 block|,
-comment|/* "group" */
+comment|/*%< "group" */
 name|irs_pw
 block|,
-comment|/* "passwd" */
+comment|/*%< "passwd" */
 name|irs_sv
 block|,
-comment|/* "services" */
+comment|/*%< "services" */
 name|irs_pr
 block|,
-comment|/* "protocols" */
+comment|/*%< "protocols" */
 name|irs_ho
 block|,
-comment|/* "hosts" */
+comment|/*%< "hosts" */
 name|irs_nw
 block|,
-comment|/* "networks" */
+comment|/*%< "networks" */
 name|irs_ng
 block|,
-comment|/* "netgroup" */
+comment|/*%< "netgroup" */
 name|irs_nmap
 block|}
 enum|;
 end_enum
 
 begin_comment
-comment|/*  * This is an accessor instance.  */
+comment|/*%  * This is an accessor instance.  */
 end_comment
 
 begin_struct
@@ -135,7 +135,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This is a search rule for some map type.  */
+comment|/*%  * This is a search rule for some map type.  */
 end_comment
 
 begin_struct
@@ -167,7 +167,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* Don't stop if acc. has data? */
+comment|/*%< Don't stop if acc. has data? */
 end_comment
 
 begin_define
@@ -178,7 +178,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* Don't stop if acc. has no data? */
+comment|/*%< Don't stop if acc. has no data? */
 end_comment
 
 begin_comment

@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irs_data.c,v 1.3.2.2.4.4 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: irs_data.c,v 1.7.18.3 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -558,7 +558,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* applications that need a specific config file other than  * _PATH_IRS_CONF should call net_data_init directly rather than letting  *   the various wrapper functions make the first call. - brister  */
+comment|/*%  *  applications that need a specific config file other than  * _PATH_IRS_CONF should call net_data_init directly rather than letting  *   the various wrapper functions make the first call. - brister  */
 end_comment
 
 begin_function
@@ -1204,6 +1204,10 @@ end_endif
 
 begin_comment
 comment|/*__BIND_NOSTATIC*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

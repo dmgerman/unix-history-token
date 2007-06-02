@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: update.c,v 1.88.2.5.2.29 2006/01/06 00:01:42 marka Exp $ */
+comment|/* $Id: update.c,v 1.109.18.19 2006/03/06 01:38:00 marka Exp $ */
 end_comment
 
 begin_include
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<dns/journal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/keyvalues.h>
 end_include
 
 begin_include
@@ -170,7 +176,7 @@ file|<named/update.h>
 end_include
 
 begin_comment
-comment|/*  * This module implements dynamic update as in RFC2136.  */
+comment|/*! \file  * \brief  * This module implements dynamic update as in RFC2136.  */
 end_comment
 
 begin_comment
@@ -182,7 +188,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Log level for tracing dynamic update protocol requests.  */
+comment|/*%  * Log level for tracing dynamic update protocol requests.  */
 end_comment
 
 begin_define
@@ -193,7 +199,7 @@ value|ISC_LOG_INFO
 end_define
 
 begin_comment
-comment|/*  * Log level for low-level debug tracing.  */
+comment|/*%  * Log level for low-level debug tracing.  */
 end_comment
 
 begin_define
@@ -204,7 +210,7 @@ value|ISC_LOG_DEBUG(8)
 end_define
 
 begin_comment
-comment|/*  * Check an operation for failure.  These macros all assume that  * the function using them has a 'result' variable and a 'failure'  * label.  */
+comment|/*%  * Check an operation for failure.  These macros all assume that  * the function using them has a 'result' variable and a 'failure'  * label.  */
 end_comment
 
 begin_define
@@ -219,7 +225,7 @@ value|do { result = (op); 				  	 \ 	       if (result != ISC_R_SUCCESS) goto fa
 end_define
 
 begin_comment
-comment|/*  * Fail unconditionally with result 'code', which must not  * be ISC_R_SUCCESS.  The reason for failure presumably has  * been logged already.  *  * The test against ISC_R_SUCCESS is there to keep the Solaris compiler  * from complaining about "end-of-loop code not reached".  */
+comment|/*%  * Fail unconditionally with result 'code', which must not  * be ISC_R_SUCCESS.  The reason for failure presumably has  * been logged already.  *  * The test against ISC_R_SUCCESS is there to keep the Solaris compiler  * from complaining about "end-of-loop code not reached".  */
 end_comment
 
 begin_define
@@ -234,7 +240,7 @@ value|do {							\ 		result = (code);				\ 		if (result != ISC_R_SUCCESS) goto f
 end_define
 
 begin_comment
-comment|/*  * Fail unconditionally and log as a client error.  * The test against ISC_R_SUCCESS is there to keep the Solaris compiler  * from complaining about "end-of-loop code not reached".  */
+comment|/*%  * Fail unconditionally and log as a client error.  * The test against ISC_R_SUCCESS is there to keep the Solaris compiler  * from complaining about "end-of-loop code not reached".  */
 end_comment
 
 begin_define
@@ -283,7 +289,7 @@ value|do {								\ 		const char *_what = "failed";				\ 		result = (code);					
 end_define
 
 begin_comment
-comment|/*  * Fail unconditionally and log as a server error.  * The test against ISC_R_SUCCESS is there to keep the Solaris compiler  * from complaining about "end-of-loop code not reached".  */
+comment|/*%  * Fail unconditionally and log as a server error.  * The test against ISC_R_SUCCESS is there to keep the Solaris compiler  * from complaining about "end-of-loop code not reached".  */
 end_comment
 
 begin_define
@@ -782,7 +788,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update a single RR in version 'ver' of 'db' and log the  * update in 'diff'.  *  * Ensures:  *   '*tuple' == NULL.  Either the tuple is freed, or its  *         ownership has been transferred to the diff.  */
+comment|/*%  * Update a single RR in version 'ver' of 'db' and log the  * update in 'diff'.  *  * Ensures:  * \li  '*tuple' == NULL.  Either the tuple is freed, or its  *         ownership has been transferred to the diff.  */
 end_comment
 
 begin_function
@@ -898,7 +904,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform the updates in 'updates' in version 'ver' of 'db' and log the  * update in 'diff'.  *  * Ensures:  *   'updates' is empty.  */
+comment|/*%  * Perform the updates in 'updates' in version 'ver' of 'db' and log the  * update in 'diff'.  *  * Ensures:  * \li  'updates' is empty.  */
 end_comment
 
 begin_function
@@ -1098,7 +1104,7 @@ comment|/*  * XXXRTH  We might want to make this public somewhere in libdns.  */
 end_comment
 
 begin_comment
-comment|/*  * Function type for foreach_rrset() iterator actions.  */
+comment|/*%  * Function type for foreach_rrset() iterator actions.  */
 end_comment
 
 begin_typedef
@@ -1118,7 +1124,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Function type for foreach_rr() iterator actions.  */
+comment|/*%  * Function type for foreach_rr() iterator actions.  */
 end_comment
 
 begin_typedef
@@ -1138,7 +1144,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Internal context struct for foreach_node_rr().  */
+comment|/*%  * Internal context struct for foreach_node_rr().  */
 end_comment
 
 begin_typedef
@@ -1159,7 +1165,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Internal helper function for foreach_node_rr().  */
+comment|/*%  * Internal helper function for foreach_node_rr().  */
 end_comment
 
 begin_function
@@ -1282,7 +1288,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For each rdataset of 'name' in 'ver' of 'db', call 'action'  * with the rdataset and 'action_data' as arguments.  If the name  * does not exist, do nothing.  *  * If 'action' returns an error, abort iteration and return the error.  */
+comment|/*%  * For each rdataset of 'name' in 'ver' of 'db', call 'action'  * with the rdataset and 'action_data' as arguments.  If the name  * does not exist, do nothing.  *  * If 'action' returns an error, abort iteration and return the error.  */
 end_comment
 
 begin_function
@@ -1498,7 +1504,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For each RR of 'name' in 'ver' of 'db', call 'action'  * with the RR and 'action_data' as arguments.  If the name  * does not exist, do nothing.  *  * If 'action' returns an error, abort iteration  * and return the error.  */
+comment|/*%  * For each RR of 'name' in 'ver' of 'db', call 'action'  * with the RR and 'action_data' as arguments.  If the name  * does not exist, do nothing.  *  * If 'action' returns an error, abort iteration  * and return the error.  */
 end_comment
 
 begin_function
@@ -1563,7 +1569,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For each of the RRs specified by 'db', 'ver', 'name', 'type',  * (which can be dns_rdatatype_any to match any type), and 'covers', call  * 'action' with the RR and 'action_data' as arguments. If the name  * does not exist, or if no RRset of the given type exists at the name,  * do nothing.  *  * If 'action' returns an error, abort iteration and return the error.  */
+comment|/*%  * For each of the RRs specified by 'db', 'ver', 'name', 'type',  * (which can be dns_rdatatype_any to match any type), and 'covers', call  * 'action' with the RR and 'action_data' as arguments. If the name  * does not exist, or if no RRset of the given type exists at the name,  * do nothing.  *  * If 'action' returns an error, abort iteration and return the error.  */
 end_comment
 
 begin_function
@@ -1847,7 +1853,7 @@ comment|/*  * Various tests on the database contents (for prerequisites, etc).  
 end_comment
 
 begin_comment
-comment|/*  * Function type for predicate functions that compare a database RR 'db_rr'  * against an update RR 'update_rr'.  */
+comment|/*%  * Function type for predicate functions that compare a database RR 'db_rr'  * against an update RR 'update_rr'.  */
 end_comment
 
 begin_typedef
@@ -1867,7 +1873,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Helper function for rrset_exists().  */
+comment|/*%  * Helper function for rrset_exists().  */
 end_comment
 
 begin_function
@@ -1903,7 +1909,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Utility macro for RR existence checking functions.  *  * If the variable 'result' has the value ISC_R_EXISTS or  * ISC_R_SUCCESS, set *exists to ISC_TRUE or ISC_FALSE,  * respectively, and return success.  *  * If 'result' has any other value, there was a failure.  * Return the failure result code and do not set *exists.  *  * This would be more readable as "do { if ... } while(0)",  * but that form generates tons of warnings on Solaris 2.6.  */
+comment|/*%  * Utility macro for RR existence checking functions.  *  * If the variable 'result' has the value ISC_R_EXISTS or  * ISC_R_SUCCESS, set *exists to ISC_TRUE or ISC_FALSE,  * respectively, and return success.  *  * If 'result' has any other value, there was a failure.  * Return the failure result code and do not set *exists.  *  * This would be more readable as "do { if ... } while(0)",  * but that form generates tons of warnings on Solaris 2.6.  */
 end_comment
 
 begin_define
@@ -1915,7 +1921,7 @@ value|return ((result == ISC_R_EXISTS) ? 		\ 		(*exists = ISC_TRUE, ISC_R_SUCCES
 end_define
 
 begin_comment
-comment|/*  * Set '*exists' to true iff an rrset of the given type exists,  * to false otherwise.  */
+comment|/*%  * Set '*exists' to true iff an rrset of the given type exists,  * to false otherwise.  */
 end_comment
 
 begin_function
@@ -1974,7 +1980,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Helper function for cname_incompatible_rrset_exists.  */
+comment|/*%  * Helper function for cname_incompatible_rrset_exists.  */
 end_comment
 
 begin_function
@@ -2026,7 +2032,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check whether there is an rrset incompatible with adding a CNAME RR,  * i.e., anything but another CNAME (which can be replaced) or a  * DNSSEC RR (which can coexist).  *  * If such an incompatible rrset exists, set '*exists' to ISC_TRUE.  * Otherwise, set it to ISC_FALSE.  */
+comment|/*%  * Check whether there is an rrset incompatible with adding a CNAME RR,  * i.e., anything but another CNAME (which can be replaced) or a  * DNSSEC RR (which can coexist).  *  * If such an incompatible rrset exists, set '*exists' to ISC_TRUE.  * Otherwise, set it to ISC_FALSE.  */
 end_comment
 
 begin_function
@@ -2075,7 +2081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Helper function for rr_count().  */
+comment|/*%  * Helper function for rr_count().  */
 end_comment
 
 begin_function
@@ -2118,7 +2124,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Count the number of RRs of 'type' belonging to 'name' in 'ver' of 'db'.  */
+comment|/*%  * Count the number of RRs of 'type' belonging to 'name' in 'ver' of 'db'.  */
 end_comment
 
 begin_function
@@ -2178,7 +2184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Context struct and helper function for name_exists().  */
+comment|/*%  * Context struct and helper function for name_exists().  */
 end_comment
 
 begin_function
@@ -2214,7 +2220,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set '*exists' to true iff the given name exists, to false otherwise.  */
+comment|/*%  * Set '*exists' to true iff the given name exists, to false otherwise.  */
 end_comment
 
 begin_function
@@ -2448,7 +2454,7 @@ comment|/*  * Checking of "RRset exists (value dependent)" prerequisites.  *  * 
 end_comment
 
 begin_comment
-comment|/*  * Append a tuple asserting the existence of the RR with  * 'name' and 'rdata' to 'diff'.  */
+comment|/*%  * Append a tuple asserting the existence of the RR with  * 'name' and 'rdata' to 'diff'.  */
 end_comment
 
 begin_function
@@ -2529,7 +2535,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compare two rdatasets represented as sorted lists of tuples.  * All list elements must have the same owner name and type.  * Return ISC_R_SUCCESS if the rdatasets are equal, rcode(dns_rcode_nxrrset)  * if not.  */
+comment|/*%  * Compare two rdatasets represented as sorted lists of tuples.  * All list elements must have the same owner name and type.  * Return ISC_R_SUCCESS if the rdatasets are equal, rcode(dns_rcode_nxrrset)  * if not.  */
 end_comment
 
 begin_function
@@ -2674,7 +2680,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A comparison function defining the sorting order for the entries  * in the "temp" data structure.  The major sort key is the owner name,  * followed by the type and rdata.  */
+comment|/*%  * A comparison function defining the sorting order for the entries  * in the "temp" data structure.  The major sort key is the owner name,  * followed by the type and rdata.  */
 end_comment
 
 begin_function
@@ -2807,7 +2813,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check the "RRset exists (value dependent)" prerequisite information  * in 'temp' against the contents of the database 'db'.  *  * Return ISC_R_SUCCESS if the prerequisites are satisfied,  * rcode(dns_rcode_nxrrset) if not.  *  * 'temp' must be pre-sorted.  */
+comment|/*%  * Check the "RRset exists (value dependent)" prerequisite information  * in 'temp' against the contents of the database 'db'.  *  * Return ISC_R_SUCCESS if the prerequisites are satisfied,  * rcode(dns_rcode_nxrrset) if not.  *  * 'temp' must be pre-sorted.  */
 end_comment
 
 begin_function
@@ -3378,7 +3384,7 @@ comment|/*  * Conditional deletion of RRs.  */
 end_comment
 
 begin_comment
-comment|/*  * Context structure for delete_if().  */
+comment|/*%  * Context structure for delete_if().  */
 end_comment
 
 begin_typedef
@@ -3415,11 +3421,11 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Predicate functions for delete_if().  */
+comment|/*%  * Predicate functions for delete_if().  */
 end_comment
 
 begin_comment
-comment|/*  * Return true iff 'db_rr' is neither a SOA nor an NS RR nor  * an RRSIG nor a NSEC.  */
+comment|/*%  * Return true iff 'db_rr' is neither a SOA nor an NS RR nor  * an RRSIG nor a NSEC.  */
 end_comment
 
 begin_function
@@ -3478,7 +3484,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return true iff 'db_rr' is neither a RRSIG nor a NSEC.  */
+comment|/*%  * Return true iff 'db_rr' is neither a RRSIG nor a NSEC.  */
 end_comment
 
 begin_function
@@ -3525,7 +3531,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return true always.  */
+comment|/*%  * Return true always.  */
 end_comment
 
 begin_function
@@ -3561,7 +3567,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return true iff the two RRs have identical rdata.  */
+comment|/*%  * Return true iff the two RRs have identical rdata.  */
 end_comment
 
 begin_function
@@ -3599,7 +3605,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return true iff 'update_rr' should replace 'db_rr' according  * to the special RFC2136 rules for CNAME, SOA, and WKS records.  *  * RFC2136 does not mention NSEC or DNAME, but multiple NSECs or DNAMEs  * make little sense, so we replace those, too.  */
+comment|/*%  * Return true iff 'update_rr' should replace 'db_rr' according  * to the special RFC2136 rules for CNAME, SOA, and WKS records.  *  * RFC2136 does not mention NSEC or DNAME, but multiple NSECs or DNAMEs  * make little sense, so we replace those, too.  */
 end_comment
 
 begin_function
@@ -3740,7 +3746,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal helper function for delete_if().  */
+comment|/*%  * Internal helper function for delete_if().  */
 end_comment
 
 begin_function
@@ -3836,7 +3842,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Conditionally delete RRs.  Apply 'predicate' to the RRs  * specified by 'db', 'ver', 'name', and 'type' (which can  * be dns_rdatatype_any to match any type).  Delete those  * RRs for which the predicate returns true, and log the  * deletions in 'diff'.  */
+comment|/*%  * Conditionally delete RRs.  Apply 'predicate' to the RRs  * specified by 'db', 'ver', 'name', and 'type' (which can  * be dns_rdatatype_any to match any type).  Delete those  * RRs for which the predicate returns true, and log the  * deletions in 'diff'.  */
 end_comment
 
 begin_function
@@ -3943,7 +3949,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Prepare an RR for the addition of the new RR 'ctx->update_rr',  * with TTL 'ctx->update_rr_ttl', to its rdataset, by deleting  * the RRs if it is replaced by the new RR or has a conflicting TTL.  * The necessary changes are appended to ctx->del_diff and ctx->add_diff;  * we need to do all deletions before any additions so that we don't run  * into transient states with conflicting TTLs.  */
+comment|/*%  * Prepare an RR for the addition of the new RR 'ctx->update_rr',  * with TTL 'ctx->update_rr_ttl', to its rdataset, by deleting  * the RRs if it is replaced by the new RR or has a conflicting TTL.  * The necessary changes are appended to ctx->del_diff and ctx->add_diff;  * we need to do all deletions before any additions so that we don't run  * into transient states with conflicting TTLs.  */
 end_comment
 
 begin_typedef
@@ -4250,7 +4256,7 @@ comment|/*  * Miscellaneous subroutines.  */
 end_comment
 
 begin_comment
-comment|/*  * Extract a single update RR from 'section' of dynamic update message  * 'msg', with consistency checking.  *  * Stores the owner name, rdata, and TTL of the update RR at 'name',  * 'rdata', and 'ttl', respectively.  */
+comment|/*%  * Extract a single update RR from 'section' of dynamic update message  * 'msg', with consistency checking.  *  * Stores the owner name, rdata, and TTL of the update RR at 'name',  * 'rdata', and 'ttl', respectively.  */
 end_comment
 
 begin_function
@@ -4399,7 +4405,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Increment the SOA serial number of database 'db', version 'ver'.  * Replace the SOA record in the database, and log the  * change in 'diff'.  */
+comment|/*%  * Increment the SOA serial number of database 'db', version 'ver'.  * Replace the SOA record in the database, and log the  * change in 'diff'.  */
 end_comment
 
 begin_comment
@@ -4590,7 +4596,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check that the new SOA record at 'update_rdata' does not  * illegally cause the SOA serial number to decrease or stay  * unchanged relative to the existing SOA in 'db'.  *  * Sets '*ok' to ISC_TRUE if the update is legal, ISC_FALSE if not.  *  * William King points out that RFC2136 is inconsistent about  * the case where the serial number stays unchanged:  *  *   section 3.4.2.2 requires a server to ignore a SOA update request  *   if the serial number on the update SOA is less_than_or_equal to  *   the zone SOA serial.  *  *   section 3.6 requires a server to ignore a SOA update request if  *   the serial is less_than the zone SOA serial.  *  * Paul says 3.4.2.2 is correct.  *  */
+comment|/*%  * Check that the new SOA record at 'update_rdata' does not  * illegally cause the SOA serial number to decrease or stay  * unchanged relative to the existing SOA in 'db'.  *  * Sets '*ok' to ISC_TRUE if the update is legal, ISC_FALSE if not.  *  * William King points out that RFC2136 is inconsistent about  * the case where the serial number stays unchanged:  *  *   section 3.4.2.2 requires a server to ignore a SOA update request  *   if the serial number on the update SOA is less_than_or_equal to  *   the zone SOA serial.  *  *   section 3.6 requires a server to ignore a SOA update request if  *   the serial is less_than the zone SOA serial.  *  * Paul says 3.4.2.2 is correct.  *  */
 end_comment
 
 begin_function
@@ -4702,11 +4708,11 @@ value|32
 end_define
 
 begin_comment
-comment|/* Maximum number of zone keys supported. */
+comment|/*%< Maximum number of zone keys supported. */
 end_comment
 
 begin_comment
-comment|/*  * We abuse the dns_diff_t type to represent a set of domain names  * affected by the update.  */
+comment|/*%  * We abuse the dns_diff_t type to represent a set of domain names  * affected by the update.  */
 end_comment
 
 begin_function
@@ -4736,37 +4742,7 @@ specifier|static
 name|dns_rdata_t
 name|dummy_rdata
 init|=
-block|{
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-block|{
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-operator|-
-literal|1
-operator|)
-block|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-operator|-
-literal|1
-operator|)
-block|}
-block|}
+name|DNS_RDATA_INIT
 decl_stmt|;
 name|CHECK
 argument_list|(
@@ -4974,7 +4950,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Helper function for non_nsec_rrset_exists().  */
+comment|/*%  * Helper function for non_nsec_rrset_exists().  */
 end_comment
 
 begin_function
@@ -5035,7 +5011,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check whether there is an rrset other than a NSEC or RRSIG NSEC,  * i.e., anything that justifies the continued existence of a name  * after a secure update.  *  * If such an rrset exists, set '*exists' to ISC_TRUE.  * Otherwise, set it to ISC_FALSE.  */
+comment|/*%  * Check whether there is an rrset other than a NSEC or RRSIG NSEC,  * i.e., anything that justifies the continued existence of a name  * after a secure update.  *  * If such an rrset exists, set '*exists' to ISC_TRUE.  * Otherwise, set it to ISC_FALSE.  */
 end_comment
 
 begin_function
@@ -5084,7 +5060,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A comparison function for sorting dns_diff_t:s by name.  */
+comment|/*%  * A comparison function for sorting dns_diff_t:s by name.  */
 end_comment
 
 begin_function
@@ -5418,7 +5394,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the next/previous name that has a NSEC record.  * In other words, skip empty database nodes and names that  * have had their NSECs removed because they are obscured by  * a zone cut.  */
+comment|/*%  * Find the next/previous name that has a NSEC record.  * In other words, skip empty database nodes and names that  * have had their NSECs removed because they are obscured by  * a zone cut.  */
 end_comment
 
 begin_function
@@ -5660,7 +5636,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a NSEC record for "name", recording the change in "diff".  * The existing NSEC is removed.  */
+comment|/*%  * Add a NSEC record for "name", recording the change in "diff".  * The existing NSEC is removed.  */
 end_comment
 
 begin_function
@@ -5907,7 +5883,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a placeholder NSEC record for "name", recording the change in "diff".  */
+comment|/*%  * Add a placeholder NSEC record for "name", recording the change in "diff".  */
 end_comment
 
 begin_function
@@ -6163,8 +6139,252 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|isc_boolean_t
+name|ksk_sanity
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|ver
+parameter_list|)
+block|{
+name|isc_boolean_t
+name|ret
+init|=
+name|ISC_FALSE
+decl_stmt|;
+name|isc_boolean_t
+name|have_ksk
+init|=
+name|ISC_FALSE
+decl_stmt|,
+name|have_nonksk
+init|=
+name|ISC_FALSE
+decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
+name|dns_dbnode_t
+modifier|*
+name|node
+init|=
+name|NULL
+decl_stmt|;
+name|dns_rdataset_t
+name|rdataset
+decl_stmt|;
+name|dns_rdata_t
+name|rdata
+init|=
+name|DNS_RDATA_INIT
+decl_stmt|;
+name|dns_rdata_dnskey_t
+name|dnskey
+decl_stmt|;
+name|dns_rdataset_init
+argument_list|(
+operator|&
+name|rdataset
+argument_list|)
+expr_stmt|;
+name|CHECK
+argument_list|(
+name|dns_db_findnode
+argument_list|(
+name|db
+argument_list|,
+name|dns_db_origin
+argument_list|(
+name|db
+argument_list|)
+argument_list|,
+name|ISC_FALSE
+argument_list|,
+operator|&
+name|node
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|CHECK
+argument_list|(
+name|dns_db_findrdataset
+argument_list|(
+name|db
+argument_list|,
+name|node
+argument_list|,
+name|ver
+argument_list|,
+name|dns_rdatatype_dnskey
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|rdataset
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|CHECK
+argument_list|(
+name|dns_rdataset_first
+argument_list|(
+operator|&
+name|rdataset
+argument_list|)
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+operator|&&
+operator|(
+operator|!
+name|have_ksk
+operator|||
+operator|!
+name|have_nonksk
+operator|)
+condition|)
+block|{
+name|dns_rdataset_current
+argument_list|(
+operator|&
+name|rdataset
+argument_list|,
+operator|&
+name|rdata
+argument_list|)
+expr_stmt|;
+name|CHECK
+argument_list|(
+name|dns_rdata_tostruct
+argument_list|(
+operator|&
+name|rdata
+argument_list|,
+operator|&
+name|dnskey
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dnskey
+operator|.
+name|flags
+operator|&
+operator|(
+name|DNS_KEYFLAG_OWNERMASK
+operator||
+name|DNS_KEYTYPE_NOAUTH
+operator|)
+operator|)
+operator|==
+name|DNS_KEYOWNER_ZONE
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|dnskey
+operator|.
+name|flags
+operator|&
+name|DNS_KEYFLAG_KSK
+operator|)
+operator|!=
+literal|0
+condition|)
+name|have_ksk
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+else|else
+name|have_nonksk
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+block|}
+name|dns_rdata_reset
+argument_list|(
+operator|&
+name|rdata
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|dns_rdataset_next
+argument_list|(
+operator|&
+name|rdataset
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|have_ksk
+operator|&&
+name|have_nonksk
+condition|)
+name|ret
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+name|failure
+label|:
+if|if
+condition|(
+name|dns_rdataset_isassociated
+argument_list|(
+operator|&
+name|rdataset
+argument_list|)
+condition|)
+name|dns_rdataset_disassociate
+argument_list|(
+operator|&
+name|rdataset
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|node
+operator|!=
+name|NULL
+condition|)
+name|dns_db_detachnode
+argument_list|(
+name|db
+argument_list|,
+operator|&
+name|node
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/*  * Add RRSIG records for an RRset, recording the change in "diff".  */
+comment|/*%  * Add RRSIG records for an RRset, recording the change in "diff".  */
 end_comment
 
 begin_function
@@ -6209,6 +6429,9 @@ name|inception
 parameter_list|,
 name|isc_stdtime_t
 name|expire
+parameter_list|,
+name|isc_boolean_t
+name|check_ksk
 parameter_list|)
 block|{
 name|isc_result_t
@@ -6326,6 +6549,29 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|check_ksk
+operator|&&
+name|type
+operator|!=
+name|dns_rdatatype_dnskey
+operator|&&
+operator|(
+name|dst_key_flags
+argument_list|(
+name|keys
+index|[
+name|i
+index|]
+argument_list|)
+operator|&
+name|DNS_KEYFLAG_KSK
+operator|)
+operator|!=
+literal|0
+condition|)
+continue|continue;
 comment|/* Calculate the signature, creating a RRSIG RDATA. */
 name|CHECK
 argument_list|(
@@ -6428,7 +6674,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update RRSIG and NSEC records affected by an update.  The original  * update, including the SOA serial update but exluding the RRSIG& NSEC  * changes, is in "diff" and has already been applied to "newver" of "db".  * The database version prior to the update is "oldver".  *  * The necessary RRSIG and NSEC changes will be applied to "newver"  * and added (as a minimal diff) to "diff".  *  * The RRSIGs generated will be valid for 'sigvalidityinterval' seconds.  */
+comment|/*%  * Update RRSIG and NSEC records affected by an update.  The original  * update, including the SOA serial update but exluding the RRSIG& NSEC  * changes, is in "diff" and has already been applied to "newver" of "db".  * The database version prior to the update is "oldver".  *  * The necessary RRSIG and NSEC changes will be applied to "newver"  * and added (as a minimal diff) to "diff".  *  * The RRSIGs generated will be valid for 'sigvalidityinterval' seconds.  */
 end_comment
 
 begin_function
@@ -6532,6 +6778,9 @@ modifier|*
 name|node
 init|=
 name|NULL
+decl_stmt|;
+name|isc_boolean_t
+name|check_ksk
 decl_stmt|;
 name|dns_diff_init
 argument_list|(
@@ -6645,6 +6894,36 @@ operator|=
 name|now
 operator|+
 name|sigvalidityinterval
+expr_stmt|;
+comment|/* 	 * Do we look at the KSK flag on the DNSKEY to determining which 	 * keys sign which RRsets?  First check the zone option then 	 * check the keys flags to make sure atleast one has a ksk set 	 * and one doesn't. 	 */
+name|check_ksk
+operator|=
+name|ISC_TF
+argument_list|(
+operator|(
+name|dns_zone_getoptions
+argument_list|(
+name|zone
+argument_list|)
+operator|&
+name|DNS_ZONEOPT_UPDATECHECKKSK
+operator|)
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|check_ksk
+condition|)
+name|check_ksk
+operator|=
+name|ksk_sanity
+argument_list|(
+name|db
+argument_list|,
+name|newver
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Get the NSEC's TTL from the SOA MINIMUM field. 	 */
 name|CHECK
@@ -6911,6 +7190,8 @@ argument_list|,
 name|inception
 argument_list|,
 name|expire
+argument_list|,
+name|check_ksk
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7725,6 +8006,8 @@ argument_list|,
 name|inception
 argument_list|,
 name|expire
+argument_list|,
+name|check_ksk
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7908,7 +8191,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * The actual update code in all its glory.  We try to follow  * the RFC2136 pseudocode as closely as possible.  */
+comment|/*%  * The actual update code in all its glory.  We try to follow  * the RFC2136 pseudocode as closely as possible.  */
 end_comment
 
 begin_function
@@ -8431,7 +8714,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * DS records are not allowed to exist without corresponding NS records,  * draft-ietf-dnsext-delegation-signer-11.txt, 2.2 Protocol Change,  * "DS RRsets MUST NOT appear at non-delegation points or at a zone's apex".  */
+comment|/*%  * DS records are not allowed to exist without corresponding NS records,  * draft-ietf-dnsext-delegation-signer-11.txt, 2.2 Protocol Change,  * "DS RRsets MUST NOT appear at non-delegation points or at a zone's apex".  */
 end_comment
 
 begin_function
@@ -8602,6 +8885,580 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This implements the post load integrity checks for mx records.  */
+end_comment
+
+begin_function
+specifier|static
+name|isc_result_t
+name|check_mx
+parameter_list|(
+name|ns_client_t
+modifier|*
+name|client
+parameter_list|,
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|newver
+parameter_list|,
+name|dns_diff_t
+modifier|*
+name|diff
+parameter_list|)
+block|{
+name|char
+name|tmp
+index|[
+sizeof|sizeof
+argument_list|(
+literal|"xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:123.123.123.123."
+argument_list|)
+index|]
+decl_stmt|;
+name|char
+name|ownerbuf
+index|[
+name|DNS_NAME_FORMATSIZE
+index|]
+decl_stmt|;
+name|char
+name|namebuf
+index|[
+name|DNS_NAME_FORMATSIZE
+index|]
+decl_stmt|;
+name|char
+name|altbuf
+index|[
+name|DNS_NAME_FORMATSIZE
+index|]
+decl_stmt|;
+name|dns_difftuple_t
+modifier|*
+name|t
+decl_stmt|;
+name|dns_fixedname_t
+name|fixed
+decl_stmt|;
+name|dns_name_t
+modifier|*
+name|foundname
+decl_stmt|;
+name|dns_rdata_mx_t
+name|mx
+decl_stmt|;
+name|dns_rdata_t
+name|rdata
+decl_stmt|;
+name|isc_boolean_t
+name|ok
+init|=
+name|ISC_TRUE
+decl_stmt|;
+name|isc_boolean_t
+name|isaddress
+decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
+name|struct
+name|in6_addr
+name|addr6
+decl_stmt|;
+name|struct
+name|in_addr
+name|addr
+decl_stmt|;
+name|unsigned
+name|int
+name|options
+decl_stmt|;
+name|dns_fixedname_init
+argument_list|(
+operator|&
+name|fixed
+argument_list|)
+expr_stmt|;
+name|foundname
+operator|=
+name|dns_fixedname_name
+argument_list|(
+operator|&
+name|fixed
+argument_list|)
+expr_stmt|;
+name|dns_rdata_init
+argument_list|(
+operator|&
+name|rdata
+argument_list|)
+expr_stmt|;
+name|options
+operator|=
+name|dns_zone_getoptions
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|t
+operator|=
+name|ISC_LIST_HEAD
+argument_list|(
+name|diff
+operator|->
+name|tuples
+argument_list|)
+init|;
+name|t
+operator|!=
+name|NULL
+condition|;
+name|t
+operator|=
+name|ISC_LIST_NEXT
+argument_list|(
+name|t
+argument_list|,
+name|link
+argument_list|)
+control|)
+block|{
+if|if
+condition|(
+name|t
+operator|->
+name|op
+operator|!=
+name|DNS_DIFFOP_DEL
+operator|||
+name|t
+operator|->
+name|rdata
+operator|.
+name|type
+operator|!=
+name|dns_rdatatype_mx
+condition|)
+continue|continue;
+name|result
+operator|=
+name|dns_rdata_tostruct
+argument_list|(
+operator|&
+name|t
+operator|->
+name|rdata
+argument_list|,
+operator|&
+name|mx
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Check if we will error out if we attempt to reload the 		 * zone. 		 */
+name|dns_name_format
+argument_list|(
+operator|&
+name|mx
+operator|.
+name|mx
+argument_list|,
+name|namebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|namebuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dns_name_format
+argument_list|(
+operator|&
+name|t
+operator|->
+name|name
+argument_list|,
+name|ownerbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ownerbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|isaddress
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|options
+operator|&
+name|DNS_RDATA_CHECKMX
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|strlcpy
+argument_list|(
+name|tmp
+argument_list|,
+name|namebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmp
+argument_list|)
+argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+name|tmp
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|tmp
+index|[
+name|strlen
+argument_list|(
+name|tmp
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|==
+literal|'.'
+condition|)
+name|tmp
+index|[
+name|strlen
+argument_list|(
+name|tmp
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|inet_aton
+argument_list|(
+name|tmp
+argument_list|,
+operator|&
+name|addr
+argument_list|)
+operator|==
+literal|1
+operator|||
+name|inet_pton
+argument_list|(
+name|AF_INET6
+argument_list|,
+name|tmp
+argument_list|,
+operator|&
+name|addr6
+argument_list|)
+operator|==
+literal|1
+condition|)
+name|isaddress
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|isaddress
+operator|&&
+operator|(
+name|options
+operator|&
+name|DNS_RDATA_CHECKMXFAIL
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|update_log
+argument_list|(
+name|client
+argument_list|,
+name|zone
+argument_list|,
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"%s/MX: '%s': %s"
+argument_list|,
+name|ownerbuf
+argument_list|,
+name|namebuf
+argument_list|,
+name|dns_result_totext
+argument_list|(
+name|DNS_R_MXISADDRESS
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ok
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|isaddress
+condition|)
+block|{
+name|update_log
+argument_list|(
+name|client
+argument_list|,
+name|zone
+argument_list|,
+name|ISC_LOG_WARNING
+argument_list|,
+literal|"%s/MX: warning: '%s': %s"
+argument_list|,
+name|ownerbuf
+argument_list|,
+name|namebuf
+argument_list|,
+name|dns_result_totext
+argument_list|(
+name|DNS_R_MXISADDRESS
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 * Check zone integrity checks. 		 */
+if|if
+condition|(
+operator|(
+name|options
+operator|&
+name|DNS_ZONEOPT_CHECKINTEGRITY
+operator|)
+operator|==
+literal|0
+condition|)
+continue|continue;
+name|result
+operator|=
+name|dns_db_find
+argument_list|(
+name|db
+argument_list|,
+operator|&
+name|mx
+operator|.
+name|mx
+argument_list|,
+name|newver
+argument_list|,
+name|dns_rdatatype_a
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|foundname
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+condition|)
+continue|continue;
+if|if
+condition|(
+name|result
+operator|==
+name|DNS_R_NXRRSET
+condition|)
+block|{
+name|result
+operator|=
+name|dns_db_find
+argument_list|(
+name|db
+argument_list|,
+operator|&
+name|mx
+operator|.
+name|mx
+argument_list|,
+name|newver
+argument_list|,
+name|dns_rdatatype_aaaa
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|foundname
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+condition|)
+continue|continue;
+block|}
+if|if
+condition|(
+name|result
+operator|==
+name|DNS_R_NXRRSET
+operator|||
+name|result
+operator|==
+name|DNS_R_NXDOMAIN
+condition|)
+block|{
+name|update_log
+argument_list|(
+name|client
+argument_list|,
+name|zone
+argument_list|,
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"%s/MX '%s' has no address records "
+literal|"(A or AAAA)"
+argument_list|,
+name|ownerbuf
+argument_list|,
+name|namebuf
+argument_list|)
+expr_stmt|;
+name|ok
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|result
+operator|==
+name|DNS_R_CNAME
+condition|)
+block|{
+name|update_log
+argument_list|(
+name|client
+argument_list|,
+name|zone
+argument_list|,
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"%s/MX '%s' is a CNAME (illegal)"
+argument_list|,
+name|ownerbuf
+argument_list|,
+name|namebuf
+argument_list|)
+expr_stmt|;
+name|ok
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|result
+operator|==
+name|DNS_R_DNAME
+condition|)
+block|{
+name|dns_name_format
+argument_list|(
+name|foundname
+argument_list|,
+name|altbuf
+argument_list|,
+sizeof|sizeof
+name|altbuf
+argument_list|)
+expr_stmt|;
+name|update_log
+argument_list|(
+name|client
+argument_list|,
+name|zone
+argument_list|,
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"%s/MX '%s' is below a DNAME '%s' (illegal)"
+argument_list|,
+name|ownerbuf
+argument_list|,
+name|namebuf
+argument_list|,
+name|altbuf
+argument_list|)
+expr_stmt|;
+name|ok
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+block|}
+block|}
+return|return
+operator|(
+name|ok
+condition|?
+name|ISC_R_SUCCESS
+else|:
+name|DNS_R_REFUSED
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -8720,6 +9577,10 @@ modifier|*
 name|tmpname
 init|=
 name|NULL
+decl_stmt|;
+name|unsigned
+name|int
+name|options
 decl_stmt|;
 name|INSIST
 argument_list|(
@@ -9743,6 +10604,13 @@ literal|"update section prescan OK"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Process the Update Section. 	 */
+name|options
+operator|=
+name|dns_zone_getoptions
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|result
@@ -9819,7 +10687,7 @@ operator|==
 name|zoneclass
 condition|)
 block|{
-comment|/* 			 * RFC 1123 doesn't allow MF and MD in master zones.				 */
+comment|/* 			 * RFC1123 doesn't allow MF and MD in master zones.				 */
 if|if
 condition|(
 name|rdata
@@ -10083,6 +10951,55 @@ block|}
 name|soa_serial_changed
 operator|=
 name|ISC_TRUE
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|options
+operator|&
+name|DNS_ZONEOPT_CHECKWILDCARD
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|dns_name_internalwildcard
+argument_list|(
+name|name
+argument_list|)
+condition|)
+block|{
+name|char
+name|namestr
+index|[
+name|DNS_NAME_FORMATSIZE
+index|]
+decl_stmt|;
+name|dns_name_format
+argument_list|(
+name|name
+argument_list|,
+name|namestr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|namestr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|update_log
+argument_list|(
+name|client
+argument_list|,
+name|zone
+argument_list|,
+name|LOGLEVEL_PROTOCOL
+argument_list|,
+literal|"warning: ownername '%s' contains "
+literal|"a non-terminal wildcard"
+argument_list|,
+name|namestr
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -10776,6 +11693,23 @@ expr_stmt|;
 block|}
 name|CHECK
 argument_list|(
+name|check_mx
+argument_list|(
+name|client
+argument_list|,
+name|zone
+argument_list|,
+name|db
+argument_list|,
+name|ver
+argument_list|,
+operator|&
+name|diff
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|CHECK
+argument_list|(
 name|remove_orphaned_ds
 argument_list|(
 name|db
@@ -11248,7 +12182,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update forwarding support.  */
+comment|/*%  * Update forwarding support.  */
 end_comment
 
 begin_function

@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: putenv.c,v 1.1 2001/03/29 06:30:33 marka Exp $"
+literal|"$Id: putenv.c,v 1.1.352.1 2005/04/27 05:00:43 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/*  * To give a little credit to Sun, SGI,  * and many vendors in the SysV world.  */
+comment|/*%  * To give a little credit to Sun, SGI,  * and many vendors in the SysV world.  */
 end_comment
 
 begin_if
@@ -110,6 +110,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

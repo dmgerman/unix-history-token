@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp_pw.c,v 1.2.206.1 2004/03/09 08:33:37 marka Exp $"
+literal|"$Id: irp_pw.c,v 1.3.18.1 2005/04/27 05:01:01 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -193,7 +193,7 @@ name|irp_p
 modifier|*
 name|girpdata
 decl_stmt|;
-comment|/* global IRP data */
+comment|/*%< global IRP data */
 name|int
 name|warned
 decl_stmt|;
@@ -201,7 +201,7 @@ name|struct
 name|passwd
 name|passwd
 decl_stmt|;
-comment|/* password structure */
+comment|/*%< password structure */
 block|}
 struct|;
 end_struct
@@ -477,7 +477,7 @@ comment|/* Methods */
 end_comment
 
 begin_comment
-comment|/*  * void pw_close(struct irs_pw *this)  *  */
+comment|/*%  * void pw_close(struct irs_pw *this)  *  */
 end_comment
 
 begin_function
@@ -540,7 +540,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct passwd * pw_next(struct irs_pw *this)  *  */
+comment|/*%  * struct passwd * pw_next(struct irs_pw *this)  *  */
 end_comment
 
 begin_function
@@ -732,7 +732,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct passwd * pw_byname(struct irs_pw *this, const char *name)  *  */
+comment|/*%  * struct passwd * pw_byname(struct irs_pw *this, const char *name)  *  */
 end_comment
 
 begin_function
@@ -959,7 +959,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct passwd * pw_byuid(struct irs_pw *this, uid_t uid)  *  */
+comment|/*%  * struct passwd * pw_byuid(struct irs_pw *this, uid_t uid)  *  */
 end_comment
 
 begin_function
@@ -1177,7 +1177,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void pw_rewind(struct irs_pw *this)  *  */
+comment|/*%  * void pw_rewind(struct irs_pw *this)  *  */
 end_comment
 
 begin_function
@@ -1291,7 +1291,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void pw_minimize(struct irs_pw *this)  *  */
+comment|/*%  * void pw_minimize(struct irs_pw *this)  *  */
 end_comment
 
 begin_function
@@ -1334,7 +1334,7 @@ comment|/* Private. */
 end_comment
 
 begin_comment
-comment|/*  * static void free_passwd(struct passwd *pw);  *  *	Deallocate all the memory irp_unmarshall_pw allocated.  *  */
+comment|/*%  *	Deallocate all the memory irp_unmarshall_pw allocated.  *  */
 end_comment
 
 begin_function
@@ -1460,6 +1460,10 @@ end_endif
 
 begin_comment
 comment|/* WANT_IRS_PW */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

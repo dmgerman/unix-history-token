@@ -1,10 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: lwresutil.c,v 1.29.206.1 2004/03/06 08:15:33 marka Exp $ */
+comment|/* $Id: lwresutil.c,v 1.30.18.2 2005/04/29 00:17:20 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
+end_comment
+
+begin_comment
+comment|/**  *    lwres_string_parse() retrieves a DNS-encoded string starting the  *    current pointer of lightweight resolver buffer b: i.e. b->current.  *    When the function returns, the address of the first byte of the  *    encoded string is returned via *c and the length of that string is  *    given by *len. The buffer's current pointer is advanced to point at  *    the character following the string length, the encoded string, and  *    the trailing NULL character.  *   *    lwres_addr_parse() extracts an address from the buffer b. The  *    buffer's current pointer b->current is presumed to point at an  *    encoded address: the address preceded by a 32-bit protocol family  *    identifier and a 16-bit length field. The encoded address is copied  *    to addr->address and addr->length indicates the size in bytes of  *    the address that was copied. b->current is advanced to point at the  *  next byte of available data in the buffer following the encoded  *    address.  *   *    lwres_getaddrsbyname() and lwres_getnamebyaddr() use the  *    lwres_gnbaresponse_t structure defined below:  *   * \code  * typedef struct {  *         lwres_uint32_t          flags;  *         lwres_uint16_t          naliases;  *         lwres_uint16_t          naddrs;  *         char                   *realname;  *         char                  **aliases;  *         lwres_uint16_t          realnamelen;  *         lwres_uint16_t         *aliaslen;  *         lwres_addrlist_t        addrs;  *         void                   *base;  *         size_t                  baselen;  * } lwres_gabnresponse_t;  * \endcode  *   *    The contents of this structure are not manipulated directly but  *    they are controlled through the \link lwres_gabn.c lwres_gabn*\endlink functions.    *   *    The lightweight resolver uses lwres_getaddrsbyname() to perform  *    foward lookups. Hostname name is looked up using the resolver  *    context ctx for memory allocation. addrtypes is a bitmask        *    indicating which type of addresses are to be looked up. Current  *    values for this bitmask are #LWRES_ADDRTYPE_V4 for IPv4 addresses  *    and #LWRES_ADDRTYPE_V6 for IPv6 addresses. Results of the lookup are  *    returned in *structp.  *   *    lwres_getnamebyaddr() performs reverse lookups. Resolver context    *    ctx is used for memory allocation. The address type is indicated by  *    addrtype: #LWRES_ADDRTYPE_V4 or #LWRES_ADDRTYPE_V6. The address to be  *    looked up is given by addr and its length is addrlen bytes. The      *    result of the function call is made available through *structp.     *   * \section lwresutil_return Return Values  *   *    Successful calls to lwres_string_parse() and lwres_addr_parse()  *    return #LWRES_R_SUCCESS. Both functions return #LWRES_R_FAILURE if   *    the buffer is corrupt or #LWRES_R_UNEXPECTEDEND if the buffer has     *    less space than expected for the components of the encoded string  *    or address.  *   * lwres_getaddrsbyname() returns #LWRES_R_SUCCESS on success and it  *    returns #LWRES_R_NOTFOUND if the hostname name could not be found.  *   *    #LWRES_R_SUCCESS is returned by a successful call to  *    lwres_getnamebyaddr().  *   *    Both lwres_getaddrsbyname() and lwres_getnamebyaddr() return  *    #LWRES_R_NOMEMORY when memory allocation requests fail and  *    #LWRES_R_UNEXPECTEDEND if the buffers used for sending queries and  *    receiving replies are too small.       *   * \section lwresutil_see See Also  *   *    lwbuffer.c, lwres_gabn.c  */
 end_comment
 
 begin_include
@@ -68,7 +76,11 @@ file|"context_p.h"
 end_include
 
 begin_comment
-comment|/*  * Requires:  *  *	The "current" pointer in "b" points to encoded raw data.  *  * Ensures:  *  *	The address of the first byte of the data is returned via "p",  *	and the length is returned via "len".  If NULL, they are not  *	set.  *  *	On return, the current pointer of "b" will point to the character  *	following the data length and the data.  *  */
+comment|/*% Parse data. */
+end_comment
+
+begin_comment
+comment|/*!  * Requires:  *  *	The "current" pointer in "b" points to encoded raw data.  *  * Ensures:  *  *	The address of the first byte of the data is returned via "p",  *	and the length is returned via "len".  If NULL, they are not  *	set.  *  *	On return, the current pointer of "b" will point to the character  *	following the data length and the data.  *  */
 end_comment
 
 begin_function
@@ -192,7 +204,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Requires:  *  *	The "current" pointer in "b" point to an encoded string.  *  * Ensures:  *  *	The address of the first byte of the string is returned via "c",  *	and the length is returned via "len".  If NULL, they are not  *	set.  *  *	On return, the current pointer of "b" will point to the character  *	following the string length, the string, and the trailing NULL.  *  */
+comment|/*% Retrieves a DNS-encoded string. */
+end_comment
+
+begin_comment
+comment|/*!  * Requires:  *  *	The "current" pointer in "b" point to an encoded string.  *  * Ensures:  *  *	The address of the first byte of the string is returned via "c",  *	and the length is returned via "len".  If NULL, they are not  *	set.  *  *	On return, the current pointer of "b" will point to the character  *	following the string length, the string, and the trailing NULL.  *  */
 end_comment
 
 begin_function
@@ -347,6 +363,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*% Extracts an address from the buffer b. */
+end_comment
+
 begin_function
 name|lwres_result_t
 name|lwres_addr_parse
@@ -450,6 +470,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*% Used to perform forward lookups. */
+end_comment
 
 begin_function
 name|lwres_result_t
@@ -941,6 +965,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*% Used to perform reverse lookups. */
+end_comment
+
 begin_function
 name|lwres_result_t
 name|lwres_getnamebyaddr
@@ -1413,6 +1441,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*% Get rdata by name. */
+end_comment
 
 begin_function
 name|lwres_result_t

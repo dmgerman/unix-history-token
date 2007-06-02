@@ -4,11 +4,11 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: lcl_p.h,v 1.1.206.1 2004/03/09 08:33:38 marka Exp $  */
+comment|/*  * $Id: lcl_p.h,v 1.2.18.1 2005/04/27 05:01:02 sra Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * lcl_p.h - private include file for the local accessor functions.  */
+comment|/*! \file  * \brief  * lcl_p.h - private include file for the local accessor functions.  */
 end_comment
 
 begin_ifndef
@@ -24,7 +24,7 @@ name|_LCL_P_H_INCLUDED
 end_define
 
 begin_comment
-comment|/*  * Object state.  */
+comment|/*%  * Object state.  */
 end_comment
 
 begin_struct

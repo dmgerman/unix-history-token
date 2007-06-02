@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: irs.h,v 1.2.2.1.4.1 2004/03/09 08:33:29 marka Exp $  */
+comment|/*  * $Id: irs.h,v 1.4.18.1 2005/04/27 05:00:49 sra Exp $  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,10 @@ define|#
 directive|define
 name|_IRS_H_INCLUDED
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -56,7 +60,7 @@ file|<pwd.h>
 end_include
 
 begin_comment
-comment|/*  * This is the group map class.  */
+comment|/*%  * This is the group map class.  */
 end_comment
 
 begin_struct
@@ -230,7 +234,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This is the password map class.  */
+comment|/*%  * This is the password map class.  */
 end_comment
 
 begin_struct
@@ -379,7 +383,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This is the service map class.  */
+comment|/*%  * This is the service map class.  */
 end_comment
 
 begin_struct
@@ -536,7 +540,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This is the protocols map class.  */
+comment|/*%  * This is the protocols map class.  */
 end_comment
 
 begin_struct
@@ -685,7 +689,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This is the hosts map class.  */
+comment|/*%  * This is the hosts map class.  */
 end_comment
 
 begin_struct
@@ -887,7 +891,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This is the networks map class.  */
+comment|/*%  * This is the networks map class.  */
 end_comment
 
 begin_struct
@@ -1043,7 +1047,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This is the netgroups map class.  */
+comment|/*%  * This is the netgroups map class.  */
 end_comment
 
 begin_struct
@@ -1159,7 +1163,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This is the generic map class, which copies the front of all others.  */
+comment|/*%  * This is the generic map class, which copies the front of all others.  */
 end_comment
 
 begin_struct
@@ -1187,7 +1191,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This is the accessor class.  It contains pointers to all of the  * initializers for the map classes for a particular accessor.  */
+comment|/*%  * This is the accessor class.  It contains pointers to all of the  * initializers for the map classes for a particular accessor.  */
 end_comment
 
 begin_struct
@@ -1368,7 +1372,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This is because the official definition of "struct netent" has no  * concept of CIDR even though it allows variant address families (on  * output but not input).  The compatibility stubs convert the structs  * below into "struct netent"'s.  */
+comment|/*%  * This is because the official definition of "struct netent" has no  * concept of CIDR even though it allows variant address families (on  * output but not input).  The compatibility stubs convert the structs  * below into "struct netent"'s.  */
 end_comment
 
 begin_struct
@@ -1379,32 +1383,32 @@ name|char
 modifier|*
 name|n_name
 decl_stmt|;
-comment|/* official name of net */
+comment|/*%< official name of net */
 name|char
 modifier|*
 modifier|*
 name|n_aliases
 decl_stmt|;
-comment|/* alias list */
+comment|/*%< alias list */
 name|int
 name|n_addrtype
 decl_stmt|;
-comment|/* net address type */
+comment|/*%< net address type */
 name|void
 modifier|*
 name|n_addr
 decl_stmt|;
-comment|/* network address */
+comment|/*%< network address */
 name|int
 name|n_length
 decl_stmt|;
-comment|/* address length, in bits */
+comment|/*%< address length, in bits */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Hide external function names from POSIX.  */
+comment|/*%  * Hide external function names from POSIX.  */
 end_comment
 
 begin_define
@@ -1730,7 +1734,7 @@ value|__net_data_minimize
 end_define
 
 begin_comment
-comment|/*  * Externs.  */
+comment|/*%  * Externs.  */
 end_comment
 
 begin_decl_stmt
@@ -1836,7 +1840,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * These forward declarations are for the semi-private functions in  * the get*.c files. Each of these funcs implements the real get*  * functionality and the standard versions are just wrappers that  * call these. Apart from the wrappers, only irpd is expected to  * call these directly, hence these decls are put here and not in  * the /usr/include replacements.  */
+comment|/*%  * These forward declarations are for the semi-private functions in  * the get*.c files. Each of these funcs implements the real get*  * functionality and the standard versions are just wrappers that  * call these. Apart from the wrappers, only irpd is expected to  * call these directly, hence these decls are put here and not in  * the /usr/include replacements.  */
 end_comment
 
 begin_struct_decl
@@ -1846,7 +1850,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/* forward */
+comment|/*%< forward */
 end_comment
 
 begin_comment
@@ -2749,6 +2753,10 @@ end_endif
 
 begin_comment
 comment|/*_IRS_H_INCLUDED*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

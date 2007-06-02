@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.35.2.4.2.10 2004/12/04 06:50:02 marka Exp $ */
+comment|/* $Id: acconfig.h,v 1.44.18.5 2005/04/29 00:15:20 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_comment
@@ -15,95 +19,95 @@ begin_expr_stmt
 unit|@
 name|TOP
 expr|@
-comment|/* define to `int' if<sys/types.h> doesn't define.  */
+comment|/** define to `int' if<sys/types.h> doesn't define.  */
 undef|#
 directive|undef
 name|ssize_t
-comment|/* define on DEC OSF to enable 4.4BSD style sa_len support */
+comment|/** define on DEC OSF to enable 4.4BSD style sa_len support */
 undef|#
 directive|undef
 name|_SOCKADDR_LEN
-comment|/* define if your system needs pthread_init() before using pthreads */
+comment|/** define if your system needs pthread_init() before using pthreads */
 undef|#
 directive|undef
 name|NEED_PTHREAD_INIT
-comment|/* define if your system has sigwait() */
+comment|/** define if your system has sigwait() */
 undef|#
 directive|undef
 name|HAVE_SIGWAIT
-comment|/* define if sigwait() is the UnixWare flavor */
+comment|/** define if sigwait() is the UnixWare flavor */
 undef|#
 directive|undef
 name|HAVE_UNIXWARE_SIGWAIT
-comment|/* define on Solaris to get sigwait() to work using pthreads semantics */
+comment|/** define on Solaris to get sigwait() to work using pthreads semantics */
 undef|#
 directive|undef
 name|_POSIX_PTHREAD_SEMANTICS
-comment|/* define if LinuxThreads is in use */
+comment|/** define if LinuxThreads is in use */
 undef|#
 directive|undef
 name|HAVE_LINUXTHREADS
-comment|/* define if sysconf() is available */
+comment|/** define if sysconf() is available */
 undef|#
 directive|undef
 name|HAVE_SYSCONF
-comment|/* define if sysctlbyname() is available */
+comment|/** define if sysctlbyname() is available */
 undef|#
 directive|undef
 name|HAVE_SYSCTLBYNAME
-comment|/* define if catgets() is available */
+comment|/** define if catgets() is available */
 undef|#
 directive|undef
 name|HAVE_CATGETS
-comment|/* define if getifaddrs() exists */
+comment|/** define if getifaddrs() exists */
 undef|#
 directive|undef
 name|HAVE_GETIFADDRS
-comment|/* define if you have the NET_RT_IFLIST sysctl variable and sys/sysctl.h */
+comment|/** define if you have the NET_RT_IFLIST sysctl variable and sys/sysctl.h */
 undef|#
 directive|undef
 name|HAVE_IFLIST_SYSCTL
-comment|/* define if chroot() is available */
+comment|/** define if chroot() is available */
 undef|#
 directive|undef
 name|HAVE_CHROOT
-comment|/* define if tzset() is available */
+comment|/** define if tzset() is available */
 undef|#
 directive|undef
 name|HAVE_TZSET
-comment|/* define if struct addrinfo exists */
+comment|/** define if struct addrinfo exists */
 undef|#
 directive|undef
 name|HAVE_ADDRINFO
-comment|/* define if getaddrinfo() exists */
+comment|/** define if getaddrinfo() exists */
 undef|#
 directive|undef
 name|HAVE_GETADDRINFO
-comment|/* define if gai_strerror() exists */
+comment|/** define if gai_strerror() exists */
 undef|#
 directive|undef
 name|HAVE_GAISTRERROR
-comment|/* define if arc4random() exists */
+comment|/** define if arc4random() exists */
 undef|#
 directive|undef
 name|HAVE_ARC4RANDOM
-comment|/* define if pthread_setconcurrency() should be called to tell the  * OS how many threads we might want to run.  */
+comment|/**  * define if pthread_setconcurrency() should be called to tell the  * OS how many threads we might want to run.  */
 undef|#
 directive|undef
 name|CALL_PTHREAD_SETCONCURRENCY
-comment|/* define if IPv6 is not disabled */
+comment|/** define if IPv6 is not disabled */
 undef|#
 directive|undef
 name|WANT_IPV6
-comment|/* define if flockfile() is available */
+comment|/** define if flockfile() is available */
 undef|#
 directive|undef
 name|HAVE_FLOCKFILE
-comment|/* define if getc_unlocked() is available */
+comment|/** define if getc_unlocked() is available */
 undef|#
 directive|undef
 name|HAVE_GETCUNLOCKED
-comment|/* Shut up warnings about sputaux in stdio.h on BSD/OS pre-4.1 */
+comment|/** Shut up warnings about sputaux in stdio.h on BSD/OS pre-4.1 */
 undef|#
 directive|undef
 name|SHUTUP_SPUTAUX
@@ -138,7 +142,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Shut up warnings about missing sigwait prototype on BSD/OS 4.0* */
+comment|/** Shut up warnings about missing sigwait prototype on BSD/OS 4.0* */
 end_comment
 
 begin_undef
@@ -176,7 +180,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Shut up warnings from gcc -Wcast-qual on BSD/OS 4.1. */
+comment|/** Shut up warnings from gcc -Wcast-qual on BSD/OS 4.1. */
 end_comment
 
 begin_undef
@@ -206,11 +210,11 @@ file|<stdarg.h>
 end_include
 
 begin_comment
-comment|/* Grr.  Must be included *every time*. */
+comment|/** Grr.  Must be included *every time*. */
 end_comment
 
 begin_comment
-comment|/*  * The silly continuation line is to keep configure from  * commenting out the #undef.  */
+comment|/**  * The silly continuation line is to keep configure from  * commenting out the #undef.  */
 end_comment
 
 begin_undef
@@ -239,11 +243,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SHUTUP_STDARG_CAST&& __GNUC__ */
+comment|/** SHUTUP_STDARG_CAST&& __GNUC__ */
 end_comment
 
 begin_comment
-comment|/* define if the system has a random number generating device */
+comment|/** define if the system has a random number generating device */
 end_comment
 
 begin_undef
@@ -253,7 +257,7 @@ name|PATH_RANDOMDEV
 end_undef
 
 begin_comment
-comment|/* define if pthread_attr_getstacksize() is available */
+comment|/** define if pthread_attr_getstacksize() is available */
 end_comment
 
 begin_undef
@@ -263,7 +267,7 @@ name|HAVE_PTHREAD_ATTR_GETSTACKSIZE
 end_undef
 
 begin_comment
-comment|/* define if pthread_attr_setstacksize() is available */
+comment|/** define if pthread_attr_setstacksize() is available */
 end_comment
 
 begin_undef
@@ -273,7 +277,7 @@ name|HAVE_PTHREAD_ATTR_SETSTACKSIZE
 end_undef
 
 begin_comment
-comment|/* define if you have strerror in the C library. */
+comment|/** define if you have strerror in the C library. */
 end_comment
 
 begin_undef
@@ -283,7 +287,7 @@ name|HAVE_STRERROR
 end_undef
 
 begin_comment
-comment|/* Define if you are running under Compaq TruCluster. */
+comment|/** Define if you are running under Compaq TruCluster. */
 end_comment
 
 begin_undef

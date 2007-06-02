@@ -73,7 +73,7 @@ block|{
 name|int
 name|level
 decl_stmt|;
-comment|/* don't log messages> level */
+comment|/*%< don't log messages> level */
 name|log_channel_type
 name|type
 decl_stmt|;
@@ -156,6 +156,10 @@ end_endif
 
 begin_comment
 comment|/* !LOGGING_P_H */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

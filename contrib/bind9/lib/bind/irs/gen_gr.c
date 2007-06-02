@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gen_gr.c,v 1.4.2.1.4.2 2004/05/17 07:48:56 marka Exp $"
+literal|"$Id: gen_gr.c,v 1.6.18.2 2005/04/27 05:00:56 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -178,7 +178,7 @@ decl_stmt|;
 name|size_t
 name|nmemb
 decl_stmt|;
-comment|/* Malloc'd max index of gr_mem[]. */
+comment|/*%< Malloc'd max index of gr_mem[]. */
 name|char
 modifier|*
 name|membuf
@@ -2820,6 +2820,10 @@ end_endif
 
 begin_comment
 comment|/* WANT_IRS_GR */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

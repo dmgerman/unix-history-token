@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dig.h,v 1.71.2.6.2.14 2006/12/07 01:26:33 marka Exp $ */
+comment|/* $Id: dig.h,v 1.82.18.19 2006/12/07 06:08:02 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,10 @@ define|#
 directive|define
 name|DIG_H
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -112,6 +116,10 @@ name|MXRD
 value|32
 end_define
 
+begin_comment
+comment|/*% Buffer Size */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -132,6 +140,10 @@ directive|ifndef
 name|RESOLV_CONF
 end_ifndef
 
+begin_comment
+comment|/*% location of resolve.conf */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -144,12 +156,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*% output buffer */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|OUTPUTBUF
 value|32767
 end_define
+
+begin_comment
+comment|/*% Max RR Limit */
+end_comment
 
 begin_define
 define|#
@@ -165,12 +185,20 @@ name|MAXTIMEOUT
 value|0xffff
 end_define
 
+begin_comment
+comment|/*% Max number of tries */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MAXTRIES
 value|0xffffffff
 end_define
+
+begin_comment
+comment|/*% Max number of dots */
+end_comment
 
 begin_define
 define|#
@@ -179,12 +207,20 @@ name|MAXNDOTS
 value|0xffff
 end_define
 
+begin_comment
+comment|/*% Max number of ports */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MAXPORT
 value|0xffff
 end_define
+
+begin_comment
+comment|/*% Max serial number */
+end_comment
 
 begin_define
 define|#
@@ -194,7 +230,7 @@ value|0xffffffff
 end_define
 
 begin_comment
-comment|/*  * Default timeout values  */
+comment|/*% Default TCP Timeout */
 end_comment
 
 begin_define
@@ -203,6 +239,10 @@ directive|define
 name|TCP_TIMEOUT
 value|10
 end_define
+
+begin_comment
+comment|/*% Default UDP Timeout */
+end_comment
 
 begin_define
 define|#
@@ -226,7 +266,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * Lookup_limit is just a limiter, keeping too many lookups from being  * created.  It's job is mainly to prevent the program from running away  * in a tight loop of constant lookups.  It's value is arbitrary.  */
+comment|/*%  * Lookup_limit is just a limiter, keeping too many lookups from being  * created.  It's job is mainly to prevent the program from running away  * in a tight loop of constant lookups.  It's value is arbitrary.  */
 end_comment
 
 begin_comment
@@ -345,6 +385,10 @@ name|dig_searchlist_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*% The dig_lookup structure */
+end_comment
+
 begin_struct
 struct|struct
 name|dig_lookup
@@ -352,20 +396,20 @@ block|{
 name|isc_boolean_t
 name|pending
 decl_stmt|,
-comment|/* Pending a successful answer */
+comment|/*%< Pending a successful answer */
 name|waiting_connect
 decl_stmt|,
 name|doing_xfr
 decl_stmt|,
 name|ns_search_only
 decl_stmt|,
-comment|/* dig +nssearch, host -C */
+comment|/*%< dig +nssearch, host -C */
 name|identify
 decl_stmt|,
-comment|/* Append an "on server<foo>" message */
+comment|/*%< Append an "on server<foo>" message */
 name|identify_previous_line
 decl_stmt|,
-comment|/* Prepend a "Nameserver<foo>:" 					   message, with newline and tab */
+comment|/*% Prepend a "Nameserver<foo>:" 					   message, with newline and tab */
 name|ignore
 decl_stmt|,
 name|recurse
@@ -378,10 +422,10 @@ name|cdflag
 decl_stmt|,
 name|trace
 decl_stmt|,
-comment|/* dig +trace */
+comment|/*% dig +trace */
 name|trace_root
 decl_stmt|,
-comment|/* initial query for either +trace or +nssearch */
+comment|/*% initial query for either +trace or +nssearch */
 name|tcp_mode
 decl_stmt|,
 name|ip6_int
@@ -401,6 +445,10 @@ decl_stmt|,
 name|servfail_stops
 decl_stmt|,
 name|new_search
+decl_stmt|,
+name|need_search
+decl_stmt|,
+name|done_as_is
 decl_stmt|,
 name|besteffort
 decl_stmt|,
@@ -441,7 +489,7 @@ index|[
 name|MXNAME
 index|]
 decl_stmt|;
-comment|/* Name we're going to be looking up */
+comment|/*% Name we're going to be looking up */
 name|char
 name|cmdline
 index|[
@@ -557,6 +605,9 @@ decl_stmt|;
 name|isc_uint16_t
 name|udpsize
 decl_stmt|;
+name|isc_int16_t
+name|edns
+decl_stmt|;
 name|isc_uint32_t
 name|ixfr_serial
 decl_stmt|;
@@ -580,9 +631,16 @@ decl_stmt|;
 name|isc_uint32_t
 name|msgcounter
 decl_stmt|;
+name|dns_fixedname_t
+name|fdomain
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*% The dig_query structure */
+end_comment
 
 begin_struct
 struct|struct
@@ -674,6 +732,9 @@ name|sockaddr
 decl_stmt|;
 name|isc_time_t
 name|time_sent
+decl_stmt|;
+name|isc_uint64_t
+name|byte_count
 decl_stmt|;
 name|isc_buffer_t
 name|sendbuf
@@ -804,7 +865,17 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
+name|int
+name|extrabytes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|isc_boolean_t
+name|check_ra
+decl_stmt|,
 name|have_ipv4
 decl_stmt|,
 name|have_ipv6
@@ -812,6 +883,8 @@ decl_stmt|,
 name|specified_source
 decl_stmt|,
 name|usesearch
+decl_stmt|,
+name|showsearch
 decl_stmt|,
 name|qr
 decl_stmt|;
@@ -909,6 +982,22 @@ name|keysecret
 index|[
 name|MXNAME
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|dns_name_t
+modifier|*
+name|hmacname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|int
+name|digestbits
 decl_stmt|;
 end_decl_stmt
 
@@ -1382,7 +1471,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Print the final result of the lookup.  */
+comment|/*%<  * Print the final result of the lookup.  */
 end_comment
 
 begin_function_decl
@@ -1404,7 +1493,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Print a message about where and when the response  * was received from, like the final comment in the  * output of "dig".  */
+comment|/*%<  * Print a message about where and when the response  * was received from, like the final comment in the  * output of "dig".  */
 end_comment
 
 begin_function_decl

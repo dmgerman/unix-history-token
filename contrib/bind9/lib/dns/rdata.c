@@ -4,7 +4,11 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rdata.c,v 1.147.2.11.2.22 2006/07/21 02:05:56 marka Exp $ */
+comment|/* $Id: rdata.c,v 1.184.18.9 2006/07/21 02:05:57 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -286,7 +290,7 @@ value|dns_rdata_t *rdata, dns_name_t *owner, dns_name_t *bad
 end_define
 
 begin_comment
-comment|/*  * Context structure for the totext_ functions.  * Contains formatting options for rdata-to-text  * conversion.  */
+comment|/*%  * Context structure for the totext_ functions.  * Contains formatting options for rdata-to-text  * conversion.  */
 end_comment
 
 begin_typedef
@@ -298,23 +302,23 @@ name|dns_name_t
 modifier|*
 name|origin
 decl_stmt|;
-comment|/* Current origin, or NULL. */
+comment|/*%< Current origin, or NULL. */
 name|unsigned
 name|int
 name|flags
 decl_stmt|;
-comment|/* DNS_STYLEFLAG_* */
+comment|/*%< DNS_STYLEFLAG_*  */
 name|unsigned
 name|int
 name|width
 decl_stmt|;
-comment|/* Width of rdata column. */
+comment|/*%< Width of rdata column. */
 specifier|const
 name|char
 modifier|*
 name|linebreak
 decl_stmt|;
-comment|/* Line break string. */
+comment|/*%< Line break string. */
 block|}
 name|dns_rdata_textctx_t
 typedef|;
@@ -752,6 +756,26 @@ parameter_list|(
 name|dns_name_t
 modifier|*
 name|name
+parameter_list|,
+name|isc_lex_t
+modifier|*
+name|lexer
+parameter_list|,
+name|dns_rdatacallbacks_t
+modifier|*
+name|callbacks
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|warn_badmx
+parameter_list|(
+name|isc_token_t
+modifier|*
+name|token
 parameter_list|,
 name|isc_lex_t
 modifier|*
@@ -7497,6 +7521,85 @@ argument_list|,
 name|isc_lex_getsourceline
 argument_list|(
 name|lexer
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|warn_badmx
+parameter_list|(
+name|isc_token_t
+modifier|*
+name|token
+parameter_list|,
+name|isc_lex_t
+modifier|*
+name|lexer
+parameter_list|,
+name|dns_rdatacallbacks_t
+modifier|*
+name|callbacks
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|file
+decl_stmt|;
+name|unsigned
+name|long
+name|line
+decl_stmt|;
+if|if
+condition|(
+name|lexer
+operator|!=
+name|NULL
+condition|)
+block|{
+name|file
+operator|=
+name|isc_lex_getsourcename
+argument_list|(
+name|lexer
+argument_list|)
+expr_stmt|;
+name|line
+operator|=
+name|isc_lex_getsourceline
+argument_list|(
+name|lexer
+argument_list|)
+expr_stmt|;
+call|(
+modifier|*
+name|callbacks
+operator|->
+name|warn
+call|)
+argument_list|(
+name|callbacks
+argument_list|,
+literal|"%s:%u: warning: '%s': %s"
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|,
+name|DNS_AS_STR
+argument_list|(
+operator|*
+name|token
+argument_list|)
+argument_list|,
+name|dns_result_totext
+argument_list|(
+name|DNS_R_MXISADDRESS
 argument_list|)
 argument_list|)
 expr_stmt|;

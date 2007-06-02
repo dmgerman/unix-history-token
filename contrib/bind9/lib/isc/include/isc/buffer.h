@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: buffer.h,v 1.39.12.2 2004/03/08 09:04:51 marka Exp $ */
+comment|/* $Id: buffer.h,v 1.43.18.2 2005/04/29 00:16:53 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * Buffers  *  * A buffer is a region of memory, together with a set of related subregions.  * Buffers are used for parsing and I/O operations.  *  * The 'used region' and the 'available' region are disjoint, and their  * union is the buffer's region.  The used region extends from the beginning  * of the buffer region to the last used byte.  The available region  * extends from one byte greater than the last used byte to the end of the  * buffer's region.  The size of the used region can be changed using various  * buffer commands.  Initially, the used region is empty.  *  * The used region is further subdivided into two disjoint regions: the  * 'consumed region' and the 'remaining region'.  The union of these two  * regions is the used region.  The consumed region extends from the beginning  * of the used region to the byte before the 'current' offset (if any).  The  * 'remaining' region the current pointer to the end of the used  * region.  The size of the consumed region can be changed using various  * buffer commands.  Initially, the consumed region is empty.  *  * The 'active region' is an (optional) subregion of the remaining region.  * It extends from the current offset to an offset in the remaining region  * that is selected with isc_buffer_setactive().  Initially, the active region  * is empty.  If the current offset advances beyond the chosen offset, the  * active region will also be empty.  *  *  /------------entire length---------------\  *  /----- used region -----\/-- available --\  *  +----------------------------------------+  *  | consumed  | remaining |                |  *  +----------------------------------------+  *  a           b     c     d                e  *  * a == base of buffer.  * b == current pointer.  Can be anywhere between a and d.  * c == active pointer.  Meaningful between b and d.  * d == used pointer.  * e == length of buffer.  *  * a-e == entire length of buffer.  * a-d == used region.  * a-b == consumed region.  * b-d == remaining region.  * b-c == optional active region.  *  * The following invariants are maintained by all routines:  *  *	length> 0  *  *	base is a valid pointer to length bytes of memory  *  *	0<= used<= length  *  *	0<= current<= used  *  *	0<= active<= used  *	(although active< current implies empty active region)  *  * MP:  *	Buffers have no synchronization.  Clients must ensure exclusive  *	access.  *  * Reliability:  *	No anticipated impact.  *  * Resources:  *	Memory: 1 pointer + 6 unsigned integers per buffer.  *  * Security:  *	No anticipated impact.  *  * Standards:  *	None.  */
+comment|/*! \file buffer.h  *  * \brief A buffer is a region of memory, together with a set of related subregions.  * Buffers are used for parsing and I/O operations.  *  * The 'used region' and the 'available' region are disjoint, and their  * union is the buffer's region.  The used region extends from the beginning  * of the buffer region to the last used byte.  The available region  * extends from one byte greater than the last used byte to the end of the  * buffer's region.  The size of the used region can be changed using various  * buffer commands.  Initially, the used region is empty.  *  * The used region is further subdivided into two disjoint regions: the  * 'consumed region' and the 'remaining region'.  The union of these two  * regions is the used region.  The consumed region extends from the beginning  * of the used region to the byte before the 'current' offset (if any).  The  * 'remaining' region the current pointer to the end of the used  * region.  The size of the consumed region can be changed using various  * buffer commands.  Initially, the consumed region is empty.  *  * The 'active region' is an (optional) subregion of the remaining region.  * It extends from the current offset to an offset in the remaining region  * that is selected with isc_buffer_setactive().  Initially, the active region  * is empty.  If the current offset advances beyond the chosen offset, the  * active region will also be empty.  *  * \verbatim  *  /------------entire length---------------\  *  /----- used region -----\/-- available --\  *  +----------------------------------------+  *  | consumed  | remaining |                |  *  +----------------------------------------+  *  a           b     c     d                e  *  * a == base of buffer.  * b == current pointer.  Can be anywhere between a and d.  * c == active pointer.  Meaningful between b and d.  * d == used pointer.  * e == length of buffer.  *  * a-e == entire length of buffer.  * a-d == used region.  * a-b == consumed region.  * b-d == remaining region.  * b-c == optional active region.  *\endverbatim  *  * The following invariants are maintained by all routines:  *  *\code  *	length> 0  *  *	base is a valid pointer to length bytes of memory  *  *	0<= used<= length  *  *	0<= current<= used  *  *	0<= active<= used  *	(although active< current implies empty active region)  *\endcode  *  * \li MP:  *	Buffers have no synchronization.  Clients must ensure exclusive  *	access.  *  * \li Reliability:  *	No anticipated impact.  *  * \li Resources:  *	Memory: 1 pointer + 6 unsigned integers per buffer.  *  * \li Security:  *	No anticipated impact.  *  * \li Standards:  *	None.  */
 end_comment
 
 begin_comment
@@ -51,7 +51,7 @@ file|<isc/types.h>
 end_include
 
 begin_comment
-comment|/*  * To make many functions be inline macros (via #define) define this.  * If it is undefined, a function will be used.  */
+comment|/*!  * To make many functions be inline macros (via #define) define this.  * If it is undefined, a function will be used.  */
 end_comment
 
 begin_comment
@@ -63,7 +63,11 @@ name|ISC_LANG_BEGINDECLS
 end_macro
 
 begin_comment
-comment|/***  *** Magic numbers  ***/
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  *** Magic numbers  ***/
 end_comment
 
 begin_define
@@ -88,11 +92,19 @@ value|ISC_MAGIC_VALID(b, ISC_BUFFER_MAGIC)
 end_define
 
 begin_comment
+comment|/*@}*/
+end_comment
+
+begin_comment
 comment|/*  * The following macros MUST be used only on valid buffers.  It is the  * caller's responsibility to ensure this by using the ISC_BUFFER_VALID  * check above, or by calling another isc_buffer_*() function (rather than  * another macro.)  */
 end_comment
 
 begin_comment
-comment|/*  * Fundamental buffer elements.  (A through E in the introductory comment.)  */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * Fundamental buffer elements.  (A through E in the introductory comment.)  */
 end_comment
 
 begin_define
@@ -169,7 +181,15 @@ comment|/*e*/
 end_comment
 
 begin_comment
-comment|/*  * Derived lengths.  (Described in the introductory comment.)  */
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * Derived lengths.  (Described in the introductory comment.)  */
 end_comment
 
 begin_define
@@ -243,7 +263,11 @@ comment|/* e-d */
 end_comment
 
 begin_comment
-comment|/*  * Note that the buffer structure is public.  This is principally so buffer  * operations can be implemented using macros.  Applications are strongly  * discouraged from directly manipulating the structure.  */
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*!  * Note that the buffer structure is public.  This is principally so buffer  * operations can be implemented using macros.  Applications are strongly  * discouraged from directly manipulating the structure.  */
 end_comment
 
 begin_struct
@@ -258,7 +282,8 @@ name|void
 modifier|*
 name|base
 decl_stmt|;
-comment|/* The following integers are byte offsets from 'base'. */
+comment|/*@{*/
+comment|/*! The following integers are byte offsets from 'base'. */
 name|unsigned
 name|int
 name|length
@@ -275,14 +300,15 @@ name|unsigned
 name|int
 name|active
 decl_stmt|;
-comment|/* linkable */
+comment|/*@}*/
+comment|/*! linkable */
 name|ISC_LINK
 argument_list|(
 argument|isc_buffer_t
 argument_list|)
 name|link
 expr_stmt|;
-comment|/* private internal elements */
+comment|/*! private internal elements */
 name|isc_mem_t
 modifier|*
 name|mctx
@@ -316,7 +342,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Allocate a dynamic linkable buffer which has "length" bytes in the  * data region.  *  * Requires:  *	"mctx" is valid.  *  *	"dynbuffer" is non-NULL, and "*dynbuffer" is NULL.  *  * Returns:  *	ISC_R_SUCCESS		- success  *	ISC_R_NOMEMORY		- no memory available  *  * Note:  *	Changing the buffer's length field is not permitted.  */
+comment|/*!<  * \brief Allocate a dynamic linkable buffer which has "length" bytes in the  * data region.  *  * Requires:  *\li	"mctx" is valid.  *  *\li	"dynbuffer" is non-NULL, and "*dynbuffer" is NULL.  *  * Returns:  *\li	ISC_R_SUCCESS		- success  *\li	ISC_R_NOMEMORY		- no memory available  *  * Note:  *\li	Changing the buffer's length field is not permitted.  */
 end_comment
 
 begin_function_decl
@@ -332,7 +358,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Release resources allocated for a dynamic buffer.  *  * Requires:  *	"dynbuffer" is not NULL.  *  *	"*dynbuffer" is a valid dynamic buffer.  *  * Ensures:  *	"*dynbuffer" will be NULL on return, and all memory associated with  *	the dynamic buffer is returned to the memory context used in  *	isc_buffer_allocate().  */
+comment|/*!<  * \brief Release resources allocated for a dynamic buffer.  *  * Requires:  *\li	"dynbuffer" is not NULL.  *  *\li	"*dynbuffer" is a valid dynamic buffer.  *  * Ensures:  *\li	"*dynbuffer" will be NULL on return, and all memory associated with  *	the dynamic buffer is returned to the memory context used in  *	isc_buffer_allocate().  */
 end_comment
 
 begin_function_decl
@@ -356,7 +382,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'b' refer to the 'length'-byte region starting at base.  *  * Requires:  *  *	'length'> 0  *  *	'base' is a pointer to a sequence of 'length' bytes.  *  */
+comment|/*!<  * \brief Make 'b' refer to the 'length'-byte region starting at base.  *  * Requires:  *  *\li	'length'> 0  *  *\li	'base' is a pointer to a sequence of 'length' bytes.  *  */
 end_comment
 
 begin_function_decl
@@ -371,7 +397,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'b' an invalid buffer.  *  * Requires:  *	'b' is a valid buffer.  *  * Ensures:  *	If assertion checking is enabled, future attempts to use 'b' without  *	calling isc_buffer_init() on it will cause an assertion failure.  */
+comment|/*!<  * \brief Make 'b' an invalid buffer.  *  * Requires:  *\li	'b' is a valid buffer.  *  * Ensures:  *\li	If assertion checking is enabled, future attempts to use 'b' without  *	calling isc_buffer_init() on it will cause an assertion failure.  */
 end_comment
 
 begin_function_decl
@@ -390,7 +416,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'r' refer to the region of 'b'.  *  * Requires:  *  *	'b' is a valid buffer.  *  *	'r' points to a region structure.  */
+comment|/*!<  * \brief Make 'r' refer to the region of 'b'.  *  * Requires:  *  *\li	'b' is a valid buffer.  *  *\li	'r' points to a region structure.  */
 end_comment
 
 begin_function_decl
@@ -409,7 +435,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'r' refer to the used region of 'b'.  *  * Requires:  *  *	'b' is a valid buffer.  *  *	'r' points to a region structure.  */
+comment|/*!<  * \brief Make 'r' refer to the used region of 'b'.  *  * Requires:  *  *\li	'b' is a valid buffer.  *  *\li	'r' points to a region structure.  */
 end_comment
 
 begin_function_decl
@@ -428,7 +454,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'r' refer to the available region of 'b'.  *  * Requires:  *  *	'b' is a valid buffer.  *  *	'r' points to a region structure.  */
+comment|/*!<  * \brief Make 'r' refer to the available region of 'b'.  *  * Requires:  *  *\li	'b' is a valid buffer.  *  *\li	'r' points to a region structure.  */
 end_comment
 
 begin_function_decl
@@ -447,7 +473,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Increase the 'used' region of 'b' by 'n' bytes.  *  * Requires:  *  *	'b' is a valid buffer  *  *	used + n<= length  *  */
+comment|/*!<  * \brief Increase the 'used' region of 'b' by 'n' bytes.  *  * Requires:  *  *\li	'b' is a valid buffer  *  *\li	used + n<= length  *  */
 end_comment
 
 begin_function_decl
@@ -466,7 +492,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Decrease the 'used' region of 'b' by 'n' bytes.  *  * Requires:  *  *	'b' is a valid buffer  *  *	used>= n  *  */
+comment|/*!<  * \brief Decrease the 'used' region of 'b' by 'n' bytes.  *  * Requires:  *  *\li	'b' is a valid buffer  *  *\li	used>= n  *  */
 end_comment
 
 begin_function_decl
@@ -481,7 +507,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make the used region empty.  *  * Requires:  *  *	'b' is a valid buffer  *  * Ensures:  *  *	used = 0  *  */
+comment|/*!<  * \brief Make the used region empty.  *  * Requires:  *  *\li	'b' is a valid buffer  *  * Ensures:  *  *\li	used = 0  *  */
 end_comment
 
 begin_function_decl
@@ -500,7 +526,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'r' refer to the consumed region of 'b'.  *  * Requires:  *  *	'b' is a valid buffer.  *  *	'r' points to a region structure.  */
+comment|/*!<  * \brief Make 'r' refer to the consumed region of 'b'.  *  * Requires:  *  *\li	'b' is a valid buffer.  *  *\li	'r' points to a region structure.  */
 end_comment
 
 begin_function_decl
@@ -519,7 +545,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'r' refer to the remaining region of 'b'.  *  * Requires:  *  *	'b' is a valid buffer.  *  *	'r' points to a region structure.  */
+comment|/*!<  * \brief Make 'r' refer to the remaining region of 'b'.  *  * Requires:  *  *\li	'b' is a valid buffer.  *  *\li	'r' points to a region structure.  */
 end_comment
 
 begin_function_decl
@@ -538,7 +564,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'r' refer to the active region of 'b'.  *  * Requires:  *  *	'b' is a valid buffer.  *  *	'r' points to a region structure.  */
+comment|/*!<  * \brief Make 'r' refer to the active region of 'b'.  *  * Requires:  *  *\li	'b' is a valid buffer.  *  *\li	'r' points to a region structure.  */
 end_comment
 
 begin_function_decl
@@ -557,7 +583,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Sets the end of the active region 'n' bytes after current.  *  * Requires:  *  *	'b' is a valid buffer.  *  *	current + n<= used  */
+comment|/*!<  * \brief Sets the end of the active region 'n' bytes after current.  *  * Requires:  *  *\li	'b' is a valid buffer.  *  *\li	current + n<= used  */
 end_comment
 
 begin_function_decl
@@ -572,7 +598,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make the consumed region empty.  *  * Requires:  *  *	'b' is a valid buffer  *  * Ensures:  *  *	current == 0  *  */
+comment|/*!<  * \brief Make the consumed region empty.  *  * Requires:  *  *\li	'b' is a valid buffer  *  * Ensures:  *  *\li	current == 0  *  */
 end_comment
 
 begin_function_decl
@@ -591,7 +617,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Increase the 'consumed' region of 'b' by 'n' bytes.  *  * Requires:  *  *	'b' is a valid buffer  *  *	current + n<= used  *  */
+comment|/*!<  * \brief Increase the 'consumed' region of 'b' by 'n' bytes.  *  * Requires:  *  *\li	'b' is a valid buffer  *  *\li	current + n<= used  *  */
 end_comment
 
 begin_function_decl
@@ -610,7 +636,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Decrease the 'consumed' region of 'b' by 'n' bytes.  *  * Requires:  *  *	'b' is a valid buffer  *  *	n<= current  *  */
+comment|/*!<  * \brief Decrease the 'consumed' region of 'b' by 'n' bytes.  *  * Requires:  *  *\li	'b' is a valid buffer  *  *\li	n<= current  *  */
 end_comment
 
 begin_function_decl
@@ -625,7 +651,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Compact the used region by moving the remaining region so it occurs  * at the start of the buffer.  The used region is shrunk by the size of  * the consumed region, and the consumed region is then made empty.  *  * Requires:  *  *	'b' is a valid buffer  *  * Ensures:  *  *	current == 0  *  *	The size of the used region is now equal to the size of the remaining  *	region (as it was before the call).  The contents of the used region  *	are those of the remaining region (as it was before the call).  */
+comment|/*!<  * \brief Compact the used region by moving the remaining region so it occurs  * at the start of the buffer.  The used region is shrunk by the size of  * the consumed region, and the consumed region is then made empty.  *  * Requires:  *  *\li	'b' is a valid buffer  *  * Ensures:  *  *\li	current == 0  *  *\li	The size of the used region is now equal to the size of the remaining  *	region (as it was before the call).  The contents of the used region  *	are those of the remaining region (as it was before the call).  */
 end_comment
 
 begin_function_decl
@@ -640,7 +666,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Read an unsigned 8-bit integer from 'b' and return it.  *  * Requires:  *  *	'b' is a valid buffer.  *  *	The length of the available region of 'b' is at least 1.  *  * Ensures:  *  *	The current pointer in 'b' is advanced by 1.  *  * Returns:  *  *	A 8-bit unsigned integer.  */
+comment|/*!<  * \brief Read an unsigned 8-bit integer from 'b' and return it.  *  * Requires:  *  *\li	'b' is a valid buffer.  *  *\li	The length of the available region of 'b' is at least 1.  *  * Ensures:  *  *\li	The current pointer in 'b' is advanced by 1.  *  * Returns:  *  *\li	A 8-bit unsigned integer.  */
 end_comment
 
 begin_function_decl
@@ -658,7 +684,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Store an unsigned 8-bit integer from 'val' into 'b'.  *  * Requires:  *	'b' is a valid buffer.  *  *	The length of the unused region of 'b' is at least 1.  *  * Ensures:  *	The used pointer in 'b' is advanced by 1.  */
+comment|/*!<  * \brief Store an unsigned 8-bit integer from 'val' into 'b'.  *  * Requires:  *\li	'b' is a valid buffer.  *  *\li	The length of the unused region of 'b' is at least 1.  *  * Ensures:  *\li	The used pointer in 'b' is advanced by 1.  */
 end_comment
 
 begin_function_decl
@@ -673,7 +699,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Read an unsigned 16-bit integer in network byte order from 'b', convert  * it to host byte order, and return it.  *  * Requires:  *  *	'b' is a valid buffer.  *  *	The length of the available region of 'b' is at least 2.  *  * Ensures:  *  *	The current pointer in 'b' is advanced by 2.  *  * Returns:  *  *	A 16-bit unsigned integer.  */
+comment|/*!<  * \brief Read an unsigned 16-bit integer in network byte order from 'b', convert  * it to host byte order, and return it.  *  * Requires:  *  *\li	'b' is a valid buffer.  *  *\li	The length of the available region of 'b' is at least 2.  *  * Ensures:  *  *\li	The current pointer in 'b' is advanced by 2.  *  * Returns:  *  *\li	A 16-bit unsigned integer.  */
 end_comment
 
 begin_function_decl
@@ -691,7 +717,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Store an unsigned 16-bit integer in host byte order from 'val'  * into 'b' in network byte order.  *  * Requires:  *	'b' is a valid buffer.  *  *	The length of the unused region of 'b' is at least 2.  *  * Ensures:  *	The used pointer in 'b' is advanced by 2.  */
+comment|/*!<  * \brief Store an unsigned 16-bit integer in host byte order from 'val'  * into 'b' in network byte order.  *  * Requires:  *\li	'b' is a valid buffer.  *  *\li	The length of the unused region of 'b' is at least 2.  *  * Ensures:  *\li	The used pointer in 'b' is advanced by 2.  */
 end_comment
 
 begin_function_decl
@@ -706,7 +732,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Read an unsigned 32-bit integer in network byte order from 'b', convert  * it to host byte order, and return it.  *  * Requires:  *  *	'b' is a valid buffer.  *  *	The length of the available region of 'b' is at least 4.  *  * Ensures:  *  *	The current pointer in 'b' is advanced by 4.  *  * Returns:  *  *	A 32-bit unsigned integer.  */
+comment|/*!<  * \brief Read an unsigned 32-bit integer in network byte order from 'b', convert  * it to host byte order, and return it.  *  * Requires:  *  *\li	'b' is a valid buffer.  *  *\li	The length of the available region of 'b' is at least 4.  *  * Ensures:  *  *\li	The current pointer in 'b' is advanced by 4.  *  * Returns:  *  *\li	A 32-bit unsigned integer.  */
 end_comment
 
 begin_function_decl
@@ -724,7 +750,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Store an unsigned 32-bit integer in host byte order from 'val'  * into 'b' in network byte order.  *  * Requires:  *	'b' is a valid buffer.  *  *	The length of the unused region of 'b' is at least 4.  *  * Ensures:  *	The used pointer in 'b' is advanced by 4.  */
+comment|/*!<  * \brief Store an unsigned 32-bit integer in host byte order from 'val'  * into 'b' in network byte order.  *  * Requires:  *\li	'b' is a valid buffer.  *  *\li	The length of the unused region of 'b' is at least 4.  *  * Ensures:  *\li	The used pointer in 'b' is advanced by 4.  */
 end_comment
 
 begin_function_decl
@@ -749,7 +775,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Copy 'length' bytes of memory at 'base' into 'b'.  *  * Requires:  *	'b' is a valid buffer.  *  *	'base' points to 'length' bytes of valid memory.  *  */
+comment|/*!<  * \brief Copy 'length' bytes of memory at 'base' into 'b'.  *  * Requires:  *\li	'b' is a valid buffer.  *  *\li	'base' points to 'length' bytes of valid memory.  *  */
 end_comment
 
 begin_function_decl
@@ -769,7 +795,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Copy 'source' into 'b', not including terminating NUL.  *  * Requires:  *	'b' is a valid buffer.  *  *	'source' to be a valid NULL terminated string.  *  *	strlen(source)<= isc_buffer_available(b)  */
+comment|/*!<  * \brief Copy 'source' into 'b', not including terminating NUL.  *  * Requires:  *\li	'b' is a valid buffer.  *  *\li	'source' to be a valid NULL terminated string.  *  *\li	strlen(source)<= isc_buffer_available(b)  */
 end_comment
 
 begin_function_decl
@@ -789,7 +815,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Copy the contents of 'r' into 'b'.  *  * Requires:  *	'b' is a valid buffer.  *  *	'r' is a valid region.  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_NOSPACE			The available region of 'b' is not  *					big enough.  */
+comment|/*!<  * \brief Copy the contents of 'r' into 'b'.  *  * Requires:  *\li	'b' is a valid buffer.  *  *\li	'r' is a valid region.  *  * Returns:  *  *\li	ISC_R_SUCCESS  *\li	ISC_R_NOSPACE			The available region of 'b' is not  *					big enough.  */
 end_comment
 
 begin_macro
@@ -801,7 +827,7 @@ comment|/*  * Inline macro versions of the functions.  These should never be cal
 end_comment
 
 begin_comment
-comment|/*  * XXXDCL Something more could be done with initializing buffers that  * point to const data.  For example, a new function, isc_buffer_initconst,  * could be used, and a new boolean flag in the buffer structure could  * indicate whether the buffer was initialized with that function.  * (isc_bufer_init itself would be reprototyped to *not* have its "base"  * parameter be const.)  Then if the boolean were true, the isc_buffer_put*  * functions could assert a contractual requirement for a non-const buffer.  * One drawback is that the isc_buffer_* functions (macros) that return  * pointers would still need to return non-const pointers to avoid compiler  * warnings, so it would be up to code that uses them to have to deal  * with the possibility that the buffer was initialized as const --  * a problem that they *already* have to deal with but have absolutely  * no ability to.  With a new isc_buffer_isconst() function returning  * true/false, they could at least assert a contractual requirement for  * non-const buffers when needed.  */
+comment|/*! \note  * XXXDCL Something more could be done with initializing buffers that  * point to const data.  For example, a new function, isc_buffer_initconst,  * could be used, and a new boolean flag in the buffer structure could  * indicate whether the buffer was initialized with that function.  * (isc_bufer_init itself would be reprototyped to *not* have its "base"  * parameter be const.)  Then if the boolean were true, the isc_buffer_put*  * functions could assert a contractual requirement for a non-const buffer.  * One drawback is that the isc_buffer_* functions (macros) that return  * pointers would still need to return non-const pointers to avoid compiler  * warnings, so it would be up to code that uses them to have to deal  * with the possibility that the buffer was initialized as const --  * a problem that they *already* have to deal with but have absolutely  * no ability to.  With a new isc_buffer_isconst() function returning  * true/false, they could at least assert a contractual requirement for  * non-const buffers when needed.  */
 end_comment
 
 begin_define

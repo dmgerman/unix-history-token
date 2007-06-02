@@ -4,7 +4,11 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: mutex.c,v 1.6.26.5 2005/03/17 03:58:32 marka Exp $ */
+comment|/* $Id: mutex.c,v 1.8.18.4 2005/07/12 01:22:32 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -34,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isc/mutex.h>
 end_include
 
@@ -43,6 +53,12 @@ directive|include
 file|<isc/util.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<isc/strerror.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -50,7 +66,11 @@ name|ISC_MUTEX_PROFILE
 end_if
 
 begin_comment
-comment|/* Operations on timevals; adapted from FreeBSD's sys/time.h */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*% Operations on timevals; adapted from FreeBSD's sys/time.h */
 end_comment
 
 begin_define
@@ -88,6 +108,10 @@ parameter_list|)
 define|\
 value|do {                                                            \                 (vvp)->tv_sec -= (uvp)->tv_sec;                         \                 (vvp)->tv_usec -= (uvp)->tv_usec;                       \                 if ((vvp)->tv_usec< 0) {                               \                         (vvp)->tv_sec--;                                \                         (vvp)->tv_usec += 1000000;                      \                 }                                                       \         } while (0)
 end_define
+
+begin_comment
+comment|/*@}*/
+end_comment
 
 begin_define
 define|#
@@ -133,11 +157,11 @@ name|char
 modifier|*
 name|file
 decl_stmt|;
-comment|/* File mutex was created in. */
+comment|/*%< File mutex was created in. */
 name|int
 name|line
 decl_stmt|;
-comment|/* Line mutex was created on. */
+comment|/*%< Line mutex was created on. */
 name|unsigned
 name|count
 decl_stmt|;
@@ -221,9 +245,11 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|err
 decl_stmt|;
-if|if
-condition|(
+name|err
+operator|=
 name|pthread_mutex_init
 argument_list|(
 operator|&
@@ -233,11 +259,28 @@ name|mutex
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+name|ENOMEM
+condition|)
+return|return
+operator|(
+name|ISC_R_NOMEMORY
+operator|)
+return|;
+if|if
+condition|(
+name|err
 operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|ISC_R_UNEXPECTED
+operator|)
 return|;
 name|RUNTIME_CHECK
 argument_list|(
@@ -480,7 +523,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|ISC_R_SUCCESS
+operator|)
 return|;
 block|}
 end_function
@@ -723,7 +768,9 @@ operator|=
 name|locker
 expr_stmt|;
 return|return
+operator|(
 name|ISC_R_SUCCESS
+operator|)
 return|;
 block|}
 end_function
@@ -1084,6 +1131,9 @@ block|{
 name|pthread_mutexattr_t
 name|attr
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 if|if
 condition|(
 name|pthread_mutexattr_init
@@ -1095,7 +1145,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|ISC_R_UNEXPECTED
+operator|)
 return|;
 if|if
 condition|(
@@ -1110,10 +1162,12 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|ISC_R_UNEXPECTED
+operator|)
 return|;
-if|if
-condition|(
+name|err
+operator|=
 name|pthread_mutex_init
 argument_list|(
 name|mp
@@ -1123,17 +1177,39 @@ name|attr
 argument_list|)
 operator|!=
 literal|0
-condition|)
-return|return
-name|ISC_R_UNEXPECTED
-return|;
-return|return
-name|ISC_R_SUCCESS
-return|;
-block|}
+block|)
+function|if
+parameter_list|(
+function|err == ENOMEM
 end_function
 
+begin_return
+unit|)
+return|return
+operator|(
+name|ISC_R_NOMEMORY
+operator|)
+return|;
+end_return
+
+begin_return
+return|return
+operator|(
+operator|(
+name|err
+operator|==
+literal|0
+operator|)
+condition|?
+name|ISC_R_SUCCESS
+else|:
+name|ISC_R_UNEXPECTED
+operator|)
+return|;
+end_return
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
@@ -1154,10 +1230,10 @@ name|PTHREAD_MUTEX_ERRORCHECK
 argument_list|)
 end_if
 
-begin_decl_stmt
-name|pthread_mutexattr_t
+begin_expr_stmt
+unit|pthread_mutexattr_t
 name|isc__mutex_attrs
-init|=
+operator|=
 block|{
 name|PTHREAD_MUTEX_ERRORCHECK
 block|,
@@ -1165,13 +1241,108 @@ comment|/* m_type */
 literal|0
 comment|/* m_flags, which appears to be unused. */
 block|}
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+name|isc_result_t
+name|isc__mutex_init
+parameter_list|(
+name|isc_mutex_t
+modifier|*
+name|mp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|unsigned
+name|int
+name|line
+parameter_list|)
+block|{
+name|char
+name|strbuf
+index|[
+name|ISC_STRERRORSIZE
+index|]
+decl_stmt|;
+name|isc_result_t
+name|result
+init|=
+name|ISC_R_SUCCESS
+decl_stmt|;
+name|int
+name|err
+decl_stmt|;
+name|err
+operator|=
+name|pthread_mutex_init
+argument_list|(
+name|mp
+argument_list|,
+name|ISC__MUTEX_ATTRS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+name|ENOMEM
+condition|)
+return|return
+operator|(
+name|ISC_R_NOMEMORY
+operator|)
+return|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
+block|{
+name|isc__strerror
+argument_list|(
+name|errno
+argument_list|,
+name|strbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|strbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|UNEXPECTED_ERROR
+argument_list|(
+name|file
+argument_list|,
+name|line
+argument_list|,
+literal|"isc_mutex_init() failed: %s"
+argument_list|,
+name|strbuf
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|ISC_R_UNEXPECTED
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|result
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 

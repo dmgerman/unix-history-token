@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ctl_p.c,v 1.1.206.2 2004/03/17 00:29:51 marka Exp $"
+literal|"$Id: ctl_p.c,v 1.3.18.1 2005/04/27 05:01:05 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,7 +190,7 @@ comment|/* Public. */
 end_comment
 
 begin_comment
-comment|/*  * ctl_logger()  *	if ctl_startup()'s caller didn't specify a logger, this one  *	is used.  this pollutes stderr with all kinds of trash so it will  *	probably never be used in real applications.  */
+comment|/*%  * ctl_logger()  *	if ctl_startup()'s caller didn't specify a logger, this one  *	is used.  this pollutes stderr with all kinds of trash so it will  *	probably never be used in real applications.  */
 end_comment
 
 begin_function
@@ -908,6 +908,10 @@ break|break;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

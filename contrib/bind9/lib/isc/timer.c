@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: timer.c,v 1.64.12.13 2006/01/04 23:50:21 marka Exp $ */
+comment|/* $Id: timer.c,v 1.73.18.5 2005/11/30 03:44:39 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -266,7 +270,7 @@ begin_struct
 struct|struct
 name|isc_timer
 block|{
-comment|/* Not locked. */
+comment|/*! Not locked. */
 name|unsigned
 name|int
 name|magic
@@ -278,7 +282,7 @@ decl_stmt|;
 name|isc_mutex_t
 name|lock
 decl_stmt|;
-comment|/* Locked by timer lock. */
+comment|/*! Locked by timer lock. */
 name|unsigned
 name|int
 name|references
@@ -286,7 +290,7 @@ decl_stmt|;
 name|isc_time_t
 name|idle
 decl_stmt|;
-comment|/* Locked by manager lock. */
+comment|/*! Locked by manager lock. */
 name|isc_timertype_t
 name|type
 decl_stmt|;
@@ -408,7 +412,7 @@ name|ISC_PLATFORM_USETHREADS
 end_ifndef
 
 begin_comment
-comment|/*  * If threads are not in use, there can be only one.  */
+comment|/*!  * If threads are not in use, there can be only one.  */
 end_comment
 
 begin_decl_stmt
@@ -469,7 +473,7 @@ name|timedwait
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Note: the caller must ensure locking. 	 */
+comment|/*! 	 * Note: the caller must ensure locking. 	 */
 name|REQUIRE
 argument_list|(
 name|timer
@@ -499,7 +503,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ISC_PLATFORM_USETHREADS
-comment|/* 	 * If the manager was timed wait, we may need to signal the 	 * manager to force a wakeup. 	 */
+comment|/*! 	 * If the manager was timed wait, we may need to signal the 	 * manager to force a wakeup. 	 */
 name|timedwait
 operator|=
 name|ISC_TF
@@ -1512,8 +1516,8 @@ name|index
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
+name|result
+operator|=
 name|isc_mutex_init
 argument_list|(
 operator|&
@@ -1521,6 +1525,10 @@ name|timer
 operator|->
 name|lock
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
@@ -1548,29 +1556,9 @@ name|timer
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init() %s"
-argument_list|,
-name|isc_msgcat_get
-argument_list|(
-name|isc_msgcat
-argument_list|,
-name|ISC_MSGSET_GENERAL
-argument_list|,
-name|ISC_MSG_FAILED
-argument_list|,
-literal|"failed"
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|ISC_R_UNEXPECTED
+name|result
 operator|)
 return|;
 block|}
@@ -2343,7 +2331,7 @@ decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
-comment|/* 	 * The caller must be holding the manager lock. 	 */
+comment|/*! 	 * The caller must be holding the manager lock. 	 */
 while|while
 condition|(
 name|manager
@@ -3262,8 +3250,8 @@ name|ISC_R_NOMEMORY
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|result
+operator|=
 name|isc_mutex_init
 argument_list|(
 operator|&
@@ -3271,6 +3259,10 @@ name|manager
 operator|->
 name|lock
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
@@ -3296,29 +3288,9 @@ name|manager
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init() %s"
-argument_list|,
-name|isc_msgcat_get
-argument_list|(
-name|isc_msgcat
-argument_list|,
-name|ISC_MSGSET_GENERAL
-argument_list|,
-name|ISC_MSG_FAILED
-argument_list|,
-literal|"failed"
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|ISC_R_UNEXPECTED
+name|result
 operator|)
 return|;
 block|}

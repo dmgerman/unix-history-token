@@ -29,5 +29,9 @@ begin_comment
 comment|/* _RES_MKUPDATE_H_ */
 end_comment
 
+begin_comment
+comment|/*! \file */
+end_comment
+
 end_unit
 

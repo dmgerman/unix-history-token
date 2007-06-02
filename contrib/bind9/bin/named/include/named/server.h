@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: server.h,v 1.58.2.1.10.13 2006/03/02 00:37:20 marka Exp $ */
+comment|/* $Id: server.h,v 1.73.18.8 2006/03/09 23:46:20 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|NAMED_SERVER_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -90,7 +94,7 @@ value|(NS_EVENTCLASS + 1)
 end_define
 
 begin_comment
-comment|/*  * Name server state.  Better here than in lots of separate global variables.  */
+comment|/*%  * Name server state.  Better here than in lots of separate global variables.  */
 end_comment
 
 begin_struct
@@ -127,36 +131,36 @@ name|char
 modifier|*
 name|statsfile
 decl_stmt|;
-comment|/* Statistics file name */
+comment|/*%< Statistics file name */
 name|char
 modifier|*
 name|dumpfile
 decl_stmt|;
-comment|/* Dump file name */
+comment|/*%< Dump file name */
 name|char
 modifier|*
 name|recfile
 decl_stmt|;
-comment|/* Recursive file name */
+comment|/*%< Recursive file name */
 name|isc_boolean_t
 name|version_set
 decl_stmt|;
-comment|/* User has set version */
+comment|/*%< User has set version */
 name|char
 modifier|*
 name|version
 decl_stmt|;
-comment|/* User-specified version */
+comment|/*%< User-specified version */
 name|isc_boolean_t
 name|hostname_set
 decl_stmt|;
-comment|/* User has set hostname */
+comment|/*%< User has set hostname */
 name|char
 modifier|*
 name|hostname
 decl_stmt|;
-comment|/* User-specified hostname */
-comment|/* Use hostname for server id */
+comment|/*%< User-specified hostname */
+comment|/*% Use hostname for server id */
 name|isc_boolean_t
 name|server_usehostname
 decl_stmt|;
@@ -164,8 +168,8 @@ name|char
 modifier|*
 name|server_id
 decl_stmt|;
-comment|/* User-specified server id */
-comment|/* 	 * Current ACL environment.  This defines the 	 * current values of the localhost and localnets 	 * ACLs. 	 */
+comment|/*%< User-specified server id */
+comment|/*% 	 * Current ACL environment.  This defines the 	 * current values of the localhost and localnets 	 * ACLs. 	 */
 name|dns_aclenv_t
 name|aclenv
 decl_stmt|;
@@ -201,6 +205,10 @@ name|isc_timer_t
 modifier|*
 name|heartbeat_timer
 decl_stmt|;
+name|isc_timer_t
+modifier|*
+name|pps_timer
+decl_stmt|;
 name|isc_uint32_t
 name|interface_interval
 decl_stmt|;
@@ -220,23 +228,27 @@ decl_stmt|;
 name|isc_boolean_t
 name|log_queries
 decl_stmt|;
-comment|/* For BIND 8 compatibility */
+comment|/*%< For BIND 8 compatibility */
 name|isc_uint64_t
 modifier|*
 name|querystats
 decl_stmt|;
-comment|/* Query statistics counters */
+comment|/*%< Query statistics counters */
 name|ns_controls_t
 modifier|*
 name|controls
 decl_stmt|;
-comment|/* Control channels */
+comment|/*%< Control channels */
 name|unsigned
 name|int
 name|dispatchgen
 decl_stmt|;
 name|ns_dispatchlist_t
 name|dispatches
+decl_stmt|;
+name|dns_acache_t
+modifier|*
+name|acache
 decl_stmt|;
 block|}
 struct|;
@@ -276,7 +288,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a server object with default settings.  * This function either succeeds or causes the program to exit  * with a fatal error.  */
+comment|/*%<  * Create a server object with default settings.  * This function either succeeds or causes the program to exit  * with a fatal error.  */
 end_comment
 
 begin_function_decl
@@ -292,7 +304,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy a server object, freeing its memory.  */
+comment|/*%<  * Destroy a server object, freeing its memory.  */
 end_comment
 
 begin_function_decl
@@ -307,7 +319,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Inform a server that a reload is wanted.  This function  * may be called asynchronously, from outside the server's task.  * If a reload is already scheduled or in progress, the call  * is ignored.  */
+comment|/*%<  * Inform a server that a reload is wanted.  This function  * may be called asynchronously, from outside the server's task.  * If a reload is already scheduled or in progress, the call  * is ignored.  */
 end_comment
 
 begin_function_decl
@@ -325,7 +337,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Inform the server that the zones should be flushed to disk on shutdown.  */
+comment|/*%<  * Inform the server that the zones should be flushed to disk on shutdown.  */
 end_comment
 
 begin_function_decl
@@ -348,7 +360,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Act on a "reload" command from the command channel.  */
+comment|/*%<  * Act on a "reload" command from the command channel.  */
 end_comment
 
 begin_function_decl
@@ -367,7 +379,30 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Act on a "reconfig" command from the command channel.  */
+comment|/*%<  * Act on a "reconfig" command from the command channel.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|ns_server_notifycommand
+parameter_list|(
+name|ns_server_t
+modifier|*
+name|server
+parameter_list|,
+name|char
+modifier|*
+name|args
+parameter_list|,
+name|isc_buffer_t
+modifier|*
+name|text
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Act on a "notify" command from the command channel.  */
 end_comment
 
 begin_function_decl
@@ -390,7 +425,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Act on a "refresh" command from the command channel.  */
+comment|/*%<  * Act on a "refresh" command from the command channel.  */
 end_comment
 
 begin_function_decl
@@ -409,7 +444,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Act on a "retransfer" command from the command channel.  */
+comment|/*%<  * Act on a "retransfer" command from the command channel.  */
 end_comment
 
 begin_function_decl
@@ -424,11 +459,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Toggle logging of queries, as in BIND 8.  */
+comment|/*%<  * Toggle logging of queries, as in BIND 8.  */
 end_comment
 
 begin_comment
-comment|/*  * Dump the current statistics to the statistics file.  */
+comment|/*%  * Dump the current statistics to the statistics file.  */
 end_comment
 
 begin_function_decl
@@ -443,7 +478,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Dump the current cache to the dump file.  */
+comment|/*%  * Dump the current cache to the dump file.  */
 end_comment
 
 begin_function_decl
@@ -462,7 +497,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Change or increment the server debug level.  */
+comment|/*%  * Change or increment the server debug level.  */
 end_comment
 
 begin_function_decl
@@ -481,7 +516,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Flush the server's cache(s)  */
+comment|/*%  * Flush the server's cache(s)  */
 end_comment
 
 begin_function_decl
@@ -500,7 +535,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Flush a particular name from the server's cache(s)  */
+comment|/*%  * Flush a particular name from the server's cache(s)  */
 end_comment
 
 begin_function_decl
@@ -519,7 +554,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Report the server's status.  */
+comment|/*%  * Report the server's status.  */
 end_comment
 
 begin_function_decl
@@ -538,7 +573,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Enable or disable updates for a zone.  */
+comment|/*%  * Enable or disable updates for a zone.  */
 end_comment
 
 begin_function_decl
@@ -560,7 +595,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Dump the current recursive queries.  */
+comment|/*%  * Dump the current recursive queries.  */
 end_comment
 
 begin_function_decl
@@ -575,7 +610,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Maintain a list of dispatches that require reserved ports.  */
+comment|/*%  * Maintain a list of dispatches that require reserved ports.  */
 end_comment
 
 begin_function_decl
@@ -590,6 +625,25 @@ specifier|const
 name|isc_sockaddr_t
 modifier|*
 name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Enable or disable dnssec validation.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|ns_server_validation
+parameter_list|(
+name|ns_server_t
+modifier|*
+name|server
+parameter_list|,
+name|char
+modifier|*
+name|args
 parameter_list|)
 function_decl|;
 end_function_decl

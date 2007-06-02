@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rdataset.h,v 1.41.2.5.2.10 2006/03/02 00:37:20 marka Exp $ */
+comment|/* $Id: rdataset.h,v 1.51.18.7 2006/03/03 00:56:53 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * DNS Rdataset  *  * A DNS rdataset is a handle that can be associated with a collection of  * rdata all having a common owner name, class, and type.  *  * The dns_rdataset_t type is like a "virtual class".  To actually use  * rdatasets, an implementation of the method suite (e.g. "slabbed rdata") is  * required.  *  * XXX<more> XXX  *  * MP:  *	Clients of this module must impose any required synchronization.  *  * Reliability:  *	No anticipated impact.  *  * Resources:  *<TBS>  *  * Security:  *	No anticipated impact.  *  * Standards:  *	None.  */
+comment|/*! \file  * \brief  * A DNS rdataset is a handle that can be associated with a collection of  * rdata all having a common owner name, class, and type.  *  * The dns_rdataset_t type is like a "virtual class".  To actually use  * rdatasets, an implementation of the method suite (e.g. "slabbed rdata") is  * required.  *  * XXX&lt;more&gt; XXX  *  * MP:  *\li	Clients of this module must impose any required synchronization.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	None.  */
 end_comment
 
 begin_include
@@ -43,12 +43,32 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/stdtime.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dns/types.h>
 end_include
 
 begin_macro
 name|ISC_LANG_BEGINDECLS
 end_macro
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|dns_rdatasetadditional_fromauth
+block|,
+name|dns_rdatasetadditional_fromcache
+block|,
+name|dns_rdatasetadditional_fromglue
+block|}
+name|dns_rdatasetadditional_t
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -168,6 +188,120 @@ modifier|*
 name|nsecsig
 parameter_list|)
 function_decl|;
+name|isc_result_t
+function_decl|(
+modifier|*
+name|getadditional
+function_decl|)
+parameter_list|(
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_rdatasetadditional_t
+name|type
+parameter_list|,
+name|dns_rdatatype_t
+name|qtype
+parameter_list|,
+name|dns_acache_t
+modifier|*
+name|acache
+parameter_list|,
+name|dns_zone_t
+modifier|*
+modifier|*
+name|zonep
+parameter_list|,
+name|dns_db_t
+modifier|*
+modifier|*
+name|dbp
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+modifier|*
+name|versionp
+parameter_list|,
+name|dns_dbnode_t
+modifier|*
+modifier|*
+name|nodep
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|fname
+parameter_list|,
+name|dns_message_t
+modifier|*
+name|msg
+parameter_list|,
+name|isc_stdtime_t
+name|now
+parameter_list|)
+function_decl|;
+name|isc_result_t
+function_decl|(
+modifier|*
+name|setadditional
+function_decl|)
+parameter_list|(
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_rdatasetadditional_t
+name|type
+parameter_list|,
+name|dns_rdatatype_t
+name|qtype
+parameter_list|,
+name|dns_acache_t
+modifier|*
+name|acache
+parameter_list|,
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
+parameter_list|,
+name|dns_dbnode_t
+modifier|*
+name|node
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|fname
+parameter_list|)
+function_decl|;
+name|isc_result_t
+function_decl|(
+modifier|*
+name|putadditional
+function_decl|)
+parameter_list|(
+name|dns_acache_t
+modifier|*
+name|acache
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_rdatasetadditional_t
+name|type
+parameter_list|,
+name|dns_rdatatype_t
+name|qtype
+parameter_list|)
+function_decl|;
 block|}
 name|dns_rdatasetmethods_t
 typedef|;
@@ -191,7 +325,7 @@ value|ISC_MAGIC_VALID(set, DNS_RDATASET_MAGIC)
 end_define
 
 begin_comment
-comment|/*  * Direct use of this structure by clients is strongly discouraged, except  * for the 'link' field which may be used however the client wishes.  The  * 'private', 'current', and 'index' fields MUST NOT be changed by clients.  * rdataset implementations may change any of the fields.  */
+comment|/*%  * Direct use of this structure by clients is strongly discouraged, except  * for the 'link' field which may be used however the client wishes.  The  * 'private', 'current', and 'index' fields MUST NOT be changed by clients.  * rdataset implementations may change any of the fields.  */
 end_comment
 
 begin_struct
@@ -234,11 +368,12 @@ name|unsigned
 name|int
 name|attributes
 decl_stmt|;
-comment|/* 	 * the counter provides the starting point in the "cyclic" order. 	 * The value ISC_UINT32_MAX has a special meaning of "picking up a 	 * random value." in order to take care of databases that do not 	 * increment the counter. 	 */
+comment|/*% 	 * the counter provides the starting point in the "cyclic" order. 	 * The value ISC_UINT32_MAX has a special meaning of "picking up a 	 * random value." in order to take care of databases that do not 	 * increment the counter. 	 */
 name|isc_uint32_t
 name|count
 decl_stmt|;
-comment|/* 	 * These are for use by the rdataset implementation, and MUST NOT 	 * be changed by clients. 	 */
+comment|/*@{*/
+comment|/*% 	 * These are for use by the rdataset implementation, and MUST NOT 	 * be changed by clients. 	 */
 name|void
 modifier|*
 name|private1
@@ -263,12 +398,13 @@ name|void
 modifier|*
 name|private6
 decl_stmt|;
+comment|/*@}*/
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * _RENDERED:  *	Used by message.c to indicate that the rdataset was rendered.  *  * _TTLADJUSTED:  *	Used by message.c to indicate that the rdataset's rdata had differing  *	TTL values, and the rdataset->ttl holds the smallest.  */
+comment|/*!  * \def DNS_RDATASETATTR_RENDERED  *	Used by message.c to indicate that the rdataset was rendered.  *  * \def DNS_RDATASETATTR_TTLADJUSTED  *	Used by message.c to indicate that the rdataset's rdata had differing  *	TTL values, and the rdataset->ttl holds the smallest.  *  * \def DNS_RDATASETATTR_LOADORDER  *	Output the RRset in load order.  */
 end_comment
 
 begin_define
@@ -286,7 +422,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* Used by message.c */
+comment|/*%< Used by message.c */
 end_comment
 
 begin_define
@@ -297,7 +433,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* Used by server. */
+comment|/*%< Used by server. */
 end_comment
 
 begin_define
@@ -308,7 +444,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* Used by resolver. */
+comment|/*%< Used by resolver. */
 end_comment
 
 begin_define
@@ -319,7 +455,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/* Used by resolver. */
+comment|/*%< Used by resolver. */
 end_comment
 
 begin_define
@@ -330,7 +466,7 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|/* Used by resolver. */
+comment|/*%< Used by resolver. */
 end_comment
 
 begin_define
@@ -341,7 +477,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* Used by resolver. */
+comment|/*%< Used by resolver. */
 end_comment
 
 begin_define
@@ -352,7 +488,7 @@ value|0x00000080
 end_define
 
 begin_comment
-comment|/* Used by resolver. */
+comment|/*%< Used by resolver. */
 end_comment
 
 begin_define
@@ -363,7 +499,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/* Used by resolver. */
+comment|/*%< Used by resolver. */
 end_comment
 
 begin_define
@@ -374,7 +510,7 @@ value|0x00000200
 end_define
 
 begin_comment
-comment|/* Used by message.c */
+comment|/*%< Used by message.c */
 end_comment
 
 begin_define
@@ -399,7 +535,7 @@ value|0x00001000
 end_define
 
 begin_comment
-comment|/* Used by resolver. */
+comment|/*%< Used by resolver. */
 end_comment
 
 begin_define
@@ -424,7 +560,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* Used by resolver. */
+comment|/*%< Used by resolver. */
 end_comment
 
 begin_define
@@ -434,8 +570,15 @@ name|DNS_RDATASETATTR_REQUIREDGLUE
 value|0x00010000
 end_define
 
+begin_define
+define|#
+directive|define
+name|DNS_RDATASETATTR_LOADORDER
+value|0x00020000
+end_define
+
 begin_comment
-comment|/*  * _OMITDNSSEC:  * 	Omit DNSSEC records when rendering ncache records.  */
+comment|/*%  * _OMITDNSSEC:  * 	Omit DNSSEC records when rendering ncache records.  */
 end_comment
 
 begin_define
@@ -457,7 +600,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'rdataset' a valid, disassociated rdataset.  *  * Requires:  *	'rdataset' is not NULL.  *  * Ensures:  *	'rdataset' is a valid, disassociated rdataset.  */
+comment|/*%<  * Make 'rdataset' a valid, disassociated rdataset.  *  * Requires:  *\li	'rdataset' is not NULL.  *  * Ensures:  *\li	'rdataset' is a valid, disassociated rdataset.  */
 end_comment
 
 begin_function_decl
@@ -472,7 +615,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Invalidate 'rdataset'.  *  * Requires:  *	'rdataset' is a valid, disassociated rdataset.  *  * Ensures:  *	If assertion checking is enabled, future attempts to use 'rdataset'  *	without initializing it will cause an assertion failure.  */
+comment|/*%<  * Invalidate 'rdataset'.  *  * Requires:  *\li	'rdataset' is a valid, disassociated rdataset.  *  * Ensures:  *\li	If assertion checking is enabled, future attempts to use 'rdataset'  *	without initializing it will cause an assertion failure.  */
 end_comment
 
 begin_function_decl
@@ -487,7 +630,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Disassociate 'rdataset' from its rdata, allowing it to be reused.  *  * Notes:  *	The client must ensure it has no references to rdata in the rdataset  *	before disassociating.  *  * Requires:  *	'rdataset' is a valid, associated rdataset.  *  * Ensures:  *	'rdataset' is a valid, disassociated rdataset.  */
+comment|/*%<  * Disassociate 'rdataset' from its rdata, allowing it to be reused.  *  * Notes:  *\li	The client must ensure it has no references to rdata in the rdataset  *	before disassociating.  *  * Requires:  *\li	'rdataset' is a valid, associated rdataset.  *  * Ensures:  *\li	'rdataset' is a valid, disassociated rdataset.  */
 end_comment
 
 begin_function_decl
@@ -502,7 +645,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Is 'rdataset' associated?  *  * Requires:  *	'rdataset' is a valid rdataset.  *  * Returns:  *	ISC_TRUE			'rdataset' is associated.  *	ISC_FALSE			'rdataset' is not associated.  */
+comment|/*%<  * Is 'rdataset' associated?  *  * Requires:  *\li	'rdataset' is a valid rdataset.  *  * Returns:  *\li	#ISC_TRUE			'rdataset' is associated.  *\li	#ISC_FALSE			'rdataset' is not associated.  */
 end_comment
 
 begin_function_decl
@@ -523,7 +666,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'rdataset' a valid, associated, question rdataset, with a  * question class of 'rdclass' and type 'type'.  *  * Notes:  *	Question rdatasets have a class and type, but no rdata.  *  * Requires:  *	'rdataset' is a valid, disassociated rdataset.  *  * Ensures:  *	'rdataset' is a valid, associated, question rdataset.  */
+comment|/*%<  * Make 'rdataset' a valid, associated, question rdataset, with a  * question class of 'rdclass' and type 'type'.  *  * Notes:  *\li	Question rdatasets have a class and type, but no rdata.  *  * Requires:  *\li	'rdataset' is a valid, disassociated rdataset.  *  * Ensures:  *\li	'rdataset' is a valid, associated, question rdataset.  */
 end_comment
 
 begin_function_decl
@@ -542,7 +685,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'target' refer to the same rdataset as 'source'.  *  * Requires:  *	'source' is a valid, associated rdataset.  *  *	'target' is a valid, dissociated rdataset.  *  * Ensures:  *	'target' references the same rdataset as 'source'.  */
+comment|/*%<  * Make 'target' refer to the same rdataset as 'source'.  *  * Requires:  *\li	'source' is a valid, associated rdataset.  *  *\li	'target' is a valid, dissociated rdataset.  *  * Ensures:  *\li	'target' references the same rdataset as 'source'.  */
 end_comment
 
 begin_function_decl
@@ -558,7 +701,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the number of records in 'rdataset'.  *  * Requires:  *	'rdataset' is a valid, associated rdataset.  *  * Returns:  *	The number of records in 'rdataset'.  */
+comment|/*%<  * Return the number of records in 'rdataset'.  *  * Requires:  *\li	'rdataset' is a valid, associated rdataset.  *  * Returns:  *\li	The number of records in 'rdataset'.  */
 end_comment
 
 begin_function_decl
@@ -573,7 +716,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Move the rdata cursor to the first rdata in the rdataset (if any).  *  * Requires:  *	'rdataset' is a valid, associated rdataset.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMORE			There are no rdata in the set.  */
+comment|/*%<  * Move the rdata cursor to the first rdata in the rdataset (if any).  *  * Requires:  *\li	'rdataset' is a valid, associated rdataset.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMORE			There are no rdata in the set.  */
 end_comment
 
 begin_function_decl
@@ -588,7 +731,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Move the rdata cursor to the next rdata in the rdataset (if any).  *  * Requires:  *	'rdataset' is a valid, associated rdataset.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMORE			There are no more rdata in the set.  */
+comment|/*%<  * Move the rdata cursor to the next rdata in the rdataset (if any).  *  * Requires:  *\li	'rdataset' is a valid, associated rdataset.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMORE			There are no more rdata in the set.  */
 end_comment
 
 begin_function_decl
@@ -607,7 +750,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'rdata' refer to the current rdata.  *  * Notes:  *  *	The data returned in 'rdata' is valid for the life of the  *	rdataset; in particular, subsequent changes in the cursor position  *	do not invalidate 'rdata'.  *  * Requires:  *	'rdataset' is a valid, associated rdataset.  *  *	The rdata cursor of 'rdataset' is at a valid location (i.e. the  *	result of last call to a cursor movement command was ISC_R_SUCCESS).  *  * Ensures:  *	'rdata' refers to the rdata at the rdata cursor location of  *	'rdataset'.  */
+comment|/*%<  * Make 'rdata' refer to the current rdata.  *  * Notes:  *  *\li	The data returned in 'rdata' is valid for the life of the  *	rdataset; in particular, subsequent changes in the cursor position  *	do not invalidate 'rdata'.  *  * Requires:  *\li	'rdataset' is a valid, associated rdataset.  *  *\li	The rdata cursor of 'rdataset' is at a valid location (i.e. the  *	result of last call to a cursor movement command was ISC_R_SUCCESS).  *  * Ensures:  *\li	'rdata' refers to the rdata at the rdata cursor location of  *\li	'rdataset'.  */
 end_comment
 
 begin_function_decl
@@ -636,7 +779,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convert 'rdataset' to text format, storing the result in 'target'.  *  * Notes:  *	The rdata cursor position will be changed.  *  *	The 'question' flag should normally be ISC_FALSE.  If it is   *	ISC_TRUE, the TTL and rdata fields are not printed.  This is   *	for use when printing an rdata representing a question section.  *  *	This interface is deprecated; use dns_master_rdatasettottext()  * 	and/or dns_master_questiontotext() instead.  *  * Requires:  *	'rdataset' is a valid rdataset.  *  *	'rdataset' is not empty.  */
+comment|/*%<  * Convert 'rdataset' to text format, storing the result in 'target'.  *  * Notes:  *\li	The rdata cursor position will be changed.  *  *\li	The 'question' flag should normally be #ISC_FALSE.  If it is   *	#ISC_TRUE, the TTL and rdata fields are not printed.  This is   *	for use when printing an rdata representing a question section.  *  *\li	This interface is deprecated; use dns_master_rdatasettottext()  * 	and/or dns_master_questiontotext() instead.  *  * Requires:  *\li	'rdataset' is a valid rdataset.  *  *\li	'rdataset' is not empty.  */
 end_comment
 
 begin_function_decl
@@ -672,7 +815,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convert 'rdataset' to wire format, compressing names as specified  * in 'cctx', and storing the result in 'target'.  *  * Notes:  *	The rdata cursor position will be changed.  *  *	The number of RRs added to target will be added to *countp.  *  * Requires:  *	'rdataset' is a valid rdataset.  *  *	'rdataset' is not empty.  *  *	'countp' is a valid pointer.  *  * Ensures:  *	On a return of ISC_R_SUCCESS, 'target' contains a wire format  *	for the data contained in 'rdataset'.  Any error return leaves  *	the buffer unchanged.  *  *	*countp has been incremented by the number of RRs added to  *	target.  *  * Returns:  *	ISC_R_SUCCESS		- all ok  *	ISC_R_NOSPACE		- 'target' doesn't have enough room  *  *	Any error returned by dns_rdata_towire(), dns_rdataset_next(),  *	dns_name_towire().  */
+comment|/*%<  * Convert 'rdataset' to wire format, compressing names as specified  * in 'cctx', and storing the result in 'target'.  *  * Notes:  *\li	The rdata cursor position will be changed.  *  *\li	The number of RRs added to target will be added to *countp.  *  * Requires:  *\li	'rdataset' is a valid rdataset.  *  *\li	'rdataset' is not empty.  *  *\li	'countp' is a valid pointer.  *  * Ensures:  *\li	On a return of ISC_R_SUCCESS, 'target' contains a wire format  *	for the data contained in 'rdataset'.  Any error return leaves  *	the buffer unchanged.  *  *\li	*countp has been incremented by the number of RRs added to  *	target.  *  * Returns:  *\li	#ISC_R_SUCCESS		- all ok  *\li	#ISC_R_NOSPACE		- 'target' doesn't have enough room  *  *\li	Any error returned by dns_rdata_towire(), dns_rdataset_next(),  *	dns_name_towire().  */
 end_comment
 
 begin_function_decl
@@ -717,7 +860,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Like dns_rdataset_towire(), but sorting the rdatasets according to  * the integer value returned by 'order' when called witih the rdataset  * and 'order_arg' as arguments.  *  * Requires:  *	All the requirements of dns_rdataset_towire(), and  *	that order_arg is NULL if and only if order is NULL.  */
+comment|/*%<  * Like dns_rdataset_towire(), but sorting the rdatasets according to  * the integer value returned by 'order' when called witih the rdataset  * and 'order_arg' as arguments.  *  * Requires:  *\li	All the requirements of dns_rdataset_towire(), and  *	that order_arg is NULL if and only if order is NULL.  */
 end_comment
 
 begin_function_decl
@@ -767,7 +910,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Like dns_rdataset_towiresorted() except that a partial rdataset  * may be written.  *  * Requires:  *	All the requirements of dns_rdataset_towiresorted().  *	If 'state' is non NULL then the current position in the  *	rdataset will be remembered if the rdataset in not  *	completely written and should be passed on on subsequent  *	calls (NOT CURRENTLY IMPLEMENTED).  *  * Returns:  *	ISC_R_SUCCESS if all of the records were written.  *	ISC_R_NOSPACE if unable to fit in all of the records. *countp  *		      will be updated to reflect the number of records  *		      written.  */
+comment|/*%<  * Like dns_rdataset_towiresorted() except that a partial rdataset  * may be written.  *  * Requires:  *\li	All the requirements of dns_rdataset_towiresorted().  *	If 'state' is non NULL then the current position in the  *	rdataset will be remembered if the rdataset in not  *	completely written and should be passed on on subsequent  *	calls (NOT CURRENTLY IMPLEMENTED).  *  * Returns:  *\li	#ISC_R_SUCCESS if all of the records were written.  *\li	#ISC_R_NOSPACE if unable to fit in all of the records. *countp  *		      will be updated to reflect the number of records  *		      written.  */
 end_comment
 
 begin_function_decl
@@ -789,7 +932,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * For each rdata in rdataset, call 'add' for each name and type in the  * rdata which is subject to additional section processing.  *  * Requires:  *  *	'rdataset' is a valid, non-question rdataset.  *  *	'add' is a valid dns_additionaldatafunc_t  *  * Ensures:  *  *	If successful, dns_rdata_additionaldata() will have been called for  *	each rdata in 'rdataset'.  *  *	If a call to dns_rdata_additionaldata() is not successful, the  *	result returned will be the result of dns_rdataset_additionaldata().  *  * Returns:  *  *	ISC_R_SUCCESS  *  *	Any error that dns_rdata_additionaldata() can return.  */
+comment|/*%<  * For each rdata in rdataset, call 'add' for each name and type in the  * rdata which is subject to additional section processing.  *  * Requires:  *  *\li	'rdataset' is a valid, non-question rdataset.  *  *\li	'add' is a valid dns_additionaldatafunc_t  *  * Ensures:  *  *\li	If successful, dns_rdata_additionaldata() will have been called for  *	each rdata in 'rdataset'.  *  *\li	If a call to dns_rdata_additionaldata() is not successful, the  *	result returned will be the result of dns_rdataset_additionaldata().  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *  *\li	Any error that dns_rdata_additionaldata() can return.  */
 end_comment
 
 begin_function_decl
@@ -816,7 +959,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the noqname proof for this record.  *  * Requires:  *	'rdataset' to be valid and DNS_RDATASETATTR_NOQNAME to be set.  *	'name' to be valid.  *	'nsec' and 'nsecsig' to be valid and not associated.  */
+comment|/*%<  * Return the noqname proof for this record.  *  * Requires:  *\li	'rdataset' to be valid and #DNS_RDATASETATTR_NOQNAME to be set.  *\li	'name' to be valid.  *\li	'nsec' and 'nsecsig' to be valid and not associated.  */
 end_comment
 
 begin_function_decl
@@ -835,7 +978,133 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Associate a noqname proof with this record.  * Sets DNS_RDATASETATTR_NOQNAME if successful.  * Adjusts the 'rdataset->ttl' to minimum of the 'rdataset->ttl' and  * the 'nsec' and 'rrsig(nsec)' ttl.  *  * Requires:  *	'rdataset' to be valid and DNS_RDATASETATTR_NOQNAME to be set.  *	'name' to be valid and have NSEC and RRSIG(NSEC) rdatasets.  */
+comment|/*%<  * Associate a noqname proof with this record.  * Sets #DNS_RDATASETATTR_NOQNAME if successful.  * Adjusts the 'rdataset->ttl' to minimum of the 'rdataset->ttl' and  * the 'nsec' and 'rrsig(nsec)' ttl.  *  * Requires:  *\li	'rdataset' to be valid and #DNS_RDATASETATTR_NOQNAME to be set.  *\li	'name' to be valid and have NSEC and RRSIG(NSEC) rdatasets.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_rdataset_getadditional
+parameter_list|(
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_rdatasetadditional_t
+name|type
+parameter_list|,
+name|dns_rdatatype_t
+name|qtype
+parameter_list|,
+name|dns_acache_t
+modifier|*
+name|acache
+parameter_list|,
+name|dns_zone_t
+modifier|*
+modifier|*
+name|zonep
+parameter_list|,
+name|dns_db_t
+modifier|*
+modifier|*
+name|dbp
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+modifier|*
+name|versionp
+parameter_list|,
+name|dns_dbnode_t
+modifier|*
+modifier|*
+name|nodep
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|fname
+parameter_list|,
+name|dns_message_t
+modifier|*
+name|msg
+parameter_list|,
+name|isc_stdtime_t
+name|now
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get cached additional information from the DB node for a particular  * 'rdataset.'  'type' is one of dns_rdatasetadditional_fromauth,  * dns_rdatasetadditional_fromcache, and dns_rdatasetadditional_fromglue,  * which specifies the origin of the information.  'qtype' is intended to  * be used for specifying a particular rdata type in the cached information.  *  * Requires:  * \li	'rdataset' is a valid rdataset.  * \li	'acache' can be NULL, in which case this function will simply return  * 	ISC_R_FAILURE.  * \li	For the other pointers, see dns_acache_getentry().  *  * Ensures:  * \li	See dns_acache_getentry().  *  * Returns:  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_FAILURE	- additional information caching is not supported.  * \li	#ISC_R_NOTFOUND	- the corresponding DB node has not cached additional  *			  information for 'rdataset.'  * \li	Any error that dns_acache_getentry() can return.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_rdataset_setadditional
+parameter_list|(
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_rdatasetadditional_t
+name|type
+parameter_list|,
+name|dns_rdatatype_t
+name|qtype
+parameter_list|,
+name|dns_acache_t
+modifier|*
+name|acache
+parameter_list|,
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
+parameter_list|,
+name|dns_dbnode_t
+modifier|*
+name|node
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|fname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set cached additional information to the DB node for a particular  * 'rdataset.'  See dns_rdataset_getadditional for the semantics of 'type'  * and 'qtype'.  *  * Requires:  * \li	'rdataset' is a valid rdataset.  * \li	'acache' can be NULL, in which case this function will simply return  *	ISC_R_FAILURE.  * \li	For the other pointers, see dns_acache_setentry().  *  * Ensures:  * \li	See dns_acache_setentry().  *  * Returns:  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_FAILURE	- additional information caching is not supported.  * \li	#ISC_R_NOMEMORY  * \li	Any error that dns_acache_setentry() can return.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_rdataset_putadditional
+parameter_list|(
+name|dns_acache_t
+modifier|*
+name|acache
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|rdataset
+parameter_list|,
+name|dns_rdatasetadditional_t
+name|type
+parameter_list|,
+name|dns_rdatatype_t
+name|qtype
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Discard cached additional information stored in the DB node for a particular  * 'rdataset.'  See dns_rdataset_getadditional for the semantics of 'type'  * and 'qtype'.  *  * Requires:  * \li	'rdataset' is a valid rdataset.  * \li	'acache' can be NULL, in which case this function will simply return  *	ISC_R_FAILURE.  *  * Ensures:  * \li	See dns_acache_cancelentry().  *  * Returns:  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_FAILURE	- additional information caching is not supported.  * \li	#ISC_R_NOTFOUND	- the corresponding DB node has not cached additional  *			  information for 'rdataset.'  */
 end_comment
 
 begin_macro

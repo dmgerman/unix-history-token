@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: interfaceiter.h,v 1.10.206.1 2004/03/06 08:14:42 marka Exp $ */
+comment|/* $Id: interfaceiter.h,v 1.11.18.2 2005/04/29 00:16:55 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * Interface iterator  *  * Iterate over the list of network interfaces.  *  * Interfaces whose address family is not supported are ignored and never  * returned by the iterator.  Interfaces whose netmask, interface flags,  * or similar cannot be obtained are also ignored, and the failure is logged.  *  * Standards:  *	The API for scanning varies greatly among operating systems.  *	This module attempts to hide the differences.  */
+comment|/*! \file  * \brief Iterates over the list of network interfaces.  *  * Interfaces whose address family is not supported are ignored and never  * returned by the iterator.  Interfaces whose netmask, interface flags,  * or similar cannot be obtained are also ignored, and the failure is logged.  *  * Standards:  *	The API for scanning varies greatly among operating systems.  *	This module attempts to hide the differences.  */
 end_comment
 
 begin_comment
@@ -51,7 +51,7 @@ file|<isc/types.h>
 end_include
 
 begin_comment
-comment|/*  * Public structure describing a network interface.  */
+comment|/*!  * \brief Public structure describing a network interface.  */
 end_comment
 
 begin_struct
@@ -64,34 +64,38 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/* Interface name, null-terminated. */
+comment|/*%< Interface name, null-terminated. */
 name|unsigned
 name|int
 name|af
 decl_stmt|;
-comment|/* Address family. */
+comment|/*%< Address family. */
 name|isc_netaddr_t
 name|address
 decl_stmt|;
-comment|/* Local address. */
+comment|/*%< Local address. */
 name|isc_netaddr_t
 name|netmask
 decl_stmt|;
-comment|/* Network mask. */
+comment|/*%< Network mask. */
 name|isc_netaddr_t
 name|dstaddress
 decl_stmt|;
-comment|/* Destination address 					   (point-to-point only). */
+comment|/*%< Destination address (point-to-point only). */
 name|isc_uint32_t
 name|flags
 decl_stmt|;
-comment|/* Flags; see below. */
+comment|/*%< Flags; see INTERFACE flags. */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* Interface flags. */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*! Interface flags. */
 end_comment
 
 begin_define
@@ -116,6 +120,10 @@ value|0x00000004U
 end_define
 
 begin_comment
+comment|/*@}*/
+end_comment
+
+begin_comment
 comment|/***  *** Functions  ***/
 end_comment
 
@@ -137,7 +145,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create an iterator for traversing the operating system's list  * of network interfaces.  *  * Returns:  *	ISC_R_SUCCESS  * 	ISC_R_NOMEMORY  *	Various network-related errors  */
+comment|/*!<  * \brief Create an iterator for traversing the operating system's list  * of network interfaces.  *  * Returns:  *\li	#ISC_R_SUCCESS  * \li	#ISC_R_NOMEMORY  *\li	Various network-related errors  */
 end_comment
 
 begin_function_decl
@@ -152,7 +160,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Position the iterator on the first interface.  *  * Returns:  *	ISC_R_SUCCESS		Success.  *	ISC_R_NOMORE		There are no interfaces.  */
+comment|/*!<  * \brief Position the iterator on the first interface.  *  * Returns:  *\li	#ISC_R_SUCCESS		Success.  *\li	#ISC_R_NOMORE		There are no interfaces.  */
 end_comment
 
 begin_function_decl
@@ -171,7 +179,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get information about the interface the iterator is currently  * positioned at and store it at *ifdata.  *  * Requires:  * 	The iterator has been successfully positioned using  * 	isc_interface_iter_first() / isc_interface_iter_next().  *  * Returns:  *	ISC_R_SUCCESS		Success.  */
+comment|/*!<  * \brief Get information about the interface the iterator is currently  * positioned at and store it at *ifdata.  *  * Requires:  *\li 	The iterator has been successfully positioned using  * 	isc_interface_iter_first() / isc_interface_iter_next().  *  * Returns:  *\li	#ISC_R_SUCCESS		Success.  */
 end_comment
 
 begin_function_decl
@@ -186,7 +194,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Position the iterator on the next interface.  *  * Requires:  * 	The iterator has been successfully positioned using  * 	isc_interface_iter_first() / isc_interface_iter_next().  *  * Returns:  *	ISC_R_SUCCESS		Success.  *	ISC_R_NOMORE		There are no more interfaces.  */
+comment|/*!<  * \brief Position the iterator on the next interface.  *  * Requires:  * \li	The iterator has been successfully positioned using  * 	isc_interface_iter_first() / isc_interface_iter_next().  *  * Returns:  *\li	#ISC_R_SUCCESS		Success.  *\li	#ISC_R_NOMORE		There are no more interfaces.  */
 end_comment
 
 begin_function_decl
@@ -202,7 +210,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy the iterator.  */
+comment|/*!<  * \brief Destroy the iterator.  */
 end_comment
 
 begin_macro

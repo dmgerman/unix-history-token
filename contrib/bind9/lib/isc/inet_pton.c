@@ -3,6 +3,10 @@ begin_comment
 comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1996-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
+begin_comment
+comment|/*! \file */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -24,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_pton.c,v 1.10.2.4.2.3 2005/03/31 23:56:14 marka Exp $"
+literal|"$Id: inet_pton.c,v 1.13.18.4 2005/04/29 00:16:46 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +65,10 @@ directive|include
 file|<isc/net.h>
 end_include
 
+begin_comment
+comment|/*% INT16 Size */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -68,12 +76,20 @@ name|NS_INT16SZ
 value|2
 end_define
 
+begin_comment
+comment|/*% IPv4 Address Size */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NS_INADDRSZ
 value|4
 end_define
+
+begin_comment
+comment|/*% IPv6 Address Size */
+end_comment
 
 begin_define
 define|#
@@ -123,7 +139,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* int  * isc_net_pton(af, src, dst)  *	convert from presentation format (which usually means ASCII printable)  *	to network format (which is usually some kind of binary format).  * return:  *	1 if the address was valid for the specified address family  *	0 if the address wasn't valid (`dst' is untouched in this case)  *	-1 if some other error occurred (`dst' is untouched in this case, too)  * author:  *	Paul Vixie, 1996.  */
+comment|/*%   *	convert from presentation format (which usually means ASCII printable)  *	to network format (which is usually some kind of binary format).  * \return  *	1 if the address was valid for the specified address family  *	0 if the address wasn't valid (`dst' is untouched in this case)  *	-1 if some other error occurred (`dst' is untouched in this case, too)  * \author  *	Paul Vixie, 1996.  */
 end_comment
 
 begin_function
@@ -191,7 +207,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* int  * inet_pton4(src, dst)  *	like inet_aton() but without all the hexadecimal and shorthand.  * return:  *	1 if `src' is a valid dotted quad, else 0.  * notice:  *	does not touch `dst' unless it's returning 1.  * author:  *	Paul Vixie, 1996.  */
+comment|/*!\fn static int inet_pton4(const char *src, unsigned char *dst)  * \brief  *	like inet_aton() but without all the hexadecimal and shorthand.  * \return  *	1 if `src' is a valid dotted quad, else 0.  * \note  *	does not touch `dst' unless it's returning 1.  * \author  *	Paul Vixie, 1996.  */
 end_comment
 
 begin_function
@@ -423,7 +439,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* int  * inet_pton6(src, dst)  *	convert presentation level address to network order binary form.  * return:  *	1 if `src' is a valid [RFC1884 2.2] address, else 0.  * notice:  *	(1) does not touch `dst' unless it's returning 1.  *	(2) :: in a full address is silently ignored.  * credit:  *	inspired by Mark Andrews.  * author:  *	Paul Vixie, 1996.  */
+comment|/*%  *	convert presentation level address to network order binary form.  * \return  *	1 if `src' is a valid [RFC1884 2.2] address, else 0.  * \note  *	(1) does not touch `dst' unless it's returning 1.  * \note  *	(2) :: in a full address is silently ignored.  * \author  *	inspired by Mark Andrews.  * \author  *	Paul Vixie, 1996.  */
 end_comment
 
 begin_function

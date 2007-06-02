@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: print.h,v 1.17.188.4 2005/06/09 23:54:30 marka Exp $ */
+comment|/* $Id: print.h,v 1.19.18.3 2005/06/08 02:07:56 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|ISC_PRINT_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_comment
 comment|/***  *** Imports  ***/
@@ -47,7 +51,7 @@ file|<isc/platform.h>
 end_include
 
 begin_comment
-comment|/*  * This block allows lib/isc/print.c to be cleanly compiled even if  * the platform does not need it.  The standard Makefile will still  * not compile print.c or archive print.o, so this is just to make test  * compilation ("make print.o") easier.  */
+comment|/*!  * This block allows lib/isc/print.c to be cleanly compiled even if  * the platform does not need it.  The standard Makefile will still  * not compile print.c or archive print.o, so this is just to make test  * compilation ("make print.o") easier.  */
 end_comment
 
 begin_if

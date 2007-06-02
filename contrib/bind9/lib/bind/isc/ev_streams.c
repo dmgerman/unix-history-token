@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_streams.c,v 1.2.206.2 2004/03/17 00:29:51 marka Exp $"
+literal|"$Id: ev_streams.c,v 1.4.18.1 2005/04/27 05:01:06 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1606,6 +1606,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

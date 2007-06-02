@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_pr.c,v 1.3.206.1 2004/03/09 08:33:34 marka Exp $"
+literal|"$Id: dns_pr.c,v 1.4.18.1 2005/04/27 05:00:55 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1457,6 +1457,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

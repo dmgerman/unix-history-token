@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gen_ho.c,v 1.1.206.3 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: gen_ho.c,v 1.3.18.2 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2030,7 +2030,7 @@ name|addrinfo
 operator|==
 name|NULL
 condition|)
-comment|/* for safety */
+comment|/*%< for safety */
 continue|continue;
 name|rval
 operator|=
@@ -2237,6 +2237,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

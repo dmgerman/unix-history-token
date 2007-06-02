@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: lex.h,v 1.26.2.2.8.3 2004/03/08 09:04:51 marka Exp $ */
+comment|/* $Id: lex.h,v 1.30.18.3 2005/06/04 00:39:05 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * Lex  *  * The "lex" module provides a lightweight tokenizer.  It can operate  * on files or buffers, and can handle "include".  It is designed for  * parsing of DNS master files and the BIND configuration file, but  * should be general enough to tokenize other things, e.g. HTTP.  *  * MP:  *	No synchronization is provided.  Clients must ensure exclusive  *	access.  *  * Reliability:  *	No anticipated impact.  *  * Resources:  *<TBS>  *  * Security:  *	No anticipated impact.  *  * Standards:  * 	None.  */
+comment|/*! \file isc/lex.h  * \brief The "lex" module provides a lightweight tokenizer.  It can operate  * on files or buffers, and can handle "include".  It is designed for  * parsing of DNS master files and the BIND configuration file, but  * should be general enough to tokenize other things, e.g. HTTP.  *  * \li MP:  *	No synchronization is provided.  Clients must ensure exclusive  *	access.  *  * \li Reliability:  *	No anticipated impact.  *  * \li Resources:  *	TBS  *  * \li Security:  *	No anticipated impact.  *  * \li Standards:  * 	None.  */
 end_comment
 
 begin_comment
@@ -65,7 +65,11 @@ comment|/***  *** Options  ***/
 end_comment
 
 begin_comment
-comment|/*  * Various options for isc_lex_gettoken().  */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * Various options for isc_lex_gettoken().  */
 end_comment
 
 begin_define
@@ -76,7 +80,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Want end-of-line token. */
+comment|/*%< Want end-of-line token. */
 end_comment
 
 begin_define
@@ -87,7 +91,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Want end-of-file token. */
+comment|/*%< Want end-of-file token. */
 end_comment
 
 begin_define
@@ -98,7 +102,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* Want initial whitespace. */
+comment|/*%< Want initial whitespace. */
 end_comment
 
 begin_define
@@ -109,7 +113,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* Recognize numbers. */
+comment|/*%< Recognize numbers. */
 end_comment
 
 begin_define
@@ -120,11 +124,19 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Recognize qstrings. */
+comment|/*%< Recognize qstrings. */
 end_comment
 
 begin_comment
-comment|/*  * The ISC_LEXOPT_DNSMULTILINE option handles the processing of '(' and ')' in  * the DNS master file format.  If this option is set, then the  * ISC_LEXOPT_INITIALWS and ISC_LEXOPT_EOL options will be ignored when  * the paren count is> 0.  To use this option, '(' and ')' must be special  * characters.  */
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * The ISC_LEXOPT_DNSMULTILINE option handles the processing of '(' and ')' in  * the DNS master file format.  If this option is set, then the  * ISC_LEXOPT_INITIALWS and ISC_LEXOPT_EOL options will be ignored when  * the paren count is> 0.  To use this option, '(' and ')' must be special  * characters.  */
 end_comment
 
 begin_define
@@ -135,7 +147,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* Handle '(' and ')'. */
+comment|/*%< Handle '(' and ')'. */
 end_comment
 
 begin_define
@@ -146,7 +158,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* Want "no more" token. */
+comment|/*%< Want "no more" token. */
 end_comment
 
 begin_define
@@ -157,7 +169,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* Regognise octal and hex */
+comment|/*%< Regognize octal and hex. */
 end_comment
 
 begin_define
@@ -168,7 +180,7 @@ value|0x100
 end_define
 
 begin_comment
-comment|/* Recognize escapes. */
+comment|/*%< Recognize escapes. */
 end_comment
 
 begin_define
@@ -179,11 +191,30 @@ value|0x200
 end_define
 
 begin_comment
-comment|/* Allow multiline "" strings */
+comment|/*%< Allow multiline "" strings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_LEXOPT_OCTAL
+value|0x400
+end_define
+
+begin_comment
+comment|/*%< Expect a octal number. */
 end_comment
 
 begin_comment
-comment|/*  * Various commenting styles, which may be changed at any time with  * isc_lex_setcomments().  */
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * Various commenting styles, which may be changed at any time with  * isc_lex_setcomments().  */
 end_comment
 
 begin_define
@@ -215,11 +246,15 @@ value|0x08
 end_define
 
 begin_comment
+comment|/*@}*/
+end_comment
+
+begin_comment
 comment|/***  *** Types  ***/
 end_comment
 
 begin_comment
-comment|/* Lex */
+comment|/*! Lex */
 end_comment
 
 begin_typedef
@@ -346,7 +381,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a lexer.  *  * 'max_token' is a hint of the number of bytes in the largest token.  *  * Requires:  *	'*lexp' is a valid lexer.  *  *	max_token> 0.  *  * Ensures:  *	On success, *lexp is attached to the newly created lexer.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY  */
+comment|/*%<  * Create a lexer.  *  * 'max_token' is a hint of the number of bytes in the largest token.  *  * Requires:  *\li	'*lexp' is a valid lexer.  *  *\li	max_token> 0.  *  * Ensures:  *\li	On success, *lexp is attached to the newly created lexer.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -362,7 +397,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy the lexer.  *  * Requires:  *	'*lexp' is a valid lexer.  *  * Ensures:  *	*lexp == NULL  */
+comment|/*%<  * Destroy the lexer.  *  * Requires:  *\li	'*lexp' is a valid lexer.  *  * Ensures:  *\li	*lexp == NULL  */
 end_comment
 
 begin_function_decl
@@ -378,7 +413,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the current lexer commenting styles.  *  * Requires:  *	'lex' is a valid lexer.  *  * Returns:  *	The commenting sytles which are currently allowed.  */
+comment|/*%<  * Return the current lexer commenting styles.  *  * Requires:  *\li	'lex' is a valid lexer.  *  * Returns:  *\li	The commenting sytles which are currently allowed.  */
 end_comment
 
 begin_function_decl
@@ -397,7 +432,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set allowed lexer commenting styles.  *  * Requires:  *	'lex' is a valid lexer.  *  *	'comments' has meaningful values.  */
+comment|/*%<  * Set allowed lexer commenting styles.  *  * Requires:  *\li	'lex' is a valid lexer.  *  *\li	'comments' has meaningful values.  */
 end_comment
 
 begin_function_decl
@@ -415,7 +450,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Put the current list of specials into 'specials'.  *  * Requires:  *	'lex' is a valid lexer.  */
+comment|/*%<  * Put the current list of specials into 'specials'.  *  * Requires:  *\li	'lex' is a valid lexer.  */
 end_comment
 
 begin_function_decl
@@ -433,7 +468,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * The characters in 'specials' are returned as tokens.  Along with  * whitespace, they delimit strings and numbers.  *  * Note:  *	Comment processing takes precedence over special character  *	recognition.  *  * Requires:  *	'lex' is a valid lexer.  */
+comment|/*!<  * The characters in 'specials' are returned as tokens.  Along with  * whitespace, they delimit strings and numbers.  *  * Note:  *\li	Comment processing takes precedence over special character  *	recognition.  *  * Requires:  *\li	'lex' is a valid lexer.  */
 end_comment
 
 begin_function_decl
@@ -453,7 +488,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Open 'filename' and make it the current input source for 'lex'.  *  * Requires:  *	'lex' is a valid lexer.  *  *	filename is a valid C string.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY			Out of memory  *	ISC_R_NOTFOUND			File not found  *	ISC_R_NOPERM			No permission to open file  *	ISC_R_FAILURE			Couldn't open file, not sure why  *	ISC_R_UNEXPECTED  */
+comment|/*%<  * Open 'filename' and make it the current input source for 'lex'.  *  * Requires:  *\li	'lex' is a valid lexer.  *  *\li	filename is a valid C string.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY			Out of memory  *\li	#ISC_R_NOTFOUND			File not found  *\li	#ISC_R_NOPERM			No permission to open file  *\li	#ISC_R_FAILURE			Couldn't open file, not sure why  *\li	#ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -472,7 +507,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'stream' the current input source for 'lex'.  *  * Requires:  *	'lex' is a valid lexer.  *  *	'stream' is a valid C stream.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY			Out of memory  */
+comment|/*%<  * Make 'stream' the current input source for 'lex'.  *  * Requires:  *\li	'lex' is a valid lexer.  *  *\li	'stream' is a valid C stream.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY			Out of memory  */
 end_comment
 
 begin_function_decl
@@ -491,7 +526,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'buffer' the current input source for 'lex'.  *  * Requires:  *	'lex' is a valid lexer.  *  *	'buffer' is a valid buffer.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY			Out of memory  */
+comment|/*%<  * Make 'buffer' the current input source for 'lex'.  *  * Requires:  *\li	'lex' is a valid lexer.  *  *\li	'buffer' is a valid buffer.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY			Out of memory  */
 end_comment
 
 begin_function_decl
@@ -506,7 +541,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Close the most recently opened object (i.e. file or buffer).  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMORE			No more input sources  */
+comment|/*%<  * Close the most recently opened object (i.e. file or buffer).  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMORE			No more input sources  */
 end_comment
 
 begin_function_decl
@@ -529,7 +564,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the next token.  *  * Requires:  *	'lex' is a valid lexer.  *  *	'lex' has an input source.  *  *	'options' contains valid options.  *  *	'*tokenp' is a valid pointer.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_UNEXPECTEDEND  *	ISC_R_NOMEMORY  *  *	These two results are returned only if their corresponding lexer  *	options are not set.  *  *	ISC_R_EOF			End of input source  *	ISC_R_NOMORE			No more input sources  */
+comment|/*%<  * Get the next token.  *  * Requires:  *\li	'lex' is a valid lexer.  *  *\li	'lex' has an input source.  *  *\li	'options' contains valid options.  *  *\li	'*tokenp' is a valid pointer.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_UNEXPECTEDEND  *\li	#ISC_R_NOMEMORY  *  *	These two results are returned only if their corresponding lexer  *	options are not set.  *  *\li	#ISC_R_EOF			End of input source  *\li	#ISC_R_NOMORE			No more input sources  */
 end_comment
 
 begin_function_decl
@@ -554,7 +589,29 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the next token from a DNS master file type stream.  This is a  * convenience function that sets appropriate options and handles quoted  * strings and end of line correctly for master files.  It also ungets  * unexpected tokens.  *  * Requires:  *	'lex' is a valid lexer.  *  *	'token' is a valid pointer  *  * Returns:  *  * 	any return code from isc_lex_gettoken.  */
+comment|/*%<  * Get the next token from a DNS master file type stream.  This is a  * convenience function that sets appropriate options and handles quoted  * strings and end of line correctly for master files.  It also ungets  * unexpected tokens.  *  * Requires:  *\li	'lex' is a valid lexer.  *  *\li	'token' is a valid pointer  *  * Returns:  *  * \li	any return code from isc_lex_gettoken().  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_lex_getoctaltoken
+parameter_list|(
+name|isc_lex_t
+modifier|*
+name|lex
+parameter_list|,
+name|isc_token_t
+modifier|*
+name|token
+parameter_list|,
+name|isc_boolean_t
+name|eol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the next token from a DNS master file type stream.  This is a  * convenience function that sets appropriate options and handles end  * of line correctly for master files.  It also ungets unexpected tokens.  *  * Requires:  *\li	'lex' is a valid lexer.  *  *\li	'token' is a valid pointer  *  * Returns:  *  * \li	any return code from isc_lex_gettoken().  */
 end_comment
 
 begin_function_decl
@@ -573,7 +630,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Unget the current token.  *  * Requires:  *	'lex' is a valid lexer.  *  *	'lex' has an input source.  *  *	'tokenp' points to a valid token.  *  *	There is no ungotten token already.  */
+comment|/*%<  * Unget the current token.  *  * Requires:  *\li	'lex' is a valid lexer.  *  *\li	'lex' has an input source.  *  *\li	'tokenp' points to a valid token.  *  *\li	There is no ungotten token already.  */
 end_comment
 
 begin_function_decl
@@ -596,7 +653,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns a region containing the text of the last token returned.  *  * Requires:  *	'lex' is a valid lexer.  *  *	'lex' has an input source.  *  *	'tokenp' points to a valid token.  *  *	A token has been gotten and not ungotten.  */
+comment|/*%<  * Returns a region containing the text of the last token returned.  *  * Requires:  *\li	'lex' is a valid lexer.  *  *\li	'lex' has an input source.  *  *\li	'tokenp' points to a valid token.  *  *\li	A token has been gotten and not ungotten.  */
 end_comment
 
 begin_function_decl
@@ -612,7 +669,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the input source name.  *  * Requires:  *	'lex' is a valid lexer.  *  * Returns:  * 	source name or NULL if no current source.  *	result valid while current input source exists.  */
+comment|/*%<  * Return the input source name.  *  * Requires:  *\li	'lex' is a valid lexer.  *  * Returns:  * \li	source name or NULL if no current source.  *\li	result valid while current input source exists.  */
 end_comment
 
 begin_function_decl
@@ -628,7 +685,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the input source line number.  *  * Requires:  *	'lex' is a valid lexer.  *  * Returns:  * 	Current line number or 0 if no current source.  */
+comment|/*%<  * Return the input source line number.  *  * Requires:  *\li	'lex' is a valid lexer.  *  * Returns:  *\li 	Current line number or 0 if no current source.  */
 end_comment
 
 begin_function_decl
@@ -648,7 +705,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Assigns a new name to the input source.  *  * Requires:  *  * 	'lex' is a valid lexer.  *  * Returns:  * 	ISC_R_SUCCESS  * 	ISC_R_NOMEMORY  * 	ISC_R_NOTFOUND - there are no sources.  */
+comment|/*%<  * Assigns a new name to the input source.  *  * Requires:  *  * \li	'lex' is a valid lexer.  *  * Returns:  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_NOMEMORY  * \li	#ISC_R_NOTFOUND - there are no sources.  */
 end_comment
 
 begin_function_decl
@@ -663,7 +720,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return whether the current input source is a file.  *  * Requires:  *	'lex' is a valid lexer.  *  * Returns:  * 	ISC_TRUE if the current input is a file,  *	ISC_FALSE otherwise.  */
+comment|/*%<  * Return whether the current input source is a file.  *  * Requires:  *\li	'lex' is a valid lexer.  *  * Returns:  * \li	#ISC_TRUE if the current input is a file,  *\li	#ISC_FALSE otherwise.  */
 end_comment
 
 begin_macro

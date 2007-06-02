@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rwlock.h,v 1.18.2.3.2.1 2004/03/06 08:14:47 marka Exp $ */
+comment|/* $Id: rwlock.h,v 1.21.18.3 2005/06/04 06:23:44 jinmei Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|ISC_RWLOCK_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -70,6 +74,32 @@ directive|ifdef
 name|ISC_PLATFORM_USETHREADS
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ISC_PLATFORM_HAVEXADD
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|ISC_PLATFORM_HAVECMPXCHG
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ISC_RWLOCK_USEATOMIC
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|isc_rwlock
@@ -82,7 +112,53 @@ decl_stmt|;
 name|isc_mutex_t
 name|lock
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ISC_PLATFORM_HAVEXADD
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|ISC_PLATFORM_HAVECMPXCHG
+argument_list|)
+comment|/* 	 * When some atomic instructions with hardware assistance are 	 * available, rwlock will use those so that concurrent readers do not 	 * interfere with each other through mutex as long as no writers 	 * appear, massively reducing the lock overhead in the typical case. 	 * 	 * The basic algorithm of this approach is the "simple 	 * writer-preference lock" shown in the following URL: 	 * http://www.cs.rochester.edu/u/scott/synchronization/pseudocode/rw.html 	 * but our implementation does not rely on the spin lock unlike the 	 * original algorithm to be more portable as a user space application. 	 */
+comment|/* Read or modified atomically. */
+name|isc_int32_t
+name|write_requests
+decl_stmt|;
+name|isc_int32_t
+name|write_completions
+decl_stmt|;
+name|isc_int32_t
+name|cnt_and_flag
+decl_stmt|;
 comment|/* Locked by lock. */
+name|isc_condition_t
+name|readable
+decl_stmt|;
+name|isc_condition_t
+name|writeable
+decl_stmt|;
+name|unsigned
+name|int
+name|readers_waiting
+decl_stmt|;
+comment|/* Locked by rwlock itself. */
+name|unsigned
+name|int
+name|write_granted
+decl_stmt|;
+comment|/* Unlocked. */
+name|unsigned
+name|int
+name|write_quota
+decl_stmt|;
+else|#
+directive|else
+comment|/* ISC_PLATFORM_HAVEXADD&& ISC_PLATFORM_HAVECMPXCHG */
+comment|/*%< Locked by lock. */
 name|isc_condition_t
 name|readable
 decl_stmt|;
@@ -92,12 +168,12 @@ decl_stmt|;
 name|isc_rwlocktype_t
 name|type
 decl_stmt|;
-comment|/* The number of threads that have the lock. */
+comment|/*% The number of threads that have the lock. */
 name|unsigned
 name|int
 name|active
 decl_stmt|;
-comment|/* 	 * The number of lock grants made since the lock was last switched 	 * from reading to writing or vice versa; used in determining 	 * when the quota is reached and it is time to switch. 	 */
+comment|/*% 	 * The number of lock grants made since the lock was last switched 	 * from reading to writing or vice versa; used in determining 	 * when the quota is reached and it is time to switch. 	 */
 name|unsigned
 name|int
 name|granted
@@ -121,6 +197,9 @@ decl_stmt|;
 name|isc_rwlocktype_t
 name|original
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* ISC_PLATFORM_HAVEXADD&& ISC_PLATFORM_HAVECMPXCHG */
 block|}
 struct|;
 end_struct

@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 2001-2003  Internet Software Consortium.  * Portions Copyright (C) 2001  Nominum, Inc.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NOMINUM DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 2001-2003  Internet Software Consortium.  * Portions Copyright (C) 2001  Nominum, Inc.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NOMINUM DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: cc.c,v 1.4.2.3.2.5 2004/08/28 06:25:23 marka Exp $ */
+comment|/* $Id: cc.c,v 1.10.18.5 2006/12/07 23:57:58 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -145,10 +149,10 @@ literal|0x74
 block|,
 literal|0x68
 block|,
-comment|/* len + _auth */
+comment|/*%< len + _auth */
 name|ISCCC_CCMSGTYPE_TABLE
 block|,
-comment|/* message type */
+comment|/*%< message type */
 literal|0x00
 block|,
 literal|0x00
@@ -157,7 +161,7 @@ literal|0x00
 block|,
 literal|0x20
 block|,
-comment|/* length == 32 */
+comment|/*%< length == 32 */
 literal|0x04
 block|,
 literal|0x68
@@ -168,10 +172,10 @@ literal|0x64
 block|,
 literal|0x35
 block|,
-comment|/* len + hmd5 */
+comment|/*%< len + hmd5 */
 name|ISCCC_CCMSGTYPE_BINARYDATA
 block|,
-comment|/* message type */
+comment|/*%< message type */
 literal|0x00
 block|,
 literal|0x00
@@ -180,7 +184,7 @@ literal|0x00
 block|,
 literal|0x16
 block|,
-comment|/* length == 22 */
+comment|/*%< length == 22 */
 comment|/* 	 * The base64 encoding of one of our HMAC-MD5 signatures is 	 * 22 bytes. 	 */
 literal|0x00
 block|,
@@ -237,7 +241,7 @@ value|21
 end_define
 
 begin_comment
-comment|/* 6 + 1 + 4 + 5 + 1 + 4 */
+comment|/*%< 21 = 6 + 1 + 4 + 5 + 1 + 4 */
 end_comment
 
 begin_define
@@ -2207,18 +2211,9 @@ operator|=
 name|isccc_alist_create
 argument_list|()
 expr_stmt|;
-name|_data
-operator|=
-name|isccc_alist_create
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|_ctrl
-operator|==
-name|NULL
-operator|||
-name|_data
 operator|==
 name|NULL
 condition|)
@@ -2237,7 +2232,34 @@ name|_ctrl
 argument_list|)
 operator|==
 name|NULL
-operator|||
+condition|)
+block|{
+name|isccc_sexpr_free
+argument_list|(
+operator|&
+name|_ctrl
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+name|_data
+operator|=
+name|isccc_alist_create
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|_data
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|bad
+goto|;
+if|if
+condition|(
 name|isccc_alist_define
 argument_list|(
 name|alist
@@ -2249,9 +2271,17 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|isccc_sexpr_free
+argument_list|(
+operator|&
+name|_data
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 if|if
 condition|(
 name|isccc_cc_defineuint32

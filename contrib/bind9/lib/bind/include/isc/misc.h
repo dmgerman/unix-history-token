@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: misc.h,v 1.2.2.1.4.1 2004/03/09 08:33:31 marka Exp $  */
+comment|/*  * $Id: misc.h,v 1.4.18.1 2005/04/27 05:00:52 sra Exp $  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,10 @@ define|#
 directive|define
 name|_ISC_MISC_H
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -143,6 +147,10 @@ end_endif
 
 begin_comment
 comment|/*_ISC_MISC_H*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

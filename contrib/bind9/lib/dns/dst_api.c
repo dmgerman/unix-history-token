@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: dst_api.c,v 1.1.4.3 2006/01/04 23:50:20 marka Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: dst_api.c,v 1.1.6.7 2006/01/27 23:57:44 marka Exp $  */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -41,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<isc/fsaccess.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/hmacsha.h>
 end_include
 
 begin_include
@@ -247,31 +257,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|isc_result_t
-name|read_public_key
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|filename
-parameter_list|,
-name|int
-name|type
-parameter_list|,
-name|isc_mem_t
-modifier|*
-name|mctx
-parameter_list|,
-name|dst_key_t
-modifier|*
-modifier|*
-name|keyp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|isc_result_t
 name|write_public_key
 parameter_list|(
 specifier|const
@@ -431,21 +416,89 @@ parameter_list|(
 name|alg
 parameter_list|)
 define|\
-value|do {					\ 		isc_result_t _r;		\ 		_r = algorithm_status(alg);	\ 		if (_r != ISC_R_SUCCESS)	\ 			return (_r);		\ 	} while (0);				\  isc_result_t
+value|do {					\ 		isc_result_t _r;		\ 		_r = algorithm_status(alg);	\ 		if (_r != ISC_R_SUCCESS)	\ 			return (_r);		\ 	} while (0);				\  static void *
 end_define
 
 begin_macro
-name|dst_lib_init
+name|default_memalloc
 argument_list|(
-argument|isc_mem_t *mctx
+argument|void *arg
 argument_list|,
-argument|isc_entropy_t *ectx
-argument_list|,
-argument|unsigned int eflags
+argument|size_t size
 argument_list|)
 end_macro
 
 begin_block
+block|{
+name|UNUSED
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|size
+operator|==
+literal|0U
+condition|)
+name|size
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+name|malloc
+argument_list|(
+name|size
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_function
+specifier|static
+name|void
+name|default_memfree
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|void
+modifier|*
+name|ptr
+parameter_list|)
+block|{
+name|UNUSED
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ptr
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|isc_result_t
+name|dst_lib_init
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|isc_entropy_t
+modifier|*
+name|ectx
+parameter_list|,
+name|unsigned
+name|int
+name|eflags
+parameter_list|)
 block|{
 name|isc_result_t
 name|result
@@ -480,17 +533,25 @@ argument_list|(
 name|mctx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * When using --with-openssl, there seems to be no good way of not 	 * leaking memory due to the openssl error handling mechanism. 	 * Avoid assertions by using a local memory context and not checking 	 * for leaks on exit. 	 */
+comment|/* 	 * When using --with-openssl, there seems to be no good way of not 	 * leaking memory due to the openssl error handling mechanism. 	 * Avoid assertions by using a local memory context and not checking 	 * for leaks on exit.  Note: as there are leaks we cannot use 	 * ISC_MEMFLAG_INTERNAL as it will free up memory still being used 	 * by libcrypto. 	 */
 name|result
 operator|=
-name|isc_mem_create
+name|isc_mem_createx2
 argument_list|(
 literal|0
 argument_list|,
 literal|0
 argument_list|,
+name|default_memalloc
+argument_list|,
+name|default_memfree
+argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|dst__memory_pool
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -558,6 +619,66 @@ operator|&
 name|dst_t_func
 index|[
 name|DST_ALG_HMACMD5
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RETERR
+argument_list|(
+name|dst__hmacsha1_init
+argument_list|(
+operator|&
+name|dst_t_func
+index|[
+name|DST_ALG_HMACSHA1
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RETERR
+argument_list|(
+name|dst__hmacsha224_init
+argument_list|(
+operator|&
+name|dst_t_func
+index|[
+name|DST_ALG_HMACSHA224
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RETERR
+argument_list|(
+name|dst__hmacsha256_init
+argument_list|(
+operator|&
+name|dst_t_func
+index|[
+name|DST_ALG_HMACSHA256
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RETERR
+argument_list|(
+name|dst__hmacsha384_init
+argument_list|(
+operator|&
+name|dst_t_func
+index|[
+name|DST_ALG_HMACSHA384
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RETERR
+argument_list|(
+name|dst__hmacsha512_init
+argument_list|(
+operator|&
+name|dst_t_func
+index|[
+name|DST_ALG_HMACSHA512
 index|]
 argument_list|)
 argument_list|)
@@ -664,7 +785,7 @@ name|result
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -1980,11 +2101,60 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-name|result
+name|newfilenamelen
 operator|=
-name|read_public_key
+name|strlen
 argument_list|(
 name|filename
+argument_list|)
+operator|+
+literal|5
+expr_stmt|;
+name|newfilename
+operator|=
+name|isc_mem_get
+argument_list|(
+name|mctx
+argument_list|,
+name|newfilenamelen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|newfilename
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ISC_R_NOMEMORY
+operator|)
+return|;
+name|result
+operator|=
+name|addsuffix
+argument_list|(
+name|newfilename
+argument_list|,
+name|newfilenamelen
+argument_list|,
+name|filename
+argument_list|,
+literal|".key"
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|dst_key_read_public
+argument_list|(
+name|newfilename
 argument_list|,
 name|type
 argument_list|,
@@ -1993,6 +2163,19 @@ argument_list|,
 operator|&
 name|pubkey
 argument_list|)
+expr_stmt|;
+name|isc_mem_put
+argument_list|(
+name|mctx
+argument_list|,
+name|newfilename
+argument_list|,
+name|newfilenamelen
+argument_list|)
+expr_stmt|;
+name|newfilename
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -2501,7 +2684,7 @@ name|opaque
 operator|==
 name|NULL
 condition|)
-comment|/* NULL KEY */
+comment|/*%< NULL KEY */
 return|return
 operator|(
 name|ISC_R_SUCCESS
@@ -3268,7 +3451,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* NULL KEY */
+comment|/*%< NULL KEY */
 name|key
 operator|->
 name|key_flags
@@ -3940,6 +4123,51 @@ literal|16
 expr_stmt|;
 break|break;
 case|case
+name|DST_ALG_HMACSHA1
+case|:
+operator|*
+name|n
+operator|=
+name|ISC_SHA1_DIGESTLENGTH
+expr_stmt|;
+break|break;
+case|case
+name|DST_ALG_HMACSHA224
+case|:
+operator|*
+name|n
+operator|=
+name|ISC_SHA224_DIGESTLENGTH
+expr_stmt|;
+break|break;
+case|case
+name|DST_ALG_HMACSHA256
+case|:
+operator|*
+name|n
+operator|=
+name|ISC_SHA256_DIGESTLENGTH
+expr_stmt|;
+break|break;
+case|case
+name|DST_ALG_HMACSHA384
+case|:
+operator|*
+name|n
+operator|=
+name|ISC_SHA384_DIGESTLENGTH
+expr_stmt|;
+break|break;
+case|case
+name|DST_ALG_HMACSHA512
+case|:
+operator|*
+name|n
+operator|=
+name|ISC_SHA512_DIGESTLENGTH
+expr_stmt|;
+break|break;
+case|case
 name|DST_ALG_GSSAPI
 case|:
 operator|*
@@ -3947,7 +4175,7 @@ name|n
 operator|=
 literal|128
 expr_stmt|;
-comment|/* XXX */
+comment|/*%< XXX */
 break|break;
 case|case
 name|DST_ALG_DH
@@ -4044,7 +4272,7 @@ comment|/***  *** Static methods  ***/
 end_comment
 
 begin_comment
-comment|/*  * Allocates a key structure and fills in some of the fields.  */
+comment|/*%  * Allocates a key structure and fills in some of the fields.  */
 end_comment
 
 begin_function
@@ -4295,13 +4523,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reads a public key from disk  */
+comment|/*%  * Reads a public key from disk  */
 end_comment
 
 begin_function
-specifier|static
 name|isc_result_t
-name|read_public_key
+name|dst_key_read_public
 parameter_list|(
 specifier|const
 name|char
@@ -4356,14 +4583,6 @@ name|opt
 init|=
 name|ISC_LEXOPT_DNSMULTILINE
 decl_stmt|;
-name|char
-modifier|*
-name|newfilename
-decl_stmt|;
-name|unsigned
-name|int
-name|newfilenamelen
-decl_stmt|;
 name|dns_rdataclass_t
 name|rdclass
 init|=
@@ -4381,56 +4600,7 @@ decl_stmt|;
 name|dns_rdatatype_t
 name|keytype
 decl_stmt|;
-name|newfilenamelen
-operator|=
-name|strlen
-argument_list|(
-name|filename
-argument_list|)
-operator|+
-literal|5
-expr_stmt|;
-name|newfilename
-operator|=
-name|isc_mem_get
-argument_list|(
-name|mctx
-argument_list|,
-name|newfilenamelen
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|newfilename
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ISC_R_NOMEMORY
-operator|)
-return|;
-name|ret
-operator|=
-name|addsuffix
-argument_list|(
-name|newfilename
-argument_list|,
-name|newfilenamelen
-argument_list|,
-name|filename
-argument_list|,
-literal|".key"
-argument_list|)
-expr_stmt|;
-name|INSIST
-argument_list|(
-name|ret
-operator|==
-name|ISC_R_SUCCESS
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Open the file and read its formatted contents 	 * File format: 	 *    domain.name [ttl] [class] KEY<flags><protocol><algorithm><key> 	 */
+comment|/* 	 * Open the file and read its formatted contents 	 * File format: 	 *    domain.name [ttl] [class] [KEY|DNSKEY]<flags><protocol><algorithm><key> 	 */
 comment|/* 1500 should be large enough for any key */
 name|ret
 operator|=
@@ -4506,7 +4676,7 @@ name|isc_lex_openfile
 argument_list|(
 name|lex
 argument_list|,
-name|newfilename
+name|filename
 argument_list|)
 expr_stmt|;
 if|if
@@ -4757,7 +4927,7 @@ name|keytype
 operator|=
 name|dns_rdatatype_key
 expr_stmt|;
-comment|/* SIG(0), TKEY */
+comment|/*%< SIG(0), TKEY */
 else|else
 name|BADTOKEN
 argument_list|()
@@ -4891,15 +5061,6 @@ operator|&
 name|lex
 argument_list|)
 expr_stmt|;
-name|isc_mem_put
-argument_list|(
-name|mctx
-argument_list|,
-name|newfilename
-argument_list|,
-name|newfilenamelen
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -4981,7 +5142,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Writes a public key to disk in DNS format.  */
+comment|/*%  * Writes a public key to disk in DNS format.  */
 end_comment
 
 begin_function

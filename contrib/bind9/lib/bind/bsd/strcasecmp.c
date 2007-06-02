@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strcasecmp.c,v 1.1 2001/03/29 06:30:35 marka Exp $"
+literal|"$Id: strcasecmp.c,v 1.1.352.1 2005/04/27 05:00:45 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,7 +103,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * This array is designed for mapping upper and lower case letter  * together for a case independent comparison.  The mappings are  * based upon ascii character sequences.  */
+comment|/*%  * This array is designed for mapping upper and lower case letter  * together for a case independent comparison.  The mappings are  * based upon ascii character sequences.  */
 end_comment
 
 begin_decl_stmt
@@ -837,6 +837,10 @@ end_endif
 
 begin_comment
 comment|/*NEED_STRCASECMP*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

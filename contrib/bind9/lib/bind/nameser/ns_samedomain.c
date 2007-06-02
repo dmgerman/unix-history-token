@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_samedomain.c,v 1.1.2.2.4.2 2004/03/16 12:34:17 marka Exp $"
+literal|"$Id: ns_samedomain.c,v 1.5.18.1 2005/04/27 05:01:09 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,7 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/*  * int  * ns_samedomain(a, b)  *	Check whether a name belongs to a domain.  * Inputs:  *	a - the domain whose ancestory is being verified  *	b - the potential ancestor we're checking against  * Return:  *	boolean - is a at or below b?  * Notes:  *	Trailing dots are first removed from name and domain.  *	Always compare complete subdomains, not only whether the  *	domain name is the trailing string of the given name.  *  *	"host.foobar.top" lies in "foobar.top" and in "top" and in ""  *	but NOT in "bar.top"  */
+comment|/*%  *	Check whether a name belongs to a domain.  *  * Inputs:  *\li	a - the domain whose ancestory is being verified  *\li	b - the potential ancestor we're checking against  *  * Return:  *\li	boolean - is a at or below b?  *  * Notes:  *\li	Trailing dots are first removed from name and domain.  *	Always compare complete subdomains, not only whether the  *	domain name is the trailing string of the given name.  *  *\li	"host.foobar.top" lies in "foobar.top" and in "top" and in ""  *	but NOT in "bar.top"  */
 end_comment
 
 begin_function
@@ -416,7 +416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int  * ns_subdomain(a, b)  *	is "a" a subdomain of "b"?  */
+comment|/*%  *	is "a" a subdomain of "b"?  */
 end_comment
 
 begin_function
@@ -457,7 +457,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int  * ns_makecanon(src, dst, dstsize)  *	make a canonical copy of domain name "src"  * notes:  *	foo -> foo.  *	foo. -> foo.  *	foo.. -> foo.  *	foo\. -> foo\..  *	foo\\. -> foo\\.  */
+comment|/*%  *	make a canonical copy of domain name "src"  *  * notes:  * \code  *	foo -> foo.  *	foo. -> foo.  *	foo.. -> foo.  *	foo\. -> foo\..  *	foo\\. -> foo\\.  * \endcode  */
 end_comment
 
 begin_function
@@ -495,7 +495,7 @@ operator|>
 name|dstsize
 condition|)
 block|{
-comment|/* Note: sizeof == 2 */
+comment|/*%< Note: sizeof == 2 */
 name|errno
 operator|=
 name|EMSGSIZE
@@ -529,7 +529,7 @@ index|]
 operator|==
 literal|'.'
 condition|)
-comment|/* Ends in "." */
+comment|/*%< Ends in "." */
 if|if
 condition|(
 name|n
@@ -545,7 +545,7 @@ index|]
 operator|==
 literal|'\\'
 operator|&&
-comment|/* Ends in "\." */
+comment|/*%< Ends in "\." */
 operator|(
 name|n
 operator|<
@@ -561,7 +561,7 @@ operator|!=
 literal|'\\'
 operator|)
 condition|)
-comment|/* But not "\\." */
+comment|/*%< But not "\\." */
 break|break;
 else|else
 name|dst
@@ -596,7 +596,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int  * ns_samename(a, b)  *	determine whether domain name "a" is the same as domain name "b"  * return:  *	-1 on error  *	0 if names differ  *	1 if names are the same  */
+comment|/*%  *	determine whether domain name "a" is the same as domain name "b"  *  * return:  *\li	-1 on error  *\li	0 if names differ  *\li	1 if names are the same  */
 end_comment
 
 begin_function
@@ -681,6 +681,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ctl_clnt.c,v 1.4.2.1.4.3 2004/03/17 01:13:35 marka Exp $"
+literal|"$Id: ctl_clnt.c,v 1.7.18.1 2005/04/27 05:01:05 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -582,7 +582,7 @@ comment|/* Public. */
 end_comment
 
 begin_comment
-comment|/*  * void  * ctl_client()  *	create, condition, and connect to a listener on the control port.  */
+comment|/*%  * void  * ctl_client()  *	create, condition, and connect to a listener on the control port.  */
 end_comment
 
 begin_function
@@ -1078,7 +1078,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void  * ctl_endclient(ctx)  *	close a client and release all of its resources.  */
+comment|/*%  * void  * ctl_endclient(ctx)  *	close a client and release all of its resources.  */
 end_comment
 
 begin_function
@@ -1119,7 +1119,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int  * ctl_command(ctx, cmd, len, donefunc, uap)  *	Queue a transaction, which will begin with sending cmd  *	and complete by calling donefunc with the answer.  */
+comment|/*%  * int  * ctl_command(ctx, cmd, len, donefunc, uap)  *	Queue a transaction, which will begin with sending cmd  *	and complete by calling donefunc with the answer.  */
 end_comment
 
 begin_function
@@ -3559,6 +3559,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

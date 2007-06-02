@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: quota.h,v 1.8.12.6 2005/08/11 15:00:08 marka Exp $ */
+comment|/* $Id: quota.h,v 1.10.18.4 2005/08/11 15:01:54 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * Quota  *  * The isc_quota_t object is a simple helper object for implementing  * quotas on things like the number of simultaneous connections to  * a server.  It keeps track of the amount of quota in use, and  * encapsulates the locking necessary to allow multiple tasks to  * share a quota.  */
+comment|/*! \file isc/quota.h  *  * \brief The isc_quota_t object is a simple helper object for implementing  * quotas on things like the number of simultaneous connections to  * a server.  It keeps track of the amount of quota in use, and  * encapsulates the locking necessary to allow multiple tasks to  * share a quota.  */
 end_comment
 
 begin_comment
@@ -58,6 +58,10 @@ begin_macro
 name|ISC_LANG_BEGINDECLS
 end_macro
 
+begin_comment
+comment|/*% isc_quota structure */
+end_comment
+
 begin_struct
 struct|struct
 name|isc_quota
@@ -65,7 +69,7 @@ block|{
 name|isc_mutex_t
 name|lock
 decl_stmt|;
-comment|/* Locked by lock. */
+comment|/*%< Locked by lock. */
 name|int
 name|max
 decl_stmt|;
@@ -94,7 +98,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Initialize a quota object.  *  * Returns:  * 	ISC_R_SUCCESS  *	Other error	Lock creation failed.  */
+comment|/*%<  * Initialize a quota object.  *  * Returns:  * 	ISC_R_SUCCESS  *	Other error	Lock creation failed.  */
 end_comment
 
 begin_function_decl
@@ -109,7 +113,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy a quota object.  */
+comment|/*%<  * Destroy a quota object.  */
 end_comment
 
 begin_function_decl
@@ -127,7 +131,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Turn on/off soft quotas.  */
+comment|/*%<  * Set a soft quota.  */
 end_comment
 
 begin_function_decl
@@ -145,7 +149,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Re-set a maximum quota.  */
+comment|/*%<  * Re-set a maximum quota.  */
 end_comment
 
 begin_function_decl
@@ -160,7 +164,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Attempt to reserve one unit of 'quota'.  *  * Returns:  * 	ISC_R_SUCCESS	Success  *	ISC_R_SOFTQUOTA	Success soft quota reached  *	ISC_R_QUOTA	Quota is full  */
+comment|/*%<  * Attempt to reserve one unit of 'quota'.  *  * Returns:  * \li 	#ISC_R_SUCCESS		Success  * \li	#ISC_R_SOFTQUOTA	Success soft quota reached  * \li	#ISC_R_QUOTA		Quota is full  */
 end_comment
 
 begin_function_decl
@@ -175,7 +179,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Release one unit of quota.  */
+comment|/*%<  * Release one unit of quota.  */
 end_comment
 
 begin_function_decl
@@ -195,7 +199,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Like isc_quota_reserve, and also attaches '*p' to the  * quota if successful (ISC_R_SUCCESS or ISC_R_SOFTQUOTA).  */
+comment|/*%<  * Like isc_quota_reserve, and also attaches '*p' to the  * quota if successful (ISC_R_SUCCESS or ISC_R_SOFTQUOTA).  */
 end_comment
 
 begin_function_decl
@@ -211,7 +215,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Like isc_quota_release, and also detaches '*p' from the  * quota.  */
+comment|/*%<  * Like isc_quota_release, and also detaches '*p' from the  * quota.  */
 end_comment
 
 begin_macro

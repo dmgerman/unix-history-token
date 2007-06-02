@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: setenv.c,v 1.1 2001/03/29 06:30:35 marka Exp $"
+literal|"$Id: setenv.c,v 1.1.352.1 2005/04/27 05:00:44 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,7 +128,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * setenv --  *	Set the value of the environmental variable "name" to be  *	"value".  If rewrite is set, replace any current value.  */
+comment|/*%  * setenv --  *	Set the value of the environmental variable "name" to be  *	"value".  If rewrite is set, replace any current value.  */
 end_comment
 
 begin_macro
@@ -154,7 +154,7 @@ specifier|static
 name|int
 name|alloced
 decl_stmt|;
-comment|/* if allocated space before */
+comment|/*%< if allocated space before */
 name|char
 modifier|*
 name|c
@@ -171,7 +171,7 @@ name|value
 operator|==
 literal|'='
 condition|)
-comment|/* no `=' in value */
+comment|/*%< no `=' in value */
 operator|++
 name|value
 expr_stmt|;
@@ -197,7 +197,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* find if already exists */
+comment|/*%< find if already exists */
 if|if
 condition|(
 operator|!
@@ -218,7 +218,7 @@ operator|>=
 name|l_value
 condition|)
 block|{
-comment|/* old larger; copy over */
+comment|/*%< old larger; copy over */
 while|while
 condition|(
 operator|*
@@ -239,7 +239,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* create new slot */
+comment|/*%< create new slot */
 name|int
 name|cnt
 decl_stmt|;
@@ -273,7 +273,7 @@ condition|(
 name|alloced
 condition|)
 block|{
-comment|/* just increase size */
+comment|/*%< just increase size */
 name|environ
 operator|=
 operator|(
@@ -321,12 +321,12 @@ return|;
 block|}
 else|else
 block|{
-comment|/* get new space */
+comment|/*%< get new space */
 name|alloced
 operator|=
 literal|1
 expr_stmt|;
-comment|/* copy old entries into it */
+comment|/*%< copy old entries into it */
 name|p
 operator|=
 name|malloc
@@ -416,7 +416,7 @@ operator|++
 name|c
 control|)
 empty_stmt|;
-comment|/* no `=' in name */
+comment|/*%< no `=' in name */
 if|if
 condition|(
 operator|!
@@ -426,7 +426,7 @@ index|[
 name|offset
 index|]
 operator|=
-comment|/* name + `=' + value */
+comment|/*%< name + `=' + value */
 name|malloc
 argument_list|(
 call|(
@@ -509,7 +509,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * unsetenv(name) --  *	Delete environmental variable "name".  */
+comment|/*%  * unsetenv(name) --  *	Delete environmental variable "name".  */
 end_comment
 
 begin_function
@@ -540,7 +540,7 @@ operator|&
 name|offset
 argument_list|)
 condition|)
-comment|/* if set multiple times */
+comment|/*%< if set multiple times */
 for|for
 control|(
 name|p
@@ -575,7 +575,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * findenv --  *	Returns pointer to value associated with name, if any, else NULL.  *	Sets offset to be the offset of the name/value combination in the  *	environmental array, for use by setenv(3) and unsetenv(3).  *	Explicitly removes '=' in argument name.  *  *	This routine *should* be a static; don't use it.  */
+comment|/*%  * findenv --  *	Returns pointer to value associated with name, if any, else NULL.  *	Sets offset to be the offset of the name/value combination in the  *	environmental array, for use by setenv(3) and unsetenv(3).  *	Explicitly removes '=' in argument name.  *  *	This routine *should* be a static; don't use it.  */
 end_comment
 
 begin_function
@@ -717,6 +717,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

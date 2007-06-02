@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: keyvalues.h,v 1.11.12.3 2004/03/06 08:13:56 marka Exp $ */
+comment|/* $Id: keyvalues.h,v 1.15.18.2 2005/04/29 00:16:14 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -21,6 +21,10 @@ value|1
 end_define
 
 begin_comment
+comment|/*! \file */
+end_comment
+
+begin_comment
 comment|/*  * Flags field of the KEY RR rdata  */
 end_comment
 
@@ -32,7 +36,7 @@ value|0xC000
 end_define
 
 begin_comment
-comment|/* Mask for "type" bits */
+comment|/*%< Mask for "type" bits */
 end_comment
 
 begin_define
@@ -43,7 +47,7 @@ value|0x0000
 end_define
 
 begin_comment
-comment|/* Key usable for both */
+comment|/*%< Key usable for both */
 end_comment
 
 begin_define
@@ -54,7 +58,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* Key usable for confidentiality */
+comment|/*%< Key usable for confidentiality */
 end_comment
 
 begin_define
@@ -65,7 +69,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* Key usable for authentication */
+comment|/*%< Key usable for authentication */
 end_comment
 
 begin_define
@@ -76,7 +80,7 @@ value|0xC000
 end_define
 
 begin_comment
-comment|/* No key usable for either; no key */
+comment|/*%< No key usable for either; no key */
 end_comment
 
 begin_define
@@ -101,7 +105,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* reserved - must be zero */
+comment|/*%< reserved - must be zero */
 end_comment
 
 begin_define
@@ -112,7 +116,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* key has extended flags */
+comment|/*%< key has extended flags */
 end_comment
 
 begin_define
@@ -123,7 +127,7 @@ value|0x0800
 end_define
 
 begin_comment
-comment|/* reserved - must be zero */
+comment|/*%< reserved - must be zero */
 end_comment
 
 begin_define
@@ -134,7 +138,7 @@ value|0x0400
 end_define
 
 begin_comment
-comment|/* reserved - must be zero */
+comment|/*%< reserved - must be zero */
 end_comment
 
 begin_define
@@ -145,7 +149,7 @@ value|0x0300
 end_define
 
 begin_comment
-comment|/* these bits determine the type */
+comment|/*%< these bits determine the type */
 end_comment
 
 begin_define
@@ -156,7 +160,7 @@ value|0x0000
 end_define
 
 begin_comment
-comment|/* key is assoc. with user */
+comment|/*%< key is assoc. with user */
 end_comment
 
 begin_define
@@ -167,7 +171,7 @@ value|0x0200
 end_define
 
 begin_comment
-comment|/* key is assoc. with entity eg host */
+comment|/*%< key is assoc. with entity eg host */
 end_comment
 
 begin_define
@@ -178,7 +182,7 @@ value|0x0100
 end_define
 
 begin_comment
-comment|/* key is zone key */
+comment|/*%< key is zone key */
 end_comment
 
 begin_define
@@ -189,7 +193,7 @@ value|0x0300
 end_define
 
 begin_comment
-comment|/* reserved meaning */
+comment|/*%< reserved meaning */
 end_comment
 
 begin_define
@@ -200,7 +204,7 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* reserved - must be zero */
+comment|/*%< reserved - must be zero */
 end_comment
 
 begin_define
@@ -211,7 +215,7 @@ value|0x0040
 end_define
 
 begin_comment
-comment|/* reserved - must be zero */
+comment|/*%< reserved - must be zero */
 end_comment
 
 begin_define
@@ -222,7 +226,7 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/* reserved - must be zero */
+comment|/*%< reserved - must be zero */
 end_comment
 
 begin_define
@@ -233,7 +237,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* reserved - must be zero */
+comment|/*%< reserved - must be zero */
 end_comment
 
 begin_define
@@ -244,7 +248,7 @@ value|0x000F
 end_define
 
 begin_comment
-comment|/* key can sign RR's of same name */
+comment|/*%< key can sign RR's of same name */
 end_comment
 
 begin_define
@@ -262,7 +266,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* key signing key */
+comment|/*%< key signing key */
 end_comment
 
 begin_define
@@ -273,7 +277,7 @@ value|0xFFFF
 end_define
 
 begin_comment
-comment|/* no bits defined here */
+comment|/*%< no bits defined here */
 end_comment
 
 begin_comment
@@ -288,7 +292,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* RSA with MD5 */
+comment|/*%< RSA with MD5 */
 end_comment
 
 begin_define
@@ -306,7 +310,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Diffie Hellman KEY */
+comment|/*%< Diffie Hellman KEY */
 end_comment
 
 begin_define
@@ -317,7 +321,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* DSA KEY */
+comment|/*%< DSA KEY */
 end_comment
 
 begin_define
@@ -363,7 +367,7 @@ value|254
 end_define
 
 begin_comment
-comment|/* Key begins with OID giving alg */
+comment|/*%< Key begins with OID giving alg */
 end_comment
 
 begin_comment
@@ -424,7 +428,7 @@ value|512
 end_define
 
 begin_comment
-comment|/* Size of a mod or exp in bits */
+comment|/*%< Size of a mod or exp in bits */
 end_comment
 
 begin_define
@@ -446,7 +450,7 @@ value|((DNS_SIG_RSAMAXBITS+7/8)*2+3)
 end_define
 
 begin_comment
-comment|/* Max length of text sig block */
+comment|/*%< Max length of text sig block */
 end_comment
 
 begin_define

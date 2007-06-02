@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: journal.c,v 1.77.2.1.10.13 2005/11/03 23:08:41 marka Exp $ */
+comment|/* $Id: journal.c,v 1.86.18.8 2005/11/03 23:02:23 marka Exp $ */
 end_comment
 
 begin_include
@@ -122,7 +122,11 @@ file|<dns/soa.h>
 end_include
 
 begin_comment
-comment|/*  * When true, accept IXFR difference sequences where the  * SOA serial number does not change (BIND 8 sends such  * sequences).  */
+comment|/*! \file   * \brief Journalling.  *  * A journal file consists of  *  *   \li A fixed-size header of type journal_rawheader_t.  *  *   \li The index.  This is an unordered array of index entries  *     of type journal_rawpos_t giving the locations  *     of some arbitrary subset of the journal's addressable  *     transactions.  The index entries are used as hints to  *     speed up the process of locating a transaction with a given  *     serial number.  Unused index entries have an "offset"  *     field of zero.  The size of the index can vary between  *     journal files, but does not change during the lifetime  *     of a file.  The size can be zero.  *  *   \li The journal data.  This  consists of one or more transactions.  *     Each transaction begins with a transaction header of type  *     journal_rawxhdr_t.  The transaction header is followed by a  *     sequence of RRs, similar in structure to an IXFR difference  *     sequence (RFC1995).  That is, the pre-transaction SOA,  *     zero or more other deleted RRs, the post-transaction SOA,  *     and zero or more other added RRs.  Unlike in IXFR, each RR  *     is prefixed with a 32-bit length.  *  *     The journal data part grows as new transactions are  *     appended to the file.  Only those transactions  *     whose serial number is current-(2^31-1) to current  *     are considered "addressable" and may be pointed  *     to from the header or index.  They may be preceded  *     by old transactions that are no longer addressable,  *     and they may be followed by transactions that were  *     appended to the journal but never committed by updating  *     the "end" position in the header.  The latter will  *     be overwritten when new transactions are added.  */
+end_comment
+
+begin_comment
+comment|/*%  * When true, accept IXFR difference sequences where the  * SOA serial number does not change (BIND 8 sends such  * sequences).  */
 end_comment
 
 begin_decl_stmt
@@ -166,7 +170,7 @@ value|JOURNAL_COMMON_LOGARGS, ISC_LOG_DEBUG(n)
 end_define
 
 begin_comment
-comment|/*  * It would be non-sensical (or at least obtuse) to use FAIL() with an  * ISC_R_SUCCESS code, but the test is there to keep the Solaris compiler  * from complaining about "end-of-loop code not reached".  */
+comment|/*%  * It would be non-sensical (or at least obtuse) to use FAIL() with an  * ISC_R_SUCCESS code, but the test is there to keep the Solaris compiler  * from complaining about "end-of-loop code not reached".  */
 end_comment
 
 begin_define
@@ -543,19 +547,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************/
+comment|/* Journalling */
 end_comment
 
 begin_comment
-comment|/*  * Journalling.  */
-end_comment
-
-begin_comment
-comment|/*  * A journal file consists of  *  *   - A fixed-size header of type journal_rawheader_t.  *  *   - The index.  This is an unordered array of index entries  *     of type journal_rawpos_t giving the locations  *     of some arbitrary subset of the journal's addressable  *     transactions.  The index entries are used as hints to  *     speed up the process of locating a transaction with a given  *     serial number.  Unused index entries have an "offset"  *     field of zero.  The size of the index can vary between  *     journal files, but does not change during the lifetime  *     of a file.  The size can be zero.  *  *   - The journal data.  This  consists of one or more transactions.  *     Each transaction begins with a transaction header of type  *     journal_rawxhdr_t.  The transaction header is followed by a  *     sequence of RRs, similar in structure to an IXFR difference  *     sequence (RFC1995).  That is, the pre-transaction SOA,  *     zero or more other deleted RRs, the post-transaction SOA,  *     and zero or more other added RRs.  Unlike in IXFR, each RR  *     is prefixed with a 32-bit length.  *  *     The journal data part grows as new transactions are  *     appended to the file.  Only those transactions  *     whose serial number is current-(2^31-1) to current  *     are considered "addressable" and may be pointed  *     to from the header or index.  They may be preceded  *     by old transactions that are no longer addressable,  *     and they may be followed by transactions that were  *     appended to the journal but never committed by updating  *     the "end" position in the header.  The latter will  *     be overwritten when new transactions are added.  */
-end_comment
-
-begin_comment
-comment|/*  * On-disk representation of a "pointer" to a journal entry.  * These are used in the journal header to locate the beginning  * and end of the journal, and in the journal index to locate  * other transactions.  */
+comment|/*%  * On-disk representation of a "pointer" to a journal entry.  * These are used in the journal header to locate the beginning  * and end of the journal, and in the journal index to locate  * other transactions.  */
 end_comment
 
 begin_typedef
@@ -569,7 +565,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* SOA serial before update. */
+comment|/*%< SOA serial before update. */
 comment|/* 	 * XXXRTH  Should offset be 8 bytes? 	 * XXXDCL ... probably, since isc_offset_t is 8 bytes on many OSs. 	 * XXXAG  ... but we will not be able to seek>2G anyway on many 	 *            platforms as long as we are using fseek() rather 	 *            than lseek(). 	 */
 name|unsigned
 name|char
@@ -578,18 +574,14 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* Offset from beginning of file. */
+comment|/*%< Offset from beginning of file. */
 block|}
 name|journal_rawpos_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The on-disk representation of the journal header.  * All numbers are stored in big-endian order.  */
-end_comment
-
-begin_comment
-comment|/*  * The header is of a fixed size, with some spare room for future  * extensions.  */
+comment|/*%  * The header is of a fixed size, with some spare room for future  * extensions.  */
 end_comment
 
 begin_define
@@ -603,13 +595,17 @@ begin_comment
 comment|/* Bytes. */
 end_comment
 
+begin_comment
+comment|/*%  * The on-disk representation of the journal header.  * All numbers are stored in big-endian order.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 union|union
 block|{
 struct|struct
 block|{
-comment|/* File format version ID. */
+comment|/*% File format version ID. */
 name|unsigned
 name|char
 name|format
@@ -617,15 +613,15 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* Position of the first addressable transaction */
+comment|/*% Position of the first addressable transaction */
 name|journal_rawpos_t
 name|begin
 decl_stmt|;
-comment|/* Position of the next (yet nonexistent) transaction. */
+comment|/*% Position of the next (yet nonexistent) transaction. */
 name|journal_rawpos_t
 name|end
 decl_stmt|;
-comment|/* Number of index entries following the header. */
+comment|/*% Number of index entries following the header. */
 name|unsigned
 name|char
 name|index_size
@@ -650,7 +646,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The on-disk representation of the transaction header.  * There is one of these at the beginning of each transaction.  */
+comment|/*%  * The on-disk representation of the transaction header.  * There is one of these at the beginning of each transaction.  */
 end_comment
 
 begin_typedef
@@ -664,7 +660,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* In bytes, excluding header. */
+comment|/*%< In bytes, excluding header. */
 name|unsigned
 name|char
 name|serial0
@@ -672,7 +668,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* SOA serial before update. */
+comment|/*%< SOA serial before update. */
 name|unsigned
 name|char
 name|serial1
@@ -680,14 +676,14 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* SOA serial after update. */
+comment|/*%< SOA serial after update. */
 block|}
 name|journal_rawxhdr_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The on-disk representation of the RR header.  * There is one of these at the beginning of each RR.  */
+comment|/*%  * The on-disk representation of the RR header.  * There is one of these at the beginning of each RR.  */
 end_comment
 
 begin_typedef
@@ -701,14 +697,14 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* In bytes, excluding header. */
+comment|/*%< In bytes, excluding header. */
 block|}
 name|journal_rawrrhdr_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The in-core representation of the journal header.  */
+comment|/*%  * The in-core representation of the journal header.  */
 end_comment
 
 begin_typedef
@@ -772,7 +768,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The in-core representation of the transaction header.  */
+comment|/*%  * The in-core representation of the transaction header.  */
 end_comment
 
 begin_typedef
@@ -794,7 +790,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The in-core representation of the RR header.  */
+comment|/*%  * The in-core representation of the RR header.  */
 end_comment
 
 begin_typedef
@@ -810,7 +806,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Initial contents to store in the header of a newly created  * journal file.  *  * The header starts with the magic string ";BIND LOG V9\n"  * to identify the file as a BIND 9 journal file.  An ASCII  * identification string is used rather than a binary magic  * number to be consistent with BIND 8 (BIND 8 journal files  * are ASCII text files).  */
+comment|/*%  * Initial contents to store in the header of a newly created  * journal file.  *  * The header starts with the magic string ";BIND LOG V9\n"  * to identify the file as a BIND 9 journal file.  An ASCII  * identification string is used rather than a binary magic  * number to be consistent with BIND 8 (BIND 8 journal files  * are ASCII text files).  */
 end_comment
 
 begin_decl_stmt
@@ -872,12 +868,12 @@ name|unsigned
 name|int
 name|magic
 decl_stmt|;
-comment|/* JOUR */
+comment|/*%< JOUR */
 name|isc_mem_t
 modifier|*
 name|mctx
 decl_stmt|;
-comment|/* Memory context */
+comment|/*%< Memory context */
 name|journal_state_t
 name|state
 decl_stmt|;
@@ -886,104 +882,104 @@ name|char
 modifier|*
 name|filename
 decl_stmt|;
-comment|/* Journal file name */
+comment|/*%< Journal file name */
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-comment|/* File handle */
+comment|/*%< File handle */
 name|isc_offset_t
 name|offset
 decl_stmt|;
-comment|/* Current file offset */
+comment|/*%< Current file offset */
 name|journal_header_t
 name|header
 decl_stmt|;
-comment|/* In-core journal header */
+comment|/*%< In-core journal header */
 name|unsigned
 name|char
 modifier|*
 name|rawindex
 decl_stmt|;
-comment|/* In-core buffer for journal 						   index in on-disk format */
+comment|/*%< In-core buffer for journal index in on-disk format */
 name|journal_pos_t
 modifier|*
 name|index
 decl_stmt|;
-comment|/* In-core journal index */
-comment|/* Current transaction state (when writing). */
+comment|/*%< In-core journal index */
+comment|/*% Current transaction state (when writing). */
 struct|struct
 block|{
 name|unsigned
 name|int
 name|n_soa
 decl_stmt|;
-comment|/* Number of SOAs seen */
+comment|/*%< Number of SOAs seen */
 name|journal_pos_t
 name|pos
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Begin/end position */
+comment|/*%< Begin/end position */
 block|}
 name|x
 struct|;
-comment|/* Iteration state (when reading). */
+comment|/*% Iteration state (when reading). */
 struct|struct
 block|{
 comment|/* These define the part of the journal we iterate over. */
 name|journal_pos_t
 name|bpos
 decl_stmt|;
-comment|/* Position before first, */
+comment|/*%< Position before first, */
 name|journal_pos_t
 name|epos
 decl_stmt|;
-comment|/* and after last 						   transaction */
+comment|/*%< and after last transaction */
 comment|/* The rest is iterator state. */
 name|isc_uint32_t
 name|current_serial
 decl_stmt|;
-comment|/* Current SOA serial */
+comment|/*%< Current SOA serial */
 name|isc_buffer_t
 name|source
 decl_stmt|;
-comment|/* Data from disk */
+comment|/*%< Data from disk */
 name|isc_buffer_t
 name|target
 decl_stmt|;
-comment|/* Data from _fromwire check */
+comment|/*%< Data from _fromwire check */
 name|dns_decompress_t
 name|dctx
 decl_stmt|;
-comment|/* Dummy decompression ctx */
+comment|/*%< Dummy decompression ctx */
 name|dns_name_t
 name|name
 decl_stmt|;
-comment|/* Current domain name */
+comment|/*%< Current domain name */
 name|dns_rdata_t
 name|rdata
 decl_stmt|;
-comment|/* Current rdata */
+comment|/*%< Current rdata */
 name|isc_uint32_t
 name|ttl
 decl_stmt|;
-comment|/* Current TTL */
+comment|/*%< Current TTL */
 name|unsigned
 name|int
 name|xsize
 decl_stmt|;
-comment|/* Size of transaction data */
+comment|/*%< Size of transaction data */
 name|unsigned
 name|int
 name|xpos
 decl_stmt|;
-comment|/* Current position in it */
+comment|/*%< Current position in it */
 name|isc_result_t
 name|result
 decl_stmt|;
-comment|/* Result of last call */
+comment|/*%< Result of last call */
 block|}
 name|it
 struct|;

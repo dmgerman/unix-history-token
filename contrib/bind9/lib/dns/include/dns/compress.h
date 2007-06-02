@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: compress.h,v 1.29.2.2.8.3 2006/03/02 00:37:20 marka Exp $ */
+comment|/* $Id: compress.h,v 1.32.18.6 2006/03/02 00:37:21 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -50,7 +50,7 @@ value|0x00
 end_define
 
 begin_comment
-comment|/* no compression */
+comment|/*%< no compression */
 end_comment
 
 begin_define
@@ -61,7 +61,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* "normal" compression. */
+comment|/*%< "normal" compression. */
 end_comment
 
 begin_define
@@ -72,11 +72,22 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* all compression. */
+comment|/*%< all compression. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_COMPRESS_CASESENSITIVE
+value|0x02
+end_define
+
+begin_comment
+comment|/*%< case sensitive compression. */
 end_comment
 
 begin_comment
-comment|/*  *	Direct manipulation of the structures is strongly discouraged.  */
+comment|/*! \file  *	Direct manipulation of the structures is strongly discouraged.  */
 end_comment
 
 begin_define
@@ -133,17 +144,17 @@ name|unsigned
 name|int
 name|magic
 decl_stmt|;
-comment|/* Magic number. */
+comment|/*%< Magic number. */
 name|unsigned
 name|int
 name|allowed
 decl_stmt|;
-comment|/* Allowed methods. */
+comment|/*%< Allowed methods. */
 name|int
 name|edns
 decl_stmt|;
-comment|/* Edns version or -1. */
-comment|/* Global compression table. */
+comment|/*%< Edns version or -1. */
+comment|/*% Global compression table. */
 name|dns_compressnode_t
 modifier|*
 name|table
@@ -151,7 +162,7 @@ index|[
 name|DNS_COMPRESS_TABLESIZE
 index|]
 decl_stmt|;
-comment|/* Preallocated nodes for the table. */
+comment|/*% Preallocated nodes for the table. */
 name|dns_compressnode_t
 name|initialnodes
 index|[
@@ -161,12 +172,12 @@ decl_stmt|;
 name|isc_uint16_t
 name|count
 decl_stmt|;
-comment|/* Number of nodes. */
+comment|/*%< Number of nodes. */
 name|isc_mem_t
 modifier|*
 name|mctx
 decl_stmt|;
-comment|/* Memory context. */
+comment|/*%< Memory context. */
 block|}
 struct|;
 end_struct
@@ -177,12 +188,12 @@ enum|enum
 block|{
 name|DNS_DECOMPRESS_ANY
 block|,
-comment|/* Any compression */
+comment|/*%< Any compression */
 name|DNS_DECOMPRESS_STRICT
 block|,
-comment|/* Allowed compression */
+comment|/*%< Allowed compression */
 name|DNS_DECOMPRESS_NONE
-comment|/* No compression */
+comment|/*%< No compression */
 block|}
 name|dns_decompresstype_t
 typedef|;
@@ -196,20 +207,20 @@ name|unsigned
 name|int
 name|magic
 decl_stmt|;
-comment|/* Magic number. */
+comment|/*%< Magic number. */
 name|unsigned
 name|int
 name|allowed
 decl_stmt|;
-comment|/* Allowed methods. */
+comment|/*%< Allowed methods. */
 name|int
 name|edns
 decl_stmt|;
-comment|/* Edns version or -1. */
+comment|/*%< Edns version or -1. */
 name|dns_decompresstype_t
 name|type
 decl_stmt|;
-comment|/* Strict checking */
+comment|/*%< Strict checking */
 block|}
 struct|;
 end_struct
@@ -233,7 +244,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Inialise the compression context structure pointed to by 'cctx'.  *  *	Requires:  *		'cctx' is a valid dns_compress_t structure.  *		'mctx' is an initialized memory context.  *	Ensures:  *		cctx->global is initialized.  *  *	Returns:  *		ISC_R_SUCCESS  *		failures from dns_rbt_create()  */
+comment|/*%<  *	Inialise the compression context structure pointed to by 'cctx'.  *  *	Requires:  *	\li	'cctx' is a valid dns_compress_t structure.  *	\li	'mctx' is an initialized memory context.  *	Ensures:  *	\li	cctx->global is initialized.  *  *	Returns:  *	\li	#ISC_R_SUCCESS  *	\li	failures from dns_rbt_create()  */
 end_comment
 
 begin_function_decl
@@ -248,7 +259,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Invalidate the compression structure pointed to by cctx.  *  *	Requires:  *		'cctx' to be initialized.  */
+comment|/*%<  *	Invalidate the compression structure pointed to by cctx.  *  *	Requires:  *\li		'cctx' to be initialized.  */
 end_comment
 
 begin_function_decl
@@ -267,7 +278,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Sets allowed compression methods.  *  *	Requires:  *		'cctx' to be initialized.  */
+comment|/*%<  *	Sets allowed compression methods.  *  *	Requires:  *\li		'cctx' to be initialized.  */
 end_comment
 
 begin_function_decl
@@ -283,7 +294,40 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Gets allowed compression methods.  *  *	Requires:  *		'cctx' to be initialized.  *  *	Returns:  *		allowed compression bitmap.  */
+comment|/*%<  *	Gets allowed compression methods.  *  *	Requires:  *\li		'cctx' to be initialized.  *  *	Returns:  *\li		allowed compression bitmap.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_compress_setsensitive
+parameter_list|(
+name|dns_compress_t
+modifier|*
+name|cctx
+parameter_list|,
+name|isc_boolean_t
+name|sensitive
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  *	Preserve the case of compressed domain names.  *  *	Requires:  *		'cctx' to be initialized.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_compress_getsensitive
+parameter_list|(
+name|dns_compress_t
+modifier|*
+name|cctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  *	Return whether case is to be preservered when compressing  *	domain names.  *  *	Requires:  *		'cctx' to be initialized.  */
 end_comment
 
 begin_function_decl
@@ -298,7 +342,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Gets edns value.  *  *	Requires:  *		'cctx' to be initialized.  *  *	Returns:  *		-1 .. 255  */
+comment|/*%<  *	Gets edns value.  *  *	Requires:  *\li		'cctx' to be initialized.  *  *	Returns:  *\li		-1 .. 255  */
 end_comment
 
 begin_function_decl
@@ -326,7 +370,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Finds longest possible match of 'name' in the global compression table.  *  *	Requires:  *		'cctx' to be initialized.  *		'name' to be a absolute name.  *		'prefix' to be initialized.  *		'offset' to point to an isc_uint16_t.  *  *	Ensures:  *		'prefix' and 'offset' are valid if ISC_TRUE is 	returned.  *  *	Returns:  *		ISC_TRUE / ISC_FALSE  */
+comment|/*%<  *	Finds longest possible match of 'name' in the global compression table.  *  *	Requires:  *\li		'cctx' to be initialized.  *\li		'name' to be a absolute name.  *\li		'prefix' to be initialized.  *\li		'offset' to point to an isc_uint16_t.  *  *	Ensures:  *\li		'prefix' and 'offset' are valid if ISC_TRUE is 	returned.  *  *	Returns:  *\li		#ISC_TRUE / #ISC_FALSE  */
 end_comment
 
 begin_function_decl
@@ -354,7 +398,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Add compression pointers for 'name' to the compression table,  *	not replacing existing pointers.  *  *	Requires:  *		'cctx' initialized  *  *		'name' must be initialized and absolute, and must remain  *		valid until the message compression is complete.  *  *		'prefix' must be a prefix returned by  *		dns_compress_findglobal(), or the same as 'name'.  */
+comment|/*%<  *	Add compression pointers for 'name' to the compression table,  *	not replacing existing pointers.  *  *	Requires:  *\li		'cctx' initialized  *  *\li		'name' must be initialized and absolute, and must remain  *		valid until the message compression is complete.  *  *\li		'prefix' must be a prefix returned by  *		dns_compress_findglobal(), or the same as 'name'.  */
 end_comment
 
 begin_function_decl
@@ -372,7 +416,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Remove any compression pointers from global table>= offset.  *  *	Requires:  *		'cctx' is initialized.  */
+comment|/*%<  *	Remove any compression pointers from global table>= offset.  *  *	Requires:  *\li		'cctx' is initialized.  */
 end_comment
 
 begin_function_decl
@@ -393,7 +437,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Initializes 'dctx'.  *	Records 'edns' and 'type' into the structure.  *  *	Requires:  *		'dctx' to be a valid pointer.  */
+comment|/*%<  *	Initializes 'dctx'.  *	Records 'edns' and 'type' into the structure.  *  *	Requires:  *\li		'dctx' to be a valid pointer.  */
 end_comment
 
 begin_function_decl
@@ -408,7 +452,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Invalidates 'dctx'.  *  *	Requires:  *		'dctx' to be initialized  */
+comment|/*%<  *	Invalidates 'dctx'.  *  *	Requires:  *\li		'dctx' to be initialized  */
 end_comment
 
 begin_function_decl
@@ -427,7 +471,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Sets 'dctx->allowed' to 'allowed'.  *  *	Requires:  *		'dctx' to be initialized  */
+comment|/*%<  *	Sets 'dctx->allowed' to 'allowed'.  *  *	Requires:  *\li		'dctx' to be initialized  */
 end_comment
 
 begin_function_decl
@@ -443,7 +487,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Returns 'dctx->allowed'  *  *	Requires:  *		'dctx' to be initialized  */
+comment|/*%<  *	Returns 'dctx->allowed'  *  *	Requires:  *\li		'dctx' to be initialized  */
 end_comment
 
 begin_function_decl
@@ -458,7 +502,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Returns 'dctx->edns'  *  *	Requires:  *		'dctx' to be initialized  */
+comment|/*%<  *	Returns 'dctx->edns'  *  *	Requires:  *\li		'dctx' to be initialized  */
 end_comment
 
 begin_function_decl
@@ -473,7 +517,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Returns 'dctx->type'  *  *	Requires:  *		'dctx' to be initialized  */
+comment|/*%<  *	Returns 'dctx->type'  *  *	Requires:  *\li		'dctx' to be initialized  */
 end_comment
 
 begin_macro

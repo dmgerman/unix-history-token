@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp_ho.c,v 1.1.206.1 2004/03/09 08:33:36 marka Exp $"
+literal|"$Id: irp_ho.c,v 1.2.18.1 2005/04/27 05:01:00 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -413,7 +413,7 @@ comment|/* Public. */
 end_comment
 
 begin_comment
-comment|/*  * struct irs_ho * irs_irp_ho(struct irs_acc *this)  *  * Notes:  *  *	Initializes the irp_ho module.  *  */
+comment|/*%  * struct irs_ho * irs_irp_ho(struct irs_acc *this)  *  * Notes:  *  *	Initializes the irp_ho module.  *  */
 end_comment
 
 begin_function
@@ -594,7 +594,7 @@ comment|/* Methods. */
 end_comment
 
 begin_comment
-comment|/*  * void ho_close(struct irs_ho *this)  *  * Notes:  *  *	Closes down the module.  *  */
+comment|/*%  *	Closes down the module.  *  */
 end_comment
 
 begin_function
@@ -1238,7 +1238,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct hostent * ho_next(struct irs_ho *this)  *  * Notes:  *  *	The implementation for gethostent(3). The first time it's  *	called all the data is pulled from the remote(i.e. what  *	the maximum number of gethostent(3) calls would return)  *	and that data is cached.  *  */
+comment|/*%  *	The implementation for gethostent(3). The first time it's  *	called all the data is pulled from the remote(i.e. what  *	the maximum number of gethostent(3) calls would return)  *	and that data is cached.  *  */
 end_comment
 
 begin_function
@@ -1430,7 +1430,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void ho_rewind(struct irs_ho *this)  *  */
+comment|/*%  * void ho_rewind(struct irs_ho *this)  *  */
 end_comment
 
 begin_function
@@ -1544,7 +1544,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void ho_minimize(struct irs_ho *this)  *  */
+comment|/*%  * void ho_minimize(struct irs_ho *this)  *  */
 end_comment
 
 begin_function
@@ -1591,7 +1591,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void free_host(struct hostent *ho)  *  */
+comment|/*%  * void free_host(struct hostent *ho)  *  */
 end_comment
 
 begin_function
@@ -1765,6 +1765,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

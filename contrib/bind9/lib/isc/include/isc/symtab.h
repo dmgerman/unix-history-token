@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1996-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1996-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: symtab.h,v 1.16.206.3 2006/03/02 00:37:20 marka Exp $ */
+comment|/* $Id: symtab.h,v 1.17.18.4 2006/03/02 00:37:22 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * Symbol Table  *  * Provides a simple memory-based symbol table.  *  * Keys are C strings, and key comparisons are case-insenstive.  A type may  * be specified when looking up, defining, or undefining.  A type value of  * 0 means "match any type"; any other value will only match the given  * type.  *  * It's possible that a client will attempt to define a<key, type, value>  * tuple when a tuple with the given key and type already exists in the table.  * What to do in this case is specified by the client.  Possible policies are:  *  *	isc_symexists_reject	Disallow the define, returning ISC_R_EXISTS  *	isc_symexists_replace	Replace the old value with the new.  The  *				undefine action (if provided) will be called  *				with the old<key, type, value> tuple.  *	isc_symexists_add	Add the new tuple, leaving the old tuple in  *				the table.  Subsequent lookups will retrieve  *				the most-recently-defined tuple.  *  * A lookup of a key using type 0 will return the most-recently defined  * symbol with that key.  An undefine of a key using type 0 will undefine the  * most-recently defined symbol with that key.  Trying to define a key with  * type 0 is illegal.  *  * The symbol table library does not make a copy the key field, so the  * caller must ensure that any key it passes to isc_symtab_define() will not  * change until it calls isc_symtab_undefine() or isc_symtab_destroy().  *  * A user-specified action will be called (if provided) when a symbol is  * undefined.  It can be used to free memory associated with keys and/or  * values.  *  * MP:  *	The callers of this module must ensure any required synchronization.  *  * Reliability:  *	No anticipated impact.  *  * Resources:  *<TBS>  *  * Security:  *	No anticipated impact.  *  * Standards:  *	None.  */
+comment|/*! \file  * \brief Provides a simple memory-based symbol table.  *  * Keys are C strings, and key comparisons are case-insenstive.  A type may  * be specified when looking up, defining, or undefining.  A type value of  * 0 means "match any type"; any other value will only match the given  * type.  *  * It's possible that a client will attempt to define a<key, type, value>  * tuple when a tuple with the given key and type already exists in the table.  * What to do in this case is specified by the client.  Possible policies are:  *  *\li	#isc_symexists_reject	Disallow the define, returning #ISC_R_EXISTS  *\li	#isc_symexists_replace	Replace the old value with the new.  The  *				undefine action (if provided) will be called  *				with the old<key, type, value> tuple.  *\li	#isc_symexists_add	Add the new tuple, leaving the old tuple in  *				the table.  Subsequent lookups will retrieve  *				the most-recently-defined tuple.  *  * A lookup of a key using type 0 will return the most-recently defined  * symbol with that key.  An undefine of a key using type 0 will undefine the  * most-recently defined symbol with that key.  Trying to define a key with  * type 0 is illegal.  *  * The symbol table library does not make a copy the key field, so the  * caller must ensure that any key it passes to isc_symtab_define() will not  * change until it calls isc_symtab_undefine() or isc_symtab_destroy().  *  * A user-specified action will be called (if provided) when a symbol is  * undefined.  It can be used to free memory associated with keys and/or  * values.  *  * \li MP:  *	The callers of this module must ensure any required synchronization.  *  * \li Reliability:  *	No anticipated impact.  *  * \li Resources:  *	TBS  *  * \li Security:  *	No anticipated impact.  *  * \li Standards:  *	None.  */
 end_comment
 
 begin_comment
@@ -45,7 +45,11 @@ file|<isc/types.h>
 end_include
 
 begin_comment
-comment|/***  *** Symbol Tables.  ***/
+comment|/*  *** Symbol Tables.  ***/
+end_comment
+
+begin_comment
+comment|/*% Symbol table value. */
 end_comment
 
 begin_typedef
@@ -100,6 +104,10 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/*% Symbol table exists. */
+end_comment
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -108,13 +116,16 @@ name|isc_symexists_reject
 init|=
 literal|0
 block|,
+comment|/*%< Disallow the define */
 name|isc_symexists_replace
 init|=
 literal|1
 block|,
+comment|/*%< Replace the old value with the new */
 name|isc_symexists_add
 init|=
 literal|2
+comment|/*%< Add the new tuple */
 block|}
 name|isc_symexists_t
 typedef|;
@@ -122,6 +133,7 @@ end_typedef
 
 begin_function_decl
 name|ISC_LANG_BEGINDECLS
+comment|/*% Create a symbol table. */
 name|isc_result_t
 name|isc_symtab_create
 parameter_list|(
@@ -151,6 +163,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*% Destroy a symbol table. */
+end_comment
+
 begin_function_decl
 name|void
 name|isc_symtab_destroy
@@ -162,6 +178,10 @@ name|symtabp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*% Lookup a symbol table. */
+end_comment
 
 begin_function_decl
 name|isc_result_t
@@ -186,6 +206,10 @@ name|value
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*% Define a symbol table. */
+end_comment
 
 begin_function_decl
 name|isc_result_t
@@ -212,6 +236,10 @@ name|exists_policy
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*% Undefine a symbol table. */
+end_comment
 
 begin_function_decl
 name|isc_result_t

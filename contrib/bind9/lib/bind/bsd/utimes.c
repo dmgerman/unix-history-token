@@ -119,5 +119,9 @@ begin_comment
 comment|/* NEED_UTIMES */
 end_comment
 
+begin_comment
+comment|/*! \file */
+end_comment
+
 end_unit
 

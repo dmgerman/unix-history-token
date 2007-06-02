@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: tsigconf.c,v 1.21.208.6 2006/03/02 00:37:20 marka Exp $ */
+comment|/* $Id: tsigconf.c,v 1.22.18.6 2006/02/28 03:10:47 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -92,6 +96,12 @@ modifier|*
 name|mctx
 parameter_list|)
 block|{
+name|dns_tsigkey_t
+modifier|*
+name|tsigkey
+init|=
+name|NULL
+decl_stmt|;
 specifier|const
 name|cfg_listelt_t
 modifier|*
@@ -133,6 +143,9 @@ name|ret
 decl_stmt|;
 name|isc_stdtime_t
 name|now
+decl_stmt|;
+name|isc_uint16_t
+name|bits
 decl_stmt|;
 for|for
 control|(
@@ -351,6 +364,9 @@ name|algstr
 argument_list|,
 operator|&
 name|alg
+argument_list|,
+operator|&
+name|bits
 argument_list|)
 operator|!=
 name|ISC_R_SUCCESS
@@ -364,10 +380,11 @@ name|ns_g_lctx
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"key '%s': the only supported algorithm "
-literal|"is hmac-md5"
+literal|"key '%s': has a unsupported algorithm '%s'"
 argument_list|,
 name|keyid
+argument_list|,
+name|algstr
 argument_list|)
 expr_stmt|;
 name|ret
@@ -490,7 +507,8 @@ name|mctx
 argument_list|,
 name|ring
 argument_list|,
-name|NULL
+operator|&
+name|tsigkey
 argument_list|)
 expr_stmt|;
 name|isc_mem_put
@@ -515,6 +533,22 @@ condition|)
 goto|goto
 name|failure
 goto|;
+comment|/* 		 * Set digest bits. 		 */
+name|dst_key_setbits
+argument_list|(
+name|tsigkey
+operator|->
+name|key
+argument_list|,
+name|bits
+argument_list|)
+expr_stmt|;
+name|dns_tsigkey_detach
+argument_list|(
+operator|&
+name|tsigkey
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(

@@ -4,15 +4,15 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: adb.c,v 1.181.2.11.2.26 2006/01/04 23:50:20 marka Exp $ */
+comment|/* $Id: adb.c,v 1.215.18.13 2006/08/30 23:49:57 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Implementation notes  * --------------------  *  * In finds, if task == NULL, no events will be generated, and no events  * have been sent.  If task != NULL but taskaction == NULL, an event has been  * posted but not yet freed.  If neither are NULL, no event was posted.  *  */
+comment|/*! \file   *  * \note  * In finds, if task == NULL, no events will be generated, and no events  * have been sent.  If task != NULL but taskaction == NULL, an event has been  * posted but not yet freed.  If neither are NULL, no event was posted.  *  */
 end_comment
 
 begin_comment
-comment|/*  * After we have cleaned all buckets, dump the database contents.  */
+comment|/*%  * After we have cleaned all buckets, dump the database contents.  */
 end_comment
 
 begin_if
@@ -135,6 +135,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dns/rdatatype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dns/resolver.h>
 end_include
 
@@ -198,18 +204,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|DNS_ADBZONEINFO_MAGIC
+name|DNS_ADBLAMEINFO_MAGIC
 value|ISC_MAGIC('a', 'd', 'b', 'Z')
 end_define
 
 begin_define
 define|#
 directive|define
-name|DNS_ADBZONEINFO_VALID
+name|DNS_ADBLAMEINFO_VALID
 parameter_list|(
 name|x
 parameter_list|)
-value|ISC_MAGIC_VALID(x, DNS_ADBZONEINFO_MAGIC)
+value|ISC_MAGIC_VALID(x, DNS_ADBLAMEINFO_MAGIC)
 end_define
 
 begin_define
@@ -264,7 +270,7 @@ value|ISC_MAGIC_VALID(x, DNS_ADBFETCH6_MAGIC)
 end_define
 
 begin_comment
-comment|/*  * The number of buckets needs to be a prime (for good hashing).  *  * XXXRTH  How many buckets do we need?  */
+comment|/*!   * The number of buckets needs to be a prime (for good hashing).  *  * XXXRTH  How many buckets do we need?  */
 end_comment
 
 begin_define
@@ -275,11 +281,11 @@ value|1009
 end_define
 
 begin_comment
-comment|/* how many buckets for names/addrs */
+comment|/*%< how many buckets for names/addrs */
 end_comment
 
 begin_comment
-comment|/*  * For type 3 negative cache entries, we will remember that the address is  * broken for this long.  XXXMLG This is also used for actual addresses, too.  * The intent is to keep us from constantly asking about A/AAAA records  * if the zone has extremely low TTLs.  */
+comment|/*!  * For type 3 negative cache entries, we will remember that the address is  * broken for this long.  XXXMLG This is also used for actual addresses, too.  * The intent is to keep us from constantly asking about A/AAAA records  * if the zone has extremely low TTLs.  */
 end_comment
 
 begin_define
@@ -290,7 +296,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* seconds */
+comment|/*%< seconds */
 end_comment
 
 begin_define
@@ -301,7 +307,7 @@ value|86400
 end_define
 
 begin_comment
-comment|/* seconds (86400 = 24 hours) */
+comment|/*%< seconds (86400 = 24 hours) */
 end_comment
 
 begin_define
@@ -312,11 +318,11 @@ value|1800
 end_define
 
 begin_comment
-comment|/* seconds */
+comment|/*%< seconds */
 end_comment
 
 begin_comment
-comment|/*  * Wake up every CLEAN_SECONDS and clean CLEAN_BUCKETS buckets, so that all  * buckets are cleaned in CLEAN_PERIOD seconds.  */
+comment|/*%  * Wake up every CLEAN_SECONDS and clean CLEAN_BUCKETS buckets, so that all  * buckets are cleaned in CLEAN_PERIOD seconds.  */
 end_comment
 
 begin_define
@@ -326,12 +332,20 @@ name|CLEAN_PERIOD
 value|3600
 end_define
 
+begin_comment
+comment|/*% See #CLEAN_PERIOD */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CLEAN_SECONDS
 value|30
 end_define
+
+begin_comment
+comment|/*% See #CLEAN_PERIOD */
+end_comment
 
 begin_define
 define|#
@@ -348,7 +362,7 @@ value|64
 end_define
 
 begin_comment
-comment|/* free count for memory pools */
+comment|/*%< free count for memory pools */
 end_comment
 
 begin_define
@@ -359,7 +373,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* fill count for memory pools */
+comment|/*%< fill count for memory pools */
 end_comment
 
 begin_define
@@ -370,7 +384,7 @@ value|(-1)
 end_define
 
 begin_comment
-comment|/* invalid bucket address */
+comment|/*%< invalid bucket address */
 end_comment
 
 begin_define
@@ -381,7 +395,7 @@ value|(1024*1024)
 end_define
 
 begin_comment
-comment|/* 1 Megabyte */
+comment|/*%< 1 Megabyte */
 end_comment
 
 begin_typedef
@@ -415,8 +429,8 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
-name|dns_adbzoneinfo
-name|dns_adbzoneinfo_t
+name|dns_adblameinfo
+name|dns_adblameinfo_t
 typedef|;
 end_typedef
 
@@ -446,6 +460,10 @@ name|dns_adbfetch6_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*% dns adb structure */
+end_comment
+
 begin_struct
 struct|struct
 name|dns_adb
@@ -460,7 +478,7 @@ decl_stmt|;
 name|isc_mutex_t
 name|reflock
 decl_stmt|;
-comment|/* Covers irefcnt, erefcnt */
+comment|/*%< Covers irefcnt, erefcnt */
 name|isc_mem_t
 modifier|*
 name|mctx
@@ -509,56 +527,59 @@ name|isc_mempool_t
 modifier|*
 name|nmp
 decl_stmt|;
-comment|/* dns_adbname_t */
+comment|/*%< dns_adbname_t */
 name|isc_mempool_t
 modifier|*
 name|nhmp
 decl_stmt|;
-comment|/* dns_adbnamehook_t */
+comment|/*%< dns_adbnamehook_t */
 name|isc_mempool_t
 modifier|*
-name|zimp
+name|limp
 decl_stmt|;
-comment|/* dns_adbzoneinfo_t */
+comment|/*%< dns_adblameinfo_t */
 name|isc_mempool_t
 modifier|*
 name|emp
 decl_stmt|;
-comment|/* dns_adbentry_t */
+comment|/*%< dns_adbentry_t */
 name|isc_mempool_t
 modifier|*
 name|ahmp
 decl_stmt|;
-comment|/* dns_adbfind_t */
+comment|/*%< dns_adbfind_t */
 name|isc_mempool_t
 modifier|*
 name|aimp
 decl_stmt|;
-comment|/* dns_adbaddrinfo_t */
+comment|/*%< dns_adbaddrinfo_t */
 name|isc_mempool_t
 modifier|*
 name|afmp
 decl_stmt|;
-comment|/* dns_adbfetch_t */
-comment|/* 	 * Bucketized locks and lists for names. 	 * 	 * XXXRTH  Have a per-bucket structure that contains all of these? 	 */
+comment|/*%< dns_adbfetch_t */
+comment|/*! 	 * Bucketized locks and lists for names. 	 * 	 * XXXRTH  Have a per-bucket structure that contains all of these? 	 */
 name|dns_adbnamelist_t
 name|names
 index|[
 name|NBUCKETS
 index|]
 decl_stmt|;
+comment|/*% See dns_adbnamelist_t */
 name|isc_mutex_t
 name|namelocks
 index|[
 name|NBUCKETS
 index|]
 decl_stmt|;
+comment|/*% See dns_adbnamelist_t */
 name|isc_boolean_t
 name|name_sd
 index|[
 name|NBUCKETS
 index|]
 decl_stmt|;
+comment|/*% See dns_adbnamelist_t */
 name|unsigned
 name|int
 name|name_refcnt
@@ -566,7 +587,7 @@ index|[
 name|NBUCKETS
 index|]
 decl_stmt|;
-comment|/* 	 * Bucketized locks for entries. 	 * 	 * XXXRTH  Have a per-bucket structure that contains all of these? 	 */
+comment|/*! 	 * Bucketized locks for entries. 	 * 	 * XXXRTH  Have a per-bucket structure that contains all of these? 	 */
 name|dns_adbentrylist_t
 name|entries
 index|[
@@ -585,7 +606,7 @@ index|[
 name|NBUCKETS
 index|]
 decl_stmt|;
-comment|/* shutting down */
+comment|/*%< shutting down */
 name|unsigned
 name|int
 name|entry_refcnt
@@ -611,6 +632,10 @@ end_struct
 
 begin_comment
 comment|/*  * XXXMLG  Document these structures.  */
+end_comment
+
+begin_comment
+comment|/*% dns_adbname structure */
 end_comment
 
 begin_struct
@@ -690,6 +715,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*% The adbfetch structure */
+end_comment
+
 begin_struct
 struct|struct
 name|dns_adbfetch
@@ -718,7 +747,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * dns_adbnamehook_t  *  * This is a small widget that dangles off a dns_adbname_t.  It contains a  * pointer to the address information about this host, and a link to the next  * namehook that will contain the next address this host has.  */
+comment|/*%  * This is a small widget that dangles off a dns_adbname_t.  It contains a  * pointer to the address information about this host, and a link to the next  * namehook that will contain the next address this host has.  */
 end_comment
 
 begin_struct
@@ -744,26 +773,29 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * dns_adbzoneinfo_t  *  * This is a small widget that holds zone-specific information about an  * address.  Currently limited to lameness, but could just as easily be  * extended to other types of information about zones.  */
+comment|/*%  * This is a small widget that holds qname-specific information about an  * address.  Currently limited to lameness, but could just as easily be  * extended to other types of information about zones.  */
 end_comment
 
 begin_struct
 struct|struct
-name|dns_adbzoneinfo
+name|dns_adblameinfo
 block|{
 name|unsigned
 name|int
 name|magic
 decl_stmt|;
 name|dns_name_t
-name|zone
+name|qname
+decl_stmt|;
+name|dns_rdatatype_t
+name|qtype
 decl_stmt|;
 name|isc_stdtime_t
 name|lame_timer
 decl_stmt|;
 name|ISC_LINK
 argument_list|(
-argument|dns_adbzoneinfo_t
+argument|dns_adblameinfo_t
 argument_list|)
 name|plink
 expr_stmt|;
@@ -772,7 +804,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * An address entry.  It holds quite a bit of information about addresses,  * including edns state (in "flags"), rtt, and of course the address of  * the host.  */
+comment|/*%  * An address entry.  It holds quite a bit of information about addresses,  * including edns state (in "flags"), rtt, and of course the address of  * the host.  */
 end_comment
 
 begin_struct
@@ -804,12 +836,12 @@ decl_stmt|;
 name|isc_stdtime_t
 name|expires
 decl_stmt|;
-comment|/* 	 * A nonzero 'expires' field indicates that the entry should 	 * persist until that time.  This allows entries found 	 * using dns_adb_findaddrinfo() to persist for a limited time 	 * even though they are not necessarily associated with a 	 * name. 	 */
+comment|/*%< 	 * A nonzero 'expires' field indicates that the entry should 	 * persist until that time.  This allows entries found 	 * using dns_adb_findaddrinfo() to persist for a limited time 	 * even though they are not necessarily associated with a 	 * name. 	 */
 name|ISC_LIST
 argument_list|(
-argument|dns_adbzoneinfo_t
+argument|dns_adblameinfo_t
 argument_list|)
-name|zoneinfo
+name|lameinfo
 expr_stmt|;
 name|ISC_LINK
 argument_list|(
@@ -892,15 +924,17 @@ end_function_decl
 begin_function_decl
 specifier|static
 specifier|inline
-name|dns_adbzoneinfo_t
+name|dns_adblameinfo_t
 modifier|*
-name|new_adbzoneinfo
+name|new_adblameinfo
 parameter_list|(
 name|dns_adb_t
 modifier|*
 parameter_list|,
 name|dns_name_t
 modifier|*
+parameter_list|,
+name|dns_rdatatype_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -909,12 +943,12 @@ begin_function_decl
 specifier|static
 specifier|inline
 name|void
-name|free_adbzoneinfo
+name|free_adblameinfo
 parameter_list|(
 name|dns_adb_t
 modifier|*
 parameter_list|,
-name|dns_adbzoneinfo_t
+name|dns_adblameinfo_t
 modifier|*
 modifier|*
 parameter_list|)
@@ -6195,9 +6229,9 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|dns_adbzoneinfo_t
+name|dns_adblameinfo_t
 modifier|*
-name|new_adbzoneinfo
+name|new_adblameinfo
 parameter_list|(
 name|dns_adb_t
 modifier|*
@@ -6205,25 +6239,28 @@ name|adb
 parameter_list|,
 name|dns_name_t
 modifier|*
-name|zone
+name|qname
+parameter_list|,
+name|dns_rdatatype_t
+name|qtype
 parameter_list|)
 block|{
-name|dns_adbzoneinfo_t
+name|dns_adblameinfo_t
 modifier|*
-name|zi
+name|li
 decl_stmt|;
-name|zi
+name|li
 operator|=
 name|isc_mempool_get
 argument_list|(
 name|adb
 operator|->
-name|zimp
+name|limp
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|zi
+name|li
 operator|==
 name|NULL
 condition|)
@@ -6235,9 +6272,9 @@ return|;
 name|dns_name_init
 argument_list|(
 operator|&
-name|zi
+name|li
 operator|->
-name|zone
+name|qname
 argument_list|,
 name|NULL
 argument_list|)
@@ -6246,16 +6283,16 @@ if|if
 condition|(
 name|dns_name_dup
 argument_list|(
-name|zone
+name|qname
 argument_list|,
 name|adb
 operator|->
 name|mctx
 argument_list|,
 operator|&
-name|zi
+name|li
 operator|->
-name|zone
+name|qname
 argument_list|)
 operator|!=
 name|ISC_R_SUCCESS
@@ -6265,9 +6302,9 @@ name|isc_mempool_put
 argument_list|(
 name|adb
 operator|->
-name|zimp
+name|limp
 argument_list|,
-name|zi
+name|li
 argument_list|)
 expr_stmt|;
 return|return
@@ -6276,28 +6313,34 @@ name|NULL
 operator|)
 return|;
 block|}
-name|zi
+name|li
 operator|->
 name|magic
 operator|=
-name|DNS_ADBZONEINFO_MAGIC
+name|DNS_ADBLAMEINFO_MAGIC
 expr_stmt|;
-name|zi
+name|li
 operator|->
 name|lame_timer
 operator|=
 literal|0
 expr_stmt|;
+name|li
+operator|->
+name|qtype
+operator|=
+name|qtype
+expr_stmt|;
 name|ISC_LINK_INIT
 argument_list|(
-name|zi
+name|li
 argument_list|,
 name|plink
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|zi
+name|li
 operator|)
 return|;
 block|}
@@ -6307,42 +6350,42 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|free_adbzoneinfo
+name|free_adblameinfo
 parameter_list|(
 name|dns_adb_t
 modifier|*
 name|adb
 parameter_list|,
-name|dns_adbzoneinfo_t
+name|dns_adblameinfo_t
 modifier|*
 modifier|*
-name|zoneinfo
+name|lameinfo
 parameter_list|)
 block|{
-name|dns_adbzoneinfo_t
+name|dns_adblameinfo_t
 modifier|*
-name|zi
+name|li
 decl_stmt|;
 name|INSIST
 argument_list|(
-name|zoneinfo
+name|lameinfo
 operator|!=
 name|NULL
 operator|&&
-name|DNS_ADBZONEINFO_VALID
+name|DNS_ADBLAMEINFO_VALID
 argument_list|(
 operator|*
-name|zoneinfo
+name|lameinfo
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|zi
+name|li
 operator|=
 operator|*
-name|zoneinfo
+name|lameinfo
 expr_stmt|;
 operator|*
-name|zoneinfo
+name|lameinfo
 operator|=
 name|NULL
 expr_stmt|;
@@ -6351,7 +6394,7 @@ argument_list|(
 operator|!
 name|ISC_LINK_LINKED
 argument_list|(
-name|zi
+name|li
 argument_list|,
 name|plink
 argument_list|)
@@ -6360,16 +6403,16 @@ expr_stmt|;
 name|dns_name_free
 argument_list|(
 operator|&
-name|zi
+name|li
 operator|->
-name|zone
+name|qname
 argument_list|,
 name|adb
 operator|->
 name|mctx
 argument_list|)
 expr_stmt|;
-name|zi
+name|li
 operator|->
 name|magic
 operator|=
@@ -6379,9 +6422,9 @@ name|isc_mempool_put
 argument_list|(
 name|adb
 operator|->
-name|zimp
+name|limp
 argument_list|,
-name|zi
+name|li
 argument_list|)
 expr_stmt|;
 block|}
@@ -6478,7 +6521,7 @@ name|ISC_LIST_INIT
 argument_list|(
 name|e
 operator|->
-name|zoneinfo
+name|lameinfo
 argument_list|)
 expr_stmt|;
 name|ISC_LINK_INIT
@@ -6516,9 +6559,9 @@ name|dns_adbentry_t
 modifier|*
 name|e
 decl_stmt|;
-name|dns_adbzoneinfo_t
+name|dns_adblameinfo_t
 modifier|*
-name|zi
+name|li
 decl_stmt|;
 name|INSIST
 argument_list|(
@@ -6578,18 +6621,18 @@ name|magic
 operator|=
 literal|0
 expr_stmt|;
-name|zi
+name|li
 operator|=
 name|ISC_LIST_HEAD
 argument_list|(
 name|e
 operator|->
-name|zoneinfo
+name|lameinfo
 argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|zi
+name|li
 operator|!=
 name|NULL
 condition|)
@@ -6598,28 +6641,28 @@ name|ISC_LIST_UNLINK
 argument_list|(
 name|e
 operator|->
-name|zoneinfo
+name|lameinfo
 argument_list|,
-name|zi
+name|li
 argument_list|,
 name|plink
 argument_list|)
 expr_stmt|;
-name|free_adbzoneinfo
+name|free_adblameinfo
 argument_list|(
 name|adb
 argument_list|,
 operator|&
-name|zi
+name|li
 argument_list|)
 expr_stmt|;
-name|zi
+name|li
 operator|=
 name|ISC_LIST_HEAD
 argument_list|(
 name|e
 operator|->
-name|zoneinfo
+name|lameinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -6768,15 +6811,6 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init failed in new_adbfind()"
-argument_list|)
-expr_stmt|;
 name|isc_mempool_put
 argument_list|(
 name|adb
@@ -7799,7 +7833,7 @@ end_comment
 begin_function
 specifier|static
 name|isc_boolean_t
-name|entry_is_bad_for_zone
+name|entry_is_lame
 parameter_list|(
 name|dns_adb_t
 modifier|*
@@ -7811,18 +7845,21 @@ name|entry
 parameter_list|,
 name|dns_name_t
 modifier|*
-name|zone
+name|qname
+parameter_list|,
+name|dns_rdatatype_t
+name|qtype
 parameter_list|,
 name|isc_stdtime_t
 name|now
 parameter_list|)
 block|{
-name|dns_adbzoneinfo_t
+name|dns_adblameinfo_t
 modifier|*
-name|zi
+name|li
 decl_stmt|,
 modifier|*
-name|next_zi
+name|next_li
 decl_stmt|;
 name|isc_boolean_t
 name|is_bad
@@ -7831,18 +7868,18 @@ name|is_bad
 operator|=
 name|ISC_FALSE
 expr_stmt|;
-name|zi
+name|li
 operator|=
 name|ISC_LIST_HEAD
 argument_list|(
 name|entry
 operator|->
-name|zoneinfo
+name|lameinfo
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|zi
+name|li
 operator|==
 name|NULL
 condition|)
@@ -7853,16 +7890,16 @@ operator|)
 return|;
 while|while
 condition|(
-name|zi
+name|li
 operator|!=
 name|NULL
 condition|)
 block|{
-name|next_zi
+name|next_li
 operator|=
 name|ISC_LIST_NEXT
 argument_list|(
-name|zi
+name|li
 argument_list|,
 name|plink
 argument_list|)
@@ -7870,7 +7907,7 @@ expr_stmt|;
 comment|/* 		 * Has the entry expired? 		 */
 if|if
 condition|(
-name|zi
+name|li
 operator|->
 name|lame_timer
 operator|<
@@ -7881,53 +7918,55 @@ name|ISC_LIST_UNLINK
 argument_list|(
 name|entry
 operator|->
-name|zoneinfo
+name|lameinfo
 argument_list|,
-name|zi
+name|li
 argument_list|,
 name|plink
 argument_list|)
 expr_stmt|;
-name|free_adbzoneinfo
+name|free_adblameinfo
 argument_list|(
 name|adb
 argument_list|,
 operator|&
-name|zi
+name|li
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Order tests from least to most expensive. 		 */
+comment|/* 		 * Order tests from least to most expensive. 		 * 		 * We do not break out of the main loop here as 		 * we use the loop for house keeping. 		 */
 if|if
 condition|(
-name|zi
+name|li
 operator|!=
 name|NULL
 operator|&&
 operator|!
 name|is_bad
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
+name|li
+operator|->
+name|qtype
+operator|==
+name|qtype
+operator|&&
 name|dns_name_equal
 argument_list|(
-name|zone
+name|qname
 argument_list|,
 operator|&
-name|zi
+name|li
 operator|->
-name|zone
+name|qname
 argument_list|)
 condition|)
 name|is_bad
 operator|=
 name|ISC_TRUE
 expr_stmt|;
-block|}
-name|zi
+name|li
 operator|=
-name|next_zi
+name|next_li
 expr_stmt|;
 block|}
 return|return
@@ -7953,7 +7992,10 @@ name|find
 parameter_list|,
 name|dns_name_t
 modifier|*
-name|zone
+name|qname
+parameter_list|,
+name|dns_rdatatype_t
+name|qtype
 parameter_list|,
 name|dns_adbname_t
 modifier|*
@@ -8038,13 +8080,15 @@ argument_list|(
 name|find
 argument_list|)
 operator|&&
-name|entry_is_bad_for_zone
+name|entry_is_lame
 argument_list|(
 name|adb
 argument_list|,
 name|entry
 argument_list|,
-name|zone
+name|qname
+argument_list|,
+name|qtype
 argument_list|,
 name|now
 argument_list|)
@@ -8193,13 +8237,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|entry_is_bad_for_zone
+name|entry_is_lame
 argument_list|(
 name|adb
 argument_list|,
 name|entry
 argument_list|,
-name|zone
+name|qname
+argument_list|,
+name|qtype
 argument_list|,
 name|now
 argument_list|)
@@ -9263,7 +9309,7 @@ argument_list|(
 operator|&
 name|adb
 operator|->
-name|zimp
+name|limp
 argument_list|)
 expr_stmt|;
 name|isc_mempool_destroy
@@ -9494,7 +9540,7 @@ name|NULL
 expr_stmt|;
 name|adb
 operator|->
-name|zimp
+name|limp
 operator|=
 name|NULL
 expr_stmt|;
@@ -9860,13 +9906,13 @@ argument_list|)
 expr_stmt|;
 name|MPINIT
 argument_list|(
-name|dns_adbzoneinfo_t
+name|dns_adblameinfo_t
 argument_list|,
 name|adb
 operator|->
-name|zimp
+name|limp
 argument_list|,
-literal|"adbzoneinfo"
+literal|"adblameinfo"
 argument_list|)
 expr_stmt|;
 name|MPINIT
@@ -10137,7 +10183,7 @@ if|if
 condition|(
 name|adb
 operator|->
-name|zimp
+name|limp
 operator|!=
 name|NULL
 condition|)
@@ -10146,7 +10192,7 @@ argument_list|(
 operator|&
 name|adb
 operator|->
-name|zimp
+name|limp
 argument_list|)
 expr_stmt|;
 if|if
@@ -10721,7 +10767,10 @@ name|name
 parameter_list|,
 name|dns_name_t
 modifier|*
-name|zone
+name|qname
+parameter_list|,
+name|dns_rdatatype_t
+name|qtype
 parameter_list|,
 name|unsigned
 name|int
@@ -10810,7 +10859,7 @@ argument_list|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
-name|zone
+name|qname
 operator|!=
 name|NULL
 argument_list|)
@@ -11510,7 +11559,9 @@ name|adb
 argument_list|,
 name|find
 argument_list|,
-name|zone
+name|qname
+argument_list|,
+name|qtype
 argument_list|,
 name|adbname
 argument_list|,
@@ -13051,12 +13102,18 @@ index|[
 name|ISC_NETADDR_FORMATSIZE
 index|]
 decl_stmt|;
+name|char
+name|typebuf
+index|[
+name|DNS_RDATATYPE_FORMATSIZE
+index|]
+decl_stmt|;
 name|isc_netaddr_t
 name|netaddr
 decl_stmt|;
-name|dns_adbzoneinfo_t
+name|dns_adblameinfo_t
 modifier|*
-name|zi
+name|li
 decl_stmt|;
 name|isc_netaddr_fromsockaddr
 argument_list|(
@@ -13146,24 +13203,24 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|zi
+name|li
 operator|=
 name|ISC_LIST_HEAD
 argument_list|(
 name|entry
 operator|->
-name|zoneinfo
+name|lameinfo
 argument_list|)
 init|;
-name|zi
+name|li
 operator|!=
 name|NULL
 condition|;
-name|zi
+name|li
 operator|=
 name|ISC_LIST_NEXT
 argument_list|(
-name|zi
+name|li
 argument_list|,
 name|plink
 argument_list|)
@@ -13181,18 +13238,34 @@ argument_list|(
 name|f
 argument_list|,
 operator|&
-name|zi
+name|li
 operator|->
-name|zone
+name|qname
+argument_list|)
+expr_stmt|;
+name|dns_rdatatype_format
+argument_list|(
+name|li
+operator|->
+name|qtype
+argument_list|,
+name|typebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|typebuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|" [lame TTL %d]\n"
+literal|" %s [lame TTL %d]\n"
 argument_list|,
-name|zi
+name|typebuf
+argument_list|,
+name|li
 operator|->
 name|lame_timer
 operator|-
@@ -15457,15 +15530,18 @@ name|addr
 parameter_list|,
 name|dns_name_t
 modifier|*
-name|zone
+name|qname
+parameter_list|,
+name|dns_rdatatype_t
+name|qtype
 parameter_list|,
 name|isc_stdtime_t
 name|expire_time
 parameter_list|)
 block|{
-name|dns_adbzoneinfo_t
+name|dns_adblameinfo_t
 modifier|*
-name|zi
+name|li
 decl_stmt|;
 name|int
 name|bucket
@@ -15493,7 +15569,7 @@ argument_list|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
-name|zone
+name|qname
 operator|!=
 name|NULL
 argument_list|)
@@ -15517,7 +15593,7 @@ name|bucket
 index|]
 argument_list|)
 expr_stmt|;
-name|zi
+name|li
 operator|=
 name|ISC_LIST_HEAD
 argument_list|(
@@ -15525,38 +15601,46 @@ name|addr
 operator|->
 name|entry
 operator|->
-name|zoneinfo
+name|lameinfo
 argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|zi
+name|li
 operator|!=
 name|NULL
 operator|&&
+operator|(
+name|li
+operator|->
+name|qtype
+operator|!=
+name|qtype
+operator|||
 operator|!
 name|dns_name_equal
 argument_list|(
-name|zone
+name|qname
 argument_list|,
 operator|&
-name|zi
+name|li
 operator|->
-name|zone
+name|qname
 argument_list|)
+operator|)
 condition|)
-name|zi
+name|li
 operator|=
 name|ISC_LIST_NEXT
 argument_list|(
-name|zi
+name|li
 argument_list|,
 name|plink
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|zi
+name|li
 operator|!=
 name|NULL
 condition|)
@@ -15565,11 +15649,11 @@ if|if
 condition|(
 name|expire_time
 operator|>
-name|zi
+name|li
 operator|->
 name|lame_timer
 condition|)
-name|zi
+name|li
 operator|->
 name|lame_timer
 operator|=
@@ -15579,18 +15663,20 @@ goto|goto
 name|unlock
 goto|;
 block|}
-name|zi
+name|li
 operator|=
-name|new_adbzoneinfo
+name|new_adblameinfo
 argument_list|(
 name|adb
 argument_list|,
-name|zone
+name|qname
+argument_list|,
+name|qtype
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|zi
+name|li
 operator|==
 name|NULL
 condition|)
@@ -15603,7 +15689,7 @@ goto|goto
 name|unlock
 goto|;
 block|}
-name|zi
+name|li
 operator|->
 name|lame_timer
 operator|=
@@ -15615,9 +15701,9 @@ name|addr
 operator|->
 name|entry
 operator|->
-name|zoneinfo
+name|lameinfo
 argument_list|,
-name|zi
+name|li
 argument_list|,
 name|plink
 argument_list|)

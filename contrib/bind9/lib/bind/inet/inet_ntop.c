@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_ntop.c,v 1.1.2.1.8.2 2005/11/03 23:08:40 marka Exp $"
+literal|"$Id: inet_ntop.c,v 1.3.18.2 2005/11/03 23:02:22 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,7 +143,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * WARNING: Don't even consider trying to compile this on a system where  * sizeof(int)< 4.  sizeof(int)> 4 is fine; all the world's not a VAX.  */
+comment|/*%  * WARNING: Don't even consider trying to compile this on a system where  * sizeof(int)< 4.  sizeof(int)> 4 is fine; all the world's not a VAX.  */
 end_comment
 
 begin_decl_stmt
@@ -939,6 +939,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

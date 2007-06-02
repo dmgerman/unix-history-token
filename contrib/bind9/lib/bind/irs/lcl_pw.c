@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lcl_pw.c,v 1.1.206.1 2004/03/09 08:33:38 marka Exp $"
+literal|"$Id: lcl_pw.c,v 1.2.18.1 2005/04/27 05:01:03 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,7 +191,7 @@ file|"lcl_p.h"
 end_include
 
 begin_comment
-comment|/*  * The lookup techniques and data extraction code here must be kept  * in sync with that in `pwd_mkdb'.  */
+comment|/*! \file  * \brief  * The lookup techniques and data extraction code here must be kept  * in sync with that in `pwd_mkdb'.  */
 end_comment
 
 begin_comment
@@ -206,16 +206,16 @@ name|struct
 name|passwd
 name|passwd
 decl_stmt|;
-comment|/* password structure */
+comment|/*%< password structure */
 name|DB
 modifier|*
 name|pw_db
 decl_stmt|;
-comment|/* password database */
+comment|/*%< password database */
 name|int
 name|pw_keynum
 decl_stmt|;
-comment|/* key counter */
+comment|/*%< key counter */
 name|int
 name|warned
 decl_stmt|;

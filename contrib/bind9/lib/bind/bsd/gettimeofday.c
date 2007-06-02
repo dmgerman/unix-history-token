@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gettimeofday.c,v 1.1.2.2 2002/07/12 00:49:51 marka Exp $"
+literal|"$Id: gettimeofday.c,v 1.3.332.1 2005/04/27 05:00:43 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * gettimeofday() occasionally returns invalid tv_usec on some platforms.  */
+comment|/*%  * gettimeofday() occasionally returns invalid tv_usec on some platforms.  */
 end_comment
 
 begin_define
@@ -322,6 +322,10 @@ end_endif
 
 begin_comment
 comment|/*NEED_GETTIMEOFDAY*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

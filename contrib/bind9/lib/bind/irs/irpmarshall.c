@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irpmarshall.c,v 1.3.206.4 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: irpmarshall.c,v 1.5.18.2 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -368,7 +368,7 @@ comment|/* +++++++++++++++++++++++++ struct passwd +++++++++++++++++++++++++ */
 end_comment
 
 begin_comment
-comment|/*  * int irp_marshall_pw(const struct passwd *pw, char **buffer, size_t *len)  *  * notes:  *  *	See above  *  * return:  *  *	0 on sucess, -1 on failure.  *  */
+comment|/*%  * int irp_marshall_pw(const struct passwd *pw, char **buffer, size_t *len)  *  * notes: \li  *  *	See irpmarshall.h  *  * return: \li  *  *	0 on sucess, -1 on failure.  *  */
 end_comment
 
 begin_function
@@ -396,7 +396,7 @@ name|need
 init|=
 literal|1
 decl_stmt|;
-comment|/* for null byte */
+comment|/*%< for null byte */
 name|char
 name|pwUid
 index|[
@@ -581,7 +581,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* one for fieldsep */
+comment|/*%< one for fieldsep */
 name|need
 operator|+=
 name|strlen
@@ -725,7 +725,7 @@ name|need
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* for CRLF */
+comment|/*%< for CRLF */
 operator|*
 name|buffer
 operator|=
@@ -938,7 +938,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int irp_unmarshall_pw(struct passwd *pw, char *buffer)  *  * notes:  *  *	see above  *  * return:  *  *	0 on success, -1 on failure  *  */
+comment|/*%  * int irp_unmarshall_pw(struct passwd *pw, char *buffer)  *  * notes: \li  *  *	See irpmarshall.h  *  * return: \li  *  *	0 on success, -1 on failure  *  */
 end_comment
 
 begin_function
@@ -1094,7 +1094,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* field can be empty */
+comment|/*%< field can be empty */
 goto|goto
 name|error
 goto|;
@@ -1155,7 +1155,7 @@ block|{
 goto|goto
 name|error
 goto|;
-comment|/* junk in value */
+comment|/*%< junk in value */
 block|}
 name|pwuid
 operator|=
@@ -1174,7 +1174,7 @@ operator|!=
 name|t
 condition|)
 block|{
-comment|/* value must have been too big. */
+comment|/*%< value must have been too big. */
 goto|goto
 name|error
 goto|;
@@ -1235,7 +1235,7 @@ block|{
 goto|goto
 name|error
 goto|;
-comment|/* junk in value */
+comment|/*%< junk in value */
 block|}
 name|pwgid
 operator|=
@@ -1254,7 +1254,7 @@ operator|!=
 name|t
 condition|)
 block|{
-comment|/* value must have been too big. */
+comment|/*%< value must have been too big. */
 goto|goto
 name|error
 goto|;
@@ -1342,7 +1342,7 @@ block|{
 goto|goto
 name|error
 goto|;
-comment|/* junk in value */
+comment|/*%< junk in value */
 block|}
 name|pwchange
 operator|=
@@ -1361,7 +1361,7 @@ operator|!=
 name|t
 condition|)
 block|{
-comment|/* value must have been too big. */
+comment|/*%< value must have been too big. */
 goto|goto
 name|error
 goto|;
@@ -1422,7 +1422,7 @@ block|{
 goto|goto
 name|error
 goto|;
-comment|/* junk in value */
+comment|/*%< junk in value */
 block|}
 name|pwexpire
 operator|=
@@ -1441,7 +1441,7 @@ operator|!=
 name|t
 condition|)
 block|{
-comment|/* value must have been too big. */
+comment|/*%< value must have been too big. */
 goto|goto
 name|error
 goto|;
@@ -1695,7 +1695,7 @@ comment|/* +++++++++++++++++++++++++ struct group +++++++++++++++++++++++++ */
 end_comment
 
 begin_comment
-comment|/*  * int irp_marshall_gr(const struct group *gr, char **buffer, size_t *len)  *  * notes:  *  *	see above.  *  * return:  *  *	0 on success, -1 on failure  */
+comment|/*%  * int irp_marshall_gr(const struct group *gr, char **buffer, size_t *len)  *  * notes: \li  *  *	See irpmarshall.h.  *  * return: \li  *  *	0 on success, -1 on failure  */
 end_comment
 
 begin_function
@@ -1723,7 +1723,7 @@ name|need
 init|=
 literal|1
 decl_stmt|;
-comment|/* for null byte */
+comment|/*%< for null byte */
 name|char
 name|grGid
 index|[
@@ -1879,7 +1879,7 @@ name|need
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* for CRLF */
+comment|/*%< for CRLF */
 operator|*
 name|buffer
 operator|=
@@ -1999,7 +1999,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int irp_unmarshall_gr(struct group *gr, char *buffer)  *  * notes:  *  *	see above  *  * return:  *  *	0 on success and -1 on failure.  *  */
+comment|/*%  * int irp_unmarshall_gr(struct group *gr, char *buffer)  *  * notes: \li  *  *	See irpmarshall.h  *  * return: \li  *  *	0 on success and -1 on failure.  *  */
 end_comment
 
 begin_function
@@ -2211,7 +2211,7 @@ block|{
 goto|goto
 name|error
 goto|;
-comment|/* junk in value */
+comment|/*%< junk in value */
 block|}
 name|grgid
 operator|=
@@ -2230,7 +2230,7 @@ operator|!=
 name|t
 condition|)
 block|{
-comment|/* value must have been too big. */
+comment|/*%< value must have been too big. */
 goto|goto
 name|error
 goto|;
@@ -2368,7 +2368,7 @@ comment|/* +++++++++++++++++++++++++ struct servent +++++++++++++++++++++++++ */
 end_comment
 
 begin_comment
-comment|/*  * int irp_marshall_sv(const struct servent *sv, char **buffer, size_t *len)  *  * notes:  *  *	see above  *  * return:  *  *	0 on success, -1 on failure.  *  */
+comment|/*%  * int irp_marshall_sv(const struct servent *sv, char **buffer, size_t *len)  *  * notes: \li  *  *	See irpmarshall.h  *  * return: \li  *  *	0 on success, -1 on failure.  *  */
 end_comment
 
 begin_function
@@ -2396,7 +2396,7 @@ name|need
 init|=
 literal|1
 decl_stmt|;
-comment|/* for null byte */
+comment|/*%< for null byte */
 name|char
 name|svPort
 index|[
@@ -2553,7 +2553,7 @@ name|need
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* for CRLF */
+comment|/*%< for CRLF */
 operator|*
 name|buffer
 operator|=
@@ -2668,7 +2668,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int irp_unmarshall_sv(struct servent *sv, char *buffer)  *  * notes:  *  *	see above  *  * return:  *  *	0 on success, -1 on failure.  *  */
+comment|/*%  * int irp_unmarshall_sv(struct servent *sv, char *buffer)  *  * notes: \li  *  *	See irpmarshall.h  *  * return: \li  *  *	0 on success, -1 on failure.  *  */
 end_comment
 
 begin_function
@@ -2900,7 +2900,7 @@ block|{
 goto|goto
 name|error
 goto|;
-comment|/* junk in value */
+comment|/*%< junk in value */
 block|}
 name|svport
 operator|=
@@ -2919,7 +2919,7 @@ operator|!=
 name|t
 condition|)
 block|{
-comment|/* value must have been too big. */
+comment|/*%< value must have been too big. */
 goto|goto
 name|error
 goto|;
@@ -3040,7 +3040,7 @@ comment|/* +++++++++++++++++++++++++ struct protoent +++++++++++++++++++++++++ *
 end_comment
 
 begin_comment
-comment|/*  * int irp_marshall_pr(struct protoent *pr, char **buffer, size_t *len)  *  * notes:  *  *	see above  *  * return:  *  *	0 on success and -1 on failure.  *  */
+comment|/*%  * int irp_marshall_pr(struct protoent *pr, char **buffer, size_t *len)  *  * notes: \li  *  *	See irpmarshall.h  *  * return: \li  *  *	0 on success and -1 on failure.  *  */
 end_comment
 
 begin_function
@@ -3067,7 +3067,7 @@ name|need
 init|=
 literal|1
 decl_stmt|;
-comment|/* for null byte */
+comment|/*%< for null byte */
 name|char
 name|prProto
 index|[
@@ -3202,7 +3202,7 @@ name|need
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* for CRLF */
+comment|/*%< for CRLF */
 operator|*
 name|buffer
 operator|=
@@ -3299,7 +3299,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int irp_unmarshall_pr(struct protoent *pr, char *buffer)  *  * notes:  *  *	See above  *  * return:  *  *	0 on success, -1 on failure  *  */
+comment|/*%  * int irp_unmarshall_pr(struct protoent *pr, char *buffer)  *  * notes: \li  *  *	See irpmarshall.h  *  * return: \li  *  *	0 on success, -1 on failure  *  */
 end_comment
 
 begin_function
@@ -3531,7 +3531,7 @@ block|{
 goto|goto
 name|error
 goto|;
-comment|/* junk in value */
+comment|/*%< junk in value */
 block|}
 name|prproto
 operator|=
@@ -3550,7 +3550,7 @@ operator|!=
 name|t
 condition|)
 block|{
-comment|/* value must have been too big. */
+comment|/*%< value must have been too big. */
 goto|goto
 name|error
 goto|;
@@ -3620,7 +3620,7 @@ comment|/* +++++++++++++++++++++++++ struct hostent +++++++++++++++++++++++++ */
 end_comment
 
 begin_comment
-comment|/*  * int irp_marshall_ho(struct hostent *ho, char **buffer, size_t *len)  *  * notes:  *  *	see above.  *  * return:  *  *	0 on success, -1 on failure.  *  */
+comment|/*%  * int irp_marshall_ho(struct hostent *ho, char **buffer, size_t *len)  *  * notes: \li  *  *	See irpmarshall.h.  *  * return: \li  *  *	0 on success, -1 on failure.  *  */
 end_comment
 
 begin_function
@@ -3647,7 +3647,7 @@ name|need
 init|=
 literal|1
 decl_stmt|;
-comment|/* for null byte */
+comment|/*%< for null byte */
 name|char
 name|hoaddrtype
 index|[
@@ -3816,7 +3816,7 @@ else|:
 literal|46
 operator|)
 expr_stmt|;
-comment|/* XX other AF's?? */
+comment|/*%< XX other AF's?? */
 for|for
 control|(
 name|av
@@ -3895,7 +3895,7 @@ name|need
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* for CRLF */
+comment|/*%< for CRLF */
 operator|*
 name|buffer
 operator|=
@@ -4140,7 +4140,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int irp_unmarshall_ho(struct hostent *ho, char *buffer)  *  * notes:  *  *	See above.  *  * return:  *  *	0 on success, -1 on failure.  *  */
+comment|/*%  * int irp_unmarshall_ho(struct hostent *ho, char *buffer)  *  * notes: \li  *  *	See irpmarshall.h.  *  * return: \li  *  *	0 on success, -1 on failure.  *  */
 end_comment
 
 begin_function
@@ -4464,7 +4464,7 @@ block|{
 goto|goto
 name|error
 goto|;
-comment|/* junk in value */
+comment|/*%< junk in value */
 block|}
 name|holength
 operator|=
@@ -4483,7 +4483,7 @@ operator|!=
 name|t
 condition|)
 block|{
-comment|/* value must have been too big. */
+comment|/*%< value must have been too big. */
 goto|goto
 name|error
 goto|;
@@ -4805,7 +4805,7 @@ comment|/* +++++++++++++++++++++++++ struct netgrp +++++++++++++++++++++++++ */
 end_comment
 
 begin_comment
-comment|/*  * int irp_marshall_ng(const char *host, const char *user,  *		       const char *domain, char *buffer, size_t *len)  *  * notes:  *  *	See note for irp_marshall_ng_start  *  * return:  *  *	0 on success, 0 on failure.  *  */
+comment|/*%  * int irp_marshall_ng(const char *host, const char *user,  *		       const char *domain, char *buffer, size_t *len)  *  * notes: \li  *  *	See note for irp_marshall_ng_start  *  * return: \li  *  *	0 on success, 0 on failure.  *  */
 end_comment
 
 begin_function
@@ -4842,7 +4842,7 @@ name|need
 init|=
 literal|1
 decl_stmt|;
-comment|/* for nul byte */
+comment|/*%< for nul byte */
 specifier|const
 name|char
 modifier|*
@@ -4872,7 +4872,7 @@ name|need
 operator|+=
 literal|4
 expr_stmt|;
-comment|/* two parens and two commas */
+comment|/*%< two parens and two commas */
 name|need
 operator|+=
 operator|(
@@ -4973,7 +4973,7 @@ name|need
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* for CRLF */
+comment|/*%< for CRLF */
 operator|*
 name|buffer
 operator|=
@@ -5106,7 +5106,7 @@ comment|/* ---------- */
 end_comment
 
 begin_comment
-comment|/*  * int irp_unmarshall_ng(const char **host, const char **user,  *			 const char **domain, char *buffer)  *  * notes:  *  *	Unpacks the BUFFER into 3 character arrays it allocates and assigns  *	to *HOST, *USER and *DOMAIN. If any field of the value is empty,  *	then the corresponding paramater value will be set to NULL.  *  * return:  *  *	0 on success and -1 on failure.  */
+comment|/*%  * int irp_unmarshall_ng(const char **host, const char **user,  *			 const char **domain, char *buffer)  *  * notes: \li  *  *	Unpacks the BUFFER into 3 character arrays it allocates and assigns  *	to *HOST, *USER and *DOMAIN. If any field of the value is empty,  *	then the corresponding paramater value will be set to NULL.  *  * return: \li  *  *	0 on success and -1 on failure.  */
 end_comment
 
 begin_function
@@ -5488,7 +5488,7 @@ comment|/* +++++++++++++++++++++++++ struct nwent +++++++++++++++++++++++++ */
 end_comment
 
 begin_comment
-comment|/*  * int irp_marshall_nw(struct nwent *ne, char **buffer, size_t *len)  *  * notes:  *  *	See at top.  *  * return:  *  *	0 on success and -1 on failure.  *  */
+comment|/*%  * int irp_marshall_nw(struct nwent *ne, char **buffer, size_t *len)  *  * notes: \li  *  *	See at top.  *  * return: \li  *  *	0 on success and -1 on failure.  *  */
 end_comment
 
 begin_function
@@ -5515,7 +5515,7 @@ name|need
 init|=
 literal|1
 decl_stmt|;
-comment|/* for null byte */
+comment|/*%< for null byte */
 name|char
 name|nAddrType
 index|[
@@ -5691,7 +5691,7 @@ name|need
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* for CRLF */
+comment|/*%< for CRLF */
 operator|*
 name|buffer
 operator|=
@@ -5804,7 +5804,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int irp_unmarshall_nw(struct nwent *ne, char *buffer)  *  * notes:  *  *	See note up top.  *  * return:  *  *	0 on success and -1 on failure.  *  */
+comment|/*%  * int irp_unmarshall_nw(struct nwent *ne, char *buffer)  *  * notes: \li  *  *	See note up top.  *  * return: \li  *  *	0 on success and -1 on failure.  *  */
 end_comment
 
 begin_function
@@ -6220,7 +6220,7 @@ comment|/* +++++++++++++++++++++++++ struct netent +++++++++++++++++++++++++ */
 end_comment
 
 begin_comment
-comment|/*  * int irp_marshall_ne(struct netent *ne, char **buffer, size_t *len)  *  * notes:  *  *	See at top.  *  * return:  *  *	0 on success and -1 on failure.  *  */
+comment|/*%  * int irp_marshall_ne(struct netent *ne, char **buffer, size_t *len)  *  * notes: \li  *  *	See at top.  *  * return: \li  *  *	0 on success and -1 on failure.  *  */
 end_comment
 
 begin_function
@@ -6247,7 +6247,7 @@ name|need
 init|=
 literal|1
 decl_stmt|;
-comment|/* for null byte */
+comment|/*%< for null byte */
 name|char
 name|nAddrType
 index|[
@@ -6430,7 +6430,7 @@ name|need
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* for CRLF */
+comment|/*%< for CRLF */
 operator|*
 name|buffer
 operator|=
@@ -6543,7 +6543,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int irp_unmarshall_ne(struct netent *ne, char *buffer)  *  * notes:  *  *	See note up top.  *  * return:  *  *	0 on success and -1 on failure.  *  */
+comment|/*%  * int irp_unmarshall_ne(struct netent *ne, char *buffer)  *  * notes: \li  *  *	See note up top.  *  * return: \li  *  *	0 on success and -1 on failure.  *  */
 end_comment
 
 begin_function
@@ -6924,7 +6924,7 @@ comment|/* =====================================================================
 end_comment
 
 begin_comment
-comment|/*  * static char ** splitarray(const char *buffer, const char *buffend, char delim)  *  * notes:  *  *	Split a delim separated astring. Not allowed  *	to have two delims next to each other. BUFFER points to begining of  *	string, BUFFEND points to one past the end of the string  *	(i.e. points at where the null byte would be if null  *	terminated).  *  * return:  *  *	Returns a malloced array of pointers, each pointer pointing to a  *	malloced string. If BUFEER is an empty string, then return values is  *	array of 1 pointer that is NULL. Returns NULL on failure.  *  */
+comment|/*%  * static char ** splitarray(const char *buffer, const char *buffend, char delim)  *  * notes: \li  *  *	Split a delim separated astring. Not allowed  *	to have two delims next to each other. BUFFER points to begining of  *	string, BUFFEND points to one past the end of the string  *	(i.e. points at where the null byte would be if null  *	terminated).  *  * return: \li  *  *	Returns a malloced array of pointers, each pointer pointing to a  *	malloced string. If BUFEER is an empty string, then return values is  *	array of 1 pointer that is NULL. Returns NULL on failure.  *  */
 end_comment
 
 begin_function
@@ -7102,7 +7102,7 @@ block|{
 name|count
 operator|++
 expr_stmt|;
-comment|/* for NULL at end */
+comment|/*%< for NULL at end */
 name|aptr
 operator|=
 name|arr
@@ -7255,7 +7255,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static size_t joinlength(char * const *argv)  *  * return:  *  *	the number of bytes in all the arrays pointed at  *	by argv, including their null bytes(which will usually be turned  *	into commas).  *  *  */
+comment|/*%  * static size_t joinlength(char * const *argv)  *  * return: \li  *  *	the number of bytes in all the arrays pointed at  *	by argv, including their null bytes(which will usually be turned  *	into commas).  *  *  */
 end_comment
 
 begin_function
@@ -7308,7 +7308,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int joinarray(char * const *argv, char *buffer, char delim)  *  * notes:  *  *	Copy all the ARGV strings into the end of BUFFER  *	separating them with DELIM.  BUFFER is assumed to have  *	enough space to hold everything and to be already null-terminated.  *  * return:  *  *	0 unless argv or buffer is NULL.  *  *  */
+comment|/*%  * int joinarray(char * const *argv, char *buffer, char delim)  *  * notes: \li  *  *	Copy all the ARGV strings into the end of BUFFER  *	separating them with DELIM.  BUFFER is assumed to have  *	enough space to hold everything and to be already null-terminated.  *  * return: \li  *  *	0 unless argv or buffer is NULL.  *  *  */
 end_comment
 
 begin_function
@@ -7431,7 +7431,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static char * getfield(char **res, size_t reslen, char **ptr, char delim)  *  * notes:  *  *	Stores in *RES, which is a buffer of length RESLEN, a  *	copy of the bytes from *PTR up to and including the first  *	instance of DELIM. If *RES is NULL, then it will be  *	assigned a malloced buffer to hold the copy. *PTR is  *	modified to point at the found delimiter.  *  * return:  *  *	If there was no delimiter, then NULL is returned,  *	otherewise *RES is returned.  *  */
+comment|/*%  * static char * getfield(char **res, size_t reslen, char **ptr, char delim)  *  * notes: \li  *  *	Stores in *RES, which is a buffer of length RESLEN, a  *	copy of the bytes from *PTR up to and including the first  *	instance of DELIM. If *RES is NULL, then it will be  *	assigned a malloced buffer to hold the copy. *PTR is  *	modified to point at the found delimiter.  *  * return: \li  *  *	If there was no delimiter, then NULL is returned,  *	otherewise *RES is returned.  *  */
 end_comment
 
 begin_function
@@ -7558,7 +7558,7 @@ operator|>
 name|reslen
 condition|)
 block|{
-comment|/* to big for res */
+comment|/*%< to big for res */
 name|errno
 operator|=
 name|EINVAL
@@ -7624,7 +7624,7 @@ name|HAVE_STRNDUP
 end_ifndef
 
 begin_comment
-comment|/*  * static char * strndup(const char *str, size_t len)  *  * notes:  *  *	like strdup, except do len bytes instead of the whole string. Always  *	null-terminates.  *  * return:  *  *	The newly malloced string.  *  */
+comment|/*  * static char * strndup(const char *str, size_t len)  *  * notes: \li  *  *	like strdup, except do len bytes instead of the whole string. Always  *	null-terminates.  *  * return: \li  *  *	The newly malloced string.  *  */
 end_comment
 
 begin_function
@@ -7700,7 +7700,7 @@ name|WANT_MAIN
 end_if
 
 begin_comment
-comment|/*  * static int strcmp_nws(const char *a, const char *b)  *  * notes:  *  *	do a strcmp, except uneven lengths of whitespace compare the same  *  * return:  *  */
+comment|/*%  * static int strcmp_nws(const char *a, const char *b)  *  * notes: \li  *  *	do a strcmp, except uneven lengths of whitespace compare the same  *  * return: \li  *  */
 end_comment
 
 begin_function
@@ -7853,7 +7853,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * static void free_array(char **argv, size_t entries)  *  * notes:  *  *	Free argv and each of the pointers inside it. The end of  *	the array is when a NULL pointer is found inside. If  *	entries is> 0, then NULL pointers inside the array do  *	not indicate the end of the array.  *  */
+comment|/*%  * static void free_array(char **argv, size_t entries)  *  * notes: \li  *  *	Free argv and each of the pointers inside it. The end of  *	the array is when a NULL pointer is found inside. If  *	entries is> 0, then NULL pointers inside the array do  *	not indicate the end of the array.  *  */
 end_comment
 
 begin_function
@@ -7948,7 +7948,7 @@ name|WANT_MAIN
 end_if
 
 begin_comment
-comment|/* takes an option to indicate what sort of marshalling(read the code) and    an argument. If the argument looks like a marshalled buffer(has a ':'    embedded) then it's unmarshalled and the remarshalled and the new string    is compared to the old one. */
+comment|/*% takes an option to indicate what sort of marshalling(read the code) and    an argument. If the argument looks like a marshalled buffer(has a ':'    embedded) then it's unmarshalled and the remarshalled and the new string    is compared to the old one. */
 end_comment
 
 begin_function
@@ -9808,6 +9808,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

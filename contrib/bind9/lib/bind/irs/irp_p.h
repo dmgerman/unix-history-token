@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: irp_p.h,v 1.1.2.2.4.1 2004/03/09 08:33:37 marka Exp $  */
+comment|/*  * $Id: irp_p.h,v 1.4.18.1 2005/04/27 05:01:00 sra Exp $  */
 end_comment
 
 begin_ifndef
@@ -38,11 +38,11 @@ decl_stmt|;
 name|int
 name|inlast
 decl_stmt|;
-comment|/* index of one past the last char in buffer */
+comment|/*%< index of one past the last char in buffer */
 name|int
 name|incurr
 decl_stmt|;
-comment|/* index of the next char to be read from buffer */
+comment|/*%< index of the next char to be read from buffer */
 name|int
 name|fdCxn
 decl_stmt|;
@@ -305,6 +305,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

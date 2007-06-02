@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: request.h,v 1.17.12.5 2004/03/08 09:04:39 marka Exp $ */
+comment|/* $Id: request.h,v 1.21.18.2 2005/04/29 00:16:20 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * DNS Request  *  * The request module provides simple request/response services useful for  * sending SOA queries, DNS Notify messages, and dynamic update requests.  *  * MP:  *	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *  * Resources:  *<TBS>  *  * Security:  *	No anticipated impact.  */
+comment|/*! \file  *  * \brief  * The request module provides simple request/response services useful for  * sending SOA queries, DNS Notify messages, and dynamic update requests.  *  * MP:  *\li	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  */
 end_comment
 
 begin_include
@@ -118,7 +118,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a request manager.  *  * Requires:  *  *	'mctx' is a valid memory context.  *  *	'timermgr' is a valid timer manager.  *  *	'socketmgr' is a valid socket manager.  *  *	'taskmgr' is a valid task manager.  *  *	'dispatchv4' is a valid dispatcher with an IPv4 UDP socket, or is NULL.  *  *	'dispatchv6' is a valid dispatcher with an IPv6 UDP socket, or is NULL.  *  *	requestmgrp != NULL&& *requestmgrp == NULL  *  * Ensures:  *  *	On success, *requestmgrp is a valid request manager.  *  * Returns:  *  *	ISC_R_SUCCESS  *  *	Any other result indicates failure.  */
+comment|/*%<  * Create a request manager.  *  * Requires:  *  *\li	'mctx' is a valid memory context.  *  *\li	'timermgr' is a valid timer manager.  *  *\li	'socketmgr' is a valid socket manager.  *  *\li	'taskmgr' is a valid task manager.  *  *\li	'dispatchv4' is a valid dispatcher with an IPv4 UDP socket, or is NULL.  *  *\li	'dispatchv6' is a valid dispatcher with an IPv6 UDP socket, or is NULL.  *  *\li	requestmgrp != NULL&& *requestmgrp == NULL  *  * Ensures:  *  *\li	On success, *requestmgrp is a valid request manager.  *  * Returns:  *  *\li	ISC_R_SUCCESS  *  *\li	Any other result indicates failure.  */
 end_comment
 
 begin_function_decl
@@ -142,7 +142,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Send '*eventp' to 'task' when 'requestmgr' has completed shutdown.  *  * Notes:  *  *	It is not safe to detach the last reference to 'requestmgr' until  *	shutdown is complete.  *  * Requires:  *  *	'requestmgr' is a valid request manager.  *  *	'task' is a valid task.  *  *	*eventp is a valid event.  *  * Ensures:  *  *	*eventp == NULL.  */
+comment|/*%<  * Send '*eventp' to 'task' when 'requestmgr' has completed shutdown.  *  * Notes:  *  *\li	It is not safe to detach the last reference to 'requestmgr' until  *	shutdown is complete.  *  * Requires:  *  *\li	'requestmgr' is a valid request manager.  *  *\li	'task' is a valid task.  *  *\li	*eventp is a valid event.  *  * Ensures:  *  *\li	*eventp == NULL.  */
 end_comment
 
 begin_function_decl
@@ -157,7 +157,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Start the shutdown process for 'requestmgr'.  *  * Notes:  *  *	This call has no effect if the request manager is already shutting  *	down.  *  * Requires:  *  *	'requestmgr' is a valid requestmgr.  */
+comment|/*%<  * Start the shutdown process for 'requestmgr'.  *  * Notes:  *  *\li	This call has no effect if the request manager is already shutting  *	down.  *  * Requires:  *  *\li	'requestmgr' is a valid requestmgr.  */
 end_comment
 
 begin_function_decl
@@ -177,7 +177,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Attach to the request manager.  dns_requestmgr_shutdown() must not  *	have been called on 'source' prior to calling dns_requestmgr_attach().  *  * Requires:  *  *	'source' is a valid requestmgr.  *  *	'targetp' to be non NULL and '*targetp' to be NULL.  */
+comment|/*%<  *	Attach to the request manager.  dns_requestmgr_shutdown() must not  *	have been called on 'source' prior to calling dns_requestmgr_attach().  *  * Requires:  *  *\li	'source' is a valid requestmgr.  *  *\li	'targetp' to be non NULL and '*targetp' to be NULL.  */
 end_comment
 
 begin_function_decl
@@ -193,7 +193,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *  *	Detach from the given requestmgr.  If this is the final detach  *	requestmgr will be destroyed.  dns_requestmgr_shutdown() must  *	be called before the final detach.  *  * Requires:  *  *	'*requestmgrp' is a valid requestmgr.  *  * Ensures:  *	'*requestmgrp' is NULL.  */
+comment|/*%<  *	Detach from the given requestmgr.  If this is the final detach  *	requestmgr will be destroyed.  dns_requestmgr_shutdown() must  *	be called before the final detach.  *  * Requires:  *  *\li	'*requestmgrp' is a valid requestmgr.  *  * Ensures:  *\li	'*requestmgrp' is NULL.  */
 end_comment
 
 begin_function_decl
@@ -244,7 +244,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create and send a request.  *  * Notes:  *  *	'message' will be rendered and sent to 'address'.  If the  *	DNS_REQUESTOPT_TCP option is set, TCP will be used.  The request  *	will timeout after 'timeout' seconds.  *  *	When the request completes, successfully, due to a timeout, or  *	because it was canceled, a completion event will be sent to 'task'.  *  * Requires:  *  *	'message' is a valid DNS message.  *  *	'address' is a valid sockaddr.  *  *	'timeout'> 0  *  *	'task' is a valid task.  *  *	requestp != NULL&& *requestp == NULL  */
+comment|/*%<  * Create and send a request.  *  * Notes:  *  *\li	'message' will be rendered and sent to 'address'.  If the  *	#DNS_REQUESTOPT_TCP option is set, TCP will be used.  The request  *	will timeout after 'timeout' seconds.  *  *\li	When the request completes, successfully, due to a timeout, or  *	because it was canceled, a completion event will be sent to 'task'.  *  * Requires:  *  *\li	'message' is a valid DNS message.  *  *\li	'address' is a valid sockaddr.  *  *\li	'timeout'> 0  *  *\li	'task' is a valid task.  *  *\li	requestp != NULL&& *requestp == NULL  */
+end_comment
+
+begin_comment
+comment|/*% See dns_request_createvia3() */
 end_comment
 
 begin_function_decl
@@ -297,6 +301,10 @@ name|requestp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*% See dns_request_createvia3() */
+end_comment
 
 begin_function_decl
 name|isc_result_t
@@ -413,7 +421,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create and send a request.  *  * Notes:  *  *	'message' will be rendered and sent to 'address'.  If the  *	DNS_REQUESTOPT_TCP option is set, TCP will be used.  The request  *	will timeout after 'timeout' seconds.  UDP requests will be resent  *	at 'udptimeout' intervals if non-zero or 'udpretries' is non-zero.  *  *	When the request completes, successfully, due to a timeout, or  *	because it was canceled, a completion event will be sent to 'task'.  *  * Requires:  *  *	'message' is a valid DNS message.  *  *	'dstaddr' is a valid sockaddr.  *  *	'srcaddr' is a valid sockaddr or NULL.  *  *	'srcaddr' and 'dstaddr' are the same protocol family.  *  *	'timeout'> 0  *  *	'task' is a valid task.  *  *	requestp != NULL&& *requestp == NULL  */
+comment|/*%<   * Create and send a request.  *  * Notes:  *  *\li	'message' will be rendered and sent to 'address'.  If the  *	#DNS_REQUESTOPT_TCP option is set, TCP will be used.  The request  *	will timeout after 'timeout' seconds.  UDP requests will be resent  *	at 'udptimeout' intervals if non-zero or 'udpretries' is non-zero.  *  *\li	When the request completes, successfully, due to a timeout, or  *	because it was canceled, a completion event will be sent to 'task'.  *  * Requires:  *  *\li	'message' is a valid DNS message.  *  *\li	'dstaddr' is a valid sockaddr.  *  *\li	'srcaddr' is a valid sockaddr or NULL.  *  *\li	'srcaddr' and 'dstaddr' are the same protocol family.  *  *\li	'timeout'> 0  *  *\li	'task' is a valid task.  *  *\li	requestp != NULL&& *requestp == NULL  */
+end_comment
+
+begin_comment
+comment|/*% See dns_request_createraw3() */
 end_comment
 
 begin_function_decl
@@ -462,6 +474,10 @@ name|requestp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*% See dns_request_createraw3() */
+end_comment
 
 begin_function_decl
 name|isc_result_t
@@ -570,7 +586,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create and send a request.  *  * Notes:  *  *	'msgbuf' will be sent to 'destaddr' after setting the id.  If the  *	DNS_REQUESTOPT_TCP option is set, TCP will be used.  The request  *	will timeout after 'timeout' seconds.   UDP requests will be resent  *	at 'udptimeout' intervals if non-zero or if 'udpretries' is not zero.  *	  *	When the request completes, successfully, due to a timeout, or  *	because it was canceled, a completion event will be sent to 'task'.  *  * Requires:  *  *	'msgbuf' is a valid DNS message in compressed wire format.  *  *	'destaddr' is a valid sockaddr.  *  *	'srcaddr' is a valid sockaddr or NULL.  *  *	'srcaddr' and 'dstaddr' are the same protocol family.  *  *	'timeout'> 0  *  *	'task' is a valid task.  *  *	requestp != NULL&& *requestp == NULL  */
+comment|/*!<   * \brief Create and send a request.  *  * Notes:  *  *\li	'msgbuf' will be sent to 'destaddr' after setting the id.  If the  *	#DNS_REQUESTOPT_TCP option is set, TCP will be used.  The request  *	will timeout after 'timeout' seconds.   UDP requests will be resent  *	at 'udptimeout' intervals if non-zero or if 'udpretries' is not zero.  *	  *\li	When the request completes, successfully, due to a timeout, or  *	because it was canceled, a completion event will be sent to 'task'.  *  * Requires:  *  *\li	'msgbuf' is a valid DNS message in compressed wire format.  *  *\li	'destaddr' is a valid sockaddr.  *  *\li	'srcaddr' is a valid sockaddr or NULL.  *  *\li	'srcaddr' and 'dstaddr' are the same protocol family.  *  *\li	'timeout'> 0  *  *\li	'task' is a valid task.  *  *\li	requestp != NULL&& *requestp == NULL  */
 end_comment
 
 begin_function_decl
@@ -585,7 +601,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Cancel 'request'.  *  * Requires:  *  *	'request' is a valid request.  *  * Ensures:  *  *	If the completion event for 'request' has not yet been sent, it  *	will be sent, and the result code will be ISC_R_CANCELED.  */
+comment|/*%<  * Cancel 'request'.  *  * Requires:  *  *\li	'request' is a valid request.  *  * Ensures:  *  *\li	If the completion event for 'request' has not yet been sent, it  *	will be sent, and the result code will be ISC_R_CANCELED.  */
 end_comment
 
 begin_function_decl
@@ -608,7 +624,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the response to 'request' by filling in 'message'.  *  * 'options' is passed to dns_message_parse().  See dns_message_parse()  * for more details.  *  * Requires:  *  *	'request' is a valid request for which the caller has received the  *	completion event.  *  *	The result code of the completion event was ISC_R_SUCCESS.  *  * Returns:  *  *	ISC_R_SUCCESS  *  *	Any result that dns_message_parse() can return.  */
+comment|/*%<  * Get the response to 'request' by filling in 'message'.  *  * 'options' is passed to dns_message_parse().  See dns_message_parse()  * for more details.  *  * Requires:  *  *\li	'request' is a valid request for which the caller has received the  *	completion event.  *  *\li	The result code of the completion event was #ISC_R_SUCCESS.  *  * Returns:  *  *\li	ISC_R_SUCCESS  *  *\li	Any result that dns_message_parse() can return.  */
 end_comment
 
 begin_function_decl
@@ -623,7 +639,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return whether this query used TCP or not.  Setting DNS_REQUESTOPT_TCP  * in the call to dns_request_create() will cause the function to return  * ISC_TRUE, othewise the result is based on the query message size.  *  * Requires:  *	'request' is a valid request.  *  * Returns:  *	ISC_TRUE	if TCP was used.  *	ISC_FALSE	if UDP was used.  */
+comment|/*%<  * Return whether this query used TCP or not.  Setting #DNS_REQUESTOPT_TCP  * in the call to dns_request_create() will cause the function to return  * #ISC_TRUE, othewise the result is based on the query message size.  *  * Requires:  *\li	'request' is a valid request.  *  * Returns:  *\li	ISC_TRUE	if TCP was used.  *\li	ISC_FALSE	if UDP was used.  */
 end_comment
 
 begin_function_decl
@@ -639,7 +655,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy 'request'.  *  * Requires:  *  *	'request' is a valid request for which the caller has received the  *	completion event.  *  * Ensures:  *  *	*requestp == NULL  */
+comment|/*%<  * Destroy 'request'.  *  * Requires:  *  *\li	'request' is a valid request for which the caller has received the  *	completion event.  *  * Ensures:  *  *\li	*requestp == NULL  */
 end_comment
 
 begin_macro

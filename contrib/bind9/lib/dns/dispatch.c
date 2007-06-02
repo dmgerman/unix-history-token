@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dispatch.c,v 1.101.2.6.2.13 2006/07/19 00:44:04 marka Exp $ */
+comment|/* $Id: dispatch.c,v 1.116.18.13 2007/02/07 23:57:58 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -138,28 +142,28 @@ name|unsigned
 name|int
 name|qid_nbuckets
 decl_stmt|;
-comment|/* hash table size */
+comment|/*%< hash table size */
 name|unsigned
 name|int
 name|qid_increment
 decl_stmt|;
-comment|/* id increment on collision */
+comment|/*%< id increment on collision */
 name|isc_mutex_t
 name|lock
 decl_stmt|;
 name|isc_lfsr_t
 name|qid_lfsr1
 decl_stmt|;
-comment|/* state generator info */
+comment|/*%< state generator info */
 name|isc_lfsr_t
 name|qid_lfsr2
 decl_stmt|;
-comment|/* state generator info */
+comment|/*%< state generator info */
 name|dns_displist_t
 modifier|*
 name|qid_table
 decl_stmt|;
-comment|/* the table itself */
+comment|/*%< the table itself */
 block|}
 name|dns_qid_t
 typedef|;
@@ -212,17 +216,17 @@ name|unsigned
 name|int
 name|buffers
 decl_stmt|;
-comment|/* allocated buffers */
+comment|/*%< allocated buffers */
 name|unsigned
 name|int
 name|buffersize
 decl_stmt|;
-comment|/* size of each buffer */
+comment|/*%< size of each buffer */
 name|unsigned
 name|int
 name|maxbuffers
 decl_stmt|;
-comment|/* max buffers */
+comment|/*%< max buffers */
 comment|/* Locked internally. */
 name|isc_mutex_t
 name|pool_lock
@@ -231,27 +235,27 @@ name|isc_mempool_t
 modifier|*
 name|epool
 decl_stmt|;
-comment|/* memory pool for events */
+comment|/*%< memory pool for events */
 name|isc_mempool_t
 modifier|*
 name|rpool
 decl_stmt|;
-comment|/* memory pool for replies */
+comment|/*%< memory pool for replies */
 name|isc_mempool_t
 modifier|*
 name|dpool
 decl_stmt|;
-comment|/* dispatch allocations */
+comment|/*%< dispatch allocations */
 name|isc_mempool_t
 modifier|*
 name|bpool
 decl_stmt|;
-comment|/* memory pool for buffers */
+comment|/*%< memory pool for buffers */
 name|isc_entropy_t
 modifier|*
 name|entropy
 decl_stmt|;
-comment|/* entropy source */
+comment|/*%< entropy source */
 block|}
 struct|;
 end_struct
@@ -351,36 +355,36 @@ name|unsigned
 name|int
 name|magic
 decl_stmt|;
-comment|/* magic */
+comment|/*%< magic */
 name|dns_dispatchmgr_t
 modifier|*
 name|mgr
 decl_stmt|;
-comment|/* dispatch manager */
+comment|/*%< dispatch manager */
 name|isc_task_t
 modifier|*
 name|task
 decl_stmt|;
-comment|/* internal task */
+comment|/*%< internal task */
 name|isc_socket_t
 modifier|*
 name|socket
 decl_stmt|;
-comment|/* isc socket attached to */
+comment|/*%< isc socket attached to */
 name|isc_sockaddr_t
 name|local
 decl_stmt|;
-comment|/* local address */
+comment|/*%< local address */
 name|unsigned
 name|int
 name|maxrequests
 decl_stmt|;
-comment|/* max requests */
+comment|/*%< max requests */
 name|isc_event_t
 modifier|*
 name|ctlevent
 decl_stmt|;
-comment|/* Locked by mgr->lock. */
+comment|/*% Locked by mgr->lock. */
 name|ISC_LINK
 argument_list|(
 argument|dns_dispatch_t
@@ -391,7 +395,7 @@ comment|/* Locked by "lock". */
 name|isc_mutex_t
 name|lock
 decl_stmt|;
-comment|/* locks all below */
+comment|/*%< locks all below */
 name|isc_sockettype_t
 name|socktype
 decl_stmt|;
@@ -403,12 +407,12 @@ name|unsigned
 name|int
 name|refcount
 decl_stmt|;
-comment|/* number of users */
+comment|/*%< number of users */
 name|dns_dispatchevent_t
 modifier|*
 name|failsafe_ev
 decl_stmt|;
-comment|/* failsafe cancel event */
+comment|/*%< failsafe cancel event */
 name|unsigned
 name|int
 name|shutting_down
@@ -431,7 +435,7 @@ name|recv_pending
 range|:
 literal|1
 decl_stmt|;
-comment|/* is a recv() pending? */
+comment|/*%< is a recv() pending? */
 name|isc_result_t
 name|shutdown_why
 decl_stmt|;
@@ -439,16 +443,16 @@ name|unsigned
 name|int
 name|requests
 decl_stmt|;
-comment|/* how many requests we have */
+comment|/*%< how many requests we have */
 name|unsigned
 name|int
 name|tcpbuffers
 decl_stmt|;
-comment|/* allocated buffers */
+comment|/*%< allocated buffers */
 name|dns_tcpmsg_t
 name|tcpmsg
 decl_stmt|;
-comment|/* for tcp streams */
+comment|/*%< for tcp streams */
 name|dns_qid_t
 modifier|*
 name|qid
@@ -4376,6 +4380,13 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+default|default:
+name|INSIST
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
@@ -5661,6 +5672,14 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
+name|UNLOCK
+argument_list|(
+operator|&
+name|mgr
+operator|->
+name|buffer_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ISC_R_NOMEMORY
@@ -6327,6 +6346,9 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_DISPATCHMGR
@@ -6436,8 +6458,8 @@ name|ISC_R_NOMEMORY
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|result
+operator|=
 name|isc_mutex_init
 argument_list|(
 operator|&
@@ -6445,19 +6467,14 @@ name|qid
 operator|->
 name|lock
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init failed"
-argument_list|)
-expr_stmt|;
 name|isc_mem_put
 argument_list|(
 name|mgr
@@ -6493,7 +6510,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ISC_R_UNEXPECTED
+name|result
 operator|)
 return|;
 block|}
@@ -6712,7 +6729,7 @@ modifier|*
 name|disp
 decl_stmt|;
 name|isc_result_t
-name|res
+name|result
 decl_stmt|;
 name|REQUIRE
 argument_list|(
@@ -6863,8 +6880,8 @@ name|qid
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
+name|result
+operator|=
 name|isc_mutex_init
 argument_list|(
 operator|&
@@ -6872,27 +6889,16 @@ name|disp
 operator|->
 name|lock
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|res
-operator|=
-name|ISC_R_UNEXPECTED
-expr_stmt|;
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init failed"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|deallocate
 goto|;
-block|}
 name|disp
 operator|->
 name|failsafe_ev
@@ -6911,7 +6917,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|res
+name|result
 operator|=
 name|ISC_R_NOMEMORY
 expr_stmt|;
@@ -6959,7 +6965,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|res
+name|result
 operator|)
 return|;
 block|}

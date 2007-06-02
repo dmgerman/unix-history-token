@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getpwent_r.c,v 1.5.206.2 2004/09/17 13:32:37 marka Exp $"
+literal|"$Id: getpwent_r.c,v 1.6.18.2 2005/04/27 05:00:59 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -619,7 +619,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/*  *	These assume a single context is in operation per thread.  *	If this is not the case we will need to call irs directly  *	rather than through the base functions.  */
+comment|/*%  *	These assume a single context is in operation per thread.  *	If this is not the case we will need to call irs directly  *	rather than through the base functions.  */
 name|PASS_R_RETURN
 name|getpwent_r
 parameter_list|(
@@ -1232,6 +1232,10 @@ end_endif
 
 begin_comment
 comment|/* !def(_REENTRANT) || !def(DO_PTHREADS) || !def(WANT_IRS_PW) */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

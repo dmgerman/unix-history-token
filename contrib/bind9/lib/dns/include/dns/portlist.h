@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: portlist.h,v 1.2.84.2 2004/03/06 08:13:58 marka Exp $ */
+comment|/* $Id: portlist.h,v 1.3.18.2 2005/04/29 00:16:17 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -49,7 +53,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a port list.  *   * Requires:  *	'mctx' to be valid.  *	'portlistp' to be non NULL and '*portlistp' to be NULL;  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY  *	ISC_R_UNEXPECTED  */
+comment|/*%<  * Create a port list.  *   * Requires:  *\li	'mctx' to be valid.  *\li	'portlistp' to be non NULL and '*portlistp' to be NULL;  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  *\li	#ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -70,7 +74,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Add the given<port,af> tuple to the portlist.  *  * Requires:  *	'portlist' to be valid.  *	'af' to be AF_INET or AF_INET6  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY  */
+comment|/*%<  * Add the given<port,af> tuple to the portlist.  *  * Requires:  *\li	'portlist' to be valid.  *\li	'af' to be AF_INET or AF_INET6  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -91,7 +95,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Remove the given<port,af> tuple to the portlist.  *  * Requires:  *	'portlist' to be valid.  *	'af' to be AF_INET or AF_INET6  */
+comment|/*%<  * Remove the given<port,af> tuple to the portlist.  *  * Requires:  *\li	'portlist' to be valid.  *\li	'af' to be AF_INET or AF_INET6  */
 end_comment
 
 begin_function_decl
@@ -112,7 +116,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Find the given<port,af> tuple to the portlist.  *  * Requires:  *	'portlist' to be valid.  *	'af' to be AF_INET or AF_INET6  *  * Returns  * 	ISC_TRUE if the tuple is found, ISC_FALSE otherwise.  */
+comment|/*%<  * Find the given<port,af> tuple to the portlist.  *  * Requires:  *\li	'portlist' to be valid.  *\li	'af' to be AF_INET or AF_INET6  *  * Returns  * \li	#ISC_TRUE if the tuple is found, ISC_FALSE otherwise.  */
 end_comment
 
 begin_function_decl
@@ -132,7 +136,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Attach to a port list.  *  * Requires:  *	'portlist' to be valid.  *	'portlistp' to be non NULL and '*portlistp' to be NULL;  */
+comment|/*%<  * Attach to a port list.  *  * Requires:  *\li	'portlist' to be valid.  *\li	'portlistp' to be non NULL and '*portlistp' to be NULL;  */
 end_comment
 
 begin_function_decl
@@ -148,7 +152,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Detach from a port list.  *  * Requires:  *	'*portlistp' to be valid.  */
+comment|/*%<  * Detach from a port list.  *  * Requires:  *\li	'*portlistp' to be valid.  */
 end_comment
 
 begin_macro

@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strsep.c,v 1.1 2001/03/29 06:30:36 marka Exp $"
+literal|"$Id: strsep.c,v 1.1.352.1 2005/04/27 05:00:47 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,7 +97,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * Get next token from string *stringp, where tokens are possibly-empty  * strings separated by characters from delim.    *  * Writes NULs into the string at *stringp to end tokens.  * delim need not remain constant from call to call.  * On return, *stringp points past the last NUL written (if there might  * be further tokens), or is NULL (if there are definitely no more tokens).  *  * If *stringp is NULL, strsep returns NULL.  */
+comment|/*%  * Get next token from string *stringp, where tokens are possibly-empty  * strings separated by characters from delim.    *  * Writes NULs into the string at *stringp to end tokens.  * delim need not remain constant from call to call.  * On return, *stringp points past the last NUL written (if there might  * be further tokens), or is NULL (if there are definitely no more tokens).  *  * If *stringp is NULL, strsep returns NULL.  */
 end_comment
 
 begin_function
@@ -234,6 +234,10 @@ end_endif
 
 begin_comment
 comment|/*NEED_STRSEP*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

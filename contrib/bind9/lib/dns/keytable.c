@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: keytable.c,v 1.26.12.5 2006/01/06 00:01:42 marka Exp $ */
+comment|/* $Id: keytable.c,v 1.28.18.4 2005/12/05 00:00:03 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -334,29 +338,9 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init() failed: %s"
-argument_list|,
-name|isc_result_totext
-argument_list|(
-name|result
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-name|ISC_R_UNEXPECTED
-expr_stmt|;
 goto|goto
 name|cleanup_rbt
 goto|;
-block|}
 name|result
 operator|=
 name|isc_rwlock_init
@@ -377,29 +361,9 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_rwlock_init() failed: %s"
-argument_list|,
-name|isc_result_totext
-argument_list|(
-name|result
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-name|ISC_R_UNEXPECTED
-expr_stmt|;
 goto|goto
 name|cleanup_lock
 goto|;
-block|}
 name|keytable
 operator|->
 name|mctx

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetgrent.c,v 1.1.2.1.4.1 2004/03/09 08:33:36 marka Exp $"
+literal|"$Id: getnetgrent.c,v 1.3.18.1 2005/04/27 05:00:58 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -710,6 +710,10 @@ end_endif
 
 begin_comment
 comment|/*__BIND_NOSTATIC*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

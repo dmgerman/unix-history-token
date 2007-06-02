@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/* eventlib.h - exported interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib.h,v 1.1.2.1.4.2 2005/07/28 07:43:18 marka Exp $  */
+comment|/* eventlib.h - exported interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib.h,v 1.3.18.2 2005/07/28 07:38:07 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -1611,6 +1611,10 @@ end_endif
 
 begin_comment
 comment|/*_EVENTLIB_H*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

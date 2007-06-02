@@ -21,7 +21,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: hesiod.c,v 1.1.2.1.4.4 2005/07/28 07:43:19 marka Exp $"
+literal|"$Id: hesiod.c,v 1.4.18.3 2005/07/28 07:38:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,11 +35,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * This file is primarily maintained by<tytso@mit.edu> and<ghudson@mit.edu>.  */
-end_comment
-
-begin_comment
-comment|/*  * hesiod.c --- the core portion of the hesiod resolver.  *  * This file is derived from the hesiod library from Project Athena;  * It has been extensively rewritten by Theodore Ts'o to have a more  * thread-safe interface.  */
+comment|/*! \file  * \brief  * hesiod.c --- the core portion of the hesiod resolver.  *  * This file is derived from the hesiod library from Project Athena;  * It has been extensively rewritten by Theodore Ts'o to have a more  * thread-safe interface.  * \author  * This file is primarily maintained by&lt;tytso@mit.edu&gt; and&lt;ghudson@mit.edu&gt;.  */
 end_comment
 
 begin_comment
@@ -277,7 +273,7 @@ comment|/* Public */
 end_comment
 
 begin_comment
-comment|/*  * This function is called to initialize a hesiod_p.  */
+comment|/*%  * This function is called to initialize a hesiod_p.  */
 end_comment
 
 begin_function
@@ -594,7 +590,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function deallocates the hesiod_p  */
+comment|/*%  * This function deallocates the hesiod_p  */
 end_comment
 
 begin_function
@@ -697,7 +693,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function takes a hesiod (name, type) and returns a DNS  * name which is to be resolved.  */
+comment|/*%  * This function takes a hesiod (name, type) and returns a DNS  * name which is to be resolved.  */
 end_comment
 
 begin_function
@@ -1019,7 +1015,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the core function.  Given a hesiod (name, type), it  * returns an array of strings returned by the resolver.  */
+comment|/*%  * This is the core function.  Given a hesiod (name, type), it  * returns an array of strings returned by the resolver.  */
 end_comment
 
 begin_function
@@ -1219,7 +1215,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function parses the /etc/hesiod.conf file  */
+comment|/*%  * This function parses the /etc/hesiod.conf file  */
 end_comment
 
 begin_function
@@ -1595,7 +1591,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a DNS class and a DNS name, do a lookup for TXT records, and  * return a list of them.  */
+comment|/*%  * Given a DNS class and a DNS name, do a lookup for TXT records, and  * return a list of them.  */
 end_comment
 
 begin_function
@@ -1624,20 +1620,20 @@ block|{
 name|int
 name|type
 decl_stmt|;
-comment|/* RR type */
+comment|/*%< RR type */
 name|int
 name|class
 decl_stmt|;
-comment|/* RR class */
+comment|/*%< RR class */
 name|int
 name|dlen
 decl_stmt|;
-comment|/* len of data section */
+comment|/*%< len of data section */
 name|u_char
 modifier|*
 name|data
 decl_stmt|;
-comment|/* pointer to data */
+comment|/*%< pointer to data */
 block|}
 name|rr
 struct|;
@@ -2013,7 +2009,7 @@ name|INT16SZ
 operator|+
 name|INT32SZ
 expr_stmt|;
-comment|/* skip the ttl, too */
+comment|/*%< skip the ttl, too */
 name|rr
 operator|.
 name|dlen

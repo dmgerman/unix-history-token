@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 2001, 2003  Internet Software Consortium.  * Portions Copyright (C) 2001  Nominum, Inc.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NOMINUM DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 2001, 2003  Internet Software Consortium.  * Portions Copyright (C) 2001  Nominum, Inc.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NOMINUM DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: result.h,v 1.3.2.2.2.1 2004/03/06 08:15:22 marka Exp $ */
+comment|/* $Id: result.h,v 1.5.18.2 2005/04/29 00:17:14 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|ISCCC_RESULT_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -44,12 +48,20 @@ directive|include
 file|<isccc/types.h>
 end_include
 
+begin_comment
+comment|/*% Unknown Version */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ISCCC_R_UNKNOWNVERSION
 value|(ISC_RESULTCLASS_ISCCC + 0)
 end_define
+
+begin_comment
+comment|/*% Syntax Error */
+end_comment
 
 begin_define
 define|#
@@ -58,12 +70,20 @@ name|ISCCC_R_SYNTAX
 value|(ISC_RESULTCLASS_ISCCC + 1)
 end_define
 
+begin_comment
+comment|/*% Bad Authorization */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ISCCC_R_BADAUTH
 value|(ISC_RESULTCLASS_ISCCC + 2)
 end_define
+
+begin_comment
+comment|/*% Expired */
+end_comment
 
 begin_define
 define|#
@@ -72,12 +92,20 @@ name|ISCCC_R_EXPIRED
 value|(ISC_RESULTCLASS_ISCCC + 3)
 end_define
 
+begin_comment
+comment|/*% Clock Skew */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ISCCC_R_CLOCKSKEW
 value|(ISC_RESULTCLASS_ISCCC + 4)
 end_define
+
+begin_comment
+comment|/*% Duplicate */
+end_comment
 
 begin_define
 define|#
@@ -94,7 +122,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* Number of results */
+comment|/*%< Number of results */
 end_comment
 
 begin_function_decl
@@ -111,7 +139,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convert a isccc_result_t into a string message describing the result.  */
+comment|/*%  * Convert a isccc_result_t into a string message describing the result.  */
 end_comment
 
 begin_function_decl

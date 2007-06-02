@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lcl_ng.c,v 1.1.206.1 2004/03/09 08:33:38 marka Exp $"
+literal|"$Id: lcl_ng.c,v 1.2.18.1 2005/04/27 05:01:02 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,7 +141,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Host name */
+comment|/*%< Host name */
 end_comment
 
 begin_define
@@ -152,7 +152,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* User name */
+comment|/*%< User name */
 end_comment
 
 begin_define
@@ -163,7 +163,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* and Domain name */
+comment|/*%< and Domain name */
 end_comment
 
 begin_define
@@ -174,7 +174,7 @@ value|1024
 end_define
 
 begin_comment
-comment|/* Length of netgroup file line */
+comment|/*%< Length of netgroup file line */
 end_comment
 
 begin_comment
@@ -182,7 +182,7 @@ comment|/*  * XXX Warning XXX  * This code is a hack-and-slash special.  It real
 end_comment
 
 begin_comment
-comment|/*  * Static Variables and functions used by setnetgrent(), getnetgrent() and  * endnetgrent().  * There are two linked lists:  * - linelist is just used by setnetgrent() to parse the net group file via.  *   parse_netgrp()  * - netgrp is the list of entries for the current netgroup  */
+comment|/*%  * Static Variables and functions used by setnetgrent(), getnetgrent() and  * endnetgrent().  *  * There are two linked lists:  * \li linelist is just used by setnetgrent() to parse the net group file via.  *   parse_netgrp()  * \li netgrp is the list of entries for the current netgroup  */
 end_comment
 
 begin_struct
@@ -194,21 +194,21 @@ name|linelist
 modifier|*
 name|l_next
 decl_stmt|;
-comment|/* Chain ptr. */
+comment|/*%< Chain ptr. */
 name|int
 name|l_parsed
 decl_stmt|;
-comment|/* Flag for cycles */
+comment|/*%< Flag for cycles */
 name|char
 modifier|*
 name|l_groupname
 decl_stmt|;
-comment|/* Name of netgroup */
+comment|/*%< Name of netgroup */
 name|char
 modifier|*
 name|l_line
 decl_stmt|;
-comment|/* Netgroup entrie(s) to be parsed */
+comment|/*%< Netgroup entrie(s) to be parsed */
 block|}
 struct|;
 end_struct
@@ -222,7 +222,7 @@ name|ng_old_struct
 modifier|*
 name|ng_next
 decl_stmt|;
-comment|/* Chain ptr */
+comment|/*%< Chain ptr */
 name|char
 modifier|*
 name|ng_str
@@ -230,7 +230,7 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/* Field pointers, see below */
+comment|/*%< Field pointers, see below */
 block|}
 struct|;
 end_struct
@@ -643,7 +643,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse the netgroup file looking for the netgroup and build the list  * of netgrp structures. Let parse_netgrp() and read_for_group() do  * most of the work.  */
+comment|/*%  * Parse the netgroup file looking for the netgroup and build the list  * of netgrp structures. Let parse_netgrp() and read_for_group() do  * most of the work.  */
 end_comment
 
 begin_function
@@ -845,7 +845,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the next netgroup off the list.  */
+comment|/*%  * Get the next netgroup off the list.  */
 end_comment
 
 begin_function
@@ -959,7 +959,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Search for a match in a netgroup.  */
+comment|/*%  * Search for a match in a netgroup.  */
 end_comment
 
 begin_function
@@ -1167,7 +1167,7 @@ comment|/* Private */
 end_comment
 
 begin_comment
-comment|/*  * endnetgrent() - cleanup  */
+comment|/*%  * endnetgrent() - cleanup  */
 end_comment
 
 begin_function
@@ -1391,7 +1391,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse the netgroup file setting up the linked lists.  */
+comment|/*%  * Parse the netgroup file setting up the linked lists.  */
 end_comment
 
 begin_function
@@ -1853,7 +1853,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the netgroup file and save lines until the line for the netgroup  * is found. Return 1 if eof is encountered.  */
+comment|/*%  * Read the netgroup file and save lines until the line for the netgroup  * is found. Return 1 if eof is encountered.  */
 end_comment
 
 begin_function
@@ -2382,6 +2382,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

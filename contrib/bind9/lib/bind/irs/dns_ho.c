@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_ho.c,v 1.5.2.7.4.8 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: dns_ho.c,v 1.14.18.7 2006/12/07 03:54:24 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,7 +238,7 @@ value|(65535)
 end_define
 
 begin_comment
-comment|/* Maximum TCP message size */
+comment|/*%< Maximum TCP message size */
 end_comment
 
 begin_define
@@ -284,26 +284,26 @@ decl_stmt|;
 name|querybuf
 name|qbuf
 decl_stmt|;
-comment|/* query buffer */
+comment|/*%< query buffer */
 name|u_char
 modifier|*
 name|answer
 decl_stmt|;
-comment|/* buffer to put answer */
+comment|/*%< buffer to put answer */
 name|int
 name|anslen
 decl_stmt|;
-comment|/* size of answer buffer */
+comment|/*%< size of answer buffer */
 name|int
 name|qclass
 decl_stmt|,
 name|qtype
 decl_stmt|;
-comment|/* class and type of query */
+comment|/*%< class and type of query */
 name|int
 name|action
 decl_stmt|;
-comment|/* condition whether query is really issued */
+comment|/*%< condition whether query is really issued */
 name|char
 name|qname
 index|[
@@ -312,12 +312,12 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* domain name */
+comment|/*%< domain name */
 if|#
 directive|if
 literal|0
 block|int n;
-comment|/* result length */
+comment|/*%< result length */
 endif|#
 directive|endif
 block|}
@@ -384,7 +384,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* IPv4 or IPv6 */
+comment|/*%< IPv4 or IPv6 */
 name|struct
 name|__res_state
 modifier|*
@@ -513,7 +513,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* last 4 bytes of IPv6 addr */
+comment|/*%< last 4 bytes of IPv6 addr */
 end_comment
 
 begin_comment
@@ -1637,7 +1637,7 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-comment|/* no more loop is necessary */
+comment|/*%< no more loop is necessary */
 name|querystate
 operator|=
 name|RESQRY_FAIL
@@ -2736,13 +2736,13 @@ expr_stmt|;
 goto|goto
 name|cleanup
 goto|;
-comment|/* no more loop is necessary. */
+comment|/*%< no more loop is necessary. */
 block|}
 name|hp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* H_ERRNO was set by subroutines */
+comment|/*%< H_ERRNO was set by subroutines */
 name|cleanup
 label|:
 if|if
@@ -3377,7 +3377,7 @@ argument_list|,
 name|NO_RECOVERY
 argument_list|)
 expr_stmt|;
-comment|/* better error? */
+comment|/*%< better error? */
 goto|goto
 name|cleanup
 goto|;
@@ -3525,7 +3525,7 @@ name|pai
 operator|->
 name|ai_family
 argument_list|,
-comment|/* XXX: meaningless */
+comment|/*%< XXX: meaningless */
 literal|0
 argument_list|,
 operator|&
@@ -3738,7 +3738,7 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
-comment|/* meaningless for addrinfo cases */
+comment|/*!< meaningless for addrinfo cases  */
 name|struct
 name|addrinfo
 modifier|*
@@ -3921,7 +3921,7 @@ case|:
 case|case
 name|T_ANY
 case|:
-comment|/* use T_ANY only for T_A/T_AAAA lookup */
+comment|/*%< use T_ANY only for T_A/T_AAAA lookup */
 name|name_ok
 operator|=
 name|res_hnok
@@ -4169,7 +4169,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* for the \0 */
+comment|/*%< for the \\0 */
 if|if
 condition|(
 name|n
@@ -4328,7 +4328,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-comment|/* name */
+comment|/*%< name */
 name|BOUNDS_CHECK
 argument_list|(
 name|cp
@@ -4351,7 +4351,7 @@ name|cp
 operator|+=
 name|INT16SZ
 expr_stmt|;
-comment|/* type */
+comment|/*%< type */
 name|class
 operator|=
 name|ns_get16
@@ -4365,7 +4365,7 @@ name|INT16SZ
 operator|+
 name|INT32SZ
 expr_stmt|;
-comment|/* class, TTL */
+comment|/*%< class, TTL */
 name|n
 operator|=
 name|ns_get16
@@ -4377,7 +4377,7 @@ name|cp
 operator|+=
 name|INT16SZ
 expr_stmt|;
-comment|/* len */
+comment|/*%< len */
 name|BOUNDS_CHECK
 argument_list|(
 name|cp
@@ -4534,7 +4534,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* for the \0 */
+comment|/*%< for the \\0 */
 name|bp
 operator|+=
 name|n
@@ -4549,7 +4549,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* for the \0 */
+comment|/*%< for the \\0 */
 if|if
 condition|(
 name|n
@@ -4693,7 +4693,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* for the \0 */
+comment|/*%< for the \\0 */
 if|if
 condition|(
 name|n
@@ -4920,7 +4920,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* for the \0 */
+comment|/*%< for the \\0 */
 name|bp
 operator|+=
 name|n
@@ -5057,7 +5057,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* for the \0 */
+comment|/*%< for the \\0 */
 if|if
 condition|(
 name|nn
@@ -5132,16 +5132,20 @@ condition|(
 name|bp
 operator|+
 name|n
-operator|>=
+operator|>
 operator|&
 name|pvt
 operator|->
 name|hostbuf
 index|[
 sizeof|sizeof
+argument_list|(
 name|pvt
 operator|->
 name|hostbuf
+argument_list|)
+operator|-
+literal|1
 index|]
 condition|)
 block|{
@@ -5155,7 +5159,7 @@ condition|(
 name|ret_aip
 condition|)
 block|{
-comment|/* need addrinfo. keep it. */
+comment|/*%< need addrinfo. keep it. */
 while|while
 condition|(
 name|cur
@@ -5177,7 +5181,7 @@ operator|->
 name|ai_next
 condition|)
 block|{
-comment|/* need hostent */
+comment|/*%< need hostent */
 name|struct
 name|addrinfo
 modifier|*
@@ -5370,7 +5374,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* for the \0 */
+comment|/*%< for the \\0 */
 if|if
 condition|(
 name|n
@@ -5688,7 +5692,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* abort? */
+comment|/*%< abort? */
 block|}
 comment|/* Ensure alignment. */
 name|bp
@@ -5731,16 +5735,20 @@ condition|(
 name|bp
 operator|+
 name|addrlen
-operator|>=
+operator|>
 operator|&
 name|pvt
 operator|->
 name|hostbuf
 index|[
 sizeof|sizeof
+argument_list|(
 name|pvt
 operator|->
 name|hostbuf
+argument_list|)
+operator|-
+literal|1
 index|]
 condition|)
 return|return
@@ -5768,7 +5776,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* fail, but not treat it as an error. */
+comment|/*%< fail, but not treat it as an error. */
 comment|/* Suppress duplicates. */
 for|for
 control|(

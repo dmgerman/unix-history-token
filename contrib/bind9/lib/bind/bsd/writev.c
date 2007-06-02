@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: writev.c,v 1.1.2.1 2003/06/27 03:51:35 marka Exp $"
+literal|"$Id: writev.c,v 1.2.164.1 2005/04/27 05:00:47 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -399,6 +399,10 @@ end_endif
 
 begin_comment
 comment|/*NEED_WRITEV*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

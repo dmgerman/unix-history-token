@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: entropy.c,v 1.3.2.2.2.7 2004/03/08 09:04:48 marka Exp $ */
+comment|/* $Id: entropy.c,v 1.11.18.3 2005/07/12 01:22:28 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * This is the system independent part of the entropy module.  It is  * compiled via inclusion from the relevant OS source file, ie,  * unix/entropy.c or win32/entropy.c.  */
+comment|/*! \file  * \brief  * This is the system independent part of the entropy module.  It is  * compiled via inclusion from the relevant OS source file, ie,  * \link unix/entropy.c unix/entropy.c \endlink or win32/entropy.c.  *  * \author Much of this code is modeled after the NetBSD /dev/random implementation,  * written by Michael Graff<explorer@netbsd.org>.  */
 end_comment
 
 begin_include
@@ -113,10 +113,6 @@ directive|include
 file|<isc/util.h>
 end_include
 
-begin_comment
-comment|/*  * Much of this code is modeled after the NetBSD /dev/random implementation,  * written by Michael Graff<explorer@netbsd.org>.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -156,7 +152,7 @@ comment|/***  *** "constants."  Do not change these unless you _really_ know wha
 end_comment
 
 begin_comment
-comment|/*  * size of entropy pool in 32-bit words.  This _MUST_ be a power of 2.  */
+comment|/*%  * Size of entropy pool in 32-bit words.  This _MUST_ be a power of 2.  */
 end_comment
 
 begin_define
@@ -166,12 +162,20 @@ name|RND_POOLWORDS
 value|128
 end_define
 
+begin_comment
+comment|/*% Pool in bytes. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RND_POOLBYTES
 value|(RND_POOLWORDS * 4)
 end_define
+
+begin_comment
+comment|/*% Pool in bits. */
+end_comment
 
 begin_define
 define|#
@@ -181,7 +185,7 @@ value|(RND_POOLWORDS * 32)
 end_define
 
 begin_comment
-comment|/*  * Number of bytes returned per hash.  This must be true:  *	threshold * 2<= digest_size_in_bytes  */
+comment|/*%  * Number of bytes returned per hash.  This must be true:  *	threshold * 2<= digest_size_in_bytes  */
 end_comment
 
 begin_define
@@ -199,7 +203,7 @@ value|(RND_ENTROPY_THRESHOLD * 8)
 end_define
 
 begin_comment
-comment|/*  * Size of the input event queue in samples.  */
+comment|/*%  * Size of the input event queue in samples.  */
 end_comment
 
 begin_define
@@ -210,7 +214,7 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * The number of times we'll "reseed" for pseudorandom seeds.  This is an  * extremely weak pseudorandom seed.  If the caller is using lots of  * pseudorandom data and they cannot provide a stronger random source,  * there is little we can do other than hope they're smart enough to  * call _adddata() with something better than we can come up with.  */
+comment|/*%  * The number of times we'll "reseed" for pseudorandom seeds.  This is an  * extremely weak pseudorandom seed.  If the caller is using lots of  * pseudorandom data and they cannot provide a stronger random source,  * there is little we can do other than hope they're smart enough to  * call _adddata() with something better than we can come up with.  */
 end_comment
 
 begin_define
@@ -220,6 +224,10 @@ name|RND_INITIALIZE
 value|128
 end_define
 
+begin_comment
+comment|/*% Entropy Pool */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -227,26 +235,26 @@ block|{
 name|isc_uint32_t
 name|cursor
 decl_stmt|;
-comment|/* current add point in the pool */
+comment|/*%< current add point in the pool */
 name|isc_uint32_t
 name|entropy
 decl_stmt|;
-comment|/* current entropy estimate in bits */
+comment|/*%< current entropy estimate in bits */
 name|isc_uint32_t
 name|pseudo
 decl_stmt|;
-comment|/* bits extracted in pseudorandom */
+comment|/*%< bits extracted in pseudorandom */
 name|isc_uint32_t
 name|rotate
 decl_stmt|;
-comment|/* how many bits to rotate by */
+comment|/*%< how many bits to rotate by */
 name|isc_uint32_t
 name|pool
 index|[
 name|RND_POOLWORDS
 index|]
 decl_stmt|;
-comment|/* random pool data */
+comment|/*%< random pool data */
 block|}
 name|isc_entropypool_t
 typedef|;
@@ -298,6 +306,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*% Sample Queue */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -305,29 +317,29 @@ block|{
 name|isc_uint32_t
 name|last_time
 decl_stmt|;
-comment|/* last time recorded */
+comment|/*%< last time recorded */
 name|isc_uint32_t
 name|last_delta
 decl_stmt|;
-comment|/* last delta value */
+comment|/*%< last delta value */
 name|isc_uint32_t
 name|last_delta2
 decl_stmt|;
-comment|/* last delta2 value */
+comment|/*%< last delta2 value */
 name|isc_uint32_t
 name|nsamples
 decl_stmt|;
-comment|/* number of samples filled in */
+comment|/*%< number of samples filled in */
 name|isc_uint32_t
 modifier|*
 name|samples
 decl_stmt|;
-comment|/* the samples */
+comment|/*%< the samples */
 name|isc_uint32_t
 modifier|*
 name|extra
 decl_stmt|;
-comment|/* extra samples added in */
+comment|/*%< extra samples added in */
 block|}
 name|sample_queue_t
 typedef|;
@@ -404,7 +416,7 @@ decl_stmt|;
 name|isc_uint32_t
 name|total
 decl_stmt|;
-comment|/* entropy from this source */
+comment|/*%< entropy from this source */
 name|ISC_LINK
 argument_list|(
 argument|isc_entropysource_t
@@ -455,7 +467,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Type is a sample source */
+comment|/*%< Type is a sample source */
 end_comment
 
 begin_define
@@ -466,7 +478,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Type is a file source */
+comment|/*%< Type is a file source */
 end_comment
 
 begin_define
@@ -477,7 +489,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* Type is a callback source */
+comment|/*%< Type is a callback source */
 end_comment
 
 begin_define
@@ -488,11 +500,15 @@ value|4
 end_define
 
 begin_comment
-comment|/* Type is a Unix socket source */
+comment|/*%< Type is a Unix socket source */
 end_comment
 
 begin_comment
-comment|/*  * The random pool "taps"  */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*%  * The random pool "taps"  */
 end_comment
 
 begin_define
@@ -531,7 +547,15 @@ value|7
 end_define
 
 begin_comment
-comment|/*  * Declarations for function provided by the system dependent sources that  * include this file.  */
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*%  * Declarations for function provided by the system dependent sources that  * include this file.  */
 end_comment
 
 begin_function_decl
@@ -584,6 +608,10 @@ name|source
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*@}*/
+end_comment
 
 begin_function
 specifier|static
@@ -770,7 +798,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add in entropy, even when the value we're adding in could be  * very large.  */
+comment|/*%  * Add in entropy, even when the value we're adding in could be  * very large.  */
 end_comment
 
 begin_function
@@ -824,7 +852,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Decrement the amount of entropy the pool has.  */
+comment|/*%  * Decrement the amount of entropy the pool has.  */
 end_comment
 
 begin_function
@@ -866,7 +894,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add in entropy, even when the value we're adding in could be  * very large.  */
+comment|/*!  * Add in entropy, even when the value we're adding in could be  * very large.  */
 end_comment
 
 begin_function
@@ -924,7 +952,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Decrement the amount of pseudo the pool has.  */
+comment|/*!  * Decrement the amount of pseudo the pool has.  */
 end_comment
 
 begin_function
@@ -966,7 +994,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add one word to the pool, rotating the input as needed.  */
+comment|/*!  * Add one word to the pool, rotating the input as needed.  */
 end_comment
 
 begin_function
@@ -1156,7 +1184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a buffer's worth of data to the pool.  *  * Requires that the lock is held on the entropy pool.  */
+comment|/*!  * Add a buffer's worth of data to the pool.  *  * Requires that the lock is held on the entropy pool.  */
 end_comment
 
 begin_function
@@ -1464,7 +1492,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * After we've reseeded 100 times, only add new timing info every 	 * 50 requests.  This will keep us from using lots and lots of 	 * CPU just to return bad pseudorandom data anyway. 	 */
+comment|/*! 	 * After we've reseeded 100 times, only add new timing info every 	 * 50 requests.  This will keep us from using lots and lots of 	 * CPU just to return bad pseudorandom data anyway. 	 */
 if|if
 condition|(
 name|ent
@@ -1539,7 +1567,7 @@ decl_stmt|;
 name|isc_int32_t
 name|delta3
 decl_stmt|;
-comment|/* 	 * If the time counter has overflowed, calculate the real difference. 	 * If it has not, it is simpler. 	 */
+comment|/*! 	 * If the time counter has overflowed, calculate the real difference. 	 * If it has not, it is simpler. 	 */
 if|if
 condition|(
 name|t
@@ -2731,7 +2759,7 @@ name|entp
 parameter_list|)
 block|{
 name|isc_result_t
-name|ret
+name|result
 decl_stmt|;
 name|isc_entropy_t
 modifier|*
@@ -2780,8 +2808,8 @@ name|ISC_R_NOMEMORY
 operator|)
 return|;
 comment|/* 	 * We need a lock. 	 */
-if|if
-condition|(
+name|result
+operator|=
 name|isc_mutex_init
 argument_list|(
 operator|&
@@ -2789,18 +2817,16 @@ name|ent
 operator|->
 name|lock
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|ret
-operator|=
-name|ISC_R_UNEXPECTED
-expr_stmt|;
 goto|goto
 name|errout
 goto|;
-block|}
 comment|/* 	 * From here down, no failures will/can occur. 	 */
 name|ISC_LIST_INIT
 argument_list|(
@@ -2895,14 +2921,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|result
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Requires "ent" be locked.  */
+comment|/*!  * Requires "ent" be locked.  */
 end_comment
 
 begin_function
@@ -3524,7 +3550,7 @@ name|sourcep
 parameter_list|)
 block|{
 name|isc_result_t
-name|ret
+name|result
 decl_stmt|;
 name|isc_entropysource_t
 modifier|*
@@ -3590,7 +3616,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ret
+name|result
 operator|=
 name|ISC_R_NOMEMORY
 expr_stmt|;
@@ -3613,7 +3639,7 @@ name|sources
 operator|.
 name|callback
 expr_stmt|;
-name|ret
+name|result
 operator|=
 name|samplesource_allocate
 argument_list|(
@@ -3627,7 +3653,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
+name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
@@ -3779,7 +3805,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|result
 operator|)
 return|;
 block|}
@@ -3920,7 +3946,7 @@ name|sourcep
 parameter_list|)
 block|{
 name|isc_result_t
-name|ret
+name|result
 decl_stmt|;
 name|isc_entropysource_t
 modifier|*
@@ -3979,7 +4005,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ret
+name|result
 operator|=
 name|ISC_R_NOMEMORY
 expr_stmt|;
@@ -3998,7 +4024,7 @@ name|sample
 operator|.
 name|samplequeue
 expr_stmt|;
-name|ret
+name|result
 operator|=
 name|samplesource_allocate
 argument_list|(
@@ -4009,7 +4035,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
+name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
@@ -4131,14 +4157,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|result
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Add a sample, and return ISC_R_SUCCESS if the queue has become full,  * ISC_R_NOENTROPY if it has space remaining, and ISC_R_NOMORE if the  * queue was full when this function was called.  */
+comment|/*!  * Add a sample, and return ISC_R_SUCCESS if the queue has become full,  * ISC_R_NOENTROPY if it has space remaining, and ISC_R_NOMORE if the  * queue was full when this function was called.  */
 end_comment
 
 begin_function

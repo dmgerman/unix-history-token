@@ -242,5 +242,9 @@ begin_comment
 comment|/* HAVE_MD5 */
 end_comment
 
+begin_comment
+comment|/*! \file */
+end_comment
+
 end_unit
 

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: thread.h,v 1.3.206.1 2004/03/06 08:14:53 marka Exp $ */
+comment|/* $Id: thread.h,v 1.4 2004/03/05 05:11:13 marka Exp $ */
 end_comment
 
 begin_ifndef

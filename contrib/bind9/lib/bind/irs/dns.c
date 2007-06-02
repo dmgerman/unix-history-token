@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns.c,v 1.1.206.3 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: dns.c,v 1.3.18.2 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * dns.c --- this is the top-level accessor function for the dns  */
+comment|/*! \file  * \brief  * dns.c --- this is the top-level accessor function for the dns  */
 end_comment
 
 begin_include

@@ -3,6 +3,10 @@ begin_comment
 comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1996-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
+begin_comment
+comment|/*! \file lwinetntop.c  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -24,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lwinetntop.c,v 1.9.12.5 2005/11/04 00:16:34 marka Exp $"
+literal|"$Id: lwinetntop.c,v 1.12.18.4 2005/11/03 23:02:24 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,7 +153,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* char *  * lwres_net_ntop(af, src, dst, size)  *	convert a network format address to presentation format.  * return:  *	pointer to presentation format address (`dst'), or NULL (see errno).  * author:  *	Paul Vixie, 1996.  */
+comment|/*! char *  * lwres_net_ntop(af, src, dst, size)  *	convert a network format address to presentation format.  * return:  *	pointer to presentation format address (`dst'), or NULL (see errno).  * author:  *	Paul Vixie, 1996.  */
 end_comment
 
 begin_function
@@ -230,7 +234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* const char *  * inet_ntop4(src, dst, size)  *	format an IPv4 address  * return:  *	`dst' (as a const)  * notes:  *	(1) uses no statics  *	(2) takes a unsigned char* not an in_addr as input  * author:  *	Paul Vixie, 1996.  */
+comment|/*! const char *  * inet_ntop4(src, dst, size)  *	format an IPv4 address  * return:  *	`dst' (as a const)  * notes:  *	(1) uses no statics  *	(2) takes a unsigned char* not an in_addr as input  * author:  *	Paul Vixie, 1996.  */
 end_comment
 
 begin_function
@@ -341,7 +345,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* const char *  * inet_ntop6(src, dst, size)  *	convert IPv6 binary address into presentation (printable) format  * author:  *	Paul Vixie, 1996.  */
+comment|/*! const char *  * inet_ntop6(src, dst, size)  *	convert IPv6 binary address into presentation (printable) format  * author:  *	Paul Vixie, 1996.  */
 end_comment
 
 begin_ifdef
@@ -371,7 +375,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-comment|/* 	 * Note that int32_t and int16_t need only be "at least" large enough 	 * to contain a value of the specified size.  On some systems, like 	 * Crays, there is no such thing as an integer variable with 16 bits. 	 * Keep this in mind if you think this function should have been coded 	 * to use pointer overlays.  All the world's not a VAX. 	 */
+comment|/*! 	 * Note that int32_t and int16_t need only be "at least" large enough 	 * to contain a value of the specified size.  On some systems, like 	 * Crays, there is no such thing as an integer variable with 16 bits. 	 * Keep this in mind if you think this function should have been coded 	 * to use pointer overlays.  All the world's not a VAX. 	 */
 name|char
 name|tmp
 index|[

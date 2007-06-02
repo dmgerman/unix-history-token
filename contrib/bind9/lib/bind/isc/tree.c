@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tree.c,v 1.2.206.1 2004/03/09 08:33:43 marka Exp $"
+literal|"$Id: tree.c,v 1.3.18.1 2005/04/27 05:01:08 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,11 +22,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * tree - balanced binary tree library  *  * vix 05apr94 [removed vixie.h dependencies; cleaned up formatting, names]  * vix 22jan93 [revisited; uses RCS, ANSI, POSIX; has bug fixes]  * vix 23jun86 [added delete uar to add for replaced nodes]  * vix 20jun86 [added tree_delete per wirth a+ds (mod2 v.) p. 224]  * vix 06feb86 [added tree_mung()]  * vix 02feb86 [added tree balancing from wirth "a+ds=p" p. 220-221]  * vix 14dec85 [written]  */
+comment|/*%  * tree - balanced binary tree library  *  * vix 05apr94 [removed vixie.h dependencies; cleaned up formatting, names]  * vix 22jan93 [revisited; uses RCS, ANSI, POSIX; has bug fixes]  * vix 23jun86 [added delete uar to add for replaced nodes]  * vix 20jun86 [added tree_delete per wirth a+ds (mod2 v.) p. 224]  * vix 06feb86 [added tree_mung()]  * vix 02feb86 [added tree balancing from wirth "a+ds=p" p. 220-221]  * vix 14dec85 [written]  */
 end_comment
 
 begin_comment
-comment|/*  * This program text was created by Paul Vixie using examples from the book:  * "Algorithms& Data Structures," Niklaus Wirth, Prentice-Hall, 1986, ISBN  * 0-13-022005-1.  Any errors in the conversion from Modula-2 to C are Paul  * Vixie's.  */
+comment|/*%  * This program text was created by Paul Vixie using examples from the book:  * "Algorithms& Data Structures," Niklaus Wirth, Prentice-Hall, 1986, ISBN  * 0-13-022005-1.  Any errors in the conversion from Modula-2 to C are Paul  * Vixie's.  */
 end_comment
 
 begin_comment
@@ -954,7 +954,7 @@ operator|*
 name|pi_balance
 condition|)
 block|{
-comment|/* left branch has grown */
+comment|/*%< left branch has grown */
 name|MSG
 argument_list|(
 literal|"LESS: left branch has grown"
@@ -1039,7 +1039,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* LL */
+comment|/*%< LL */
 name|MSG
 argument_list|(
 literal|"LESS: single LL"
@@ -1079,7 +1079,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* double LR */
+comment|/*%< double LR */
 name|MSG
 argument_list|(
 literal|"LESS: double LR"
@@ -1323,7 +1323,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* RR */
+comment|/*%< RR */
 name|MSG
 argument_list|(
 literal|"MORE: single RR"
@@ -1363,7 +1363,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* double RL */
+comment|/*%< double RL */
 name|MSG
 argument_list|(
 literal|"MORE: double RL"
@@ -2620,6 +2620,10 @@ block|}
 name|RETV
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

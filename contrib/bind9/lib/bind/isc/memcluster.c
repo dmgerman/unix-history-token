@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: memcluster.c,v 1.3.206.8 2006/08/30 23:35:06 marka Exp $"
+literal|"$Id: memcluster.c,v 1.5.18.6 2006/08/30 23:30:35 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1654,7 +1654,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * This is a call from an external caller,   * so we want to count this as a user "put".   */
+comment|/*%  * This is a call from an external caller,   * so we want to count this as a user "put".   */
 end_comment
 
 begin_function
@@ -1935,7 +1935,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* double free */
+comment|/*%< double free */
 if|if
 condition|(
 name|prev
@@ -2062,14 +2062,14 @@ expr|*
 name|e
 argument_list|)
 expr_stmt|;
-comment|/* catch write after free */
+comment|/*%< catch write after free */
 name|e
 operator|->
 name|size
 operator|=
 literal|0
 expr_stmt|;
-comment|/* catch double memput() */
+comment|/*%< catch double memput() */
 ifdef|#
 directive|ifdef
 name|MEMCLUSTER_RECORD
@@ -2338,7 +2338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print the stats[] on the stream "out" with suitable formatting.  */
+comment|/*%  * Print the stats[] on the stream "out" with suitable formatting.  */
 end_comment
 
 begin_function
@@ -2640,7 +2640,7 @@ comment|/* Private. */
 end_comment
 
 begin_comment
-comment|/*   * Round up size to a multiple of sizeof(void *).  This guarantees that a  * block is at least sizeof void *, and that we won't violate alignment  * restrictions, both of which are needed to make lists of blocks.  */
+comment|/*%  * Round up size to a multiple of sizeof(void *).  This guarantees that a  * block is at least sizeof void *, and that we won't violate alignment  * restrictions, both of which are needed to make lists of blocks.  */
 end_comment
 
 begin_function
@@ -2763,6 +2763,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftruncate.c,v 1.1 2001/03/29 06:30:32 marka Exp $"
+literal|"$Id: ftruncate.c,v 1.1.352.3 2005/06/22 22:05:45 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * ftruncate - set file size, BSD Style  *  * shortens or enlarges the file as neeeded  * uses some undocumented locking call. It is known to work on SCO unix,  * other vendors should try.  * The #error directive prevents unsupported OSes  */
+comment|/*! \file  * \brief  * ftruncate - set file size, BSD Style  *  * shortens or enlarges the file as neeeded  * uses some undocumented locking call. It is known to work on SCO unix,  * other vendors should try.  * The #error directive prevents unsupported OSes  */
 end_comment
 
 begin_include

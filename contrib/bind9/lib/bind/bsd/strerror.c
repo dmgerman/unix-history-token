@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strerror.c,v 1.3.2.1 2001/11/02 17:45:31 gson Exp $"
+literal|"$Id: strerror.c,v 1.4.332.1 2005/04/27 05:00:46 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,7 +146,7 @@ index|]
 init|=
 name|UPREFIX
 decl_stmt|;
-comment|/* 64-bit number + slop */
+comment|/*%< 64-bit number + slop */
 name|u_int
 name|errnum
 decl_stmt|;
@@ -172,7 +172,7 @@ name|errnum
 operator|=
 name|num
 expr_stmt|;
-comment|/* convert to unsigned */
+comment|/*%< convert to unsigned */
 ifdef|#
 directive|ifdef
 name|USE_SYSERROR_LIST
@@ -202,7 +202,7 @@ argument_list|(
 name|num
 argument_list|)
 expr_stmt|;
-comment|/* call strerror() in libc */
+comment|/*%< call strerror() in libc */
 if|if
 condition|(
 name|ret
@@ -289,6 +289,10 @@ end_endif
 
 begin_comment
 comment|/*NEED_STRERROR*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: opensslrsa_link.c,v 1.1.4.9 2006/11/07 21:28:40 marka Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: opensslrsa_link.c,v 1.1.6.11 2006/11/07 21:28:49 marka Exp $  */
 end_comment
 
 begin_ifdef
@@ -1734,7 +1734,7 @@ operator|<
 literal|256
 condition|)
 block|{
-comment|/* key exponent is<= 2040 bits */
+comment|/*%< key exponent is<= 2040 bits */
 if|if
 condition|(
 name|r
@@ -1919,7 +1919,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|dst__openssl_toresult
+argument_list|(
 name|ISC_R_NOMEMORY
+argument_list|)
 operator|)
 return|;
 name|SET_FLAGS
@@ -3081,12 +3084,12 @@ name|opensslrsa_verify
 block|,
 name|NULL
 block|,
-comment|/* computesecret */
+comment|/*%< computesecret */
 name|opensslrsa_compare
 block|,
 name|NULL
 block|,
-comment|/* paramcompare */
+comment|/*%< paramcompare */
 name|opensslrsa_generate
 block|,
 name|opensslrsa_isprivate
@@ -3103,7 +3106,7 @@ name|opensslrsa_parse
 block|,
 name|NULL
 block|,
-comment|/* cleanup */
+comment|/*%< cleanup */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3172,6 +3175,10 @@ end_endif
 
 begin_comment
 comment|/* OPENSSL */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

@@ -248,7 +248,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* #define	F(x,y,z)	(((x)& (y))  |  ((~(x))& (z))) #define	G(x,y,z)	(((x)& (z))  |  ((y)& (~(z)))) */
+comment|/*% #define	F(x,y,z)	(((x)& (y))  |  ((~(x))& (z))) #define	G(x,y,z)	(((x)& (z))  |  ((y)& (~(z)))) */
 end_comment
 
 begin_comment
@@ -425,6 +425,10 @@ name|t
 parameter_list|)
 value|{ \ 	a+=((k)+(t)+I((b),(c),(d))); \ 	a=ROTATE(a,s); \ 	a+=b; };
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

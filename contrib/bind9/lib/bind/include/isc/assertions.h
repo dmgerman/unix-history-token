@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: assertions.h,v 1.1.206.1 2004/03/09 08:33:30 marka Exp $  */
+comment|/*  * $Id: assertions.h,v 1.2.18.1 2005/04/27 05:00:50 sra Exp $  */
 end_comment
 
 begin_ifndef
@@ -503,6 +503,10 @@ end_endif
 
 begin_comment
 comment|/* ASSERTIONS_H */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

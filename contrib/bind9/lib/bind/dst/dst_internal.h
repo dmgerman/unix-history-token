@@ -99,7 +99,7 @@ value|255
 end_define
 
 begin_comment
-comment|/* this is the value of POSIX_PATH_MAX */
+comment|/*%< this is the value of POSIX_PATH_MAX */
 end_comment
 
 begin_endif
@@ -121,38 +121,38 @@ name|char
 modifier|*
 name|dk_key_name
 decl_stmt|;
-comment|/* name of the key */
+comment|/*%< name of the key */
 name|int
 name|dk_key_size
 decl_stmt|;
-comment|/* this is the size of the key in bits */
+comment|/*%< this is the size of the key in bits */
 name|int
 name|dk_proto
 decl_stmt|;
-comment|/* what protocols this key can be used for */
+comment|/*%< what protocols this key can be used for */
 name|int
 name|dk_alg
 decl_stmt|;
-comment|/* algorithm number from key record */
+comment|/*%< algorithm number from key record */
 name|u_int32_t
 name|dk_flags
 decl_stmt|;
-comment|/* and the flags of the public key */
+comment|/*%< and the flags of the public key */
 name|u_int16_t
 name|dk_id
 decl_stmt|;
-comment|/* identifier of the key */
+comment|/*%< identifier of the key */
 name|void
 modifier|*
 name|dk_KEY_struct
 decl_stmt|;
-comment|/* pointer to key in crypto pkg fmt */
+comment|/*%< pointer to key in crypto pkg fmt */
 name|struct
 name|dst_func
 modifier|*
 name|dk_func
 decl_stmt|;
-comment|/* point to cryptto pgk specific function table */
+comment|/*%< point to cryptto pgk specific function table */
 block|}
 name|DST_KEY
 typedef|;
@@ -558,7 +558,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* RIPEMD160 and SHA-1 are 20 bytes MD5 is 16 */
+comment|/*%< RIPEMD160 and SHA-1 are 20 bytes MD5 is 16 */
 end_comment
 
 begin_endif
@@ -722,7 +722,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*   * read and write network byte order into u_int?_t    *  all of these should be retired  */
+comment|/*%  * read and write network byte order into u_int?_t    *  all of these should be retired  */
 end_comment
 
 begin_function_decl
@@ -864,6 +864,10 @@ end_endif
 
 begin_comment
 comment|/* DST_INTERNAL_H */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

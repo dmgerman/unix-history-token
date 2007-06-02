@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_parse.c,v 1.3.2.1.4.3 2005/10/11 00:48:16 marka Exp $"
+literal|"$Id: ns_parse.c,v 1.5.18.3 2005/10/11 00:25:10 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,112 +160,112 @@ block|,
 literal|15
 block|}
 block|,
-comment|/* qr. */
+comment|/*%< qr. */
 block|{
 literal|0x7800
 block|,
 literal|11
 block|}
 block|,
-comment|/* opcode. */
+comment|/*%< opcode. */
 block|{
 literal|0x0400
 block|,
 literal|10
 block|}
 block|,
-comment|/* aa. */
+comment|/*%< aa. */
 block|{
 literal|0x0200
 block|,
 literal|9
 block|}
 block|,
-comment|/* tc. */
+comment|/*%< tc. */
 block|{
 literal|0x0100
 block|,
 literal|8
 block|}
 block|,
-comment|/* rd. */
+comment|/*%< rd. */
 block|{
 literal|0x0080
 block|,
 literal|7
 block|}
 block|,
-comment|/* ra. */
+comment|/*%< ra. */
 block|{
 literal|0x0040
 block|,
 literal|6
 block|}
 block|,
-comment|/* z. */
+comment|/*%< z. */
 block|{
 literal|0x0020
 block|,
 literal|5
 block|}
 block|,
-comment|/* ad. */
+comment|/*%< ad. */
 block|{
 literal|0x0010
 block|,
 literal|4
 block|}
 block|,
-comment|/* cd. */
+comment|/*%< cd. */
 block|{
 literal|0x000f
 block|,
 literal|0
 block|}
 block|,
-comment|/* rcode. */
+comment|/*%< rcode. */
 block|{
 literal|0x0000
 block|,
 literal|0
 block|}
 block|,
-comment|/* expansion (1/6). */
+comment|/*%< expansion (1/6). */
 block|{
 literal|0x0000
 block|,
 literal|0
 block|}
 block|,
-comment|/* expansion (2/6). */
+comment|/*%< expansion (2/6). */
 block|{
 literal|0x0000
 block|,
 literal|0
 block|}
 block|,
-comment|/* expansion (3/6). */
+comment|/*%< expansion (3/6). */
 block|{
 literal|0x0000
 block|,
 literal|0
 block|}
 block|,
-comment|/* expansion (4/6). */
+comment|/*%< expansion (4/6). */
 block|{
 literal|0x0000
 block|,
 literal|0
 block|}
 block|,
-comment|/* expansion (5/6). */
+comment|/*%< expansion (5/6). */
 block|{
 literal|0x0000
 block|,
 literal|0
 block|}
 block|,
-comment|/* expansion (6/6). */
+comment|/*%< expansion (6/6). */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1162,6 +1162,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

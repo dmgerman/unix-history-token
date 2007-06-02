@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nis_gr.c,v 1.1.2.1.4.1 2004/03/09 08:33:38 marka Exp $"
+literal|"$Id: nis_gr.c,v 1.3.18.1 2005/04/27 05:01:03 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -243,7 +243,7 @@ decl_stmt|;
 name|int
 name|curval_len
 decl_stmt|;
-comment|/* 	 * Need space to store the entries read from the group file. 	 * The members list also needs space per member, and the 	 * strings making up the user names must be allocated 	 * somewhere.  Rather than doing lots of small allocations, 	 * we keep one buffer and resize it as needed. 	 */
+comment|/*%< 	 * Need space to store the entries read from the group file. 	 * The members list also needs space per member, and the 	 * strings making up the user names must be allocated 	 * somewhere.  Rather than doing lots of small allocations, 	 * we keep one buffer and resize it as needed. 	 */
 name|struct
 name|group
 name|group
@@ -251,7 +251,7 @@ decl_stmt|;
 name|size_t
 name|nmemb
 decl_stmt|;
-comment|/* Malloc'd max index of gr_mem[]. */
+comment|/*%< Malloc'd max index of gr_mem[]. */
 name|char
 modifier|*
 name|membuf
@@ -1745,6 +1745,10 @@ end_endif
 
 begin_comment
 comment|/* WANT_IRS_GR&& WANT_IRS_NIS */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: nslookup.c,v 1.90.2.4.2.12 2006/06/09 23:50:53 marka Exp $ */
+comment|/* $Id: nslookup.c,v 1.101.18.12 2006/12/07 06:08:02 marka Exp $ */
 end_comment
 
 begin_include
@@ -185,6 +185,10 @@ decl_stmt|,
 name|aaonly
 init|=
 name|ISC_FALSE
+decl_stmt|,
+name|nofail
+init|=
+name|ISC_TRUE
 decl_stmt|;
 end_decl_stmt
 
@@ -3376,6 +3380,10 @@ name|short_form
 operator|=
 name|ISC_FALSE
 expr_stmt|;
+name|showsearch
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -3395,6 +3403,10 @@ block|{
 name|short_form
 operator|=
 name|ISC_TRUE
+expr_stmt|;
+name|showsearch
+operator|=
+name|ISC_FALSE
 expr_stmt|;
 block|}
 elseif|else
@@ -3493,6 +3505,46 @@ literal|0
 condition|)
 block|{
 comment|/* deprecation_msg = ISC_FALSE; */
+block|}
+elseif|else
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|opt
+argument_list|,
+literal|"fail"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|nofail
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|opt
+argument_list|,
+literal|"nofail"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|nofail
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3832,6 +3884,16 @@ name|new_search
 operator|=
 name|ISC_TRUE
 expr_stmt|;
+if|if
+condition|(
+name|nofail
+condition|)
+name|lookup
+operator|->
+name|servfail_stops
+operator|=
+name|ISC_FALSE
+expr_stmt|;
 name|ISC_LIST_INIT
 argument_list|(
 name|lookup
@@ -4062,6 +4124,10 @@ name|set_nameserver
 argument_list|(
 name|arg
 argument_list|)
+expr_stmt|;
+name|check_ra
+operator|=
+name|ISC_FALSE
 expr_stmt|;
 name|isc_app_unblock
 argument_list|()
@@ -4318,6 +4384,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|set_nameserver
 argument_list|(
 name|argv
@@ -4326,6 +4393,11 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|check_ra
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -4725,6 +4797,10 @@ name|ISC_LIST_INIT
 argument_list|(
 name|search_list
 argument_list|)
+expr_stmt|;
+name|check_ra
+operator|=
+name|ISC_TRUE
 expr_stmt|;
 name|result
 operator|=

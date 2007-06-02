@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: cfg.h,v 1.30.12.6 2006/03/02 00:37:20 marka Exp $ */
+comment|/* $Id: cfg.h,v 1.34.18.5 2006/03/02 00:37:22 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * This is the new, table-driven, YACC-free configuration file parser.  */
+comment|/*! \file  * \brief  * This is the new, table-driven, YACC-free configuration file parser.  */
 end_comment
 
 begin_comment
@@ -60,6 +60,10 @@ begin_comment
 comment|/***  *** Types  ***/
 end_comment
 
+begin_comment
+comment|/*%  * A configuration parser.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -69,11 +73,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * A configuration parser.  */
-end_comment
-
-begin_comment
-comment|/*  * A configuration type definition object.  There is a single  * static cfg_type_t object for each data type supported by  * the configuration parser.  */
+comment|/*%  * A configuration type definition object.  There is a single  * static cfg_type_t object for each data type supported by  * the configuration parser.  */
 end_comment
 
 begin_typedef
@@ -85,7 +85,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * A configuration object.  This is the basic building block of the  * configuration parse tree.  It contains a value (which may be  * of one of several types) and information identifying the file  * and line number the value came from, for printing error  * messages.  */
+comment|/*%  * A configuration object.  This is the basic building block of the  * configuration parse tree.  It contains a value (which may be  * of one of several types) and information identifying the file  * and line number the value came from, for printing error  * messages.  */
 end_comment
 
 begin_typedef
@@ -97,7 +97,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * A configuration object list element.  */
+comment|/*%  * A configuration object list element.  */
 end_comment
 
 begin_typedef
@@ -109,7 +109,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * A callback function to be called when parsing an option   * that needs to be interpreted at parsing time, like  * "directory".  */
+comment|/*%  * A callback function to be called when parsing an option   * that needs to be interpreted at parsing time, like  * "directory".  */
 end_comment
 
 begin_typedef
@@ -163,7 +163,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a configuration file parser.  Any warning and error  * messages will be logged to 'lctx'.  *  * The parser object returned can be used for a single call  * to cfg_parse_file() or cfg_parse_buffer().  It must not  * be reused for parsing multiple files or buffers.  */
+comment|/*%<  * Create a configuration file parser.  Any warning and error  * messages will be logged to 'lctx'.  *  * The parser object returned can be used for a single call  * to cfg_parse_file() or cfg_parse_buffer().  It must not  * be reused for parsing multiple files or buffers.  */
 end_comment
 
 begin_function_decl
@@ -185,7 +185,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make the parser call 'callback' whenever it encounters  * a configuration clause with the callback attribute,  * passing it the clause name, the clause value,  * and 'arg' as arguments.  *  * To restore the default of not invoking callbacks, pass  * callback==NULL and arg==NULL.  */
+comment|/*%<  * Make the parser call 'callback' whenever it encounters  * a configuration clause with the callback attribute,  * passing it the clause name, the clause value,  * and 'arg' as arguments.  *  * To restore the default of not invoking callbacks, pass  * callback==NULL and arg==NULL.  */
 end_comment
 
 begin_function_decl
@@ -240,7 +240,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Read a configuration containing data of type 'type'  * and make '*ret' point to its parse tree.  *  * The configuration is read from the file 'filename'  * (isc_parse_file()) or the buffer 'buffer'  * (isc_parse_buffer()).  *  * Returns an error if the file does not parse correctly.  *   * Requires:  *      "filename" is valid.  *      "mem" is valid.  *	"type" is valid.  *      "cfg" is non-NULL and "*cfg" is NULL.  *  * Returns:  *      ISC_R_SUCCESS                 - success  *      ISC_R_NOMEMORY                - no memory available  *      ISC_R_INVALIDFILE             - file doesn't exist or is unreadable  *      others	                      - file contains errors  */
+comment|/*%<  * Read a configuration containing data of type 'type'  * and make '*ret' point to its parse tree.  *  * The configuration is read from the file 'filename'  * (isc_parse_file()) or the buffer 'buffer'  * (isc_parse_buffer()).  *  * Returns an error if the file does not parse correctly.  *   * Requires:  *\li 	"filename" is valid.  *\li 	"mem" is valid.  *\li	"type" is valid.  *\li 	"cfg" is non-NULL and "*cfg" is NULL.  *  * Returns:  *     \li #ISC_R_SUCCESS                 - success  *\li      #ISC_R_NOMEMORY                - no memory available  *\li      #ISC_R_INVALIDFILE             - file doesn't exist or is unreadable  *\li      others	                      - file contains errors  */
 end_comment
 
 begin_function_decl
@@ -256,7 +256,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy a configuration parser.  */
+comment|/*%<  * Destroy a configuration parser.  */
 end_comment
 
 begin_function_decl
@@ -272,7 +272,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return true iff 'obj' is of void type (e.g., an optional   * value not specified).  */
+comment|/*%<  * Return true iff 'obj' is of void type (e.g., an optional   * value not specified).  */
 end_comment
 
 begin_function_decl
@@ -288,7 +288,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return true iff 'obj' is of a map type.  */
+comment|/*%<  * Return true iff 'obj' is of a map type.  */
 end_comment
 
 begin_function_decl
@@ -315,7 +315,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Extract an element from a configuration object, which  * must be of a map type.  *  * Requires:  *      'mapobj' points to a valid configuration object of a map type.  *      'name' points to a null-terminated string.  * 	'obj' is non-NULL and '*obj' is NULL.  *  * Returns:  *      ISC_R_SUCCESS                  - success  *      ISC_R_NOTFOUND                 - name not found in map  */
+comment|/*%<  * Extract an element from a configuration object, which  * must be of a map type.  *  * Requires:  * \li     'mapobj' points to a valid configuration object of a map type.  * \li     'name' points to a null-terminated string.  * \li	'obj' is non-NULL and '*obj' is NULL.  *  * Returns:  * \li     #ISC_R_SUCCESS                  - success  * \li     #ISC_R_NOTFOUND                 - name not found in map  */
 end_comment
 
 begin_function_decl
@@ -333,7 +333,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the name of a named map object, like a server "key" clause.  *  * Requires:  *      'mapobj' points to a valid configuration object of a map type.  *  * Returns:  *      A pointer to a configuration object naming the map object,  *	or NULL if the map object does not have a name.  */
+comment|/*%<  * Get the name of a named map object, like a server "key" clause.  *  * Requires:  *    \li  'mapobj' points to a valid configuration object of a map type.  *  * Returns:  * \li     A pointer to a configuration object naming the map object,  *	or NULL if the map object does not have a name.  */
 end_comment
 
 begin_function_decl
@@ -349,7 +349,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return true iff 'obj' is of a map type.  */
+comment|/*%<  * Return true iff 'obj' is of a map type.  */
 end_comment
 
 begin_function_decl
@@ -372,7 +372,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Extract an element from a configuration object, which  * must be of a tuple type.  *  * Requires:  *      'tupleobj' points to a valid configuration object of a tuple type.  *      'name' points to a null-terminated string naming one of the  *	fields of said tuple type.  */
+comment|/*%<  * Extract an element from a configuration object, which  * must be of a tuple type.  *  * Requires:  * \li     'tupleobj' points to a valid configuration object of a tuple type.  * \li     'name' points to a null-terminated string naming one of the  *\li	fields of said tuple type.  */
 end_comment
 
 begin_function_decl
@@ -388,7 +388,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return true iff 'obj' is of integer type.  */
+comment|/*%<  * Return true iff 'obj' is of integer type.  */
 end_comment
 
 begin_function_decl
@@ -404,7 +404,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the value of a configuration object of 32-bit integer type.  *  * Requires:  *      'obj' points to a valid configuration object of 32-bit integer type.  *  * Returns:  *      A 32-bit unsigned integer.  */
+comment|/*%<  * Returns the value of a configuration object of 32-bit integer type.  *  * Requires:  * \li     'obj' points to a valid configuration object of 32-bit integer type.  *  * Returns:  * \li     A 32-bit unsigned integer.  */
 end_comment
 
 begin_function_decl
@@ -420,7 +420,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return true iff 'obj' is of integer type.  */
+comment|/*%<  * Return true iff 'obj' is of integer type.  */
 end_comment
 
 begin_function_decl
@@ -436,7 +436,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the value of a configuration object of 64-bit integer type.  *  * Requires:  *      'obj' points to a valid configuration object of 64-bit integer type.  *  * Returns:  *      A 64-bit unsigned integer.  */
+comment|/*%<  * Returns the value of a configuration object of 64-bit integer type.  *  * Requires:  * \li     'obj' points to a valid configuration object of 64-bit integer type.  *  * Returns:  * \li     A 64-bit unsigned integer.  */
 end_comment
 
 begin_function_decl
@@ -452,7 +452,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return true iff 'obj' is of string type.  */
+comment|/*%<  * Return true iff 'obj' is of string type.  */
 end_comment
 
 begin_function_decl
@@ -470,7 +470,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the value of a configuration object of a string type  * as a null-terminated string.  *  * Requires:  *      'obj' points to a valid configuration object of a string type.  *  * Returns:  *      A pointer to a null terminated string.  */
+comment|/*%<  * Returns the value of a configuration object of a string type  * as a null-terminated string.  *  * Requires:  * \li     'obj' points to a valid configuration object of a string type.  *  * Returns:  * \li     A pointer to a null terminated string.  */
 end_comment
 
 begin_function_decl
@@ -486,7 +486,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return true iff 'obj' is of a boolean type.  */
+comment|/*%<  * Return true iff 'obj' is of a boolean type.  */
 end_comment
 
 begin_function_decl
@@ -502,7 +502,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the value of a configuration object of a boolean type.  *  * Requires:  *      'obj' points to a valid configuration object of a boolean type.  *  * Returns:  *      A boolean value.  */
+comment|/*%<  * Returns the value of a configuration object of a boolean type.  *  * Requires:  * \li     'obj' points to a valid configuration object of a boolean type.  *  * Returns:  * \li     A boolean value.  */
 end_comment
 
 begin_function_decl
@@ -518,7 +518,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return true iff 'obj' is a socket address.  */
+comment|/*%<  * Return true iff 'obj' is a socket address.  */
 end_comment
 
 begin_function_decl
@@ -536,7 +536,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the value of a configuration object representing a socket address.  *  * Requires:  *      'obj' points to a valid configuration object of a socket address type.  *  * Returns:  *      A pointer to a sockaddr.  The sockaddr must be copied by the caller  *      if necessary.  */
+comment|/*%<  * Returns the value of a configuration object representing a socket address.  *  * Requires:  * \li     'obj' points to a valid configuration object of a socket address type.  *  * Returns:  * \li     A pointer to a sockaddr.  The sockaddr must be copied by the caller  *      if necessary.  */
 end_comment
 
 begin_function_decl
@@ -552,7 +552,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return true iff 'obj' is a network prefix.  */
+comment|/*%<  * Return true iff 'obj' is a network prefix.  */
 end_comment
 
 begin_function_decl
@@ -577,7 +577,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Gets the value of a configuration object representing a network  * prefix.  The network address is returned through 'netaddr' and the  * prefix length in bits through 'prefixlen'.  *  * Requires:  *      'obj' points to a valid configuration object of network prefix type.  *	'netaddr' and 'prefixlen' are non-NULL.  */
+comment|/*%<  * Gets the value of a configuration object representing a network  * prefix.  The network address is returned through 'netaddr' and the  * prefix length in bits through 'prefixlen'.  *  * Requires:  * \li     'obj' points to a valid configuration object of network prefix type.  *\li	'netaddr' and 'prefixlen' are non-NULL.  */
 end_comment
 
 begin_function_decl
@@ -593,7 +593,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return true iff 'obj' is of list type.  */
+comment|/*%<  * Return true iff 'obj' is of list type.  */
 end_comment
 
 begin_function_decl
@@ -611,7 +611,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the first list element in a configuration object of a list type.  *  * Requires:  *      'obj' points to a valid configuration object of a list type or NULL.  *  * Returns:  *      A pointer to a cfg_listelt_t representing the first list element,  * 	or NULL if the list is empty or nonexistent.  */
+comment|/*%<  * Returns the first list element in a configuration object of a list type.  *  * Requires:  * \li     'obj' points to a valid configuration object of a list type or NULL.  *  * Returns:  *   \li   A pointer to a cfg_listelt_t representing the first list element,  * 	or NULL if the list is empty or nonexistent.  */
 end_comment
 
 begin_function_decl
@@ -629,7 +629,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the next element of a list of configuration objects.  *  * Requires:  *      'elt' points to cfg_listelt_t obtained from cfg_list_first() or  *	a previous call to cfg_list_next().  *  * Returns:  *      A pointer to a cfg_listelt_t representing the next element,  * 	or NULL if there are no more elements.  */
+comment|/*%<  * Returns the next element of a list of configuration objects.  *  * Requires:  * \li     'elt' points to cfg_listelt_t obtained from cfg_list_first() or  *	a previous call to cfg_list_next().  *  * Returns:  * \li     A pointer to a cfg_listelt_t representing the next element,  * 	or NULL if there are no more elements.  */
 end_comment
 
 begin_function_decl
@@ -647,7 +647,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the configuration object associated with cfg_listelt_t.  *  * Requires:  *      'elt' points to cfg_listelt_t obtained from cfg_list_first() or  *	cfg_list_next().  *  * Returns:  *      A non-NULL pointer to a configuration object.  */
+comment|/*%<  * Returns the configuration object associated with cfg_listelt_t.  *  * Requires:  * \li     'elt' points to cfg_listelt_t obtained from cfg_list_first() or  *	cfg_list_next().  *  * Returns:  * \li     A non-NULL pointer to a configuration object.  */
 end_comment
 
 begin_function_decl
@@ -686,7 +686,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Print the configuration object 'obj' by repeatedly calling the  * function 'f', passing 'closure' and a region of text starting  * at 'text' and comprising 'textlen' characters.  */
+comment|/*%<  * Print the configuration object 'obj' by repeatedly calling the  * function 'f', passing 'closure' and a region of text starting  * at 'text' and comprising 'textlen' characters.  */
 end_comment
 
 begin_function_decl
@@ -725,7 +725,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Print a summary of the grammar of the configuration type 'type'.  */
+comment|/*%<  * Print a summary of the grammar of the configuration type 'type'.  */
 end_comment
 
 begin_function_decl
@@ -746,7 +746,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return true iff 'obj' is of type 'type'.   */
+comment|/*%<  * Return true iff 'obj' is of type 'type'.   */
 end_comment
 
 begin_function_decl
@@ -766,7 +766,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy a configuration object.  */
+comment|/*%<  * Destroy a configuration object.  */
 end_comment
 
 begin_function_decl
@@ -805,7 +805,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/*  * Log a message concerning configuration object 'obj' to the logging  * channel of 'pctx', at log level 'level'.  The message will be prefixed  * with the file name(s) and line number where 'obj' was defined.  */
+comment|/*%<  * Log a message concerning configuration object 'obj' to the logging  * channel of 'pctx', at log level 'level'.  The message will be prefixed  * with the file name(s) and line number where 'obj' was defined.  */
 end_comment
 
 begin_function_decl
@@ -823,7 +823,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the file that defined this object.  */
+comment|/*%<  * Return the file that defined this object.  */
 end_comment
 
 begin_function_decl
@@ -840,7 +840,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the line in file where this object was defined.  */
+comment|/*%<  * Return the line in file where this object was defined.  */
 end_comment
 
 begin_macro

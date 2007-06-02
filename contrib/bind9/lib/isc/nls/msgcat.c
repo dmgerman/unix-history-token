@@ -4,11 +4,11 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: msgcat.c,v 1.10.12.6 2005/06/09 23:54:31 marka Exp $ */
+comment|/* $Id: msgcat.c,v 1.13.18.3 2005/06/08 02:07:57 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Bob Halley  */
+comment|/*! \file msgcat.c  *  * \author Principal Author: Bob Halley  */
 end_comment
 
 begin_include

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: socket.h,v 1.54.12.4 2004/03/08 09:04:53 marka Exp $ */
+comment|/* $Id: socket.h,v 1.57.18.6 2006/06/07 00:29:45 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * Sockets  *  * Provides TCP and UDP sockets for network I/O.  The sockets are event  * sources in the task system.  *  * When I/O completes, a completion event for the socket is posted to the  * event queue of the task which requested the I/O.  *  * MP:  *	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *  *	Clients of this module must not be holding a socket's task's lock when  *	making a call that affects that socket.  Failure to follow this rule  *	can result in deadlock.  *  *	The caller must ensure that isc_socketmgr_destroy() is called only  *	once for a given manager.  *  * Reliability:  *	No anticipated impact.  *  * Resources:  *<TBS>  *  * Security:  *	No anticipated impact.  *  * Standards:  *	None.  */
+comment|/*! \file  * \brief Provides TCP and UDP sockets for network I/O.  The sockets are event  * sources in the task system.  *  * When I/O completes, a completion event for the socket is posted to the  * event queue of the task which requested the I/O.  *  * \li MP:  *	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *	Clients of this module must not be holding a socket's task's lock when  *	making a call that affects that socket.  Failure to follow this rule  *	can result in deadlock.  *	The caller must ensure that isc_socketmgr_destroy() is called only  *	once for a given manager.  *  * \li Reliability:  *	No anticipated impact.  *  * \li Resources:  *	TBS  *  * \li Security:  *	No anticipated impact.  *  * \li Standards:  *	None.  */
 end_comment
 
 begin_comment
@@ -83,7 +83,7 @@ comment|/***  *** Constants  ***/
 end_comment
 
 begin_comment
-comment|/*  * Maximum number of buffers in a scatter/gather read/write.  The operating  * system in use must support at least this number (plus one on some.)  */
+comment|/*%  * Maximum number of buffers in a scatter/gather read/write.  The operating  * system in use must support at least this number (plus one on some.)  */
 end_comment
 
 begin_define
@@ -109,47 +109,51 @@ expr_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
-comment|/* OK, EOF, whatever else */
+comment|/*%< OK, EOF, whatever else */
 name|unsigned
 name|int
 name|minimum
 decl_stmt|;
-comment|/* minimum i/o for event */
+comment|/*%< minimum i/o for event */
 name|unsigned
 name|int
 name|n
 decl_stmt|;
-comment|/* bytes read or written */
+comment|/*%< bytes read or written */
 name|unsigned
 name|int
 name|offset
 decl_stmt|;
-comment|/* offset into buffer list */
+comment|/*%< offset into buffer list */
 name|isc_region_t
 name|region
 decl_stmt|;
-comment|/* for single-buffer i/o */
+comment|/*%< for single-buffer i/o */
 name|isc_bufferlist_t
 name|bufferlist
 decl_stmt|;
-comment|/* list of buffers */
+comment|/*%< list of buffers */
 name|isc_sockaddr_t
 name|address
 decl_stmt|;
-comment|/* source address */
+comment|/*%< source address */
 name|isc_time_t
 name|timestamp
 decl_stmt|;
-comment|/* timestamp of packet recv */
+comment|/*%< timestamp of packet recv */
 name|struct
 name|in6_pktinfo
 name|pktinfo
 decl_stmt|;
-comment|/* ipv6 pktinfo */
+comment|/*%< ipv6 pktinfo */
 name|isc_uint32_t
 name|attributes
 decl_stmt|;
-comment|/* see below */
+comment|/*%< see below */
+name|isc_eventdestructor_t
+name|destroy
+decl_stmt|;
+comment|/*%< original destructor */
 block|}
 struct|;
 end_struct
@@ -178,11 +182,11 @@ decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
-comment|/* OK, EOF, whatever else */
+comment|/*%< OK, EOF, whatever else */
 name|isc_sockaddr_t
 name|address
 decl_stmt|;
-comment|/* source address */
+comment|/*%< source address */
 block|}
 struct|;
 end_struct
@@ -207,13 +211,17 @@ expr_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
-comment|/* OK, EOF, whatever else */
+comment|/*%< OK, EOF, whatever else */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * _ATTACHED:	Internal use only.  * _TRUNC:	Packet was truncated on receive.  * _CTRUNC:	Packet control information was truncated.  This can  *		indicate that the packet is not complete, even though  *		all the data is valid.  * _TIMESTAMP:	The timestamp member is valid.  * _PKTINFO:	The pktinfo member is valid.  * _MULTICAST:	The UDP packet was received via a multicast transmission.  */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * _ATTACHED:	Internal use only.  * _TRUNC:	Packet was truncated on receive.  * _CTRUNC:	Packet control information was truncated.  This can  *		indicate that the packet is not complete, even though  *		all the data is valid.  * _TIMESTAMP:	The timestamp member is valid.  * _PKTINFO:	The pktinfo member is valid.  * _MULTICAST:	The UDP packet was received via a multicast transmission.  */
 end_comment
 
 begin_define
@@ -282,6 +290,10 @@ begin_comment
 comment|/* public */
 end_comment
 
+begin_comment
+comment|/*@}*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -346,13 +358,21 @@ block|,
 name|isc_sockettype_tcp
 init|=
 literal|2
+block|,
+name|isc_sockettype_unix
+init|=
+literal|3
 block|}
 name|isc_sockettype_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * How a socket should be shutdown in isc_socket_shutdown() calls.  */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * How a socket should be shutdown in isc_socket_shutdown() calls.  */
 end_comment
 
 begin_define
@@ -363,7 +383,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* close read side */
+comment|/*%< close read side */
 end_comment
 
 begin_define
@@ -374,7 +394,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* close write side */
+comment|/*%< close write side */
 end_comment
 
 begin_define
@@ -385,11 +405,19 @@ value|0x00000003
 end_define
 
 begin_comment
-comment|/* close them all */
+comment|/*%< close them all */
 end_comment
 
 begin_comment
-comment|/*  * What I/O events to cancel in isc_socket_cancel() calls.  */
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * What I/O events to cancel in isc_socket_cancel() calls.  */
 end_comment
 
 begin_define
@@ -400,7 +428,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* cancel recv */
+comment|/*%< cancel recv */
 end_comment
 
 begin_define
@@ -411,7 +439,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* cancel send */
+comment|/*%< cancel send */
 end_comment
 
 begin_define
@@ -422,7 +450,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* cancel accept */
+comment|/*%< cancel accept */
 end_comment
 
 begin_define
@@ -433,7 +461,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* cancel connect */
+comment|/*%< cancel connect */
 end_comment
 
 begin_define
@@ -444,11 +472,19 @@ value|0x0000000f
 end_define
 
 begin_comment
-comment|/* cancel everything */
+comment|/*%< cancel everything */
 end_comment
 
 begin_comment
-comment|/*  * Flags for isc_socket_send() and isc_socket_recv() calls.  */
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * Flags for isc_socket_send() and isc_socket_recv() calls.  */
 end_comment
 
 begin_define
@@ -459,7 +495,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* send event only if needed */
+comment|/*%< send event only if needed */
 end_comment
 
 begin_define
@@ -470,7 +506,11 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* drop failed UDP sends */
+comment|/*%< drop failed UDP sends */
+end_comment
+
+begin_comment
+comment|/*@}*/
 end_comment
 
 begin_comment
@@ -500,7 +540,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a new 'type' socket managed by 'manager'.  *  * Note:  *  *	'pf' is the desired protocol family, e.g. PF_INET or PF_INET6.  *  * Requires:  *  *	'manager' is a valid manager  *  *	'socketp' is a valid pointer, and *socketp == NULL  *  * Ensures:  *  *	'*socketp' is attached to the newly created socket  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY  *	ISC_R_NORESOURCES  *	ISC_R_UNEXPECTED  */
+comment|/*%<  * Create a new 'type' socket managed by 'manager'.  *  * Note:  *  *\li	'pf' is the desired protocol family, e.g. PF_INET or PF_INET6.  *  * Requires:  *  *\li	'manager' is a valid manager  *  *\li	'socketp' is a valid pointer, and *socketp == NULL  *  * Ensures:  *  *	'*socketp' is attached to the newly created socket  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  *\li	#ISC_R_NORESOURCES  *\li	#ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -523,7 +563,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Cancel pending I/O of the type specified by "how".  *  * Note: if "task" is NULL, then the cancel applies to all tasks using the  * socket.  *  * Requires:  *  *	"socket" is a valid socket  *  *	"task" is NULL or a valid task  *  * "how" is a bitmask describing the type of cancelation to perform.  * The type ISC_SOCKCANCEL_ALL will cancel all pending I/O on this  * socket.  *  * ISC_SOCKCANCEL_RECV:  *	Cancel pending isc_socket_recv() calls.  *  * ISC_SOCKCANCEL_SEND:  *	Cancel pending isc_socket_send() and isc_socket_sendto() calls.  *  * ISC_SOCKCANCEL_ACCEPT:  *	Cancel pending isc_socket_accept() calls.  *  * ISC_SOCKCANCEL_CONNECT:  *	Cancel pending isc_socket_connect() call.  */
+comment|/*%<  * Cancel pending I/O of the type specified by "how".  *  * Note: if "task" is NULL, then the cancel applies to all tasks using the  * socket.  *  * Requires:  *  * \li	"socket" is a valid socket  *  * \li	"task" is NULL or a valid task  *  * "how" is a bitmask describing the type of cancelation to perform.  * The type ISC_SOCKCANCEL_ALL will cancel all pending I/O on this  * socket.  *  * \li ISC_SOCKCANCEL_RECV:  *	Cancel pending isc_socket_recv() calls.  *  * \li ISC_SOCKCANCEL_SEND:  *	Cancel pending isc_socket_send() and isc_socket_sendto() calls.  *  * \li ISC_SOCKCANCEL_ACCEPT:  *	Cancel pending isc_socket_accept() calls.  *  * \li ISC_SOCKCANCEL_CONNECT:  *	Cancel pending isc_socket_connect() call.  */
 end_comment
 
 begin_function_decl
@@ -542,7 +582,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Shutdown 'socket' according to 'how'.  *  * Requires:  *  *	'socket' is a valid socket.  *  *	'task' is NULL or is a valid task.  *  *	If 'how' is 'ISC_SOCKSHUT_RECV' or 'ISC_SOCKSHUT_ALL' then  *  *		The read queue must be empty.  *  *		No further read requests may be made.  *  *	If 'how' is 'ISC_SOCKSHUT_SEND' or 'ISC_SOCKSHUT_ALL' then  *  *		The write queue must be empty.  *  *		No further write requests may be made.  */
+comment|/*%<  * Shutdown 'socket' according to 'how'.  *  * Requires:  *  * \li	'socket' is a valid socket.  *  * \li	'task' is NULL or is a valid task.  *  * \li	If 'how' is 'ISC_SOCKSHUT_RECV' or 'ISC_SOCKSHUT_ALL' then  *  *		The read queue must be empty.  *  *		No further read requests may be made.  *  * \li	If 'how' is 'ISC_SOCKSHUT_SEND' or 'ISC_SOCKSHUT_ALL' then  *  *		The write queue must be empty.  *  *		No further write requests may be made.  */
 end_comment
 
 begin_function_decl
@@ -562,7 +602,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Attach *socketp to socket.  *  * Requires:  *  *	'socket' is a valid socket.  *  *	'socketp' points to a NULL socket.  *  * Ensures:  *  *	*socketp is attached to socket.  */
+comment|/*%<  * Attach *socketp to socket.  *  * Requires:  *  * \li	'socket' is a valid socket.  *  * \li	'socketp' points to a NULL socket.  *  * Ensures:  *  * \li	*socketp is attached to socket.  */
 end_comment
 
 begin_function_decl
@@ -578,7 +618,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Detach *socketp from its socket.  *  * Requires:  *  *	'socketp' points to a valid socket.  *  *	If '*socketp' is the last reference to the socket,  *	then:  *  *		There must be no pending I/O requests.  *  * Ensures:  *  *	*socketp is NULL.  *  *	If '*socketp' is the last reference to the socket,  *	then:  *  *		The socket will be shutdown (both reading and writing)  *		for all tasks.  *  *		All resources used by the socket have been freed  */
+comment|/*%<  * Detach *socketp from its socket.  *  * Requires:  *  * \li	'socketp' points to a valid socket.  *  * \li	If '*socketp' is the last reference to the socket,  *	then:  *  *		There must be no pending I/O requests.  *  * Ensures:  *  * \li	*socketp is NULL.  *  * \li	If '*socketp' is the last reference to the socket,  *	then:  *  *		The socket will be shutdown (both reading and writing)  *		for all tasks.  *  *		All resources used by the socket have been freed  */
 end_comment
 
 begin_function_decl
@@ -597,7 +637,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Bind 'socket' to '*addressp'.  *  * Requires:  *  *	'socket' is a valid socket  *  *	'addressp' points to a valid isc_sockaddr.  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_NOPERM  *	ISC_R_ADDRNOTAVAIL  *	ISC_R_ADDRINUSE  *	ISC_R_BOUND  *	ISC_R_UNEXPECTED  */
+comment|/*%<  * Bind 'socket' to '*addressp'.  *  * Requires:  *  * \li	'socket' is a valid socket  *  * \li	'addressp' points to a valid isc_sockaddr.  *  * Returns:  *  * \li	ISC_R_SUCCESS  * \li	ISC_R_NOPERM  * \li	ISC_R_ADDRNOTAVAIL  * \li	ISC_R_ADDRINUSE  * \li	ISC_R_BOUND  * \li	ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -617,7 +657,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Inform the kernel that it should perform accept filtering.  * If filter is NULL the current filter will be removed.:w  */
+comment|/*%<  * Inform the kernel that it should perform accept filtering.  * If filter is NULL the current filter will be removed.:w  */
 end_comment
 
 begin_function_decl
@@ -636,7 +676,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set listen mode on the socket.  After this call, the only function that  * can be used (other than attach and detach) is isc_socket_accept().  *  * Notes:  *  *	'backlog' is as in the UNIX system call listen() and may be  *	ignored by non-UNIX implementations.  *  *	If 'backlog' is zero, a reasonable system default is used, usually  *	SOMAXCONN.  *  * Requires:  *  *	'socket' is a valid, bound TCP socket.  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_UNEXPECTED  */
+comment|/*%<  * Set listen mode on the socket.  After this call, the only function that  * can be used (other than attach and detach) is isc_socket_accept().  *  * Notes:  *  * \li	'backlog' is as in the UNIX system call listen() and may be  *	ignored by non-UNIX implementations.  *  * \li	If 'backlog' is zero, a reasonable system default is used, usually  *	SOMAXCONN.  *  * Requires:  *  * \li	'socket' is a valid, bound TCP socket or a valid, bound UNIX socket.  *  * Returns:  *  * \li	ISC_R_SUCCESS  * \li	ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -663,7 +703,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Queue accept event.  When a new connection is received, the task will  * get an ISC_SOCKEVENT_NEWCONN event with the sender set to the listen  * socket.  The new socket structure is sent inside the isc_socket_newconnev_t  * event type, and is attached to the task 'task'.  *  * REQUIRES:  *	'socket' is a valid TCP socket that isc_socket_listen() was called  *	on.  *  *	'task' is a valid task  *  *	'action' is a valid action  *  * RETURNS:  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY  *	ISC_R_UNEXPECTED  */
+comment|/*%<  * Queue accept event.  When a new connection is received, the task will  * get an ISC_SOCKEVENT_NEWCONN event with the sender set to the listen  * socket.  The new socket structure is sent inside the isc_socket_newconnev_t  * event type, and is attached to the task 'task'.  *  * REQUIRES:  * \li	'socket' is a valid TCP socket that isc_socket_listen() was called  *	on.  *  * \li	'task' is a valid task  *  * \li	'action' is a valid action  *  * RETURNS:  * \li	ISC_R_SUCCESS  * \li	ISC_R_NOMEMORY  * \li	ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -694,7 +734,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Connect 'socket' to peer with address *saddr.  When the connection  * succeeds, or when an error occurs, a CONNECT event with action 'action'  * and arg 'arg' will be posted to the event queue for 'task'.  *  * Requires:  *  *	'socket' is a valid TCP socket  *  *	'addressp' points to a valid isc_sockaddr  *  *	'task' is a valid task  *  *	'action' is a valid action  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY  *	ISC_R_UNEXPECTED  *  * Posted event's result code:  *  *	ISC_R_SUCCESS  *	ISC_R_TIMEDOUT  *	ISC_R_CONNREFUSED  *	ISC_R_NETUNREACH  *	ISC_R_UNEXPECTED  */
+comment|/*%<  * Connect 'socket' to peer with address *saddr.  When the connection  * succeeds, or when an error occurs, a CONNECT event with action 'action'  * and arg 'arg' will be posted to the event queue for 'task'.  *  * Requires:  *  * \li	'socket' is a valid TCP socket  *  * \li	'addressp' points to a valid isc_sockaddr  *  * \li	'task' is a valid task  *  * \li	'action' is a valid action  *  * Returns:  *  * \li	ISC_R_SUCCESS  * \li	ISC_R_NOMEMORY  * \li	ISC_R_UNEXPECTED  *  * Posted event's result code:  *  * \li	ISC_R_SUCCESS  * \li	ISC_R_TIMEDOUT  * \li	ISC_R_CONNREFUSED  * \li	ISC_R_NETUNREACH  * \li	ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -713,7 +753,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the name of the peer connected to 'socket'.  *  * Requires:  *  *	'socket' is a valid TCP socket.  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_TOOSMALL  *	ISC_R_UNEXPECTED  */
+comment|/*%<  * Get the name of the peer connected to 'socket'.  *  * Requires:  *  * \li	'socket' is a valid TCP socket.  *  * Returns:  *  * \li	ISC_R_SUCCESS  * \li	ISC_R_TOOSMALL  * \li	ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -732,7 +772,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the name of 'socket'.  *  * Requires:  *  *	'socket' is a valid socket.  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_TOOSMALL  *	ISC_R_UNEXPECTED  */
+comment|/*%<  * Get the name of 'socket'.  *  * Requires:  *  * \li	'socket' is a valid socket.  *  * Returns:  *  * \li	ISC_R_SUCCESS  * \li	ISC_R_TOOSMALL  * \li	ISC_R_UNEXPECTED  */
+end_comment
+
+begin_comment
+comment|/*@{*/
 end_comment
 
 begin_function_decl
@@ -829,7 +873,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Receive from 'socket', storing the results in region.  *  * Notes:  *  *	Let 'length' refer to the length of 'region' or to the sum of all  *	available regions in the list of buffers '*buflist'.  *  *	If 'minimum' is non-zero and at least that many bytes are read,  *	the completion event will be posted to the task 'task.'  If minimum  *	is zero, the exact number of bytes requested in the region must  * 	be read for an event to be posted.  This only makes sense for TCP  *	connections, and is always set to 1 byte for UDP.  *  *	The read will complete when the desired number of bytes have been  *	read, if end-of-input occurs, or if an error occurs.  A read done  *	event with the given 'action' and 'arg' will be posted to the  *	event queue of 'task'.  *  *	The caller may not modify 'region', the buffers which are passed  *	into this function, or any data they refer to until the completion  *	event is received.  *  *	For isc_socket_recvv():  *	On successful completion, '*buflist' will be empty, and the list of  *	all buffers will be returned in the done event's 'bufferlist'  *	member.  On error return, '*buflist' will be unchanged.  *  *	For isc_socket_recv2():  *	'event' is not NULL, and the non-socket specific fields are  *	expected to be initialized.  *  *	For isc_socket_recv2():  *	The only defined value for 'flags' is ISC_SOCKFLAG_IMMEDIATE.  If  *	set and the operation completes, the return value will be  *	ISC_R_SUCCESS and the event will be filled in and not sent.  If the  *	operation does not complete, the return value will be  *	ISC_R_INPROGRESS and the event will be sent when the operation  *	completes.  *  * Requires:  *  *	'socket' is a valid, bound socket.  *  *	For isc_socket_recv():  *	'region' is a valid region  *  *	For isc_socket_recvv():  *	'buflist' is non-NULL, and '*buflist' contain at least one buffer.  *  *	'task' is a valid task  *  *	For isc_socket_recv() and isc_socket_recvv():  *	action != NULL and is a valid action  *  *	For isc_socket_recv2():  *	event != NULL  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_INPROGRESS  *	ISC_R_NOMEMORY  *	ISC_R_UNEXPECTED  *  * Event results:  *  *	ISC_R_SUCCESS  *	ISC_R_UNEXPECTED  *	XXX needs other net-type errors  */
+comment|/*!  * Receive from 'socket', storing the results in region.  *  * Notes:  *  *\li	Let 'length' refer to the length of 'region' or to the sum of all  *	available regions in the list of buffers '*buflist'.  *  *\li	If 'minimum' is non-zero and at least that many bytes are read,  *	the completion event will be posted to the task 'task.'  If minimum  *	is zero, the exact number of bytes requested in the region must  * 	be read for an event to be posted.  This only makes sense for TCP  *	connections, and is always set to 1 byte for UDP.  *  *\li	The read will complete when the desired number of bytes have been  *	read, if end-of-input occurs, or if an error occurs.  A read done  *	event with the given 'action' and 'arg' will be posted to the  *	event queue of 'task'.  *  *\li	The caller may not modify 'region', the buffers which are passed  *	into this function, or any data they refer to until the completion  *	event is received.  *  *\li	For isc_socket_recvv():  *	On successful completion, '*buflist' will be empty, and the list of  *	all buffers will be returned in the done event's 'bufferlist'  *	member.  On error return, '*buflist' will be unchanged.  *  *\li	For isc_socket_recv2():  *	'event' is not NULL, and the non-socket specific fields are  *	expected to be initialized.  *  *\li	For isc_socket_recv2():  *	The only defined value for 'flags' is ISC_SOCKFLAG_IMMEDIATE.  If  *	set and the operation completes, the return value will be  *	ISC_R_SUCCESS and the event will be filled in and not sent.  If the  *	operation does not complete, the return value will be  *	ISC_R_INPROGRESS and the event will be sent when the operation  *	completes.  *  * Requires:  *  *\li	'socket' is a valid, bound socket.  *  *\li	For isc_socket_recv():  *	'region' is a valid region  *  *\li	For isc_socket_recvv():  *	'buflist' is non-NULL, and '*buflist' contain at least one buffer.  *  *\li	'task' is a valid task  *  *\li	For isc_socket_recv() and isc_socket_recvv():  *	action != NULL and is a valid action  *  *\li	For isc_socket_recv2():  *	event != NULL  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_INPROGRESS  *\li	#ISC_R_NOMEMORY  *\li	#ISC_R_UNEXPECTED  *  * Event results:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_UNEXPECTED  *\li	XXX needs other net-type errors  */
+end_comment
+
+begin_comment
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*@{*/
 end_comment
 
 begin_function_decl
@@ -995,7 +1047,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Send the contents of 'region' to the socket's peer.  *  * Notes:  *  *	Shutting down the requestor's task *may* result in any  *	still pending writes being dropped or completed, depending on the  *	underlying OS implementation.  *  *	If 'action' is NULL, then no completion event will be posted.  *  *	The caller may not modify 'region', the buffers which are passed  *	into this function, or any data they refer to until the completion  *	event is received.  *  *	For isc_socket_sendv() and isc_socket_sendtov():  *	On successful completion, '*buflist' will be empty, and the list of  *	all buffers will be returned in the done event's 'bufferlist'  *	member.  On error return, '*buflist' will be unchanged.  *  *	For isc_socket_sendto2():  *	'event' is not NULL, and the non-socket specific fields are  *	expected to be initialized.  *  *	For isc_socket_sendto2():  *	The only defined values for 'flags' are ISC_SOCKFLAG_IMMEDIATE  *	and ISC_SOCKFLAG_NORETRY.  *  *	If ISC_SOCKFLAG_IMMEDIATE is set and the operation completes, the  *	return value will be ISC_R_SUCCESS and the event will be filled  *	in and not sent.  If the operation does not complete, the return  *	value will be ISC_R_INPROGRESS and the event will be sent when  *	the operation completes.  *  *	ISC_SOCKFLAG_NORETRY can only be set for UDP sockets.  If set  *	and the send operation fails due to a transient error, the send  *	will not be retried and the error will be indicated in the event.  *	Using this option along with ISC_SOCKFLAG_IMMEDIATE allows the caller  *	to specify a region that is allocated on the stack.  *  * Requires:  *  *	'socket' is a valid, bound socket.  *  *	For isc_socket_send():  *	'region' is a valid region  *  *	For isc_socket_sendv() and isc_socket_sendtov():  *	'buflist' is non-NULL, and '*buflist' contain at least one buffer.  *  *	'task' is a valid task  *  *	For isc_socket_sendv(), isc_socket_sendtov(), isc_socket_send(), and  *	isc_socket_sendto():  *	action == NULL or is a valid action  *  *	For isc_socket_sendto2():  *	event != NULL  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_INPROGRESS  *	ISC_R_NOMEMORY  *	ISC_R_UNEXPECTED  *  * Event results:  *  *	ISC_R_SUCCESS  *	ISC_R_UNEXPECTED  *	XXX needs other net-type errors  */
+comment|/*!  * Send the contents of 'region' to the socket's peer.  *  * Notes:  *  *\li	Shutting down the requestor's task *may* result in any  *	still pending writes being dropped or completed, depending on the  *	underlying OS implementation.  *  *\li	If 'action' is NULL, then no completion event will be posted.  *  *\li	The caller may not modify 'region', the buffers which are passed  *	into this function, or any data they refer to until the completion  *	event is received.  *  *\li	For isc_socket_sendv() and isc_socket_sendtov():  *	On successful completion, '*buflist' will be empty, and the list of  *	all buffers will be returned in the done event's 'bufferlist'  *	member.  On error return, '*buflist' will be unchanged.  *  *\li	For isc_socket_sendto2():  *	'event' is not NULL, and the non-socket specific fields are  *	expected to be initialized.  *  *\li	For isc_socket_sendto2():  *	The only defined values for 'flags' are ISC_SOCKFLAG_IMMEDIATE  *	and ISC_SOCKFLAG_NORETRY.  *  *\li	If ISC_SOCKFLAG_IMMEDIATE is set and the operation completes, the  *	return value will be ISC_R_SUCCESS and the event will be filled  *	in and not sent.  If the operation does not complete, the return  *	value will be ISC_R_INPROGRESS and the event will be sent when  *	the operation completes.  *  *\li	ISC_SOCKFLAG_NORETRY can only be set for UDP sockets.  If set  *	and the send operation fails due to a transient error, the send  *	will not be retried and the error will be indicated in the event.  *	Using this option along with ISC_SOCKFLAG_IMMEDIATE allows the caller  *	to specify a region that is allocated on the stack.  *  * Requires:  *  *\li	'socket' is a valid, bound socket.  *  *\li	For isc_socket_send():  *	'region' is a valid region  *  *\li	For isc_socket_sendv() and isc_socket_sendtov():  *	'buflist' is non-NULL, and '*buflist' contain at least one buffer.  *  *\li	'task' is a valid task  *  *\li	For isc_socket_sendv(), isc_socket_sendtov(), isc_socket_send(), and  *	isc_socket_sendto():  *	action == NULL or is a valid action  *  *\li	For isc_socket_sendto2():  *	event != NULL  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_INPROGRESS  *\li	#ISC_R_NOMEMORY  *\li	#ISC_R_UNEXPECTED  *  * Event results:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_UNEXPECTED  *\li	XXX needs other net-type errors  */
+end_comment
+
+begin_comment
+comment|/*@}*/
 end_comment
 
 begin_function_decl
@@ -1015,7 +1071,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a socket manager.  *  * Notes:  *  *	All memory will be allocated in memory context 'mctx'.  *  * Requires:  *  *	'mctx' is a valid memory context.  *  *	'managerp' points to a NULL isc_socketmgr_t.  *  * Ensures:  *  *	'*managerp' is a valid isc_socketmgr_t.  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY  *	ISC_R_UNEXPECTED  */
+comment|/*%<  * Create a socket manager.  *  * Notes:  *  *\li	All memory will be allocated in memory context 'mctx'.  *  * Requires:  *  *\li	'mctx' is a valid memory context.  *  *\li	'managerp' points to a NULL isc_socketmgr_t.  *  * Ensures:  *  *\li	'*managerp' is a valid isc_socketmgr_t.  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  *\li	#ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -1031,7 +1087,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy a socket manager.  *  * Notes:  *  *	This routine blocks until there are no sockets left in the manager,  *	so if the caller holds any socket references using the manager, it  *	must detach them before calling isc_socketmgr_destroy() or it will  *	block forever.  *  * Requires:  *  *	'*managerp' is a valid isc_socketmgr_t.  *  *	All sockets managed by this manager are fully detached.  *  * Ensures:  *  *	*managerp == NULL  *  *	All resources used by the manager have been freed.  */
+comment|/*%<  * Destroy a socket manager.  *  * Notes:  *  *\li	This routine blocks until there are no sockets left in the manager,  *	so if the caller holds any socket references using the manager, it  *	must detach them before calling isc_socketmgr_destroy() or it will  *	block forever.  *  * Requires:  *  *\li	'*managerp' is a valid isc_socketmgr_t.  *  *\li	All sockets managed by this manager are fully detached.  *  * Ensures:  *  *\li	*managerp == NULL  *  *\li	All resources used by the manager have been freed.  */
 end_comment
 
 begin_function_decl
@@ -1046,7 +1102,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the socket type for "sock."  *  * Requires:  *  *	"sock" is a valid socket.  */
+comment|/*%<  * Returns the socket type for "sock."  *  * Requires:  *  *\li	"sock" is a valid socket.  */
+end_comment
+
+begin_comment
+comment|/*@{*/
 end_comment
 
 begin_function_decl
@@ -1075,7 +1135,53 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * If the socket is an IPv6 socket set/clear the IPV6_IPV6ONLY socket  * option if the host OS supports this option.  *  * Requires:  *	'sock' is a valid socket.  */
+comment|/*%<  * If the socket is an IPv6 socket set/clear the IPV6_IPV6ONLY socket  * option if the host OS supports this option.  *  * Requires:  *\li	'sock' is a valid socket.  */
+end_comment
+
+begin_comment
+comment|/*@}*/
+end_comment
+
+begin_function_decl
+name|void
+name|isc_socket_cleanunix
+parameter_list|(
+name|isc_sockaddr_t
+modifier|*
+name|addr
+parameter_list|,
+name|isc_boolean_t
+name|active
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Cleanup UNIX domain sockets in the file-system.  If 'active' is true  * then just unlink the socket.  If 'active' is false try to determine  * if there is a listener of the socket or not.  If no listener is found  * then unlink socket.  *  * Prior to unlinking the path is tested to see if it a socket.  *  * Note: there are a number of race conditions which cannot be avoided  *       both in the filesystem and any application using UNIX domain  *	 sockets (e.g. socket is tested between bind() and listen(),  *	 the socket is deleted and replaced in the file-system between  *	 stat() and unlink()).  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_socket_permunix
+parameter_list|(
+name|isc_sockaddr_t
+modifier|*
+name|sockaddr
+parameter_list|,
+name|isc_uint32_t
+name|perm
+parameter_list|,
+name|isc_uint32_t
+name|owner
+parameter_list|,
+name|isc_uint32_t
+name|group
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set ownership and file permissions on the UNIX domain socket.  *  * Note: On Solaris and SunOS this secures the directory containing  *       the socket as Solaris and SunOS do not honour the filesytem  *	 permissions on the socket.  *  * Requires:  * \li	'sockaddr' to be a valid UNIX domain sockaddr.  *  * Returns:  * \li	#ISC_R_SUCCESS  * \li	#ISC_R_FAILURE  */
 end_comment
 
 begin_macro

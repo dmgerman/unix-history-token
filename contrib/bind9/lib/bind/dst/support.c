@@ -6,7 +6,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/support.c,v 1.2.2.1.10.2 2005/10/11 00:48:14 marka Exp $"
+literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/support.c,v 1.3.332.3 2005/10/11 00:25:09 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,7 +87,7 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/*  * dst_s_verify_str()  *     Validate that the input string(*str) is at the head of the input  *     buffer(**buf).  If so, move the buffer head pointer (*buf) to  *     the first byte of data following the string(*str).  * Parameters  *     buf     Input buffer.  *     str     Input string.  * Return  *	0       *str is not the head of **buff  *	1       *str is the head of **buff, *buf is is advanced to  *	the tail of **buf.  */
+comment|/*%  * dst_s_verify_str()  *     Validate that the input string(*str) is at the head of the input  *     buffer(**buf).  If so, move the buffer head pointer (*buf) to  *     the first byte of data following the string(*str).  * Parameters  *     buf     Input buffer.  *     str     Input string.  * Return  *	0       *str is not the head of **buff  *	1       *str is the head of **buff, *buf is is advanced to  *	the tail of **buf.  */
 end_comment
 
 begin_function
@@ -118,7 +118,7 @@ name|buf
 operator|==
 name|NULL
 condition|)
-comment|/* error checks */
+comment|/*%< error checks */
 return|return
 operator|(
 literal|0
@@ -148,7 +148,7 @@ operator|*
 name|buf
 argument_list|)
 expr_stmt|;
-comment|/* get length of strings */
+comment|/*%< get length of strings */
 name|s
 operator|=
 name|strlen
@@ -172,13 +172,13 @@ argument_list|,
 name|s
 argument_list|)
 condition|)
-comment|/* check if same */
+comment|/*%< check if same */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* not a match */
+comment|/*%< not a match */
 operator|(
 operator|*
 name|buf
@@ -186,7 +186,7 @@ operator|)
 operator|+=
 name|s
 expr_stmt|;
-comment|/* advance pointer */
+comment|/*%< advance pointer */
 return|return
 operator|(
 literal|1
@@ -196,7 +196,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dst_s_calculate_bits  *     Given a binary number represented in a u_char[], determine  *     the number of significant bits used.  * Parameters  *     str       An input character string containing a binary number.  *     max_bits The maximum possible significant bits.  * Return  *     N       The number of significant bits in str.  */
+comment|/*%  * dst_s_calculate_bits  *     Given a binary number represented in a u_char[], determine  *     the number of significant bits used.  * Parameters  *     str       An input character string containing a binary number.  *     max_bits The maximum possible significant bits.  * Return  *     N       The number of significant bits in str.  */
 end_comment
 
 begin_function
@@ -283,7 +283,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * calculates a checksum used in dst for an id.  * takes an array of bytes and a length.  * returns a 16  bit checksum.  */
+comment|/*%  * calculates a checksum used in dst for an id.  * takes an array of bytes and a length.  * returns a 16  bit checksum.  */
 end_comment
 
 begin_function
@@ -405,7 +405,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * dst_s_dns_key_id() Function to calculate DNSSEC footprint from KEY record  *   rdata  * Input:  *	dns_key_rdata: the raw data in wire format   *      rdata_len: the size of the input data   * Output:  *      the key footprint/id calculated from the key data   */
+comment|/*%  * dst_s_dns_key_id() Function to calculate DNSSEC footprint from KEY record  *   rdata  * Input:  *	dns_key_rdata: the raw data in wire format   *      rdata_len: the size of the input data   * Output:  *      the key footprint/id calculated from the key data   */
 end_comment
 
 begin_function
@@ -440,7 +440,7 @@ index|]
 operator|==
 name|KEY_RSA
 condition|)
-comment|/* Algorithm RSA */
+comment|/*%< Algorithm RSA */
 return|return
 name|dst_s_get_int16
 argument_list|(
@@ -486,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dst_s_get_int16  *     This routine extracts a 16 bit integer from a two byte character  *     string.  The character string is assumed to be in network byte  *     order and may be unaligned.  The number returned is in host order.  * Parameter  *     buf     A two byte character string.  * Return  *     The converted integer value.  */
+comment|/*%  * dst_s_get_int16  *     This routine extracts a 16 bit integer from a two byte character  *     string.  The character string is assumed to be in network byte  *     order and may be unaligned.  The number returned is in host order.  * Parameter  *     buf     A two byte character string.  * Return  *     The converted integer value.  */
 end_comment
 
 begin_function
@@ -542,7 +542,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dst_s_get_int32  *     This routine extracts a 32 bit integer from a four byte character  *     string.  The character string is assumed to be in network byte  *     order and may be unaligned.  The number returned is in host order.  * Parameter  *     buf     A four byte character string.  * Return  *     The converted integer value.  */
+comment|/*%  * dst_s_get_int32  *     This routine extracts a 32 bit integer from a four byte character  *     string.  The character string is assumed to be in network byte  *     order and may be unaligned.  The number returned is in host order.  * Parameter  *     buf     A four byte character string.  * Return  *     The converted integer value.  */
 end_comment
 
 begin_function
@@ -626,7 +626,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dst_s_put_int16  *     Take a 16 bit integer and store the value in a two byte  *     character string.  The integer is assumed to be in network  *     order and the string is returned in host order.  *  * Parameters  *     buf     Storage for a two byte character string.  *     val     16 bit integer.  */
+comment|/*%  * dst_s_put_int16  *     Take a 16 bit integer and store the value in a two byte  *     character string.  The integer is assumed to be in network  *     order and the string is returned in host order.  *  * Parameters  *     buf     Storage for a two byte character string.  *     val     16 bit integer.  */
 end_comment
 
 begin_function
@@ -672,7 +672,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dst_s_put_int32  *     Take a 32 bit integer and store the value in a four byte  *     character string.  The integer is assumed to be in network  *     order and the string is returned in host order.  *  * Parameters  *     buf     Storage for a four byte character string.  *     val     32 bit integer.  */
+comment|/*%  * dst_s_put_int32  *     Take a 32 bit integer and store the value in a four byte  *     character string.  The integer is assumed to be in network  *     order and the string is returned in host order.  *  * Parameters  *     buf     Storage for a four byte character string.  *     val     32 bit integer.  */
 end_comment
 
 begin_function
@@ -746,7 +746,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  dst_s_filename_length  *  *	This function returns the number of bytes needed to hold the  *	filename for a key file.  '/', '\' and ':' are not allowed.  *	form:  K<keyname>+<alg>+<id>.<suffix>  *  *	Returns 0 if the filename would contain either '\', '/' or ':'  */
+comment|/*%  *  dst_s_filename_length  *  *	This function returns the number of bytes needed to hold the  *	filename for a key file.  '/', '\' and ':' are not allowed.  *	form:  K&lt;keyname&gt;+&lt;alg&gt;+&lt;id&gt;.&lt;suffix&gt;  *  *	Returns 0 if the filename would contain either '\', '/' or ':'  */
 end_comment
 
 begin_function
@@ -891,7 +891,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  dst_s_build_filename ()  *	Builds a key filename from the key name, it's id, and a  *	suffix.  '\', '/' and ':' are not allowed. fA filename is of the  *	form:  K<keyname><id>.<suffix>  *	form: K<keyname>+<alg>+<id>.<suffix>  *  *	Returns -1 if the conversion fails:  *	  if the filename would be too long for space allotted  *	  if the filename would contain a '\', '/' or ':'  *	Returns 0 on success  */
+comment|/*%  *  dst_s_build_filename ()  *	Builds a key filename from the key name, it's id, and a  *	suffix.  '\', '/' and ':' are not allowed. fA filename is of the  *	form:  K&lt;keyname&gt;&lt;id&gt;.&lt;suffix&gt;  *	form: K&lt;keyname&gt;+&lt;alg&gt;+&lt;id&gt;.&lt;suffix&gt;  *  *	Returns -1 if the conversion fails:  *	  if the filename would be too long for space allotted  *	  if the filename would contain a '\', '/' or ':'  *	Returns 0 on success  */
 end_comment
 
 begin_function
@@ -1076,7 +1076,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  dst_s_fopen ()  *     Open a file in the dst_path directory.  If perm is specified, the  *     file is checked for existence first, and not opened if it exists.  *  Parameters  *     filename  File to open  *     mode       Mode to open the file (passed directly to fopen)  *     perm       File permission, if creating a new file.  *  Returns  *     NULL       Failure  *     NON-NULL  (FILE *) of opened file.  */
+comment|/*%  *  dst_s_fopen ()  *     Open a file in the dst_path directory.  If perm is specified, the  *     file is checked for existence first, and not opened if it exists.  *  Parameters  *     filename  File to open  *     mode       Mode to open the file (passed directly to fopen)  *     perm       File permission, if creating a new file.  *  Returns  *     NULL       Failure  *     NON-NULL  (FILE *) of opened file.  */
 end_comment
 
 begin_function
@@ -1284,6 +1284,10 @@ directive|endif
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

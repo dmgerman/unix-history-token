@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: message.h,v 1.100.2.3.8.10 2006/02/28 06:32:54 marka Exp $ */
+comment|/* $Id: message.h,v 1.114.18.6 2006/03/02 23:19:20 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -61,7 +61,7 @@ file|<dst/dst.h>
 end_include
 
 begin_comment
-comment|/*  * How this beast works:  *  * When a dns message is received in a buffer, dns_message_fromwire() is called  * on the memory region.  Various items are checked including the format  * of the message (if counts are right, if counts consume the entire sections,  * and if sections consume the entire message) and known pseudo-RRs in the  * additional data section are analyzed and removed.  *  * TSIG checking is also done at this layer, and any DNSSEC transaction  * signatures should also be checked here.  *  * Notes on using the gettemp*() and puttemp*() functions:  *  * These functions return items (names, rdatasets, etc) allocated from some  * internal state of the dns_message_t.  *  * Names and rdatasets must be put back into the dns_message_t in  * one of two ways.  Assume a name was allocated via  * dns_message_gettempname():  *  *	(1) insert it into a section, using dns_message_addname().  *  *	(2) return it to the message using dns_message_puttempname().  *  * The same applies to rdatasets.  *  * On the other hand, offsets, rdatalists and rdatas allocated using  * dns_message_gettemp*() will always be freed automatically  * when the message is reset or destroyed; calling dns_message_puttemp*()  * on rdatalists and rdatas is optional and serves only to enable the item  * to be reused multiple times during the lifetime of the message; offsets  * cannot be reused.  *  * Buffers allocated using isc_buffer_allocate() can be automatically freed  * as well by giving the buffer to the message using dns_message_takebuffer().  * Doing this will cause the buffer to be freed using isc_buffer_free()  * when the section lists are cleared, such as in a reset or in a destroy.  * Since the buffer itself exists until the message is destroyed, this sort  * of code can be written:  *  *	buffer = isc_buffer_allocate(mctx, 512);  *	name = NULL;  *	name = dns_message_gettempname(message,&name);  *	dns_name_init(name, NULL);  *	result = dns_name_fromtext(name,&source, dns_rootname, ISC_FALSE,  *				   buffer);  *	dns_message_takebuffer(message,&buffer);  *  *  * TODO:  *  * XXX Needed:  ways to set and retrieve EDNS information, add rdata to a  * section, move rdata from one section to another, remove rdata, etc.  */
+comment|/*! \file   * \brief Message Handling Module  *  * How this beast works:  *  * When a dns message is received in a buffer, dns_message_fromwire() is called  * on the memory region.  Various items are checked including the format  * of the message (if counts are right, if counts consume the entire sections,  * and if sections consume the entire message) and known pseudo-RRs in the  * additional data section are analyzed and removed.  *  * TSIG checking is also done at this layer, and any DNSSEC transaction  * signatures should also be checked here.  *  * Notes on using the gettemp*() and puttemp*() functions:  *  * These functions return items (names, rdatasets, etc) allocated from some  * internal state of the dns_message_t.  *  * Names and rdatasets must be put back into the dns_message_t in  * one of two ways.  Assume a name was allocated via  * dns_message_gettempname():  *  *\li	(1) insert it into a section, using dns_message_addname().  *  *\li	(2) return it to the message using dns_message_puttempname().  *  * The same applies to rdatasets.  *  * On the other hand, offsets, rdatalists and rdatas allocated using  * dns_message_gettemp*() will always be freed automatically  * when the message is reset or destroyed; calling dns_message_puttemp*()  * on rdatalists and rdatas is optional and serves only to enable the item  * to be reused multiple times during the lifetime of the message; offsets  * cannot be reused.  *  * Buffers allocated using isc_buffer_allocate() can be automatically freed  * as well by giving the buffer to the message using dns_message_takebuffer().  * Doing this will cause the buffer to be freed using isc_buffer_free()  * when the section lists are cleared, such as in a reset or in a destroy.  * Since the buffer itself exists until the message is destroyed, this sort  * of code can be written:  *  * \code  *	buffer = isc_buffer_allocate(mctx, 512);  *	name = NULL;  *	name = dns_message_gettempname(message,&name);  *	dns_name_init(name, NULL);  *	result = dns_name_fromtext(name,&source, dns_rootname, ISC_FALSE,  *				   buffer);  *	dns_message_takebuffer(message,&buffer);  * \endcode  *  *  * TODO:  *  * XXX Needed:  ways to set and retrieve EDNS information, add rdata to a  * section, move rdata from one section to another, remove rdata, etc.  */
 end_comment
 
 begin_define
@@ -142,7 +142,7 @@ value|12
 end_define
 
 begin_comment
-comment|/* 6 isc_uint16_t's */
+comment|/*%< 6 isc_uint16_t's */
 end_comment
 
 begin_define
@@ -315,7 +315,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* internal use only */
+comment|/*%< internal use only */
 end_comment
 
 begin_define
@@ -326,7 +326,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* parsing messages */
+comment|/*%< parsing messages */
 end_comment
 
 begin_define
@@ -337,7 +337,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* rendering */
+comment|/*%< rendering */
 end_comment
 
 begin_comment
@@ -352,7 +352,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* preserve rdata order */
+comment|/*%< preserve rdata order */
 end_comment
 
 begin_define
@@ -363,7 +363,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* return a message if a 						   recoverable parse error 						   occurs */
+comment|/*%< return a message if a 						   recoverable parse error 						   occurs */
 end_comment
 
 begin_define
@@ -374,7 +374,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* save a copy of the 						   source buffer */
+comment|/*%< save a copy of the 						   source buffer */
 end_comment
 
 begin_define
@@ -385,7 +385,7 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* trucation errors are 						  * not fatal. */
+comment|/*%< trucation errors are 						  * not fatal. */
 end_comment
 
 begin_comment
@@ -400,7 +400,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* don't change order */
+comment|/*%< don't change order */
 end_comment
 
 begin_define
@@ -411,7 +411,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* allow a partial rdataset */
+comment|/*%< allow a partial rdataset */
 end_comment
 
 begin_define
@@ -422,7 +422,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* omit DNSSEC records */
+comment|/*%< omit DNSSEC records */
 end_comment
 
 begin_define
@@ -433,7 +433,7 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* prefer A records in 						 * additional section. */
+comment|/*%< prefer A records in 						      additional section. */
 end_comment
 
 begin_define
@@ -444,7 +444,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* prefer AAAA records in 						 * additional section. */
+comment|/*%< prefer AAAA records in 						  additional section. */
 end_comment
 
 begin_typedef
@@ -720,7 +720,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create msg structure.  *  * This function will allocate some internal blocks of memory that are  * expected to be needed for parsing or rendering nearly any type of message.  *  * Requires:  *	'mctx' be a valid memory context.  *  *	'msgp' be non-null and '*msg' be NULL.  *  *	'intent' must be one of DNS_MESSAGE_INTENTPARSE or  *	DNS_MESSAGE_INTENTRENDER.  *  * Ensures:  *	The data in "*msg" is set to indicate an unused and empty msg  *	structure.  *  * Returns:  *	ISC_R_NOMEMORY		-- out of memory  *	ISC_R_SUCCESS		-- success  */
+comment|/*%<  * Create msg structure.  *  * This function will allocate some internal blocks of memory that are  * expected to be needed for parsing or rendering nearly any type of message.  *  * Requires:  *\li	'mctx' be a valid memory context.  *  *\li	'msgp' be non-null and '*msg' be NULL.  *  *\li	'intent' must be one of DNS_MESSAGE_INTENTPARSE or  *	#DNS_MESSAGE_INTENTRENDER.  *  * Ensures:  *\li	The data in "*msg" is set to indicate an unused and empty msg  *	structure.  *  * Returns:  *\li	#ISC_R_NOMEMORY		-- out of memory  *\li	#ISC_R_SUCCESS		-- success  */
 end_comment
 
 begin_function_decl
@@ -739,7 +739,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Reset a message structure to default state.  All internal lists are freed  * or reset to a default state as well.  This is simply a more efficient  * way to call dns_message_destroy() followed by dns_message_allocate(),  * since it avoid many memory allocations.  *  * If any data loanouts (buffers, names, rdatas, etc) were requested,  * the caller must no longer use them after this call.  *  * The intended next use of the message will be 'intent'.  *  * Requires:  *  *	'msg' be valid.  *  *	'intent' is DNS_MESSAGE_INTENTPARSE or DNS_MESSAGE_INTENTRENDER  */
+comment|/*%<  * Reset a message structure to default state.  All internal lists are freed  * or reset to a default state as well.  This is simply a more efficient  * way to call dns_message_destroy() followed by dns_message_allocate(),  * since it avoid many memory allocations.  *  * If any data loanouts (buffers, names, rdatas, etc) were requested,  * the caller must no longer use them after this call.  *  * The intended next use of the message will be 'intent'.  *  * Requires:  *  *\li	'msg' be valid.  *  *\li	'intent' is DNS_MESSAGE_INTENTPARSE or DNS_MESSAGE_INTENTRENDER  */
 end_comment
 
 begin_function_decl
@@ -755,7 +755,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy all state in the message.  *  * Requires:  *  *	'msgp' be valid.  *  * Ensures:  *	'*msgp' == NULL  */
+comment|/*%<  * Destroy all state in the message.  *  * Requires:  *  *\li	'msgp' be valid.  *  * Ensures:  *\li	'*msgp' == NULL  */
 end_comment
 
 begin_function_decl
@@ -811,7 +811,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convert section 'section' or 'pseudosection' of message 'msg' to  * a cleartext representation  *  * Notes:  *      See dns_message_totext for meanings of flags.  *  * Requires:  *  *	'msg' is a valid message.  *  *	'style' is a valid master dump style.  *  *	'target' is a valid buffer.  *  *	'section' is a valid section label.  *  * Ensures:  *  *	If the result is success:  *  *		The used space in 'target' is updated.  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_NOSPACE  *	ISC_R_NOMORE  *  *	Note: On error return, *target may be partially filled with data. */
+comment|/*%<  * Convert section 'section' or 'pseudosection' of message 'msg' to  * a cleartext representation  *  * Notes:  *     \li See dns_message_totext for meanings of flags.  *  * Requires:  *  *\li	'msg' is a valid message.  *  *\li	'style' is a valid master dump style.  *  *\li	'target' is a valid buffer.  *  *\li	'section' is a valid section label.  *  * Ensures:  *  *\li	If the result is success:  *		The used space in 'target' is updated.  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE  *\li	#ISC_R_NOMORE  *  *\li	Note: On error return, *target may be partially filled with data. */
 end_comment
 
 begin_function_decl
@@ -838,7 +838,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convert all sections of message 'msg' to a cleartext representation  *  * Notes:  *      In flags, If DNS_MESSAGETEXTFLAG_OMITDOT is set, then the  *      final '.' in absolute names will not be emitted.  If  *      DNS_MESSAGETEXTFLAG_NOCOMMENTS is cleared, lines beginning  *      with ";;" will be emitted indicating section name.  If  *      DNS_MESSAGETEXTFLAG_NOHEADERS is cleared, header lines will  *      be emitted.  *  * Requires:  *  *	'msg' is a valid message.  *  *	'style' is a valid master dump style.  *  *	'target' is a valid buffer.  *  * Ensures:  *  *	If the result is success:  *  *		The used space in 'target' is updated.  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_NOSPACE  *	ISC_R_NOMORE  *  *	Note: On error return, *target may be partially filled with data.  */
+comment|/*%<  * Convert all sections of message 'msg' to a cleartext representation  *  * Notes:  * \li     In flags, If #DNS_MESSAGETEXTFLAG_OMITDOT is set, then the  *      final '.' in absolute names will not be emitted.  If  *      #DNS_MESSAGETEXTFLAG_NOCOMMENTS is cleared, lines beginning  *      with ";;" will be emitted indicating section name.  If  *      #DNS_MESSAGETEXTFLAG_NOHEADERS is cleared, header lines will  *      be emitted.  *  * Requires:  *  *\li	'msg' is a valid message.  *  *\li	'style' is a valid master dump style.  *  *\li	'target' is a valid buffer.  *  * Ensures:  *  *\li	If the result is success:  *		The used space in 'target' is updated.  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE  *\li	#ISC_R_NOMORE  *  *\li	Note: On error return, *target may be partially filled with data.  */
 end_comment
 
 begin_function_decl
@@ -861,7 +861,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Parse raw wire data in 'source' as a DNS message.  *  * OPT records are detected and stored in the pseudo-section "opt".  * TSIGs are detected and stored in the pseudo-section "tsig".  *  * If DNS_MESSAGEPARSE_PRESERVEORDER is set, or if the opcode of the message  * is UPDATE, a separate dns_name_t object will be created for each RR in the  * message.  Each such dns_name_t will have a single rdataset containing the  * single RR, and the order of the RRs in the message is preserved.  * Otherwise, only one dns_name_t object will be created for each unique  * owner name in the section, and each such dns_name_t will have a list  * of rdatasets.  To access the names and their data, use  * dns_message_firstname() and dns_message_nextname().  *  * If DNS_MESSAGEPARSE_BESTEFFORT is set, errors in message content will  * not be considered FORMERRs.  If the entire message can be parsed, it  * will be returned and DNS_R_RECOVERABLE will be returned.  *  * If DNS_MESSAGEPARSE_IGNORETRUNCATION is set then return as many complete  * RR's as possible, DNS_R_RECOVERABLE will be returned.  *  * OPT and TSIG records are always handled specially, regardless of the  * 'preserve_order' setting.  *  * Requires:  *	"msg" be valid.  *  *	"buffer" be a wire format buffer.  *  * Ensures:  *	The buffer's data format is correct.  *  *	The buffer's contents verify as correct regarding header bits, buffer  * 	and rdata sizes, etc.  *  * Returns:  *	ISC_R_SUCCESS		-- all is well  *	ISC_R_NOMEMORY		-- no memory  *	DNS_R_RECOVERABLE	-- the message parsed properly, but contained  *				   errors.  *	Many other errors possible XXXMLG  */
+comment|/*%<  * Parse raw wire data in 'source' as a DNS message.  *  * OPT records are detected and stored in the pseudo-section "opt".  * TSIGs are detected and stored in the pseudo-section "tsig".  *  * If #DNS_MESSAGEPARSE_PRESERVEORDER is set, or if the opcode of the message  * is UPDATE, a separate dns_name_t object will be created for each RR in the  * message.  Each such dns_name_t will have a single rdataset containing the  * single RR, and the order of the RRs in the message is preserved.  * Otherwise, only one dns_name_t object will be created for each unique  * owner name in the section, and each such dns_name_t will have a list  * of rdatasets.  To access the names and their data, use  * dns_message_firstname() and dns_message_nextname().  *  * If #DNS_MESSAGEPARSE_BESTEFFORT is set, errors in message content will  * not be considered FORMERRs.  If the entire message can be parsed, it  * will be returned and DNS_R_RECOVERABLE will be returned.  *  * If #DNS_MESSAGEPARSE_IGNORETRUNCATION is set then return as many complete  * RR's as possible, DNS_R_RECOVERABLE will be returned.  *  * OPT and TSIG records are always handled specially, regardless of the  * 'preserve_order' setting.  *  * Requires:  *\li	"msg" be valid.  *  *\li	"buffer" be a wire format buffer.  *  * Ensures:  *\li	The buffer's data format is correct.  *  *\li	The buffer's contents verify as correct regarding header bits, buffer  * 	and rdata sizes, etc.  *  * Returns:  *\li	#ISC_R_SUCCESS		-- all is well  *\li	#ISC_R_NOMEMORY		-- no memory  *\li	#DNS_R_RECOVERABLE	-- the message parsed properly, but contained  *				   errors.  *\li	Many other errors possible XXXMLG  */
 end_comment
 
 begin_function_decl
@@ -884,7 +884,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Begin rendering on a message.  Only one call can be made to this function  * per message.  *  * The compression context is "owned" by the message library until  * dns_message_renderend() is called.  It must be invalidated by the caller.  *  * The buffer is "owned" by the message library until dns_message_renderend()  * is called.  *  * Requires:  *  *	'msg' be valid.  *  *	'cctx' be valid.  *  *	'buffer' is a valid buffer.  *  * Side Effects:  *  *	The buffer is cleared before it is used.  *  * Returns:  *	ISC_R_SUCCESS		-- all is well  *	ISC_R_NOSPACE		-- output buffer is too small  */
+comment|/*%<  * Begin rendering on a message.  Only one call can be made to this function  * per message.  *  * The compression context is "owned" by the message library until  * dns_message_renderend() is called.  It must be invalidated by the caller.  *  * The buffer is "owned" by the message library until dns_message_renderend()  * is called.  *  * Requires:  *  *\li	'msg' be valid.  *  *\li	'cctx' be valid.  *  *\li	'buffer' is a valid buffer.  *  * Side Effects:  *  *\li	The buffer is cleared before it is used.  *  * Returns:  *\li	#ISC_R_SUCCESS		-- all is well  *\li	#ISC_R_NOSPACE		-- output buffer is too small  */
 end_comment
 
 begin_function_decl
@@ -903,7 +903,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Reset the buffer.  This can be used after growing the old buffer  * on a ISC_R_NOSPACE return from most of the render functions.  *  * On successful completion, the old buffer is no longer used by the  * library.  The new buffer is owned by the library until  * dns_message_renderend() is called.  *  * Requires:  *  *	'msg' be valid.  *  *	dns_message_renderbegin() was called.  *  *	buffer != NULL.  *  * Returns:  *	ISC_R_NOSPACE		-- new buffer is too small  *	ISC_R_SUCCESS		-- all is well.  */
+comment|/*%<  * Reset the buffer.  This can be used after growing the old buffer  * on a ISC_R_NOSPACE return from most of the render functions.  *  * On successful completion, the old buffer is no longer used by the  * library.  The new buffer is owned by the library until  * dns_message_renderend() is called.  *  * Requires:  *  *\li	'msg' be valid.  *  *\li	dns_message_renderbegin() was called.  *  *\li	buffer != NULL.  *  * Returns:  *\li	#ISC_R_NOSPACE		-- new buffer is too small  *\li	#ISC_R_SUCCESS		-- all is well.  */
 end_comment
 
 begin_function_decl
@@ -922,7 +922,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * XXXMLG should use size_t rather than unsigned int once the buffer  * API is cleaned up  *  * Reserve "space" bytes in the given buffer.  *  * Requires:  *  *	'msg' be valid.  *  *	dns_message_renderbegin() was called.  *  * Returns:  *	ISC_R_SUCCESS		-- all is well.  *	ISC_R_NOSPACE		-- not enough free space in the buffer.  */
+comment|/*%<  * XXXMLG should use size_t rather than unsigned int once the buffer  * API is cleaned up  *  * Reserve "space" bytes in the given buffer.  *  * Requires:  *  *\li	'msg' be valid.  *  *\li	dns_message_renderbegin() was called.  *  * Returns:  *\li	#ISC_R_SUCCESS		-- all is well.  *\li	#ISC_R_NOSPACE		-- not enough free space in the buffer.  */
 end_comment
 
 begin_function_decl
@@ -941,7 +941,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * XXXMLG should use size_t rather than unsigned int once the buffer  * API is cleaned up  *  * Release "space" bytes in the given buffer that was previously reserved.  *  * Requires:  *  *	'msg' be valid.  *  *	'space' is less than or equal to the total amount of space reserved  *	via prior calls to dns_message_renderreserve().  *  *	dns_message_renderbegin() was called.  */
+comment|/*%<  * XXXMLG should use size_t rather than unsigned int once the buffer  * API is cleaned up  *  * Release "space" bytes in the given buffer that was previously reserved.  *  * Requires:  *  *\li	'msg' be valid.  *  *\li	'space' is less than or equal to the total amount of space reserved  *	via prior calls to dns_message_renderreserve().  *  *\li	dns_message_renderbegin() was called.  */
 end_comment
 
 begin_function_decl
@@ -963,7 +963,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Render all names, rdatalists, etc from the given section at the  * specified priority or higher.  *  * Requires:  *	'msg' be valid.  *  *	'section' be a valid section.  *  *	dns_message_renderbegin() was called.  *  * Returns:  *	ISC_R_SUCCESS		-- all records were written, and there are  *				   no more records for this section.  *	ISC_R_NOSPACE		-- Not enough room in the buffer to write  *				   all records requested.  *	DNS_R_MOREDATA		-- All requested records written, and there  *				   are records remaining for this section.  */
+comment|/*%<  * Render all names, rdatalists, etc from the given section at the  * specified priority or higher.  *  * Requires:  *\li	'msg' be valid.  *  *\li	'section' be a valid section.  *  *\li	dns_message_renderbegin() was called.  *  * Returns:  *\li	#ISC_R_SUCCESS		-- all records were written, and there are  *				   no more records for this section.  *\li	#ISC_R_NOSPACE		-- Not enough room in the buffer to write  *				   all records requested.  *\li	#DNS_R_MOREDATA		-- All requested records written, and there  *				   are records remaining for this section.  */
 end_comment
 
 begin_function_decl
@@ -982,7 +982,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Render the message header.  This is implicitly called by  * dns_message_renderend().  *  * Requires:  *  *	'msg' be a valid message.  *  *	dns_message_renderbegin() was called.  *  *	'target' is a valid buffer with enough space to hold a message header  */
+comment|/*%<  * Render the message header.  This is implicitly called by  * dns_message_renderend().  *  * Requires:  *  *\li	'msg' be a valid message.  *  *\li	dns_message_renderbegin() was called.  *  *\li	'target' is a valid buffer with enough space to hold a message header  */
 end_comment
 
 begin_function_decl
@@ -997,7 +997,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Finish rendering to the buffer.  Note that more data can be in the  * 'msg' structure.  Destroying the structure will free this, or in a multi-  * part EDNS1 message this data can be rendered to another buffer later.  *  * Requires:  *  *	'msg' be a valid message.  *  *	dns_message_renderbegin() was called.  *  * Returns:  *	ISC_R_SUCCESS		-- all is well.  */
+comment|/*%<  * Finish rendering to the buffer.  Note that more data can be in the  * 'msg' structure.  Destroying the structure will free this, or in a multi-  * part EDNS1 message this data can be rendered to another buffer later.  *  * Requires:  *  *\li	'msg' be a valid message.  *  *\li	dns_message_renderbegin() was called.  *  * Returns:  *\li	#ISC_R_SUCCESS		-- all is well.  */
 end_comment
 
 begin_function_decl
@@ -1012,7 +1012,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Reset the message so that it may be rendered again.  *  * Notes:  *  *	If dns_message_renderbegin() has been called, dns_message_renderend()  *	must be called before calling this function.  *  * Requires:  *  *	'msg' be a valid message with rendering intent.  */
+comment|/*%<  * Reset the message so that it may be rendered again.  *  * Notes:  *  *\li	If dns_message_renderbegin() has been called, dns_message_renderend()  *	must be called before calling this function.  *  * Requires:  *  *\li	'msg' be a valid message with rendering intent.  */
 end_comment
 
 begin_function_decl
@@ -1030,7 +1030,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set internal per-section name pointer to the beginning of the section.  *  * The functions dns_message_firstname() and dns_message_nextname() may  * be used for iterating over the owner names in a section.  *  * Requires:  *  *   	'msg' be valid.  *  *	'section' be a valid section.  *  * Returns:  *	ISC_R_SUCCESS		-- All is well.  *	ISC_R_NOMORE		-- No names on given section.  */
+comment|/*%<  * Set internal per-section name pointer to the beginning of the section.  *  * The functions dns_message_firstname() and dns_message_nextname() may  * be used for iterating over the owner names in a section.  *  * Requires:  *  *\li   	'msg' be valid.  *  *\li	'section' be a valid section.  *  * Returns:  *\li	#ISC_R_SUCCESS		-- All is well.  *\li	#ISC_R_NOMORE		-- No names on given section.  */
 end_comment
 
 begin_function_decl
@@ -1048,7 +1048,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Sets the internal per-section name pointer to point to the next name  * in that section.  *  * Requires:  *  *   	'msg' be valid.  *  *	'section' be a valid section.  *  *	dns_message_firstname() must have been called on this section,  *	and the result was ISC_R_SUCCESS.  *  * Returns:  *	ISC_R_SUCCESS		-- All is well.  *	ISC_R_NOMORE		-- No more names in given section.  */
+comment|/*%<  * Sets the internal per-section name pointer to point to the next name  * in that section.  *  * Requires:  *  * \li  	'msg' be valid.  *  *\li	'section' be a valid section.  *  *\li	dns_message_firstname() must have been called on this section,  *	and the result was ISC_R_SUCCESS.  *  * Returns:  *\li	#ISC_R_SUCCESS		-- All is well.  *\li	#ISC_R_NOMORE		-- No more names in given section.  */
 end_comment
 
 begin_function_decl
@@ -1071,7 +1071,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Sets 'name' to point to the name where the per-section internal name  * pointer is currently set.  *  * This function returns the name in the database, so any data associated  * with it (via the name's "list" member) contains the actual rdatasets.  *  * Requires:  *  *	'msg' be valid.  *  *	'name' be non-NULL, and *name be NULL.  *  *	'section' be a valid section.  *  *	dns_message_firstname() must have been called on this section,  *	and the result of it and any dns_message_nextname() calls was  *	ISC_R_SUCCESS.  */
+comment|/*%<  * Sets 'name' to point to the name where the per-section internal name  * pointer is currently set.  *  * This function returns the name in the database, so any data associated  * with it (via the name's "list" member) contains the actual rdatasets.  *  * Requires:  *  *\li	'msg' be valid.  *  *\li	'name' be non-NULL, and *name be NULL.  *  *\li	'section' be a valid section.  *  *\li	dns_message_firstname() must have been called on this section,  *	and the result of it and any dns_message_nextname() calls was  *	#ISC_R_SUCCESS.  */
 end_comment
 
 begin_function_decl
@@ -1109,7 +1109,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Search for a name in the specified section.  If it is found, *name is  * set to point to the name, and *rdataset is set to point to the found  * rdataset (if type is specified as other than dns_rdatatype_any).  *  * Requires:  *	'msg' be valid.  *  *	'section' be a valid section.  *  *	If a pointer to the name is desired, 'foundname' should be non-NULL.  *	If it is non-NULL, '*foundname' MUST be NULL.  *  *	If a type other than dns_datatype_any is searched for, 'rdataset'  *	may be non-NULL, '*rdataset' be NULL, and will point at the found  *	rdataset.  If the type is dns_datatype_any, 'rdataset' must be NULL.  *  *	'target' be a valid name.  *  *	'type' be a valid type.  *  *	If 'type' is dns_rdatatype_rrsig, 'covers' must be a valid type.  *	Otherwise it should be 0.  *  * Returns:  *	ISC_R_SUCCESS		-- all is well.  *	DNS_R_NXDOMAIN		-- name does not exist in that section.  *	DNS_R_NXRRSET		-- The name does exist, but the desired  *				   type does not.  */
+comment|/*%<  * Search for a name in the specified section.  If it is found, *name is  * set to point to the name, and *rdataset is set to point to the found  * rdataset (if type is specified as other than dns_rdatatype_any).  *  * Requires:  *\li	'msg' be valid.  *  *\li	'section' be a valid section.  *  *\li	If a pointer to the name is desired, 'foundname' should be non-NULL.  *	If it is non-NULL, '*foundname' MUST be NULL.  *  *\li	If a type other than dns_datatype_any is searched for, 'rdataset'  *	may be non-NULL, '*rdataset' be NULL, and will point at the found  *	rdataset.  If the type is dns_datatype_any, 'rdataset' must be NULL.  *  *\li	'target' be a valid name.  *  *\li	'type' be a valid type.  *  *\li	If 'type' is dns_rdatatype_rrsig, 'covers' must be a valid type.  *	Otherwise it should be 0.  *  * Returns:  *\li	#ISC_R_SUCCESS		-- all is well.  *\li	#DNS_R_NXDOMAIN		-- name does not exist in that section.  *\li	#DNS_R_NXRRSET		-- The name does exist, but the desired  *				   type does not.  */
 end_comment
 
 begin_function_decl
@@ -1135,7 +1135,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Search the name for the specified type.  If it is found, *rdataset is  * filled in with a pointer to that rdataset.  *  * Requires:  *	if '**rdataset' is non-NULL, *rdataset needs to be NULL.  *  *	'type' be a valid type, and NOT dns_rdatatype_any.  *  *	If 'type' is dns_rdatatype_rrsig, 'covers' must be a valid type.  *	Otherwise it should be 0.  *  * Returns:  *	ISC_R_SUCCESS		-- all is well.  *	ISC_R_NOTFOUND		-- the desired type does not exist.  */
+comment|/*%<  * Search the name for the specified type.  If it is found, *rdataset is  * filled in with a pointer to that rdataset.  *  * Requires:  *\li	if '**rdataset' is non-NULL, *rdataset needs to be NULL.  *  *\li	'type' be a valid type, and NOT dns_rdatatype_any.  *  *\li	If 'type' is dns_rdatatype_rrsig, 'covers' must be a valid type.  *	Otherwise it should be 0.  *  * Returns:  *\li	#ISC_R_SUCCESS		-- all is well.  *\li	#ISC_R_NOTFOUND		-- the desired type does not exist.  */
 end_comment
 
 begin_function_decl
@@ -1189,7 +1189,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Move a name from one section to another.  *  * Requires:  *  *	'msg' be valid.  *  *	'name' must be a name already in 'fromsection'.  *  *	'fromsection' must be a valid section.  *  *	'tosection' must be a valid section.  */
+comment|/*%<  * Move a name from one section to another.  *  * Requires:  *  *\li	'msg' be valid.  *  *\li	'name' must be a name already in 'fromsection'.  *  *\li	'fromsection' must be a valid section.  *  *\li	'tosection' must be a valid section.  */
 end_comment
 
 begin_function_decl
@@ -1211,7 +1211,29 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Adds the name to the given section.  *  * It is the caller's responsibility to enforce any unique name requirements  * in a section.  *  * Requires:  *  *	'msg' be valid, and be a renderable message.  *  *	'name' be a valid absolute name.  *  *	'section' be a named section.  */
+comment|/*%<  * Adds the name to the given section.  *  * It is the caller's responsibility to enforce any unique name requirements  * in a section.  *  * Requires:  *  *\li	'msg' be valid, and be a renderable message.  *  *\li	'name' be a valid absolute name.  *  *\li	'section' be a named section.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_message_removename
+parameter_list|(
+name|dns_message_t
+modifier|*
+name|msg
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|dns_section_t
+name|section
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Remove a existing name from a given section.  *  * It is the caller's responsibility to ensure the name is part of the  * given section.  *  * Requires:  *  *\li	'msg' be valid, and be a renderable message.  *  *\li	'name' be a valid absolute name.  *  *\li	'section' be a named section.  */
 end_comment
 
 begin_comment
@@ -1235,7 +1257,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return a name that can be used for any temporary purpose, including  * inserting into the message's linked lists.  The name must be returned  * to the message code using dns_message_puttempname() or inserted into  * one of the message's sections before the message is destroyed.  *  * It is the caller's responsibility to initialize this name.  *  * Requires:  *	msg be a valid message  *  *	item != NULL&& *item == NULL  *  * Returns:  *	ISC_R_SUCCESS		-- All is well.  *	ISC_R_NOMEMORY		-- No item can be allocated.  */
+comment|/*%<  * Return a name that can be used for any temporary purpose, including  * inserting into the message's linked lists.  The name must be returned  * to the message code using dns_message_puttempname() or inserted into  * one of the message's sections before the message is destroyed.  *  * It is the caller's responsibility to initialize this name.  *  * Requires:  *\li	msg be a valid message  *  *\li	item != NULL&& *item == NULL  *  * Returns:  *\li	#ISC_R_SUCCESS		-- All is well.  *\li	#ISC_R_NOMEMORY		-- No item can be allocated.  */
 end_comment
 
 begin_function_decl
@@ -1255,7 +1277,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return an offsets array that can be used for any temporary purpose,  * such as attaching to a temporary name.  The offsets will be freed  * when the message is destroyed or reset.  *  * Requires:  *	msg be a valid message  *  *	item != NULL&& *item == NULL  *  * Returns:  *	ISC_R_SUCCESS		-- All is well.  *	ISC_R_NOMEMORY		-- No item can be allocated.  */
+comment|/*%<  * Return an offsets array that can be used for any temporary purpose,  * such as attaching to a temporary name.  The offsets will be freed  * when the message is destroyed or reset.  *  * Requires:  *\li	msg be a valid message  *  *\li	item != NULL&& *item == NULL  *  * Returns:  *\li	#ISC_R_SUCCESS		-- All is well.  *\li	#ISC_R_NOMEMORY		-- No item can be allocated.  */
 end_comment
 
 begin_function_decl
@@ -1275,7 +1297,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return a rdata that can be used for any temporary purpose, including  * inserting into the message's linked lists.  The rdata will be freed  * when the message is destroyed or reset.  *  * Requires:  *	msg be a valid message  *  *	item != NULL&& *item == NULL  *  * Returns:  *	ISC_R_SUCCESS		-- All is well.  *	ISC_R_NOMEMORY		-- No item can be allocated.  */
+comment|/*%<  * Return a rdata that can be used for any temporary purpose, including  * inserting into the message's linked lists.  The rdata will be freed  * when the message is destroyed or reset.  *  * Requires:  *\li	msg be a valid message  *  *\li	item != NULL&& *item == NULL  *  * Returns:  *\li	#ISC_R_SUCCESS		-- All is well.  *\li	#ISC_R_NOMEMORY		-- No item can be allocated.  */
 end_comment
 
 begin_function_decl
@@ -1295,7 +1317,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return a rdataset that can be used for any temporary purpose, including  * inserting into the message's linked lists. The name must be returned  * to the message code using dns_message_puttempname() or inserted into  * one of the message's sections before the message is destroyed.  *  * Requires:  *	msg be a valid message  *  *	item != NULL&& *item == NULL  *  * Returns:  *	ISC_R_SUCCESS		-- All is well.  *	ISC_R_NOMEMORY		-- No item can be allocated.  */
+comment|/*%<  * Return a rdataset that can be used for any temporary purpose, including  * inserting into the message's linked lists. The name must be returned  * to the message code using dns_message_puttempname() or inserted into  * one of the message's sections before the message is destroyed.  *  * Requires:  *\li	msg be a valid message  *  *\li	item != NULL&& *item == NULL  *  * Returns:  *\li	#ISC_R_SUCCESS		-- All is well.  *\li	#ISC_R_NOMEMORY		-- No item can be allocated.  */
 end_comment
 
 begin_function_decl
@@ -1315,7 +1337,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return a rdatalist that can be used for any temporary purpose, including  * inserting into the message's linked lists.  The rdatalist will be  * destroyed when the message is destroyed or reset.  *  * Requires:  *	msg be a valid message  *  *	item != NULL&& *item == NULL  *  * Returns:  *	ISC_R_SUCCESS		-- All is well.  *	ISC_R_NOMEMORY		-- No item can be allocated.  */
+comment|/*%<  * Return a rdatalist that can be used for any temporary purpose, including  * inserting into the message's linked lists.  The rdatalist will be  * destroyed when the message is destroyed or reset.  *  * Requires:  *\li	msg be a valid message  *  *\li	item != NULL&& *item == NULL  *  * Returns:  *\li	#ISC_R_SUCCESS		-- All is well.  *\li	#ISC_R_NOMEMORY		-- No item can be allocated.  */
 end_comment
 
 begin_function_decl
@@ -1335,7 +1357,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return a borrowed name to the message's name free list.  *  * Requires:  *	msg be a valid message  *  *	item != NULL&& *item point to a name returned by  *	dns_message_gettempname()  *  * Ensures:  *	*item == NULL  */
+comment|/*%<  * Return a borrowed name to the message's name free list.  *  * Requires:  *\li	msg be a valid message  *  *\li	item != NULL&& *item point to a name returned by  *	dns_message_gettempname()  *  * Ensures:  *\li	*item == NULL  */
 end_comment
 
 begin_function_decl
@@ -1355,7 +1377,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return a borrowed rdata to the message's rdata free list.  *  * Requires:  *	msg be a valid message  *  *	item != NULL&& *item point to a rdata returned by  *	dns_message_gettemprdata()  *  * Ensures:  *	*item == NULL  */
+comment|/*%<  * Return a borrowed rdata to the message's rdata free list.  *  * Requires:  *\li	msg be a valid message  *  *\li	item != NULL&& *item point to a rdata returned by  *	dns_message_gettemprdata()  *  * Ensures:  *\li	*item == NULL  */
 end_comment
 
 begin_function_decl
@@ -1375,7 +1397,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return a borrowed rdataset to the message's rdataset free list.  *  * Requires:  *	msg be a valid message  *  *	item != NULL&& *item point to a rdataset returned by  *	dns_message_gettemprdataset()  *  * Ensures:  *	*item == NULL  */
+comment|/*%<  * Return a borrowed rdataset to the message's rdataset free list.  *  * Requires:  *\li	msg be a valid message  *  *\li	item != NULL&& *item point to a rdataset returned by  *	dns_message_gettemprdataset()  *  * Ensures:  *\li	*item == NULL  */
 end_comment
 
 begin_function_decl
@@ -1395,7 +1417,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return a borrowed rdatalist to the message's rdatalist free list.  *  * Requires:  *	msg be a valid message  *  *	item != NULL&& *item point to a rdatalist returned by  *	dns_message_gettemprdatalist()  *  * Ensures:  *	*item == NULL  */
+comment|/*%<  * Return a borrowed rdatalist to the message's rdatalist free list.  *  * Requires:  *\li	msg be a valid message  *  *\li	item != NULL&& *item point to a rdatalist returned by  *	dns_message_gettemprdatalist()  *  * Ensures:  *\li	*item == NULL  */
 end_comment
 
 begin_function_decl
@@ -1419,7 +1441,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Assume the remaining region of "source" is a DNS message.  Peek into  * it and fill in "*idp" with the message id, and "*flagsp" with the flags.  *  * Requires:  *  *	source != NULL  *  * Ensures:  *  *	if (idp != NULL) *idp == message id.  *  *	if (flagsp != NULL) *flagsp == message flags.  *  * Returns:  *  *	ISC_R_SUCCESS		-- all is well.  *  *	ISC_R_UNEXPECTEDEND	-- buffer doesn't contain enough for a header.  */
+comment|/*%<  * Assume the remaining region of "source" is a DNS message.  Peek into  * it and fill in "*idp" with the message id, and "*flagsp" with the flags.  *  * Requires:  *  *\li	source != NULL  *  * Ensures:  *  *\li	if (idp != NULL) *idp == message id.  *  *\li	if (flagsp != NULL) *flagsp == message flags.  *  * Returns:  *  *\li	#ISC_R_SUCCESS		-- all is well.  *  *\li	#ISC_R_UNEXPECTEDEND	-- buffer doesn't contain enough for a header.  */
 end_comment
 
 begin_function_decl
@@ -1437,7 +1459,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Start formatting a reply to the query in 'msg'.  *  * Requires:  *  *	'msg' is a valid message with parsing intent, and contains a query.  *  * Ensures:  *  *	The message will have a rendering intent.  If 'want_question_section'  *	is true, the message opcode is query or notify, and the question  *	section is present and properly formatted, then the question section  *	will be included in the reply.  All other sections will be cleared.  *	The QR flag will be set, the RD flag will be preserved, and all other  *	flags will be cleared.  *  * Returns:  *  *	ISC_R_SUCCESS		-- all is well.  *  *	DNS_R_FORMERR		-- the header or question section of the  *				   message is invalid, replying is impossible.  *				   If DNS_R_FORMERR is returned when  *				   want_question_section is ISC_FALSE, then  *				   it's the header section that's bad;  *				   otherwise either of the header or question  *				   sections may be bad.  */
+comment|/*%<  * Start formatting a reply to the query in 'msg'.  *  * Requires:  *  *\li	'msg' is a valid message with parsing intent, and contains a query.  *  * Ensures:  *  *\li	The message will have a rendering intent.  If 'want_question_section'  *	is true, the message opcode is query or notify, and the question  *	section is present and properly formatted, then the question section  *	will be included in the reply.  All other sections will be cleared.  *	The QR flag will be set, the RD flag will be preserved, and all other  *	flags will be cleared.  *  * Returns:  *  *\li	#ISC_R_SUCCESS		-- all is well.  *  *\li	#DNS_R_FORMERR		-- the header or question section of the  *				   message is invalid, replying is impossible.  *				   If DNS_R_FORMERR is returned when  *				   want_question_section is ISC_FALSE, then  *				   it's the header section that's bad;  *				   otherwise either of the header or question  *				   sections may be bad.  */
 end_comment
 
 begin_function_decl
@@ -1453,7 +1475,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the OPT record for 'msg'.  *  * Requires:  *  *	'msg' is a valid message.  *  * Returns:  *  *	The OPT rdataset of 'msg', or NULL if there isn't one.  */
+comment|/*%<  * Get the OPT record for 'msg'.  *  * Requires:  *  *\li	'msg' is a valid message.  *  * Returns:  *  *\li	The OPT rdataset of 'msg', or NULL if there isn't one.  */
 end_comment
 
 begin_function_decl
@@ -1472,7 +1494,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the OPT record for 'msg'.  *  * Requires:  *  *	'msg' is a valid message with rendering intent  *	and no sections have been rendered.  *  *	'opt' is a valid OPT record.  *  * Ensures:  *  *	The OPT record has either been freed or ownership of it has  *	been transferred to the message.  *  *	If ISC_R_SUCCESS was returned, the OPT record will be rendered   *	when dns_message_renderend() is called.  *  * Returns:  *  *	ISC_R_SUCCESS		-- all is well.  *  *	ISC_R_NOSPACE		-- there is no space for the OPT record.  */
+comment|/*%<  * Set the OPT record for 'msg'.  *  * Requires:  *  *\li	'msg' is a valid message with rendering intent  *	and no sections have been rendered.  *  *\li	'opt' is a valid OPT record.  *  * Ensures:  *  *\li	The OPT record has either been freed or ownership of it has  *	been transferred to the message.  *  *\li	If ISC_R_SUCCESS was returned, the OPT record will be rendered   *	when dns_message_renderend() is called.  *  * Returns:  *  *\li	#ISC_R_SUCCESS		-- all is well.  *  *\li	#ISC_R_NOSPACE		-- there is no space for the OPT record.  */
 end_comment
 
 begin_function_decl
@@ -1493,7 +1515,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the TSIG record and owner for 'msg'.  *  * Requires:  *  *	'msg' is a valid message.  *	'owner' is NULL or *owner is NULL.  *  * Returns:  *  *	The TSIG rdataset of 'msg', or NULL if there isn't one.  *  * Ensures:  *  * 	If 'owner' is not NULL, it will point to the owner name.  */
+comment|/*%<  * Get the TSIG record and owner for 'msg'.  *  * Requires:  *  *\li	'msg' is a valid message.  *\li	'owner' is NULL or *owner is NULL.  *  * Returns:  *  *\li	The TSIG rdataset of 'msg', or NULL if there isn't one.  *  * Ensures:  *  * \li	If 'owner' is not NULL, it will point to the owner name.  */
 end_comment
 
 begin_function_decl
@@ -1512,7 +1534,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the tsig key for 'msg'.  This is only necessary for when rendering a  * query or parsing a response.  The key (if non-NULL) is attached to, and  * will be detached when the message is destroyed.  *  * Requires:  *  *	'msg' is a valid message with rendering intent,  *	dns_message_renderbegin() has been called, and no sections have been  *	rendered.  *	'key' is a valid tsig key or NULL.  *  * Returns:  *  *	ISC_R_SUCCESS		-- all is well.  *  *	ISC_R_NOSPACE		-- there is no space for the TSIG record.  */
+comment|/*%<  * Set the tsig key for 'msg'.  This is only necessary for when rendering a  * query or parsing a response.  The key (if non-NULL) is attached to, and  * will be detached when the message is destroyed.  *  * Requires:  *  *\li	'msg' is a valid message with rendering intent,  *	dns_message_renderbegin() has been called, and no sections have been  *	rendered.  *\li	'key' is a valid tsig key or NULL.  *  * Returns:  *  *\li	#ISC_R_SUCCESS		-- all is well.  *  *\li	#ISC_R_NOSPACE		-- there is no space for the TSIG record.  */
 end_comment
 
 begin_function_decl
@@ -1528,7 +1550,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Gets the tsig key for 'msg'.  *  * Requires:  *  *	'msg' is a valid message  */
+comment|/*%<  * Gets the tsig key for 'msg'.  *  * Requires:  *  *\li	'msg' is a valid message  */
 end_comment
 
 begin_function_decl
@@ -1547,7 +1569,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Indicates that 'querytsig' is the TSIG from the signed query for which  * 'msg' is the response.  This is also used for chained TSIGs in TCP  * responses.  *  * Requires:  *  *	'querytsig' is a valid buffer as returned by dns_message_getquerytsig()  *	or NULL  *  *	'msg' is a valid message  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY  */
+comment|/*%<  * Indicates that 'querytsig' is the TSIG from the signed query for which  * 'msg' is the response.  This is also used for chained TSIGs in TCP  * responses.  *  * Requires:  *  *\li	'querytsig' is a valid buffer as returned by dns_message_getquerytsig()  *	or NULL  *  *\li	'msg' is a valid message  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -1571,7 +1593,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Gets the tsig from the TSIG from the signed query 'msg'.  This is also used  * for chained TSIGs in TCP responses.  Unlike dns_message_gettsig, this makes  * a copy of the data, so can be used if the message is destroyed.  *  * Requires:  *  *	'msg' is a valid signed message  *	'mctx' is a valid memory context  *	querytsig != NULL&& *querytsig == NULL  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY  *  * Ensures:  * 	'tsig' points to NULL or an allocated buffer which must be freed  * 	by the caller.  */
+comment|/*%<  * Gets the tsig from the TSIG from the signed query 'msg'.  This is also used  * for chained TSIGs in TCP responses.  Unlike dns_message_gettsig, this makes  * a copy of the data, so can be used if the message is destroyed.  *  * Requires:  *  *\li	'msg' is a valid signed message  *\li	'mctx' is a valid memory context  *\li	querytsig != NULL&& *querytsig == NULL  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  *  * Ensures:  *\li 	'tsig' points to NULL or an allocated buffer which must be freed  * 	by the caller.  */
 end_comment
 
 begin_function_decl
@@ -1592,7 +1614,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the SIG(0) record and owner for 'msg'.  *  * Requires:  *  *	'msg' is a valid message.  *	'owner' is NULL or *owner is NULL.  *  * Returns:  *  *	The SIG(0) rdataset of 'msg', or NULL if there isn't one.  *  * Ensures:  *  * 	If 'owner' is not NULL, it will point to the owner name.  */
+comment|/*%<  * Get the SIG(0) record and owner for 'msg'.  *  * Requires:  *  *\li	'msg' is a valid message.  *\li	'owner' is NULL or *owner is NULL.  *  * Returns:  *  *\li	The SIG(0) rdataset of 'msg', or NULL if there isn't one.  *  * Ensures:  *  * \li	If 'owner' is not NULL, it will point to the owner name.  */
 end_comment
 
 begin_function_decl
@@ -1611,7 +1633,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the SIG(0) key for 'msg'.  *  * Requires:  *  *	'msg' is a valid message with rendering intent,  *	dns_message_renderbegin() has been called, and no sections have been  *	rendered.  *	'key' is a valid sig key or NULL.  *  * Returns:  *  *	ISC_R_SUCCESS		-- all is well.  *  *	ISC_R_NOSPACE		-- there is no space for the SIG(0) record.  */
+comment|/*%<  * Set the SIG(0) key for 'msg'.  *  * Requires:  *  *\li	'msg' is a valid message with rendering intent,  *	dns_message_renderbegin() has been called, and no sections have been  *	rendered.  *\li	'key' is a valid sig key or NULL.  *  * Returns:  *  *\li	#ISC_R_SUCCESS		-- all is well.  *  *\li	#ISC_R_NOSPACE		-- there is no space for the SIG(0) record.  */
 end_comment
 
 begin_function_decl
@@ -1627,7 +1649,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Gets the SIG(0) key for 'msg'.  *  * Requires:  *  *	'msg' is a valid message  */
+comment|/*%<  * Gets the SIG(0) key for 'msg'.  *  * Requires:  *  *\li	'msg' is a valid message  */
 end_comment
 
 begin_function_decl
@@ -1647,7 +1669,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Give the *buffer to the message code to clean up when it is no  * longer needed.  This is usually when the message is reset or  * destroyed.  *  * Requires:  *  *	msg be a valid message.  *  *	buffer != NULL&& *buffer is a valid isc_buffer_t, which was  *	dynamincally allocated via isc_buffer_allocate().  */
+comment|/*%<  * Give the *buffer to the message code to clean up when it is no  * longer needed.  This is usually when the message is reset or  * destroyed.  *  * Requires:  *  *\li	msg be a valid message.  *  *\li	buffer != NULL&& *buffer is a valid isc_buffer_t, which was  *	dynamincally allocated via isc_buffer_allocate().  */
 end_comment
 
 begin_function_decl
@@ -1666,7 +1688,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * If this message was signed, return the identity of the signer.  * Unless ISC_R_NOTFOUND is returned, signer will reflect the name of the  * key that signed the message.  *  * Requires:  *  *	msg is a valid parsed message.  *	signer is a valid name  *  * Returns:  *  *	ISC_R_SUCCESS		- the message was signed, and *signer  *				  contains the signing identity  *  *	ISC_R_NOTFOUND		- no TSIG or SIG(0) record is present in the  *				  message  *  *	DNS_R_TSIGVERIFYFAILURE	- the message was signed by a TSIG, but the  *				  signature failed to verify  *  *	DNS_R_TSIGERRORSET	- the message was signed by a TSIG and  *				  verified, but the query was rejected by  *				  the server  *  *	DNS_R_NOIDENTITY	- the message was signed by a TSIG and  *				  verified, but the key has no identity since  *				  it was generated by an unsigned TKEY process  *  *	DNS_R_SIGINVALID	- the message was signed by a SIG(0), but  *				  the signature failed to verify  *  *	DNS_R_NOTVERIFIEDYET	- the message was signed by a TSIG or SIG(0),  *				  but the signature has not been verified yet  */
+comment|/*%<  * If this message was signed, return the identity of the signer.  * Unless ISC_R_NOTFOUND is returned, signer will reflect the name of the  * key that signed the message.  *  * Requires:  *  *\li	msg is a valid parsed message.  *\li	signer is a valid name  *  * Returns:  *  *\li	#ISC_R_SUCCESS		- the message was signed, and *signer  *				  contains the signing identity  *  *\li	#ISC_R_NOTFOUND		- no TSIG or SIG(0) record is present in the  *				  message  *  *\li	#DNS_R_TSIGVERIFYFAILURE	- the message was signed by a TSIG, but the  *				  signature failed to verify  *  *\li	#DNS_R_TSIGERRORSET	- the message was signed by a TSIG and  *				  verified, but the query was rejected by  *				  the server  *  *\li	#DNS_R_NOIDENTITY	- the message was signed by a TSIG and  *				  verified, but the key has no identity since  *				  it was generated by an unsigned TKEY process  *  *\li	#DNS_R_SIGINVALID	- the message was signed by a SIG(0), but  *				  the signature failed to verify  *  *\li	#DNS_R_NOTVERIFIEDYET	- the message was signed by a TSIG or SIG(0),  *				  but the signature has not been verified yet  */
 end_comment
 
 begin_function_decl
@@ -1685,7 +1707,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * If this message was signed, verify the signature.  *  * Requires:  *  *	msg is a valid parsed message.  *	view is a valid view or NULL  *  * Returns:  *  *	ISC_R_SUCCESS		- the message was unsigned, or the message  *				  was signed correctly.  *  *	DNS_R_EXPECTEDTSIG	- A TSIG was expected, but not seen  *	DNS_R_UNEXPECTEDTSIG	- A TSIG was seen but not expected  *	DNS_R_TSIGVERIFYFAILURE - The TSIG failed to verify  */
+comment|/*%<  * If this message was signed, verify the signature.  *  * Requires:  *  *\li	msg is a valid parsed message.  *\li	view is a valid view or NULL  *  * Returns:  *  *\li	#ISC_R_SUCCESS		- the message was unsigned, or the message  *				  was signed correctly.  *  *\li	#DNS_R_EXPECTEDTSIG	- A TSIG was expected, but not seen  *\li	#DNS_R_UNEXPECTEDTSIG	- A TSIG was seen but not expected  *\li	#DNS_R_TSIGVERIFYFAILURE - The TSIG failed to verify  */
 end_comment
 
 begin_function_decl
@@ -1704,7 +1726,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Reset the signature state and then if the message was signed,  * verify the message.  *  * Requires:  *  *	msg is a valid parsed message.  *	view is a valid view or NULL  *  * Returns:  *  *	ISC_R_SUCCESS		- the message was unsigned, or the message  *				  was signed correctly.  *  *	DNS_R_EXPECTEDTSIG	- A TSIG was expected, but not seen  *	DNS_R_UNEXPECTEDTSIG	- A TSIG was seen but not expected  *	DNS_R_TSIGVERIFYFAILURE - The TSIG failed to verify  */
+comment|/*%<  * Reset the signature state and then if the message was signed,  * verify the message.  *  * Requires:  *  *\li	msg is a valid parsed message.  *\li	view is a valid view or NULL  *  * Returns:  *  *\li	#ISC_R_SUCCESS		- the message was unsigned, or the message  *				  was signed correctly.  *  *\li	#DNS_R_EXPECTEDTSIG	- A TSIG was expected, but not seen  *\li	#DNS_R_UNEXPECTEDTSIG	- A TSIG was seen but not expected  *\li	#DNS_R_TSIGVERIFYFAILURE - The TSIG failed to verify  */
 end_comment
 
 begin_function_decl
@@ -1719,7 +1741,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Reset the signature state.  *  * Requires:  *	'msg' is a valid parsed message.  */
+comment|/*%<  * Reset the signature state.  *  * Requires:  *\li	'msg' is a valid parsed message.  */
 end_comment
 
 begin_function_decl
@@ -1735,7 +1757,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Retrieve the raw message in compressed wire format.  The message must  * have been successfully parsed for it to have been saved.  *  * Requires:  *	msg is a valid parsed message.  *  * Returns:  *	NULL	if there is no saved message.  *	a pointer to a region which refers the dns message.  */
+comment|/*%<  * Retrieve the raw message in compressed wire format.  The message must  * have been successfully parsed for it to have been saved.  *  * Requires:  *\li	msg is a valid parsed message.  *  * Returns:  *\li	NULL	if there is no saved message.  *	a pointer to a region which refers the dns message.  */
 end_comment
 
 begin_function_decl
@@ -1758,7 +1780,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Define the order in which RR sets get rendered by  * dns_message_rendersection() to be the ascending order  * defined by the integer value returned by 'order' when  * given each RR and 'arg' as arguments.  If 'order' and  * 'order_arg' are NULL, a default order is used.  *  * Requires:  *	msg be a valid message.  *	order_arg is NULL if and only if order is NULL.  */
+comment|/*%<  * Define the order in which RR sets get rendered by  * dns_message_rendersection() to be the ascending order  * defined by the integer value returned by 'order' when  * given each RR and 'arg' as arguments.  If 'order' and  * 'order_arg' are NULL, a default order is used.  *  * Requires:  *\li	msg be a valid message.  *\li	order_arg is NULL if and only if order is NULL.  */
 end_comment
 
 begin_function_decl
@@ -1776,7 +1798,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Adjust the time used to sign/verify a message by timeadjust.  * Currently only TSIG.  *  * Requires:  *	msg be a valid message.  */
+comment|/*%<  * Adjust the time used to sign/verify a message by timeadjust.  * Currently only TSIG.  *  * Requires:  *\li	msg be a valid message.  */
 end_comment
 
 begin_function_decl
@@ -1791,7 +1813,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the current time adjustment.  *  * Requires:  *	msg be a valid message.  */
+comment|/*%<  * Return the current time adjustment.  *  * Requires:  *\li	msg be a valid message.  */
 end_comment
 
 begin_macro

@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All righ
 end_comment
 
 begin_comment
-comment|/*  * Issues to be discussed:  * - Thread safe-ness must be checked.  * - Return values.  There are nonstandard return values defined and used  *   in the source code.  This is because RFC2553 is silent about which error  *   code must be returned for which situation.  * - IPv4 classful (shortened) form.  RFC2553 is silent about it.  XNET 5.2  *   says to use inet_aton() to convert IPv4 numeric to binary (allows  *   classful form as a result).  *   current code - disallow classful form for IPv4 (due to use of inet_pton).  * - freeaddrinfo(NULL).  RFC2553 is silent about it.  XNET 5.2 says it is  *   invalid.  *   current code - SEGV on freeaddrinfo(NULL)  * Note:  * - We use getipnodebyname() just for thread-safeness.  There's no intent  *   to let it do PF_UNSPEC (actually we never pass PF_UNSPEC to  *   getipnodebyname().  * - The code filters out AFs that are not supported by the kernel,  *   when globbing NULL hostname (to loopback, or wildcard).  Is it the right  *   thing to do?  What is the relationship with post-RFC2553 AI_ADDRCONFIG  *   in ai_flags?  * - (post-2553) semantics of AI_ADDRCONFIG itself is too vague.  *   (1) what should we do against numeric hostname (2) what should we do  *   against NULL hostname (3) what is AI_ADDRCONFIG itself.  AF not ready?  *   non-loopback address configured?  global address configured?  * - To avoid search order issue, we have a big amount of code duplicate  *   from gethnamaddr.c and some other places.  The issues that there's no  *   lower layer function to lookup "IPv4 or IPv6" record.  Calling  *   gethostbyname2 from getaddrinfo will end up in wrong search order, as  *   follows:  *	- The code makes use of following calls when asked to resolver with  *	  ai_family  = PF_UNSPEC:  *		getipnodebyname(host, AF_INET6);  *		getipnodebyname(host, AF_INET);  *	  This will result in the following queries if the node is configure to  *	  prefer /etc/hosts than DNS:  *		lookup /etc/hosts for IPv6 address  *		lookup DNS for IPv6 address  *		lookup /etc/hosts for IPv4 address  *		lookup DNS for IPv4 address  *	  which may not meet people's requirement.  *	  The right thing to happen is to have underlying layer which does  *	  PF_UNSPEC lookup (lookup both) and return chain of addrinfos.  *	  This would result in a bit of code duplicate with _dns_ghbyname() and  *	  friends.  */
+comment|/*! \file  * Issues to be discussed:  *\li  Thread safe-ness must be checked.  *\li  Return values.  There are nonstandard return values defined and used  *   in the source code.  This is because RFC2553 is silent about which error  *   code must be returned for which situation.  *\li  IPv4 classful (shortened) form.  RFC2553 is silent about it.  XNET 5.2  *   says to use inet_aton() to convert IPv4 numeric to binary (allows  *   classful form as a result).  *   current code - disallow classful form for IPv4 (due to use of inet_pton).  *\li  freeaddrinfo(NULL).  RFC2553 is silent about it.  XNET 5.2 says it is  *   invalid.  *   current code - SEGV on freeaddrinfo(NULL)  * Note:  *\li  We use getipnodebyname() just for thread-safeness.  There's no intent  *   to let it do PF_UNSPEC (actually we never pass PF_UNSPEC to  *   getipnodebyname().  *\li  The code filters out AFs that are not supported by the kernel,  *   when globbing NULL hostname (to loopback, or wildcard).  Is it the right  *   thing to do?  What is the relationship with post-RFC2553 AI_ADDRCONFIG  *   in ai_flags?  *\li  (post-2553) semantics of AI_ADDRCONFIG itself is too vague.  *   (1) what should we do against numeric hostname (2) what should we do  *   against NULL hostname (3) what is AI_ADDRCONFIG itself.  AF not ready?  *   non-loopback address configured?  global address configured?  * \par Additional Issue:  *  To avoid search order issue, we have a big amount of code duplicate  *   from gethnamaddr.c and some other places.  The issues that there's no  *   lower layer function to lookup "IPv4 or IPv6" record.  Calling  *   gethostbyname2 from getaddrinfo will end up in wrong search order, as  *   follows:  *	\li The code makes use of following calls when asked to resolver with  *	  ai_family  = PF_UNSPEC:  *\code		getipnodebyname(host, AF_INET6);  *		getipnodebyname(host, AF_INET);  *\endcode  *	\li  This will result in the following queries if the node is configure to  *	  prefer /etc/hosts than DNS:  *\code  *		lookup /etc/hosts for IPv6 address  *		lookup DNS for IPv6 address  *		lookup /etc/hosts for IPv4 address  *		lookup DNS for IPv4 address  *\endcode  *	  which may not meet people's requirement.  *	 \li The right thing to happen is to have underlying layer which does  *	  PF_UNSPEC lookup (lookup both) and return chain of addrinfos.  *	  This would result in a bit of code duplicate with _dns_ghbyname() and  *	  friends.  */
 end_comment
 
 begin_include
@@ -946,72 +946,72 @@ end_if
 
 begin_comment
 unit|static const char *ai_errlist[] = { 	"Success", 	"Address family for hostname not supported",
-comment|/* EAI_ADDRFAMILY */
+comment|/*%< EAI_ADDRFAMILY */
 end_comment
 
 begin_comment
 unit|"Temporary failure in name resolution",
-comment|/* EAI_AGAIN      */
+comment|/*%< EAI_AGAIN */
 end_comment
 
 begin_comment
 unit|"Invalid value for ai_flags",
-comment|/* EAI_BADFLAGS   */
+comment|/*%< EAI_BADFLAGS */
 end_comment
 
 begin_comment
 unit|"Non-recoverable failure in name resolution",
-comment|/* EAI_FAIL       */
+comment|/*%< EAI_FAIL */
 end_comment
 
 begin_comment
 unit|"ai_family not supported",
-comment|/* EAI_FAMILY     */
+comment|/*%< EAI_FAMILY */
 end_comment
 
 begin_comment
 unit|"Memory allocation failure",
-comment|/* EAI_MEMORY     */
+comment|/*%< EAI_MEMORY */
 end_comment
 
 begin_comment
 unit|"No address associated with hostname",
-comment|/* EAI_NODATA     */
+comment|/*%< EAI_NODATA */
 end_comment
 
 begin_comment
 unit|"hostname nor servname provided, or not known",
-comment|/* EAI_NONAME     */
+comment|/*%< EAI_NONAME */
 end_comment
 
 begin_comment
 unit|"servname not supported for ai_socktype",
-comment|/* EAI_SERVICE    */
+comment|/*%< EAI_SERVICE */
 end_comment
 
 begin_comment
 unit|"ai_socktype not supported",
-comment|/* EAI_SOCKTYPE   */
+comment|/*%< EAI_SOCKTYPE */
 end_comment
 
 begin_comment
 unit|"System error returned in errno",
-comment|/* EAI_SYSTEM     */
+comment|/*%< EAI_SYSTEM */
 end_comment
 
 begin_comment
 unit|"Invalid value for hints",
-comment|/* EAI_BADHINTS	  */
+comment|/*%< EAI_BADHINTS */
 end_comment
 
 begin_comment
 unit|"Resolved protocol is unknown",
-comment|/* EAI_PROTOCOL   */
+comment|/*%< EAI_PROTOCOL */
 end_comment
 
 begin_comment
 unit|"Unknown error",
-comment|/* EAI_MAX        */
+comment|/*%< EAI_MAX */
 end_comment
 
 begin_endif
@@ -1166,7 +1166,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/* bind8 has its own version */
+comment|/*%< bind8 has its own version */
 end_comment
 
 begin_endif
@@ -1519,7 +1519,7 @@ argument_list|(
 name|EAI_BADHINTS
 argument_list|)
 expr_stmt|;
-comment|/* xxx */
+comment|/*%< xxx */
 if|if
 condition|(
 name|hints
@@ -2165,7 +2165,7 @@ name|error
 operator|=
 name|EAI_NONAME
 expr_stmt|;
-comment|/* we've had no errors. */
+comment|/*%< we've had no errors. */
 goto|goto
 name|free
 goto|;
@@ -2422,7 +2422,7 @@ argument_list|(
 name|afai
 argument_list|)
 expr_stmt|;
-comment|/* afai must not be NULL at this point. */
+comment|/*%< afai must not be NULL at this point. */
 if|if
 condition|(
 name|sentinel
@@ -2484,7 +2484,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FQDN hostname, DNS lookup  */
+comment|/*%  * FQDN hostname, DNS lookup  */
 end_comment
 
 begin_function
@@ -2613,7 +2613,7 @@ return|;
 if|#
 directive|if
 literal|0
-comment|/* XXX (notyet) */
+comment|/*%< XXX (notyet) */
 block|if (net_data->ho_stayopen&& net_data->ho_last&& 	    net_data->ho_last->h_addrtype == af) { 		if (ns_samename(name, net_data->ho_last->h_name) == 1) 			return (net_data->ho_last); 		for (hap = net_data->ho_last->h_aliases; hap&& *hap; hap++) 			if (ns_samename(name, *hap) == 1) 				return (net_data->ho_last); 	}
 endif|#
 directive|endif
@@ -2742,7 +2742,7 @@ default|default:
 case|case
 name|NETDB_SUCCESS
 case|:
-comment|/* should be impossible... */
+comment|/*%< should be impossible... */
 name|error
 operator|=
 name|EAI_NONAME
@@ -2775,7 +2775,7 @@ argument_list|,
 name|servname
 argument_list|)
 expr_stmt|;
-comment|/* XXX: redundant lookups... */
+comment|/*%< XXX: redundant lookups... */
 comment|/* canonname should already be filled. */
 block|}
 operator|*
@@ -2822,14 +2822,14 @@ name|addrinfo
 modifier|*
 name|pai
 decl_stmt|;
-comment|/* seed */
+comment|/*%< seed */
 specifier|const
 name|struct
 name|addrinfo
 modifier|*
 name|src0
 decl_stmt|;
-comment|/* source */
+comment|/*%< source */
 name|struct
 name|addrinfo
 modifier|*
@@ -2974,7 +2974,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * hostname == NULL.  * passive socket -> anyaddr (0.0.0.0 or ::)  * non-passive socket -> localhost (127.0.0.1 or ::1)  */
+comment|/*%  * hostname == NULL.  * passive socket -> anyaddr (0.0.0.0 or ::)  * non-passive socket -> localhost (127.0.0.1 or ::1)  */
 end_comment
 
 begin_function
@@ -3155,7 +3155,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * numeric hostname  */
+comment|/*%  * numeric hostname  */
 end_comment
 
 begin_function
@@ -3382,7 +3382,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * numeric hostname with scope  */
+comment|/*%  * numeric hostname with scope  */
 end_comment
 
 begin_function
@@ -3662,7 +3662,7 @@ operator|(
 name|EAI_NONAME
 operator|)
 return|;
-comment|/* XXX: is return OK? */
+comment|/*%< XXX: is return OK? */
 block|}
 ifdef|#
 directive|ifdef
@@ -4567,7 +4567,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * post-2553: AI_ADDRCONFIG check.  if we use getipnodeby* as backend, backend  * will take care of it.  * the semantics of AI_ADDRCONFIG is not defined well.  we are not sure  * if the code is right or not.  */
+comment|/*%  * post-2553: AI_ADDRCONFIG check.  if we use getipnodeby* as backend, backend  * will take care of it.  * the semantics of AI_ADDRCONFIG is not defined well.  we are not sure  * if the code is right or not.  */
 end_comment
 
 begin_function
@@ -4762,7 +4762,7 @@ else|else
 goto|goto
 name|trynumeric
 goto|;
-comment|/* global */
+comment|/*%< global */
 comment|/* try to convert to a numeric id as a last resort */
 name|trynumeric
 label|:
@@ -4971,7 +4971,7 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/* the trick seems too much */
+comment|/*%< the trick seems too much */
 block|af = hp->h_addr_list; 		if (af == AF_INET6&& 		    IN6_IS_ADDR_V4MAPPED((struct in6_addr *)ap)) { 			af = AF_INET; 			ap = ap + sizeof(struct in6_addr) 				- sizeof(struct in_addr); 		} 		afd = find_afd(af); 		if (afd == NULL) 			continue;
 endif|#
 directive|endif
@@ -5020,7 +5020,7 @@ name|cur
 operator|->
 name|ai_next
 condition|)
-comment|/* no need to loop, actually. */
+comment|/*%< no need to loop, actually. */
 name|cur
 operator|=
 name|cur

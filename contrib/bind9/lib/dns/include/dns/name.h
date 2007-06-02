@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: name.h,v 1.95.2.3.2.14 2006/03/02 00:37:20 marka Exp $ */
+comment|/* $Id: name.h,v 1.107.18.15 2006/03/02 00:37:21 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * DNS Names and Labels  *  * Provides facilities for manipulating DNS names and labels, including  * conversions to and from wire format and text format.  *  * Given the large number of names possible in a nameserver, and because  * names occur in rdata, it was important to come up with a very efficient  * way of storing name data, but at the same time allow names to be  * manipulated.  The decision was to store names in uncompressed wire format,  * and not to make them fully abstracted objects; i.e. certain parts of the  * server know names are stored that way.  This saves a lot of memory, and  * makes adding names to messages easy.  Having much of the server know  * the representation would be perilous, and we certainly don't want each  * user of names to be manipulating such a low-level structure.  This is  * where the Names and Labels module comes in.  The module allows name or  * label handles to be created and attached to uncompressed wire format  * regions.  All name operations and conversions are done through these  * handles.  *  * MP:  *	Clients of this module must impose any required synchronization.  *  * Reliability:  *	This module deals with low-level byte streams.  Errors in any of  *	the functions are likely to crash the server or corrupt memory.  *  * Resources:  *	None.  *  * Security:  *  *	*** WARNING ***  *  *	dns_name_fromwire() deals with raw network data.  An error in  *	this routine could result in the failure or hijacking of the server.  *  * Standards:  *	RFC 1035  *	Draft EDNS0 (0)  *	Draft Binary Labels (2)  *  */
+comment|/*! \file  * \brief  * Provides facilities for manipulating DNS names and labels, including  * conversions to and from wire format and text format.  *  * Given the large number of names possible in a nameserver, and because  * names occur in rdata, it was important to come up with a very efficient  * way of storing name data, but at the same time allow names to be  * manipulated.  The decision was to store names in uncompressed wire format,  * and not to make them fully abstracted objects; i.e. certain parts of the  * server know names are stored that way.  This saves a lot of memory, and  * makes adding names to messages easy.  Having much of the server know  * the representation would be perilous, and we certainly don't want each  * user of names to be manipulating such a low-level structure.  This is  * where the Names and Labels module comes in.  The module allows name or  * label handles to be created and attached to uncompressed wire format  * regions.  All name operations and conversions are done through these  * handles.  *  * MP:  *\li	Clients of this module must impose any required synchronization.  *  * Reliability:  *\li	This module deals with low-level byte streams.  Errors in any of  *	the functions are likely to crash the server or corrupt memory.  *  * Resources:  *\li	None.  *  * Security:  *  *\li	*** WARNING ***  *  *\li	dns_name_fromwire() deals with raw network data.  An error in  *	this routine could result in the failure or hijacking of the server.  *  * Standards:  *\li	RFC1035  *\li	Draft EDNS0 (0)  *\li	Draft Binary Labels (2)  *  */
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ comment|/***  *** Types  ***/
 end_comment
 
 begin_comment
-comment|/*  * Clients are strongly discouraged from using this type directly,  with  * the exception of the 'link' and 'list' fields which may be used directly  * for whatever purpose the client desires.  */
+comment|/*%  * Clients are strongly discouraged from using this type directly,  with  * the exception of the 'link' and 'list' fields which may be used directly  * for whatever purpose the client desires.  */
 end_comment
 
 begin_struct
@@ -200,7 +200,7 @@ value|0x0100
 end_define
 
 begin_comment
-comment|/* Used by resolver. */
+comment|/*%< Used by resolver. */
 end_comment
 
 begin_define
@@ -211,7 +211,7 @@ value|0x0200
 end_define
 
 begin_comment
-comment|/* Used by resolver. */
+comment|/*%< Used by resolver. */
 end_comment
 
 begin_define
@@ -222,7 +222,7 @@ value|0x0400
 end_define
 
 begin_comment
-comment|/* Used by resolver. */
+comment|/*%< Used by resolver. */
 end_comment
 
 begin_define
@@ -233,7 +233,7 @@ value|0x0800
 end_define
 
 begin_comment
-comment|/* Used by resolver. */
+comment|/*%< Used by resolver. */
 end_comment
 
 begin_define
@@ -244,7 +244,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* Used by resolver. */
+comment|/*%< Used by resolver. */
 end_comment
 
 begin_define
@@ -255,7 +255,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* Used by server. */
+comment|/*%< Used by server. */
 end_comment
 
 begin_define
@@ -273,7 +273,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* Used by rdata. */
+comment|/*%< Used by rdata. */
 end_comment
 
 begin_define
@@ -284,7 +284,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* Used by rdata. */
+comment|/*%< Used by rdata. */
 end_comment
 
 begin_define
@@ -295,7 +295,29 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* Used by rdata. */
+comment|/*%< Used by rdata. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_NAME_CHECKMX
+value|0x0010
+end_define
+
+begin_comment
+comment|/*%< Used by rdata. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_NAME_CHECKMXFAIL
+value|0x0020
+end_define
+
+begin_comment
+comment|/*%< Used by rdata. */
 end_comment
 
 begin_decl_stmt
@@ -317,7 +339,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Standard size of a wire format name  */
+comment|/*%  * Standard size of a wire format name  */
 end_comment
 
 begin_define
@@ -326,6 +348,32 @@ directive|define
 name|DNS_NAME_MAXWIRE
 value|255
 end_define
+
+begin_comment
+comment|/*  * Text output filter procedure.  * 'target' is the buffer to be converted.  The region to be converted  * is from 'buffer'->base + 'used_org' to the end of the used region.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|isc_result_t
+function_decl|(
+modifier|*
+name|dns_name_totextfilter_t
+function_decl|)
+parameter_list|(
+name|isc_buffer_t
+modifier|*
+name|target
+parameter_list|,
+name|unsigned
+name|int
+name|used_org
+parameter_list|,
+name|isc_boolean_t
+name|absolute
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_comment
 comment|/***  *** Initialization  ***/
@@ -348,7 +396,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Initialize 'name'.  *  * Notes:  *	'offsets' is never required to be non-NULL, but specifying a  *	dns_offsets_t for 'offsets' will improve the performance of most  *	name operations if the name is used more than once.  *  * Requires:  *	'name' is not NULL and points to a struct dns_name.  *  *	offsets == NULL or offsets is a dns_offsets_t.  *  * Ensures:  *	'name' is a valid name.  *	dns_name_countlabels(name) == 0  *	dns_name_isabsolute(name) == ISC_FALSE  */
+comment|/*%<  * Initialize 'name'.  *  * Notes:  * \li	'offsets' is never required to be non-NULL, but specifying a  *	dns_offsets_t for 'offsets' will improve the performance of most  *	name operations if the name is used more than once.  *  * Requires:  * \li	'name' is not NULL and points to a struct dns_name.  *  * \li	offsets == NULL or offsets is a dns_offsets_t.  *  * Ensures:  * \li	'name' is a valid name.  * \li	dns_name_countlabels(name) == 0  * \li	dns_name_isabsolute(name) == ISC_FALSE  */
 end_comment
 
 begin_function_decl
@@ -363,7 +411,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Reinitialize 'name'.  *  * Notes:  *	This function distinguishes itself from dns_name_init() in two  *	key ways:  *  *	+ If any buffer is associated with 'name' (via dns_name_setbuffer()  *	  or by being part of a dns_fixedname_t) the link to the buffer  *	  is retained but the buffer itself is cleared.  *  *	+ Of the attributes associated with 'name', all are retained except  *	  DNS_NAMEATTR_ABSOLUTE.  *  * Requires:  *	'name' is a valid name.  *  * Ensures:  *	'name' is a valid name.  *	dns_name_countlabels(name) == 0  *	dns_name_isabsolute(name) == ISC_FALSE  */
+comment|/*%<  * Reinitialize 'name'.  *  * Notes:  * \li	This function distinguishes itself from dns_name_init() in two  *	key ways:  *  * \li	+ If any buffer is associated with 'name' (via dns_name_setbuffer()  *	  or by being part of a dns_fixedname_t) the link to the buffer  *	  is retained but the buffer itself is cleared.  *  * \li	+ Of the attributes associated with 'name', all are retained except  *	  DNS_NAMEATTR_ABSOLUTE.  *  * Requires:  * \li	'name' is a valid name.  *  * Ensures:  * \li	'name' is a valid name.  * \li	dns_name_countlabels(name) == 0  * \li	dns_name_isabsolute(name) == ISC_FALSE  */
 end_comment
 
 begin_function_decl
@@ -378,7 +426,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'name' invalid.  *  * Requires:  *	'name' is a valid name.  *  * Ensures:  *	If assertion checking is enabled, future attempts to use 'name'  *	without initializing it will cause an assertion failure.  *  *	If the name had a dedicated buffer, that association is ended.  */
+comment|/*%<  * Make 'name' invalid.  *  * Requires:  * \li	'name' is a valid name.  *  * Ensures:  * \li	If assertion checking is enabled, future attempts to use 'name'  *	without initializing it will cause an assertion failure.  *  * \li	If the name had a dedicated buffer, that association is ended.  */
 end_comment
 
 begin_comment
@@ -401,7 +449,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Dedicate a buffer for use with 'name'.  *  * Notes:  *	Specification of a target buffer in dns_name_fromwire(),  *	dns_name_fromtext(), and dns_name_concatentate() is optional if  *	'name' has a dedicated buffer.  *  *	The caller must not write to buffer until the name has been  *	invalidated or is otherwise known not to be in use.  *  *	If buffer is NULL and the name previously had a dedicated buffer,  *	than that buffer is no longer dedicated to use with this name.  *	The caller is responsible for ensuring that the storage used by  *	the name remains valid.  *  * Requires:  *	'name' is a valid name.  *  *	'buffer' is a valid binary buffer and 'name' doesn't have a  *	dedicated buffer already, or 'buffer' is NULL.  */
+comment|/*%<  * Dedicate a buffer for use with 'name'.  *  * Notes:  * \li	Specification of a target buffer in dns_name_fromwire(),  *	dns_name_fromtext(), and dns_name_concatentate() is optional if  *	'name' has a dedicated buffer.  *  * \li	The caller must not write to buffer until the name has been  *	invalidated or is otherwise known not to be in use.  *  * \li	If buffer is NULL and the name previously had a dedicated buffer,  *	than that buffer is no longer dedicated to use with this name.  *	The caller is responsible for ensuring that the storage used by  *	the name remains valid.  *  * Requires:  * \li	'name' is a valid name.  *  * \li	'buffer' is a valid binary buffer and 'name' doesn't have a  *	dedicated buffer already, or 'buffer' is NULL.  */
 end_comment
 
 begin_function_decl
@@ -417,7 +465,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Does 'name' have a dedicated buffer?  *  * Requires:  *	'name' is a valid name.  *  * Returns:  *	ISC_TRUE	'name' has a dedicated buffer.  *	ISC_FALSE	'name' does not have a dedicated buffer.  */
+comment|/*%<  * Does 'name' have a dedicated buffer?  *  * Requires:  * \li	'name' is a valid name.  *  * Returns:  * \li	ISC_TRUE	'name' has a dedicated buffer.  * \li	ISC_FALSE	'name' does not have a dedicated buffer.  */
 end_comment
 
 begin_comment
@@ -437,7 +485,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Does 'name' end in the root label?  *  * Requires:  *	'name' is a valid name  *  * Returns:  *	TRUE		The last label in 'name' is the root label.  *	FALSE		The last label in 'name' is not the root label.  */
+comment|/*%<  * Does 'name' end in the root label?  *  * Requires:  * \li	'name' is a valid name  *  * Returns:  * \li	TRUE		The last label in 'name' is the root label.  * \li	FALSE		The last label in 'name' is not the root label.  */
 end_comment
 
 begin_function_decl
@@ -453,7 +501,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Is 'name' a wildcard name?  *  * Requires:  *	'name' is a valid name  *  *	dns_name_countlabels(name)> 0  *  * Returns:  *	TRUE		The least significant label of 'name' is '*'.  *	FALSE		The least significant label of 'name' is not '*'.  */
+comment|/*%<  * Is 'name' a wildcard name?  *  * Requires:  * \li	'name' is a valid name  *  * \li	dns_name_countlabels(name)> 0  *  * Returns:  * \li	TRUE		The least significant label of 'name' is '*'.  * \li	FALSE		The least significant label of 'name' is not '*'.  */
 end_comment
 
 begin_function_decl
@@ -472,7 +520,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Provide a hash value for 'name'.  *  * Note: if 'case_sensitive' is ISC_FALSE, then names which differ only in  * case will have the same hash value.  *  * Requires:  *	'name' is a valid name  *  * Returns:  *	A hash value  */
+comment|/*%<  * Provide a hash value for 'name'.  *  * Note: if 'case_sensitive' is ISC_FALSE, then names which differ only in  * case will have the same hash value.  *  * Requires:  * \li	'name' is a valid name  *  * Returns:  * \li	A hash value  */
 end_comment
 
 begin_function_decl
@@ -491,7 +539,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Provide a hash value for 'name'.  Unlike dns_name_hash(), this function  * always takes into account of the entire name to calculate the hash value.  *  * Note: if 'case_sensitive' is ISC_FALSE, then names which differ only in  * case will have the same hash value.  *  * Requires:  *	'name' is a valid name  *  * Returns:  *	A hash value  */
+comment|/*%<  * Provide a hash value for 'name'.  Unlike dns_name_hash(), this function  * always takes into account of the entire name to calculate the hash value.  *  * Note: if 'case_sensitive' is ISC_FALSE, then names which differ only in  * case will have the same hash value.  *  * Requires:  *\li	'name' is a valid name  *  * Returns:  *\li	A hash value  */
 end_comment
 
 begin_function_decl
@@ -510,11 +558,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Provide a hash value for 'name', where the hash value is the sum  * of the hash values of each label.  *  * Note: if 'case_sensitive' is ISC_FALSE, then names which differ only in  * case will have the same hash value.  *  * Requires:  *	'name' is a valid name  *  * Returns:  *	A hash value  */
+comment|/*%<  * Provide a hash value for 'name', where the hash value is the sum  * of the hash values of each label.  *  * Note: if 'case_sensitive' is ISC_FALSE, then names which differ only in  * case will have the same hash value.  *  * Requires:  *\li	'name' is a valid name  *  * Returns:  *\li	A hash value  */
 end_comment
 
 begin_comment
-comment|/***  *** Comparisons  ***/
+comment|/*  *** Comparisons  ***/
 end_comment
 
 begin_function_decl
@@ -544,7 +592,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Determine the relative ordering under the DNSSEC order relation of  * 'name1' and 'name2', and also determine the hierarchical  * relationship of the names.  *  * Note: It makes no sense for one of the names to be relative and the  * other absolute.  If both names are relative, then to be meaningfully  * compared the caller must ensure that they are both relative to the  * same domain.  *  * Requires:  *	'name1' is a valid name  *  *	dns_name_countlabels(name1)> 0  *  *	'name2' is a valid name  *  *	dns_name_countlabels(name2)> 0  *  *	orderp and nlabelsp are valid pointers.  *  *	Either name1 is absolute and name2 is absolute, or neither is.  *  * Ensures:  *  *	*orderp is< 0 if name1< name2, 0 if name1 = name2,> 0 if  *	name1> name2.  *  *	*nlabelsp is the number of common significant labels.  *  * Returns:  *	dns_namereln_none		There's no hierarchical relationship  *					between name1 and name2.  *	dns_namereln_contains		name1 properly contains name2; i.e.  *					name2 is a proper subdomain of name1.  *	dns_namereln_subdomain		name1 is a proper subdomain of name2.  *	dns_namereln_equal		name1 and name2 are equal.  *	dns_namereln_commonancestor	name1 and name2 share a common  *					ancestor.  */
+comment|/*%<  * Determine the relative ordering under the DNSSEC order relation of  * 'name1' and 'name2', and also determine the hierarchical  * relationship of the names.  *  * Note: It makes no sense for one of the names to be relative and the  * other absolute.  If both names are relative, then to be meaningfully  * compared the caller must ensure that they are both relative to the  * same domain.  *  * Requires:  *\li	'name1' is a valid name  *  *\li	dns_name_countlabels(name1)> 0  *  *\li	'name2' is a valid name  *  *\li	dns_name_countlabels(name2)> 0  *  *\li	orderp and nlabelsp are valid pointers.  *  *\li	Either name1 is absolute and name2 is absolute, or neither is.  *  * Ensures:  *  *\li	*orderp is< 0 if name1< name2, 0 if name1 = name2,> 0 if  *	name1> name2.  *  *\li	*nlabelsp is the number of common significant labels.  *  * Returns:  *\li	dns_namereln_none		There's no hierarchical relationship  *					between name1 and name2.  *\li	dns_namereln_contains		name1 properly contains name2; i.e.  *					name2 is a proper subdomain of name1.  *\li	dns_namereln_subdomain		name1 is a proper subdomain of name2.  *\li	dns_namereln_equal		name1 and name2 are equal.  *\li	dns_namereln_commonancestor	name1 and name2 share a common  *					ancestor.  */
 end_comment
 
 begin_function_decl
@@ -565,7 +613,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Determine the relative ordering under the DNSSEC order relation of  * 'name1' and 'name2'.  *  * Note: It makes no sense for one of the names to be relative and the  * other absolute.  If both names are relative, then to be meaningfully  * compared the caller must ensure that they are both relative to the  * same domain.  *  * Requires:  *	'name1' is a valid name  *  *	'name2' is a valid name  *  *	Either name1 is absolute and name2 is absolute, or neither is.  *  * Returns:  *< 0		'name1' is less than 'name2'  *	0		'name1' is equal to 'name2'  *> 0		'name1' is greater than 'name2'  */
+comment|/*%<  * Determine the relative ordering under the DNSSEC order relation of  * 'name1' and 'name2'.  *  * Note: It makes no sense for one of the names to be relative and the  * other absolute.  If both names are relative, then to be meaningfully  * compared the caller must ensure that they are both relative to the  * same domain.  *  * Requires:  * \li	'name1' is a valid name  *  * \li	'name2' is a valid name  *  * \li	Either name1 is absolute and name2 is absolute, or neither is.  *  * Returns:  * \li< 0		'name1' is less than 'name2'  * \li	0		'name1' is equal to 'name2'  * \li> 0		'name1' is greater than 'name2'  */
 end_comment
 
 begin_function_decl
@@ -586,7 +634,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Are 'name1' and 'name2' equal?  *  * Notes:  *	Because it only needs to test for equality, dns_name_equal() can be  *	significantly faster than dns_name_fullcompare() or dns_name_compare().  *  *	Offsets tables are not used in the comparision.  *  * 	It makes no sense for one of the names to be relative and the  *	other absolute.  If both names are relative, then to be meaningfully  * 	compared the caller must ensure that they are both relative to the  * 	same domain.  *  * Requires:  *	'name1' is a valid name  *  *	'name2' is a valid name  *  *	Either name1 is absolute and name2 is absolute, or neither is.  *  * Returns:  *	ISC_TRUE	'name1' and 'name2' are equal  *	ISC_FALSE	'name1' and 'name2' are not equal  */
+comment|/*%<  * Are 'name1' and 'name2' equal?  *  * Notes:  * \li	Because it only needs to test for equality, dns_name_equal() can be  *	significantly faster than dns_name_fullcompare() or dns_name_compare().  *  * \li	Offsets tables are not used in the comparision.  *  * \li	It makes no sense for one of the names to be relative and the  *	other absolute.  If both names are relative, then to be meaningfully  * 	compared the caller must ensure that they are both relative to the  * 	same domain.  *  * Requires:  * \li	'name1' is a valid name  *  * \li	'name2' is a valid name  *  * \li	Either name1 is absolute and name2 is absolute, or neither is.  *  * Returns:  * \li	ISC_TRUE	'name1' and 'name2' are equal  * \li	ISC_FALSE	'name1' and 'name2' are not equal  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_name_caseequal
+parameter_list|(
+specifier|const
+name|dns_name_t
+modifier|*
+name|name1
+parameter_list|,
+specifier|const
+name|dns_name_t
+modifier|*
+name|name2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Case sensitive version of dns_name_equal().  */
 end_comment
 
 begin_function_decl
@@ -607,7 +676,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Compare two names as if they are part of rdata in DNSSEC canonical  * form.  *  * Requires:  *	'name1' is a valid absolute name  *  *	dns_name_countlabels(name1)> 0  *  *	'name2' is a valid absolute name  *  *	dns_name_countlabels(name2)> 0  *  * Returns:  *< 0		'name1' is less than 'name2'  *	0		'name1' is equal to 'name2'  *> 0		'name1' is greater than 'name2'  */
+comment|/*%<  * Compare two names as if they are part of rdata in DNSSEC canonical  * form.  *  * Requires:  * \li	'name1' is a valid absolute name  *  * \li	dns_name_countlabels(name1)> 0  *  * \li	'name2' is a valid absolute name  *  * \li	dns_name_countlabels(name2)> 0  *  * Returns:  * \li< 0		'name1' is less than 'name2'  * \li	0		'name1' is equal to 'name2'  * \li> 0		'name1' is greater than 'name2'  */
 end_comment
 
 begin_function_decl
@@ -628,7 +697,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Is 'name1' a subdomain of 'name2'?  *  * Notes:  *	name1 is a subdomain of name2 if name1 is contained in name2, or  *	name1 equals name2.  *  *	It makes no sense for one of the names to be relative and the  *	other absolute.  If both names are relative, then to be meaningfully  *	compared the caller must ensure that they are both relative to the  *	same domain.  *  * Requires:  *	'name1' is a valid name  *  *	'name2' is a valid name  *  *	Either name1 is absolute and name2 is absolute, or neither is.  *  * Returns:  *	TRUE		'name1' is a subdomain of 'name2'  *	FALSE		'name1' is not a subdomain of 'name2'  */
+comment|/*%<  * Is 'name1' a subdomain of 'name2'?  *  * Notes:  * \li	name1 is a subdomain of name2 if name1 is contained in name2, or  *	name1 equals name2.  *  * \li	It makes no sense for one of the names to be relative and the  *	other absolute.  If both names are relative, then to be meaningfully  *	compared the caller must ensure that they are both relative to the  *	same domain.  *  * Requires:  * \li	'name1' is a valid name  *  * \li	'name2' is a valid name  *  * \li	Either name1 is absolute and name2 is absolute, or neither is.  *  * Returns:  * \li	TRUE		'name1' is a subdomain of 'name2'  * \li	FALSE		'name1' is not a subdomain of 'name2'  */
 end_comment
 
 begin_function_decl
@@ -649,7 +718,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Does 'name' match the wildcard specified in 'wname'?  *  * Notes:  *	name matches the wildcard specified in wname if all labels  *	following the wildcard in wname are identical to the same number  *	of labels at the end of name.  *  *	It makes no sense for one of the names to be relative and the  *	other absolute.  If both names are relative, then to be meaningfully  *	compared the caller must ensure that they are both relative to the  *	same domain.  *  * Requires:  *	'name' is a valid name  *  *	dns_name_countlabels(name)> 0  *  *	'wname' is a valid name  *  *	dns_name_countlabels(wname)> 0  *  *	dns_name_iswildcard(wname) is true  *  *	Either name is absolute and wname is absolute, or neither is.  *  * Returns:  *	TRUE		'name' matches the wildcard specified in 'wname'  *	FALSE		'name' does not match the wildcard specified in 'wname'  */
+comment|/*%<  * Does 'name' match the wildcard specified in 'wname'?  *  * Notes:  * \li	name matches the wildcard specified in wname if all labels  *	following the wildcard in wname are identical to the same number  *	of labels at the end of name.  *  * \li	It makes no sense for one of the names to be relative and the  *	other absolute.  If both names are relative, then to be meaningfully  *	compared the caller must ensure that they are both relative to the  *	same domain.  *  * Requires:  * \li	'name' is a valid name  *  * \li	dns_name_countlabels(name)> 0  *  * \li	'wname' is a valid name  *  * \li	dns_name_countlabels(wname)> 0  *  * \li	dns_name_iswildcard(wname) is true  *  * \li	Either name is absolute and wname is absolute, or neither is.  *  * Returns:  * \li	TRUE		'name' matches the wildcard specified in 'wname'  * \li	FALSE		'name' does not match the wildcard specified in 'wname'  */
 end_comment
 
 begin_comment
@@ -670,7 +739,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * How many labels does 'name' have?  *  * Notes:  *	In this case, as in other places, a 'label' is an ordinary label.  *  * Requires:  *	'name' is a valid name  *  * Ensures:  *	The result is<= 128.  *  * Returns:  *	The number of labels in 'name'.  */
+comment|/*%<  * How many labels does 'name' have?  *  * Notes:  * \li	In this case, as in other places, a 'label' is an ordinary label.  *  * Requires:  * \li	'name' is a valid name  *  * Ensures:  * \li	The result is<= 128.  *  * Returns:  * \li	The number of labels in 'name'.  */
 end_comment
 
 begin_function_decl
@@ -694,7 +763,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'label' refer to the 'n'th least significant label of 'name'.  *  * Notes:  *	Numbering starts at 0.  *  *	Given "rc.vix.com.", the label 0 is "rc", and label 3 is the  *	root label.  *  *	'label' refers to the same memory as 'name', so 'name' must not  *	be changed while 'label' is still in use.  *  * Requires:  *	n< dns_name_countlabels(name)  */
+comment|/*%<  * Make 'label' refer to the 'n'th least significant label of 'name'.  *  * Notes:  * \li	Numbering starts at 0.  *  * \li	Given "rc.vix.com.", the label 0 is "rc", and label 3 is the  *	root label.  *  * \li	'label' refers to the same memory as 'name', so 'name' must not  *	be changed while 'label' is still in use.  *  * Requires:  * \li	n< dns_name_countlabels(name)  */
 end_comment
 
 begin_function_decl
@@ -722,7 +791,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'target' refer to the 'n' labels including and following 'first'  * in 'source'.  *  * Notes:  *	Numbering starts at 0.  *  *	Given "rc.vix.com.", the label 0 is "rc", and label 3 is the  *	root label.  *  *	'target' refers to the same memory as 'source', so 'source'  *	must not be changed while 'target' is still in use.  *  * Requires:  *	'source' and 'target' are valid names.  *  *	first< dns_name_countlabels(name)  *  *	first + n<= dns_name_countlabels(name)  */
+comment|/*%<  * Make 'target' refer to the 'n' labels including and following 'first'  * in 'source'.  *  * Notes:  * \li	Numbering starts at 0.  *  * \li	Given "rc.vix.com.", the label 0 is "rc", and label 3 is the  *	root label.  *  * \li	'target' refers to the same memory as 'source', so 'source'  *	must not be changed while 'target' is still in use.  *  * Requires:  * \li	'source' and 'target' are valid names.  *  * \li	first< dns_name_countlabels(name)  *  * \li	first + n<= dns_name_countlabels(name)  */
 end_comment
 
 begin_function_decl
@@ -742,7 +811,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'target' refer to the same name as 'source'.  *  * Notes:  *  *	'target' refers to the same memory as 'source', so 'source'  *	must not be changed while 'target' is still in use.  *  *	This call is functionally equivalent to:  *  *		dns_name_getlabelsequence(source, 0,  *					  dns_name_countlabels(source),  *					  target);  *  *	but is more efficient.  Also, dns_name_clone() works even if 'source'  *	is empty.  *  * Requires:  *  *	'source' is a valid name.  *  *	'target' is a valid name that is not read-only.  */
+comment|/*%<  * Make 'target' refer to the same name as 'source'.  *  * Notes:  *  * \li	'target' refers to the same memory as 'source', so 'source'  *	must not be changed while 'target' is still in use.  *  * \li	This call is functionally equivalent to:  *  * \code  *		dns_name_getlabelsequence(source, 0,  *					  dns_name_countlabels(source),  *					  target);  * \endcode  *  *	but is more efficient.  Also, dns_name_clone() works even if 'source'  *	is empty.  *  * Requires:  *  * \li	'source' is a valid name.  *  * \li	'target' is a valid name that is not read-only.  */
 end_comment
 
 begin_comment
@@ -766,7 +835,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'name' refer to region 'r'.  *  * Note:  *	If the conversion encounters a root label before the end of the  *	region the conversion stops and the length is set to the length  *	so far converted.  A maximum of 255 bytes is converted.  *  * Requires:  *	The data in 'r' is a sequence of one or more type 00 or type 01000001  *	labels.  */
+comment|/*%<  * Make 'name' refer to region 'r'.  *  * Note:  * \li	If the conversion encounters a root label before the end of the  *	region the conversion stops and the length is set to the length  *	so far converted.  A maximum of 255 bytes is converted.  *  * Requires:  * \li	The data in 'r' is a sequence of one or more type 00 or type 01000001  *	labels.  */
 end_comment
 
 begin_function_decl
@@ -785,7 +854,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'r' refer to 'name'.  *  * Requires:  *  *	'name' is a valid name.  *  *	'r' is a valid region.  */
+comment|/*%<  * Make 'r' refer to 'name'.  *  * Requires:  *  * \li	'name' is a valid name.  *  * \li	'r' is a valid region.  */
 end_comment
 
 begin_function_decl
@@ -816,7 +885,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Copy the possibly-compressed name at source (active region) into target,  * decompressing it.  *  * Notes:  *	Decompression policy is controlled by 'dctx'.  *  *	If DNS_NAME_DOWNCASE is set, any uppercase letters in 'source' will be  *	downcased when they are copied into 'target'.  *  * Security:  *  *	*** WARNING ***  *  *	This routine will often be used when 'source' contains raw network  *	data.  A programming error in this routine could result in a denial  *	of service, or in the hijacking of the server.  *  * Requires:  *  *	'name' is a valid name.  *  *	'source' is a valid buffer and the first byte of the active  *	region should be the first byte of a DNS wire format domain name.  *  *	'target' is a valid buffer or 'target' is NULL and 'name' has  *	a dedicated buffer.  *  *	'dctx' is a valid decompression context.  *  * Ensures:  *  *	If result is success:  *	 	If 'target' is not NULL, 'name' is attached to it.  *  *		Uppercase letters are downcased in the copy iff  *		DNS_NAME_DOWNCASE is set in options.  *  *		The current location in source is advanced, and the used space  *		in target is updated.  *  * Result:  *	Success  *	Bad Form: Label Length  *	Bad Form: Unknown Label Type  *	Bad Form: Name Length  *	Bad Form: Compression type not allowed  *	Bad Form: Bad compression pointer  *	Bad Form: Input too short  *	Resource Limit: Too many compression pointers  *	Resource Limit: Not enough space in buffer  */
+comment|/*%<  * Copy the possibly-compressed name at source (active region) into target,  * decompressing it.  *  * Notes:  * \li	Decompression policy is controlled by 'dctx'.  *  * \li	If DNS_NAME_DOWNCASE is set, any uppercase letters in 'source' will be  *	downcased when they are copied into 'target'.  *  * Security:  *  * \li	*** WARNING ***  *  * \li	This routine will often be used when 'source' contains raw network  *	data.  A programming error in this routine could result in a denial  *	of service, or in the hijacking of the server.  *  * Requires:  *  * \li	'name' is a valid name.  *  * \li	'source' is a valid buffer and the first byte of the active  *	region should be the first byte of a DNS wire format domain name.  *  * \li	'target' is a valid buffer or 'target' is NULL and 'name' has  *	a dedicated buffer.  *  * \li	'dctx' is a valid decompression context.  *  * Ensures:  *  *	If result is success:  * \li	 	If 'target' is not NULL, 'name' is attached to it.  *  * \li		Uppercase letters are downcased in the copy iff  *		DNS_NAME_DOWNCASE is set in options.  *  * \li		The current location in source is advanced, and the used space  *		in target is updated.  *  * Result:  * \li	Success  * \li	Bad Form: Label Length  * \li	Bad Form: Unknown Label Type  * \li	Bad Form: Name Length  * \li	Bad Form: Compression type not allowed  * \li	Bad Form: Bad compression pointer  * \li	Bad Form: Input too short  * \li	Resource Limit: Too many compression pointers  * \li	Resource Limit: Not enough space in buffer  */
 end_comment
 
 begin_function_decl
@@ -840,7 +909,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convert 'name' into wire format, compressing it as specified by the  * compression context 'cctx', and storing the result in 'target'.  *  * Notes:  *	If the compression context allows global compression, then the  *	global compression table may be updated.  *  * Requires:  *	'name' is a valid name  *  *	dns_name_countlabels(name)> 0  *  *	dns_name_isabsolute(name) == TRUE  *  *	target is a valid buffer.  *  *	Any offsets specified in a global compression table are valid  *	for buffer.  *  * Ensures:  *  *	If the result is success:  *  *		The used space in target is updated.  *  * Returns:  *	Success  *	Resource Limit: Not enough space in buffer  */
+comment|/*%<  * Convert 'name' into wire format, compressing it as specified by the  * compression context 'cctx', and storing the result in 'target'.  *  * Notes:  * \li	If the compression context allows global compression, then the  *	global compression table may be updated.  *  * Requires:  * \li	'name' is a valid name  *  * \li	dns_name_countlabels(name)> 0  *  * \li	dns_name_isabsolute(name) == TRUE  *  * \li	target is a valid buffer.  *  * \li	Any offsets specified in a global compression table are valid  *	for buffer.  *  * Ensures:  *  *	If the result is success:  *  * \li		The used space in target is updated.  *  * Returns:  * \li	Success  * \li	Resource Limit: Not enough space in buffer  */
 end_comment
 
 begin_function_decl
@@ -871,7 +940,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convert the textual representation of a DNS name at source  * into uncompressed wire form stored in target.  *  * Notes:  *	Relative domain names will have 'origin' appended to them  *	unless 'origin' is NULL, in which case relative domain names  *	will remain relative.  *  *	If DNS_NAME_DOWNCASE is set in 'options', any uppercase letters  *	in 'source' will be downcased when they are copied into 'target'.  *  * Requires:  *  *	'name' is a valid name.  *  *	'source' is a valid buffer.  *  *	'target' is a valid buffer or 'target' is NULL and 'name' has  *	a dedicated buffer.  *  * Ensures:  *  *	If result is success:  *	 	If 'target' is not NULL, 'name' is attached to it.  *  *		Uppercase letters are downcased in the copy iff  *		DNS_NAME_DOWNCASE is set in 'options'.  *  *		The current location in source is advanced, and the used space  *		in target is updated.  *  * Result:  *	ISC_R_SUCCESS  *	DNS_R_EMPTYLABEL  *	DNS_R_LABELTOOLONG  *	DNS_R_BADESCAPE  *	(DNS_R_BADBITSTRING: should not be returned)  *	(DNS_R_BITSTRINGTOOLONG: should not be returned)  *	DNS_R_BADDOTTEDQUAD  *	ISC_R_NOSPACE  *	ISC_R_UNEXPECTEDEND  */
+comment|/*%<  * Convert the textual representation of a DNS name at source  * into uncompressed wire form stored in target.  *  * Notes:  * \li	Relative domain names will have 'origin' appended to them  *	unless 'origin' is NULL, in which case relative domain names  *	will remain relative.  *  * \li	If DNS_NAME_DOWNCASE is set in 'options', any uppercase letters  *	in 'source' will be downcased when they are copied into 'target'.  *  * Requires:  *  * \li	'name' is a valid name.  *  * \li	'source' is a valid buffer.  *  * \li	'target' is a valid buffer or 'target' is NULL and 'name' has  *	a dedicated buffer.  *  * Ensures:  *  *	If result is success:  * \li	 	If 'target' is not NULL, 'name' is attached to it.  *  * \li		Uppercase letters are downcased in the copy iff  *		DNS_NAME_DOWNCASE is set in 'options'.  *  * \li		The current location in source is advanced, and the used space  *		in target is updated.  *  * Result:  *\li	#ISC_R_SUCCESS  *\li	#DNS_R_EMPTYLABEL  *\li	#DNS_R_LABELTOOLONG  *\li	#DNS_R_BADESCAPE  *\li	(#DNS_R_BADBITSTRING: should not be returned)  *\li	(#DNS_R_BITSTRINGTOOLONG: should not be returned)  *\li	#DNS_R_BADDOTTEDQUAD  *\li	#ISC_R_NOSPACE  *\li	#ISC_R_UNEXPECTEDEND  */
 end_comment
 
 begin_function_decl
@@ -893,7 +962,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convert 'name' into text format, storing the result in 'target'.  *  * Notes:  *	If 'omit_final_dot' is true, then the final '.' in absolute  *	names other than the root name will be omitted.  *  *	If dns_name_countlabels == 0, the name will be "@", representing the  *	current origin as described by RFC 1035.  *  *	The name is not NUL terminated.  *  * Requires:  *  *	'name' is a valid name  *  *	'target' is a valid buffer.  *  *	if dns_name_isabsolute == FALSE, then omit_final_dot == FALSE  *  * Ensures:  *  *	If the result is success:  *  *		The used space in target is updated.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOSPACE  */
+comment|/*%<  * Convert 'name' into text format, storing the result in 'target'.  *  * Notes:  *\li	If 'omit_final_dot' is true, then the final '.' in absolute  *	names other than the root name will be omitted.  *  *\li	If dns_name_countlabels == 0, the name will be "@", representing the  *	current origin as described by RFC1035.  *  *\li	The name is not NUL terminated.  *  * Requires:  *  *\li	'name' is a valid name  *  *\li	'target' is a valid buffer.  *  *\li	if dns_name_isabsolute == FALSE, then omit_final_dot == FALSE  *  * Ensures:  *  *\li	If the result is success:  *		the used space in target is updated.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE  */
 end_comment
 
 begin_define
@@ -904,7 +973,7 @@ value|1023
 end_define
 
 begin_comment
-comment|/*  * The maximum length of the text representation of a domain  * name as generated by dns_name_totext().  This does not  * include space for a terminating NULL.  *  * This definition is conservative - the actual maximum   * is 1004, derived as follows:  *  *   A backslash-decimal escaped character takes 4 bytes.  *   A wire-encoded name can be up to 255 bytes and each  *   label is one length byte + at most 63 bytes of data.  *   Maximizing the label lengths gives us a name of  *   three 63-octet labels, one 61-octet label, and the  *   root label:  *  *      1 + 63 + 1 + 63 + 1 + 63 + 1 + 61 + 1 = 255  *  *   When printed, this is (3 * 63 + 61) * 4  *   bytes for the escaped label data + 4 bytes for the  *   dot terminating each label = 1004 bytes total.  */
+comment|/*%<  * The maximum length of the text representation of a domain  * name as generated by dns_name_totext().  This does not  * include space for a terminating NULL.  *  * This definition is conservative - the actual maximum   * is 1004, derived as follows:  *  *   A backslash-decimal escaped character takes 4 bytes.  *   A wire-encoded name can be up to 255 bytes and each  *   label is one length byte + at most 63 bytes of data.  *   Maximizing the label lengths gives us a name of  *   three 63-octet labels, one 61-octet label, and the  *   root label:  *  *      1 + 63 + 1 + 63 + 1 + 63 + 1 + 61 + 1 = 255  *  *   When printed, this is (3 * 63 + 61) * 4  *   bytes for the escaped label data + 4 bytes for the  *   dot terminating each label = 1004 bytes total.  */
 end_comment
 
 begin_function_decl
@@ -926,7 +995,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convert 'name' into an alternate text format appropriate for filenames,  * storing the result in 'target'.  The name data is downcased, guaranteeing  * that the filename does not depend on the case of the converted name.  *  * Notes:  *	If 'omit_final_dot' is true, then the final '.' in absolute  *	names other than the root name will be omitted.  *  *	The name is not NUL terminated.  *  * Requires:  *  *	'name' is a valid absolute name  *  *	'target' is a valid buffer.  *  * Ensures:  *  *	If the result is success:  *  *		The used space in target is updated.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOSPACE  */
+comment|/*%<  * Convert 'name' into an alternate text format appropriate for filenames,  * storing the result in 'target'.  The name data is downcased, guaranteeing  * that the filename does not depend on the case of the converted name.  *  * Notes:  *\li	If 'omit_final_dot' is true, then the final '.' in absolute  *	names other than the root name will be omitted.  *  *\li	The name is not NUL terminated.  *  * Requires:  *  *\li	'name' is a valid absolute name  *  *\li	'target' is a valid buffer.  *  * Ensures:  *  *\li	If the result is success:  *		the used space in target is updated.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE  */
 end_comment
 
 begin_function_decl
@@ -949,7 +1018,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Downcase 'source'.  *  * Requires:  *  *	'source' and 'name' are valid names.  *  *	If source == name, then  *  *		'source' must not be read-only  *  *	Otherwise,  *  *		'target' is a valid buffer or 'target' is NULL and  *		'name' has a dedicated buffer.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOSPACE  *  * Note: if source == name, then the result will always be ISC_R_SUCCESS.  */
+comment|/*%<  * Downcase 'source'.  *  * Requires:  *  *\li	'source' and 'name' are valid names.  *  *\li	If source == name, then  *		'source' must not be read-only  *  *\li	Otherwise,  *		'target' is a valid buffer or 'target' is NULL and  *		'name' has a dedicated buffer.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE  *  * Note: if source == name, then the result will always be ISC_R_SUCCESS.  */
 end_comment
 
 begin_function_decl
@@ -976,7 +1045,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Concatenate 'prefix' and 'suffix'.  *  * Requires:  *  *	'prefix' is a valid name or NULL.  *  *	'suffix' is a valid name or NULL.  *  *	'name' is a valid name or NULL.  *  *	'target' is a valid buffer or 'target' is NULL and 'name' has  *	a dedicated buffer.  *  *	If 'prefix' is absolute, 'suffix' must be NULL or the empty name.  *  * Ensures:  *  *	On success,  *	 	If 'target' is not NULL and 'name' is not NULL, then 'name'  *		is attached to it.  *  *		The used space in target is updated.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOSPACE  *	DNS_R_NAMETOOLONG  */
+comment|/*%<  *	Concatenate 'prefix' and 'suffix'.  *  * Requires:  *  *\li	'prefix' is a valid name or NULL.  *  *\li	'suffix' is a valid name or NULL.  *  *\li	'name' is a valid name or NULL.  *  *\li	'target' is a valid buffer or 'target' is NULL and 'name' has  *	a dedicated buffer.  *  *\li	If 'prefix' is absolute, 'suffix' must be NULL or the empty name.  *  * Ensures:  *  *\li	On success,  *	 	If 'target' is not NULL and 'name' is not NULL, then 'name'  *		is attached to it.  *		The used space in target is updated.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE  *\li	#DNS_R_NAMETOOLONG  */
 end_comment
 
 begin_function_decl
@@ -1003,7 +1072,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *  * Split 'name' into two pieces on a label boundary.  *  * Notes:  *      'name' is split such that 'suffix' holds the most significant  *      'suffixlabels' labels.  All other labels are stored in 'prefix'.   *  *	Copying name data is avoided as much as possible, so 'prefix'  *	and 'suffix' will end up pointing at the data for 'name'.  *  *	It is legitimate to pass a 'prefix' or 'suffix' that has  *	its name data stored someplace other than the dedicated buffer.  *	This is useful to avoid name copying in the calling function.  *  *	It is also legitimate to pass a 'prefix' or 'suffix' that is  *	the same dns_name_t as 'name'.  *  * Requires:  *	'name' is a valid name.  *  * 	'suffixlabels' cannot exceed the number of labels in 'name'.  *  *	'prefix' is a valid name or NULL, and cannot be read-only.  *  *	'suffix' is a valid name or NULL, and cannot be read-only.  *  *	If non-NULL, 'prefix' and 'suffix' must have dedicated buffers.  *  *	'prefix' and 'suffix' cannot point to the same buffer.  *  * Ensures:  *  *	On success:  *		If 'prefix' is not NULL it will contain the least significant  *		labels.  *  *		If 'suffix' is not NULL it will contain the most significant  *		labels.  dns_name_countlabels(suffix) will be equal to  *		suffixlabels.  *  *	On failure:  *		Either 'prefix' or 'suffix' is invalidated (depending  *		on which one the problem was encountered with).  *  * Returns:  *	ISC_R_SUCCESS	No worries.  (This function should always success).  */
+comment|/*%<  *  * Split 'name' into two pieces on a label boundary.  *  * Notes:  * \li     'name' is split such that 'suffix' holds the most significant  *      'suffixlabels' labels.  All other labels are stored in 'prefix'.   *  *\li	Copying name data is avoided as much as possible, so 'prefix'  *	and 'suffix' will end up pointing at the data for 'name'.  *  *\li	It is legitimate to pass a 'prefix' or 'suffix' that has  *	its name data stored someplace other than the dedicated buffer.  *	This is useful to avoid name copying in the calling function.  *  *\li	It is also legitimate to pass a 'prefix' or 'suffix' that is  *	the same dns_name_t as 'name'.  *  * Requires:  *\li	'name' is a valid name.  *  *\li	'suffixlabels' cannot exceed the number of labels in 'name'.  *  * \li	'prefix' is a valid name or NULL, and cannot be read-only.  *  *\li	'suffix' is a valid name or NULL, and cannot be read-only.  *  *\li	If non-NULL, 'prefix' and 'suffix' must have dedicated buffers.  *  *\li	'prefix' and 'suffix' cannot point to the same buffer.  *  * Ensures:  *  *\li	On success:  *		If 'prefix' is not NULL it will contain the least significant  *		labels.  *		If 'suffix' is not NULL it will contain the most significant  *		labels.  dns_name_countlabels(suffix) will be equal to  *		suffixlabels.  *  *\li	On failure:  *		Either 'prefix' or 'suffix' is invalidated (depending  *		on which one the problem was encountered with).  *  * Returns:  *\li	#ISC_R_SUCCESS	No worries.  (This function should always success).  */
 end_comment
 
 begin_function_decl
@@ -1027,7 +1096,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'target' a dynamically allocated copy of 'source'.  *  * Requires:  *  *	'source' is a valid non-empty name.  *  *	'target' is a valid name that is not read-only.  *  *	'mctx' is a valid memory context.  */
+comment|/*%<  * Make 'target' a dynamically allocated copy of 'source'.  *  * Requires:  *  *\li	'source' is a valid non-empty name.  *  *\li	'target' is a valid name that is not read-only.  *  *\li	'mctx' is a valid memory context.  */
 end_comment
 
 begin_function_decl
@@ -1050,7 +1119,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'target' a read-only dynamically allocated copy of 'source'.  * 'target' will also have a dynamically allocated offsets table.  *  * Requires:  *  *	'source' is a valid non-empty name.  *  *	'target' is a valid name that is not read-only.  *  *	'target' has no offsets table.  *  *	'mctx' is a valid memory context.  */
+comment|/*%<  * Make 'target' a read-only dynamically allocated copy of 'source'.  * 'target' will also have a dynamically allocated offsets table.  *  * Requires:  *  *\li	'source' is a valid non-empty name.  *  *\li	'target' is a valid name that is not read-only.  *  *\li	'target' has no offsets table.  *  *\li	'mctx' is a valid memory context.  */
 end_comment
 
 begin_function_decl
@@ -1069,7 +1138,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Free 'name'.  *  * Requires:  *  *	'name' is a valid name created previously in 'mctx' by dns_name_dup().  *  *	'mctx' is a valid memory context.  *  * Ensures:  *  *	All dynamic resources used by 'name' are freed and the name is  *	invalidated.  */
+comment|/*%<  * Free 'name'.  *  * Requires:  *  *\li	'name' is a valid name created previously in 'mctx' by dns_name_dup().  *  *\li	'mctx' is a valid memory context.  *  * Ensures:  *  *\li	All dynamic resources used by 'name' are freed and the name is  *	invalidated.  */
 end_comment
 
 begin_function_decl
@@ -1091,7 +1160,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Send 'name' in DNSSEC canonical form to 'digest'.  *  * Requires:  *  *	'name' is a valid name.  *  *	'digest' is a valid dns_digestfunc_t.  *  * Ensures:  *  *	If successful, the DNSSEC canonical form of 'name' will have been  *	sent to 'digest'.  *  *	If digest() returns something other than ISC_R_SUCCESS, that result  *	will be returned as the result of dns_name_digest().  *  * Returns:  *  *	ISC_R_SUCCESS  *  *	Many other results are possible if not successful.  *  */
+comment|/*%<  * Send 'name' in DNSSEC canonical form to 'digest'.  *  * Requires:  *  *\li	'name' is a valid name.  *  *\li	'digest' is a valid dns_digestfunc_t.  *  * Ensures:  *  *\li	If successful, the DNSSEC canonical form of 'name' will have been  *	sent to 'digest'.  *  *\li	If digest() returns something other than ISC_R_SUCCESS, that result  *	will be returned as the result of dns_name_digest().  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *  *\li	Many other results are possible if not successful.  *  */
 end_comment
 
 begin_function_decl
@@ -1106,7 +1175,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns whether there is dynamic memory associated with this name.  *  * Requires:  *  *	'name' is a valid name.  *  * Returns:  *  *	'ISC_TRUE' if the name is dynamic othewise 'ISC_FALSE'.  */
+comment|/*%<  * Returns whether there is dynamic memory associated with this name.  *  * Requires:  *  *\li	'name' is a valid name.  *  * Returns:  *  *\li	'ISC_TRUE' if the name is dynamic othewise 'ISC_FALSE'.  */
 end_comment
 
 begin_function_decl
@@ -1125,7 +1194,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Print 'name' on 'stream'.  *  * Requires:  *  *	'name' is a valid name.  *  *	'stream' is a valid stream.  *  * Returns:  *  *	ISC_R_SUCCESS  *  *	Any error that dns_name_totext() can return.  */
+comment|/*%<  * Print 'name' on 'stream'.  *  * Requires:  *  *\li	'name' is a valid name.  *  *\li	'stream' is a valid stream.  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *  *\li	Any error that dns_name_totext() can return.  */
 end_comment
 
 begin_function_decl
@@ -1148,7 +1217,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Format 'name' as text appropriate for use in log messages.  *  * Store the formatted name at 'cp', writing no more than  * 'size' bytes.  The resulting string is guaranteed to be  * null terminated.  *  * The formatted name will have a terminating dot only if it is  * the root.  *  * This function cannot fail, instead any errors are indicated  * in the returned text.  *  * Requires:  *  *	'name' is a valid name.  *  *	'cp' points a valid character array of size 'size'.  *  *	'size'> 0.  *  */
+comment|/*%<  * Format 'name' as text appropriate for use in log messages.  *  * Store the formatted name at 'cp', writing no more than  * 'size' bytes.  The resulting string is guaranteed to be  * null terminated.  *  * The formatted name will have a terminating dot only if it is  * the root.  *  * This function cannot fail, instead any errors are indicated  * in the returned text.  *  * Requires:  *  *\li	'name' is a valid name.  *  *\li	'cp' points a valid character array of size 'size'.  *  *\li	'size'> 0.  *  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_name_settotextfilter
+parameter_list|(
+name|dns_name_totextfilter_t
+name|proc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set / clear a thread specific function 'proc' to be called at the  * end of dns_name_totext().  *  * Note: Under Windows you need to call "dns_name_settotextfilter(NULL);"  * prior to exiting the thread otherwise memory will be leaked.  * For other platforms, which are pthreads based, this is still a good  * idea but not required.  *  * Returns  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_UNEXPECTED  */
 end_comment
 
 begin_define
@@ -1159,7 +1242,7 @@ value|(DNS_NAME_MAXTEXT + 1)
 end_define
 
 begin_comment
-comment|/*  * Suggested size of buffer passed to dns_name_format().  * Includes space for the terminating NULL.  */
+comment|/*%<  * Suggested size of buffer passed to dns_name_format().  * Includes space for the terminating NULL.  */
 end_comment
 
 begin_function_decl
@@ -1182,7 +1265,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Makes 'dest' refer to a copy of the name in 'source'.  The data are  * either copied to 'target' or the dedicated buffer in 'dest'.  *  * Requires:  * 	'source' is a valid name.  *  * 	'dest' is an initialized name with a dedicated buffer.  *  * 	'target' is NULL or an initialized buffer.  *  * 	Either dest has a dedicated buffer or target != NULL.  *  * Ensures:  *  *	On success, the used space in target is updated.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOSPACE  */
+comment|/*%<  * Makes 'dest' refer to a copy of the name in 'source'.  The data are  * either copied to 'target' or the dedicated buffer in 'dest'.  *  * Requires:  * \li	'source' is a valid name.  *  * \li	'dest' is an initialized name with a dedicated buffer.  *  * \li	'target' is NULL or an initialized buffer.  *  * \li	Either dest has a dedicated buffer or target != NULL.  *  * Ensures:  *  *\li	On success, the used space in target is updated.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE  */
 end_comment
 
 begin_function_decl
@@ -1201,7 +1284,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return if 'name' is a valid hostname.  RFC 952 / RFC 1123.  * If 'wildcard' is ISC_TRUE then allow the first label of name to  * be a wildcard.  * The root is also accepted.  *  * Requires:  *	'name' to be valid.  */
+comment|/*%<  * Return if 'name' is a valid hostname.  RFC 952 / RFC 1123.  * If 'wildcard' is ISC_TRUE then allow the first label of name to  * be a wildcard.  * The root is also accepted.  *  * Requires:  *	'name' to be valid.  */
 end_comment
 
 begin_function_decl
@@ -1217,7 +1300,36 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return if 'name' is a valid mailbox.  RFC 821.  *  * Requires:  *	'name' to be valid.  */
+comment|/*%<  * Return if 'name' is a valid mailbox.  RFC 821.  *  * Requires:  * \li	'name' to be valid.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_name_internalwildcard
+parameter_list|(
+specifier|const
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Return if 'name' contains a internal wildcard name.  *  * Requires:  * \li	'name' to be valid.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_name_destroy
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Cleanup dns_name_settotextfilter() / dns_name_totext() state.  *  * This should be called as part of the final cleanup process.  *  * Note: dns_name_settotextfilter(NULL); should be called for all  * threads which have called dns_name_settotextfilter() with a  * non-NULL argument prior to calling dns_name_destroy();  */
 end_comment
 
 begin_macro
@@ -1225,7 +1337,7 @@ name|ISC_LANG_ENDDECLS
 end_macro
 
 begin_comment
-comment|/***  *** High Peformance Macros  ***/
+comment|/*  *** High Peformance Macros  ***/
 end_comment
 
 begin_comment

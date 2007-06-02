@@ -4,7 +4,11 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.119.2.3.2.25 2006/11/10 18:51:06 marka Exp $ */
+comment|/* $Id: main.c,v 1.136.18.17 2006/11/10 18:51:14 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -244,6 +248,27 @@ end_comment
 begin_comment
 comment|/* #include "xxdb.h" */
 end_comment
+
+begin_comment
+comment|/*  * Include DLZ drivers if appropriate.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DLZ
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dlz/dlz_drivers.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -917,7 +942,7 @@ literal|"[-d debuglevel]\n"
 literal|"              [-f|-g] [-n number_of_cpus] [-p port] "
 literal|"[-P listen-port] [-s]\n"
 literal|"              [-t chrootdir] [-u username] [-i pidfile]\n"
-literal|"              [-m {usage|trace|record}]\n"
+literal|"              [-m {usage|trace|record|size|mctx}]\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -948,7 +973,7 @@ argument_list|,
 literal|"usage: named [-4|-6] [-c conffile] [-d debuglevel] "
 literal|"[-f|-g] [-n number_of_cpus]\n"
 literal|"             [-p port] [-s] [-t chrootdir] [-u username]\n"
-literal|"             [-m {usage|trace|record}]\n"
+literal|"             [-m {usage|trace|record|size|mctx}]\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1276,6 +1301,18 @@ block|{
 literal|"usage"
 block|,
 name|ISC_MEM_DEBUGUSAGE
+block|}
+block|,
+block|{
+literal|"size"
+block|,
+name|ISC_MEM_DEBUGSIZE
+block|}
+block|,
+block|{
+literal|"mctx"
+block|,
+name|ISC_MEM_DEBUGCTX
 block|}
 block|,
 block|{
@@ -2560,6 +2597,33 @@ argument_list|()
 expr_stmt|;
 comment|/* 	 * Add calls to register sdb drivers here. 	 */
 comment|/* xxdb_init(); */
+ifdef|#
+directive|ifdef
+name|DLZ
+comment|/* 	 * Registyer any DLZ drivers. 	 */
+name|result
+operator|=
+name|dlz_drivers_init
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+name|ns_main_earlyfatal
+argument_list|(
+literal|"dlz_drivers_init() failed: %s"
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ns_server_create
 argument_list|(
 name|ns_g_mctx
@@ -2593,6 +2657,18 @@ argument_list|()
 expr_stmt|;
 comment|/* 	 * Add calls to unregister sdb drivers here. 	 */
 comment|/* xxdb_clear(); */
+ifdef|#
+directive|ifdef
+name|DLZ
+comment|/* 	 * Unregister any DLZ drivers. 	 */
+name|dlz_drivers_clear
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|dns_name_destroy
+argument_list|()
+expr_stmt|;
 name|isc_log_write
 argument_list|(
 name|ns_g_lctx
@@ -3420,6 +3496,11 @@ name|isc_mem_destroy
 argument_list|(
 operator|&
 name|ns_g_mctx
+argument_list|)
+expr_stmt|;
+name|isc_mem_checkdestroyed
+argument_list|(
+name|stderr
 argument_list|)
 expr_stmt|;
 name|ns_main_setmemstats

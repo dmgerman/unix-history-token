@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: dns_p.h,v 1.1.206.2 2004/03/17 00:29:48 marka Exp $  */
+comment|/*  * $Id: dns_p.h,v 1.3.18.1 2005/04/27 05:00:55 sra Exp $  */
 end_comment
 
 begin_ifndef
@@ -58,7 +58,7 @@ value|maybe_ok((res), (dn), res_dnok)
 end_define
 
 begin_comment
-comment|/*  * Object state.  */
+comment|/*%  * Object state.  */
 end_comment
 
 begin_struct
@@ -203,6 +203,10 @@ end_endif
 
 begin_comment
 comment|/*_DNS_P_H_INCLUDED*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

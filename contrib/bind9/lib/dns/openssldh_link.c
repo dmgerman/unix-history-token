@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2002  Internet Software Consortium.  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2002  Internet Software Consortium.  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: openssldh_link.c,v 1.1.4.3 2006/03/02 00:37:20 marka Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: openssldh_link.c,v 1.1.6.9 2007/01/08 02:52:39 marka Exp $  */
 end_comment
 
 begin_ifdef
@@ -577,116 +577,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_DH_GENERATE_PARAMETERS
-end_ifndef
-
-begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
-end_comment
-
-begin_function
-specifier|static
-name|DH
-modifier|*
-name|DH_generate_parameters
-parameter_list|(
-name|int
-name|prime_len
-parameter_list|,
-name|int
-name|generator
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|callback
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-parameter_list|,
-name|void
-modifier|*
-name|cb_arg
-parameter_list|)
-block|{
-name|BN_GENCB
-name|cb
-decl_stmt|;
-name|DH
-modifier|*
-name|dh
-init|=
-name|NULL
-decl_stmt|;
-name|dh
-operator|=
-name|DH_new
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|dh
-operator|!=
-name|NULL
-condition|)
-block|{
-name|BN_GENCB_set_old
-argument_list|(
-operator|&
-name|cb
-argument_list|,
-name|callback
-argument_list|,
-name|cb_arg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|DH_generate_parameters_ex
-argument_list|(
-name|dh
-argument_list|,
-name|prime_len
-argument_list|,
-name|generator
-argument_list|,
-operator|&
-name|cb
-argument_list|)
-condition|)
-return|return
-operator|(
-name|dh
-operator|)
-return|;
-name|DH_free
-argument_list|(
-name|dh
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|isc_result_t
@@ -700,6 +590,16 @@ name|int
 name|generator
 parameter_list|)
 block|{
+if|#
+directive|if
+name|OPENSSL_VERSION_NUMBER
+operator|>
+literal|0x00908000L
+name|BN_GENCB
+name|cb
+decl_stmt|;
+endif|#
+directive|endif
 name|DH
 modifier|*
 name|dh
@@ -747,7 +647,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|dst__openssl_toresult
+argument_list|(
 name|ISC_R_NOMEMORY
+argument_list|)
 operator|)
 return|;
 if|if
@@ -809,6 +712,75 @@ name|generator
 operator|!=
 literal|0
 condition|)
+block|{
+if|#
+directive|if
+name|OPENSSL_VERSION_NUMBER
+operator|>
+literal|0x00908000L
+name|dh
+operator|=
+name|DH_new
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|dh
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|dst__openssl_toresult
+argument_list|(
+name|DST_R_OPENSSLFAILURE
+argument_list|)
+operator|)
+return|;
+name|BN_GENCB_set_old
+argument_list|(
+operator|&
+name|cb
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|DH_generate_parameters_ex
+argument_list|(
+name|dh
+argument_list|,
+name|key
+operator|->
+name|key_size
+argument_list|,
+name|generator
+argument_list|,
+operator|&
+name|cb
+argument_list|)
+condition|)
+block|{
+name|DH_free
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|dst__openssl_toresult
+argument_list|(
+name|DST_R_OPENSSLFAILURE
+argument_list|)
+operator|)
+return|;
+block|}
+else|#
+directive|else
 name|dh
 operator|=
 name|DH_generate_parameters
@@ -824,6 +796,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 if|if
 condition|(
 name|dh
@@ -1488,7 +1463,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|dst__openssl_toresult
+argument_list|(
 name|ISC_R_NOMEMORY
+argument_list|)
 operator|)
 return|;
 name|dh
@@ -3081,19 +3059,19 @@ init|=
 block|{
 name|NULL
 block|,
-comment|/* createctx */
+comment|/*%< createctx */
 name|NULL
 block|,
-comment|/* destroyctx */
+comment|/*%< destroyctx */
 name|NULL
 block|,
-comment|/* adddata */
+comment|/*%< adddata */
 name|NULL
 block|,
-comment|/* openssldh_sign */
+comment|/*%< openssldh_sign */
 name|NULL
 block|,
-comment|/* openssldh_verify */
+comment|/*%< openssldh_verify */
 name|openssldh_computesecret
 block|,
 name|openssldh_compare
@@ -3241,6 +3219,10 @@ end_endif
 
 begin_comment
 comment|/* OPENSSL */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

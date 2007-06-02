@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strtoul.c,v 1.1.2.1 2003/06/27 03:51:35 marka Exp $"
+literal|"$Id: strtoul.c,v 1.2.164.1 2005/04/27 05:00:47 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,7 +115,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * Convert a string to an unsigned long integer.  *  * Ignores `locale' stuff.  Assumes that the upper and lower case  * alphabets and digits are each contiguous.  */
+comment|/*%  * Convert a string to an unsigned long integer.  *  * Ignores `locale' stuff.  Assumes that the upper and lower case  * alphabets and digits are each contiguous.  */
 end_comment
 
 begin_function
@@ -469,6 +469,10 @@ end_endif
 
 begin_comment
 comment|/*NEED_STRTOUL*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit
