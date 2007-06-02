@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp_pr.c,v 1.1.206.1 2004/03/09 08:33:37 marka Exp $"
+literal|"$Id: irp_pr.c,v 1.2.18.1 2005/04/27 05:01:01 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -287,7 +287,7 @@ comment|/* Public */
 end_comment
 
 begin_comment
-comment|/*  * struct irs_pr * irs_irp_pr(struct irs_acc *this)  *  */
+comment|/*%  * struct irs_pr * irs_irp_pr(struct irs_acc *this)  *  */
 end_comment
 
 begin_function
@@ -456,7 +456,7 @@ comment|/* Methods */
 end_comment
 
 begin_comment
-comment|/*  * void pr_close(struct irs_pr *this)  *  */
+comment|/*%  * void pr_close(struct irs_pr *this)  *  */
 end_comment
 
 begin_function
@@ -519,7 +519,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct protoent * pr_byname(struct irs_pr *this, const char *name)  *  */
+comment|/*%  * struct protoent * pr_byname(struct irs_pr *this, const char *name)  *  */
 end_comment
 
 begin_function
@@ -751,7 +751,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct protoent * pr_bynumber(struct irs_pr *this, int proto)  *  */
+comment|/*%  * struct protoent * pr_bynumber(struct irs_pr *this, int proto)  *  */
 end_comment
 
 begin_function
@@ -976,7 +976,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void pr_rewind(struct irs_pr *this)  *  */
+comment|/*%  * void pr_rewind(struct irs_pr *this)  *  */
 end_comment
 
 begin_function
@@ -1090,7 +1090,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct protoent * pr_next(struct irs_pr *this)  *  * Notes:  *  *	Prepares the cache if necessary and returns the next item in it.  *  */
+comment|/*%  *	Prepares the cache if necessary and returns the next item in it.  *  */
 end_comment
 
 begin_function
@@ -1282,7 +1282,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void pr_minimize(struct irs_pr *this)  *  */
+comment|/*%  * void pr_minimize(struct irs_pr *this)  *  */
 end_comment
 
 begin_function
@@ -1321,7 +1321,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static void free_proto(struct protoent *pw);  *  *	Deallocate all the memory irp_unmarshall_pr allocated.  *  */
+comment|/*%  *	Deallocate all the memory irp_unmarshall_pr allocated.  *  */
 end_comment
 
 begin_function
@@ -1390,6 +1390,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

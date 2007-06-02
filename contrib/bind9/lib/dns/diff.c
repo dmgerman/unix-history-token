@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: diff.c,v 1.4.2.1.8.4 2004/03/08 02:07:52 marka Exp $ */
+comment|/* $Id: diff.c,v 1.9.18.3 2005/04/27 05:01:15 sra Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -70,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dns/rdataclass.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dns/rdatalist.h>
 end_include
 
@@ -77,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<dns/rdataset.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/rdatatype.h>
 end_include
 
 begin_include
@@ -879,6 +895,24 @@ decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
+name|char
+name|namebuf
+index|[
+name|DNS_NAME_FORMATSIZE
+index|]
+decl_stmt|;
+name|char
+name|typebuf
+index|[
+name|DNS_RDATATYPE_FORMATSIZE
+index|]
+decl_stmt|;
+name|char
+name|classbuf
+index|[
+name|DNS_RDATACLASS_FORMATSIZE
+index|]
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|DNS_DIFF_VALID
@@ -1091,6 +1125,50 @@ operator|==
 name|covers
 condition|)
 block|{
+name|dns_name_format
+argument_list|(
+name|name
+argument_list|,
+name|namebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|namebuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dns_rdatatype_format
+argument_list|(
+name|t
+operator|->
+name|rdata
+operator|.
+name|type
+argument_list|,
+name|typebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|typebuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dns_rdataclass_format
+argument_list|(
+name|t
+operator|->
+name|rdata
+operator|.
+name|rdclass
+argument_list|,
+name|classbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|classbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|t
@@ -1109,8 +1187,15 @@ name|DIFF_COMMON_LOGARGS
 argument_list|,
 name|ISC_LOG_WARNING
 argument_list|,
-literal|"TTL differs in rdataset, "
-literal|"adjusting %lu -> %lu"
+literal|"'%s/%s/%s': TTL differs in "
+literal|"rdataset, adjusting "
+literal|"%lu -> %lu"
+argument_list|,
+name|namebuf
+argument_list|,
+name|typebuf
+argument_list|,
+name|classbuf
 argument_list|,
 operator|(
 name|unsigned

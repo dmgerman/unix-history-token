@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: key.c,v 1.1.4.3 2005/06/09 23:54:29 marka Exp $ */
+comment|/* $Id: key.c,v 1.1.6.6 2006/01/27 23:57:44 marka Exp $ */
 end_comment
 
 begin_include
@@ -571,6 +571,103 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_function
+name|void
+name|dst_key_setbits
+parameter_list|(
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|isc_uint16_t
+name|bits
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|maxbits
+decl_stmt|;
+name|REQUIRE
+argument_list|(
+name|VALID_KEY
+argument_list|(
+name|key
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bits
+operator|!=
+literal|0
+condition|)
+block|{
+name|RUNTIME_CHECK
+argument_list|(
+name|dst_key_sigsize
+argument_list|(
+name|key
+argument_list|,
+operator|&
+name|maxbits
+argument_list|)
+operator|==
+name|ISC_R_SUCCESS
+argument_list|)
+expr_stmt|;
+name|maxbits
+operator|*=
+literal|8
+expr_stmt|;
+name|REQUIRE
+argument_list|(
+name|bits
+operator|<=
+name|maxbits
+argument_list|)
+expr_stmt|;
+block|}
+name|key
+operator|->
+name|key_bits
+operator|=
+name|bits
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|isc_uint16_t
+name|dst_key_getbits
+parameter_list|(
+specifier|const
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|)
+block|{
+name|REQUIRE
+argument_list|(
+name|VALID_KEY
+argument_list|(
+name|key
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|key
+operator|->
+name|key_bits
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

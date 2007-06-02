@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lcl_pr.c,v 1.1.206.2 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: lcl_pr.c,v 1.2.18.2 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1392,6 +1392,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

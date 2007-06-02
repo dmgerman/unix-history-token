@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  *	$Id: res_update.h,v 1.1.206.1 2004/03/09 08:33:29 marka Exp $  */
+comment|/*  *	$Id: res_update.h,v 1.2.18.1 2005/04/27 05:00:49 sra Exp $  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,10 @@ define|#
 directive|define
 name|__RES_UPDATE_H
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -44,7 +48,7 @@ file|<resolv.h>
 end_include
 
 begin_comment
-comment|/*  * This RR-like structure is particular to UPDATE.  */
+comment|/*%  * This RR-like structure is particular to UPDATE.  */
 end_comment
 
 begin_struct
@@ -62,54 +66,54 @@ expr_stmt|;
 name|ns_sect
 name|r_section
 decl_stmt|;
-comment|/* ZONE/PREREQUISITE/UPDATE */
+comment|/*%< ZONE/PREREQUISITE/UPDATE */
 name|char
 modifier|*
 name|r_dname
 decl_stmt|;
-comment|/* owner of the RR */
+comment|/*%< owner of the RR */
 name|ns_class
 name|r_class
 decl_stmt|;
-comment|/* class number */
+comment|/*%< class number */
 name|ns_type
 name|r_type
 decl_stmt|;
-comment|/* type number */
+comment|/*%< type number */
 name|u_int32_t
 name|r_ttl
 decl_stmt|;
-comment|/* time to live */
+comment|/*%< time to live */
 name|u_char
 modifier|*
 name|r_data
 decl_stmt|;
-comment|/* rdata fields as text string */
+comment|/*%< rdata fields as text string */
 name|u_int
 name|r_size
 decl_stmt|;
-comment|/* size of r_data field */
+comment|/*%< size of r_data field */
 name|int
 name|r_opcode
 decl_stmt|;
-comment|/* type of operation */
+comment|/*%< type of operation */
 comment|/* following fields for private use by the resolver/server routines */
 name|struct
 name|databuf
 modifier|*
 name|r_dp
 decl_stmt|;
-comment|/* databuf to process */
+comment|/*%< databuf to process */
 name|struct
 name|databuf
 modifier|*
 name|r_deldp
 decl_stmt|;
-comment|/* databuf's deleted/overwritten */
+comment|/*%< databuf's deleted/overwritten */
 name|u_int
 name|r_zone
 decl_stmt|;
-comment|/* zone number on server */
+comment|/*%< zone number on server */
 block|}
 struct|;
 end_struct
@@ -286,6 +290,10 @@ end_endif
 
 begin_comment
 comment|/*__RES_UPDATE_H*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

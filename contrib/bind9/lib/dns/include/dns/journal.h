@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: journal.h,v 1.23.12.3 2004/03/08 09:04:36 marka Exp $ */
+comment|/* $Id: journal.h,v 1.25.18.2 2005/04/29 00:16:13 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * Database journalling.  */
+comment|/*! \file  * \brief  * Database journalling.  */
 end_comment
 
 begin_comment
@@ -73,7 +73,7 @@ comment|/***  *** Types  ***/
 end_comment
 
 begin_comment
-comment|/*  * A dns_journal_t represents an open journal file.  This is an opaque type.  *  * A particular dns_journal_t object may be opened for writing, in which case  * it can be used for writing transactions to a journal file, or it can be  * opened for reading, in which case it can be used for reading transactions  * from (iterating over) a journal file.  A single dns_journal_t object may  * not be used for both purposes.  */
+comment|/*%  * A dns_journal_t represents an open journal file.  This is an opaque type.  *  * A particular dns_journal_t object may be opened for writing, in which case  * it can be used for writing transactions to a journal file, or it can be  * opened for reading, in which case it can be used for reading transactions  * from (iterating over) a journal file.  A single dns_journal_t object may  * not be used for both purposes.  */
 end_comment
 
 begin_typedef
@@ -118,7 +118,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a diff tuple for the current database SOA.  * XXX this probably belongs somewhere else.  */
+comment|/*!< brief  * Create a diff tuple for the current database SOA.  * XXX this probably belongs somewhere else.  */
+end_comment
+
+begin_comment
+comment|/*@{*/
 end_comment
 
 begin_define
@@ -146,7 +150,11 @@ value|((int)(((a) - (b))& 0xFFFFFFFF)>= 0)
 end_define
 
 begin_comment
-comment|/*  * Compare SOA serial numbers.  DNS_SERIAL_GT(a, b) returns true iff  * a is "greater than" b where "greater than" is as defined in RFC1982.  * DNS_SERIAL_GE(a, b) returns true iff a is "greater than or equal to" b.  */
+comment|/*!< brief  * Compare SOA serial numbers.  DNS_SERIAL_GT(a, b) returns true iff  * a is "greater than" b where "greater than" is as defined in RFC1982.  * DNS_SERIAL_GE(a, b) returns true iff a is "greater than or equal to" b.  */
+end_comment
+
+begin_comment
+comment|/*@}*/
 end_comment
 
 begin_comment
@@ -182,7 +190,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Open the journal file 'filename' and create a dns_journal_t object for it.  *  * If 'write' is ISC_TRUE, the journal is open for writing.  If it does  * not exist, it is created.  *  * If 'write' is ISC_FALSE, the journal is open for reading.  If it does  * not exist, ISC_R_NOTFOUND is returned.  */
+comment|/*%<  * Open the journal file 'filename' and create a dns_journal_t object for it.  *  * If 'write' is ISC_TRUE, the journal is open for writing.  If it does  * not exist, it is created.  *  * If 'write' is ISC_FALSE, the journal is open for reading.  If it does  * not exist, ISC_R_NOTFOUND is returned.  */
 end_comment
 
 begin_function_decl
@@ -198,7 +206,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy a dns_journal_t, closing any open files and freeing its memory.  */
+comment|/*%<  * Destroy a dns_journal_t, closing any open files and freeing its memory.  */
 end_comment
 
 begin_comment
@@ -221,7 +229,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Prepare to write a new transaction to the open journal file 'j'.  *  * Requires:  *      'j' is open for writing.  */
+comment|/*%<  * Prepare to write a new transaction to the open journal file 'j'.  *  * Requires:  *     \li 'j' is open for writing.  */
 end_comment
 
 begin_function_decl
@@ -240,7 +248,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Write 'diff' to the current transaction of journal file 'j'.  *  * Requires:  *      'j' is open for writing and dns_journal_begin_transaction()  * 	has been called.  *  * 	'diff' is a full or partial, correctly ordered IXFR  *      difference sequence.  */
+comment|/*%<  * Write 'diff' to the current transaction of journal file 'j'.  *  * Requires:  * \li     'j' is open for writing and dns_journal_begin_transaction()  * 	has been called.  *  *\li 	'diff' is a full or partial, correctly ordered IXFR  *      difference sequence.  */
 end_comment
 
 begin_function_decl
@@ -255,7 +263,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Commit the current transaction of journal file 'j'.  *  * Requires:  *      'j' is open for writing and dns_journal_begin_transaction()  * 	has been called.  *  *      dns_journal_writediff() has been called one or more times  * 	to form a complete, correctly ordered IXFR difference  *      sequence.  */
+comment|/*%<  * Commit the current transaction of journal file 'j'.  *  * Requires:  * \li     'j' is open for writing and dns_journal_begin_transaction()  * 	has been called.  *  *   \li   dns_journal_writediff() has been called one or more times  * 	to form a complete, correctly ordered IXFR difference  *      sequence.  */
 end_comment
 
 begin_function_decl
@@ -274,7 +282,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Write a complete transaction at once to a journal file,  * sorting it if necessary, and commit it.  Equivalent to calling  * dns_diff_sort(), dns_journal_begin_transaction(),  * dns_journal_writediff(), and dns_journal_commit().  *  * Requires:  *      'j' is open for writing.  *  * 	'diff' contains exactly one SOA deletion, one SOA addition  *       with a greater serial number, and possibly other changes,  *       in arbitrary order.  */
+comment|/*%  * Write a complete transaction at once to a journal file,  * sorting it if necessary, and commit it.  Equivalent to calling  * dns_diff_sort(), dns_journal_begin_transaction(),  * dns_journal_writediff(), and dns_journal_commit().  *  * Requires:  *\li      'j' is open for writing.  *  * \li	'diff' contains exactly one SOA deletion, one SOA addition  *       with a greater serial number, and possibly other changes,  *       in arbitrary order.  */
 end_comment
 
 begin_comment
@@ -308,7 +316,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the first and last addressable serial number in the journal.  */
+comment|/*%<  * Get the first and last addressable serial number in the journal.  */
 end_comment
 
 begin_function_decl
@@ -329,7 +337,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Prepare to iterate over the transactions that will bring the database  * from SOA serial number 'begin_serial' to 'end_serial'.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_RANGE	begin_serial is outside the addressable range.  *	ISC_R_NOTFOUND	begin_serial is within the range of adressable  *			serial numbers covered by the journal, but  *			this particular serial number does not exist.  */
+comment|/*%<  * Prepare to iterate over the transactions that will bring the database  * from SOA serial number 'begin_serial' to 'end_serial'.  *  * Returns:  *\li	ISC_R_SUCCESS  *\li	ISC_R_RANGE	begin_serial is outside the addressable range.  *\li	ISC_R_NOTFOUND	begin_serial is within the range of adressable  *			serial numbers covered by the journal, but  *			this particular serial number does not exist.  */
+end_comment
+
+begin_comment
+comment|/*@{*/
 end_comment
 
 begin_function_decl
@@ -355,7 +367,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Position the iterator at the first/next RR in a journal  * transaction sequence established using dns_journal_iter_init().  *  * Requires:  *      dns_journal_iter_init() has been called.  *  */
+comment|/*%<  * Position the iterator at the first/next RR in a journal  * transaction sequence established using dns_journal_iter_init().  *  * Requires:  *    \li  dns_journal_iter_init() has been called.  *  */
+end_comment
+
+begin_comment
+comment|/*@}*/
 end_comment
 
 begin_function_decl
@@ -384,7 +400,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the name, ttl, and rdata of the current journal RR.  *  * Requires:  *      The last call to dns_journal_first_rr() or dns_journal_next_rr()  *      returned ISC_R_SUCCESS.  */
+comment|/*%<  * Get the name, ttl, and rdata of the current journal RR.  *  * Requires:  * \li     The last call to dns_journal_first_rr() or dns_journal_next_rr()  *      returned ISC_R_SUCCESS.  */
 end_comment
 
 begin_comment
@@ -416,7 +432,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Roll forward (play back) the journal file "filename" into the  * database "db".  This should be called when the server starts  * after a shutdown or crash.  *  * Requires:  *      'mctx' is a valid memory context.  *	'db' is a valid database which does not have a version  *           open for writing.  *      'filename' is the name of the journal file belonging to 'db'.  *  * Returns:  *	DNS_R_NOJOURNAL when journal does not exist.  *	ISC_R_NOTFOUND when current serial in not in journal.  *	ISC_R_RANGE when current serial in not in journals range.  *	ISC_R_SUCCESS journal has been applied successfully to database.  *	others  */
+comment|/*%<  * Roll forward (play back) the journal file "filename" into the  * database "db".  This should be called when the server starts  * after a shutdown or crash.  *  * Requires:  *\li      'mctx' is a valid memory context.  *\li	'db' is a valid database which does not have a version  *           open for writing.  *  \li    'filename' is the name of the journal file belonging to 'db'.  *  * Returns:  *\li	DNS_R_NOJOURNAL when journal does not exist.  *\li	ISC_R_NOTFOUND when current serial in not in journal.  *\li	ISC_R_RANGE when current serial in not in journals range.  *\li	ISC_R_SUCCESS journal has been applied successfully to database.  *	others  */
 end_comment
 
 begin_function_decl
@@ -476,7 +492,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Compare the databases 'dba' and 'dbb' and generate a journal  * entry containing the changes to make 'dba' from 'dbb' (note  * the order).  This journal entry will consist of a single,  * possibly very large transaction.  Append the journal  * entry to the journal file specified by 'journal_filename'.  */
+comment|/*%<  * Compare the databases 'dba' and 'dbb' and generate a journal  * entry containing the changes to make 'dba' from 'dbb' (note  * the order).  This journal entry will consist of a single,  * possibly very large transaction.  Append the journal  * entry to the journal file specified by 'journal_filename'.  */
 end_comment
 
 begin_function_decl
@@ -501,7 +517,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Attempt to compact the journal if it is greater that 'target_size'.  * Changes from 'serial' onwards will be preserved.  If the journal  * exists and is non-empty 'serial' must exist in the journal.  */
+comment|/*%<  * Attempt to compact the journal if it is greater that 'target_size'.  * Changes from 'serial' onwards will be preserved.  If the journal  * exists and is non-empty 'serial' must exist in the journal.  */
 end_comment
 
 begin_macro

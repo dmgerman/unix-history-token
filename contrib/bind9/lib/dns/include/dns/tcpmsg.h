@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: tcpmsg.h,v 1.15.206.1 2004/03/06 08:14:00 marka Exp $ */
+comment|/* $Id: tcpmsg.h,v 1.16.18.2 2005/04/29 00:16:22 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|DNS_TCPMSG_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -113,7 +117,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Associate a tcp message state with a given memory context and  * TCP socket.  *  * Requires:  *  *	"mctx" and "sock" be non-NULL and valid types.  *  *	"sock" be a read/write TCP socket.  *  *	"tcpmsg" be non-NULL and an uninitialized or invalidated structure.  *  * Ensures:  *  *	"tcpmsg" is a valid structure.  */
+comment|/*%<  * Associate a tcp message state with a given memory context and  * TCP socket.  *  * Requires:  *  *\li	"mctx" and "sock" be non-NULL and valid types.  *  *\li	"sock" be a read/write TCP socket.  *  *\li	"tcpmsg" be non-NULL and an uninitialized or invalidated structure.  *  * Ensures:  *  *\li	"tcpmsg" is a valid structure.  */
 end_comment
 
 begin_function_decl
@@ -132,7 +136,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the maximum packet size to "maxsize"  *  * Requires:  *  *	"tcpmsg" be valid.  *  *	512<= "maxsize"<= 65536  */
+comment|/*%<  * Set the maximum packet size to "maxsize"  *  * Requires:  *  *\li	"tcpmsg" be valid.  *  *\li	512<= "maxsize"<= 65536  */
 end_comment
 
 begin_function_decl
@@ -158,7 +162,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Schedule an event to be delivered when a DNS message is readable, or  * when an error occurs on the socket.  *  * Requires:  *  *	"tcpmsg" be valid.  *  *	"task", "taskaction", and "arg" be valid.  *  * Returns:  *  *	ISC_R_SUCCESS		-- no error  *	Anything that the isc_socket_recv() call can return.  XXXMLG  *  * Notes:  *  *	The event delivered is a fully generic event.  It will contain no  *	actual data.  The sender will be a pointer to the dns_tcpmsg_t.  *	The result code inside that structure should be checked to see  *	what the final result was.  */
+comment|/*%<  * Schedule an event to be delivered when a DNS message is readable, or  * when an error occurs on the socket.  *  * Requires:  *  *\li	"tcpmsg" be valid.  *  *\li	"task", "taskaction", and "arg" be valid.  *  * Returns:  *  *\li	ISC_R_SUCCESS		-- no error  *\li	Anything that the isc_socket_recv() call can return.  XXXMLG  *  * Notes:  *  *\li	The event delivered is a fully generic event.  It will contain no  *	actual data.  The sender will be a pointer to the dns_tcpmsg_t.  *	The result code inside that structure should be checked to see  *	what the final result was.  */
 end_comment
 
 begin_function_decl
@@ -173,7 +177,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Cancel a readmessage() call.  The event will still be posted with a  * CANCELED result code.  *  * Requires:  *  *	"tcpmsg" be valid.  */
+comment|/*%<  * Cancel a readmessage() call.  The event will still be posted with a  * CANCELED result code.  *  * Requires:  *  *\li	"tcpmsg" be valid.  */
 end_comment
 
 begin_function_decl
@@ -192,7 +196,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * If a dns buffer is to be kept between calls, this function marks the  * internal state-machine buffer as invalid, and copies all the contents  * of the state into "buffer".  *  * Requires:  *  *	"tcpmsg" be valid.  *  *	"buffer" be non-NULL.  */
+comment|/*%<  * If a dns buffer is to be kept between calls, this function marks the  * internal state-machine buffer as invalid, and copies all the contents  * of the state into "buffer".  *  * Requires:  *  *\li	"tcpmsg" be valid.  *  *\li	"buffer" be non-NULL.  */
 end_comment
 
 begin_function_decl
@@ -207,7 +211,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Clean up all allocated state, and invalidate the structure.  *  * Requires:  *  *	"tcpmsg" be valid.  *  * Ensures:  *  *	"tcpmsg" is invalidated and disassociated with all memory contexts,  *	sockets, etc.  */
+comment|/*%<  * Clean up all allocated state, and invalidate the structure.  *  * Requires:  *  *\li	"tcpmsg" be valid.  *  * Ensures:  *  *\li	"tcpmsg" is invalidated and disassociated with all memory contexts,  *	sockets, etc.  */
 end_comment
 
 begin_macro

@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: hmacmd5.c,v 1.5.12.5 2006/02/26 23:49:48 marka Exp $ */
+comment|/* $Id: hmacmd5.c,v 1.7.18.5 2006/02/26 22:30:56 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * This code implements the HMAC-MD5 keyed hash algorithm  * described in RFC 2104.  */
+comment|/*! \file  * This code implements the HMAC-MD5 keyed hash algorithm  * described in RFC2104.  */
 end_comment
 
 begin_include
@@ -75,7 +75,7 @@ value|0x5C
 end_define
 
 begin_comment
-comment|/*  * Start HMAC-MD5 process.  Initialize an md5 context and digest the key.  */
+comment|/*!  * Start HMAC-MD5 process.  Initialize an md5 context and digest the key.  */
 end_comment
 
 begin_function
@@ -277,7 +277,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update context to reflect the concatenation of another buffer full  * of bytes.  */
+comment|/*!  * Update context to reflect the concatenation of another buffer full  * of bytes.  */
 end_comment
 
 begin_function
@@ -315,7 +315,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compute signature - finalize MD5 operation and reapply MD5.  */
+comment|/*!  * Compute signature - finalize MD5 operation and reapply MD5.  */
 end_comment
 
 begin_function
@@ -443,7 +443,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Verify signature - finalize MD5 operation and reapply MD5, then  * compare to the supplied digest.  */
+comment|/*!  * Verify signature - finalize MD5 operation and reapply MD5, then  * compare to the supplied digest.  */
 end_comment
 
 begin_function
@@ -460,6 +460,38 @@ modifier|*
 name|digest
 parameter_list|)
 block|{
+return|return
+operator|(
+name|isc_hmacmd5_verify2
+argument_list|(
+name|ctx
+argument_list|,
+name|digest
+argument_list|,
+name|ISC_MD5_DIGESTLENGTH
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|isc_boolean_t
+name|isc_hmacmd5_verify2
+parameter_list|(
+name|isc_hmacmd5_t
+modifier|*
+name|ctx
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|digest
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+block|{
 name|unsigned
 name|char
 name|newdigest
@@ -467,6 +499,13 @@ index|[
 name|ISC_MD5_DIGESTLENGTH
 index|]
 decl_stmt|;
+name|REQUIRE
+argument_list|(
+name|len
+operator|<=
+name|ISC_MD5_DIGESTLENGTH
+argument_list|)
+expr_stmt|;
 name|isc_hmacmd5_sign
 argument_list|(
 name|ctx
@@ -484,7 +523,7 @@ name|digest
 argument_list|,
 name|newdigest
 argument_list|,
-name|ISC_MD5_DIGESTLENGTH
+name|len
 argument_list|)
 operator|==
 literal|0

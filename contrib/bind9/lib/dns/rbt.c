@@ -4,7 +4,11 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: rbt.c,v 1.115.2.2.2.13 2005/06/18 01:03:24 marka Exp $ */
+comment|/* $Id: rbt.c,v 1.128.18.7 2005/10/13 01:26:06 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_comment
@@ -38,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/refcount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isc/string.h>
 end_include
 
@@ -48,7 +58,7 @@ file|<isc/util.h>
 end_include
 
 begin_comment
-comment|/*  * This define is so dns/name.h (included by dns/fixedname.h) uses more  * efficient macro calls instead of functions for a few operations.  */
+comment|/*%  * This define is so dns/name.h (included by dns/fixedname.h) uses more  * efficient macro calls instead of functions for a few operations.  */
 end_comment
 
 begin_define
@@ -141,7 +151,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* To give the reallocation code a workout. */
+comment|/*%< To give the reallocation code a workout. */
 end_comment
 
 begin_endif
@@ -214,7 +224,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Elements of the rbtnode structure.  */
+comment|/*%  * Elements of the rbtnode structure.  */
 end_comment
 
 begin_define
@@ -358,7 +368,7 @@ value|ISC_TF((node)->find_callback == 1)
 end_define
 
 begin_comment
-comment|/*  * Structure elements from the rbtdb.c, not  * used as part of the rbt.c algorithms.  */
+comment|/*%  * Structure elements from the rbtdb.c, not  * used as part of the rbt.c algorithms.  */
 end_comment
 
 begin_define
@@ -391,18 +401,8 @@ parameter_list|)
 value|((node)->locknum)
 end_define
 
-begin_define
-define|#
-directive|define
-name|REFS
-parameter_list|(
-name|node
-parameter_list|)
-value|((node)->references)
-end_define
-
 begin_comment
-comment|/*  * The variable length stuff stored after the node.  */
+comment|/*%  * The variable length stuff stored after the node.  */
 end_comment
 
 begin_define
@@ -436,7 +436,7 @@ value|(sizeof(*node) + \ 			 NAMELEN(node) + OFFSETLEN(node) + PADBYTES(node))
 end_define
 
 begin_comment
-comment|/*  * Color management.  */
+comment|/*%  * Color management.  */
 end_comment
 
 begin_define
@@ -480,7 +480,7 @@ value|((node)->color = BLACK)
 end_define
 
 begin_comment
-comment|/*  * Chain management.  *  * The "ancestors" member of chains were removed, with their job now  * being wholy handled by parent pointers (which didn't exist, because  * of memory concerns, when chains were first implemented).  */
+comment|/*%  * Chain management.  *  * The "ancestors" member of chains were removed, with their job now  * being wholy handled by parent pointers (which didn't exist, because  * of memory concerns, when chains were first implemented).  */
 end_comment
 
 begin_define
@@ -497,7 +497,7 @@ value|(chain)->levels[(chain)->level_count++] = (node)
 end_define
 
 begin_comment
-comment|/*  * The following macros directly access normally private name variables.  * These macros are used to avoid a lot of function calls in the critical  * path of the tree traversal code.  */
+comment|/*%  * The following macros directly access normally private name variables.  * These macros are used to avoid a lot of function calls in the critical  * path of the tree traversal code.  */
 end_comment
 
 begin_define
@@ -4296,6 +4296,11 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+name|dns_rbtnode_refdestroy
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 name|isc_mem_put
 argument_list|(
 name|rbt
@@ -4758,13 +4763,6 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-name|REFS
-argument_list|(
-name|node
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
 name|WILD
 argument_list|(
 name|node
@@ -4778,6 +4776,13 @@ name|node
 argument_list|)
 operator|=
 literal|0
+expr_stmt|;
+name|dns_rbtnode_refinit
+argument_list|(
+name|node
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|node
 operator|->

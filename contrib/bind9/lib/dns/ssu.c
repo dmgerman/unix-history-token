@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * $Id: ssu.c,v 1.22.206.3 2004/03/08 09:04:32 marka Exp $  * Principal Author: Brian Wellington  */
+comment|/*! \file */
+end_comment
+
+begin_comment
+comment|/*  * $Id: ssu.c,v 1.24.18.4 2006/02/16 23:51:32 marka Exp $  * Principal Author: Brian Wellington  */
 end_comment
 
 begin_include
@@ -28,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/result.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isc/string.h>
 end_include
 
@@ -39,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<isc/util.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/fixedname.h>
 end_include
 
 begin_include
@@ -98,33 +114,33 @@ decl_stmt|;
 name|isc_boolean_t
 name|grant
 decl_stmt|;
-comment|/* is this a grant or a deny? */
+comment|/*%< is this a grant or a deny? */
 name|unsigned
 name|int
 name|matchtype
 decl_stmt|;
-comment|/* which type of pattern match? */
+comment|/*%< which type of pattern match? */
 name|dns_name_t
 modifier|*
 name|identity
 decl_stmt|;
-comment|/* the identity to match */
+comment|/*%< the identity to match */
 name|dns_name_t
 modifier|*
 name|name
 decl_stmt|;
-comment|/* the name being updated */
+comment|/*%< the name being updated */
 name|unsigned
 name|int
 name|ntypes
 decl_stmt|;
-comment|/* number of data types covered */
+comment|/*%< number of data types covered */
 name|dns_rdatatype_t
 modifier|*
 name|types
 decl_stmt|;
-comment|/* the data types.  Can include ANY, */
-comment|/* defaults to all but SIG,SOA,NS if NULL*/
+comment|/*%< the data types.  Can include ANY, */
+comment|/*%< defaults to all but SIG,SOA,NS if NULL */
 name|ISC_LINK
 argument_list|(
 argument|dns_ssurule_t
@@ -748,7 +764,7 @@ name|REQUIRE
 argument_list|(
 name|matchtype
 operator|<=
-name|DNS_SSUMATCHTYPE_SELF
+name|DNS_SSUMATCHTYPE_MAX
 argument_list|)
 expr_stmt|;
 if|if
@@ -1242,6 +1258,16 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|dns_fixedname_t
+name|fixed
+decl_stmt|;
+name|dns_name_t
+modifier|*
+name|wildcard
+decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_SSUTABLE
@@ -1348,8 +1374,7 @@ argument_list|)
 condition|)
 continue|continue;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 operator|!
@@ -1363,7 +1388,6 @@ name|identity
 argument_list|)
 condition|)
 continue|continue;
-block|}
 if|if
 condition|(
 name|rule
@@ -1453,6 +1477,84 @@ argument_list|(
 name|signer
 argument_list|,
 name|name
+argument_list|)
+condition|)
+continue|continue;
+block|}
+elseif|else
+if|if
+condition|(
+name|rule
+operator|->
+name|matchtype
+operator|==
+name|DNS_SSUMATCHTYPE_SELFSUB
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|dns_name_issubdomain
+argument_list|(
+name|name
+argument_list|,
+name|signer
+argument_list|)
+condition|)
+continue|continue;
+block|}
+elseif|else
+if|if
+condition|(
+name|rule
+operator|->
+name|matchtype
+operator|==
+name|DNS_SSUMATCHTYPE_SELFWILD
+condition|)
+block|{
+name|dns_fixedname_init
+argument_list|(
+operator|&
+name|fixed
+argument_list|)
+expr_stmt|;
+name|wildcard
+operator|=
+name|dns_fixedname_name
+argument_list|(
+operator|&
+name|fixed
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|dns_name_concatenate
+argument_list|(
+name|dns_wildcardname
+argument_list|,
+name|signer
+argument_list|,
+name|wildcard
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|!
+name|dns_name_matcheswildcard
+argument_list|(
+name|name
+argument_list|,
+name|wildcard
 argument_list|)
 condition|)
 continue|continue;

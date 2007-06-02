@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lcl_sv.c,v 1.2.206.1 2004/03/09 08:33:38 marka Exp $"
+literal|"$Id: lcl_sv.c,v 1.3.18.1 2005/04/27 05:01:03 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2248,7 +2248,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* should be, but we depend on it */
+comment|/*%< should be, but we depend on it */
 if|if
 condition|(
 operator|(
@@ -2641,6 +2641,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

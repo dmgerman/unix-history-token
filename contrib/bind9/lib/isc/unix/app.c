@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: app.c,v 1.43.2.3.8.5 2004/03/08 02:08:05 marka Exp $ */
+comment|/* $Id: app.c,v 1.50.18.2 2005/04/29 00:17:06 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -218,7 +222,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * We assume that 'want_shutdown' can be read and written atomically.  */
+comment|/*!  * We assume that 'want_shutdown' can be read and written atomically.  */
 end_comment
 
 begin_decl_stmt
@@ -281,7 +285,7 @@ name|HAVE_LINUXTHREADS
 end_ifdef
 
 begin_comment
-comment|/*  * Linux has sigwait(), but it appears to prevent signal handlers from  * running, even if they're not in the set being waited for.  This makes  * it impossible to get the default actions for SIGILL, SIGSEGV, etc.  * Instead of messing with it, we just use sigsuspend() instead.  */
+comment|/*!  * Linux has sigwait(), but it appears to prevent signal handlers from  * running, even if they're not in the set being waited for.  This makes  * it impossible to get the default actions for SIGILL, SIGSEGV, etc.  * Instead of messing with it, we just use sigsuspend() instead.  */
 end_comment
 
 begin_undef
@@ -291,7 +295,7 @@ name|HAVE_SIGWAIT
 end_undef
 
 begin_comment
-comment|/*  * We need to remember which thread is the main thread...  */
+comment|/*!  * We need to remember which thread is the main thread...  */
 end_comment
 
 begin_decl_stmt
@@ -1104,7 +1108,7 @@ name|ISC_PLATFORM_USETHREADS
 end_ifndef
 
 begin_comment
-comment|/*  * Event loop for nonthreaded programs.  */
+comment|/*!  * Event loop for nonthreaded programs.  */
 end_comment
 
 begin_function
@@ -1358,7 +1362,7 @@ comment|/*  * This is a gross hack to support waiting for condition  * variables
 end_comment
 
 begin_comment
-comment|/*  * True iff we are currently executing in the recursive  * event loop.  */
+comment|/*!  * \brief True if we are currently executing in the recursive  * event loop.  */
 end_comment
 
 begin_decl_stmt
@@ -1371,7 +1375,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * True iff we are exiting the event loop as the result of  * a call to isc_condition_signal() rather than a shutdown  * or reload.  */
+comment|/*!  * \brief True if we are exiting the event loop as the result of  * a call to isc_condition_signal() rather than a shutdown  * or reload.  */
 end_comment
 
 begin_decl_stmt

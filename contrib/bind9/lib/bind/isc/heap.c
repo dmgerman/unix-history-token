@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * Heap implementation of priority queues adapted from the following:  *  *	_Introduction to Algorithms_, Cormen, Leiserson, and Rivest,  *	MIT Press / McGraw Hill, 1990, ISBN 0-262-03141-8, chapter 7.  *  *	_Algorithms_, Second Edition, Sedgewick, Addison-Wesley, 1988,  *	ISBN 0-201-06673-4, chapter 11.  */
+comment|/*%  * Heap implementation of priority queues adapted from the following:  *  *	_Introduction to Algorithms_, Cormen, Leiserson, and Rivest,  *	MIT Press / McGraw Hill, 1990, ISBN 0-262-03141-8, chapter 7.  *  *	_Algorithms_, Second Edition, Sedgewick, Addison-Wesley, 1988,  *	ISBN 0-201-06673-4, chapter 11.  */
 end_comment
 
 begin_if
@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: heap.c,v 1.1.206.2 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: heap.c,v 1.2.18.2 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,7 @@ file|<isc/heap.h>
 end_include
 
 begin_comment
-comment|/*  * Note: to make heap_parent and heap_left easy to compute, the first  * element of the heap array is not used; i.e. heap subscripts are 1-based,  * not 0-based.  */
+comment|/*%  * Note: to make heap_parent and heap_left easy to compute, the first  * element of the heap array is not used; i.e. heap subscripts are 1-based,  * not 0-based.  */
 end_comment
 
 begin_define
@@ -1141,6 +1141,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

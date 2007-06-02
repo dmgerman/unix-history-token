@@ -4,11 +4,11 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * This file is primarily maintained by<tytso@mit.edu> and<ghudson@mit.edu>.  */
+comment|/*! \file   * \brief  * This file is primarily maintained by<tytso@mit.edu> and<ghudson@mit.edu>.  */
 end_comment
 
 begin_comment
-comment|/*  * $Id: hesiod.h,v 1.1.2.1.4.1 2004/03/09 08:33:29 marka Exp $  */
+comment|/*  * $Id: hesiod.h,v 1.3.18.1 2005/04/27 05:00:49 sra Exp $  */
 end_comment
 
 begin_ifndef

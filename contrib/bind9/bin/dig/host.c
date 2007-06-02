@@ -4,7 +4,11 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: host.c,v 1.76.2.5.2.16 2006/05/23 04:43:47 marka Exp $ */
+comment|/* $Id: host.c,v 1.94.18.14 2006/05/23 04:40:42 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -404,8 +408,8 @@ block|{
 name|fputs
 argument_list|(
 literal|"Usage: host [-aCdlriTwv] [-c class] [-N ndots] [-t type] [-W time]\n"
-literal|"            [-R number] hostname [server]\n"
-literal|"       -a is equivalent to -v -t *\n"
+literal|"            [-R number] [-m flag] hostname [server]\n"
+literal|"       -a is equivalent to -v -t ANY\n"
 literal|"       -c specifies query class for non-IN data\n"
 literal|"       -C compares SOA records on authoritative nameservers\n"
 literal|"       -d is equivalent to -v\n"
@@ -414,6 +418,7 @@ literal|"       -i IP6.INT reverse lookups\n"
 literal|"       -N changes the number of dots allowed before root lookup is done\n"
 literal|"       -r disables recursive processing\n"
 literal|"       -R specifies number of retries for UDP packets\n"
+literal|"       -s a SERVFAIL response should stop query\n"
 literal|"       -t specifies the query type\n"
 literal|"       -T enables TCP/IP mode\n"
 literal|"       -v enables verbose output\n"
@@ -421,6 +426,7 @@ literal|"       -w specifies to wait forever for a reply\n"
 literal|"       -W specifies how long to wait for a reply\n"
 literal|"       -4 use IPv4 query transport only\n"
 literal|"       -6 use IPv6 query transport only\n"
+literal|"       -m set memory debugging flag (trace|record|usage)\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -2771,6 +2777,203 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|optstring
+init|=
+literal|"46ac:dilnm:rst:vwCDN:R:TW:"
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|pre_parse_args
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+block|{
+name|int
+name|c
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+name|isc_commandline_parse
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|optstring
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+switch|switch
+condition|(
+name|c
+condition|)
+block|{
+case|case
+literal|'m'
+case|:
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+literal|"trace"
+argument_list|,
+name|isc_commandline_argument
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|isc_mem_debugging
+operator||=
+name|ISC_MEM_DEBUGTRACE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+literal|"record"
+argument_list|,
+name|isc_commandline_argument
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|isc_mem_debugging
+operator||=
+name|ISC_MEM_DEBUGRECORD
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+literal|"usage"
+argument_list|,
+name|isc_commandline_argument
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|isc_mem_debugging
+operator||=
+name|ISC_MEM_DEBUGUSAGE
+expr_stmt|;
+break|break;
+case|case
+literal|'4'
+case|:
+break|break;
+case|case
+literal|'6'
+case|:
+break|break;
+case|case
+literal|'a'
+case|:
+break|break;
+case|case
+literal|'c'
+case|:
+break|break;
+case|case
+literal|'d'
+case|:
+break|break;
+case|case
+literal|'i'
+case|:
+break|break;
+case|case
+literal|'l'
+case|:
+break|break;
+case|case
+literal|'n'
+case|:
+break|break;
+case|case
+literal|'r'
+case|:
+break|break;
+case|case
+literal|'s'
+case|:
+break|break;
+case|case
+literal|'t'
+case|:
+break|break;
+case|case
+literal|'v'
+case|:
+break|break;
+case|case
+literal|'w'
+case|:
+break|break;
+case|case
+literal|'C'
+case|:
+break|break;
+case|case
+literal|'D'
+case|:
+break|break;
+case|case
+literal|'N'
+case|:
+break|break;
+case|case
+literal|'R'
+case|:
+break|break;
+case|case
+literal|'T'
+case|:
+break|break;
+case|case
+literal|'W'
+case|:
+break|break;
+default|default:
+name|show_usage
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+name|isc_commandline_reset
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+name|isc_commandline_index
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -2836,6 +3039,18 @@ operator|=
 name|make_empty_lookup
 argument_list|()
 expr_stmt|;
+name|lookup
+operator|->
+name|servfail_stops
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+name|lookup
+operator|->
+name|comments
+operator|=
+name|ISC_FALSE
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2847,11 +3062,12 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lvwrdt:c:aTCN:R:W:Dni46"
+name|optstring
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -3212,6 +3428,11 @@ case|:
 comment|/* deprecated */
 break|break;
 case|case
+literal|'m'
+case|:
+comment|/* Handled by pre_parse_args(). */
+break|break;
+case|case
 literal|'w'
 case|:
 comment|/* 			 * The timer routines are coded such that 			 * timeout==MAXINT doesn't enable the timer 			 */
@@ -3401,6 +3622,16 @@ literal|"can't find IPv6 networking"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'s'
+case|:
+name|lookup
+operator|->
+name|servfail_stops
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+break|break;
 block|}
 block|}
 name|lookup
@@ -3481,6 +3712,11 @@ operator|=
 name|ISC_TRUE
 expr_stmt|;
 block|}
+else|else
+name|check_ra
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 name|lookup
 operator|->
 name|pending
@@ -3666,6 +3902,13 @@ name|argv
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|pre_parse_args
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
 expr_stmt|;
 name|result
 operator|=

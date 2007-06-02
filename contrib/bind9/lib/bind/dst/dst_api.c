@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/dst_api.c,v 1.4.2.6.8.4 2006/03/10 00:17:21 marka Exp $"
+literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/dst_api.c,v 1.10.332.5 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -288,7 +288,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *  dst_init  *	This function initializes the Digital Signature Toolkit.  *	Right now, it just checks the DSTKEYPATH environment variable.  *  Parameters  *	none  *  Returns  *	none  */
+comment|/*%  *  dst_init  *	This function initializes the Digital Signature Toolkit.  *	Right now, it just checks the DSTKEYPATH environment variable.  *  Parameters  *	none  *  Returns  *	none  */
 end_comment
 
 begin_function
@@ -486,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  dst_check_algorithm  *	This function determines if the crypto system for the specified  *	algorithm is present.  *  Parameters  *	alg     1       KEY_RSA  *		3       KEY_DSA  *	      157     KEY_HMAC_MD5  *		      future algorithms TBD and registered with IANA.  *  Returns  *	1 - The algorithm is available.  *	0 - The algorithm is not available.  */
+comment|/*%  *  dst_check_algorithm  *	This function determines if the crypto system for the specified  *	algorithm is present.  *  Parameters  *	alg     1       KEY_RSA  *		3       KEY_DSA  *	      157     KEY_HMAC_MD5  *		      future algorithms TBD and registered with IANA.  *  Returns  *	1 - The algorithm is available.  *	0 - The algorithm is not available.  */
 end_comment
 
 begin_function
@@ -512,7 +512,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * dst_s_get_key_struct   *	This function allocates key structure and fills in some of the   *	fields of the structure.   * Parameters:   *	name:     the name of the key   *	alg:      the algorithm number   *	flags:    the dns flags of the key  *	protocol: the dns protocol of the key  *	bits:     the size of the key  * Returns:  *       NULL if error  *       valid pointer otherwise  */
+comment|/*%  * dst_s_get_key_struct   *	This function allocates key structure and fills in some of the   *	fields of the structure.   * Parameters:   *	name:     the name of the key   *	alg:      the algorithm number   *	flags:    the dns flags of the key  *	protocol: the dns protocol of the key  *	bits:     the size of the key  * Returns:  *       NULL if error  *       valid pointer otherwise  */
 end_comment
 
 begin_function
@@ -556,7 +556,7 @@ argument_list|(
 name|alg
 argument_list|)
 condition|)
-comment|/* make sure alg is available */
+comment|/*%< make sure alg is available */
 name|new_key
 operator|=
 operator|(
@@ -673,7 +673,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  dst_compare_keys  *	Compares two keys for equality.  *  Parameters  *	key1, key2      Two keys to be compared.  *  Returns  *	0	       The keys are equal.  *	non-zero	The keys are not equal.  */
+comment|/*%  *  dst_compare_keys  *	Compares two keys for equality.  *  Parameters  *	key1, key2      Two keys to be compared.  *  Returns  *	0	       The keys are equal.  *	non-zero	The keys are not equal.  */
 end_comment
 
 begin_function
@@ -780,7 +780,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dst_sign_data  *	An incremental signing function.  Data is signed in steps.  *	First the context must be initialized (SIG_MODE_INIT).  *	Then data is hashed (SIG_MODE_UPDATE).  Finally the signature  *	itself is created (SIG_MODE_FINAL).  This function can be called  *	once with INIT, UPDATE and FINAL modes all set, or it can be  *	called separately with a different mode set for each step.  The  *	UPDATE step can be repeated.  * Parameters  *	mode    A bit mask used to specify operation(s) to be performed.  *		  SIG_MODE_INIT	   1   Initialize digest  *		  SIG_MODE_UPDATE	 2   Add data to digest  *		  SIG_MODE_FINAL	  4   Generate signature  *					      from signature  *		  SIG_MODE_ALL (SIG_MODE_INIT,SIG_MODE_UPDATE,SIG_MODE_FINAL  *	data    Data to be signed.  *	len     The length in bytes of data to be signed.  *	in_key  Contains a private key to sign with.  *		  KEY structures should be handled (created, converted,  *		  compared, stored, freed) by the DST.  *	signature  *	      The location to which the signature will be written.  *	sig_len Length of the signature field in bytes.  * Return  *	 0      Successfull INIT or Update operation  *>0      success FINAL (sign) operation  *<0      failure  */
+comment|/*%  * dst_sign_data  *	An incremental signing function.  Data is signed in steps.  *	First the context must be initialized (SIG_MODE_INIT).  *	Then data is hashed (SIG_MODE_UPDATE).  Finally the signature  *	itself is created (SIG_MODE_FINAL).  This function can be called  *	once with INIT, UPDATE and FINAL modes all set, or it can be  *	called separately with a different mode set for each step.  The  *	UPDATE step can be repeated.  * Parameters  *	mode    A bit mask used to specify operation(s) to be performed.  *		  SIG_MODE_INIT	   1   Initialize digest  *		  SIG_MODE_UPDATE	 2   Add data to digest  *		  SIG_MODE_FINAL	  4   Generate signature  *					      from signature  *		  SIG_MODE_ALL (SIG_MODE_INIT,SIG_MODE_UPDATE,SIG_MODE_FINAL  *	data    Data to be signed.  *	len     The length in bytes of data to be signed.  *	in_key  Contains a private key to sign with.  *		  KEY structures should be handled (created, converted,  *		  compared, stored, freed) by the DST.  *	signature  *	      The location to which the signature will be written.  *	sig_len Length of the signature field in bytes.  * Return  *	 0      Successfull INIT or Update operation  *&gt;0      success FINAL (sign) operation  *&lt;0      failure  */
 end_comment
 
 begin_function
@@ -897,7 +897,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  dst_verify_data  *	An incremental verify function.  Data is verified in steps.  *	First the context must be initialized (SIG_MODE_INIT).  *	Then data is hashed (SIG_MODE_UPDATE).  Finally the signature  *	is verified (SIG_MODE_FINAL).  This function can be called  *	once with INIT, UPDATE and FINAL modes all set, or it can be  *	called separately with a different mode set for each step.  The  *	UPDATE step can be repeated.  *  Parameters  *	mode	Operations to perform this time.  *		      SIG_MODE_INIT       1   Initialize digest  *		      SIG_MODE_UPDATE     2   add data to digest  *		      SIG_MODE_FINAL      4   verify signature  *		      SIG_MODE_ALL  *			  (SIG_MODE_INIT,SIG_MODE_UPDATE,SIG_MODE_FINAL)  *	data	Data to pass through the hash function.  *	len	 Length of the data in bytes.  *	in_key      Key for verification.  *	signature   Location of signature.  *	sig_len     Length of the signature in bytes.  *  Returns  *	0	   Verify success  *	Non-Zero    Verify Failure  */
+comment|/*%  *  dst_verify_data  *	An incremental verify function.  Data is verified in steps.  *	First the context must be initialized (SIG_MODE_INIT).  *	Then data is hashed (SIG_MODE_UPDATE).  Finally the signature  *	is verified (SIG_MODE_FINAL).  This function can be called  *	once with INIT, UPDATE and FINAL modes all set, or it can be  *	called separately with a different mode set for each step.  The  *	UPDATE step can be repeated.  *  Parameters  *	mode	Operations to perform this time.  *		      SIG_MODE_INIT       1   Initialize digest  *		      SIG_MODE_UPDATE     2   add data to digest  *		      SIG_MODE_FINAL      4   verify signature  *		      SIG_MODE_ALL  *			  (SIG_MODE_INIT,SIG_MODE_UPDATE,SIG_MODE_FINAL)  *	data	Data to pass through the hash function.  *	len	 Length of the data in bytes.  *	in_key      Key for verification.  *	signature   Location of signature.  *	sig_len     Length of the signature in bytes.  *  Returns  *	0	   Verify success  *	Non-Zero    Verify Failure  */
 end_comment
 
 begin_function
@@ -1019,7 +1019,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  dst_read_private_key  *	Access a private key.  First the list of private keys that have  *	already been read in is searched, then the key accessed on disk.  *	If the private key can be found, it is returned.  If the key cannot  *	be found, a null pointer is returned.  The options specify required  *	key characteristics.  If the private key requested does not have  *	these characteristics, it will not be read.  *  Parameters  *	in_keyname  The private key name.  *	in_id	    The id of the private key.  *	options     DST_FORCE_READ  Read from disk - don't use a previously  *				      read key.  *		  DST_CAN_SIGN    The key must be useable for signing.  *		  DST_NO_AUTHEN   The key must be useable for authentication.  *		  DST_STANDARD    Return any key   *  Returns  *	NULL	If there is no key found in the current directory or  *		      this key has not been loaded before.  *	!NULL       Success - KEY structure returned.  */
+comment|/*%  *  dst_read_private_key  *	Access a private key.  First the list of private keys that have  *	already been read in is searched, then the key accessed on disk.  *	If the private key can be found, it is returned.  If the key cannot  *	be found, a null pointer is returned.  The options specify required  *	key characteristics.  If the private key requested does not have  *	these characteristics, it will not be read.  *  Parameters  *	in_keyname  The private key name.  *	in_id	    The id of the private key.  *	options     DST_FORCE_READ  Read from disk - don't use a previously  *				      read key.  *		  DST_CAN_SIGN    The key must be useable for signing.  *		  DST_NO_AUTHEN   The key must be useable for authentication.  *		  DST_STANDARD    Return any key   *  Returns  *	NULL	If there is no key found in the current directory or  *		      this key has not been loaded before.  *	!NULL       Success - KEY structure returned.  */
 end_comment
 
 begin_function
@@ -1071,7 +1071,7 @@ name|in_alg
 argument_list|)
 condition|)
 block|{
-comment|/* make sure alg is available */
+comment|/*%< make sure alg is available */
 name|EREPORT
 argument_list|(
 operator|(
@@ -1311,7 +1311,7 @@ name|dk_alg
 argument_list|)
 condition|)
 block|{
-comment|/* make sure alg is available */
+comment|/*%< make sure alg is available */
 name|EREPORT
 argument_list|(
 operator|(
@@ -1407,7 +1407,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  dst_write_private_key  *	Write a private key to disk.  The filename will be of the form:  *	K<key->dk_name>+<key->dk_alg>+<key->dk_id>.<private key suffix>.  *	If there is already a file with this name, an error is returned.  *  *  Parameters  *	key     A DST managed key structure that contains  *	      all information needed about a key.  *  Return  *>= 0    Correct behavior.  Returns length of encoded key value  *		  written to disk.  *<  0    error.  */
+comment|/*%  *  dst_write_private_key  *	Write a private key to disk.  The filename will be of the form:  *	K&lt;key-&gt;dk_name&gt;+&lt;key-&gt;dk_alg+&gt;&lt;key-d&gt;k_id.&gt;&lt;private key suffix&gt;.  *	If there is already a file with this name, an error is returned.  *  *  Parameters  *	key     A DST managed key structure that contains  *	      all information needed about a key.  *  Return  *&gt;= 0    Correct behavior.  Returns length of encoded key value  *		  written to disk.  *&lt;  0    error.  */
 end_comment
 
 begin_function
@@ -1466,7 +1466,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* null key has no private key */
+comment|/*%< null key has no private key */
 if|if
 condition|(
 name|key
@@ -1676,7 +1676,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* *  *  dst_read_public_key  *	Read a public key from disk and store in a DST key structure.  *  Parameters  *	in_name	 K<in_name><in_id>.<public key suffix> is the  *		      filename of the key file to be read.  *  Returns  *	NULL	    If the key does not exist or no name is supplied.  *	NON-NULL	Initialized key structure if the key exists.  */
+comment|/*% *  *  dst_read_public_key  *	Read a public key from disk and store in a DST key structure.  *  Parameters  *	in_name	 K&lt;in_name&gt;&lt;in_id&gt;.&lt;public key suffix&gt; is the  *		      filename of the key file to be read.  *  Returns  *	NULL	    If the key does not exist or no name is supplied.  *	NON-NULL	Initialized key structure if the key exists.  */
 end_comment
 
 begin_function
@@ -1796,7 +1796,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	 * Open the file and read it's formatted contents up to key 	 * File format: 	 *    domain.name [ttl] [IN] KEY<flags><protocol><algorithm><key> 	 * flags, proto, alg stored as decimal (or hex numbers FIXME). 	 * (FIXME: handle parentheses for line continuation.) 	 */
+comment|/* 	 * Open the file and read it's formatted contents up to key 	 * File format: 	 *    domain.name [ttl] [IN] KEY&lt;flags&gt;&lt;protocol&gt;&lt;algorithm&gt;&lt;key&gt; 	 * flags, proto, alg stored as decimal (or hex numbers FIXME). 	 * (FIXME: handle parentheses for line continuation.) 	 */
 if|if
 condition|(
 operator|(
@@ -2059,7 +2059,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* return the charcter to the input field */
+comment|/*%< return the charcter to the input field */
 comment|/* Handle hex!! FIXME.  */
 if|if
 condition|(
@@ -2272,7 +2272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  dst_write_public_key  *	Write a key to disk in DNS format.  *  Parameters  *	key     Pointer to a DST key structure.  *  Returns  *	0       Failure  *	1       Success  */
+comment|/*%  *  dst_write_public_key  *	Write a key to disk in DNS format.  *  Parameters  *	key     Pointer to a DST key structure.  *  Returns  *	0       Failure  *	1       Success  */
 end_comment
 
 begin_function
@@ -2565,7 +2565,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  dst_dnskey_to_public_key  *	This function converts the contents of a DNS KEY RR into a DST  *	key structure.  *  Paramters  *	len	 Length of the RDATA of the KEY RR RDATA  *	rdata	 A pointer to the the KEY RR RDATA.  *	in_name     Key name to be stored in key structure.  *  Returns  *	NULL	    Failure  *	NON-NULL	Success.  Pointer to key structure.  *			Caller's responsibility to free() it.  */
+comment|/*%  *  dst_dnskey_to_public_key  *	This function converts the contents of a DNS KEY RR into a DST  *	key structure.  *  Paramters  *	len	 Length of the RDATA of the KEY RR RDATA  *	rdata	 A pointer to the the KEY RR RDATA.  *	in_name     Key name to be stored in key structure.  *  Returns  *	NULL	    Failure  *	NON-NULL	Success.  Pointer to key structure.  *			Caller's responsibility to free() it.  */
 end_comment
 
 begin_function
@@ -2610,7 +2610,7 @@ name|len
 operator|<=
 name|DST_KEY_ALG
 condition|)
-comment|/* no data */
+comment|/*%< no data */
 return|return
 operator|(
 name|NULL
@@ -2635,7 +2635,7 @@ name|alg
 argument_list|)
 condition|)
 block|{
-comment|/* make sure alg is available */
+comment|/*%< make sure alg is available */
 name|EREPORT
 argument_list|(
 operator|(
@@ -2832,7 +2832,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  dst_public_key_to_dnskey  *	Function to encode a public key into DNS KEY wire format   *  Parameters  *	key	     Key structure to encode.  *	out_storage     Location to write the encoded key to.  *	out_len	 Size of the output array.  *  Returns  *<0      Failure  *>=0     Number of bytes written to out_storage  */
+comment|/*%  *  dst_public_key_to_dnskey  *	Function to encode a public key into DNS KEY wire format   *  Parameters  *	key	     Key structure to encode.  *	out_storage     Location to write the encoded key to.  *	out_len	 Size of the output array.  *  Returns  *<0      Failure  *>=0     Number of bytes written to out_storage  */
 end_comment
 
 begin_function
@@ -2889,7 +2889,7 @@ name|dk_alg
 argument_list|)
 condition|)
 block|{
-comment|/* make sure alg is available */
+comment|/*%< make sure alg is available */
 name|EREPORT
 argument_list|(
 operator|(
@@ -2975,7 +2975,7 @@ operator|>
 literal|0xffff
 condition|)
 block|{
-comment|/* Extended flags */
+comment|/*%< Extended flags */
 name|val
 operator|=
 call|(
@@ -3103,7 +3103,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  dst_buffer_to_key  *	Function to encode a string of raw data into a DST key  *  Parameters  *	alg		The algorithm (HMAC only)  *	key		A pointer to the data  *	keylen		The length of the data  *  Returns  *	NULL	    an error occurred  *	NON-NULL	the DST key  */
+comment|/*%  *  dst_buffer_to_key  *	Function to encode a string of raw data into a DST key  *  Parameters  *	alg		The algorithm (HMAC only)  *	key		A pointer to the data  *	keylen		The length of the data  *  Returns  *	NULL	    an error occurred  *	NON-NULL	the DST key  */
 end_comment
 
 begin_function
@@ -3116,33 +3116,33 @@ name|char
 modifier|*
 name|key_name
 parameter_list|,
-comment|/* name of the key */
+comment|/*!< name of the key  */
 specifier|const
 name|int
 name|alg
 parameter_list|,
-comment|/* algorithm */
+comment|/*!< algorithm  */
 specifier|const
 name|int
 name|flags
 parameter_list|,
-comment|/* dns flags */
+comment|/*!< dns flags  */
 specifier|const
 name|int
 name|protocol
 parameter_list|,
-comment|/* dns protocol */
+comment|/*!< dns protocol  */
 specifier|const
 name|u_char
 modifier|*
 name|key_buf
 parameter_list|,
-comment|/* key in dns wire fmt */
+comment|/*!< key in dns wire fmt  */
 specifier|const
 name|int
 name|key_len
 parameter_list|)
-comment|/* size of key */
+comment|/*!< size of key  */
 block|{
 name|DST_KEY
 modifier|*
@@ -3168,7 +3168,7 @@ name|alg
 argument_list|)
 condition|)
 block|{
-comment|/* make sure alg is available */
+comment|/*%< make sure alg is available */
 name|EREPORT
 argument_list|(
 operator|(
@@ -3384,7 +3384,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dst_s_read_private_key_file  *     Function reads in private key from a file.  *     Fills out the KEY structure.  * Parameters  *     name    Name of the key to be read.  *     pk_key  Structure that the key is returned in.  *     in_id   Key identifier (tag)  * Return  *     1 if everthing works  *     0 if there is any problem  */
+comment|/*%  * dst_s_read_private_key_file  *     Function reads in private key from a file.  *     Fills out the KEY structure.  * Parameters  *     name    Name of the key to be read.  *     pk_key  Structure that the key is returned in.  *     in_id   Key identifier (tag)  * Return  *     1 if everthing works  *     0 if there is any problem  */
 end_comment
 
 begin_function
@@ -3771,7 +3771,7 @@ operator|!=
 literal|'\n'
 condition|)
 empty_stmt|;
-comment|/* skip to end of line */
+comment|/*%< skip to end of line */
 if|if
 condition|(
 operator|!
@@ -3826,7 +3826,7 @@ operator|!=
 literal|'\n'
 condition|)
 empty_stmt|;
-comment|/* skip to end of line */
+comment|/*%< skip to end of line */
 if|if
 condition|(
 name|pk_key
@@ -4019,7 +4019,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  dst_generate_key  *	Generate and store a public/private keypair.  *	Keys will be stored in formatted files.  *  Parameters  *	name    Name of the new key.  Used to create key files  *		  K<name>+<alg>+<id>.public and K<name>+<alg>+<id>.private.  *	bits    Size of the new key in bits.  *	exp     What exponent to use:  *		  0	   use exponent 3  *		  non-zero    use Fermant4  *	flags   The default value of the DNS Key flags.  *		  The DNS Key RR Flag field is defined in RFC 2065,  *		  section 3.3.  The field has 16 bits.  *	protocol  *	      Default value of the DNS Key protocol field.  *		  The DNS Key protocol field is defined in RFC 2065,  *		  section 3.4.  The field has 8 bits.  *	alg     What algorithm to use.  Currently defined:  *		  KEY_RSA       1  *		  KEY_DSA       3  *		  KEY_HMAC    157  *	out_id The key tag is returned.  *  *  Return  *	NULL		Failure  *	non-NULL 	the generated key pair  *			Caller frees the result, and its dk_name pointer.  */
+comment|/*%  *	Generate and store a public/private keypair.  *	Keys will be stored in formatted files.  *  *  Parameters&  *\par	name    Name of the new key.  Used to create key files  *\li		  K&lt;name&gt;+&lt;alg&gt;+&lt;id&gt;.public and K&lt;name&gt;+&lt;alg&gt;+&lt;id&gt;.private.  *\par	bits    Size of the new key in bits.  *\par	exp     What exponent to use:  *\li		  0	   use exponent 3  *\li		  non-zero    use Fermant4  *\par	flags   The default value of the DNS Key flags.  *\li		  The DNS Key RR Flag field is defined in RFC2065,  *		  section 3.3.  The field has 16 bits.  *\par	protocol  *\li	      Default value of the DNS Key protocol field.  *\li		  The DNS Key protocol field is defined in RFC2065,  *		  section 3.4.  The field has 8 bits.  *\par	alg     What algorithm to use.  Currently defined:  *\li		  KEY_RSA       1  *\li		  KEY_DSA       3  *\li		  KEY_HMAC    157  *\par	out_id The key tag is returned.  *  *  Return  *\li	NULL		Failure  *\li	non-NULL 	the generated key pair  *			Caller frees the result, and its dk_name pointer.  */
 end_comment
 
 begin_function
@@ -4088,7 +4088,7 @@ name|alg
 argument_list|)
 condition|)
 block|{
-comment|/* make sure alg is available */
+comment|/*%< make sure alg is available */
 name|EREPORT
 argument_list|(
 operator|(
@@ -4136,7 +4136,7 @@ name|bits
 operator|==
 literal|0
 condition|)
-comment|/* null key we are done */
+comment|/*%< null key we are done */
 return|return
 operator|(
 name|new_key
@@ -4270,7 +4270,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  dst_free_key  *	Release all data structures pointed to by a key structure.  *  Parameters  *	f_key   Key structure to be freed.  */
+comment|/*%  *	Release all data structures pointed to by a key structure.  *  *  Parameters  *\li	f_key   Key structure to be freed.  */
 end_comment
 
 begin_function
@@ -4383,7 +4383,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dst_sig_size  *	Return the maximim size of signature from the key specified in bytes  * Parameters  *      key   * Returns  *     bytes  */
+comment|/*%  *	Return the maximim size of signature from the key specified in bytes  *  * Parameters  *\li      key   *  * Returns  *  \li   bytes  */
 end_comment
 
 begin_function
@@ -4459,6 +4459,10 @@ return|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

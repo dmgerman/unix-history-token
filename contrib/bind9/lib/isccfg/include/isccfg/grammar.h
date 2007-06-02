@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2002, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2002, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: grammar.h,v 1.3.50.6 2006/03/02 00:37:20 marka Exp $ */
+comment|/* $Id: grammar.h,v 1.4.18.8 2006/02/28 03:10:49 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|ISCCFG_GRAMMAR_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -61,7 +65,7 @@ comment|/*  * Definitions shared between the configuration parser  * and the gra
 end_comment
 
 begin_comment
-comment|/* Clause may occur multiple times (e.g., "zone") */
+comment|/*% Clause may occur multiple times (e.g., "zone") */
 end_comment
 
 begin_define
@@ -72,7 +76,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* Clause is obsolete */
+comment|/*% Clause is obsolete */
 end_comment
 
 begin_define
@@ -83,7 +87,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* Clause is not implemented, and may never be */
+comment|/*% Clause is not implemented, and may never be */
 end_comment
 
 begin_define
@@ -94,7 +98,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* Clause is not implemented yet */
+comment|/*% Clause is not implemented yet */
 end_comment
 
 begin_define
@@ -105,7 +109,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* Default value has changed since earlier release */
+comment|/*% Default value has changed since earlier release */
 end_comment
 
 begin_define
@@ -116,7 +120,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/*  * Clause needs to be interpreted during parsing  * by calling a callback function, like the  * "directory" option.  */
+comment|/*%  * Clause needs to be interpreted during parsing  * by calling a callback function, like the  * "directory" option.  */
 end_comment
 
 begin_define
@@ -261,7 +265,7 @@ comment|/*  * Structure definitions  */
 end_comment
 
 begin_comment
-comment|/*  * A configuration printer object.  This is an abstract  * interface to a destination to which text can be printed  * by calling the function 'f'.  */
+comment|/*%  * A configuration printer object.  This is an abstract  * interface to a destination to which text can be printed  * by calling the function 'f'.  */
 end_comment
 
 begin_struct
@@ -299,7 +303,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* A clause definition. */
+comment|/*% A clause definition. */
 end_comment
 
 begin_struct
@@ -324,7 +328,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* A tuple field definition. */
+comment|/*% A tuple field definition. */
 end_comment
 
 begin_struct
@@ -349,7 +353,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* A configuration object type definition. */
+comment|/*% A configuration object type definition. */
 end_comment
 
 begin_struct
@@ -361,7 +365,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* For debugging purposes only */
+comment|/*%< For debugging purposes only */
 name|cfg_parsefunc_t
 name|parse
 decl_stmt|;
@@ -371,24 +375,24 @@ decl_stmt|;
 name|cfg_docfunc_t
 name|doc
 decl_stmt|;
-comment|/* Print grammar description */
+comment|/*%< Print grammar description */
 name|cfg_rep_t
 modifier|*
 name|rep
 decl_stmt|;
-comment|/* Data representation */
+comment|/*%< Data representation */
 specifier|const
 name|void
 modifier|*
 name|of
 decl_stmt|;
-comment|/* Additional data for meta-types */
+comment|/*%< Additional data for meta-types */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* A keyword-type definition, for things like "port<integer>". */
+comment|/*% A keyword-type definition, for things like "port<integer>". */
 end_comment
 
 begin_typedef
@@ -418,7 +422,7 @@ name|cfg_obj_t
 modifier|*
 name|id
 decl_stmt|;
-comment|/* Used for 'named maps' like keys, zones,&c */
+comment|/*%< Used for 'named maps' like keys, zones,&c */
 specifier|const
 name|cfg_clausedef_t
 modifier|*
@@ -426,7 +430,7 @@ specifier|const
 modifier|*
 name|clausesets
 decl_stmt|;
-comment|/* The clauses that 						      can occur in this map; 						      used for printing */
+comment|/*%< The clauses that 						      can occur in this map; 						      used for printing */
 name|isc_symtab_t
 modifier|*
 name|symtab
@@ -460,7 +464,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * A configuration data representation.  */
+comment|/*%  * A configuration data representation.  */
 end_comment
 
 begin_struct
@@ -472,17 +476,17 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* For debugging only */
+comment|/*%< For debugging only */
 name|cfg_freefunc_t
 name|free
 decl_stmt|;
-comment|/* How to free this kind of data. */
+comment|/*%< How to free this kind of data. */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * A configuration object.  This is the main building block  * of the configuration parse tree.  */
+comment|/*%  * A configuration object.  This is the main building block  * of the configuration parse tree.  */
 end_comment
 
 begin_struct
@@ -505,7 +509,7 @@ decl_stmt|;
 name|isc_textregion_t
 name|string
 decl_stmt|;
-comment|/* null terminated, too */
+comment|/*%< null terminated, too */
 name|isc_boolean_t
 name|boolean
 decl_stmt|;
@@ -543,7 +547,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* A list element. */
+comment|/*% A list element. */
 end_comment
 
 begin_struct
@@ -565,7 +569,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* The parser object. */
+comment|/*% The parser object. */
 end_comment
 
 begin_struct
@@ -595,25 +599,25 @@ decl_stmt|;
 name|isc_token_t
 name|token
 decl_stmt|;
-comment|/* We are at the end of all input. */
+comment|/*% We are at the end of all input. */
 name|isc_boolean_t
 name|seen_eof
 decl_stmt|;
-comment|/* The current token has been pushed back. */
+comment|/*% The current token has been pushed back. */
 name|isc_boolean_t
 name|ungotten
 decl_stmt|;
-comment|/* 	 * The stack of currently active files, represented 	 * as a configuration list of configuration strings. 	 * The head is the top-level file, subsequent elements  	 * (if any) are the nested include files, and the  	 * last element is the file currently being parsed. 	 */
+comment|/*% 	 * The stack of currently active files, represented 	 * as a configuration list of configuration strings. 	 * The head is the top-level file, subsequent elements  	 * (if any) are the nested include files, and the  	 * last element is the file currently being parsed. 	 */
 name|cfg_obj_t
 modifier|*
 name|open_files
 decl_stmt|;
-comment|/* 	 * Names of files that we have parsed and closed 	 * and were previously on the open_file list. 	 * We keep these objects around after closing 	 * the files because the file names may still be 	 * referenced from other configuration objects 	 * for use in reporting semantic errors after 	 * parsing is complete. 	 */
+comment|/*% 	 * Names of files that we have parsed and closed 	 * and were previously on the open_file list. 	 * We keep these objects around after closing 	 * the files because the file names may still be 	 * referenced from other configuration objects 	 * for use in reporting semantic errors after 	 * parsing is complete. 	 */
 name|cfg_obj_t
 modifier|*
 name|closed_files
 decl_stmt|;
-comment|/* 	 * Current line number.  We maintain our own 	 * copy of this so that it is available even 	 * when a file has just been closed. 	 */
+comment|/*% 	 * Current line number.  We maintain our own 	 * copy of this so that it is available even 	 * when a file has just been closed. 	 */
 name|unsigned
 name|int
 name|line
@@ -630,7 +634,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Flags defining whether to accept certain types of network addresses.  */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*%  * Flags defining whether to accept certain types of network addresses.  */
 end_comment
 
 begin_define
@@ -661,8 +669,23 @@ name|CFG_ADDR_WILDOK
 value|0x00000008
 end_define
 
+begin_define
+define|#
+directive|define
+name|CFG_ADDR_MASK
+value|(CFG_ADDR_V6OK|CFG_ADDR_V4OK)
+end_define
+
 begin_comment
-comment|/*  * Predefined data representation types.  */
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*%  * Predefined data representation types.  */
 end_comment
 
 begin_decl_stmt
@@ -746,7 +769,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Predefined configuration object types.  */
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*%  * Predefined configuration object types.  */
 end_comment
 
 begin_decl_stmt
@@ -817,6 +848,38 @@ begin_decl_stmt
 name|LIBISCCFG_EXTERNAL_DATA
 specifier|extern
 name|cfg_type_t
+name|cfg_type_netaddr4
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LIBISCCFG_EXTERNAL_DATA
+specifier|extern
+name|cfg_type_t
+name|cfg_type_netaddr4wild
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LIBISCCFG_EXTERNAL_DATA
+specifier|extern
+name|cfg_type_t
+name|cfg_type_netaddr6
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LIBISCCFG_EXTERNAL_DATA
+specifier|extern
+name|cfg_type_t
+name|cfg_type_netaddr6wild
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LIBISCCFG_EXTERNAL_DATA
+specifier|extern
+name|cfg_type_t
 name|cfg_type_netprefix
 decl_stmt|;
 end_decl_stmt
@@ -844,6 +907,10 @@ name|cfg_type_t
 name|cfg_type_unsupported
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*@}*/
+end_comment
 
 begin_function_decl
 name|isc_result_t
@@ -1196,7 +1263,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Parse a required special character 'special'. */
+comment|/*%< Parse a required special character 'special'. */
 end_comment
 
 begin_function_decl
@@ -1462,7 +1529,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Print 'len' characters at 'text' */
+comment|/*%< Print 'len' characters at 'text' */
 end_comment
 
 begin_function_decl
@@ -1482,7 +1549,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Print the null-terminated string 's' */
+comment|/*%< Print the null-terminated string 's' */
 end_comment
 
 begin_function_decl
@@ -1530,6 +1597,27 @@ end_function_decl
 begin_function_decl
 name|isc_result_t
 name|cfg_parse_addressed_map
+parameter_list|(
+name|cfg_parser_t
+modifier|*
+name|pctx
+parameter_list|,
+specifier|const
+name|cfg_type_t
+modifier|*
+name|type
+parameter_list|,
+name|cfg_obj_t
+modifier|*
+modifier|*
+name|ret
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|cfg_parse_netprefix_map
 parameter_list|(
 name|cfg_parser_t
 modifier|*
@@ -1740,7 +1828,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Print a description of the grammar of an arbitrary configuration  * type 'type'  */
+comment|/*%<  * Print a description of the grammar of an arbitrary configuration  * type 'type'  */
 end_comment
 
 begin_function_decl
@@ -1760,7 +1848,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Document the type 'type' as a terminal by printing its  * name in angle brackets, e.g.,<uint32>.  */
+comment|/*%<  * Document the type 'type' as a terminal by printing its  * name in angle brackets, e.g.,&lt;uint32>.  */
 end_comment
 
 begin_function_decl
@@ -1795,7 +1883,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/*  * Pass one of these flags to cfg_parser_error() to include the  * token text in log message.  */
+comment|/*!   * Pass one of these flags to cfg_parser_error() to include the  * token text in log message.  */
 end_comment
 
 begin_define
@@ -1806,7 +1894,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* Say "near<token>" */
+comment|/*%< Say "near<token>" */
 end_comment
 
 begin_define
@@ -1817,7 +1905,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* Say "before<token>" */
+comment|/*%< Say "before<token>" */
 end_comment
 
 begin_define
@@ -1828,7 +1916,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* Say just "<token>" */
+comment|/*%< Say just "<token>" */
 end_comment
 
 begin_function_decl
@@ -1882,7 +1970,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Return true iff the string 's' is one of the strings in 'enums' */
+comment|/*%< Return true iff the string 's' is one of the strings in 'enums' */
 end_comment
 
 begin_endif

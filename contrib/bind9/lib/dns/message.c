@@ -4,7 +4,11 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: message.c,v 1.194.2.10.2.24 2006/02/28 06:32:54 marka Exp $ */
+comment|/* $Id: message.c,v 1.222.18.10 2006/03/02 23:19:20 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_comment
@@ -228,7 +232,7 @@ value|(((s)>= DNS_PSEUDOSECTION_ANY) \&& ((s)< DNS_PSEUDOSECTION_MAX))
 end_define
 
 begin_comment
-comment|/*  * This is the size of each individual scratchpad buffer, and the numbers  * of various block allocations used within the server.  * XXXMLG These should come from a config setting.  */
+comment|/*%  * This is the size of each individual scratchpad buffer, and the numbers  * of various block allocations used within the server.  * XXXMLG These should come from a config setting.  */
 end_comment
 
 begin_define
@@ -274,7 +278,7 @@ value|RDATALIST_COUNT
 end_define
 
 begin_comment
-comment|/*  * Text representation of the different items, for message_totext  * functions.  */
+comment|/*%  * Text representation of the different items, for message_totext  * functions.  */
 end_comment
 
 begin_decl_stmt
@@ -408,7 +412,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * "helper" type, which consists of a block of some type, and is linkable.  * For it to work, sizeof(dns_msgblock_t) must be a multiple of the pointer  * size, or the allocated elements will not be alligned correctly.  */
+comment|/*%  * "helper" type, which consists of a block of some type, and is linkable.  * For it to work, sizeof(dns_msgblock_t) must be a multiple of the pointer  * size, or the allocated elements will not be alligned correctly.  */
 end_comment
 
 begin_struct
@@ -5979,7 +5983,7 @@ name|ISC_FALSE
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * Minimize TTLs. 		 * 		 * Section 5.2 of RFC 2181 says we should drop 		 * nonauthoritative rrsets where the TTLs differ, but we 		 * currently treat them the as if they were authoritative and 		 * minimize them. 		 */
+comment|/* 		 * Minimize TTLs. 		 * 		 * Section 5.2 of RFC2181 says we should drop 		 * nonauthoritative rrsets where the TTLs differ, but we 		 * currently treat them the as if they were authoritative and 		 * minimize them. 		 */
 if|if
 condition|(
 name|ttl
@@ -9734,6 +9738,70 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|ISC_LIST_APPEND
+argument_list|(
+name|msg
+operator|->
+name|sections
+index|[
+name|section
+index|]
+argument_list|,
+name|name
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|dns_message_removename
+parameter_list|(
+name|dns_message_t
+modifier|*
+name|msg
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|dns_section_t
+name|section
+parameter_list|)
+block|{
+name|REQUIRE
+argument_list|(
+name|msg
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|REQUIRE
+argument_list|(
+name|msg
+operator|->
+name|from_to_wire
+operator|==
+name|DNS_MESSAGE_INTENTRENDER
+argument_list|)
+expr_stmt|;
+name|REQUIRE
+argument_list|(
+name|name
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|REQUIRE
+argument_list|(
+name|VALID_NAMED_SECTION
+argument_list|(
+name|section
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ISC_LIST_UNLINK
 argument_list|(
 name|msg
 operator|->

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: irpmarshall.h,v 1.1.2.1.4.1 2004/03/09 08:33:31 marka Exp $  */
+comment|/*  * $Id: irpmarshall.h,v 1.3.18.1 2005/04/27 05:00:51 sra Exp $  */
 end_comment
 
 begin_ifndef
@@ -435,15 +435,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Functions to marshall and unmarshall various system data structures. We  * use a printable ascii format that is as close to various system config  * files as reasonable (e.g. /etc/passwd format).  *  * We are not forgiving with unmarhsalling misformatted buffers. In  * particular whitespace in fields is not ignored. So a formatted password  * entry "brister  :1364:100:...." will yield a username of "brister   "  *  * We potentially do a lot of mallocs to fill fields that are of type  * (char **) like a hostent h_addr field. Building (for example) the  * h_addr field and its associated addresses all in one buffer is  * certainly possible, but not done here.  *  * The following description is true for all the marshalling functions:  *  */
-end_comment
-
-begin_comment
-comment|/* int irp_marshall_XX(struct yyyy *XX, char **buffer, size_t *len);  *  * The argument XX (of type struct passwd for example) is marshalled in the  * buffer pointed at by *BUFFER, which is of length *LEN. Returns 0  * on success and -1 on failure. Failure will occur if *LEN is  * smaller than needed.  *  * If BUFFER is NULL, then *LEN is set to the size of the buffer  * needed to marshall the data and no marshalling is actually done.  *  * If *BUFFER is NULL, then a buffer large enough will be allocated  * with memget() and the size allocated will be stored in *LEN. An extra 2  * bytes will be allocated for the client to append CRLF if wanted. The  * value of *LEN will include these two bytes.  *  * All the marshalling functions produce a buffer with the fields  * separated by colons (except for the hostent marshalling, which uses '@'  * to separate fields). Fields that have multiple subfields (like the  * gr_mem field in struct group) have their subparts separated by  * commas.  */
-end_comment
-
-begin_comment
-comment|/*  * int irp_unmarshall_XX(struct YYYYY *XX, char *buffer);  *  * The unmashalling functions break apart the buffer and store the  * values in the struct pointed to by XX. All pointer values inside  * XX are allocated with malloc. All arrays of pointers have a NULL  * as the last element.  */
+comment|/*! \file  * \brief  * Functions to marshall and unmarshall various system data structures. We  * use a printable ascii format that is as close to various system config  * files as reasonable (e.g. /etc/passwd format).  *  * We are not forgiving with unmarhsalling misformatted buffers. In  * particular whitespace in fields is not ignored. So a formatted password  * entry "brister  :1364:100:...." will yield a username of "brister   "  *  * We potentially do a lot of mallocs to fill fields that are of type  * (char **) like a hostent h_addr field. Building (for example) the  * h_addr field and its associated addresses all in one buffer is  * certainly possible, but not done here.  *  * The following description is true for all the marshalling functions:  *  * int irp_marshall_XX(struct yyyy *XX, char **buffer, size_t *len);  *  * The argument XX (of type struct passwd for example) is marshalled in the  * buffer pointed at by *BUFFER, which is of length *LEN. Returns 0  * on success and -1 on failure. Failure will occur if *LEN is  * smaller than needed.  *  * If BUFFER is NULL, then *LEN is set to the size of the buffer  * needed to marshall the data and no marshalling is actually done.  *  * If *BUFFER is NULL, then a buffer large enough will be allocated  * with memget() and the size allocated will be stored in *LEN. An extra 2  * bytes will be allocated for the client to append CRLF if wanted. The  * value of *LEN will include these two bytes.  *  * All the marshalling functions produce a buffer with the fields  * separated by colons (except for the hostent marshalling, which uses '@'  * to separate fields). Fields that have multiple subfields (like the  * gr_mem field in struct group) have their subparts separated by  * commas.  *  * int irp_unmarshall_XX(struct YYYYY *XX, char *buffer);  *  * The unmashalling functions break apart the buffer and store the  * values in the struct pointed to by XX. All pointer values inside  * XX are allocated with malloc. All arrays of pointers have a NULL  * as the last element.  */
 end_comment
 
 begin_endif

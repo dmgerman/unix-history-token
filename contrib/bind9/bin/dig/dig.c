@@ -4,7 +4,11 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dig.c,v 1.157.2.13.2.31 2006/07/22 23:52:57 marka Exp $ */
+comment|/* $Id: dig.c,v 1.186.18.26 2006/07/21 23:52:21 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -136,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dns/tsig.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<bind9/getaddresses.h>
 end_include
 
@@ -257,6 +267,10 @@ name|ISC_FALSE
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*% opcode text */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -300,6 +314,10 @@ literal|"RESERVED15"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*% return code text */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -346,6 +364,10 @@ literal|"BADVERS"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*% print usage */
+end_comment
 
 begin_function
 specifier|static
@@ -398,6 +420,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*% version */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -417,6 +443,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*% help */
+end_comment
 
 begin_function
 specifier|static
@@ -443,10 +473,11 @@ literal|"                 -i                  (IP6.INT reverse IPv6 lookups)\n"
 literal|"                 -f filename         (batch mode)\n"
 literal|"                 -b address[#port]   (bind to source address/port)\n"
 literal|"                 -p port             (specify port number)\n"
+literal|"                 -q name             (specify query name)\n"
 literal|"                 -t type             (specify query type)\n"
 literal|"                 -c class            (specify query class)\n"
 literal|"                 -k keyfile          (specify tsig key file)\n"
-literal|"                 -y name:key         (specify named base64 tsig key)\n"
+literal|"                 -y [hmac:]name:key  (specify named base64 tsig key)\n"
 literal|"                 -4                  (use IPv4 query transport only)\n"
 literal|"                 -6                  (use IPv6 query transport only)\n"
 literal|"        d-opt    is of the form +keyword[=value], where keyword is:\n"
@@ -458,7 +489,9 @@ literal|"                 +retry=###          (Set number of UDP retries) [2]\n"
 literal|"                 +domain=###         (Set default domainname)\n"
 literal|"                 +bufsize=###        (Set EDNS0 Max UDP packet size)\n"
 literal|"                 +ndots=###          (Set NDOTS value)\n"
+literal|"                 +edns=###           (Set EDNS version)\n"
 literal|"                 +[no]search         (Set whether to use searchlist)\n"
+literal|"                 +[no]showsearch     (Search with intermediate results)\n"
 literal|"                 +[no]defname        (Ditto)\n"
 literal|"                 +[no]recurse        (Recursive mode)\n"
 literal|"                 +[no]ignore         (Don't revert to TCP for TC responses.)"
@@ -511,7 +544,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Callback from dighost.c to print the received message.  */
+comment|/*%  * Callback from dighost.c to print the received message.  */
 end_comment
 
 begin_function
@@ -640,7 +673,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|";; XFR size: %u records (messages %u)\n"
+literal|";; XFR size: %u records (messages %u, "
+literal|"bytes %"
+name|ISC_PRINT_QUADFORMAT
+literal|"u)\n"
 argument_list|,
 name|query
 operator|->
@@ -649,6 +685,10 @@ argument_list|,
 name|query
 operator|->
 name|msg_count
+argument_list|,
+name|query
+operator|->
+name|byte_count
 argument_list|)
 expr_stmt|;
 block|}
@@ -656,7 +696,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|";; MSG SIZE  rcvd: %d\n"
+literal|";; MSG SIZE  rcvd: %u\n"
 argument_list|,
 name|bytes
 argument_list|)
@@ -739,8 +779,24 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|";; Received %u bytes from %s(%s) in %d ms\n\n"
+literal|";; Received %"
+name|ISC_PRINT_QUADFORMAT
+literal|"u bytes "
+literal|"from %s(%s) in %d ms\n\n"
 argument_list|,
+name|query
+operator|->
+name|lookup
+operator|->
+name|doing_xfr
+condition|?
+name|query
+operator|->
+name|byte_count
+else|:
+operator|(
+name|isc_uint64_t
+operator|)
 name|bytes
 argument_list|,
 name|fromtext
@@ -792,7 +848,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal print routine used to print short form replies.  */
+comment|/*%  * Internal print routine used to print short form replies.  */
 end_comment
 
 begin_function
@@ -978,7 +1034,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * short_form message print handler.  Calls above say_message()  */
+comment|/*%  * short_form message print handler.  Calls above say_message()  */
 end_comment
 
 begin_function
@@ -2045,7 +2101,73 @@ name|DNS_SECTION_ADDITIONAL
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msg
+operator|!=
+name|query
+operator|->
+name|lookup
+operator|->
+name|sendmsg
+operator|&&
+operator|(
+name|msg
+operator|->
+name|flags
+operator|&
+name|DNS_MESSAGEFLAG_RD
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|msg
+operator|->
+name|flags
+operator|&
+name|DNS_MESSAGEFLAG_RA
+operator|)
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|";; WARNING: recursion requested "
+literal|"but not available\n"
+argument_list|)
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|msg
+operator|!=
+name|query
+operator|->
+name|lookup
+operator|->
+name|sendmsg
+operator|&&
+name|extrabytes
+operator|!=
+literal|0U
+condition|)
+name|printf
+argument_list|(
+literal|";; WARNING: Messages has %u extra byte%s at "
+literal|"end\n"
+argument_list|,
+name|extrabytes
+argument_list|,
+name|extrabytes
+operator|!=
+literal|0
+condition|?
+literal|"s"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
 block|}
 name|repopulate_buffer
 label|:
@@ -2497,7 +2619,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * print the greeting message when the program first starts up.  */
+comment|/*%  * print the greeting message when the program first starts up.  */
 end_comment
 
 begin_function
@@ -2798,7 +2920,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reorder an argument list so that server names all come at the end.  * This is a bit of a hack, to allow batch-mode processing to properly  * handle the server options.  */
+comment|/*%  * Reorder an argument list so that server names all come at the end.  * This is a bit of a hack, to allow batch-mode processing to properly  * handle the server options.  */
 end_comment
 
 begin_function
@@ -3077,7 +3199,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We're not using isc_commandline_parse() here since the command line  * syntax of dig is quite a bit different from that which can be described  * by that routine.  * XXX doc options  */
+comment|/*%  * We're not using isc_commandline_parse() here since the command line  * syntax of dig is quite a bit different from that which can be described  * by that routine.  * XXX doc options  */
 end_comment
 
 begin_function
@@ -3600,6 +3722,23 @@ argument_list|(
 literal|"dnssec"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|state
+operator|&&
+name|lookup
+operator|->
+name|edns
+operator|==
+operator|-
+literal|1
+condition|)
+name|lookup
+operator|->
+name|edns
+operator|=
+literal|0
+expr_stmt|;
 name|lookup
 operator|->
 name|dnssec
@@ -3663,6 +3802,55 @@ goto|goto
 name|invalid_option
 goto|;
 block|}
+break|break;
+case|case
+literal|'e'
+case|:
+name|FULLCHECK
+argument_list|(
+literal|"edns"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|state
+condition|)
+block|{
+name|lookup
+operator|->
+name|edns
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|value
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|need_value
+goto|;
+name|lookup
+operator|->
+name|edns
+operator|=
+operator|(
+name|isc_int16_t
+operator|)
+name|parse_uint
+argument_list|(
+name|value
+argument_list|,
+literal|"edns"
+argument_list|,
+literal|255
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'f'
@@ -4065,6 +4253,29 @@ break|break;
 case|case
 literal|'h'
 case|:
+if|if
+condition|(
+name|cmd
+index|[
+literal|2
+index|]
+operator|!=
+literal|'o'
+condition|)
+goto|goto
+name|invalid_option
+goto|;
+switch|switch
+condition|(
+name|cmd
+index|[
+literal|3
+index|]
+condition|)
+block|{
+case|case
+literal|'r'
+case|:
 comment|/* short */
 name|FULLCHECK
 argument_list|(
@@ -4120,6 +4331,30 @@ name|stats
 operator|=
 name|ISC_FALSE
 expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'w'
+case|:
+comment|/* showsearch */
+name|FULLCHECK
+argument_list|(
+literal|"showsearch"
+argument_list|)
+expr_stmt|;
+name|showsearch
+operator|=
+name|state
+expr_stmt|;
+name|usesearch
+operator|=
+name|state
+expr_stmt|;
+break|break;
+default|default:
+goto|goto
+name|invalid_option
+goto|;
 block|}
 break|break;
 ifdef|#
@@ -4546,7 +4781,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ISC_TRUE returned if value was used  */
+comment|/*%  * #ISC_TRUE returned if value was used  */
 end_comment
 
 begin_decl_stmt
@@ -4592,6 +4827,9 @@ parameter_list|,
 name|isc_boolean_t
 modifier|*
 name|open_type_class
+parameter_list|,
+name|isc_boolean_t
+name|config_only
 parameter_list|)
 block|{
 name|char
@@ -4602,6 +4840,12 @@ name|value
 decl_stmt|,
 modifier|*
 name|ptr
+decl_stmt|,
+modifier|*
+name|ptr2
+decl_stmt|,
+modifier|*
+name|ptr3
 decl_stmt|;
 name|isc_result_t
 name|result
@@ -5223,6 +5467,134 @@ name|value_from_next
 operator|)
 return|;
 case|case
+literal|'q'
+case|:
+if|if
+condition|(
+operator|!
+name|config_only
+condition|)
+block|{
+operator|(
+operator|*
+name|lookup
+operator|)
+operator|=
+name|clone_lookup
+argument_list|(
+name|default_lookup
+argument_list|,
+name|ISC_TRUE
+argument_list|)
+expr_stmt|;
+name|strncpy
+argument_list|(
+operator|(
+operator|*
+name|lookup
+operator|)
+operator|->
+name|textname
+argument_list|,
+name|value
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|(
+operator|*
+name|lookup
+operator|)
+operator|->
+name|textname
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+operator|*
+name|lookup
+operator|)
+operator|->
+name|textname
+index|[
+sizeof|sizeof
+argument_list|(
+operator|(
+operator|*
+name|lookup
+operator|)
+operator|->
+name|textname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+operator|(
+operator|*
+name|lookup
+operator|)
+operator|->
+name|trace_root
+operator|=
+name|ISC_TF
+argument_list|(
+operator|(
+operator|*
+name|lookup
+operator|)
+operator|->
+name|trace
+operator|||
+operator|(
+operator|*
+name|lookup
+operator|)
+operator|->
+name|ns_search_only
+argument_list|)
+expr_stmt|;
+operator|(
+operator|*
+name|lookup
+operator|)
+operator|->
+name|new_search
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+name|ISC_LIST_APPEND
+argument_list|(
+name|lookup_list
+argument_list|,
+operator|(
+operator|*
+name|lookup
+operator|)
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"looking up %s"
+argument_list|,
+operator|(
+operator|*
+name|lookup
+operator|)
+operator|->
+name|textname
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|value_from_next
+operator|)
+return|;
+case|case
 literal|'t'
 case|:
 operator|*
@@ -5478,6 +5850,7 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
+comment|/* hmac type or name */
 if|if
 condition|(
 name|ptr
@@ -5487,6 +5860,489 @@ condition|)
 block|{
 name|usage
 argument_list|()
+expr_stmt|;
+block|}
+name|ptr2
+operator|=
+name|next_token
+argument_list|(
+operator|&
+name|value
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
+comment|/* name or secret */
+if|if
+condition|(
+name|ptr2
+operator|==
+name|NULL
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|ptr3
+operator|=
+name|next_token
+argument_list|(
+operator|&
+name|value
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
+comment|/* secret or NULL */
+if|if
+condition|(
+name|ptr3
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|ptr
+argument_list|,
+literal|"hmac-md5"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACMD5_NAME
+expr_stmt|;
+name|digestbits
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|ptr
+argument_list|,
+literal|"hmac-md5-"
+argument_list|,
+literal|9
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACMD5_NAME
+expr_stmt|;
+name|digestbits
+operator|=
+name|parse_uint
+argument_list|(
+operator|&
+name|ptr
+index|[
+literal|9
+index|]
+argument_list|,
+literal|"digest-bits [0..128]"
+argument_list|,
+literal|128
+argument_list|)
+expr_stmt|;
+name|digestbits
+operator|=
+operator|(
+name|digestbits
+operator|+
+literal|7
+operator|)
+operator|&
+operator|~
+literal|0x7U
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|ptr
+argument_list|,
+literal|"hmac-sha1"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA1_NAME
+expr_stmt|;
+name|digestbits
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|ptr
+argument_list|,
+literal|"hmac-sha1-"
+argument_list|,
+literal|10
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA1_NAME
+expr_stmt|;
+name|digestbits
+operator|=
+name|parse_uint
+argument_list|(
+operator|&
+name|ptr
+index|[
+literal|10
+index|]
+argument_list|,
+literal|"digest-bits [0..160]"
+argument_list|,
+literal|160
+argument_list|)
+expr_stmt|;
+name|digestbits
+operator|=
+operator|(
+name|digestbits
+operator|+
+literal|7
+operator|)
+operator|&
+operator|~
+literal|0x7U
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|ptr
+argument_list|,
+literal|"hmac-sha224"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA224_NAME
+expr_stmt|;
+name|digestbits
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|ptr
+argument_list|,
+literal|"hmac-sha224-"
+argument_list|,
+literal|12
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA224_NAME
+expr_stmt|;
+name|digestbits
+operator|=
+name|parse_uint
+argument_list|(
+operator|&
+name|ptr
+index|[
+literal|12
+index|]
+argument_list|,
+literal|"digest-bits [0..224]"
+argument_list|,
+literal|224
+argument_list|)
+expr_stmt|;
+name|digestbits
+operator|=
+operator|(
+name|digestbits
+operator|+
+literal|7
+operator|)
+operator|&
+operator|~
+literal|0x7U
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|ptr
+argument_list|,
+literal|"hmac-sha256"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA256_NAME
+expr_stmt|;
+name|digestbits
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|ptr
+argument_list|,
+literal|"hmac-sha256-"
+argument_list|,
+literal|12
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA256_NAME
+expr_stmt|;
+name|digestbits
+operator|=
+name|parse_uint
+argument_list|(
+operator|&
+name|ptr
+index|[
+literal|12
+index|]
+argument_list|,
+literal|"digest-bits [0..256]"
+argument_list|,
+literal|256
+argument_list|)
+expr_stmt|;
+name|digestbits
+operator|=
+operator|(
+name|digestbits
+operator|+
+literal|7
+operator|)
+operator|&
+operator|~
+literal|0x7U
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|ptr
+argument_list|,
+literal|"hmac-sha384"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA384_NAME
+expr_stmt|;
+name|digestbits
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|ptr
+argument_list|,
+literal|"hmac-sha384-"
+argument_list|,
+literal|12
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA384_NAME
+expr_stmt|;
+name|digestbits
+operator|=
+name|parse_uint
+argument_list|(
+operator|&
+name|ptr
+index|[
+literal|12
+index|]
+argument_list|,
+literal|"digest-bits [0..384]"
+argument_list|,
+literal|384
+argument_list|)
+expr_stmt|;
+name|digestbits
+operator|=
+operator|(
+name|digestbits
+operator|+
+literal|7
+operator|)
+operator|&
+operator|~
+literal|0x7U
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|ptr
+argument_list|,
+literal|"hmac-sha512"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA512_NAME
+expr_stmt|;
+name|digestbits
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|ptr
+argument_list|,
+literal|"hmac-sha512-"
+argument_list|,
+literal|12
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA512_NAME
+expr_stmt|;
+name|digestbits
+operator|=
+name|parse_uint
+argument_list|(
+operator|&
+name|ptr
+index|[
+literal|12
+index|]
+argument_list|,
+literal|"digest-bits [0..512]"
+argument_list|,
+literal|512
+argument_list|)
+expr_stmt|;
+name|digestbits
+operator|=
+operator|(
+name|digestbits
+operator|+
+literal|7
+operator|)
+operator|&
+operator|~
+literal|0x7U
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|";; Warning, ignoring "
+literal|"invalid TSIG algorithm %s\n"
+argument_list|,
+name|ptr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|value_from_next
+operator|)
+return|;
+block|}
+name|ptr
+operator|=
+name|ptr2
+expr_stmt|;
+name|ptr2
+operator|=
+name|ptr3
+expr_stmt|;
+block|}
+else|else
+block|{
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACMD5_NAME
+expr_stmt|;
+name|digestbits
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|strncpy
@@ -5513,30 +6369,11 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|ptr
-operator|=
-name|next_token
-argument_list|(
-operator|&
-name|value
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ptr
-operator|==
-name|NULL
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
 name|strncpy
 argument_list|(
 name|keysecret
 argument_list|,
-name|ptr
+name|ptr2
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5767,7 +6604,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Because we may be trying to do memory allocation recording, we're going  * to need to parse the arguments for the -m *before* we start the main  * argument parsing routine.  * I'd prefer not to have to do this, but I am not quite sure how else to  * fix the problem.  Argument parsing in dig involves memory allocation  * by its nature, so it can't be done in the main argument parser.  */
+comment|/*%  * Because we may be trying to do memory allocation recording, we're going  * to need to parse the arguments for the -m *before* we start the main  * argument parsing routine.  *  * I'd prefer not to have to do this, but I am not quite sure how else to  * fix the problem.  Argument parsing in dig involves memory allocation  * by its nature, so it can't be done in the main argument parser.  */
 end_comment
 
 begin_function
@@ -6522,6 +7359,8 @@ name|lookup
 argument_list|,
 operator|&
 name|open_type_class
+argument_list|,
+name|config_only
 argument_list|)
 condition|)
 block|{
@@ -6558,6 +7397,8 @@ name|lookup
 argument_list|,
 operator|&
 name|open_type_class
+argument_list|,
+name|config_only
 argument_list|)
 condition|)
 block|{
@@ -7504,6 +8345,10 @@ return|return;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*% Main processing routine for dig */
+end_comment
 
 begin_function
 name|int

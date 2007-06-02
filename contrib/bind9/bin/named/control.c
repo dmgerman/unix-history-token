@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: control.c,v 1.7.2.2.2.14 2005/04/29 01:04:47 marka Exp $ */
+comment|/* $Id: control.c,v 1.20.10.8 2006/03/10 00:23:20 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -189,7 +193,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function is called to process the incoming command  * when a control channel message is received.    */
+comment|/*%  * This function is called to process the incoming command  * when a control channel message is received.    */
 end_comment
 
 begin_function
@@ -786,6 +790,27 @@ name|command_compare
 argument_list|(
 name|command
 argument_list|,
+name|NS_COMMAND_TIMERPOKE
+argument_list|)
+condition|)
+block|{
+name|result
+operator|=
+name|ISC_R_SUCCESS
+expr_stmt|;
+name|isc_timermgr_poke
+argument_list|(
+name|ns_g_timermgr
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|command_compare
+argument_list|(
+name|command
+argument_list|,
 name|NS_COMMAND_NULL
 argument_list|)
 condition|)
@@ -793,6 +818,50 @@ block|{
 name|result
 operator|=
 name|ISC_R_SUCCESS
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|command_compare
+argument_list|(
+name|command
+argument_list|,
+name|NS_COMMAND_NOTIFY
+argument_list|)
+condition|)
+block|{
+name|result
+operator|=
+name|ns_server_notifycommand
+argument_list|(
+name|ns_g_server
+argument_list|,
+name|command
+argument_list|,
+name|text
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|command_compare
+argument_list|(
+name|command
+argument_list|,
+name|NS_COMMAND_VALIDATION
+argument_list|)
+condition|)
+block|{
+name|result
+operator|=
+name|ns_server_validation
+argument_list|(
+name|ns_g_server
+argument_list|,
+name|command
+argument_list|)
 expr_stmt|;
 block|}
 else|else

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: ssu.h,v 1.11.206.3 2004/03/08 09:04:39 marka Exp $ */
+comment|/* $Id: ssu.h,v 1.13.18.4 2006/02/16 23:51:32 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|DNS_SSU_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -50,6 +54,19 @@ define|#
 directive|define
 name|DNS_SSUMATCHTYPE_SELF
 value|3
+define|#
+directive|define
+name|DNS_SSUMATCHTYPE_SELFSUB
+value|4
+define|#
+directive|define
+name|DNS_SSUMATCHTYPE_SELFWILD
+value|5
+define|#
+directive|define
+name|DNS_SSUMATCHTYPE_MAX
+value|5
+comment|/* maximum defined value */
 name|isc_result_t
 name|dns_ssutable_create
 parameter_list|(
@@ -66,7 +83,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Creates a table that will be used to store simple-secure-update rules.  *	Note: all locking must be provided by the client.  *  *	Requires:  *		'mctx' is a valid memory context  *		'table' is not NULL, and '*table' is NULL  *  *	Returns:  *		ISC_R_SUCCESS  *		ISC_R_NOMEMORY  */
+comment|/*%<  *	Creates a table that will be used to store simple-secure-update rules.  *	Note: all locking must be provided by the client.  *  *	Requires:  *\li		'mctx' is a valid memory context  *\li		'table' is not NULL, and '*table' is NULL  *  *	Returns:  *\li		ISC_R_SUCCESS  *\li		ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -86,7 +103,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Attach '*targetp' to 'source'.  *  *	Requires:  *		'source' is a valid SSU table  *		'targetp' points to a NULL dns_ssutable_t *.  *  *	Ensures:  *		*targetp is attached to source.  */
+comment|/*%<  *	Attach '*targetp' to 'source'.  *  *	Requires:  *\li		'source' is a valid SSU table  *\li		'targetp' points to a NULL dns_ssutable_t *.  *  *	Ensures:  *\li		*targetp is attached to source.  */
 end_comment
 
 begin_function_decl
@@ -102,7 +119,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Detach '*tablep' from its simple-secure-update rule table.  *  *	Requires:  *		'tablep' points to a valid dns_ssutable_t  *  *	Ensures:  *		*tablep is NULL  *		If '*tablep' is the last reference to the SSU table, all  *			resources used by the table will be freed.  */
+comment|/*%<  *	Detach '*tablep' from its simple-secure-update rule table.  *  *	Requires:  *\li		'tablep' points to a valid dns_ssutable_t  *  *	Ensures:  *\li		*tablep is NULL  *\li		If '*tablep' is the last reference to the SSU table, all  *			resources used by the table will be freed.  */
 end_comment
 
 begin_function_decl
@@ -140,7 +157,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Adds a new rule to a simple-secure-update rule table.  The rule  *	either grants or denies update privileges of an identity (or set of  *	identities) to modify a name (or set of names) or certain types present  *	at that name.  *  *	Notes:  *		If 'matchtype' is SELF, this rule only matches if the name  *		to be updated matches the signing identity.  *  *		If 'ntypes' is 0, this rule applies to all types except  *		NS, SOA, RRSIG, and NSEC.  *  *		If 'types' includes ANY, this rule applies to all types  *		except NSEC.  *  *	Requires:  *		'table' is a valid SSU table  *		'identity' is a valid absolute name  *		'matchtype' must be one of the defined constants.  *		'name' is a valid absolute name  *		If 'ntypes'> 0, 'types' must not be NULL  *  *	Returns:  *		ISC_R_SUCCESS  *		ISC_R_NOMEMORY  */
+comment|/*%<  *	Adds a new rule to a simple-secure-update rule table.  The rule  *	either grants or denies update privileges of an identity (or set of  *	identities) to modify a name (or set of names) or certain types present  *	at that name.  *  *	Notes:  *\li		If 'matchtype' is SELF, this rule only matches if the name  *		to be updated matches the signing identity.  *  *\li		If 'ntypes' is 0, this rule applies to all types except  *		NS, SOA, RRSIG, and NSEC.  *  *\li		If 'types' includes ANY, this rule applies to all types  *		except NSEC.  *  *	Requires:  *\li		'table' is a valid SSU table  *\li		'identity' is a valid absolute name  *\li		'matchtype' must be one of the defined constants.  *\li		'name' is a valid absolute name  *\li		If 'ntypes'> 0, 'types' must not be NULL  *  *	Returns:  *\li		ISC_R_SUCCESS  *\li		ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -166,7 +183,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Checks that the attempted update of (name, type) is allowed according  *	to the rules specified in the simple-secure-update rule table.  If  *	no rules are matched, access is denied.  If signer is NULL, access  *	is denied.  *  *	Requires:  *		'table' is a valid SSU table  *		'signer' is NULL or a valid absolute name  *		'name' is a valid absolute name  */
+comment|/*%<  *	Checks that the attempted update of (name, type) is allowed according  *	to the rules specified in the simple-secure-update rule table.  If  *	no rules are matched, access is denied.  If signer is NULL, access  *	is denied.  *  *	Requires:  *\li		'table' is a valid SSU table  *\li		'signer' is NULL or a valid absolute name  *\li		'name' is a valid absolute name  */
+end_comment
+
+begin_comment
+comment|/*% Accessor functions to extract rule components */
 end_comment
 
 begin_function_decl
@@ -181,6 +202,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*% Accessor functions to extract rule components */
+end_comment
+
 begin_function_decl
 name|dns_name_t
 modifier|*
@@ -193,6 +218,10 @@ name|rule
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*% Accessor functions to extract rule components */
+end_comment
 
 begin_function_decl
 name|unsigned
@@ -207,6 +236,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*% Accessor functions to extract rule components */
+end_comment
+
 begin_function_decl
 name|dns_name_t
 modifier|*
@@ -219,6 +252,10 @@ name|rule
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*% Accessor functions to extract rule components */
+end_comment
 
 begin_function_decl
 name|unsigned
@@ -238,10 +275,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Accessor functions to extract rule components  */
-end_comment
-
 begin_function_decl
 name|isc_result_t
 name|dns_ssutable_firstrule
@@ -260,7 +293,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Initiates a rule iterator.  There is no need to maintain any state.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMORE  */
+comment|/*%<  * Initiates a rule iterator.  There is no need to maintain any state.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMORE  */
 end_comment
 
 begin_function_decl
@@ -280,7 +313,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the next rule in the table.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMORE  */
+comment|/*%<  * Returns the next rule in the table.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMORE  */
 end_comment
 
 begin_macro

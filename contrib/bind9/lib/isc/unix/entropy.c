@@ -4,11 +4,11 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: entropy.c,v 1.60.2.3.8.14 2006/03/02 23:29:17 marka Exp $ */
+comment|/* $Id: entropy.c,v 1.71.18.7 2006/12/07 04:53:03 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * This is the system depenedent part of the ISC entropy API.  */
+comment|/* \file unix/entropy.c  * \brief  * This is the system dependent part of the ISC entropy API.  */
 end_comment
 
 begin_include
@@ -99,7 +99,7 @@ file|"errno2result.h"
 end_include
 
 begin_comment
-comment|/*  * There is only one variable in the entropy data structures that is not  * system independent, but pulling the structure that uses it into this file  * ultimately means pulling several other independent structures here also to  * resolve their interdependencies.  Thus only the problem variable's type  * is defined here.  */
+comment|/*%  * There is only one variable in the entropy data structures that is not  * system independent, but pulling the structure that uses it into this file  * ultimately means pulling several other independent structures here also to  * resolve their interdependencies.  Thus only the problem variable's type  * is defined here.  */
 end_comment
 
 begin_define
@@ -1885,10 +1885,6 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|source
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|stat
@@ -2360,26 +2356,6 @@ argument_list|)
 expr_stmt|;
 name|errout
 label|:
-if|if
-condition|(
-name|source
-operator|!=
-name|NULL
-condition|)
-name|isc_mem_put
-argument_list|(
-name|ent
-operator|->
-name|mctx
-argument_list|,
-name|source
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|isc_entropysource_t
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|UNLOCK
 argument_list|(
 operator|&

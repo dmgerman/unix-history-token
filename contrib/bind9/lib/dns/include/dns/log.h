@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: log.h,v 1.30.2.1.10.2 2004/03/06 08:13:57 marka Exp $ */
+comment|/* $Id: log.h,v 1.33.18.4 2005/09/05 00:18:27 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/* Principal Authors: DCL */
+comment|/*! \file  * \author  Principal Authors: DCL */
 end_comment
 
 begin_ifndef
@@ -323,6 +323,20 @@ name|DNS_LOGMODULE_HINTS
 value|(&dns_modules[24])
 end_define
 
+begin_define
+define|#
+directive|define
+name|DNS_LOGMODULE_ACACHE
+value|(&dns_modules[25])
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_LOGMODULE_DLZ
+value|(&dns_modules[26])
+end_define
+
 begin_function_decl
 name|ISC_LANG_BEGINDECLS
 name|void
@@ -336,7 +350,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make the libdns categories and modules available for use with the  * ISC logging library.  *  * Requires:  *	lctx is a valid logging context.  *  *	dns_log_init() is called only once.  *  * Ensures:  * 	The catgories and modules defined above are available for  * 	use by isc_log_usechannnel() and isc_log_write().  */
+comment|/*%  * Make the libdns categories and modules available for use with the  * ISC logging library.  *  * Requires:  *\li	lctx is a valid logging context.  *  *\li	dns_log_init() is called only once.  *  * Ensures:  * \li	The catgories and modules defined above are available for  * 	use by isc_log_usechannnel() and isc_log_write().  */
 end_comment
 
 begin_function_decl
@@ -351,7 +365,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make the libdns library use the provided context for logging internal  * messages.  *  * Requires:  *	lctx is a valid logging context.  */
+comment|/*%  * Make the libdns library use the provided context for logging internal  * messages.  *  * Requires:  *\li	lctx is a valid logging context.  */
 end_comment
 
 begin_macro

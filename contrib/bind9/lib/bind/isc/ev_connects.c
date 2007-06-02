@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_connects.c,v 1.4.206.3 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: ev_connects.c,v 1.5.18.3 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,7 +240,7 @@ argument_list|,
 name|new
 argument_list|)
 expr_stmt|;
-comment|/* side effect: validate fd. */
+comment|/*%< side effect: validate fd. */
 comment|/* 	 * Remember the nonblocking status.  We assume that either evSelectFD 	 * has not been done to this fd, or that if it has then the caller 	 * will evCancelConn before they evDeselectFD.  If our assumptions 	 * are not met, then we might restore the old nonblocking status 	 * incorrectly. 	 */
 if|if
 condition|(
@@ -1891,7 +1891,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-comment|/* XXX closing caller's fd */
+comment|/*%< XXX closing caller's fd */
 name|errno
 operator|=
 name|save
@@ -1930,6 +1930,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: timer.h,v 1.28.12.6 2005/10/27 00:27:30 marka Exp $ */
+comment|/* $Id: timer.h,v 1.31.18.3 2005/10/26 06:50:50 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * Timers  *  * Provides timers which are event sources in the task system.  *  * Three types of timers are supported:  *  *	'ticker' timers generate a periodic tick event.  *  *	'once' timers generate an idle timeout event if they are idle for too  *	long, and generate a life timeout event if their lifetime expires.  *	They are used to implement both (possibly expiring) idle timers and  *	'one-shot' timers.  *  *	'limited' timers generate a periodic tick event until they reach  *	their lifetime when they generate a life timeout event.  *  *	'inactive' timers generate no events.  *  * Timers can change type.  It is typical to create a timer as  * an 'inactive' timer and then change it into a 'ticker' or  * 'once' timer.  *  * MP:  *	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *  *	Clients of this module must not be holding a timer's task's lock when  *	making a call that affects that timer.  Failure to follow this rule  *	can result in deadlock.  *  *	The caller must ensure that isc_timermgr_destroy() is called only  *	once for a given manager.  *  * Reliability:  *	No anticipated impact.  *  * Resources:  *<TBS>  *  * Security:  *	No anticipated impact.  *  * Standards:  *	None.  */
+comment|/*! \file  * \brief Provides timers which are event sources in the task system.  *  * Three types of timers are supported:  *  *\li	'ticker' timers generate a periodic tick event.  *  *\li	'once' timers generate an idle timeout event if they are idle for too  *	long, and generate a life timeout event if their lifetime expires.  *	They are used to implement both (possibly expiring) idle timers and  *	'one-shot' timers.  *  *\li	'limited' timers generate a periodic tick event until they reach  *	their lifetime when they generate a life timeout event.  *  *\li	'inactive' timers generate no events.  *  * Timers can change type.  It is typical to create a timer as  * an 'inactive' timer and then change it into a 'ticker' or  * 'once' timer.  *  *\li MP:  *	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *	Clients of this module must not be holding a timer's task's lock when  *	making a call that affects that timer.  Failure to follow this rule  *	can result in deadlock.  *	The caller must ensure that isc_timermgr_destroy() is called only  *	once for a given manager.  *  * \li Reliability:  *	No anticipated impact.  *  * \li Resources:  *	TBS  *  * \li Security:  *	No anticipated impact.  *  * \li Standards:  *	None.  */
 end_comment
 
 begin_comment
@@ -64,6 +64,10 @@ begin_comment
 comment|/***  *** Types  ***/
 end_comment
 
+begin_comment
+comment|/*% Timer Type */
+end_comment
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -72,17 +76,21 @@ name|isc_timertype_ticker
 init|=
 literal|0
 block|,
+comment|/*%< Ticker */
 name|isc_timertype_once
 init|=
 literal|1
 block|,
+comment|/*%< Once */
 name|isc_timertype_limited
 init|=
 literal|2
 block|,
+comment|/*%< Limited */
 name|isc_timertype_inactive
 init|=
 literal|3
+comment|/*%< Inactive */
 block|}
 name|isc_timertype_t
 typedef|;
@@ -181,7 +189,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a new 'type' timer managed by 'manager'.  The timers parameters  * are specified by 'expires' and 'interval'.  Events will be posted to  * 'task' and when dispatched 'action' will be called with 'arg' as the  * arg value.  The new timer is returned in 'timerp'.  *  * Notes:  *  *	For ticker timers, the timer will generate a 'tick' event every  *	'interval' seconds.  The value of 'expires' is ignored.  *  *	For once timers, 'expires' specifies the time when a life timeout  *	event should be generated.  If 'expires' is 0 (the epoch), then no life  *	timeout will be generated.  'interval' specifies how long the timer  *	can be idle before it generates an idle timeout.  If 0, then no  *	idle timeout will be generated.  *  *	If 'expires' is NULL, the epoch will be used.  *  *	If 'interval' is NULL, the zero interval will be used.  *  * Requires:  *  *	'manager' is a valid manager  *  *	'task' is a valid task  *  *	'action' is a valid action  *  *	'expires' points to a valid time, or is NULL.  *  *	'interval' points to a valid interval, or is NULL.  *  *	type == isc_timertype_inactive ||  *	('expires' and 'interval' are not both 0)  *  *	'timerp' is a valid pointer, and *timerp == NULL  *  * Ensures:  *  *	'*timerp' is attached to the newly created timer  *  *	The timer is attached to the task  *  *	An idle timeout will not be generated until at least Now + the  *	timer's interval if 'timer' is a once timer with a non-zero  *	interval.  *  * Returns:  *  *	Success  *	No memory  *	Unexpected error  */
+comment|/*%<  * Create a new 'type' timer managed by 'manager'.  The timers parameters  * are specified by 'expires' and 'interval'.  Events will be posted to  * 'task' and when dispatched 'action' will be called with 'arg' as the  * arg value.  The new timer is returned in 'timerp'.  *  * Notes:  *  *\li	For ticker timers, the timer will generate a 'tick' event every  *	'interval' seconds.  The value of 'expires' is ignored.  *  *\li	For once timers, 'expires' specifies the time when a life timeout  *	event should be generated.  If 'expires' is 0 (the epoch), then no life  *	timeout will be generated.  'interval' specifies how long the timer  *	can be idle before it generates an idle timeout.  If 0, then no  *	idle timeout will be generated.  *  *\li	If 'expires' is NULL, the epoch will be used.  *  *	If 'interval' is NULL, the zero interval will be used.  *  * Requires:  *  *\li	'manager' is a valid manager  *  *\li	'task' is a valid task  *  *\li	'action' is a valid action  *  *\li	'expires' points to a valid time, or is NULL.  *  *\li	'interval' points to a valid interval, or is NULL.  *  *\li	type == isc_timertype_inactive ||  *	('expires' and 'interval' are not both 0)  *  *\li	'timerp' is a valid pointer, and *timerp == NULL  *  * Ensures:  *  *\li	'*timerp' is attached to the newly created timer  *  *\li	The timer is attached to the task  *  *\li	An idle timeout will not be generated until at least Now + the  *	timer's interval if 'timer' is a once timer with a non-zero  *	interval.  *  * Returns:  *  *\li	Success  *\li	No memory  *\li	Unexpected error  */
 end_comment
 
 begin_function_decl
@@ -210,7 +218,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Change the timer's type, expires, and interval values to the given  * values.  If 'purge' is TRUE, any pending events from this timer  * are purged from its task's event queue.  *  * Notes:  *  *	If 'expires' is NULL, the epoch will be used.  *  *	If 'interval' is NULL, the zero interval will be used.  *  * Requires:  *  *	'timer' is a valid timer  *  *	The same requirements that isc_timer_create() imposes on 'type',  *	'expires' and 'interval' apply.  *  * Ensures:  *  *	An idle timeout will not be generated until at least Now + the  *	timer's interval if 'timer' is a once timer with a non-zero  *	interval.  *  * Returns:  *  *	Success  *	No memory  *	Unexpected error  */
+comment|/*%<  * Change the timer's type, expires, and interval values to the given  * values.  If 'purge' is TRUE, any pending events from this timer  * are purged from its task's event queue.  *  * Notes:  *  *\li	If 'expires' is NULL, the epoch will be used.  *  *\li	If 'interval' is NULL, the zero interval will be used.  *  * Requires:  *  *\li	'timer' is a valid timer  *  *\li	The same requirements that isc_timer_create() imposes on 'type',  *	'expires' and 'interval' apply.  *  * Ensures:  *  *\li	An idle timeout will not be generated until at least Now + the  *	timer's interval if 'timer' is a once timer with a non-zero  *	interval.  *  * Returns:  *  *\li	Success  *\li	No memory  *\li	Unexpected error  */
 end_comment
 
 begin_function_decl
@@ -225,7 +233,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the last-touched time of 'timer' to the current time.  *  * Requires:  *  *	'timer' is a valid once timer.  *  * Ensures:  *  *	An idle timeout will not be generated until at least Now + the  *	timer's interval if 'timer' is a once timer with a non-zero  *	interval.  *  * Returns:  *  *	Success  *	Unexpected error  */
+comment|/*%<  * Set the last-touched time of 'timer' to the current time.  *  * Requires:  *  *\li	'timer' is a valid once timer.  *  * Ensures:  *  *\li	An idle timeout will not be generated until at least Now + the  *	timer's interval if 'timer' is a once timer with a non-zero  *	interval.  *  * Returns:  *  *\li	Success  *\li	Unexpected error  */
 end_comment
 
 begin_function_decl
@@ -245,7 +253,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Attach *timerp to timer.  *  * Requires:  *  *	'timer' is a valid timer.  *  *	'timerp' points to a NULL timer.  *  * Ensures:  *  *	*timerp is attached to timer.  */
+comment|/*%<  * Attach *timerp to timer.  *  * Requires:  *  *\li	'timer' is a valid timer.  *  *\li	'timerp' points to a NULL timer.  *  * Ensures:  *  *\li	*timerp is attached to timer.  */
 end_comment
 
 begin_function_decl
@@ -261,7 +269,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Detach *timerp from its timer.  *  * Requires:  *  *	'timerp' points to a valid timer.  *  * Ensures:  *  *	*timerp is NULL.  *  *	If '*timerp' is the last reference to the timer,  *	then:  *  *		The timer will be shutdown  *  *		The timer will detach from its task  *  *		All resources used by the timer have been freed  *  *		Any events already posted by the timer will be purged.  *		Therefore, if isc_timer_detach() is called in the context  *		of the timer's task, it is guaranteed that no more  *		timer event callbacks will run after the call.  */
+comment|/*%<  * Detach *timerp from its timer.  *  * Requires:  *  *\li	'timerp' points to a valid timer.  *  * Ensures:  *  *\li	*timerp is NULL.  *  *\li	If '*timerp' is the last reference to the timer,  *	then:  *  *\code  *		The timer will be shutdown  *  *		The timer will detach from its task  *  *		All resources used by the timer have been freed  *  *		Any events already posted by the timer will be purged.  *		Therefore, if isc_timer_detach() is called in the context  *		of the timer's task, it is guaranteed that no more  *		timer event callbacks will run after the call.  *\endcode  */
 end_comment
 
 begin_function_decl
@@ -296,7 +304,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a timer manager.  *  * Notes:  *  *	All memory will be allocated in memory context 'mctx'.  *  * Requires:  *  *	'mctx' is a valid memory context.  *  *	'managerp' points to a NULL isc_timermgr_t.  *  * Ensures:  *  *	'*managerp' is a valid isc_timermgr_t.  *  * Returns:  *  *	Success  *	No memory  *	Unexpected error  */
+comment|/*%<  * Create a timer manager.  *  * Notes:  *  *\li	All memory will be allocated in memory context 'mctx'.  *  * Requires:  *  *\li	'mctx' is a valid memory context.  *  *\li	'managerp' points to a NULL isc_timermgr_t.  *  * Ensures:  *  *\li	'*managerp' is a valid isc_timermgr_t.  *  * Returns:  *  *\li	Success  *\li	No memory  *\li	Unexpected error  */
 end_comment
 
 begin_function_decl
@@ -312,7 +320,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy a timer manager.  *  * Notes:  *  *	This routine blocks until there are no timers left in the manager,  *	so if the caller holds any timer references using the manager, it  *	must detach them before calling isc_timermgr_destroy() or it will  *	block forever.  *  * Requires:  *  *	'*managerp' is a valid isc_timermgr_t.  *  * Ensures:  *  *	*managerp == NULL  *  *	All resources used by the manager have been freed.  */
+comment|/*%<  * Destroy a timer manager.  *  * Notes:  *  *\li	This routine blocks until there are no timers left in the manager,  *	so if the caller holds any timer references using the manager, it  *	must detach them before calling isc_timermgr_destroy() or it will  *	block forever.  *  * Requires:  *  *\li	'*managerp' is a valid isc_timermgr_t.  *  * Ensures:  *  *\li	*managerp == NULL  *  *\li	All resources used by the manager have been freed.  */
 end_comment
 
 begin_function_decl

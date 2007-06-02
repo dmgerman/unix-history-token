@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: callbacks.h,v 1.15.2.2.8.1 2004/03/06 08:13:51 marka Exp $ */
+comment|/* $Id: callbacks.h,v 1.18.18.2 2005/04/29 00:16:10 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|DNS_CALLBACKS_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_comment
 comment|/***  ***	Imports  ***/
@@ -48,11 +52,11 @@ begin_struct
 struct|struct
 name|dns_rdatacallbacks
 block|{
-comment|/* 	 * dns_load_master calls this when it has rdatasets to commit. 	 */
+comment|/*% 	 * dns_load_master calls this when it has rdatasets to commit. 	 */
 name|dns_addrdatasetfunc_t
 name|add
 decl_stmt|;
-comment|/* 	 * dns_load_master / dns_rdata_fromtext call this to issue a error. 	 */
+comment|/*% 	 * dns_load_master / dns_rdata_fromtext call this to issue a error. 	 */
 name|void
 function_decl|(
 modifier|*
@@ -70,7 +74,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 function_decl|;
-comment|/* 	 * dns_load_master / dns_rdata_fromtext call this to issue a warning. 	 */
+comment|/*% 	 * dns_load_master / dns_rdata_fromtext call this to issue a warning. 	 */
 name|void
 function_decl|(
 modifier|*
@@ -88,7 +92,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 function_decl|;
-comment|/* 	 * Private data handles for use by the above callback functions. 	 */
+comment|/*% 	 * Private data handles for use by the above callback functions. 	 */
 name|void
 modifier|*
 name|add_private
@@ -121,7 +125,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Initialize 'callbacks'.  * 	'error' and 'warn' are set to default callbacks that print the  *	error message through the DNS library log context.  *  *	All other elements are initialized to NULL.  *  * Requires:  *      'callbacks' is a valid dns_rdatacallbacks_t,  */
+comment|/*%<  * Initialize 'callbacks'.  *  *  * \li	'error' and 'warn' are set to default callbacks that print the  *	error message through the DNS library log context.  *  *\li	All other elements are initialized to NULL.  *  * Requires:  *  \li    'callbacks' is a valid dns_rdatacallbacks_t,  */
 end_comment
 
 begin_function_decl
@@ -136,7 +140,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Like dns_rdatacallbacks_init, but logs to stdio.  */
+comment|/*%<  * Like dns_rdatacallbacks_init, but logs to stdio.  */
 end_comment
 
 begin_macro

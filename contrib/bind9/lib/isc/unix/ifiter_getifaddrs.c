@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: ifiter_getifaddrs.c,v 1.2.68.3 2004/03/06 08:14:59 marka Exp $ */
+comment|/* $Id: ifiter_getifaddrs.c,v 1.4.18.2 2005/04/29 00:17:08 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Obtain the list of network interfaces using the getifaddrs(3) library.  */
+comment|/*! \file  * \brief  * Obtain the list of network interfaces using the getifaddrs(3) library.  */
 end_comment
 
 begin_include
@@ -17,12 +17,20 @@ directive|include
 file|<ifaddrs.h>
 end_include
 
+begin_comment
+comment|/*% Iterator Magic */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IFITER_MAGIC
 value|ISC_MAGIC('I', 'F', 'I', 'G')
 end_define
+
+begin_comment
+comment|/*% Valid Iterator */
+end_comment
 
 begin_define
 define|#
@@ -34,6 +42,10 @@ parameter_list|)
 value|ISC_MAGIC_VALID(t, IFITER_MAGIC)
 end_define
 
+begin_comment
+comment|/*% Iterator structure */
+end_comment
+
 begin_struct
 struct|struct
 name|isc_interfaceiter
@@ -42,7 +54,7 @@ name|unsigned
 name|int
 name|magic
 decl_stmt|;
-comment|/* Magic number. */
+comment|/*%< Magic number. */
 name|isc_mem_t
 modifier|*
 name|mctx
@@ -51,32 +63,32 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
-comment|/* (unused) */
+comment|/*%< (unused) */
 name|unsigned
 name|int
 name|bufsize
 decl_stmt|;
-comment|/* (always 0) */
+comment|/*%< (always 0) */
 name|struct
 name|ifaddrs
 modifier|*
 name|ifaddrs
 decl_stmt|;
-comment|/* List of ifaddrs */
+comment|/*%< List of ifaddrs */
 name|struct
 name|ifaddrs
 modifier|*
 name|pos
 decl_stmt|;
-comment|/* Ptr to current ifaddr */
+comment|/*%< Ptr to current ifaddr */
 name|isc_interface_t
 name|current
 decl_stmt|;
-comment|/* Current interface data. */
+comment|/*%< Current interface data. */
 name|isc_result_t
 name|result
 decl_stmt|;
-comment|/* Last result code. */
+comment|/*%< Last result code. */
 block|}
 struct|;
 end_struct

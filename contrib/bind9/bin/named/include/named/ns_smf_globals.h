@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2005  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: ns_smf_globals.h,v 1.2.4.4 2005/05/13 01:22:33 marka Exp $ */
+comment|/* $Id: ns_smf_globals.h,v 1.2.2.4 2005/05/13 01:32:46 marka Exp $ */
 end_comment
 
 begin_ifndef

@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_files.c,v 1.3.2.1.4.3 2005/07/28 07:43:19 marka Exp $"
+literal|"$Id: ev_files.c,v 1.5.18.3 2005/07/28 07:38:09 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -236,7 +236,7 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* side effect: validate fd. */
+comment|/*%< side effect: validate fd. */
 comment|/* 	 * The first time we touch a file descriptor, we need to check to see 	 * if the application already had it in O_NONBLOCK mode and if so, all 	 * of our deselect()'s have to leave it in O_NONBLOCK.  If not, then 	 * all but our last deselect() has to leave it in O_NONBLOCK. 	 */
 ifdef|#
 directive|ifdef
@@ -1241,6 +1241,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

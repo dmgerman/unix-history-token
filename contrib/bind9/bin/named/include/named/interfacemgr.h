@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: interfacemgr.h,v 1.23.24.7 2004/04/29 01:31:22 marka Exp $ */
+comment|/* $Id: interfacemgr.h,v 1.26.18.4 2005/04/27 05:00:35 sra Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * Interface manager  *  * The interface manager monitors the operating system's list  * of network interfaces, creating and destroying listeners  * as needed.  *  * Reliability:  *	No impact expected.  *  * Resources:  *  * Security:  * 	The server will only be able to bind to the DNS port on  *	newly discovered interfaces if it is running as root.  *  * Standards:  *	The API for scanning varies greatly among operating systems.  *	This module attempts to hide the differences.  */
+comment|/*! \file  * \brief  * The interface manager monitors the operating system's list  * of network interfaces, creating and destroying listeners  * as needed.  *  * Reliability:  *\li	No impact expected.  *  * Resources:  *  * Security:  * \li	The server will only be able to bind to the DNS port on  *	newly discovered interfaces if it is running as root.  *  * Standards:  *\li	The API for scanning varies greatly among operating systems.  *	This module attempts to hide the differences.  */
 end_comment
 
 begin_comment
@@ -97,7 +97,11 @@ value|0x01U
 end_define
 
 begin_comment
-comment|/* bound to "any" address */
+comment|/*%< bound to "any" address */
+end_comment
+
+begin_comment
+comment|/*% The nameserver interface structure */
 end_comment
 
 begin_struct
@@ -108,63 +112,63 @@ name|unsigned
 name|int
 name|magic
 decl_stmt|;
-comment|/* Magic number. */
+comment|/*%< Magic number. */
 name|ns_interfacemgr_t
 modifier|*
 name|mgr
 decl_stmt|;
-comment|/* Interface manager. */
+comment|/*%< Interface manager. */
 name|isc_mutex_t
 name|lock
 decl_stmt|;
 name|int
 name|references
 decl_stmt|;
-comment|/* Locked */
+comment|/*%< Locked */
 name|unsigned
 name|int
 name|generation
 decl_stmt|;
-comment|/* Generation number. */
+comment|/*%< Generation number. */
 name|isc_sockaddr_t
 name|addr
 decl_stmt|;
-comment|/* Address and port. */
+comment|/*%< Address and port. */
 name|unsigned
 name|int
 name|flags
 decl_stmt|;
-comment|/* Interface characteristics */
+comment|/*%< Interface characteristics */
 name|char
 name|name
 index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/* Null terminated. */
+comment|/*%< Null terminated. */
 name|dns_dispatch_t
 modifier|*
 name|udpdispatch
 decl_stmt|;
-comment|/* UDP dispatcher. */
+comment|/*%< UDP dispatcher. */
 name|isc_socket_t
 modifier|*
 name|tcpsocket
 decl_stmt|;
-comment|/* TCP socket. */
+comment|/*%< TCP socket. */
 name|int
 name|ntcptarget
 decl_stmt|;
-comment|/* Desired number of concurrent 						   TCP accepts */
+comment|/*%< Desired number of concurrent 						     TCP accepts */
 name|int
 name|ntcpcurrent
 decl_stmt|;
-comment|/* Current ditto, locked */
+comment|/*%< Current ditto, locked */
 name|ns_clientmgr_t
 modifier|*
 name|clientmgr
 decl_stmt|;
-comment|/* Client manager. */
+comment|/*%< Client manager. */
 name|ISC_LINK
 argument_list|(
 argument|ns_interface_t
@@ -208,7 +212,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a new interface manager.  *  * Initially, the new manager will not listen on any interfaces.  * Call ns_interfacemgr_setlistenon() and/or ns_interfacemgr_setlistenon6()  * to set nonempty listen-on lists.  */
+comment|/*%  * Create a new interface manager.  *  * Initially, the new manager will not listen on any interfaces.  * Call ns_interfacemgr_setlistenon() and/or ns_interfacemgr_setlistenon6()  * to set nonempty listen-on lists.  */
 end_comment
 
 begin_function_decl
@@ -265,7 +269,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Scan the operatings system's list of network interfaces  * and create listeners when new interfaces are discovered.  * Shut down the sockets for interfaces that go away.  *  * This should be called once on server startup and then  * periodically according to the 'interface-interval' option  * in named.conf.  */
+comment|/*%  * Scan the operatings system's list of network interfaces  * and create listeners when new interfaces are discovered.  * Shut down the sockets for interfaces that go away.  *  * This should be called once on server startup and then  * periodically according to the 'interface-interval' option  * in named.conf.  */
 end_comment
 
 begin_function_decl
@@ -287,7 +291,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Similar to ns_interfacemgr_scan(), but this function also tries to see the  * need for an explicit listen-on when a list element in 'list' is going to  * override an already-listening a wildcard interface.  *  * This function does not update localhost and localnets ACLs.  *  * This should be called once on server startup, after configuring views and  * zones.  */
+comment|/*%  * Similar to ns_interfacemgr_scan(), but this function also tries to see the  * need for an explicit listen-on when a list element in 'list' is going to  * override an already-listening a wildcard interface.  *  * This function does not update localhost and localnets ACLs.  *  * This should be called once on server startup, after configuring views and  * zones.  */
 end_comment
 
 begin_function_decl
@@ -306,7 +310,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the IPv4 "listen-on" list of 'mgr' to 'value'.  * The previous IPv4 listen-on list is freed.  */
+comment|/*%  * Set the IPv4 "listen-on" list of 'mgr' to 'value'.  * The previous IPv4 listen-on list is freed.  */
 end_comment
 
 begin_function_decl
@@ -325,7 +329,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the IPv6 "listen-on" list of 'mgr' to 'value'.  * The previous IPv6 listen-on list is freed.  */
+comment|/*%  * Set the IPv6 "listen-on" list of 'mgr' to 'value'.  * The previous IPv6 listen-on list is freed.  */
 end_comment
 
 begin_function_decl
@@ -380,7 +384,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Stop listening for queries on interface 'ifp'.  * May safely be called multiple times.  */
+comment|/*%  * Stop listening for queries on interface 'ifp'.  * May safely be called multiple times.  */
 end_comment
 
 begin_function_decl
@@ -394,6 +398,21 @@ parameter_list|,
 name|ns_interfacemgr_t
 modifier|*
 name|mgr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_boolean_t
+name|ns_interfacemgr_listeningon
+parameter_list|(
+name|ns_interfacemgr_t
+modifier|*
+name|mgr
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|addr
 parameter_list|)
 function_decl|;
 end_function_decl

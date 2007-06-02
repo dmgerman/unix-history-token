@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: stdlib.h,v 1.2.4.1 2005/06/08 02:08:32 marka Exp $ */
+comment|/* $Id: stdlib.h,v 1.2.2.1 2005/06/08 02:08:01 marka Exp $ */
 end_comment
 
 begin_ifndef

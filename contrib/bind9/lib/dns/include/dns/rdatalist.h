@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rdatalist.h,v 1.13.206.1 2004/03/06 08:13:59 marka Exp $ */
+comment|/* $Id: rdatalist.h,v 1.14.18.2 2005/04/29 00:16:19 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * DNS Rdatalist  *  * A DNS rdatalist is a list of rdata of a common type and class.  *  * MP:  *	Clients of this module must impose any required synchronization.  *  * Reliability:  *	No anticipated impact.  *  * Resources:  *<TBS>  *  * Security:  *	No anticipated impact.  *  * Standards:  *	None.  */
+comment|/*! \file  * \brief  * A DNS rdatalist is a list of rdata of a common type and class.  *  * MP:  *\li	Clients of this module must impose any required synchronization.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	None.  */
 end_comment
 
 begin_include
@@ -41,7 +41,7 @@ file|<dns/types.h>
 end_include
 
 begin_comment
-comment|/*  * Clients may use this type directly.  */
+comment|/*%  * Clients may use this type directly.  */
 end_comment
 
 begin_struct
@@ -89,7 +89,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Initialize rdatalist.  *  * Ensures:  *	All fields of rdatalist have been initialized to their default  *	values.  */
+comment|/*%<  * Initialize rdatalist.  *  * Ensures:  *\li	All fields of rdatalist have been initialized to their default  *	values.  */
 end_comment
 
 begin_function_decl
@@ -108,7 +108,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'rdataset' refer to the rdata in 'rdatalist'.  *  * Note:  *	The caller must ensure that 'rdatalist' remains valid and unchanged  *	while 'rdataset' is associated with it.  *  * Requires:  *  *	'rdatalist' is a valid rdatalist.  *  *	'rdataset' is a valid rdataset that is not currently associated with  *	any rdata.  *  * Ensures:  *	On success,  *  *		'rdataset' is associated with the rdata in rdatalist.  *  * Returns:  *	ISC_R_SUCCESS  */
+comment|/*%<  * Make 'rdataset' refer to the rdata in 'rdatalist'.  *  * Note:  *\li	The caller must ensure that 'rdatalist' remains valid and unchanged  *	while 'rdataset' is associated with it.  *  * Requires:  *  *\li	'rdatalist' is a valid rdatalist.  *  *\li	'rdataset' is a valid rdataset that is not currently associated with  *	any rdata.  *  * Ensures,  *	on success,  *  *\li		'rdataset' is associated with the rdata in rdatalist.  *  * Returns:  *\li	#ISC_R_SUCCESS  */
 end_comment
 
 begin_macro

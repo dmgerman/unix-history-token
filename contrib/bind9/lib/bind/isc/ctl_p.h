@@ -22,7 +22,7 @@ value|990
 end_define
 
 begin_comment
-comment|/* Like SMTP. */
+comment|/*%< Like SMTP. */
 end_comment
 
 begin_ifndef
@@ -163,6 +163,10 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: netaddr.h,v 1.18.12.9 2005/07/29 00:13:10 marka Exp $ */
+comment|/* $Id: netaddr.h,v 1.25.18.5 2005/07/28 04:58:47 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|ISC_NETADDR_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -37,6 +41,29 @@ include|#
 directive|include
 file|<isc/types.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_HAVESYSUNH
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|ISC_LANG_BEGINDECLS
@@ -60,17 +87,49 @@ name|struct
 name|in6_addr
 name|in6
 decl_stmt|;
-block|}
-name|type
-union|;
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_HAVESYSUNH
+name|char
+name|un
+index|[
+sizeof|sizeof
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|sockaddr_un
+operator|*
+block|)
+literal|0
+block|)
+operator|->
+name|sun_path
+end_struct
+
+begin_empty_stmt
+unit|)]
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_empty_stmt
+unit|} type
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|isc_uint32_t
 name|zone
 decl_stmt|;
-block|}
-struct|;
-end_struct
+end_decl_stmt
 
 begin_function_decl
+unit|};
 name|isc_boolean_t
 name|isc_netaddr_equal
 parameter_list|(
@@ -109,7 +168,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Compare the 'prefixlen' most significant bits of the network  * addresses 'a' and 'b'.  Return ISC_TRUE if they are equal,  * ISC_FALSE if not.  */
+comment|/*%<  * Compare the 'prefixlen' most significant bits of the network  * addresses 'a' and 'b'.  Return #ISC_TRUE if they are equal,  * #ISC_FALSE if not.  */
 end_comment
 
 begin_function_decl
@@ -130,7 +189,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convert a netmask in 's' into a prefix length in '*lenp'.  * The mask should consist of zero or more '1' bits in the most  * most significant part of the address, followed by '0' bits.  * If this is not the case, ISC_R_MASKNONCONTIG is returned.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_MASKNONCONTIG  */
+comment|/*%<  * Convert a netmask in 's' into a prefix length in '*lenp'.  * The mask should consist of zero or more '1' bits in the most  * most significant part of the address, followed by '0' bits.  * If this is not the case, #ISC_R_MASKNONCONTIG is returned.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_MASKNONCONTIG  */
 end_comment
 
 begin_function_decl
@@ -150,7 +209,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Append a text representation of 'sockaddr' to the buffer 'target'.  * The text is NOT null terminated.  Handles IPv4 and IPv6 addresses.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOSPACE	The text or the null termination did not fit.  *	ISC_R_FAILURE	Unspecified failure  */
+comment|/*%<  * Append a text representation of 'sockaddr' to the buffer 'target'.  * The text is NOT null terminated.  Handles IPv4 and IPv6 addresses.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE	The text or the null termination did not fit.  *\li	#ISC_R_FAILURE	Unspecified failure  */
 end_comment
 
 begin_function_decl
@@ -174,7 +233,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Format a human-readable representation of the network address '*na'  * into the character array 'array', which is of size 'size'.  * The resulting string is guaranteed to be null-terminated.  */
+comment|/*%<  * Format a human-readable representation of the network address '*na'  * into the character array 'array', which is of size 'size'.  * The resulting string is guaranteed to be null-terminated.  */
 end_comment
 
 begin_define
@@ -186,7 +245,7 @@ value|sizeof("xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:XXX.XXX.XXX.XXX%SSSSSSSSSS")
 end_define
 
 begin_comment
-comment|/*  * Minimum size of array to pass to isc_netaddr_format().  */
+comment|/*%<  * Minimum size of array to pass to isc_netaddr_format().  */
 end_comment
 
 begin_function_decl
@@ -240,6 +299,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|isc_result_t
+name|isc_netaddr_frompath
+parameter_list|(
+name|isc_netaddr_t
+modifier|*
+name|netaddr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|isc_netaddr_setzone
 parameter_list|(
@@ -277,7 +352,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the IPv4 wildcard address.  */
+comment|/*%<  * Return the IPv4 wildcard address.  */
 end_comment
 
 begin_function_decl
@@ -292,7 +367,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the IPv6 wildcard address.  */
+comment|/*%<  * Return the IPv6 wildcard address.  */
 end_comment
 
 begin_function_decl
@@ -307,7 +382,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns ISC_TRUE if the address is a multicast address.  */
+comment|/*%<  * Returns ISC_TRUE if the address is a multicast address.  */
 end_comment
 
 begin_function_decl
@@ -322,7 +397,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns ISC_TRUE if the address is a experimental (CLASS E) address.  */
+comment|/*%<  * Returns ISC_TRUE if the address is a experimental (CLASS E) address.  */
 end_comment
 
 begin_function_decl
@@ -337,7 +412,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns ISC_TRUE if the address is a link local address.  */
+comment|/*%<  * Returns #ISC_TRUE if the address is a link local address.  */
 end_comment
 
 begin_function_decl
@@ -352,7 +427,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns ISC_TRUE if the address is a site local address.  */
+comment|/*%<  * Returns #ISC_TRUE if the address is a site local address.  */
 end_comment
 
 begin_function_decl
@@ -372,7 +447,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convert an IPv6 v4mapped address into an IPv4 address.  */
+comment|/*%<  * Convert an IPv6 v4mapped address into an IPv4 address.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_netaddr_prefixok
+parameter_list|(
+specifier|const
+name|isc_netaddr_t
+modifier|*
+name|na
+parameter_list|,
+name|unsigned
+name|int
+name|prefixlen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Test whether the netaddr 'na' and 'prefixlen' are consistant.  * e.g. prefixlen within range.  *      na does not have bits set which are not covered by the prefixlen.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_RANGE		prefixlen out of range  *	ISC_R_NOTIMPLENTED	unsupported family  *	ISC_R_FAILURE		extra bits.  */
 end_comment
 
 begin_macro

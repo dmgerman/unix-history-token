@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: ipv6.h,v 1.9.206.1 2004/03/06 08:15:34 marka Exp $ */
+comment|/* $Id: ipv6.h,v 1.10.18.2 2005/04/29 00:17:21 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * IPv6 definitions for systems which do not support IPv6.  */
+comment|/*! \file ipv6.h  * IPv6 definitions for systems which do not support IPv6.  */
 end_comment
 
 begin_comment
@@ -46,6 +46,10 @@ end_include
 
 begin_comment
 comment|/***  *** Types.  ***/
+end_comment
+
+begin_comment
+comment|/*% in6_addr structure */
 end_comment
 
 begin_struct
@@ -79,6 +83,14 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*% IP v6 types */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -106,6 +118,10 @@ directive|define
 name|s6_addr32
 value|_S6_un._S6_u32
 end_define
+
+begin_comment
+comment|/*@}*/
+end_comment
 
 begin_define
 define|#
@@ -140,6 +156,10 @@ name|in6_addr
 name|in6addr_loopback
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*% used in getaddrinfo.c and getnameinfo.c */
+end_comment
 
 begin_struct
 struct|struct
@@ -196,6 +216,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*% in6_pktinfo structure */
+end_comment
+
 begin_struct
 struct|struct
 name|in6_pktinfo
@@ -204,18 +228,18 @@ name|struct
 name|in6_addr
 name|ipi6_addr
 decl_stmt|;
-comment|/* src/dst IPv6 address */
+comment|/*%< src/dst IPv6 address */
 name|unsigned
 name|int
 name|ipi6_ifindex
 decl_stmt|;
-comment|/* send/recv interface index */
+comment|/*%< send/recv interface index */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Unspecified  */
+comment|/*!  * Unspecified IPv6 address  */
 end_comment
 
 begin_define

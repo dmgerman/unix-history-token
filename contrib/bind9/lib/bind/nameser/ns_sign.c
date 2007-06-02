@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_sign.c,v 1.1.2.2.4.2 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: ns_sign.c,v 1.4.18.2 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,7 +151,7 @@ value|do { \ 		if ((ptr) + (count)> eob) { \ 			errno = EMSGSIZE; \ 			return(NS
 end_define
 
 begin_comment
-comment|/* ns_sign  * Parameters:  *	msg		message to be sent  *	msglen		input - length of message  *			output - length of signed message  *	msgsize		length of buffer containing message  *	error		value to put in the error field  *	key		tsig key used for signing  *	querysig	(response), the signature in the query  *	querysiglen	(response), the length of the signature in the query  *	sig		a buffer to hold the generated signature  *	siglen		input - length of signature buffer  *			output - length of signature  *  * Errors:  *	- bad input data (-1)  *	- bad key / sign failed (-BADKEY)  *	- not enough space (NS_TSIG_ERROR_NO_SPACE)  */
+comment|/*%  *  ns_sign  *  * Parameters:  *\li	msg		message to be sent  *\li	msglen		input - length of message  *			output - length of signed message  *\li	msgsize		length of buffer containing message  *\li	error		value to put in the error field  *\li	key		tsig key used for signing  *\li	querysig	(response), the signature in the query  *\li	querysiglen	(response), the length of the signature in the query  *\li	sig		a buffer to hold the generated signature  *\li	siglen		input - length of signature buffer  *			output - length of signature  *  * Errors:  *\li	- bad input data (-1)  *\li	- bad key / sign failed (-BADKEY)  *\li	- not enough space (NS_TSIG_ERROR_NO_SPACE)  */
 end_comment
 
 begin_function
@@ -524,7 +524,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* TTL */
+comment|/*%< TTL */
 name|lenp
 operator|=
 name|cp
@@ -935,7 +935,7 @@ argument_list|,
 name|cp2
 argument_list|)
 expr_stmt|;
-comment|/* Top 16 bits of time */
+comment|/*%< Top 16 bits of time */
 if|if
 condition|(
 name|error
@@ -971,7 +971,7 @@ argument_list|,
 name|cp2
 argument_list|)
 expr_stmt|;
-comment|/* Error */
+comment|/*%< Error */
 if|if
 condition|(
 name|error
@@ -985,7 +985,7 @@ argument_list|,
 name|cp2
 argument_list|)
 expr_stmt|;
-comment|/* Other data length */
+comment|/*%< Other data length */
 else|else
 block|{
 name|PUTSHORT
@@ -997,7 +997,7 @@ argument_list|,
 name|cp2
 argument_list|)
 expr_stmt|;
-comment|/* Other data length */
+comment|/*%< Other data length */
 name|PUTSHORT
 argument_list|(
 literal|0
@@ -1005,7 +1005,7 @@ argument_list|,
 name|cp2
 argument_list|)
 expr_stmt|;
-comment|/* Top 16 bits of time */
+comment|/*%< Top 16 bits of time */
 name|PUTLONG
 argument_list|(
 name|timesigned
@@ -1139,7 +1139,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* already in network order */
+comment|/*%< already in network order */
 name|PUTSHORT
 argument_list|(
 name|error
@@ -1168,7 +1168,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* Other data length */
+comment|/*%< Other data length */
 else|else
 block|{
 name|PUTSHORT
@@ -1180,7 +1180,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* Other data length */
+comment|/*%< Other data length */
 name|BOUNDS_CHECK
 argument_list|(
 name|cp
@@ -1197,7 +1197,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* Top 16 bits of time */
+comment|/*%< Top 16 bits of time */
 name|PUTLONG
 argument_list|(
 name|timesigned
@@ -1799,7 +1799,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* TTL */
+comment|/*%< TTL */
 name|lenp
 operator|=
 name|cp
@@ -1894,7 +1894,7 @@ argument_list|,
 name|cp2
 argument_list|)
 expr_stmt|;
-comment|/* Top 16 bits of time */
+comment|/*%< Top 16 bits of time */
 name|PUTLONG
 argument_list|(
 name|timesigned
@@ -2044,7 +2044,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* already in network order */
+comment|/*%< already in network order */
 name|PUTSHORT
 argument_list|(
 name|error
@@ -2111,6 +2111,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

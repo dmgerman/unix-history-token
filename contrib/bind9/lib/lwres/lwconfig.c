@@ -4,11 +4,15 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: lwconfig.c,v 1.33.2.1.2.10 2006/10/03 23:50:50 marka Exp $ */
+comment|/* $Id: lwconfig.c,v 1.38.18.5 2006/10/03 23:50:51 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/***  *** Module for parsing resolv.conf files.  ***  *** entry points are:  ***	lwres_conf_init(lwres_context_t *ctx)  ***		intializes data structure for subsequent config parsing.  ***  ***	lwres_conf_parse(lwres_context_t *ctx, const char *filename)  ***		parses a file and fills in the data structure.  ***  ***	lwres_conf_print(lwres_context_t *ctx, FILE *fp)  ***		prints the config data structure to the FILE.  ***  ***	lwres_conf_clear(lwres_context_t *ctx)  ***		frees up all the internal memory used by the config data  ***		 structure, returning it to the lwres_context_t.  ***  ***/
+comment|/*! \file */
+end_comment
+
+begin_comment
+comment|/**  * Module for parsing resolv.conf files.  *  *    lwres_conf_init() creates an empty lwres_conf_t structure for  *    lightweight resolver context ctx.  *   *    lwres_conf_clear() frees up all the internal memory used by that  *    lwres_conf_t structure in resolver context ctx.  *   *    lwres_conf_parse() opens the file filename and parses it to initialise  *    the resolver context ctx's lwres_conf_t structure.  *   *    lwres_conf_print() prints the lwres_conf_t structure for resolver  *    context ctx to the FILE fp.  *   * \section lwconfig_return Return Values  *   *    lwres_conf_parse() returns #LWRES_R_SUCCESS if it successfully read and  *    parsed filename. It returns #LWRES_R_FAILURE if filename could not be  *    opened or contained incorrect resolver statements.  *   *    lwres_conf_print() returns #LWRES_R_SUCCESS unless an error occurred  *    when converting the network addresses to a numeric host address  *    string. If this happens, the function returns #LWRES_R_FAILURE.  *   * \section lwconfig_see See Also  *   *    stdio(3), \link resolver resolver \endlink  *   * \section files Files  *   *    /etc/resolv.conf  */
 end_comment
 
 begin_include
@@ -323,7 +327,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Eat characters from FP until EOL or EOF. Returns EOF or '\n'  */
+comment|/*!  * Eat characters from FP until EOL or EOF. Returns EOF or '\n'  */
 end_comment
 
 begin_function
@@ -372,7 +376,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Eats white space up to next newline or non-whitespace character (of  * EOF). Returns the last character read. Comments are considered white  * space.  */
+comment|/*!  * Eats white space up to next newline or non-whitespace character (of  * EOF). Returns the last character read. Comments are considered white  * space.  */
 end_comment
 
 begin_function
@@ -447,7 +451,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Skip over any leading whitespace and then read in the next sequence of  * non-whitespace characters. In this context newline is not considered  * whitespace. Returns EOF on end-of-file, or the character  * that caused the reading to stop.  */
+comment|/*!  * Skip over any leading whitespace and then read in the next sequence of  * non-whitespace characters. In this context newline is not considered  * whitespace. Returns EOF on end-of-file, or the character  * that caused the reading to stop.  */
 end_comment
 
 begin_function
@@ -701,6 +705,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*% intializes data structure for subsequent config parsing. */
+end_comment
+
 begin_function
 name|void
 name|lwres_conf_init
@@ -868,6 +876,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*% Frees up all the internal memory used by the config data structure, returning it to the lwres_context_t. */
+end_comment
 
 begin_function
 name|void
@@ -2596,6 +2608,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*% parses a file and fills in the data structure. */
+end_comment
+
 begin_function
 name|lwres_result_t
 name|lwres_conf_parse
@@ -2924,6 +2940,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*% Prints the config data structure to the FILE. */
+end_comment
 
 begin_function
 name|lwres_result_t
@@ -3505,6 +3525,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*% Returns a pointer to the current config structure. */
+end_comment
 
 begin_function
 name|lwres_conf_t

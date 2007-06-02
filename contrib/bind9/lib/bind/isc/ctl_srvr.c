@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ctl_srvr.c,v 1.3.2.1.4.3 2004/03/17 01:13:35 marka Exp $"
+literal|"$Id: ctl_srvr.c,v 1.6.18.2 2006/12/07 04:53:02 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -721,7 +721,7 @@ comment|/* Public. */
 end_comment
 
 begin_comment
-comment|/*  * void  * ctl_server()  *	create, condition, and start a listener on the control port.  */
+comment|/*%  * void  * ctl_server()  *	create, condition, and start a listener on the control port.  */
 end_comment
 
 begin_function
@@ -1417,7 +1417,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void  * ctl_endserver(ctx)  *	if the control listener is open, close it.  clean out all eventlib  *	stuff.  close all active sessions.  */
+comment|/*%  * void  * ctl_endserver(ctx)  *	if the control listener is open, close it.  clean out all eventlib  *	stuff.  close all active sessions.  */
 end_comment
 
 begin_function
@@ -1586,7 +1586,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If body is non-NULL then it we add a "." line after it.  * Caller must have  escaped lines with leading ".".  */
+comment|/*%  * If body is non-NULL then it we add a "." line after it.  * Caller must have  escaped lines with leading ".".  */
 end_comment
 
 begin_function
@@ -3527,10 +3527,6 @@ name|struct
 name|ctl_sctx
 modifier|*
 name|ctx
-init|=
-name|sess
-operator|->
-name|ctx
 decl_stmt|;
 name|char
 modifier|*
@@ -3579,6 +3575,12 @@ name|state
 operator|==
 name|reading_data
 argument_list|)
+expr_stmt|;
+name|ctx
+operator|=
+name|sess
+operator|->
+name|ctx
 expr_stmt|;
 name|evTouchIdleTimer
 argument_list|(
@@ -5042,6 +5044,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

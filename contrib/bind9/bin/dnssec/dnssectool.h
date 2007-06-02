@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: dnssectool.h,v 1.15.12.3 2004/03/08 04:04:18 marka Exp $ */
+comment|/* $Id: dnssectool.h,v 1.18 2004/03/05 04:57:41 marka Exp $ */
 end_comment
 
 begin_ifndef

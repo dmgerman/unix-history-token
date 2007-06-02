@@ -14,7 +14,7 @@ name|USE_MD5
 end_ifdef
 
 begin_comment
-comment|/* Added by ogud@tis.com 1998/1/26 */
+comment|/*%< Added by ogud@tis.com 1998/1/26 */
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Implemented from RFC1321 The MD5 Message-Digest Algorithm  */
+comment|/*! \file  * \brief  *  Implemented from RFC1321 The MD5 Message-Digest Algorithm  */
 end_comment
 
 begin_define
@@ -257,7 +257,7 @@ name|c
 operator|->
 name|Nl
 condition|)
-comment|/* overflow */
+comment|/*%< overflow */
 name|c
 operator|->
 name|Nh
@@ -427,7 +427,7 @@ operator|)
 operator|<
 literal|4U
 condition|)
-comment|/* ugly, add char's to a word */
+comment|/*%< ugly, add char's to a word */
 block|{
 name|l
 operator|=
@@ -775,7 +775,7 @@ name|sc
 operator|>>
 literal|2
 expr_stmt|;
-comment|/* words to copy */
+comment|/*%< words to copy */
 ifdef|#
 directive|ifdef
 name|L_ENDIAN

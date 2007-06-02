@@ -1,18 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: hash.c,v 1.2.2.4.2.3 2006/01/04 00:37:22 marka Exp $ */
+comment|/* $Id: hash.c,v 1.6.18.5 2006/01/04 00:37:23 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Some portion of this code was derived from universal hash function  * libraries of Rice University.   */
-end_comment
-
-begin_comment
-comment|/*  "UH Universal Hashing Library"  Copyright ((c)) 2002, Rice University All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:      * Redistributions of source code must retain the above copyright     notice, this list of conditions and the following disclaimer.      * Redistributions in binary form must reproduce the above     copyright notice, this list of conditions and the following     disclaimer in the documentation and/or other materials provided     with the distribution.      * Neither the name of Rice University (RICE) nor the names of its     contributors may be used to endorse or promote products derived     from this software without specific prior written permission.   This software is provided by RICE and the contributors on an "as is" basis, without any representations or warranties of any kind, express or implied including, but not limited to, representations or warranties of non-infringement, merchantability or fitness for a particular purpose. In no event shall RICE or contributors be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage. */
+comment|/*! \file  * Some portion of this code was derived from universal hash function  * libraries of Rice University.  \section license UH Universal Hashing Library  Copyright ((c)) 2002, Rice University All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:      * Redistributions of source code must retain the above copyright     notice, this list of conditions and the following disclaimer.      * Redistributions in binary form must reproduce the above     copyright notice, this list of conditions and the following     disclaimer in the documentation and/or other materials provided     with the distribution.      * Neither the name of Rice University (RICE) nor the names of its     contributors may be used to endorse or promote products derived     from this software without specific prior written permission.   This software is provided by RICE and the contributors on an "as is" basis, without any representations or warranties of any kind, express or implied including, but not limited to, representations or warranties of non-infringement, merchantability or fitness for a particular purpose. In no event shall RICE or contributors be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage. */
 end_comment
 
 begin_include
@@ -99,7 +95,7 @@ value|ISC_MAGIC_VALID((h), HASH_MAGIC)
 end_define
 
 begin_comment
-comment|/*  * A large 32-bit prime number that specifies the range of the hash output.  */
+comment|/*%  * A large 32-bit prime number that specifies the range of the hash output.  */
 end_comment
 
 begin_define
@@ -114,7 +110,11 @@ comment|/* 2^32 -  5 */
 end_comment
 
 begin_comment
-comment|/*  * Types of random seed and hash accumulator.  Perhaps they can be system  * dependent.  */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*%  * Types of random seed and hash accumulator.  Perhaps they can be system  * dependent.  */
 end_comment
 
 begin_typedef
@@ -130,6 +130,14 @@ name|isc_uint16_t
 name|hash_random_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*% isc hash structure */
+end_comment
 
 begin_struct
 struct|struct
@@ -156,21 +164,21 @@ name|isc_entropy_t
 modifier|*
 name|entropy
 decl_stmt|;
-comment|/* entropy source */
+comment|/*%< entropy source */
 name|unsigned
 name|int
 name|limit
 decl_stmt|;
-comment|/* upper limit of key length */
+comment|/*%< upper limit of key length */
 name|size_t
 name|vectorlen
 decl_stmt|;
-comment|/* size of the vector below */
+comment|/*%< size of the vector below */
 name|hash_random_t
 modifier|*
 name|rndvector
 decl_stmt|;
-comment|/* random vector for universal hashing */
+comment|/*%< random vector for universal hashing */
 block|}
 struct|;
 end_struct
@@ -747,7 +755,7 @@ name|hctxp
 parameter_list|)
 block|{
 name|isc_result_t
-name|ret
+name|result
 decl_stmt|;
 name|isc_hash_t
 modifier|*
@@ -874,7 +882,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ret
+name|result
 operator|=
 name|ISC_R_NOMEMORY
 expr_stmt|;
@@ -883,8 +891,8 @@ name|errout
 goto|;
 block|}
 comment|/* 	 * We need a lock. 	 */
-if|if
-condition|(
+name|result
+operator|=
 name|isc_mutex_init
 argument_list|(
 operator|&
@@ -892,18 +900,16 @@ name|hctx
 operator|->
 name|lock
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|ret
-operator|=
-name|ISC_R_UNEXPECTED
-expr_stmt|;
 goto|goto
 name|errout
 goto|;
-block|}
 comment|/* 	 * From here down, no failures will/can occur. 	 */
 name|hctx
 operator|->
@@ -933,6 +939,8 @@ name|initialized
 operator|=
 name|ISC_FALSE
 expr_stmt|;
+name|result
+operator|=
 name|isc_refcount_init
 argument_list|(
 operator|&
@@ -943,6 +951,15 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+goto|goto
+name|cleanup_lock
+goto|;
 name|hctx
 operator|->
 name|entropy
@@ -993,6 +1010,16 @@ operator|(
 name|ISC_R_SUCCESS
 operator|)
 return|;
+name|cleanup_lock
+label|:
+name|DESTROYLOCK
+argument_list|(
+operator|&
+name|hctx
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|errout
 label|:
 name|isc_mem_put
@@ -1024,7 +1051,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|result
 operator|)
 return|;
 block|}

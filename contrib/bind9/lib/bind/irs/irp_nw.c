@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp_nw.c,v 1.1.206.2 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: irp_nw.c,v 1.2.18.2 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,7 +338,7 @@ comment|/* Public */
 end_comment
 
 begin_comment
-comment|/*  * struct irs_nw * irs_irp_nw(struct irs_acc *this)   *  */
+comment|/*%  * struct irs_nw * irs_irp_nw(struct irs_acc *this)   *  */
 end_comment
 
 begin_function
@@ -507,7 +507,7 @@ comment|/* Methods */
 end_comment
 
 begin_comment
-comment|/*  * void nw_close(struct irs_nw *this)   *  */
+comment|/*%  * void nw_close(struct irs_nw *this)   *  */
 end_comment
 
 begin_function
@@ -570,7 +570,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct nwent * nw_byaddr(struct irs_nw *this, void *net,   * 				int length, int type)   *  */
+comment|/*%  * struct nwent * nw_byaddr(struct irs_nw *this, void *net,   * 				int length, int type)   *  */
 end_comment
 
 begin_function
@@ -638,7 +638,7 @@ index|[
 literal|24
 index|]
 decl_stmt|;
-comment|/* bigenough for ip4 w/ cidr spec. */
+comment|/*%< bigenough for ip4 w/ cidr spec. */
 name|char
 name|text
 index|[
@@ -811,7 +811,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct nwent * nw_byname(struct irs_nw *this, const char *name, int type)   *  */
+comment|/*%  * struct nwent * nw_byname(struct irs_nw *this, const char *name, int type)   *  */
 end_comment
 
 begin_function
@@ -1045,7 +1045,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void nw_rewind(struct irs_nw *this)   *  */
+comment|/*%  * void nw_rewind(struct irs_nw *this)   *  */
 end_comment
 
 begin_function
@@ -1159,7 +1159,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct nwent * nw_next(struct irs_nw *this)   *  * Notes:  * 	  * 	Prepares the cache if necessary and returns the first, or   * 	next item from it.  */
+comment|/*%  * 	Prepares the cache if necessary and returns the first, or   * 	next item from it.  */
 end_comment
 
 begin_function
@@ -1349,7 +1349,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void nw_minimize(struct irs_nw *this)   *  */
+comment|/*%  * void nw_minimize(struct irs_nw *this)   *  */
 end_comment
 
 begin_function
@@ -1392,7 +1392,7 @@ comment|/* private. */
 end_comment
 
 begin_comment
-comment|/*  * static void free_passwd(struct passwd *pw);  *  *	deallocate all the memory irp_unmarshall_pw allocated.  *  */
+comment|/*%  *	deallocate all the memory irp_unmarshall_pw allocated.  *  */
 end_comment
 
 begin_function
@@ -1491,6 +1491,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

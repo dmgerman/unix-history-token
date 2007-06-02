@@ -277,5 +277,9 @@ begin_comment
 comment|/* MEMCLUSTER_H */
 end_comment
 
+begin_comment
+comment|/*! \file */
+end_comment
+
 end_unit
 

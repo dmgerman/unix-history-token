@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -8,15 +8,15 @@ comment|/*  * Copyright (c) 1987, 1993, 1994  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id: commandline.c,v 1.15.206.1 2004/03/06 08:14:28 marka Exp $ */
+comment|/* $Id: commandline.c,v 1.16.18.2 2005/04/29 00:16:45 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * This file was adapted from the NetBSD project's source tree, RCS ID:  *    NetBSD: getopt.c,v 1.15 1999/09/20 04:39:37 lukem Exp  *  * The primary change has been to rename items to the ISC namespace  * and format in the ISC coding style.  */
+comment|/*! \file  * This file was adapted from the NetBSD project's source tree, RCS ID:  *    NetBSD: getopt.c,v 1.15 1999/09/20 04:39:37 lukem Exp  *  * The primary change has been to rename items to the ISC namespace  * and format in the ISC coding style.  */
 end_comment
 
 begin_comment
-comment|/*  * Principal Authors: Computer Systems Research Group at UC Berkeley  * Principal ISC caretaker: DCL  */
+comment|/*  * \author Principal Authors: Computer Systems Research Group at UC Berkeley  * \author Principal ISC caretaker: DCL  */
 end_comment
 
 begin_include
@@ -56,7 +56,7 @@ file|<isc/util.h>
 end_include
 
 begin_comment
-comment|/* Index into parent argv vector. */
+comment|/*% Index into parent argv vector. */
 end_comment
 
 begin_decl_stmt
@@ -69,7 +69,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Character checked for validity. */
+comment|/*% Character checked for validity. */
 end_comment
 
 begin_decl_stmt
@@ -80,7 +80,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Argument associated with option. */
+comment|/*% Argument associated with option. */
 end_comment
 
 begin_decl_stmt
@@ -92,7 +92,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* For printing error messages. */
+comment|/*% For printing error messages. */
 end_comment
 
 begin_decl_stmt
@@ -104,7 +104,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Print error messages. */
+comment|/*% Print error messages. */
 end_comment
 
 begin_decl_stmt
@@ -117,7 +117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Reset processing. */
+comment|/*% Reset processing. */
 end_comment
 
 begin_decl_stmt
@@ -160,7 +160,7 @@ value|&endopt
 end_define
 
 begin_comment
-comment|/*  * getopt --  *	Parse argc/argv argument vector.  */
+comment|/*!  * getopt --  *	Parse argc/argv argument vector.  */
 end_comment
 
 begin_function

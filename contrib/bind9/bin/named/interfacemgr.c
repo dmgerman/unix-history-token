@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: interfacemgr.c,v 1.59.2.5.8.18 2006/07/19 00:16:28 marka Exp $ */
+comment|/* $Id: interfacemgr.c,v 1.76.18.8 2006/07/20 01:10:30 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -92,6 +96,10 @@ define|\
 value|ns_g_lctx, NS_LOGCATEGORY_NETWORK, NS_LOGMODULE_INTERFACEMGR
 end_define
 
+begin_comment
+comment|/*% nameserver interface manager structure */
+end_comment
+
 begin_struct
 struct|struct
 name|ns_interfacemgr
@@ -100,7 +108,7 @@ name|unsigned
 name|int
 name|magic
 decl_stmt|;
-comment|/* Magic number. */
+comment|/*%< Magic number. */
 name|int
 name|references
 decl_stmt|;
@@ -111,17 +119,17 @@ name|isc_mem_t
 modifier|*
 name|mctx
 decl_stmt|;
-comment|/* Memory context. */
+comment|/*%< Memory context. */
 name|isc_taskmgr_t
 modifier|*
 name|taskmgr
 decl_stmt|;
-comment|/* Task manager. */
+comment|/*%< Task manager. */
 name|isc_socketmgr_t
 modifier|*
 name|socketmgr
 decl_stmt|;
-comment|/* Socket manager. */
+comment|/*%< Socket manager. */
 name|dns_dispatchmgr_t
 modifier|*
 name|dispatchmgr
@@ -130,7 +138,7 @@ name|unsigned
 name|int
 name|generation
 decl_stmt|;
-comment|/* Current generation no. */
+comment|/*%< Current generation no. */
 name|ns_listenlist_t
 modifier|*
 name|listenon4
@@ -142,14 +150,20 @@ decl_stmt|;
 name|dns_aclenv_t
 name|aclenv
 decl_stmt|;
-comment|/* Localhost/localnets ACLs */
+comment|/*%< Localhost/localnets ACLs */
 name|ISC_LIST
 argument_list|(
 argument|ns_interface_t
 argument_list|)
 name|interfaces
 expr_stmt|;
-comment|/* List of interfaces. */
+comment|/*%< List of interfaces. */
+name|ISC_LIST
+argument_list|(
+argument|isc_sockaddr_t
+argument_list|)
+name|listenon
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -158,6 +172,18 @@ begin_function_decl
 specifier|static
 name|void
 name|purge_old_interfaces
+parameter_list|(
+name|ns_interfacemgr_t
+modifier|*
+name|mgr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|clearlistenon
 parameter_list|(
 name|ns_interfacemgr_t
 modifier|*
@@ -311,6 +337,13 @@ argument_list|(
 name|mgr
 operator|->
 name|interfaces
+argument_list|)
+expr_stmt|;
+name|ISC_LIST_INIT
+argument_list|(
+name|mgr
+operator|->
+name|listenon
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The listen-on lists are initially empty. 	 */
@@ -471,6 +504,11 @@ operator|&
 name|mgr
 operator|->
 name|listenon6
+argument_list|)
+expr_stmt|;
+name|clearlistenon
+argument_list|(
+name|mgr
 argument_list|)
 expr_stmt|;
 name|DESTROYLOCK
@@ -699,7 +737,7 @@ name|mgr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Shut down and detach all interfaces. 	 * By incrementing the generation count, we make purge_old_interfaces() 	 * consider all interfaces "old". 	 */
+comment|/*% 	 * Shut down and detach all interfaces. 	 * By incrementing the generation count, we make purge_old_interfaces() 	 * consider all interfaces "old". 	 */
 name|mgr
 operator|->
 name|generation
@@ -1928,7 +1966,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Search the interface list for an interface whose address and port  * both match those of 'addr'.  Return a pointer to it, or NULL if not found.  */
+comment|/*%  * Search the interface list for an interface whose address and port  * both match those of 'addr'.  Return a pointer to it, or NULL if not found.  */
 end_comment
 
 begin_function
@@ -1998,7 +2036,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove any interfaces whose generation number is not the current one.  */
+comment|/*%  * Remove any interfaces whose generation number is not the current one.  */
 end_comment
 
 begin_function
@@ -2495,6 +2533,204 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|setup_listenon
+parameter_list|(
+name|ns_interfacemgr_t
+modifier|*
+name|mgr
+parameter_list|,
+name|isc_interface_t
+modifier|*
+name|interface
+parameter_list|,
+name|in_port_t
+name|port
+parameter_list|)
+block|{
+name|isc_sockaddr_t
+modifier|*
+name|addr
+decl_stmt|;
+name|isc_sockaddr_t
+modifier|*
+name|old
+decl_stmt|;
+name|addr
+operator|=
+name|isc_mem_get
+argument_list|(
+name|mgr
+operator|->
+name|mctx
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|==
+name|NULL
+condition|)
+return|return;
+name|isc_sockaddr_fromnetaddr
+argument_list|(
+name|addr
+argument_list|,
+operator|&
+name|interface
+operator|->
+name|address
+argument_list|,
+name|port
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|old
+operator|=
+name|ISC_LIST_HEAD
+argument_list|(
+name|mgr
+operator|->
+name|listenon
+argument_list|)
+init|;
+name|old
+operator|!=
+name|NULL
+condition|;
+name|old
+operator|=
+name|ISC_LIST_NEXT
+argument_list|(
+name|old
+argument_list|,
+name|link
+argument_list|)
+control|)
+if|if
+condition|(
+name|isc_sockaddr_equal
+argument_list|(
+name|addr
+argument_list|,
+name|old
+argument_list|)
+condition|)
+break|break;
+if|if
+condition|(
+name|old
+operator|!=
+name|NULL
+condition|)
+name|isc_mem_put
+argument_list|(
+name|mgr
+operator|->
+name|mctx
+argument_list|,
+name|addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|ISC_LIST_APPEND
+argument_list|(
+name|mgr
+operator|->
+name|listenon
+argument_list|,
+name|addr
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|clearlistenon
+parameter_list|(
+name|ns_interfacemgr_t
+modifier|*
+name|mgr
+parameter_list|)
+block|{
+name|isc_sockaddr_t
+modifier|*
+name|old
+decl_stmt|;
+name|old
+operator|=
+name|ISC_LIST_HEAD
+argument_list|(
+name|mgr
+operator|->
+name|listenon
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|old
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ISC_LIST_UNLINK
+argument_list|(
+name|mgr
+operator|->
+name|listenon
+argument_list|,
+name|old
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+name|isc_mem_put
+argument_list|(
+name|mgr
+operator|->
+name|mctx
+argument_list|,
+name|old
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|old
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|old
+operator|=
+name|ISC_LIST_HEAD
+argument_list|(
+name|mgr
+operator|->
+name|listenon
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
 name|isc_result_t
 name|do_scan
 parameter_list|(
@@ -2564,6 +2800,9 @@ name|isc_boolean_t
 name|log_explicit
 init|=
 name|ISC_FALSE
+decl_stmt|;
+name|isc_boolean_t
+name|dolistenon
 decl_stmt|;
 if|if
 condition|(
@@ -2930,6 +3169,11 @@ condition|)
 goto|goto
 name|cleanup_iter
 goto|;
+name|clearlistenon
+argument_list|(
+name|mgr
+argument_list|)
+expr_stmt|;
 block|}
 for|for
 control|(
@@ -3105,6 +3349,10 @@ name|mgr
 operator|->
 name|listenon6
 expr_stmt|;
+name|dolistenon
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 for|for
 control|(
 name|le
@@ -3244,6 +3492,34 @@ operator|<=
 literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|adjusting
+operator|==
+name|ISC_FALSE
+operator|&&
+name|dolistenon
+operator|==
+name|ISC_TRUE
+condition|)
+block|{
+name|setup_listenon
+argument_list|(
+name|mgr
+argument_list|,
+operator|&
+name|interface
+argument_list|,
+name|le
+operator|->
+name|port
+argument_list|)
+expr_stmt|;
+name|dolistenon
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+block|}
 comment|/* 			 * The case of "any" IPv6 address will require 			 * special considerations later, so remember it. 			 */
 if|if
 condition|(
@@ -3955,6 +4231,78 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|isc_boolean_t
+name|ns_interfacemgr_listeningon
+parameter_list|(
+name|ns_interfacemgr_t
+modifier|*
+name|mgr
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|addr
+parameter_list|)
+block|{
+name|isc_sockaddr_t
+modifier|*
+name|old
+decl_stmt|;
+name|old
+operator|=
+name|ISC_LIST_HEAD
+argument_list|(
+name|mgr
+operator|->
+name|listenon
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|old
+operator|=
+name|ISC_LIST_HEAD
+argument_list|(
+name|mgr
+operator|->
+name|listenon
+argument_list|)
+init|;
+name|old
+operator|!=
+name|NULL
+condition|;
+name|old
+operator|=
+name|ISC_LIST_NEXT
+argument_list|(
+name|old
+argument_list|,
+name|link
+argument_list|)
+control|)
+if|if
+condition|(
+name|isc_sockaddr_equal
+argument_list|(
+name|old
+argument_list|,
+name|addr
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ISC_TRUE
+operator|)
+return|;
+return|return
+operator|(
+name|ISC_FALSE
+operator|)
+return|;
 block|}
 end_function
 

@@ -4,11 +4,11 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: ifiter_ioctl.c,v 1.19.2.5.2.19 2006/02/03 23:51:37 marka Exp $ */
+comment|/* $Id: ifiter_ioctl.c,v 1.44.18.11 2006/02/03 23:51:38 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Obtain the list of network interfaces using the SIOCGLIFCONF ioctl.  * See netintro(4).  */
+comment|/*! \file  * \brief  * Obtain the list of network interfaces using the SIOCGLIFCONF ioctl.  * See netintro(4).  */
 end_comment
 
 begin_if
@@ -338,7 +338,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Size of buffer for SIOCGLIFCONF, in bytes.  We assume no sane system  * will have more than a megabyte of interface configuration data.  */
+comment|/*%  * Size of buffer for SIOCGLIFCONF, in bytes.  We assume no sane system  * will have more than a megabyte of interface configuration data.  */
 end_comment
 
 begin_define

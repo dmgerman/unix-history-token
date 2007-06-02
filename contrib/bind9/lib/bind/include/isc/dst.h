@@ -26,27 +26,27 @@ name|char
 modifier|*
 name|dk_key_name
 decl_stmt|;
-comment|/* name of the key */
+comment|/*%< name of the key */
 name|int
 name|dk_key_size
 decl_stmt|;
-comment|/* this is the size of the key in bits */
+comment|/*%< this is the size of the key in bits */
 name|int
 name|dk_proto
 decl_stmt|;
-comment|/* what protocols this key can be used for */
+comment|/*%< what protocols this key can be used for */
 name|int
 name|dk_alg
 decl_stmt|;
-comment|/* algorithm number from key record */
+comment|/*%< algorithm number from key record */
 name|u_int32_t
 name|dk_flags
 decl_stmt|;
-comment|/* and the flags of the public key */
+comment|/*%< and the flags of the public key */
 name|u_int16_t
 name|dk_id
 decl_stmt|;
-comment|/* identifier of the key */
+comment|/*%< identifier of the key */
 block|}
 name|DST_KEY
 typedef|;
@@ -354,29 +354,29 @@ parameter_list|(
 specifier|const
 name|int
 parameter_list|,
-comment|/* specifies INIT/UPDATE/FINAL/ALL */
+comment|/*!<   specifies INIT/UPDATE/FINAL/ALL  */
 name|DST_KEY
 modifier|*
 parameter_list|,
-comment|/* the key to use */
+comment|/*!<   the key to use  */
 name|void
 modifier|*
 modifier|*
 parameter_list|,
-comment|/* pointer to state structure */
+comment|/*!<   pointer to state structure  */
 specifier|const
 name|u_char
 modifier|*
 parameter_list|,
-comment|/* data to be signed */
+comment|/*!<   data to be signed  */
 specifier|const
 name|int
 parameter_list|,
-comment|/* length of input data */
+comment|/*!<   length of input data  */
 name|u_char
 modifier|*
 parameter_list|,
-comment|/* buffer to write signature to */
+comment|/*!<   buffer to write signature to  */
 specifier|const
 name|int
 parameter_list|)
@@ -384,7 +384,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* size of output buffer */
+comment|/*!<   size of output buffer  */
 end_comment
 
 begin_function_decl
@@ -394,30 +394,30 @@ parameter_list|(
 specifier|const
 name|int
 parameter_list|,
-comment|/* specifies INIT/UPDATE/FINAL/ALL */
+comment|/*!<   specifies INIT/UPDATE/FINAL/ALL  */
 name|DST_KEY
 modifier|*
 parameter_list|,
-comment|/* the key to use */
+comment|/*!<   the key to use  */
 name|void
 modifier|*
 modifier|*
 parameter_list|,
-comment|/* pointer to state structure */
+comment|/*!<   pointer to state structure  */
 specifier|const
 name|u_char
 modifier|*
 parameter_list|,
-comment|/* data to be verified */
+comment|/*!<   data to be verified  */
 specifier|const
 name|int
 parameter_list|,
-comment|/* length of input data */
+comment|/*!<   length of input data  */
 specifier|const
 name|u_char
 modifier|*
 parameter_list|,
-comment|/* buffer containing signature */
+comment|/*!<   buffer containing signature  */
 specifier|const
 name|int
 parameter_list|)
@@ -425,7 +425,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* length of signature */
+comment|/*!<   length of signature  */
 end_comment
 
 begin_function_decl
@@ -437,15 +437,15 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-comment|/* name of key */
+comment|/*!<   name of key  */
 specifier|const
 name|u_int16_t
 parameter_list|,
-comment|/* key tag identifier */
+comment|/*!<   key tag identifier  */
 specifier|const
 name|int
 parameter_list|,
-comment|/* key algorithm */
+comment|/*!<   key algorithm  */
 specifier|const
 name|int
 parameter_list|)
@@ -453,7 +453,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Private/PublicKey wanted*/
+comment|/*!<   Private/PublicKey wanted */
 end_comment
 
 begin_function_decl
@@ -464,7 +464,7 @@ specifier|const
 name|DST_KEY
 modifier|*
 parameter_list|,
-comment|/* key to write out */
+comment|/*!<   key to write out  */
 specifier|const
 name|int
 parameter_list|)
@@ -472,7 +472,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Public/Private */
+comment|/*!<   Public/Private  */
 end_comment
 
 begin_function_decl
@@ -484,12 +484,12 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-comment|/* KEY record name */
+comment|/*!<   KEY record name  */
 specifier|const
 name|u_char
 modifier|*
 parameter_list|,
-comment|/* KEY RDATA */
+comment|/*!<   KEY RDATA  */
 specifier|const
 name|int
 parameter_list|)
@@ -497,7 +497,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* size of input buffer*/
+comment|/*!<   size of input buffer */
 end_comment
 
 begin_function_decl
@@ -508,11 +508,11 @@ specifier|const
 name|DST_KEY
 modifier|*
 parameter_list|,
-comment|/* key to translate */
+comment|/*!<   key to translate  */
 name|u_char
 modifier|*
 parameter_list|,
-comment|/* output buffer */
+comment|/*!<   output buffer  */
 specifier|const
 name|int
 parameter_list|)
@@ -520,7 +520,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* size of out_storage*/
+comment|/*!<   size of out_storage */
 end_comment
 
 begin_function_decl
@@ -532,24 +532,24 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-comment|/* name of the key */
+comment|/*!<   name of the key  */
 specifier|const
 name|int
 parameter_list|,
-comment|/* algorithm */
+comment|/*!<   algorithm  */
 specifier|const
 name|int
 parameter_list|,
-comment|/* dns flags */
+comment|/*!<   dns flags  */
 specifier|const
 name|int
 parameter_list|,
-comment|/* dns protocol */
+comment|/*!<   dns protocol  */
 specifier|const
 name|u_char
 modifier|*
 parameter_list|,
-comment|/* key in dns wire fmt */
+comment|/*!<   key in dns wire fmt  */
 specifier|const
 name|int
 parameter_list|)
@@ -557,7 +557,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* size of key */
+comment|/*!<   size of key  */
 end_comment
 
 begin_function_decl
@@ -584,23 +584,23 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-comment|/* name of new key */
+comment|/*!<   name of new key  */
 specifier|const
 name|int
 parameter_list|,
-comment|/* key algorithm to generate */
+comment|/*!<   key algorithm to generate  */
 specifier|const
 name|int
 parameter_list|,
-comment|/* size of new key */
+comment|/*!<   size of new key  */
 specifier|const
 name|int
 parameter_list|,
-comment|/* alg dependent parameter*/
+comment|/*!<   alg dependent parameter */
 specifier|const
 name|int
 parameter_list|,
-comment|/* key DNS flags */
+comment|/*!<   key DNS flags  */
 specifier|const
 name|int
 parameter_list|)
@@ -608,7 +608,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* key DNS protocol */
+comment|/*!<   key DNS protocol  */
 end_comment
 
 begin_function_decl
@@ -691,7 +691,7 @@ value|8192
 end_define
 
 begin_comment
-comment|/* large enough to store any key */
+comment|/*%< large enough to store any key */
 end_comment
 
 begin_comment
@@ -710,7 +710,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* initialize digest */
+comment|/*%< initialize digest */
 end_comment
 
 begin_define
@@ -721,7 +721,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* add data to digest */
+comment|/*%< add data to digest */
 end_comment
 
 begin_define
@@ -732,7 +732,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* generate/verify signature */
+comment|/*%< generate/verify signature */
 end_comment
 
 begin_define
@@ -1014,6 +1014,10 @@ end_endif
 
 begin_comment
 comment|/* DST_H */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

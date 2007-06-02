@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostent.c,v 1.1.2.2.4.3 2006/01/10 05:09:16 marka Exp $"
+literal|"$Id: gethostent.c,v 1.6.18.2 2006/01/10 05:09:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1301,11 +1301,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Public functions  */
+comment|/*%  *	Public functions  */
 end_comment
 
 begin_comment
-comment|/*  *	AI_V4MAPPED + AF_INET6  *	If no IPv6 address then a query for IPv4 and map returned values.  *  *	AI_ALL + AI_V4MAPPED + AF_INET6  *	Return IPv6 and IPv4 mapped.  *  *	AI_ADDRCONFIG  *	Only return IPv6 / IPv4 address if there is an interface of that  *	type active.  */
+comment|/*%  *	AI_V4MAPPED + AF_INET6  *	If no IPv6 address then a query for IPv4 and map returned values.  *  *	AI_ALL + AI_V4MAPPED + AF_INET6  *	Return IPv6 and IPv4 mapped.  *  *	AI_ADDRCONFIG  *	Only return IPv6 / IPv4 address if there is an interface of that  *	type active.  */
 end_comment
 
 begin_function
@@ -2426,11 +2426,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Private  */
+comment|/*%  * Private  */
 end_comment
 
 begin_comment
-comment|/*  * Scan the interface table and set have_v4 and have_v6 depending  * upon whether there are IPv4 and IPv6 interface addresses.  *  * Returns:  *	0 on success  *	-1 on failure.  */
+comment|/*%  * Scan the interface table and set have_v4 and have_v6 depending  * upon whether there are IPv4 and IPv6 interface addresses.  *  * Returns:  *	0 on success  *	-1 on failure.  */
 end_comment
 
 begin_if
@@ -2686,7 +2686,7 @@ name|lifc_family
 operator|=
 name|AF_UNSPEC
 expr_stmt|;
-comment|/* request all families */
+comment|/*%< request all families */
 name|lifc
 operator|.
 name|lifc_flags
@@ -2795,7 +2795,7 @@ name|lifc
 operator|.
 name|lifc_len
 expr_stmt|;
-comment|/* skip over if's with big ifr_addr's */
+comment|/*%< skip over if's with big ifr_addr's */
 for|for
 control|(
 name|cp
@@ -3401,7 +3401,7 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-comment|/* leave space for IPv6 addresses */
+comment|/*%< leave space for IPv6 addresses */
 name|struct
 name|ifreq
 name|ifreq
@@ -3674,7 +3674,7 @@ name|ifc
 operator|.
 name|ifc_len
 expr_stmt|;
-comment|/* skip over if's with big ifr_addr's */
+comment|/*%< skip over if's with big ifr_addr's */
 for|for
 control|(
 name|cp
@@ -4196,13 +4196,13 @@ name|addresses
 init|=
 literal|1
 decl_stmt|;
-comment|/* NULL terminator */
+comment|/*%< NULL terminator */
 name|int
 name|names
 init|=
 literal|1
 decl_stmt|;
-comment|/* NULL terminator */
+comment|/*%< NULL terminator */
 name|int
 name|len
 init|=
@@ -5503,7 +5503,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|grot
-comment|/* for future use in gethostbyaddr(), for "SUNSECURITY" */
+comment|/*%< for future use in gethostbyaddr(), for "SUNSECURITY" */
 name|struct
 name|hostent
 modifier|*
@@ -5689,6 +5689,10 @@ end_endif
 
 begin_comment
 comment|/*__BIND_NOSTATIC*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

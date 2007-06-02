@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: tkey.h,v 1.18.206.1 2004/03/06 08:14:00 marka Exp $ */
+comment|/* $Id: tkey.h,v 1.19.18.2 2005/04/29 00:16:23 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|DNS_TKEY_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -130,7 +134,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Create an empty TKEY context.  *  * 	Requires:  *		'mctx' is not NULL  *		'tctx' is not NULL  *		'*tctx' is NULL  *  *	Returns  *		ISC_R_SUCCESS  *		ISC_R_NOMEMORY  *		return codes from dns_name_fromtext()  */
+comment|/*%<  *	Create an empty TKEY context.  *  * 	Requires:  *\li		'mctx' is not NULL  *\li		'tctx' is not NULL  *\li		'*tctx' is NULL  *  *	Returns  *\li		#ISC_R_SUCCESS  *\li		#ISC_R_NOMEMORY  *\li		return codes from dns_name_fromtext()  */
 end_comment
 
 begin_function_decl
@@ -146,7 +150,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *      Frees all data associated with the TKEY context  *  * 	Requires:  *		'tctx' is not NULL  *		'*tctx' is not NULL  */
+comment|/*%<  *      Frees all data associated with the TKEY context  *  * 	Requires:  *\li		'tctx' is not NULL  *\li		'*tctx' is not NULL  */
 end_comment
 
 begin_function_decl
@@ -169,7 +173,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Processes a query containing a TKEY record, adding or deleting TSIG  *	keys if necessary, and modifies the message to contain the response.  *  *	Requires:  *		'msg' is a valid message  *		'tctx' is a valid TKEY context  *		'ring' is a valid TSIG keyring  *  *	Returns  *		ISC_R_SUCCESS	msg was updated (the TKEY operation succeeded,  *				or msg now includes a TKEY with an error set)  *		DNS_R_FORMERR	the packet was malformed (missing a TKEY  *				or KEY).  *		other		An error occurred while processing the message  */
+comment|/*%<  *	Processes a query containing a TKEY record, adding or deleting TSIG  *	keys if necessary, and modifies the message to contain the response.  *  *	Requires:  *\li		'msg' is a valid message  *\li		'tctx' is a valid TKEY context  *\li		'ring' is a valid TSIG keyring  *  *	Returns  *\li		#ISC_R_SUCCESS	msg was updated (the TKEY operation succeeded,  *				or msg now includes a TKEY with an error set)  *		DNS_R_FORMERR	the packet was malformed (missing a TKEY  *				or KEY).  *\li		other		An error occurred while processing the message  */
 end_comment
 
 begin_function_decl
@@ -203,7 +207,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Builds a query containing a TKEY that will generate a shared  *	secret using a Diffie-Hellman key exchange.  The shared key  *	will be of the specified algorithm (only DNS_TSIG_HMACMD5_NAME  *	is supported), and will be named either 'name',  *	'name' + server chosen domain, or random data + server chosen domain  *	if 'name' == dns_rootname.  If nonce is not NULL, it supplies  *	random data used in the shared secret computation.  The key is  *	requested to have the specified lifetime (in seconds)  *  *  *	Requires:  *		'msg' is a valid message  *		'key' is a valid Diffie Hellman dst key  *		'name' is a valid name  *		'algorithm' is a valid name  *  *	Returns:  *		ISC_R_SUCCESS	msg was successfully updated to include the  *				query to be sent  *		other		an error occurred while building the message  */
+comment|/*%<  *	Builds a query containing a TKEY that will generate a shared  *	secret using a Diffie-Hellman key exchange.  The shared key  *	will be of the specified algorithm (only DNS_TSIG_HMACMD5_NAME  *	is supported), and will be named either 'name',  *	'name' + server chosen domain, or random data + server chosen domain  *	if 'name' == dns_rootname.  If nonce is not NULL, it supplies  *	random data used in the shared secret computation.  The key is  *	requested to have the specified lifetime (in seconds)  *  *  *	Requires:  *\li		'msg' is a valid message  *\li		'key' is a valid Diffie Hellman dst key  *\li		'name' is a valid name  *\li		'algorithm' is a valid name  *  *	Returns:  *\li		#ISC_R_SUCCESS	msg was successfully updated to include the  *				query to be sent  *\li		other		an error occurred while building the message  */
 end_comment
 
 begin_function_decl
@@ -238,7 +242,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * XXX  */
+comment|/*%<  * XXX  */
 end_comment
 
 begin_function_decl
@@ -257,7 +261,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Builds a query containing a TKEY record that will delete the  *	specified shared secret from the server.  *  *	Requires:  *		'msg' is a valid message  *		'key' is a valid TSIG key  *  *	Returns:  *		ISC_R_SUCCESS	msg was successfully updated to include the  *				query to be sent  *		other		an error occurred while building the message  */
+comment|/*%<  *	Builds a query containing a TKEY record that will delete the  *	specified shared secret from the server.  *  *	Requires:  *\li		'msg' is a valid message  *\li		'key' is a valid TSIG key  *  *	Returns:  *\li		#ISC_R_SUCCESS	msg was successfully updated to include the  *				query to be sent  *\li		other		an error occurred while building the message  */
 end_comment
 
 begin_function_decl
@@ -293,7 +297,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Processes a response to a query containing a TKEY that was  *	designed to generate a shared secret using a Diffie-Hellman key  *	exchange.  If the query was successful, a new shared key  *	is created and added to the list of shared keys.  *  *	Requires:  *		'qmsg' is a valid message (the query)  *		'rmsg' is a valid message (the response)  *		'key' is a valid Diffie Hellman dst key  *		'outkey' is either NULL or a pointer to NULL  *		'ring' is a valid keyring or NULL  *  *	Returns:  *		ISC_R_SUCCESS	the shared key was successfully added  *		ISC_R_NOTFOUND	an error occurred while looking for a  *				component of the query or response  */
+comment|/*%<  *	Processes a response to a query containing a TKEY that was  *	designed to generate a shared secret using a Diffie-Hellman key  *	exchange.  If the query was successful, a new shared key  *	is created and added to the list of shared keys.  *  *	Requires:  *\li		'qmsg' is a valid message (the query)  *\li		'rmsg' is a valid message (the response)  *\li		'key' is a valid Diffie Hellman dst key  *\li		'outkey' is either NULL or a pointer to NULL  *\li		'ring' is a valid keyring or NULL  *  *	Returns:  *\li		#ISC_R_SUCCESS	the shared key was successfully added  *\li		#ISC_R_NOTFOUND	an error occurred while looking for a  *				component of the query or response  */
 end_comment
 
 begin_function_decl
@@ -334,7 +338,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * XXX  */
+comment|/*%<  * XXX  */
 end_comment
 
 begin_function_decl
@@ -357,7 +361,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Processes a response to a query containing a TKEY that was  *	designed to delete a shared secret.  If the query was successful,  *	the shared key is deleted from the list of shared keys.  *  *	Requires:  *		'qmsg' is a valid message (the query)  *		'rmsg' is a valid message (the response)  *		'ring' is not NULL  *  *	Returns:  *		ISC_R_SUCCESS	the shared key was successfully deleted  *		ISC_R_NOTFOUND	an error occurred while looking for a  *				component of the query or response  */
+comment|/*%<  *	Processes a response to a query containing a TKEY that was  *	designed to delete a shared secret.  If the query was successful,  *	the shared key is deleted from the list of shared keys.  *  *	Requires:  *\li		'qmsg' is a valid message (the query)  *\li		'rmsg' is a valid message (the response)  *\li		'ring' is not NULL  *  *	Returns:  *\li		#ISC_R_SUCCESS	the shared key was successfully deleted  *\li		#ISC_R_NOTFOUND	an error occurred while looking for a  *				component of the query or response  */
 end_comment
 
 begin_macro

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_print.c,v 1.3.2.1.4.7 2004/09/16 07:01:12 marka Exp $"
+literal|"$Id: ns_print.c,v 1.6.18.4 2005/04/27 05:01:09 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,7 +321,7 @@ comment|/* Public. */
 end_comment
 
 begin_comment
-comment|/*  * int  * ns_sprintrr(handle, rr, name_ctx, origin, buf, buflen)  *	Convert an RR to presentation format.  * return:  *	Number of characters written to buf, or -1 (check errno).  */
+comment|/*%  *	Convert an RR to presentation format.  *  * return:  *\li	Number of characters written to buf, or -1 (check errno).  */
 end_comment
 
 begin_function
@@ -429,7 +429,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int  * ns_sprintrrf(msg, msglen, name, class, type, ttl, rdata, rdlen,  *	       name_ctx, origin, buf, buflen)  *	Convert the fields of an RR into presentation format.  * return:  *	Number of characters written to buf, or -1 (check errno).  */
+comment|/*%  *	Convert the fields of an RR into presentation format.  *  * return:  *\li	Number of characters written to buf, or -1 (check errno).  */
 end_comment
 
 begin_function
@@ -4060,7 +4060,7 @@ name|rdata
 operator|+=
 literal|8
 expr_stmt|;
-comment|/* time */
+comment|/*%< time */
 name|n
 operator|=
 name|ns_get16
@@ -4076,7 +4076,7 @@ name|rdata
 operator|+=
 name|n
 expr_stmt|;
-comment|/* sig */
+comment|/*%< sig */
 name|n
 operator|=
 name|ns_get16
@@ -4088,7 +4088,7 @@ name|rdata
 operator|+=
 name|INT16SZ
 expr_stmt|;
-comment|/* original id */
+comment|/*%< original id */
 name|sprintf
 argument_list|(
 name|buf
@@ -4690,7 +4690,7 @@ comment|/* Private. */
 end_comment
 
 begin_comment
-comment|/*  * size_t  * prune_origin(name, origin)  *	Find out if the name is at or under the current origin.  * return:  *	Number of characters in name before start of origin,  *	or length of name if origin does not match.  * notes:  *	This function should share code with samedomain().  */
+comment|/*%  * size_t  * prune_origin(name, origin)  *	Find out if the name is at or under the current origin.  * return:  *	Number of characters in name before start of origin,  *	or length of name if origin does not match.  * notes:  *	This function should share code with samedomain().  */
 end_comment
 
 begin_function
@@ -4811,7 +4811,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int  * charstr(rdata, edata, buf, buflen)  *	Format a<character-string> into the presentation buffer.  * return:  *	Number of rdata octets consumed  *	0 for protocol format error  *	-1 for output buffer error  * side effects:  *	buffer is advanced on success.  */
+comment|/*%  * int  * charstr(rdata, edata, buf, buflen)  *	Format a<character-string> into the presentation buffer.  * return:  *	Number of rdata octets consumed  *	0 for protocol format error  *	-1 for output buffer error  * side effects:  *	buffer is advanced on success.  */
 end_comment
 
 begin_function
@@ -5102,7 +5102,7 @@ condition|)
 goto|goto
 name|enospc
 goto|;
-comment|/* Guess. */
+comment|/*%< Guess. */
 name|newlen
 operator|=
 name|prune_origin
@@ -5569,6 +5569,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

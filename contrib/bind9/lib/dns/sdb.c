@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: sdb.c,v 1.35.12.8 2004/07/22 04:01:58 marka Exp $ */
+comment|/* $Id: sdb.c,v 1.45.18.10 2006/12/07 23:57:58 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -336,7 +340,7 @@ value|ISC_MAGIC('S', 'D', 'B', '-')
 end_define
 
 begin_comment
-comment|/*  * Note that "impmagic" is not the first four bytes of the struct, so  * ISC_MAGIC_VALID cannot be used.  */
+comment|/*%  * Note that "impmagic" is not the first four bytes of the struct, so  * ISC_MAGIC_VALID cannot be used.  */
 end_comment
 
 begin_define
@@ -377,7 +381,7 @@ value|VALID_SDBLOOKUP(sdbn)
 end_define
 
 begin_comment
-comment|/* These values are taken from RFC 1537 */
+comment|/* These values are taken from RFC1537 */
 end_comment
 
 begin_define
@@ -994,25 +998,9 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init() failed: %s"
-argument_list|,
-name|isc_result_totext
-argument_list|(
-name|result
-argument_list|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|cleanup_mctx
 goto|;
-block|}
 name|imp
 operator|->
 name|dbimp
@@ -1191,7 +1179,7 @@ for|for
 control|(
 name|size
 operator|=
-literal|64
+literal|1024
 init|;
 name|size
 operator|<
@@ -1218,9 +1206,7 @@ operator|)
 return|;
 return|return
 operator|(
-literal|64
-operator|*
-literal|1024
+literal|65535
 operator|)
 return|;
 block|}
@@ -1829,6 +1815,16 @@ condition|)
 goto|goto
 name|failure
 goto|;
+if|if
+condition|(
+name|size
+operator|>=
+literal|65535
+condition|)
+name|size
+operator|=
+literal|65535
+expr_stmt|;
 name|p
 operator|=
 name|isc_mem_get
@@ -1901,6 +1897,14 @@ condition|(
 name|result
 operator|!=
 name|ISC_R_NOSPACE
+condition|)
+break|break;
+comment|/* 		 * Is the RR too big? 		 */
+if|if
+condition|(
+name|size
+operator|>=
+literal|65535
 condition|)
 break|break;
 name|isc_mem_put
@@ -3064,6 +3068,9 @@ specifier|const
 name|char
 modifier|*
 name|filename
+parameter_list|,
+name|dns_masterformat_t
+name|masterformat
 parameter_list|)
 block|{
 name|UNUSED
@@ -3079,6 +3086,11 @@ expr_stmt|;
 name|UNUSED
 argument_list|(
 name|filename
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|masterformat
 argument_list|)
 expr_stmt|;
 return|return
@@ -3407,20 +3419,6 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init() failed: %s"
-argument_list|,
-name|isc_result_totext
-argument_list|(
-name|result
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|isc_mem_put
 argument_list|(
 name|sdb
@@ -3439,7 +3437,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ISC_R_UNEXPECTED
+name|result
 operator|)
 return|;
 block|}
@@ -4679,6 +4677,12 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
+if|if
+condition|(
+name|node
+operator|!=
+name|NULL
+condition|)
 name|destroynode
 argument_list|(
 name|node
@@ -6099,6 +6103,8 @@ block|,
 name|overmem
 block|,
 name|settask
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6299,29 +6305,9 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init() failed: %s"
-argument_list|,
-name|isc_result_totext
-argument_list|(
-name|result
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-name|ISC_R_UNEXPECTED
-expr_stmt|;
 goto|goto
 name|cleanup_mctx
 goto|;
-block|}
 name|result
 operator|=
 name|dns_name_dupwithoffsets
@@ -6736,6 +6722,12 @@ block|,
 name|isc__rdatalist_addnoqname
 block|,
 name|isc__rdatalist_getnoqname
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: control.h,v 1.6.2.2.2.9 2006/03/02 00:37:20 marka Exp $ */
+comment|/* $Id: control.h,v 1.14.18.8 2006/03/09 23:46:20 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * The name server command channel.  */
+comment|/*! \file  * \brief  * The name server command channel.  */
 end_comment
 
 begin_include
@@ -33,7 +33,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<named/aclconf.h>
+file|<isccfg/aclconf.h>
 end_include
 
 begin_include
@@ -171,6 +171,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NS_COMMAND_TIMERPOKE
+value|"timerpoke"
+end_define
+
+begin_define
+define|#
+directive|define
 name|NS_COMMAND_RECURSING
 value|"recursing"
 end_define
@@ -180,6 +187,20 @@ define|#
 directive|define
 name|NS_COMMAND_NULL
 value|"null"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_COMMAND_NOTIFY
+value|"notify"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_COMMAND_VALIDATION
+value|"validation"
 end_define
 
 begin_function_decl
@@ -199,7 +220,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create an initial, empty set of command channels for 'server'.  */
+comment|/*%<  * Create an initial, empty set of command channels for 'server'.  */
 end_comment
 
 begin_function_decl
@@ -215,7 +236,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy a set of command channels.  *  * Requires:  *	Shutdown of the channels has completed.  */
+comment|/*%<  * Destroy a set of command channels.  *  * Requires:  *	Shutdown of the channels has completed.  */
 end_comment
 
 begin_function_decl
@@ -231,7 +252,7 @@ name|cfg_obj_t
 modifier|*
 name|config
 parameter_list|,
-name|ns_aclconfctx_t
+name|cfg_aclconfctx_t
 modifier|*
 name|aclconfctx
 parameter_list|)
@@ -239,7 +260,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Configure zero or more command channels into 'controls'  * as defined in the configuration parse tree 'config'.  * The channels will evaluate ACLs in the context of  * 'aclconfctx'.  */
+comment|/*%<  * Configure zero or more command channels into 'controls'  * as defined in the configuration parse tree 'config'.  * The channels will evaluate ACLs in the context of  * 'aclconfctx'.  */
 end_comment
 
 begin_function_decl
@@ -254,7 +275,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Initiate shutdown of all the command channels in 'controls'.  */
+comment|/*%<  * Initiate shutdown of all the command channels in 'controls'.  */
 end_comment
 
 begin_function_decl

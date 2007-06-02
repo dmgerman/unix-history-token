@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp.c,v 1.3.2.1.10.4 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: irp.c,v 1.6.18.3 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -231,11 +231,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This module handles the irp module connection to irpd.  *  * The client expects a synchronous interface to functions like  * getpwnam(3), so we can't use the ctl_* i/o library on this end of  * the wire (it's used in the server).  */
+comment|/*%  * This module handles the irp module connection to irpd.  *  * The client expects a synchronous interface to functions like  * getpwnam(3), so we can't use the ctl_* i/o library on this end of  * the wire (it's used in the server).  */
 end_comment
 
 begin_comment
-comment|/*  * irs_acc *irs_irp_acc(const char *options);  *  *	Initialize the irp module.  */
+comment|/*%  * irs_acc *irs_irp_acc(const char *options);  *  *	Initialize the irp module.  */
 end_comment
 
 begin_function
@@ -518,7 +518,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int irs_irp_connect(void);  *  *	Sets up the connection to the remote irpd server.  *  * Returns:  *  *	0 on success, -1 on failure.  *  */
+comment|/*%  * int irs_irp_connect(void);  *  *	Sets up the connection to the remote irpd server.  *  * Returns:  *  *	0 on success, -1 on failure.  *  */
 end_comment
 
 begin_function
@@ -954,7 +954,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int	irs_irp_is_connected(struct irp_p *pvt);  *  * Returns:  *  *	Non-zero if streams are setup to remote.  *  */
+comment|/*%  * int	irs_irp_is_connected(struct irp_p *pvt);  *  * Returns:  *  *	Non-zero if streams are setup to remote.  *  */
 end_comment
 
 begin_function
@@ -980,7 +980,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void  * irs_irp_disconnect(struct irp_p *pvt);  *  *	Closes streams to remote.  */
+comment|/*%  * void  * irs_irp_disconnect(struct irp_p *pvt);  *  *	Closes streams to remote.  */
 end_comment
 
 begin_function
@@ -1386,7 +1386,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int irp_read_response(struct irp_p *pvt);  *  * Returns:  *  *	The number found at the beginning of the line read from  *	FP. 0 on failure(0 is not a legal response code). The  *	rest of the line is discarded.  *  */
+comment|/*%  * int irp_read_response(struct irp_p *pvt);  *  * Returns:  *  *	The number found at the beginning of the line read from  *	FP. 0 on failure(0 is not a legal response code). The  *	rest of the line is discarded.  *  */
 end_comment
 
 begin_function
@@ -1573,7 +1573,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * char *irp_read_body(struct irp_p *pvt, size_t *size);  *  *	Read in the body of a response. Terminated by a line with  *	just a dot on it. Lines should be terminated with a CR-LF  *	sequence, but we're nt piccky if the CR is missing.  *	No leading dot escaping is done as the protcol doesn't  *	use leading dots anywhere.  *  * Returns:  *  *	Pointer to null-terminated buffer allocated by memget.  *	*SIZE is set to the length of the buffer.  *  */
+comment|/*%  * char *irp_read_body(struct irp_p *pvt, size_t *size);  *  *	Read in the body of a response. Terminated by a line with  *	just a dot on it. Lines should be terminated with a CR-LF  *	sequence, but we're nt piccky if the CR is missing.  *	No leading dot escaping is done as the protcol doesn't  *	use leading dots anywhere.  *  * Returns:  *  *	Pointer to null-terminated buffer allocated by memget.  *	*SIZE is set to the length of the buffer.  *  */
 end_comment
 
 begin_function
@@ -1848,7 +1848,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int irs_irp_get_full_response(struct irp_p *pvt, int *code,  *			char **body, size_t *bodylen);  *  *	Gets the response to a command. If the response indicates  *	there's a body to follow(code % 10 == 1), then the  *	body buffer is allcoated with memget and stored in  *	*BODY. The length of the allocated body buffer is stored  *	in *BODY. The caller must give the body buffer back to  *	memput when done. The results code is stored in *CODE.  *  * Returns:  *  *	0 if a result was read. -1 on some sort of failure.  *  */
+comment|/*%  * int irs_irp_get_full_response(struct irp_p *pvt, int *code,  *			char **body, size_t *bodylen);  *  *	Gets the response to a command. If the response indicates  *	there's a body to follow(code % 10 == 1), then the  *	body buffer is allcoated with memget and stored in  *	*BODY. The length of the allocated body buffer is stored  *	in *BODY. The caller must give the body buffer back to  *	memput when done. The results code is stored in *CODE.  *  * Returns:  *  *	0 if a result was read. -1 on some sort of failure.  *  */
 end_comment
 
 begin_function
@@ -1972,7 +1972,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int irs_irp_send_command(struct irp_p *pvt, const char *fmt, ...);  *  *	Sends command to remote connected via the PVT  *	structure. FMT and args after it are fprintf-like  *	arguments for formatting.  *  * Returns:  *  *	0 on success, -1 on failure.  */
+comment|/*%  * int irs_irp_send_command(struct irp_p *pvt, const char *fmt, ...);  *  *	Sends command to remote connected via the PVT  *	structure. FMT and args after it are fprintf-like  *	arguments for formatting.  *  * Returns:  *  *	0 on success, -1 on failure.  */
 end_comment
 
 begin_function
@@ -2167,7 +2167,7 @@ comment|/* Methods */
 end_comment
 
 begin_comment
-comment|/*  * void irp_close(struct irs_acc *this)  *  */
+comment|/*%  * void irp_close(struct irs_acc *this)  *  */
 end_comment
 
 begin_function
@@ -2228,6 +2228,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

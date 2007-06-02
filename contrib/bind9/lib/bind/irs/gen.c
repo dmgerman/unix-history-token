@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gen.c,v 1.3.206.3 2004/09/16 00:57:34 marka Exp $"
+literal|"$Id: gen.c,v 1.5.18.2 2005/04/27 05:00:56 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * this is the top level dispatcher  *  * The dispatcher is implemented as an accessor class; it is an  * accessor class that calls other accessor classes, as controlled by a  * configuration file.  *   * A big difference between this accessor class and others is that the  * map class initializers are NULL, and the map classes are already  * filled in with method functions that will do the right thing.  */
+comment|/*! \file  * \brief  * this is the top level dispatcher  *  * The dispatcher is implemented as an accessor class; it is an  * accessor class that calls other accessor classes, as controlled by a  * configuration file.  *   * A big difference between this accessor class and others is that the  * map class initializers are NULL, and the map classes are already  * filled in with method functions that will do the right thing.  */
 end_comment
 
 begin_comment

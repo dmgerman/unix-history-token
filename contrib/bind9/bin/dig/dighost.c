@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dighost.c,v 1.221.2.19.2.36 2006/12/07 01:26:33 marka Exp $ */
+comment|/* $Id: dighost.c,v 1.259.18.39 2007/02/14 23:45:43 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Notice to programmers:  Do not use this code as an example of how to  * use the ISC library to perform DNS lookups.  Dig and Host both operate  * on the request level, since they allow fine-tuning of output and are  * intended as debugging tools.  As a result, they perform many of the  * functions which could be better handled using the dns_resolver  * functions in most applications.  */
+comment|/*! \file  *  \note  * Notice to programmers:  Do not use this code as an example of how to  * use the ISC library to perform DNS lookups.  Dig and Host both operate  * on the request level, since they allow fine-tuning of output and are  * intended as debugging tools.  As a result, they perform many of the  * functions which could be better handled using the dns_resolver  * functions in most applications.  */
 end_comment
 
 begin_include
@@ -40,6 +40,58 @@ include|#
 directive|include
 file|<limits.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LOCALE_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_IDN
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<idn/result.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<idn/log.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<idn/resconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<idn/api.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -367,6 +419,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|isc_boolean_t
+name|check_ra
+init|=
+name|ISC_FALSE
+decl_stmt|,
 name|have_ipv4
 init|=
 name|ISC_FALSE
@@ -388,6 +444,10 @@ init|=
 name|ISC_FALSE
 decl_stmt|,
 name|usesearch
+init|=
+name|ISC_FALSE
+decl_stmt|,
+name|showsearch
 init|=
 name|ISC_FALSE
 decl_stmt|,
@@ -415,6 +475,13 @@ name|int
 name|timeout
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|extrabytes
 decl_stmt|;
 end_decl_stmt
 
@@ -524,8 +591,91 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_IDN
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|void
+name|initialize_idn
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|isc_result_t
+name|output_filter
+parameter_list|(
+name|isc_buffer_t
+modifier|*
+name|buffer
+parameter_list|,
+name|unsigned
+name|int
+name|used_org
+parameter_list|,
+name|isc_boolean_t
+name|absolute
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|idn_result_t
+name|append_textname
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|origin
+parameter_list|,
+name|size_t
+name|namesize
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|idn_check_result
+parameter_list|(
+name|idn_result_t
+name|r
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|MAXDLEN
+value|256
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Exit Codes:  *   0   Everything went well, including things like NXDOMAIN  *   1   Usage error  *   7   Got too many RR's or Names  *   8   Couldn't open batch file  *   9   No reply from server  *   10  Internal error  */
+comment|/*%  * Exit Codes:  *  *\li	0   Everything went well, including things like NXDOMAIN  *\li	1   Usage error  *\li	7   Got too many RR's or Names  *\li	8   Couldn't open batch file  *\li	9   No reply from server  *\li	10  Internal error  */
 end_comment
 
 begin_decl_stmt
@@ -572,6 +722,24 @@ name|MXNAME
 index|]
 init|=
 literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|dns_name_t
+modifier|*
+name|hmacname
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|digestbits
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1640,7 +1808,7 @@ value|20
 end_define
 
 begin_comment
-comment|/*  * Apply and clear locks at the event level in global task.  * Can I get rid of these using shutdown events?  XXX  */
+comment|/*%  * Apply and clear locks at the event level in global task.  * Can I get rid of these using shutdown events?  XXX  */
 end_comment
 
 begin_define
@@ -1985,7 +2153,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Append 'len' bytes of 'text' at '*p', failing with  * ISC_R_NOSPACE if that would advance p past 'end'.  */
+comment|/*%  * Append 'len' bytes of 'text' at '*p', failing with  * ISC_R_NOSPACE if that would advance p past 'end'.  */
 end_comment
 
 begin_function
@@ -2577,7 +2745,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a server structure, which is part of the lookup structure.  * This is little more than a linked list of servers to query in hopes  * of finding the answer the user is looking for  */
+comment|/*%  * Create a server structure, which is part of the lookup structure.  * This is little more than a linked list of servers to query in hopes  * of finding the answer the user is looking for  */
 end_comment
 
 begin_function
@@ -2746,7 +2914,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a copy of the server list from the lwres configuration structure.  * The dest list must have already had ISC_LIST_INIT applied.  */
+comment|/*%  * Create a copy of the server list from the lwres configuration structure.  * The dest list must have already had ISC_LIST_INIT applied.  */
 end_comment
 
 begin_function
@@ -3230,7 +3398,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Produce a cloned server list.  The dest list must have already had  * ISC_LIST_INIT applied.  */
+comment|/*%  * Produce a cloned server list.  The dest list must have already had  * ISC_LIST_INIT applied.  */
 end_comment
 
 begin_function
@@ -3315,7 +3483,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create an empty lookup structure, which holds all the information needed  * to get an answer to a user's question.  This structure contains two  * linked lists: the server list (servers to query) and the query list  * (outstanding queries which have been made to the listed servers).  */
+comment|/*%  * Create an empty lookup structure, which holds all the information needed  * to get an answer to a user's question.  This structure contains two  * linked lists: the server list (servers to query) and the query list  * (outstanding queries which have been made to the listed servers).  */
 end_comment
 
 begin_function
@@ -3591,6 +3759,13 @@ literal|0
 expr_stmt|;
 name|looknew
 operator|->
+name|edns
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|looknew
+operator|->
 name|recurse
 operator|=
 name|ISC_TRUE
@@ -3703,6 +3878,18 @@ name|new_search
 operator|=
 name|ISC_FALSE
 expr_stmt|;
+name|looknew
+operator|->
+name|done_as_is
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+name|looknew
+operator|->
+name|need_search
+operator|=
+name|ISC_FALSE
+expr_stmt|;
 name|ISC_LINK_INIT
 argument_list|(
 name|looknew
@@ -3733,7 +3920,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Clone a lookup, perhaps copying the server list.  This does not clone  * the query list, since it will be regenerated by the setup_lookup()  * function, nor does it queue up the new lookup for processing.  * Caution: If you don't clone the servers, you MUST clone the server  * list seperately from somewhere else, or construct it by hand.  */
+comment|/*%  * Clone a lookup, perhaps copying the server list.  This does not clone  * the query list, since it will be regenerated by the setup_lookup()  * function, nor does it queue up the new lookup for processing.  * Caution: If you don't clone the servers, you MUST clone the server  * list seperately from somewhere else, or construct it by hand.  */
 end_comment
 
 begin_function
@@ -4035,6 +4222,14 @@ name|udpsize
 expr_stmt|;
 name|looknew
 operator|->
+name|edns
+operator|=
+name|lookold
+operator|->
+name|edns
+expr_stmt|;
+name|looknew
+operator|->
 name|recurse
 operator|=
 name|lookold
@@ -4143,6 +4338,22 @@ name|tsigctx
 operator|=
 name|NULL
 expr_stmt|;
+name|looknew
+operator|->
+name|need_search
+operator|=
+name|lookold
+operator|->
+name|need_search
+expr_stmt|;
+name|looknew
+operator|->
+name|done_as_is
+operator|=
+name|lookold
+operator|->
+name|done_as_is
+expr_stmt|;
 if|if
 condition|(
 name|servers
@@ -4168,7 +4379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Requeue a lookup for further processing, perhaps copying the server  * list.  The new lookup structure is returned to the caller, and is  * queued for processing.  If servers are not cloned in the requeue, they  * must be added before allowing the current event to complete, since the  * completion of the event may result in the next entry on the lookup  * queue getting run.  */
+comment|/*%  * Requeue a lookup for further processing, perhaps copying the server  * list.  The new lookup structure is returned to the caller, and is  * queued for processing.  If servers are not cloned in the requeue, they  * must be added before allowing the current event to complete, since the  * completion of the event may result in the next entry on the lookup  * queue getting run.  */
 end_comment
 
 begin_function
@@ -4451,7 +4662,7 @@ argument_list|(
 operator|&
 name|keyname
 argument_list|,
-name|dns_tsig_hmacmd5_name
+name|hmacname
 argument_list|,
 name|secretstore
 argument_list|,
@@ -4491,6 +4702,16 @@ name|isc_result_totext
 argument_list|(
 name|result
 argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|dst_key_setbits
+argument_list|(
+name|key
+operator|->
+name|key
+argument_list|,
+name|digestbits
 argument_list|)
 expr_stmt|;
 name|isc_mem_free
@@ -4578,6 +4799,74 @@ goto|goto
 name|failure
 goto|;
 block|}
+switch|switch
+condition|(
+name|dst_key_alg
+argument_list|(
+name|dstkey
+argument_list|)
+condition|)
+block|{
+case|case
+name|DST_ALG_HMACMD5
+case|:
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACMD5_NAME
+expr_stmt|;
+break|break;
+case|case
+name|DST_ALG_HMACSHA1
+case|:
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA1_NAME
+expr_stmt|;
+break|break;
+case|case
+name|DST_ALG_HMACSHA224
+case|:
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA224_NAME
+expr_stmt|;
+break|break;
+case|case
+name|DST_ALG_HMACSHA256
+case|:
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA256_NAME
+expr_stmt|;
+break|break;
+case|case
+name|DST_ALG_HMACSHA384
+case|:
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA384_NAME
+expr_stmt|;
+break|break;
+case|case
+name|DST_ALG_HMACSHA512
+case|:
+name|hmacname
+operator|=
+name|DNS_TSIG_HMACSHA512_NAME
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|";; Couldn't create key %s: bad algorithm\n"
+argument_list|,
+name|keynametext
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failure
+goto|;
+block|}
 name|result
 operator|=
 name|dns_tsigkey_createfromkey
@@ -4587,7 +4876,7 @@ argument_list|(
 name|dstkey
 argument_list|)
 argument_list|,
-name|dns_tsig_hmacmd5_name
+name|hmacname
 argument_list|,
 name|dstkey
 argument_list|,
@@ -4800,7 +5089,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Setup the system as a whole, reading key information and resolv.conf  * settings.  */
+comment|/*%  * Setup the system as a whole, reading key information and resolv.conf  * settings.  */
 end_comment
 
 begin_function
@@ -5038,6 +5327,14 @@ operator|&
 name|server_list
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_IDN
+name|initialize_idn
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|keyfile
@@ -5171,7 +5468,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Override the search list derived from resolv.conf by 'domain'.  */
+comment|/*%  * Override the search list derived from resolv.conf by 'domain'.  */
 end_comment
 
 begin_function
@@ -5210,7 +5507,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Setup the ISC and DNS libraries for use by the system.  */
+comment|/*%  * Setup the ISC and DNS libraries for use by the system.  */
 end_comment
 
 begin_function
@@ -5466,7 +5763,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add EDNS0 option record to a message.  Currently, the only supported  * options are UDP buffer size and the DO bit.  */
+comment|/*%  * Add EDNS0 option record to a message.  Currently, the only supported  * options are UDP buffer size and the DO bit.  */
 end_comment
 
 begin_function
@@ -5480,6 +5777,9 @@ name|msg
 parameter_list|,
 name|isc_uint16_t
 name|udpsize
+parameter_list|,
+name|isc_uint16_t
+name|edns
 parameter_list|,
 name|isc_boolean_t
 name|dnssec
@@ -5596,7 +5896,9 @@ name|rdatalist
 operator|->
 name|ttl
 operator|=
-literal|0
+name|edns
+operator|<<
+literal|16
 expr_stmt|;
 if|if
 condition|(
@@ -5605,7 +5907,7 @@ condition|)
 name|rdatalist
 operator|->
 name|ttl
-operator|=
+operator||=
 name|DNS_MESSAGEEXTFLAG_DO
 expr_stmt|;
 name|rdata
@@ -5665,7 +5967,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a question section to a message, asking for the specified name,  * type, and class.  */
+comment|/*%  * Add a question section to a message, asking for the specified name,  * type, and class.  */
 end_comment
 
 begin_function
@@ -5750,7 +6052,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if we're done with all the queued lookups, which is true iff  * all sockets, sends, and recvs are accounted for (counters == 0),  * and the lookup list is empty.  * If we are done, pass control back out to dighost_shutdown() (which is  * part of dig.c, host.c, or nslookup.c) to either shutdown the system as  * a whole or reseed the lookup list.  */
+comment|/*%  * Check if we're done with all the queued lookups, which is true iff  * all sockets, sends, and recvs are accounted for (counters == 0),  * and the lookup list is empty.  * If we are done, pass control back out to dighost_shutdown() (which is  * part of dig.c, host.c, or nslookup.c) to either shutdown the system as  * a whole or reseed the lookup list.  */
 end_comment
 
 begin_function
@@ -5823,7 +6125,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Clear out a query when we're done with it.  WARNING: This routine  * WILL invalidate the query pointer.  */
+comment|/*%  * Clear out a query when we're done with it.  WARNING: This routine  * WILL invalidate the query pointer.  */
 end_comment
 
 begin_function
@@ -6023,7 +6325,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try and clear out a lookup if we're done with it.  Return ISC_TRUE if  * the lookup was successfully cleared.  If ISC_TRUE is returned, the  * lookup pointer has been invalidated.  */
+comment|/*%  * Try and clear out a lookup if we're done with it.  Return ISC_TRUE if  * the lookup was successfully cleared.  If ISC_TRUE is returned, the  * lookup pointer has been invalidated.  */
 end_comment
 
 begin_function
@@ -6296,7 +6598,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If we can, start the next lookup in the queue running.  * This assumes that the lookup on the head of the queue hasn't been  * started yet.  It also removes the lookup from the head of the queue,  * setting the current_lookup pointer pointing to it.  */
+comment|/*%  * If we can, start the next lookup in the queue running.  * This assumes that the lookup on the head of the queue hasn't been  * started yet.  It also removes the lookup from the head of the queue,  * setting the current_lookup pointer pointing to it.  */
 end_comment
 
 begin_function
@@ -6745,7 +7047,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If we can, clear the current lookup and start the next one running.  * This calls try_clear_lookup, so may invalidate the lookup pointer.  */
+comment|/*%  * If we can, clear the current lookup and start the next one running.  * This calls try_clear_lookup, so may invalidate the lookup pointer.  */
 end_comment
 
 begin_function
@@ -6810,7 +7112,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create and queue a new lookup as a followup to the current lookup,  * based on the supplied message and section.  This is used in trace and  * name server search modes to start a new lookup using servers from  * NS records in a reply. Returns the number of followup lookups made.  */
+comment|/*%  * Create and queue a new lookup as a followup to the current lookup,  * based on the supplied message and section.  This is used in trace and  * name server search modes to start a new lookup using servers from  * NS records in a reply. Returns the number of followup lookups made.  */
 end_comment
 
 begin_function
@@ -6871,6 +7173,19 @@ name|int
 name|numLookups
 init|=
 literal|0
+decl_stmt|;
+name|dns_name_t
+modifier|*
+name|domain
+decl_stmt|;
+name|isc_boolean_t
+name|horizontal
+init|=
+name|ISC_FALSE
+decl_stmt|,
+name|bad
+init|=
+name|ISC_FALSE
 decl_stmt|;
 name|INSIST
 argument_list|(
@@ -6995,6 +7310,106 @@ argument_list|(
 literal|"found NS set"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|query
+operator|->
+name|lookup
+operator|->
+name|trace
+operator|&&
+operator|!
+name|query
+operator|->
+name|lookup
+operator|->
+name|trace_root
+condition|)
+block|{
+name|dns_namereln_t
+name|namereln
+decl_stmt|;
+name|unsigned
+name|int
+name|nlabels
+decl_stmt|;
+name|int
+name|order
+decl_stmt|;
+name|domain
+operator|=
+name|dns_fixedname_name
+argument_list|(
+operator|&
+name|query
+operator|->
+name|lookup
+operator|->
+name|fdomain
+argument_list|)
+expr_stmt|;
+name|namereln
+operator|=
+name|dns_name_fullcompare
+argument_list|(
+name|name
+argument_list|,
+name|domain
+argument_list|,
+operator|&
+name|order
+argument_list|,
+operator|&
+name|nlabels
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|namereln
+operator|==
+name|dns_namereln_equal
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|horizontal
+condition|)
+name|printf
+argument_list|(
+literal|";; BAD (HORIZONTAL) REFERRAL\n"
+argument_list|)
+expr_stmt|;
+name|horizontal
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|namereln
+operator|!=
+name|dns_namereln_subdomain
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|bad
+condition|)
+name|printf
+argument_list|(
+literal|";; BAD REFERRAL\n"
+argument_list|)
+expr_stmt|;
+name|bad
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+continue|continue;
+block|}
+block|}
 for|for
 control|(
 name|result
@@ -7198,6 +7613,33 @@ name|recurse
 operator|=
 name|ISC_FALSE
 expr_stmt|;
+name|dns_fixedname_init
+argument_list|(
+operator|&
+name|lookup
+operator|->
+name|fdomain
+argument_list|)
+expr_stmt|;
+name|domain
+operator|=
+name|dns_fixedname_name
+argument_list|(
+operator|&
+name|lookup
+operator|->
+name|fdomain
+argument_list|)
+expr_stmt|;
+name|dns_name_copy
+argument_list|(
+name|name
+argument_list|,
+name|domain
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 name|srv
 operator|=
@@ -7272,14 +7714,119 @@ name|DNS_SECTION_AUTHORITY
 argument_list|)
 operator|)
 return|;
-return|return
+comment|/* 	 * Randomize the order the nameserver will be tried. 	 */
+if|if
+condition|(
 name|numLookups
+operator|>
+literal|1
+condition|)
+block|{
+name|isc_uint32_t
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|dig_serverlist_t
+name|my_server_list
+decl_stmt|;
+name|ISC_LIST_INIT
+argument_list|(
+name|my_server_list
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|numLookups
+init|;
+name|i
+operator|>
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+block|{
+name|isc_random_get
+argument_list|(
+operator|&
+name|j
+argument_list|)
+expr_stmt|;
+name|j
+operator|%=
+name|i
+expr_stmt|;
+name|srv
+operator|=
+name|ISC_LIST_HEAD
+argument_list|(
+name|lookup
+operator|->
+name|my_server_list
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|j
+operator|--
+operator|>
+literal|0
+condition|)
+name|srv
+operator|=
+name|ISC_LIST_NEXT
+argument_list|(
+name|srv
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+name|ISC_LIST_DEQUEUE
+argument_list|(
+name|lookup
+operator|->
+name|my_server_list
+argument_list|,
+name|srv
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+name|ISC_LIST_APPEND
+argument_list|(
+name|my_server_list
+argument_list|,
+name|srv
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+block|}
+name|ISC_LIST_APPENDLIST
+argument_list|(
+name|lookup
+operator|->
+name|my_server_list
+argument_list|,
+name|my_server_list
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|numLookups
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Create and queue a new lookup using the next origin from the search  * list, read in setup_system().  *  * Return ISC_TRUE iff there was another searchlist entry.  */
+comment|/*%  * Create and queue a new lookup using the next origin from the search  * list, read in setup_system().  *  * Return ISC_TRUE iff there was another searchlist entry.  */
 end_comment
 
 begin_function
@@ -7299,6 +7846,10 @@ block|{
 name|dig_lookup_t
 modifier|*
 name|lookup
+decl_stmt|;
+name|dig_searchlist_t
+modifier|*
+name|search
 decl_stmt|;
 name|UNUSED
 argument_list|(
@@ -7347,8 +7898,91 @@ operator|->
 name|origin
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|query
+operator|->
+name|lookup
+operator|->
+name|need_search
 condition|)
 comment|/* 		 * Then we just did rootorg; there's nothing left. 		 */
+return|return
+operator|(
+name|ISC_FALSE
+operator|)
+return|;
+if|if
+condition|(
+name|query
+operator|->
+name|lookup
+operator|->
+name|origin
+operator|==
+name|NULL
+operator|&&
+name|query
+operator|->
+name|lookup
+operator|->
+name|need_search
+condition|)
+block|{
+name|lookup
+operator|=
+name|requeue_lookup
+argument_list|(
+name|query
+operator|->
+name|lookup
+argument_list|,
+name|ISC_TRUE
+argument_list|)
+expr_stmt|;
+name|lookup
+operator|->
+name|origin
+operator|=
+name|ISC_LIST_HEAD
+argument_list|(
+name|search_list
+argument_list|)
+expr_stmt|;
+name|lookup
+operator|->
+name|need_search
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|search
+operator|=
+name|ISC_LIST_NEXT
+argument_list|(
+name|query
+operator|->
+name|lookup
+operator|->
+name|origin
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|search
+operator|==
+name|NULL
+operator|&&
+name|query
+operator|->
+name|lookup
+operator|->
+name|done_as_is
+condition|)
 return|return
 operator|(
 name|ISC_FALSE
@@ -7369,17 +8003,9 @@ name|lookup
 operator|->
 name|origin
 operator|=
-name|ISC_LIST_NEXT
-argument_list|(
-name|query
-operator|->
-name|lookup
-operator|->
-name|origin
-argument_list|,
-name|link
-argument_list|)
+name|search
 expr_stmt|;
+block|}
 name|cancel_lookup
 argument_list|(
 name|query
@@ -7396,7 +8022,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Insert an SOA record into the sendmessage in a lookup.  Used for  * creating IXFR queries.  */
+comment|/*%  * Insert an SOA record into the sendmessage in a lookup.  Used for  * creating IXFR queries.  */
 end_comment
 
 begin_function
@@ -7773,7 +8399,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Setup the supplied lookup structure, making it ready to start sending  * queries to servers.  Create and initialize the message to be sent as  * well as the query structures and buffer space for the replies.  If the  * server list is empty, clone it from the system default list.  */
+comment|/*%  * Setup the supplied lookup structure, making it ready to start sending  * queries to servers.  Create and initialize the message to be sent as  * well as the query structures and buffer space for the replies.  If the  * server list is empty, clone it from the system default list.  */
 end_comment
 
 begin_function
@@ -7814,6 +8440,49 @@ index|[
 name|MXNAME
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_IDN
+name|idn_result_t
+name|mr
+decl_stmt|;
+name|char
+name|utf8_textname
+index|[
+name|MXNAME
+index|]
+decl_stmt|,
+name|utf8_origin
+index|[
+name|MXNAME
+index|]
+decl_stmt|,
+name|idn_textname
+index|[
+name|MXNAME
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|WITH_IDN
+name|result
+operator|=
+name|dns_name_settotextfilter
+argument_list|(
+name|output_filter
+argument_list|)
+expr_stmt|;
+name|check_result
+argument_list|(
+name|result
+argument_list|,
+literal|"dns_name_settotextfilter"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|REQUIRE
 argument_list|(
 name|lookup
@@ -7966,8 +8635,115 @@ name|onamespace
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_IDN
+comment|/* 	 * We cannot convert `textname' and `origin' separately. 	 * `textname' doesn't contain TLD, but local mapping needs 	 * TLD. 	 */
+name|mr
+operator|=
+name|idn_encodename
+argument_list|(
+name|IDN_LOCALCONV
+operator||
+name|IDN_DELIMMAP
+argument_list|,
+name|lookup
+operator|->
+name|textname
+argument_list|,
+name|utf8_textname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|utf8_textname
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|idn_check_result
+argument_list|(
+name|mr
+argument_list|,
+literal|"convert textname to UTF-8"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * If the name has too many dots, force the origin to be NULL 	 * (which produces an absolute lookup).  Otherwise, take the origin 	 * we have if there's one in the struct already.  If it's NULL, 	 * take the first entry in the searchlist iff either usesearch 	 * is TRUE or we got a domain line in the resolv.conf file. 	 */
-comment|/* XXX New search here? */
+if|if
+condition|(
+name|lookup
+operator|->
+name|new_search
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|WITH_IDN
+if|if
+condition|(
+operator|(
+name|count_dots
+argument_list|(
+name|utf8_textname
+argument_list|)
+operator|>=
+name|ndots
+operator|)
+operator|||
+operator|!
+name|usesearch
+condition|)
+block|{
+name|lookup
+operator|->
+name|origin
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Force abs lookup */
+name|lookup
+operator|->
+name|done_as_is
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+name|lookup
+operator|->
+name|need_search
+operator|=
+name|usesearch
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|lookup
+operator|->
+name|origin
+operator|==
+name|NULL
+operator|&&
+name|usesearch
+condition|)
+block|{
+name|lookup
+operator|->
+name|origin
+operator|=
+name|ISC_LIST_HEAD
+argument_list|(
+name|search_list
+argument_list|)
+expr_stmt|;
+name|lookup
+operator|->
+name|need_search
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -7984,6 +8760,7 @@ operator|||
 operator|!
 name|usesearch
 condition|)
+block|{
 name|lookup
 operator|->
 name|origin
@@ -7991,6 +8768,19 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Force abs lookup */
+name|lookup
+operator|->
+name|done_as_is
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+name|lookup
+operator|->
+name|need_search
+operator|=
+name|usesearch
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -8000,12 +8790,9 @@ name|origin
 operator|==
 name|NULL
 operator|&&
-name|lookup
-operator|->
-name|new_search
-operator|&&
 name|usesearch
 condition|)
+block|{
 name|lookup
 operator|->
 name|origin
@@ -8015,6 +8802,112 @@ argument_list|(
 name|search_list
 argument_list|)
 expr_stmt|;
+name|lookup
+operator|->
+name|need_search
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
+ifdef|#
+directive|ifdef
+name|WITH_IDN
+if|if
+condition|(
+name|lookup
+operator|->
+name|origin
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mr
+operator|=
+name|idn_encodename
+argument_list|(
+name|IDN_LOCALCONV
+operator||
+name|IDN_DELIMMAP
+argument_list|,
+name|lookup
+operator|->
+name|origin
+operator|->
+name|origin
+argument_list|,
+name|utf8_origin
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|utf8_origin
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|idn_check_result
+argument_list|(
+name|mr
+argument_list|,
+literal|"convert origin to UTF-8"
+argument_list|)
+expr_stmt|;
+name|mr
+operator|=
+name|append_textname
+argument_list|(
+name|utf8_textname
+argument_list|,
+name|utf8_origin
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|utf8_textname
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|idn_check_result
+argument_list|(
+name|mr
+argument_list|,
+literal|"append origin to textname"
+argument_list|)
+expr_stmt|;
+block|}
+name|mr
+operator|=
+name|idn_encodename
+argument_list|(
+name|IDN_LOCALMAP
+operator||
+name|IDN_NAMEPREP
+operator||
+name|IDN_ASCCHECK
+operator||
+name|IDN_IDNCONV
+operator||
+name|IDN_LENCHECK
+argument_list|,
+name|utf8_textname
+argument_list|,
+name|idn_textname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|idn_textname
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|idn_check_result
+argument_list|(
+name|mr
+argument_list|,
+literal|"convert UTF-8 textname to IDN encoding"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|lookup
@@ -8304,6 +9197,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 name|debug
 argument_list|(
@@ -8331,6 +9226,57 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_IDN
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|idn_textname
+argument_list|)
+expr_stmt|;
+name|isc_buffer_init
+argument_list|(
+operator|&
+name|b
+argument_list|,
+name|idn_textname
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|isc_buffer_add
+argument_list|(
+operator|&
+name|b
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|dns_name_fromtext
+argument_list|(
+name|lookup
+operator|->
+name|name
+argument_list|,
+operator|&
+name|b
+argument_list|,
+name|dns_rootname
+argument_list|,
+name|ISC_FALSE
+argument_list|,
+operator|&
+name|lookup
+operator|->
+name|namebuf
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|len
 operator|=
 name|strlen
@@ -8381,6 +9327,8 @@ operator|->
 name|namebuf
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -8859,6 +9807,13 @@ operator|||
 name|lookup
 operator|->
 name|dnssec
+operator|||
+name|lookup
+operator|->
+name|edns
+operator|>
+operator|-
+literal|1
 condition|)
 block|{
 if|if
@@ -8873,7 +9828,21 @@ name|lookup
 operator|->
 name|udpsize
 operator|=
-literal|2048
+literal|4096
+expr_stmt|;
+if|if
+condition|(
+name|lookup
+operator|->
+name|edns
+operator|<
+literal|0
+condition|)
+name|lookup
+operator|->
+name|edns
+operator|=
+literal|0
 expr_stmt|;
 name|add_opt
 argument_list|(
@@ -8884,6 +9853,10 @@ argument_list|,
 name|lookup
 operator|->
 name|udpsize
+argument_list|,
+name|lookup
+operator|->
+name|edns
 argument_list|,
 name|lookup
 operator|->
@@ -9144,6 +10117,12 @@ name|msg_count
 operator|=
 literal|0
 expr_stmt|;
+name|query
+operator|->
+name|byte_count
+operator|=
+literal|0
+expr_stmt|;
 name|ISC_LINK_INIT
 argument_list|(
 name|query
@@ -9276,6 +10255,10 @@ operator|&&
 name|qr
 condition|)
 block|{
+name|extrabytes
+operator|=
+literal|0
+expr_stmt|;
 name|printmessage
 argument_list|(
 name|ISC_LIST_HEAD
@@ -9297,7 +10280,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Event handler for send completion.  Track send counter, and clear out  * the query if the send was canceled.  */
+comment|/*%  * Event handler for send completion.  Track send counter, and clear out  * the query if the send was canceled.  */
 end_comment
 
 begin_function
@@ -9498,7 +10481,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Cancel a lookup, sending isc_socket_cancel() requests to all outstanding  * IO sockets.  The cancel handlers should take care of cleaning up the  * query and lookup structures  */
+comment|/*%  * Cancel a lookup, sending isc_socket_cancel() requests to all outstanding  * IO sockets.  The cancel handlers should take care of cleaning up the  * query and lookup structures  */
 end_comment
 
 begin_function
@@ -9775,7 +10758,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Unlike send_udp, this can't be called multiple times with the same  * query.  When we retry TCP, we requeue the whole lookup, which should  * start anew.  */
+comment|/*%  * Unlike send_udp, this can't be called multiple times with the same  * query.  When we retry TCP, we requeue the whole lookup, which should  * start anew.  */
 end_comment
 
 begin_function
@@ -10115,7 +11098,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a UDP packet to the remote nameserver, possible starting the  * recv action as well.  Also make sure that the timer is running and  * is properly reset.  */
+comment|/*%  * Send a UDP packet to the remote nameserver, possible starting the  * recv action as well.  Also make sure that the timer is running and  * is properly reset.  */
 end_comment
 
 begin_function
@@ -10471,7 +11454,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * IO timeout handler, used for both connect and recv timeouts.  If  * retries are still allowed, either resend the UDP packet or queue a  * new TCP lookup.  Otherwise, cancel the lookup.  */
+comment|/*%  * IO timeout handler, used for both connect and recv timeouts.  If  * retries are still allowed, either resend the UDP packet or queue a  * new TCP lookup.  Otherwise, cancel the lookup.  */
 end_comment
 
 begin_function
@@ -10744,7 +11727,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Event handler for the TCP recv which gets the length header of TCP  * packets.  Start the next recv of length bytes.  */
+comment|/*%  * Event handler for the TCP recv which gets the length header of TCP  * packets.  Start the next recv of length bytes.  */
 end_comment
 
 begin_function
@@ -11150,7 +12133,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For transfers that involve multiple recvs (XFR's in particular),  * launch the next recv.  */
+comment|/*%  * For transfers that involve multiple recvs (XFR's in particular),  * launch the next recv.  */
 end_comment
 
 begin_function
@@ -11475,7 +12458,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Event handler for TCP connect complete.  Make sure the connection was  * successful, then pass into launch_next_query to actually send the  * question.  */
+comment|/*%  * Event handler for TCP connect complete.  Make sure the connection was  * successful, then pass into launch_next_query to actually send the  * question.  */
 end_comment
 
 begin_function
@@ -11845,7 +12828,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if the ongoing XFR needs more data before it's complete, using  * the semantics of IXFR and AXFR protocols.  Much of the complexity of  * this routine comes from determining when an IXFR is complete.  * ISC_FALSE means more data is on the way, and the recv has been issued.  */
+comment|/*%  * Check if the ongoing XFR needs more data before it's complete, using  * the semantics of IXFR and AXFR protocols.  Much of the complexity of  * this routine comes from determining when an IXFR is complete.  * ISC_FALSE means more data is on the way, and the recv has been issued.  */
 end_comment
 
 begin_function
@@ -11896,6 +12879,14 @@ name|query
 operator|->
 name|msg_count
 operator|++
+expr_stmt|;
+name|query
+operator|->
+name|byte_count
+operator|+=
+name|sevent
+operator|->
+name|n
 expr_stmt|;
 name|result
 operator|=
@@ -12380,7 +13371,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Event handler for recv complete.  Perform whatever actions are necessary,  * based on the specifics of the user's request.  */
+comment|/*%  * Event handler for recv complete.  Perform whatever actions are necessary,  * based on the specifics of the user's request.  */
 end_comment
 
 begin_function
@@ -12778,7 +13769,7 @@ operator|->
 name|tcp_mode
 operator|&&
 operator|!
-name|isc_sockaddr_equal
+name|isc_sockaddr_compare
 argument_list|(
 operator|&
 name|sevent
@@ -12789,6 +13780,14 @@ operator|&
 name|query
 operator|->
 name|sockaddr
+argument_list|,
+name|ISC_SOCKADDR_CMPADDR
+operator||
+name|ISC_SOCKADDR_CMPPORT
+operator||
+name|ISC_SOCKADDR_CMPSCOPE
+operator||
+name|ISC_SOCKADDR_CMPSCOPEZERO
 argument_list|)
 condition|)
 block|{
@@ -12832,96 +13831,7 @@ operator|&
 name|any
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ISC_PLATFORM_HAVESCOPEID
-comment|/* 		 * Accept answers from any scope if we havn't specified the 		 * scope as long as the address and port match. 		 */
-if|if
-condition|(
-name|isc_sockaddr_pf
-argument_list|(
-operator|&
-name|query
-operator|->
-name|sockaddr
-argument_list|)
-operator|==
-name|AF_INET6
-operator|&&
-name|query
-operator|->
-name|sockaddr
-operator|.
-name|type
-operator|.
-name|sin6
-operator|.
-name|sin6_scope_id
-operator|==
-literal|0
-operator|&&
-name|memcmp
-argument_list|(
-operator|&
-name|sevent
-operator|->
-name|address
-operator|.
-name|type
-operator|.
-name|sin6
-operator|.
-name|sin6_addr
-argument_list|,
-operator|&
-name|query
-operator|->
-name|sockaddr
-operator|.
-name|type
-operator|.
-name|sin6
-operator|.
-name|sin6_addr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|query
-operator|->
-name|sockaddr
-operator|.
-name|type
-operator|.
-name|sin6
-operator|.
-name|sin6_addr
-argument_list|)
-argument_list|)
-operator|==
-literal|0
-operator|&&
-name|isc_sockaddr_getport
-argument_list|(
-operator|&
-name|sevent
-operator|->
-name|address
-argument_list|)
-operator|==
-name|isc_sockaddr_getport
-argument_list|(
-operator|&
-name|query
-operator|->
-name|sockaddr
-argument_list|)
-condition|)
-comment|/* empty */
-empty_stmt|;
-elseif|else
-endif|#
-directive|endif
-comment|/* 		 * We don't expect a match above when the packet is 		 * sent to 0.0.0.0, :: or to a multicast addresses. 		 * XXXMPA broadcast needs to be handled here as well. 		 */
+comment|/* 		* We don't expect a match when the packet is  		* sent to 0.0.0.0, :: or to a multicast addresses. 		* XXXMPA broadcast needs to be handled here as well. 		*/
 if|if
 condition|(
 operator|(
@@ -13177,6 +14087,25 @@ literal|"(< header size) message received\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+operator|&&
+operator|(
+name|msgflags
+operator|&
+name|DNS_MESSAGEFLAG_QR
+operator|)
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|";; Warning: query response not set\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -13621,6 +14550,7 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
 name|msg
 operator|->
 name|rcode
@@ -13631,6 +14561,25 @@ operator|!
 name|l
 operator|->
 name|servfail_stops
+operator|)
+operator|||
+operator|(
+name|check_ra
+operator|&&
+operator|(
+name|msg
+operator|->
+name|flags
+operator|&
+name|DNS_MESSAGEFLAG_RA
+operator|)
+operator|==
+literal|0
+operator|&&
+name|l
+operator|->
+name|recurse
+operator|)
 condition|)
 block|{
 name|dig_query_t
@@ -13716,10 +14665,28 @@ name|NULL
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|l
+operator|->
+name|comments
+operator|==
+name|ISC_TRUE
+condition|)
 name|printf
 argument_list|(
-literal|";; Got SERVFAIL reply from %s, "
+literal|";; Got %s from %s, "
 literal|"trying next server\n"
+argument_list|,
+name|msg
+operator|->
+name|rcode
+operator|==
+name|dns_rcode_servfail
+condition|?
+literal|"SERVFAIL reply"
+else|:
+literal|"recursion not available"
 argument_list|,
 name|query
 operator|->
@@ -13861,6 +14828,13 @@ literal|"dns_message_getquerytsig"
 argument_list|)
 expr_stmt|;
 block|}
+name|extrabytes
+operator|=
+name|isc_buffer_remaininglength
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
 name|debug
 argument_list|(
 literal|"after parse"
@@ -14024,11 +14998,17 @@ name|rcode
 operator|!=
 name|dns_rcode_noerror
 operator|&&
+operator|(
 name|l
 operator|->
 name|origin
 operator|!=
 name|NULL
+operator|||
+name|l
+operator|->
+name|need_search
+operator|)
 condition|)
 block|{
 if|if
@@ -14040,6 +15020,8 @@ name|msg
 argument_list|,
 name|query
 argument_list|)
+operator|||
+name|showsearch
 condition|)
 block|{
 name|printmessage
@@ -14244,7 +15226,7 @@ operator|->
 name|trace_root
 condition|)
 block|{
-comment|/* 				 * This is the initial NS query. 				 */
+comment|/* 				 * This is the initial NS query.  				 */
 name|int
 name|n
 decl_stmt|;
@@ -14759,7 +15741,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Turn a name into an address, using system-supplied routines.  This is  * used in looking up server names, etc... and needs to use system-supplied  * routines, since they may be using a non-DNS system for these lookups.  */
+comment|/*%  * Turn a name into an address, using system-supplied routines.  This is  * used in looking up server names, etc... and needs to use system-supplied  * routines, since they may be using a non-DNS system for these lookups.  */
 end_comment
 
 begin_function
@@ -14835,7 +15817,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initiate either a TCP or UDP lookup  */
+comment|/*%  * Initiate either a TCP or UDP lookup  */
 end_comment
 
 begin_function
@@ -14896,7 +15878,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start everything in action upon task startup.  */
+comment|/*%  * Start everything in action upon task startup.  */
 end_comment
 
 begin_function
@@ -14934,7 +15916,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make everything on the lookup queue go away.  Mainly used by the  * SIGINT handler.  */
+comment|/*%  * Make everything on the lookup queue go away.  Mainly used by the  * SIGINT handler.  */
 end_comment
 
 begin_function
@@ -15118,7 +16100,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destroy all of the libs we are using, and get everything ready for a  * clean shutdown.  */
+comment|/*%  * Destroy all of the libs we are using, and get everything ready for a  * clean shutdown.  */
 end_comment
 
 begin_function
@@ -15138,6 +16120,14 @@ decl_stmt|;
 name|dig_message_t
 modifier|*
 name|chase_msg
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|WITH_IDN
+name|isc_result_t
+name|result
 decl_stmt|;
 endif|#
 directive|endif
@@ -15250,6 +16240,28 @@ name|flush_server_list
 argument_list|()
 expr_stmt|;
 name|clear_searchlist
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_IDN
+name|result
+operator|=
+name|dns_name_settotextfilter
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|check_result
+argument_list|(
+name|result
+argument_list|,
+literal|"dns_name_settotextfilter"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|dns_name_destroy
 argument_list|()
 expr_stmt|;
 if|if
@@ -15612,6 +16624,468 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_IDN
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|initialize_idn
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|idn_result_t
+name|r
+decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SETLOCALE
+comment|/* Set locale */
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Create configuration context. */
+name|r
+operator|=
+name|idn_nameinit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|!=
+name|idn_success
+condition|)
+name|fatal
+argument_list|(
+literal|"idn api initialization failed: %s"
+argument_list|,
+name|idn_result_tostring
+argument_list|(
+name|r
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Set domain name -> text post-conversion filter. */
+name|result
+operator|=
+name|dns_name_settotextfilter
+argument_list|(
+name|output_filter
+argument_list|)
+expr_stmt|;
+name|check_result
+argument_list|(
+name|result
+argument_list|,
+literal|"dns_name_settotextfilter"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|isc_result_t
+name|output_filter
+parameter_list|(
+name|isc_buffer_t
+modifier|*
+name|buffer
+parameter_list|,
+name|unsigned
+name|int
+name|used_org
+parameter_list|,
+name|isc_boolean_t
+name|absolute
+parameter_list|)
+block|{
+name|char
+name|tmp1
+index|[
+name|MAXDLEN
+index|]
+decl_stmt|,
+name|tmp2
+index|[
+name|MAXDLEN
+index|]
+decl_stmt|;
+name|size_t
+name|fromlen
+decl_stmt|,
+name|tolen
+decl_stmt|;
+name|isc_boolean_t
+name|end_with_dot
+decl_stmt|;
+comment|/* 	 * Copy contents of 'buffer' to 'tmp1', supply trailing dot 	 * if 'absolute' is true, and terminate with NUL. 	 */
+name|fromlen
+operator|=
+name|isc_buffer_usedlength
+argument_list|(
+name|buffer
+argument_list|)
+operator|-
+name|used_org
+expr_stmt|;
+if|if
+condition|(
+name|fromlen
+operator|>=
+name|MAXDLEN
+condition|)
+return|return
+operator|(
+name|ISC_R_SUCCESS
+operator|)
+return|;
+name|memcpy
+argument_list|(
+name|tmp1
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|isc_buffer_base
+argument_list|(
+name|buffer
+argument_list|)
+operator|+
+name|used_org
+argument_list|,
+name|fromlen
+argument_list|)
+expr_stmt|;
+name|end_with_dot
+operator|=
+operator|(
+name|tmp1
+index|[
+name|fromlen
+operator|-
+literal|1
+index|]
+operator|==
+literal|'.'
+operator|)
+condition|?
+name|ISC_TRUE
+else|:
+name|ISC_FALSE
+expr_stmt|;
+if|if
+condition|(
+name|absolute
+operator|&&
+operator|!
+name|end_with_dot
+condition|)
+block|{
+name|fromlen
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|fromlen
+operator|>=
+name|MAXDLEN
+condition|)
+return|return
+operator|(
+name|ISC_R_SUCCESS
+operator|)
+return|;
+name|tmp1
+index|[
+name|fromlen
+operator|-
+literal|1
+index|]
+operator|=
+literal|'.'
+expr_stmt|;
+block|}
+name|tmp1
+index|[
+name|fromlen
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* 	 * Convert contents of 'tmp1' to local encoding. 	 */
+if|if
+condition|(
+name|idn_decodename
+argument_list|(
+name|IDN_DECODE_APP
+argument_list|,
+name|tmp1
+argument_list|,
+name|tmp2
+argument_list|,
+name|MAXDLEN
+argument_list|)
+operator|!=
+name|idn_success
+condition|)
+return|return
+operator|(
+name|ISC_R_SUCCESS
+operator|)
+return|;
+name|strcpy
+argument_list|(
+name|tmp1
+argument_list|,
+name|tmp2
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Copy the converted contents in 'tmp1' back to 'buffer'. 	 * If we have appended trailing dot, remove it. 	 */
+name|tolen
+operator|=
+name|strlen
+argument_list|(
+name|tmp1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|absolute
+operator|&&
+operator|!
+name|end_with_dot
+operator|&&
+name|tmp1
+index|[
+name|tolen
+operator|-
+literal|1
+index|]
+operator|==
+literal|'.'
+condition|)
+name|tolen
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|isc_buffer_length
+argument_list|(
+name|buffer
+argument_list|)
+operator|<
+name|used_org
+operator|+
+name|tolen
+condition|)
+return|return
+operator|(
+name|ISC_R_NOSPACE
+operator|)
+return|;
+name|isc_buffer_subtract
+argument_list|(
+name|buffer
+argument_list|,
+name|isc_buffer_usedlength
+argument_list|(
+name|buffer
+argument_list|)
+operator|-
+name|used_org
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|isc_buffer_used
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|,
+name|tmp1
+argument_list|,
+name|tolen
+argument_list|)
+expr_stmt|;
+name|isc_buffer_add
+argument_list|(
+name|buffer
+argument_list|,
+name|tolen
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ISC_R_SUCCESS
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|idn_result_t
+name|append_textname
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|origin
+parameter_list|,
+name|size_t
+name|namesize
+parameter_list|)
+block|{
+name|size_t
+name|namelen
+init|=
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+decl_stmt|;
+name|size_t
+name|originlen
+init|=
+name|strlen
+argument_list|(
+name|origin
+argument_list|)
+decl_stmt|;
+comment|/* Already absolute? */
+if|if
+condition|(
+name|namelen
+operator|>
+literal|0
+operator|&&
+name|name
+index|[
+name|namelen
+operator|-
+literal|1
+index|]
+operator|==
+literal|'.'
+condition|)
+return|return
+name|idn_success
+return|;
+comment|/* Append dot and origin */
+if|if
+condition|(
+name|namelen
+operator|+
+literal|1
+operator|+
+name|originlen
+operator|>=
+name|namesize
+condition|)
+return|return
+name|idn_buffer_overflow
+return|;
+name|name
+index|[
+name|namelen
+operator|++
+index|]
+operator|=
+literal|'.'
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|name
+operator|+
+name|namelen
+argument_list|,
+name|origin
+argument_list|)
+expr_stmt|;
+return|return
+name|idn_success
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|idn_check_result
+parameter_list|(
+name|idn_result_t
+name|r
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
+parameter_list|)
+block|{
+if|if
+condition|(
+name|r
+operator|!=
+name|idn_success
+condition|)
+block|{
+name|exitcode
+operator|=
+literal|1
+expr_stmt|;
+name|fatal
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|msg
+argument_list|,
+name|idn_result_tostring
+argument_list|(
+name|r
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_IDN */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -20018,7 +21492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  * take a pointer on a rdataset in parameter and try to resolv it.  * the searched rrset is a rrset on 'name' with type 'type'  * (and if the type is a rrsig the signature cover 'covers').  * the lookedup is to known if you have already done the query on the net.  * ISC_R_SUCCESS: if we found the rrset  * ISC_R_NOTFOUND: we do not found the rrset in cache  * and we do a query on the net  * ISC_R_FAILURE: rrset not found  */
+comment|/*  *  * take a pointer on a rdataset in parameter and try to resolv it.  * the searched rrset is a rrset on 'name' with type 'type'  * (and if the type is a rrsig the signature cover 'covers').  * the lookedup is to known if you have already done the query on the net.  * ISC_R_SUCCESS: if we found the rrset  * ISC_R_NOTFOUND: we do not found the rrset in cache  * and we do a query on the net  * ISC_R_FAILURE: rrset not found   */
 end_comment
 
 begin_function
@@ -23620,6 +25094,7 @@ name|ret
 operator|)
 return|;
 block|}
+comment|/* Never get here */
 block|}
 end_function
 

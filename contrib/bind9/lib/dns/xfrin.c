@@ -4,7 +4,11 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: xfrin.c,v 1.124.2.4.2.16 2006/07/19 01:04:24 marka Exp $ */
+comment|/* $Id: xfrin.c,v 1.135.18.11 2006/07/19 00:58:01 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -172,7 +176,7 @@ comment|/*  * Incoming AXFR and IXFR.  */
 end_comment
 
 begin_comment
-comment|/*  * It would be non-sensical (or at least obtuse) to use FAIL() with an  * ISC_R_SUCCESS code, but the test is there to keep the Solaris compiler  * from complaining about "end-of-loop code not reached".  */
+comment|/*%  * It would be non-sensical (or at least obtuse) to use FAIL() with an  * ISC_R_SUCCESS code, but the test is there to keep the Solaris compiler  * from complaining about "end-of-loop code not reached".  */
 end_comment
 
 begin_define
@@ -198,7 +202,7 @@ value|do { result = (op);					\ 		if (result != ISC_R_SUCCESS) goto failure;	\ 	
 end_define
 
 begin_comment
-comment|/*  * The states of the *XFR state machine.  We handle both IXFR and AXFR  * with a single integrated state machine because they cannot be distinguished  * immediately - an AXFR response to an IXFR request can only be detected  * when the first two (2) response RRs have already been received.  */
+comment|/*%  * The states of the *XFR state machine.  We handle both IXFR and AXFR  * with a single integrated state machine because they cannot be distinguished  * immediately - an AXFR response to an IXFR request can only be detected  * when the first two (2) response RRs have already been received.  */
 end_comment
 
 begin_typedef
@@ -230,7 +234,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Incoming zone transfer context.  */
+comment|/*%  * Incoming zone transfer context.  */
 end_comment
 
 begin_struct
@@ -267,22 +271,22 @@ decl_stmt|;
 name|int
 name|connects
 decl_stmt|;
-comment|/* Connect in progress */
+comment|/*%< Connect in progress */
 name|int
 name|sends
 decl_stmt|;
-comment|/* Send in progress */
+comment|/*%< Send in progress */
 name|int
 name|recvs
 decl_stmt|;
-comment|/* Receive in progress */
+comment|/*%< Receive in progress */
 name|isc_boolean_t
 name|shuttingdown
 decl_stmt|;
 name|dns_name_t
 name|name
 decl_stmt|;
-comment|/* Name of zone to transfer */
+comment|/*%< Name of zone to transfer */
 name|dns_rdataclass_t
 name|rdclass
 decl_stmt|;
@@ -292,7 +296,7 @@ decl_stmt|;
 name|dns_messageid_t
 name|id
 decl_stmt|;
-comment|/* 	 * Requested transfer type (dns_rdatatype_axfr or 	 * dns_rdatatype_ixfr).  The actual transfer type 	 * may differ due to IXFR->AXFR fallback. 	 */
+comment|/*% 	 * Requested transfer type (dns_rdatatype_axfr or 	 * dns_rdatatype_ixfr).  The actual transfer type 	 * may differ due to IXFR->AXFR fallback. 	 */
 name|dns_rdatatype_t
 name|reqtype
 decl_stmt|;
@@ -306,7 +310,7 @@ name|isc_socket_t
 modifier|*
 name|socket
 decl_stmt|;
-comment|/* Buffer for IXFR/AXFR request message */
+comment|/*% Buffer for IXFR/AXFR request message */
 name|isc_buffer_t
 name|qbuffer
 decl_stmt|;
@@ -317,7 +321,7 @@ index|[
 literal|512
 index|]
 decl_stmt|;
-comment|/* Incoming reply TCP message */
+comment|/*% Incoming reply TCP message */
 name|dns_tcpmsg_t
 name|tcpmsg
 decl_stmt|;
@@ -335,11 +339,11 @@ decl_stmt|;
 name|dns_diff_t
 name|diff
 decl_stmt|;
-comment|/* Pending database changes */
+comment|/*%< Pending database changes */
 name|int
 name|difflen
 decl_stmt|;
-comment|/* Number of pending tuples */
+comment|/*%< Number of pending tuples */
 name|xfrin_state_t
 name|state
 decl_stmt|;
@@ -353,31 +357,31 @@ name|unsigned
 name|int
 name|nmsg
 decl_stmt|;
-comment|/* Number of messages recvd */
+comment|/*%< Number of messages recvd */
 name|dns_tsigkey_t
 modifier|*
 name|tsigkey
 decl_stmt|;
-comment|/* Key used to create TSIG */
+comment|/*%< Key used to create TSIG */
 name|isc_buffer_t
 modifier|*
 name|lasttsig
 decl_stmt|;
-comment|/* The last TSIG */
+comment|/*%< The last TSIG */
 name|dst_context_t
 modifier|*
 name|tsigctx
 decl_stmt|;
-comment|/* TSIG verification context */
+comment|/*%< TSIG verification context */
 name|unsigned
 name|int
 name|sincetsig
 decl_stmt|;
-comment|/* recvd since the last TSIG */
+comment|/*%< recvd since the last TSIG */
 name|dns_xfrindone_t
 name|done
 decl_stmt|;
-comment|/* 	 * AXFR- and IXFR-specific data.  Only one is used at a time 	 * according to the is_ixfr flag, so this could be a union, 	 * but keeping them separate makes it a bit simpler to clean 	 * things up when destroying the context. 	 */
+comment|/*% 	 * AXFR- and IXFR-specific data.  Only one is used at a time 	 * according to the is_ixfr flag, so this could be a union, 	 * but keeping them separate makes it a bit simpler to clean 	 * things up when destroying the context. 	 */
 struct|struct
 block|{
 name|dns_addrdatasetfunc_t
@@ -821,12 +825,10 @@ parameter_list|(
 name|int
 name|level
 parameter_list|,
-name|dns_name_t
+specifier|const
+name|char
 modifier|*
-name|zonename
-parameter_list|,
-name|dns_rdataclass_t
-name|rdclass
+name|zonetext
 parameter_list|,
 name|isc_sockaddr_t
 modifier|*
@@ -842,7 +844,7 @@ name|ap
 parameter_list|)
 function_decl|ISC_FORMAT_PRINTF
 parameter_list|(
-function_decl|5
+function_decl|4
 operator|,
 function_decl|0
 end_function_decl
@@ -860,12 +862,10 @@ parameter_list|(
 name|int
 name|level
 parameter_list|,
-name|dns_name_t
+specifier|const
+name|char
 modifier|*
-name|zonename
-parameter_list|,
-name|dns_rdataclass_t
-name|rdclass
+name|zonetext
 parameter_list|,
 name|isc_sockaddr_t
 modifier|*
@@ -880,9 +880,9 @@ modifier|...
 parameter_list|)
 function_decl|ISC_FORMAT_PRINTF
 parameter_list|(
-function_decl|5
+function_decl|4
 operator|,
-function_decl|6
+function_decl|5
 end_function_decl
 
 begin_empty_stmt
@@ -1962,7 +1962,7 @@ name|DNS_R_FORMERR
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Remember the serial number in the intial SOA. 		 * We need it to recognize the end of an IXFR. 		 */
+comment|/* 		 * Remember the serial number in the initial SOA. 		 * We need it to recognize the end of an IXFR. 		 */
 name|xfr
 operator|->
 name|end_serial
@@ -2814,22 +2814,39 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
+block|{
+name|char
+name|zonetext
+index|[
+name|DNS_NAME_MAXTEXT
+operator|+
+literal|32
+index|]
+decl_stmt|;
+name|dns_zone_name
+argument_list|(
+name|zone
+argument_list|,
+name|zonetext
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|zonetext
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|xfrin_log1
 argument_list|(
 name|ISC_LOG_ERROR
 argument_list|,
-name|zonename
-argument_list|,
-name|dns_zone_getclass
-argument_list|(
-name|zone
-argument_list|)
+name|zonetext
 argument_list|,
 name|masteraddr
 argument_list|,
 literal|"zone transfer setup failed"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|result
@@ -6782,12 +6799,10 @@ parameter_list|(
 name|int
 name|level
 parameter_list|,
-name|dns_name_t
+specifier|const
+name|char
 modifier|*
-name|zonename
-parameter_list|,
-name|dns_rdataclass_t
-name|rdclass
+name|zonetext
 parameter_list|,
 name|isc_sockaddr_t
 modifier|*
@@ -6803,21 +6818,9 @@ name|ap
 parameter_list|)
 block|{
 name|char
-name|zntext
-index|[
-name|DNS_NAME_FORMATSIZE
-index|]
-decl_stmt|;
-name|char
 name|mastertext
 index|[
 name|ISC_SOCKADDR_FORMATSIZE
-index|]
-decl_stmt|;
-name|char
-name|classtext
-index|[
-name|DNS_RDATACLASS_FORMATSIZE
 index|]
 decl_stmt|;
 name|char
@@ -6826,30 +6829,6 @@ index|[
 literal|2048
 index|]
 decl_stmt|;
-name|dns_name_format
-argument_list|(
-name|zonename
-argument_list|,
-name|zntext
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|zntext
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|dns_rdataclass_format
-argument_list|(
-name|rdclass
-argument_list|,
-name|classtext
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|classtext
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|isc_sockaddr_format
 argument_list|(
 name|masteraddr
@@ -6886,11 +6865,9 @@ name|DNS_LOGMODULE_XFER_IN
 argument_list|,
 name|level
 argument_list|,
-literal|"transfer of '%s/%s' from %s: %s"
+literal|"transfer of '%s' from %s: %s"
 argument_list|,
-name|zntext
-argument_list|,
-name|classtext
+name|zonetext
 argument_list|,
 name|mastertext
 argument_list|,
@@ -6912,12 +6889,10 @@ parameter_list|(
 name|int
 name|level
 parameter_list|,
-name|dns_name_t
+specifier|const
+name|char
 modifier|*
-name|zonename
-parameter_list|,
-name|dns_rdataclass_t
-name|rdclass
+name|zonetext
 parameter_list|,
 name|isc_sockaddr_t
 modifier|*
@@ -6957,9 +6932,7 @@ name|xfrin_logv
 argument_list|(
 name|level
 argument_list|,
-name|zonename
-argument_list|,
-name|rdclass
+name|zonetext
 argument_list|,
 name|masteraddr
 argument_list|,
@@ -7003,6 +6976,14 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
+name|char
+name|zonetext
+index|[
+name|DNS_NAME_MAXTEXT
+operator|+
+literal|32
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|isc_log_wouldlog
@@ -7015,6 +6996,20 @@ operator|==
 name|ISC_FALSE
 condition|)
 return|return;
+name|dns_zone_name
+argument_list|(
+name|xfr
+operator|->
+name|zone
+argument_list|,
+name|zonetext
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|zonetext
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -7026,14 +7021,7 @@ name|xfrin_logv
 argument_list|(
 name|level
 argument_list|,
-operator|&
-name|xfr
-operator|->
-name|name
-argument_list|,
-name|xfr
-operator|->
-name|rdclass
+name|zonetext
 argument_list|,
 operator|&
 name|xfr

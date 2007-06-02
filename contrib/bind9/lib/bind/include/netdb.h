@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1980, 1983, 1988, 1993  * -  * Copyright (c) 1980, 1
 end_comment
 
 begin_comment
-comment|/*  *      @(#)netdb.h	8.1 (Berkeley) 6/2/93  *	$Id: netdb.h,v 1.12.2.1.4.9 2006/10/02 01:20:30 marka Exp $  */
+comment|/*  *      @(#)netdb.h	8.1 (Berkeley) 6/2/93  *	$Id: netdb.h,v 1.15.18.6 2006/10/02 01:23:09 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -260,7 +260,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Structures returned by network data base library.  All addresses are  * supplied in host order, and returned in network order (suitable for  * use in system calls).  */
+comment|/*%  * Structures returned by network data base library.  All addresses are  * supplied in host order, and returned in network order (suitable for  * use in system calls).  */
 end_comment
 
 begin_struct
@@ -271,38 +271,38 @@ name|char
 modifier|*
 name|h_name
 decl_stmt|;
-comment|/* official name of host */
+comment|/*%< official name of host */
 name|char
 modifier|*
 modifier|*
 name|h_aliases
 decl_stmt|;
-comment|/* alias list */
+comment|/*%< alias list */
 name|int
 name|h_addrtype
 decl_stmt|;
-comment|/* host address type */
+comment|/*%< host address type */
 name|int
 name|h_length
 decl_stmt|;
-comment|/* length of address */
+comment|/*%< length of address */
 name|char
 modifier|*
 modifier|*
 name|h_addr_list
 decl_stmt|;
-comment|/* list of addresses from name server */
+comment|/*%< list of addresses from name server */
 define|#
 directive|define
 name|h_addr
 value|h_addr_list[0]
-comment|/* address, for backward compatiblity */
+comment|/*%< address, for backward compatiblity */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Assumption here is that a network number  * fits in an unsigned long -- probably a poor one.  */
+comment|/*%  * Assumption here is that a network number  * fits in an unsigned long -- probably a poor one.  */
 end_comment
 
 begin_struct
@@ -313,22 +313,22 @@ name|char
 modifier|*
 name|n_name
 decl_stmt|;
-comment|/* official name of net */
+comment|/*%< official name of net */
 name|char
 modifier|*
 modifier|*
 name|n_aliases
 decl_stmt|;
-comment|/* alias list */
+comment|/*%< alias list */
 name|int
 name|n_addrtype
 decl_stmt|;
-comment|/* net address type */
+comment|/*%< net address type */
 name|unsigned
 name|long
 name|n_net
 decl_stmt|;
-comment|/* network # */
+comment|/*%< network # */
 block|}
 struct|;
 end_struct
@@ -341,22 +341,22 @@ name|char
 modifier|*
 name|s_name
 decl_stmt|;
-comment|/* official service name */
+comment|/*%< official service name */
 name|char
 modifier|*
 modifier|*
 name|s_aliases
 decl_stmt|;
-comment|/* alias list */
+comment|/*%< alias list */
 name|int
 name|s_port
 decl_stmt|;
-comment|/* port # */
+comment|/*%< port # */
 name|char
 modifier|*
 name|s_proto
 decl_stmt|;
-comment|/* protocol to use */
+comment|/*%< protocol to use */
 block|}
 struct|;
 end_struct
@@ -369,17 +369,17 @@ name|char
 modifier|*
 name|p_name
 decl_stmt|;
-comment|/* official protocol name */
+comment|/*%< official protocol name */
 name|char
 modifier|*
 modifier|*
 name|p_aliases
 decl_stmt|;
-comment|/* alias list */
+comment|/*%< alias list */
 name|int
 name|p_proto
 decl_stmt|;
-comment|/* protocol # */
+comment|/*%< protocol # */
 block|}
 struct|;
 end_struct
@@ -391,19 +391,19 @@ block|{
 name|int
 name|ai_flags
 decl_stmt|;
-comment|/* AI_PASSIVE, AI_CANONNAME */
+comment|/*%< AI_PASSIVE, AI_CANONNAME */
 name|int
 name|ai_family
 decl_stmt|;
-comment|/* PF_xxx */
+comment|/*%< PF_xxx */
 name|int
 name|ai_socktype
 decl_stmt|;
-comment|/* SOCK_xxx */
+comment|/*%< SOCK_xxx */
 name|int
 name|ai_protocol
 decl_stmt|;
-comment|/* 0 or IPPROTO_xxx for IPv4 and IPv6 */
+comment|/*%< 0 or IPPROTO_xxx for IPv4 and IPv6 */
 if|#
 directive|if
 name|defined
@@ -431,7 +431,7 @@ directive|else
 name|size_t
 name|ai_addrlen
 decl_stmt|;
-comment|/* length of ai_addr */
+comment|/*%< length of ai_addr */
 endif|#
 directive|endif
 ifdef|#
@@ -442,25 +442,25 @@ name|sockaddr
 modifier|*
 name|ai_addr
 decl_stmt|;
-comment|/* binary address */
+comment|/*%< binary address */
 name|char
 modifier|*
 name|ai_canonname
 decl_stmt|;
-comment|/* canonical name for hostname */
+comment|/*%< canonical name for hostname */
 else|#
 directive|else
 name|char
 modifier|*
 name|ai_canonname
 decl_stmt|;
-comment|/* canonical name for hostname */
+comment|/*%< canonical name for hostname */
 name|struct
 name|sockaddr
 modifier|*
 name|ai_addr
 decl_stmt|;
-comment|/* binary address */
+comment|/*%< binary address */
 endif|#
 directive|endif
 name|struct
@@ -468,13 +468,13 @@ name|addrinfo
 modifier|*
 name|ai_next
 decl_stmt|;
-comment|/* next structure in linked list */
+comment|/*%< next structure in linked list */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Error return codes from gethostbyname() and gethostbyaddr()  * (left in extern int h_errno).  */
+comment|/*%  * Error return codes from gethostbyname() and gethostbyaddr()  * (left in extern int h_errno).  */
 end_comment
 
 begin_define
@@ -485,7 +485,7 @@ value|-1
 end_define
 
 begin_comment
-comment|/* see errno */
+comment|/*%< see errno */
 end_comment
 
 begin_define
@@ -496,7 +496,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* no problem */
+comment|/*%< no problem */
 end_comment
 
 begin_define
@@ -507,7 +507,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Authoritative Answer Host not found */
+comment|/*%< Authoritative Answer Host not found */
 end_comment
 
 begin_define
@@ -518,7 +518,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Non-Authoritive Host not found, or SERVERFAIL */
+comment|/*%< Non-Authoritive Host not found, or SERVERFAIL */
 end_comment
 
 begin_define
@@ -529,7 +529,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* Non recoverable errors, FORMERR, REFUSED, NOTIMP */
+comment|/*%< Non recoverable errors, FORMERR, REFUSED, NOTIMP */
 end_comment
 
 begin_define
@@ -540,7 +540,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* Valid name, no data record of requested type */
+comment|/*%< Valid name, no data record of requested type */
 end_comment
 
 begin_define
@@ -551,7 +551,7 @@ value|NO_DATA
 end_define
 
 begin_comment
-comment|/* no address, look for MX record */
+comment|/*%< no address, look for MX record */
 end_comment
 
 begin_comment
@@ -566,7 +566,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* address family for hostname not supported */
+comment|/*%< address family for hostname not supported */
 end_comment
 
 begin_define
@@ -577,7 +577,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* temporary failure in name resolution */
+comment|/*%< temporary failure in name resolution */
 end_comment
 
 begin_define
@@ -588,7 +588,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* invalid value for ai_flags */
+comment|/*%< invalid value for ai_flags */
 end_comment
 
 begin_define
@@ -599,7 +599,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* non-recoverable failure in name resolution */
+comment|/*%< non-recoverable failure in name resolution */
 end_comment
 
 begin_define
@@ -610,7 +610,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* ai_family not supported */
+comment|/*%< ai_family not supported */
 end_comment
 
 begin_define
@@ -621,7 +621,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* memory allocation failure */
+comment|/*%< memory allocation failure */
 end_comment
 
 begin_define
@@ -632,7 +632,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* no address associated with hostname */
+comment|/*%< no address associated with hostname */
 end_comment
 
 begin_define
@@ -643,7 +643,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* hostname nor servname provided, or not known */
+comment|/*%< hostname nor servname provided, or not known */
 end_comment
 
 begin_define
@@ -654,7 +654,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* servname not supported for ai_socktype */
+comment|/*%< servname not supported for ai_socktype */
 end_comment
 
 begin_define
@@ -665,7 +665,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* ai_socktype not supported */
+comment|/*%< ai_socktype not supported */
 end_comment
 
 begin_define
@@ -676,7 +676,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* system error returned in errno */
+comment|/*%< system error returned in errno */
 end_comment
 
 begin_define
@@ -701,7 +701,7 @@ value|14
 end_define
 
 begin_comment
-comment|/*  * Flag values for getaddrinfo()  */
+comment|/*%  * Flag values for getaddrinfo()  */
 end_comment
 
 begin_define
@@ -733,7 +733,7 @@ value|0x00000007
 end_define
 
 begin_comment
-comment|/*  * Flag values for getipnodebyname()  */
+comment|/*%  * Flag values for getipnodebyname()  */
 end_comment
 
 begin_define
@@ -765,7 +765,7 @@ value|(AI_V4MAPPED|AI_ADDRCONFIG)
 end_define
 
 begin_comment
-comment|/*  * Constants for getnameinfo()  */
+comment|/*%  * Constants for getnameinfo()  */
 end_comment
 
 begin_define
@@ -783,7 +783,7 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * Flag values for getnameinfo()  */
+comment|/*%  * Flag values for getnameinfo()  */
 end_comment
 
 begin_define
@@ -836,7 +836,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/*  * Scope delimit character  */
+comment|/*%  * Scope delimit character  */
 end_comment
 
 begin_define
@@ -3593,17 +3593,17 @@ name|char
 modifier|*
 name|r_name
 decl_stmt|;
-comment|/* name of server for this rpc program */
+comment|/*%< name of server for this rpc program */
 name|char
 modifier|*
 modifier|*
 name|r_aliases
 decl_stmt|;
-comment|/* alias list */
+comment|/*%< alias list */
 name|int
 name|r_number
 decl_stmt|;
-comment|/* rpc program number */
+comment|/*%< rpc program number */
 block|}
 struct|;
 end_struct
@@ -3650,6 +3650,10 @@ end_endif
 
 begin_comment
 comment|/* !_NETDB_H_ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

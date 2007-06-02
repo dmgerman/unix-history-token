@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 2001  Internet Software Consortium.  * Portions Copyright (C) 2001  Nominum, Inc.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NOMINUM DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 2001  Internet Software Consortium.  * Portions Copyright (C) 2001  Nominum, Inc.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NOMINUM DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: ccmsg.h,v 1.3.206.1 2004/03/06 08:15:21 marka Exp $ */
+comment|/* $Id: ccmsg.h,v 1.4.18.2 2005/04/29 00:17:13 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|ISCCC_CCMSG_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -37,6 +41,10 @@ include|#
 directive|include
 file|<isc/socket.h>
 end_include
+
+begin_comment
+comment|/*% ISCCC Message Structure */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -113,7 +121,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Associate a cc message state with a given memory context and  * TCP socket.  *  * Requires:  *  *	"mctx" and "sock" be non-NULL and valid types.  *  *	"sock" be a read/write TCP socket.  *  *	"ccmsg" be non-NULL and an uninitialized or invalidated structure.  *  * Ensures:  *  *	"ccmsg" is a valid structure.  */
+comment|/*%  * Associate a cc message state with a given memory context and  * TCP socket.  *  * Requires:  *  *\li	"mctx" and "sock" be non-NULL and valid types.  *  *\li	"sock" be a read/write TCP socket.  *  *\li	"ccmsg" be non-NULL and an uninitialized or invalidated structure.  *  * Ensures:  *  *\li	"ccmsg" is a valid structure.  */
 end_comment
 
 begin_function_decl
@@ -132,7 +140,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the maximum packet size to "maxsize"  *  * Requires:  *  *	"ccmsg" be valid.  *  *	512<= "maxsize"<= 4294967296  */
+comment|/*%  * Set the maximum packet size to "maxsize"  *  * Requires:  *  *\li	"ccmsg" be valid.  *  *\li	512<= "maxsize"<= 4294967296  */
 end_comment
 
 begin_function_decl
@@ -158,7 +166,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Schedule an event to be delivered when a command channel message is  * readable, or when an error occurs on the socket.  *  * Requires:  *  *	"ccmsg" be valid.  *  *	"task", "taskaction", and "arg" be valid.  *  * Returns:  *  *	ISC_R_SUCCESS		-- no error  *	Anything that the isc_socket_recv() call can return.  XXXMLG  *  * Notes:  *  *	The event delivered is a fully generic event.  It will contain no  *	actual data.  The sender will be a pointer to the isccc_ccmsg_t.  *	The result code inside that structure should be checked to see  *	what the final result was.  */
+comment|/*%  * Schedule an event to be delivered when a command channel message is  * readable, or when an error occurs on the socket.  *  * Requires:  *  *\li	"ccmsg" be valid.  *  *\li	"task", "taskaction", and "arg" be valid.  *  * Returns:  *  *\li	#ISC_R_SUCCESS		-- no error  *\li	Anything that the isc_socket_recv() call can return.  XXXMLG  *  * Notes:  *  *\li	The event delivered is a fully generic event.  It will contain no  *	actual data.  The sender will be a pointer to the isccc_ccmsg_t.  *	The result code inside that structure should be checked to see  *	what the final result was.  */
 end_comment
 
 begin_function_decl
@@ -173,7 +181,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Cancel a readmessage() call.  The event will still be posted with a  * CANCELED result code.  *  * Requires:  *  *	"ccmsg" be valid.  */
+comment|/*%  * Cancel a readmessage() call.  The event will still be posted with a  * CANCELED result code.  *  * Requires:  *  *\li	"ccmsg" be valid.  */
 end_comment
 
 begin_function_decl
@@ -188,7 +196,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Clean up all allocated state, and invalidate the structure.  *  * Requires:  *  *	"ccmsg" be valid.  *  * Ensures:  *  *	"ccmsg" is invalidated and disassociated with all memory contexts,  *	sockets, etc.  */
+comment|/*%  * Clean up all allocated state, and invalidate the structure.  *  * Requires:  *  *\li	"ccmsg" be valid.  *  * Ensures:  *  *\li	"ccmsg" is invalidated and disassociated with all memory contexts,  *	sockets, etc.  */
 end_comment
 
 begin_macro

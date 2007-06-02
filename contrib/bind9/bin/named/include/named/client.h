@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: client.h,v 1.60.2.2.10.12 2006/06/06 00:11:40 marka Exp $ */
+comment|/* $Id: client.h,v 1.69.18.9 2006/06/06 00:11:41 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * Client  *  * This module defines two objects, ns_client_t and ns_clientmgr_t.  *  * An ns_client_t object handles incoming DNS requests from clients  * on a given network interface.  *  * Each ns_client_t object can handle only one TCP connection or UDP  * request at a time.  Therefore, several ns_client_t objects are  * typically created to serve each network interface, e.g., one  * for handling TCP requests and a few (one per CPU) for handling  * UDP requests.  *  * Incoming requests are classified as queries, zone transfer  * requests, update requests, notify requests, etc, and handed off  * to the appropriate request handler.  When the request has been  * fully handled (which can be much later), the ns_client_t must be  * notified of this by calling one of the following functions  * exactly once in the context of its task:  *  *   ns_client_send()	(sending a non-error response)  *   ns_client_sendraw() (sending a raw response)  *   ns_client_error()	(sending an error response)  *   ns_client_next()	(sending no response)  *  * This will release any resources used by the request and  * and allow the ns_client_t to listen for the next request.  *  * A ns_clientmgr_t manages a number of ns_client_t objects.  * New ns_client_t objects are created by calling  * ns_clientmgr_createclients(). They are destroyed by  * destroying their manager.  */
+comment|/*! \file   * \brief  * This module defines two objects, ns_client_t and ns_clientmgr_t.  *  * An ns_client_t object handles incoming DNS requests from clients  * on a given network interface.  *  * Each ns_client_t object can handle only one TCP connection or UDP  * request at a time.  Therefore, several ns_client_t objects are  * typically created to serve each network interface, e.g., one  * for handling TCP requests and a few (one per CPU) for handling  * UDP requests.  *  * Incoming requests are classified as queries, zone transfer  * requests, update requests, notify requests, etc, and handed off  * to the appropriate request handler.  When the request has been  * fully handled (which can be much later), the ns_client_t must be  * notified of this by calling one of the following functions  * exactly once in the context of its task:  * \code  *   ns_client_send()	(sending a non-error response)  *   ns_client_sendraw() (sending a raw response)  *   ns_client_error()	(sending an error response)  *   ns_client_next()	(sending no response)  *\endcode  * This will release any resources used by the request and  * and allow the ns_client_t to listen for the next request.  *  * A ns_clientmgr_t manages a number of ns_client_t objects.  * New ns_client_t objects are created by calling  * ns_clientmgr_createclients(). They are destroyed by  * destroying their manager.  */
 end_comment
 
 begin_comment
@@ -117,6 +117,10 @@ argument_list|)
 name|client_list_t
 expr_stmt|;
 end_typedef
+
+begin_comment
+comment|/*% nameserver client structure */
+end_comment
 
 begin_struct
 struct|struct
@@ -234,6 +238,10 @@ decl_stmt|;
 name|isc_uint16_t
 name|extflags
 decl_stmt|;
+name|isc_int16_t
+name|ednsversion
+decl_stmt|;
+comment|/* -1 noedns */
 name|void
 function_decl|(
 modifier|*
@@ -274,16 +282,16 @@ decl_stmt|;
 name|dns_name_t
 name|signername
 decl_stmt|;
-comment|/* [T]SIG key name */
+comment|/*%< [T]SIG key name */
 name|dns_name_t
 modifier|*
 name|signer
 decl_stmt|;
-comment|/* NULL if not valid sig */
+comment|/*%< NULL if not valid sig */
 name|isc_boolean_t
 name|mortal
 decl_stmt|;
-comment|/* Die after handling request */
+comment|/*%< Die after handling request */
 name|isc_quota_t
 modifier|*
 name|tcpquota
@@ -309,7 +317,7 @@ decl_stmt|;
 name|isc_event_t
 name|ctlevent
 decl_stmt|;
-comment|/* 	 * Information about recent FORMERR response(s), for 	 * FORMERR loop avoidance.  This is separate for each 	 * client object rather than global only to avoid 	 * the need for locking. 	 */
+comment|/*% 	 * Information about recent FORMERR response(s), for 	 * FORMERR loop avoidance.  This is separate for each 	 * client object rather than global only to avoid 	 * the need for locking. 	 */
 struct|struct
 block|{
 name|isc_sockaddr_t
@@ -330,7 +338,7 @@ argument|ns_client_t
 argument_list|)
 name|link
 expr_stmt|;
-comment|/* 	 * The list 'link' is part of, or NULL if not on any list. 	 */
+comment|/*% 	 * The list 'link' is part of, or NULL if not on any list. 	 */
 name|client_list_t
 modifier|*
 name|list
@@ -371,7 +379,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Client gets recusive service */
+comment|/*%< Client gets recusive service */
 end_comment
 
 begin_define
@@ -382,7 +390,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* pktinfo is valid */
+comment|/*%< pktinfo is valid */
 end_comment
 
 begin_define
@@ -393,7 +401,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* recv'd from multicast */
+comment|/*%< recv'd from multicast */
 end_comment
 
 begin_define
@@ -404,15 +412,23 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* include dnssec records */
+comment|/*%< include dnssec records */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|int
+name|ns_client_requests
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/***  *** Functions  ***/
 end_comment
 
 begin_comment
-comment|/*  * Note!  These ns_client_ routines MUST be called ONLY from the client's  * task in order to ensure synchronization.  */
+comment|/*%  * Note!  These ns_client_ routines MUST be called ONLY from the client's  * task in order to ensure synchronization.  */
 end_comment
 
 begin_function_decl
@@ -427,7 +443,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Finish processing the current client request and  * send client->message as a response.  */
+comment|/*%  * Finish processing the current client request and  * send client->message as a response.  * \brief  * Note!  These ns_client_ routines MUST be called ONLY from the client's  * task in order to ensure synchronization.  */
 end_comment
 
 begin_function_decl
@@ -446,7 +462,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Finish processing the current client request and  * send msg as a response using client->message->id for the id.  */
+comment|/*%  * Finish processing the current client request and  * send msg as a response using client->message->id for the id.  */
 end_comment
 
 begin_function_decl
@@ -464,7 +480,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Finish processing the current client request and return  * an error response to the client.  The error response  * will have an RCODE determined by 'result'.  */
+comment|/*%  * Finish processing the current client request and return  * an error response to the client.  The error response  * will have an RCODE determined by 'result'.  */
 end_comment
 
 begin_function_decl
@@ -482,26 +498,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Finish processing the current client request,  * return no response to the client.  */
-end_comment
-
-begin_function_decl
-name|void
-name|ns_client_qnamereplace
-parameter_list|(
-name|ns_client_t
-modifier|*
-name|client
-parameter_list|,
-name|dns_name_t
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*%  * Replace the qname.  */
+comment|/*%  * Finish processing the current client request,  * return no response to the client.  */
 end_comment
 
 begin_function_decl
@@ -516,7 +513,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return ISC_TRUE iff the client is currently shutting down.  */
+comment|/*%  * Return ISC_TRUE iff the client is currently shutting down.  */
 end_comment
 
 begin_function_decl
@@ -536,7 +533,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Attach '*targetp' to 'source'.  */
+comment|/*%  * Attach '*targetp' to 'source'.  */
 end_comment
 
 begin_function_decl
@@ -552,7 +549,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Detach '*clientp' from its client.  */
+comment|/*%  * Detach '*clientp' from its client.  */
 end_comment
 
 begin_function_decl
@@ -567,7 +564,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Try to replace the current client with a new one, so that the  * current one can go off and do some lengthy work without  * leaving the dispatch/socket without service.  */
+comment|/*%  * Try to replace the current client with a new one, so that the  * current one can go off and do some lengthy work without  * leaving the dispatch/socket without service.  */
 end_comment
 
 begin_function_decl
@@ -586,7 +583,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set a timer in the client to go off in the specified amount of time.  */
+comment|/*%  * Set a timer in the client to go off in the specified amount of time.  */
 end_comment
 
 begin_function_decl
@@ -614,7 +611,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a client manager.  */
+comment|/*%  * Create a client manager.  */
 end_comment
 
 begin_function_decl
@@ -630,7 +627,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy a client manager and all ns_client_t objects  * managed by it.  */
+comment|/*%  * Destroy a client manager and all ns_client_t objects  * managed by it.  */
 end_comment
 
 begin_function_decl
@@ -656,7 +653,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create up to 'n' clients listening on interface 'ifp'.  * If 'tcp' is ISC_TRUE, the clients will listen for TCP connections,  * otherwise for UDP requests.  */
+comment|/*%  * Create up to 'n' clients listening on interface 'ifp'.  * If 'tcp' is ISC_TRUE, the clients will listen for TCP connections,  * otherwise for UDP requests.  */
 end_comment
 
 begin_function_decl
@@ -672,7 +669,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the socket address of the client whose request is  * currently being processed.  */
+comment|/*%  * Get the socket address of the client whose request is  * currently being processed.  */
 end_comment
 
 begin_function_decl
@@ -694,7 +691,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convenience function for client request ACL checking.  *  * Check the current client request against 'acl'.  If 'acl'  * is NULL, allow the request iff 'default_allow' is ISC_TRUE.  *  * Notes:  *	This is appropriate for checking allow-update,  * 	allow-query, allow-transfer, etc.  It is not appropriate  * 	for checking the blackhole list because we treat positive  * 	matches as "allow" and negative matches as "deny"; in  *	the case of the blackhole list this would be backwards.  *  * Requires:  *	'client' points to a valid client.  *	'acl' points to a valid ACL, or is NULL.  *  * Returns:  *	ISC_R_SUCCESS	if the request should be allowed  * 	ISC_R_REFUSED	if the request should be denied  *	No other return values are possible.  */
+comment|/*%  * Convenience function for client request ACL checking.  *  * Check the current client request against 'acl'.  If 'acl'  * is NULL, allow the request iff 'default_allow' is ISC_TRUE.  *  * Notes:  *\li	This is appropriate for checking allow-update,  * 	allow-query, allow-transfer, etc.  It is not appropriate  * 	for checking the blackhole list because we treat positive  * 	matches as "allow" and negative matches as "deny"; in  *	the case of the blackhole list this would be backwards.  *  * Requires:  *\li	'client' points to a valid client.  *\li	'acl' points to a valid ACL, or is NULL.  *  * Returns:  *\li	ISC_R_SUCCESS	if the request should be allowed  * \li	ISC_R_REFUSED	if the request should be denied  *\li	No other return values are possible.  */
 end_comment
 
 begin_function_decl
@@ -724,7 +721,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Like ns_client_checkacl, but also logs the outcome of the  * check at log level 'log_level' if denied, and at debug 3  * if approved.  Log messages will refer to the request as  * an 'opname' request.  *  * Requires:  *	Those of ns_client_checkaclsilent(), and:  *  *	'opname' points to a null-terminated string.  */
+comment|/*%  * Like ns_client_checkacl, but also logs the outcome of the  * check at log level 'log_level' if denied, and at debug 3  * if approved.  Log messages will refer to the request as  * an 'opname' request.  *  * Requires:  *\li	Those of ns_client_checkaclsilent(), and:  *  *\li	'opname' points to a null-terminated string.  */
 end_comment
 
 begin_function_decl
@@ -856,7 +853,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%  * Add client to end of recursing list.  If 'killoldest' is true  * kill the oldest recursive client (list head).   */
+comment|/*%  * Add client to end of th recursing list.  */
 end_comment
 
 begin_function_decl
@@ -890,7 +887,60 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Dump the outstanding recursive queries to 'f'.  */
+comment|/*%  * Dump the outstanding recursive queries to 'f'.  */
+end_comment
+
+begin_function_decl
+name|void
+name|ns_client_qnamereplace
+parameter_list|(
+name|ns_client_t
+modifier|*
+name|client
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Replace the qname.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|ns_client_isself
+parameter_list|(
+name|dns_view_t
+modifier|*
+name|myview
+parameter_list|,
+name|dns_tsigkey_t
+modifier|*
+name|mykey
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|srcaddr
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|destaddr
+parameter_list|,
+name|dns_rdataclass_t
+name|rdclass
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Isself callback.  */
 end_comment
 
 begin_endif

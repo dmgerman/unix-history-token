@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_date.c,v 1.3.206.2 2004/03/16 12:34:16 marka Exp $"
+literal|"$Id: ns_date.c,v 1.5.18.1 2005/04/27 05:01:08 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,7 +145,7 @@ comment|/* Public. */
 end_comment
 
 begin_comment
-comment|/* Convert a date in ASCII into the number of seconds since    1 January 1970 (GMT assumed).  Format is yyyymmddhhmmss, all    digits required, no spaces allowed.  */
+comment|/*%  * Convert a date in ASCII into the number of seconds since  * 1 January 1970 (GMT assumed).  Format is yyyymmddhhmmss, all  * digits required, no spaces allowed.  */
 end_comment
 
 begin_function
@@ -368,7 +368,7 @@ condition|(
 operator|*
 name|errp
 condition|)
-comment|/* Any parse errors? */
+comment|/*%< Any parse errors? */
 return|return
 operator|(
 literal|0
@@ -392,7 +392,7 @@ name|time
 operator|.
 name|tm_sec
 expr_stmt|;
-comment|/* Seconds */
+comment|/*%< Seconds */
 name|result
 operator|+=
 name|time
@@ -401,7 +401,7 @@ name|tm_min
 operator|*
 literal|60
 expr_stmt|;
-comment|/* Minutes */
+comment|/*%< Minutes */
 name|result
 operator|+=
 name|time
@@ -414,7 +414,7 @@ operator|*
 literal|60
 operator|)
 expr_stmt|;
-comment|/* Hours */
+comment|/*%< Hours */
 name|result
 operator|+=
 operator|(
@@ -427,7 +427,7 @@ operator|)
 operator|*
 name|SECS_PER_DAY
 expr_stmt|;
-comment|/* Days */
+comment|/*%< Days */
 comment|/* Months are trickier.  Look without leaping, then leap */
 name|mdays
 operator|=
@@ -461,7 +461,7 @@ name|mdays
 operator|*
 name|SECS_PER_DAY
 expr_stmt|;
-comment|/* Months */
+comment|/*%< Months */
 if|if
 condition|(
 name|time
@@ -483,7 +483,7 @@ name|result
 operator|+=
 name|SECS_PER_DAY
 expr_stmt|;
-comment|/* Add leapday for this year */
+comment|/*%< Add leapday for this year */
 comment|/* First figure years without leapdays, then add them in.  */
 comment|/* The loop is slow, FIXME, but simple and accurate.  */
 name|result
@@ -502,7 +502,7 @@ operator|*
 literal|365
 operator|)
 expr_stmt|;
-comment|/* Years */
+comment|/*%< Years */
 for|for
 control|(
 name|i
@@ -531,7 +531,7 @@ name|result
 operator|+=
 name|SECS_PER_DAY
 expr_stmt|;
-comment|/* Add leapday for prev year */
+comment|/*%< Add leapday for prev year */
 return|return
 operator|(
 name|result
@@ -545,7 +545,7 @@ comment|/* Private. */
 end_comment
 
 begin_comment
-comment|/*  * Parse part of a date.  Set error flag if any error.  * Don't reset the flag if there is no error.  */
+comment|/*%  * Parse part of a date.  Set error flag if any error.  * Don't reset the flag if there is no error.  */
 end_comment
 
 begin_function
@@ -661,6 +661,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

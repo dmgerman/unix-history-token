@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_nw.c,v 1.3.2.4.4.4 2004/09/16 00:57:34 marka Exp $"
+literal|"$Id: dns_nw.c,v 1.9.18.3 2005/04/27 05:00:55 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2162,7 +2162,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-comment|/* Owner */
+comment|/*%< Owner */
 if|if
 condition|(
 name|n
@@ -2212,7 +2212,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* Type */
+comment|/*%< Type */
 name|GETSHORT
 argument_list|(
 name|class
@@ -2220,12 +2220,12 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* Class */
+comment|/*%< Class */
 name|cp
 operator|+=
 name|INT32SZ
 expr_stmt|;
-comment|/* TTL */
+comment|/*%< TTL */
 name|GETSHORT
 argument_list|(
 name|n
@@ -2233,7 +2233,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* RDLENGTH */
+comment|/*%< RDLENGTH */
 if|if
 condition|(
 name|class
@@ -2498,7 +2498,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-comment|/* RDATA */
+comment|/*%< RDATA */
 block|}
 if|if
 condition|(
@@ -2855,7 +2855,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-comment|/* Owner */
+comment|/*%< Owner */
 if|if
 condition|(
 name|cp
@@ -2876,7 +2876,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* Type */
+comment|/*%< Type */
 name|GETSHORT
 argument_list|(
 name|class
@@ -2884,12 +2884,12 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* Class */
+comment|/*%< Class */
 name|cp
 operator|+=
 name|INT32SZ
 expr_stmt|;
-comment|/* TTL */
+comment|/*%< TTL */
 name|GETSHORT
 argument_list|(
 name|n
@@ -2897,7 +2897,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* RDLENGTH */
+comment|/*%< RDLENGTH */
 if|if
 condition|(
 name|cp
@@ -2994,7 +2994,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-comment|/* RDATA */
+comment|/*%< RDATA */
 block|}
 name|memput
 argument_list|(
@@ -3446,6 +3446,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

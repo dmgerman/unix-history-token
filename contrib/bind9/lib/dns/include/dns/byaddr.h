@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: byaddr.h,v 1.12.2.1.2.4 2004/03/08 09:04:34 marka Exp $ */
+comment|/* $Id: byaddr.h,v 1.16.18.2 2005/04/29 00:16:09 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * DNS ByAddr  *  * The byaddr module provides reverse lookup services for IPv4 and IPv6  * addresses.  *  * MP:  *	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *  * Reliability:  *	No anticipated impact.  *  * Resources:  *<TBS>  *  * Security:  *	No anticipated impact.  *  * Standards:  *	RFCs:	1034, 1035, 2181,<TBS>  *	Drafts:<TBS>  */
+comment|/*! \file  * \brief  * The byaddr module provides reverse lookup services for IPv4 and IPv6  * addresses.  *  * MP:  *\li	The module ensures appropriate synchronization of data structures it  *	creates and manipulates.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	RFCs:	1034, 1035, 2181, TBS  *\li	Drafts:	TBS  */
 end_comment
 
 begin_include
@@ -51,7 +51,7 @@ name|ISC_LANG_BEGINDECLS
 end_macro
 
 begin_comment
-comment|/*  * A 'dns_byaddrevent_t' is returned when a byaddr completes.  * The sender field will be set to the byaddr that completed.  If 'result'  * is ISC_R_SUCCESS, then 'names' will contain a list of names associated  * with the address.  The recipient of the event must not change the list  * and must not refer to any of the name data after the event is freed.  */
+comment|/*%  * A 'dns_byaddrevent_t' is returned when a byaddr completes.  * The sender field will be set to the byaddr that completed.  If 'result'  * is ISC_R_SUCCESS, then 'names' will contain a list of names associated  * with the address.  The recipient of the event must not change the list  * and must not refer to any of the name data after the event is freed.  */
 end_comment
 
 begin_typedef
@@ -78,6 +78,10 @@ end_typedef
 
 begin_comment
 comment|/*  * This option is deprecated since we now only consider nibbles. #define DNS_BYADDROPT_IPV6NIBBLE	0x0001  */
+end_comment
+
+begin_comment
+comment|/*% Note DNS_BYADDROPT_IPV6NIBBLE is now deprecated. */
 end_comment
 
 begin_define
@@ -127,7 +131,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Find the domain name of 'address'.  *  * Notes:  *  *	There is a reverse lookup format for IPv6 addresses, 'nibble'  *  *	The 'nibble' format for that address is  *  *   1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.e.f.ip6.arpa.  *  *	DNS_BYADDROPT_IPV6INT can be used to get nibble lookups under ip6.int.  *  * Requires:  *  *	'mctx' is a valid mctx.  *  *	'address' is a valid IPv4 or IPv6 address.  *  *	'view' is a valid view which has a resolver.  *  *	'task' is a valid task.  *  *	byaddrp != NULL&& *byaddrp == NULL  *  * Returns:  *  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY  *  *	Any resolver-related error (e.g. ISC_R_SHUTTINGDOWN) may also be  *	returned.  */
+comment|/*%<  * Find the domain name of 'address'.  *  * Notes:  *  *\li	There is a reverse lookup format for IPv6 addresses, 'nibble'  *  *\li	The 'nibble' format for that address is  *  * \code  *   1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.e.f.ip6.arpa.  * \endcode  *  *\li	#DNS_BYADDROPT_IPV6INT can be used to get nibble lookups under ip6.int.  *  * Requires:  *  *\li	'mctx' is a valid mctx.  *  *\li	'address' is a valid IPv4 or IPv6 address.  *  *\li	'view' is a valid view which has a resolver.  *  *\li	'task' is a valid task.  *  *\li	byaddrp != NULL&& *byaddrp == NULL  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  *  *\li	Any resolver-related error (e.g. #ISC_R_SHUTTINGDOWN) may also be  *	returned.  */
 end_comment
 
 begin_function_decl
@@ -142,7 +146,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Cancel 'byaddr'.  *  * Notes:  *  *	If 'byaddr' has not completed, post its BYADDRDONE event with a  *	result code of ISC_R_CANCELED.  *  * Requires:  *  *	'byaddr' is a valid byaddr.  */
+comment|/*%<  * Cancel 'byaddr'.  *  * Notes:  *  *\li	If 'byaddr' has not completed, post its #BYADDRDONE event with a  *	result code of #ISC_R_CANCELED.  *  * Requires:  *  *\li	'byaddr' is a valid byaddr.  */
 end_comment
 
 begin_function_decl
@@ -158,7 +162,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy 'byaddr'.  *  * Requires:  *  *	'*byaddrp' is a valid byaddr.  *  *	The caller has received the BYADDRDONE event (either because the  *	byaddr completed or because dns_byaddr_cancel() was called).  *  * Ensures:  *  *	*byaddrp == NULL.  */
+comment|/*%<  * Destroy 'byaddr'.  *  * Requires:  *  *\li	'*byaddrp' is a valid byaddr.  *  *\li	The caller has received the BYADDRDONE event (either because the  *	byaddr completed or because dns_byaddr_cancel() was called).  *  * Ensures:  *  *\li	*byaddrp == NULL.  */
 end_comment
 
 begin_function_decl
@@ -199,7 +203,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Creates a name that would be used in a PTR query for this address.  The  * nibble flag indicates that the 'nibble' format is to be used if an IPv6  * address is provided, instead of the 'bitstring' format.  Since we dropped  * the support of the bitstring labels, it is expected that the flag is always  * set.  'options' are the same as for dns_byaddr_create().  *  * Requires:  *   * 	'address' is a valid address.  * 	'name' is a valid name with a dedicated buffer.  */
+comment|/*%<  * Creates a name that would be used in a PTR query for this address.  The  * nibble flag indicates that the 'nibble' format is to be used if an IPv6  * address is provided, instead of the 'bitstring' format.  Since we dropped  * the support of the bitstring labels, it is expected that the flag is always  * set.  'options' are the same as for dns_byaddr_create().  *  * Requires:  *   * \li	'address' is a valid address.  * \li	'name' is a valid name with a dedicated buffer.  */
 end_comment
 
 begin_macro

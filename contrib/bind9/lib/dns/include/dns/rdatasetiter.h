@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rdatasetiter.h,v 1.14.206.1 2004/03/06 08:13:59 marka Exp $ */
+comment|/* $Id: rdatasetiter.h,v 1.15.18.2 2005/04/29 00:16:19 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * DNS Rdataset Iterator  *  * The DNS Rdataset Iterator interface allows iteration of all of the  * rdatasets at a node.  *  * The dns_rdatasetiter_t type is like a "virtual class".  To actually use  * it, an implementation of the class is required.  This implementation is  * supplied by the database.  *  * It is the client's responsibility to call dns_rdataset_disassociate()  * on all rdatasets returned.  *  * XXX<more> XXX  *  * MP:  *	The iterator itself is not locked.  The caller must ensure  *	synchronization.  *  *	The iterator methods ensure appropriate database locking.  *  * Reliability:  *	No anticipated impact.  *  * Resources:  *<TBS>  *  * Security:  *	No anticipated impact.  *  * Standards:  *	None.  */
+comment|/*! \file  * \brief  * The DNS Rdataset Iterator interface allows iteration of all of the  * rdatasets at a node.  *  * The dns_rdatasetiter_t type is like a "virtual class".  To actually use  * it, an implementation of the class is required.  This implementation is  * supplied by the database.  *  * It is the client's responsibility to call dns_rdataset_disassociate()  * on all rdatasets returned.  *  * XXX more XXX  *  * MP:  *\li	The iterator itself is not locked.  The caller must ensure  *	synchronization.  *  *\li	The iterator methods ensure appropriate database locking.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	TBS  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	None.  */
 end_comment
 
 begin_comment
@@ -141,7 +141,7 @@ value|ISC_MAGIC_VALID(i, DNS_RDATASETITER_MAGIC)
 end_define
 
 begin_comment
-comment|/*  * This structure is actually just the common prefix of a DNS db  * implementation's version of a dns_rdatasetiter_t.  *  * Direct use of this structure by clients is forbidden.  DB implementations  * may change the structure.  'magic' must be DNS_RDATASETITER_MAGIC for  * any of the dns_rdatasetiter routines to work.  DB implementations must  * maintain all DB rdataset iterator invariants.  */
+comment|/*%  * This structure is actually just the common prefix of a DNS db  * implementation's version of a dns_rdatasetiter_t.  * \brief  * Direct use of this structure by clients is forbidden.  DB implementations  * may change the structure.  'magic' must be #DNS_RDATASETITER_MAGIC for  * any of the dns_rdatasetiter routines to work.  DB implementations must  * maintain all DB rdataset iterator invariants.  */
 end_comment
 
 begin_struct
@@ -189,7 +189,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy '*iteratorp'.  *  * Requires:  *  *	'*iteratorp' is a valid iterator.  *  * Ensures:  *  *	All resources used by the iterator are freed.  *  *	*iteratorp == NULL.  */
+comment|/*%<  * Destroy '*iteratorp'.  *  * Requires:  *  *\li	'*iteratorp' is a valid iterator.  *  * Ensures:  *  *\li	All resources used by the iterator are freed.  *  *\li	*iteratorp == NULL.  */
 end_comment
 
 begin_function_decl
@@ -204,7 +204,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Move the rdataset cursor to the first rdataset at the node (if any).  *  * Requires:  *	'iterator' is a valid iterator.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMORE			There are no rdatasets at the node.  *  *	Other results are possible, depending on the DB implementation.  */
+comment|/*%<  * Move the rdataset cursor to the first rdataset at the node (if any).  *  * Requires:  *\li	'iterator' is a valid iterator.  *  * Returns:  *\li	ISC_R_SUCCESS  *\li	ISC_R_NOMORE			There are no rdatasets at the node.  *  *\li	Other results are possible, depending on the DB implementation.  */
 end_comment
 
 begin_function_decl
@@ -219,7 +219,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Move the rdataset cursor to the next rdataset at the node (if any).  *  * Requires:  *	'iterator' is a valid iterator.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMORE			There are no more rdatasets at the  *					node.  *  *	Other results are possible, depending on the DB implementation.  */
+comment|/*%<  * Move the rdataset cursor to the next rdataset at the node (if any).  *  * Requires:  *\li	'iterator' is a valid iterator.  *  * Returns:  *\li	ISC_R_SUCCESS  *\li	ISC_R_NOMORE			There are no more rdatasets at the  *					node.  *  *\li	Other results are possible, depending on the DB implementation.  */
 end_comment
 
 begin_function_decl
@@ -238,7 +238,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the current rdataset.  *  * Requires:  *	'iterator' is a valid iterator.  *  *	'rdataset' is a valid, disassociated rdataset.  *  *	The rdataset cursor of 'iterator' is at a valid location (i.e. the  *	result of last call to a cursor movement command was ISC_R_SUCCESS).  */
+comment|/*%<  * Return the current rdataset.  *  * Requires:  *\li	'iterator' is a valid iterator.  *  *\li	'rdataset' is a valid, disassociated rdataset.  *  *\li	The rdataset cursor of 'iterator' is at a valid location (i.e. the  *	result of last call to a cursor movement command was #ISC_R_SUCCESS).  */
 end_comment
 
 begin_macro

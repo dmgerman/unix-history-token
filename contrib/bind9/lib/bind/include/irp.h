@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: irp.h,v 1.1.2.1.4.1 2004/03/09 08:33:29 marka Exp $  */
+comment|/*  * $Id: irp.h,v 1.3.18.1 2005/04/27 05:00:49 sra Exp $  */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|_IRP_H_INCLUDED
 end_define
 
+begin_comment
+comment|/*! \file */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -27,7 +31,7 @@ value|30
 end_define
 
 begin_comment
-comment|/* seconds */
+comment|/*%< seconds */
 end_comment
 
 begin_define
@@ -38,7 +42,7 @@ value|50
 end_define
 
 begin_comment
-comment|/* number of simultaneous sessions. */
+comment|/*%< number of simultaneous sessions. */
 end_comment
 
 begin_define
@@ -49,7 +53,7 @@ value|6660
 end_define
 
 begin_comment
-comment|/* 10 times the number of the beast. */
+comment|/*%< 10 times the number of the beast. */
 end_comment
 
 begin_define
@@ -60,7 +64,7 @@ value|"/var/run/irpd"
 end_define
 
 begin_comment
-comment|/* af_unix socket path */
+comment|/*%< af_unix socket path */
 end_comment
 
 begin_comment
@@ -551,6 +555,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

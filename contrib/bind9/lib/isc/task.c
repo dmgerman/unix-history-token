@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: task.c,v 1.85.2.3.8.5 2004/10/15 00:45:45 marka Exp $ */
+comment|/* $Id: task.c,v 1.91.18.6 2006/01/04 23:50:23 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Bob Halley  */
+comment|/*! \file  * \author Principal Author: Bob Halley  */
 end_comment
 
 begin_comment
@@ -632,6 +632,9 @@ decl_stmt|;
 name|isc_boolean_t
 name|exiting
 decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_MANAGER
@@ -689,8 +692,8 @@ name|manager
 operator|=
 name|manager
 expr_stmt|;
-if|if
-condition|(
+name|result
+operator|=
 name|isc_mutex_init
 argument_list|(
 operator|&
@@ -698,6 +701,10 @@ name|task
 operator|->
 name|lock
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
@@ -717,29 +724,9 @@ name|task
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init() %s"
-argument_list|,
-name|isc_msgcat_get
-argument_list|(
-name|isc_msgcat
-argument_list|,
-name|ISC_MSGSET_GENERAL
-argument_list|,
-name|ISC_MSG_FAILED
-argument_list|,
-literal|"failed"
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|ISC_R_UNEXPECTED
+name|result
 operator|)
 return|;
 block|}
@@ -3772,8 +3759,8 @@ name|mctx
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
+name|result
+operator|=
 name|isc_mutex_init
 argument_list|(
 operator|&
@@ -3781,38 +3768,16 @@ name|manager
 operator|->
 name|lock
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init() %s"
-argument_list|,
-name|isc_msgcat_get
-argument_list|(
-name|isc_msgcat
-argument_list|,
-name|ISC_MSGSET_GENERAL
-argument_list|,
-name|ISC_MSG_FAILED
-argument_list|,
-literal|"failed"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-name|ISC_R_UNEXPECTED
-expr_stmt|;
 goto|goto
 name|cleanup_mgr
 goto|;
-block|}
 ifdef|#
 directive|ifdef
 name|ISC_PLATFORM_USETHREADS
@@ -4414,6 +4379,21 @@ name|void
 operator|)
 name|isc__taskmgr_dispatch
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ISC_LIST_EMPTY
+argument_list|(
+name|manager
+operator|->
+name|tasks
+argument_list|)
+condition|)
+name|isc_mem_printallactive
+argument_list|(
+name|stderr
+argument_list|)
 expr_stmt|;
 name|INSIST
 argument_list|(

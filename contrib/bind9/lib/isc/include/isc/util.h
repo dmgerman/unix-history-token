@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: util.h,v 1.21.12.5 2004/03/08 09:04:53 marka Exp $ */
+comment|/* $Id: util.h,v 1.24.18.2 2005/04/29 00:17:04 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * NOTE:  *  * This file is not to be included from any<isc/???.h> (or other) library  * files.  *  * Including this file puts several macros in your name space that are  * not protected (as all the other ISC functions/macros do) by prepending  * ISC_ or isc_ to the name.  */
+comment|/*! \file util.h  * NOTE:  *  * This file is not to be included from any<isc/???.h> (or other) library  * files.  *  * \brief  * Including this file puts several macros in your name space that are  * not protected (as all the other ISC functions/macros do) by prepending  * ISC_ or isc_ to the name.  */
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ comment|/***  *** General Macros.  ***/
 end_comment
 
 begin_comment
-comment|/*  * Use this to hide unused function arguments.  *  * int  * foo(char *bar)  * {  *	UNUSED(bar);  * }  */
+comment|/*%  * Use this to hide unused function arguments.  * \code  * int  * foo(char *bar)  * {  *	UNUSED(bar);  * }  * \endcode  */
 end_comment
 
 begin_define
@@ -67,7 +67,7 @@ value|((a)< (b) ? (a) : (b))
 end_define
 
 begin_comment
-comment|/*  * Use this to remove the const qualifier of a variable to assign it to  * a non-const variable or pass it as a non-const function argument ...  * but only when you are sure it won't then be changed!  * This is necessary to sometimes shut up some compilers  * (as with gcc -Wcast-qual) when there is just no other good way to avoid the  * situation.  */
+comment|/*%  * Use this to remove the const qualifier of a variable to assign it to  * a non-const variable or pass it as a non-const function argument ...  * but only when you are sure it won't then be changed!  * This is necessary to sometimes shut up some compilers  * (as with gcc -Wcast-qual) when there is just no other good way to avoid the  * situation.  */
 end_comment
 
 begin_define
@@ -84,7 +84,7 @@ value|do { \ 		union { const void *k; void *v; } _u; \ 		_u.k = konst; \ 		var =
 end_define
 
 begin_comment
-comment|/*  * Use this in translation units that would otherwise be empty, to  * suppress compiler warnings.  */
+comment|/*%  * Use this in translation units that would otherwise be empty, to  * suppress compiler warnings.  */
 end_comment
 
 begin_define
@@ -95,7 +95,7 @@ value|static void isc__empty(void) { isc__empty(); }
 end_define
 
 begin_comment
-comment|/*  * We use macros instead of calling the routines directly because  * the capital letters make the locking stand out.  *  * We RUNTIME_CHECK for success since in general there's no way  * for us to continue if they fail.  */
+comment|/*%  * We use macros instead of calling the routines directly because  * the capital letters make the locking stand out.  * We RUNTIME_CHECK for success since in general there's no way  * for us to continue if they fail.  */
 end_comment
 
 begin_ifdef
@@ -532,6 +532,10 @@ begin_comment
 comment|/* Contractual promise. */
 end_comment
 
+begin_comment
+comment|/*% Require Assertion */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -541,6 +545,10 @@ name|e
 parameter_list|)
 value|ISC_REQUIRE(e)
 end_define
+
+begin_comment
+comment|/*% Ensure Assertion */
+end_comment
 
 begin_define
 define|#
@@ -552,6 +560,10 @@ parameter_list|)
 value|ISC_ENSURE(e)
 end_define
 
+begin_comment
+comment|/*% Insist Assertion */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -561,6 +573,10 @@ name|e
 parameter_list|)
 value|ISC_INSIST(e)
 end_define
+
+begin_comment
+comment|/*% Invariant Assertion */
+end_comment
 
 begin_define
 define|#
@@ -586,6 +602,10 @@ begin_comment
 comment|/* Contractual promise. */
 end_comment
 
+begin_comment
+comment|/*% Unexpected Error */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -593,12 +613,20 @@ name|UNEXPECTED_ERROR
 value|isc_error_unexpected
 end_define
 
+begin_comment
+comment|/*% Fatal Error */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|FATAL_ERROR
 value|isc_error_fatal
 end_define
+
+begin_comment
+comment|/*% Runtime Check */
+end_comment
 
 begin_define
 define|#
@@ -611,7 +639,7 @@ value|ISC_ERROR_RUNTIMECHECK(cond)
 end_define
 
 begin_comment
-comment|/*  * Time  */
+comment|/*%  * Time  */
 end_comment
 
 begin_define

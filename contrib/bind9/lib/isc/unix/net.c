@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: net.c,v 1.22.2.2.10.9 2005/03/17 03:58:33 marka Exp $ */
+comment|/* $Id: net.c,v 1.29.18.4 2005/03/16 01:22:50 marka Exp $ */
 end_comment
 
 begin_include
@@ -165,6 +165,15 @@ begin_decl_stmt
 specifier|static
 name|isc_result_t
 name|ipv6_result
+init|=
+name|ISC_R_NOTFOUND
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|isc_result_t
+name|unix_result
 init|=
 name|ISC_R_NOTFOUND
 decl_stmt|;
@@ -506,6 +515,18 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_HAVESYSUNH
+name|unix_result
+operator|=
+name|try_proto
+argument_list|(
+name|PF_UNIX
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -564,6 +585,24 @@ expr_stmt|;
 return|return
 operator|(
 name|ipv6_result
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|isc_result_t
+name|isc_net_probeunix
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|initialize
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|unix_result
 operator|)
 return|;
 block|}

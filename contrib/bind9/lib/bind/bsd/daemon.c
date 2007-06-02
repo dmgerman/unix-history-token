@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: daemon.c,v 1.1 2001/03/29 06:30:31 marka Exp $"
+literal|"$Id: daemon.c,v 1.1.352.1 2005/04/27 05:00:42 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -243,6 +243,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

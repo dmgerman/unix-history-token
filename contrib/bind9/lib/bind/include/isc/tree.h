@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tree.h - declare structures used by tree library  *  * vix 22jan93 [revisited; uses RCS, ANSI, POSIX; has bug fixes]  * vix 27jun86 [broken out of tree.c]  *  * $Id: tree.h,v 1.1.2.1 2003/06/27 03:51:39 marka Exp $  */
+comment|/* tree.h - declare structures used by tree library  *  * vix 22jan93 [revisited; uses RCS, ANSI, POSIX; has bug fixes]  * vix 27jun86 [broken out of tree.c]  *  * $Id: tree.h,v 1.2.164.1 2005/04/27 05:00:52 sra Exp $  */
 end_comment
 
 begin_ifndef
@@ -71,7 +71,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * tree_t is our package-specific anonymous pointer.  */
+comment|/*%  * tree_t is our package-specific anonymous pointer.  */
 end_comment
 
 begin_if
@@ -115,7 +115,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Do not taint namespace  */
+comment|/*%  * Do not taint namespace  */
 end_comment
 
 begin_define
@@ -323,6 +323,10 @@ end_endif
 
 begin_comment
 comment|/* _TREE_H_INCLUDED */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

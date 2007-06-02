@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: lwsearch.h,v 1.4.208.1 2004/03/06 10:21:25 marka Exp $ */
+comment|/* $Id: lwsearch.h,v 1.5.18.2 2005/04/29 00:15:36 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -51,7 +51,11 @@ file|<named/types.h>
 end_include
 
 begin_comment
-comment|/*  * Lightweight resolver search list types and routines.  *  * An ns_lwsearchlist_t holds a list of search path elements.  *  * An ns_lwsearchctx stores the state of search list during a lookup  * operation.  */
+comment|/*! \file  * \brief  * Lightweight resolver search list types and routines.  *  * An ns_lwsearchlist_t holds a list of search path elements.  *  * An ns_lwsearchctx stores the state of search list during a lookup  * operation.  */
+end_comment
+
+begin_comment
+comment|/*% An ns_lwsearchlist_t holds a list of search path elements. */
 end_comment
 
 begin_struct
@@ -79,6 +83,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*% An ns_lwsearchctx stores the state of search list during a lookup operation. */
+end_comment
 
 begin_struct
 struct|struct
@@ -127,7 +135,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create an empty search list object.  */
+comment|/*%<  * Create an empty search list object.  */
 end_comment
 
 begin_function_decl
@@ -147,7 +155,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Attach to a search list object.  */
+comment|/*%<  * Attach to a search list object.  */
 end_comment
 
 begin_function_decl
@@ -163,7 +171,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Detach from a search list object.  */
+comment|/*%<  * Detach from a search list object.  */
 end_comment
 
 begin_function_decl
@@ -182,7 +190,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Append an element to a search list.  This creates a copy of the name.  */
+comment|/*%<  * Append an element to a search list.  This creates a copy of the name.  */
 end_comment
 
 begin_function_decl
@@ -209,7 +217,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Creates a search list context structure.  */
+comment|/*%<  * Creates a search list context structure.  */
 end_comment
 
 begin_function_decl
@@ -224,7 +232,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Moves the search list context iterator to the first element, which  * is usually the exact name.  */
+comment|/*%<  * Moves the search list context iterator to the first element, which  * is usually the exact name.  */
 end_comment
 
 begin_function_decl
@@ -239,7 +247,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Moves the search list context iterator to the next element.  */
+comment|/*%<  * Moves the search list context iterator to the next element.  */
 end_comment
 
 begin_function_decl
@@ -258,7 +266,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Obtains the current name to be looked up.  This involves either  * concatenating the name with a search path element, making an  * exact name absolute, or doing nothing.  */
+comment|/*%<  * Obtains the current name to be looked up.  This involves either  * concatenating the name with a search path element, making an  * exact name absolute, or doing nothing.  */
 end_comment
 
 begin_endif

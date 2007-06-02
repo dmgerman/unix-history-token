@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: msgs.h,v 1.5.2.2.8.3 2004/03/06 08:14:44 marka Exp $ */
+comment|/* $Id: msgs.h,v 1.9.18.2 2005/04/29 00:16:59 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|ISC_MSGS_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -41,7 +45,11 @@ comment|/* Provide isc_msgcat_*() functions. */
 end_comment
 
 begin_comment
-comment|/*  * Message sets, named per source file, excepting "GENERAL".  * IMPORTANT: The original list is alphabetical, but any new sets must  * be added to the end.  */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * \brief Message sets, named per source file, excepting "GENERAL".  *  * IMPORTANT: The original list is alphabetical, but any new sets must  * be added to the end.  */
 end_comment
 
 begin_define
@@ -194,7 +202,15 @@ value|21
 end_define
 
 begin_comment
-comment|/*  * Message numbers.  They are only required to be unique per message set,  * but are unique throughout the entire catalog to not be as confusing when  * debugging.  *  * The initial numbering was done by multiply by 100 the set number the  * message appears in then adding the incremental message number.  */
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * Message numbers    * are only required to be unique per message set,  * but are unique throughout the entire catalog to not be as confusing when  * debugging.  *  * The initial numbering was done by multiply by 100 the set number the  * message appears in then adding the incremental message number.  */
 end_comment
 
 begin_define
@@ -205,7 +221,7 @@ value|101
 end_define
 
 begin_comment
-comment|/* "failed" */
+comment|/*%< "failed" */
 end_comment
 
 begin_define
@@ -216,7 +232,7 @@ value|102
 end_define
 
 begin_comment
-comment|/* Compatible with "failed" */
+comment|/*%< Compatible with "failed" */
 end_comment
 
 begin_define
@@ -227,7 +243,7 @@ value|103
 end_define
 
 begin_comment
-comment|/* More usual way to say "success" */
+comment|/*%< More usual way to say "success" */
 end_comment
 
 begin_define
@@ -238,7 +254,7 @@ value|104
 end_define
 
 begin_comment
-comment|/* As in "daemon: starting" */
+comment|/*%< As in "daemon: starting" */
 end_comment
 
 begin_define
@@ -249,7 +265,7 @@ value|105
 end_define
 
 begin_comment
-comment|/* As in "daemon: stopping" */
+comment|/*%< As in "daemon: stopping" */
 end_comment
 
 begin_define
@@ -260,7 +276,7 @@ value|106
 end_define
 
 begin_comment
-comment|/* As in "some_subr: entering" */
+comment|/*%< As in "some_subr: entering" */
 end_comment
 
 begin_define
@@ -271,7 +287,7 @@ value|107
 end_define
 
 begin_comment
-comment|/* As in "some_subr: exiting" */
+comment|/*%< As in "some_subr: exiting" */
 end_comment
 
 begin_define
@@ -282,7 +298,7 @@ value|108
 end_define
 
 begin_comment
-comment|/* As in "calling some_subr()" */
+comment|/*%< As in "calling some_subr()" */
 end_comment
 
 begin_define
@@ -293,7 +309,7 @@ value|109
 end_define
 
 begin_comment
-comment|/* As in "some_subr: returned<foo>" */
+comment|/*%< As in "some_subr: returned<foo>" */
 end_comment
 
 begin_define
@@ -304,7 +320,7 @@ value|110
 end_define
 
 begin_comment
-comment|/* "fatal error" */
+comment|/*%< "fatal error" */
 end_comment
 
 begin_define
@@ -315,7 +331,7 @@ value|111
 end_define
 
 begin_comment
-comment|/* "shutting down" */
+comment|/*%< "shutting down" */
 end_comment
 
 begin_define
@@ -326,7 +342,7 @@ value|112
 end_define
 
 begin_comment
-comment|/* "running" */
+comment|/*%< "running" */
 end_comment
 
 begin_define
@@ -337,7 +353,7 @@ value|113
 end_define
 
 begin_comment
-comment|/* "wait" */
+comment|/*%< "wait" */
 end_comment
 
 begin_define
@@ -348,7 +364,7 @@ value|114
 end_define
 
 begin_comment
-comment|/* "waituntil" */
+comment|/*%< "waituntil" */
 end_comment
 
 begin_define
@@ -359,7 +375,7 @@ value|201
 end_define
 
 begin_comment
-comment|/* "handle_signal() %d setup: %s" */
+comment|/*%< "handle_signal() %d setup: %s" */
 end_comment
 
 begin_define
@@ -370,7 +386,7 @@ value|301
 end_define
 
 begin_comment
-comment|/* "illegal option" */
+comment|/*%< "illegal option" */
 end_comment
 
 begin_define
@@ -381,7 +397,7 @@ value|302
 end_define
 
 begin_comment
-comment|/* "option requires an argument" */
+comment|/*%< "option requires an argument" */
 end_comment
 
 begin_define
@@ -392,7 +408,7 @@ value|401
 end_define
 
 begin_comment
-comment|/* "Entropy pool %p:  refcnt %u ..." */
+comment|/*%< "Entropy pool %p:  refcnt %u ..." */
 end_comment
 
 begin_define
@@ -403,7 +419,7 @@ value|501
 end_define
 
 begin_comment
-comment|/* "making interface scan socket: %s" */
+comment|/*%< "making interface scan socket: %s" */
 end_comment
 
 begin_define
@@ -414,7 +430,7 @@ value|502
 end_define
 
 begin_comment
-comment|/* "get interface configuration: %s" */
+comment|/*%< "get interface configuration: %s" */
 end_comment
 
 begin_define
@@ -425,7 +441,7 @@ value|503
 end_define
 
 begin_comment
-comment|/* "... maximum buffer size exceeded" */
+comment|/*%< "... maximum buffer size exceeded" */
 end_comment
 
 begin_define
@@ -436,7 +452,7 @@ value|504
 end_define
 
 begin_comment
-comment|/* "%s: getting destination address: %s" */
+comment|/*%< "%s: getting destination address: %s" */
 end_comment
 
 begin_define
@@ -447,7 +463,7 @@ value|505
 end_define
 
 begin_comment
-comment|/* "%s: getting netmask: %s" */
+comment|/*%< "%s: getting netmask: %s" */
 end_comment
 
 begin_define
@@ -458,7 +474,7 @@ value|601
 end_define
 
 begin_comment
-comment|/* "getting interface list size: ..." */
+comment|/*%< "getting interface list size: ..." */
 end_comment
 
 begin_define
@@ -469,7 +485,7 @@ value|602
 end_define
 
 begin_comment
-comment|/* "getting interface list: ..." */
+comment|/*%< "getting interface list: ..." */
 end_comment
 
 begin_define
@@ -480,7 +496,7 @@ value|603
 end_define
 
 begin_comment
-comment|/* "... unexpected ... message type" */
+comment|/*%< "... unexpected ... message type" */
 end_comment
 
 begin_define
@@ -491,7 +507,7 @@ value|701
 end_define
 
 begin_comment
-comment|/* "Unexpected state %d" */
+comment|/*%< "Unexpected state %d" */
 end_comment
 
 begin_define
@@ -502,7 +518,7 @@ value|801
 end_define
 
 begin_comment
-comment|/* "Bad 00 99:99:99.999 " */
+comment|/*%< "Bad 00 99:99:99.999 " */
 end_comment
 
 begin_define
@@ -513,7 +529,7 @@ value|802
 end_define
 
 begin_comment
-comment|/* "level %d: " */
+comment|/*%< "level %d: " */
 end_comment
 
 begin_define
@@ -524,7 +540,7 @@ value|901
 end_define
 
 begin_comment
-comment|/* "add %p size %u " */
+comment|/*%< "add %p size %u " */
 end_comment
 
 begin_define
@@ -535,7 +551,7 @@ value|902
 end_define
 
 begin_comment
-comment|/* "del %p size %u " */
+comment|/*%< "del %p size %u " */
 end_comment
 
 begin_define
@@ -546,7 +562,7 @@ value|903
 end_define
 
 begin_comment
-comment|/* "[Pool statistics]\n" */
+comment|/*%< "[Pool statistics]\n" */
 end_comment
 
 begin_define
@@ -557,7 +573,7 @@ value|904
 end_define
 
 begin_comment
-comment|/* "name" */
+comment|/*%< "name" */
 end_comment
 
 begin_define
@@ -568,7 +584,7 @@ value|905
 end_define
 
 begin_comment
-comment|/* "size" */
+comment|/*%< "size" */
 end_comment
 
 begin_define
@@ -579,7 +595,7 @@ value|906
 end_define
 
 begin_comment
-comment|/* "maxalloc" */
+comment|/*%< "maxalloc" */
 end_comment
 
 begin_define
@@ -590,7 +606,7 @@ value|907
 end_define
 
 begin_comment
-comment|/* "allocated" */
+comment|/*%< "allocated" */
 end_comment
 
 begin_define
@@ -601,7 +617,7 @@ value|908
 end_define
 
 begin_comment
-comment|/* "freecount" */
+comment|/*%< "freecount" */
 end_comment
 
 begin_define
@@ -612,7 +628,7 @@ value|909
 end_define
 
 begin_comment
-comment|/* "freemax" */
+comment|/*%< "freemax" */
 end_comment
 
 begin_define
@@ -623,7 +639,7 @@ value|910
 end_define
 
 begin_comment
-comment|/* "fillcount" */
+comment|/*%< "fillcount" */
 end_comment
 
 begin_define
@@ -634,7 +650,7 @@ value|911
 end_define
 
 begin_comment
-comment|/* "gets" */
+comment|/*%< "gets" */
 end_comment
 
 begin_define
@@ -645,7 +661,7 @@ value|912
 end_define
 
 begin_comment
-comment|/* "DUMP OF ALL OUTSTANDING MEMORY ..." */
+comment|/*%< "DUMP OF ALL OUTSTANDING MEMORY ..." */
 end_comment
 
 begin_define
@@ -656,7 +672,7 @@ value|913
 end_define
 
 begin_comment
-comment|/* "\tNone.\n" */
+comment|/*%< "\tNone.\n" */
 end_comment
 
 begin_define
@@ -667,7 +683,7 @@ value|914
 end_define
 
 begin_comment
-comment|/* "\tptr %p file %s line %u\n" */
+comment|/*%< "\tptr %p file %s line %u\n" */
 end_comment
 
 begin_define
@@ -678,7 +694,7 @@ value|1001
 end_define
 
 begin_comment
-comment|/* "<unknown address, family %u>" */
+comment|/*%< "<unknown address, family %u>" */
 end_comment
 
 begin_define
@@ -689,7 +705,7 @@ value|1104
 end_define
 
 begin_comment
-comment|/* "long doubles are not supported" */
+comment|/*%< "long doubles are not supported" */
 end_comment
 
 begin_define
@@ -700,7 +716,7 @@ value|1201
 end_define
 
 begin_comment
-comment|/* "rwlock %p thread %lu ..." */
+comment|/*%< "rwlock %p thread %lu ..." */
 end_comment
 
 begin_define
@@ -711,7 +727,7 @@ value|1202
 end_define
 
 begin_comment
-comment|/* "read" */
+comment|/*%< "read" */
 end_comment
 
 begin_define
@@ -722,7 +738,7 @@ value|1203
 end_define
 
 begin_comment
-comment|/* "write" */
+comment|/*%< "write" */
 end_comment
 
 begin_define
@@ -733,7 +749,7 @@ value|1204
 end_define
 
 begin_comment
-comment|/* "reading" */
+comment|/*%< "reading" */
 end_comment
 
 begin_define
@@ -744,7 +760,7 @@ value|1205
 end_define
 
 begin_comment
-comment|/* "writing" */
+comment|/*%< "writing" */
 end_comment
 
 begin_define
@@ -755,7 +771,7 @@ value|1206
 end_define
 
 begin_comment
-comment|/* "prelock" */
+comment|/*%< "prelock" */
 end_comment
 
 begin_define
@@ -766,7 +782,7 @@ value|1207
 end_define
 
 begin_comment
-comment|/* "postlock" */
+comment|/*%< "postlock" */
 end_comment
 
 begin_define
@@ -777,7 +793,7 @@ value|1208
 end_define
 
 begin_comment
-comment|/* "preunlock" */
+comment|/*%< "preunlock" */
 end_comment
 
 begin_define
@@ -788,7 +804,7 @@ value|1209
 end_define
 
 begin_comment
-comment|/* "postunlock" */
+comment|/*%< "postunlock" */
 end_comment
 
 begin_define
@@ -799,7 +815,7 @@ value|1301
 end_define
 
 begin_comment
-comment|/* "unknown address family: %d" */
+comment|/*%< "unknown address family: %d" */
 end_comment
 
 begin_define
@@ -810,7 +826,7 @@ value|1401
 end_define
 
 begin_comment
-comment|/* "write() failed during watcher ..." */
+comment|/*%< "write() failed during watcher ..." */
 end_comment
 
 begin_define
@@ -821,7 +837,7 @@ value|1402
 end_define
 
 begin_comment
-comment|/* "read() failed during watcher ... " */
+comment|/*%< "read() failed during watcher ... " */
 end_comment
 
 begin_define
@@ -832,7 +848,7 @@ value|1403
 end_define
 
 begin_comment
-comment|/* "processing cmsg %p" */
+comment|/*%< "processing cmsg %p" */
 end_comment
 
 begin_define
@@ -843,7 +859,7 @@ value|1404
 end_define
 
 begin_comment
-comment|/* "interface received on ifindex %u" */
+comment|/*%< "interface received on ifindex %u" */
 end_comment
 
 begin_define
@@ -854,7 +870,7 @@ value|1405
 end_define
 
 begin_comment
-comment|/* "sendto pktinfo data, ifindex %u" */
+comment|/*%< "sendto pktinfo data, ifindex %u" */
 end_comment
 
 begin_define
@@ -865,7 +881,7 @@ value|1406
 end_define
 
 begin_comment
-comment|/* "doio_recv: recvmsg(%d) %d bytes ..." */
+comment|/*%< "doio_recv: recvmsg(%d) %d bytes ..." */
 end_comment
 
 begin_define
@@ -876,7 +892,7 @@ value|1407
 end_define
 
 begin_comment
-comment|/* "packet received correctly" */
+comment|/*%< "packet received correctly" */
 end_comment
 
 begin_define
@@ -887,7 +903,7 @@ value|1408
 end_define
 
 begin_comment
-comment|/* "destroying" */
+comment|/*%< "destroying" */
 end_comment
 
 begin_define
@@ -898,7 +914,7 @@ value|1409
 end_define
 
 begin_comment
-comment|/* "created" */
+comment|/*%< "created" */
 end_comment
 
 begin_define
@@ -909,7 +925,7 @@ value|1410
 end_define
 
 begin_comment
-comment|/* "internal_accept called, locked ..." */
+comment|/*%< "internal_accept called, locked ..." */
 end_comment
 
 begin_define
@@ -920,7 +936,7 @@ value|1411
 end_define
 
 begin_comment
-comment|/* "accepted connection, new socket %p" */
+comment|/*%< "accepted connection, new socket %p" */
 end_comment
 
 begin_define
@@ -931,7 +947,7 @@ value|1412
 end_define
 
 begin_comment
-comment|/* "internal_recv: task %p got event %p" */
+comment|/*%< "internal_recv: task %p got event %p" */
 end_comment
 
 begin_define
@@ -942,7 +958,7 @@ value|1413
 end_define
 
 begin_comment
-comment|/* "internal_send: task %p got event %p" */
+comment|/*%< "internal_send: task %p got event %p" */
 end_comment
 
 begin_define
@@ -953,7 +969,7 @@ value|1414
 end_define
 
 begin_comment
-comment|/* "watcher got message %d" */
+comment|/*%< "watcher got message %d" */
 end_comment
 
 begin_define
@@ -964,7 +980,7 @@ value|1415
 end_define
 
 begin_comment
-comment|/* "sockets exist" */
+comment|/*%< "sockets exist" */
 end_comment
 
 begin_define
@@ -975,7 +991,7 @@ value|1416
 end_define
 
 begin_comment
-comment|/* "pktinfo structure provided, ..." */
+comment|/*%< "pktinfo structure provided, ..." */
 end_comment
 
 begin_define
@@ -986,7 +1002,7 @@ value|1417
 end_define
 
 begin_comment
-comment|/* "bound" */
+comment|/*%< "bound" */
 end_comment
 
 begin_define
@@ -997,7 +1013,7 @@ value|1418
 end_define
 
 begin_comment
-comment|/* accept() returned %d/%s */
+comment|/*%< accept() returned %d/%s */
 end_comment
 
 begin_define
@@ -1008,7 +1024,7 @@ value|1419
 end_define
 
 begin_comment
-comment|/* %s: too many open file descriptors */
+comment|/*%< %s: too many open file descriptors */
 end_comment
 
 begin_define
@@ -1019,7 +1035,7 @@ value|1420
 end_define
 
 begin_comment
-comment|/* dropping source port zero packet */
+comment|/*%< dropping source port zero packet */
 end_comment
 
 begin_define
@@ -1030,7 +1046,7 @@ value|1420
 end_define
 
 begin_comment
-comment|/* setsockopt(SO_ACCEPTFILTER): %s */
+comment|/*%< setsockopt(SO_ACCEPTFILTER): %s */
 end_comment
 
 begin_define
@@ -1041,7 +1057,7 @@ value|1502
 end_define
 
 begin_comment
-comment|/* "awake" */
+comment|/*%< "awake" */
 end_comment
 
 begin_define
@@ -1052,7 +1068,7 @@ value|1503
 end_define
 
 begin_comment
-comment|/* "working" */
+comment|/*%< "working" */
 end_comment
 
 begin_define
@@ -1063,7 +1079,7 @@ value|1504
 end_define
 
 begin_comment
-comment|/* "execute action" */
+comment|/*%< "execute action" */
 end_comment
 
 begin_define
@@ -1074,7 +1090,7 @@ value|1505
 end_define
 
 begin_comment
-comment|/* "empty" */
+comment|/*%< "empty" */
 end_comment
 
 begin_define
@@ -1085,7 +1101,7 @@ value|1506
 end_define
 
 begin_comment
-comment|/* "done" */
+comment|/*%< "done" */
 end_comment
 
 begin_define
@@ -1096,7 +1112,7 @@ value|1507
 end_define
 
 begin_comment
-comment|/* "quantum" */
+comment|/*%< "quantum" */
 end_comment
 
 begin_define
@@ -1107,7 +1123,7 @@ value|1601
 end_define
 
 begin_comment
-comment|/* "schedule" */
+comment|/*%< "schedule" */
 end_comment
 
 begin_define
@@ -1118,7 +1134,7 @@ value|1602
 end_define
 
 begin_comment
-comment|/* "signal (schedule)" */
+comment|/*%< "signal (schedule)" */
 end_comment
 
 begin_define
@@ -1129,7 +1145,7 @@ value|1603
 end_define
 
 begin_comment
-comment|/* "signal (deschedule)" */
+comment|/*%< "signal (deschedule)" */
 end_comment
 
 begin_define
@@ -1140,7 +1156,7 @@ value|1604
 end_define
 
 begin_comment
-comment|/* "signal (destroy)" */
+comment|/*%< "signal (destroy)" */
 end_comment
 
 begin_define
@@ -1151,7 +1167,7 @@ value|1605
 end_define
 
 begin_comment
-comment|/* "idle reschedule" */
+comment|/*%< "idle reschedule" */
 end_comment
 
 begin_define
@@ -1162,7 +1178,7 @@ value|1606
 end_define
 
 begin_comment
-comment|/* "couldn't allocate event" */
+comment|/*%< "couldn't allocate event" */
 end_comment
 
 begin_define
@@ -1173,7 +1189,7 @@ value|1607
 end_define
 
 begin_comment
-comment|/* "couldn't schedule timer: %u" */
+comment|/*%< "couldn't schedule timer: %u" */
 end_comment
 
 begin_define
@@ -1184,7 +1200,7 @@ value|1608
 end_define
 
 begin_comment
-comment|/* "posting" */
+comment|/*%< "posting" */
 end_comment
 
 begin_define
@@ -1195,7 +1211,7 @@ value|1609
 end_define
 
 begin_comment
-comment|/* "wakeup" */
+comment|/*%< "wakeup" */
 end_comment
 
 begin_define
@@ -1206,7 +1222,7 @@ value|1701
 end_define
 
 begin_comment
-comment|/* "LOCK" */
+comment|/*%< "LOCK" */
 end_comment
 
 begin_define
@@ -1217,7 +1233,7 @@ value|1702
 end_define
 
 begin_comment
-comment|/* "LOCKING" */
+comment|/*%< "LOCKING" */
 end_comment
 
 begin_define
@@ -1228,7 +1244,7 @@ value|1703
 end_define
 
 begin_comment
-comment|/* "LOCKED" */
+comment|/*%< "LOCKED" */
 end_comment
 
 begin_define
@@ -1239,7 +1255,7 @@ value|1704
 end_define
 
 begin_comment
-comment|/* "UNLOCKED" */
+comment|/*%< "UNLOCKED" */
 end_comment
 
 begin_define
@@ -1250,7 +1266,7 @@ value|1705
 end_define
 
 begin_comment
-comment|/* "RWLOCK" */
+comment|/*%< "RWLOCK" */
 end_comment
 
 begin_define
@@ -1261,7 +1277,7 @@ value|1706
 end_define
 
 begin_comment
-comment|/* "RWLOCKED" */
+comment|/*%< "RWLOCKED" */
 end_comment
 
 begin_define
@@ -1272,7 +1288,7 @@ value|1707
 end_define
 
 begin_comment
-comment|/* "RWUNLOCK" */
+comment|/*%< "RWUNLOCK" */
 end_comment
 
 begin_define
@@ -1283,7 +1299,7 @@ value|1708
 end_define
 
 begin_comment
-comment|/* "BROADCAST" */
+comment|/*%< "BROADCAST" */
 end_comment
 
 begin_define
@@ -1294,7 +1310,7 @@ value|1709
 end_define
 
 begin_comment
-comment|/* "SIGNAL" */
+comment|/*%< "SIGNAL" */
 end_comment
 
 begin_define
@@ -1305,7 +1321,7 @@ value|1710
 end_define
 
 begin_comment
-comment|/* "WAIT" */
+comment|/*%< "WAIT" */
 end_comment
 
 begin_define
@@ -1316,7 +1332,7 @@ value|1711
 end_define
 
 begin_comment
-comment|/* "WAITED" */
+comment|/*%< "WAITED" */
 end_comment
 
 begin_define
@@ -1327,7 +1343,11 @@ value|1801
 end_define
 
 begin_comment
-comment|/* "getting interface addresses: ..." */
+comment|/*%< "getting interface addresses: ..." */
+end_comment
+
+begin_comment
+comment|/*@}*/
 end_comment
 
 begin_endif

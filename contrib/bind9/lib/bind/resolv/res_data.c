@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_data.c,v 1.1.206.2 2004/03/16 12:34:18 marka Exp $"
+literal|"$Id: res_data.c,v 1.3.18.1 2005/04/27 05:01:10 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,10 +162,10 @@ literal|"CQUERYM"
 block|,
 literal|"CQUERYU"
 block|,
-comment|/* experimental */
+comment|/*%< experimental */
 literal|"NOTIFY"
 block|,
-comment|/* experimental */
+comment|/*%< experimental */
 literal|"UPDATE"
 block|,
 literal|"6"
@@ -241,7 +241,7 @@ init|=
 block|{
 name|RES_TIMEOUT
 block|, }
-comment|/* Motorola, et al. */
+comment|/*%< Motorola, et al. */
 endif|#
 directive|endif
 decl_stmt|;
@@ -459,45 +459,45 @@ parameter_list|(
 name|int
 name|op
 parameter_list|,
-comment|/* opcode of query */
+comment|/*!< opcode of query  */
 specifier|const
 name|char
 modifier|*
 name|dname
 parameter_list|,
-comment|/* domain name */
+comment|/*!< domain name  */
 name|int
 name|class
 parameter_list|,
 name|int
 name|type
 parameter_list|,
-comment|/* class and type of query */
+comment|/*!< class and type of query  */
 specifier|const
 name|u_char
 modifier|*
 name|data
 parameter_list|,
-comment|/* resource record data */
+comment|/*!< resource record data  */
 name|int
 name|datalen
 parameter_list|,
-comment|/* length of data */
+comment|/*!< length of data  */
 specifier|const
 name|u_char
 modifier|*
 name|newrr_in
 parameter_list|,
-comment|/* new rr for modify or append */
+comment|/*!< new rr for modify or append  */
 name|u_char
 modifier|*
 name|buf
 parameter_list|,
-comment|/* buffer to put query */
+comment|/*!< buffer to put query  */
 name|int
 name|buflen
 parameter_list|)
-comment|/* size of buffer */
+comment|/*!< size of buffer  */
 block|{
 if|if
 condition|(
@@ -640,23 +640,23 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-comment|/* domain name */
+comment|/*!< domain name  */
 name|int
 name|class
 parameter_list|,
 name|int
 name|type
 parameter_list|,
-comment|/* class and type of query */
+comment|/*!< class and type of query  */
 name|u_char
 modifier|*
 name|answer
 parameter_list|,
-comment|/* buffer to put answer */
+comment|/*!< buffer to put answer  */
 name|int
 name|anslen
 parameter_list|)
-comment|/* size of answer buffer */
+comment|/*!< size of answer buffer  */
 block|{
 if|if
 condition|(
@@ -997,23 +997,23 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-comment|/* domain name */
+comment|/*!< domain name  */
 name|int
 name|class
 parameter_list|,
 name|int
 name|type
 parameter_list|,
-comment|/* class and type of query */
+comment|/*!< class and type of query  */
 name|u_char
 modifier|*
 name|answer
 parameter_list|,
-comment|/* buffer to put answer */
+comment|/*!< buffer to put answer  */
 name|int
 name|anslen
 parameter_list|)
-comment|/* size of answer */
+comment|/*!< size of answer  */
 block|{
 if|if
 condition|(
@@ -1091,16 +1091,16 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
-comment|/* class and type of query */
+comment|/*!< class and type of query  */
 name|u_char
 modifier|*
 name|answer
 parameter_list|,
-comment|/* buffer to put answer */
+comment|/*!< buffer to put answer  */
 name|int
 name|anslen
 parameter_list|)
-comment|/* size of answer */
+comment|/*!< size of answer  */
 block|{
 if|if
 condition|(
@@ -1307,6 +1307,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

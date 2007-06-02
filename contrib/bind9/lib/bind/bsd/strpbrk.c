@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strpbrk.c,v 1.1 2001/03/29 06:30:36 marka Exp $"
+literal|"$Id: strpbrk.c,v 1.1.352.1 2005/04/27 05:00:46 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,7 +97,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * Find the first occurrence in s1 of a character in s2 (excluding NUL).  */
+comment|/*%  * Find the first occurrence in s1 of a character in s2 (excluding NUL).  */
 end_comment
 
 begin_function
@@ -191,6 +191,10 @@ end_endif
 
 begin_comment
 comment|/*NEED_STRPBRK*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

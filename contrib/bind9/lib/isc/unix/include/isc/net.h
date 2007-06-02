@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: net.h,v 1.31.2.2.10.8 2004/04/29 01:31:23 marka Exp $ */
+comment|/* $Id: net.h,v 1.39.18.4 2005/04/27 05:02:37 sra Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * Basic Networking Types  *  * This module is responsible for defining the following basic networking  * types:  *  *		struct in_addr  *		struct in6_addr  *		struct in6_pktinfo  *		struct sockaddr  *		struct sockaddr_in  *		struct sockaddr_in6  *		in_port_t  *  * It ensures that the AF_ and PF_ macros are defined.  *  * It declares ntoh[sl]() and hton[sl]().  *  * It declares inet_aton(), inet_ntop(), and inet_pton().  *  * It ensures that INADDR_LOOPBACK, INADDR_ANY, IN6ADDR_ANY_INIT,  * in6addr_any, and in6addr_loopback are available.  *  * It ensures that IN_MULTICAST() is available to check for multicast  * addresses.  *  * MP:  *	No impact.  *  * Reliability:  *	No anticipated impact.  *  * Resources:  *	N/A.  *  * Security:  *	No anticipated impact.  *  * Standards:  *	BSD Socket API  *	RFC 2553  */
+comment|/*! \file  * \brief  * Basic Networking Types  *  * This module is responsible for defining the following basic networking  * types:  *  *\li		struct in_addr  *\li		struct in6_addr  *\li		struct in6_pktinfo  *\li		struct sockaddr  *\li		struct sockaddr_in  *\li		struct sockaddr_in6  *\li		in_port_t  *  * It ensures that the AF_ and PF_ macros are defined.  *  * It declares ntoh[sl]() and hton[sl]().  *  * It declares inet_aton(), inet_ntop(), and inet_pton().  *  * It ensures that #INADDR_LOOPBACK, #INADDR_ANY, #IN6ADDR_ANY_INIT,  * in6addr_any, and in6addr_loopback are available.  *  * It ensures that IN_MULTICAST() is available to check for multicast  * addresses.  *  * MP:  *\li	No impact.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	N/A.  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	BSD Socket API  *\li	RFC2553  */
 end_comment
 
 begin_comment
@@ -169,7 +169,7 @@ value|in_addr6
 end_define
 
 begin_comment
-comment|/* Required for pre RFC2133 implementations. */
+comment|/*%< Required for pre RFC2133 implementations. */
 end_comment
 
 begin_endif
@@ -183,10 +183,6 @@ directive|ifdef
 name|ISC_PLATFORM_HAVEIPV6
 end_ifdef
 
-begin_comment
-comment|/*  * Required for some pre RFC2133 implementations.  * IN6ADDR_ANY_INIT and IN6ADDR_LOOPBACK_INIT were added in  * draft-ietf-ipngwg-bsd-api-04.txt or draft-ietf-ipngwg-bsd-api-05.txt.    * If 's6_addr' is defined then assume that there is a union and three  * levels otherwise assume two levels required.  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -198,6 +194,10 @@ ifdef|#
 directive|ifdef
 name|s6_addr
 end_ifdef
+
+begin_comment
+comment|/*%  * Required for some pre RFC2133 implementations.  * IN6ADDR_ANY_INIT and IN6ADDR_LOOPBACK_INIT were added in  * draft-ietf-ipngwg-bsd-api-04.txt or draft-ietf-ipngwg-bsd-api-05.txt.    * If 's6_addr' is defined then assume that there is a union and three  * levels otherwise assume two levels required.  */
+end_comment
 
 begin_define
 define|#
@@ -240,6 +240,10 @@ directive|ifdef
 name|s6_addr
 end_ifdef
 
+begin_comment
+comment|/*% IPv6 address loopback init */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -275,6 +279,10 @@ directive|ifndef
 name|IN6_IS_ADDR_V4MAPPED
 end_ifndef
 
+begin_comment
+comment|/*% Is IPv6 address V4 mapped? */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -296,6 +304,10 @@ ifndef|#
 directive|ifndef
 name|IN6_IS_ADDR_V4COMPAT
 end_ifndef
+
+begin_comment
+comment|/*% Is IPv6 address V4 compatible? */
+end_comment
 
 begin_define
 define|#
@@ -319,6 +331,10 @@ directive|ifndef
 name|IN6_IS_ADDR_MULTICAST
 end_ifndef
 
+begin_comment
+comment|/*% Is IPv6 address multicast? */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -339,6 +355,10 @@ ifndef|#
 directive|ifndef
 name|IN6_IS_ADDR_LINKLOCAL
 end_ifndef
+
+begin_comment
+comment|/*% Is IPv6 address linklocal? */
+end_comment
 
 begin_define
 define|#
@@ -362,6 +382,10 @@ directive|ifndef
 name|IN6_IS_ADDR_SITELOCAL
 end_ifndef
 
+begin_comment
+comment|/*% is IPv6 address sitelocal? */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -383,6 +407,10 @@ ifndef|#
 directive|ifndef
 name|IN6_IS_ADDR_LOOPBACK
 end_ifndef
+
+begin_comment
+comment|/*% is IPv6 address loopback? */
+end_comment
 
 begin_define
 define|#
@@ -411,6 +439,10 @@ directive|ifndef
 name|AF_INET6
 end_ifndef
 
+begin_comment
+comment|/*% IPv6 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -428,6 +460,10 @@ ifndef|#
 directive|ifndef
 name|PF_INET6
 end_ifndef
+
+begin_comment
+comment|/*% IPv6 */
+end_comment
 
 begin_define
 define|#
@@ -447,6 +483,10 @@ directive|ifndef
 name|INADDR_LOOPBACK
 end_ifndef
 
+begin_comment
+comment|/*% inaddr loopback */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -465,6 +505,10 @@ directive|ifndef
 name|ISC_PLATFORM_HAVEIN6PKTINFO
 end_ifndef
 
+begin_comment
+comment|/*% IPv6 packet info */
+end_comment
+
 begin_struct
 struct|struct
 name|in6_pktinfo
@@ -473,12 +517,12 @@ name|struct
 name|in6_addr
 name|ipi6_addr
 decl_stmt|;
-comment|/* src/dst IPv6 address */
+comment|/*%< src/dst IPv6 address */
 name|unsigned
 name|int
 name|ipi6_ifindex
 decl_stmt|;
-comment|/* send/recv interface index */
+comment|/*%< send/recv interface index */
 block|}
 struct|;
 end_struct
@@ -487,10 +531,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Cope with a missing in6addr_any and in6addr_loopback.  */
-end_comment
 
 begin_if
 if|#
@@ -514,6 +554,10 @@ name|in6_addr
 name|isc_net_in6addrany
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*%  * Cope with a missing in6addr_any and in6addr_loopback.  */
+end_comment
 
 begin_define
 define|#
@@ -562,10 +606,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Fix UnixWare 7.1.1's broken IN6_IS_ADDR_* definitions.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -577,6 +617,10 @@ undef|#
 directive|undef
 name|IN6_IS_ADDR_GEOGRAPHIC
 end_undef
+
+begin_comment
+comment|/*!   * \brief  * Fix UnixWare 7.1.1's broken IN6_IS_ADDR_* definitions.  */
+end_comment
 
 begin_define
 define|#
@@ -693,15 +737,15 @@ begin_comment
 comment|/* ISC_PLATFORM_FIXIN6ISADDR */
 end_comment
 
-begin_comment
-comment|/*  * Ensure type in_port_t is defined.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|ISC_PLATFORM_NEEDPORTT
 end_ifdef
+
+begin_comment
+comment|/*%  * Ensure type in_port_t is defined.  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -715,15 +759,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * If this system does not have MSG_TRUNC (as returned from recvmsg())  * ISC_PLATFORM_RECVOVERFLOW will be defined.  This will enable the MSG_TRUNC  * faking code in socket.c.  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|MSG_TRUNC
 end_ifndef
+
+begin_comment
+comment|/*%  * If this system does not have MSG_TRUNC (as returned from recvmsg())  * ISC_PLATFORM_RECVOVERFLOW will be defined.  This will enable the MSG_TRUNC  * faking code in socket.c.  */
+end_comment
 
 begin_define
 define|#
@@ -736,6 +780,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*% IP address. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -745,6 +793,10 @@ name|x
 parameter_list|)
 value|((isc_uint32_t)htonl((isc_uint32_t)(x)))
 end_define
+
+begin_comment
+comment|/*% Is IP address multicast? */
+end_comment
 
 begin_define
 define|#
@@ -783,7 +835,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Check if the system's kernel supports IPv4.  *  * Returns:  *  *	ISC_R_SUCCESS		IPv4 is supported.  *	ISC_R_NOTFOUND		IPv4 is not supported.  *	ISC_R_DISABLED		IPv4 is disabled.  *	ISC_R_UNEXPECTED  */
+comment|/*%<  * Check if the system's kernel supports IPv4.  *  * Returns:  *  *\li	#ISC_R_SUCCESS		IPv4 is supported.  *\li	#ISC_R_NOTFOUND		IPv4 is not supported.  *\li	#ISC_R_DISABLED		IPv4 is disabled.  *\li	#ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -796,7 +848,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Check if the system's kernel supports IPv6.  *  * Returns:  *  *	ISC_R_SUCCESS		IPv6 is supported.  *	ISC_R_NOTFOUND		IPv6 is not supported.  *	ISC_R_DISABLED		IPv6 is disabled.  *	ISC_R_UNEXPECTED  */
+comment|/*%<  * Check if the system's kernel supports IPv6.  *  * Returns:  *  *\li	#ISC_R_SUCCESS		IPv6 is supported.  *\li	#ISC_R_NOTFOUND		IPv6 is not supported.  *\li	#ISC_R_DISABLED		IPv6 is disabled.  *\li	#ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -809,7 +861,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Check if the system's kernel supports the IPV6_V6ONLY socket option.  *  * Returns:  *  *	ISC_R_SUCCESS		the option is supported for both TCP and UDP.  *	ISC_R_NOTFOUND		IPv6 itself or the option is not supported.  *	ISC_R_UNEXPECTED  */
+comment|/*%<  * Check if the system's kernel supports the IPV6_V6ONLY socket option.  *  * Returns:  *  *\li	#ISC_R_SUCCESS		the option is supported for both TCP and UDP.  *\li	#ISC_R_NOTFOUND		IPv6 itself or the option is not supported.  *\li	#ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -822,7 +874,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Check if the system's kernel supports the IPV6_(RECV)PKTINFO socket option  * for UDP sockets.  *  * Returns:  *  *	ISC_R_SUCCESS		the option is supported.  *	ISC_R_NOTFOUND		IPv6 itself or the option is not supported.  *	ISC_R_UNEXPECTED  */
+comment|/*  * Check if the system's kernel supports the IPV6_(RECV)PKTINFO socket option  * for UDP sockets.  *  * Returns:  *  * \li	#ISC_R_SUCCESS		the option is supported.  * \li	#ISC_R_NOTFOUND		IPv6 itself or the option is not supported.  * \li	#ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -860,6 +912,19 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|isc_net_probeunix
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Returns whether UNIX domain sockets are supported.  */
+end_comment
 
 begin_ifdef
 ifdef|#

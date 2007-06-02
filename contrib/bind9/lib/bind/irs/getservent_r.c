@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getservent_r.c,v 1.3.206.2 2006/08/01 01:19:28 marka Exp $"
+literal|"$Id: getservent_r.c,v 1.4.18.2 2006/08/01 01:19:12 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -363,7 +363,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	These assume a single context is in operation per thread.  *	If this is not the case we will need to call irs directly  *	rather than through the base functions.  */
+comment|/*%  *	These assume a single context is in operation per thread.  *	If this is not the case we will need to call irs directly  *	rather than through the base functions.  */
 end_comment
 
 begin_function
@@ -589,7 +589,7 @@ name|numptr
 operator|=
 literal|1
 expr_stmt|;
-comment|/* NULL ptr */
+comment|/*%< NULL ptr */
 name|len
 operator|=
 operator|(
@@ -1190,6 +1190,10 @@ end_endif
 
 begin_comment
 comment|/* !defined(_REENTRANT) || !defined(DO_PTHREADS) */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_gr.c,v 1.1.2.1.4.1 2004/03/09 08:33:34 marka Exp $"
+literal|"$Id: dns_gr.c,v 1.3.18.1 2005/04/27 05:00:54 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * dns_gr.c --- this file contains the functions for accessing  * 	group information from Hesiod.  */
+comment|/*! \file  * \brief  * dns_gr.c --- this file contains the functions for accessing  * 	group information from Hesiod.  */
 end_comment
 
 begin_include
@@ -186,7 +186,7 @@ decl_stmt|;
 name|size_t
 name|nmemb
 decl_stmt|;
-comment|/* Malloc'd max index of gr_mem[]. */
+comment|/*%< Malloc'd max index of gr_mem[]. */
 name|char
 modifier|*
 name|membuf

@@ -147,7 +147,7 @@ file|<port_after.h>
 end_include
 
 begin_comment
-comment|/*  * Note that a_off will be dynamically adjusted so that to be consistent  * with the definition of sockaddr_in{,6}.  * The value presented below is just a guess.  */
+comment|/*%  * Note that a_off will be dynamically adjusted so that to be consistent  * with the definition of sockaddr_in{,6}.  * The value presented below is just a guess.  */
 end_comment
 
 begin_struct
@@ -523,7 +523,7 @@ operator|)
 operator|->
 name|si_port
 expr_stmt|;
-comment|/* network byte order */
+comment|/*%< network byte order */
 name|addr
 operator|=
 operator|(
@@ -1067,7 +1067,7 @@ literal|1
 operator|>
 name|hostlen
 condition|)
-comment|/* don't forget terminator */
+comment|/*%< don't forget terminator */
 return|return
 name|EAI_MEMORY
 return|;
@@ -1102,7 +1102,7 @@ index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
-comment|/* XXX */
+comment|/*%< XXX */
 name|int
 name|scopelen
 decl_stmt|;
@@ -1418,6 +1418,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

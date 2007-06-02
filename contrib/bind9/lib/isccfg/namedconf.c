@@ -4,7 +4,11 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: namedconf.c,v 1.21.44.34 2006/03/02 00:37:20 marka Exp $ */
+comment|/* $Id: namedconf.c,v 1.30.18.38 2006/05/03 01:46:40 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -72,7 +76,7 @@ value|(pctx->token.value.as_textregion.base)
 end_define
 
 begin_comment
-comment|/* Check a return value. */
+comment|/*% Check a return value. */
 end_comment
 
 begin_define
@@ -87,7 +91,7 @@ value|do { result = (op); 					\ 		if (result != ISC_R_SUCCESS) goto cleanup; 	\
 end_define
 
 begin_comment
-comment|/* Clean up a configuration object if non-NULL. */
+comment|/*% Clean up a configuration object if non-NULL. */
 end_comment
 
 begin_define
@@ -102,7 +106,7 @@ value|do { if ((obj) != NULL) cfg_obj_destroy(pctx,&(obj)); } while (0)
 end_define
 
 begin_comment
-comment|/*  * Forward declarations of static functions.  */
+comment|/*%  * Forward declarations of static functions.  */
 end_comment
 
 begin_function_decl
@@ -265,6 +269,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|cfg_type_t
+name|cfg_type_bracketed_sockaddrnameportlist
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cfg_type_t
 name|cfg_type_controls
 decl_stmt|;
 end_decl_stmt
@@ -287,6 +298,13 @@ begin_decl_stmt
 specifier|static
 name|cfg_type_t
 name|cfg_type_dialuptype
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cfg_type_t
+name|cfg_type_ixfrdifftype
 decl_stmt|;
 end_decl_stmt
 
@@ -493,8 +511,115 @@ name|cfg_type_zoneopts
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|cfg_type_t
+name|cfg_type_dynamically_loadable_zones
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cfg_type_t
+name|cfg_type_dynamically_loadable_zones_opts
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* tkey-dhkey */
+comment|/*  * Clauses that can be found in a 'dynamically loadable zones' statement  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|cfg_clausedef_t
+name|dynamically_loadable_zones_clauses
+index|[]
+init|=
+block|{
+block|{
+literal|"database"
+block|,
+operator|&
+name|cfg_type_astring
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * A dynamically loadable zones statement.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|cfg_tuplefielddef_t
+name|dynamically_loadable_zones_fields
+index|[]
+init|=
+block|{
+block|{
+literal|"name"
+block|,
+operator|&
+name|cfg_type_astring
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"options"
+block|,
+operator|&
+name|cfg_type_dynamically_loadable_zones_opts
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cfg_type_t
+name|cfg_type_dynamically_loadable_zones
+init|=
+block|{
+literal|"dlz"
+block|,
+name|cfg_parse_tuple
+block|,
+name|cfg_print_tuple
+block|,
+name|cfg_doc_tuple
+block|,
+operator|&
+name|cfg_rep_tuple
+block|,
+name|dynamically_loadable_zones_fields
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*% tkey-dhkey */
 end_comment
 
 begin_decl_stmt
@@ -556,7 +681,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* listen-on */
+comment|/*% listen-on */
 end_comment
 
 begin_decl_stmt
@@ -618,7 +743,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* acl */
+comment|/*% acl */
 end_comment
 
 begin_decl_stmt
@@ -680,7 +805,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* masters */
+comment|/*% masters */
 end_comment
 
 begin_decl_stmt
@@ -751,7 +876,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * "sockaddrkeylist", a list of socket addresses with optional keys  * and an optional default port, as used in the masters option.  * E.g.,  *   "port 1234 { mymasters; 10.0.0.1 key foo; 1::2 port 69; }"  */
+comment|/*%  * "sockaddrkeylist", a list of socket addresses with optional keys  * and an optional default port, as used in the masters option.  * E.g.,  *   "port 1234 { mymasters; 10.0.0.1 key foo; 1::2 port 69; }"  */
 end_comment
 
 begin_decl_stmt
@@ -894,7 +1019,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A list of socket addresses with an optional default port,  * as used in the also-notify option.  E.g.,  * "port 1234 { 10.0.0.1; 1::2 port 69; }"  */
+comment|/*%  * A list of socket addresses with an optional default port,  * as used in the also-notify option.  E.g.,  * "port 1234 { 10.0.0.1; 1::2 port 69; }"  */
 end_comment
 
 begin_decl_stmt
@@ -956,7 +1081,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A public key, as in the "pubkey" statement.  */
+comment|/*%  * A public key, as in the "pubkey" statement.  */
 end_comment
 
 begin_decl_stmt
@@ -1036,7 +1161,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A list of RR types, used in grant statements.  * Note that the old parser allows quotes around the RR type names.  */
+comment|/*%  * A list of RR types, used in grant statements.  * Note that the old parser allows quotes around the RR type names.  */
 end_comment
 
 begin_decl_stmt
@@ -1120,6 +1245,10 @@ literal|"wildcard"
 block|,
 literal|"self"
 block|,
+literal|"selfsub"
+block|,
+literal|"selfwild"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -1149,7 +1278,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A grant statement, used in the update policy.  */
+comment|/*%  * A grant statement, used in the update policy.  */
 end_comment
 
 begin_decl_stmt
@@ -1263,7 +1392,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A view statement.  */
+comment|/*%  * A view statement.  */
 end_comment
 
 begin_decl_stmt
@@ -1334,7 +1463,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A zone statement.  */
+comment|/*%  * A zone statement.  */
 end_comment
 
 begin_decl_stmt
@@ -1405,7 +1534,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A "category" clause in the "logging" statement.  */
+comment|/*%  * A "category" clause in the "logging" statement.  */
 end_comment
 
 begin_decl_stmt
@@ -1467,7 +1596,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A trusted key, as used in the "trusted-keys" statement.  */
+comment|/*%  * A trusted key, as used in the "trusted-keys" statement.  */
 end_comment
 
 begin_decl_stmt
@@ -1667,7 +1796,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * An rrset ordering element.  */
+comment|/*%  * An rrset ordering element.  */
 end_comment
 
 begin_decl_stmt
@@ -1757,7 +1886,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A global or view "check-names" option.  Note that the zone  * "check-names" option has a different syntax.  */
+comment|/*%  * A global or view "check-names" option.  Note that the zone  * "check-names" option has a different syntax.  */
 end_comment
 
 begin_decl_stmt
@@ -1988,7 +2117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* A list of keys, as in the "key" clause of the controls statement. */
+comment|/*% A list of keys, as in the "key" clause of the controls statement. */
 end_comment
 
 begin_decl_stmt
@@ -2218,7 +2347,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The special keyword "none", as used in the pid-file option.  */
+comment|/*%  * The special keyword "none", as used in the pid-file option.  */
 end_comment
 
 begin_function
@@ -2276,7 +2405,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A quoted string or the special keyword "none".  Used in the pid-file option.  */
+comment|/*%  * A quoted string or the special keyword "none".  Used in the pid-file option.  */
 end_comment
 
 begin_function
@@ -2428,7 +2557,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * keyword hostname  */
+comment|/*%  * keyword hostname  */
 end_comment
 
 begin_function
@@ -2486,7 +2615,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * "server-id" argument.  */
+comment|/*%  * "server-id" argument.  */
 end_comment
 
 begin_function
@@ -2675,7 +2804,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Port list.  */
+comment|/*%  * Port list.  */
 end_comment
 
 begin_function
@@ -2808,7 +2937,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Clauses that can be found within the top level of the named.conf  * file only.  */
+comment|/*%  * Clauses that can be found within the top level of the named.conf  * file only.  */
 end_comment
 
 begin_decl_stmt
@@ -2893,7 +3022,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Clauses that can occur at the top level or in the view  * statement, but not in the options block.  */
+comment|/*%  * Clauses that can occur at the top level or in the view  * statement, but not in the options block.  */
 end_comment
 
 begin_decl_stmt
@@ -2919,6 +3048,16 @@ operator|&
 name|cfg_type_zone
 block|,
 name|CFG_CLAUSEFLAG_MULTI
+block|}
+block|,
+comment|/* only 1 DLZ per view allowed */
+block|{
+literal|"dlz"
+block|,
+operator|&
+name|cfg_type_dynamically_loadable_zones
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2951,7 +3090,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Clauses that can be found within the 'options' statement.  */
+comment|/*%  * Clauses that can be found within the 'options' statement.  */
 end_comment
 
 begin_decl_stmt
@@ -3594,8 +3733,49 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|masterformat_enums
+index|[]
+init|=
+block|{
+literal|"text"
+block|,
+literal|"raw"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cfg_type_t
+name|cfg_type_masterformat
+init|=
+block|{
+literal|"masterformat"
+block|,
+name|cfg_parse_enum
+block|,
+name|cfg_print_ustring
+block|,
+name|cfg_doc_enum
+block|,
+operator|&
+name|cfg_rep_string
+block|,
+operator|&
+name|masterformat_enums
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * dnssec-lookaside  */
+comment|/*%  * dnssec-lookaside  */
 end_comment
 
 begin_decl_stmt
@@ -3694,7 +3874,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Clauses that can be found within the 'view' statement,  * with defaults in the 'options' statement.  */
+comment|/*%  * Clauses that can be found within the 'view' statement,  * with defaults in the 'options' statement.  */
 end_comment
 
 begin_decl_stmt
@@ -3704,6 +3884,15 @@ name|view_clauses
 index|[]
 init|=
 block|{
+block|{
+literal|"allow-query-cache"
+block|,
+operator|&
+name|cfg_type_bracketed_aml
+block|,
+literal|0
+block|}
+block|,
 block|{
 literal|"allow-recursion"
 block|,
@@ -3967,6 +4156,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"max-udp-size"
+block|,
+operator|&
+name|cfg_type_uint32
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"root-delegation-only"
 block|,
 operator|&
@@ -3994,6 +4192,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"dnssec-validation"
+block|,
+operator|&
+name|cfg_type_boolean
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"dnssec-lookaside"
 block|,
 operator|&
@@ -4012,6 +4219,114 @@ name|CFG_CLAUSEFLAG_MULTI
 block|}
 block|,
 block|{
+literal|"dnssec-accept-expired"
+block|,
+operator|&
+name|cfg_type_boolean
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"ixfr-from-differences"
+block|,
+operator|&
+name|cfg_type_ixfrdifftype
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"acache-enable"
+block|,
+operator|&
+name|cfg_type_boolean
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"acache-cleaning-interval"
+block|,
+operator|&
+name|cfg_type_uint32
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"max-acache-size"
+block|,
+operator|&
+name|cfg_type_sizenodefault
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"clients-per-query"
+block|,
+operator|&
+name|cfg_type_uint32
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"max-clients-per-query"
+block|,
+operator|&
+name|cfg_type_uint32
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"empty-server"
+block|,
+operator|&
+name|cfg_type_astring
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"empty-contact"
+block|,
+operator|&
+name|cfg_type_astring
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"empty-zones-enable"
+block|,
+operator|&
+name|cfg_type_boolean
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"disable-empty-zone"
+block|,
+operator|&
+name|cfg_type_astring
+block|,
+name|CFG_CLAUSEFLAG_MULTI
+block|}
+block|,
+block|{
+literal|"zero-no-soa-ttl-cache"
+block|,
+operator|&
+name|cfg_type_boolean
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
@@ -4023,7 +4338,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Clauses that can be found within the 'view' statement only.  */
+comment|/*%  * Clauses that can be found within the 'view' statement only.  */
 end_comment
 
 begin_decl_stmt
@@ -4072,7 +4387,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Clauses that can be found in a 'zone' statement,  * with defaults in the 'view' or 'options' statement.  */
+comment|/*%  * Clauses that can be found in a 'zone' statement,  * with defaults in the 'view' or 'options' statement.  */
 end_comment
 
 begin_decl_stmt
@@ -4101,6 +4416,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"allow-update"
+block|,
+operator|&
+name|cfg_type_bracketed_aml
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"allow-update-forwarding"
 block|,
 operator|&
@@ -4114,6 +4438,15 @@ literal|"allow-notify"
 block|,
 operator|&
 name|cfg_type_bracketed_aml
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"masterfile-format"
+block|,
+operator|&
+name|cfg_type_masterformat
 block|,
 literal|0
 block|}
@@ -4155,6 +4488,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"notify-delay"
+block|,
+operator|&
+name|cfg_type_uint32
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"dialup"
 block|,
 operator|&
@@ -4177,15 +4519,6 @@ literal|"forwarders"
 block|,
 operator|&
 name|cfg_type_portiplist
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"ixfr-from-differences"
-block|,
-operator|&
-name|cfg_type_boolean
 block|,
 literal|0
 block|}
@@ -4371,6 +4704,78 @@ literal|0
 block|}
 block|,
 block|{
+literal|"check-wildcard"
+block|,
+operator|&
+name|cfg_type_boolean
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"check-integrity"
+block|,
+operator|&
+name|cfg_type_boolean
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"check-mx"
+block|,
+operator|&
+name|cfg_type_checkmode
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"check-mx-cname"
+block|,
+operator|&
+name|cfg_type_checkmode
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"check-srv-cname"
+block|,
+operator|&
+name|cfg_type_checkmode
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"check-sibling"
+block|,
+operator|&
+name|cfg_type_boolean
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"zero-no-soa-ttl"
+block|,
+operator|&
+name|cfg_type_boolean
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"update-check-ksk"
+block|,
+operator|&
+name|cfg_type_boolean
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
@@ -4382,7 +4787,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Clauses that can be found in a 'zone' statement  * only.  */
+comment|/*%  * Clauses that can be found in a 'zone' statement  * only.  */
 end_comment
 
 begin_decl_stmt
@@ -4402,16 +4807,16 @@ literal|0
 block|}
 block|,
 block|{
-literal|"allow-update"
+literal|"file"
 block|,
 operator|&
-name|cfg_type_bracketed_aml
+name|cfg_type_qstring
 block|,
 literal|0
 block|}
 block|,
 block|{
-literal|"file"
+literal|"journal"
 block|,
 operator|&
 name|cfg_type_qstring
@@ -4495,6 +4900,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"ixfr-from-differences"
+block|,
+operator|&
+name|cfg_type_boolean
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
@@ -4506,7 +4920,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The top-level named.conf syntax. */
+comment|/*% The top-level named.conf syntax. */
 end_comment
 
 begin_decl_stmt
@@ -4549,7 +4963,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The "options" statement syntax. */
+comment|/*% The "options" statement syntax. */
 end_comment
 
 begin_decl_stmt
@@ -4594,7 +5008,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The "view" statement syntax. */
+comment|/*% The "view" statement syntax. */
 end_comment
 
 begin_decl_stmt
@@ -4612,6 +5026,8 @@ block|,
 name|view_clauses
 block|,
 name|zone_clauses
+block|,
+name|dynamically_loadable_zones_clauses
 block|,
 name|NULL
 block|}
@@ -4641,7 +5057,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The "zone" statement syntax. */
+comment|/*% The "zone" statement syntax. */
 end_comment
 
 begin_decl_stmt
@@ -4684,7 +5100,48 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Clauses that can be found within the 'key' statement.  */
+comment|/*% The "dynamically loadable zones" statement syntax. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|cfg_clausedef_t
+modifier|*
+name|dynamically_loadable_zones_clausesets
+index|[]
+init|=
+block|{
+name|dynamically_loadable_zones_clauses
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cfg_type_t
+name|cfg_type_dynamically_loadable_zones_opts
+init|=
+block|{
+literal|"dynamically_loadable_zones_opts"
+block|,
+name|cfg_parse_map
+block|,
+name|cfg_print_map
+block|,
+name|cfg_doc_map
+block|,
+operator|&
+name|cfg_rep_map
+block|,
+name|dynamically_loadable_zones_clausesets
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*%  * Clauses that can be found within the 'key' statement.  */
 end_comment
 
 begin_decl_stmt
@@ -4761,7 +5218,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Clauses that can be found in a 'server' statement.  */
+comment|/*%  * Clauses that can be found in a 'server' statement.  */
 end_comment
 
 begin_decl_stmt
@@ -4844,6 +5301,60 @@ literal|0
 block|}
 block|,
 block|{
+literal|"edns-udp-size"
+block|,
+operator|&
+name|cfg_type_uint32
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"max-udp-size"
+block|,
+operator|&
+name|cfg_type_uint32
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"notify-source"
+block|,
+operator|&
+name|cfg_type_sockaddr4wild
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"notify-source-v6"
+block|,
+operator|&
+name|cfg_type_sockaddr6wild
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"query-source"
+block|,
+operator|&
+name|cfg_type_querysource4
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"query-source-v6"
+block|,
+operator|&
+name|cfg_type_querysource6
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"transfer-source"
 block|,
 operator|&
@@ -4895,7 +5406,7 @@ init|=
 block|{
 literal|"server"
 block|,
-name|cfg_parse_addressed_map
+name|cfg_parse_netprefix_map
 block|,
 name|cfg_print_map
 block|,
@@ -4910,7 +5421,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Clauses that can be found in a 'channel' clause in the  * 'logging' statement.  *  * These have some additional constraints that need to be  * checked after parsing:  *  - There must exactly one of file/syslog/null/stderr  *  */
+comment|/*%  * Clauses that can be found in a 'channel' clause in the  * 'logging' statement.  *  * These have some additional constraints that need to be  * checked after parsing:  *  - There must exactly one of file/syslog/null/stderr  *  */
 end_comment
 
 begin_decl_stmt
@@ -5043,7 +5554,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* A list of log destination, used in the "category" clause. */
+comment|/*% A list of log destination, used in the "category" clause. */
 end_comment
 
 begin_decl_stmt
@@ -5070,7 +5581,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Clauses that can be found in a 'logging' statement.  */
+comment|/*%  * Clauses that can be found in a 'logging' statement.  */
 end_comment
 
 begin_decl_stmt
@@ -5446,7 +5957,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A size value (number + optional unit).  */
+comment|/*%  * A size value (number + optional unit).  */
 end_comment
 
 begin_decl_stmt
@@ -5472,7 +5983,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A size, "unlimited", or "default".  */
+comment|/*%  * A size, "unlimited", or "default".  */
 end_comment
 
 begin_function
@@ -5554,7 +6065,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A size or "unlimited", but not "default".  */
+comment|/*%  * A size or "unlimited", but not "default".  */
 end_comment
 
 begin_decl_stmt
@@ -5596,7 +6107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * optional_keyvalue  */
+comment|/*%  * optional_keyvalue  */
 end_comment
 
 begin_function
@@ -6254,6 +6765,8 @@ init|=
 block|{
 literal|"explicit"
 block|,
+literal|"master-only"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -6321,6 +6834,84 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
+name|char
+modifier|*
+name|ixfrdiff_enums
+index|[]
+init|=
+block|{
+literal|"master"
+block|,
+literal|"slave"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|isc_result_t
+name|parse_ixfrdiff_type
+parameter_list|(
+name|cfg_parser_t
+modifier|*
+name|pctx
+parameter_list|,
+specifier|const
+name|cfg_type_t
+modifier|*
+name|type
+parameter_list|,
+name|cfg_obj_t
+modifier|*
+modifier|*
+name|ret
+parameter_list|)
+block|{
+return|return
+operator|(
+name|parse_enum_or_other
+argument_list|(
+name|pctx
+argument_list|,
+name|type
+argument_list|,
+operator|&
+name|cfg_type_boolean
+argument_list|,
+name|ret
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+specifier|static
+name|cfg_type_t
+name|cfg_type_ixfrdifftype
+init|=
+block|{
+literal|"ixfrdiff"
+block|,
+name|parse_ixfrdiff_type
+block|,
+name|cfg_print_ustring
+block|,
+name|doc_enum_or_other
+block|,
+operator|&
+name|cfg_rep_string
+block|,
+name|ixfrdiff_enums
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|keyword_type_t
 name|key_kw
 init|=
@@ -6380,7 +6971,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A "controls" statement is represented as a map with the multivalued  * "inet" and "unix" clauses.  Inet controls are tuples; unix controls  * are cfg_unsupported_t objects.  */
+comment|/*%  * A "controls" statement is represented as a map with the multivalued  * "inet" and "unix" clauses.   */
 end_comment
 
 begin_decl_stmt
@@ -6526,6 +7117,202 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|keyword_type_t
+name|controls_perm_kw
+init|=
+block|{
+literal|"perm"
+block|,
+operator|&
+name|cfg_type_uint32
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cfg_type_t
+name|cfg_type_controls_perm
+init|=
+block|{
+literal|"controls_perm"
+block|,
+name|parse_keyvalue
+block|,
+name|print_keyvalue
+block|,
+name|doc_keyvalue
+block|,
+operator|&
+name|cfg_rep_uint32
+block|,
+operator|&
+name|controls_perm_kw
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|keyword_type_t
+name|controls_owner_kw
+init|=
+block|{
+literal|"owner"
+block|,
+operator|&
+name|cfg_type_uint32
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cfg_type_t
+name|cfg_type_controls_owner
+init|=
+block|{
+literal|"controls_owner"
+block|,
+name|parse_keyvalue
+block|,
+name|print_keyvalue
+block|,
+name|doc_keyvalue
+block|,
+operator|&
+name|cfg_rep_uint32
+block|,
+operator|&
+name|controls_owner_kw
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|keyword_type_t
+name|controls_group_kw
+init|=
+block|{
+literal|"group"
+block|,
+operator|&
+name|cfg_type_uint32
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cfg_type_t
+name|cfg_type_controls_group
+init|=
+block|{
+literal|"controls_allow"
+block|,
+name|parse_keyvalue
+block|,
+name|print_keyvalue
+block|,
+name|doc_keyvalue
+block|,
+operator|&
+name|cfg_rep_uint32
+block|,
+operator|&
+name|controls_group_kw
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cfg_tuplefielddef_t
+name|unixcontrol_fields
+index|[]
+init|=
+block|{
+block|{
+literal|"path"
+block|,
+operator|&
+name|cfg_type_qstring
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"perm"
+block|,
+operator|&
+name|cfg_type_controls_perm
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"owner"
+block|,
+operator|&
+name|cfg_type_controls_owner
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"group"
+block|,
+operator|&
+name|cfg_type_controls_group
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"keys"
+block|,
+operator|&
+name|cfg_type_controls_keys
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cfg_type_t
+name|cfg_type_unixcontrol
+init|=
+block|{
+literal|"unixcontrol"
+block|,
+name|cfg_parse_tuple
+block|,
+name|cfg_print_tuple
+block|,
+name|cfg_doc_tuple
+block|,
+operator|&
+name|cfg_rep_tuple
+block|,
+name|unixcontrol_fields
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|cfg_clausedef_t
 name|controls_clauses
 index|[]
@@ -6544,11 +7331,9 @@ block|{
 literal|"unix"
 block|,
 operator|&
-name|cfg_type_unsupported
+name|cfg_type_unixcontrol
 block|,
 name|CFG_CLAUSEFLAG_MULTI
-operator||
-name|CFG_CLAUSEFLAG_NOTIMP
 block|}
 block|,
 block|{
@@ -6601,7 +7386,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * An optional class, as used in view and zone statements.  */
+comment|/*%  * An optional class, as used in view and zone statements.  */
 end_comment
 
 begin_function
@@ -6719,8 +7504,10 @@ name|cfg_parser_t
 modifier|*
 name|pctx
 parameter_list|,
-name|int
-name|flags
+specifier|const
+name|cfg_type_t
+modifier|*
+name|type
 parameter_list|,
 name|cfg_obj_t
 modifier|*
@@ -6755,10 +7542,21 @@ name|have_port
 init|=
 literal|0
 decl_stmt|;
+specifier|const
+name|unsigned
+name|int
+modifier|*
+name|flagp
+init|=
+name|type
+operator|->
+name|of
+decl_stmt|;
 if|if
 condition|(
 operator|(
-name|flags
+operator|*
+name|flagp
 operator|&
 name|CFG_ADDR_V4OK
 operator|)
@@ -6775,7 +7573,8 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|flags
+operator|*
+name|flagp
 operator|&
 name|CFG_ADDR_V6OK
 operator|)
@@ -6797,20 +7596,6 @@ expr_stmt|;
 name|port
 operator|=
 literal|0
-expr_stmt|;
-name|CHECK
-argument_list|(
-name|cfg_create_obj
-argument_list|(
-name|pctx
-argument_list|,
-operator|&
-name|cfg_type_querysource
-argument_list|,
-operator|&
-name|obj
-argument_list|)
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -6871,9 +7656,8 @@ name|cfg_parse_rawaddr
 argument_list|(
 name|pctx
 argument_list|,
-name|flags
-operator||
-name|CFG_ADDR_WILDOK
+operator|*
+name|flagp
 argument_list|,
 operator|&
 name|netaddr
@@ -6928,6 +7712,31 @@ name|have_port
 operator|++
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|have_port
+operator|==
+literal|0
+operator|&&
+name|have_address
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|cfg_parse_sockaddr
+argument_list|(
+name|pctx
+argument_list|,
+name|type
+argument_list|,
+name|ret
+argument_list|)
+operator|)
+return|;
+block|}
 else|else
 block|{
 name|cfg_parser_error
@@ -6981,6 +7790,20 @@ name|ISC_R_UNEXPECTEDTOKEN
 operator|)
 return|;
 block|}
+name|CHECK
+argument_list|(
+name|cfg_create_obj
+argument_list|(
+name|pctx
+argument_list|,
+operator|&
+name|cfg_type_querysource
+argument_list|,
+operator|&
+name|obj
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|isc_sockaddr_fromnetaddr
 argument_list|(
 operator|&
@@ -7025,86 +7848,6 @@ expr_stmt|;
 return|return
 operator|(
 name|result
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|isc_result_t
-name|parse_querysource4
-parameter_list|(
-name|cfg_parser_t
-modifier|*
-name|pctx
-parameter_list|,
-specifier|const
-name|cfg_type_t
-modifier|*
-name|type
-parameter_list|,
-name|cfg_obj_t
-modifier|*
-modifier|*
-name|ret
-parameter_list|)
-block|{
-name|UNUSED
-argument_list|(
-name|type
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|parse_querysource
-argument_list|(
-name|pctx
-argument_list|,
-name|CFG_ADDR_V4OK
-argument_list|,
-name|ret
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|isc_result_t
-name|parse_querysource6
-parameter_list|(
-name|cfg_parser_t
-modifier|*
-name|pctx
-parameter_list|,
-specifier|const
-name|cfg_type_t
-modifier|*
-name|type
-parameter_list|,
-name|cfg_obj_t
-modifier|*
-modifier|*
-name|ret
-parameter_list|)
-block|{
-name|UNUSED
-argument_list|(
-name|type
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|parse_querysource
-argument_list|(
-name|pctx
-argument_list|,
-name|CFG_ADDR_V6OK
-argument_list|,
-name|ret
-argument_list|)
 operator|)
 return|;
 block|}
@@ -7187,13 +7930,37 @@ end_function
 
 begin_decl_stmt
 specifier|static
+name|unsigned
+name|int
+name|sockaddr4wild_flags
+init|=
+name|CFG_ADDR_WILDOK
+operator||
+name|CFG_ADDR_V4OK
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|sockaddr6wild_flags
+init|=
+name|CFG_ADDR_WILDOK
+operator||
+name|CFG_ADDR_V6OK
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|cfg_type_t
 name|cfg_type_querysource4
 init|=
 block|{
 literal|"querysource4"
 block|,
-name|parse_querysource4
+name|parse_querysource
 block|,
 name|NULL
 block|,
@@ -7201,7 +7968,8 @@ name|cfg_doc_terminal
 block|,
 name|NULL
 block|,
-name|NULL
+operator|&
+name|sockaddr4wild_flags
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7214,7 +7982,7 @@ init|=
 block|{
 literal|"querysource6"
 block|,
-name|parse_querysource6
+name|parse_querysource
 block|,
 name|NULL
 block|,
@@ -7222,7 +7990,8 @@ name|cfg_doc_terminal
 block|,
 name|NULL
 block|,
-name|NULL
+operator|&
+name|sockaddr6wild_flags
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7250,7 +8019,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* addrmatchelt */
+comment|/*% addrmatchelt */
 end_comment
 
 begin_function
@@ -7511,7 +8280,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A negated address match list element (like "! 10.0.0.1").  * Somewhat sneakily, the caller is expected to parse the  * "!", but not to print it.  */
+comment|/*%  * A negated address match list element (like "! 10.0.0.1").  * Somewhat sneakily, the caller is expected to parse the  * "!", but not to print it.  */
 end_comment
 
 begin_decl_stmt
@@ -7599,7 +8368,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* An address match list element */
+comment|/*% An address match list element */
 end_comment
 
 begin_decl_stmt
@@ -7624,7 +8393,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* A bracketed address match list */
+comment|/*% A bracketed address match list */
 end_comment
 
 begin_decl_stmt
@@ -7651,7 +8420,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The socket address syntax in the "controls" statement is silly.  * It allows both socket address families, but also allows "*",  * whis is gratuitously interpreted as the IPv4 wildcard address.  */
+comment|/*%  * The socket address syntax in the "controls" statement is silly.  * It allows both socket address families, but also allows "*",  * whis is gratuitously interpreted as the IPv4 wildcard address.  */
 end_comment
 
 begin_decl_stmt
@@ -7692,7 +8461,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Handle the special kludge syntax of the "keys" clause in the "server"  * statement, which takes a single key with or without braces and semicolon.  */
+comment|/*%  * Handle the special kludge syntax of the "keys" clause in the "server"  * statement, which takes a single key with or without braces and semicolon.  */
 end_comment
 
 begin_function
@@ -7876,7 +8645,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * An optional logging facility.  */
+comment|/*%  * An optional logging facility.  */
 end_comment
 
 begin_function
@@ -7998,7 +8767,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A log severity.  Return as a string, except "debug N",  * which is returned as a keyword object.  */
+comment|/*%  * A log severity.  Return as a string, except "debug N",  * which is returned as a keyword object.  */
 end_comment
 
 begin_decl_stmt
@@ -8232,7 +9001,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The "file" clause of the "channel" statement.  * This is yet another special case.  */
+comment|/*%  * The "file" clause of the "channel" statement.  * This is yet another special case.  */
 end_comment
 
 begin_decl_stmt
@@ -8818,20 +9587,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* An IPv4/IPv6 address with optional port, "*" accepted as wildcard. */
+comment|/*% An IPv4 address with optional port, "*" accepted as wildcard. */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|sockaddr4wild_flags
-init|=
-name|CFG_ADDR_WILDOK
-operator||
-name|CFG_ADDR_V4OK
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -8856,17 +9613,9 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|sockaddr6wild_flags
-init|=
-name|CFG_ADDR_WILDOK
-operator||
-name|CFG_ADDR_V6OK
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*% An IPv6 address with optional port, "*" accepted as wildcard. */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -8892,7 +9641,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * lwres  */
+comment|/*%  * lwres  */
 end_comment
 
 begin_decl_stmt
@@ -9068,7 +9817,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * rndc  */
+comment|/*%  * rndc  */
 end_comment
 
 begin_decl_stmt
@@ -9078,15 +9827,6 @@ name|rndcconf_options_clauses
 index|[]
 init|=
 block|{
-block|{
-literal|"default-server"
-block|,
-operator|&
-name|cfg_type_astring
-block|,
-literal|0
-block|}
-block|,
 block|{
 literal|"default-key"
 block|,
@@ -9101,6 +9841,33 @@ literal|"default-port"
 block|,
 operator|&
 name|cfg_type_uint32
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"default-server"
+block|,
+operator|&
+name|cfg_type_astring
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"default-source-address"
+block|,
+operator|&
+name|cfg_type_netaddr4wild
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"default-source-address-v6"
+block|,
+operator|&
+name|cfg_type_netaddr6wild
 block|,
 literal|0
 block|}
@@ -9174,6 +9941,33 @@ literal|"port"
 block|,
 operator|&
 name|cfg_type_uint32
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"source-address"
+block|,
+operator|&
+name|cfg_type_netaddr4wild
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"source-address-v6"
+block|,
+operator|&
+name|cfg_type_netaddr6wild
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"addresses"
+block|,
+operator|&
+name|cfg_type_bracketed_sockaddrnameportlist
 block|,
 literal|0
 block|}
@@ -9808,7 +10602,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A list of socket addresses or name with an optional default port,  * as used in the dual-stack-servers option.  E.g.,  * "port 1234 { dual-stack-servers.net; 10.0.0.1; 1::2 port 69; }"  */
+comment|/*%  * A list of socket addresses or name with an optional default port,  * as used in the dual-stack-servers option.  E.g.,  * "port 1234 { dual-stack-servers.net; 10.0.0.1; 1::2 port 69; }"  */
 end_comment
 
 begin_decl_stmt
@@ -9870,7 +10664,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * masters element.  */
+comment|/*%  * masters element.  */
 end_comment
 
 begin_function

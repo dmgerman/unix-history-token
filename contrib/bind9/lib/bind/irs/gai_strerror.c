@@ -57,45 +57,45 @@ literal|"no error"
 block|,
 literal|"address family not supported for name"
 block|,
-comment|/* EAI_ADDRFAMILY */
+comment|/*%< EAI_ADDRFAMILY */
 literal|"temporary failure"
 block|,
-comment|/* EAI_AGAIN */
+comment|/*%< EAI_AGAIN */
 literal|"invalid flags"
 block|,
-comment|/* EAI_BADFLAGS */
+comment|/*%< EAI_BADFLAGS */
 literal|"permanent failure"
 block|,
-comment|/* EAI_FAIL */
+comment|/*%< EAI_FAIL */
 literal|"address family not supported"
 block|,
-comment|/* EAI_FAMILY */
+comment|/*%< EAI_FAMILY */
 literal|"memory failure"
 block|,
-comment|/* EAI_MEMORY */
+comment|/*%< EAI_MEMORY */
 literal|"no address"
 block|,
-comment|/* EAI_NODATA */
+comment|/*%< EAI_NODATA */
 literal|"unknown name or service"
 block|,
-comment|/* EAI_NONAME */
+comment|/*%< EAI_NONAME */
 literal|"service not supported for socktype"
 block|,
-comment|/* EAI_SERVICE */
+comment|/*%< EAI_SERVICE */
 literal|"socktype not supported"
 block|,
-comment|/* EAI_SOCKTYPE */
+comment|/*%< EAI_SOCKTYPE */
 literal|"system failure"
 block|,
-comment|/* EAI_SYSTEM */
+comment|/*%< EAI_SYSTEM */
 literal|"bad hints"
 block|,
-comment|/* EAI_BADHINTS */
+comment|/*%< EAI_BADHINTS */
 literal|"bad protocol"
 block|,
-comment|/* EAI_PROTOCOL */
+comment|/*%< EAI_PROTOCOL */
 literal|"unknown error"
-comment|/* Must be last. */
+comment|/*%< Must be last. */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -356,6 +356,10 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

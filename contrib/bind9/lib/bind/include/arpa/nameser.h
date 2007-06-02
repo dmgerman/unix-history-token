@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  *	$Id: nameser.h,v 1.2.2.4.4.1 2004/03/09 08:33:30 marka Exp $  */
+comment|/*  *	$Id: nameser.h,v 1.7.18.1 2005/04/27 05:00:50 sra Exp $  */
 end_comment
 
 begin_ifndef
@@ -22,6 +22,10 @@ define|#
 directive|define
 name|_ARPA_NAMESER_H_
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_define
 define|#
@@ -82,7 +86,7 @@ file|<sys/cdefs.h>
 end_include
 
 begin_comment
-comment|/*  * Revision information.  This is the release date in YYYYMMDD format.  * It can change every day so the right thing to do with it is use it  * in preprocessor commands such as "#if (__NAMESER> 19931104)".  Do not  * compare for equality; rather, use it to determine whether your libbind.a  * contains a new enough lib/nameser/ to support the feature you need.  */
+comment|/*%  * Revision information.  This is the release date in YYYYMMDD format.  * It can change every day so the right thing to do with it is use it  * in preprocessor commands such as "#if (__NAMESER> 19931104)".  Do not  * compare for equality; rather, use it to determine whether your libbind.a  * contains a new enough lib/nameser/ to support the feature you need.  */
 end_comment
 
 begin_define
@@ -93,11 +97,11 @@ value|19991006
 end_define
 
 begin_comment
-comment|/* New interface version stamp. */
+comment|/*%< New interface version stamp. */
 end_comment
 
 begin_comment
-comment|/*  * Define constants based on RFC 883, RFC 1034, RFC 1035  */
+comment|/*  * Define constants based on RFC0883, RFC1034, RFC 1035  */
 end_comment
 
 begin_define
@@ -108,7 +112,7 @@ value|512
 end_define
 
 begin_comment
-comment|/* default UDP packet size */
+comment|/*%< default UDP packet size */
 end_comment
 
 begin_define
@@ -119,7 +123,7 @@ value|1025
 end_define
 
 begin_comment
-comment|/* maximum domain name */
+comment|/*%< maximum domain name */
 end_comment
 
 begin_define
@@ -130,7 +134,7 @@ value|65535
 end_define
 
 begin_comment
-comment|/* maximum message size */
+comment|/*%< maximum message size */
 end_comment
 
 begin_define
@@ -141,7 +145,7 @@ value|255
 end_define
 
 begin_comment
-comment|/* maximum compressed domain name */
+comment|/*%< maximum compressed domain name */
 end_comment
 
 begin_define
@@ -152,7 +156,7 @@ value|63
 end_define
 
 begin_comment
-comment|/* maximum length of domain label */
+comment|/*%< maximum length of domain label */
 end_comment
 
 begin_define
@@ -163,7 +167,7 @@ value|12
 end_define
 
 begin_comment
-comment|/* #/bytes of fixed data in header */
+comment|/*%< #/bytes of fixed data in header */
 end_comment
 
 begin_define
@@ -174,7 +178,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* #/bytes of fixed data in query */
+comment|/*%< #/bytes of fixed data in query */
 end_comment
 
 begin_define
@@ -185,7 +189,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* #/bytes of fixed data in r record */
+comment|/*%< #/bytes of fixed data in r record */
 end_comment
 
 begin_define
@@ -196,7 +200,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* #/bytes of data in a u_int32_t */
+comment|/*%< #/bytes of data in a u_int32_t */
 end_comment
 
 begin_define
@@ -207,7 +211,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* #/bytes of data in a u_int16_t */
+comment|/*%< #/bytes of data in a u_int16_t */
 end_comment
 
 begin_define
@@ -218,7 +222,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* #/bytes of data in a u_int8_t */
+comment|/*%< #/bytes of data in a u_int8_t */
 end_comment
 
 begin_define
@@ -229,7 +233,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* IPv4 T_A */
+comment|/*%< IPv4 T_A */
 end_comment
 
 begin_define
@@ -240,7 +244,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* IPv6 T_AAAA */
+comment|/*%< IPv6 T_AAAA */
 end_comment
 
 begin_define
@@ -251,7 +255,7 @@ value|0xc0
 end_define
 
 begin_comment
-comment|/* Flag bits indicating name compression. */
+comment|/*%< Flag bits indicating name compression. */
 end_comment
 
 begin_define
@@ -262,7 +266,7 @@ value|53
 end_define
 
 begin_comment
-comment|/* For both TCP and UDP. */
+comment|/*%< For both TCP and UDP. */
 end_comment
 
 begin_comment
@@ -278,37 +282,37 @@ name|ns_s_qd
 init|=
 literal|0
 block|,
-comment|/* Query: Question. */
+comment|/*%< Query: Question. */
 name|ns_s_zn
 init|=
 literal|0
 block|,
-comment|/* Update: Zone. */
+comment|/*%< Update: Zone. */
 name|ns_s_an
 init|=
 literal|1
 block|,
-comment|/* Query: Answer. */
+comment|/*%< Query: Answer. */
 name|ns_s_pr
 init|=
 literal|1
 block|,
-comment|/* Update: Prerequisites. */
+comment|/*%< Update: Prerequisites. */
 name|ns_s_ns
 init|=
 literal|2
 block|,
-comment|/* Query: Name servers. */
+comment|/*%< Query: Name servers. */
 name|ns_s_ud
 init|=
 literal|2
 block|,
-comment|/* Update: Update. */
+comment|/*%< Update: Update. */
 name|ns_s_ar
 init|=
 literal|3
 block|,
-comment|/* Query|Update: Additional records. */
+comment|/*%< Query|Update: Additional records. */
 name|ns_s_max
 init|=
 literal|4
@@ -318,7 +322,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * This is a message handle.  It is caller allocated and has no dynamic data.  * This structure is intended to be opaque to all but ns_parse.c, thus the  * leading _'s on the member names.  Use the accessor functions, not the _'s.  */
+comment|/*%  * This is a message handle.  It is caller allocated and has no dynamic data.  * This structure is intended to be opaque to all but ns_parse.c, thus the  * leading _'s on the member names.  Use the accessor functions, not the _'s.  */
 end_comment
 
 begin_typedef
@@ -451,7 +455,7 @@ value|((handle)._counts[section] + 0)
 end_define
 
 begin_comment
-comment|/*  * This is a parsed record.  It is caller allocated and has no dynamic data.  */
+comment|/*%  * This is a parsed record.  It is caller allocated and has no dynamic data.  */
 end_comment
 
 begin_typedef
@@ -552,7 +556,7 @@ value|((rr).rdata + 0)
 end_define
 
 begin_comment
-comment|/*  * These don't have to be in the same order as in the packet flags word,  * and they can even overlap in some cases, but they will need to be kept  * in synch with ns_parse.c:ns_flagdata[].  */
+comment|/*%  * These don't have to be in the same order as in the packet flags word,  * and they can even overlap in some cases, but they will need to be kept  * in synch with ns_parse.c:ns_flagdata[].  */
 end_comment
 
 begin_typedef
@@ -562,34 +566,34 @@ name|__ns_flag
 block|{
 name|ns_f_qr
 block|,
-comment|/* Question/Response. */
+comment|/*%< Question/Response. */
 name|ns_f_opcode
 block|,
-comment|/* Operation code. */
+comment|/*%< Operation code. */
 name|ns_f_aa
 block|,
-comment|/* Authoritative Answer. */
+comment|/*%< Authoritative Answer. */
 name|ns_f_tc
 block|,
-comment|/* Truncation occurred. */
+comment|/*%< Truncation occurred. */
 name|ns_f_rd
 block|,
-comment|/* Recursion Desired. */
+comment|/*%< Recursion Desired. */
 name|ns_f_ra
 block|,
-comment|/* Recursion Available. */
+comment|/*%< Recursion Available. */
 name|ns_f_z
 block|,
-comment|/* MBZ. */
+comment|/*%< MBZ. */
 name|ns_f_ad
 block|,
-comment|/* Authentic Data (DNSSEC). */
+comment|/*%< Authentic Data (DNSSEC). */
 name|ns_f_cd
 block|,
-comment|/* Checking Disabled (DNSSEC). */
+comment|/*%< Checking Disabled (DNSSEC). */
 name|ns_f_rcode
 block|,
-comment|/* Response code. */
+comment|/*%< Response code. */
 name|ns_f_max
 block|}
 name|ns_flag
@@ -597,7 +601,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Currently defined opcodes.  */
+comment|/*%  * Currently defined opcodes.  */
 end_comment
 
 begin_typedef
@@ -609,28 +613,28 @@ name|ns_o_query
 init|=
 literal|0
 block|,
-comment|/* Standard query. */
+comment|/*%< Standard query. */
 name|ns_o_iquery
 init|=
 literal|1
 block|,
-comment|/* Inverse query (deprecated/unsupported). */
+comment|/*%< Inverse query (deprecated/unsupported). */
 name|ns_o_status
 init|=
 literal|2
 block|,
-comment|/* Name server status query (unsupported). */
+comment|/*%< Name server status query (unsupported). */
 comment|/* Opcode 3 is undefined/reserved. */
 name|ns_o_notify
 init|=
 literal|4
 block|,
-comment|/* Zone change notification. */
+comment|/*%< Zone change notification. */
 name|ns_o_update
 init|=
 literal|5
 block|,
-comment|/* Zone update message. */
+comment|/*%< Zone update message. */
 name|ns_o_max
 init|=
 literal|6
@@ -640,7 +644,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Currently defined response codes.  */
+comment|/*%  * Currently defined response codes.  */
 end_comment
 
 begin_typedef
@@ -652,58 +656,58 @@ name|ns_r_noerror
 init|=
 literal|0
 block|,
-comment|/* No error occurred. */
+comment|/*%< No error occurred. */
 name|ns_r_formerr
 init|=
 literal|1
 block|,
-comment|/* Format error. */
+comment|/*%< Format error. */
 name|ns_r_servfail
 init|=
 literal|2
 block|,
-comment|/* Server failure. */
+comment|/*%< Server failure. */
 name|ns_r_nxdomain
 init|=
 literal|3
 block|,
-comment|/* Name error. */
+comment|/*%< Name error. */
 name|ns_r_notimpl
 init|=
 literal|4
 block|,
-comment|/* Unimplemented. */
+comment|/*%< Unimplemented. */
 name|ns_r_refused
 init|=
 literal|5
 block|,
-comment|/* Operation refused. */
+comment|/*%< Operation refused. */
 comment|/* these are for BIND_UPDATE */
 name|ns_r_yxdomain
 init|=
 literal|6
 block|,
-comment|/* Name exists */
+comment|/*%< Name exists */
 name|ns_r_yxrrset
 init|=
 literal|7
 block|,
-comment|/* RRset exists */
+comment|/*%< RRset exists */
 name|ns_r_nxrrset
 init|=
 literal|8
 block|,
-comment|/* RRset does not exist */
+comment|/*%< RRset does not exist */
 name|ns_r_notauth
 init|=
 literal|9
 block|,
-comment|/* Not authoritative for zone */
+comment|/*%< Not authoritative for zone */
 name|ns_r_notzone
 init|=
 literal|10
 block|,
-comment|/* Zone of record different from zone section */
+comment|/*%< Zone of record different from zone section */
 name|ns_r_max
 init|=
 literal|11
@@ -756,7 +760,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * This structure is used for TSIG authenticated messages  */
+comment|/*%  * This structure is used for TSIG authenticated messages  */
 end_comment
 
 begin_struct
@@ -795,7 +799,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * This structure is used for TSIG authenticated TCP messages  */
+comment|/*%  * This structure is used for TSIG authenticated TCP messages  */
 end_comment
 
 begin_struct
@@ -879,7 +883,7 @@ value|-12
 end_define
 
 begin_comment
-comment|/*  * Currently defined type values for resources and queries.  */
+comment|/*%  * Currently defined type values for resources and queries.  */
 end_comment
 
 begin_typedef
@@ -891,257 +895,257 @@ name|ns_t_invalid
 init|=
 literal|0
 block|,
-comment|/* Cookie. */
+comment|/*%< Cookie. */
 name|ns_t_a
 init|=
 literal|1
 block|,
-comment|/* Host address. */
+comment|/*%< Host address. */
 name|ns_t_ns
 init|=
 literal|2
 block|,
-comment|/* Authoritative server. */
+comment|/*%< Authoritative server. */
 name|ns_t_md
 init|=
 literal|3
 block|,
-comment|/* Mail destination. */
+comment|/*%< Mail destination. */
 name|ns_t_mf
 init|=
 literal|4
 block|,
-comment|/* Mail forwarder. */
+comment|/*%< Mail forwarder. */
 name|ns_t_cname
 init|=
 literal|5
 block|,
-comment|/* Canonical name. */
+comment|/*%< Canonical name. */
 name|ns_t_soa
 init|=
 literal|6
 block|,
-comment|/* Start of authority zone. */
+comment|/*%< Start of authority zone. */
 name|ns_t_mb
 init|=
 literal|7
 block|,
-comment|/* Mailbox domain name. */
+comment|/*%< Mailbox domain name. */
 name|ns_t_mg
 init|=
 literal|8
 block|,
-comment|/* Mail group member. */
+comment|/*%< Mail group member. */
 name|ns_t_mr
 init|=
 literal|9
 block|,
-comment|/* Mail rename name. */
+comment|/*%< Mail rename name. */
 name|ns_t_null
 init|=
 literal|10
 block|,
-comment|/* Null resource record. */
+comment|/*%< Null resource record. */
 name|ns_t_wks
 init|=
 literal|11
 block|,
-comment|/* Well known service. */
+comment|/*%< Well known service. */
 name|ns_t_ptr
 init|=
 literal|12
 block|,
-comment|/* Domain name pointer. */
+comment|/*%< Domain name pointer. */
 name|ns_t_hinfo
 init|=
 literal|13
 block|,
-comment|/* Host information. */
+comment|/*%< Host information. */
 name|ns_t_minfo
 init|=
 literal|14
 block|,
-comment|/* Mailbox information. */
+comment|/*%< Mailbox information. */
 name|ns_t_mx
 init|=
 literal|15
 block|,
-comment|/* Mail routing information. */
+comment|/*%< Mail routing information. */
 name|ns_t_txt
 init|=
 literal|16
 block|,
-comment|/* Text strings. */
+comment|/*%< Text strings. */
 name|ns_t_rp
 init|=
 literal|17
 block|,
-comment|/* Responsible person. */
+comment|/*%< Responsible person. */
 name|ns_t_afsdb
 init|=
 literal|18
 block|,
-comment|/* AFS cell database. */
+comment|/*%< AFS cell database. */
 name|ns_t_x25
 init|=
 literal|19
 block|,
-comment|/* X_25 calling address. */
+comment|/*%< X_25 calling address. */
 name|ns_t_isdn
 init|=
 literal|20
 block|,
-comment|/* ISDN calling address. */
+comment|/*%< ISDN calling address. */
 name|ns_t_rt
 init|=
 literal|21
 block|,
-comment|/* Router. */
+comment|/*%< Router. */
 name|ns_t_nsap
 init|=
 literal|22
 block|,
-comment|/* NSAP address. */
+comment|/*%< NSAP address. */
 name|ns_t_nsap_ptr
 init|=
 literal|23
 block|,
-comment|/* Reverse NSAP lookup (deprecated). */
+comment|/*%< Reverse NSAP lookup (deprecated). */
 name|ns_t_sig
 init|=
 literal|24
 block|,
-comment|/* Security signature. */
+comment|/*%< Security signature. */
 name|ns_t_key
 init|=
 literal|25
 block|,
-comment|/* Security key. */
+comment|/*%< Security key. */
 name|ns_t_px
 init|=
 literal|26
 block|,
-comment|/* X.400 mail mapping. */
+comment|/*%< X.400 mail mapping. */
 name|ns_t_gpos
 init|=
 literal|27
 block|,
-comment|/* Geographical position (withdrawn). */
+comment|/*%< Geographical position (withdrawn). */
 name|ns_t_aaaa
 init|=
 literal|28
 block|,
-comment|/* Ip6 Address. */
+comment|/*%< Ip6 Address. */
 name|ns_t_loc
 init|=
 literal|29
 block|,
-comment|/* Location Information. */
+comment|/*%< Location Information. */
 name|ns_t_nxt
 init|=
 literal|30
 block|,
-comment|/* Next domain (security). */
+comment|/*%< Next domain (security). */
 name|ns_t_eid
 init|=
 literal|31
 block|,
-comment|/* Endpoint identifier. */
+comment|/*%< Endpoint identifier. */
 name|ns_t_nimloc
 init|=
 literal|32
 block|,
-comment|/* Nimrod Locator. */
+comment|/*%< Nimrod Locator. */
 name|ns_t_srv
 init|=
 literal|33
 block|,
-comment|/* Server Selection. */
+comment|/*%< Server Selection. */
 name|ns_t_atma
 init|=
 literal|34
 block|,
-comment|/* ATM Address */
+comment|/*%< ATM Address */
 name|ns_t_naptr
 init|=
 literal|35
 block|,
-comment|/* Naming Authority PoinTeR */
+comment|/*%< Naming Authority PoinTeR */
 name|ns_t_kx
 init|=
 literal|36
 block|,
-comment|/* Key Exchange */
+comment|/*%< Key Exchange */
 name|ns_t_cert
 init|=
 literal|37
 block|,
-comment|/* Certification record */
+comment|/*%< Certification record */
 name|ns_t_a6
 init|=
 literal|38
 block|,
-comment|/* IPv6 address (deprecates AAAA) */
+comment|/*%< IPv6 address (deprecates AAAA) */
 name|ns_t_dname
 init|=
 literal|39
 block|,
-comment|/* Non-terminal DNAME (for IPv6) */
+comment|/*%< Non-terminal DNAME (for IPv6) */
 name|ns_t_sink
 init|=
 literal|40
 block|,
-comment|/* Kitchen sink (experimentatl) */
+comment|/*%< Kitchen sink (experimentatl) */
 name|ns_t_opt
 init|=
 literal|41
 block|,
-comment|/* EDNS0 option (meta-RR) */
+comment|/*%< EDNS0 option (meta-RR) */
 name|ns_t_apl
 init|=
 literal|42
 block|,
-comment|/* Address prefix list (RFC 3123) */
+comment|/*%< Address prefix list (RFC3123) */
 name|ns_t_tkey
 init|=
 literal|249
 block|,
-comment|/* Transaction key */
+comment|/*%< Transaction key */
 name|ns_t_tsig
 init|=
 literal|250
 block|,
-comment|/* Transaction signature. */
+comment|/*%< Transaction signature. */
 name|ns_t_ixfr
 init|=
 literal|251
 block|,
-comment|/* Incremental zone transfer. */
+comment|/*%< Incremental zone transfer. */
 name|ns_t_axfr
 init|=
 literal|252
 block|,
-comment|/* Transfer zone of authority. */
+comment|/*%< Transfer zone of authority. */
 name|ns_t_mailb
 init|=
 literal|253
 block|,
-comment|/* Transfer mailbox records. */
+comment|/*%< Transfer mailbox records. */
 name|ns_t_maila
 init|=
 literal|254
 block|,
-comment|/* Transfer mail agent records. */
+comment|/*%< Transfer mail agent records. */
 name|ns_t_any
 init|=
 literal|255
 block|,
-comment|/* Wildcard match. */
+comment|/*%< Wildcard match. */
 name|ns_t_zxfr
 init|=
 literal|256
 block|,
-comment|/* BIND-specific, nonstandard. */
+comment|/*%< BIND-specific, nonstandard. */
 name|ns_t_max
 init|=
 literal|65536
@@ -1213,7 +1217,7 @@ value|((t) == ns_t_axfr || (t) == ns_t_ixfr || \ 		       (t) == ns_t_zxfr)
 end_define
 
 begin_comment
-comment|/*  * Values for class field  */
+comment|/*%  * Values for class field  */
 end_comment
 
 begin_typedef
@@ -1225,38 +1229,38 @@ name|ns_c_invalid
 init|=
 literal|0
 block|,
-comment|/* Cookie. */
+comment|/*%< Cookie. */
 name|ns_c_in
 init|=
 literal|1
 block|,
-comment|/* Internet. */
+comment|/*%< Internet. */
 name|ns_c_2
 init|=
 literal|2
 block|,
-comment|/* unallocated/unsupported. */
+comment|/*%< unallocated/unsupported. */
 name|ns_c_chaos
 init|=
 literal|3
 block|,
-comment|/* MIT Chaos-net. */
+comment|/*%< MIT Chaos-net. */
 name|ns_c_hs
 init|=
 literal|4
 block|,
-comment|/* MIT Hesiod. */
+comment|/*%< MIT Hesiod. */
 comment|/* Query class values which do not appear in resource records */
 name|ns_c_none
 init|=
 literal|254
 block|,
-comment|/* for prereq. sections in update requests */
+comment|/*%< for prereq. sections in update requests */
 name|ns_c_any
 init|=
 literal|255
 block|,
-comment|/* Wildcard match. */
+comment|/*%< Wildcard match. */
 name|ns_c_max
 init|=
 literal|65536
@@ -1278,21 +1282,21 @@ name|ns_kt_rsa
 init|=
 literal|1
 block|,
-comment|/* key type RSA/MD5 */
+comment|/*%< key type RSA/MD5 */
 name|ns_kt_dh
 init|=
 literal|2
 block|,
-comment|/* Diffie Hellman */
+comment|/*%< Diffie Hellman */
 name|ns_kt_dsa
 init|=
 literal|3
 block|,
-comment|/* Digital Signature Standard (MANDATORY) */
+comment|/*%< Digital Signature Standard (MANDATORY) */
 name|ns_kt_private
 init|=
 literal|254
-comment|/* Private key type starts with OID */
+comment|/*%< Private key type starts with OID */
 block|}
 name|ns_key_types
 typedef|;
@@ -1307,26 +1311,26 @@ name|cert_t_pkix
 init|=
 literal|1
 block|,
-comment|/* PKIX (X.509v3) */
+comment|/*%< PKIX (X.509v3) */
 name|cert_t_spki
 init|=
 literal|2
 block|,
-comment|/* SPKI */
+comment|/*%< SPKI */
 name|cert_t_pgp
 init|=
 literal|3
 block|,
-comment|/* PGP */
+comment|/*%< PGP */
 name|cert_t_url
 init|=
 literal|253
 block|,
-comment|/* URL private type */
+comment|/*%< URL private type */
 name|cert_t_oid
 init|=
 literal|254
-comment|/* OID private type */
+comment|/*%< OID private type */
 block|}
 name|ns_cert_types
 typedef|;
@@ -1344,7 +1348,7 @@ value|0xC000
 end_define
 
 begin_comment
-comment|/* Mask for "type" bits */
+comment|/*%< Mask for "type" bits */
 end_comment
 
 begin_define
@@ -1355,7 +1359,7 @@ value|0x0000
 end_define
 
 begin_comment
-comment|/* Key usable for both */
+comment|/*%< Key usable for both */
 end_comment
 
 begin_define
@@ -1366,7 +1370,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* Key usable for confidentiality */
+comment|/*%< Key usable for confidentiality */
 end_comment
 
 begin_define
@@ -1377,7 +1381,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* Key usable for authentication */
+comment|/*%< Key usable for authentication */
 end_comment
 
 begin_define
@@ -1388,7 +1392,7 @@ value|0xC000
 end_define
 
 begin_comment
-comment|/* No key usable for either; no key */
+comment|/*%< No key usable for either; no key */
 end_comment
 
 begin_comment
@@ -1403,7 +1407,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* Key unusable for authentication */
+comment|/*%< Key unusable for authentication */
 end_comment
 
 begin_define
@@ -1414,7 +1418,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* Key unusable for confidentiality */
+comment|/*%< Key unusable for confidentiality */
 end_comment
 
 begin_define
@@ -1436,7 +1440,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* reserved - must be zero */
+comment|/*%< reserved - must be zero */
 end_comment
 
 begin_define
@@ -1447,7 +1451,7 @@ value|0x0800
 end_define
 
 begin_comment
-comment|/* reserved - must be zero */
+comment|/*%< reserved - must be zero */
 end_comment
 
 begin_define
@@ -1458,7 +1462,7 @@ value|0x0400
 end_define
 
 begin_comment
-comment|/* reserved - must be zero */
+comment|/*%< reserved - must be zero */
 end_comment
 
 begin_define
@@ -1469,7 +1473,7 @@ value|0x0300
 end_define
 
 begin_comment
-comment|/* these bits determine the type */
+comment|/*%< these bits determine the type */
 end_comment
 
 begin_define
@@ -1480,7 +1484,7 @@ value|0x0000
 end_define
 
 begin_comment
-comment|/* key is assoc. with user */
+comment|/*%< key is assoc. with user */
 end_comment
 
 begin_define
@@ -1491,7 +1495,7 @@ value|0x0200
 end_define
 
 begin_comment
-comment|/* key is assoc. with entity eg host */
+comment|/*%< key is assoc. with entity eg host */
 end_comment
 
 begin_define
@@ -1502,7 +1506,7 @@ value|0x0100
 end_define
 
 begin_comment
-comment|/* key is zone key */
+comment|/*%< key is zone key */
 end_comment
 
 begin_define
@@ -1513,7 +1517,7 @@ value|0x0300
 end_define
 
 begin_comment
-comment|/* reserved meaning */
+comment|/*%< reserved meaning */
 end_comment
 
 begin_define
@@ -1524,7 +1528,7 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* reserved - must be zero */
+comment|/*%< reserved - must be zero */
 end_comment
 
 begin_define
@@ -1535,7 +1539,7 @@ value|0x0040
 end_define
 
 begin_comment
-comment|/* reserved - must be zero */
+comment|/*%< reserved - must be zero */
 end_comment
 
 begin_define
@@ -1546,7 +1550,7 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/* reserved - must be zero */
+comment|/*%< reserved - must be zero */
 end_comment
 
 begin_define
@@ -1557,7 +1561,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* reserved - must be zero */
+comment|/*%< reserved - must be zero */
 end_comment
 
 begin_define
@@ -1568,7 +1572,7 @@ value|0x000F
 end_define
 
 begin_comment
-comment|/* key can sign RR's of same name */
+comment|/*%< key can sign RR's of same name */
 end_comment
 
 begin_define
@@ -1586,7 +1590,7 @@ value|0xFFFF
 end_define
 
 begin_comment
-comment|/* no bits defined here */
+comment|/*%< no bits defined here */
 end_comment
 
 begin_comment
@@ -1601,7 +1605,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* MD5 with RSA */
+comment|/*%< MD5 with RSA */
 end_comment
 
 begin_define
@@ -1612,7 +1616,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Diffie Hellman KEY */
+comment|/*%< Diffie Hellman KEY */
 end_comment
 
 begin_define
@@ -1623,7 +1627,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* DSA KEY */
+comment|/*%< DSA KEY */
 end_comment
 
 begin_define
@@ -1641,7 +1645,7 @@ value|253
 end_define
 
 begin_comment
-comment|/* No alg, no security */
+comment|/*%< No alg, no security */
 end_comment
 
 begin_define
@@ -1652,7 +1656,7 @@ value|254
 end_define
 
 begin_comment
-comment|/* Key begins with OID giving alg */
+comment|/*%< Key begins with OID giving alg */
 end_comment
 
 begin_comment
@@ -1710,7 +1714,7 @@ value|512
 end_define
 
 begin_comment
-comment|/* Size of a mod or exp in bits */
+comment|/*%< Size of a mod or exp in bits */
 end_comment
 
 begin_define
@@ -1789,7 +1793,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Type flags */
+comment|/*%< Type flags */
 end_comment
 
 begin_define
@@ -1800,7 +1804,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Algorithm */
+comment|/*%< Algorithm */
 end_comment
 
 begin_define
@@ -1811,7 +1815,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* How many labels in name */
+comment|/*%< How many labels in name */
 end_comment
 
 begin_define
@@ -1822,7 +1826,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* Original TTL */
+comment|/*%< Original TTL */
 end_comment
 
 begin_define
@@ -1833,7 +1837,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* Expiration time */
+comment|/*%< Expiration time */
 end_comment
 
 begin_define
@@ -1844,7 +1848,7 @@ value|12
 end_define
 
 begin_comment
-comment|/* Signature time */
+comment|/*%< Signature time */
 end_comment
 
 begin_define
@@ -1855,7 +1859,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* Key footprint */
+comment|/*%< Key footprint */
 end_comment
 
 begin_define
@@ -1866,7 +1870,7 @@ value|18
 end_define
 
 begin_comment
-comment|/* Domain name of who signed it */
+comment|/*%< Domain name of who signed it */
 end_comment
 
 begin_comment
@@ -1924,7 +1928,7 @@ value|127
 end_define
 
 begin_comment
-comment|/*  * EDNS0 extended flags, host order.  */
+comment|/*%  * EDNS0 extended flags, host order.  */
 end_comment
 
 begin_define
@@ -1935,7 +1939,7 @@ value|0x8000U
 end_define
 
 begin_comment
-comment|/*  * Inline versions of get/put short/long.  Pointer is advanced.  */
+comment|/*%  * Inline versions of get/put short/long.  Pointer is advanced.  */
 end_comment
 
 begin_define
@@ -1987,7 +1991,7 @@ value|do { \ 	register u_int32_t t_l = (u_int32_t)(l); \ 	register u_char *t_cp 
 end_define
 
 begin_comment
-comment|/*  * ANSI C identifier hiding for bind's lib/nameser.  */
+comment|/*%  * ANSI C identifier hiding for bind's lib/nameser.  */
 end_comment
 
 begin_define
@@ -3069,6 +3073,10 @@ end_endif
 
 begin_comment
 comment|/* !_ARPA_NAMESER_H_ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

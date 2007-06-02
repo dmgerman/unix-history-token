@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rdatatype.h,v 1.17.206.1 2004/03/06 08:13:59 marka Exp $ */
+comment|/* $Id: rdatatype.h,v 1.18.18.2 2005/04/29 00:16:20 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|DNS_RDATATYPE_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -49,7 +53,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convert the text 'source' refers to into a DNS rdata type.  *  * Requires:  *	'typep' is a valid pointer.  *  *	'source' is a valid text region.  *  * Returns:  *	ISC_R_SUCCESS			on success  *	DNS_R_UNKNOWN			type is unknown  */
+comment|/*%<  * Convert the text 'source' refers to into a DNS rdata type.  *  * Requires:  *\li	'typep' is a valid pointer.  *  *\li	'source' is a valid text region.  *  * Returns:  *\li	ISC_R_SUCCESS			on success  *\li	DNS_R_UNKNOWN			type is unknown  */
 end_comment
 
 begin_function_decl
@@ -67,7 +71,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Put a textual representation of type 'type' into 'target'.  *  * Requires:  *	'type' is a valid type.  *  *	'target' is a valid text buffer.  *  * Ensures:  *	If the result is success:  *		The used space in 'target' is updated.  *  * Returns:  *	ISC_R_SUCCESS			on success  *	ISC_R_NOSPACE			target buffer is too small  */
+comment|/*%<  * Put a textual representation of type 'type' into 'target'.  *  * Requires:  *\li	'type' is a valid type.  *  *\li	'target' is a valid text buffer.  *  * Ensures,  *	if the result is success:  *\li		The used space in 'target' is updated.  *  * Returns:  *\li	#ISC_R_SUCCESS			on success  *\li	#ISC_R_NOSPACE			target buffer is too small  */
 end_comment
 
 begin_function_decl
@@ -89,7 +93,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Format a human-readable representation of the type 'rdtype'  * into the character array 'array', which is of size 'size'.  * The resulting string is guaranteed to be null-terminated.  */
+comment|/*%<  * Format a human-readable representation of the type 'rdtype'  * into the character array 'array', which is of size 'size'.  * The resulting string is guaranteed to be null-terminated.  */
 end_comment
 
 begin_define
@@ -100,7 +104,7 @@ value|sizeof("TYPE65535")
 end_define
 
 begin_comment
-comment|/*  * Minimum size of array to pass to dns_rdatatype_format().  * May need to be adjusted if a new RR type with a very long  * name is defined.  */
+comment|/*%<  * Minimum size of array to pass to dns_rdatatype_format().  * May need to be adjusted if a new RR type with a very long  * name is defined.  */
 end_comment
 
 begin_macro

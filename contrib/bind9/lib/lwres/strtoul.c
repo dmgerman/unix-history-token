@@ -46,7 +46,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/* $Id: strtoul.c,v 1.2.4.1 2005/06/08 02:08:31 marka Exp $ */
+comment|/* $Id: strtoul.c,v 1.2.2.1 2005/06/08 02:07:59 marka Exp $ */
 end_comment
 
 begin_include

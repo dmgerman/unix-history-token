@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: base64.c,v 1.1.206.2 2004/03/17 00:29:50 marka Exp $"
+literal|"$Id: base64.c,v 1.3.18.1 2005/04/27 05:01:05 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,7 +153,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* (From RFC1521 and draft-ietf-dnssec-secext-03.txt)    The following encoding technique is taken from RFC 1521 by Borenstein    and Freed.  It is reproduced here in a slightly edited form for    convenience.     A 65-character subset of US-ASCII is used, enabling 6 bits to be    represented per printable character. (The extra 65th character, "=",    is used to signify a special processing function.)     The encoding process represents 24-bit groups of input bits as output    strings of 4 encoded characters. Proceeding from left to right, a    24-bit input group is formed by concatenating 3 8-bit input groups.    These 24 bits are then treated as 4 concatenated 6-bit groups, each    of which is translated into a single digit in the base64 alphabet.     Each 6-bit group is used as an index into an array of 64 printable    characters. The character referenced by the index is placed in the    output string.                           Table 1: The Base64 Alphabet        Value Encoding  Value Encoding  Value Encoding  Value Encoding           0 A            17 R            34 i            51 z           1 B            18 S            35 j            52 0           2 C            19 T            36 k            53 1           3 D            20 U            37 l            54 2           4 E            21 V            38 m            55 3           5 F            22 W            39 n            56 4           6 G            23 X            40 o            57 5           7 H            24 Y            41 p            58 6           8 I            25 Z            42 q            59 7           9 J            26 a            43 r            60 8          10 K            27 b            44 s            61 9          11 L            28 c            45 t            62 +          12 M            29 d            46 u            63 /          13 N            30 e            47 v          14 O            31 f            48 w         (pad) =          15 P            32 g            49 x          16 Q            33 h            50 y     Special processing is performed if fewer than 24 bits are available    at the end of the data being encoded.  A full encoding quantum is    always completed at the end of a quantity.  When fewer than 24 input    bits are available in an input group, zero bits are added (on the    right) to form an integral number of 6-bit groups.  Padding at the    end of the data is performed using the '=' character.     Since all base64 input is an integral number of octets, only the          -------------------------------------------------                           following cases can arise:            (1) the final quantum of encoding input is an integral            multiple of 24 bits; here, the final unit of encoded 	   output will be an integral multiple of 4 characters 	   with no "=" padding,        (2) the final quantum of encoding input is exactly 8 bits;            here, the final unit of encoded output will be two 	   characters followed by two "=" padding characters, or        (3) the final quantum of encoding input is exactly 16 bits;            here, the final unit of encoded output will be three 	   characters followed by one "=" padding character.    */
+comment|/* (From RFC1521 and draft-ietf-dnssec-secext-03.txt)    The following encoding technique is taken from RFC1521 by Borenstein    and Freed.  It is reproduced here in a slightly edited form for    convenience.     A 65-character subset of US-ASCII is used, enabling 6 bits to be    represented per printable character. (The extra 65th character, "=",    is used to signify a special processing function.)     The encoding process represents 24-bit groups of input bits as output    strings of 4 encoded characters. Proceeding from left to right, a    24-bit input group is formed by concatenating 3 8-bit input groups.    These 24 bits are then treated as 4 concatenated 6-bit groups, each    of which is translated into a single digit in the base64 alphabet.     Each 6-bit group is used as an index into an array of 64 printable    characters. The character referenced by the index is placed in the    output string.                           Table 1: The Base64 Alphabet        Value Encoding  Value Encoding  Value Encoding  Value Encoding           0 A            17 R            34 i            51 z           1 B            18 S            35 j            52 0           2 C            19 T            36 k            53 1           3 D            20 U            37 l            54 2           4 E            21 V            38 m            55 3           5 F            22 W            39 n            56 4           6 G            23 X            40 o            57 5           7 H            24 Y            41 p            58 6           8 I            25 Z            42 q            59 7           9 J            26 a            43 r            60 8          10 K            27 b            44 s            61 9          11 L            28 c            45 t            62 +          12 M            29 d            46 u            63 /          13 N            30 e            47 v          14 O            31 f            48 w         (pad) =          15 P            32 g            49 x          16 Q            33 h            50 y     Special processing is performed if fewer than 24 bits are available    at the end of the data being encoded.  A full encoding quantum is    always completed at the end of a quantity.  When fewer than 24 input    bits are available in an input group, zero bits are added (on the    right) to form an integral number of 6-bit groups.  Padding at the    end of the data is performed using the '=' character.     Since all base64 input is an integral number of octets, only the          -------------------------------------------------                           following cases can arise:            (1) the final quantum of encoding input is an integral            multiple of 24 bits; here, the final unit of encoded 	   output will be an integral multiple of 4 characters 	   with no "=" padding,        (2) the final quantum of encoding input is exactly 8 bits;            here, the final unit of encoded output will be two 	   characters followed by two "=" padding characters, or        (3) the final quantum of encoding input is exactly 16 bits;            here, the final unit of encoded output will be three 	   characters followed by one "=" padding character.    */
 end_comment
 
 begin_function
@@ -666,7 +666,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Returned value doesn't count \0. */
+comment|/*%< Returned value doesn't count \\0. */
 return|return
 operator|(
 name|datalength
@@ -741,7 +741,7 @@ argument_list|(
 name|ch
 argument_list|)
 condition|)
-comment|/* Skip whitespace anywhere. */
+comment|/*%< Skip whitespace anywhere. */
 continue|continue;
 if|if
 condition|(
@@ -765,7 +765,7 @@ name|pos
 operator|==
 literal|0
 condition|)
-comment|/* A non-base64 character. */
+comment|/*%< A non-base64 character. */
 return|return
 operator|(
 operator|-
@@ -1008,14 +1008,14 @@ operator|==
 name|Pad64
 condition|)
 block|{
-comment|/* We got a pad char. */
+comment|/*%< We got a pad char. */
 name|ch
 operator|=
 operator|*
 name|src
 operator|++
 expr_stmt|;
-comment|/* Skip it, get next. */
+comment|/*%< Skip it, get next. */
 switch|switch
 condition|(
 name|state
@@ -1024,11 +1024,11 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* Invalid = in first position */
+comment|/*%< Invalid = in first position */
 case|case
 literal|1
 case|:
-comment|/* Invalid = in second position */
+comment|/*%< Invalid = in second position */
 return|return
 operator|(
 operator|-
@@ -1038,7 +1038,7 @@ return|;
 case|case
 literal|2
 case|:
-comment|/* Valid, means one byte of info */
+comment|/*%< Valid, means one byte of info */
 comment|/* Skip any number of spaces. */
 for|for
 control|(
@@ -1085,13 +1085,13 @@ operator|*
 name|src
 operator|++
 expr_stmt|;
-comment|/* Skip the = */
+comment|/*%< Skip the = */
 comment|/* Fall through to "single trailing =" case. */
 comment|/* FALLTHROUGH */
 case|case
 literal|3
 case|:
-comment|/* Valid, means two bytes of info */
+comment|/*%< Valid, means two bytes of info */
 comment|/* 			 * We know this char is an =.  Is there anything but 			 * whitespace after it? 			 */
 for|for
 control|(
@@ -1167,6 +1167,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

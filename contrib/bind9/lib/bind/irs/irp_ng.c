@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp_ng.c,v 1.1.206.1 2004/03/09 08:33:37 marka Exp $"
+literal|"$Id: irp_ng.c,v 1.2.18.2 2006/12/07 04:53:02 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,7 +247,7 @@ comment|/* Public */
 end_comment
 
 begin_comment
-comment|/*  * struct irs_ng * irs_irp_ng(struct irs_acc *this)  *  * Notes:  *  *	Intialize the irp netgroup module.  *  */
+comment|/*%  *	Intialize the irp netgroup module.  *  */
 end_comment
 
 begin_function
@@ -588,7 +588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int ng_next(struct irs_ng *this, const char **host, const char **user,  *	       const char **domain)  *  * Notes:  *  *	Get the next netgroup item from the cache.  *  */
+comment|/*  *	Get the next netgroup item from the cache.  *  */
 end_comment
 
 begin_function
@@ -783,7 +783,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int ng_test(struct irs_ng *this, const char *name, const char *host,  *		const char *user, const char *domain)  *  * Notes:  *  *	Search for a match in a netgroup.  *  */
+comment|/*  *	Search for a match in a netgroup.  *  */
 end_comment
 
 begin_function
@@ -926,13 +926,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|memput
-argument_list|(
-name|body
-argument_list|,
-name|bodylen
-argument_list|)
-expr_stmt|;
 name|code
 operator|=
 name|irs_irp_read_response
@@ -960,6 +953,13 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+name|memput
+argument_list|(
+name|body
+argument_list|,
+name|bodylen
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rval
@@ -1009,6 +1009,10 @@ end_function
 
 begin_comment
 comment|/* Private */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

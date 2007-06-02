@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dispatch.h,v 1.45.2.2.4.2 2004/03/06 08:13:55 marka Exp $ */
+comment|/* $Id: dispatch.h,v 1.48.18.2 2005/04/29 00:16:12 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * DNS Dispatch Management  *  * 	Shared UDP and single-use TCP dispatches for queries and responses.  *  * MP:  *  *     	All locking is performed internally to each dispatch.  * 	Restrictions apply to dns_dispatch_removeresponse().  *  * Reliability:  *  * Resources:  *  * Security:  *  *	Depends on the isc_socket_t and dns_message_t for prevention of  *	buffer overruns.  *  * Standards:  *  *	None.  */
+comment|/*! \file  * \brief  * DNS Dispatch Management  * 	Shared UDP and single-use TCP dispatches for queries and responses.  *  * MP:  *  *\li     	All locking is performed internally to each dispatch.  * 	Restrictions apply to dns_dispatch_removeresponse().  *  * Reliability:  *  * Resources:  *  * Security:  *  *\li	Depends on the isc_socket_t and dns_message_t for prevention of  *	buffer overruns.  *  * Standards:  *  *\li	None.  */
 end_comment
 
 begin_comment
@@ -67,7 +67,7 @@ name|ISC_LANG_BEGINDECLS
 end_macro
 
 begin_comment
-comment|/*  * This event is sent to a task when a response comes in.  * No part of this structure should ever be modified by the caller,  * other than parts of the buffer.  The holy parts of the buffer are  * the base and size of the buffer.  All other parts of the buffer may  * be used.  On event delivery the used region contains the packet.  *  * "id" is the received message id,  *  * "addr" is the host that sent it to us,  *  * "buffer" holds state on the received data.  *  * The "free" routine for this event will clean up itself as well as  * any buffer space allocated from common pools.  */
+comment|/*%  * This event is sent to a task when a response comes in.  * No part of this structure should ever be modified by the caller,  * other than parts of the buffer.  The holy parts of the buffer are  * the base and size of the buffer.  All other parts of the buffer may  * be used.  On event delivery the used region contains the packet.  *  * "id" is the received message id,  *  * "addr" is the host that sent it to us,  *  * "buffer" holds state on the received data.  *  * The "free" routine for this event will clean up itself as well as  * any buffer space allocated from common pools.  */
 end_comment
 
 begin_struct
@@ -79,38 +79,42 @@ argument_list|(
 name|dns_dispatchevent_t
 argument_list|)
 expr_stmt|;
-comment|/* standard event common */
+comment|/*%< standard event common */
 name|isc_result_t
 name|result
 decl_stmt|;
-comment|/* result code */
+comment|/*%< result code */
 name|isc_int32_t
 name|id
 decl_stmt|;
-comment|/* message id */
+comment|/*%< message id */
 name|isc_sockaddr_t
 name|addr
 decl_stmt|;
-comment|/* address recv'd from */
+comment|/*%< address recv'd from */
 name|struct
 name|in6_pktinfo
 name|pktinfo
 decl_stmt|;
-comment|/* reply info for v6 */
+comment|/*%< reply info for v6 */
 name|isc_buffer_t
 name|buffer
 decl_stmt|;
-comment|/* data buffer */
+comment|/*%< data buffer */
 name|isc_uint32_t
 name|attributes
 decl_stmt|;
-comment|/* mirrored from socket.h */
+comment|/*%< mirrored from socket.h */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Attributes for added dispatchers.  *  * Values with the mask 0xffff0000 are application defined.  * Values with the mask 0x0000ffff are library defined.  *  * Insane values (like setting both TCP and UDP) are not caught.  Don't  * do that.  *  * _PRIVATE  *	The dispatcher cannot be shared.  *  * _TCP, _UDP  *	The dispatcher is a TCP or UDP socket.  *  * _IPV4, _IPV6  *	The dispatcher uses an ipv4 or ipv6 socket.  *  * _NOLISTEN  *	The dispatcher should not listen on the socket.  *  * _MAKEQUERY  *	The dispatcher can be used to issue queries to other servers, and  *	accept replies from them.  */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*%  * Attributes for added dispatchers.  *  * Values with the mask 0xffff0000 are application defined.  * Values with the mask 0x0000ffff are library defined.  *  * Insane values (like setting both TCP and UDP) are not caught.  Don't  * do that.  *  * _PRIVATE  *	The dispatcher cannot be shared.  *  * _TCP, _UDP  *	The dispatcher is a TCP or UDP socket.  *  * _IPV4, _IPV6  *	The dispatcher uses an ipv4 or ipv6 socket.  *  * _NOLISTEN  *	The dispatcher should not listen on the socket.  *  * _MAKEQUERY  *	The dispatcher can be used to issue queries to other servers, and  *	accept replies from them.  */
 end_comment
 
 begin_define
@@ -169,6 +173,10 @@ name|DNS_DISPATCHATTR_CONNECTED
 value|0x00000080U
 end_define
 
+begin_comment
+comment|/*@}*/
+end_comment
+
 begin_function_decl
 name|isc_result_t
 name|dns_dispatchmgr_create
@@ -190,7 +198,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Creates a new dispatchmgr object.  *  * Requires:  *	"mctx" be a valid memory context.  *  *	mgrp != NULL&& *mgrp == NULL  *  *	"entropy" may be NULL, in which case an insecure random generator  *	will be used.  If it is non-NULL, it must be a valid entropy  *	source.  *  * Returns:  *	ISC_R_SUCCESS	-- all ok  *  *	anything else	-- failure  */
+comment|/*%<  * Creates a new dispatchmgr object.  *  * Requires:  *\li	"mctx" be a valid memory context.  *  *\li	mgrp != NULL&& *mgrp == NULL  *  *\li	"entropy" may be NULL, in which case an insecure random generator  *	will be used.  If it is non-NULL, it must be a valid entropy  *	source.  *  * Returns:  *\li	ISC_R_SUCCESS	-- all ok  *  *\li	anything else	-- failure  */
 end_comment
 
 begin_function_decl
@@ -206,7 +214,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroys the dispatchmgr when it becomes empty.  This could be  * immediately.  *  * Requires:  *	mgrp != NULL&& *mgrp is a valid dispatchmgr.  */
+comment|/*%<  * Destroys the dispatchmgr when it becomes empty.  This could be  * immediately.  *  * Requires:  *\li	mgrp != NULL&& *mgrp is a valid dispatchmgr.  */
 end_comment
 
 begin_function_decl
@@ -225,7 +233,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Sets the dispatcher's "blackhole list," a list of addresses that will  * be ignored by all dispatchers created by the dispatchmgr.  *  * Requires:  * 	mgrp is a valid dispatchmgr  * 	blackhole is a valid acl  */
+comment|/*%<  * Sets the dispatcher's "blackhole list," a list of addresses that will  * be ignored by all dispatchers created by the dispatchmgr.  *  * Requires:  * \li	mgrp is a valid dispatchmgr  * \li	blackhole is a valid acl  */
 end_comment
 
 begin_function_decl
@@ -241,7 +249,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Gets a pointer to the dispatcher's current blackhole list,  * without incrementing its reference count.  *  * Requires:  * 	mgr is a valid dispatchmgr  * Returns:  *	A pointer to the current blackhole list, or NULL.  */
+comment|/*%<  * Gets a pointer to the dispatcher's current blackhole list,  * without incrementing its reference count.  *  * Requires:  *\li 	mgr is a valid dispatchmgr  * Returns:  *\li	A pointer to the current blackhole list, or NULL.  */
 end_comment
 
 begin_function_decl
@@ -260,7 +268,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Sets a list of UDP ports that won't be used when creating a udp  * dispatch with a wildcard port.  *  * Requires:  *	mgr is a valid dispatchmgr  *	portlist to be NULL or a valid port list.  */
+comment|/*%<  * Sets a list of UDP ports that won't be used when creating a udp  * dispatch with a wildcard port.  *  * Requires:  *\li	mgr is a valid dispatchmgr  *\li	portlist to be NULL or a valid port list.  */
 end_comment
 
 begin_function_decl
@@ -276,7 +284,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the current port list.  *  * Requires:  *	mgr is a valid dispatchmgr  */
+comment|/*%<  * Return the current port list.  *  * Requires:  *\li	mgr is a valid dispatchmgr  */
 end_comment
 
 begin_function_decl
@@ -336,7 +344,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Attach to existing dns_dispatch_t if one is found with dns_dispatchmgr_find,  * otherwise create a new UDP dispatch.  *  * Requires:  *	All pointer parameters be valid for their respective types.  *  *	dispp != NULL&& *disp == NULL  *  *	512<= buffersize<= 64k  *  *	maxbuffers> 0  *  *	buckets< 2097169  *  *	increment> buckets  *  *	(attributes& DNS_DISPATCHATTR_TCP) == 0  *  * Returns:  *	ISC_R_SUCCESS	-- success.  *  *	Anything else	-- failure.  */
+comment|/*%<  * Attach to existing dns_dispatch_t if one is found with dns_dispatchmgr_find,  * otherwise create a new UDP dispatch.  *  * Requires:  *\li	All pointer parameters be valid for their respective types.  *  *\li	dispp != NULL&& *disp == NULL  *  *\li	512<= buffersize<= 64k  *  *\li	maxbuffers> 0  *  *\li	buckets< 2097169  *  *\li	increment> buckets  *  *\li	(attributes& DNS_DISPATCHATTR_TCP) == 0  *  * Returns:  *\li	ISC_R_SUCCESS	-- success.  *  *\li	Anything else	-- failure.  */
 end_comment
 
 begin_function_decl
@@ -388,7 +396,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a new dns_dispatch and attach it to the provided isc_socket_t.  *  * For all dispatches, "buffersize" is the maximum packet size we will  * accept.  *  * "maxbuffers" and "maxrequests" control the number of buffers in the  * overall system and the number of buffers which can be allocated to  * requests.  *  * "buckets" is the number of buckets to use, and should be prime.  *  * "increment" is used in a collision avoidance function, and needs to be  * a prime> buckets, and not 2.  *  * Requires:  *  *	mgr is a valid dispatch manager.  *  *	sock is a valid.  *  *	task is a valid task that can be used internally to this dispatcher.  *  * 	512<= buffersize<= 64k  *  *	maxbuffers> 0.  *  *	maxrequests<= maxbuffers.  *  *	buckets< 2097169 (the next prime after 65536 * 32)  *  *	increment> buckets (and prime).  *  *	attributes includes DNS_DISPATCHATTR_TCP and does not include  *	DNS_DISPATCHATTR_UDP.  *  * Returns:  *	ISC_R_SUCCESS	-- success.  *  *	Anything else	-- failure.  */
+comment|/*%<  * Create a new dns_dispatch and attach it to the provided isc_socket_t.  *  * For all dispatches, "buffersize" is the maximum packet size we will  * accept.  *  * "maxbuffers" and "maxrequests" control the number of buffers in the  * overall system and the number of buffers which can be allocated to  * requests.  *  * "buckets" is the number of buckets to use, and should be prime.  *  * "increment" is used in a collision avoidance function, and needs to be  * a prime> buckets, and not 2.  *  * Requires:  *  *\li	mgr is a valid dispatch manager.  *  *\li	sock is a valid.  *  *\li	task is a valid task that can be used internally to this dispatcher.  *  * \li	512<= buffersize<= 64k  *  *\li	maxbuffers> 0.  *  *\li	maxrequests<= maxbuffers.  *  *\li	buckets< 2097169 (the next prime after 65536 * 32)  *  *\li	increment> buckets (and prime).  *  *\li	attributes includes #DNS_DISPATCHATTR_TCP and does not include  *	#DNS_DISPATCHATTR_UDP.  *  * Returns:  *\li	ISC_R_SUCCESS	-- success.  *  *\li	Anything else	-- failure.  */
 end_comment
 
 begin_function_decl
@@ -408,7 +416,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Attach to a dispatch handle.  *  * Requires:  *	disp is valid.  *  *	dispp != NULL&& *dispp == NULL  */
+comment|/*%<  * Attach to a dispatch handle.  *  * Requires:  *\li	disp is valid.  *  *\li	dispp != NULL&& *dispp == NULL  */
 end_comment
 
 begin_function_decl
@@ -424,7 +432,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Detaches from the dispatch.  *  * Requires:  *	dispp != NULL and *dispp be a valid dispatch.  */
+comment|/*%<  * Detaches from the dispatch.  *  * Requires:  *\li	dispp != NULL and *dispp be a valid dispatch.  */
 end_comment
 
 begin_function_decl
@@ -439,7 +447,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Start processing of a TCP dispatch once the socket connects.  *  * Requires:  *	'disp' is valid.  */
+comment|/*%<  * Start processing of a TCP dispatch once the socket connects.  *  * Requires:  *\li	'disp' is valid.  */
 end_comment
 
 begin_function_decl
@@ -478,7 +486,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Add a response entry for this dispatch.  *  * "*idp" is filled in with the assigned message ID, and *resp is filled in  * to contain the magic token used to request event flow stop.  *  * Arranges for the given task to get a callback for response packets.  When  * the event is delivered, it must be returned using dns_dispatch_freeevent()  * or through dns_dispatch_removeresponse() for another to be delivered.  *  * Requires:  *	"idp" be non-NULL.  *  *	"task" "action" and "arg" be set as appropriate.  *  *	"dest" be non-NULL and valid.  *  *	"resp" be non-NULL and *resp be NULL  *  * Ensures:  *  *<id, dest> is a unique tuple.  That means incoming messages  *	are identifiable.  *  * Returns:  *  *	ISC_R_SUCCESS		-- all is well.  *	ISC_R_NOMEMORY		-- memory could not be allocated.  *	ISC_R_NOMORE		-- no more message ids can be allocated  *				   for this destination.  */
+comment|/*%<  * Add a response entry for this dispatch.  *  * "*idp" is filled in with the assigned message ID, and *resp is filled in  * to contain the magic token used to request event flow stop.  *  * Arranges for the given task to get a callback for response packets.  When  * the event is delivered, it must be returned using dns_dispatch_freeevent()  * or through dns_dispatch_removeresponse() for another to be delivered.  *  * Requires:  *\li	"idp" be non-NULL.  *  *\li	"task" "action" and "arg" be set as appropriate.  *  *\li	"dest" be non-NULL and valid.  *  *\li	"resp" be non-NULL and *resp be NULL  *  * Ensures:  *  *\li&lt;id, dest> is a unique tuple.  That means incoming messages  *	are identifiable.  *  * Returns:  *  *\li	ISC_R_SUCCESS		-- all is well.  *\li	ISC_R_NOMEMORY		-- memory could not be allocated.  *\li	ISC_R_NOMORE		-- no more message ids can be allocated  *				   for this destination.  */
 end_comment
 
 begin_function_decl
@@ -499,7 +507,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Stops the flow of responses for the provided id and destination.  * If "sockevent" is non-NULL, the dispatch event and associated buffer is  * also returned to the system.  *  * Requires:  *	"resp" != NULL and "*resp" contain a value previously allocated  *	by dns_dispatch_addresponse();  *  *	May only be called from within the task given as the 'task'   * 	argument to dns_dispatch_addresponse() when allocating '*resp'.  */
+comment|/*%<  * Stops the flow of responses for the provided id and destination.  * If "sockevent" is non-NULL, the dispatch event and associated buffer is  * also returned to the system.  *  * Requires:  *\li	"resp" != NULL and "*resp" contain a value previously allocated  *	by dns_dispatch_addresponse();  *  *\li	May only be called from within the task given as the 'task'   * 	argument to dns_dispatch_addresponse() when allocating '*resp'.  */
 end_comment
 
 begin_function_decl
@@ -515,7 +523,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the socket associated with this dispatcher.  *  * Requires:  *	disp is valid.  *  * Returns:  *	The socket the dispatcher is using.  */
+comment|/*%<  * Return the socket associated with this dispatcher.  *  * Requires:  *\li	disp is valid.  *  * Returns:  *\li	The socket the dispatcher is using.  */
 end_comment
 
 begin_function_decl
@@ -534,7 +542,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the local address for this dispatch.  * This currently only works for dispatches using UDP sockets.  *  * Requires:  *	disp is valid.  *	addrp to be non null.  *  * Returns:  *	ISC_R_SUCCESS	  *	ISC_R_NOTIMPLEMENTED  */
+comment|/*%<  * Return the local address for this dispatch.  * This currently only works for dispatches using UDP sockets.  *  * Requires:  *\li	disp is valid.  *\li	addrp to be non null.  *  * Returns:  *\li	ISC_R_SUCCESS	  *\li	ISC_R_NOTIMPLEMENTED  */
 end_comment
 
 begin_function_decl
@@ -549,7 +557,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * cancel outstanding clients  *  * Requires:  *	disp is valid.  */
+comment|/*%<  * cancel outstanding clients  *  * Requires:  *\li	disp is valid.  */
 end_comment
 
 begin_function_decl
@@ -572,7 +580,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the bits described by "mask" to the corresponding values in  * "attributes".  *  * That is:  *  *	new = (old& ~mask) | (attributes& mask)  *  * This function has a side effect when DNS_DISPATCHATTR_NOLISTEN changes.   * When the flag becomes off, the dispatch will start receiving on the  * corresponding socket.  When the flag becomes on, receive events on the  * corresponding socket will be canceled.  *  * Requires:  *	disp is valid.  *  *	attributes are reasonable for the dispatch.  That is, setting the UDP  *	attribute on a TCP socket isn't reasonable.  */
+comment|/*%<  * Set the bits described by "mask" to the corresponding values in  * "attributes".  *  * That is:  *  * \code  *	new = (old& ~mask) | (attributes& mask)  * \endcode  *  * This function has a side effect when #DNS_DISPATCHATTR_NOLISTEN changes.   * When the flag becomes off, the dispatch will start receiving on the  * corresponding socket.  When the flag becomes on, receive events on the  * corresponding socket will be canceled.  *  * Requires:  *\li	disp is valid.  *  *\li	attributes are reasonable for the dispatch.  That is, setting the UDP  *	attribute on a TCP socket isn't reasonable.  */
 end_comment
 
 begin_function_decl
@@ -591,7 +599,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Inform the dispatcher of a socket receive.  This is used for sockets  * shared between dispatchers and clients.  If the dispatcher fails to copy  * or send the event, nothing happens.  *  * Requires:  * 	disp is valid, and the attribute DNS_DISPATCHATTR_NOLISTEN is set.  * 	event != NULL  */
+comment|/*%<  * Inform the dispatcher of a socket receive.  This is used for sockets  * shared between dispatchers and clients.  If the dispatcher fails to copy  * or send the event, nothing happens.  *  * Requires:  *\li 	disp is valid, and the attribute DNS_DISPATCHATTR_NOLISTEN is set.  * 	event != NULL  */
 end_comment
 
 begin_macro

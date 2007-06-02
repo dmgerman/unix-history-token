@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: logging.c,v 1.3.2.1.4.2 2004/03/17 01:49:42 marka Exp $"
+literal|"$Id: logging.c,v 1.6.18.1 2005/04/27 05:01:07 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1350,7 +1350,7 @@ name|category
 operator|=
 literal|0
 expr_stmt|;
-comment|/* use default */
+comment|/*%< use default */
 name|lcl
 operator|=
 name|lc
@@ -1554,7 +1554,7 @@ name|category
 operator|=
 literal|0
 expr_stmt|;
-comment|/* use default */
+comment|/*%< use default */
 name|original_category
 operator|=
 name|category
@@ -2195,7 +2195,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Functions to create, set, or destroy contexts  */
+comment|/*%  * Functions to create, set, or destroy contexts  */
 end_comment
 
 begin_function
@@ -3639,6 +3639,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

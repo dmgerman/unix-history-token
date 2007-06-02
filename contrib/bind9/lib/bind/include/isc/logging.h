@@ -736,5 +736,9 @@ begin_comment
 comment|/* !LOGGING_H */
 end_comment
 
+begin_comment
+comment|/*! \file */
+end_comment
+
 end_unit
 

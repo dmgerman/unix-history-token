@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: proforma.c,v 1.30.12.4 2004/03/08 09:04:41 marka Exp $ */
+comment|/* $Id: proforma.c,v 1.34 2004/03/05 05:10:17 marka Exp $ */
 end_comment
 
 begin_ifndef

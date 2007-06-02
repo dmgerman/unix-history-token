@@ -4,7 +4,11 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: os.c,v 1.46.2.4.8.24 2006/02/03 23:51:37 marka Exp $ */
+comment|/* $Id: os.c,v 1.66.18.11 2006/02/03 23:51:38 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -327,7 +331,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * We define _LINUX_FS_H to prevent it from being included.  We don't need  * anything from it, and the files it includes cause warnings with 2.2  * kernels, and compilation failures (due to conflicts between<linux/string.h>  * and<string.h>) on 2.3 kernels.  */
+comment|/*%  * We define _LINUX_FS_H to prevent it from being included.  We don't need  * anything from it, and the files it includes cause warnings with 2.2  * kernels, and compilation failures (due to conflicts between<linux/string.h>  * and<string.h>) on 2.3 kernels.  */
 end_comment
 
 begin_define
@@ -590,7 +594,7 @@ name|unsigned
 name|int
 name|caps
 decl_stmt|;
-comment|/* 	 * We don't need most privileges, so we drop them right away. 	 * Later on linux_minprivs() will be called, which will drop our 	 * capabilities to the minimum needed to run the server. 	 */
+comment|/*% 	 * We don't need most privileges, so we drop them right away. 	 * Later on linux_minprivs() will be called, which will drop our 	 * capabilities to the minimum needed to run the server. 	 */
 name|caps
 operator|=
 literal|0
@@ -683,7 +687,7 @@ name|unsigned
 name|int
 name|caps
 decl_stmt|;
-comment|/* 	 * Drop all privileges except the ability to bind() to privileged 	 * ports. 	 * 	 * It's important that we drop CAP_SYS_CHROOT.  If we didn't, it 	 * chroot() could be used to escape from the chrooted area. 	 */
+comment|/*% 	 * Drop all privileges except the ability to bind() to privileged 	 * ports. 	 * 	 * It's important that we drop CAP_SYS_CHROOT.  If we didn't, it 	 * chroot() could be used to escape from the chrooted area. 	 */
 name|caps
 operator|=
 literal|0
@@ -733,7 +737,7 @@ index|[
 name|ISC_STRERRORSIZE
 index|]
 decl_stmt|;
-comment|/* 	 * Ask the kernel to allow us to keep our capabilities after we 	 * setuid(). 	 */
+comment|/*% 	 * Ask the kernel to allow us to keep our capabilities after we 	 * setuid(). 	 */
 if|if
 condition|(
 name|prctl

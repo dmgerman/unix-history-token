@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: tsig.h,v 1.40.2.2.8.3 2004/03/08 09:04:39 marka Exp $ */
+comment|/* $Id: tsig.h,v 1.43.18.4 2006/01/27 23:57:44 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|DNS_TSIG_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -114,8 +118,88 @@ name|DNS_TSIG_GSSAPIMS_NAME
 value|dns_tsig_gssapims_name
 end_define
 
+begin_decl_stmt
+name|LIBDNS_EXTERNAL_DATA
+specifier|extern
+name|dns_name_t
+modifier|*
+name|dns_tsig_hmacsha1_name
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DNS_TSIG_HMACSHA1_NAME
+value|dns_tsig_hmacsha1_name
+end_define
+
+begin_decl_stmt
+name|LIBDNS_EXTERNAL_DATA
+specifier|extern
+name|dns_name_t
+modifier|*
+name|dns_tsig_hmacsha224_name
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DNS_TSIG_HMACSHA224_NAME
+value|dns_tsig_hmacsha224_name
+end_define
+
+begin_decl_stmt
+name|LIBDNS_EXTERNAL_DATA
+specifier|extern
+name|dns_name_t
+modifier|*
+name|dns_tsig_hmacsha256_name
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DNS_TSIG_HMACSHA256_NAME
+value|dns_tsig_hmacsha256_name
+end_define
+
+begin_decl_stmt
+name|LIBDNS_EXTERNAL_DATA
+specifier|extern
+name|dns_name_t
+modifier|*
+name|dns_tsig_hmacsha384_name
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DNS_TSIG_HMACSHA384_NAME
+value|dns_tsig_hmacsha384_name
+end_define
+
+begin_decl_stmt
+name|LIBDNS_EXTERNAL_DATA
+specifier|extern
+name|dns_name_t
+modifier|*
+name|dns_tsig_hmacsha512_name
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DNS_TSIG_HMACSHA512_NAME
+value|dns_tsig_hmacsha512_name
+end_define
+
 begin_comment
-comment|/*  * Default fudge value.  */
+comment|/*%  * Default fudge value.  */
 end_comment
 
 begin_define
@@ -153,7 +237,7 @@ name|unsigned
 name|int
 name|magic
 decl_stmt|;
-comment|/* Magic number. */
+comment|/*%< Magic number. */
 name|isc_mem_t
 modifier|*
 name|mctx
@@ -162,42 +246,42 @@ name|dst_key_t
 modifier|*
 name|key
 decl_stmt|;
-comment|/* Key */
+comment|/*%< Key */
 name|dns_name_t
 name|name
 decl_stmt|;
-comment|/* Key name */
+comment|/*%< Key name */
 name|dns_name_t
 modifier|*
 name|algorithm
 decl_stmt|;
-comment|/* Algorithm name */
+comment|/*%< Algorithm name */
 name|dns_name_t
 modifier|*
 name|creator
 decl_stmt|;
-comment|/* name that created secret */
+comment|/*%< name that created secret */
 name|isc_boolean_t
 name|generated
 decl_stmt|;
-comment|/* was this generated? */
+comment|/*%< was this generated? */
 name|isc_stdtime_t
 name|inception
 decl_stmt|;
-comment|/* start of validity period */
+comment|/*%< start of validity period */
 name|isc_stdtime_t
 name|expire
 decl_stmt|;
-comment|/* end of validity period */
+comment|/*%< end of validity period */
 name|dns_tsig_keyring_t
 modifier|*
 name|ring
 decl_stmt|;
-comment|/* the enclosing keyring */
+comment|/*%< the enclosing keyring */
 name|isc_refcount_t
 name|refs
 decl_stmt|;
-comment|/* reference counter */
+comment|/*%< reference counter */
 block|}
 struct|;
 end_struct
@@ -309,7 +393,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Creates a tsig key structure and saves it in the keyring.  If key is  *	not NULL, *key will contain a copy of the key.  The keys validity  *	period is specified by (inception, expire), and will not expire if  *	inception == expire.  If the key was generated, the creating identity,  *	if there is one, should be in the creator parameter.  Specifying an  *	unimplemented algorithm will cause failure only if dstkey != NULL; this  *	allows a transient key with an invalid algorithm to exist long enough  *	to generate a BADKEY response.  *  *	Requires:  *		'name' is a valid dns_name_t  *		'algorithm' is a valid dns_name_t  *		'secret' is a valid pointer  *		'length' is an integer>= 0  *		'key' is a valid dst key or NULL  *		'creator' points to a valid dns_name_t or is NULL  *		'mctx' is a valid memory context  *		'ring' is a valid TSIG keyring or NULL  *		'key' or '*key' must be NULL  *  *	Returns:  *		ISC_R_SUCCESS  *		ISC_R_EXISTS - a key with this name already exists  *		ISC_R_NOTIMPLEMENTED - algorithm is not implemented  *		ISC_R_NOMEMORY  */
+comment|/*%<  *	Creates a tsig key structure and saves it in the keyring.  If key is  *	not NULL, *key will contain a copy of the key.  The keys validity  *	period is specified by (inception, expire), and will not expire if  *	inception == expire.  If the key was generated, the creating identity,  *	if there is one, should be in the creator parameter.  Specifying an  *	unimplemented algorithm will cause failure only if dstkey != NULL; this  *	allows a transient key with an invalid algorithm to exist long enough  *	to generate a BADKEY response.  *  *	Requires:  *\li		'name' is a valid dns_name_t  *\li		'algorithm' is a valid dns_name_t  *\li		'secret' is a valid pointer  *\li		'length' is an integer>= 0  *\li		'key' is a valid dst key or NULL  *\li		'creator' points to a valid dns_name_t or is NULL  *\li		'mctx' is a valid memory context  *\li		'ring' is a valid TSIG keyring or NULL  *\li		'key' or '*key' must be NULL  *  *	Returns:  *\li		#ISC_R_SUCCESS  *\li		#ISC_R_EXISTS - a key with this name already exists  *\li		#ISC_R_NOTIMPLEMENTED - algorithm is not implemented  *\li		#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -329,7 +413,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Attach '*targetp' to 'source'.  *  *	Requires:  *		'key' is a valid TSIG key  *  *	Ensures:  *		*targetp is attached to source.  */
+comment|/*%<  *	Attach '*targetp' to 'source'.  *  *	Requires:  *\li		'key' is a valid TSIG key  *  *	Ensures:  *\li		*targetp is attached to source.  */
 end_comment
 
 begin_function_decl
@@ -345,7 +429,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Detaches from the tsig key structure pointed to by '*key'.  *  *	Requires:  *		'keyp' is not NULL and '*keyp' is a valid TSIG key  *  *	Ensures:  *		'keyp' points to NULL  */
+comment|/*%<  *	Detaches from the tsig key structure pointed to by '*key'.  *  *	Requires:  *\li		'keyp' is not NULL and '*keyp' is a valid TSIG key  *  *	Ensures:  *\li		'keyp' points to NULL  */
 end_comment
 
 begin_function_decl
@@ -360,7 +444,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Prevents this key from being used again.  It will be deleted when  *	no references exist.  *  *	Requires:  *		'key' is a valid TSIG key on a keyring  */
+comment|/*%<  *	Prevents this key from being used again.  It will be deleted when  *	no references exist.  *  *	Requires:  *\li		'key' is a valid TSIG key on a keyring  */
 end_comment
 
 begin_function_decl
@@ -375,7 +459,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Generates a TSIG record for this message  *  *	Requires:  *		'msg' is a valid message  *		'msg->tsigkey' is a valid TSIG key  *		'msg->tsig' is NULL  *  *	Returns:  *		ISC_R_SUCCESS  *		ISC_R_NOMEMORY  *		ISC_R_NOSPACE  *		DNS_R_EXPECTEDTSIG  *			- this is a response& msg->querytsig is NULL  */
+comment|/*%<  *	Generates a TSIG record for this message  *  *	Requires:  *\li		'msg' is a valid message  *\li		'msg->tsigkey' is a valid TSIG key  *\li		'msg->tsig' is NULL  *  *	Returns:  *\li		#ISC_R_SUCCESS  *\li		#ISC_R_NOMEMORY  *\li		#ISC_R_NOSPACE  *\li		#DNS_R_EXPECTEDTSIG  *			- this is a response& msg->querytsig is NULL  */
 end_comment
 
 begin_function_decl
@@ -402,7 +486,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Verifies the TSIG record in this message  *  *	Requires:  *		'source' is a valid buffer containing the unparsed message  *		'msg' is a valid message  *		'msg->tsigkey' is a valid TSIG key if this is a response  *		'msg->tsig' is NULL  *		'msg->querytsig' is not NULL if this is a response  *		'ring1' and 'ring2' are each either a valid keyring or NULL  *  *	Returns:  *		ISC_R_SUCCESS  *		ISC_R_NOMEMORY  *		DNS_R_EXPECTEDTSIG - A TSIG was expected but not seen  *		DNS_R_UNEXPECTEDTSIG - A TSIG was seen but not expected  *		DNS_R_TSIGERRORSET - the TSIG verified but ->error was set  *				     and this is a query  *		DNS_R_CLOCKSKEW - the TSIG failed to verify because of  *				  the time was out of the allowed range.  *		DNS_R_TSIGVERIFYFAILURE - the TSIG failed to verify  *		DNS_R_EXPECTEDRESPONSE - the message was set over TCP and  *					 should have been a response,  *					 but was not.  */
+comment|/*%<  *	Verifies the TSIG record in this message  *  *	Requires:  *\li		'source' is a valid buffer containing the unparsed message  *\li		'msg' is a valid message  *\li		'msg->tsigkey' is a valid TSIG key if this is a response  *\li		'msg->tsig' is NULL  *\li		'msg->querytsig' is not NULL if this is a response  *\li		'ring1' and 'ring2' are each either a valid keyring or NULL  *  *	Returns:  *\li		#ISC_R_SUCCESS  *\li		#ISC_R_NOMEMORY  *\li		#DNS_R_EXPECTEDTSIG - A TSIG was expected but not seen  *\li		#DNS_R_UNEXPECTEDTSIG - A TSIG was seen but not expected  *\li		#DNS_R_TSIGERRORSET - the TSIG verified but ->error was set  *				     and this is a query  *\li		#DNS_R_CLOCKSKEW - the TSIG failed to verify because of  *				  the time was out of the allowed range.  *\li		#DNS_R_TSIGVERIFYFAILURE - the TSIG failed to verify  *\li		#DNS_R_EXPECTEDRESPONSE - the message was set over TCP and  *					 should have been a response,  *					 but was not.  */
 end_comment
 
 begin_function_decl
@@ -430,7 +514,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Returns the TSIG key corresponding to this name and (possibly)  *	algorithm.  Also increments the key's reference counter.  *  *	Requires:  *		'tsigkey' is not NULL  *		'*tsigkey' is NULL  *		'name' is a valid dns_name_t  *		'algorithm' is a valid dns_name_t or NULL  *		'ring' is a valid keyring  *  *	Returns:  *		ISC_R_SUCCESS  *		ISC_R_NOTFOUND  */
+comment|/*%<  *	Returns the TSIG key corresponding to this name and (possibly)  *	algorithm.  Also increments the key's reference counter.  *  *	Requires:  *\li		'tsigkey' is not NULL  *\li		'*tsigkey' is NULL  *\li		'name' is a valid dns_name_t  *\li		'algorithm' is a valid dns_name_t or NULL  *\li		'ring' is a valid keyring  *  *	Returns:  *\li		#ISC_R_SUCCESS  *\li		#ISC_R_NOTFOUND  */
 end_comment
 
 begin_function_decl
@@ -450,7 +534,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Create an empty TSIG key ring.  *  *	Requires:  *		'mctx' is not NULL  *		'ringp' is not NULL, and '*ringp' is NULL  *  *	Returns:  *		ISC_R_SUCCESS  *		ISC_R_NOMEMORY  */
+comment|/*%<  *	Create an empty TSIG key ring.  *  *	Requires:  *\li		'mctx' is not NULL  *\li		'ringp' is not NULL, and '*ringp' is NULL  *  *	Returns:  *\li		#ISC_R_SUCCESS  *\li		#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -466,7 +550,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	Destroy a TSIG key ring.  *  *	Requires:  *		'ringp' is not NULL  */
+comment|/*%<  *	Destroy a TSIG key ring.  *  *	Requires:  *\li		'ringp' is not NULL  */
 end_comment
 
 begin_macro

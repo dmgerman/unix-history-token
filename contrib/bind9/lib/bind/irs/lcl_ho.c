@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lcl_ho.c,v 1.1.206.3 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: lcl_ho.c,v 1.3.18.2 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -322,7 +322,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* IPv4 or IPv6 */
+comment|/*%< IPv4 or IPv6 */
 name|struct
 name|__res_state
 modifier|*
@@ -2856,7 +2856,7 @@ block|{
 case|case
 name|AF_UNSPEC
 case|:
-comment|/* INET6 then INET4 */
+comment|/*%< INET6 then INET4 */
 name|q
 operator|.
 name|family
@@ -2907,7 +2907,7 @@ argument_list|,
 name|NO_RECOVERY
 argument_list|)
 expr_stmt|;
-comment|/* ??? */
+comment|/*%< ??? */
 return|return
 operator|(
 name|NULL
@@ -3210,6 +3210,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

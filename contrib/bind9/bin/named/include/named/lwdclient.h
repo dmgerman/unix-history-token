@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: lwdclient.h,v 1.13.208.1 2004/03/06 10:21:24 marka Exp $ */
+comment|/* $Id: lwdclient.h,v 1.14.18.2 2005/04/29 00:15:36 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|NAMED_LWDCLIENT_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -88,6 +92,10 @@ name|LWRD_SHUTDOWN
 value|(LWRD_EVENTCLASS + 0x0001)
 end_define
 
+begin_comment
+comment|/*% Lighweight Resolver Daemon Client */
+end_comment
+
 begin_struct
 struct|struct
 name|ns_lwdclient
@@ -95,7 +103,7 @@ block|{
 name|isc_sockaddr_t
 name|address
 decl_stmt|;
-comment|/* where to reply */
+comment|/*%< where to reply */
 name|struct
 name|in6_pktinfo
 name|pktinfo
@@ -107,7 +115,7 @@ name|ns_lwdclientmgr_t
 modifier|*
 name|clientmgr
 decl_stmt|;
-comment|/* our parent */
+comment|/*%< our parent */
 name|ISC_LINK
 argument_list|(
 argument|ns_lwdclient_t
@@ -122,7 +130,7 @@ name|void
 modifier|*
 name|arg
 decl_stmt|;
-comment|/* packet processing state */
+comment|/*%< packet processing state */
 comment|/* 	 * Received data info. 	 */
 name|unsigned
 name|char
@@ -131,15 +139,15 @@ index|[
 name|LWRES_RECVLENGTH
 index|]
 decl_stmt|;
-comment|/* receive buffer */
+comment|/*%< receive buffer */
 name|isc_uint32_t
 name|recvlength
 decl_stmt|;
-comment|/* length recv'd */
+comment|/*%< length recv'd */
 name|lwres_lwpacket_t
 name|pkt
 decl_stmt|;
-comment|/* 	 * Send data state.  If sendbuf != buffer (that is, the send buffer 	 * isn't our receive buffer) it will be freed to the lwres_context_t. 	 */
+comment|/*% 	 * Send data state.  If sendbuf != buffer (that is, the send buffer 	 * isn't our receive buffer) it will be freed to the lwres_context_t. 	 */
 name|unsigned
 name|char
 modifier|*
@@ -151,7 +159,7 @@ decl_stmt|;
 name|isc_buffer_t
 name|recv_buffer
 decl_stmt|;
-comment|/* 	 * gabn (get address by name) state info. 	 */
+comment|/*% 	 * gabn (get address by name) state info. 	 */
 name|dns_adbfind_t
 modifier|*
 name|find
@@ -168,7 +176,7 @@ name|unsigned
 name|int
 name|find_wanted
 decl_stmt|;
-comment|/* Addresses we want */
+comment|/*%< Addresses we want */
 name|dns_fixedname_t
 name|query_name
 decl_stmt|;
@@ -181,7 +189,7 @@ decl_stmt|;
 name|lwres_gabnresponse_t
 name|gabn
 decl_stmt|;
-comment|/* 	 * gnba (get name by address) state info. 	 */
+comment|/*% 	 * gnba (get name by address) state info. 	 */
 name|lwres_gnbaresponse_t
 name|gnba
 decl_stmt|;
@@ -196,7 +204,7 @@ decl_stmt|;
 name|isc_netaddr_t
 name|na
 decl_stmt|;
-comment|/* 	 * grbn (get rrset by name) state info. 	 * 	 * Note: this also uses target_name and searchctx. 	 */
+comment|/*% 	 * grbn (get rrset by name) state info. 	 * 	 * Note: this also uses target_name and searchctx. 	 */
 name|lwres_grbnresponse_t
 name|grbn
 decl_stmt|;
@@ -207,7 +215,7 @@ decl_stmt|;
 name|dns_rdatatype_t
 name|rdtype
 decl_stmt|;
-comment|/* 	 * Alias and address info.  This is copied up to the gabn/gnba 	 * structures eventually. 	 * 	 * XXXMLG We can keep all of this in a client since we only service 	 * three packet types right now.  If we started handling more, 	 * we'd need to use "arg" above and allocate/destroy things. 	 */
+comment|/*% 	 * Alias and address info.  This is copied up to the gabn/gnba 	 * structures eventually. 	 * 	 * XXXMLG We can keep all of this in a client since we only service 	 * three packet types right now.  If we started handling more, 	 * we'd need to use "arg" above and allocate/destroy things. 	 */
 name|char
 modifier|*
 name|aliases
@@ -232,7 +240,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Client states.  *  * _IDLE	The client is not doing anything at all.  *  * _RECV	The client is waiting for data after issuing a socket recv().  *  * _RECVDONE	Data has been received, and is being processed.  *  * _FINDWAIT	An adb (or other) request was made that cannot be satisfied  *		immediately.  An event will wake the client up.  *  * _SEND	All data for a response has completed, and a reply was  *		sent via a socket send() call.  *  * Badly formatted state table:  *  *	IDLE -> RECV when client has a recv() queued.  *  *	RECV -> RECVDONE when recvdone event received.  *  *	RECVDONE -> SEND if the data for a reply is at hand.  *	RECVDONE -> FINDWAIT if more searching is needed, and events will  *		eventually wake us up again.  *  *	FINDWAIT -> SEND when enough data was received to reply.  *  *	SEND -> IDLE when a senddone event was received.  *  *	At any time -> IDLE on error.  Sometimes this will be -> SEND  *	instead, if enough data is on hand to reply with a meaningful  *	error.  *  *	Packets which are badly formatted may or may not get error returns.  */
+comment|/*%  * Client states.  *  * _IDLE	The client is not doing anything at all.  *  * _RECV	The client is waiting for data after issuing a socket recv().  *  * _RECVDONE	Data has been received, and is being processed.  *  * _FINDWAIT	An adb (or other) request was made that cannot be satisfied  *		immediately.  An event will wake the client up.  *  * _SEND	All data for a response has completed, and a reply was  *		sent via a socket send() call.  *  * Badly formatted state table:  *  *	IDLE -> RECV when client has a recv() queued.  *  *	RECV -> RECVDONE when recvdone event received.  *  *	RECVDONE -> SEND if the data for a reply is at hand.  *	RECVDONE -> FINDWAIT if more searching is needed, and events will  *		eventually wake us up again.  *  *	FINDWAIT -> SEND when enough data was received to reply.  *  *	SEND -> IDLE when a senddone event was received.  *  *	At any time -> IDLE on error.  Sometimes this will be -> SEND  *	instead, if enough data is on hand to reply with a meaningful  *	error.  *  *	Packets which are badly formatted may or may not get error returns.  */
 end_comment
 
 begin_define
@@ -333,7 +341,7 @@ value|((c)->state == NS_LWDCLIENT_STATESEND)
 end_define
 
 begin_comment
-comment|/*  * Overall magic test that means we're not idle.  */
+comment|/*%  * Overall magic test that means we're not idle.  */
 end_comment
 
 begin_define
@@ -412,6 +420,10 @@ define|\
 value|((c)->state = NS_LWDCLIENT_STATESENDDONE)
 end_define
 
+begin_comment
+comment|/*% lightweight daemon client manager */
+end_comment
+
 begin_struct
 struct|struct
 name|ns_lwdclientmgr
@@ -428,7 +440,7 @@ name|isc_socket_t
 modifier|*
 name|sock
 decl_stmt|;
-comment|/* socket to use */
+comment|/*%< socket to use */
 name|dns_view_t
 modifier|*
 name|view
@@ -437,12 +449,12 @@ name|lwres_context_t
 modifier|*
 name|lwctx
 decl_stmt|;
-comment|/* lightweight proto context */
+comment|/*%< lightweight proto context */
 name|isc_task_t
 modifier|*
 name|task
 decl_stmt|;
-comment|/* owning task */
+comment|/*%< owning task */
 name|unsigned
 name|int
 name|flags
@@ -459,14 +471,14 @@ argument|ns_lwdclient_t
 argument_list|)
 name|idle
 expr_stmt|;
-comment|/* idle client slots */
+comment|/*%< idle client slots */
 name|ISC_LIST
 argument_list|(
 argument|ns_lwdclient_t
 argument_list|)
 name|running
 expr_stmt|;
-comment|/* running clients */
+comment|/*%< running clients */
 block|}
 struct|;
 end_struct

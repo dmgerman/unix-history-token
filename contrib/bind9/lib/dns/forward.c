@@ -4,7 +4,11 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: forward.c,v 1.5.206.3 2005/03/17 03:58:30 marka Exp $ */
+comment|/* $Id: forward.c,v 1.6.18.4 2005/07/12 01:22:20 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -230,29 +234,9 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_rwlock_init() failed: %s"
-argument_list|,
-name|isc_result_totext
-argument_list|(
-name|result
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-name|ISC_R_UNEXPECTED
-expr_stmt|;
 goto|goto
 name|cleanup_rbt
 goto|;
-block|}
 name|fwdtable
 operator|->
 name|mctx

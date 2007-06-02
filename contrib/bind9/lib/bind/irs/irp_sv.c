@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp_sv.c,v 1.1.206.1 2004/03/09 08:33:37 marka Exp $"
+literal|"$Id: irp_sv.c,v 1.2.18.1 2005/04/27 05:01:01 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -311,7 +311,7 @@ comment|/* Public */
 end_comment
 
 begin_comment
-comment|/*  * struct irs_sv * irs_irp_sv(struct irs_acc *this)  *  */
+comment|/*%  * struct irs_sv * irs_irp_sv(struct irs_acc *this)  *  */
 end_comment
 
 begin_function
@@ -482,7 +482,7 @@ comment|/* Methods */
 end_comment
 
 begin_comment
-comment|/*  * void sv_close(struct irs_sv *this)  *  */
+comment|/*%  * void sv_close(struct irs_sv *this)  *  */
 end_comment
 
 begin_function
@@ -545,7 +545,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct servent * sv_next(struct irs_sv *this)  *  * Notes:  *  *	Fills the cache if necessary and returns the next item from it.  *  */
+comment|/*%  *	Fills the cache if necessary and returns the next item from it.  *  */
 end_comment
 
 begin_function
@@ -737,7 +737,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct servent * sv_byname(struct irs_sv *this, const char *name,  *				const char *proto)  *  */
+comment|/*%  * struct servent * sv_byname(struct irs_sv *this, const char *name,  *				const char *proto)  *  */
 end_comment
 
 begin_function
@@ -978,7 +978,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct servent * sv_byport(struct irs_sv *this, int port,  *				const char *proto)  *  */
+comment|/*%  * struct servent * sv_byport(struct irs_sv *this, int port,  *				const char *proto)  *  */
 end_comment
 
 begin_function
@@ -1220,7 +1220,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void sv_rewind(struct irs_sv *this)  *  */
+comment|/*%  * void sv_rewind(struct irs_sv *this)  *  */
 end_comment
 
 begin_function
@@ -1334,7 +1334,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void sv_minimize(struct irs_sv *this)  *  */
+comment|/*%  * void sv_minimize(struct irs_sv *this)  *  */
 end_comment
 
 begin_function
@@ -1461,6 +1461,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

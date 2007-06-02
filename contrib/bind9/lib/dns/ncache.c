@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: ncache.c,v 1.24.2.4.2.7 2004/03/08 02:07:54 marka Exp $ */
+comment|/* $Id: ncache.c,v 1.36.18.3 2005/04/29 00:15:59 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -646,7 +650,7 @@ operator|==
 literal|0xffff
 condition|)
 block|{
-comment|/* 		 * We didn't find any authority data from which to create a 		 * negative cache rdataset.  In particular, we have no SOA. 		 * 		 * We trust that the caller wants negative caching, so this 		 * means we have a "type 3 nxdomain" or "type 3 nodata" 		 * response (see RFC 2308 for details). 		 * 		 * We will now build a suitable negative cache rdataset that 		 * will cause zero bytes to be emitted when converted to 		 * wire format. 		 */
+comment|/* 		 * We didn't find any authority data from which to create a 		 * negative cache rdataset.  In particular, we have no SOA. 		 * 		 * We trust that the caller wants negative caching, so this 		 * means we have a "type 3 nxdomain" or "type 3 nodata" 		 * response (see RFC2308 for details). 		 * 		 * We will now build a suitable negative cache rdataset that 		 * will cause zero bytes to be emitted when converted to 		 * wire format. 		 */
 comment|/* 		 * The ownername must exist, but it doesn't matter what value 		 * it has.  We use the root name. 		 */
 name|dns_name_toregion
 argument_list|(
@@ -717,7 +721,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * RFC 2308, section 5, says that negative answers without 		 * SOAs should not be cached. 		 */
+comment|/* 		 * RFC2308, section 5, says that negative answers without 		 * SOAs should not be cached. 		 */
 name|ttl
 operator|=
 literal|0
@@ -1881,6 +1885,12 @@ block|,
 name|rdataset_clone
 block|,
 name|rdataset_count
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
 block|,
 name|NULL
 block|,

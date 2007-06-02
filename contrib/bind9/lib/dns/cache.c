@@ -4,7 +4,11 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: cache.c,v 1.45.2.4.8.15 2006/08/01 01:07:05 marka Exp $ */
+comment|/* $Id: cache.c,v 1.57.18.16 2006/08/01 01:06:48 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -70,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dns/lib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dns/log.h>
 end_include
 
@@ -121,7 +131,7 @@ value|ISC_MAGIC_VALID(cache, CACHE_MAGIC)
 end_define
 
 begin_comment
-comment|/*  * The following two variables control incremental cleaning.  * MINSIZE is how many bytes is the floor for dns_cache_setcachesize().  * CLEANERINCREMENT is how many nodes are examined in one pass.  */
+comment|/*!   * Control incremental cleaning.  * DNS_CACHE_MINSIZE is how many bytes is the floor for dns_cache_setcachesize().  * See also DNS_CACHE_CLEANERINCREMENT  */
 end_comment
 
 begin_define
@@ -132,18 +142,22 @@ value|2097152
 end_define
 
 begin_comment
-comment|/* Bytes.  2097152 = 2 MB */
+comment|/*%< Bytes.  2097152 = 2 MB */
+end_comment
+
+begin_comment
+comment|/*!   * Control incremental cleaning.  * CLEANERINCREMENT is how many nodes are examined in one pass.  * See also DNS_CACHE_MINSIZE   */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DNS_CACHE_CLEANERINCREMENT
-value|1000
+value|1000U
 end_define
 
 begin_comment
-comment|/* Number of nodes. */
+comment|/*%< Number of nodes. */
 end_comment
 
 begin_comment
@@ -168,12 +182,12 @@ enum|enum
 block|{
 name|cleaner_s_idle
 block|,
-comment|/* Waiting for cleaning-interval to expire. */
+comment|/*%< Waiting for cleaning-interval to expire. */
 name|cleaner_s_busy
 block|,
-comment|/* Currently cleaning. */
+comment|/*%< Currently cleaning. */
 name|cleaner_s_done
-comment|/* Freed enough memory after being overmem. */
+comment|/*%< Freed enough memory after being overmem. */
 block|}
 name|cleaner_state_t
 typedef|;
@@ -204,7 +218,7 @@ value|((c)->state == cleaner_s_busy&& \ 			 (c)->iterator != NULL&& \ 			 (c)->r
 end_define
 
 begin_comment
-comment|/*  * Accesses to a cache cleaner object are synchronized through  * task/event serialization, or locked from the cache object.  */
+comment|/*%  * Accesses to a cache cleaner object are synchronized through  * task/event serialization, or locked from the cache object.  */
 end_comment
 
 begin_struct
@@ -214,7 +228,7 @@ block|{
 name|isc_mutex_t
 name|lock
 decl_stmt|;
-comment|/* 	 * Locks overmem_event, overmem.  Note: never allocate memory 	 * while holding this lock - that could lead to deadlock since 	 * the lock is take by water() which is called from the memory 	 * allocator. 	 */
+comment|/*%< 	 * Locks overmem_event, overmem.  Note: never allocate memory 	 * while holding this lock - that could lead to deadlock since 	 * the lock is take by water() which is called from the memory 	 * allocator. 	 */
 name|dns_cache_t
 modifier|*
 name|cache
@@ -227,7 +241,7 @@ name|unsigned
 name|int
 name|cleaning_interval
 decl_stmt|;
-comment|/* The cleaning-interval from 					      named.conf, in seconds. */
+comment|/*% The cleaning-interval from 					      named.conf, in seconds. */
 name|isc_timer_t
 modifier|*
 name|cleaning_timer
@@ -236,7 +250,7 @@ name|isc_event_t
 modifier|*
 name|resched_event
 decl_stmt|;
-comment|/* Sent by cleaner task to 					   itself to reschedule */
+comment|/*% Sent by cleaner task to 					   itself to reschedule */
 name|isc_event_t
 modifier|*
 name|overmem_event
@@ -245,18 +259,19 @@ name|dns_dbiterator_t
 modifier|*
 name|iterator
 decl_stmt|;
+name|unsigned
 name|int
 name|increment
 decl_stmt|;
-comment|/* Number of names to 					   clean in one increment */
+comment|/*% Number of names to 					   clean in one increment */
 name|cleaner_state_t
 name|state
 decl_stmt|;
-comment|/* Idle/Busy. */
+comment|/*% Idle/Busy. */
 name|isc_boolean_t
 name|overmem
 decl_stmt|;
-comment|/* The cache is in an overmem state. */
+comment|/*% The cache is in an overmem state. */
 name|isc_boolean_t
 name|replaceiterator
 decl_stmt|;
@@ -265,7 +280,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The actual cache object.  */
+comment|/*%  * The actual cache object.  */
 end_comment
 
 begin_struct
@@ -417,6 +432,285 @@ name|event
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*%  * Work out how many nodes can be cleaned in the time between two  * requests to the nameserver.  Smooth the resulting number and use  * it as a estimate for the number of nodes to be cleaned in the next  * iteration.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|adjust_increment
+parameter_list|(
+name|cache_cleaner_t
+modifier|*
+name|cleaner
+parameter_list|,
+name|unsigned
+name|int
+name|remaining
+parameter_list|,
+name|isc_time_t
+modifier|*
+name|start
+parameter_list|)
+block|{
+name|isc_time_t
+name|end
+decl_stmt|;
+name|isc_uint64_t
+name|usecs
+decl_stmt|;
+name|isc_uint64_t
+name|new
+decl_stmt|;
+name|unsigned
+name|int
+name|pps
+init|=
+name|dns_pps
+decl_stmt|;
+name|unsigned
+name|int
+name|interval
+decl_stmt|;
+name|unsigned
+name|int
+name|names
+decl_stmt|;
+comment|/* 	 * Tune for minumum of 100 packets per second (pps). 	 */
+if|if
+condition|(
+name|pps
+operator|<
+literal|100
+condition|)
+name|pps
+operator|=
+literal|100
+expr_stmt|;
+name|isc_time_now
+argument_list|(
+operator|&
+name|end
+argument_list|)
+expr_stmt|;
+name|interval
+operator|=
+literal|1000000
+operator|/
+name|pps
+expr_stmt|;
+comment|/* Interval between packets in usecs. */
+if|if
+condition|(
+name|interval
+operator|==
+literal|0
+condition|)
+name|interval
+operator|=
+literal|1
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|cleaner
+operator|->
+name|increment
+operator|>=
+name|remaining
+argument_list|)
+expr_stmt|;
+name|names
+operator|=
+name|cleaner
+operator|->
+name|increment
+operator|-
+name|remaining
+expr_stmt|;
+name|usecs
+operator|=
+name|isc_time_microdiff
+argument_list|(
+operator|&
+name|end
+argument_list|,
+name|start
+argument_list|)
+expr_stmt|;
+name|isc_log_write
+argument_list|(
+name|dns_lctx
+argument_list|,
+name|DNS_LOGCATEGORY_DATABASE
+argument_list|,
+name|DNS_LOGMODULE_CACHE
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|1
+argument_list|)
+argument_list|,
+literal|"adjust_increment interval=%u "
+literal|"names=%u usec=%"
+name|ISC_PLATFORM_QUADFORMAT
+literal|"u"
+argument_list|,
+name|interval
+argument_list|,
+name|names
+argument_list|,
+name|usecs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|usecs
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * If we cleaned all the nodes in unmeasurable time 		 * double the number of nodes to be cleaned next time. 		 */
+if|if
+condition|(
+name|names
+operator|==
+name|cleaner
+operator|->
+name|increment
+condition|)
+block|{
+name|cleaner
+operator|->
+name|increment
+operator|*=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|cleaner
+operator|->
+name|increment
+operator|>
+name|DNS_CACHE_CLEANERINCREMENT
+condition|)
+name|cleaner
+operator|->
+name|increment
+operator|=
+name|DNS_CACHE_CLEANERINCREMENT
+expr_stmt|;
+name|isc_log_write
+argument_list|(
+name|dns_lctx
+argument_list|,
+name|DNS_LOGCATEGORY_DATABASE
+argument_list|,
+name|DNS_LOGMODULE_CACHE
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|1
+argument_list|)
+argument_list|,
+literal|"%p:new cleaner->increment = %u\n"
+argument_list|,
+name|cleaner
+argument_list|,
+name|cleaner
+operator|->
+name|increment
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+name|new
+operator|=
+operator|(
+name|names
+operator|*
+name|interval
+operator|)
+expr_stmt|;
+name|new
+operator|/=
+operator|(
+name|usecs
+operator|*
+literal|2
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|new
+operator|==
+literal|0
+condition|)
+name|new
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Smooth */
+name|new
+operator|=
+operator|(
+name|new
+operator|+
+name|cleaner
+operator|->
+name|increment
+operator|*
+literal|7
+operator|)
+operator|/
+literal|8
+expr_stmt|;
+if|if
+condition|(
+name|new
+operator|>
+name|DNS_CACHE_CLEANERINCREMENT
+condition|)
+name|new
+operator|=
+name|DNS_CACHE_CLEANERINCREMENT
+expr_stmt|;
+name|cleaner
+operator|->
+name|increment
+operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
+name|new
+expr_stmt|;
+name|isc_log_write
+argument_list|(
+name|dns_lctx
+argument_list|,
+name|DNS_LOGCATEGORY_DATABASE
+argument_list|,
+name|DNS_LOGMODULE_CACHE
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|1
+argument_list|)
+argument_list|,
+literal|"%p:new cleaner->increment = %u\n"
+argument_list|,
+name|cleaner
+argument_list|,
+name|cleaner
+operator|->
+name|increment
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -596,29 +890,9 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init() failed: %s"
-argument_list|,
-name|dns_result_totext
-argument_list|(
-name|result
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-name|ISC_R_UNEXPECTED
-expr_stmt|;
 goto|goto
 name|cleanup_mem
 goto|;
-block|}
 name|result
 operator|=
 name|isc_mutex_init
@@ -635,29 +909,9 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init() failed: %s"
-argument_list|,
-name|dns_result_totext
-argument_list|(
-name|result
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-name|ISC_R_UNEXPECTED
-expr_stmt|;
 goto|goto
 name|cleanup_lock
 goto|;
-block|}
 name|cache
 operator|->
 name|references
@@ -2125,29 +2379,9 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|UNEXPECTED_ERROR
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"isc_mutex_init() failed: %s"
-argument_list|,
-name|dns_result_totext
-argument_list|(
-name|result
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-name|ISC_R_UNEXPECTED
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
-block|}
 name|cleaner
 operator|->
 name|increment
@@ -3227,8 +3461,12 @@ decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
+name|unsigned
 name|int
 name|n_names
+decl_stmt|;
+name|isc_time_t
+name|start
 decl_stmt|;
 name|UNUSED
 argument_list|(
@@ -3378,6 +3616,12 @@ name|iterator
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|isc_time_now
+argument_list|(
+operator|&
+name|start
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|n_names
@@ -3426,6 +3670,16 @@ name|dns_result_totext
 argument_list|(
 name|result
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|adjust_increment
+argument_list|(
+name|cleaner
+argument_list|,
+name|n_names
+argument_list|,
+operator|&
+name|start
 argument_list|)
 expr_stmt|;
 name|end_cleaning
@@ -3535,6 +3789,16 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+name|adjust_increment
+argument_list|(
+name|cleaner
+argument_list|,
+name|n_names
+argument_list|,
+operator|&
+name|start
+argument_list|)
+expr_stmt|;
 name|end_cleaning
 argument_list|(
 name|cleaner
@@ -3545,6 +3809,16 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+name|adjust_increment
+argument_list|(
+name|cleaner
+argument_list|,
+literal|0U
+argument_list|,
+operator|&
+name|start
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We have successfully performed a cleaning increment but have 	 * not gone through the entire cache.  Free the iterator locks 	 * and reschedule another batch.  If it fails, just try to continue 	 * anyway. 	 */
 name|result
 operator|=
@@ -3575,7 +3849,7 @@ argument_list|(
 literal|1
 argument_list|)
 argument_list|,
-literal|"cache cleaner: checked %d nodes, "
+literal|"cache cleaner: checked %u nodes, "
 literal|"mem inuse %lu, sleeping"
 argument_list|,
 name|cleaner

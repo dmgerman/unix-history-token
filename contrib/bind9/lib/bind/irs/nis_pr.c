@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nis_pr.c,v 1.2.206.1 2004/03/09 08:33:38 marka Exp $"
+literal|"$Id: nis_pr.c,v 1.3.18.1 2005/04/27 05:01:04 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1694,6 +1694,10 @@ end_endif
 
 begin_comment
 comment|/*WANT_IRS_NIS*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

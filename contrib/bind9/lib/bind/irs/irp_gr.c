@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp_gr.c,v 1.2.206.1 2004/03/09 08:33:36 marka Exp $"
+literal|"$Id: irp_gr.c,v 1.3.18.1 2005/04/27 05:01:00 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,7 +185,7 @@ comment|/* Types. */
 end_comment
 
 begin_comment
-comment|/*  * Module for the getnetgrent(3) family to use when connected to a  * remote irp daemon.  *  * See irpd.c for justification of caching done here.  *  */
+comment|/*! \file   * \brief  * Module for the getnetgrent(3) family to use when connected to a  * remote irp daemon.  * \brief  * See irpd.c for justification of caching done here.  *  */
 end_comment
 
 begin_struct
@@ -197,7 +197,7 @@ name|irp_p
 modifier|*
 name|girpdata
 decl_stmt|;
-comment|/* global IRP data */
+comment|/*%< global IRP data */
 name|int
 name|warned
 decl_stmt|;
@@ -319,7 +319,7 @@ comment|/* Public. */
 end_comment
 
 begin_comment
-comment|/*  * struct irs_gr * irs_irp_gr(struct irs_acc *this)  *  * Notes:  *  *	Initialize the group sub-module.  *  * Notes:  *  *	Module data.  *  */
+comment|/*%  *	Initialize the group sub-module.  *  */
 end_comment
 
 begin_function
@@ -494,7 +494,7 @@ comment|/* Methods. */
 end_comment
 
 begin_comment
-comment|/*  * void gr_close(struct irs_gr *this)  *  * Notes:  *  *	Close the sub-module.  *  */
+comment|/*%  *	Close the sub-module.  *  */
 end_comment
 
 begin_function
@@ -549,7 +549,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct group * gr_next(struct irs_gr *this)  *  * Notes:  *  *	Gets the next group out of the cached data and returns it.  *  */
+comment|/*%  *	Gets the next group out of the cached data and returns it.  *  */
 end_comment
 
 begin_function
@@ -756,7 +756,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct group * gr_byname(struct irs_gr *this, const char *name)  *  * Notes:  *  *	Gets a group by name from irpd and returns it.  *  */
+comment|/*%  *	Gets a group by name from irpd and returns it.  *  */
 end_comment
 
 begin_function
@@ -979,7 +979,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * struct group * gr_bygid(struct irs_gr *this, gid_t gid)  *  * Notes:  *  *	Gets a group by gid from irpd and returns it.  *  */
+comment|/*%  *	Gets a group by gid from irpd and returns it.  *  */
 end_comment
 
 begin_function
@@ -1198,7 +1198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void gr_rewind(struct irs_gr *this)  *  */
+comment|/*%  * void gr_rewind(struct irs_gr *this)  *  */
 end_comment
 
 begin_function
@@ -1312,7 +1312,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void gr_minimize(struct irs_gr *this)  *  * Notes:  *  *	Frees up cached data and disconnects(if necessary) from the remote.  *  */
+comment|/*%  *	Frees up cached data and disconnects(if necessary) from the remote.  *  */
 end_comment
 
 begin_function
@@ -1363,7 +1363,7 @@ comment|/* Private. */
 end_comment
 
 begin_comment
-comment|/*  * static void free_group(struct group *gr);  *  *	Deallocate all the memory irp_unmarshall_gr allocated.  *  */
+comment|/*%  * static void free_group(struct group *gr);  *  *	Deallocate all the memory irp_unmarshall_gr allocated.  *  */
 end_comment
 
 begin_function
@@ -1479,6 +1479,10 @@ end_endif
 
 begin_comment
 comment|/* WANT_IRS_GR */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

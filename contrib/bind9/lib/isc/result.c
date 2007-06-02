@@ -4,7 +4,11 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: result.c,v 1.56.2.2.8.9 2005/06/09 23:54:30 marka Exp $ */
+comment|/* $Id: result.c,v 1.62.18.6 2005/06/22 22:05:48 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -111,183 +115,183 @@ init|=
 block|{
 literal|"success"
 block|,
-comment|/*  0 */
+comment|/*%< 0 */
 literal|"out of memory"
 block|,
-comment|/*  1 */
+comment|/*%< 1 */
 literal|"timed out"
 block|,
-comment|/*  2 */
+comment|/*%< 2 */
 literal|"no available threads"
 block|,
-comment|/*  3 */
+comment|/*%< 3 */
 literal|"address not available"
 block|,
-comment|/*  4 */
+comment|/*%< 4 */
 literal|"address in use"
 block|,
-comment|/*  5 */
+comment|/*%< 5 */
 literal|"permission denied"
 block|,
-comment|/*  6 */
+comment|/*%< 6 */
 literal|"no pending connections"
 block|,
-comment|/*  7 */
+comment|/*%< 7 */
 literal|"network unreachable"
 block|,
-comment|/*  8 */
+comment|/*%< 8 */
 literal|"host unreachable"
 block|,
-comment|/*  9 */
+comment|/*%< 9 */
 literal|"network down"
 block|,
-comment|/* 10 */
+comment|/*%< 10 */
 literal|"host down"
 block|,
-comment|/* 11 */
+comment|/*%< 11 */
 literal|"connection refused"
 block|,
-comment|/* 12 */
+comment|/*%< 12 */
 literal|"not enough free resources"
 block|,
-comment|/* 13 */
+comment|/*%< 13 */
 literal|"end of file"
 block|,
-comment|/* 14 */
+comment|/*%< 14 */
 literal|"socket already bound"
 block|,
-comment|/* 15 */
+comment|/*%< 15 */
 literal|"reload"
 block|,
-comment|/* 16 */
+comment|/*%< 16 */
 literal|"lock busy"
 block|,
-comment|/* 17 */
+comment|/*%< 17 */
 literal|"already exists"
 block|,
-comment|/* 18 */
+comment|/*%< 18 */
 literal|"ran out of space"
 block|,
-comment|/* 19 */
+comment|/*%< 19 */
 literal|"operation canceled"
 block|,
-comment|/* 20 */
+comment|/*%< 20 */
 literal|"socket is not bound"
 block|,
-comment|/* 21 */
+comment|/*%< 21 */
 literal|"shutting down"
 block|,
-comment|/* 22 */
+comment|/*%< 22 */
 literal|"not found"
 block|,
-comment|/* 23 */
+comment|/*%< 23 */
 literal|"unexpected end of input"
 block|,
-comment|/* 24 */
+comment|/*%< 24 */
 literal|"failure"
 block|,
-comment|/* 25 */
+comment|/*%< 25 */
 literal|"I/O error"
 block|,
-comment|/* 26 */
+comment|/*%< 26 */
 literal|"not implemented"
 block|,
-comment|/* 27 */
+comment|/*%< 27 */
 literal|"unbalanced parentheses"
 block|,
-comment|/* 28 */
+comment|/*%< 28 */
 literal|"no more"
 block|,
-comment|/* 29 */
+comment|/*%< 29 */
 literal|"invalid file"
 block|,
-comment|/* 30 */
+comment|/*%< 30 */
 literal|"bad base64 encoding"
 block|,
-comment|/* 31 */
+comment|/*%< 31 */
 literal|"unexpected token"
 block|,
-comment|/* 32 */
+comment|/*%< 32 */
 literal|"quota reached"
 block|,
-comment|/* 33 */
+comment|/*%< 33 */
 literal|"unexpected error"
 block|,
-comment|/* 34 */
+comment|/*%< 34 */
 literal|"already running"
 block|,
-comment|/* 35 */
+comment|/*%< 35 */
 literal|"ignore"
 block|,
-comment|/* 36 */
+comment|/*%< 36 */
 literal|"address mask not contiguous"
 block|,
-comment|/* 37 */
+comment|/*%< 37 */
 literal|"file not found"
 block|,
-comment|/* 38 */
+comment|/*%< 38 */
 literal|"file already exists"
 block|,
-comment|/* 39 */
+comment|/*%< 39 */
 literal|"socket is not connected"
 block|,
-comment|/* 40 */
+comment|/*%< 40 */
 literal|"out of range"
 block|,
-comment|/* 41 */
+comment|/*%< 41 */
 literal|"out of entropy"
 block|,
-comment|/* 42 */
+comment|/*%< 42 */
 literal|"invalid use of multicast address"
 block|,
-comment|/* 43 */
+comment|/*%< 43 */
 literal|"not a file"
 block|,
-comment|/* 44 */
+comment|/*%< 44 */
 literal|"not a directory"
 block|,
-comment|/* 45 */
+comment|/*%< 45 */
 literal|"queue is full"
 block|,
-comment|/* 46 */
+comment|/*%< 46 */
 literal|"address family mismatch"
 block|,
-comment|/* 47 */
+comment|/*%< 47 */
 literal|"address family not supported"
 block|,
-comment|/* 48 */
+comment|/*%< 48 */
 literal|"bad hex encoding"
 block|,
-comment|/* 49 */
+comment|/*%< 49 */
 literal|"too many open files"
 block|,
-comment|/* 50 */
+comment|/*%< 50 */
 literal|"not blocking"
 block|,
-comment|/* 51 */
+comment|/*%< 51 */
 literal|"unbalanced quotes"
 block|,
-comment|/* 52 */
+comment|/*%< 52 */
 literal|"operation in progress"
 block|,
-comment|/* 53 */
+comment|/*%< 53 */
 literal|"connection reset"
 block|,
-comment|/* 54 */
+comment|/*%< 54 */
 literal|"soft quota reached"
 block|,
-comment|/* 55 */
+comment|/*%< 55 */
 literal|"not a valid number"
 block|,
-comment|/* 56 */
+comment|/*%< 56 */
 literal|"disabled"
 block|,
-comment|/* 57 */
+comment|/*%< 57 */
 literal|"max size"
 block|,
-comment|/* 58 */
+comment|/*%< 58 */
 literal|"invalid address format"
-comment|/* 59 */
+comment|/*%< 59 */
 block|}
 decl_stmt|;
 end_decl_stmt

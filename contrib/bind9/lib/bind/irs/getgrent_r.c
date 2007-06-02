@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getgrent_r.c,v 1.5.206.1 2004/03/09 08:33:35 marka Exp $"
+literal|"$Id: getgrent_r.c,v 1.6.18.1 2005/04/27 05:00:57 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -608,7 +608,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/*  *	These assume a single context is in operation per thread.  *	If this is not the case we will need to call irs directly  *	rather than through the base functions.  */
+comment|/*%  *	These assume a single context is in operation per thread.  *	If this is not the case we will need to call irs directly  *	rather than through the base functions.  */
 name|GROUP_R_RETURN
 name|getgrent_r
 parameter_list|(
@@ -751,7 +751,7 @@ name|numptr
 operator|=
 literal|1
 expr_stmt|;
-comment|/* NULL ptr */
+comment|/*%< NULL ptr */
 name|len
 operator|=
 operator|(
@@ -1053,6 +1053,10 @@ end_endif
 
 begin_comment
 comment|/* !def(_REENTRANT) || !def(DO_PTHREADS) || !def(WANT_IRS_PW) */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

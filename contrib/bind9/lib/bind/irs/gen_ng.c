@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gen_ng.c,v 1.1.206.1 2004/03/09 08:33:35 marka Exp $"
+literal|"$Id: gen_ng.c,v 1.2.18.1 2005/04/27 05:00:56 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -952,6 +952,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

@@ -18,7 +18,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/hmac_link.c,v 1.2.2.1.4.2 2006/03/10 00:17:21 marka Exp $"
+literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/hmac_link.c,v 1.3.164.3 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,7 +32,7 @@ comment|/*  * Portions Copyright (c) 1995-1998 by Trusted Information Systems, I
 end_comment
 
 begin_comment
-comment|/*   * This file contains an implementation of the HMAC-MD5 algorithm.  */
+comment|/*%  * This file contains an implementation of the HMAC-MD5 algorithm.  */
 end_comment
 
 begin_include
@@ -166,7 +166,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* make sure we do not include rsaref md5.h file */
+comment|/*%< make sure we do not include rsaref md5.h file */
 end_comment
 
 begin_endif
@@ -1168,7 +1168,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* no OR not enough space in output area */
+comment|/*%< no OR not enough space in output area */
 name|hkey
 operator|=
 operator|(
@@ -1188,7 +1188,7 @@ argument_list|,
 name|buff_len
 argument_list|)
 expr_stmt|;
-comment|/* just in case */
+comment|/*%< just in case */
 comment|/* write file header */
 name|sprintf
 argument_list|(
@@ -1566,7 +1566,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* see above */
+comment|/*%< see above */
 name|SAFE_FREE2
 argument_list|(
 name|tmp
@@ -1606,7 +1606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dst_hmac_md5_to_dns_key()   *         function to extract hmac key from DST_KEY structure   * intput:   *      in_key:  HMAC-MD5 key   * output:   *	out_str: buffer to write ot  *      out_len: size of output buffer   * returns:  *      number of bytes written to output buffer   */
+comment|/*%  * dst_hmac_md5_to_dns_key()   *         function to extract hmac key from DST_KEY structure   * intput:   *      in_key:  HMAC-MD5 key   * output:   *	out_str: buffer to write ot  *      out_len: size of output buffer   * returns:  *      number of bytes written to output buffer   */
 end_comment
 
 begin_function
@@ -1843,7 +1843,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dst_hmac_md5_init()  Function to answer set up function pointers for HMAC  *	   related functions   */
+comment|/*%  * dst_hmac_md5_init()  Function to answer set up function pointers for HMAC  *	   related functions   */
 end_comment
 
 begin_function
@@ -2036,6 +2036,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dir.c,v 1.18.2.1.2.3 2004/03/08 09:04:55 marka Exp $ */
+comment|/* $Id: dir.c,v 1.20.18.3 2005/09/05 00:18:30 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/* Principal Authors: DCL */
+comment|/*! \file  * \author  Principal Authors: DCL */
 end_comment
 
 begin_include
@@ -145,7 +145,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate workspace and open directory stream. If either one fails,  * NULL will be returned.  */
+comment|/*!  * \brief Allocate workspace and open directory stream. If either one fails,  * NULL will be returned.  */
 end_comment
 
 begin_function
@@ -162,6 +162,10 @@ modifier|*
 name|dirname
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|p
+decl_stmt|;
 name|isc_result_t
 name|result
 init|=
@@ -181,6 +185,87 @@ name|dirname
 operator|!=
 name|NULL
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Copy directory name.  Need to have enough space for the name, 	 * a possible path separator, the wildcard, and the final NUL. 	 */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|dirname
+argument_list|)
+operator|+
+literal|3
+operator|>
+sizeof|sizeof
+argument_list|(
+name|dir
+operator|->
+name|dirname
+argument_list|)
+condition|)
+comment|/* XXXDCL ? */
+return|return
+operator|(
+name|ISC_R_NOSPACE
+operator|)
+return|;
+name|strcpy
+argument_list|(
+name|dir
+operator|->
+name|dirname
+argument_list|,
+name|dirname
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Append path separator, if needed, and "*". 	 */
+name|p
+operator|=
+name|dir
+operator|->
+name|dirname
+operator|+
+name|strlen
+argument_list|(
+name|dir
+operator|->
+name|dirname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dir
+operator|->
+name|dirname
+operator|<
+name|p
+operator|&&
+operator|*
+operator|(
+name|p
+operator|-
+literal|1
+operator|)
+operator|!=
+literal|'/'
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|'/'
+expr_stmt|;
+operator|*
+name|p
+operator|++
+operator|=
+literal|'*'
+expr_stmt|;
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
 expr_stmt|;
 comment|/* 	 * Open stream. 	 */
 name|dir
@@ -215,7 +300,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return previously retrieved file or get next one.  Unix's dirent has  * separate open and read functions, but the Win32 and DOS interfaces open  * the dir stream and reads the first file in one operation.  */
+comment|/*!  * \brief Return previously retrieved file or get next one.     * Unix's dirent has  * separate open and read functions, but the Win32 and DOS interfaces open  * the dir stream and reads the first file in one operation.  */
 end_comment
 
 begin_function
@@ -327,7 +412,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close directory stream.  */
+comment|/*!  * \brief Close directory stream.  */
 end_comment
 
 begin_function
@@ -373,7 +458,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reposition directory stream at start.  */
+comment|/*!  * \brief Reposition directory stream at start.  */
 end_comment
 
 begin_function
@@ -424,7 +509,7 @@ modifier|*
 name|dirname
 parameter_list|)
 block|{
-comment|/* 	 * Change the current directory to 'dirname'. 	 */
+comment|/*! 	 * \brief Change the current directory to 'dirname'. 	 */
 name|REQUIRE
 argument_list|(
 name|dirname
@@ -532,7 +617,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * mkdtemp is not portable, so this emulates it. 	 */
+comment|/*! 	 * \brief mkdtemp is not portable, so this emulates it. 	 */
 name|pid
 operator|=
 name|getpid

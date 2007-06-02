@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: rt_21.c,v 1.37.2.1.2.5 2005/03/17 03:58:31 marka Exp $ */
+comment|/* $Id: rt_21.c,v 1.41.18.3 2005/04/27 05:01:52 sra Exp $ */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/* reviewed: Thu Mar 16 15:02:31 PST 2000 by brister */
 end_comment
 
 begin_comment
-comment|/* RFC 1183 */
+comment|/* RFC1183 */
 end_comment
 
 begin_ifndef

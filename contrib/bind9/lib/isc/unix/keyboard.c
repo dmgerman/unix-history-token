@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: keyboard.c,v 1.9.12.3 2004/03/08 09:04:56 marka Exp $ */
+comment|/* $Id: keyboard.c,v 1.11 2004/03/05 05:11:46 marka Exp $ */
 end_comment
 
 begin_include

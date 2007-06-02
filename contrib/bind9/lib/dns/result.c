@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: result.c,v 1.90.2.9.2.13 2004/05/14 05:06:39 marka Exp $ */
+comment|/* $Id: result.c,v 1.115.10.7 2005/06/17 02:04:31 marka Exp $ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 begin_include
@@ -50,310 +54,316 @@ init|=
 block|{
 literal|"label too long"
 block|,
-comment|/*  0 DNS_R_LABELTOOLONG	     */
+comment|/*%< 0 DNS_R_LABELTOOLONG */
 literal|"bad escape"
 block|,
-comment|/*  1 DNS_R_BADESCAPE	     */
-comment|/* 	 * Note that DNS_R_BADBITSTRING and DNS_R_BITSTRINGTOOLONG are 	 * deprecated. 	 */
+comment|/*%< 1 DNS_R_BADESCAPE */
+comment|/*! 	 * Note that DNS_R_BADBITSTRING and DNS_R_BITSTRINGTOOLONG are 	 * deprecated. 	 */
 literal|"bad bitstring"
 block|,
-comment|/*  2 DNS_R_BADBITSTRING	     */
+comment|/*%< 2 DNS_R_BADBITSTRING */
 literal|"bitstring too long"
 block|,
-comment|/*  3 DNS_R_BITSTRINGTOOLONG  */
+comment|/*%< 3 DNS_R_BITSTRINGTOOLONG */
 literal|"empty label"
 block|,
-comment|/*  4 DNS_R_EMPTYLABEL	     */
+comment|/*%< 4 DNS_R_EMPTYLABEL */
 literal|"bad dotted quad"
 block|,
-comment|/*  5 DNS_R_BADDOTTEDQUAD     */
+comment|/*%< 5 DNS_R_BADDOTTEDQUAD */
 literal|"invalid NS owner name (wildcard)"
 block|,
-comment|/*  6 DNS_R_INVALIDNS	     */
+comment|/*%< 6 DNS_R_INVALIDNS */
 literal|"unknown class/type"
 block|,
-comment|/*  7 DNS_R_UNKNOWN	     */
+comment|/*%< 7 DNS_R_UNKNOWN */
 literal|"bad label type"
 block|,
-comment|/*  8 DNS_R_BADLABELTYPE	     */
+comment|/*%< 8 DNS_R_BADLABELTYPE */
 literal|"bad compression pointer"
 block|,
-comment|/*  9 DNS_R_BADPOINTER	     */
+comment|/*%< 9 DNS_R_BADPOINTER */
 literal|"too many hops"
 block|,
-comment|/* 10 DNS_R_TOOMANYHOPS	     */
+comment|/*%< 10 DNS_R_TOOMANYHOPS */
 literal|"disallowed (by application policy)"
 block|,
-comment|/* 11 DNS_R_DISALLOWED	     */
+comment|/*%< 11 DNS_R_DISALLOWED */
 literal|"extra input text"
 block|,
-comment|/* 12 DNS_R_EXTRATOKEN	     */
+comment|/*%< 12 DNS_R_EXTRATOKEN */
 literal|"extra input data"
 block|,
-comment|/* 13 DNS_R_EXTRADATA	     */
+comment|/*%< 13 DNS_R_EXTRADATA */
 literal|"text too long"
 block|,
-comment|/* 14 DNS_R_TEXTTOOLONG	     */
+comment|/*%< 14 DNS_R_TEXTTOOLONG */
 literal|"not at top of zone"
 block|,
-comment|/* 15 DNS_R_NOTZONETOP	     */
+comment|/*%< 15 DNS_R_NOTZONETOP */
 literal|"syntax error"
 block|,
-comment|/* 16 DNS_R_SYNTAX	     */
+comment|/*%< 16 DNS_R_SYNTAX */
 literal|"bad checksum"
 block|,
-comment|/* 17 DNS_R_BADCKSUM	     */
+comment|/*%< 17 DNS_R_BADCKSUM */
 literal|"bad IPv6 address"
 block|,
-comment|/* 18 DNS_R_BADAAAA	     */
+comment|/*%< 18 DNS_R_BADAAAA */
 literal|"no owner"
 block|,
-comment|/* 19 DNS_R_NOOWNER	     */
+comment|/*%< 19 DNS_R_NOOWNER */
 literal|"no ttl"
 block|,
-comment|/* 20 DNS_R_NOTTL	     */
+comment|/*%< 20 DNS_R_NOTTL */
 literal|"bad class"
 block|,
-comment|/* 21 DNS_R_BADCLASS	     */
+comment|/*%< 21 DNS_R_BADCLASS */
 literal|"name too long"
 block|,
-comment|/* 22 DNS_R_NAMETOOLONG	     */
+comment|/*%< 22 DNS_R_NAMETOOLONG */
 literal|"partial match"
 block|,
-comment|/* 23 DNS_R_PARTIALMATCH	     */
+comment|/*%< 23 DNS_R_PARTIALMATCH */
 literal|"new origin"
 block|,
-comment|/* 24 DNS_R_NEWORIGIN	     */
+comment|/*%< 24 DNS_R_NEWORIGIN */
 literal|"unchanged"
 block|,
-comment|/* 25 DNS_R_UNCHANGED	     */
+comment|/*%< 25 DNS_R_UNCHANGED */
 literal|"bad ttl"
 block|,
-comment|/* 26 DNS_R_BADTTL	     */
+comment|/*%< 26 DNS_R_BADTTL */
 literal|"more data needed/to be rendered"
 block|,
-comment|/* 27 DNS_R_NOREDATA	     */
+comment|/*%< 27 DNS_R_NOREDATA */
 literal|"continue"
 block|,
-comment|/* 28 DNS_R_CONTINUE	     */
+comment|/*%< 28 DNS_R_CONTINUE */
 literal|"delegation"
 block|,
-comment|/* 29 DNS_R_DELEGATION	     */
+comment|/*%< 29 DNS_R_DELEGATION */
 literal|"glue"
 block|,
-comment|/* 30 DNS_R_GLUE		     */
+comment|/*%< 30 DNS_R_GLUE */
 literal|"dname"
 block|,
-comment|/* 31 DNS_R_DNAME	     */
+comment|/*%< 31 DNS_R_DNAME */
 literal|"cname"
 block|,
-comment|/* 32 DNS_R_CNAME	     */
+comment|/*%< 32 DNS_R_CNAME */
 literal|"bad database"
 block|,
-comment|/* 33 DNS_R_BADDB	     */
+comment|/*%< 33 DNS_R_BADDB */
 literal|"zonecut"
 block|,
-comment|/* 34 DNS_R_ZONECUT	     */
+comment|/*%< 34 DNS_R_ZONECUT */
 literal|"bad zone"
 block|,
-comment|/* 35 DNS_R_BADZONE	     */
+comment|/*%< 35 DNS_R_BADZONE */
 literal|"more data"
 block|,
-comment|/* 36 DNS_R_MOREDATA	     */
+comment|/*%< 36 DNS_R_MOREDATA */
 literal|"up to date"
 block|,
-comment|/* 37 DNS_R_UPTODATE	     */
+comment|/*%< 37 DNS_R_UPTODATE */
 literal|"tsig verify failure"
 block|,
-comment|/* 38 DNS_R_TSIGVERIFYFAILURE */
+comment|/*%< 38 DNS_R_TSIGVERIFYFAILURE */
 literal|"tsig indicates error"
 block|,
-comment|/* 39 DNS_R_TSIGERRORSET	     */
+comment|/*%< 39 DNS_R_TSIGERRORSET */
 literal|"RRSIG failed to verify"
 block|,
-comment|/* 40 DNS_R_SIGINVALID	     */
+comment|/*%< 40 DNS_R_SIGINVALID */
 literal|"RRSIG has expired"
 block|,
-comment|/* 41 DNS_R_SIGEXPIRED	     */
+comment|/*%< 41 DNS_R_SIGEXPIRED */
 literal|"RRSIG validity period has not begun"
 block|,
-comment|/* 42 DNS_R_SIGFUTURE	     */
+comment|/*%< 42 DNS_R_SIGFUTURE */
 literal|"key is unauthorized to sign data"
 block|,
-comment|/* 43 DNS_R_KEYUNAUTHORIZED   */
+comment|/*%< 43 DNS_R_KEYUNAUTHORIZED */
 literal|"invalid time"
 block|,
-comment|/* 44 DNS_R_INVALIDTIME	     */
+comment|/*%< 44 DNS_R_INVALIDTIME */
 literal|"expected a TSIG or SIG(0)"
 block|,
-comment|/* 45 DNS_R_EXPECTEDTSIG	     */
+comment|/*%< 45 DNS_R_EXPECTEDTSIG */
 literal|"did not expect a TSIG or SIG(0)"
 block|,
-comment|/* 46 DNS_R_UNEXPECTEDTSIG    */
+comment|/*%< 46 DNS_R_UNEXPECTEDTSIG */
 literal|"TKEY is unacceptable"
 block|,
-comment|/* 47 DNS_R_INVALIDTKEY	     */
+comment|/*%< 47 DNS_R_INVALIDTKEY */
 literal|"hint"
 block|,
-comment|/* 48 DNS_R_HINT		     */
+comment|/*%< 48 DNS_R_HINT */
 literal|"drop"
 block|,
-comment|/* 49 DNS_R_DROP		     */
+comment|/*%< 49 DNS_R_DROP */
 literal|"zone not loaded"
 block|,
-comment|/* 50 DNS_R_NOTLOADED	     */
+comment|/*%< 50 DNS_R_NOTLOADED */
 literal|"ncache nxdomain"
 block|,
-comment|/* 51 DNS_R_NCACHENXDOMAIN    */
+comment|/*%< 51 DNS_R_NCACHENXDOMAIN */
 literal|"ncache nxrrset"
 block|,
-comment|/* 52 DNS_R_NCACHENXRRSET     */
+comment|/*%< 52 DNS_R_NCACHENXRRSET */
 literal|"wait"
 block|,
-comment|/* 53 DNS_R_WAIT		     */
+comment|/*%< 53 DNS_R_WAIT */
 literal|"not verified yet"
 block|,
-comment|/* 54 DNS_R_NOTVERIFIEDYET    */
+comment|/*%< 54 DNS_R_NOTVERIFIEDYET */
 literal|"no identity"
 block|,
-comment|/* 55 DNS_R_NOIDENTITY	     */
+comment|/*%< 55 DNS_R_NOIDENTITY */
 literal|"no journal"
 block|,
-comment|/* 56 DNS_R_NOJOURNAL	     */
+comment|/*%< 56 DNS_R_NOJOURNAL */
 literal|"alias"
 block|,
-comment|/* 57 DNS_R_ALIAS	     */
+comment|/*%< 57 DNS_R_ALIAS */
 literal|"use TCP"
 block|,
-comment|/* 58 DNS_R_USETCP	     */
+comment|/*%< 58 DNS_R_USETCP */
 literal|"no valid RRSIG"
 block|,
-comment|/* 59 DNS_R_NOVALIDSIG	     */
+comment|/*%< 59 DNS_R_NOVALIDSIG */
 literal|"no valid NSEC"
 block|,
-comment|/* 60 DNS_R_NOVALIDNSEC	     */
+comment|/*%< 60 DNS_R_NOVALIDNSEC */
 literal|"not insecure"
 block|,
-comment|/* 61 DNS_R_NOTINSECURE	     */
+comment|/*%< 61 DNS_R_NOTINSECURE */
 literal|"unknown service"
 block|,
-comment|/* 62 DNS_R_UNKNOWNSERVICE    */
+comment|/*%< 62 DNS_R_UNKNOWNSERVICE */
 literal|"recoverable error occurred"
 block|,
-comment|/* 63 DNS_R_RECOVERABLE       */
+comment|/*%< 63 DNS_R_RECOVERABLE */
 literal|"unknown opt attribute record"
 block|,
-comment|/* 64 DNS_R_UNKNOWNOPT	     */
+comment|/*%< 64 DNS_R_UNKNOWNOPT */
 literal|"unexpected message id"
 block|,
-comment|/* 65 DNS_R_UNEXPECTEDID      */
+comment|/*%< 65 DNS_R_UNEXPECTEDID */
 literal|"seen include file"
 block|,
-comment|/* 66 DNS_R_SEENINCLUDE       */
+comment|/*%< 66 DNS_R_SEENINCLUDE */
 literal|"not exact"
 block|,
-comment|/* 67 DNS_R_NOTEXACT	     */
+comment|/*%< 67 DNS_R_NOTEXACT */
 literal|"address blackholed"
 block|,
-comment|/* 68 DNS_R_BLACKHOLED	     */
+comment|/*%< 68 DNS_R_BLACKHOLED */
 literal|"bad algorithm"
 block|,
-comment|/* 69 DNS_R_BADALG	     */
+comment|/*%< 69 DNS_R_BADALG */
 literal|"invalid use of a meta type"
 block|,
-comment|/* 70 DNS_R_METATYPE	     */
+comment|/*%< 70 DNS_R_METATYPE */
 literal|"CNAME and other data"
 block|,
-comment|/* 71 DNS_R_CNAMEANDOTHER     */
+comment|/*%< 71 DNS_R_CNAMEANDOTHER */
 literal|"multiple RRs of singleton type"
 block|,
-comment|/* 72 DNS_R_SINGLETON	     */
+comment|/*%< 72 DNS_R_SINGLETON */
 literal|"hint nxrrset"
 block|,
-comment|/* 73 DNS_R_HINTNXRRSET	     */
+comment|/*%< 73 DNS_R_HINTNXRRSET */
 literal|"no master file configured"
 block|,
-comment|/* 74 DNS_R_NOMASTERFILE	     */
+comment|/*%< 74 DNS_R_NOMASTERFILE */
 literal|"unknown protocol"
 block|,
-comment|/* 75 DNS_R_UNKNOWNPROTO	     */
+comment|/*%< 75 DNS_R_UNKNOWNPROTO */
 literal|"clocks are unsynchronized"
 block|,
-comment|/* 76 DNS_R_CLOCKSKEW	     */
+comment|/*%< 76 DNS_R_CLOCKSKEW */
 literal|"IXFR failed"
 block|,
-comment|/* 77 DNS_R_BADIXFR	     */
+comment|/*%< 77 DNS_R_BADIXFR */
 literal|"not authoritative"
 block|,
-comment|/* 78 DNS_R_NOTAUTHORITATIVE  */
+comment|/*%< 78 DNS_R_NOTAUTHORITATIVE */
 literal|"no valid KEY"
 block|,
-comment|/* 79 DNS_R_NOVALIDKEY	     */
+comment|/*%< 79 DNS_R_NOVALIDKEY */
 literal|"obsolete"
 block|,
-comment|/* 80 DNS_R_OBSOLETE	     */
+comment|/*%< 80 DNS_R_OBSOLETE */
 literal|"already frozen"
 block|,
-comment|/* 81 DNS_R_FROZEN	     */
+comment|/*%< 81 DNS_R_FROZEN */
 literal|"unknown flag"
 block|,
-comment|/* 82 DNS_R_UNKNOWNFLAG	     */
+comment|/*%< 82 DNS_R_UNKNOWNFLAG */
 literal|"expected a response"
 block|,
-comment|/* 83 DNS_R_EXPECTEDRESPONSE  */
+comment|/*%< 83 DNS_R_EXPECTEDRESPONSE */
 literal|"no valid DS"
 block|,
-comment|/* 84 DNS_R_NOVALIDDS	     */
+comment|/*%< 84 DNS_R_NOVALIDDS */
 literal|"NS is an address"
 block|,
-comment|/* 85 DNS_R_NSISADDRESS	     */
+comment|/*%< 85 DNS_R_NSISADDRESS */
 literal|"received FORMERR"
 block|,
-comment|/* 86 DNS_R_REMOTEFORMERR     */
+comment|/*%< 86 DNS_R_REMOTEFORMERR */
 literal|"truncated TCP response"
 block|,
-comment|/* 87 DNS_R_TRUNCATEDTCP	     */
+comment|/*%< 87 DNS_R_TRUNCATEDTCP */
 literal|"lame server detected"
 block|,
-comment|/* 88 DNS_R_LAME		     */
+comment|/*%< 88 DNS_R_LAME */
 literal|"unexpected RCODE"
 block|,
-comment|/* 89 DNS_R_UNEXPECTEDRCODE   */
+comment|/*%< 89 DNS_R_UNEXPECTEDRCODE */
 literal|"unexpected OPCODE"
 block|,
-comment|/* 90 DNS_R_UNEXPECTEDOPCODE  */
+comment|/*%< 90 DNS_R_UNEXPECTEDOPCODE */
 literal|"chase DS servers"
 block|,
-comment|/* 91 DNS_R_CHASEDSSERVERS    */
+comment|/*%< 91 DNS_R_CHASEDSSERVERS */
 literal|"empty name"
 block|,
-comment|/* 92 DNS_R_EMPTYNAME	     */
+comment|/*%< 92 DNS_R_EMPTYNAME */
 literal|"empty wild"
 block|,
-comment|/* 93 DNS_R_EMPTYWILD	     */
+comment|/*%< 93 DNS_R_EMPTYWILD */
 literal|"bad bitmap"
 block|,
-comment|/* 94 DNS_R_BADBITMAP	     */
+comment|/*%< 94 DNS_R_BADBITMAP */
 literal|"from wildcard"
 block|,
-comment|/* 95 DNS_R_FROMWILDCARD	     */
+comment|/*%< 95 DNS_R_FROMWILDCARD */
 literal|"bad owner name (check-names)"
 block|,
-comment|/* 96 DNS_R_BADOWNERNAME	     */
+comment|/*%< 96 DNS_R_BADOWNERNAME */
 literal|"bad name (check-names)"
 block|,
-comment|/* 97 DNS_R_BADNAME	     */
+comment|/*%< 97 DNS_R_BADNAME */
 literal|"dynamic zone"
 block|,
-comment|/* 98 DNS_R_DYNAMIC	     */
+comment|/*%< 98 DNS_R_DYNAMIC */
 literal|"unknown command"
 block|,
-comment|/* 99 DNS_R_UNKNOWNCOMMAND    */
+comment|/*%< 99 DNS_R_UNKNOWNCOMMAND */
 literal|"must-be-secure"
 block|,
-comment|/* 100 DNS_R_MUSTBESECURE     */
+comment|/*%< 100 DNS_R_MUSTBESECURE */
 literal|"covering NSEC record returned"
-comment|/* 101 DNS_R_COVERINGNSEC     */
+block|,
+comment|/*%< 101 DNS_R_COVERINGNSEC */
+literal|"MX is an address"
+block|,
+comment|/*%< 102 DNS_R_MXISADDRESS */
+literal|"duplicate query"
+comment|/*%< 103 DNS_R_DUPLICATE */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -371,55 +381,55 @@ init|=
 block|{
 literal|"NOERROR"
 block|,
-comment|/*  0 DNS_R_NOEROR	     */
+comment|/*%< 0 DNS_R_NOEROR */
 literal|"FORMERR"
 block|,
-comment|/*  1 DNS_R_FORMERR	     */
+comment|/*%< 1 DNS_R_FORMERR */
 literal|"SERVFAIL"
 block|,
-comment|/*  2 DNS_R_SERVFAIL	     */
+comment|/*%< 2 DNS_R_SERVFAIL */
 literal|"NXDOMAIN"
 block|,
-comment|/*  3 DNS_R_NXDOMAIN	     */
+comment|/*%< 3 DNS_R_NXDOMAIN */
 literal|"NOTIMP"
 block|,
-comment|/*  4 DNS_R_NOTIMP	     */
+comment|/*%< 4 DNS_R_NOTIMP */
 literal|"REFUSED"
 block|,
-comment|/*  5 DNS_R_REFUSED	     */
+comment|/*%< 5 DNS_R_REFUSED */
 literal|"YXDOMAIN"
 block|,
-comment|/*  6 DNS_R_YXDOMAIN	     */
+comment|/*%< 6 DNS_R_YXDOMAIN */
 literal|"YXRRSET"
 block|,
-comment|/*  7 DNS_R_YXRRSET	     */
+comment|/*%< 7 DNS_R_YXRRSET */
 literal|"NXRRSET"
 block|,
-comment|/*  8 DNS_R_NXRRSET	     */
+comment|/*%< 8 DNS_R_NXRRSET */
 literal|"NOTAUTH"
 block|,
-comment|/*  9 DNS_R_NOTAUTH	     */
+comment|/*%< 9 DNS_R_NOTAUTH */
 literal|"NOTZONE"
 block|,
-comment|/* 10 DNS_R_NOTZONE 	     */
+comment|/*%< 10 DNS_R_NOTZONE */
 literal|"<rcode 11>"
 block|,
-comment|/* 11 has no macro	     */
+comment|/*%< 11 has no macro */
 literal|"<rcode 12>"
 block|,
-comment|/* 12 has no macro	     */
+comment|/*%< 12 has no macro */
 literal|"<rcode 13>"
 block|,
-comment|/* 13 has no macro	     */
+comment|/*%< 13 has no macro */
 literal|"<rcode 14>"
 block|,
-comment|/* 14 has no macro	     */
+comment|/*%< 14 has no macro */
 literal|"<rcode 15>"
 block|,
-comment|/* 15 has no macro	     */
+comment|/*%< 15 has no macro */
 literal|"BADVERS"
 block|,
-comment|/* 16 DNS_R_BADVERS	     */
+comment|/*%< 16 DNS_R_BADVERS */
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: sha1.c,v 1.10.2.2.2.3 2004/03/06 08:14:35 marka Exp $ */
+comment|/* $Id: sha1.c,v 1.14.18.2 2005/04/29 00:16:49 marka Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|/*	$OpenBSD: sha1.c,v 1.9 1997/07/23 21:12:32 kstailey Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * SHA-1 in C  * By Steve Reid<steve@edmweb.com>  * 100% Public Domain  *  * Test Vectors (from FIPS PUB 180-1)  * "abc"  *   A9993E36 4706816A BA3E2571 7850C26C 9CD0D89D  * "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"  *   84983E44 1C3BD26E BAAE4AA1 F95129E5 E54670F1  * A million repetitions of "a"  *   34AA973C D4C4DAA4 F61EEB2B DBAD2731 6534016F  */
+comment|/*! \file  * SHA-1 in C  * \author By Steve Reid<steve@edmweb.com>  * 100% Public Domain  * \verbatim  * Test Vectors (from FIPS PUB 180-1)  * "abc"  *   A9993E36 4706816A BA3E2571 7850C26C 9CD0D89D  * "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"  *   84983E44 1C3BD26E BAAE4AA1 F95129E5 E54670F1  * A million repetitions of "a"  *   34AA973C D4C4DAA4 F61EEB2B DBAD2731 6534016F  * \endverbatim  */
 end_comment
 
 begin_include
@@ -68,7 +68,11 @@ value|(((value)<< (bits)) | ((value)>> (32 - (bits))))
 end_define
 
 begin_comment
-comment|/*  * blk0() and blk() perform the initial expand.  * I got the idea of expanding during the round function from SSLeay  */
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * blk0() and blk() perform the initial expand.  * I got the idea of expanding during the round function from SSLeay  */
 end_comment
 
 begin_if
@@ -124,7 +128,15 @@ value|(block->l[i& 15] = rol(block->l[(i + 13)& 15] \ 				^ block->l[(i + 8)& 15
 end_define
 
 begin_comment
-comment|/*  * (R0+R1), R2, R3, R4 are the different operations (rounds) used in SHA1  */
+comment|/*@}*/
+end_comment
+
+begin_comment
+comment|/*@{*/
+end_comment
+
+begin_comment
+comment|/*!  * (R0+R1), R2, R3, R4 are the different operations (rounds) used in SHA1  */
 end_comment
 
 begin_define
@@ -231,6 +243,10 @@ parameter_list|)
 define|\
 value|z += (w ^ x ^ y) + blk(i) + 0xCA62C1D6 + rol(v, 5); \ 	w = rol(w, 30);
 end_define
+
+begin_comment
+comment|/*@}*/
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -1823,7 +1839,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Hash a single 512-bit block. This is the core of the algorithm.  */
+comment|/*!  * Hash a single 512-bit block. This is the core of the algorithm.  */
 end_comment
 
 begin_function
@@ -3272,7 +3288,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * isc_sha1_init - Initialize new context  */
+comment|/*!  * isc_sha1_init - Initialize new context  */
 end_comment
 
 begin_function
@@ -3383,7 +3399,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Run your data through this.  */
+comment|/*!  * Run your data through this.  */
 end_comment
 
 begin_function
@@ -3588,7 +3604,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add padding and return the message digest.  */
+comment|/*!  * Add padding and return the message digest.  */
 end_comment
 
 begin_decl_stmt

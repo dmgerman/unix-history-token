@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 2000-2002  Internet Software Consortium.  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 2000-2002  Internet Software Consortium.  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dst_internal.h,v 1.1.4.1 2004/12/09 04:07:16 marka Exp $ */
+comment|/* $Id: dst_internal.h,v 1.1.6.5 2006/01/27 23:57:44 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -105,6 +105,10 @@ name|dst_func_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*% DST Key Structure */
+end_comment
+
 begin_struct
 struct|struct
 name|dst_key
@@ -117,49 +121,53 @@ name|dns_name_t
 modifier|*
 name|key_name
 decl_stmt|;
-comment|/* name of the key */
+comment|/*%< name of the key */
 name|unsigned
 name|int
 name|key_size
 decl_stmt|;
-comment|/* size of the key in bits */
+comment|/*%< size of the key in bits */
 name|unsigned
 name|int
 name|key_proto
 decl_stmt|;
-comment|/* protocols this key is used for */
+comment|/*%< protocols this key is used for */
 name|unsigned
 name|int
 name|key_alg
 decl_stmt|;
-comment|/* algorithm of the key */
+comment|/*%< algorithm of the key */
 name|isc_uint32_t
 name|key_flags
 decl_stmt|;
-comment|/* flags of the public key */
+comment|/*%< flags of the public key */
 name|isc_uint16_t
 name|key_id
 decl_stmt|;
-comment|/* identifier of the key */
+comment|/*%< identifier of the key */
+name|isc_uint16_t
+name|key_bits
+decl_stmt|;
+comment|/*%< hmac digest bits */
 name|dns_rdataclass_t
 name|key_class
 decl_stmt|;
-comment|/* class of the key record */
+comment|/*%< class of the key record */
 name|isc_mem_t
 modifier|*
 name|mctx
 decl_stmt|;
-comment|/* memory context */
+comment|/*%< memory context */
 name|void
 modifier|*
 name|opaque
 decl_stmt|;
-comment|/* pointer to key in crypto pkg fmt */
+comment|/*%< pointer to key in crypto pkg fmt */
 name|dst_func_t
 modifier|*
 name|func
 decl_stmt|;
-comment|/* crypto package specific functions */
+comment|/*%< crypto package specific functions */
 block|}
 struct|;
 end_struct
@@ -438,7 +446,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Initializers  */
+comment|/*%  * Initializers  */
 end_comment
 
 begin_function_decl
@@ -453,6 +461,71 @@ end_function_decl
 begin_function_decl
 name|isc_result_t
 name|dst__hmacmd5_init
+parameter_list|(
+name|struct
+name|dst_func
+modifier|*
+modifier|*
+name|funcp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|dst__hmacsha1_init
+parameter_list|(
+name|struct
+name|dst_func
+modifier|*
+modifier|*
+name|funcp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|dst__hmacsha224_init
+parameter_list|(
+name|struct
+name|dst_func
+modifier|*
+modifier|*
+name|funcp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|dst__hmacsha256_init
+parameter_list|(
+name|struct
+name|dst_func
+modifier|*
+modifier|*
+name|funcp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|dst__hmacsha384_init
+parameter_list|(
+name|struct
+name|dst_func
+modifier|*
+modifier|*
+name|funcp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|dst__hmacsha512_init
 parameter_list|(
 name|struct
 name|dst_func
@@ -516,7 +589,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destructors  */
+comment|/*%  * Destructors  */
 end_comment
 
 begin_function_decl
@@ -529,7 +602,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Memory allocators using the DST memory pool.  */
+comment|/*%  * Memory allocators using the DST memory pool.  */
 end_comment
 
 begin_function_decl
@@ -570,7 +643,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Entropy retriever using the DST entropy pool.  */
+comment|/*%  * Entropy retriever using the DST entropy pool.  */
 end_comment
 
 begin_function_decl
@@ -602,6 +675,10 @@ end_endif
 
 begin_comment
 comment|/* DST_DST_INTERNAL_H */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

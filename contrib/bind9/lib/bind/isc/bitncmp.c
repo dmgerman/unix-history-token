@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: bitncmp.c,v 1.1.206.1 2004/03/09 08:33:39 marka Exp $"
+literal|"$Id: bitncmp.c,v 1.2.18.1 2005/04/27 05:01:05 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ file|<isc/misc.h>
 end_include
 
 begin_comment
-comment|/*  * int  * bitncmp(l, r, n)  *	compare bit masks l and r, for n bits.  * return:  *	-1, 1, or 0 in the libc tradition.  * note:  *	network byte order assumed.  this means 192.5.5.240/28 has  *	0x11110000 in its fourth octet.  * author:  *	Paul Vixie (ISC), June 1996  */
+comment|/*%  * int  * bitncmp(l, r, n)  *	compare bit masks l and r, for n bits.  * return:  *	-1, 1, or 0 in the libc tradition.  * note:  *	network byte order assumed.  this means 192.5.5.240/28 has  *	0x11110000 in its fourth octet.  * author:  *	Paul Vixie (ISC), June 1996  */
 end_comment
 
 begin_function
@@ -215,6 +215,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

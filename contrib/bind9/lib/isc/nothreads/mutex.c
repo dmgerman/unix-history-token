@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: mutex.c,v 1.4.12.5 2006/08/25 05:25:50 marka Exp $ */
+comment|/* $Id: mutex.c,v 1.6.18.2 2006/08/25 05:25:51 marka Exp $ */
 end_comment
 
 begin_include

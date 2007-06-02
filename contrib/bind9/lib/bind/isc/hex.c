@@ -98,7 +98,7 @@ name|x
 operator|=
 literal|0
 expr_stmt|;
-comment|/* silence compiler */
+comment|/*%< silence compiler */
 name|n
 operator|=
 literal|0
@@ -555,6 +555,10 @@ literal|'\0'
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

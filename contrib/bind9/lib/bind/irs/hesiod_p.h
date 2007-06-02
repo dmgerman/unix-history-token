@@ -4,15 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * This file is primarily maintained by<tytso@mit.edu> and<ghudson@mit.edu>.  */
-end_comment
-
-begin_comment
-comment|/*  * $Id: hesiod_p.h,v 1.1.206.1 2004/03/09 08:33:36 marka Exp $  */
-end_comment
-
-begin_comment
-comment|/*  * hesiod_p.h -- private definitions for the hesiod library  */
+comment|/*  * $Id: hesiod_p.h,v 1.2.18.1 2005/04/27 05:00:59 sra Exp $  */
 end_comment
 
 begin_ifndef
@@ -27,6 +19,10 @@ directive|define
 name|_HESIOD_P_H_INCLUDED
 end_define
 
+begin_comment
+comment|/** \file  * \brief  * hesiod_p.h -- private definitions for the hesiod library.  *  * \author  * This file is primarily maintained by tytso@mit.edu and ghudson@mit.edu.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -35,7 +31,7 @@ value|".Athena.MIT.EDU"
 end_define
 
 begin_comment
-comment|/* Defaults if HESIOD_CONF */
+comment|/*%< Defaults if HESIOD_CONF */
 end_comment
 
 begin_define
@@ -46,11 +42,11 @@ value|".ns"
 end_define
 
 begin_comment
-comment|/*    file is not */
+comment|/*%<    file is not */
 end_comment
 
 begin_comment
-comment|/*    present. */
+comment|/*%<    present. */
 end_comment
 
 begin_struct
@@ -61,18 +57,18 @@ name|char
 modifier|*
 name|LHS
 decl_stmt|;
-comment|/* normally ".ns" */
+comment|/*%< normally ".ns" */
 name|char
 modifier|*
 name|RHS
 decl_stmt|;
-comment|/* AKA the default hesiod domain */
+comment|/*%< AKA the default hesiod domain */
 name|struct
 name|__res_state
 modifier|*
 name|res
 decl_stmt|;
-comment|/* resolver context */
+comment|/*%< resolver context */
 name|void
 function_decl|(
 modifier|*

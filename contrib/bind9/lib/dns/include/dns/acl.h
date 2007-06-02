@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acl.h,v 1.20.52.5 2006/03/02 00:37:20 marka Exp $ */
+comment|/* $Id: acl.h,v 1.22.18.4 2006/03/02 00:37:21 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*  * Address match list handling.  */
+comment|/*! \file  * \brief  * Address match list handling.  */
 end_comment
 
 begin_comment
@@ -168,24 +168,24 @@ name|unsigned
 name|int
 name|alloc
 decl_stmt|;
-comment|/* Elements allocated */
+comment|/*%< Elements allocated */
 name|unsigned
 name|int
 name|length
 decl_stmt|;
-comment|/* Elements initialized */
+comment|/*%< Elements initialized */
 name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* Temporary use only */
+comment|/*%< Temporary use only */
 name|ISC_LINK
 argument_list|(
 argument|dns_acl_t
 argument_list|)
 name|nextincache
 expr_stmt|;
-comment|/* Ditto */
+comment|/*%< Ditto */
 block|}
 struct|;
 end_struct
@@ -251,7 +251,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a new ACL with room for 'n' elements.  * The elements are uninitialized and the length is 0.  */
+comment|/*%<  * Create a new ACL with room for 'n' elements.  * The elements are uninitialized and the length is 0.  */
 end_comment
 
 begin_function_decl
@@ -271,7 +271,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Append an element to an existing ACL.  */
+comment|/*%<  * Append an element to an existing ACL.  */
 end_comment
 
 begin_function_decl
@@ -291,7 +291,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a new ACL that matches everything.  */
+comment|/*%<  * Create a new ACL that matches everything.  */
 end_comment
 
 begin_function_decl
@@ -311,7 +311,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a new ACL that matches nothing.  */
+comment|/*%<  * Create a new ACL that matches nothing.  */
 end_comment
 
 begin_function_decl
@@ -389,7 +389,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return ISC_TRUE iff the acl 'a' is considered insecure, that is,  * if it contains IP addresses other than those of the local host.  * This is intended for applications such as printing warning   * messages for suspect ACLs; it is not intended for making access  * control decisions.  We make no guarantee that an ACL for which  * this function returns ISC_FALSE is safe.  */
+comment|/*%<  * Return #ISC_TRUE iff the acl 'a' is considered insecure, that is,  * if it contains IP addresses other than those of the local host.  * This is intended for applications such as printing warning   * messages for suspect ACLs; it is not intended for making access  * control decisions.  We make no guarantee that an ACL for which  * this function returns #ISC_FALSE is safe.  */
 end_comment
 
 begin_function_decl
@@ -471,7 +471,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * General, low-level ACL matching.  This is expected to  * be useful even for weird stuff like the topology and sortlist statements.  *  * Match the address 'reqaddr', and optionally the key name 'reqsigner',  * against 'acl'.  'reqsigner' may be NULL.  *  * If there is a positive match, '*match' will be set to a positive value  * indicating the distance from the beginning of the list.  *  * If there is a negative match, '*match' will be set to a negative value  * whose absolute value indicates the distance from the beginning of  * the list.  *  * If there is a match (either positive or negative) and 'matchelt' is  * non-NULL, *matchelt will be attached to the primitive  * (non-indirect) address match list element that matched.  *  * If there is no match, *match will be set to zero.  *  * Returns:  *	ISC_R_SUCCESS		Always succeeds.  */
+comment|/*%<  * General, low-level ACL matching.  This is expected to  * be useful even for weird stuff like the topology and sortlist statements.  *  * Match the address 'reqaddr', and optionally the key name 'reqsigner',  * against 'acl'.  'reqsigner' may be NULL.  *  * If there is a positive match, '*match' will be set to a positive value  * indicating the distance from the beginning of the list.  *  * If there is a negative match, '*match' will be set to a negative value  * whose absolute value indicates the distance from the beginning of  * the list.  *  * If there is a match (either positive or negative) and 'matchelt' is  * non-NULL, *matchelt will be attached to the primitive  * (non-indirect) address match list element that matched.  *  * If there is no match, *match will be set to zero.  *  * Returns:  *\li	#ISC_R_SUCCESS		Always succeeds.  */
 end_comment
 
 begin_function_decl
@@ -508,7 +508,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Like dns_acl_match, but matches against the single ACL element 'e'  * rather than a complete list and returns ISC_TRUE iff it matched.  * To determine whether the match was prositive or negative, the   * caller should examine e->negative.  Since the element 'e' may be  * a reference to a named ACL or a nested ACL, the matching element  * returned through 'matchelt' is not necessarily 'e' itself.  */
+comment|/*%<  * Like dns_acl_match, but matches against the single ACL element 'e'  * rather than a complete list and returns ISC_TRUE iff it matched.  * To determine whether the match was prositive or negative, the   * caller should examine e->negative.  Since the element 'e' may be  * a reference to a named ACL or a nested ACL, the matching element  * returned through 'matchelt' is not necessarily 'e' itself.  */
 end_comment
 
 begin_function_decl
@@ -535,7 +535,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Search for an ACL element in 'acl' which is exactly the same as 'elt'.  * If there is one, and 'matchelt' is non NULL, then '*matchelt' will point  * to the entry.  *  * This function is intended to be used for avoiding duplicated ACL entries  * before adding an entry.  *  * Returns:  *	ISC_R_SUCCESS		Match succeeds.  *	ISC_R_NOTFOUND		Match fails.  */
+comment|/*%<  * Search for an ACL element in 'acl' which is exactly the same as 'elt'.  * If there is one, and 'matchelt' is non NULL, then '*matchelt' will point  * to the entry.  *  * This function is intended to be used for avoiding duplicated ACL entries  * before adding an entry.  *  * Returns:  *\li	#ISC_R_SUCCESS		Match succeeds.  *\li	#ISC_R_NOTFOUND		Match fails.  */
 end_comment
 
 begin_macro

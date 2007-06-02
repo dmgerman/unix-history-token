@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -17,7 +17,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: sha1.h,v 1.8.206.1 2004/03/06 08:14:48 marka Exp $ */
+comment|/* $Id: sha1.h,v 1.9.18.5 2006/08/16 03:18:14 marka Exp $ */
 end_comment
 
 begin_comment
@@ -25,7 +25,7 @@ comment|/*	$NetBSD: sha1.h,v 1.2 1998/05/29 22:55:44 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * SHA-1 in C  * By Steve Reid<steve@edmweb.com>  * 100% Public Domain  */
+comment|/*! \file  * \brief SHA-1 in C  * \author By Steve Reid<steve@edmweb.com>  * \note 100% Public Domain  */
 end_comment
 
 begin_include
@@ -44,7 +44,14 @@ begin_define
 define|#
 directive|define
 name|ISC_SHA1_DIGESTLENGTH
-value|20
+value|20U
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISC_SHA1_BLOCK_LENGTH
+value|64U
 end_define
 
 begin_typedef
@@ -67,7 +74,7 @@ name|unsigned
 name|char
 name|buffer
 index|[
-literal|64
+name|ISC_SHA1_BLOCK_LENGTH
 index|]
 decl_stmt|;
 block|}

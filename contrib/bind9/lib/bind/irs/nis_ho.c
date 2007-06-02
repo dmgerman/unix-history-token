@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nis_ho.c,v 1.2.2.1.4.1 2004/03/09 08:33:38 marka Exp $"
+literal|"$Id: nis_ho.c,v 1.4.18.1 2005/04/27 05:01:03 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -330,7 +330,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* IPv4 or IPv6 */
+comment|/*%< IPv4 or IPv6 */
 name|struct
 name|__res_state
 modifier|*
@@ -2398,7 +2398,7 @@ block|{
 case|case
 name|AF_UNSPEC
 case|:
-comment|/* INET6 then INET4 */
+comment|/*%< INET6 then INET4 */
 name|q
 operator|.
 name|family
@@ -2449,7 +2449,7 @@ argument_list|,
 name|NO_RECOVERY
 argument_list|)
 expr_stmt|;
-comment|/* ??? */
+comment|/*%< ??? */
 return|return
 operator|(
 name|NULL
@@ -2617,7 +2617,7 @@ comment|/* Private */
 end_comment
 
 begin_comment
-comment|/* ipnodes: ::1             localhost 127.0.0.1       localhost 1.2.3.4         FOO bar 1.2.6.4         FOO bar 1.2.6.5         host  ipnodes.byname: YP_MULTI_localhost ::1,127.0.0.1        localhost YP_MULTI_foo 1.2.3.4,1.2.6.4    FOO bar YP_MULTI_bar 1.2.3.4,1.2.6.4    FOO bar host 1.2.6.5    host  hosts.byname: localhost 127.0.0.1     localhost host 1.2.6.5    host YP_MULTI_foo 1.2.3.4,1.2.6.4    FOO bar YP_MULTI_bar 1.2.3.4,1.2.6.4    FOO bar */
+comment|/*% ipnodes: ::1             localhost 127.0.0.1       localhost 1.2.3.4         FOO bar 1.2.6.4         FOO bar 1.2.6.5         host  ipnodes.byname: YP_MULTI_localhost ::1,127.0.0.1        localhost YP_MULTI_foo 1.2.3.4,1.2.6.4    FOO bar YP_MULTI_bar 1.2.3.4,1.2.6.4    FOO bar host 1.2.6.5    host  hosts.byname: localhost 127.0.0.1     localhost host 1.2.6.5    host YP_MULTI_foo 1.2.3.4,1.2.6.4    FOO bar YP_MULTI_bar 1.2.3.4,1.2.6.4    FOO bar */
 end_comment
 
 begin_function
@@ -3294,6 +3294,10 @@ end_endif
 
 begin_comment
 comment|/*WANT_IRS_NIS*/
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

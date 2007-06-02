@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: eventlib.c,v 1.2.2.1.4.6 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: eventlib.c,v 1.5.18.5 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,6 +307,12 @@ name|accepts
 argument_list|)
 expr_stmt|;
 comment|/* Files. */
+name|ctx
+operator|->
+name|files
+operator|=
+name|NULL
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_POLL
@@ -408,12 +414,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* USE_POLL */
-name|ctx
-operator|->
-name|files
-operator|=
-name|NULL
-expr_stmt|;
 name|FD_ZERO
 argument_list|(
 operator|&
@@ -465,7 +465,7 @@ name|fdCount
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Invalidate {rd,wr,ex}Last. */
+comment|/*%< Invalidate {rd,wr,ex}Last. */
 ifndef|#
 directive|ifndef
 name|USE_POLL
@@ -513,6 +513,7 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* USE_POLL */
 ifdef|#
 directive|ifdef
 name|EVENTLIB_TIME_CHECKS
@@ -695,7 +696,7 @@ name|revs
 init|=
 literal|424242
 decl_stmt|;
-comment|/* Doug Adams. */
+comment|/*%< Doug Adams. */
 name|evWaitList
 modifier|*
 name|this_wl
@@ -1316,7 +1317,7 @@ name|timerPast
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Make gcc happy. */
+comment|/*%< Make gcc happy. */
 name|evPrintf
 argument_list|(
 name|ctx

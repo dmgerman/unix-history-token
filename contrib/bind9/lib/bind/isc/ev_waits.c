@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_waits.c,v 1.1.2.1.4.1 2004/03/09 08:33:43 marka Exp $"
+literal|"$Id: ev_waits.c,v 1.3.18.1 2005/04/27 05:01:06 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,7 +146,7 @@ comment|/* Public. */
 end_comment
 
 begin_comment
-comment|/*  * Enter a new wait function on the queue.  */
+comment|/*%  * Enter a new wait function on the queue.  */
 end_comment
 
 begin_function
@@ -290,7 +290,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mark runnable all waiting functions having a certain tag.  */
+comment|/*%  * Mark runnable all waiting functions having a certain tag.  */
 end_comment
 
 begin_function
@@ -416,7 +416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove a waiting (or ready to run) function from the queue.  */
+comment|/*%  * Remove a waiting (or ready to run) function from the queue.  */
 end_comment
 
 begin_function
@@ -1246,6 +1246,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

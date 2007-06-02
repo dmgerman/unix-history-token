@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_verify.c,v 1.1.206.3 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: ns_verify.c,v 1.2.18.3 2006/03/10 00:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -441,7 +441,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ns_verify  * Parameters:  *	statp		res stuff  *	msg		received message  *	msglen		length of message  *	key		tsig key used for verifying.  *	querysig	(response), the signature in the query  *	querysiglen	(response), the length of the signature in the query  *	sig		(query), a buffer to hold the signature  *	siglen		(query), input - length of signature buffer  *				 output - length of signature  *  * Errors:  *	- bad input (-1)  *	- invalid dns message (NS_TSIG_ERROR_FORMERR)  *	- TSIG is not present (NS_TSIG_ERROR_NO_TSIG)  *	- key doesn't match (-ns_r_badkey)  *	- TSIG verification fails with BADKEY (-ns_r_badkey)  *	- TSIG verification fails with BADSIG (-ns_r_badsig)  *	- TSIG verification fails with BADTIME (-ns_r_badtime)  *	- TSIG verification succeeds, error set to BAKEY (ns_r_badkey)  *	- TSIG verification succeeds, error set to BADSIG (ns_r_badsig)  *	- TSIG verification succeeds, error set to BADTIME (ns_r_badtime)  */
+comment|/* ns_verify  *  * Parameters:  *\li	statp		res stuff  *\li	msg		received message  *\li	msglen		length of message  *\li	key		tsig key used for verifying.  *\li	querysig	(response), the signature in the query  *\li	querysiglen	(response), the length of the signature in the query  *\li	sig		(query), a buffer to hold the signature  *\li	siglen		(query), input - length of signature buffer  *				 output - length of signature  *  * Errors:  *\li	- bad input (-1)  *\li	- invalid dns message (NS_TSIG_ERROR_FORMERR)  *\li	- TSIG is not present (NS_TSIG_ERROR_NO_TSIG)  *\li	- key doesn't match (-ns_r_badkey)  *\li	- TSIG verification fails with BADKEY (-ns_r_badkey)  *\li	- TSIG verification fails with BADSIG (-ns_r_badsig)  *\li	- TSIG verification fails with BADTIME (-ns_r_badtime)  *\li	- TSIG verification succeeds, error set to BAKEY (ns_r_badkey)  *\li	- TSIG verification succeeds, error set to BADSIG (ns_r_badsig)  *\li	- TSIG verification succeeds, error set to BADTIME (ns_r_badtime)  */
 end_comment
 
 begin_function
@@ -2281,7 +2281,7 @@ argument_list|,
 name|cp2
 argument_list|)
 expr_stmt|;
-comment|/* Top 16 bits of time. */
+comment|/*%< Top 16 bits of time. */
 name|PUTLONG
 argument_list|(
 name|timesigned
@@ -2435,6 +2435,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

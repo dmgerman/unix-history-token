@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: client.c,v 1.176.2.13.4.31 2006/07/22 01:09:38 marka Exp $ */
+comment|/* $Id: client.c,v 1.219.18.20 2006/07/22 01:02:36 marka Exp $ */
 end_comment
 
 begin_include
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<isc/once.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/platform.h>
 end_include
 
 begin_include
@@ -94,13 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dns/rcode.h>
+file|<dns/peer.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dns/resolver.h>
+file|<dns/rcode.h>
 end_include
 
 begin_include
@@ -125,6 +131,12 @@ begin_include
 include|#
 directive|include
 file|<dns/rdataset.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/resolver.h>
 end_include
 
 begin_include
@@ -180,7 +192,7 @@ comment|/***  *** Client  ***/
 end_comment
 
 begin_comment
-comment|/*  * Important note!  *  * All client state changes, other than that from idle to listening, occur  * as a result of events.  This guarantees serialization and avoids the  * need for locking.  *  * If a routine is ever created that allows someone other than the client's  * task to change the client, then the client will have to be locked.  */
+comment|/*! \file  * Client Routines  *  * Important note!  *  * All client state changes, other than that from idle to listening, occur  * as a result of events.  This guarantees serialization and avoids the  * need for locking.  *  * If a routine is ever created that allows someone other than the client's  * task to change the client, then the client will have to be locked.  */
 end_comment
 
 begin_define
@@ -276,6 +288,48 @@ name|RECV_BUFFER_SIZE
 value|4096
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_USETHREADS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NMCTXS
+value|100
+end_define
+
+begin_comment
+comment|/*%<  * Number of 'mctx pools' for clients. (Should this be configurable?)  * When enabling threads, we use a pool of memory contexts shared by  * client objects, since concurrent access to a shared context would cause  * heavy contentions.  The above constant is expected to be enough for  * completely avoiding contentions among threads for an authoritative-only  * server.  */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NMCTXS
+value|0
+end_define
+
+begin_comment
+comment|/*%<  * If named with built without thread, simply share manager's context.  Using  * a separate context in this case would simply waste memory.  */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*% nameserver client manager structure */
+end_comment
+
 begin_struct
 struct|struct
 name|ns_clientmgr
@@ -307,15 +361,34 @@ decl_stmt|;
 name|client_list_t
 name|active
 decl_stmt|;
-comment|/* Active clients */
+comment|/*%< Active clients */
 name|client_list_t
 name|recursing
 decl_stmt|;
-comment|/* Recursing clients */
+comment|/*%< Recursing clients */
 name|client_list_t
 name|inactive
 decl_stmt|;
-comment|/* To be recycled */
+comment|/*%< To be recycled */
+if|#
+directive|if
+name|NMCTXS
+operator|>
+literal|0
+comment|/*%< mctx pool for clients. */
+name|unsigned
+name|int
+name|nextmctx
+decl_stmt|;
+name|isc_mem_t
+modifier|*
+name|mctxpool
+index|[
+name|NMCTXS
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -338,7 +411,7 @@ value|ISC_MAGIC_VALID(m, MANAGER_MAGIC)
 end_define
 
 begin_comment
-comment|/*  * Client object states.  Ordering is significant: higher-numbered  * states are generally "more active", meaning that the client can  * have more dynamically allocated data, outstanding events, etc.  * In the list below, any such properties listed for state N  * also apply to any state> N.  *  * To force the client into a less active state, set client->newstate  * to that state and call exit_check().  This will cause any  * activities defined for higher-numbered states to be aborted.  */
+comment|/*!   * Client object states.  Ordering is significant: higher-numbered  * states are generally "more active", meaning that the client can  * have more dynamically allocated data, outstanding events, etc.  * In the list below, any such properties listed for state N  * also apply to any state> N.  *  * To force the client into a less active state, set client->newstate  * to that state and call exit_check().  This will cause any  * activities defined for higher-numbered states to be aborted.  */
 end_comment
 
 begin_define
@@ -349,7 +422,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * The client object no longer exists.  */
+comment|/*%<  * The client object no longer exists.  */
 end_comment
 
 begin_define
@@ -360,7 +433,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * The client object exists and has a task and timer.  * Its "query" struct and sendbuf are initialized.  * It is on the client manager's list of inactive clients.  * It has a message and OPT, both in the reset state.  */
+comment|/*%<  * The client object exists and has a task and timer.  * Its "query" struct and sendbuf are initialized.  * It is on the client manager's list of inactive clients.  * It has a message and OPT, both in the reset state.  */
 end_comment
 
 begin_define
@@ -371,7 +444,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * The client object is either a TCP or a UDP one, and  * it is associated with a network interface.  It is on the  * client manager's list of active clients.  *  * If it is a TCP client object, it has a TCP listener socket  * and an outstanding TCP listen request.  *  * If it is a UDP client object, it has a UDP listener socket  * and an outstanding UDP receive request.  */
+comment|/*%<  * The client object is either a TCP or a UDP one, and  * it is associated with a network interface.  It is on the  * client manager's list of active clients.  *  * If it is a TCP client object, it has a TCP listener socket  * and an outstanding TCP listen request.  *  * If it is a UDP client object, it has a UDP listener socket  * and an outstanding UDP receive request.  */
 end_comment
 
 begin_define
@@ -382,7 +455,7 @@ value|3
 end_define
 
 begin_comment
-comment|/*  * The client object is a TCP client object that has received  * a connection.  It has a tcpsocket, tcpmsg, TCP quota, and an  * outstanding TCP read request.  This state is not used for  * UDP client objects.  */
+comment|/*%<  * The client object is a TCP client object that has received  * a connection.  It has a tcpsocket, tcpmsg, TCP quota, and an  * outstanding TCP read request.  This state is not used for  * UDP client objects.  */
 end_comment
 
 begin_define
@@ -393,7 +466,7 @@ value|4
 end_define
 
 begin_comment
-comment|/*  * The client object has received a request and is working  * on it.  It has a view, and it may have any of a non-reset OPT,  * recursion quota, and an outstanding write request.  */
+comment|/*%<  * The client object has received a request and is working  * on it.  It has a view, and it may have any of a non-reset OPT,  * recursion quota, and an outstanding write request.  */
 end_comment
 
 begin_define
@@ -404,7 +477,7 @@ value|9
 end_define
 
 begin_comment
-comment|/*  * Sentinel value used to indicate "no state".  When client->newstate  * has this value, we are not attempting to exit the current state.  * Must be greater than any valid state.  */
+comment|/*%<  * Sentinel value used to indicate "no state".  When client->newstate  * has this value, we are not attempting to exit the current state.  * Must be greater than any valid state.  */
 end_comment
 
 begin_comment
@@ -428,6 +501,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|ns_client_requests
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -826,7 +906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check for a deactivation or shutdown request and take appropriate  * action.  Returns ISC_TRUE if either is in progress; in this case  * the caller must no longer use the client object as it may have been  * freed.  */
+comment|/*%  * Check for a deactivation or shutdown request and take appropriate  * action.  Returns ISC_TRUE if either is in progress; in this case  * the caller must no longer use the client object as it may have been  * freed.  */
 end_comment
 
 begin_function
@@ -1937,8 +2017,9 @@ name|magic
 operator|=
 literal|0
 expr_stmt|;
-name|isc_mem_put
+name|isc_mem_putanddetach
 argument_list|(
+operator|&
 name|client
 operator|->
 name|mctx
@@ -1999,7 +2080,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The client's task has received the client's control event  * as part of the startup process.  */
+comment|/*%  * The client's task has received the client's control event  * as part of the startup process.  */
 end_comment
 
 begin_function
@@ -2090,7 +2171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The client's task has received a shutdown event.  */
+comment|/*%  * The client's task has received a shutdown event.  */
 end_comment
 
 begin_function
@@ -2378,6 +2459,13 @@ operator|->
 name|extflags
 operator|=
 literal|0
+expr_stmt|;
+name|client
+operator|->
+name|ednsversion
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|dns_message_reset
 argument_list|(
@@ -2814,7 +2902,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We only want to fail with ISC_R_NOSPACE when called from  * ns_client_sendraw() and not when called from ns_client_send(),  * tcpbuffer is NULL when called from ns_client_sendraw() and  * length != 0.  tcpbuffer != NULL when called from ns_client_send()  * and length == 0.  */
+comment|/*%  * We only want to fail with ISC_R_NOSPACE when called from  * ns_client_sendraw() and not when called from ns_client_send(),  * tcpbuffer is NULL when called from ns_client_sendraw() and  * length != 0.  tcpbuffer != NULL when called from ns_client_send()  * and length == 0.  */
 end_comment
 
 begin_function
@@ -4934,6 +5022,243 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Callback to see if a non-recursive query coming from 'srcaddr' to  * 'destaddr', with optional key 'mykey' for class 'rdclass' would be  * delivered to 'myview'.  *  * We run this unlocked as both the view list and the interface list  * are updated when the approprite task has exclusivity.  */
+end_comment
+
+begin_function
+name|isc_boolean_t
+name|ns_client_isself
+parameter_list|(
+name|dns_view_t
+modifier|*
+name|myview
+parameter_list|,
+name|dns_tsigkey_t
+modifier|*
+name|mykey
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|srcaddr
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+name|dstaddr
+parameter_list|,
+name|dns_rdataclass_t
+name|rdclass
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|dns_view_t
+modifier|*
+name|view
+decl_stmt|;
+name|dns_tsigkey_t
+modifier|*
+name|key
+decl_stmt|;
+name|isc_netaddr_t
+name|netsrc
+decl_stmt|;
+name|isc_netaddr_t
+name|netdst
+decl_stmt|;
+name|UNUSED
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ns_interfacemgr_listeningon
+argument_list|(
+name|ns_g_server
+operator|->
+name|interfacemgr
+argument_list|,
+name|dstaddr
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ISC_FALSE
+operator|)
+return|;
+name|isc_netaddr_fromsockaddr
+argument_list|(
+operator|&
+name|netsrc
+argument_list|,
+name|srcaddr
+argument_list|)
+expr_stmt|;
+name|isc_netaddr_fromsockaddr
+argument_list|(
+operator|&
+name|netdst
+argument_list|,
+name|dstaddr
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|view
+operator|=
+name|ISC_LIST_HEAD
+argument_list|(
+name|ns_g_server
+operator|->
+name|viewlist
+argument_list|)
+init|;
+name|view
+operator|!=
+name|NULL
+condition|;
+name|view
+operator|=
+name|ISC_LIST_NEXT
+argument_list|(
+name|view
+argument_list|,
+name|link
+argument_list|)
+control|)
+block|{
+name|dns_name_t
+modifier|*
+name|tsig
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+name|view
+operator|->
+name|matchrecursiveonly
+condition|)
+continue|continue;
+if|if
+condition|(
+name|rdclass
+operator|!=
+name|view
+operator|->
+name|rdclass
+condition|)
+continue|continue;
+if|if
+condition|(
+name|mykey
+operator|!=
+name|NULL
+condition|)
+block|{
+name|isc_boolean_t
+name|match
+decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
+name|tsig
+operator|=
+operator|&
+name|mykey
+operator|->
+name|name
+expr_stmt|;
+name|result
+operator|=
+name|dns_view_gettsig
+argument_list|(
+name|view
+argument_list|,
+name|tsig
+argument_list|,
+operator|&
+name|key
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+continue|continue;
+name|match
+operator|=
+name|dst_key_compare
+argument_list|(
+name|mykey
+operator|->
+name|key
+argument_list|,
+name|key
+operator|->
+name|key
+argument_list|)
+expr_stmt|;
+name|dns_tsigkey_detach
+argument_list|(
+operator|&
+name|key
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|match
+condition|)
+continue|continue;
+block|}
+if|if
+condition|(
+name|allowed
+argument_list|(
+operator|&
+name|netsrc
+argument_list|,
+name|tsig
+argument_list|,
+name|view
+operator|->
+name|matchclients
+argument_list|)
+operator|&&
+name|allowed
+argument_list|(
+operator|&
+name|netdst
+argument_list|,
+name|tsig
+argument_list|,
+name|view
+operator|->
+name|matchdestinations
+argument_list|)
+condition|)
+break|break;
+block|}
+return|return
+operator|(
+name|ISC_TF
+argument_list|(
+name|view
+operator|==
+name|myview
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Handle an incoming request event from the socket (UDP case)  * or tcpmsg (TCP case).  */
 end_comment
 
@@ -5059,6 +5384,9 @@ name|NS_CLIENTSTATE_READING
 else|:
 name|NS_CLIENTSTATE_READY
 argument_list|)
+expr_stmt|;
+name|ns_client_requests
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -5775,10 +6103,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|unsigned
-name|int
-name|version
-decl_stmt|;
 comment|/* 		 * Set the client's UDP buffer size. 		 */
 name|client
 operator|->
@@ -5819,6 +6143,58 @@ operator|&
 literal|0xFFFF
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Do we understand this version of EDNS? 		 * 		 * XXXRTH need library support for this! 		 */
+name|client
+operator|->
+name|ednsversion
+operator|=
+operator|(
+name|opt
+operator|->
+name|ttl
+operator|&
+literal|0x00FF0000
+operator|)
+operator|>>
+literal|16
+expr_stmt|;
+if|if
+condition|(
+name|client
+operator|->
+name|ednsversion
+operator|>
+literal|0
+condition|)
+block|{
+name|result
+operator|=
+name|client_addopt
+argument_list|(
+name|client
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+condition|)
+name|result
+operator|=
+name|DNS_R_BADVERS
+expr_stmt|;
+name|ns_client_error
+argument_list|(
+name|client
+argument_list|,
+name|result
+argument_list|)
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
+block|}
 comment|/* 		 * Create an OPT for our reply. 		 */
 name|result
 operator|=
@@ -5839,37 +6215,6 @@ argument_list|(
 name|client
 argument_list|,
 name|result
-argument_list|)
-expr_stmt|;
-goto|goto
-name|cleanup
-goto|;
-block|}
-comment|/* 		 * Do we understand this version of ENDS? 		 * 		 * XXXRTH need library support for this! 		 */
-name|version
-operator|=
-operator|(
-name|opt
-operator|->
-name|ttl
-operator|&
-literal|0x00FF0000
-operator|)
-operator|>>
-literal|16
-expr_stmt|;
-if|if
-condition|(
-name|version
-operator|!=
-literal|0
-condition|)
-block|{
-name|ns_client_error
-argument_list|(
-name|client
-argument_list|,
-name|DNS_R_BADVERS
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6783,6 +7128,74 @@ else|:
 literal|"recursion not available"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Adjust maximum UDP response size for this client. 	 */
+if|if
+condition|(
+name|client
+operator|->
+name|udpsize
+operator|>
+literal|512
+condition|)
+block|{
+name|dns_peer_t
+modifier|*
+name|peer
+init|=
+name|NULL
+decl_stmt|;
+name|isc_uint16_t
+name|udpsize
+init|=
+name|view
+operator|->
+name|maxudp
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|dns_peerlist_peerbyaddr
+argument_list|(
+name|view
+operator|->
+name|peers
+argument_list|,
+operator|&
+name|netaddr
+argument_list|,
+operator|&
+name|peer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|peer
+operator|!=
+name|NULL
+condition|)
+name|dns_peer_getmaxudp
+argument_list|(
+name|peer
+argument_list|,
+operator|&
+name|udpsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|client
+operator|->
+name|udpsize
+operator|>
+name|udpsize
+condition|)
+name|client
+operator|->
+name|udpsize
+operator|=
+name|udpsize
+expr_stmt|;
+block|}
 comment|/* 	 * Dispatch the request. 	 */
 switch|switch
 condition|(
@@ -7038,6 +7451,147 @@ end_function
 begin_function
 specifier|static
 name|isc_result_t
+name|get_clientmctx
+parameter_list|(
+name|ns_clientmgr_t
+modifier|*
+name|manager
+parameter_list|,
+name|isc_mem_t
+modifier|*
+modifier|*
+name|mctxp
+parameter_list|)
+block|{
+name|isc_mem_t
+modifier|*
+name|clientmctx
+decl_stmt|;
+if|#
+directive|if
+name|NMCTXS
+operator|>
+literal|0
+name|isc_result_t
+name|result
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * Caller must be holding the manager lock. 	 */
+if|#
+directive|if
+name|NMCTXS
+operator|>
+literal|0
+name|INSIST
+argument_list|(
+name|manager
+operator|->
+name|nextmctx
+operator|<
+name|NMCTXS
+argument_list|)
+expr_stmt|;
+name|clientmctx
+operator|=
+name|manager
+operator|->
+name|mctxpool
+index|[
+name|manager
+operator|->
+name|nextmctx
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|clientmctx
+operator|==
+name|NULL
+condition|)
+block|{
+name|result
+operator|=
+name|isc_mem_create
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|clientmctx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+return|return
+operator|(
+name|result
+operator|)
+return|;
+name|manager
+operator|->
+name|mctxpool
+index|[
+name|manager
+operator|->
+name|nextmctx
+index|]
+operator|=
+name|clientmctx
+expr_stmt|;
+name|manager
+operator|->
+name|nextmctx
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|manager
+operator|->
+name|nextmctx
+operator|==
+name|NMCTXS
+condition|)
+name|manager
+operator|->
+name|nextmctx
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|#
+directive|else
+name|clientmctx
+operator|=
+name|manager
+operator|->
+name|mctx
+expr_stmt|;
+endif|#
+directive|endif
+name|isc_mem_attach
+argument_list|(
+name|clientmctx
+argument_list|,
+name|mctxp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ISC_R_SUCCESS
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|isc_result_t
 name|client_create
 parameter_list|(
 name|ns_clientmgr_t
@@ -7057,6 +7611,12 @@ decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
+name|isc_mem_t
+modifier|*
+name|mctx
+init|=
+name|NULL
+decl_stmt|;
 comment|/* 	 * Caller must be holding the manager lock. 	 * 	 * Note: creating a client does not add the client to the 	 * manager's client list or set the client's manager pointer. 	 * The caller is responsible for that. 	 */
 name|REQUIRE
 argument_list|(
@@ -7070,12 +7630,31 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
+name|get_clientmctx
+argument_list|(
+name|manager
+argument_list|,
+operator|&
+name|mctx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+return|return
+operator|(
+name|result
+operator|)
+return|;
 name|client
 operator|=
 name|isc_mem_get
 argument_list|(
-name|manager
-operator|->
 name|mctx
 argument_list|,
 sizeof|sizeof
@@ -7091,11 +7670,25 @@ name|client
 operator|==
 name|NULL
 condition|)
+block|{
+name|isc_mem_detach
+argument_list|(
+operator|&
+name|mctx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ISC_R_NOMEMORY
 operator|)
 return|;
+block|}
+name|client
+operator|->
+name|mctx
+operator|=
+name|mctx
+expr_stmt|;
 name|client
 operator|->
 name|task
@@ -7197,7 +7790,7 @@ name|result
 operator|=
 name|dns_message_create
 argument_list|(
-name|manager
+name|client
 operator|->
 name|mctx
 argument_list|,
@@ -7229,7 +7822,7 @@ operator|*
 operator|)
 name|isc_event_allocate
 argument_list|(
-name|manager
+name|client
 operator|->
 name|mctx
 argument_list|,
@@ -7270,7 +7863,7 @@ name|recvbuf
 operator|=
 name|isc_mem_get
 argument_list|(
-name|manager
+name|client
 operator|->
 name|mctx
 argument_list|,
@@ -7304,7 +7897,7 @@ operator|*
 operator|)
 name|isc_event_allocate
 argument_list|(
-name|manager
+name|client
 operator|->
 name|mctx
 argument_list|,
@@ -7344,14 +7937,6 @@ operator|->
 name|magic
 operator|=
 name|NS_CLIENT_MAGIC
-expr_stmt|;
-name|client
-operator|->
-name|mctx
-operator|=
-name|manager
-operator|->
-name|mctx
 expr_stmt|;
 name|client
 operator|->
@@ -7478,6 +8063,13 @@ operator|->
 name|extflags
 operator|=
 literal|0
+expr_stmt|;
+name|client
+operator|->
+name|ednsversion
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|client
 operator|->
@@ -7688,7 +8280,7 @@ name|cleanup_recvbuf
 label|:
 name|isc_mem_put
 argument_list|(
-name|manager
+name|client
 operator|->
 name|mctx
 argument_list|,
@@ -7752,9 +8344,10 @@ argument_list|)
 expr_stmt|;
 name|cleanup_client
 label|:
-name|isc_mem_put
+name|isc_mem_putanddetach
 argument_list|(
-name|manager
+operator|&
+name|client
 operator|->
 name|mctx
 argument_list|,
@@ -8753,6 +9346,16 @@ modifier|*
 name|manager
 parameter_list|)
 block|{
+if|#
+directive|if
+name|NMCTXS
+operator|>
+literal|0
+name|int
+name|i
+decl_stmt|;
+endif|#
+directive|endif
 name|REQUIRE
 argument_list|(
 name|ISC_LIST_EMPTY
@@ -8788,6 +9391,50 @@ argument_list|(
 literal|"clientmgr_destroy"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NMCTXS
+operator|>
+literal|0
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NMCTXS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|manager
+operator|->
+name|mctxpool
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|)
+name|isc_mem_detach
+argument_list|(
+operator|&
+name|manager
+operator|->
+name|mctxpool
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|DESTROYLOCK
 argument_list|(
 operator|&
@@ -8849,6 +9496,16 @@ decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
+if|#
+directive|if
+name|NMCTXS
+operator|>
+literal|0
+name|int
+name|i
+decl_stmt|;
+endif|#
+directive|endif
 name|manager
 operator|=
 name|isc_mem_get
@@ -8937,6 +9594,42 @@ operator|->
 name|recursing
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NMCTXS
+operator|>
+literal|0
+name|manager
+operator|->
+name|nextmctx
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NMCTXS
+condition|;
+name|i
+operator|++
+control|)
+name|manager
+operator|->
+name|mctxpool
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* will be created on-demand */
+endif|#
+directive|endif
 name|manager
 operator|->
 name|magic

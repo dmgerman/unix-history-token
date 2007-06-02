@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: xfrout.c,v 1.101.2.5.2.12 2005/10/14 02:13:05 marka Exp $ */
+comment|/* $Id: xfrout.c,v 1.115.18.8 2006/03/05 23:58:51 marka Exp $ */
 end_comment
 
 begin_include
@@ -54,6 +54,23 @@ include|#
 directive|include
 file|<dns/dbiterator.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DLZ
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dns/dlz.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -170,7 +187,7 @@ file|<named/xfrout.h>
 end_include
 
 begin_comment
-comment|/*  * Outgoing AXFR and IXFR.  */
+comment|/*! \file   * \brief  * Outgoing AXFR and IXFR.  */
 end_comment
 
 begin_comment
@@ -220,7 +237,7 @@ value|ISC_LOG_DEBUG(8)
 end_define
 
 begin_comment
-comment|/*  * Fail unconditionally and log as a client error.  * The test against ISC_R_SUCCESS is there to keep the Solaris compiler  * from complaining about "end-of-loop code not reached".  */
+comment|/*%  * Fail unconditionally and log as a client error.  * The test against ISC_R_SUCCESS is there to keep the Solaris compiler  * from complaining about "end-of-loop code not reached".  */
 end_comment
 
 begin_define
@@ -269,7 +286,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * A db_rr_iterator_t is an iterator that iterates over an entire database,  * returning one RR at a time, in some arbitrary order.  */
+comment|/*%  * A db_rr_iterator_t is an iterator that iterates over an entire database,  * returning one RR at a time, in some arbitrary order.  */
 end_comment
 
 begin_typedef
@@ -279,6 +296,10 @@ name|db_rr_iterator
 name|db_rr_iterator_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*% db_rr_iterator structure */
+end_comment
 
 begin_struct
 struct|struct
@@ -728,6 +749,14 @@ argument_list|)
 expr_stmt|;
 name|it
 operator|->
+name|rdataset
+operator|.
+name|attributes
+operator||=
+name|DNS_RDATASETATTR_LOADORDER
+expr_stmt|;
+name|it
+operator|->
 name|result
 operator|=
 name|dns_rdataset_first
@@ -1045,6 +1074,14 @@ argument_list|)
 expr_stmt|;
 name|it
 operator|->
+name|rdataset
+operator|.
+name|attributes
+operator||=
+name|DNS_RDATASETATTR_LOADORDER
+expr_stmt|;
+name|it
+operator|->
 name|result
 operator|=
 name|dns_rdataset_first
@@ -1283,7 +1320,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Log an RR (for debugging) */
+comment|/*% Log an RR (for debugging) */
 end_comment
 
 begin_function
@@ -4212,6 +4249,16 @@ name|is_poll
 init|=
 name|ISC_FALSE
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DLZ
+name|isc_boolean_t
+name|is_dlz
+init|=
+name|ISC_FALSE
+decl_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|reqtype
@@ -4422,6 +4469,117 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
+ifdef|#
+directive|ifdef
+name|DLZ
+block|{
+comment|/* 		 * Normal zone table does not have a match.  Try the DLZ database 		 */
+if|if
+condition|(
+name|client
+operator|->
+name|view
+operator|->
+name|dlzdatabase
+operator|!=
+name|NULL
+condition|)
+block|{
+name|result
+operator|=
+name|dns_dlzallowzonexfr
+argument_list|(
+name|client
+operator|->
+name|view
+argument_list|,
+name|question_name
+argument_list|,
+operator|&
+name|client
+operator|->
+name|peeraddr
+argument_list|,
+operator|&
+name|db
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_NOPERM
+condition|)
+block|{
+name|char
+name|_buf1
+index|[
+name|DNS_NAME_FORMATSIZE
+index|]
+decl_stmt|;
+name|char
+name|_buf2
+index|[
+name|DNS_RDATACLASS_FORMATSIZE
+index|]
+decl_stmt|;
+name|result
+operator|=
+name|DNS_R_REFUSED
+expr_stmt|;
+name|dns_name_format
+argument_list|(
+name|question_name
+argument_list|,
+name|_buf1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|_buf1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dns_rdataclass_format
+argument_list|(
+name|question_class
+argument_list|,
+name|_buf2
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|_buf2
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ns_client_log
+argument_list|(
+name|client
+argument_list|,
+name|DNS_LOGCATEGORY_SECURITY
+argument_list|,
+name|NS_LOGMODULE_XFER_OUT
+argument_list|,
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"zone transfer '%s/%s' denied"
+argument_list|,
+name|_buf1
+argument_list|,
+name|_buf2
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failure
+goto|;
+block|}
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+endif|#
+directive|endif
 name|FAILQ
 argument_list|(
 name|DNS_R_NOTAUTH
@@ -4433,6 +4591,52 @@ argument_list|,
 name|question_class
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DLZ
+name|is_dlz
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+comment|/* 			 * DLZ only support full zone transfer, not incremental 			 */
+if|if
+condition|(
+name|reqtype
+operator|!=
+name|dns_rdatatype_axfr
+condition|)
+block|{
+name|mnemonic
+operator|=
+literal|"AXFR-style IXFR"
+expr_stmt|;
+name|reqtype
+operator|=
+name|dns_rdatatype_axfr
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* 		 	 * not DLZ and not in normal zone table, we are 			 * not authoritative 			 */
+name|FAILQ
+argument_list|(
+name|DNS_R_NOTAUTH
+argument_list|,
+literal|"non-authoritative zone"
+argument_list|,
+name|question_name
+argument_list|,
+name|question_class
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* zone table has a match */
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|dns_zone_gettype
@@ -4481,6 +4685,12 @@ operator|&
 name|ver
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DLZ
+block|}
+endif|#
+directive|endif
 name|xfrout_log1
 argument_list|(
 name|client
@@ -4673,6 +4883,18 @@ name|mnemonic
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Decide whether to allow this transfer. 	 */
+ifdef|#
+directive|ifdef
+name|DLZ
+comment|/* 	 * if not a DLZ zone decide whether to allow this transfer. 	 */
+if|if
+condition|(
+operator|!
+name|is_dlz
+condition|)
+block|{
+endif|#
+directive|endif
 name|ns_client_aclmsg
 argument_list|(
 literal|"zone transfer"
@@ -4714,6 +4936,12 @@ name|ISC_LOG_ERROR
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DLZ
+block|}
+endif|#
+directive|endif
 comment|/* 	 * AXFR over UDP is not possible. 	 */
 if|if
 condition|(
@@ -4787,6 +5015,23 @@ name|format
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get a dynamically allocated copy of the current SOA. 	 */
+ifdef|#
+directive|ifdef
+name|DLZ
+if|if
+condition|(
+name|is_dlz
+condition|)
+name|dns_db_currentversion
+argument_list|(
+name|db
+argument_list|,
+operator|&
+name|ver
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|CHECK
 argument_list|(
 name|dns_db_createsoatuple
@@ -5081,6 +5326,68 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Create the xfrout context object.  This transfers the ownership 	 * of "stream", "db", "ver", and "quota" to the xfrout context object. 	 */
+ifdef|#
+directive|ifdef
+name|DLZ
+if|if
+condition|(
+name|is_dlz
+condition|)
+name|CHECK
+argument_list|(
+name|xfrout_ctx_create
+argument_list|(
+name|mctx
+argument_list|,
+name|client
+argument_list|,
+name|request
+operator|->
+name|id
+argument_list|,
+name|question_name
+argument_list|,
+name|reqtype
+argument_list|,
+name|question_class
+argument_list|,
+name|db
+argument_list|,
+name|ver
+argument_list|,
+name|quota
+argument_list|,
+name|stream
+argument_list|,
+name|dns_message_gettsigkey
+argument_list|(
+name|request
+argument_list|)
+argument_list|,
+name|tsigbuf
+argument_list|,
+literal|3600
+argument_list|,
+literal|3600
+argument_list|,
+operator|(
+name|format
+operator|==
+name|dns_many_answers
+operator|)
+condition|?
+name|ISC_TRUE
+else|:
+name|ISC_FALSE
+argument_list|,
+operator|&
+name|xfr
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|CHECK
 argument_list|(
 name|xfrout_ctx_create
@@ -6900,6 +7207,14 @@ name|xfr
 operator|->
 name|mctx
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|dns_compress_setsensitive
+argument_list|(
+operator|&
+name|cctx
+argument_list|,
+name|ISC_TRUE
 argument_list|)
 expr_stmt|;
 name|cleanup_cctx

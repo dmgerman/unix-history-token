@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dst.h,v 1.1.4.1 2004/12/09 04:07:19 marka Exp $ */
+comment|/* $Id: dst.h,v 1.1.6.5 2006/01/27 23:57:44 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,10 @@ directive|define
 name|DST_DST_H
 value|1
 end_define
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 begin_include
 include|#
@@ -41,7 +45,7 @@ comment|/***  *** Types  ***/
 end_comment
 
 begin_comment
-comment|/*  * The dst_key structure is opaque.  Applications should use the accessor  * functions provided to retrieve key attributes.  If an application needs  * to set attributes, new accessor functions will be written.  */
+comment|/*%  * The dst_key structure is opaque.  Applications should use the accessor  * functions provided to retrieve key attributes.  If an application needs  * to set attributes, new accessor functions will be written.  */
 end_comment
 
 begin_typedef
@@ -86,7 +90,7 @@ value|DST_ALG_RSAMD5
 end_define
 
 begin_comment
-comment|/* backwards compatibility */
+comment|/*%< backwards compatibility */
 end_comment
 
 begin_define
@@ -134,6 +138,61 @@ end_define
 begin_define
 define|#
 directive|define
+name|DST_ALG_HMACSHA1
+value|161
+end_define
+
+begin_comment
+comment|/* XXXMPA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DST_ALG_HMACSHA224
+value|162
+end_define
+
+begin_comment
+comment|/* XXXMPA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DST_ALG_HMACSHA256
+value|163
+end_define
+
+begin_comment
+comment|/* XXXMPA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DST_ALG_HMACSHA384
+value|164
+end_define
+
+begin_comment
+comment|/* XXXMPA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DST_ALG_HMACSHA512
+value|165
+end_define
+
+begin_comment
+comment|/* XXXMPA */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DST_ALG_PRIVATE
 value|254
 end_define
@@ -153,7 +212,7 @@ value|255
 end_define
 
 begin_comment
-comment|/* A buffer of this size is large enough to hold any key */
+comment|/*% A buffer of this size is large enough to hold any key */
 end_comment
 
 begin_define
@@ -164,7 +223,7 @@ value|1280
 end_define
 
 begin_comment
-comment|/*  * A buffer of this size is large enough to hold the textual representation  * of any key  */
+comment|/*%  * A buffer of this size is large enough to hold the textual representation  * of any key  */
 end_comment
 
 begin_define
@@ -175,7 +234,7 @@ value|2048
 end_define
 
 begin_comment
-comment|/* 'Type' for dst_read_key() */
+comment|/*% 'Type' for dst_read_key() */
 end_comment
 
 begin_define
@@ -227,7 +286,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Initializes the DST subsystem.  *  * Requires:  * 	"mctx" is a valid memory context  * 	"ectx" is a valid entropy context  *  * Returns:  * 	ISC_R_SUCCESS  * 	ISC_R_NOMEMORY  *  * Ensures:  * 	DST is properly initialized.  */
+comment|/*%<  * Initializes the DST subsystem.  *  * Requires:  * \li 	"mctx" is a valid memory context  * \li	"ectx" is a valid entropy context  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	ISC_R_NOMEMORY  *  * Ensures:  * \li	DST is properly initialized.  */
 end_comment
 
 begin_function_decl
@@ -240,7 +299,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Releases all resources allocated by DST.  */
+comment|/*%<  * Releases all resources allocated by DST.  */
 end_comment
 
 begin_function_decl
@@ -255,7 +314,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Checks that a given algorithm is supported by DST.  *  * Returns:  * 	ISC_TRUE  * 	ISC_FALSE  */
+comment|/*%<  * Checks that a given algorithm is supported by DST.  *  * Returns:  * \li	ISC_TRUE  * \li	ISC_FALSE  */
 end_comment
 
 begin_function_decl
@@ -279,7 +338,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Creates a context to be used for a sign or verify operation.  *  * Requires:  *	"key" is a valid key.  * 	"mctx" is a valid memory context.  * 	dctxp != NULL&& *dctxp == NULL  *  * Returns:  * 	ISC_R_SUCCESS  * 	ISC_R_NOMEMORY  *  * Ensures:  *	*dctxp will contain a usable context.  */
+comment|/*%<  * Creates a context to be used for a sign or verify operation.  *  * Requires:  * \li	"key" is a valid key.  * \li	"mctx" is a valid memory context.  * \li	dctxp != NULL&& *dctxp == NULL  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	ISC_R_NOMEMORY  *  * Ensures:  * \li	*dctxp will contain a usable context.  */
 end_comment
 
 begin_function_decl
@@ -295,7 +354,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroys all memory associated with a context.  *  * Requires:  * 	*dctxp != NULL&& *dctxp == NULL  *  * Ensures:  *	*dctxp == NULL  */
+comment|/*%<  * Destroys all memory associated with a context.  *  * Requires:  * \li	*dctxp != NULL&& *dctxp == NULL  *  * Ensures:  * \li	*dctxp == NULL  */
 end_comment
 
 begin_function_decl
@@ -315,7 +374,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Incrementally adds data to the context to be used in a sign or verify  * operation.  *  * Requires:  * 	"dctx" is a valid context  * 	"data" is a valid region  *  * Returns:  * 	ISC_R_SUCCESS  * 	DST_R_SIGNFAILURE  * 	all other errors indicate failure  */
+comment|/*%<  * Incrementally adds data to the context to be used in a sign or verify  * operation.  *  * Requires:  * \li	"dctx" is a valid context  * \li	"data" is a valid region  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	DST_R_SIGNFAILURE  * \li	all other errors indicate failure  */
 end_comment
 
 begin_function_decl
@@ -334,7 +393,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Computes a signature using the data and key stored in the context.  *  * Requires:  * 	"dctx" is a valid context.  *	"sig" is a valid buffer.  *  * Returns:  * 	ISC_R_SUCCESS  * 	DST_R_VERIFYFAILURE  * 	all other errors indicate failure  *  * Ensures:  *	"sig" will contain the signature  */
+comment|/*%<  * Computes a signature using the data and key stored in the context.  *  * Requires:  * \li	"dctx" is a valid context.  * \li	"sig" is a valid buffer.  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	DST_R_VERIFYFAILURE  * \li	all other errors indicate failure  *  * Ensures:  * \li	"sig" will contain the signature  */
 end_comment
 
 begin_function_decl
@@ -353,7 +412,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Verifies the signature using the data and key stored in the context.  *  * Requires:  * 	"dctx" is a valid context.  *	"sig" is a valid region.  *  * Returns:  * 	ISC_R_SUCCESS  * 	all other errors indicate failure  *  * Ensures:  *	"sig" will contain the signature  */
+comment|/*%<  * Verifies the signature using the data and key stored in the context.  *  * Requires:  * \li	"dctx" is a valid context.  * \li	"sig" is a valid region.  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	all other errors indicate failure  *  * Ensures:  * \li	"sig" will contain the signature  */
 end_comment
 
 begin_function_decl
@@ -378,7 +437,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Computes a shared secret from two (Diffie-Hellman) keys.  *  * Requires:  *     "pub" is a valid key that can be used to derive a shared secret  *     "priv" is a valid private key that can be used to derive a shared secret  *     "secret" is a valid buffer  *  * Returns:  * 	ISC_R_SUCCESS  * 	any other result indicates failure  *  * Ensures:  *      If successful, secret will contain the derived shared secret.  */
+comment|/*%<  * Computes a shared secret from two (Diffie-Hellman) keys.  *  * Requires:  * \li	"pub" is a valid key that can be used to derive a shared secret  * \li	"priv" is a valid private key that can be used to derive a shared secret  * \li	"secret" is a valid buffer  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  * \li	If successful, secret will contain the derived shared secret.  */
 end_comment
 
 begin_function_decl
@@ -417,7 +476,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Reads a key from permanent storage.  The key can either be a public or  * private key, and is specified by name, algorithm, and id.  If a private key  * is specified, the public key must also be present.  If directory is NULL,  * the current directory is assumed.  *  * Requires:  *	"name" is a valid absolute dns name.  *	"id" is a valid key tag identifier.  *	"alg" is a supported key algorithm.  *	"type" is DST_TYPE_PUBLIC, DST_TYPE_PRIVATE, or the bitwise union.  *		  DST_TYPE_KEY look for a KEY record otherwise DNSKEY  *	"mctx" is a valid memory context.  *	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  * 	ISC_R_SUCCESS  * 	any other result indicates failure  *  * Ensures:  *	If successful, *keyp will contain a valid key.  */
+comment|/*%<  * Reads a key from permanent storage.  The key can either be a public or  * private key, and is specified by name, algorithm, and id.  If a private key  * is specified, the public key must also be present.  If directory is NULL,  * the current directory is assumed.  *  * Requires:  * \li	"name" is a valid absolute dns name.  * \li	"id" is a valid key tag identifier.  * \li	"alg" is a supported key algorithm.  * \li	"type" is DST_TYPE_PUBLIC, DST_TYPE_PRIVATE, or the bitwise union.  *		  DST_TYPE_KEY look for a KEY record otherwise DNSKEY  * \li	"mctx" is a valid memory context.  * \li	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  * \li	If successful, *keyp will contain a valid key.  */
 end_comment
 
 begin_function_decl
@@ -445,7 +504,35 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Reads a key from permanent storage.  The key can either be a public or  * key, and is specified by filename.  If a private key is specified, the  * public key must also be present.  *  * Requires:  * 	"filename" is not NULL  *	"type" is DST_TYPE_PUBLIC, DST_TYPE_PRIVATE, or the bitwise union  *		  DST_TYPE_KEY look for a KEY record otherwise DNSKEY  *	"mctx" is a valid memory context  *	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  * 	ISC_R_SUCCESS  * 	any other result indicates failure  *  * Ensures:  *	If successful, *keyp will contain a valid key.  */
+comment|/*%<  * Reads a key from permanent storage.  The key can either be a public or  * key, and is specified by filename.  If a private key is specified, the  * public key must also be present.  *  * Requires:  * \li	"filename" is not NULL  * \li	"type" is DST_TYPE_PUBLIC, DST_TYPE_PRIVATE, or the bitwise union  *		  DST_TYPE_KEY look for a KEY record otherwise DNSKEY  * \li	"mctx" is a valid memory context  * \li	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  * \li	If successful, *keyp will contain a valid key.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dst_key_read_public
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|dst_key_t
+modifier|*
+modifier|*
+name|keyp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Reads a public key from permanent storage.  The key must be a public key.  *  * Requires:  * \li	"filename" is not NULL  * \li	"type" is DST_TYPE_KEY look for a KEY record otherwise DNSKEY  * \li	"mctx" is a valid memory context  * \li	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	DST_R_BADKEYTYPE if the key type is not the expected one  * \li	ISC_R_UNEXPECTEDTOKEN if the file can not be parsed as a public key  * \li	any other result indicates failure  *  * Ensures:  * \li	If successful, *keyp will contain a valid key.  */
 end_comment
 
 begin_function_decl
@@ -469,7 +556,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Writes a key to permanent storage.  The key can either be a public or  * private key.  Public keys are written in DNS format and private keys  * are written as a set of base64 encoded values.  If directory is NULL,  * the current directory is assumed.  *  * Requires:  *	"key" is a valid key.  *	"type" is DST_TYPE_PUBLIC, DST_TYPE_PRIVATE, or the bitwise union  *  * Returns:  * 	ISC_R_SUCCESS  * 	any other result indicates failure  */
+comment|/*%<  * Writes a key to permanent storage.  The key can either be a public or  * private key.  Public keys are written in DNS format and private keys  * are written as a set of base64 encoded values.  If directory is NULL,  * the current directory is assumed.  *  * Requires:  * \li	"key" is a valid key.  * \li	"type" is DST_TYPE_PUBLIC, DST_TYPE_PRIVATE, or the bitwise union  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	any other result indicates failure  */
 end_comment
 
 begin_function_decl
@@ -500,7 +587,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Converts a DNS KEY record into a DST key.  *  * Requires:  *	"name" is a valid absolute dns name.  *	"source" is a valid buffer.  There must be at least 4 bytes available.  *	"mctx" is a valid memory context.  *	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  * 	ISC_R_SUCCESS  * 	any other result indicates failure  *  * Ensures:  *	If successful, *keyp will contain a valid key, and the consumed  *	pointer in data will be advanced.  */
+comment|/*%<  * Converts a DNS KEY record into a DST key.  *  * Requires:  * \li	"name" is a valid absolute dns name.  * \li	"source" is a valid buffer.  There must be at least 4 bytes available.  * \li	"mctx" is a valid memory context.  * \li	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  * \li	If successful, *keyp will contain a valid key, and the consumed  *	pointer in data will be advanced.  */
 end_comment
 
 begin_function_decl
@@ -520,7 +607,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Converts a DST key into a DNS KEY record.  *  * Requires:  *	"key" is a valid key.  *	"target" is a valid buffer.  There must be at least 4 bytes unused.  *  * Returns:  * 	ISC_R_SUCCESS  * 	any other result indicates failure  *  * Ensures:  *	If successful, the used pointer in 'target' is advanced by at least 4.  */
+comment|/*%<  * Converts a DST key into a DNS KEY record.  *  * Requires:  * \li	"key" is a valid key.  * \li	"target" is a valid buffer.  There must be at least 4 bytes unused.  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  * \li	If successful, the used pointer in 'target' is advanced by at least 4.  */
 end_comment
 
 begin_function_decl
@@ -563,7 +650,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Converts a buffer containing DNS KEY RDATA into a DST key.  *  * Requires:  *	"name" is a valid absolute dns name.  *	"alg" is a supported key algorithm.  *	"source" is a valid buffer.  *	"mctx" is a valid memory context.  *	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  * 	ISC_R_SUCCESS  * 	any other result indicates failure  *  * Ensures:  *	If successful, *keyp will contain a valid key, and the consumed  *	pointer in source will be advanced.  */
+comment|/*%<  * Converts a buffer containing DNS KEY RDATA into a DST key.  *  * Requires:  *\li	"name" is a valid absolute dns name.  *\li	"alg" is a supported key algorithm.  *\li	"source" is a valid buffer.  *\li	"mctx" is a valid memory context.  *\li	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  *\li 	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  *\li	If successful, *keyp will contain a valid key, and the consumed  *	pointer in source will be advanced.  */
 end_comment
 
 begin_function_decl
@@ -583,7 +670,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Converts a DST key into DNS KEY RDATA format.  *  * Requires:  *	"key" is a valid key.  *	"target" is a valid buffer.  *  * Returns:  * 	ISC_R_SUCCESS  * 	any other result indicates failure  *  * Ensures:  *	If successful, the used pointer in 'target' is advanced.  */
+comment|/*%<  * Converts a DST key into DNS KEY RDATA format.  *  * Requires:  *\li	"key" is a valid key.  *\li	"target" is a valid buffer.  *  * Returns:  *\li 	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  *\li	If successful, the used pointer in 'target' is advanced.  */
 end_comment
 
 begin_function_decl
@@ -602,7 +689,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Converts a public key into a private key, reading the private key  * information from the buffer.  The buffer should contain the same data  * as the .private key file would.  *  * Requires:  * 	"key" is a valid public key.  *	"buffer" is not NULL.  *  * Returns:  * 	ISC_R_SUCCESS  * 	any other result indicates failure  *  * Ensures:  *	If successful, key will contain a valid private key.  */
+comment|/*%<  * Converts a public key into a private key, reading the private key  * information from the buffer.  The buffer should contain the same data  * as the .private key file would.  *  * Requires:  *\li	"key" is a valid public key.  *\li	"buffer" is not NULL.  *  * Returns:  *\li 	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  *\li	If successful, key will contain a valid private key.  */
 end_comment
 
 begin_function_decl
@@ -630,7 +717,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Converts a GSSAPI opaque context id into a DST key.  *  * Requires:  *	"name" is a valid absolute dns name.  *	"opaque" is a GSSAPI context id.  *	"mctx" is a valid memory context.  *	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  * 	ISC_R_SUCCESS  * 	any other result indicates failure  *  * Ensures:  *	If successful, *keyp will contain a valid key and be responsible for  *	the context id.  */
+comment|/*%<  * Converts a GSSAPI opaque context id into a DST key.  *  * Requires:  *\li	"name" is a valid absolute dns name.  *\li	"opaque" is a GSSAPI context id.  *\li	"mctx" is a valid memory context.  *\li	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  *\li 	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  *\li	If successful, *keyp will contain a valid key and be responsible for  *	the context id.  */
 end_comment
 
 begin_function_decl
@@ -677,7 +764,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Generate a DST key (or keypair) with the supplied parameters.  The  * interpretation of the "param" field depends on the algorithm:  * 	RSA:	exponent  * 		0	use exponent 3  * 		!0	use Fermat4 (2^16 + 1)  * 	DH:	generator  * 		0	default - use well known prime if bits == 768 or 1024,  * 			otherwise use 2 as the generator.  * 		!0	use this value as the generator.  * 	DSA:	unused  * 	HMACMD5: entropy  *		0	default - require good entropy  *		!0	lack of good entropy is ok  *  * Requires:  *	"name" is a valid absolute dns name.  *	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  * 	ISC_R_SUCCESS  * 	any other result indicates failure  *  * Ensures:  *	If successful, *keyp will contain a valid key.  */
+comment|/*%<  * Generate a DST key (or keypair) with the supplied parameters.  The  * interpretation of the "param" field depends on the algorithm:  * \code  * 	RSA:	exponent  * 		0	use exponent 3  * 		!0	use Fermat4 (2^16 + 1)  * 	DH:	generator  * 		0	default - use well known prime if bits == 768 or 1024,  * 			otherwise use 2 as the generator.  * 		!0	use this value as the generator.  * 	DSA:	unused  * 	HMACMD5: entropy  *		0	default - require good entropy  *		!0	lack of good entropy is ok  *\endcode  *  * Requires:  *\li	"name" is a valid absolute dns name.  *\li	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  *\li 	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  *\li	If successful, *keyp will contain a valid key.  */
 end_comment
 
 begin_function_decl
@@ -698,7 +785,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Compares two DST keys.  *  * Requires:  *	"key1" is a valid key.  *	"key2" is a valid key.  *  * Returns:  * 	ISC_TRUE  * 	ISC_FALSE  */
+comment|/*%<  * Compares two DST keys.  *  * Requires:  *\li	"key1" is a valid key.  *\li	"key2" is a valid key.  *  * Returns:  *\li 	ISC_TRUE  * \li	ISC_FALSE  */
 end_comment
 
 begin_function_decl
@@ -719,7 +806,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Compares the parameters of two DST keys.  This is used to determine if  * two (Diffie-Hellman) keys can be used to derive a shared secret.  *  * Requires:  *	"key1" is a valid key.  *	"key2" is a valid key.  *  * Returns:  * 	ISC_TRUE  * 	ISC_FALSE  */
+comment|/*%<  * Compares the parameters of two DST keys.  This is used to determine if  * two (Diffie-Hellman) keys can be used to derive a shared secret.  *  * Requires:  *\li	"key1" is a valid key.  *\li	"key2" is a valid key.  *  * Returns:  *\li 	ISC_TRUE  * \li	ISC_FALSE  */
 end_comment
 
 begin_function_decl
@@ -735,11 +822,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Release all memory associated with the key.  *  * Requires:  *	"keyp" is not NULL and "*keyp" is a valid key.  *  * Ensures:  *	All memory associated with "*keyp" will be freed.  *	*keyp == NULL  */
+comment|/*%<  * Release all memory associated with the key.  *  * Requires:  *\li	"keyp" is not NULL and "*keyp" is a valid key.  *  * Ensures:  *\li	All memory associated with "*keyp" will be freed.  *\li	*keyp == NULL  */
 end_comment
 
 begin_comment
-comment|/*  * Accessor functions to obtain key fields.  *  * Require:  *	"key" is a valid key.  */
+comment|/*%<  * Accessor functions to obtain key fields.  *  * Require:  *\li	"key" is a valid key.  */
 end_comment
 
 begin_function_decl
@@ -891,7 +978,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Generates the filename used by dst to store the specified key.  * If directory is NULL, the current directory is assumed.  *  * Requires:  *	"key" is a valid key  *	"type" is either DST_TYPE_PUBLIC, DST_TYPE_PRIVATE, or 0 for no suffix.  *	"out" is a valid buffer  *  * Ensures:  *	the file name will be written to "out", and the used pointer will  *		be advanced.  */
+comment|/*%<  * Generates the filename used by dst to store the specified key.  * If directory is NULL, the current directory is assumed.  *  * Requires:  *\li	"key" is a valid key  *\li	"type" is either DST_TYPE_PUBLIC, DST_TYPE_PRIVATE, or 0 for no suffix.  *\li	"out" is a valid buffer  *  * Ensures:  *\li	the file name will be written to "out", and the used pointer will  *		be advanced.  */
 end_comment
 
 begin_function_decl
@@ -912,7 +999,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Computes the size of a signature generated by the given key.  *  * Requires:  *	"key" is a valid key.  *	"n" is not NULL  *  * Returns:  *	ISC_R_SUCCESS  *	DST_R_UNSUPPORTEDALG  *  * Ensures:  * 	"n" stores the size of a generated signature  */
+comment|/*%<  * Computes the size of a signature generated by the given key.  *  * Requires:  *\li	"key" is a valid key.  *\li	"n" is not NULL  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	DST_R_UNSUPPORTEDALG  *  * Ensures:  *\li	"n" stores the size of a generated signature  */
 end_comment
 
 begin_function_decl
@@ -933,7 +1020,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Computes the size of a shared secret generated by the given key.  *  * Requires:  *	"key" is a valid key.  *	"n" is not NULL  *  * Returns:  *	ISC_R_SUCCESS  *	DST_R_UNSUPPORTEDALG  *  * Ensures:  * 	"n" stores the size of a generated shared secret  */
+comment|/*%<  * Computes the size of a shared secret generated by the given key.  *  * Requires:  *\li	"key" is a valid key.  *\li	"n" is not NULL  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	DST_R_UNSUPPORTEDALG  *  * Ensures:  *\li	"n" stores the size of a generated shared secret  */
 end_comment
 
 begin_function_decl
@@ -953,7 +1040,41 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Computes the key id of the key stored in the provided region with the  * given algorithm.  *  * Requires:  * 	"source" contains a valid, non-NULL region.  *  * Returns:  * 	the key id  */
+comment|/*%<  * Computes the key id of the key stored in the provided region with the  * given algorithm.  *  * Requires:  *\li	"source" contains a valid, non-NULL region.  *  * Returns:  *\li 	the key id  */
+end_comment
+
+begin_function_decl
+name|isc_uint16_t
+name|dst_key_getbits
+parameter_list|(
+specifier|const
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Get the number of digest bits required (0 == MAX).  *  * Requires:  *	"key" is a valid key.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dst_key_setbits
+parameter_list|(
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|isc_uint16_t
+name|bits
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Set the number of digest bits required (0 == MAX).  *  * Requires:  *	"key" is a valid key.  */
 end_comment
 
 begin_macro
