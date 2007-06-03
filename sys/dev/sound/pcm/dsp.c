@@ -8817,6 +8817,10 @@ name|i
 operator|=
 literal|0
 init|;
+name|pcm_devclass
+operator|!=
+name|NULL
+operator|&&
 name|i
 operator|<
 name|devclass_get_maxunit
