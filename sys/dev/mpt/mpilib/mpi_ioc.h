@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2000-2005, LSI Logic Corporation and its contributors.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the name of the LSI Logic Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *   *   *           Name:  mpi_ioc.h  *          Title:  MPI IOC, Port, Event, FW Download, and FW Upload messages  *  Creation Date:  August 11, 2000  *  *    mpi_ioc.h Version:  01.05.10  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  05-24-00  00.10.02  Added _MSG_IOC_INIT_REPLY structure.  *  06-06-00  01.00.01  Added CurReplyFrameSize field to _MSG_IOC_FACTS_REPLY.  *  06-12-00  01.00.02  Added _MSG_PORT_ENABLE_REPLY structure.  *                      Added _MSG_EVENT_ACK_REPLY structure.  *                      Added _MSG_FW_DOWNLOAD_REPLY structure.  *                      Added _MSG_TOOLBOX_REPLY structure.  *  06-30-00  01.00.03  Added MaxLanBuckets to _PORT_FACT_REPLY structure.  *  07-27-00  01.00.04  Added _EVENT_DATA structure definitions for _SCSI,  *                      _LINK_STATUS, _LOOP_STATE and _LOGOUT.  *  08-11-00  01.00.05  Switched positions of MsgLength and Function fields in  *                      _MSG_EVENT_ACK_REPLY structure to match specification.  *  11-02-00  01.01.01  Original release for post 1.0 work.  *                      Added a value for Manufacturer to WhoInit.  *  12-04-00  01.01.02  Modified IOCFacts reply, added FWUpload messages, and  *                      removed toolbox message.  *  01-09-01  01.01.03  Added event enabled and disabled defines.  *                      Added structures for FwHeader and DataHeader.  *                      Added ImageType to FwUpload reply.  *  02-20-01  01.01.04  Started using MPI_POINTER.  *  02-27-01  01.01.05  Added event for RAID status change and its event data.  *                      Added IocNumber field to MSG_IOC_FACTS_REPLY.  *  03-27-01  01.01.06  Added defines for ProductId field of MPI_FW_HEADER.  *                      Added structure offset comments.  *  04-09-01  01.01.07  Added structure EVENT_DATA_EVENT_CHANGE.  *  08-08-01  01.02.01  Original release for v1.2 work.  *                      New format for FWVersion and ProductId in  *                      MSG_IOC_FACTS_REPLY and MPI_FW_HEADER.  *  08-31-01  01.02.02  Addded event MPI_EVENT_SCSI_DEVICE_STATUS_CHANGE and  *                      related structure and defines.  *                      Added event MPI_EVENT_ON_BUS_TIMER_EXPIRED.  *                      Added MPI_IOCINIT_FLAGS_DISCARD_FW_IMAGE.  *                      Replaced a reserved field in MSG_IOC_FACTS_REPLY with  *                      IOCExceptions and changed DataImageSize to reserved.  *                      Added MPI_FW_DOWNLOAD_ITYPE_NVSTORE_DATA and  *                      MPI_FW_UPLOAD_ITYPE_NVDATA.  *  09-28-01  01.02.03  Modified Event Data for Integrated RAID.  *  11-01-01  01.02.04  Added defines for MPI_EXT_IMAGE_HEADER ImageType field.  *  03-14-02  01.02.05  Added HeaderVersion field to MSG_IOC_FACTS_REPLY.  *  05-31-02  01.02.06  Added define for  *                      MPI_IOCFACTS_EXCEPT_RAID_CONFIG_INVALID.  *                      Added AliasIndex to EVENT_DATA_LOGOUT structure.  *  04-01-03  01.02.07  Added defines for MPI_FW_HEADER_SIGNATURE_.  *  06-26-03  01.02.08  Added new values to the product family defines.  *  04-29-04  01.02.09  Added IOCCapabilities field to MSG_IOC_FACTS_REPLY and  *                      added related defines.  *  05-11-04  01.03.01  Original release for MPI v1.3.  *  08-19-04  01.05.01  Added four new fields to MSG_IOC_INIT.  *                      Added three new fields to MSG_IOC_FACTS_REPLY.  *                      Defined four new bits for the IOCCapabilities field of  *                      the IOCFacts reply.  *                      Added two new PortTypes for the PortFacts reply.  *                      Added six new events along with their EventData  *                      structures.  *                      Added a new MsgFlag to the FwDownload request to  *                      indicate last segment.  *                      Defined a new image type of boot loader.  *                      Added FW family codes for SAS product families.  *  10-05-04  01.05.02  Added ReplyFifoHostSignalingAddr field to  *                      MSG_IOC_FACTS_REPLY.  *  12-07-04  01.05.03  Added more defines for SAS Discovery Error event.  *  12-09-04  01.05.04  Added Unsupported device to SAS Device event.  *  01-15-05  01.05.05  Added event data for SAS SES Event.  *  02-09-05  01.05.06  Added MPI_FW_UPLOAD_ITYPE_FW_BACKUP define.  *  02-22-05  01.05.07  Added Host Page Buffer Persistent flag to IOC Facts  *                      Reply and IOC Init Request.  *  03-11-05  01.05.08  Added family code for 1068E family.  *                      Removed IOCFacts Reply EEDP Capability bit.  *  06-24-05  01.05.09  Added 5 new IOCFacts Reply IOCCapabilities bits.  *                      Added Max SATA Targets to SAS Discovery Error event.  *  08-30-05  01.05.10  Added 4 new events and their event data structures.  *                      Added new ReasonCode value for SAS Device Status Change  *                      event.  *                      Added new family code for FC949E.  *  --------------------------------------------------------------------------  */
+comment|/*-  * Copyright (c) 2000-2005, LSI Logic Corporation and its contributors.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the name of the LSI Logic Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *           Name:  mpi_ioc.h  *          Title:  MPI IOC, Port, Event, FW Download, and FW Upload messages  *  Creation Date:  August 11, 2000  *  *    mpi_ioc.h Version:  01.05.14  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  05-24-00  00.10.02  Added _MSG_IOC_INIT_REPLY structure.  *  06-06-00  01.00.01  Added CurReplyFrameSize field to _MSG_IOC_FACTS_REPLY.  *  06-12-00  01.00.02  Added _MSG_PORT_ENABLE_REPLY structure.  *                      Added _MSG_EVENT_ACK_REPLY structure.  *                      Added _MSG_FW_DOWNLOAD_REPLY structure.  *                      Added _MSG_TOOLBOX_REPLY structure.  *  06-30-00  01.00.03  Added MaxLanBuckets to _PORT_FACT_REPLY structure.  *  07-27-00  01.00.04  Added _EVENT_DATA structure definitions for _SCSI,  *                      _LINK_STATUS, _LOOP_STATE and _LOGOUT.  *  08-11-00  01.00.05  Switched positions of MsgLength and Function fields in  *                      _MSG_EVENT_ACK_REPLY structure to match specification.  *  11-02-00  01.01.01  Original release for post 1.0 work.  *                      Added a value for Manufacturer to WhoInit.  *  12-04-00  01.01.02  Modified IOCFacts reply, added FWUpload messages, and  *                      removed toolbox message.  *  01-09-01  01.01.03  Added event enabled and disabled defines.  *                      Added structures for FwHeader and DataHeader.  *                      Added ImageType to FwUpload reply.  *  02-20-01  01.01.04  Started using MPI_POINTER.  *  02-27-01  01.01.05  Added event for RAID status change and its event data.  *                      Added IocNumber field to MSG_IOC_FACTS_REPLY.  *  03-27-01  01.01.06  Added defines for ProductId field of MPI_FW_HEADER.  *                      Added structure offset comments.  *  04-09-01  01.01.07  Added structure EVENT_DATA_EVENT_CHANGE.  *  08-08-01  01.02.01  Original release for v1.2 work.  *                      New format for FWVersion and ProductId in  *                      MSG_IOC_FACTS_REPLY and MPI_FW_HEADER.  *  08-31-01  01.02.02  Addded event MPI_EVENT_SCSI_DEVICE_STATUS_CHANGE and  *                      related structure and defines.  *                      Added event MPI_EVENT_ON_BUS_TIMER_EXPIRED.  *                      Added MPI_IOCINIT_FLAGS_DISCARD_FW_IMAGE.  *                      Replaced a reserved field in MSG_IOC_FACTS_REPLY with  *                      IOCExceptions and changed DataImageSize to reserved.  *                      Added MPI_FW_DOWNLOAD_ITYPE_NVSTORE_DATA and  *                      MPI_FW_UPLOAD_ITYPE_NVDATA.  *  09-28-01  01.02.03  Modified Event Data for Integrated RAID.  *  11-01-01  01.02.04  Added defines for MPI_EXT_IMAGE_HEADER ImageType field.  *  03-14-02  01.02.05  Added HeaderVersion field to MSG_IOC_FACTS_REPLY.  *  05-31-02  01.02.06  Added define for  *                      MPI_IOCFACTS_EXCEPT_RAID_CONFIG_INVALID.  *                      Added AliasIndex to EVENT_DATA_LOGOUT structure.  *  04-01-03  01.02.07  Added defines for MPI_FW_HEADER_SIGNATURE_.  *  06-26-03  01.02.08  Added new values to the product family defines.  *  04-29-04  01.02.09  Added IOCCapabilities field to MSG_IOC_FACTS_REPLY and  *                      added related defines.  *  05-11-04  01.03.01  Original release for MPI v1.3.  *  08-19-04  01.05.01  Added four new fields to MSG_IOC_INIT.  *                      Added three new fields to MSG_IOC_FACTS_REPLY.  *                      Defined four new bits for the IOCCapabilities field of  *                      the IOCFacts reply.  *                      Added two new PortTypes for the PortFacts reply.  *                      Added six new events along with their EventData  *                      structures.  *                      Added a new MsgFlag to the FwDownload request to  *                      indicate last segment.  *                      Defined a new image type of boot loader.  *                      Added FW family codes for SAS product families.  *  10-05-04  01.05.02  Added ReplyFifoHostSignalingAddr field to  *                      MSG_IOC_FACTS_REPLY.  *  12-07-04  01.05.03  Added more defines for SAS Discovery Error event.  *  12-09-04  01.05.04  Added Unsupported device to SAS Device event.  *  01-15-05  01.05.05  Added event data for SAS SES Event.  *  02-09-05  01.05.06  Added MPI_FW_UPLOAD_ITYPE_FW_BACKUP define.  *  02-22-05  01.05.07  Added Host Page Buffer Persistent flag to IOC Facts  *                      Reply and IOC Init Request.  *  03-11-05  01.05.08  Added family code for 1068E family.  *                      Removed IOCFacts Reply EEDP Capability bit.  *  06-24-05  01.05.09  Added 5 new IOCFacts Reply IOCCapabilities bits.  *                      Added Max SATA Targets to SAS Discovery Error event.  *  08-30-05  01.05.10  Added 4 new events and their event data structures.  *                      Added new ReasonCode value for SAS Device Status Change  *                      event.  *                      Added new family code for FC949E.  *  03-27-06  01.05.11  Added MPI_IOCFACTS_CAPABILITY_TLR.  *                      Added additional Reason Codes and more event data fields  *                      to EVENT_DATA_SAS_DEVICE_STATUS_CHANGE.  *                      Added EVENT_DATA_SAS_BROADCAST_PRIMITIVE structure and  *                      new event.  *                      Added MPI_EVENT_SAS_SMP_ERROR and event data structure.  *                      Added MPI_EVENT_SAS_INIT_DEVICE_STATUS_CHANGE and event  *                      data structure.  *                      Added MPI_EVENT_SAS_INIT_TABLE_OVERFLOW and event  *                      data structure.  *                      Added MPI_EXT_IMAGE_TYPE_INITIALIZATION.  *  10-11-06  01.05.12  Added MPI_IOCFACTS_EXCEPT_METADATA_UNSUPPORTED.  *                      Added MaxInitiators field to PortFacts reply.  *                      Added SAS Device Status Change ReasonCode for  *                      asynchronous notificaiton.  *                      Added MPI_EVENT_SAS_EXPANDER_STATUS_CHANGE and event  *                      data structure.  *                      Added new ImageType values for FWDownload and FWUpload  *                      requests.  *  02-28-07  01.05.13  Added MPI_EVENT_PRIMITIVE_ASYNCHRONOUS_EVENT for SAS  *                      Broadcast Event Data (replacing _RESERVED2).  *                      For Discovery Error Event Data DiscoveryStatus field,  *                      replaced _MULTPL_PATHS with _UNSUPPORTED_DEVICE and  *                      added _MULTI_PORT_DOMAIN.  *  05-24-07  01.05.14  Added Common Boot Block type to FWDownload Request.  *                      Added Common Boot Block type to FWUpload Request.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -669,6 +669,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI_IOCFACTS_EXCEPT_METADATA_UNSUPPORTED
+value|(0x0010)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI_IOCFACTS_FLAGS_FW_DOWNLOAD_BOOT
 value|(0x01)
 end_define
@@ -776,6 +783,13 @@ define|#
 directive|define
 name|MPI_IOCFACTS_CAPABILITY_NO_SCSIIO16
 value|(0x00000400)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_IOCFACTS_CAPABILITY_TLR
+value|(0x00000800)
 end_define
 
 begin_comment
@@ -923,10 +937,14 @@ name|U16
 name|MaxLanBuckets
 decl_stmt|;
 comment|/* 20h */
-name|U16
-name|Reserved4
+name|U8
+name|MaxInitiators
 decl_stmt|;
 comment|/* 22h */
+name|U8
+name|Reserved4
+decl_stmt|;
+comment|/* 23h */
 name|U32
 name|Reserved5
 decl_stmt|;
@@ -1597,6 +1615,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI_EVENT_SAS_BROADCAST_PRIMITIVE
+value|(0x00000017)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_INIT_DEVICE_STATUS_CHANGE
+value|(0x00000018)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_INIT_TABLE_OVERFLOW
+value|(0x00000019)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_SMP_ERROR
+value|(0x0000001A)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXPANDER_STATUS_CHANGE
+value|(0x0000001B)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI_EVENT_LOG_ENTRY_ADDED
 value|(0x00000021)
 end_define
@@ -1909,6 +1962,21 @@ name|U64
 name|SASAddress
 decl_stmt|;
 comment|/* 10h */
+name|U8
+name|LUN
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* 18h */
+name|U16
+name|TaskTag
+decl_stmt|;
+comment|/* 20h */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 22h */
 block|}
 name|EVENT_DATA_SAS_DEVICE_STATUS_CHANGE
 operator|,
@@ -1966,6 +2034,41 @@ define|#
 directive|define
 name|MPI_EVENT_SAS_DEV_STAT_RC_INTERNAL_DEVICE_RESET
 value|(0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_DEV_STAT_RC_TASK_ABORT_INTERNAL
+value|(0x09)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_DEV_STAT_RC_ABORT_TASK_SET_INTERNAL
+value|(0x0A)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_DEV_STAT_RC_CLEAR_TASK_SET_INTERNAL
+value|(0x0B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_DEV_STAT_RC_QUERY_TASK_INTERNAL
+value|(0x0C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_DEV_STAT_RC_ASYNC_NOTIFICATION
+value|(0x0D)
 end_define
 
 begin_comment
@@ -2667,6 +2770,93 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* SAS Broadcast Primitive Event data */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_EVENT_DATA_SAS_BROADCAST_PRIMITIVE
+block|{
+name|U8
+name|PhyNum
+decl_stmt|;
+comment|/* 00h */
+name|U8
+name|Port
+decl_stmt|;
+comment|/* 01h */
+name|U8
+name|PortWidth
+decl_stmt|;
+comment|/* 02h */
+name|U8
+name|Primitive
+decl_stmt|;
+comment|/* 04h */
+block|}
+name|EVENT_DATA_SAS_BROADCAST_PRIMITIVE
+operator|,
+name|MPI_POINTER
+name|PTR_EVENT_DATA_SAS_BROADCAST_PRIMITIVE
+operator|,
+name|MpiEventDataSasBroadcastPrimitive_t
+operator|,
+name|MPI_POINTER
+name|pMpiEventDataSasBroadcastPrimitive_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_PRIMITIVE_CHANGE
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_PRIMITIVE_EXPANDER
+value|(0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_PRIMITIVE_ASYNCHRONOUS_EVENT
+value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_PRIMITIVE_RESERVED3
+value|(0x05)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_PRIMITIVE_RESERVED4
+value|(0x06)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_PRIMITIVE_CHANGE0_RESERVED
+value|(0x07)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_PRIMITIVE_CHANGE1_RESERVED
+value|(0x08)
+end_define
+
+begin_comment
 comment|/* SAS Phy Link Status Event data */
 end_comment
 
@@ -2954,7 +3144,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MPI_EVENT_DSCVRY_ERR_DS_MULTPL_PATHS
+name|MPI_EVENT_DSCVRY_ERR_DS_UNSUPPORTED_DEVICE
 value|(0x00000800)
 end_define
 
@@ -2963,6 +3153,387 @@ define|#
 directive|define
 name|MPI_EVENT_DSCVRY_ERR_DS_MAX_SATA_TARGETS
 value|(0x00001000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_DSCVRY_ERR_DS_MULTI_PORT_DOMAIN
+value|(0x00002000)
+end_define
+
+begin_comment
+comment|/* SAS SMP Error Event data */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_EVENT_DATA_SAS_SMP_ERROR
+block|{
+name|U8
+name|Status
+decl_stmt|;
+comment|/* 00h */
+name|U8
+name|Port
+decl_stmt|;
+comment|/* 01h */
+name|U8
+name|SMPFunctionResult
+decl_stmt|;
+comment|/* 02h */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 03h */
+name|U64
+name|SASAddress
+decl_stmt|;
+comment|/* 04h */
+block|}
+name|EVENT_DATA_SAS_SMP_ERROR
+operator|,
+name|MPI_POINTER
+name|PTR_EVENT_DATA_SAS_SMP_ERROR
+operator|,
+name|MpiEventDataSasSmpError_t
+operator|,
+name|MPI_POINTER
+name|pMpiEventDataSasSmpError_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* defines for the Status field of the SAS SMP Error event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_SMP_FUNCTION_RESULT_VALID
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_SMP_CRC_ERROR
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_SMP_TIMEOUT
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_SMP_NO_DESTINATION
+value|(0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_SMP_BAD_DESTINATION
+value|(0x04)
+end_define
+
+begin_comment
+comment|/* SAS Initiator Device Status Change Event data */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_EVENT_DATA_SAS_INIT_DEV_STATUS_CHANGE
+block|{
+name|U8
+name|ReasonCode
+decl_stmt|;
+comment|/* 00h */
+name|U8
+name|Port
+decl_stmt|;
+comment|/* 01h */
+name|U16
+name|DevHandle
+decl_stmt|;
+comment|/* 02h */
+name|U64
+name|SASAddress
+decl_stmt|;
+comment|/* 04h */
+block|}
+name|EVENT_DATA_SAS_INIT_DEV_STATUS_CHANGE
+operator|,
+name|MPI_POINTER
+name|PTR_EVENT_DATA_SAS_INIT_DEV_STATUS_CHANGE
+operator|,
+name|MpiEventDataSasInitDevStatusChange_t
+operator|,
+name|MPI_POINTER
+name|pMpiEventDataSasInitDevStatusChange_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* defines for the ReasonCode field of the SAS Initiator Device Status Change event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_INIT_RC_ADDED
+value|(0x01)
+end_define
+
+begin_comment
+comment|/* SAS Initiator Device Table Overflow Event data */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_EVENT_DATA_SAS_INIT_TABLE_OVERFLOW
+block|{
+name|U8
+name|MaxInit
+decl_stmt|;
+comment|/* 00h */
+name|U8
+name|CurrentInit
+decl_stmt|;
+comment|/* 01h */
+name|U16
+name|Reserved1
+decl_stmt|;
+comment|/* 02h */
+block|}
+name|EVENT_DATA_SAS_INIT_TABLE_OVERFLOW
+operator|,
+name|MPI_POINTER
+name|PTR_EVENT_DATA_SAS_INIT_TABLE_OVERFLOW
+operator|,
+name|MpiEventDataSasInitTableOverflow_t
+operator|,
+name|MPI_POINTER
+name|pMpiEventDataSasInitTableOverflow_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* SAS Expander Status Change Event data */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_EVENT_DATA_SAS_EXPANDER_STATUS_CHANGE
+block|{
+name|U8
+name|ReasonCode
+decl_stmt|;
+comment|/* 00h */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 01h */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 02h */
+name|U8
+name|PhysicalPort
+decl_stmt|;
+comment|/* 04h */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 05h */
+name|U16
+name|EnclosureHandle
+decl_stmt|;
+comment|/* 06h */
+name|U64
+name|SASAddress
+decl_stmt|;
+comment|/* 08h */
+name|U32
+name|DiscoveryStatus
+decl_stmt|;
+comment|/* 10h */
+name|U16
+name|DevHandle
+decl_stmt|;
+comment|/* 14h */
+name|U16
+name|ParentDevHandle
+decl_stmt|;
+comment|/* 16h */
+name|U16
+name|ExpanderChangeCount
+decl_stmt|;
+comment|/* 18h */
+name|U16
+name|ExpanderRouteIndexes
+decl_stmt|;
+comment|/* 1Ah */
+name|U8
+name|NumPhys
+decl_stmt|;
+comment|/* 1Ch */
+name|U8
+name|SASLevel
+decl_stmt|;
+comment|/* 1Dh */
+name|U8
+name|Flags
+decl_stmt|;
+comment|/* 1Eh */
+name|U8
+name|Reserved4
+decl_stmt|;
+comment|/* 1Fh */
+block|}
+name|EVENT_DATA_SAS_EXPANDER_STATUS_CHANGE
+operator|,
+name|MPI_POINTER
+name|PTR_EVENT_DATA_SAS_EXPANDER_STATUS_CHANGE
+operator|,
+name|MpiEventDataSasExpanderStatusChange_t
+operator|,
+name|MPI_POINTER
+name|pMpiEventDataSasExpanderStatusChange_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* values for ReasonCode field of SAS Expander Status Change Event data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_RC_ADDED
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_RC_NOT_RESPONDING
+value|(0x01)
+end_define
+
+begin_comment
+comment|/* values for DiscoveryStatus field of SAS Expander Status Change Event data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_DS_LOOP_DETECTED
+value|(0x00000001)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_DS_UNADDRESSABLE_DEVICE
+value|(0x00000002)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_DS_MULTIPLE_PORTS
+value|(0x00000004)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_DS_EXPANDER_ERR
+value|(0x00000008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_DS_SMP_TIMEOUT
+value|(0x00000010)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_DS_OUT_ROUTE_ENTRIES
+value|(0x00000020)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_DS_INDEX_NOT_EXIST
+value|(0x00000040)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_DS_SMP_FUNCTION_FAILED
+value|(0x00000080)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_DS_SMP_CRC_ERROR
+value|(0x00000100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_DS_SUBTRACTIVE_LINK
+value|(0x00000200)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_DS_TABLE_LINK
+value|(0x00000400)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_DS_UNSUPPORTED_DEVICE
+value|(0x00000800)
+end_define
+
+begin_comment
+comment|/* values for Flags field of SAS Expander Status Change Event data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_FLAGS_ROUTE_TABLE_CONFIG
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EVENT_SAS_EXP_FLAGS_CONFIG_IN_PROGRESS
+value|(0x01)
 end_define
 
 begin_comment
@@ -3074,6 +3645,41 @@ define|#
 directive|define
 name|MPI_FW_DOWNLOAD_ITYPE_BOOTLOADER
 value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FW_DOWNLOAD_ITYPE_MANUFACTURING
+value|(0x06)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FW_DOWNLOAD_ITYPE_CONFIG_1
+value|(0x07)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FW_DOWNLOAD_ITYPE_CONFIG_2
+value|(0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FW_DOWNLOAD_ITYPE_MEGARAID
+value|(0x09)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FW_DOWNLOAD_ITYPE_COMMON_BOOT_BLOCK
+value|(0x0B)
 end_define
 
 begin_typedef
@@ -3293,6 +3899,48 @@ define|#
 directive|define
 name|MPI_FW_UPLOAD_ITYPE_FW_BACKUP
 value|(0x05)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FW_UPLOAD_ITYPE_MANUFACTURING
+value|(0x06)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FW_UPLOAD_ITYPE_CONFIG_1
+value|(0x07)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FW_UPLOAD_ITYPE_CONFIG_2
+value|(0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FW_UPLOAD_ITYPE_MEGARAID
+value|(0x09)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FW_UPLOAD_ITYPE_COMPLETE
+value|(0x0A)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_FW_UPLOAD_ITYPE_COMMON_BOOT_BLOCK
+value|(0x0B)
 end_define
 
 begin_typedef
@@ -3914,6 +4562,13 @@ define|#
 directive|define
 name|MPI_EXT_IMAGE_TYPE_BOOTLOADER
 value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_EXT_IMAGE_TYPE_INITIALIZATION
+value|(0x05)
 end_define
 
 begin_endif

@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2000-2005, LSI Logic Corporation and its contributors.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the name of the LSI Logic Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *           Name:  mpi_cnfg.h  *          Title:  MPI Config message, structures, and Pages  *  Creation Date:  July 27, 2000  *  *    mpi_cnfg.h Version:  01.05.11  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  06-06-00  01.00.01  Update version number for 1.0 release.  *  06-08-00  01.00.02  Added _PAGEVERSION definitions for all pages.  *                      Added FcPhLowestVersion, FcPhHighestVersion, Reserved2  *                      fields to FC_DEVICE_0 page, updated the page version.  *                      Changed _FREE_RUNNING_CLOCK to _PACING_TRANSFERS in  *                      SCSI_PORT_0, SCSI_DEVICE_0 and SCSI_DEVICE_1 pages  *                      and updated the page versions.  *                      Added _RESPONSE_ID_MASK definition to SCSI_PORT_1  *                      page and updated the page version.  *                      Added Information field and _INFO_PARAMS_NEGOTIATED  *                      definitionto SCSI_DEVICE_0 page.  *  06-22-00  01.00.03  Removed batch controls from LAN_0 page and updated the  *                      page version.  *                      Added BucketsRemaining to LAN_1 page, redefined the  *                      state values, and updated the page version.  *                      Revised bus width definitions in SCSI_PORT_0,  *                      SCSI_DEVICE_0 and SCSI_DEVICE_1 pages.  *  06-30-00  01.00.04  Added MaxReplySize to LAN_1 page and updated the page  *                      version.  *                      Moved FC_DEVICE_0 PageAddress description to spec.  *  07-27-00  01.00.05  Corrected the SubsystemVendorID and SubsystemID field  *                      widths in IOC_0 page and updated the page version.  *  11-02-00  01.01.01  Original release for post 1.0 work  *                      Added Manufacturing pages, IO Unit Page 2, SCSI SPI  *                      Port Page 2, FC Port Page 4, FC Port Page 5  *  11-15-00  01.01.02  Interim changes to match proposals  *  12-04-00  01.01.03  Config page changes to match MPI rev 1.00.01.  *  12-05-00  01.01.04  Modified config page actions.  *  01-09-01  01.01.05  Added defines for page address formats.  *                      Data size for Manufacturing pages 2 and 3 no longer  *                      defined here.  *                      Io Unit Page 2 size is fixed at 4 adapters and some  *                      flags were changed.  *                      SCSI Port Page 2 Device Settings modified.  *                      New fields added to FC Port Page 0 and some flags  *                      cleaned up.  *                      Removed impedance flash from FC Port Page 1.  *                      Added FC Port pages 6 and 7.  *  01-25-01  01.01.06  Added MaxInitiators field to FcPortPage0.  *  01-29-01  01.01.07  Changed some defines to make them 32 character unique.  *                      Added some LinkType defines for FcPortPage0.  *  02-20-01  01.01.08  Started using MPI_POINTER.  *  02-27-01  01.01.09  Replaced MPI_CONFIG_PAGETYPE_SCSI_LUN with  *                      MPI_CONFIG_PAGETYPE_RAID_VOLUME.  *                      Added definitions and structures for IOC Page 2 and  *                      RAID Volume Page 2.  *  03-27-01  01.01.10  Added CONFIG_PAGE_FC_PORT_8 and CONFIG_PAGE_FC_PORT_9.  *                      CONFIG_PAGE_FC_PORT_3 now supports persistent by DID.  *                      Added VendorId and ProductRevLevel fields to  *                      RAIDVOL2_IM_PHYS_ID struct.  *                      Modified values for MPI_FCPORTPAGE0_FLAGS_ATTACH_  *                      defines to make them compatible to MPI version 1.0.  *                      Added structure offset comments.  *  04-09-01  01.01.11  Added some new defines for the PageAddress field and  *                      removed some obsolete ones.  *                      Added IO Unit Page 3.  *                      Modified defines for Scsi Port Page 2.  *                      Modified RAID Volume Pages.  *  08-08-01  01.02.01  Original release for v1.2 work.  *                      Added SepID and SepBus to RVP2 IMPhysicalDisk struct.  *                      Added defines for the SEP bits in RVP2 VolumeSettings.  *                      Modified the DeviceSettings field in RVP2 to use the  *                      proper structure.  *                      Added defines for SES, SAF-TE, and cross channel for  *                      IOCPage2 CapabilitiesFlags.  *                      Removed define for MPI_IOUNITPAGE2_FLAGS_RAID_DISABLE.  *                      Removed define for  *                      MPI_SCSIPORTPAGE2_PORT_FLAGS_PARITY_ENABLE.  *                      Added define for MPI_CONFIG_PAGEATTR_RO_PERSISTENT.  *  08-29-01 01.02.02   Fixed value for MPI_MANUFACTPAGE_DEVID_53C1035.  *                      Added defines for MPI_FCPORTPAGE1_FLAGS_HARD_ALPA_ONLY  *                      and MPI_FCPORTPAGE1_FLAGS_IMMEDIATE_ERROR_REPLY.  *                      Removed MPI_SCSIPORTPAGE0_CAP_PACING_TRANSFERS,  *                      MPI_SCSIDEVPAGE0_NP_PACING_TRANSFERS, and  *                      MPI_SCSIDEVPAGE1_RP_PACING_TRANSFERS, and  *                      MPI_SCSIDEVPAGE1_CONF_PPR_ALLOWED.  *                      Added defines for MPI_SCSIDEVPAGE1_CONF_WDTR_DISALLOWED  *                      and MPI_SCSIDEVPAGE1_CONF_SDTR_DISALLOWED.  *                      Added OnBusTimerValue to CONFIG_PAGE_SCSI_PORT_1.  *                      Added rejected bits to SCSI Device Page 0 Information.  *                      Increased size of ALPA array in FC Port Page 2 by one  *                      and removed a one byte reserved field.  *  09-28-01 01.02.03   Swapped NegWireSpeedLow and NegWireSpeedLow in  *                      CONFIG_PAGE_LAN_1 to match preferred 64-bit ordering.  *                      Added structures for Manufacturing Page 4, IO Unit  *                      Page 3, IOC Page 3, IOC Page 4, RAID Volume Page 0, and  *                      RAID PhysDisk Page 0.  *  10-04-01 01.02.04   Added define for MPI_CONFIG_PAGETYPE_RAID_PHYSDISK.  *                      Modified some of the new defines to make them 32  *                      character unique.  *                      Modified how variable length pages (arrays) are defined.  *                      Added generic defines for hot spare pools and RAID  *                      volume types.  *  11-01-01 01.02.05   Added define for MPI_IOUNITPAGE1_DISABLE_IR.  *  03-14-02 01.02.06   Added PCISlotNum field to CONFIG_PAGE_IOC_1 along with  *                      related define, and bumped the page version define.  *  05-31-02 01.02.07   Added a Flags field to CONFIG_PAGE_IOC_2_RAID_VOL in a  *                      reserved byte and added a define.  *                      Added define for  *                      MPI_RAIDVOL0_STATUS_FLAG_VOLUME_INACTIVE.  *                      Added new config page: CONFIG_PAGE_IOC_5.  *                      Added MaxAliases, MaxHardAliases, and NumCurrentAliases  *                      fields to CONFIG_PAGE_FC_PORT_0.  *                      Added AltConnector and NumRequestedAliases fields to  *                      CONFIG_PAGE_FC_PORT_1.  *                      Added new config page: CONFIG_PAGE_FC_PORT_10.  *  07-12-02 01.02.08   Added more MPI_MANUFACTPAGE_DEVID_ defines.  *                      Added additional MPI_SCSIDEVPAGE0_NP_ defines.  *                      Added more MPI_SCSIDEVPAGE1_RP_ defines.  *                      Added define for  *                      MPI_SCSIDEVPAGE1_CONF_EXTENDED_PARAMS_ENABLE.  *                      Added new config page: CONFIG_PAGE_SCSI_DEVICE_3.  *                      Modified MPI_FCPORTPAGE5_FLAGS_ defines.  *  09-16-02 01.02.09   Added MPI_SCSIDEVPAGE1_CONF_FORCE_PPR_MSG define.  *  11-15-02 01.02.10   Added ConnectedID defines for CONFIG_PAGE_SCSI_PORT_0.  *                      Added more Flags defines for CONFIG_PAGE_FC_PORT_1.  *                      Added more Flags defines for CONFIG_PAGE_FC_DEVICE_0.  *  04-01-03 01.02.11   Added RR_TOV field and additional Flags defines for  *                      CONFIG_PAGE_FC_PORT_1.  *                      Added define MPI_FCPORTPAGE5_FLAGS_DISABLE to disable  *                      an alias.  *                      Added more device id defines.  *  06-26-03 01.02.12   Added MPI_IOUNITPAGE1_IR_USE_STATIC_VOLUME_ID define.  *                      Added TargetConfig and IDConfig fields to  *                      CONFIG_PAGE_SCSI_PORT_1.  *                      Added more PortFlags defines for CONFIG_PAGE_SCSI_PORT_2  *                      to control DV.  *                      Added more Flags defines for CONFIG_PAGE_FC_PORT_1.  *                      In CONFIG_PAGE_FC_DEVICE_0, replaced Reserved1 field  *                      with ADISCHardALPA.  *                      Added MPI_FC_DEVICE_PAGE0_PROT_FCP_RETRY define.  *  01-16-04 01.02.13   Added InitiatorDeviceTimeout and InitiatorIoPendTimeout  *                      fields and related defines to CONFIG_PAGE_FC_PORT_1.  *                      Added define for  *                      MPI_FCPORTPAGE1_FLAGS_SOFT_ALPA_FALLBACK.  *                      Added new fields to the substructures of  *                      CONFIG_PAGE_FC_PORT_10.  *  04-29-04 01.02.14   Added define for IDP bit for CONFIG_PAGE_SCSI_PORT_0,  *                      CONFIG_PAGE_SCSI_DEVICE_0, and  *                      CONFIG_PAGE_SCSI_DEVICE_1. Also bumped Page Version for  *                      these pages.  *  05-11-04 01.03.01   Added structure for CONFIG_PAGE_INBAND_0.  *  08-19-04 01.05.01   Modified MSG_CONFIG request to support extended config  *                      pages.  *                      Added a new structure for extended config page header.  *                      Added new extended config pages types and structures for  *                      SAS IO Unit, SAS Expander, SAS Device, and SAS PHY.  *                      Replaced a reserved byte in CONFIG_PAGE_MANUFACTURING_4  *                      to add a Flags field.  *                      Two new Manufacturing config pages (5 and 6).  *                      Two new bits defined for IO Unit Page 1 Flags field.  *                      Modified CONFIG_PAGE_IO_UNIT_2 to add three new fields  *                      to specify the BIOS boot device.  *                      Four new Flags bits defined for IO Unit Page 2.  *                      Added IO Unit Page 4.  *                      Added EEDP Flags settings to IOC Page 1.  *                      Added new BIOS Page 1 config page.  *  10-05-04 01.05.02   Added define for  *                      MPI_IOCPAGE1_INITIATOR_CONTEXT_REPLY_DISABLE.  *                      Added new Flags field to CONFIG_PAGE_MANUFACTURING_5 and  *                      associated defines.  *                      Added more defines for SAS IO Unit Page 0  *                      DiscoveryStatus field.  *                      Added define for MPI_SAS_IOUNIT0_DS_SUBTRACTIVE_LINK  *                      and MPI_SAS_IOUNIT0_DS_TABLE_LINK.  *                      Added defines for Physical Mapping Modes to SAS IO Unit  *                      Page 2.  *                      Added define for  *                      MPI_SAS_DEVICE0_FLAGS_PORT_SELECTOR_ATTACH.  *  10-27-04 01.05.03   Added defines for new SAS PHY page addressing mode.  *                      Added defines for MaxTargetSpinUp to BIOS Page 1.  *                      Added 5 new ControlFlags defines for SAS IO Unit  *                      Page 1.  *                      Added MaxNumPhysicalMappedIDs field to SAS IO Unit  *                      Page 2.  *                      Added AccessStatus field to SAS Device Page 0 and added  *                      new Flags bits for supported SATA features.  *  12-07-04  01.05.04  Added config page structures for BIOS Page 2, RAID  *                      Volume Page 1, and RAID Physical Disk Page 1.  *                      Replaced IO Unit Page 1 BootTargetID,BootBus, and  *                      BootAdapterNum with reserved field.  *                      Added DataScrubRate and ResyncRate to RAID Volume  *                      Page 0.  *                      Added MPI_SAS_IOUNIT2_FLAGS_RESERVE_ID_0_FOR_BOOT  *                      define.  *  12-09-04  01.05.05  Added Target Mode Large CDB Enable to FC Port Page 1  *                      Flags field.  *                      Added Auto Port Config flag define for SAS IOUNIT  *                      Page 1 ControlFlags.  *                      Added Disabled bad Phy define to Expander Page 1  *                      Discovery Info field.  *                      Added SAS/SATA device support to SAS IOUnit Page 1  *                      ControlFlags.  *                      Added Unsupported device to SAS Dev Page 0 Flags field  *                      Added disable use SATA Hash Address for SAS IOUNIT  *                      page 1 in ControlFields.  *  01-15-05  01.05.06  Added defaults for data scrub rate and resync rate to  *                      Manufacturing Page 4.  *                      Added new defines for BIOS Page 1 IOCSettings field.  *                      Added ExtDiskIdentifier field to RAID Physical Disk  *                      Page 0.  *                      Added new defines for SAS IO Unit Page 1 ControlFlags  *                      and to SAS Device Page 0 Flags to control SATA devices.  *                      Added defines and structures for the new Log Page 0, a  *                      new type of configuration page.  *  02-09-05  01.05.07  Added InactiveStatus field to RAID Volume Page 0.  *                      Added WWID field to RAID Volume Page 1.  *                      Added PhysicalPort field to SAS Expander pages 0 and 1.  *  03-11-05  01.05.08  Removed the EEDP flags from IOC Page 1.  *                      Added Enclosure/Slot boot device format to BIOS Page 2.  *                      New status value for RAID Volume Page 0 VolumeStatus  *                      (VolumeState subfield).  *                      New value for RAID Physical Page 0 InactiveStatus.  *                      Added Inactive Volume Member flag RAID Physical Disk  *                      Page 0 PhysDiskStatus field.  *                      New physical mapping mode in SAS IO Unit Page 2.  *                      Added CONFIG_PAGE_SAS_ENCLOSURE_0.  *                      Added Slot and Enclosure fields to SAS Device Page 0.  *  06-24-05  01.05.09  Added EEDP defines to IOC Page 1.  *                      Added more RAID type defines to IOC Page 2.  *                      Added Port Enable Delay settings to BIOS Page 1.  *                      Added Bad Block Table Full define to RAID Volume Page 0.  *                      Added Previous State defines to RAID Physical Disk  *                      Page 0.  *                      Added Max Sata Targets define for DiscoveryStatus field  *                      of SAS IO Unit Page 0.  *                      Added Device Self Test to Control Flags of SAS IO Unit  *                      Page 1.  *                      Added Direct Attach Starting Slot Number define for SAS  *                      IO Unit Page 2.  *                      Added new fields in SAS Device Page 2 for enclosure  *                      mapping.  *                      Added OwnerDevHandle and Flags field to SAS PHY Page 0.  *                      Added IOC GPIO Flags define to SAS Enclosure Page 0.  *                      Fixed the value for MPI_SAS_IOUNIT1_CONTROL_DEV_SATA_SUPPORT.  *  08-03-05  01.05.10  Removed ISDataScrubRate and ISResyncRate from  *                      Manufacturing Page 4.  *                      Added MPI_IOUNITPAGE1_SATA_WRITE_CACHE_DISABLE bit.  *                      Added NumDevsPerEnclosure field to SAS IO Unit page 2.  *                      Added MPI_SAS_IOUNIT2_FLAGS_HOST_ASSIGNED_PHYS_MAP  *                      define.  *                      Added EnclosureHandle field to SAS Expander page 0.  *                      Removed redundant NumTableEntriesProg field from SAS  *                      Expander Page 1.  *  08-30-05  01.05.11  Added DeviceID for FC949E and changed the DeviceID for  *                      SAS1078.  *                      Added more defines for Manufacturing Page 4 Flags field.  *                      Added more defines for IOCSettings and added  *                      ExpanderSpinup field to Bios Page 1.  *                      Added postpone SATA Init bit to SAS IO Unit Page 1  *                      ControlFlags.  *                      Changed LogEntry format for Log Page 0.  *  --------------------------------------------------------------------------  */
+comment|/*-  * Copyright (c) 2000-2005, LSI Logic Corporation and its contributors.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the name of the LSI Logic Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *           Name:  mpi_cnfg.h  *          Title:  MPI Config message, structures, and Pages  *  Creation Date:  July 27, 2000  *  *    mpi_cnfg.h Version:  01.05.15  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  05-08-00  00.10.01  Original release for 0.10 spec dated 4/26/2000.  *  06-06-00  01.00.01  Update version number for 1.0 release.  *  06-08-00  01.00.02  Added _PAGEVERSION definitions for all pages.  *                      Added FcPhLowestVersion, FcPhHighestVersion, Reserved2  *                      fields to FC_DEVICE_0 page, updated the page version.  *                      Changed _FREE_RUNNING_CLOCK to _PACING_TRANSFERS in  *                      SCSI_PORT_0, SCSI_DEVICE_0 and SCSI_DEVICE_1 pages  *                      and updated the page versions.  *                      Added _RESPONSE_ID_MASK definition to SCSI_PORT_1  *                      page and updated the page version.  *                      Added Information field and _INFO_PARAMS_NEGOTIATED  *                      definitionto SCSI_DEVICE_0 page.  *  06-22-00  01.00.03  Removed batch controls from LAN_0 page and updated the  *                      page version.  *                      Added BucketsRemaining to LAN_1 page, redefined the  *                      state values, and updated the page version.  *                      Revised bus width definitions in SCSI_PORT_0,  *                      SCSI_DEVICE_0 and SCSI_DEVICE_1 pages.  *  06-30-00  01.00.04  Added MaxReplySize to LAN_1 page and updated the page  *                      version.  *                      Moved FC_DEVICE_0 PageAddress description to spec.  *  07-27-00  01.00.05  Corrected the SubsystemVendorID and SubsystemID field  *                      widths in IOC_0 page and updated the page version.  *  11-02-00  01.01.01  Original release for post 1.0 work  *                      Added Manufacturing pages, IO Unit Page 2, SCSI SPI  *                      Port Page 2, FC Port Page 4, FC Port Page 5  *  11-15-00  01.01.02  Interim changes to match proposals  *  12-04-00  01.01.03  Config page changes to match MPI rev 1.00.01.  *  12-05-00  01.01.04  Modified config page actions.  *  01-09-01  01.01.05  Added defines for page address formats.  *                      Data size for Manufacturing pages 2 and 3 no longer  *                      defined here.  *                      Io Unit Page 2 size is fixed at 4 adapters and some  *                      flags were changed.  *                      SCSI Port Page 2 Device Settings modified.  *                      New fields added to FC Port Page 0 and some flags  *                      cleaned up.  *                      Removed impedance flash from FC Port Page 1.  *                      Added FC Port pages 6 and 7.  *  01-25-01  01.01.06  Added MaxInitiators field to FcPortPage0.  *  01-29-01  01.01.07  Changed some defines to make them 32 character unique.  *                      Added some LinkType defines for FcPortPage0.  *  02-20-01  01.01.08  Started using MPI_POINTER.  *  02-27-01  01.01.09  Replaced MPI_CONFIG_PAGETYPE_SCSI_LUN with  *                      MPI_CONFIG_PAGETYPE_RAID_VOLUME.  *                      Added definitions and structures for IOC Page 2 and  *                      RAID Volume Page 2.  *  03-27-01  01.01.10  Added CONFIG_PAGE_FC_PORT_8 and CONFIG_PAGE_FC_PORT_9.  *                      CONFIG_PAGE_FC_PORT_3 now supports persistent by DID.  *                      Added VendorId and ProductRevLevel fields to  *                      RAIDVOL2_IM_PHYS_ID struct.  *                      Modified values for MPI_FCPORTPAGE0_FLAGS_ATTACH_  *                      defines to make them compatible to MPI version 1.0.  *                      Added structure offset comments.  *  04-09-01  01.01.11  Added some new defines for the PageAddress field and  *                      removed some obsolete ones.  *                      Added IO Unit Page 3.  *                      Modified defines for Scsi Port Page 2.  *                      Modified RAID Volume Pages.  *  08-08-01  01.02.01  Original release for v1.2 work.  *                      Added SepID and SepBus to RVP2 IMPhysicalDisk struct.  *                      Added defines for the SEP bits in RVP2 VolumeSettings.  *                      Modified the DeviceSettings field in RVP2 to use the  *                      proper structure.  *                      Added defines for SES, SAF-TE, and cross channel for  *                      IOCPage2 CapabilitiesFlags.  *                      Removed define for MPI_IOUNITPAGE2_FLAGS_RAID_DISABLE.  *                      Removed define for  *                      MPI_SCSIPORTPAGE2_PORT_FLAGS_PARITY_ENABLE.  *                      Added define for MPI_CONFIG_PAGEATTR_RO_PERSISTENT.  *  08-29-01 01.02.02   Fixed value for MPI_MANUFACTPAGE_DEVID_53C1035.  *                      Added defines for MPI_FCPORTPAGE1_FLAGS_HARD_ALPA_ONLY  *                      and MPI_FCPORTPAGE1_FLAGS_IMMEDIATE_ERROR_REPLY.  *                      Removed MPI_SCSIPORTPAGE0_CAP_PACING_TRANSFERS,  *                      MPI_SCSIDEVPAGE0_NP_PACING_TRANSFERS, and  *                      MPI_SCSIDEVPAGE1_RP_PACING_TRANSFERS, and  *                      MPI_SCSIDEVPAGE1_CONF_PPR_ALLOWED.  *                      Added defines for MPI_SCSIDEVPAGE1_CONF_WDTR_DISALLOWED  *                      and MPI_SCSIDEVPAGE1_CONF_SDTR_DISALLOWED.  *                      Added OnBusTimerValue to CONFIG_PAGE_SCSI_PORT_1.  *                      Added rejected bits to SCSI Device Page 0 Information.  *                      Increased size of ALPA array in FC Port Page 2 by one  *                      and removed a one byte reserved field.  *  09-28-01 01.02.03   Swapped NegWireSpeedLow and NegWireSpeedLow in  *                      CONFIG_PAGE_LAN_1 to match preferred 64-bit ordering.  *                      Added structures for Manufacturing Page 4, IO Unit  *                      Page 3, IOC Page 3, IOC Page 4, RAID Volume Page 0, and  *                      RAID PhysDisk Page 0.  *  10-04-01 01.02.04   Added define for MPI_CONFIG_PAGETYPE_RAID_PHYSDISK.  *                      Modified some of the new defines to make them 32  *                      character unique.  *                      Modified how variable length pages (arrays) are defined.  *                      Added generic defines for hot spare pools and RAID  *                      volume types.  *  11-01-01 01.02.05   Added define for MPI_IOUNITPAGE1_DISABLE_IR.  *  03-14-02 01.02.06   Added PCISlotNum field to CONFIG_PAGE_IOC_1 along with  *                      related define, and bumped the page version define.  *  05-31-02 01.02.07   Added a Flags field to CONFIG_PAGE_IOC_2_RAID_VOL in a  *                      reserved byte and added a define.  *                      Added define for  *                      MPI_RAIDVOL0_STATUS_FLAG_VOLUME_INACTIVE.  *                      Added new config page: CONFIG_PAGE_IOC_5.  *                      Added MaxAliases, MaxHardAliases, and NumCurrentAliases  *                      fields to CONFIG_PAGE_FC_PORT_0.  *                      Added AltConnector and NumRequestedAliases fields to  *                      CONFIG_PAGE_FC_PORT_1.  *                      Added new config page: CONFIG_PAGE_FC_PORT_10.  *  07-12-02 01.02.08   Added more MPI_MANUFACTPAGE_DEVID_ defines.  *                      Added additional MPI_SCSIDEVPAGE0_NP_ defines.  *                      Added more MPI_SCSIDEVPAGE1_RP_ defines.  *                      Added define for  *                      MPI_SCSIDEVPAGE1_CONF_EXTENDED_PARAMS_ENABLE.  *                      Added new config page: CONFIG_PAGE_SCSI_DEVICE_3.  *                      Modified MPI_FCPORTPAGE5_FLAGS_ defines.  *  09-16-02 01.02.09   Added MPI_SCSIDEVPAGE1_CONF_FORCE_PPR_MSG define.  *  11-15-02 01.02.10   Added ConnectedID defines for CONFIG_PAGE_SCSI_PORT_0.  *                      Added more Flags defines for CONFIG_PAGE_FC_PORT_1.  *                      Added more Flags defines for CONFIG_PAGE_FC_DEVICE_0.  *  04-01-03 01.02.11   Added RR_TOV field and additional Flags defines for  *                      CONFIG_PAGE_FC_PORT_1.  *                      Added define MPI_FCPORTPAGE5_FLAGS_DISABLE to disable  *                      an alias.  *                      Added more device id defines.  *  06-26-03 01.02.12   Added MPI_IOUNITPAGE1_IR_USE_STATIC_VOLUME_ID define.  *                      Added TargetConfig and IDConfig fields to  *                      CONFIG_PAGE_SCSI_PORT_1.  *                      Added more PortFlags defines for CONFIG_PAGE_SCSI_PORT_2  *                      to control DV.  *                      Added more Flags defines for CONFIG_PAGE_FC_PORT_1.  *                      In CONFIG_PAGE_FC_DEVICE_0, replaced Reserved1 field  *                      with ADISCHardALPA.  *                      Added MPI_FC_DEVICE_PAGE0_PROT_FCP_RETRY define.  *  01-16-04 01.02.13   Added InitiatorDeviceTimeout and InitiatorIoPendTimeout  *                      fields and related defines to CONFIG_PAGE_FC_PORT_1.  *                      Added define for  *                      MPI_FCPORTPAGE1_FLAGS_SOFT_ALPA_FALLBACK.  *                      Added new fields to the substructures of  *                      CONFIG_PAGE_FC_PORT_10.  *  04-29-04 01.02.14   Added define for IDP bit for CONFIG_PAGE_SCSI_PORT_0,  *                      CONFIG_PAGE_SCSI_DEVICE_0, and  *                      CONFIG_PAGE_SCSI_DEVICE_1. Also bumped Page Version for  *                      these pages.  *  05-11-04 01.03.01   Added structure for CONFIG_PAGE_INBAND_0.  *  08-19-04 01.05.01   Modified MSG_CONFIG request to support extended config  *                      pages.  *                      Added a new structure for extended config page header.  *                      Added new extended config pages types and structures for  *                      SAS IO Unit, SAS Expander, SAS Device, and SAS PHY.  *                      Replaced a reserved byte in CONFIG_PAGE_MANUFACTURING_4  *                      to add a Flags field.  *                      Two new Manufacturing config pages (5 and 6).  *                      Two new bits defined for IO Unit Page 1 Flags field.  *                      Modified CONFIG_PAGE_IO_UNIT_2 to add three new fields  *                      to specify the BIOS boot device.  *                      Four new Flags bits defined for IO Unit Page 2.  *                      Added IO Unit Page 4.  *                      Added EEDP Flags settings to IOC Page 1.  *                      Added new BIOS Page 1 config page.  *  10-05-04 01.05.02   Added define for  *                      MPI_IOCPAGE1_INITIATOR_CONTEXT_REPLY_DISABLE.  *                      Added new Flags field to CONFIG_PAGE_MANUFACTURING_5 and  *                      associated defines.  *                      Added more defines for SAS IO Unit Page 0  *                      DiscoveryStatus field.  *                      Added define for MPI_SAS_IOUNIT0_DS_SUBTRACTIVE_LINK  *                      and MPI_SAS_IOUNIT0_DS_TABLE_LINK.  *                      Added defines for Physical Mapping Modes to SAS IO Unit  *                      Page 2.  *                      Added define for  *                      MPI_SAS_DEVICE0_FLAGS_PORT_SELECTOR_ATTACH.  *  10-27-04 01.05.03   Added defines for new SAS PHY page addressing mode.  *                      Added defines for MaxTargetSpinUp to BIOS Page 1.  *                      Added 5 new ControlFlags defines for SAS IO Unit  *                      Page 1.  *                      Added MaxNumPhysicalMappedIDs field to SAS IO Unit  *                      Page 2.  *                      Added AccessStatus field to SAS Device Page 0 and added  *                      new Flags bits for supported SATA features.  *  12-07-04  01.05.04  Added config page structures for BIOS Page 2, RAID  *                      Volume Page 1, and RAID Physical Disk Page 1.  *                      Replaced IO Unit Page 1 BootTargetID,BootBus, and  *                      BootAdapterNum with reserved field.  *                      Added DataScrubRate and ResyncRate to RAID Volume  *                      Page 0.  *                      Added MPI_SAS_IOUNIT2_FLAGS_RESERVE_ID_0_FOR_BOOT  *                      define.  *  12-09-04  01.05.05  Added Target Mode Large CDB Enable to FC Port Page 1  *                      Flags field.  *                      Added Auto Port Config flag define for SAS IOUNIT  *                      Page 1 ControlFlags.  *                      Added Disabled bad Phy define to Expander Page 1  *                      Discovery Info field.  *                      Added SAS/SATA device support to SAS IOUnit Page 1  *                      ControlFlags.  *                      Added Unsupported device to SAS Dev Page 0 Flags field  *                      Added disable use SATA Hash Address for SAS IOUNIT  *                      page 1 in ControlFields.  *  01-15-05  01.05.06  Added defaults for data scrub rate and resync rate to  *                      Manufacturing Page 4.  *                      Added new defines for BIOS Page 1 IOCSettings field.  *                      Added ExtDiskIdentifier field to RAID Physical Disk  *                      Page 0.  *                      Added new defines for SAS IO Unit Page 1 ControlFlags  *                      and to SAS Device Page 0 Flags to control SATA devices.  *                      Added defines and structures for the new Log Page 0, a  *                      new type of configuration page.  *  02-09-05  01.05.07  Added InactiveStatus field to RAID Volume Page 0.  *                      Added WWID field to RAID Volume Page 1.  *                      Added PhysicalPort field to SAS Expander pages 0 and 1.  *  03-11-05  01.05.08  Removed the EEDP flags from IOC Page 1.  *                      Added Enclosure/Slot boot device format to BIOS Page 2.  *                      New status value for RAID Volume Page 0 VolumeStatus  *                      (VolumeState subfield).  *                      New value for RAID Physical Page 0 InactiveStatus.  *                      Added Inactive Volume Member flag RAID Physical Disk  *                      Page 0 PhysDiskStatus field.  *                      New physical mapping mode in SAS IO Unit Page 2.  *                      Added CONFIG_PAGE_SAS_ENCLOSURE_0.  *                      Added Slot and Enclosure fields to SAS Device Page 0.  *  06-24-05  01.05.09  Added EEDP defines to IOC Page 1.  *                      Added more RAID type defines to IOC Page 2.  *                      Added Port Enable Delay settings to BIOS Page 1.  *                      Added Bad Block Table Full define to RAID Volume Page 0.  *                      Added Previous State defines to RAID Physical Disk  *                      Page 0.  *                      Added Max Sata Targets define for DiscoveryStatus field  *                      of SAS IO Unit Page 0.  *                      Added Device Self Test to Control Flags of SAS IO Unit  *                      Page 1.  *                      Added Direct Attach Starting Slot Number define for SAS  *                      IO Unit Page 2.  *                      Added new fields in SAS Device Page 2 for enclosure  *                      mapping.  *                      Added OwnerDevHandle and Flags field to SAS PHY Page 0.  *                      Added IOC GPIO Flags define to SAS Enclosure Page 0.  *                      Fixed the value for MPI_SAS_IOUNIT1_CONTROL_DEV_SATA_SUPPORT.  *  08-03-05  01.05.10  Removed ISDataScrubRate and ISResyncRate from  *                      Manufacturing Page 4.  *                      Added MPI_IOUNITPAGE1_SATA_WRITE_CACHE_DISABLE bit.  *                      Added NumDevsPerEnclosure field to SAS IO Unit page 2.  *                      Added MPI_SAS_IOUNIT2_FLAGS_HOST_ASSIGNED_PHYS_MAP  *                      define.  *                      Added EnclosureHandle field to SAS Expander page 0.  *                      Removed redundant NumTableEntriesProg field from SAS  *                      Expander Page 1.  *  08-30-05  01.05.11  Added DeviceID for FC949E and changed the DeviceID for  *                      SAS1078.  *                      Added more defines for Manufacturing Page 4 Flags field.  *                      Added more defines for IOCSettings and added  *                      ExpanderSpinup field to Bios Page 1.  *                      Added postpone SATA Init bit to SAS IO Unit Page 1  *                      ControlFlags.  *                      Changed LogEntry format for Log Page 0.  *  03-27-06  01.05.12  Added two new Flags defines for Manufacturing Page 4.  *                      Added Manufacturing Page 7.  *                      Added MPI_IOCPAGE2_CAP_FLAGS_RAID_64_BIT_ADDRESSING.  *                      Added IOC Page 6.  *                      Added PrevBootDeviceForm field to CONFIG_PAGE_BIOS_2.  *                      Added MaxLBAHigh field to RAID Volume Page 0.  *                      Added Nvdata version fields to SAS IO Unit Page 0.  *                      Added AdditionalControlFlags, MaxTargetPortConnectTime,  *                      ReportDeviceMissingDelay, and IODeviceMissingDelay  *                      fields to SAS IO Unit Page 1.  *  10-11-06  01.05.13  Added NumForceWWID field and ForceWWID array to  *                      Manufacturing Page 5.  *                      Added Manufacturing pages 8 through 10.  *                      Added defines for supported metadata size bits in  *                      CapabilitiesFlags field of IOC Page 6.  *                      Added defines for metadata size bits in VolumeSettings  *                      field of RAID Volume Page 0.  *                      Added SATA Link Reset settings, Enable SATA Asynchronous  *                      Notification bit, and HideNonZeroAttachedPhyIdentifiers  *                      bit to AdditionalControlFlags field of SAS IO Unit  *                      Page 1.  *                      Added defines for Enclosure Devices Unmapped and  *                      Device Limit Exceeded bits in Status field of SAS IO  *                      Unit Page 2.  *                      Added more AccessStatus values for SAS Device Page 0.  *                      Added bit for SATA Asynchronous Notification Support in  *                      Flags field of SAS Device Page 0.  *  02-28-07  01.05.14  Added ExtFlags field to Manufacturing Page 4.  *                      Added Disable SMART Polling for CapabilitiesFlags of  *                      IOC Page 6.  *                      Added Disable SMART Polling to DeviceSettings of BIOS  *                      Page 1.  *                      Added Multi-Port Domain bit for DiscoveryStatus field  *                      of SAS IO Unit Page.  *                      Added Multi-Port Domain Illegal flag for SAS IO Unit  *                      Page 1 AdditionalControlFlags field.  *  05-24-07  01.05.15  Added Hide Physical Disks with Non-Integrated RAID  *                      Metadata bit to Manufacturing Page 4 ExtFlags field.  *                      Added Internal Connector to End Device Present bit to  *                      Expander Page 0 Flags field.  *                      Fixed define for  *                      MPI_SAS_EXPANDER1_DISCINFO_BAD_PHY_DISABLED.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -1544,7 +1544,7 @@ name|Flags
 decl_stmt|;
 comment|/* 0Dh */
 name|U16
-name|Reserved2
+name|ExtFlags
 decl_stmt|;
 comment|/* 0Eh */
 name|U8
@@ -1627,12 +1627,26 @@ begin_define
 define|#
 directive|define
 name|MPI_MANUFACTURING4_PAGEVERSION
-value|(0x03)
+value|(0x05)
 end_define
 
 begin_comment
 comment|/* defines for the Flags field */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE4_FORCE_BAD_BLOCK_TABLE
+value|(0x80)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE4_FORCE_OFFLINE_FAILOVER
+value|(0x40)
+end_define
 
 begin_define
 define|#
@@ -1676,6 +1690,56 @@ name|MPI_MANPAGE4_IR_NO_MIX_SAS_SATA
 value|(0x01)
 end_define
 
+begin_comment
+comment|/* defines for the ExtFlags field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE4_EXTFLAGS_HIDE_NON_IR_METADATA
+value|(0x0008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE4_EXTFLAGS_SAS_CACHE_DISABLE
+value|(0x0004)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE4_EXTFLAGS_SATA_CACHE_DISABLE
+value|(0x0002)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE4_EXTFLAGS_LEGACY_MODE
+value|(0x0001)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MPI_MANPAGE5_NUM_FORCEWWID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE5_NUM_FORCEWWID
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1694,13 +1758,28 @@ name|Flags
 decl_stmt|;
 comment|/* 0Ch */
 name|U8
-name|Reserved1
+name|NumForceWWID
 decl_stmt|;
 comment|/* 0Dh */
 name|U16
 name|Reserved2
 decl_stmt|;
 comment|/* 0Eh */
+name|U32
+name|Reserved3
+decl_stmt|;
+comment|/* 10h */
+name|U32
+name|Reserved4
+decl_stmt|;
+comment|/* 14h */
+name|U64
+name|ForceWWID
+index|[
+name|MPI_MANPAGE5_NUM_FORCEWWID
+index|]
+decl_stmt|;
+comment|/* 18h */
 block|}
 name|CONFIG_PAGE_MANUFACTURING_5
 operator|,
@@ -1718,7 +1797,7 @@ begin_define
 define|#
 directive|define
 name|MPI_MANUFACTURING5_PAGEVERSION
-value|(0x01)
+value|(0x02)
 end_define
 
 begin_comment
@@ -1762,6 +1841,377 @@ begin_define
 define|#
 directive|define
 name|MPI_MANUFACTURING6_PAGEVERSION
+value|(0x00)
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI_MANPAGE7_CONNECTOR_INFO
+block|{
+name|U32
+name|Pinout
+decl_stmt|;
+comment|/* 00h */
+name|U8
+name|Connector
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* 04h */
+name|U8
+name|Location
+decl_stmt|;
+comment|/* 14h */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 15h */
+name|U16
+name|Slot
+decl_stmt|;
+comment|/* 16h */
+name|U32
+name|Reserved2
+decl_stmt|;
+comment|/* 18h */
+block|}
+name|MPI_MANPAGE7_CONNECTOR_INFO
+operator|,
+name|MPI_POINTER
+name|PTR_MPI_MANPAGE7_CONNECTOR_INFO
+operator|,
+name|MpiManPage7ConnectorInfo_t
+operator|,
+name|MPI_POINTER
+name|pMpiManPage7ConnectorInfo_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* defines for the Pinout field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_PINOUT_SFF_8484_L4
+value|(0x00080000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_PINOUT_SFF_8484_L3
+value|(0x00040000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_PINOUT_SFF_8484_L2
+value|(0x00020000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_PINOUT_SFF_8484_L1
+value|(0x00010000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_PINOUT_SFF_8470_L4
+value|(0x00000800)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_PINOUT_SFF_8470_L3
+value|(0x00000400)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_PINOUT_SFF_8470_L2
+value|(0x00000200)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_PINOUT_SFF_8470_L1
+value|(0x00000100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_PINOUT_SFF_8482
+value|(0x00000002)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_PINOUT_CONNECTION_UNKNOWN
+value|(0x00000001)
+end_define
+
+begin_comment
+comment|/* defines for the Location field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_LOCATION_UNKNOWN
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_LOCATION_INTERNAL
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_LOCATION_EXTERNAL
+value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_LOCATION_SWITCHABLE
+value|(0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_LOCATION_AUTO
+value|(0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_LOCATION_NOT_PRESENT
+value|(0x20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_LOCATION_NOT_CONNECTED
+value|(0x80)
+end_define
+
+begin_comment
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check NumPhys at runtime.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MPI_MANPAGE7_CONNECTOR_INFO_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_CONNECTOR_INFO_MAX
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_CONFIG_PAGE_MANUFACTURING_7
+block|{
+name|CONFIG_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 00h */
+name|U32
+name|Reserved1
+decl_stmt|;
+comment|/* 04h */
+name|U32
+name|Reserved2
+decl_stmt|;
+comment|/* 08h */
+name|U32
+name|Flags
+decl_stmt|;
+comment|/* 0Ch */
+name|U8
+name|EnclosureName
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* 10h */
+name|U8
+name|NumPhys
+decl_stmt|;
+comment|/* 20h */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 21h */
+name|U16
+name|Reserved4
+decl_stmt|;
+comment|/* 22h */
+name|MPI_MANPAGE7_CONNECTOR_INFO
+name|ConnectorInfo
+index|[
+name|MPI_MANPAGE7_CONNECTOR_INFO_MAX
+index|]
+decl_stmt|;
+comment|/* 24h */
+block|}
+name|CONFIG_PAGE_MANUFACTURING_7
+operator|,
+name|MPI_POINTER
+name|PTR_CONFIG_PAGE_MANUFACTURING_7
+operator|,
+name|ManufacturingPage7_t
+operator|,
+name|MPI_POINTER
+name|pManufacturingPage7_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI_MANUFACTURING7_PAGEVERSION
+value|(0x00)
+end_define
+
+begin_comment
+comment|/* defines for the Flags field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_MANPAGE7_FLAG_USE_SLOT_INFO
+value|(0x00000001)
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_CONFIG_PAGE_MANUFACTURING_8
+block|{
+name|CONFIG_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 00h */
+name|U32
+name|ProductSpecificInfo
+decl_stmt|;
+comment|/* 04h */
+block|}
+name|CONFIG_PAGE_MANUFACTURING_8
+operator|,
+name|MPI_POINTER
+name|PTR_CONFIG_PAGE_MANUFACTURING_8
+operator|,
+name|ManufacturingPage8_t
+operator|,
+name|MPI_POINTER
+name|pManufacturingPage8_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI_MANUFACTURING8_PAGEVERSION
+value|(0x00)
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_CONFIG_PAGE_MANUFACTURING_9
+block|{
+name|CONFIG_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 00h */
+name|U32
+name|ProductSpecificInfo
+decl_stmt|;
+comment|/* 04h */
+block|}
+name|CONFIG_PAGE_MANUFACTURING_9
+operator|,
+name|MPI_POINTER
+name|PTR_CONFIG_PAGE_MANUFACTURING_9
+operator|,
+name|ManufacturingPage9_t
+operator|,
+name|MPI_POINTER
+name|pManufacturingPage9_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI_MANUFACTURING9_PAGEVERSION
+value|(0x00)
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_CONFIG_PAGE_MANUFACTURING_10
+block|{
+name|CONFIG_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 00h */
+name|U32
+name|ProductSpecificInfo
+decl_stmt|;
+comment|/* 04h */
+block|}
+name|CONFIG_PAGE_MANUFACTURING_10
+operator|,
+name|MPI_POINTER
+name|PTR_CONFIG_PAGE_MANUFACTURING_10
+operator|,
+name|ManufacturingPage10_t
+operator|,
+name|MPI_POINTER
+name|pManufacturingPage10_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI_MANUFACTURING10_PAGEVERSION
 value|(0x00)
 end_define
 
@@ -2561,7 +3011,7 @@ begin_define
 define|#
 directive|define
 name|MPI_IOCPAGE2_PAGEVERSION
-value|(0x03)
+value|(0x04)
 end_define
 
 begin_comment
@@ -2615,6 +3065,13 @@ define|#
 directive|define
 name|MPI_IOCPAGE2_CAP_FLAGS_RAID_50_SUPPORT
 value|(0x00000040)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_IOCPAGE2_CAP_FLAGS_RAID_64_BIT_ADDRESSING
+value|(0x10000000)
 end_define
 
 begin_define
@@ -2961,6 +3418,178 @@ name|MPI_IOCPAGE5_PAGEVERSION
 value|(0x00)
 end_define
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|_CONFIG_PAGE_IOC_6
+block|{
+name|CONFIG_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 00h */
+name|U32
+name|CapabilitiesFlags
+decl_stmt|;
+comment|/* 04h */
+name|U8
+name|MaxDrivesIS
+decl_stmt|;
+comment|/* 08h */
+name|U8
+name|MaxDrivesIM
+decl_stmt|;
+comment|/* 09h */
+name|U8
+name|MaxDrivesIME
+decl_stmt|;
+comment|/* 0Ah */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0Bh */
+name|U8
+name|MinDrivesIS
+decl_stmt|;
+comment|/* 0Ch */
+name|U8
+name|MinDrivesIM
+decl_stmt|;
+comment|/* 0Dh */
+name|U8
+name|MinDrivesIME
+decl_stmt|;
+comment|/* 0Eh */
+name|U8
+name|Reserved2
+decl_stmt|;
+comment|/* 0Fh */
+name|U8
+name|MaxGlobalHotSpares
+decl_stmt|;
+comment|/* 10h */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 11h */
+name|U16
+name|Reserved4
+decl_stmt|;
+comment|/* 12h */
+name|U32
+name|Reserved5
+decl_stmt|;
+comment|/* 14h */
+name|U32
+name|SupportedStripeSizeMapIS
+decl_stmt|;
+comment|/* 18h */
+name|U32
+name|SupportedStripeSizeMapIME
+decl_stmt|;
+comment|/* 1Ch */
+name|U32
+name|Reserved6
+decl_stmt|;
+comment|/* 20h */
+name|U8
+name|MetadataSize
+decl_stmt|;
+comment|/* 24h */
+name|U8
+name|Reserved7
+decl_stmt|;
+comment|/* 25h */
+name|U16
+name|Reserved8
+decl_stmt|;
+comment|/* 26h */
+name|U16
+name|MaxBadBlockTableEntries
+decl_stmt|;
+comment|/* 28h */
+name|U16
+name|Reserved9
+decl_stmt|;
+comment|/* 2Ah */
+name|U16
+name|IRNvsramUsage
+decl_stmt|;
+comment|/* 2Ch */
+name|U16
+name|Reserved10
+decl_stmt|;
+comment|/* 2Eh */
+name|U32
+name|IRNvsramVersion
+decl_stmt|;
+comment|/* 30h */
+name|U32
+name|Reserved11
+decl_stmt|;
+comment|/* 34h */
+name|U32
+name|Reserved12
+decl_stmt|;
+comment|/* 38h */
+block|}
+name|CONFIG_PAGE_IOC_6
+operator|,
+name|MPI_POINTER
+name|PTR_CONFIG_PAGE_IOC_6
+operator|,
+name|IOCPage6_t
+operator|,
+name|MPI_POINTER
+name|pIOCPage6_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI_IOCPAGE6_PAGEVERSION
+value|(0x01)
+end_define
+
+begin_comment
+comment|/* IOC Page 6 Capabilities Flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_IOCPAGE6_CAP_FLAGS_DISABLE_SMART_POLLING
+value|(0x00000008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_IOCPAGE6_CAP_FLAGS_MASK_METADATA_SIZE
+value|(0x00000006)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_IOCPAGE6_CAP_FLAGS_64MB_METADATA_SIZE
+value|(0x00000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_IOCPAGE6_CAP_FLAGS_512MB_METADATA_SIZE
+value|(0x00000002)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_IOCPAGE6_CAP_FLAGS_GLOBAL_HOT_SPARE
+value|(0x00000001)
+end_define
+
 begin_comment
 comment|/**************************************************************************** *   BIOS Config Pages ****************************************************************************/
 end_comment
@@ -3238,6 +3867,13 @@ end_define
 begin_comment
 comment|/* values for the DeviceSettings field */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_BIOSPAGE1_DEVSET_DISABLE_SMART_POLLING
+value|(0x00000010)
+end_define
 
 begin_define
 define|#
@@ -3949,9 +4585,9 @@ name|BootDeviceForm
 decl_stmt|;
 comment|/* 1Ch */
 name|U8
-name|Reserved7
+name|PrevBootDeviceForm
 decl_stmt|;
-comment|/* 1Dh */
+comment|/* 1Ch */
 name|U16
 name|Reserved8
 decl_stmt|;
@@ -3977,7 +4613,7 @@ begin_define
 define|#
 directive|define
 name|MPI_BIOSPAGE2_PAGEVERSION
-value|(0x01)
+value|(0x02)
 end_define
 
 begin_define
@@ -5753,7 +6389,7 @@ value|(0x00000001)
 end_define
 
 begin_comment
-comment|/* (SNIA)HBA_PORTSPEED_1GBIT 1  1 GBit/sec  */
+comment|/* (SNIA)HBA_PORTSPEED_1GBIT   1   1 GBit/sec */
 end_comment
 
 begin_define
@@ -5764,7 +6400,7 @@ value|(0x00000002)
 end_define
 
 begin_comment
-comment|/* (SNIA)HBA_PORTSPEED_2GBIT 2  2 GBit/sec  */
+comment|/* (SNIA)HBA_PORTSPEED_2GBIT   2   2 GBit/sec */
 end_comment
 
 begin_define
@@ -5775,7 +6411,7 @@ value|(0x00000004)
 end_define
 
 begin_comment
-comment|/* (SNIA)HBA_PORTSPEED_10GBIT 4 10 GBit/sec */
+comment|/* (SNIA)HBA_PORTSPEED_10GBIT  4  10 GBit/sec */
 end_comment
 
 begin_define
@@ -7926,6 +8562,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MPI_RAIDVOL0_SETTING_MASK_METADATA_SIZE
+value|(0x00C0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_RAIDVOL0_SETTING_64MB_METADATA_SIZE
+value|(0x0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_RAIDVOL0_SETTING_512MB_METADATA_SIZE
+value|(0x0040)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI_RAIDVOL0_SETTING_USE_PRODUCT_ID_SUFFIX
 value|(0x0010)
 end_define
@@ -8058,7 +8715,7 @@ name|MaxLBA
 decl_stmt|;
 comment|/* 10h */
 name|U32
-name|Reserved1
+name|MaxLBAHigh
 decl_stmt|;
 comment|/* 14h */
 name|U32
@@ -8113,7 +8770,7 @@ begin_define
 define|#
 directive|define
 name|MPI_RAIDVOLPAGE0_PAGEVERSION
-value|(0x05)
+value|(0x07)
 end_define
 
 begin_comment
@@ -8181,26 +8838,26 @@ comment|/* 00h */
 name|U8
 name|VolumeID
 decl_stmt|;
-comment|/* 01h */
+comment|/* 04h */
 name|U8
 name|VolumeBus
 decl_stmt|;
-comment|/* 02h */
+comment|/* 05h */
 name|U8
 name|VolumeIOC
 decl_stmt|;
-comment|/* 03h */
+comment|/* 06h */
 name|U8
 name|Reserved0
 decl_stmt|;
-comment|/* 04h */
+comment|/* 07h */
 name|U8
 name|GUID
 index|[
 literal|24
 index|]
 decl_stmt|;
-comment|/* 05h */
+comment|/* 08h */
 name|U8
 name|Name
 index|[
@@ -8410,7 +9067,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* RAID Volume 2 IM Physical Disk DiskStatus flags */
+comment|/* RAID Physical Disk PhysDiskStatus flags */
 end_comment
 
 begin_define
@@ -8998,10 +9655,14 @@ name|CONFIG_EXTENDED_PAGE_HEADER
 name|Header
 decl_stmt|;
 comment|/* 00h */
-name|U32
-name|Reserved1
+name|U16
+name|NvdataVersionDefault
 decl_stmt|;
 comment|/* 08h */
+name|U16
+name|NvdataVersionPersistent
+decl_stmt|;
+comment|/* 0Ah */
 name|U8
 name|NumPhys
 decl_stmt|;
@@ -9038,7 +9699,7 @@ begin_define
 define|#
 directive|define
 name|MPI_SASIOUNITPAGE0_PAGEVERSION
-value|(0x03)
+value|(0x04)
 end_define
 
 begin_comment
@@ -9243,6 +9904,13 @@ name|MPI_SAS_IOUNIT0_DS_MAX_SATA_TARGETS
 value|(0x00001000)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPI_SAS_IOUNIT0_DS_MULTI_PORT_DOMAIN
+value|(0x00002000)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -9268,10 +9936,14 @@ name|U32
 name|ControllerPhyDeviceInfo
 decl_stmt|;
 comment|/* 04h */
-name|U32
-name|Reserved1
+name|U16
+name|MaxTargetPortConnectTime
 decl_stmt|;
 comment|/* 08h */
+name|U16
+name|Reserved1
+decl_stmt|;
+comment|/* 0Ah */
 block|}
 name|MPI_SAS_IO_UNIT1_PHY_DATA
 operator|,
@@ -9324,10 +9996,14 @@ name|U16
 name|MaxNumSATATargets
 decl_stmt|;
 comment|/* 0Ah */
-name|U32
-name|Reserved1
+name|U16
+name|AdditionalControlFlags
 decl_stmt|;
 comment|/* 0Ch */
+name|U16
+name|Reserved1
+decl_stmt|;
+comment|/* 0Eh */
 name|U8
 name|NumPhys
 decl_stmt|;
@@ -9336,10 +10012,14 @@ name|U8
 name|SATAMaxQDepth
 decl_stmt|;
 comment|/* 11h */
-name|U16
-name|Reserved2
+name|U8
+name|ReportDeviceMissingDelay
 decl_stmt|;
 comment|/* 12h */
+name|U8
+name|IODeviceMissingDelay
+decl_stmt|;
+comment|/* 13h */
 name|MPI_SAS_IO_UNIT1_PHY_DATA
 name|PhyData
 index|[
@@ -9364,7 +10044,7 @@ begin_define
 define|#
 directive|define
 name|MPI_SASIOUNITPAGE1_PAGEVERSION
-value|(0x05)
+value|(0x07)
 end_define
 
 begin_comment
@@ -9502,6 +10182,84 @@ define|#
 directive|define
 name|MPI_SAS_IOUNIT1_CONTROL_CLEAR_AFFILIATION
 value|(0x0001)
+end_define
+
+begin_comment
+comment|/* values for SAS IO Unit Page 1 AdditionalControlFlags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_IOUNIT1_ACONTROL_MULTI_PORT_DOMAIN_ILLEGAL
+value|(0x0080)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_IOUNIT1_ACONTROL_SATA_ASYNCHROUNOUS_NOTIFICATION
+value|(0x0040)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_IOUNIT1_ACONTROL_HIDE_NONZERO_ATTACHED_PHY_IDENT
+value|(0x0020)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_IOUNIT1_ACONTROL_PORT_ENABLE_ONLY_SATA_LINK_RESET
+value|(0x0010)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_IOUNIT1_ACONTROL_OTHER_AFFILIATION_SATA_LINK_RESET
+value|(0x0008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_IOUNIT1_ACONTROL_SELF_AFFILIATION_SATA_LINK_RESET
+value|(0x0004)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_IOUNIT1_ACONTROL_NO_AFFILIATION_SATA_LINK_RESET
+value|(0x0002)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_IOUNIT1_ACONTROL_ALLOW_TABLE_TO_TABLE
+value|(0x0001)
+end_define
+
+begin_comment
+comment|/* defines for SAS IO Unit Page 1 ReportDeviceMissingDelay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_IOUNIT1_REPORT_MISSING_TIMEOUT_MASK
+value|(0x7F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_IOUNIT1_REPORT_MISSING_UNIT_16
+value|(0x80)
 end_define
 
 begin_comment
@@ -9662,12 +10420,26 @@ begin_define
 define|#
 directive|define
 name|MPI_SASIOUNITPAGE2_PAGEVERSION
-value|(0x05)
+value|(0x06)
 end_define
 
 begin_comment
 comment|/* values for SAS IO Unit Page 2 Status field */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_IOUNIT2_STATUS_DEVICE_LIMIT_EXCEEDED
+value|(0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_IOUNIT2_STATUS_ENCLOSURE_DEVICES_UNMAPPED
+value|(0x04)
+end_define
 
 begin_define
 define|#
@@ -9999,6 +10771,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MPI_SAS_EXPANDER0_FLAGS_CONNECTOR_END_DEVICE
+value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI_SAS_EXPANDER0_FLAGS_ROUTE_TABLE_CONFIG
 value|(0x02)
 end_define
@@ -10138,8 +10917,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MPI_SAS_EXPANDER1_DISCINFO_BAD_PHY
-value|DISABLED     (0x04)
+name|MPI_SAS_EXPANDER1_DISCINFO_BAD_PHY_DISABLED
+value|(0x04)
 end_define
 
 begin_define
@@ -10284,7 +11063,7 @@ begin_define
 define|#
 directive|define
 name|MPI_SASDEVICE0_PAGEVERSION
-value|(0x04)
+value|(0x05)
 end_define
 
 begin_comment
@@ -10312,9 +11091,104 @@ name|MPI_SAS_DEVICE0_ASTATUS_SATA_CAPABILITY_FAILED
 value|(0x02)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPI_SAS_DEVICE0_ASTATUS_SATA_AFFILIATION_CONFLICT
+value|(0x03)
+end_define
+
+begin_comment
+comment|/* specific values for SATA Init failures */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_DEVICE0_ASTATUS_SIF_UNKNOWN
+value|(0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_DEVICE0_ASTATUS_SIF_AFFILIATION_CONFLICT
+value|(0x11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_DEVICE0_ASTATUS_SIF_DIAG
+value|(0x12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_DEVICE0_ASTATUS_SIF_IDENTIFICATION
+value|(0x13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_DEVICE0_ASTATUS_SIF_CHECK_POWER
+value|(0x14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_DEVICE0_ASTATUS_SIF_PIO_SN
+value|(0x15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_DEVICE0_ASTATUS_SIF_MDMA_SN
+value|(0x16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_DEVICE0_ASTATUS_SIF_UDMA_SN
+value|(0x17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_DEVICE0_ASTATUS_SIF_ZONING_VIOLATION
+value|(0x18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_DEVICE0_ASTATUS_SIF_NOT_ADDRESSABLE
+value|(0x19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_DEVICE0_ASTATUS_SIF_MAX
+value|(0x1F)
+end_define
+
 begin_comment
 comment|/* values for SAS Device Page 0 Flags field */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_DEVICE0_FLAGS_SATA_ASYNCHRONOUS_NOTIFY
+value|(0x0400)
+end_define
 
 begin_define
 define|#
@@ -10577,23 +11451,23 @@ comment|/* 18h */
 name|U8
 name|ProgrammedLinkRate
 decl_stmt|;
-comment|/* 20h */
+comment|/* 1Ch */
 name|U8
 name|HwLinkRate
 decl_stmt|;
-comment|/* 21h */
+comment|/* 1Dh */
 name|U8
 name|ChangeCount
 decl_stmt|;
-comment|/* 22h */
+comment|/* 1Eh */
 name|U8
 name|Flags
 decl_stmt|;
-comment|/* 23h */
+comment|/* 1Fh */
 name|U32
 name|PhyInfo
 decl_stmt|;
-comment|/* 24h */
+comment|/* 20h */
 block|}
 name|CONFIG_PAGE_SAS_PHY_0
 operator|,
