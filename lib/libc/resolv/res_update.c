@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_update.c,v 1.6.2.4.4.2 2004/03/16 12:34:20 marka Exp $"
+literal|"$Id: res_update.c,v 1.12.18.1 2005/04/27 05:01:12 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * Based on the Dynamic DNS reference implementation by Viraj Bais  *<viraj_bais@ccm.fm.intel.com>  */
+comment|/*! \file  * \brief  * Based on the Dynamic DNS reference implementation by Viraj Bais  *&lt;viraj_bais@ccm.fm.intel.com>  */
 end_comment
 
 begin_include
@@ -172,7 +172,7 @@ file|"res_private.h"
 end_include
 
 begin_comment
-comment|/*  * Separate a linked list of records into groups so that all records  * in a group will belong to a single zone on the nameserver.  * Create a dynamic update packet for each zone and send it to the  * nameservers for that zone, and await answer.  * Abort if error occurs in updating any zone.  * Return the number of zones updated on success,< 0 on error.  *  * On error, caller must deal with the unsynchronized zones  * eg. an A record might have been successfully added to the forward  * zone but the corresponding PTR record would be missing if error  * was encountered while updating the reverse zone.  */
+comment|/*%  * Separate a linked list of records into groups so that all records  * in a group will belong to a single zone on the nameserver.  * Create a dynamic update packet for each zone and send it to the  * nameservers for that zone, and await answer.  * Abort if error occurs in updating any zone.  * Return the number of zones updated on success,< 0 on error.  *  * On error, caller must deal with the unsynchronized zones  * eg. an A record might have been successfully added to the forward  * zone but the corresponding PTR record would be missing if error  * was encountered while updating the reverse zone.  */
 end_comment
 
 begin_struct

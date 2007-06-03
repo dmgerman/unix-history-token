@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 1.7.2.11.4.3 2005/08/25 04:44:13 marka Exp $  * $FreeBSD$  */
+comment|/*%  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 1.19.18.3 2005/08/25 04:43:51 marka Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -60,7 +60,7 @@ file|<arpa/nameser.h>
 end_include
 
 begin_comment
-comment|/*  * Revision information.  This is the release date in YYYYMMDD format.  * It can change every day so the right thing to do with it is use it  * in preprocessor commands such as "#if (__RES> 19931104)".  Do not  * compare for equality; rather, use it to determine whether your resolver  * is new enough to contain a certain feature.  */
+comment|/*%  * Revision information.  This is the release date in YYYYMMDD format.  * It can change every day so the right thing to do with it is use it  * in preprocessor commands such as "#if (__RES> 19931104)".  Do not  * compare for equality; rather, use it to determine whether your resolver  * is new enough to contain a certain feature.  */
 end_comment
 
 begin_define
@@ -71,7 +71,7 @@ value|20030124
 end_define
 
 begin_comment
-comment|/*  * This used to be defined in res_query.c, now it's in herror.c.  * [XXX no it's not.  It's in irs/irs_data.c]  * It was  * never extern'd by any *.h file before it was placed here.  For thread  * aware programs, the last h_errno value set is stored in res->h_errno.  *  * XXX:	There doesn't seem to be a good reason for exposing RES_SET_H_ERRNO  *	(and __h_errno_set) to the public via<resolv.h>.  * XXX:	__h_errno_set is really part of IRS, not part of the resolver.  *	If somebody wants to build and use a resolver that doesn't use IRS,  *	what do they do?  Perhaps something like  *		#ifdef WANT_IRS  *		# define RES_SET_H_ERRNO(r,x) __h_errno_set(r,x)  *		#else  *		# define RES_SET_H_ERRNO(r,x) (h_errno = (r)->res_h_errno = (x))  *		#endif  */
+comment|/*%  * This used to be defined in res_query.c, now it's in herror.c.  * [XXX no it's not.  It's in irs/irs_data.c]  * It was  * never extern'd by any *.h file before it was placed here.  For thread  * aware programs, the last h_errno value set is stored in res->h_errno.  *  * XXX:	There doesn't seem to be a good reason for exposing RES_SET_H_ERRNO  *	(and __h_errno_set) to the public via<resolv.h>.  * XXX:	__h_errno_set is really part of IRS, not part of the resolver.  *	If somebody wants to build and use a resolver that doesn't use IRS,  *	what do they do?  Perhaps something like  *		#ifdef WANT_IRS  *		# define RES_SET_H_ERRNO(r,x) __h_errno_set(r,x)  *		#else  *		# define RES_SET_H_ERRNO(r,x) (h_errno = (r)->res_h_errno = (x))  *		#endif  */
 end_comment
 
 begin_define
@@ -93,7 +93,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/* forward */
+comment|/*%< forward */
 end_comment
 
 begin_function_decl
@@ -115,7 +115,7 @@ name|__END_DECLS
 end_macro
 
 begin_comment
-comment|/*  * Resolver configuration file.  * Normally not present, but may contain the address of the  * initial name server(s) to query and the domain search list.  */
+comment|/*%  * Resolver configuration file.  * Normally not present, but may contain the address of the  * initial name server(s) to query and the domain search list.  */
 end_comment
 
 begin_ifndef
@@ -224,25 +224,25 @@ block|{
 name|int
 name|number
 decl_stmt|;
-comment|/* Identifying number, like T_MX */
+comment|/*%< Identifying number, like T_MX */
 specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* Its symbolic name, like "MX" */
+comment|/*%< Its symbolic name, like "MX" */
 specifier|const
 name|char
 modifier|*
 name|humanname
 decl_stmt|;
-comment|/* Its fun name, like "mail exchanger" */
+comment|/*%< Its fun name, like "mail exchanger" */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Global defines and variables for resolver stub.  */
+comment|/*%  * Global defines and variables for resolver stub.  */
 end_comment
 
 begin_define
@@ -253,7 +253,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* max # name servers we'll track */
+comment|/*%< max # name servers we'll track */
 end_comment
 
 begin_define
@@ -264,7 +264,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* # default domain levels to try */
+comment|/*%< # default domain levels to try */
 end_comment
 
 begin_define
@@ -275,7 +275,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* max # domains in search path */
+comment|/*%< max # domains in search path */
 end_comment
 
 begin_define
@@ -286,7 +286,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* min levels in name that is "local" */
+comment|/*%< min levels in name that is "local" */
 end_comment
 
 begin_define
@@ -297,7 +297,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* min. seconds between retries */
+comment|/*%< min. seconds between retries */
 end_comment
 
 begin_define
@@ -308,7 +308,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* number of net to sort on */
+comment|/*%< number of net to sort on */
 end_comment
 
 begin_define
@@ -319,7 +319,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* should reflect bit field size */
+comment|/*%< should reflect bit field size */
 end_comment
 
 begin_define
@@ -330,7 +330,7 @@ value|30
 end_define
 
 begin_comment
-comment|/* only for resolv.conf/RES_OPTIONS */
+comment|/*%< only for resolv.conf/RES_OPTIONS */
 end_comment
 
 begin_define
@@ -341,7 +341,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* only for resolv.conf/RES_OPTIONS */
+comment|/*%< only for resolv.conf/RES_OPTIONS */
 end_comment
 
 begin_define
@@ -352,7 +352,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Default #/tries. */
+comment|/*%< Default #/tries. */
 end_comment
 
 begin_define
@@ -363,7 +363,7 @@ value|65535
 end_define
 
 begin_comment
-comment|/* Infinity, in milliseconds. */
+comment|/*%< Infinity, in milliseconds. */
 end_comment
 
 begin_struct_decl
@@ -379,11 +379,11 @@ block|{
 name|int
 name|retrans
 decl_stmt|;
-comment|/* retransmission time interval */
+comment|/*%< retransmission time interval */
 name|int
 name|retry
 decl_stmt|;
-comment|/* number of times to retransmit */
+comment|/*%< number of times to retransmit */
 comment|/* 	 * XXX: If `sun' is defined, `options' and `pfcode' are 	 * defined as u_int in original BIND9 distribution.  However, 	 * it breaks binary backward compatibility against FreeBSD's 	 * resolver.  So, we changed not to see `sun'. 	 */
 if|#
 directive|if
@@ -396,19 +396,19 @@ literal|0
 name|u_int
 name|options
 decl_stmt|;
-comment|/* option flags - see below. */
+comment|/*%< option flags - see below. */
 else|#
 directive|else
 name|u_long
 name|options
 decl_stmt|;
-comment|/* option flags - see below. */
+comment|/*%< option flags - see below. */
 endif|#
 directive|endif
 name|int
 name|nscount
 decl_stmt|;
-comment|/* number of name servers */
+comment|/*%< number of name servers */
 name|struct
 name|sockaddr_in
 name|nsaddr_list
@@ -416,16 +416,16 @@ index|[
 name|MAXNS
 index|]
 decl_stmt|;
-comment|/* address of name server */
+comment|/*%< address of name server */
 define|#
 directive|define
 name|nsaddr
 value|nsaddr_list[0]
-comment|/* for backward compatibility */
+comment|/*%< for backward compatibility */
 name|u_short
 name|id
 decl_stmt|;
-comment|/* current message id */
+comment|/*%< current message id */
 name|char
 modifier|*
 name|dnsrch
@@ -435,14 +435,14 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* components of domain to search */
+comment|/*%< components of domain to search */
 name|char
 name|defdname
 index|[
 literal|256
 index|]
 decl_stmt|;
-comment|/* default domain (deprecated) */
+comment|/*%< default domain (deprecated) */
 if|#
 directive|if
 name|defined
@@ -454,13 +454,13 @@ literal|0
 name|u_int
 name|pfcode
 decl_stmt|;
-comment|/* RES_PRF_ flags - see below. */
+comment|/*%< RES_PRF_ flags - see below. */
 else|#
 directive|else
 name|u_long
 name|pfcode
 decl_stmt|;
-comment|/* RES_PRF_ flags - see below. */
+comment|/*%< RES_PRF_ flags - see below. */
 endif|#
 directive|endif
 name|unsigned
@@ -468,13 +468,13 @@ name|ndots
 range|:
 literal|4
 decl_stmt|;
-comment|/* threshold for initial abs. query */
+comment|/*%< threshold for initial abs. query */
 name|unsigned
 name|nsort
 range|:
 literal|4
 decl_stmt|;
-comment|/* number of elements in sort_list[] */
+comment|/*%< number of elements in sort_list[] */
 name|char
 name|unused
 index|[
@@ -499,27 +499,27 @@ struct|;
 name|res_send_qhook
 name|qhook
 decl_stmt|;
-comment|/* query hook */
+comment|/*%< query hook */
 name|res_send_rhook
 name|rhook
 decl_stmt|;
-comment|/* response hook */
+comment|/*%< response hook */
 name|int
 name|res_h_errno
 decl_stmt|;
-comment|/* last one set for this context */
+comment|/*%< last one set for this context */
 name|int
 name|_vcsock
 decl_stmt|;
-comment|/* PRIVATE: for res_send VC i/o */
+comment|/*%< PRIVATE: for res_send VC i/o */
 name|u_int
 name|_flags
 decl_stmt|;
-comment|/* PRIVATE: see below */
+comment|/*%< PRIVATE: see below */
 name|u_int
 name|_pad
 decl_stmt|;
-comment|/* make _u 64 bit aligned */
+comment|/*%< make _u 64 bit aligned */
 union|union
 block|{
 comment|/* On an 32-bit arch this means 512b total. */
@@ -555,7 +555,7 @@ index|[
 name|MAXNS
 index|]
 decl_stmt|;
-comment|/* ms. */
+comment|/*%< ms. */
 name|int
 name|nssocks
 index|[
@@ -567,7 +567,7 @@ name|__res_state_ext
 modifier|*
 name|ext
 decl_stmt|;
-comment|/* extention for IPv6 */
+comment|/*%< extention for IPv6 */
 block|}
 name|_ext
 struct|;
@@ -610,13 +610,13 @@ name|ISC_ALIGN64
 name|int64_t
 name|__align64
 decl_stmt|;
-comment|/* 64bit alignment */
+comment|/*%< 64bit alignment */
 else|#
 directive|else
 name|int32_t
 name|__align32
 decl_stmt|;
-comment|/* 32bit alignment */
+comment|/*%< 32bit alignment */
 endif|#
 directive|endif
 name|char
@@ -625,13 +625,13 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-comment|/* max size */
+comment|/*%< max size */
 block|}
 union|;
 end_union
 
 begin_comment
-comment|/*  * Resolver flags (used to be discrete per-module statics ints).  */
+comment|/*%  * Resolver flags (used to be discrete per-module statics ints).  */
 end_comment
 
 begin_define
@@ -642,7 +642,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* socket is TCP */
+comment|/*%< socket is TCP */
 end_comment
 
 begin_define
@@ -653,7 +653,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* socket is connected */
+comment|/*%< socket is connected */
 end_comment
 
 begin_define
@@ -664,7 +664,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* EDNS0 caused errors */
+comment|/*%< EDNS0 caused errors */
 end_comment
 
 begin_define
@@ -675,7 +675,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* (unused) */
+comment|/*%< (unused) */
 end_comment
 
 begin_define
@@ -686,7 +686,7 @@ value|0x000000F0
 end_define
 
 begin_comment
-comment|/* ordinal server of last res_nsend */
+comment|/*%< ordinal server of last res_nsend */
 end_comment
 
 begin_define
@@ -697,7 +697,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* bit position of LASTMASK "flag" */
+comment|/*%< bit position of LASTMASK "flag" */
 end_comment
 
 begin_define
@@ -722,7 +722,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* always do all queries */
+comment|/*%< always do all queries */
 end_comment
 
 begin_define
@@ -733,7 +733,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* IPv4 only */
+comment|/*%< IPv4 only */
 end_comment
 
 begin_define
@@ -744,11 +744,11 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* IPv6 only */
+comment|/*%< IPv6 only */
 end_comment
 
 begin_comment
-comment|/*  * Resolver options (keep these in synch with res_debug.c, please)  */
+comment|/*%  * Resolver options (keep these in synch with res_debug.c, please)  */
 end_comment
 
 begin_define
@@ -759,7 +759,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* address initialized */
+comment|/*%< address initialized */
 end_comment
 
 begin_define
@@ -770,7 +770,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* print debug messages */
+comment|/*%< print debug messages */
 end_comment
 
 begin_define
@@ -781,7 +781,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* authoritative answers only (!IMPL)*/
+comment|/*%< authoritative answers only (!IMPL)*/
 end_comment
 
 begin_define
@@ -792,7 +792,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* use virtual circuit */
+comment|/*%< use virtual circuit */
 end_comment
 
 begin_define
@@ -803,7 +803,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/* query primary server only (!IMPL) */
+comment|/*%< query primary server only (!IMPL) */
 end_comment
 
 begin_define
@@ -814,7 +814,7 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|/* ignore truncation errors */
+comment|/*%< ignore truncation errors */
 end_comment
 
 begin_define
@@ -825,7 +825,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* recursion desired */
+comment|/*%< recursion desired */
 end_comment
 
 begin_define
@@ -836,7 +836,7 @@ value|0x00000080
 end_define
 
 begin_comment
-comment|/* use default domain name */
+comment|/*%< use default domain name */
 end_comment
 
 begin_define
@@ -847,7 +847,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/* Keep TCP socket open */
+comment|/*%< Keep TCP socket open */
 end_comment
 
 begin_define
@@ -858,7 +858,7 @@ value|0x00000200
 end_define
 
 begin_comment
-comment|/* search up local domain tree */
+comment|/*%< search up local domain tree */
 end_comment
 
 begin_define
@@ -869,7 +869,7 @@ value|0x00000400
 end_define
 
 begin_comment
-comment|/* type 1 security disabled */
+comment|/*%< type 1 security disabled */
 end_comment
 
 begin_define
@@ -880,7 +880,7 @@ value|0x00000800
 end_define
 
 begin_comment
-comment|/* type 2 security disabled */
+comment|/*%< type 2 security disabled */
 end_comment
 
 begin_define
@@ -891,7 +891,7 @@ value|0x00001000
 end_define
 
 begin_comment
-comment|/* shuts off HOSTALIASES feature */
+comment|/*%< shuts off HOSTALIASES feature */
 end_comment
 
 begin_define
@@ -902,7 +902,7 @@ value|0x00002000
 end_define
 
 begin_comment
-comment|/* use/map IPv6 in gethostbyname() */
+comment|/*%< use/map IPv6 in gethostbyname() */
 end_comment
 
 begin_define
@@ -913,7 +913,7 @@ value|0x00004000
 end_define
 
 begin_comment
-comment|/* rotate ns list after each query */
+comment|/*%< rotate ns list after each query */
 end_comment
 
 begin_define
@@ -924,7 +924,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* do not check names for sanity. */
+comment|/*%< do not check names for sanity. */
 end_comment
 
 begin_define
@@ -935,7 +935,7 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/* do not strip TSIG records */
+comment|/*%< do not strip TSIG records */
 end_comment
 
 begin_define
@@ -946,7 +946,7 @@ value|0x00020000
 end_define
 
 begin_comment
-comment|/* blast all recursive servers */
+comment|/*%< blast all recursive servers */
 end_comment
 
 begin_define
@@ -957,7 +957,7 @@ value|0x00100000
 end_define
 
 begin_comment
-comment|/* don't unqualified name as a tld */
+comment|/*%< don't unqualified name as a tld */
 end_comment
 
 begin_define
@@ -968,7 +968,7 @@ value|0x00200000
 end_define
 
 begin_comment
-comment|/* use DNSSEC using OK bit in OPT */
+comment|/*%< use DNSSEC using OK bit in OPT */
 end_comment
 
 begin_comment
@@ -991,7 +991,7 @@ value|0x10000000
 end_define
 
 begin_comment
-comment|/* use DNAME */
+comment|/*%< use DNAME */
 end_comment
 
 begin_define
@@ -1002,7 +1002,7 @@ value|0x40000000
 end_define
 
 begin_comment
-comment|/* use EDNS0 if configured */
+comment|/*%< use EDNS0 if configured */
 end_comment
 
 begin_define
@@ -1013,7 +1013,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/* disable alternate nibble lookup */
+comment|/*%< disable alternate nibble lookup */
 end_comment
 
 begin_define
@@ -1024,7 +1024,7 @@ value|(RES_RECURSE | RES_DEFNAMES | \ 			 RES_DNSRCH | RES_NO_NIBBLE2)
 end_define
 
 begin_comment
-comment|/*  * Resolver "pfcode" values.  Used by dig.  */
+comment|/*%  * Resolver "pfcode" values.  Used by dig.  */
 end_comment
 
 begin_define
@@ -2963,6 +2963,10 @@ end_endif
 
 begin_comment
 comment|/* !_RESOLV_H_ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

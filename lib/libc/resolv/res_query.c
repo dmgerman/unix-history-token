@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_query.c,v 1.2.2.3.4.2 2004/03/16 12:34:19 marka Exp $"
+literal|"$Id: res_query.c,v 1.7.18.1 2005/04/27 05:01:11 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,7 +204,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Formulate a normal query, send, and await answer.  * Returned answer is placed in supplied buffer "answer".  * Perform preliminary check of answer, returning success only  * if no error is indicated and the answer count is nonzero.  * Return the size of the response on success, -1 on error.  * Error number is left in H_ERRNO.  *  * Caller must parse answer and determine whether it answers the question.  */
+comment|/*%  * Formulate a normal query, send, and await answer.  * Returned answer is placed in supplied buffer "answer".  * Perform preliminary check of answer, returning success only  * if no error is indicated and the answer count is nonzero.  * Return the size of the response on success, -1 on error.  * Error number is left in H_ERRNO.  *  * Caller must parse answer and determine whether it answers the question.  */
 end_comment
 
 begin_function
@@ -219,23 +219,23 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-comment|/* domain name */
+comment|/*%< domain name */
 name|int
 name|class
 parameter_list|,
 name|int
 name|type
 parameter_list|,
-comment|/* class and type of query */
+comment|/*%< class and type of query */
 name|u_char
 modifier|*
 name|answer
 parameter_list|,
-comment|/* buffer to put answer */
+comment|/*%< buffer to put answer */
 name|int
 name|anslen
 parameter_list|)
-comment|/* size of answer buffer */
+comment|/*%< size of answer buffer */
 block|{
 name|u_char
 name|buf
@@ -273,7 +273,7 @@ name|rcode
 operator|=
 name|NOERROR
 expr_stmt|;
-comment|/* default */
+comment|/*%< default */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -669,7 +669,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Formulate a normal query, send, and retrieve answer in supplied buffer.  * Return the size of the response on success, -1 on error.  * If enabled, implement search rules until answer or unrecoverable failure  * is detected.  Error code, if any, is left in H_ERRNO.  */
+comment|/*%  * Formulate a normal query, send, and retrieve answer in supplied buffer.  * Return the size of the response on success, -1 on error.  * If enabled, implement search rules until answer or unrecoverable failure  * is detected.  Error code, if any, is left in H_ERRNO.  */
 end_comment
 
 begin_function
@@ -684,23 +684,23 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-comment|/* domain name */
+comment|/*%< domain name */
 name|int
 name|class
 parameter_list|,
 name|int
 name|type
 parameter_list|,
-comment|/* class and type of query */
+comment|/*%< class and type of query */
 name|u_char
 modifier|*
 name|answer
 parameter_list|,
-comment|/* buffer to put answer */
+comment|/*%< buffer to put answer */
 name|int
 name|anslen
 parameter_list|)
-comment|/* size of answer */
+comment|/*%< size of answer */
 block|{
 specifier|const
 name|char
@@ -772,7 +772,7 @@ argument_list|,
 name|HOST_NOT_FOUND
 argument_list|)
 expr_stmt|;
-comment|/* True if we never query. */
+comment|/*%< True if we never query. */
 name|dots
 operator|=
 literal|0
@@ -1348,7 +1348,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform a call on res_query on the concatenation of name and domain,  * removing a trailing dot from name if domain is NULL.  */
+comment|/*%  * Perform a call on res_query on the concatenation of name and domain,  * removing a trailing dot from name if domain is NULL.  */
 end_comment
 
 begin_function
@@ -1374,16 +1374,16 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
-comment|/* class and type of query */
+comment|/*%< class and type of query */
 name|u_char
 modifier|*
 name|answer
 parameter_list|,
-comment|/* buffer to put answer */
+comment|/*%< buffer to put answer */
 name|int
 name|anslen
 parameter_list|)
-comment|/* size of answer */
+comment|/*%< size of answer */
 block|{
 name|char
 name|nbuf
@@ -1858,6 +1858,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

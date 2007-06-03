@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * Based on the Dynamic DNS reference implementation by Viraj Bais  *<viraj_bais@ccm.fm.intel.com>  */
+comment|/*! \file  * \brief  * Based on the Dynamic DNS reference implementation by Viraj Bais  *&lt;viraj_bais@ccm.fm.intel.com>  */
 end_comment
 
 begin_if
@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_mkupdate.c,v 1.1.2.1.4.5 2005/10/14 05:43:47 marka Exp $"
+literal|"$Id: res_mkupdate.c,v 1.4.18.4 2005/10/14 05:44:12 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,7 +318,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Form update packets.  * Returns the size of the resulting packet if no error  * On error,  *	returns -1 if error in reading a word/number in rdata  *		   portion for update packets  *		-2 if length of buffer passed is insufficient  *		-3 if zone section is not the first section in  *		   the linked list, or section order has a problem  *		-4 on a number overflow  *		-5 unknown operation or no records  */
+comment|/*%  * Form update packets.  * Returns the size of the resulting packet if no error  *  * On error,  *	returns   *\li              -1 if error in reading a word/number in rdata  *		   portion for update packets  *\li		-2 if length of buffer passed is insufficient  *\li		-3 if zone section is not the first section in  *		   the linked list, or section order has a problem  *\li		-4 on a number overflow  *\li		-5 unknown operation or no records  */
 end_comment
 
 begin_function
@@ -951,7 +951,7 @@ name|sp2
 operator|=
 name|cp
 expr_stmt|;
-comment|/* save pointer to length byte */
+comment|/*%< save pointer to length byte */
 name|cp
 operator|+=
 name|INT16SZ
@@ -2192,7 +2192,7 @@ break|break;
 case|case
 name|T_X25
 case|:
-comment|/* RFC 1183 */
+comment|/* RFC1183 */
 if|if
 condition|(
 operator|(
@@ -2262,7 +2262,7 @@ break|break;
 case|case
 name|T_ISDN
 case|:
-comment|/* RFC 1183 */
+comment|/* RFC1183 */
 if|if
 condition|(
 operator|(
@@ -4129,7 +4129,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a whitespace delimited word from a string (not file)  * into buf. modify the start pointer to point after the  * word in the string.  */
+comment|/*%  * Get a whitespace delimited word from a string (not file)  * into buf. modify the start pointer to point after the  * word in the string.  */
 end_comment
 
 begin_function
@@ -4198,11 +4198,11 @@ name|cp
 operator|!=
 name|buf
 condition|)
-comment|/* trailing whitespace */
+comment|/*%< trailing whitespace */
 break|break;
 else|else
 block|{
-comment|/* leading whitespace */
+comment|/*%< leading whitespace */
 operator|(
 operator|*
 name|startpp
@@ -4255,7 +4255,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * get a white spae delimited string from memory.  Process quoted strings  * and \DDD escapes.  Return length or -1 on error.  Returned string may  * contain nulls.  */
+comment|/*%  * get a white spae delimited string from memory.  Process quoted strings  * and \\DDD escapes.  Return length or -1 on error.  Returned string may  * contain nulls.  */
 end_comment
 
 begin_decl_stmt
@@ -4605,7 +4605,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a whitespace delimited base 16 number from a string (not file) into buf  * update the start pointer to point after the number in the string.  */
+comment|/*%  * Get a whitespace delimited base 16 number from a string (not file) into buf  * update the start pointer to point after the number in the string.  */
 end_comment
 
 begin_function
@@ -4713,11 +4713,11 @@ if|if
 condition|(
 name|seendigit
 condition|)
-comment|/* trailing whitespace */
+comment|/*%< trailing whitespace */
 break|break;
 else|else
 block|{
-comment|/* leading whitespace */
+comment|/*%< leading whitespace */
 operator|(
 operator|*
 name|startpp
@@ -4860,7 +4860,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a whitespace delimited base 10 number from a string (not file) into buf  * update the start pointer to point after the number in the string.  */
+comment|/*%  * Get a whitespace delimited base 10 number from a string (not file) into buf  * update the start pointer to point after the number in the string.  */
 end_comment
 
 begin_function
@@ -4928,11 +4928,11 @@ if|if
 condition|(
 name|seendigit
 condition|)
-comment|/* trailing whitespace */
+comment|/*%< trailing whitespace */
 break|break;
 else|else
 block|{
-comment|/* leading whitespace */
+comment|/*%< leading whitespace */
 operator|(
 operator|*
 name|startpp
@@ -5050,7 +5050,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a resource record buffer& save rr info.  */
+comment|/*%  * Allocate a resource record buffer& save rr info.  */
 end_comment
 
 begin_function
@@ -5187,7 +5187,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free a resource record buffer created by res_mkupdrec.  */
+comment|/*%  * Free a resource record buffer created by res_mkupdrec.  */
 end_comment
 
 begin_function
@@ -5419,7 +5419,7 @@ operator|->
 name|s_port
 argument_list|)
 expr_stmt|;
-comment|/* host byt order */
+comment|/*%< host byt order */
 name|slp
 operator|->
 name|next
@@ -5642,7 +5642,7 @@ name|pp
 operator|->
 name|p_proto
 expr_stmt|;
-comment|/* host byte order */
+comment|/*%< host byte order */
 name|slp
 operator|->
 name|next
@@ -5866,7 +5866,7 @@ operator|->
 name|port
 operator|)
 return|;
-comment|/* host byte order */
+comment|/*%< host byte order */
 block|}
 if|if
 condition|(
@@ -5900,7 +5900,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert service name or (ascii) number to int.  */
+comment|/*%  * Convert service name or (ascii) number to int.  */
 end_comment
 
 begin_ifdef
@@ -5951,7 +5951,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert protocol name or (ascii) number to int.  */
+comment|/*%  * Convert protocol name or (ascii) number to int.  */
 end_comment
 
 begin_ifdef
@@ -6023,7 +6023,7 @@ modifier|*
 name|proto
 parameter_list|)
 block|{
-comment|/* Host byte order. */
+comment|/*%< Host byte order. */
 name|struct
 name|valuelist
 modifier|*
@@ -6078,7 +6078,7 @@ name|lp
 operator|->
 name|port
 condition|)
-comment|/* Host byte order. */
+comment|/*%< Host byte order. */
 continue|continue;
 if|if
 condition|(
@@ -6207,7 +6207,7 @@ name|int
 name|proto
 parameter_list|)
 block|{
-comment|/* Host byte order. */
+comment|/*%< Host byte order. */
 name|struct
 name|valuelist
 modifier|*
@@ -6252,7 +6252,7 @@ operator|==
 name|proto
 condition|)
 block|{
-comment|/* Host byte order. */
+comment|/*%< Host byte order. */
 if|if
 condition|(
 name|lp
@@ -6325,7 +6325,7 @@ name|lp
 operator|->
 name|port
 expr_stmt|;
-comment|/* Host byte order. */
+comment|/*%< Host byte order. */
 return|return
 operator|(
 operator|&
@@ -6434,7 +6434,7 @@ modifier|*
 name|proto
 parameter_list|)
 block|{
-comment|/* Host byte order. */
+comment|/*%< Host byte order. */
 specifier|static
 name|char
 name|number

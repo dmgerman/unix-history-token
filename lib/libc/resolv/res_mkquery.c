@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_mkquery.c,v 1.1.2.2.4.2 2004/03/16 12:34:18 marka Exp $"
+literal|"$Id: res_mkquery.c,v 1.5.18.1 2005/04/27 05:01:11 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,7 +152,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Form all types of queries.  * Returns the size of the result or -1.  */
+comment|/*%  * Form all types of queries.  * Returns the size of the result or -1.  */
 end_comment
 
 begin_function
@@ -165,45 +165,45 @@ parameter_list|,
 name|int
 name|op
 parameter_list|,
-comment|/* opcode of query */
+comment|/*!< opcode of query  */
 specifier|const
 name|char
 modifier|*
 name|dname
 parameter_list|,
-comment|/* domain name */
+comment|/*!< domain name  */
 name|int
 name|class
 parameter_list|,
 name|int
 name|type
 parameter_list|,
-comment|/* class and type of query */
+comment|/*!< class and type of query  */
 specifier|const
 name|u_char
 modifier|*
 name|data
 parameter_list|,
-comment|/* resource record data */
+comment|/*!< resource record data  */
 name|int
 name|datalen
 parameter_list|,
-comment|/* length of data */
+comment|/*!< length of data  */
 specifier|const
 name|u_char
 modifier|*
 name|newrr_in
 parameter_list|,
-comment|/* new rr for modify or append */
+comment|/*!< new rr for modify or append  */
 name|u_char
 modifier|*
 name|buf
 parameter_list|,
-comment|/* buffer to put query */
+comment|/*!< buffer to put query  */
 name|int
 name|buflen
 parameter_list|)
-comment|/* size of buffer */
+comment|/*!< size of buffer  */
 block|{
 name|HEADER
 modifier|*
@@ -634,7 +634,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* no domain name */
+comment|/*%< no domain name */
 name|ns_put16
 argument_list|(
 name|type
@@ -764,20 +764,20 @@ parameter_list|,
 name|int
 name|n0
 parameter_list|,
-comment|/* current offset in buffer */
+comment|/*%< current offset in buffer */
 name|u_char
 modifier|*
 name|buf
 parameter_list|,
-comment|/* buffer to put query */
+comment|/*%< buffer to put query */
 name|int
 name|buflen
 parameter_list|,
-comment|/* size of buffer */
+comment|/*%< size of buffer */
 name|int
 name|anslen
 parameter_list|)
-comment|/* UDP answer buffer size */
+comment|/*%< UDP answer buffer size */
 block|{
 name|HEADER
 modifier|*
@@ -861,7 +861,7 @@ operator|++
 operator|=
 literal|0
 expr_stmt|;
-comment|/* "." */
+comment|/*%< "." */
 name|ns_put16
 argument_list|(
 name|T_OPT
@@ -869,7 +869,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* TYPE */
+comment|/*%< TYPE */
 name|cp
 operator|+=
 name|INT16SZ
@@ -894,7 +894,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* CLASS = UDP payload size */
+comment|/*%< CLASS = UDP payload size */
 name|cp
 operator|+=
 name|INT16SZ
@@ -905,14 +905,14 @@ operator|++
 operator|=
 name|NOERROR
 expr_stmt|;
-comment|/* extended RCODE */
+comment|/*%< extended RCODE */
 operator|*
 name|cp
 operator|++
 operator|=
 literal|0
 expr_stmt|;
-comment|/* EDNS version */
+comment|/*%< EDNS version */
 if|if
 condition|(
 name|statp
@@ -963,7 +963,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* RDLEN */
+comment|/*%< RDLEN */
 name|cp
 operator|+=
 name|INT16SZ
@@ -998,6 +998,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

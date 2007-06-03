@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_comp.c,v 1.1.2.1.4.2 2005/07/28 07:43:22 marka Exp $"
+literal|"$Id: res_comp.c,v 1.3.18.2 2005/07/28 07:38:11 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,7 +138,7 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/*  * Expand compressed domain name 'src' to full domain name.  * 'msg' is a pointer to the begining of the message,  * 'eom' points to the first location after the message,  * 'dst' is a pointer to a buffer of size 'dstsiz' for the result.  * Return size of compressed name or -1 if there was an error.  */
+comment|/*%  * Expand compressed domain name 'src' to full domain name.  *  * \li 'msg' is a pointer to the begining of the message,  * \li 'eom' points to the first location after the message,  * \li 'dst' is a pointer to a buffer of size 'dstsiz' for the result.  * \li Return size of compressed name or -1 if there was an error.  */
 end_comment
 
 begin_function
@@ -216,7 +216,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Pack domain name 'exp_dn' in presentation form into 'comp_dn'.  * Return the size of the compressed name or -1.  * 'length' is the size of the array pointed to by 'comp_dn'.  */
+comment|/*%  * Pack domain name 'exp_dn' in presentation form into 'comp_dn'.  *  * \li Return the size of the compressed name or -1.  * \li 'length' is the size of the array pointed to by 'comp_dn'.  */
 end_comment
 
 begin_function
@@ -281,7 +281,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Skip over a compressed domain name. Return the size or -1.  */
+comment|/*%  * Skip over a compressed domain name. Return the size or -1.  */
 end_comment
 
 begin_function
@@ -336,11 +336,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Verify that a domain name uses an acceptable character set.  */
-end_comment
-
-begin_comment
-comment|/*  * Note the conspicuous absence of ctype macros in these definitions.  On  * non-ASCII hosts, we can't depend on string literals or ctype macros to  * tell us anything about network-format data.  The rest of the BIND system  * is not careful about this, but for some reason, we're doing it right here.  */
+comment|/*%  * Verify that a domain name uses an acceptable character set.  *  * Note the conspicuous absence of ctype macros in these definitions.  On  * non-ASCII hosts, we can't depend on string literals or ctype macros to  * tell us anything about network-format data.  The rest of the BIND system  * is not careful about this, but for some reason, we're doing it right here.  */
 end_comment
 
 begin_define
@@ -573,7 +569,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * hostname-like (A, MX, WKS) owners can have "*" as their first label  * but must otherwise be as a host name.  */
+comment|/*%  * hostname-like (A, MX, WKS) owners can have "*" as their first label  * but must otherwise be as a host name.  */
 end_comment
 
 begin_function
@@ -644,7 +640,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SOA RNAMEs and RP RNAMEs can have any printable character in their first  * label, but the rest of the name has to look like a host name.  */
+comment|/*%  * SOA RNAMEs and RP RNAMEs can have any printable character in their first  * label, but the rest of the name has to look like a host name.  */
 end_comment
 
 begin_function
@@ -760,7 +756,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function is quite liberal, since RFC 1034's character sets are only  * recommendations.  */
+comment|/*%  * This function is quite liberal, since RFC1034's character sets are only  * recommendations.  */
 end_comment
 
 begin_function
@@ -816,7 +812,7 @@ name|BIND_4_COMPAT
 end_ifdef
 
 begin_comment
-comment|/*  * This module must export the following externally-visible symbols:  *	___putlong  *	___putshort  *	__getlong  *	__getshort  * Note that one _ comes from C and the others come from us.  */
+comment|/*%  * This module must export the following externally-visible symbols:  *	___putlong  *	___putshort  *	__getlong  *	__getshort  * Note that one _ comes from C and the others come from us.  */
 end_comment
 
 begin_ifdef
@@ -1031,6 +1027,10 @@ name|dn_expand
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

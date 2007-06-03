@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_net_pton.c,v 1.4.2.1.8.2 2004/03/17 00:29:47 marka Exp $"
+literal|"$Id: inet_net_pton.c,v 1.7.18.1 2005/04/27 05:00:53 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,7 +165,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * static int  * inet_net_pton_ipv4(src, dst, size)  *	convert IPv4 network number from presentation to network format.  *	accepts hex octets, hex strings, decimal octets, and /CIDR.  *	"size" is in bytes and describes "dst".  * return:  *	number of bits, either imputed classfully or specified with /CIDR,  *	or -1 if some failure occurred (check errno).  ENOENT means it was  *	not an IPv4 network specification.  * note:  *	network byte order assumed.  this means 192.5.5.240/28 has  *	0b11110000 in its fourth octet.  * author:  *	Paul Vixie (ISC), June 1996  */
+comment|/*%  * static int  * inet_net_pton_ipv4(src, dst, size)  *	convert IPv4 network number from presentation to network format.  *	accepts hex octets, hex strings, decimal octets, and /CIDR.  *	"size" is in bytes and describes "dst".  * return:  *	number of bits, either imputed classfully or specified with /CIDR,  *	or -1 if some failure occurred (check errno).  ENOENT means it was  *	not an IPv4 network specification.  * note:  *	network byte order assumed.  this means 192.5.5.240/28 has  *	0b11110000 in its fourth octet.  * author:  *	Paul Vixie (ISC), June 1996  */
 end_comment
 
 begin_function
@@ -296,7 +296,7 @@ expr_stmt|;
 name|src
 operator|++
 expr_stmt|;
-comment|/* skip x or X. */
+comment|/*%< skip x or X. */
 while|while
 condition|(
 operator|(
@@ -415,7 +415,7 @@ condition|(
 name|dirty
 condition|)
 block|{
-comment|/* Odd trailing nybble? */
+comment|/*%< Odd trailing nybble? */
 if|if
 condition|(
 name|size
@@ -650,7 +650,7 @@ operator|*
 name|src
 operator|++
 expr_stmt|;
-comment|/* Skip over the /. */
+comment|/*%< Skip over the /. */
 name|bits
 operator|=
 literal|0
@@ -766,7 +766,7 @@ name|odst
 operator|>=
 literal|240
 condition|)
-comment|/* Class E */
+comment|/*%< Class E */
 name|bits
 operator|=
 literal|32
@@ -779,7 +779,7 @@ name|odst
 operator|>=
 literal|224
 condition|)
-comment|/* Class D */
+comment|/*%< Class D */
 name|bits
 operator|=
 literal|8
@@ -792,7 +792,7 @@ name|odst
 operator|>=
 literal|192
 condition|)
-comment|/* Class C */
+comment|/*%< Class C */
 name|bits
 operator|=
 literal|24
@@ -805,13 +805,13 @@ name|odst
 operator|>=
 literal|128
 condition|)
-comment|/* Class B */
+comment|/*%< Class B */
 name|bits
 operator|=
 literal|16
 expr_stmt|;
 else|else
-comment|/* Class A */
+comment|/*%< Class A */
 name|bits
 operator|=
 literal|8
@@ -1008,7 +1008,7 @@ name|val
 operator|==
 literal|0
 condition|)
-comment|/* no leading zeros */
+comment|/*%< no leading zeros */
 return|return
 operator|(
 literal|0
@@ -1032,7 +1032,7 @@ name|val
 operator|>
 literal|128
 condition|)
-comment|/* range */
+comment|/*%< range */
 return|return
 operator|(
 literal|0
@@ -1165,7 +1165,7 @@ name|val
 operator|==
 literal|0
 condition|)
-comment|/* no leading zeros */
+comment|/*%< no leading zeros */
 return|return
 operator|(
 literal|0
@@ -1189,7 +1189,7 @@ name|val
 operator|>
 literal|255
 condition|)
-comment|/* range */
+comment|/*%< range */
 return|return
 operator|(
 literal|0
@@ -1216,7 +1216,7 @@ name|odst
 operator|>
 literal|3
 condition|)
-comment|/* too many octets? */
+comment|/*%< too many octets? */
 return|return
 operator|(
 literal|0
@@ -1279,7 +1279,7 @@ name|odst
 operator|>
 literal|3
 condition|)
-comment|/* too many octets? */
+comment|/*%< too many octets? */
 return|return
 operator|(
 literal|0
@@ -1664,7 +1664,7 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-comment|/* '\0' was seen by inet_pton4(). */
+comment|/*%< '\\0' was seen by inet_pton4(). */
 block|}
 if|if
 condition|(
@@ -1917,7 +1917,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * int  * inet_net_pton(af, src, dst, size)  *	convert network number from presentation to network format.  *	accepts hex octets, hex strings, decimal octets, and /CIDR.  *	"size" is in bytes and describes "dst".  * return:  *	number of bits, either imputed classfully or specified with /CIDR,  *	or -1 if some failure occurred (check errno).  ENOENT means it was  *	not a valid network specification.  * author:  *	Paul Vixie (ISC), June 1996  */
+comment|/*%  * int  * inet_net_pton(af, src, dst, size)  *	convert network number from presentation to network format.  *	accepts hex octets, hex strings, decimal octets, and /CIDR.  *	"size" is in bytes and describes "dst".  * return:  *	number of bits, either imputed classfully or specified with /CIDR,  *	or -1 if some failure occurred (check errno).  ENOENT means it was  *	not a valid network specification.  * author:  *	Paul Vixie (ISC), June 1996  */
 end_comment
 
 begin_function
@@ -2009,6 +2009,10 @@ name|inet_net_pton
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

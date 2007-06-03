@@ -83,7 +83,7 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/*  * Return the network number from an internet  * address; handles class a/b/c network #'s.  */
+comment|/*%  * Return the network number from an internet  * address; handles class a/b/c network #'s.  */
 end_comment
 
 begin_function
@@ -184,6 +184,10 @@ name|inet_netof
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_addr.c,v 1.2.206.2 2004/03/17 00:29:45 marka Exp $"
+literal|"$Id: inet_addr.c,v 1.4.18.1 2005/04/27 05:00:52 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,7 +114,7 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/*  * Ascii internet address interpretation routine.  * The value returned is in network order.  */
+comment|/*%  * Ascii internet address interpretation routine.  * The value returned is in network order.  */
 end_comment
 
 begin_function
@@ -158,7 +158,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Check whether "cp" is a valid ascii representation  * of an Internet address and convert to a binary address.  * Returns 1 if the address is valid, 0 if not.  * This replaces inet_addr, the return value from which  * cannot distinguish between failure and a local broadcast address.  */
+comment|/*%  * Check whether "cp" is a valid ascii representation  * of an Internet address and convert to a binary address.  * Returns 1 if the address is valid, 0 if not.  * This replaces inet_addr, the return value from which  * cannot distinguish between failure and a local broadcast address.  */
 end_comment
 
 begin_function
@@ -521,12 +521,12 @@ block|{
 case|case
 literal|1
 case|:
-comment|/* a -- 32 bits */
+comment|/*%< a -- 32 bits */
 break|break;
 case|case
 literal|2
 case|:
-comment|/* a.b -- 8.24 bits */
+comment|/*%< a.b -- 8.24 bits */
 if|if
 condition|(
 name|val
@@ -551,7 +551,7 @@ break|break;
 case|case
 literal|3
 case|:
-comment|/* a.b.c -- 8.8.16 bits */
+comment|/*%< a.b.c -- 8.8.16 bits */
 if|if
 condition|(
 name|val
@@ -587,7 +587,7 @@ break|break;
 case|case
 literal|4
 case|:
-comment|/* a.b.c.d -- 8.8.8.8 bits */
+comment|/*%< a.b.c.d -- 8.8.8.8 bits */
 if|if
 condition|(
 name|val
@@ -688,6 +688,10 @@ name|inet_aton
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

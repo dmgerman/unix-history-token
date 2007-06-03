@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_timers.c,v 1.2.2.1.4.5 2004/03/17 02:39:13 marka Exp $"
+literal|"$Id: ev_timers.c,v 1.5.18.1 2005/04/27 05:01:06 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2423,6 +2423,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_init.c,v 1.9.2.5.4.6 2006/08/30 23:23:01 marka Exp $"
+literal|"$Id: res_init.c,v 1.16.18.5 2006/08/30 23:23:13 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,7 +190,7 @@ file|"res_private.h"
 end_include
 
 begin_comment
-comment|/* Options.  Should all be left alone. */
+comment|/*% Options.  Should all be left alone. */
 end_comment
 
 begin_define
@@ -294,7 +294,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* XXX - could be a function */
+comment|/*%< XXX - could be a function */
 end_comment
 
 begin_define
@@ -317,7 +317,7 @@ comment|/*  * Resolver state default settings.  */
 end_comment
 
 begin_comment
-comment|/*  * Set up default settings.  If the configuration file exist, the values  * there will have precedence.  Otherwise, the server address is set to  * INADDR_ANY and the default domain name comes from the gethostname().  *  * An interrim version of this code (BIND 4.9, pre-4.4BSD) used 127.0.0.1  * rather than INADDR_ANY ("0.0.0.0") as the default name server address  * since it was noted that INADDR_ANY actually meant ``the first interface  * you "ifconfig"'d at boot time'' and if this was a SLIP or PPP interface,  * it had to be "up" in order for you to reach your own name server.  It  * was later decided that since the recommended practice is to always   * install local static routes through 127.0.0.1 for all your network  * interfaces, that we could solve this problem without a code change.  *  * The configuration file should always be used, since it is the only way  * to specify a default domain.  If you are running a server on your local  * machine, you should say "nameserver 0.0.0.0" or "nameserver 127.0.0.1"  * in the configuration file.  *  * Return 0 if completes successfully, -1 on error  */
+comment|/*%  * Set up default settings.  If the configuration file exist, the values  * there will have precedence.  Otherwise, the server address is set to  * INADDR_ANY and the default domain name comes from the gethostname().  *  * An interrim version of this code (BIND 4.9, pre-4.4BSD) used 127.0.0.1  * rather than INADDR_ANY ("0.0.0.0") as the default name server address  * since it was noted that INADDR_ANY actually meant ``the first interface  * you "ifconfig"'d at boot time'' and if this was a SLIP or PPP interface,  * it had to be "up" in order for you to reach your own name server.  It  * was later decided that since the recommended practice is to always   * install local static routes through 127.0.0.1 for all your network  * interfaces, that we could solve this problem without a code change.  *  * The configuration file should always be used, since it is the only way  * to specify a default domain.  If you are running a server on your local  * machine, you should say "nameserver 0.0.0.0" or "nameserver 127.0.0.1"  * in the configuration file.  *  * Return 0 if completes successfully, -1 on error  */
 end_comment
 
 begin_function
@@ -351,7 +351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function has to be reachable by res_data.c but not publically. */
+comment|/*% This function has to be reachable by res_data.c but not publically. */
 end_comment
 
 begin_function
@@ -391,7 +391,7 @@ name|nserv
 init|=
 literal|0
 decl_stmt|;
-comment|/* number of nameserver records read from file */
+comment|/*%< number of nameserver records read from file */
 name|int
 name|haveenv
 init|=
@@ -1077,7 +1077,7 @@ name|cp
 operator|==
 literal|'\n'
 condition|)
-comment|/* silly backwards compat */
+comment|/*%< silly backwards compat */
 break|break;
 elseif|else
 if|if
@@ -1240,7 +1240,7 @@ if|if
 condition|(
 name|haveenv
 condition|)
-comment|/* skip if have from environ */
+comment|/*%< skip if have from environ */
 continue|continue;
 name|cp
 operator|=
@@ -1362,7 +1362,7 @@ if|if
 condition|(
 name|haveenv
 condition|)
-comment|/* skip if have from environ */
+comment|/*%< skip if have from environ */
 continue|continue;
 name|cp
 operator|=
@@ -2703,7 +2703,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* we know there is one */
+comment|/*%< we know there is one */
 operator|*
 name|pp
 operator|++
@@ -3841,7 +3841,7 @@ name|net_mask
 parameter_list|(
 name|in
 parameter_list|)
-comment|/* XXX - should really use system's version of this */
+comment|/*!< XXX - should really use system's version of this  */
 name|struct
 name|in_addr
 name|in
@@ -3945,7 +3945,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is for closing the socket if a virtual circuit is used and  * the program wants to close it.  This provides support for endhostent()  * which expects to close the socket.  *  * This routine is not expected to be user visible.  */
+comment|/*%  * This routine is for closing the socket if a virtual circuit is used and  * the program wants to close it.  This provides support for endhostent()  * which expects to close the socket.  *  * This routine is not expected to be user visible.  */
 end_comment
 
 begin_function
@@ -4753,6 +4753,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

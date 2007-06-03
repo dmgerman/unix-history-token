@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2005 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/* eventlib_p.h - private interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.3.2.1.4.4 2006/03/10 00:17:21 marka Exp $  * $FreeBSD$  */
+comment|/*! \file   * \brief private interfaces for eventlib  * \author vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.5.18.4 2006/03/10 00:20:08 marka Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -279,17 +279,17 @@ define|#
 directive|define
 name|EV_CONN_LISTEN
 value|0x0001
-comment|/* Connection is a listener. */
+comment|/*%< Connection is a listener. */
 define|#
 directive|define
 name|EV_CONN_SELECTED
 value|0x0002
-comment|/* evSelectFD(conn->file). */
+comment|/*%< evSelectFD(conn->file). */
 define|#
 directive|define
 name|EV_CONN_BLOCK
 value|0x0004
-comment|/* Listener fd was blocking. */
+comment|/*%< Listener fd was blocking. */
 name|evFileID
 name|file
 decl_stmt|;
@@ -461,7 +461,7 @@ define|#
 directive|define
 name|EV_STR_TIMEROK
 value|0x0001
-comment|/* IFF timer valid. */
+comment|/*%< IFF timer valid. */
 name|int
 name|fd
 decl_stmt|;

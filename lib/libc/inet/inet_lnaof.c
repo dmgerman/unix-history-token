@@ -83,7 +83,7 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/*  * Return the local network address portion of an  * internet address; handles class a/b/c network  * number formats.  */
+comment|/*%  * Return the local network address portion of an  * internet address; handles class a/b/c network  * number formats.  */
 end_comment
 
 begin_function
@@ -172,6 +172,10 @@ name|inet_lnaof
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

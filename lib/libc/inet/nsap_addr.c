@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nsap_addr.c,v 1.2.206.2 2005/07/28 07:43:18 marka Exp $"
+literal|"$Id: nsap_addr.c,v 1.3.18.2 2005/07/28 07:38:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -580,6 +580,10 @@ name|inet_nsap_ntoa
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

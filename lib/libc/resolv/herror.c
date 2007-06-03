@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: herror.c,v 1.2.206.1 2004/03/09 08:33:54 marka Exp $"
+literal|"$Id: herror.c,v 1.3.18.1 2005/04/27 05:01:09 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,16 +157,16 @@ literal|"Resolver Error 0 (no error)"
 block|,
 literal|"Unknown host"
 block|,
-comment|/* 1 HOST_NOT_FOUND */
+comment|/*%< 1 HOST_NOT_FOUND */
 literal|"Host name lookup failure"
 block|,
-comment|/* 2 TRY_AGAIN */
+comment|/*%< 2 TRY_AGAIN */
 literal|"Unknown server error"
 block|,
-comment|/* 3 NO_RECOVERY */
+comment|/*%< 3 NO_RECOVERY */
 literal|"No address associated with name"
 block|,
-comment|/* 4 NO_ADDRESS */
+comment|/*%< 4 NO_ADDRESS */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -202,7 +202,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * herror --  *	print the error indicated by the h_errno value.  */
+comment|/*%  * herror --  *	print the error indicated by the h_errno value.  */
 end_comment
 
 begin_function
@@ -361,7 +361,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * hstrerror --  *	return the string associated with a given "host" errno value.  */
+comment|/*%  * hstrerror --  *	return the string associated with a given "host" errno value.  */
 end_comment
 
 begin_function
@@ -407,6 +407,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

@@ -48,7 +48,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_debug.c,v 1.3.2.5.4.6 2005/07/28 07:43:22 marka Exp $"
+literal|"$Id: res_debug.c,v 1.10.18.5 2005/07/28 07:38:11 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -242,7 +242,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Print the current options.  */
+comment|/*%  * Print the current options.  */
 end_comment
 
 begin_function
@@ -731,7 +731,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print the contents of a query.  * This is intended to be primarily a debugging routine.  */
+comment|/*%  * Print the contents of a query.  * This is intended to be primarily a debugging routine.  */
 end_comment
 
 begin_function
@@ -1416,7 +1416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return a fully-qualified domain name from a compressed name (with    length supplied).  */
+comment|/*%  * Return a fully-qualified domain name from a compressed name (with    length supplied).  */
 end_comment
 
 begin_function
@@ -1530,7 +1530,7 @@ literal|1
 operator|>=
 name|namelen
 condition|)
-comment|/* Lack space for final dot */
+comment|/*%< Lack space for final dot */
 return|return
 operator|(
 name|NULL
@@ -1636,7 +1636,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Names of RR classes and qclasses.  Classes and qclasses are the same, except  * that C_ANY is a qclass but not a class.  (You can ask for records of class  * C_ANY, but you can't have any records of that class in the database.)  */
+comment|/*%  * Names of RR classes and qclasses.  Classes and qclasses are the same, except  * that C_ANY is a qclass but not a class.  (You can ask for records of class  * C_ANY, but you can't have any records of that class in the database.)  */
 end_comment
 
 begin_decl_stmt
@@ -1751,7 +1751,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Names of message sections.  */
+comment|/*%  * Names of message sections.  */
 end_comment
 
 begin_decl_stmt
@@ -2025,7 +2025,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Names of RR types and qtypes.  Types and qtypes are the same, except  * that T_ANY is a qtype but not a type.  (You can ask for records of type  * T_ANY, but you can't have any records of that type in the database.)  */
+comment|/*%  * Names of RR types and qtypes.  Types and qtypes are the same, except  * that T_ANY is a qtype but not a type.  (You can ask for records of type  * T_ANY, but you can't have any records of that type in the database.)  */
 end_comment
 
 begin_decl_stmt
@@ -2440,7 +2440,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Names of DNS rcodes.  */
+comment|/*%  * Names of DNS rcodes.  */
 end_comment
 
 begin_decl_stmt
@@ -2667,7 +2667,7 @@ operator|->
 name|number
 operator|)
 return|;
-comment|/* The default value. */
+comment|/*%< The default value. */
 block|}
 end_function
 
@@ -2750,7 +2750,7 @@ argument_list|,
 name|number
 argument_list|)
 expr_stmt|;
-comment|/* XXX nonreentrant */
+comment|/*%< XXX nonreentrant */
 if|if
 condition|(
 name|success
@@ -2847,7 +2847,7 @@ argument_list|,
 name|number
 argument_list|)
 expr_stmt|;
-comment|/* XXX nonreentrant */
+comment|/*%< XXX nonreentrant */
 if|if
 condition|(
 name|success
@@ -2866,7 +2866,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a string for the type.  */
+comment|/*%  * Return a string for the type.  */
 end_comment
 
 begin_function
@@ -2948,7 +2948,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a string for the type.  */
+comment|/*%  * Return a string for the type.  */
 end_comment
 
 begin_function
@@ -3010,7 +3010,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a mnemonic for class.  */
+comment|/*%  * Return a mnemonic for class.  */
 end_comment
 
 begin_function
@@ -3092,7 +3092,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a mnemonic for an option  */
+comment|/*%  * Return a mnemonic for an option  */
 end_comment
 
 begin_function
@@ -3203,7 +3203,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|RES_USE_EDNS0
-comment|/* KAME extension */
+comment|/*%< KAME extension */
 case|case
 name|RES_USE_EDNS0
 case|:
@@ -3280,7 +3280,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a mnemonic for a time to live.  */
+comment|/*%  * Return a mnemonic for a time to live.  */
 end_comment
 
 begin_function
@@ -3331,7 +3331,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a string for the rcode.  */
+comment|/*%  * Return a string for the rcode.  */
 end_comment
 
 begin_function
@@ -3364,7 +3364,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a string for a res_sockaddr_union.  */
+comment|/*%  * Return a string for a res_sockaddr_union.  */
 end_comment
 
 begin_function
@@ -3500,7 +3500,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * routines to convert between on-the-wire RR format and zone file format.  * Does not contain conversion to/from decimal degrees; divide or multiply  * by 60*60*1000 for that.  */
+comment|/*%  * routines to convert between on-the-wire RR format and zone file format.  * Does not contain conversion to/from decimal degrees; divide or multiply  * by 60*60*1000 for that.  */
 end_comment
 
 begin_decl_stmt
@@ -3537,7 +3537,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* takes an XeY precision/size value, returns a string representation. */
+comment|/*% takes an XeY precision/size value, returns a string representation. */
 end_comment
 
 begin_function
@@ -3638,7 +3638,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* converts ascii size/precision X * 10**Y(cm) to 0xXY.  moves pointer. */
+comment|/*% converts ascii size/precision X * 10**Y(cm) to 0xXY.  moves pointer.  */
 end_comment
 
 begin_function
@@ -3718,7 +3718,7 @@ operator|==
 literal|'.'
 condition|)
 block|{
-comment|/* centimeters */
+comment|/*%< centimeters */
 name|cp
 operator|++
 expr_stmt|;
@@ -3851,7 +3851,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* converts ascii lat/lon to unsigned encoded 32-bit number.  moves pointer. */
+comment|/*% converts ascii lat/lon to unsigned encoded 32-bit number.  moves pointer. */
 end_comment
 
 begin_function
@@ -4052,7 +4052,7 @@ operator|==
 literal|'.'
 condition|)
 block|{
-comment|/* decimal seconds */
+comment|/*%< decimal seconds */
 name|cp
 operator|++
 expr_stmt|;
@@ -4146,7 +4146,7 @@ operator|*
 name|cp
 argument_list|)
 condition|)
-comment|/* if any trailing garbage */
+comment|/*%< if any trailing garbage */
 name|cp
 operator|++
 expr_stmt|;
@@ -4274,7 +4274,7 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
-comment|/* invalid value -- indicates error */
+comment|/*%< invalid value -- indicates error */
 break|break;
 block|}
 switch|switch
@@ -4300,7 +4300,7 @@ name|which
 operator|=
 literal|1
 expr_stmt|;
-comment|/* latitude */
+comment|/*%< latitude */
 break|break;
 case|case
 literal|'E'
@@ -4319,7 +4319,7 @@ name|which
 operator|=
 literal|2
 expr_stmt|;
-comment|/* longitude */
+comment|/*%< longitude */
 break|break;
 default|default:
 operator|*
@@ -4327,13 +4327,13 @@ name|which
 operator|=
 literal|0
 expr_stmt|;
-comment|/* error */
+comment|/*%< error */
 break|break;
 block|}
 name|cp
 operator|++
 expr_stmt|;
-comment|/* skip the hemisphere */
+comment|/*%< skip the hemisphere */
 while|while
 condition|(
 operator|!
@@ -4347,7 +4347,7 @@ operator|*
 name|cp
 argument_list|)
 condition|)
-comment|/* if any trailing garbage */
+comment|/*%< if any trailing garbage */
 name|cp
 operator|++
 expr_stmt|;
@@ -4363,7 +4363,7 @@ operator|*
 name|cp
 argument_list|)
 condition|)
-comment|/* move to next field */
+comment|/*%< move to next field */
 name|cp
 operator|++
 expr_stmt|;
@@ -4381,7 +4381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* converts a zone file representation in a string to an RDATA on-the-wire  * representation. */
+comment|/*%  * converts a zone file representation in a string to an RDATA on-the-wire  * representation. */
 end_comment
 
 begin_function
@@ -4454,19 +4454,19 @@ name|hp
 init|=
 literal|0x16
 decl_stmt|;
-comment|/* default = 1e6 cm = 10000.00m = 10km */
+comment|/*%< default = 1e6 cm = 10000.00m = 10km */
 name|u_int8_t
 name|vp
 init|=
 literal|0x13
 decl_stmt|;
-comment|/* default = 1e3 cm = 10.00m */
+comment|/*%< default = 1e3 cm = 10.00m */
 name|u_int8_t
 name|siz
 init|=
 literal|0x12
 decl_stmt|;
-comment|/* default = 1e2 cm = 1.00m */
+comment|/*%< default = 1e2 cm = 1.00m */
 name|int
 name|which1
 init|=
@@ -4521,7 +4521,7 @@ block|{
 case|case
 literal|3
 case|:
-comment|/* 1 + 2, the only valid combination */
+comment|/*%< 1 + 2, the only valid combination */
 if|if
 condition|(
 operator|(
@@ -4537,7 +4537,7 @@ literal|2
 operator|)
 condition|)
 block|{
-comment|/* normal case */
+comment|/*%< normal case */
 name|latit
 operator|=
 name|lltemp1
@@ -4563,7 +4563,7 @@ literal|1
 operator|)
 condition|)
 block|{
-comment|/* reversed */
+comment|/*%< reversed */
 name|longit
 operator|=
 name|lltemp1
@@ -4575,7 +4575,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* some kind of brokenness */
+comment|/*%< some kind of brokenness */
 return|return
 operator|(
 literal|0
@@ -4584,7 +4584,7 @@ return|;
 block|}
 break|break;
 default|default:
-comment|/* we didn't get one of each */
+comment|/*%< we didn't get one of each */
 return|return
 operator|(
 literal|0
@@ -4653,7 +4653,7 @@ operator|==
 literal|'.'
 condition|)
 block|{
-comment|/* decimal meters */
+comment|/*%< decimal meters */
 name|cp
 operator|++
 expr_stmt|;
@@ -4745,7 +4745,7 @@ operator|<
 name|maxcp
 operator|)
 condition|)
-comment|/* if trailing garbage or m */
+comment|/*%< if trailing garbage or m */
 name|cp
 operator|++
 expr_stmt|;
@@ -4806,7 +4806,7 @@ operator|<
 name|maxcp
 operator|)
 condition|)
-comment|/* if trailing garbage or m */
+comment|/*%< if trailing garbage or m */
 name|cp
 operator|++
 expr_stmt|;
@@ -4867,7 +4867,7 @@ operator|<
 name|maxcp
 operator|)
 condition|)
-comment|/* if trailing garbage or m */
+comment|/*%< if trailing garbage or m */
 name|cp
 operator|++
 expr_stmt|;
@@ -4924,7 +4924,7 @@ name|u_int8_t
 operator|)
 literal|0
 expr_stmt|;
-comment|/* version byte */
+comment|/*%< version byte */
 operator|*
 name|bcp
 operator|++
@@ -4969,12 +4969,12 @@ operator|(
 literal|16
 operator|)
 return|;
-comment|/* size of RR in octets */
+comment|/*%< size of RR in octets */
 block|}
 end_function
 
 begin_comment
-comment|/* takes an on-the-wire LOC RR and formats it in a human readable format. */
+comment|/*% takes an on-the-wire LOC RR and formats it in a human readable format. */
 end_comment
 
 begin_function
@@ -5202,7 +5202,7 @@ operator|<
 name|referencealt
 condition|)
 block|{
-comment|/* below WGS 84 spheroid */
+comment|/*%< below WGS 84 spheroid */
 name|altval
 operator|=
 name|referencealt
@@ -5500,7 +5500,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the number of DNS hierarchy levels in the name. */
+comment|/*% Return the number of DNS hierarchy levels in the name. */
 end_comment
 
 begin_function
@@ -5606,7 +5606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Make dates expressed in seconds-since-Jan-1-1970 easy to read.    * SIG records are required to be printed like this, by the Secure DNS RFC.  */
+comment|/*%  * Make dates expressed in seconds-since-Jan-1-1970 easy to read.    * SIG records are required to be printed like this, by the Secure DNS RFC.  */
 end_comment
 
 begin_function
@@ -6088,6 +6088,10 @@ name|p_secstodate
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

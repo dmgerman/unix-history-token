@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1983, 1989  *    The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  *      from nameser.h	8.1 (Berkeley) 6/2/93  *	$Id: nameser_compat.h,v 1.1.2.3.4.3 2006/05/19 02:38:15 marka Exp $  * $FreeBSD$  */
+comment|/*%  *      from nameser.h	8.1 (Berkeley) 6/2/93  *	$Id: nameser_compat.h,v 1.5.18.3 2006/05/19 02:36:00 marka Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -27,7 +27,7 @@ value|19950621
 end_define
 
 begin_comment
-comment|/* (DEAD) interface version stamp. */
+comment|/*%< (DEAD) interface version stamp. */
 end_comment
 
 begin_include
@@ -79,7 +79,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Structure for query header.  The order of the fields is machine- and  * compiler-dependent, depending on the byte/bit order and the layout  * of bit fields.  We use bit fields only in int variables, as this  * is all ANSI requires.  This requires a somewhat confusing rearrangement.  */
+comment|/*%  * Structure for query header.  The order of the fields is machine- and  * compiler-dependent, depending on the byte/bit order and the layout  * of bit fields.  We use bit fields only in int variables, as this  * is all ANSI requires.  This requires a somewhat confusing rearrangement.  */
 end_comment
 
 begin_typedef
@@ -91,7 +91,7 @@ name|id
 range|:
 literal|16
 decl_stmt|;
-comment|/* query identification number */
+comment|/*%< query identification number */
 if|#
 directive|if
 name|_BYTE_ORDER
@@ -103,62 +103,62 @@ name|qr
 range|:
 literal|1
 decl_stmt|;
-comment|/* response flag */
+comment|/*%< response flag */
 name|unsigned
 name|opcode
 range|:
 literal|4
 decl_stmt|;
-comment|/* purpose of message */
+comment|/*%< purpose of message */
 name|unsigned
 name|aa
 range|:
 literal|1
 decl_stmt|;
-comment|/* authoritive answer */
+comment|/*%< authoritive answer */
 name|unsigned
 name|tc
 range|:
 literal|1
 decl_stmt|;
-comment|/* truncated message */
+comment|/*%< truncated message */
 name|unsigned
 name|rd
 range|:
 literal|1
 decl_stmt|;
-comment|/* recursion desired */
+comment|/*%< recursion desired */
 comment|/* fields in fourth byte */
 name|unsigned
 name|ra
 range|:
 literal|1
 decl_stmt|;
-comment|/* recursion available */
+comment|/*%< recursion available */
 name|unsigned
 name|unused
 range|:
 literal|1
 decl_stmt|;
-comment|/* unused bits (MBZ as of 4.9.3a3) */
+comment|/*%< unused bits (MBZ as of 4.9.3a3) */
 name|unsigned
 name|ad
 range|:
 literal|1
 decl_stmt|;
-comment|/* authentic data from named */
+comment|/*%< authentic data from named */
 name|unsigned
 name|cd
 range|:
 literal|1
 decl_stmt|;
-comment|/* checking disabled by resolver */
+comment|/*%< checking disabled by resolver */
 name|unsigned
 name|rcode
 range|:
 literal|4
 decl_stmt|;
-comment|/* response code */
+comment|/*%< response code */
 endif|#
 directive|endif
 if|#
@@ -176,62 +176,62 @@ name|rd
 range|:
 literal|1
 decl_stmt|;
-comment|/* recursion desired */
+comment|/*%< recursion desired */
 name|unsigned
 name|tc
 range|:
 literal|1
 decl_stmt|;
-comment|/* truncated message */
+comment|/*%< truncated message */
 name|unsigned
 name|aa
 range|:
 literal|1
 decl_stmt|;
-comment|/* authoritive answer */
+comment|/*%< authoritive answer */
 name|unsigned
 name|opcode
 range|:
 literal|4
 decl_stmt|;
-comment|/* purpose of message */
+comment|/*%< purpose of message */
 name|unsigned
 name|qr
 range|:
 literal|1
 decl_stmt|;
-comment|/* response flag */
+comment|/*%< response flag */
 comment|/* fields in fourth byte */
 name|unsigned
 name|rcode
 range|:
 literal|4
 decl_stmt|;
-comment|/* response code */
+comment|/*%< response code */
 name|unsigned
 name|cd
 range|:
 literal|1
 decl_stmt|;
-comment|/* checking disabled by resolver */
+comment|/*%< checking disabled by resolver */
 name|unsigned
 name|ad
 range|:
 literal|1
 decl_stmt|;
-comment|/* authentic data from named */
+comment|/*%< authentic data from named */
 name|unsigned
 name|unused
 range|:
 literal|1
 decl_stmt|;
-comment|/* unused bits (MBZ as of 4.9.3a3) */
+comment|/*%< unused bits (MBZ as of 4.9.3a3) */
 name|unsigned
 name|ra
 range|:
 literal|1
 decl_stmt|;
-comment|/* recursion available */
+comment|/*%< recursion available */
 endif|#
 directive|endif
 comment|/* remaining bytes */
@@ -240,25 +240,25 @@ name|qdcount
 range|:
 literal|16
 decl_stmt|;
-comment|/* number of question entries */
+comment|/*%< number of question entries */
 name|unsigned
 name|ancount
 range|:
 literal|16
 decl_stmt|;
-comment|/* number of answer entries */
+comment|/*%< number of answer entries */
 name|unsigned
 name|nscount
 range|:
 literal|16
 decl_stmt|;
-comment|/* number of authority entries */
+comment|/*%< number of authority entries */
 name|unsigned
 name|arcount
 range|:
 literal|16
 decl_stmt|;
-comment|/* number of resource entries */
+comment|/*%< number of resource entries */
 block|}
 name|HEADER
 typedef|;
@@ -903,6 +903,10 @@ end_endif
 
 begin_comment
 comment|/* _ARPA_NAMESER_COMPAT_ */
+end_comment
+
+begin_comment
+comment|/*! \file */
 end_comment
 
 end_unit

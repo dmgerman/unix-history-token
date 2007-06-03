@@ -89,7 +89,7 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/*  * Internet network address interpretation routine.  * The library routines call this routine to interpret  * network numbers.  */
+comment|/*%  * Internet network address interpretation routine.  * The library routines call this routine to interpret  * network numbers.  */
 end_comment
 
 begin_function
@@ -454,6 +454,10 @@ name|inet_network
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

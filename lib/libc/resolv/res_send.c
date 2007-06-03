@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.5.2.2.4.9 2006/10/16 23:00:50 marka Exp $"
+literal|"$Id: res_send.c,v 1.9.18.8 2006/10/16 23:00:58 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,7 +72,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Send query to name server and wait for reply.  */
+comment|/*! \file  * \brief  * Send query to name server and wait for reply.  */
 end_comment
 
 begin_include
@@ -594,7 +594,7 @@ comment|/* Public. */
 end_comment
 
 begin_comment
-comment|/* int  * res_isourserver(ina)  *	looks up "ina" in _res.ns_addr_list[]  * returns:  *	0  : not found  *>0 : found  * author:  *	paul vixie, 29may94  */
+comment|/*%  *	looks up "ina" in _res.ns_addr_list[]  *  * returns:  *\li	0  : not found  *\li>0 : found  *  * author:  *\li	paul vixie, 29may94  */
 end_comment
 
 begin_function
@@ -866,7 +866,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* int  * res_nameinquery(name, type, class, buf, eom)  *	look for (name,type,class) in the query section of packet (buf,eom)  * requires:  *	buf + HFIXEDSZ<= eom  * returns:  *	-1 : format error  *	0  : not found  *>0 : found  * author:  *	paul vixie, 29may94  */
+comment|/*%  *	look for (name,type,class) in the query section of packet (buf,eom)  *  * requires:  *\li	buf + HFIXEDSZ<= eom  *  * returns:  *\li	-1 : format error  *\li	0  : not found  *\li>0 : found  *  * author:  *\li	paul vixie, 29may94  */
 end_comment
 
 begin_function
@@ -1048,7 +1048,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* int  * res_queriesmatch(buf1, eom1, buf2, eom2)  *	is there a 1:1 mapping of (name,type,class)  *	in (buf1,eom1) and (buf2,eom2)?  * returns:  *	-1 : format error  *	0  : not a 1:1 mapping  *>0 : is a 1:1 mapping  * author:  *	paul vixie, 29may94  */
+comment|/*%  *	is there a 1:1 mapping of (name,type,class)  *	in (buf1,eom1) and (buf2,eom2)?  *  * returns:  *\li	-1 : format error  *\li	0  : not a 1:1 mapping  *\li>0 : is a 1:1 mapping  *  * author:  *\li	paul vixie, 29may94  */
 end_comment
 
 begin_function
@@ -2713,13 +2713,13 @@ name|errno
 operator|=
 name|ECONNREFUSED
 expr_stmt|;
-comment|/* no nameservers found */
+comment|/*%< no nameservers found */
 else|else
 name|errno
 operator|=
 name|ETIMEDOUT
 expr_stmt|;
-comment|/* no answer obtained */
+comment|/*%< no answer obtained */
 block|}
 else|else
 name|errno
@@ -2836,12 +2836,12 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* unknown, die on connect */
+comment|/*%< unknown, die on connect */
 block|}
 end_function
 
 begin_comment
-comment|/*  * pick appropriate nsaddr_list for use.  see res_init() for initialization.  */
+comment|/*%  * pick appropriate nsaddr_list for use.  see res_init() for initialization.  */
 end_comment
 
 begin_function
