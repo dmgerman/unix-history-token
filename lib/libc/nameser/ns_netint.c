@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_netint.c,v 1.1.206.1 2004/03/09 08:33:44 marka Exp $"
+literal|"$Id: ns_netint.c,v 1.2.18.1 2005/04/27 05:01:08 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,6 +150,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

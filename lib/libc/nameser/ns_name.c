@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_name.c,v 1.3.2.4.4.2 2004/05/04 03:27:47 marka Exp $"
+literal|"$Id: ns_name.c,v 1.8.18.2 2005/04/27 05:01:08 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* EDNS0 extended label type */
+comment|/*%< EDNS0 extended label type */
 end_comment
 
 begin_define
@@ -1053,7 +1053,7 @@ comment|/* Public. */
 end_comment
 
 begin_comment
-comment|/*  * ns_name_ntop(src, dst, dstsiz)  *	Convert an encoded domain name to printable ascii as per RFC1035.  * return:  *	Number of bytes written to buffer, or -1 (with errno set)  * notes:  *	The root is returned as "."  *	All other domains are returned in non absolute form  */
+comment|/*%  *	Convert an encoded domain name to printable ascii as per RFC1035.   * return:  *\li	Number of bytes written to buffer, or -1 (with errno set)  *  * notes:  *\li	The root is returned as "."  *\li	All other domains are returned in non absolute form  */
 end_comment
 
 begin_function
@@ -1196,7 +1196,7 @@ name|errno
 operator|=
 name|EMSGSIZE
 expr_stmt|;
-comment|/* XXX */
+comment|/*%< XXX */
 return|return
 operator|(
 operator|-
@@ -1531,7 +1531,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ns_name_pton(src, dst, dstsiz)  *	Convert a ascii string into an encoded domain name as per RFC1035.  * return:  *	-1 if it fails  *	1 if string was fully qualified  *	0 is string was not fully qualified  * notes:  *	Enforces label and domain length limits.  */
+comment|/*%  *	Convert a ascii string into an encoded domain name as per RFC1035.  *  * return:  *  *\li	-1 if it fails  *\li	1 if string was fully qualified  *\li	0 is string was not fully qualified  *  * notes:  *\li	Enforces label and domain length limits.  */
 end_comment
 
 begin_function
@@ -1620,7 +1620,7 @@ operator|==
 literal|'['
 condition|)
 block|{
-comment|/* start a bit string label */
+comment|/*%< start a bit string label */
 if|if
 condition|(
 operator|(
@@ -1641,7 +1641,7 @@ name|errno
 operator|=
 name|EINVAL
 expr_stmt|;
-comment|/* ??? */
+comment|/*%< ??? */
 return|return
 operator|(
 operator|-
@@ -1922,7 +1922,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Label too big. */
+comment|/*%< Label too big. */
 name|errno
 operator|=
 name|EMSGSIZE
@@ -2105,7 +2105,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Label too big. */
+comment|/*%< Label too big. */
 name|errno
 operator|=
 name|EMSGSIZE
@@ -2185,7 +2185,7 @@ operator|>
 name|MAXCDNAME
 condition|)
 block|{
-comment|/* src too big */
+comment|/*%< src too big */
 name|errno
 operator|=
 name|EMSGSIZE
@@ -2206,7 +2206,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ns_name_ntol(src, dst, dstsiz)  *	Convert a network strings labels into all lowercase.  * return:  *	Number of bytes written to buffer, or -1 (with errno set)  * notes:  *	Enforces label and domain length limits.  */
+comment|/*%  *	Convert a network strings labels into all lowercase.  *  * return:  *\li	Number of bytes written to buffer, or -1 (with errno set)  *  * notes:  *\li	Enforces label and domain length limits.  */
 end_comment
 
 begin_function
@@ -2431,7 +2431,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ns_name_unpack(msg, eom, src, dst, dstsiz)  *	Unpack a domain name from a message, source may be compressed.  * return:  *	-1 if it fails, or consumed octets if it succeeds.  */
+comment|/*%  *	Unpack a domain name from a message, source may be compressed.  *  * return:  *\li	-1 if it fails, or consumed octets if it succeeds.  */
 end_comment
 
 begin_function
@@ -2710,7 +2710,7 @@ operator|>=
 name|eom
 condition|)
 block|{
-comment|/* Out of range. */
+comment|/*%< Out of range. */
 name|errno
 operator|=
 name|EMSGSIZE
@@ -2759,7 +2759,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* flag error */
+comment|/*%< flag error */
 block|}
 block|}
 operator|*
@@ -2788,7 +2788,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ns_name_pack(src, dst, dstsiz, dnptrs, lastdnptr)  *	Pack domain name 'domain' into 'comp_dn'.  * return:  *	Size of the compressed name, or -1.  * notes:  *	'dnptrs' is an array of pointers to previous compressed names.  *	dnptrs[0] is a pointer to the beginning of the message. The array  *	ends with NULL.  *	'lastdnptr' is a pointer to the end of the array pointed to  *	by 'dnptrs'.  * Side effects:  *	The list of pointers in dnptrs is updated for labels inserted into  *	the message as we compress the name.  If 'dnptr' is NULL, we don't  *	try to compress names. If 'lastdnptr' is NULL, we don't update the  *	list.  */
+comment|/*%  *	Pack domain name 'domain' into 'comp_dn'.  *  * return:  *\li	Size of the compressed name, or -1.  *  * notes:  *\li	'dnptrs' is an array of pointers to previous compressed names.  *\li	dnptrs[0] is a pointer to the beginning of the message. The array  *	ends with NULL.  *\li	'lastdnptr' is a pointer to the end of the array pointed to  *	by 'dnptrs'.  *  * Side effects:  *\li	The list of pointers in dnptrs is updated for labels inserted into  *	the message as we compress the name.  If 'dnptr' is NULL, we don't  *	try to compress names. If 'lastdnptr' is NULL, we don't update the  *	list.  */
 end_comment
 
 begin_function
@@ -2917,7 +2917,7 @@ name|lpp
 operator|=
 name|cpp
 expr_stmt|;
-comment|/* end of list to search */
+comment|/*%< end of list to search */
 block|}
 block|}
 else|else
@@ -3277,7 +3277,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ns_name_uncompress(msg, eom, src, dst, dstsiz)  *	Expand compressed domain name to presentation format.  * return:  *	Number of bytes read out of `src', or -1 (with errno set).  * note:  *	Root domain returns as "." not "".  */
+comment|/*%  *	Expand compressed domain name to presentation format.  *  * return:  *\li	Number of bytes read out of `src', or -1 (with errno set).  *  * note:  *\li	Root domain returns as "." not "".  */
 end_comment
 
 begin_function
@@ -3374,7 +3374,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ns_name_compress(src, dst, dstsiz, dnptrs, lastdnptr)  *	Compress a domain name into wire format, using compression pointers.  * return:  *	Number of bytes consumed in `dst' or -1 (with errno set).  * notes:  *	'dnptrs' is an array of pointers to previous compressed names.  *	dnptrs[0] is a pointer to the beginning of the message.  *	The list ends with NULL.  'lastdnptr' is a pointer to the end of the  *	array pointed to by 'dnptrs'. Side effect is to update the list of  *	pointers for labels inserted into the message as we compress the name.  *	If 'dnptr' is NULL, we don't try to compress names. If 'lastdnptr'  *	is NULL, we don't update the list.  */
+comment|/*%  *	Compress a domain name into wire format, using compression pointers.  *  * return:  *\li	Number of bytes consumed in `dst' or -1 (with errno set).  *  * notes:  *\li	'dnptrs' is an array of pointers to previous compressed names.  *\li	dnptrs[0] is a pointer to the beginning of the message.  *\li	The list ends with NULL.  'lastdnptr' is a pointer to the end of the  *	array pointed to by 'dnptrs'. Side effect is to update the list of  *	pointers for labels inserted into the message as we compress the name.  *\li	If 'dnptr' is NULL, we don't try to compress names. If 'lastdnptr'  *	is NULL, we don't update the list.  */
 end_comment
 
 begin_function
@@ -3453,7 +3453,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reset dnptrs so that there are no active references to pointers at or  * after src.  */
+comment|/*%  * Reset dnptrs so that there are no active references to pointers at or  * after src.  */
 end_comment
 
 begin_function
@@ -3513,7 +3513,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ns_name_skip(ptrptr, eom)  *	Advance *ptrptr to skip over the compressed name it points at.  * return:  *	0 on success, -1 (with errno set) on failure.  */
+comment|/*%  *	Advance *ptrptr to skip over the compressed name it points at.  *  * return:  *\li	0 on success, -1 (with errno set) on failure.  */
 end_comment
 
 begin_function
@@ -3576,7 +3576,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* normal case, n == len */
+comment|/*%< normal case, n == len */
 name|cp
 operator|+=
 name|n
@@ -3585,7 +3585,7 @@ continue|continue;
 case|case
 name|NS_TYPE_ELT
 case|:
-comment|/* EDNS0 extended label */
+comment|/*%< EDNS0 extended label */
 if|if
 condition|(
 operator|(
@@ -3606,7 +3606,7 @@ name|errno
 operator|=
 name|EMSGSIZE
 expr_stmt|;
-comment|/* XXX */
+comment|/*%< XXX */
 return|return
 operator|(
 operator|-
@@ -3622,13 +3622,13 @@ continue|continue;
 case|case
 name|NS_CMPRSFLGS
 case|:
-comment|/* indirection */
+comment|/*%< indirection */
 name|cp
 operator|++
 expr_stmt|;
 break|break;
 default|default:
-comment|/* illegal type */
+comment|/*%< illegal type */
 name|errno
 operator|=
 name|EMSGSIZE
@@ -3678,7 +3678,7 @@ comment|/* Private. */
 end_comment
 
 begin_comment
-comment|/*  * special(ch)  *	Thinking in noninternationalized USASCII (per the DNS spec),  *	is this characted special ("in need of quoting") ?  * return:  *	boolean.  */
+comment|/*%  *	Thinking in noninternationalized USASCII (per the DNS spec),  *	is this characted special ("in need of quoting") ?  *  * return:  *\li	boolean.  */
 end_comment
 
 begin_function
@@ -3698,36 +3698,36 @@ block|{
 case|case
 literal|0x22
 case|:
-comment|/* '"' */
+comment|/*%< '"' */
 case|case
 literal|0x2E
 case|:
-comment|/* '.' */
+comment|/*%< '.' */
 case|case
 literal|0x3B
 case|:
-comment|/* ';' */
+comment|/*%< ';' */
 case|case
 literal|0x5C
 case|:
-comment|/* '\\' */
+comment|/*%< '\\' */
 case|case
 literal|0x28
 case|:
-comment|/* '(' */
+comment|/*%< '(' */
 case|case
 literal|0x29
 case|:
-comment|/* ')' */
+comment|/*%< ')' */
 comment|/* Special modifiers in zone files. */
 case|case
 literal|0x40
 case|:
-comment|/* '@' */
+comment|/*%< '@' */
 case|case
 literal|0x24
 case|:
-comment|/* '$' */
+comment|/*%< '$' */
 return|return
 operator|(
 literal|1
@@ -3744,7 +3744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * printable(ch)  *	Thinking in noninternationalized USASCII (per the DNS spec),  *	is this character visible and not a space when printed ?  * return:  *	boolean.  */
+comment|/*%  *	Thinking in noninternationalized USASCII (per the DNS spec),  *	is this character visible and not a space when printed ?  *  * return:  *\li	boolean.  */
 end_comment
 
 begin_function
@@ -3771,7 +3771,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Thinking in noninternationalized USASCII (per the DNS spec),  *	convert this character to lower case if it's upper case.  */
+comment|/*%  *	Thinking in noninternationalized USASCII (per the DNS spec),  *	convert this character to lower case if it's upper case.  */
 end_comment
 
 begin_function
@@ -3809,7 +3809,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dn_find(domain, msg, dnptrs, lastdnptr)  *	Search for the counted-label name in an array of compressed names.  * return:  *	offset from msg if found, or -1.  * notes:  *	dnptrs is the pointer to the first name on the list,  *	not the pointer to the start of the message.  */
+comment|/*%  *	Search for the counted-label name in an array of compressed names.  *  * return:  *\li	offset from msg if found, or -1.  *  * notes:  *\li	dnptrs is the pointer to the first name on the list,  *\li	not the pointer to the start of the message.  */
 end_comment
 
 begin_function
@@ -3940,7 +3940,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* normal case, n == len */
+comment|/*%< normal case, n == len */
 name|n
 operator|=
 name|labellen
@@ -3950,7 +3950,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
+comment|/*%< XXX */
 if|if
 condition|(
 name|n
@@ -4027,7 +4027,7 @@ goto|;
 case|case
 name|NS_CMPRSFLGS
 case|:
-comment|/* indirection */
+comment|/*%< indirection */
 name|cp
 operator|=
 name|msg
@@ -4049,7 +4049,7 @@ operator|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* illegal type */
+comment|/*%< illegal type */
 name|errno
 operator|=
 name|EMSGSIZE
@@ -4574,7 +4574,7 @@ operator|&
 literal|0xff
 argument_list|)
 condition|)
-comment|/* reject '\[x/BLEN]' */
+comment|/*%< reject '\[x/BLEN]' */
 return|return
 operator|(
 name|EINVAL
@@ -4614,7 +4614,7 @@ block|{
 case|case
 literal|']'
 case|:
-comment|/* end of the bitstring */
+comment|/*%< end of the bitstring */
 if|if
 condition|(
 name|afterslash
@@ -4680,7 +4680,7 @@ expr_stmt|;
 name|cp
 operator|++
 expr_stmt|;
-comment|/* skip ']' */
+comment|/*%< skip ']' */
 goto|goto
 name|done
 goto|;
@@ -4829,7 +4829,7 @@ operator|(
 name|EMSGSIZE
 operator|)
 return|;
-comment|/* 	 * bit length validation: 	 * If a<length> is present, the number of digits in the<bit-data> 	 * MUST be just sufficient to contain the number of bits specified 	 * by the<length>. If there are insignificant bits in a final 	 * hexadecimal or octal digit, they MUST be zero. 	 * RFC 2673, Section 3.2. 	 */
+comment|/* 	 * bit length validation: 	 * If a<length> is present, the number of digits in the<bit-data> 	 * MUST be just sufficient to contain the number of bits specified 	 * by the<length>. If there are insignificant bits in a final 	 * hexadecimal or octal digit, they MUST be zero. 	 * RFC2673, Section 3.2. 	 */
 if|if
 condition|(
 name|blen
@@ -4866,7 +4866,7 @@ name|tbcount
 operator|-
 name|blen
 expr_stmt|;
-comment|/* between 0 and 3 */
+comment|/*%< between 0 and 3 */
 if|if
 condition|(
 operator|(
@@ -5033,7 +5033,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* unknwon ELT */
+comment|/*%< unknwon ELT */
 block|}
 return|return
 operator|(
@@ -5042,6 +5042,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 
