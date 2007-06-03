@@ -496,9 +496,13 @@ name|i
 decl_stmt|;
 if|if
 condition|(
+name|DCACHE_COLOR
+argument_list|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
 name|m
-operator|->
-name|pc
+argument_list|)
+argument_list|)
 operator|!=
 name|DCACHE_COLOR
 argument_list|(
