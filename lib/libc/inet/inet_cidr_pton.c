@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_cidr_pton.c,v 1.2.2.1.8.2 2004/03/17 00:29:46 marka Exp $"
+literal|"$Id: inet_cidr_pton.c,v 1.5.18.1 2005/04/27 05:00:53 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -217,7 +217,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * int  * inet_cidr_pton(af, src, dst, *bits)  *	convert network address from presentation to network format.  *	accepts inet_pton()'s input for this "af" plus trailing "/CIDR".  *	"dst" is assumed large enough for its "af".  "bits" is set to the  *	/CIDR prefix length, which can have defaults (like /32 for IPv4).  * return:  *	-1 if an error occurred (inspect errno; ENOENT means bad format).  *	0 if successful conversion occurred.  * note:  *	192.5.5.1/28 has a nonzero host part, which means it isn't a network  *	as called for by inet_net_pton() but it can be a host address with  *	an included netmask.  * author:  *	Paul Vixie (ISC), October 1998  */
+comment|/*%  * int  * inet_cidr_pton(af, src, dst, *bits)  *	convert network address from presentation to network format.  *	accepts inet_pton()'s input for this "af" plus trailing "/CIDR".  *	"dst" is assumed large enough for its "af".  "bits" is set to the  *	/CIDR prefix length, which can have defaults (like /32 for IPv4).  * return:  *	-1 if an error occurred (inspect errno; ENOENT means bad format).  *	0 if successful conversion occurred.  * note:  *	192.5.5.1/28 has a nonzero host part, which means it isn't a network  *	as called for by inet_net_pton() but it can be a host address with  *	an included netmask.  * author:  *	Paul Vixie (ISC), October 1998  */
 end_comment
 
 begin_function
@@ -993,7 +993,7 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-comment|/* '\0' was seen by inet_pton4(). */
+comment|/*%< '\\0' was seen by inet_pton4(). */
 block|}
 if|if
 condition|(
@@ -1218,7 +1218,7 @@ name|src
 operator|==
 literal|'\0'
 condition|)
-comment|/* syntax */
+comment|/*%< syntax */
 return|return
 operator|(
 operator|-
@@ -1248,7 +1248,7 @@ name|cp
 operator|==
 name|NULL
 condition|)
-comment|/* syntax */
+comment|/*%< syntax */
 return|return
 operator|(
 operator|-
@@ -1276,7 +1276,7 @@ name|src
 operator|!=
 literal|'\0'
 condition|)
-comment|/* no leading zeros */
+comment|/*%< no leading zeros */
 return|return
 operator|(
 operator|-
@@ -1295,7 +1295,7 @@ else|:
 literal|32
 operator|)
 condition|)
-comment|/* range error */
+comment|/*%< range error */
 return|return
 operator|(
 operator|-
@@ -1318,6 +1318,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

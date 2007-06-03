@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_cidr_ntop.c,v 1.1.2.1.8.4 2006/10/11 02:32:50 marka Exp $"
+literal|"$Id: inet_cidr_ntop.c,v 1.4.18.3 2006/10/11 02:32:47 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,7 +187,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * char *  * inet_cidr_ntop(af, src, bits, dst, size)  *	convert network address from network to presentation format.  *	"src"'s size is determined from its "af".  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	192.5.5.1/28 has a nonzero host part, which means it isn't a network  *	as called for by inet_net_ntop() but it can be a host address with  *	an included netmask.  * author:  *	Paul Vixie (ISC), October 1998  */
+comment|/*%  * char *  * inet_cidr_ntop(af, src, bits, dst, size)  *	convert network address from network to presentation format.  *	"src"'s size is determined from its "af".  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	192.5.5.1/28 has a nonzero host part, which means it isn't a network  *	as called for by inet_net_ntop() but it can be a host address with  *	an included netmask.  * author:  *	Paul Vixie (ISC), October 1998  */
 end_comment
 
 begin_function
@@ -388,7 +388,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static char *  * inet_cidr_ntop_ipv4(src, bits, dst, size)  *	convert IPv4 network address from network to presentation format.  *	"src"'s size is determined from its "af".  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	network byte order assumed.  this means 192.5.5.240/28 has  *	0b11110000 in its fourth octet.  * author:  *	Paul Vixie (ISC), October 1998  */
+comment|/*%  * static char *  * inet_cidr_ntop_ipv4(src, bits, dst, size)  *	convert IPv4 network address from network to presentation format.  *	"src"'s size is determined from its "af".  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	network byte order assumed.  this means 192.5.5.240/28 has  *	0b11110000 in its fourth octet.  * author:  *	Paul Vixie (ISC), October 1998  */
 end_comment
 
 begin_function
@@ -1265,6 +1265,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

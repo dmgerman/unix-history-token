@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_ntoa.c,v 1.1 2001/03/29 06:31:38 marka Exp $"
+literal|"$Id: inet_ntoa.c,v 1.1.352.1 2005/04/27 05:00:54 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,7 +98,7 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/*  * Convert network-format internet address  * to base 256 d.d.d.d representation.  */
+comment|/*%  * Convert network-format internet address  * to base 256 d.d.d.d representation.  */
 end_comment
 
 begin_comment
@@ -152,6 +152,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

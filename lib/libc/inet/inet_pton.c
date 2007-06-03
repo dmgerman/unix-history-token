@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_pton.c,v 1.2.206.2 2005/07/28 07:43:18 marka Exp $"
+literal|"$Id: inet_pton.c,v 1.3.18.2 2005/07/28 07:38:07 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,7 +99,7 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/*  * WARNING: Don't even consider trying to compile this on a system where  * sizeof(int)< 4.  sizeof(int)> 4 is fine; all the world's not a VAX.  */
+comment|/*%  * WARNING: Don't even consider trying to compile this on a system where  * sizeof(int)< 4.  sizeof(int)> 4 is fine; all the world's not a VAX.  */
 end_comment
 
 begin_decl_stmt
@@ -786,7 +786,7 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-comment|/* '\0' was seen by inet_pton4(). */
+comment|/*%< '\\0' was seen by inet_pton4(). */
 block|}
 return|return
 operator|(
@@ -938,6 +938,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

@@ -88,5 +88,9 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*! \file */
+end_comment
+
 end_unit
 

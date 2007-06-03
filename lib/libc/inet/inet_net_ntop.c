@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_net_ntop.c,v 1.1.2.1.8.2 2006/06/20 02:53:07 marka Exp $"
+literal|"$Id: inet_net_ntop.c,v 1.3.18.2 2006/06/20 02:51:32 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,7 +187,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * char *  * inet_net_ntop(af, src, bits, dst, size)  *	convert network number from network to presentation format.  *	generates CIDR style result always.  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * author:  *	Paul Vixie (ISC), July 1996  */
+comment|/*%  * char *  * inet_net_ntop(af, src, bits, dst, size)  *	convert network number from network to presentation format.  *	generates CIDR style result always.  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * author:  *	Paul Vixie (ISC), July 1996  */
 end_comment
 
 begin_function
@@ -278,7 +278,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static char *  * inet_net_ntop_ipv4(src, bits, dst, size)  *	convert IPv4 network number from network to presentation format.  *	generates CIDR style result always.  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	network byte order assumed.  this means 192.5.5.240/28 has  *	0b11110000 in its fourth octet.  * author:  *	Paul Vixie (ISC), July 1996  */
+comment|/*%  * static char *  * inet_net_ntop_ipv4(src, bits, dst, size)  *	convert IPv4 network number from network to presentation format.  *	generates CIDR style result always.  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	network byte order assumed.  this means 192.5.5.240/28 has  *	0b11110000 in its fourth octet.  * author:  *	Paul Vixie (ISC), July 1996  */
 end_comment
 
 begin_function
@@ -587,7 +587,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static char *  * inet_net_ntop_ipv6(src, bits, fakebits, dst, size)  *	convert IPv6 network number from network to presentation format.  *	generates CIDR style result always. Picks the shortest representation  *	unless the IP is really IPv4.  *	always prints specified number of bits (bits).  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	network byte order assumed.  this means 192.5.5.240/28 has  *	0x11110000 in its fourth octet.  * author:  *	Vadim Kogan (UCB), June 2001  *  Original version (IPv4) by Paul Vixie (ISC), July 1996  */
+comment|/*%  * static char *  * inet_net_ntop_ipv6(src, bits, fakebits, dst, size)  *	convert IPv6 network number from network to presentation format.  *	generates CIDR style result always. Picks the shortest representation  *	unless the IP is really IPv4.  *	always prints specified number of bits (bits).  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	network byte order assumed.  this means 192.5.5.240/28 has  *	0x11110000 in its fourth octet.  * author:  *	Vadim Kogan (UCB), June 2001  *  Original version (IPv4) by Paul Vixie (ISC), July 1996  */
 end_comment
 
 begin_function
@@ -1215,6 +1215,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

@@ -69,7 +69,7 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/*  * Formulate an Internet address from network + host.  Used in  * building addresses stored in the ifnet structure.  */
+comment|/*%  * Formulate an Internet address from network + host.  Used in  * building addresses stored in the ifnet structure.  */
 end_comment
 
 begin_function
@@ -186,6 +186,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

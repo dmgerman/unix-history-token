@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_neta.c,v 1.1.206.1 2004/03/09 08:33:33 marka Exp $"
+literal|"$Id: inet_neta.c,v 1.2.18.1 2005/04/27 05:00:53 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,7 +127,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * char *  * inet_neta(src, dst, size)  *	format a u_long network number into presentation format.  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	format of ``src'' is as for inet_network().  * author:  *	Paul Vixie (ISC), July 1996  */
+comment|/*%  * char *  * inet_neta(src, dst, size)  *	format a u_long network number into presentation format.  * return:  *	pointer to dst, or NULL if an error occurred (check errno).  * note:  *	format of ``src'' is as for inet_network().  * author:  *	Paul Vixie (ISC), July 1996  */
 end_comment
 
 begin_function
@@ -291,6 +291,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 
