@@ -1749,7 +1749,18 @@ literal|0
 argument|; 	}
 endif|#
 directive|endif
-argument|p->infd = p->outfd = ns; 	EV_SET(&kev, ns, EVFILT_READ, EV_ADD, NOTE_LOWAT,
+comment|/* discard backlog on GDB port */
+argument|if (IS_GDB(p)) { 		char buf[
+literal|2048
+argument|]; 		int len;  		while ((len = dconschat_read_dcons(dc, DCONS_GDB,&buf[
+literal|0
+argument|],
+literal|2048
+argument|))>
+literal|0
+argument|) 			if (verbose) 				printf(
+literal|"discard %d chars on GDB port\n"
+argument|, len); 	}  	p->infd = p->outfd = ns; 	EV_SET(&kev, ns, EVFILT_READ, EV_ADD, NOTE_LOWAT,
 literal|1
 argument|, (void *)p); 	kevent(dc->kq,&kev,
 literal|1
