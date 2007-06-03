@@ -734,11 +734,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * The number of PHYSMAP entries must be one less than the number of  * PHYSSEG entries because the PHYSMAP entry that spans the largest  * physical address that is accessible by ISA DMA is split into two  * PHYSSEG entries.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PHYSMAP_SIZE
-value|(2 * 30)
+value|(2 * (VM_PHYSSEG_MAX - 1))
 end_define
 
 begin_decl_stmt

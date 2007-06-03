@@ -177,6 +177,78 @@ name|VM_PHYSSEG_DENSE
 end_define
 
 begin_comment
+comment|/*  * The number of PHYSSEG entries must be one greater than the number  * of phys_avail entries because the phys_avail entry that spans the  * largest physical address that is accessible by ISA DMA is split  * into two PHYSSEG entries.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_PHYSSEG_MAX
+value|31
+end_define
+
+begin_comment
+comment|/*  * Create two free page pools: VM_FREEPOOL_DEFAULT is the default pool  * from which physical pages are allocated and VM_FREEPOOL_DIRECT is  * the pool from which physical pages for page tables and small UMA  * objects are allocated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_NFREEPOOL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREEPOOL_DEFAULT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREEPOOL_DIRECT
+value|1
+end_define
+
+begin_comment
+comment|/*  * Create two free page lists: VM_FREELIST_DEFAULT is for physical  * pages that are above the largest physical address that is  * accessible by ISA DMA and VM_FREELIST_ISADMA is for physical pages  * that are below that address.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_NFREELIST
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREELIST_DEFAULT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREELIST_ISADMA
+value|1
+end_define
+
+begin_comment
+comment|/*  * An allocation size of 16MB is supported in order to optimize the  * use of the direct map by UMA.  Specifically, a cache line contains  * at most 8 PDEs, collectively mapping 16MB of physical memory.  By  * reducing the number of distinct 16MB "pages" that are used by UMA,  * the physical memory allocator reduces the likelihood of both 2MB  * page TLB misses and cache misses caused by 2MB page TLB misses.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_NFREEORDER
+value|13
+end_define
+
+begin_comment
 comment|/*  * Virtual addresses of things.  Derived from the page directory and  * page table indexes from pmap.h for precision.  * Because of the page that is both a PD and PT, it looks a little  * messy at times, but hey, we'll do anything to save a page :-)  */
 end_comment
 
