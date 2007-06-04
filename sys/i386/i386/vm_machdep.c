@@ -1054,7 +1054,7 @@ operator|&
 name|dt_lock
 argument_list|)
 expr_stmt|;
-comment|/* Setup to release sched_lock in fork_exit(). */
+comment|/* Setup to release spin count in fork_exit(). */
 name|td2
 operator|->
 name|td_md
@@ -1615,7 +1615,7 @@ name|pcb_ext
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Setup to release sched_lock in fork_exit(). */
+comment|/* Setup to release spin count in fork_exit(). */
 name|td
 operator|->
 name|td_md

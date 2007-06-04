@@ -576,7 +576,7 @@ operator|)
 name|fork_trampoline
 expr_stmt|;
 comment|/*- 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_[fg]sbase:	cloned above 	 */
-comment|/* Setup to release sched_lock in fork_exit(). */
+comment|/* Setup to release spin count in fork_exit(). */
 name|td2
 operator|->
 name|td_md
@@ -964,7 +964,7 @@ operator|)
 name|fork_trampoline
 expr_stmt|;
 comment|/* 	 * If we didn't copy the pcb, we'd need to do the following registers: 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_[fg]sbase: cloned above 	 */
-comment|/* Setup to release sched_lock in fork_exit(). */
+comment|/* Setup to release spin count in fork_exit(). */
 name|td
 operator|->
 name|td_md

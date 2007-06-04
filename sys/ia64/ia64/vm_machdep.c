@@ -525,7 +525,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* Setup to release sched_lock in fork_exit(). */
+comment|/* Setup to release the spin count in fork_exit(). */
 name|td
 operator|->
 name|td_md
@@ -1324,7 +1324,7 @@ argument_list|,
 name|td2
 argument_list|)
 expr_stmt|;
-comment|/* Setup to release sched_lock in fork_exit(). */
+comment|/* Setup to release the spin count in fork_exit(). */
 name|td2
 operator|->
 name|td_md

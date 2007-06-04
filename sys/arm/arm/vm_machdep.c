@@ -596,7 +596,7 @@ name|u_int
 operator|)
 name|sf
 expr_stmt|;
-comment|/* Setup to release sched_lock in fork_exit(). */
+comment|/* Setup to release spin count in fork_exit(). */
 name|td2
 operator|->
 name|td_md
@@ -1317,7 +1317,7 @@ name|td_kstack
 operator|+
 name|USPACE_UNDEF_STACK_TOP
 expr_stmt|;
-comment|/* Setup to release sched_lock in fork_exit(). */
+comment|/* Setup to release spin count in fork_exit(). */
 name|td
 operator|->
 name|td_md

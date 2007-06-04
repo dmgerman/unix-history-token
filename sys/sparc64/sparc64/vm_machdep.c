@@ -641,7 +641,7 @@ name|fr
 operator|-
 name|SPOFF
 expr_stmt|;
-comment|/* Setup to release sched_lock in fork_exit(). */
+comment|/* Setup to release the spin count in fork_exit(). */
 name|td
 operator|->
 name|td_md
@@ -1311,7 +1311,7 @@ name|fork_trampoline
 operator|-
 literal|8
 expr_stmt|;
-comment|/* Setup to release sched_lock in fork_exit(). */
+comment|/* Setup to release the spin count in fork_exit(). */
 name|td2
 operator|->
 name|td_md

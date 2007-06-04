@@ -12619,7 +12619,7 @@ name|switch_in_progress
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * XXX wakeup() calls mtx_lock(&sched_lock) which will hang if 	 * sched_lock is in an in-between state, e.g., when we stop at 	 * a breakpoint at fork_exit.  It has always been wrong to call 	 * wakeup() when the debugger is active.  In RELENG_4, wakeup() 	 * is supposed to be locked by splhigh(), but the debugger may 	 * be invoked at splhigh(). 	 */
+comment|/* 	 * XXX wakeup() locks the scheduler lock which will hang if 	 * the lock is in an in-between state, e.g., when we stop at 	 * a breakpoint at fork_exit.  It has always been wrong to call 	 * wakeup() when the debugger is active.  In RELENG_4, wakeup() 	 * is supposed to be locked by splhigh(), but the debugger may 	 * be invoked at splhigh(). 	 */
 if|if
 condition|(
 name|debugger

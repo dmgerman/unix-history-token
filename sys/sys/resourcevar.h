@@ -51,7 +51,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Kernel per-process accounting / statistics  * (not necessarily resident except when running).  *  * Locking key:  *      b - created at fork, never changes  *      c - locked by proc mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  */
+comment|/*  * Kernel per-process accounting / statistics  * (not necessarily resident except when running).  *  * Locking key:  *      b - created at fork, never changes  *      c - locked by proc mtx  *      j - locked by proc slock  *      k - only accessed by curthread  */
 end_comment
 
 begin_struct
