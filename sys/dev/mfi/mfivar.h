@@ -193,6 +193,9 @@ decl_stmt|;
 name|int
 name|cm_index
 decl_stmt|;
+name|int
+name|cm_error
+decl_stmt|;
 block|}
 struct|;
 end_struct
