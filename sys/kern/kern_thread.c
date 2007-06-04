@@ -1354,10 +1354,12 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
+name|PCPU_INC
+argument_list|(
 name|cnt
 operator|.
 name|v_swtch
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Aggregate this thread's tick stats in the parent so they are not 	 * lost.  Also add the child usage to our own when the final thread 	 * exits. 	 */
 name|ruxagg

@@ -3491,10 +3491,12 @@ argument_list|,
 name|PQ_CACHE
 argument_list|)
 condition|)
+name|PCPU_INC
+argument_list|(
 name|cnt
 operator|.
 name|v_reactivated
-operator|++
+argument_list|)
 expr_stmt|;
 name|vm_pageq_remove
 argument_list|(
@@ -3688,10 +3690,12 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
+name|PCPU_INC
+argument_list|(
 name|cnt
 operator|.
 name|v_tfree
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4233,10 +4237,12 @@ argument_list|,
 name|PQ_CACHE
 argument_list|)
 condition|)
+name|PCPU_INC
+argument_list|(
 name|cnt
 operator|.
 name|v_reactivated
-operator|++
+argument_list|)
 expr_stmt|;
 name|vm_page_flag_clear
 argument_list|(
@@ -4300,6 +4306,7 @@ operator|.
 name|lcnt
 operator|++
 expr_stmt|;
+comment|/* 		 * Just not use an atomic here since vm_page_queues_lock 		 * alredy protects this field. 		 */
 name|cnt
 operator|.
 name|v_inactive_count

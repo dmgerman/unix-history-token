@@ -2296,10 +2296,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|PCPU_INC
+argument_list|(
 name|cnt
 operator|.
 name|v_pfree
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 else|else

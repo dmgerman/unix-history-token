@@ -1603,10 +1603,12 @@ name|td_generation
 operator|++
 expr_stmt|;
 comment|/* bump preempt-detect counter */
+name|PCPU_INC
+argument_list|(
 name|cnt
 operator|.
 name|v_swtch
-operator|++
+argument_list|)
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
