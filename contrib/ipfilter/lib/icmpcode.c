@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: icmpcode.c,v 1.7.2.4 2006/02/25 17:40:22 darrenr Exp $  */
+comment|/*  * Copyright (C) 2000-2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: icmpcode.c,v 1.7.2.5 2006/06/16 17:21:02 darrenr Exp $  */
 end_comment
 
 begin_include

@@ -641,7 +641,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_sync.c,v 2.40.2.7 2006/03/19 14:59:39 darrenr Exp $"
+literal|"@(#)$Id: ip_sync.c,v 2.40.2.8 2006/07/14 06:12:20 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5401,6 +5401,10 @@ parameter_list|,
 name|cmd
 parameter_list|,
 name|mode
+parameter_list|,
+name|uid
+parameter_list|,
+name|ctx
 parameter_list|)
 name|caddr_t
 name|data
@@ -5410,6 +5414,12 @@ name|cmd
 decl_stmt|;
 name|int
 name|mode
+decl_stmt|,
+name|uid
+decl_stmt|;
+name|void
+modifier|*
+name|ctx
 decl_stmt|;
 block|{
 return|return

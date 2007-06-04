@@ -85,11 +85,37 @@ name|_KERNEL
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__NetBSD_Version__
+operator|<
+literal|399001400
+operator|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|"opt_ipfilter_log.h"
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"opt_ipfilter.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -963,17 +989,6 @@ begin_comment
 comment|/* IPL_SELECT */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|selinfo
-name|ipfselwait
-index|[
-name|IPL_LOGSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_if
 if|#
 directive|if
@@ -1006,6 +1021,11 @@ begin_if
 if|#
 directive|if
 name|SOLARIS
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -1078,12 +1098,6 @@ name|int
 name|ipl_suppress
 init|=
 literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ipl_buffer_sz
 decl_stmt|;
 end_decl_stmt
 
@@ -1558,6 +1572,22 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* SOLARIS || __hpux */
+name|m
+operator|=
+name|fin
+operator|->
+name|fin_m
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|ipfl
 operator|.
 name|fl_nattag
@@ -1568,12 +1598,6 @@ literal|0
 index|]
 operator|=
 literal|0
-expr_stmt|;
-name|m
-operator|=
-name|fin
-operator|->
-name|fin_m
 expr_stmt|;
 name|ifp
 operator|=

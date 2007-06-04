@@ -1569,7 +1569,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|(void) copyin((caddr_t)(a), (caddr_t)(b), (c))
+value|copyin((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
 begin_define
@@ -1583,7 +1583,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|(void) copyout((caddr_t)(a), (caddr_t)(b), (c))
+value|copyout((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
 begin_define
@@ -1622,6 +1622,16 @@ parameter_list|,
 name|s
 parameter_list|)
 value|kmem_free((char *)(x), (s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|;
 end_define
 
 begin_define
@@ -2822,79 +2832,15 @@ parameter_list|)
 value|copyout((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
-begin_if
-if|#
-directive|if
-name|HPUXREV
-operator|>=
-literal|1111
-end_if
-
 begin_define
 define|#
 directive|define
-name|BCOPYIN
+name|SPL_SCHED
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
+name|x
 parameter_list|)
-value|0; bcopy((caddr_t)(a), (caddr_t)(b), (c))
+value|;
 end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|0; bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -3951,34 +3897,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|(bcopy((caddr_t)(a), (caddr_t)(b), (c)), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|(bcopy((caddr_t)(a), (caddr_t)(b), (c)), 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|UIOMOVE
 parameter_list|(
 name|a
@@ -4133,6 +4051,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(x) = splnet()
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|(x) = splsched()
 end_define
 
 begin_define
@@ -4590,6 +4518,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
 name|SPL_NET
 parameter_list|(
 name|x
@@ -4728,34 +4666,6 @@ parameter_list|,
 name|c
 parameter_list|)
 value|copyout((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
 begin_define
@@ -5102,6 +5012,69 @@ end_ifdef
 begin_if
 if|#
 directive|if
+operator|(
+name|NetBSD
+operator|>=
+literal|199905
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|IPFILTER_LKM
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"opt_ipfilter.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|_KERNEL
@@ -5190,11 +5163,63 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__NetBSD_Version__
+operator|>=
+literal|499000000
+operator|)
+end_if
+
+begin_typedef
+typedef|typedef
+name|char
+modifier|*
+name|caddr_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__NetBSD_Version__
+operator|>=
+literal|399001400
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KMALLOCS
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|(a) = (b)malloc((c), _M_IPF, M_NOWAIT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -5274,34 +5299,6 @@ parameter_list|,
 name|c
 parameter_list|)
 value|copyout((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
 begin_typedef
@@ -5647,34 +5644,6 @@ parameter_list|)
 value|copyout((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
 begin_if
 if|#
 directive|if
@@ -5741,7 +5710,11 @@ end_define
 begin_if
 if|#
 directive|if
-literal|1
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|700000
+operator|)
 end_if
 
 begin_define
@@ -5981,7 +5954,11 @@ end_comment
 begin_if
 if|#
 directive|if
-literal|1
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|700000
+operator|)
 end_if
 
 begin_define
@@ -6116,7 +6093,7 @@ name|RWLOCK_EXIT
 parameter_list|(
 name|x
 parameter_list|)
-value|sx_unlock(x)
+value|sx_unlock(&(x)->ipf_lk)
 end_define
 
 begin_else
@@ -6197,7 +6174,7 @@ name|ATOMIC_INC32
 parameter_list|(
 name|x
 parameter_list|)
-value|atomic_add_32(&(x), 1)
+value|atomic_add_32((u_int *)&(x), 1)
 end_define
 
 begin_define
@@ -6237,7 +6214,7 @@ name|ATOMIC_DEC32
 parameter_list|(
 name|x
 parameter_list|)
-value|atomic_add_32(&(x), -1)
+value|atomic_add_32((u_int *)&(x), -1)
 end_define
 
 begin_define
@@ -6274,6 +6251,16 @@ begin_define
 define|#
 directive|define
 name|SPL_IMP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_SCHED
 parameter_list|(
 name|x
 parameter_list|)
@@ -6665,34 +6652,6 @@ parameter_list|,
 name|c
 parameter_list|)
 value|copyout((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
 begin_define
@@ -7385,9 +7344,16 @@ end_include
 begin_if
 if|#
 directive|if
+operator|(
 name|LINUX
 operator|>=
 literal|20600
+operator|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
 end_if
 
 begin_define
@@ -7454,34 +7420,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
 name|COPYIN
 parameter_list|(
 name|a
@@ -7530,6 +7468,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|wait_event_interruptible
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SLEEP
+parameter_list|(
+name|x
+parameter_list|,
+name|s
+parameter_list|)
+value|wait_event_interruptible((*(x##_linux)), 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
 name|SLEEP
 parameter_list|(
 name|x
@@ -7539,15 +7510,10 @@ parameter_list|)
 value|0, interruptible_sleep_on(x##_linux)
 end_define
 
-begin_define
-define|#
-directive|define
-name|POLLWAKEUP
-parameter_list|(
-name|x
-parameter_list|)
-value|;
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -7678,7 +7644,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|rwlock_init(&(x)->ipf_lk)
+value|ipf_rw_init(x, y)
 end_define
 
 begin_define
@@ -7789,6 +7755,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|MUTEX_ENTER(&ipf_rw); (x)--; \ 					MUTEX_EXIT(&ipf_rw)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|do { } while (0)
 end_define
 
 begin_define
@@ -8681,6 +8657,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|x = splsched()
+end_define
+
+begin_define
+define|#
+directive|define
 name|SPL_NET
 parameter_list|(
 name|x
@@ -8826,34 +8812,6 @@ parameter_list|,
 name|c
 parameter_list|)
 value|copyout((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
 begin_define
@@ -9253,9 +9211,17 @@ decl_stmt|;
 name|int
 name|eMm_heldat
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__hpux
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__linux
+argument_list|)
 name|char
 name|eMm_fill
 index|[
@@ -9528,6 +9494,23 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|ipf_rw_init
+name|__P
+argument_list|(
+operator|(
+name|ipfrwlock_t
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|ipf_rw_downgrade
 name|__P
 argument_list|(
@@ -9723,6 +9706,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
 name|SPL_NET
 parameter_list|(
 name|x
@@ -9836,34 +9829,6 @@ parameter_list|,
 name|c
 parameter_list|)
 value|bcopywrap((a), (b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|(bcopy((a), (b), (c)), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|(bcopy((a), (b), (c)), 0)
 end_define
 
 begin_define
@@ -10861,6 +10826,16 @@ parameter_list|)
 value|MALLOC((a), b, sizeof(*(a)), _M_IPF, M_NOWAIT)
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KMALLOCS
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -10874,6 +10849,11 @@ name|c
 parameter_list|)
 value|MALLOC((a), b, (c), _M_IPF, M_NOWAIT)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -11068,6 +11048,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|x = splsched()
+end_define
+
+begin_define
+define|#
+directive|define
 name|SPL_X
 parameter_list|(
 name|x
@@ -11152,34 +11142,6 @@ begin_define
 define|#
 directive|define
 name|COPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|(bcopy((caddr_t)(a), (caddr_t)(b), (c)), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|(bcopy((caddr_t)(a), (caddr_t)(b), (c)), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
 parameter_list|(
 name|a
 parameter_list|,
@@ -11357,6 +11319,45 @@ name|ASSERT
 parameter_list|(
 name|x
 parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BCOPYIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BCOPYIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|(bcopy((caddr_t)(a), (caddr_t)(b), (c)), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOPYOUT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|(bcopy((caddr_t)(a), (caddr_t)(b), (c)), 0)
 end_define
 
 begin_endif
@@ -11868,23 +11869,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|offsetof
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|offsetof
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11992,7 +11976,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(x)->ip_hl = (y)
+value|(x)->ip_hl = ((y)& 0xf)
 end_define
 
 begin_endif
@@ -15514,19 +15498,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPF_TCPS_CLOSED
-value|0
-end_define
-
-begin_comment
-comment|/* closed */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IPF_TCPS_LISTEN
-value|1
+value|0
 end_define
 
 begin_comment
@@ -15537,7 +15510,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_SYN_SENT
-value|2
+value|1
 end_define
 
 begin_comment
@@ -15548,7 +15521,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_SYN_RECEIVED
-value|3
+value|2
 end_define
 
 begin_comment
@@ -15559,7 +15532,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_HALF_ESTAB
-value|4
+value|3
 end_define
 
 begin_comment
@@ -15574,7 +15547,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_ESTABLISHED
-value|5
+value|4
 end_define
 
 begin_comment
@@ -15585,7 +15558,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_CLOSE_WAIT
-value|6
+value|5
 end_define
 
 begin_comment
@@ -15600,7 +15573,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_FIN_WAIT_1
-value|7
+value|6
 end_define
 
 begin_comment
@@ -15611,7 +15584,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_CLOSING
-value|8
+value|7
 end_define
 
 begin_comment
@@ -15622,7 +15595,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_LAST_ACK
-value|9
+value|8
 end_define
 
 begin_comment
@@ -15637,7 +15610,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_FIN_WAIT_2
-value|10
+value|9
 end_define
 
 begin_comment
@@ -15648,11 +15621,22 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_TIME_WAIT
-value|11
+value|10
 end_define
 
 begin_comment
 comment|/* in 2*msl quiet wait after close */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPF_TCPS_CLOSED
+value|11
+end_define
+
+begin_comment
+comment|/* closed */
 end_comment
 
 begin_define

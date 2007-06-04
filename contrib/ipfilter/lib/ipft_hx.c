@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2000-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_if
@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_hx.c,v 1.11.4.3 2005/12/04 10:07:21 darrenr Exp $"
+literal|"@(#)$Id: ipft_hx.c,v 1.11.4.4 2006/06/16 17:21:03 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

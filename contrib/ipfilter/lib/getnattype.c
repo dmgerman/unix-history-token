@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
+comment|/*  * Copyright (C) 2002-2004 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
 end_comment
 
 begin_include
@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: getnattype.c,v 1.3 2004/01/17 17:26:07 darrenr Exp $"
+literal|"@(#)$Id: getnattype.c,v 1.3.2.2 2006/07/14 06:12:24 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,11 +54,16 @@ name|char
 modifier|*
 name|getnattype
 parameter_list|(
-name|ipnat
+name|nat
+parameter_list|,
+name|alive
 parameter_list|)
-name|ipnat_t
+name|nat_t
 modifier|*
-name|ipnat
+name|nat
+decl_stmt|;
+name|int
+name|alive
 decl_stmt|;
 block|{
 specifier|static
@@ -69,20 +74,46 @@ literal|20
 index|]
 decl_stmt|;
 name|ipnat_t
-name|ipnatbuff
+modifier|*
+name|ipn
+decl_stmt|,
+name|ipnat
 decl_stmt|;
 name|char
 modifier|*
 name|which
 decl_stmt|;
+name|int
+name|type
+decl_stmt|;
 if|if
 condition|(
 operator|!
-name|ipnat
+name|nat
 condition|)
 return|return
 literal|"???"
 return|;
+if|if
+condition|(
+name|alive
+condition|)
+block|{
+name|type
+operator|=
+name|nat
+operator|->
+name|nat_redir
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ipn
+operator|=
+name|nat
+operator|->
+name|nat_ptr
+expr_stmt|;
 if|if
 condition|(
 name|kmemcpy
@@ -92,27 +123,32 @@ name|char
 operator|*
 operator|)
 operator|&
-name|ipnatbuff
+name|ipnat
 argument_list|,
 operator|(
 name|long
 operator|)
-name|ipnat
+name|ipn
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ipnatbuff
+name|ipnat
 argument_list|)
 argument_list|)
 condition|)
 return|return
 literal|"!!!"
 return|;
-switch|switch
-condition|(
-name|ipnatbuff
+name|type
+operator|=
+name|ipnat
 operator|.
 name|in_redir
+expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|type
 condition|)
 block|{
 case|case
@@ -154,9 +190,7 @@ name|unknownbuf
 argument_list|,
 literal|"unknown(%04x)"
 argument_list|,
-name|ipnatbuff
-operator|.
-name|in_redir
+name|type
 operator|&
 literal|0xffffffff
 argument_list|)

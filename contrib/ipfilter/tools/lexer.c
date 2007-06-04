@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2002-2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -1310,12 +1310,14 @@ operator|!=
 name|c
 condition|)
 do|;
-name|yyunputc
-argument_list|(
-name|n
-argument_list|)
+name|rval
+operator|=
+name|YY_STR
 expr_stmt|;
-break|break;
+goto|goto
+name|done
+goto|;
+comment|/* NOTREACHED */
 case|case
 name|EOF
 case|:
@@ -1970,6 +1972,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|yydebug
+condition|)
+name|printf
+argument_list|(
+literal|"isbuilding %d yyvarnext %d nokey %d\n"
+argument_list|,
+name|isbuilding
+argument_list|,
+name|yyvarnext
+argument_list|,
+name|nokey
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|isbuilding
 operator|==
 literal|1
@@ -2078,7 +2095,7 @@ name|yydebug
 condition|)
 name|printf
 argument_list|(
-literal|"lexed(%s) [%d,%d,%d] => %d\n"
+literal|"lexed(%s) [%d,%d,%d] => %d @%d\n"
 argument_list|,
 name|yystr
 argument_list|,
@@ -2089,6 +2106,8 @@ argument_list|,
 name|pos
 argument_list|,
 name|rval
+argument_list|,
+name|yysavedepth
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2550,6 +2569,17 @@ name|void
 name|yyresetdict
 parameter_list|()
 block|{
+if|if
+condition|(
+name|yydebug
+condition|)
+name|printf
+argument_list|(
+literal|"yyresetdict(%d)\n"
+argument_list|,
+name|yysavedepth
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|yysavedepth

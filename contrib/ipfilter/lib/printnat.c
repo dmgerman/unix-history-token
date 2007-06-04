@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
+comment|/*  * Copyright (C) 2002-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
 end_comment
 
 begin_include
@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: printnat.c,v 1.22.2.11 2005/11/14 17:45:06 darrenr Exp $"
+literal|"@(#)$Id: printnat.c,v 1.22.2.13 2006/12/09 10:37:47 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,6 +139,34 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|np
+operator|->
+name|in_ifnames
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"-"
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" \"%s\""
+argument_list|,
+name|np
+operator|->
+name|in_ifnames
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|" %s"
@@ -191,6 +219,34 @@ literal|0
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|np
+operator|->
+name|in_ifnames
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-"
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|",\"%s\""
+argument_list|,
+name|np
+operator|->
+name|in_ifnames
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|",%s"

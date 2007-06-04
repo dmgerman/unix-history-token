@@ -1759,6 +1759,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|ipf_proxy_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|appr_add
 name|__P
 argument_list|(
@@ -1956,6 +1963,9 @@ operator|,
 name|ioctlcmd_t
 operator|,
 name|int
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

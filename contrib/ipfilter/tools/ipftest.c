@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2002-2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -59,7 +59,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipftest.c,v 1.44.2.9 2006/03/29 11:21:13 darrenr Exp $"
+literal|"@(#)$Id: ipftest.c,v 1.44.2.13 2006/12/12 16:13:01 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,7 +169,15 @@ specifier|extern
 name|hostmap_t
 modifier|*
 modifier|*
-name|maptable
+name|ipf_hm_maptable
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|hostmap_t
+modifier|*
+name|ipf_hm_maplist
 decl_stmt|;
 end_decl_stmt
 
@@ -220,6 +228,8 @@ decl_stmt|,
 name|ipf_natfrag
 decl_stmt|,
 name|ipf_auth
+decl_stmt|,
+name|ipf_tokens
 decl_stmt|;
 end_decl_stmt
 
@@ -870,6 +880,14 @@ operator|&
 name|ipf_frcache
 argument_list|,
 literal|"ipf filter cache"
+argument_list|)
+expr_stmt|;
+name|RWLOCK_INIT
+argument_list|(
+operator|&
+name|ipf_tokens
+argument_list|,
+literal|"ipf token rwlock"
 argument_list|)
 expr_stmt|;
 name|initparse
@@ -1604,6 +1622,21 @@ break|break;
 case|case
 literal|1
 case|:
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"bad-packet"
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
@@ -3481,6 +3514,10 @@ name|void
 name|dumpnat
 parameter_list|()
 block|{
+name|hostmap_t
+modifier|*
+name|hm
+decl_stmt|;
 name|ipnat_t
 modifier|*
 name|ipn
@@ -3488,13 +3525,6 @@ decl_stmt|;
 name|nat_t
 modifier|*
 name|nat
-decl_stmt|;
-name|hostmap_t
-modifier|*
-name|hm
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|printf
 argument_list|(
@@ -3555,6 +3585,10 @@ argument_list|(
 name|nat
 argument_list|,
 name|opts
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3580,26 +3614,9 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ipf_hostmap_sz
-condition|;
-name|i
-operator|++
-control|)
-block|{
-for|for
-control|(
 name|hm
 operator|=
-name|maptable
-index|[
-name|i
-index|]
+name|ipf_hm_maplist
 init|;
 name|hm
 operator|!=
@@ -3615,10 +3632,9 @@ name|printhostmap
 argument_list|(
 name|hm
 argument_list|,
-name|i
+literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

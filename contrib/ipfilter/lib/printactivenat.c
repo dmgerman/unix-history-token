@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
+comment|/*  * Copyright (C) 2002-2004 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: printactivenat.c,v 1.3.2.4 2004/05/11 16:07:32 darrenr Exp $"
+literal|"@(#)$Id: printactivenat.c,v 1.3.2.7 2006/12/12 16:13:00 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,6 +46,10 @@ parameter_list|(
 name|nat
 parameter_list|,
 name|opts
+parameter_list|,
+name|alive
+parameter_list|,
+name|now
 parameter_list|)
 name|nat_t
 modifier|*
@@ -53,6 +57,11 @@ name|nat
 decl_stmt|;
 name|int
 name|opts
+decl_stmt|,
+name|alive
+decl_stmt|;
+name|u_long
+name|now
 decl_stmt|;
 block|{
 name|printf
@@ -62,8 +71,8 @@ argument_list|,
 name|getnattype
 argument_list|(
 name|nat
-operator|->
-name|nat_ptr
+argument_list|,
+name|alive
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -202,11 +211,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\tage %lu use %hu sumd %s/"
+literal|"\n\tttl %lu use %hu sumd %s/"
 argument_list|,
 name|nat
 operator|->
 name|nat_age
+operator|-
+name|now
 argument_list|,
 name|nat
 operator|->

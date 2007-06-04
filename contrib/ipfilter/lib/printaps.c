@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
+comment|/*  * Copyright (C) 2002-2004 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
 end_comment
 
 begin_include
@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: printaps.c,v 1.4 2004/01/08 13:34:32 darrenr Exp $"
+literal|"@(#)$Id: printaps.c,v 1.4.2.1 2006/06/16 17:21:10 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

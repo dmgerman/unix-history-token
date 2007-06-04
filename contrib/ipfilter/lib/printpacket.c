@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printpacket.c,v 1.12.4.2 2005/12/04 09:33:06 darrenr Exp $  */
+comment|/*  * Copyright (C) 2000-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printpacket.c,v 1.12.4.4 2006/09/30 21:44:43 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -189,6 +189,11 @@ literal|' '
 argument_list|)
 expr_stmt|;
 block|}
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'

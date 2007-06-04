@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: load_poolnode.c,v 1.3.2.1 2004/03/06 14:33:29 darrenr Exp $  */
+comment|/*  * Copyright (C) 2003-2004 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: load_poolnode.c,v 1.3.2.3 2006/06/16 17:21:06 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -342,7 +342,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"load_pool:SIOCLOOKUP*NODE"
+literal|"load_poolnode:SIOCLOOKUP*NODE"
 argument_list|)
 expr_stmt|;
 return|return

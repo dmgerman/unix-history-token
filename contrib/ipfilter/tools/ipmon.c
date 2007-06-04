@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2001-2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_ifndef
@@ -457,7 +457,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipmon.c,v 1.33.2.15 2006/03/18 06:59:39 darrenr Exp $"
+literal|"@(#)$Id: ipmon.c,v 1.33.2.18 2007/05/27 11:12:12 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5153,14 +5153,16 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|sl
 operator|->
 name|isl_type
-operator|==
-name|ISL_NEW
 condition|)
+block|{
+case|case
+name|ISL_NEW
+case|:
 name|strcpy
 argument_list|(
 name|t
@@ -5168,15 +5170,10 @@ argument_list|,
 literal|"STATE:NEW "
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
-operator|==
+break|break;
+case|case
 name|ISL_CLONE
-condition|)
+case|:
 name|strcpy
 argument_list|(
 name|t
@@ -5184,16 +5181,10 @@ argument_list|,
 literal|"STATE:CLONED "
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
-operator|==
+break|break;
+case|case
 name|ISL_EXPIRE
-condition|)
-block|{
+case|:
 if|if
 condition|(
 operator|(
@@ -5239,16 +5230,10 @@ argument_list|,
 literal|"STATE:EXPIRE "
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
-operator|==
+break|break;
+case|case
 name|ISL_FLUSH
-condition|)
+case|:
 name|strcpy
 argument_list|(
 name|t
@@ -5256,15 +5241,10 @@ argument_list|,
 literal|"STATE:FLUSH "
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
-operator|==
+break|break;
+case|case
 name|ISL_INTERMEDIATE
-condition|)
+case|:
 name|strcpy
 argument_list|(
 name|t
@@ -5272,15 +5252,10 @@ argument_list|,
 literal|"STATE:INTERMEDIATE "
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
-operator|==
+break|break;
+case|case
 name|ISL_REMOVE
-condition|)
+case|:
 name|strcpy
 argument_list|(
 name|t
@@ -5288,15 +5263,10 @@ argument_list|,
 literal|"STATE:REMOVE "
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
-operator|==
+break|break;
+case|case
 name|ISL_KILLED
-condition|)
+case|:
 name|strcpy
 argument_list|(
 name|t
@@ -5304,7 +5274,19 @@ argument_list|,
 literal|"STATE:KILLED "
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+case|case
+name|ISL_UNLOAD
+case|:
+name|strcpy
+argument_list|(
+name|t
+argument_list|,
+literal|"STATE:UNLOAD "
+argument_list|)
+expr_stmt|;
+break|break;
+default|default :
 name|sprintf
 argument_list|(
 name|t
@@ -5316,6 +5298,8 @@ operator|->
 name|isl_type
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|t
 operator|+=
 name|strlen
@@ -10346,6 +10330,10 @@ continue|continue;
 name|nr
 operator|+=
 name|tr
+expr_stmt|;
+name|n
+operator|=
+literal|0
 expr_stmt|;
 name|tr
 operator|=

@@ -23,14 +23,14 @@ begin_define
 define|#
 directive|define
 name|IPL_VERSION
-value|"IP Filter: v4.1.13"
+value|"IP Filter: v4.1.23"
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPFILTER_VERSION
-value|4011300
+value|4012300
 end_define
 
 begin_endif

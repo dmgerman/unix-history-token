@@ -3,6 +3,10 @@ begin_comment
 comment|/*	$FreeBSD$	*/
 end_comment
 
+begin_comment
+comment|/*  * Copyright (C) 2002-2004 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
