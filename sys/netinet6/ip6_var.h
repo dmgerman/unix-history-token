@@ -35,19 +35,6 @@ begin_struct
 struct|struct
 name|ip6q
 block|{
-name|u_int32_t
-name|ip6q_head
-decl_stmt|;
-name|u_int16_t
-name|ip6q_len
-decl_stmt|;
-name|u_int8_t
-name|ip6q_nxt
-decl_stmt|;
-comment|/* ip6f_nxt in first fragment */
-name|u_int8_t
-name|ip6q_hlim
-decl_stmt|;
 name|struct
 name|ip6asfrag
 modifier|*
@@ -62,7 +49,10 @@ name|u_int32_t
 name|ip6q_ident
 decl_stmt|;
 name|u_int8_t
-name|ip6q_arrive
+name|ip6q_nxt
+decl_stmt|;
+name|u_int8_t
+name|ip6q_ecn
 decl_stmt|;
 name|u_int8_t
 name|ip6q_ttl
@@ -108,19 +98,6 @@ begin_struct
 struct|struct
 name|ip6asfrag
 block|{
-name|u_int32_t
-name|ip6af_head
-decl_stmt|;
-name|u_int16_t
-name|ip6af_len
-decl_stmt|;
-name|u_int8_t
-name|ip6af_nxt
-decl_stmt|;
-name|u_int8_t
-name|ip6af_hlim
-decl_stmt|;
-comment|/* must not override the above members during reassembling */
 name|struct
 name|ip6asfrag
 modifier|*
