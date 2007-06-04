@@ -1571,6 +1571,13 @@ name|p2
 operator|=
 name|newproc
 expr_stmt|;
+name|td2
+operator|=
+name|FIRST_THREAD_IN_PROC
+argument_list|(
+name|newproc
+argument_list|)
+expr_stmt|;
 name|p2
 operator|->
 name|p_state
@@ -1583,6 +1590,24 @@ operator|->
 name|p_pid
 operator|=
 name|trypid
+expr_stmt|;
+comment|/* 	 * Allow the scheduler to initialize the child. 	 */
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|sched_fork
+argument_list|(
+name|td
+argument_list|,
+name|td2
+argument_list|)
+expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
 expr_stmt|;
 name|AUDIT_ARG
 argument_list|(
@@ -1849,13 +1874,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Make a proc table entry for the new process. 	 * Start by zeroing the section of proc that is zero-initialized, 	 * then copy the section that is copied directly from the parent. 	 */
-name|td2
-operator|=
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|p2
-argument_list|)
-expr_stmt|;
 comment|/* Allocate and switch to an alternate kstack if specified. */
 if|if
 condition|(
@@ -1957,10 +1975,9 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|PROC_SLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p2
 argument_list|)
 expr_stmt|;
 name|p2
@@ -1969,18 +1986,9 @@ name|p_sflag
 operator|=
 name|PS_INMEM
 expr_stmt|;
-comment|/* 	 * Allow the scheduler to adjust the priority of the child and 	 * parent while we hold the sched_lock. 	 */
-name|sched_fork
+name|PROC_SUNLOCK
 argument_list|(
-name|td
-argument_list|,
-name|td2
-argument_list|)
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
+name|p2
 argument_list|)
 expr_stmt|;
 name|td2
@@ -2767,10 +2775,9 @@ operator|->
 name|p_start
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|PROC_SLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p2
 argument_list|)
 expr_stmt|;
 name|p2
@@ -2778,6 +2785,11 @@ operator|->
 name|p_state
 operator|=
 name|PRS_NORMAL
+expr_stmt|;
+name|PROC_SUNLOCK
+argument_list|(
+name|p2
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If RFSTOPPED not requested, make child runnable and add to 	 * run queue. 	 */
 if|if
@@ -2791,6 +2803,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|thread_lock
+argument_list|(
+name|td2
+argument_list|)
+expr_stmt|;
 name|TD_SET_CAN_RUN
 argument_list|(
 name|td2
@@ -2803,13 +2820,12 @@ argument_list|,
 name|SRQ_BORING
 argument_list|)
 expr_stmt|;
-block|}
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td2
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Now can be swapped. 	 */
 name|PROC_LOCK
 argument_list|(
@@ -3073,7 +3089,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-comment|/* 	 * Finish setting up thread glue so that it begins execution in a 	 * non-nested critical section with sched_lock held but not recursed. 	 */
 name|td
 operator|=
 name|curthread
@@ -3083,15 +3098,6 @@ operator|=
 name|td
 operator|->
 name|td_proc
-expr_stmt|;
-name|td
-operator|->
-name|td_oncpu
-operator|=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -3104,25 +3110,6 @@ argument_list|,
 operator|(
 literal|"executing process is still new"
 operator|)
-argument_list|)
-expr_stmt|;
-name|sched_lock
-operator|.
-name|mtx_lock
-operator|=
-operator|(
-name|uintptr_t
-operator|)
-name|td
-expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|,
-name|MA_OWNED
-operator||
-name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
 name|CTR4
@@ -3146,36 +3133,9 @@ operator|->
 name|p_comm
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Processes normally resume in mi_switch() after being 	 * cpu_switch()'ed to, but when children start up they arrive here 	 * instead, so we must do much the same things as mi_switch() would. 	 */
-if|if
-condition|(
-operator|(
-name|td
-operator|=
-name|PCPU_GET
-argument_list|(
-name|deadthread
-argument_list|)
-operator|)
-condition|)
-block|{
-name|PCPU_SET
-argument_list|(
-name|deadthread
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|thread_stash
+name|sched_fork_exit
 argument_list|(
 name|td
-argument_list|)
-expr_stmt|;
-block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * cpu_set_fork_handler intercepts this function call to 	 * have this call a non-return function to stay in kernel mode. 	 * initproc has its own fork handler, but it does return. 	 */
