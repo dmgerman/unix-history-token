@@ -409,6 +409,9 @@ name|vnode_t
 modifier|*
 modifier|*
 name|cvpp
+parameter_list|,
+name|int
+name|lktype
 parameter_list|)
 function_decl|;
 end_function_decl

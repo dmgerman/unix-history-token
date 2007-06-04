@@ -491,6 +491,9 @@ name|vnode_t
 modifier|*
 modifier|*
 name|cvpp
+parameter_list|,
+name|int
+name|lktype
 parameter_list|)
 block|{
 name|kthread_t
@@ -519,9 +522,9 @@ operator|=
 operator|*
 name|cvpp
 expr_stmt|;
-name|error
+name|tvp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* 	 * If this vnode is mounted on, then we transparently indirect 	 * to the vnode which is the root of the mounted file system. 	 * Before we do this we must check that an unmount is not in 	 * progress on this vnode. 	 */
 for|for
@@ -545,7 +548,20 @@ operator|==
 name|NULL
 condition|)
 break|break;
-name|VN_RELE
+comment|/* 		 * tvp is NULL for *cvpp vnode, which we can't unlock. 		 */
+if|if
+condition|(
+name|tvp
+operator|!=
+name|NULL
+condition|)
+name|vput
+argument_list|(
+name|cvp
+argument_list|)
+expr_stmt|;
+else|else
+name|vrele
 argument_list|(
 name|cvp
 argument_list|)
@@ -557,7 +573,7 @@ name|VFS_ROOT
 argument_list|(
 name|vfsp
 argument_list|,
-literal|0
+name|lktype
 argument_list|,
 operator|&
 name|tvp
@@ -568,17 +584,14 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-condition|)
-break|break;
-name|VOP_UNLOCK
-argument_list|(
-name|tvp
-argument_list|,
+operator|!=
 literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|cvp
 operator|=
 name|tvp
@@ -591,7 +604,7 @@ name|cvp
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
