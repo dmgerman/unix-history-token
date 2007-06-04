@@ -277,8 +277,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Check the environment for overrides */
-return|return
-operator|(
 name|uart_getenv
 argument_list|(
 name|devtype
@@ -287,6 +285,10 @@ name|di
 argument_list|,
 name|class
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
