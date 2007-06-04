@@ -1023,7 +1023,7 @@ expr_stmt|;
 name|whole
 operator|=
 operator|(
-name|hz
+literal|100
 operator|*
 name|SECS_PER_MIN
 operator|*
@@ -1913,7 +1913,7 @@ expr_stmt|;
 name|whole
 operator|=
 operator|(
-name|hz
+literal|100
 operator|*
 name|SECS_PER_MIN
 operator|*
