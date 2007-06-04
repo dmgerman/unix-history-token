@@ -1494,6 +1494,11 @@ name|struct
 name|thread
 modifier|*
 name|new
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+name|mtx
 parameter_list|)
 block|{
 name|struct
