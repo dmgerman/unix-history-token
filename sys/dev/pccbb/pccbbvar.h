@@ -138,13 +138,12 @@ name|struct
 name|cv
 name|powercv
 decl_stmt|;
+name|int
+name|cardok
+decl_stmt|;
 name|u_int32_t
 name|flags
 decl_stmt|;
-define|#
-directive|define
-name|CBB_CARD_OK
-value|0x08000000
 define|#
 directive|define
 name|CBB_16BIT_CARD

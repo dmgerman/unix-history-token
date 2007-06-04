@@ -1604,6 +1604,12 @@ argument_list|,
 literal|"Subordinate bus number"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|SYSCTL_ADD_UINT(sctx, SYSCTL_CHILDREN(soid), OID_AUTO, "memory", 	    CTLFLAG_RD,&sc->subbus, 0, "Memory window open"); 	SYSCTL_ADD_UINT(sctx, SYSCTL_CHILDREN(soid), OID_AUTO, "premem", 	    CTLFLAG_RD,&sc->subbus, 0, "Prefetch memroy window open"); 	SYSCTL_ADD_UINT(sctx, SYSCTL_CHILDREN(soid), OID_AUTO, "io1", 	    CTLFLAG_RD,&sc->subbus, 0, "io range 1 open"); 	SYSCTL_ADD_UINT(sctx, SYSCTL_CHILDREN(soid), OID_AUTO, "io2", 	    CTLFLAG_RD,&sc->subbus, 0, "io range 2 open");
+endif|#
+directive|endif
 comment|/* 	 * This is a gross hack.  We should be scanning the entire pci 	 * tree, assigning bus numbers in a way such that we (1) can 	 * reserve 1 extra bus just in case and (2) all sub busses 	 * are in an appropriate range. 	 */
 name|DEVPRINTF
 argument_list|(
@@ -3033,7 +3039,7 @@ argument_list|,
 name|sockevent
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If anything has happened to the socket, we assume that 		 * the card is no longer OK, and we shouldn't call its 		 * ISR.  We set CARD_OK as soon as we've attached the 		 * card.  This helps in a noisy eject, which happens 		 * all too often when users are ejecting their PC Cards. 		 * 		 * We use this method in preference to checking to see if 		 * the card is still there because the check suffers from 		 * a race condition in the bouncing case.  Prior versions 		 * of the pccard software used a similar trick and achieved 		 * excellent results. 		 */
+comment|/* 		 * If anything has happened to the socket, we assume that 		 * the card is no longer OK, and we shouldn't call its 		 * ISR.  We set cardok as soon as we've attached the 		 * card.  This helps in a noisy eject, which happens 		 * all too often when users are ejecting their PC Cards. 		 * 		 * We use this method in preference to checking to see if 		 * the card is still there because the check suffers from 		 * a race condition in the bouncing case.  Prior versions 		 * of the pccard software used a similar trick and achieved 		 * excellent results. 		 */
 if|if
 condition|(
 name|sockevent
@@ -3060,10 +3066,9 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|flags
-operator|&=
-operator|~
-name|CBB_CARD_OK
+name|cardok
+operator|=
+literal|0
 expr_stmt|;
 name|cbb_disable_func_intr
 argument_list|(

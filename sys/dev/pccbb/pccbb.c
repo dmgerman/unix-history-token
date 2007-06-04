@@ -1618,9 +1618,9 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|flags
-operator||=
-name|CBB_CARD_OK
+name|cardok
+operator|=
+literal|1
 expr_stmt|;
 return|return
 literal|0
@@ -2408,10 +2408,9 @@ parameter_list|)
 block|{
 name|sc
 operator|->
-name|flags
-operator|&=
-operator|~
-name|CBB_CARD_OK
+name|cardok
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2473,10 +2472,6 @@ begin_comment
 comment|/************************************************************************/
 end_comment
 
-begin_comment
-comment|/*  * Since we touch hardware in the worst case, we don't need to use atomic ops  * on the CARD_OK tests.  They would save us a trip to the hardware if CARD_OK  * was recently cleared and the caches haven't updated yet.  However, an  * atomic op costs between 100-200 CPU cycles.  On a 3GHz machine, this is  * about 33-66ns, whereas a trip the the hardware is about that.  On slower  * machines, the cost is even higher, so the trip to the hardware is cheaper  * and achieves the same ends that a fully locked operation would give us.  *  * This is a separate routine because we'd have to use locking and/or other  * synchronization in cbb_intr to do this there.  That would be even more  * expensive.  *  * I need to investigate what this means for a SMP machine with multiple CPUs  * servicing the ISR when an eject happens.  In the case of a dirty eject, CD  * glitches and we might read 'card present' from the hardware due to this  * jitter.  If we assumed that cbb_intr() ran before cbb_func_intr(), we could  * just check the SOCKET_MASK register and if CD changes were clear there,  * then we'd know the card was gone.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -2511,15 +2506,10 @@ decl_stmt|;
 comment|/* 	 * Make sure that the card is really there. 	 */
 if|if
 condition|(
-operator|(
+operator|!
 name|sc
 operator|->
-name|flags
-operator|&
-name|CBB_CARD_OK
-operator|)
-operator|==
-literal|0
+name|cardok
 condition|)
 return|return
 operator|(
@@ -2542,10 +2532,9 @@ condition|)
 block|{
 name|sc
 operator|->
-name|flags
-operator|&=
-operator|~
-name|CBB_CARD_OK
+name|cardok
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -2615,15 +2604,10 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
+operator|!
 name|sc
 operator|->
-name|flags
-operator|&
-name|CBB_CARD_OK
-operator|)
-operator|==
-literal|0
+name|cardok
 condition|)
 return|return;
 if|if
@@ -2642,10 +2626,9 @@ condition|)
 block|{
 name|sc
 operator|->
-name|flags
-operator|&=
-operator|~
-name|CBB_CARD_OK
+name|cardok
+operator|=
+literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -6821,10 +6804,9 @@ expr_stmt|;
 comment|/* Quiet hardware */
 name|sc
 operator|->
-name|flags
-operator|&=
-operator|~
-name|CBB_CARD_OK
+name|cardok
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Card is bogus now */
 return|return
@@ -7017,15 +6999,9 @@ argument_list|(
 name|sockstate
 argument_list|)
 operator|&&
-operator|(
 name|sc
 operator|->
-name|flags
-operator|&
-name|CBB_CARD_OK
-operator|)
-operator|==
-name|CBB_CARD_OK
+name|cardok
 operator|)
 return|;
 block|}
