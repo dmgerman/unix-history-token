@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2002-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -104,7 +104,7 @@ else|else
 block|{
 name|PRINTF
 argument_list|(
-literal|"\t\t%s%s"
+literal|"\tAddress: %s%s"
 argument_list|,
 name|np
 operator|->
@@ -142,7 +142,7 @@ argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|"\n\t\tHits %lu\tName %s\n"
+literal|"\t\tHits %lu\tName %s\tRef %d\n"
 argument_list|,
 name|np
 operator|->
@@ -151,6 +151,10 @@ argument_list|,
 name|np
 operator|->
 name|ipn_name
+argument_list|,
+name|np
+operator|->
+name|ipn_ref
 argument_list|)
 expr_stmt|;
 block|}

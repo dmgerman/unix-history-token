@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2001-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_if
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipfcomp.c,v 1.24.2.3 2006/03/17 22:31:57 darrenr Exp $"
+literal|"@(#)$Id: ipfcomp.c,v 1.24.2.7 2007/05/01 22:15:00 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -619,6 +619,13 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
+literal|"#include<sys/param.h>\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
 literal|"#include<sys/types.h>\n"
 argument_list|)
 expr_stmt|;
@@ -640,14 +647,84 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#if !defined(__FreeBSD__)&& !defined(__OpenBSD__)&& !defined(__sgi)\n"
+literal|"#if (__FreeBSD_version>= 40000)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"# include<sys/systm.h>\n"
+literal|"# if defined(_KERNEL)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#  include<sys/libkern.h>\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"# else\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#  include<sys/unistd.h>\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"# endif\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#endif\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#if (__NetBSD_Version__>= 399000000)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#else\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"# if !defined(__FreeBSD__)&& !defined(__OpenBSD__)&& !defined(__sgi)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#  include<sys/systm.h>\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"# endif\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2928,6 +3005,10 @@ block|}
 comment|/* 	 * Output the array of pointers to rules for this group. 	 */
 if|if
 condition|(
+name|g
+operator|!=
+name|NULL
+operator|&&
 name|num
 operator|==
 operator|-
@@ -3057,6 +3138,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|g
+operator|!=
+name|NULL
+operator|&&
 name|num
 operator|==
 operator|-
@@ -3068,7 +3153,7 @@ literal|1
 operator|&&
 name|header
 index|[
-literal|1
+literal|0
 index|]
 operator|==
 literal|0
@@ -3208,6 +3293,10 @@ expr_stmt|;
 comment|/* 	 * If the function header has not been printed then print it now. 	 */
 if|if
 condition|(
+name|g
+operator|!=
+name|NULL
+operator|&&
 name|header
 index|[
 name|dir

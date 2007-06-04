@@ -100,6 +100,11 @@ name|defined
 argument_list|(
 name|__sgi
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__osf__
+argument_list|)
 end_if
 
 begin_define

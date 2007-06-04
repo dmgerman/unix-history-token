@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /devel/CVS/IP-Filter/bpf_filter.c,v 2.2.2.2 2005/12/30 12:57:28 darrenr Exp $ (LBL)"
+literal|"@(#) $Header: /devel/CVS/IP-Filter/bpf_filter.c,v 2.2.2.3 2006/10/03 11:25:56 darrenr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -807,7 +807,11 @@ name|n
 decl_stmt|;
 name|int
 name|merr
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+comment|/* XXX: GCC */
+name|int
 name|len
 decl_stmt|;
 if|if

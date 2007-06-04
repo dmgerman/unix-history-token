@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ipft_tx.c,v 1.15.2.7 2005/12/18 14:53:39 darrenr Exp $  */
+comment|/*  * Copyright (C) 2000-2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ipft_tx.c,v 1.15.2.9 2006/06/16 17:21:04 darrenr Exp $  */
 end_comment
 
 begin_if
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_tx.c,v 1.15.2.7 2005/12/18 14:53:39 darrenr Exp $"
+literal|"@(#)$Id: ipft_tx.c,v 1.15.2.9 2006/06/16 17:21:04 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -665,6 +665,10 @@ index|[
 literal|513
 index|]
 decl_stmt|;
+name|ip_t
+modifier|*
+name|ip
+decl_stmt|;
 operator|*
 name|ifn
 operator|=
@@ -793,20 +797,24 @@ argument_list|,
 name|dir
 argument_list|)
 condition|)
-if|#
-directive|if
-literal|0
-then|return sizeof(ip_t) + sizeof(tcphdr_t);
-else|#
-directive|else
-return|return
-sizeof|sizeof
-argument_list|(
+block|{
+name|ip
+operator|=
+operator|(
 name|ip_t
+operator|*
+operator|)
+name|buf
+expr_stmt|;
+return|return
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
 argument_list|)
 return|;
-endif|#
-directive|endif
+block|}
 block|}
 if|if
 condition|(

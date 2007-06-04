@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2001-2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_if
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipsyncm.c,v 1.4.2.4 2006/03/27 02:09:46 darrenr Exp $"
+literal|"@(#)$Id: ipsyncm.c,v 1.4.2.5 2006/08/26 11:21:14 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

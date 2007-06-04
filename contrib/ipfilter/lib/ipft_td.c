@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ipft_td.c,v 1.15 2004/01/08 13:34:31 darrenr Exp $  */
+comment|/*  * Copyright (C) 2000-2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ipft_td.c,v 1.15.2.2 2006/06/16 17:21:03 darrenr Exp $  */
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_td.c,v 1.15 2004/01/08 13:34:31 darrenr Exp $"
+literal|"@(#)$Id: ipft_td.c,v 1.15.2.2 2006/06/16 17:21:03 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -732,6 +732,15 @@ argument_list|,
 literal|" :"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 name|ip
 operator|->
 name|ip_p
@@ -763,6 +772,15 @@ argument_list|,
 literal|" :"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 name|ip
 operator|->
 name|ip_len

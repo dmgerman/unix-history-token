@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip.c,v 2.8.2.1 2004/10/19 12:31:48 darrenr Exp $"
+literal|"@(#)$Id: ip.c,v 2.8.2.2 2007/02/17 12:41:51 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +63,23 @@ include|#
 directive|include
 file|<sys/socket.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__osf__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"radix_ipf_local.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

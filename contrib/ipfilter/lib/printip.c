@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printip.c,v 1.3 2002/07/13 12:10:27 darrenr Exp $  */
+comment|/*  * Copyright (C) 2002-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printip.c,v 1.3.4.1 2006/06/16 17:21:12 darrenr Exp $  */
 end_comment
 
 begin_include

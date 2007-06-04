@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (C) 2002-2004 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: printsbuf.c,v 1.2.4.2 2006/06/16 17:21:14 darrenr Exp $   */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: v6ionames.c,v 1.1.4.2 2005/10/17 18:31:09 darrenr Exp $  */
+comment|/*  * Copyright (C) 2003-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: v6ionames.c,v 1.1.4.3 2006/06/16 17:21:18 darrenr Exp $  */
 end_comment
 
 begin_include

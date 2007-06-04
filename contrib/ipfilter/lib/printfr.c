@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printfr.c,v 1.43.2.16 2006/03/29 11:19:59 darrenr Exp $  */
+comment|/*  * Copyright (C) 2000-2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printfr.c,v 1.43.2.18 2007/05/07 06:55:38 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -2845,6 +2845,33 @@ operator|->
 name|fr_pps
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fp
+operator|->
+name|fr_flags
+operator|&
+name|FR_KEEPSTATE
+operator|)
+operator|&&
+operator|(
+name|opts
+operator|&
+name|OPT_VERBOSE
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" # count %d"
+argument_list|,
+name|fp
+operator|->
+name|fr_statecnt
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)

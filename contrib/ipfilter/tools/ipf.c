@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2001-2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_ifdef
@@ -107,7 +107,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipf.c,v 1.35.2.4 2006/03/17 11:48:08 darrenr Exp $"
+literal|"@(#)$Id: ipf.c,v 1.35.2.8 2007/05/10 06:12:01 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1648,6 +1648,12 @@ name|arg
 argument_list|,
 literal|"S"
 argument_list|)
+operator|||
+name|ISDIGIT
+argument_list|(
+operator|*
+name|arg
+argument_list|)
 condition|)
 block|{
 if|if
@@ -1661,10 +1667,25 @@ name|fl
 operator|=
 literal|0
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|*
+name|arg
+operator|==
+literal|'s'
+condition|)
 name|fl
 operator|=
 literal|1
+expr_stmt|;
+else|else
+name|fl
+operator|=
+name|atoi
+argument_list|(
+name|arg
+argument_list|)
 expr_stmt|;
 name|rem
 operator|=
@@ -1790,7 +1811,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"removed %d filter rules\n"
+literal|"removed %d entries\n"
 argument_list|,
 name|fl
 argument_list|)
@@ -2193,16 +2214,46 @@ name|void
 name|zerostats
 parameter_list|()
 block|{
+name|ipfobj_t
+name|obj
+decl_stmt|;
 name|friostat_t
 name|fio
 decl_stmt|;
-name|friostat_t
-modifier|*
-name|fiop
-init|=
+name|obj
+operator|.
+name|ipfo_rev
+operator|=
+name|IPFILTER_VERSION
+expr_stmt|;
+name|obj
+operator|.
+name|ipfo_type
+operator|=
+name|IPFOBJ_IPFSTAT
+expr_stmt|;
+name|obj
+operator|.
+name|ipfo_size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|fio
+argument_list|)
+expr_stmt|;
+name|obj
+operator|.
+name|ipfo_ptr
+operator|=
 operator|&
 name|fio
-decl_stmt|;
+expr_stmt|;
+name|obj
+operator|.
+name|ipfo_offset
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|opendevice
@@ -2225,7 +2276,7 @@ argument_list|,
 name|SIOCFRZST
 argument_list|,
 operator|&
-name|fiop
+name|obj
 argument_list|)
 operator|==
 operator|-
@@ -2246,7 +2297,8 @@ expr_stmt|;
 block|}
 name|showstats
 argument_list|(
-name|fiop
+operator|&
+name|fio
 argument_list|)
 expr_stmt|;
 block|}

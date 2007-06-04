@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: sock.c,v 2.8.4.4 2006/03/21 16:10:56 darrenr Exp $"
+literal|"@(#)$Id: sock.c,v 2.8.4.6 2007/02/17 12:41:51 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,11 +384,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__osf__
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<net/route.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1715,6 +1726,15 @@ name|fd
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 if|#
 directive|if
 name|defined
@@ -1765,6 +1785,11 @@ operator|->
 name|ki_fd
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -1813,6 +1838,11 @@ operator|->
 name|kp_proc
 operator|.
 name|p_fd
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
