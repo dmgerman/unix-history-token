@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ipl.h	1.21 6/5/96  * $Id: ipl.h,v 2.52.2.14 2006/04/01 20:09:42 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ipl.h	1.21 6/5/96  * $Id: ipl.h,v 2.52.2.25 2007/05/31 11:40:43 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -19,14 +19,14 @@ begin_define
 define|#
 directive|define
 name|IPL_VERSION
-value|"IP Filter: v4.1.13"
+value|"IP Filter: v4.1.23"
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPFILTER_VERSION
-value|4011300
+value|4012300
 end_define
 
 begin_endif

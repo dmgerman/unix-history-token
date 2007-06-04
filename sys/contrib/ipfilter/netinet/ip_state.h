@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.68.2.5 2005/08/20 13:48:25 darrenr Exp $  */
+comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.68.2.8 2007/05/11 10:44:14 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -182,14 +182,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|is_sync
-decl_stmt|;
-name|struct
-name|nat
-modifier|*
-name|is_nat
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|frentry_t
 modifier|*
@@ -924,6 +916,13 @@ name|ISL_ORPHAN
 value|0xfffa
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISL_UNLOAD
+value|0xfff9
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1001,6 +1000,10 @@ decl_stmt|;
 name|u_long
 modifier|*
 name|iss_bucketlen
+decl_stmt|;
+name|ipftq_t
+modifier|*
+name|iss_tcptab
 decl_stmt|;
 block|}
 name|ips_stat_t
@@ -1342,6 +1345,11 @@ operator|,
 name|ioctlcmd_t
 operator|,
 name|int
+operator|,
+name|int
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1421,9 +1429,6 @@ name|fr_statederef
 name|__P
 argument_list|(
 operator|(
-name|fr_info_t
-operator|*
-operator|,
 name|ipstate_t
 operator|*
 operator|*

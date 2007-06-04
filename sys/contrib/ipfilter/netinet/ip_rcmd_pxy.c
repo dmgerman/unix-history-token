@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1998-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_rcmd_pxy.c,v 1.41.2.6 2006/04/01 10:14:54 darrenr Exp $  *  * Simple RCMD transparent proxy for in-kernel use.  For use with the NAT  * code.  */
+comment|/*  * Copyright (C) 1998-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_rcmd_pxy.c,v 1.41.2.7 2006/07/14 06:12:18 darrenr Exp $  *  * Simple RCMD transparent proxy for in-kernel use.  For use with the NAT  * code.  */
 end_comment
 
 begin_define
@@ -1171,9 +1171,6 @@ name|NULL
 condition|)
 name|fr_statederef
 argument_list|(
-operator|&
-name|fi
-argument_list|,
 operator|(
 name|ipstate_t
 operator|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000-2003 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_irc_pxy.c,v 2.39.2.5 2005/12/04 23:39:27 darrenr Exp $  */
+comment|/*  * Copyright (C) 2000-2003 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_irc_pxy.c,v 2.39.2.6 2006/07/14 06:12:14 darrenr Exp $  */
 end_comment
 
 begin_define
@@ -2017,9 +2017,6 @@ name|NULL
 condition|)
 name|fr_statederef
 argument_list|(
-operator|&
-name|fi
-argument_list|,
 operator|(
 name|ipstate_t
 operator|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_proxy.h,v 2.31.2.3 2005/06/18 02:41:33 darrenr Exp $  */
+comment|/*  * Copyright (C) 1997-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_proxy.h,v 2.31.2.5 2007/04/16 21:06:52 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -1755,6 +1755,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|ipf_proxy_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|appr_add
 name|__P
 argument_list|(
@@ -1952,6 +1959,9 @@ operator|,
 name|ioctlcmd_t
 operator|,
 name|int
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

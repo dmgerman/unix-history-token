@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1998-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_raudio_pxy.c,v 1.40.2.3 2005/02/04 10:22:55 darrenr Exp $  */
+comment|/*  * Copyright (C) 1998-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_raudio_pxy.c,v 1.40.2.4 2006/07/14 06:12:17 darrenr Exp $  */
 end_comment
 
 begin_define
@@ -1714,9 +1714,6 @@ name|NULL
 condition|)
 name|fr_statederef
 argument_list|(
-operator|&
-name|fi
-argument_list|,
 operator|(
 name|ipstate_t
 operator|*
@@ -1866,9 +1863,6 @@ name|NULL
 condition|)
 name|fr_statederef
 argument_list|(
-operator|&
-name|fi
-argument_list|,
 operator|(
 name|ipstate_t
 operator|*

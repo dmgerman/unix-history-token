@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2001 by Darren Reed& Guido Van Rooij.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_auth.h,v 2.16.2.2 2006/03/16 06:45:49 darrenr Exp $  *  */
+comment|/*  * Copyright (C) 1997-2001 by Darren Reed& Guido Van Rooij.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_auth.h,v 2.16.2.3 2006/07/14 06:12:05 darrenr Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -78,8 +78,17 @@ name|frauthent
 modifier|*
 name|fae_next
 decl_stmt|;
+name|struct
+name|frauthent
+modifier|*
+modifier|*
+name|fae_pnext
+decl_stmt|;
 name|u_long
 name|fae_age
+decl_stmt|;
+name|int
+name|fae_ref
 decl_stmt|;
 block|}
 name|frauthent_t
@@ -313,6 +322,11 @@ operator|,
 name|ioctlcmd_t
 operator|,
 name|int
+operator|,
+name|int
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
