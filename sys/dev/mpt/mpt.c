@@ -12258,7 +12258,7 @@ name|MPT_2_HOST32
 argument_list|(
 name|volp
 argument_list|,
-name|Reserved1
+name|MaxLBAHigh
 argument_list|)
 expr_stmt|;
 name|MPT_2_HOST32
