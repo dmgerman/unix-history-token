@@ -3100,6 +3100,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GEM_TD_CXSUM_STARTSHFT
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
 name|GEM_TD_CXSUM_STUFF
 value|0x000000001fe00000LL
 end_define
@@ -3107,6 +3114,13 @@ end_define
 begin_comment
 comment|/* Cxsum stuff offset */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_TD_CXSUM_STUFFSHFT
+value|21
+end_define
 
 begin_define
 define|#

@@ -238,28 +238,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Argument structure for busdma callback */
-end_comment
-
-begin_struct
-struct|struct
-name|gem_txdma
-block|{
-name|struct
-name|gem_softc
-modifier|*
-name|txd_sc
-decl_stmt|;
-name|struct
-name|gem_txsoft
-modifier|*
-name|txd_txs
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Software state for receive jobs.  */
 end_comment
 
@@ -491,6 +469,9 @@ name|sc_debug
 decl_stmt|;
 name|int
 name|sc_ifflags
+decl_stmt|;
+name|int
+name|sc_csum_features
 decl_stmt|;
 name|struct
 name|mtx
