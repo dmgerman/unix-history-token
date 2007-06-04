@@ -1289,10 +1289,7 @@ argument_list|,
 operator|&
 name|val
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|val
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)
@@ -1367,10 +1364,7 @@ argument_list|,
 operator|&
 name|val
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|val
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)

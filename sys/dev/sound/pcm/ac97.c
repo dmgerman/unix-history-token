@@ -5152,10 +5152,7 @@ argument_list|,
 operator|&
 name|ea
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ea
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)

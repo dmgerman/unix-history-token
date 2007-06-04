@@ -761,17 +761,14 @@ name|tsc_freq
 expr_stmt|;
 name|error
 operator|=
-name|sysctl_handle_int
+name|sysctl_handle_quad
 argument_list|(
 name|oidp
 argument_list|,
 operator|&
 name|freq
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|freq
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)
@@ -817,7 +814,7 @@ name|OID_AUTO
 argument_list|,
 name|tsc_freq
 argument_list|,
-name|CTLTYPE_LONG
+name|CTLTYPE_QUAD
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -830,7 +827,7 @@ argument_list|)
 argument_list|,
 name|sysctl_machdep_tsc_freq
 argument_list|,
-literal|"IU"
+literal|"QU"
 argument_list|,
 literal|""
 argument_list|)

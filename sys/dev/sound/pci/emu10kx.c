@@ -9678,10 +9678,7 @@ argument_list|,
 operator|&
 name|new_vol
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|new_vol
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)

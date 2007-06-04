@@ -469,10 +469,7 @@ argument_list|,
 operator|&
 name|new
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)

@@ -27617,10 +27617,7 @@ argument_list|,
 operator|&
 name|bool
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bool
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)

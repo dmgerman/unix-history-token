@@ -1025,10 +1025,7 @@ argument_list|,
 operator|&
 name|ncount
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ncount
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)
@@ -1061,17 +1058,14 @@ operator|->
 name|tc_frequency
 expr_stmt|;
 return|return
-name|sysctl_handle_int
+name|sysctl_handle_quad
 argument_list|(
 name|oidp
 argument_list|,
 operator|&
 name|freq
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|freq
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)
@@ -1970,7 +1964,7 @@ argument_list|)
 argument_list|,
 name|sysctl_kern_timecounter_freq
 argument_list|,
-literal|"IU"
+literal|"QU"
 argument_list|,
 literal|"timecounter frequency"
 argument_list|)

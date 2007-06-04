@@ -1378,10 +1378,7 @@ argument_list|,
 operator|&
 name|f
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|f
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)

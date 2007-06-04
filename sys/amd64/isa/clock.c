@@ -3131,10 +3131,7 @@ argument_list|,
 operator|&
 name|freq
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|freq
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)

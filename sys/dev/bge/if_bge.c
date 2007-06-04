@@ -20895,10 +20895,7 @@ argument_list|,
 operator|&
 name|result
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|result
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)

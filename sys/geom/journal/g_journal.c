@@ -518,10 +518,7 @@ argument_list|,
 operator|&
 name|entries
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|entries
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)
@@ -772,10 +769,7 @@ argument_list|,
 operator|&
 name|limit
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|limit
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)
@@ -893,10 +887,7 @@ argument_list|,
 operator|&
 name|cswitch
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cswitch
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)
