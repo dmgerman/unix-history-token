@@ -646,6 +646,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sysctl_handle_quad
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|sysctl_handle_intptr
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
