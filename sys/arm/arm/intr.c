@@ -389,7 +389,7 @@ name|thread
 decl_stmt|,
 name|ret
 decl_stmt|;
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.

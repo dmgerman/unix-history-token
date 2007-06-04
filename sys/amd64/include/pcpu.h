@@ -86,11 +86,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCPU_LAZY_INC
+name|PCPU_ADD
+parameter_list|(
+name|member
+parameter_list|,
+name|val
+parameter_list|)
+value|(pcpup->pc_ ## member += (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_INC
 parameter_list|(
 name|member
 parameter_list|)
-value|(++pcpup->pc_ ## member)
+value|PCPU_ADD(member, 1)
 end_define
 
 begin_define
@@ -188,17 +200,33 @@ value|__extension__ ({				\ 	__pcpu_type(name) __res;					\ 	struct __s {							
 end_define
 
 begin_comment
+comment|/*  * Adds the value to the per-cpu counter name.  The implementation  * must be atomic with respect to interrupts.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__PCPU_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|do {					\ 	__pcpu_type(name) __val;					\ 	struct __s {							\ 		u_char	__b[MIN(sizeof(__pcpu_type(name)), 8)];		\ 	} __s;								\ 									\ 	__val = (val);							\ 	if (sizeof(__val) == 1 || sizeof(__val) == 2 ||			\ 	    sizeof(__val) == 4 || sizeof(__val) == 8) {			\ 		__s = *(struct __s *)(void *)&__val;			\ 		__asm __volatile("add %1,%%gs:%0"			\ 		    : "=m" (*(struct __s *)(__pcpu_offset(name)))	\ 		    : "r" (__s));					\ 	} else								\ 		*__PCPU_PTR(name) += __val;				\ } while (0)
+end_define
+
+begin_comment
 comment|/*  * Increments the value of the per-cpu counter name.  The implementation  * must be atomic with respect to interrupts.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|__PCPU_LAZY_INC
+name|__PCPU_INC
 parameter_list|(
 name|name
 parameter_list|)
-value|do {					\ 	CTASSERT(sizeof(__pcpu_type(name)) == 1 ||			\ 	    sizeof(__pcpu_type(name)) == 2 ||				\ 	    sizeof(__pcpu_type(name)) == 4 ||				\ 	    sizeof(__pcpu_type(name)) == 8);				\ 	if (sizeof(__pcpu_type(name)) == 1) {				\ 		__asm __volatile("incb %%gs:%0"				\ 		    : "=m" (*(__pcpu_type(name) *)(__pcpu_offset(name)))\ 		    : "m" (*(__pcpu_type(name) *)(__pcpu_offset(name))));\ 	} else if (sizeof(__pcpu_type(name)) == 2) {			\ 		__asm __volatile("incw %%gs:%0"				\ 		    : "=m" (*(__pcpu_type(name) *)(__pcpu_offset(name)))\ 		    : "m" (*(__pcpu_type(name) *)(__pcpu_offset(name))));\ 	} else if (sizeof(__pcpu_type(name)) == 4) {			\ 		__asm __volatile("incl %%gs:%0"				\ 		    : "=m" (*(__pcpu_type(name) *)(__pcpu_offset(name)))\ 		    : "m" (*(__pcpu_type(name) *)(__pcpu_offset(name))));\ 	} else if (sizeof(__pcpu_type(name)) == 8) {			\ 		__asm __volatile("incq %%gs:%0"				\ 		    : "=m" (*(__pcpu_type(name) *)(__pcpu_offset(name)))\ 		    : "m" (*(__pcpu_type(name) *)(__pcpu_offset(name))));\ 	}								\ } while (0)
+value|do {						\ 	CTASSERT(sizeof(__pcpu_type(name)) == 1 ||			\ 	    sizeof(__pcpu_type(name)) == 2 ||				\ 	    sizeof(__pcpu_type(name)) == 4 ||				\ 	    sizeof(__pcpu_type(name)) == 8);				\ 	if (sizeof(__pcpu_type(name)) == 1) {				\ 		__asm __volatile("incb %%gs:%0"				\ 		    : "=m" (*(__pcpu_type(name) *)(__pcpu_offset(name)))\ 		    : "m" (*(__pcpu_type(name) *)(__pcpu_offset(name))));\ 	} else if (sizeof(__pcpu_type(name)) == 2) {			\ 		__asm __volatile("incw %%gs:%0"				\ 		    : "=m" (*(__pcpu_type(name) *)(__pcpu_offset(name)))\ 		    : "m" (*(__pcpu_type(name) *)(__pcpu_offset(name))));\ 	} else if (sizeof(__pcpu_type(name)) == 4) {			\ 		__asm __volatile("incl %%gs:%0"				\ 		    : "=m" (*(__pcpu_type(name) *)(__pcpu_offset(name)))\ 		    : "m" (*(__pcpu_type(name) *)(__pcpu_offset(name))));\ 	} else if (sizeof(__pcpu_type(name)) == 8) {			\ 		__asm __volatile("incq %%gs:%0"				\ 		    : "=m" (*(__pcpu_type(name) *)(__pcpu_offset(name)))\ 		    : "m" (*(__pcpu_type(name) *)(__pcpu_offset(name))));\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -230,11 +258,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCPU_LAZY_INC
+name|PCPU_ADD
+parameter_list|(
+name|member
+parameter_list|,
+name|val
+parameter_list|)
+value|__PCPU_ADD(pc_ ## member, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_INC
 parameter_list|(
 name|member
 parameter_list|)
-value|__PCPU_LAZY_INC(pc_ ## member)
+value|__PCPU_INC(pc_ ## member)
 end_define
 
 begin_define

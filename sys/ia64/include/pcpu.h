@@ -87,11 +87,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCPU_LAZY_INC
+name|PCPU_ADD
+parameter_list|(
+name|member
+parameter_list|,
+name|value
+parameter_list|)
+value|(pcpup->pc_ ## member += (value))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_INC
 parameter_list|(
 name|member
 parameter_list|)
-value|(++pcpup->pc_ ## member)
+value|PCPU_ADD(member, 1)
 end_define
 
 begin_define

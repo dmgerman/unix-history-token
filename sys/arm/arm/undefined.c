@@ -659,7 +659,7 @@ name|tf_pc
 operator|-=
 name|INSN_SIZE
 expr_stmt|;
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.

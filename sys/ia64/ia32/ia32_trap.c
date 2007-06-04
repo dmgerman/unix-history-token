@@ -197,7 +197,7 @@ decl_stmt|;
 name|ksiginfo_t
 name|ksi
 decl_stmt|;
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.
@@ -981,7 +981,7 @@ argument_list|(
 name|IA64_FPSR_DEFAULT
 argument_list|)
 expr_stmt|;
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.

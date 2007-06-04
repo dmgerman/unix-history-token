@@ -345,8 +345,8 @@ decl_stmt|;
 name|ksiginfo_t
 name|ksi
 decl_stmt|;
-comment|/* 	 * note: PCPU_LAZY_INC() can only be used if we can afford 	 * occassional inaccuracy in the count. 	 */
-name|PCPU_LAZY_INC
+comment|/* 	 * note: PCPU_INC() can only be used if we can afford 	 * occassional inaccuracy in the count. 	 */
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.

@@ -4589,7 +4589,7 @@ name|SWI_DELAY
 operator|)
 condition|)
 block|{
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.

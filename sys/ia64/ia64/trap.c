@@ -1579,7 +1579,7 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.
@@ -3819,7 +3819,7 @@ name|tf_scratch
 operator|.
 name|gr16
 expr_stmt|;
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.

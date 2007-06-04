@@ -609,7 +609,7 @@ name|growstack
 operator|=
 name|TRUE
 expr_stmt|;
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.
@@ -1279,7 +1279,7 @@ operator|.
 name|object
 argument_list|)
 expr_stmt|;
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.
@@ -2209,7 +2209,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.
@@ -2217,7 +2217,7 @@ name|v_ozfod
 argument_list|)
 expr_stmt|;
 block|}
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.
@@ -2473,7 +2473,7 @@ name|m
 operator|=
 name|NULL
 expr_stmt|;
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.
@@ -2571,7 +2571,7 @@ operator|.
 name|object
 argument_list|)
 expr_stmt|;
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.

@@ -719,7 +719,7 @@ condition|)
 block|{
 comment|/* clock interrupt */
 comment|/* CTR0(KTR_INTR, "clock interrupt"); */
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.

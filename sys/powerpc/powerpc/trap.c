@@ -661,7 +661,7 @@ decl_stmt|;
 name|ksiginfo_t
 name|ksi
 decl_stmt|;
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.
@@ -1577,7 +1577,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|PCPU_LAZY_INC
+name|PCPU_INC
 argument_list|(
 name|cnt
 operator|.
