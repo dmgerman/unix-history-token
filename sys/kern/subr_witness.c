@@ -1849,6 +1849,13 @@ block|,
 endif|#
 directive|endif
 block|{
+literal|"process slock"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 literal|"sleepq chain"
 block|,
 operator|&
@@ -1856,7 +1863,7 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
-literal|"sched lock"
+literal|"umtx lock"
 block|,
 operator|&
 name|lock_class_mtx_spin
@@ -1864,6 +1871,20 @@ block|}
 block|,
 block|{
 literal|"turnstile chain"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
+literal|"turnstile lock"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
+literal|"sched lock"
 block|,
 operator|&
 name|lock_class_mtx_spin
@@ -1985,7 +2006,14 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
-literal|"kse zombie lock"
+literal|"kse lock"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
+literal|"zombie lock"
 block|,
 operator|&
 name|lock_class_mtx_spin
@@ -2084,6 +2112,13 @@ block|}
 block|,
 endif|#
 directive|endif
+block|{
+literal|"blocked lock"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
 block|{
 name|NULL
 block|,
@@ -9535,7 +9570,7 @@ operator|->
 name|td_sleeplocks
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We only handle spinlocks if td == curthread.  This is somewhat broken 	 * if td is currently executing on some other CPU and holds spin locks 	 * as we won't display those locks.  If we had a MI way of getting 	 * the per-cpu data for a given cpu then we could use 	 * td->td_oncpu to get the list of spinlocks for this thread 	 * and "fix" this. 	 * 	 * That still wouldn't really fix this unless we locked sched_lock 	 * or stopped the other CPU to make sure it wasn't changing the list 	 * out from under us.  It is probably best to just not try to handle 	 * threads on other CPU's for now. 	 */
+comment|/* 	 * We only handle spinlocks if td == curthread.  This is somewhat broken 	 * if td is currently executing on some other CPU and holds spin locks 	 * as we won't display those locks.  If we had a MI way of getting 	 * the per-cpu data for a given cpu then we could use 	 * td->td_oncpu to get the list of spinlocks for this thread 	 * and "fix" this. 	 * 	 * That still wouldn't really fix this unless we locked the scheduler 	 * lock or stopped the other CPU to make sure it wasn't changing the 	 * list out from under us.  It is probably best to just not try to 	 * handle threads on other CPU's for now. 	 */
 if|if
 condition|(
 name|td
