@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2004  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -904,6 +904,12 @@ operator|*
 operator|*
 operator|)
 name|NULL
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1000,6 +1006,12 @@ argument_list|,
 operator|(
 name|char
 operator|*
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|(
+name|int
 operator|*
 operator|)
 name|NULL
@@ -1205,6 +1217,12 @@ operator|*
 operator|*
 operator|)
 name|NULL
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1272,6 +1290,12 @@ argument_list|,
 operator|(
 name|char
 operator|*
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|(
+name|int
 operator|*
 operator|)
 name|NULL
