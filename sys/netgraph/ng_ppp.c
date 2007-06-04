@@ -5903,6 +5903,13 @@ operator|!
 name|priv
 operator|->
 name|allLinksEqual
+operator|&&
+operator|!
+name|priv
+operator|->
+name|conf
+operator|.
+name|enableRoundRobin
 condition|)
 block|{
 comment|/* If queue was empty, then mark this time. */
@@ -5930,7 +5937,7 @@ name|len
 operator|+
 name|MP_AVERAGE_LINK_OVERHEAD
 expr_stmt|;
-comment|/* Limit max queue length to 50 pkts. BW can be defined 		       incorrectly and link may not signal overload. */
+comment|/* Limit max queue length to 50 pkts. BW can be defined 		    	   incorrectly and link may not signal overload. */
 if|if
 condition|(
 name|link
