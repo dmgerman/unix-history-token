@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2005  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -362,6 +362,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|utf_mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|oldbot
 decl_stmt|;
 end_decl_stmt
 
@@ -3838,6 +3845,9 @@ name|int
 name|endline
 decl_stmt|;
 block|{
+name|int
+name|nl
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -3933,9 +3943,37 @@ name|AT_ANSI
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Add a newline if necessary, 	 * and append a '\0' to the end of the line. 	 */
+comment|/* 	 * Add a newline if necessary, 	 * and append a '\0' to the end of the line. 	 * We output a newline if we're not at the right edge of the screen, 	 * or if the terminal doesn't auto wrap, 	 * or if this is really the end of the line AND the terminal ignores 	 * a newline at the right edge. 	 * (In the last case we don't want to output a newline if the terminal  	 * doesn't ignore it since that would produce an extra blank line. 	 * But we do want to output a newline if the terminal ignores it in case 	 * the next line is blank.  In that case the single newline output for 	 * that blank line would be ignored!) 	 */
 if|if
 condition|(
+operator|!
+name|oldbot
+condition|)
+name|nl
+operator|=
+operator|(
+name|column
+operator|<
+name|sc_width
+operator|||
+operator|!
+name|auto_wrap
+operator|||
+operator|(
+name|endline
+operator|&&
+name|ignaw
+operator|)
+operator|||
+name|ctldisp
+operator|==
+name|OPT_ON
+operator|)
+expr_stmt|;
+else|else
+name|nl
+operator|=
+operator|(
 name|column
 operator|<
 name|sc_width
@@ -3948,6 +3986,11 @@ operator|||
 name|ctldisp
 operator|==
 name|OPT_ON
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|nl
 condition|)
 block|{
 name|linebuf
@@ -4138,6 +4181,8 @@ parameter_list|(
 name|curr_pos
 parameter_list|,
 name|linep
+parameter_list|,
+name|line_lenp
 parameter_list|)
 name|POSITION
 name|curr_pos
@@ -4146,6 +4191,10 @@ name|char
 modifier|*
 modifier|*
 name|linep
+decl_stmt|;
+name|int
+modifier|*
+name|line_lenp
 decl_stmt|;
 block|{
 specifier|register
@@ -4273,6 +4322,17 @@ name|linep
 operator|=
 name|linebuf
 expr_stmt|;
+if|if
+condition|(
+name|line_lenp
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|line_lenp
+operator|=
+name|n
+expr_stmt|;
 return|return
 operator|(
 name|new_pos
@@ -4293,6 +4353,8 @@ parameter_list|(
 name|curr_pos
 parameter_list|,
 name|linep
+parameter_list|,
+name|line_lenp
 parameter_list|)
 name|POSITION
 name|curr_pos
@@ -4301,6 +4363,10 @@ name|char
 modifier|*
 modifier|*
 name|linep
+decl_stmt|;
+name|int
+modifier|*
+name|line_lenp
 decl_stmt|;
 block|{
 specifier|register
@@ -4496,6 +4562,21 @@ name|linebuf
 index|[
 name|n
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|line_lenp
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|line_lenp
+operator|=
+name|size_linebuf
+operator|-
+literal|1
+operator|-
+name|n
 expr_stmt|;
 return|return
 operator|(

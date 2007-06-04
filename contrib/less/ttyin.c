@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2004  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -330,16 +330,6 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
-name|int
-name|hex_in
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|hex_value
-init|=
-literal|0
-decl_stmt|;
 do|do
 block|{
 if|#
@@ -448,7 +438,7 @@ directive|if
 literal|0
 comment|/* allow entering arbitrary hex chars for testing */
 comment|/* ctrl-A followed by two hex chars makes a byte */
-block|if (c == CONTROL('A')) 		{ 			hex_in = 2; 			result = 0; 			continue; 		} 		if (hex_in> 0) 		{ 			int v; 			if (c>= '0'&& c<= '9') 				v = c - '0'; 			else if (c>= 'a'&& c<= 'f') 				v = c - 'a' + 10; 			else if (c>= 'A'&& c<= 'F') 				v = c - 'A' + 10; 			else 				hex_in = 0; 			hex_value = (hex_value<< 4) | v; 			if (--hex_in> 0) 			{ 				result = 0; 				continue; 			} 			c = hex_value; 		}
+block|{ 		int hex_in = 0; 		int hex_value = 0; 		if (c == CONTROL('A')) 		{ 			hex_in = 2; 			result = 0; 			continue; 		} 		if (hex_in> 0) 		{ 			int v; 			if (c>= '0'&& c<= '9') 				v = c - '0'; 			else if (c>= 'a'&& c<= 'f') 				v = c - 'a' + 10; 			else if (c>= 'A'&& c<= 'F') 				v = c - 'A' + 10; 			else 				hex_in = 0; 			hex_value = (hex_value<< 4) | v; 			if (--hex_in> 0) 			{ 				result = 0; 				continue; 			} 			c = hex_value; 		} 	}
 endif|#
 directive|endif
 comment|/* 		 * Various parts of the program cannot handle 		 * an input character of '\0'. 		 * If a '\0' was actually typed, convert it to '\340' here. 		 */

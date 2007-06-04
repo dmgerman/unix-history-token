@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2005  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -58,6 +58,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|public
+name|int
+name|at_prompt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|sigs
@@ -98,6 +105,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|is_tty
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|oldbot
 decl_stmt|;
 end_decl_stmt
 
@@ -1249,6 +1263,10 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
+name|at_prompt
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|c
@@ -1692,6 +1710,14 @@ operator|&&
 name|is_tty
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|oldbot
+condition|)
+name|squish_check
+argument_list|()
+expr_stmt|;
 name|at_exit
 argument_list|()
 expr_stmt|;

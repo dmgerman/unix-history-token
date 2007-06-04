@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2004  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -245,6 +245,16 @@ end_comment
 
 begin_decl_stmt
 name|public
+name|long
+name|jump_sline_fraction
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|public
 name|int
 name|chopline
 decl_stmt|;
@@ -340,6 +350,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Quit on interrupt */
+end_comment
+
+begin_decl_stmt
+name|public
+name|int
+name|oldbot
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Old bottom of screen behavior */
 end_comment
 
 begin_if
@@ -1025,6 +1046,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|optname
+name|oldbot_optname
+init|=
+block|{
+literal|"old-bot"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Table of all options and their semantics.  *  * For BOOL and TRIPLE options, odesc[0], odesc[1], odesc[2] are  * the description of the option when set to 0, 1 or 2, respectively.  * For NUMBER options, odesc[0] is the prompt to use when entering  * a new value, and odesc[1] is the description, which should contain   * one %d which is replaced by the value of the number.  * For STRING options, odesc[0] is the prompt to use when entering  * a new value, and odesc[1], if not NULL, is the set of characters  * that are valid in the string.  */
 end_comment
@@ -1129,7 +1164,7 @@ block|,
 block|{
 literal|"Repaint by scrolling from bottom of screen"
 block|,
-literal|"Repaint by clearing each line"
+literal|"Repaint by painting from top of screen"
 block|,
 literal|"Repaint by painting from top of screen"
 block|}
@@ -1353,19 +1388,18 @@ block|,
 operator|&
 name|j_optname
 block|,
-name|NUMBER
+name|STRING
 block|,
-literal|1
-block|,
-operator|&
-name|jump_sline
+literal|0
 block|,
 name|NULL
+block|,
+name|opt_j
 block|,
 block|{
 literal|"Target line: "
 block|,
-literal|"Position target at screen line %d"
+literal|"0123456789."
 block|,
 name|NULL
 block|}
@@ -2102,6 +2136,30 @@ block|{
 literal|"Use keypad mode"
 block|,
 literal|"Don't use keypad mode"
+block|,
+name|NULL
+block|}
+block|}
+block|,
+block|{
+literal|'.'
+block|,
+operator|&
+name|oldbot_optname
+block|,
+name|BOOL
+block|,
+name|OPT_OFF
+block|,
+operator|&
+name|oldbot
+block|,
+name|NULL
+block|,
+block|{
+literal|"Use new bottom of screen behavior"
+block|,
+literal|"Use old bottom of screen behavior"
 block|,
 name|NULL
 block|}

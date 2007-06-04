@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2004  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -78,6 +78,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|quit_on_intr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|jump_sline_fraction
 decl_stmt|;
 end_decl_stmt
 
@@ -235,13 +242,6 @@ expr_stmt|;
 name|sigs
 operator||=
 name|S_WINCH
-expr_stmt|;
-if|if
-condition|(
-name|reading
-condition|)
-name|intread
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -446,8 +446,8 @@ argument_list|,
 name|winch
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SIGWIND
@@ -476,8 +476,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}
@@ -739,6 +737,9 @@ literal|1
 operator|)
 operator|/
 literal|2
+expr_stmt|;
+name|calc_jump_sline
+argument_list|()
 expr_stmt|;
 name|screen_trashed
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2005  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -1328,6 +1328,9 @@ block|}
 if|#
 directive|if
 name|HAVE_LOCALE
+ifdef|#
+directive|ifdef
+name|CODESET
 comment|/* 	 * Try using the codeset name as the charset name. 	 */
 name|s
 operator|=
@@ -1346,6 +1349,8 @@ literal|1
 argument_list|)
 condition|)
 return|return;
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|#
@@ -2873,6 +2878,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Characters with general category values  *	Mn: Mark, Nonspacing  *	Me: Mark, Enclosing  * Last synched with  *<http://www.unicode.org/Public/5.0.0/ucd/UnicodeData-5.0.0d7.txt>  *	dated 2005-11-30T00:58:48Z  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -2882,679 +2891,963 @@ index|[]
 init|=
 block|{
 block|{
-literal|0x300
+literal|0x0300
 block|,
-literal|0x357
+literal|0x036F
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x35d
+literal|0x0483
 block|,
-literal|0x36f
+literal|0x0486
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x483
+literal|0x0488
 block|,
-literal|0x486
+literal|0x0489
 block|}
+comment|/* Me */
 block|,
 block|{
-literal|0x488
+literal|0x0591
 block|,
-literal|0x489
+literal|0x05BD
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x591
+literal|0x05BF
 block|,
-literal|0x5a1
+literal|0x05BF
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x5a3
+literal|0x05C1
 block|,
-literal|0x5b9
+literal|0x05C2
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x5bb
+literal|0x05C4
 block|,
-literal|0x5bd
+literal|0x05C5
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x5bf
+literal|0x05C7
 block|,
-literal|0x5bf
+literal|0x05C7
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x5c1
+literal|0x0610
 block|,
-literal|0x5c2
+literal|0x0615
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x5c4
+literal|0x064B
 block|,
-literal|0x5c4
+literal|0x065E
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x610
+literal|0x0670
 block|,
-literal|0x615
+literal|0x0670
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x64b
+literal|0x06D6
 block|,
-literal|0x658
+literal|0x06DC
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x670
+literal|0x06DE
 block|,
-literal|0x670
+literal|0x06DE
 block|}
+comment|/* Me */
 block|,
 block|{
-literal|0x6d6
+literal|0x06DF
 block|,
-literal|0x6dc
+literal|0x06E4
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x6de
+literal|0x06E7
 block|,
-literal|0x6e4
+literal|0x06E8
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x6e7
+literal|0x06EA
 block|,
-literal|0x6e8
+literal|0x06ED
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x6ea
+literal|0x0711
 block|,
-literal|0x6ed
+literal|0x0711
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x711
+literal|0x0730
 block|,
-literal|0x711
+literal|0x074A
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x730
+literal|0x07A6
 block|,
-literal|0x74a
+literal|0x07B0
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x7a6
+literal|0x07EB
 block|,
-literal|0x7b0
+literal|0x07F3
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x901
+literal|0x0901
 block|,
-literal|0x902
+literal|0x0902
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x93c
+literal|0x093C
 block|,
-literal|0x93c
+literal|0x093C
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x941
+literal|0x0941
 block|,
-literal|0x948
+literal|0x0948
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x94d
+literal|0x094D
 block|,
-literal|0x94d
+literal|0x094D
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x951
+literal|0x0951
 block|,
-literal|0x954
+literal|0x0954
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x962
+literal|0x0962
 block|,
-literal|0x963
+literal|0x0963
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x981
+literal|0x0981
 block|,
-literal|0x981
+literal|0x0981
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x9bc
+literal|0x09BC
 block|,
-literal|0x9bc
+literal|0x09BC
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x9c1
+literal|0x09C1
 block|,
-literal|0x9c4
+literal|0x09C4
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x9cd
+literal|0x09CD
 block|,
-literal|0x9cd
+literal|0x09CD
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x9e2
+literal|0x09E2
 block|,
-literal|0x9e3
+literal|0x09E3
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xa01
+literal|0x0A01
 block|,
-literal|0xa02
+literal|0x0A02
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xa3c
+literal|0x0A3C
 block|,
-literal|0xa3c
+literal|0x0A3C
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xa41
+literal|0x0A41
 block|,
-literal|0xa42
+literal|0x0A42
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xa47
+literal|0x0A47
 block|,
-literal|0xa48
+literal|0x0A48
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xa4b
+literal|0x0A4B
 block|,
-literal|0xa4d
+literal|0x0A4D
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xa70
+literal|0x0A70
 block|,
-literal|0xa71
+literal|0x0A71
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xa81
+literal|0x0A81
 block|,
-literal|0xa82
+literal|0x0A82
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xabc
+literal|0x0ABC
 block|,
-literal|0xabc
+literal|0x0ABC
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xac1
+literal|0x0AC1
 block|,
-literal|0xac5
+literal|0x0AC5
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xac7
+literal|0x0AC7
 block|,
-literal|0xac8
+literal|0x0AC8
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xacd
+literal|0x0ACD
 block|,
-literal|0xacd
+literal|0x0ACD
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xae2
+literal|0x0AE2
 block|,
-literal|0xae3
+literal|0x0AE3
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xb01
+literal|0x0B01
 block|,
-literal|0xb01
+literal|0x0B01
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xb3c
+literal|0x0B3C
 block|,
-literal|0xb3c
+literal|0x0B3C
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xb3f
+literal|0x0B3F
 block|,
-literal|0xb3f
+literal|0x0B3F
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xb41
+literal|0x0B41
 block|,
-literal|0xb43
+literal|0x0B43
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xb4d
+literal|0x0B4D
 block|,
-literal|0xb4d
+literal|0x0B4D
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xb56
+literal|0x0B56
 block|,
-literal|0xb56
+literal|0x0B56
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xb82
+literal|0x0B82
 block|,
-literal|0xb82
+literal|0x0B82
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xbc0
+literal|0x0BC0
 block|,
-literal|0xbc0
+literal|0x0BC0
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xbcd
+literal|0x0BCD
 block|,
-literal|0xbcd
+literal|0x0BCD
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xc3e
+literal|0x0C3E
 block|,
-literal|0xc40
+literal|0x0C40
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xc46
+literal|0x0C46
 block|,
-literal|0xc48
+literal|0x0C48
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xc4a
+literal|0x0C4A
 block|,
-literal|0xc4d
+literal|0x0C4D
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xc55
+literal|0x0C55
 block|,
-literal|0xc56
+literal|0x0C56
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xcbc
+literal|0x0CBC
 block|,
-literal|0xcbc
+literal|0x0CBC
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xcbf
+literal|0x0CBF
 block|,
-literal|0xcbf
+literal|0x0CBF
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xcc6
+literal|0x0CC6
 block|,
-literal|0xcc6
+literal|0x0CC6
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xccc
+literal|0x0CCC
 block|,
-literal|0xccd
+literal|0x0CCD
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xd41
+literal|0x0CE2
 block|,
-literal|0xd43
+literal|0x0CE3
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xd4d
+literal|0x0D41
 block|,
-literal|0xd4d
+literal|0x0D43
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xdca
+literal|0x0D4D
 block|,
-literal|0xdca
+literal|0x0D4D
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xdd2
+literal|0x0DCA
 block|,
-literal|0xdd4
+literal|0x0DCA
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xdd6
+literal|0x0DD2
 block|,
-literal|0xdd6
+literal|0x0DD4
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xe31
+literal|0x0DD6
 block|,
-literal|0xe31
+literal|0x0DD6
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xe34
+literal|0x0E31
 block|,
-literal|0xe3a
+literal|0x0E31
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xe47
+literal|0x0E34
 block|,
-literal|0xe4e
+literal|0x0E3A
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xeb1
+literal|0x0E47
 block|,
-literal|0xeb1
+literal|0x0E4E
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xeb4
+literal|0x0EB1
 block|,
-literal|0xeb9
+literal|0x0EB1
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xebb
+literal|0x0EB4
 block|,
-literal|0xebc
+literal|0x0EB9
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xec8
+literal|0x0EBB
 block|,
-literal|0xecd
+literal|0x0EBC
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xf18
+literal|0x0EC8
 block|,
-literal|0xf19
+literal|0x0ECD
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xf35
+literal|0x0F18
 block|,
-literal|0xf35
+literal|0x0F19
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xf37
+literal|0x0F35
 block|,
-literal|0xf37
+literal|0x0F35
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xf39
+literal|0x0F37
 block|,
-literal|0xf39
+literal|0x0F37
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xf71
+literal|0x0F39
 block|,
-literal|0xf7e
+literal|0x0F39
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xf80
+literal|0x0F71
 block|,
-literal|0xf84
+literal|0x0F7E
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xf86
+literal|0x0F80
 block|,
-literal|0xf87
+literal|0x0F84
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xf90
+literal|0x0F86
 block|,
-literal|0xf97
+literal|0x0F87
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xf99
+literal|0x0F90
 block|,
-literal|0xfbc
+literal|0x0F97
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xfc6
+literal|0x0F99
 block|,
-literal|0xfc6
+literal|0x0FBC
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x102d
+literal|0x0FC6
+block|,
+literal|0x0FC6
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x102D
 block|,
 literal|0x1030
 block|}
+comment|/* Mn */
 block|,
 block|{
 literal|0x1032
 block|,
 literal|0x1032
 block|}
+comment|/* Mn */
 block|,
 block|{
 literal|0x1036
 block|,
 literal|0x1037
 block|}
+comment|/* Mn */
 block|,
 block|{
 literal|0x1039
 block|,
 literal|0x1039
 block|}
+comment|/* Mn */
 block|,
 block|{
 literal|0x1058
 block|,
 literal|0x1059
 block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x135F
+block|,
+literal|0x135F
+block|}
+comment|/* Mn */
 block|,
 block|{
 literal|0x1712
 block|,
 literal|0x1714
 block|}
+comment|/* Mn */
 block|,
 block|{
 literal|0x1732
 block|,
 literal|0x1734
 block|}
+comment|/* Mn */
 block|,
 block|{
 literal|0x1752
 block|,
 literal|0x1753
 block|}
+comment|/* Mn */
 block|,
 block|{
 literal|0x1772
 block|,
 literal|0x1773
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x17b7
+literal|0x17B7
 block|,
-literal|0x17bd
+literal|0x17BD
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x17c6
+literal|0x17C6
 block|,
-literal|0x17c6
+literal|0x17C6
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x17c9
+literal|0x17C9
 block|,
-literal|0x17d3
+literal|0x17D3
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x17dd
+literal|0x17DD
 block|,
-literal|0x17dd
+literal|0x17DD
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x180b
+literal|0x180B
 block|,
-literal|0x180d
+literal|0x180D
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x18a9
+literal|0x18A9
 block|,
-literal|0x18a9
+literal|0x18A9
 block|}
+comment|/* Mn */
 block|,
 block|{
 literal|0x1920
 block|,
 literal|0x1922
 block|}
+comment|/* Mn */
 block|,
 block|{
 literal|0x1927
 block|,
 literal|0x1928
 block|}
+comment|/* Mn */
 block|,
 block|{
 literal|0x1932
 block|,
 literal|0x1932
 block|}
+comment|/* Mn */
 block|,
 block|{
 literal|0x1939
 block|,
-literal|0x193b
+literal|0x193B
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x20d0
+literal|0x1A17
 block|,
-literal|0x20ea
+literal|0x1A18
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x302a
+literal|0x1B00
 block|,
-literal|0x302f
+literal|0x1B03
 block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x1B34
+block|,
+literal|0x1B34
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x1B36
+block|,
+literal|0x1B3A
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x1B3C
+block|,
+literal|0x1B3C
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x1B42
+block|,
+literal|0x1B42
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x1B6B
+block|,
+literal|0x1B73
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x1DC0
+block|,
+literal|0x1DCA
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x1DFE
+block|,
+literal|0x1DFF
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x20D0
+block|,
+literal|0x20DC
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x20DD
+block|,
+literal|0x20E0
+block|}
+comment|/* Me */
+block|,
+block|{
+literal|0x20E1
+block|,
+literal|0x20E1
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x20E2
+block|,
+literal|0x20E4
+block|}
+comment|/* Me */
+block|,
+block|{
+literal|0x20E5
+block|,
+literal|0x20EF
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x302A
+block|,
+literal|0x302F
+block|}
+comment|/* Mn */
 block|,
 block|{
 literal|0x3099
 block|,
-literal|0x309a
+literal|0x309A
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xfb1e
+literal|0xA806
 block|,
-literal|0xfb1e
+literal|0xA806
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xfe00
+literal|0xA80B
 block|,
-literal|0xfe0f
+literal|0xA80B
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xfe20
+literal|0xA825
 block|,
-literal|0xfe23
+literal|0xA826
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x1d167
+literal|0xFB1E
 block|,
-literal|0x1d169
+literal|0xFB1E
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x1d17b
+literal|0xFE00
 block|,
-literal|0x1d182
+literal|0xFE0F
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x1d185
+literal|0xFE20
 block|,
-literal|0x1d18b
+literal|0xFE23
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0x1d1aa
+literal|0x10A01
 block|,
-literal|0x1d1ad
+literal|0x10A03
 block|}
+comment|/* Mn */
 block|,
 block|{
-literal|0xe0100
+literal|0x10A05
 block|,
-literal|0xe01ef
+literal|0x10A06
 block|}
-block|,  }
+comment|/* Mn */
+block|,
+block|{
+literal|0x10A0C
+block|,
+literal|0x10A0F
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x10A38
+block|,
+literal|0x10A3A
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x10A3F
+block|,
+literal|0x10A3F
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x1D167
+block|,
+literal|0x1D169
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x1D17B
+block|,
+literal|0x1D182
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x1D185
+block|,
+literal|0x1D18B
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x1D1AA
+block|,
+literal|0x1D1AD
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0x1D242
+block|,
+literal|0x1D244
+block|}
+comment|/* Mn */
+block|,
+block|{
+literal|0xE0100
+block|,
+literal|0xE01EF
+block|}
+comment|/* Mn */
+block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Special pairs, not ranges.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -3587,12 +3880,12 @@ literal|0x0644
 block|,
 literal|0x0627
 block|}
-block|,  }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Characters with general category values  *	Cc: Other, Control  *	Cf: Other, Format  *	Cs: Other, Surrogate  *	Co: Other, Private Use  *	Cn: Other, Not Assigned  *	Zl: Separator, Line  *	Zp: Separator, Paragraph  */
+comment|/*  * Characters with general category values  *	Cc: Other, Control  *	Cf: Other, Format  *	Cs: Other, Surrogate  *	Co: Other, Private Use  *	Cn: Other, Not Assigned  *	Zl: Separator, Line  *	Zp: Separator, Paragraph  * Last synched with  *<http://www.unicode.org/Public/5.0.0/ucd/UnicodeData-5.0.0d7.txt>  *	dated 2005-11-30T00:58:48Z  */
 end_comment
 
 begin_decl_stmt
@@ -3606,39 +3899,25 @@ block|{
 block|{
 literal|0x0000
 block|,
-literal|0x001f
+literal|0x001F
 block|}
 comment|/* Cc */
 block|,
 block|{
-literal|0x007f
+literal|0x007F
 block|,
-literal|0x009f
+literal|0x009F
 block|}
 comment|/* Cc */
 block|,
 if|#
 directive|if
 literal|0
-block|{  0x00ad,  0x00ad}
+block|{  0x00AD,  0x00AD}
 comment|/* Cf */
 block|,
 endif|#
 directive|endif
-block|{
-literal|0x0237
-block|,
-literal|0x024f
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x0358
-block|,
-literal|0x035c
-block|}
-comment|/* Cn */
-block|,
 block|{
 literal|0x0370
 block|,
@@ -3654,51 +3933,37 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x037b
-block|,
-literal|0x037d
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x037f
+literal|0x037F
 block|,
 literal|0x0383
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x038b
+literal|0x038B
 block|,
-literal|0x038b
+literal|0x038B
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x038d
+literal|0x038D
 block|,
-literal|0x038d
+literal|0x038D
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x03a2
+literal|0x03A2
 block|,
-literal|0x03a2
+literal|0x03A2
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x03cf
+literal|0x03CF
 block|,
-literal|0x03cf
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x03fc
-block|,
-literal|0x03ff
+literal|0x03CF
 block|}
 comment|/* Cn */
 block|,
@@ -3710,28 +3975,7 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x04cf
-block|,
-literal|0x04cf
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x04f6
-block|,
-literal|0x04f7
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x04fa
-block|,
-literal|0x04ff
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x0510
+literal|0x0514
 block|,
 literal|0x0530
 block|}
@@ -3759,44 +4003,30 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x058b
+literal|0x058B
 block|,
 literal|0x0590
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x05a2
+literal|0x05C8
 block|,
-literal|0x05a2
+literal|0x05CF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x05ba
+literal|0x05EB
 block|,
-literal|0x05ba
+literal|0x05EF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x05c5
+literal|0x05F5
 block|,
-literal|0x05cf
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x05eb
-block|,
-literal|0x05ef
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x05f5
-block|,
-literal|0x05ff
+literal|0x05FF
 block|}
 comment|/* Cn */
 block|,
@@ -3811,21 +4041,21 @@ directive|endif
 block|{
 literal|0x0604
 block|,
-literal|0x060b
+literal|0x060A
 block|}
 comment|/* Cn */
 block|,
 block|{
 literal|0x0616
 block|,
-literal|0x061a
+literal|0x061A
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x061c
+literal|0x061C
 block|,
-literal|0x061e
+literal|0x061D
 block|}
 comment|/* Cn */
 block|,
@@ -3837,74 +4067,81 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x063b
+literal|0x063B
 block|,
-literal|0x063f
+literal|0x063F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0659
+literal|0x065F
 block|,
-literal|0x065f
-block|}
-comment|/* Cn */
-block|,
-if|#
-directive|if
-literal|0
-block|{  0x06dd,  0x06dd}
-comment|/* Cf */
-block|,
-endif|#
-directive|endif
-block|{
-literal|0x070e
-block|,
-literal|0x070e
+literal|0x065F
 block|}
 comment|/* Cn */
 block|,
 if|#
 directive|if
 literal|0
-block|{  0x070f,  0x070f}
+block|{  0x06DD,  0x06DD}
 comment|/* Cf */
 block|,
 endif|#
 directive|endif
 block|{
-literal|0x074b
+literal|0x070E
 block|,
-literal|0x074c
+literal|0x070E
+block|}
+comment|/* Cn */
+block|,
+if|#
+directive|if
+literal|0
+block|{  0x070F,  0x070F}
+comment|/* Cf */
+block|,
+endif|#
+directive|endif
+block|{
+literal|0x074B
+block|,
+literal|0x074C
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0750
+literal|0x076E
 block|,
-literal|0x077f
+literal|0x077F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x07b2
+literal|0x07B2
+block|,
+literal|0x07BF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x07FB
 block|,
 literal|0x0900
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x093a
+literal|0x093A
 block|,
-literal|0x093b
+literal|0x093B
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x094e
+literal|0x094E
 block|,
-literal|0x094f
+literal|0x094F
 block|}
 comment|/* Cn */
 block|,
@@ -3918,6 +4155,13 @@ block|,
 block|{
 literal|0x0971
 block|,
+literal|0x097A
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x0980
+block|,
 literal|0x0980
 block|}
 comment|/* Cn */
@@ -3930,9 +4174,9 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x098d
+literal|0x098D
 block|,
-literal|0x098e
+literal|0x098E
 block|}
 comment|/* Cn */
 block|,
@@ -3944,1010 +4188,1010 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x09a9
+literal|0x09A9
 block|,
-literal|0x09a9
+literal|0x09A9
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x09b1
+literal|0x09B1
 block|,
-literal|0x09b1
+literal|0x09B1
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x09b3
+literal|0x09B3
 block|,
-literal|0x09b5
+literal|0x09B5
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x09ba
+literal|0x09BA
 block|,
-literal|0x09bb
+literal|0x09BB
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x09c5
+literal|0x09C5
 block|,
-literal|0x09c6
+literal|0x09C6
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x09c9
+literal|0x09C9
 block|,
-literal|0x09ca
+literal|0x09CA
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x09ce
+literal|0x09CF
 block|,
-literal|0x09d6
+literal|0x09D6
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x09d8
+literal|0x09D8
 block|,
-literal|0x09db
+literal|0x09DB
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x09de
+literal|0x09DE
 block|,
-literal|0x09de
+literal|0x09DE
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x09e4
+literal|0x09E4
 block|,
-literal|0x09e5
+literal|0x09E5
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x09fb
+literal|0x09FB
 block|,
-literal|0x0a00
+literal|0x0A00
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a04
+literal|0x0A04
 block|,
-literal|0x0a04
+literal|0x0A04
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a0b
+literal|0x0A0B
 block|,
-literal|0x0a0e
+literal|0x0A0E
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a11
+literal|0x0A11
 block|,
-literal|0x0a12
+literal|0x0A12
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a29
+literal|0x0A29
 block|,
-literal|0x0a29
+literal|0x0A29
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a31
+literal|0x0A31
 block|,
-literal|0x0a31
+literal|0x0A31
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a34
+literal|0x0A34
 block|,
-literal|0x0a34
+literal|0x0A34
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a37
+literal|0x0A37
 block|,
-literal|0x0a37
+literal|0x0A37
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a3a
+literal|0x0A3A
 block|,
-literal|0x0a3b
+literal|0x0A3B
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a3d
+literal|0x0A3D
 block|,
-literal|0x0a3d
+literal|0x0A3D
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a43
+literal|0x0A43
 block|,
-literal|0x0a46
+literal|0x0A46
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a49
+literal|0x0A49
 block|,
-literal|0x0a4a
+literal|0x0A4A
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a4e
+literal|0x0A4E
 block|,
-literal|0x0a58
+literal|0x0A58
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a5d
+literal|0x0A5D
 block|,
-literal|0x0a5d
+literal|0x0A5D
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a5f
+literal|0x0A5F
 block|,
-literal|0x0a65
+literal|0x0A65
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a75
+literal|0x0A75
 block|,
-literal|0x0a80
+literal|0x0A80
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a84
+literal|0x0A84
 block|,
-literal|0x0a84
+literal|0x0A84
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a8e
+literal|0x0A8E
 block|,
-literal|0x0a8e
+literal|0x0A8E
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0a92
+literal|0x0A92
 block|,
-literal|0x0a92
+literal|0x0A92
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0aa9
+literal|0x0AA9
 block|,
-literal|0x0aa9
+literal|0x0AA9
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ab1
+literal|0x0AB1
 block|,
-literal|0x0ab1
+literal|0x0AB1
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ab4
+literal|0x0AB4
 block|,
-literal|0x0ab4
+literal|0x0AB4
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0aba
+literal|0x0ABA
 block|,
-literal|0x0abb
+literal|0x0ABB
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ac6
+literal|0x0AC6
 block|,
-literal|0x0ac6
+literal|0x0AC6
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0aca
+literal|0x0ACA
 block|,
-literal|0x0aca
+literal|0x0ACA
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ace
+literal|0x0ACE
 block|,
-literal|0x0acf
+literal|0x0ACF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ad1
+literal|0x0AD1
 block|,
-literal|0x0adf
+literal|0x0ADF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ae4
+literal|0x0AE4
 block|,
-literal|0x0ae5
+literal|0x0AE5
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0af0
+literal|0x0AF0
 block|,
-literal|0x0af0
+literal|0x0AF0
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0af2
+literal|0x0AF2
 block|,
-literal|0x0b00
+literal|0x0B00
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b04
+literal|0x0B04
 block|,
-literal|0x0b04
+literal|0x0B04
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b0d
+literal|0x0B0D
 block|,
-literal|0x0b0e
+literal|0x0B0E
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b11
+literal|0x0B11
 block|,
-literal|0x0b12
+literal|0x0B12
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b29
+literal|0x0B29
 block|,
-literal|0x0b29
+literal|0x0B29
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b31
+literal|0x0B31
 block|,
-literal|0x0b31
+literal|0x0B31
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b34
+literal|0x0B34
 block|,
-literal|0x0b34
+literal|0x0B34
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b3a
+literal|0x0B3A
 block|,
-literal|0x0b3b
+literal|0x0B3B
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b44
+literal|0x0B44
 block|,
-literal|0x0b46
+literal|0x0B46
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b49
+literal|0x0B49
 block|,
-literal|0x0b4a
+literal|0x0B4A
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b4e
+literal|0x0B4E
 block|,
-literal|0x0b55
+literal|0x0B55
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b58
+literal|0x0B58
 block|,
-literal|0x0b5b
+literal|0x0B5B
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b5e
+literal|0x0B5E
 block|,
-literal|0x0b5e
+literal|0x0B5E
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b62
+literal|0x0B62
 block|,
-literal|0x0b65
+literal|0x0B65
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b72
+literal|0x0B72
 block|,
-literal|0x0b81
+literal|0x0B81
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b84
+literal|0x0B84
 block|,
-literal|0x0b84
+literal|0x0B84
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b8b
+literal|0x0B8B
 block|,
-literal|0x0b8d
+literal|0x0B8D
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b91
+literal|0x0B91
 block|,
-literal|0x0b91
+literal|0x0B91
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b96
+literal|0x0B96
 block|,
-literal|0x0b98
+literal|0x0B98
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b9b
+literal|0x0B9B
 block|,
-literal|0x0b9b
+literal|0x0B9B
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0b9d
+literal|0x0B9D
 block|,
-literal|0x0b9d
+literal|0x0B9D
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ba0
+literal|0x0BA0
 block|,
-literal|0x0ba2
+literal|0x0BA2
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ba5
+literal|0x0BA5
 block|,
-literal|0x0ba7
+literal|0x0BA7
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0bab
+literal|0x0BAB
 block|,
-literal|0x0bad
+literal|0x0BAD
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0bb6
+literal|0x0BBA
 block|,
-literal|0x0bb6
+literal|0x0BBD
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0bba
+literal|0x0BC3
 block|,
-literal|0x0bbd
+literal|0x0BC5
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0bc3
+literal|0x0BC9
 block|,
-literal|0x0bc5
+literal|0x0BC9
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0bc9
+literal|0x0BCE
 block|,
-literal|0x0bc9
+literal|0x0BD6
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0bce
+literal|0x0BD8
 block|,
-literal|0x0bd6
+literal|0x0BE5
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0bd8
+literal|0x0BFB
 block|,
-literal|0x0be6
+literal|0x0C00
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0bfb
+literal|0x0C04
 block|,
-literal|0x0c00
+literal|0x0C04
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c04
+literal|0x0C0D
 block|,
-literal|0x0c04
+literal|0x0C0D
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c0d
+literal|0x0C11
 block|,
-literal|0x0c0d
+literal|0x0C11
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c11
+literal|0x0C29
 block|,
-literal|0x0c11
+literal|0x0C29
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c29
+literal|0x0C34
 block|,
-literal|0x0c29
+literal|0x0C34
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c34
+literal|0x0C3A
 block|,
-literal|0x0c34
+literal|0x0C3D
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c3a
+literal|0x0C45
 block|,
-literal|0x0c3d
+literal|0x0C45
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c45
+literal|0x0C49
 block|,
-literal|0x0c45
+literal|0x0C49
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c49
+literal|0x0C4E
 block|,
-literal|0x0c49
+literal|0x0C54
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c4e
+literal|0x0C57
 block|,
-literal|0x0c54
+literal|0x0C5F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c57
+literal|0x0C62
 block|,
-literal|0x0c5f
+literal|0x0C65
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c62
+literal|0x0C70
 block|,
-literal|0x0c65
+literal|0x0C81
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c70
+literal|0x0C84
 block|,
-literal|0x0c81
+literal|0x0C84
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c84
+literal|0x0C8D
 block|,
-literal|0x0c84
+literal|0x0C8D
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c8d
+literal|0x0C91
 block|,
-literal|0x0c8d
+literal|0x0C91
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0c91
+literal|0x0CA9
 block|,
-literal|0x0c91
+literal|0x0CA9
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ca9
+literal|0x0CB4
 block|,
-literal|0x0ca9
+literal|0x0CB4
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0cb4
+literal|0x0CBA
 block|,
-literal|0x0cb4
+literal|0x0CBB
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0cba
+literal|0x0CC5
 block|,
-literal|0x0cbb
+literal|0x0CC5
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0cc5
+literal|0x0CC9
 block|,
-literal|0x0cc5
+literal|0x0CC9
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0cc9
+literal|0x0CCE
 block|,
-literal|0x0cc9
+literal|0x0CD4
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0cce
+literal|0x0CD7
 block|,
-literal|0x0cd4
+literal|0x0CDD
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0cd7
+literal|0x0CDF
 block|,
-literal|0x0cdd
+literal|0x0CDF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0cdf
+literal|0x0CE4
 block|,
-literal|0x0cdf
+literal|0x0CE5
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ce2
+literal|0x0CF0
 block|,
-literal|0x0ce5
+literal|0x0CF0
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0cf0
+literal|0x0CF3
 block|,
-literal|0x0d01
+literal|0x0D01
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0d04
+literal|0x0D04
 block|,
-literal|0x0d04
+literal|0x0D04
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0d0d
+literal|0x0D0D
 block|,
-literal|0x0d0d
+literal|0x0D0D
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0d11
+literal|0x0D11
 block|,
-literal|0x0d11
+literal|0x0D11
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0d29
+literal|0x0D29
 block|,
-literal|0x0d29
+literal|0x0D29
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0d3a
+literal|0x0D3A
 block|,
-literal|0x0d3d
+literal|0x0D3D
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0d44
+literal|0x0D44
 block|,
-literal|0x0d45
+literal|0x0D45
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0d49
+literal|0x0D49
 block|,
-literal|0x0d49
+literal|0x0D49
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0d4e
+literal|0x0D4E
 block|,
-literal|0x0d56
+literal|0x0D56
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0d58
+literal|0x0D58
 block|,
-literal|0x0d5f
+literal|0x0D5F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0d62
+literal|0x0D62
 block|,
-literal|0x0d65
+literal|0x0D65
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0d70
+literal|0x0D70
 block|,
-literal|0x0d81
+literal|0x0D81
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0d84
+literal|0x0D84
 block|,
-literal|0x0d84
+literal|0x0D84
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0d97
+literal|0x0D97
 block|,
-literal|0x0d99
+literal|0x0D99
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0db2
+literal|0x0DB2
 block|,
-literal|0x0db2
+literal|0x0DB2
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0dbc
+literal|0x0DBC
 block|,
-literal|0x0dbc
+literal|0x0DBC
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0dbe
+literal|0x0DBE
 block|,
-literal|0x0dbf
+literal|0x0DBF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0dc7
+literal|0x0DC7
 block|,
-literal|0x0dc9
+literal|0x0DC9
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0dcb
+literal|0x0DCB
 block|,
-literal|0x0dce
+literal|0x0DCE
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0dd5
+literal|0x0DD5
 block|,
-literal|0x0dd5
+literal|0x0DD5
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0dd7
+literal|0x0DD7
 block|,
-literal|0x0dd7
+literal|0x0DD7
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0de0
+literal|0x0DE0
 block|,
-literal|0x0df1
+literal|0x0DF1
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0df5
+literal|0x0DF5
 block|,
-literal|0x0e00
+literal|0x0E00
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0e3b
+literal|0x0E3B
 block|,
-literal|0x0e3e
+literal|0x0E3E
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0e5c
+literal|0x0E5C
 block|,
-literal|0x0e80
+literal|0x0E80
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0e83
+literal|0x0E83
 block|,
-literal|0x0e83
+literal|0x0E83
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0e85
+literal|0x0E85
 block|,
-literal|0x0e86
+literal|0x0E86
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0e89
+literal|0x0E89
 block|,
-literal|0x0e89
+literal|0x0E89
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0e8b
+literal|0x0E8B
 block|,
-literal|0x0e8c
+literal|0x0E8C
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0e8e
+literal|0x0E8E
 block|,
-literal|0x0e93
+literal|0x0E93
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0e98
+literal|0x0E98
 block|,
-literal|0x0e98
+literal|0x0E98
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ea0
+literal|0x0EA0
 block|,
-literal|0x0ea0
+literal|0x0EA0
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ea4
+literal|0x0EA4
 block|,
-literal|0x0ea4
+literal|0x0EA4
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ea6
+literal|0x0EA6
 block|,
-literal|0x0ea6
+literal|0x0EA6
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ea8
+literal|0x0EA8
 block|,
-literal|0x0ea9
+literal|0x0EA9
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0eac
+literal|0x0EAC
 block|,
-literal|0x0eac
+literal|0x0EAC
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0eba
+literal|0x0EBA
 block|,
-literal|0x0eba
+literal|0x0EBA
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ebe
+literal|0x0EBE
 block|,
-literal|0x0ebf
+literal|0x0EBF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ec5
+literal|0x0EC5
 block|,
-literal|0x0ec5
+literal|0x0EC5
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ec7
+literal|0x0EC7
 block|,
-literal|0x0ec7
+literal|0x0EC7
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ece
+literal|0x0ECE
 block|,
-literal|0x0ecf
+literal|0x0ECF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0eda
+literal|0x0EDA
 block|,
-literal|0x0edb
+literal|0x0EDB
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0ede
+literal|0x0EDE
 block|,
-literal|0x0eff
+literal|0x0EFF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0f48
+literal|0x0F48
 block|,
-literal|0x0f48
+literal|0x0F48
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0f6b
+literal|0x0F6B
 block|,
-literal|0x0f70
+literal|0x0F70
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0f8c
+literal|0x0F8C
 block|,
-literal|0x0f8f
+literal|0x0F8F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0f98
+literal|0x0F98
 block|,
-literal|0x0f98
+literal|0x0F98
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0fbd
+literal|0x0FBD
 block|,
-literal|0x0fbd
+literal|0x0FBD
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0fcd
+literal|0x0FCD
 block|,
-literal|0x0fce
+literal|0x0FCE
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x0fd0
+literal|0x0FD2
 block|,
-literal|0x0fff
+literal|0x0FFF
 block|}
 comment|/* Cn */
 block|,
@@ -4966,9 +5210,9 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x102b
+literal|0x102B
 block|,
-literal|0x102b
+literal|0x102B
 block|}
 comment|/* Cn */
 block|,
@@ -4980,72 +5224,51 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x103a
+literal|0x103A
 block|,
-literal|0x103f
+literal|0x103F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x105a
+literal|0x105A
 block|,
-literal|0x109f
+literal|0x109F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x10c6
+literal|0x10C6
 block|,
-literal|0x10cf
+literal|0x10CF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x10f9
+literal|0x10FD
 block|,
-literal|0x10fa
+literal|0x10FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x10fc
+literal|0x115A
 block|,
-literal|0x10ff
+literal|0x115E
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x115a
+literal|0x11A3
 block|,
-literal|0x115e
+literal|0x11A7
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x11a3
+literal|0x11FA
 block|,
-literal|0x11a7
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x11fa
-block|,
-literal|0x11ff
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x1207
-block|,
-literal|0x1207
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x1247
-block|,
-literal|0x1247
+literal|0x11FF
 block|}
 comment|/* Cn */
 block|,
@@ -5057,9 +5280,9 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x124e
+literal|0x124E
 block|,
-literal|0x124f
+literal|0x124F
 block|}
 comment|/* Cn */
 block|,
@@ -5078,16 +5301,9 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x125e
+literal|0x125E
 block|,
-literal|0x125f
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x1287
-block|,
-literal|0x1287
+literal|0x125F
 block|}
 comment|/* Cn */
 block|,
@@ -5099,79 +5315,51 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x128e
+literal|0x128E
 block|,
-literal|0x128f
+literal|0x128F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x12af
+literal|0x12B1
 block|,
-literal|0x12af
+literal|0x12B1
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x12b1
+literal|0x12B6
 block|,
-literal|0x12b1
+literal|0x12B7
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x12b6
+literal|0x12BF
 block|,
-literal|0x12b7
+literal|0x12BF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x12bf
+literal|0x12C1
 block|,
-literal|0x12bf
+literal|0x12C1
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x12c1
+literal|0x12C6
 block|,
-literal|0x12c1
+literal|0x12C7
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x12c6
+literal|0x12D7
 block|,
-literal|0x12c7
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x12cf
-block|,
-literal|0x12cf
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x12d7
-block|,
-literal|0x12d7
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x12ef
-block|,
-literal|0x12ef
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x130f
-block|,
-literal|0x130f
+literal|0x12D7
 block|}
 comment|/* Cn */
 block|,
@@ -5190,35 +5378,28 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x131f
+literal|0x135B
 block|,
-literal|0x131f
+literal|0x135E
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1347
+literal|0x137D
 block|,
-literal|0x1347
+literal|0x137F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x135b
+literal|0x139A
 block|,
-literal|0x1360
+literal|0x139F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x137d
-block|,
-literal|0x139f
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x13f5
+literal|0x13F5
 block|,
 literal|0x1400
 block|}
@@ -5227,56 +5408,56 @@ block|,
 block|{
 literal|0x1677
 block|,
-literal|0x167f
+literal|0x167F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x169d
+literal|0x169D
 block|,
-literal|0x169f
+literal|0x169F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x16f1
+literal|0x16F1
 block|,
-literal|0x16ff
+literal|0x16FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x170d
+literal|0x170D
 block|,
-literal|0x170d
+literal|0x170D
 block|}
 comment|/* Cn */
 block|,
 block|{
 literal|0x1715
 block|,
-literal|0x171f
+literal|0x171F
 block|}
 comment|/* Cn */
 block|,
 block|{
 literal|0x1737
 block|,
-literal|0x173f
+literal|0x173F
 block|}
 comment|/* Cn */
 block|,
 block|{
 literal|0x1754
 block|,
-literal|0x175f
+literal|0x175F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x176d
+literal|0x176D
 block|,
-literal|0x176d
+literal|0x176D
 block|}
 comment|/* Cn */
 block|,
@@ -5290,85 +5471,85 @@ block|,
 block|{
 literal|0x1774
 block|,
-literal|0x177f
+literal|0x177F
 block|}
 comment|/* Cn */
 block|,
 if|#
 directive|if
 literal|0
-block|{  0x17b4,  0x17b5}
+block|{  0x17B4,  0x17B5}
 comment|/* Cf */
 block|,
 endif|#
 directive|endif
 block|{
-literal|0x17de
+literal|0x17DE
 block|,
-literal|0x17df
+literal|0x17DF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x17ea
+literal|0x17EA
 block|,
-literal|0x17ef
+literal|0x17EF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x17fa
+literal|0x17FA
 block|,
-literal|0x17ff
+literal|0x17FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x180f
+literal|0x180F
 block|,
-literal|0x180f
+literal|0x180F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x181a
+literal|0x181A
 block|,
-literal|0x181f
+literal|0x181F
 block|}
 comment|/* Cn */
 block|,
 block|{
 literal|0x1878
 block|,
-literal|0x187f
+literal|0x187F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x18aa
+literal|0x18AA
 block|,
-literal|0x18ff
+literal|0x18FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x191d
+literal|0x191D
 block|,
-literal|0x191f
+literal|0x191F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x192c
+literal|0x192C
 block|,
-literal|0x192f
+literal|0x192F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x193c
+literal|0x193C
 block|,
-literal|0x193f
+literal|0x193F
 block|}
 comment|/* Cn */
 block|,
@@ -5380,163 +5561,205 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x196e
+literal|0x196E
 block|,
-literal|0x196f
+literal|0x196F
 block|}
 comment|/* Cn */
 block|,
 block|{
 literal|0x1975
 block|,
-literal|0x19df
+literal|0x197F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1a00
+literal|0x19AA
 block|,
-literal|0x1cff
+literal|0x19AF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d6c
+literal|0x19CA
 block|,
-literal|0x1dff
+literal|0x19CF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1e9c
+literal|0x19DA
 block|,
-literal|0x1e9f
+literal|0x19DD
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1efa
+literal|0x1A1C
 block|,
-literal|0x1eff
+literal|0x1A1D
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1f16
+literal|0x1A20
 block|,
-literal|0x1f17
+literal|0x1AFF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1f1e
+literal|0x1B4C
 block|,
-literal|0x1f1f
+literal|0x1B4F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1f46
+literal|0x1B7D
 block|,
-literal|0x1f47
+literal|0x1CFF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1f4e
+literal|0x1DCB
 block|,
-literal|0x1f4f
+literal|0x1DFD
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1f58
+literal|0x1E9C
 block|,
-literal|0x1f58
+literal|0x1E9F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1f5a
+literal|0x1EFA
 block|,
-literal|0x1f5a
+literal|0x1EFF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1f5c
+literal|0x1F16
 block|,
-literal|0x1f5c
+literal|0x1F17
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1f5e
+literal|0x1F1E
 block|,
-literal|0x1f5e
+literal|0x1F1F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1f7e
+literal|0x1F46
 block|,
-literal|0x1f7f
+literal|0x1F47
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1fb5
+literal|0x1F4E
 block|,
-literal|0x1fb5
+literal|0x1F4F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1fc5
+literal|0x1F58
 block|,
-literal|0x1fc5
+literal|0x1F58
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1fd4
+literal|0x1F5A
 block|,
-literal|0x1fd5
+literal|0x1F5A
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1fdc
+literal|0x1F5C
 block|,
-literal|0x1fdc
+literal|0x1F5C
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1ff0
+literal|0x1F5E
 block|,
-literal|0x1ff1
+literal|0x1F5E
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1ff5
+literal|0x1F7E
 block|,
-literal|0x1ff5
+literal|0x1F7F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1fff
+literal|0x1FB5
 block|,
-literal|0x1fff
+literal|0x1FB5
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x200b
+literal|0x1FC5
 block|,
-literal|0x200f
+literal|0x1FC5
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x1FD4
+block|,
+literal|0x1FD5
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x1FDC
+block|,
+literal|0x1FDC
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x1FF0
+block|,
+literal|0x1FF1
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x1FF5
+block|,
+literal|0x1FF5
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x1FFF
+block|,
+literal|0x1FFF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x200B
+block|,
+literal|0x200F
 block|}
 comment|/* Cf */
 block|,
@@ -5555,25 +5778,11 @@ block|}
 comment|/* Zp */
 block|,
 block|{
-literal|0x202a
+literal|0x202A
 block|,
-literal|0x202e
+literal|0x202E
 block|}
 comment|/* Cf */
-block|,
-block|{
-literal|0x2055
-block|,
-literal|0x2056
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x2058
-block|,
-literal|0x205e
-block|}
-comment|/* Cn */
 block|,
 block|{
 literal|0x2060
@@ -5590,9 +5799,9 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x206a
+literal|0x206A
 block|,
-literal|0x206f
+literal|0x206F
 block|}
 comment|/* Cf */
 block|,
@@ -5604,91 +5813,77 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x208f
+literal|0x208F
 block|,
-literal|0x209f
+literal|0x208F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x20b2
+literal|0x2095
 block|,
-literal|0x20cf
+literal|0x209F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x20eb
+literal|0x20B6
 block|,
-literal|0x20ff
+literal|0x20CF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x213c
+literal|0x20F0
 block|,
-literal|0x213c
+literal|0x20FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x214c
+literal|0x214F
 block|,
 literal|0x2152
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x2184
+literal|0x2185
 block|,
-literal|0x218f
+literal|0x218F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x23d1
+literal|0x23E8
 block|,
-literal|0x23ff
+literal|0x23FF
 block|}
 comment|/* Cn */
 block|,
 block|{
 literal|0x2427
 block|,
-literal|0x243f
+literal|0x243F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x244b
+literal|0x244B
 block|,
-literal|0x245f
+literal|0x245F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x2618
+literal|0x269D
 block|,
-literal|0x2618
+literal|0x269F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x267e
-block|,
-literal|0x267f
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x2692
-block|,
-literal|0x269f
-block|}
-comment|/* Cn */
-block|,
-block|{
-literal|0x26a2
+literal|0x26B3
 block|,
 literal|0x2700
 block|}
@@ -5702,9 +5897,9 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x270a
+literal|0x270A
 block|,
-literal|0x270b
+literal|0x270B
 block|}
 comment|/* Cn */
 block|,
@@ -5716,16 +5911,16 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x274c
+literal|0x274C
 block|,
-literal|0x274c
+literal|0x274C
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x274e
+literal|0x274E
 block|,
-literal|0x274e
+literal|0x274E
 block|}
 comment|/* Cn */
 block|,
@@ -5744,7 +5939,7 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x275f
+literal|0x275F
 block|,
 literal|0x2760
 block|}
@@ -5758,58 +5953,205 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x27b0
+literal|0x27B0
 block|,
-literal|0x27b0
+literal|0x27B0
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x27bf
+literal|0x27BF
 block|,
-literal|0x27cf
+literal|0x27BF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x27ec
+literal|0x27CB
 block|,
-literal|0x27ef
+literal|0x27CF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x2b0e
+literal|0x27EC
 block|,
-literal|0x2e7f
+literal|0x27EF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x2e9a
+literal|0x2B1B
 block|,
-literal|0x2e9a
+literal|0x2B1F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x2ef4
+literal|0x2B24
 block|,
-literal|0x2eff
+literal|0x2BFF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x2fd6
+literal|0x2C2F
 block|,
-literal|0x2fef
+literal|0x2C2F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x2ffc
+literal|0x2C5F
 block|,
-literal|0x2fff
+literal|0x2C5F
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2C6D
+block|,
+literal|0x2C73
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2C78
+block|,
+literal|0x2C7F
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2CEB
+block|,
+literal|0x2CF8
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2D26
+block|,
+literal|0x2D2F
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2D66
+block|,
+literal|0x2D6E
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2D70
+block|,
+literal|0x2D7F
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2D97
+block|,
+literal|0x2D9F
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2DA7
+block|,
+literal|0x2DA7
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2DAF
+block|,
+literal|0x2DAF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2DB7
+block|,
+literal|0x2DB7
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2DBF
+block|,
+literal|0x2DBF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2DC7
+block|,
+literal|0x2DC7
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2DCF
+block|,
+literal|0x2DCF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2DD7
+block|,
+literal|0x2DD7
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2DDF
+block|,
+literal|0x2DFF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2E18
+block|,
+literal|0x2E1B
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2E1E
+block|,
+literal|0x2E7F
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2E9A
+block|,
+literal|0x2E9A
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2EF4
+block|,
+literal|0x2EFF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2FD6
+block|,
+literal|0x2FEF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2FFC
+block|,
+literal|0x2FFF
 block|}
 comment|/* Cn */
 block|,
@@ -5835,331 +6177,366 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x312d
+literal|0x312D
 block|,
 literal|0x3130
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x318f
+literal|0x318F
 block|,
-literal|0x318f
+literal|0x318F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x31b8
+literal|0x31B8
 block|,
-literal|0x31ef
+literal|0x31BF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x321f
+literal|0x31D0
 block|,
-literal|0x321f
+literal|0x31EF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x321F
+block|,
+literal|0x321F
 block|}
 comment|/* Cn */
 block|,
 block|{
 literal|0x3244
 block|,
-literal|0x324f
+literal|0x324F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x327e
+literal|0x32FF
 block|,
-literal|0x327e
+literal|0x32FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x32ff
+literal|0x4DB6
 block|,
-literal|0x32ff
+literal|0x4DBF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x4db6
+literal|0x9FBC
 block|,
-literal|0x4dbf
+literal|0x9FFF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x9fa6
+literal|0xA48D
 block|,
-literal|0x9fff
+literal|0xA48F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xa48d
+literal|0xA4C7
 block|,
-literal|0xa48f
+literal|0xA6FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xa4c7
+literal|0xA71B
 block|,
-literal|0xabff
+literal|0xA71F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xd7a4
+literal|0xA722
 block|,
-literal|0xd7ff
+literal|0xA7FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xd800
+literal|0xA82C
 block|,
-literal|0xdfff
+literal|0xA83F
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0xA878
+block|,
+literal|0xABFF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0xD7A4
+block|,
+literal|0xD7FF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0xD800
+block|,
+literal|0xDFFF
 block|}
 comment|/* Cs */
 block|,
 block|{
-literal|0xe000
+literal|0xE000
 block|,
-literal|0xf8ff
+literal|0xF8FF
 block|}
 comment|/* Co */
 block|,
 block|{
-literal|0xfa2e
+literal|0xFA2E
 block|,
-literal|0xfa2f
+literal|0xFA2F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfa6b
+literal|0xFA6B
 block|,
-literal|0xfaff
+literal|0xFA6F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfb07
+literal|0xFADA
 block|,
-literal|0xfb12
+literal|0xFAFF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfb18
+literal|0xFB07
 block|,
-literal|0xfb1c
+literal|0xFB12
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfb37
+literal|0xFB18
 block|,
-literal|0xfb37
+literal|0xFB1C
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfb3d
+literal|0xFB37
 block|,
-literal|0xfb3d
+literal|0xFB37
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfb3f
+literal|0xFB3D
 block|,
-literal|0xfb3f
+literal|0xFB3D
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfb42
+literal|0xFB3F
 block|,
-literal|0xfb42
+literal|0xFB3F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfb45
+literal|0xFB42
 block|,
-literal|0xfb45
+literal|0xFB42
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfbb2
+literal|0xFB45
 block|,
-literal|0xfbd2
+literal|0xFB45
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfd40
+literal|0xFBB2
 block|,
-literal|0xfd4f
+literal|0xFBD2
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfd90
+literal|0xFD40
 block|,
-literal|0xfd91
+literal|0xFD4F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfdc8
+literal|0xFD90
 block|,
-literal|0xfdef
+literal|0xFD91
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfdfe
+literal|0xFDC8
 block|,
-literal|0xfdff
+literal|0xFDEF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfe10
+literal|0xFDFE
 block|,
-literal|0xfe1f
+literal|0xFDFF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfe24
+literal|0xFE1A
 block|,
-literal|0xfe2f
+literal|0xFE1F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfe53
+literal|0xFE24
 block|,
-literal|0xfe53
+literal|0xFE2F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfe67
+literal|0xFE53
 block|,
-literal|0xfe67
+literal|0xFE53
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfe6c
+literal|0xFE67
 block|,
-literal|0xfe6f
+literal|0xFE67
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfe75
+literal|0xFE6C
 block|,
-literal|0xfe75
+literal|0xFE6F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfefd
+literal|0xFE75
 block|,
-literal|0xfefe
+literal|0xFE75
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfeff
+literal|0xFEFD
 block|,
-literal|0xfeff
+literal|0xFEFE
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0xFEFF
+block|,
+literal|0xFEFF
 block|}
 comment|/* Cf */
 block|,
 block|{
-literal|0xff00
+literal|0xFF00
 block|,
-literal|0xff00
+literal|0xFF00
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xffbf
+literal|0xFFBF
 block|,
-literal|0xffc1
+literal|0xFFC1
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xffc8
+literal|0xFFC8
 block|,
-literal|0xffc9
+literal|0xFFC9
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xffd0
+literal|0xFFD0
 block|,
-literal|0xffd1
+literal|0xFFD1
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xffd8
+literal|0xFFD8
 block|,
-literal|0xffd9
+literal|0xFFD9
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xffdd
+literal|0xFFDD
 block|,
-literal|0xffdf
+literal|0xFFDF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xffe7
+literal|0xFFE7
 block|,
-literal|0xffe7
+literal|0xFFE7
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xffef
+literal|0xFFEF
 block|,
-literal|0xfff8
+literal|0xFFF8
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xfff9
+literal|0xFFF9
 block|,
-literal|0xfffb
+literal|0xFFFB
 block|}
 comment|/* Cf */
 block|,
 block|{
-literal|0xfffe
+literal|0xFFFE
 block|,
-literal|0xffff
+literal|0xFFFF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1000c
+literal|0x1000C
 block|,
-literal|0x1000c
+literal|0x1000C
 block|}
 comment|/* Cn */
 block|,
@@ -6171,37 +6548,37 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1003b
+literal|0x1003B
 block|,
-literal|0x1003b
+literal|0x1003B
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1003e
+literal|0x1003E
 block|,
-literal|0x1003e
+literal|0x1003E
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1004e
+literal|0x1004E
 block|,
-literal|0x1004f
+literal|0x1004F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1005e
+literal|0x1005E
 block|,
-literal|0x1007f
+literal|0x1007F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x100fb
+literal|0x100FB
 block|,
-literal|0x100ff
+literal|0x100FF
 block|}
 comment|/* Cn */
 block|,
@@ -6220,58 +6597,65 @@ block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x10140
+literal|0x1018B
 block|,
-literal|0x102ff
+literal|0x102FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1031f
+literal|0x1031F
 block|,
-literal|0x1031f
+literal|0x1031F
 block|}
 comment|/* Cn */
 block|,
 block|{
 literal|0x10324
 block|,
-literal|0x1032f
+literal|0x1032F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1034b
+literal|0x1034B
 block|,
-literal|0x1037f
+literal|0x1037F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1039e
+literal|0x1039E
 block|,
-literal|0x1039e
+literal|0x1039E
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x103a0
+literal|0x103C4
 block|,
-literal|0x103ff
+literal|0x103C7
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1049e
+literal|0x103D6
 block|,
-literal|0x1049f
+literal|0x103FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x104aa
+literal|0x1049E
 block|,
-literal|0x107ff
+literal|0x1049F
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x104AA
+block|,
+literal|0x107FF
 block|}
 comment|/* Cn */
 block|,
@@ -6299,287 +6683,392 @@ block|,
 block|{
 literal|0x10839
 block|,
-literal|0x1083b
+literal|0x1083B
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1083d
+literal|0x1083D
 block|,
-literal|0x1083e
+literal|0x1083E
 block|}
 comment|/* Cn */
 block|,
 block|{
 literal|0x10840
 block|,
-literal|0x1cfff
+literal|0x108FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d0f6
+literal|0x1091A
 block|,
-literal|0x1d0ff
+literal|0x1091E
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d127
+literal|0x10920
 block|,
-literal|0x1d129
+literal|0x109FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d173
+literal|0x10A04
 block|,
-literal|0x1d17a
+literal|0x10A04
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x10A07
+block|,
+literal|0x10A0B
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x10A14
+block|,
+literal|0x10A14
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x10A18
+block|,
+literal|0x10A18
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x10A34
+block|,
+literal|0x10A37
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x10A3B
+block|,
+literal|0x10A3E
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x10A48
+block|,
+literal|0x10A4F
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x10A59
+block|,
+literal|0x11FFF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x1236F
+block|,
+literal|0x123FF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x12463
+block|,
+literal|0x1246F
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x12474
+block|,
+literal|0x1CFFF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x1D0F6
+block|,
+literal|0x1D0FF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x1D127
+block|,
+literal|0x1D129
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x1D173
+block|,
+literal|0x1D17A
 block|}
 comment|/* Cf */
 block|,
 block|{
-literal|0x1d1de
+literal|0x1D1DE
 block|,
-literal|0x1d2ff
+literal|0x1D1FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d357
+literal|0x1D246
 block|,
-literal|0x1d3ff
+literal|0x1D2FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d455
+literal|0x1D357
 block|,
-literal|0x1d455
+literal|0x1D35F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d49d
+literal|0x1D372
 block|,
-literal|0x1d49d
+literal|0x1D3FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d4a0
+literal|0x1D455
 block|,
-literal|0x1d4a1
+literal|0x1D455
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d4a3
+literal|0x1D49D
 block|,
-literal|0x1d4a4
+literal|0x1D49D
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d4a7
+literal|0x1D4A0
 block|,
-literal|0x1d4a8
+literal|0x1D4A1
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d4ad
+literal|0x1D4A3
 block|,
-literal|0x1d4ad
+literal|0x1D4A4
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d4ba
+literal|0x1D4A7
 block|,
-literal|0x1d4ba
+literal|0x1D4A8
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d4bc
+literal|0x1D4AD
 block|,
-literal|0x1d4bc
+literal|0x1D4AD
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d4c4
+literal|0x1D4BA
 block|,
-literal|0x1d4c4
+literal|0x1D4BA
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d506
+literal|0x1D4BC
 block|,
-literal|0x1d506
+literal|0x1D4BC
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d50b
+literal|0x1D4C4
 block|,
-literal|0x1d50c
+literal|0x1D4C4
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d515
+literal|0x1D506
 block|,
-literal|0x1d515
+literal|0x1D506
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d51d
+literal|0x1D50B
 block|,
-literal|0x1d51d
+literal|0x1D50C
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d53a
+literal|0x1D515
 block|,
-literal|0x1d53a
+literal|0x1D515
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d53f
+literal|0x1D51D
 block|,
-literal|0x1d53f
+literal|0x1D51D
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d545
+literal|0x1D53A
 block|,
-literal|0x1d545
+literal|0x1D53A
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d547
+literal|0x1D53F
 block|,
-literal|0x1d549
+literal|0x1D53F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d551
+literal|0x1D545
 block|,
-literal|0x1d551
+literal|0x1D545
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d6a4
+literal|0x1D547
 block|,
-literal|0x1d6a7
+literal|0x1D549
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d7ca
+literal|0x1D551
 block|,
-literal|0x1d7cd
+literal|0x1D551
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x1d800
+literal|0x1D6A6
 block|,
-literal|0x1ffff
+literal|0x1D6A7
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x2a6d7
+literal|0x1D7CC
 block|,
-literal|0x2f7ff
+literal|0x1D7CD
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0x2fa1e
+literal|0x1D800
 block|,
-literal|0xe0000
+literal|0x1FFFF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xe0001
+literal|0x2A6D7
 block|,
-literal|0xe0001
+literal|0x2F7FF
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0x2FA1E
+block|,
+literal|0xE0000
+block|}
+comment|/* Cn */
+block|,
+block|{
+literal|0xE0001
+block|,
+literal|0xE0001
 block|}
 comment|/* Cf */
 block|,
 block|{
-literal|0xe0002
+literal|0xE0002
 block|,
-literal|0xe001f
+literal|0xE001F
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xe0020
+literal|0xE0020
 block|,
-literal|0xe007f
+literal|0xE007F
 block|}
 comment|/* Cf */
 block|,
 block|{
-literal|0xe0080
+literal|0xE0080
 block|,
-literal|0xe00ff
+literal|0xE00FF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xe01f0
+literal|0xE01F0
 block|,
-literal|0xeffff
+literal|0xEFFFF
 block|}
 comment|/* Cn */
 block|,
 block|{
-literal|0xf0000
+literal|0xF0000
 block|,
-literal|0xffffd
+literal|0xFFFFD
 block|}
 comment|/* Co */
 block|,
 block|{
-literal|0xffffe
+literal|0xFFFFE
 block|,
-literal|0xfffff
+literal|0xFFFFF
 block|}
 comment|/* Cn */
 block|,
 block|{
 literal|0x100000
 block|,
-literal|0x10fffd
+literal|0x10FFFD
 block|}
 comment|/* Co */
 block|,
 block|{
-literal|0x10fffe
+literal|0x10FFFE
 block|,
-literal|0x10ffff
+literal|0x10FFFF
 block|}
 comment|/* Cn */
 block|,
 block|{
 literal|0x110000
 block|,
-literal|0x7fffffff
+literal|0x7FFFFFFF
 block|}
 comment|/* ISO 10646?? */
 block|}
@@ -6587,7 +7076,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Double width characters  *	W: East Asian Wide  *	F: East Asian Full-width  */
+comment|/*  * Double width characters  *	W: East Asian Wide  *	F: East Asian Full-width  * Unassigned code points may be included when they allow ranges to be merged.  * Last synched with  *<http://www.unicode.org/Public/5.0.0/ucd/EastAsianWidth-5.0.0d2.txt>  *	dated 2005-11-08T01:32:56Z  */
 end_comment
 
 begin_decl_stmt
@@ -6601,14 +7090,14 @@ block|{
 block|{
 literal|0x1100
 block|,
-literal|0x115f
+literal|0x115F
 block|}
 comment|/* W */
 block|,
 block|{
 literal|0x2329
 block|,
-literal|0x232a
+literal|0x232A
 block|}
 comment|/* W */
 block|,
@@ -6643,7 +7132,7 @@ block|,
 block|{
 literal|0x4E00
 block|,
-literal|0x9FA5
+literal|0x9FBB
 block|}
 comment|/* W */
 block|,
@@ -6664,7 +7153,14 @@ block|,
 block|{
 literal|0xF900
 block|,
-literal|0xFA6A
+literal|0xFAD9
+block|}
+comment|/* W */
+block|,
+block|{
+literal|0xFE10
+block|,
+literal|0xFE19
 block|}
 comment|/* W */
 block|,
@@ -6702,7 +7198,7 @@ block|,
 literal|0x3FFFD
 block|}
 comment|/* W */
-block|,  }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
