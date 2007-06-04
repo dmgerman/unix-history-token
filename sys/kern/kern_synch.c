@@ -786,10 +786,9 @@ operator|->
 name|td_priority
 condition|)
 block|{
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 name|sched_prio
@@ -799,10 +798,9 @@ argument_list|,
 name|pri
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1360,6 +1358,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|sleepq_release
+argument_list|(
+name|ident
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1393,21 +1396,20 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|mtx_assert
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+comment|/* XXX */
+name|THREAD_LOCK_ASSERT
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|,
 name|MA_OWNED
 operator||
 name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
-name|td
-operator|=
-name|curthread
-expr_stmt|;
-comment|/* XXX */
 name|p
 operator|=
 name|td
@@ -1532,10 +1534,9 @@ condition|(
 name|kdb_active
 condition|)
 block|{
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 name|kdb_backtrace
@@ -1883,10 +1884,9 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|mtx_assert
+name|THREAD_LOCK_ASSERT
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -1989,7 +1989,7 @@ name|p_sflag
 operator||=
 name|PS_SWAPINREQ
 expr_stmt|;
-comment|/* 			 * due to a LOR between sched_lock and 			 * the sleepqueue chain locks, use 			 * lower level scheduling functions. 			 */
+comment|/* 			 * due to a LOR between the thread lock and 			 * the sleepqueue chain locks, use 			 * lower level scheduling functions. 			 */
 name|kick_proc0
 argument_list|()
 expr_stmt|;

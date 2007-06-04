@@ -1441,7 +1441,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-else|else
 name|sleepq_release
 argument_list|(
 name|cvp
