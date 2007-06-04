@@ -307,7 +307,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *	k*- only accessed by curthread and from an interrupt  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      p - select lock (sellock)  *      q - td_contested lock  *      r - p_peers lock  *      x - created at fork, only changes during single threading in exec  *      z - zombie threads lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
+comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by proc slock  *      k - only accessed by curthread  *	k*- only accessed by curthread and from an interrupt  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      p - select lock (sellock)  *      q - td_contested lock  *      r - p_peers lock  *      t - thread lock  *      x - created at fork, only changes during single threading in exec  *      z - zombie threads lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
 end_comment
 
 begin_struct_decl
@@ -387,10 +387,6 @@ comment|/*  * Here we define the two structures used for process information.  *
 end_comment
 
 begin_comment
-comment|/***************  * Threads are the unit of execution  With a single run queue used by all processors:   RUNQ: --->THREAD---THREAD--...               SLEEPQ:[]---THREAD---THREAD---THREAD                                                      []---THREAD                                        	             []                                                      []---THREAD---THREAD  With PER-CPU run queues:  it gets more complicated.  *  *****************/
-end_comment
-
-begin_comment
 comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * Thread context.  Processes may have multiple threads.  */
 end_comment
 
@@ -398,6 +394,13 @@ begin_struct
 struct|struct
 name|thread
 block|{
+specifier|volatile
+name|struct
+name|mtx
+modifier|*
+name|td_lock
+decl_stmt|;
+comment|/* replaces sched lock */
 name|struct
 name|proc
 modifier|*
@@ -418,14 +421,14 @@ argument|thread
 argument_list|)
 name|td_slpq
 expr_stmt|;
-comment|/* (j) Sleep queue. */
+comment|/* (t) Sleep queue. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
 argument_list|)
 name|td_lockq
 expr_stmt|;
-comment|/* (j) Lock queue. */
+comment|/* (t) Lock queue. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -472,11 +475,11 @@ value|td_flags
 name|int
 name|td_flags
 decl_stmt|;
-comment|/* (j) TDF_* flags. */
+comment|/* (t) TDF_* flags. */
 name|int
 name|td_inhibitors
 decl_stmt|;
-comment|/* (j) Why can not run. */
+comment|/* (t) Why can not run. */
 name|int
 name|td_pflags
 decl_stmt|;
@@ -488,26 +491,26 @@ comment|/* (k) Ret value from fdopen. XXX */
 name|int
 name|td_sqqueue
 decl_stmt|;
-comment|/* (j) Sleepqueue queue blocked on. */
+comment|/* (t) Sleepqueue queue blocked on. */
 name|void
 modifier|*
 name|td_wchan
 decl_stmt|;
-comment|/* (j) Sleep address. */
+comment|/* (t) Sleep address. */
 specifier|const
 name|char
 modifier|*
 name|td_wmesg
 decl_stmt|;
-comment|/* (j) Reason for sleep. */
+comment|/* (t) Reason for sleep. */
 name|u_char
 name|td_lastcpu
 decl_stmt|;
-comment|/* (j) Last cpu we were on. */
+comment|/* (t) Last cpu we were on. */
 name|u_char
 name|td_oncpu
 decl_stmt|;
-comment|/* (j) Which cpu we are on. */
+comment|/* (t) Which cpu we are on. */
 specifier|volatile
 name|u_char
 name|td_owepreempt
@@ -520,19 +523,19 @@ comment|/* (k) Count of non-spin locks. */
 name|u_char
 name|td_tsqueue
 decl_stmt|;
-comment|/* (j) Turnstile queue blocked on. */
+comment|/* (t) Turnstile queue blocked on. */
 name|struct
 name|turnstile
 modifier|*
 name|td_blocked
 decl_stmt|;
-comment|/* (j) Lock thread is blocked on. */
+comment|/* (t) Lock thread is blocked on. */
 specifier|const
 name|char
 modifier|*
 name|td_lockname
 decl_stmt|;
-comment|/* (j) Name of lock blocked on. */
+comment|/* (t) Name of lock blocked on. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -578,40 +581,40 @@ name|kse_upcall
 modifier|*
 name|td_upcall
 decl_stmt|;
-comment|/* (k + j) Upcall structure. */
+comment|/* (k + t) Upcall structure. */
 name|u_int
 name|td_estcpu
 decl_stmt|;
-comment|/* (j) Sum of the same field in KSEs. */
+comment|/* (t) estimated cpu utilization */
 name|u_int
 name|td_slptime
 decl_stmt|;
-comment|/* (j) How long completely blocked. */
+comment|/* (t) How long completely blocked. */
 name|struct
 name|rusage
 name|td_ru
 decl_stmt|;
-comment|/* (j) rusage information */
+comment|/* (t) rusage information */
 name|uint64_t
 name|td_runtime
 decl_stmt|;
-comment|/* (j) How many cpu ticks we've run. */
+comment|/* (t) How many cpu ticks we've run. */
 name|u_int
 name|td_pticks
 decl_stmt|;
-comment|/* (j) Statclock hits for profiling */
+comment|/* (t) Statclock hits for profiling */
 name|u_int
 name|td_sticks
 decl_stmt|;
-comment|/* (j) Statclock hits in system mode. */
+comment|/* (t) Statclock hits in system mode. */
 name|u_int
 name|td_iticks
 decl_stmt|;
-comment|/* (j) Statclock hits in intr mode. */
+comment|/* (t) Statclock hits in intr mode. */
 name|u_int
 name|td_uticks
 decl_stmt|;
-comment|/* (j) Statclock hits in user mode. */
+comment|/* (t) Statclock hits in user mode. */
 name|u_int
 name|td_uuticks
 decl_stmt|;
@@ -623,7 +626,7 @@ comment|/* (k) Statclock hits (sys), for UTS. */
 name|int
 name|td_intrval
 decl_stmt|;
-comment|/* (j) Return value of TDF_INTERRUPT. */
+comment|/* (t) Return value of TDF_INTERRUPT. */
 name|sigset_t
 name|td_oldsigmask
 decl_stmt|;
@@ -678,23 +681,23 @@ value|td_endzero
 name|u_char
 name|td_base_pri
 decl_stmt|;
-comment|/* (j) Thread base kernel priority. */
+comment|/* (t) Thread base kernel priority. */
 name|u_char
 name|td_priority
 decl_stmt|;
-comment|/* (j) Thread active priority. */
+comment|/* (t) Thread active priority. */
 name|u_char
 name|td_pri_class
 decl_stmt|;
-comment|/* (j) Scheduling class. */
+comment|/* (t) Scheduling class. */
 name|u_char
 name|td_user_pri
 decl_stmt|;
-comment|/* (j) User pri from estcpu and nice. */
+comment|/* (t) User pri from estcpu and nice. */
 name|u_char
 name|td_base_user_pri
 decl_stmt|;
-comment|/* (j) Base user pri */
+comment|/* (t) Base user pri */
 define|#
 directive|define
 name|td_endcopy
@@ -722,6 +725,7 @@ name|TDS_RUNNING
 block|}
 name|td_state
 enum|;
+comment|/* (t) thread state */
 name|register_t
 name|td_retval
 index|[
@@ -797,6 +801,62 @@ comment|/* per-thread syscall count (used by NFS :)) */
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|struct
+name|mtx
+modifier|*
+name|thread_lock_block
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_lock_unblock
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_lock_set
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|THREAD_LOCK_ASSERT
+parameter_list|(
+name|td
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|do {									\ 	struct mtx *__m = __DEVOLATILE(struct mtx *, (td)->td_lock);	\ 	if (__m !=&blocked_lock)					\ 		mtx_assert(__m, (type));				\ } while (0)
+end_define
 
 begin_comment
 comment|/*  * Flags kept in td_flags:  * To change these you MUST have the scheduler lock.  */
@@ -882,12 +942,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_TSNOBLOCK
+name|TDF_UNUSEDx100
 value|0x00000100
 end_define
 
 begin_comment
-comment|/* Don't block on a turnstile due to race. */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -964,7 +1024,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* --available -- */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -1041,7 +1101,7 @@ value|0x00400000
 end_define
 
 begin_comment
-comment|/* --available -- */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -1052,7 +1112,7 @@ value|0x00800000
 end_define
 
 begin_comment
-comment|/* --available -- */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -1890,7 +1950,12 @@ argument|thread
 argument_list|)
 name|p_threads
 expr_stmt|;
-comment|/* (j)(td_plist) Threads. (shortcut) */
+comment|/* (j) all threads. */
+name|struct
+name|mtx
+name|p_slock
+decl_stmt|;
+comment|/* process spin lock */
 name|struct
 name|ucred
 modifier|*
@@ -1940,7 +2005,7 @@ argument|kse_upcall
 argument_list|)
 name|p_upcalls
 expr_stmt|;
-comment|/* All upcalls in the proc. */
+comment|/* (j) All upcalls in the proc. */
 comment|/* 	 * The following don't make too much sense. 	 * See the td_ or ke_ versions of the same flags. 	 */
 name|int
 name|p_flag
@@ -2145,7 +2210,7 @@ comment|/* (c + j) If single threading this is it */
 name|int
 name|p_suspcount
 decl_stmt|;
-comment|/* (c) Num threads in suspended mode. */
+comment|/* (j) Num threads in suspended mode. */
 name|struct
 name|thread
 modifier|*
@@ -2167,14 +2232,6 @@ name|p_itimers
 decl_stmt|;
 comment|/* (c) POSIX interval timers. */
 comment|/* from ksegrp */
-name|u_int
-name|p_estcpu
-decl_stmt|;
-comment|/* (j) Sum of the field in threads. */
-name|u_int
-name|p_slptime
-decl_stmt|;
-comment|/* (j) How long completely blocked. */
 name|int
 name|p_numupcalls
 decl_stmt|;
@@ -2364,6 +2421,38 @@ end_define
 begin_comment
 comment|/* For when we aren't on a CPU. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PROC_SLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_lock_spin(&(p)->p_slock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_SUNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_unlock_spin(&(p)->p_slock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_SLOCK_ASSERT
+parameter_list|(
+name|p
+parameter_list|,
+name|type
+parameter_list|)
+value|mtx_assert(&(p)->p_slock, (type))
+end_define
 
 begin_comment
 comment|/* These flags are kept in p_flag. */
@@ -2684,7 +2773,7 @@ value|((p)->p_flag& P_STOPPED)
 end_define
 
 begin_comment
-comment|/* These flags are kept in p_sflag and are protected with sched_lock. */
+comment|/* These flags are kept in p_sflag and are protected with proc slock. */
 end_comment
 
 begin_define
@@ -4259,12 +4348,14 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|old
 parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|new
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4276,12 +4367,10 @@ argument_list|(
 expr|struct
 name|thread
 operator|*
-name|old
 argument_list|,
 expr|struct
 name|thread
 operator|*
-name|new
 argument_list|)
 name|__dead2
 decl_stmt|;
@@ -4385,6 +4474,17 @@ end_function_decl
 begin_comment
 comment|/* New in KSE. */
 end_comment
+
+begin_function_decl
+name|void
+name|kse_unlink
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -4736,6 +4836,17 @@ name|thread_suspend_check
 parameter_list|(
 name|int
 name|how
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_suspend_switch
+parameter_list|(
+name|struct
+name|thread
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

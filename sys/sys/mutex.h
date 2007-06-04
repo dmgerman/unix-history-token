@@ -600,6 +600,60 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|void
+name|_thread_lock_flags
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|thread_lock
+parameter_list|(
+name|tdp
+parameter_list|)
+define|\
+value|_thread_lock_flags((tdp), 0, __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|thread_lock_flags
+parameter_list|(
+name|tdp
+parameter_list|,
+name|opt
+parameter_list|)
+define|\
+value|_thread_lock_flags((tdp), (opt), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|thread_unlock
+parameter_list|(
+name|tdp
+parameter_list|)
+define|\
+value|mtx_unlock_spin(__DEVOLATILE(struct mtx *, (tdp)->td_lock))
+end_define
+
 begin_comment
 comment|/*  * We define our machine-independent (unoptimized) mutex micro-operations  * here, if they are not already defined in the machine-dependent mutex.h   */
 end_comment
@@ -1326,6 +1380,14 @@ specifier|extern
 name|struct
 name|mtx
 name|Giant
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|blocked_lock
 decl_stmt|;
 end_decl_stmt
 
