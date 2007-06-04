@@ -1571,9 +1571,17 @@ name|irq
 argument_list|,
 name|flags
 argument_list|,
+name|filt
+condition|?
 name|cbb_func_filt
+else|:
+name|NULL
 argument_list|,
+name|intr
+condition|?
 name|cbb_func_intr
+else|:
+name|NULL
 argument_list|,
 name|ih
 argument_list|,
@@ -2546,14 +2554,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * nb: don't have to check for giant or not, since that's done in the 	 * ISR dispatch and one can't hold Giant in a filter anyway... 	 */
-if|if
-condition|(
-name|ih
-operator|->
-name|filt
-operator|!=
-name|NULL
-condition|)
 return|return
 operator|(
 call|(
@@ -2567,11 +2567,6 @@ name|ih
 operator|->
 name|arg
 argument_list|)
-operator|)
-return|;
-return|return
-operator|(
-name|FILTER_SCHEDULE_THREAD
 operator|)
 return|;
 block|}
