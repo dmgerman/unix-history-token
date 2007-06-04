@@ -1647,40 +1647,12 @@ operator|!=
 literal|0
 condition|)
 empty_stmt|;
-comment|/* ok, now grab sched_lock and enter the scheduler */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
-name|spinlock_exit
-argument_list|()
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|switchtime
-argument_list|,
-name|cpu_ticks
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|switchticks
-argument_list|,
-name|ticks
-argument_list|)
-expr_stmt|;
-name|cpu_throw
+comment|/* ok, now enter the scheduler */
+name|sched_throw
 argument_list|(
 name|NULL
-argument_list|,
-name|choosethread
-argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* doesn't return */
 block|}
 end_function
 

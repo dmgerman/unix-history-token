@@ -127,6 +127,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/smp.h>
 end_include
 
@@ -2390,56 +2396,11 @@ condition|)
 name|ia32_pause
 argument_list|()
 expr_stmt|;
-comment|/* ok, now grab sched_lock and enter the scheduler */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Correct spinlock nesting.  The idle thread context that we are 	 * borrowing was created so that it would start out with a single 	 * spin lock (sched_lock) held in fork_trampoline().  Since we've 	 * explicitly acquired locks in this function, the nesting count 	 * is now 2 rather than 1.  Since we are nested, calling 	 * spinlock_exit() will simply adjust the counts without allowing 	 * spin lock using code to interrupt us. 	 */
-name|spinlock_exit
-argument_list|()
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|curthread
-operator|->
-name|td_md
-operator|.
-name|md_spinlock_count
-operator|==
-literal|1
-argument_list|,
-operator|(
-literal|"invalid count"
-operator|)
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|switchtime
-argument_list|,
-name|cpu_ticks
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|switchticks
-argument_list|,
-name|ticks
-argument_list|)
-expr_stmt|;
-name|cpu_throw
+name|sched_throw
 argument_list|(
 name|NULL
-argument_list|,
-name|choosethread
-argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* doesn't return */
 name|panic
 argument_list|(
 literal|"scheduler returned us to %s"
@@ -3889,10 +3850,9 @@ name|running_thread
 init|=
 name|curthread
 decl_stmt|;
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|running_thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -3919,10 +3879,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|running_thread
 argument_list|)
 expr_stmt|;
 block|}
@@ -4595,12 +4554,6 @@ operator|==
 literal|1
 condition|)
 return|return;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|atomic_store_rel_int
 argument_list|(
 operator|&
@@ -4617,12 +4570,6 @@ literal|0
 condition|)
 name|ia32_pause
 argument_list|()
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
 expr_stmt|;
 block|}
 end_function

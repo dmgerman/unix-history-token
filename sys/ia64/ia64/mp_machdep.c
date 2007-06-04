@@ -438,27 +438,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	 * Correct spinlock nesting.  The idle thread context that we are 	 * borrowing was created so that it would start out with a single 	 * spin lock (sched_lock) held in fork_trampoline().  Since we 	 * don't have any locks and explicitly acquire locks when we need 	 * to, the nesting count will be off by 1. 	 */
-end_comment
-
-begin_expr_stmt
-name|curthread
-operator|->
-name|td_md
-operator|.
-name|md_spinlock_count
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|critical_exit
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Get and save the CPU specific MCA records. Should we get the 	 * MCA state for each processor, or just the CMC state? 	 */
 end_comment
 
@@ -513,36 +492,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PCPU_SET
-argument_list|(
-name|switchtime
-argument_list|,
-name|cpu_ticks
-argument_list|()
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PCPU_SET
-argument_list|(
-name|switchticks
-argument_list|,
-name|ticks
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ia64_set_tpr
 argument_list|(
 literal|0
@@ -561,12 +510,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|cpu_throw
+name|sched_throw
 argument_list|(
 name|NULL
-argument_list|,
-name|choosethread
-argument_list|()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
