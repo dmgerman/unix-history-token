@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2005  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -856,6 +856,10 @@ name|sc_lower_left
 decl_stmt|,
 comment|/* Cursor to last line, first column */
 modifier|*
+name|sc_return
+decl_stmt|,
+comment|/* Cursor to beginning of current line */
+modifier|*
 name|sc_move
 decl_stmt|,
 comment|/* General cursor positioning */
@@ -1278,7 +1282,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|more_mode
+name|less_is_more
 decl_stmt|;
 end_decl_stmt
 
@@ -1321,6 +1325,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|top_scroll
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|oldbot
 decl_stmt|;
 end_decl_stmt
 
@@ -4581,8 +4592,8 @@ name|termbuf
 argument_list|,
 name|term
 argument_list|)
-operator|<=
-literal|0
+operator|!=
+name|TGETENT_OK
 condition|)
 name|hardcopy
 operator|=
@@ -4779,7 +4790,7 @@ operator|!
 name|quit_at_eof
 operator|&&
 operator|!
-name|more_mode
+name|less_is_more
 condition|)
 block|{
 name|sc_init
@@ -5243,6 +5254,27 @@ name|t2
 argument_list|,
 literal|"\r"
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Get carriage return string. 	 */
+name|sc_return
+operator|=
+name|ltgetstr
+argument_list|(
+literal|"cr"
+argument_list|,
+operator|&
+name|sp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc_return
+operator|==
+name|NULL
+condition|)
+name|sc_return
+operator|=
+literal|"\r"
 expr_stmt|;
 comment|/* 	 * Choose between using "al" or "sr" ("add line" or "scroll reverse") 	 * to add a line at the top of the screen. 	 */
 name|t1
@@ -6977,6 +7009,102 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Move cursor to left position of current line.  */
+end_comment
+
+begin_function
+name|public
+name|void
+name|line_left
+parameter_list|()
+block|{
+if|#
+directive|if
+operator|!
+name|MSDOS_COMPILER
+name|tputs
+argument_list|(
+name|sc_return
+argument_list|,
+literal|1
+argument_list|,
+name|putchr
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|int
+name|row
+decl_stmt|;
+name|flush
+argument_list|()
+expr_stmt|;
+if|#
+directive|if
+name|MSDOS_COMPILER
+operator|==
+name|WIN32C
+block|{
+name|CONSOLE_SCREEN_BUFFER_INFO
+name|scr
+decl_stmt|;
+name|GetConsoleScreenBufferInfo
+argument_list|(
+name|con_out
+argument_list|,
+operator|&
+name|scr
+argument_list|)
+expr_stmt|;
+name|row
+operator|=
+name|scr
+operator|.
+name|dwCursorPosition
+operator|.
+name|Y
+operator|-
+name|scr
+operator|.
+name|srWindow
+operator|.
+name|Top
+operator|+
+literal|1
+expr_stmt|;
+block|}
+else|#
+directive|else
+block|{
+name|struct
+name|rccoord
+name|tpos
+init|=
+name|_gettextposition
+argument_list|()
+decl_stmt|;
+name|row
+operator|=
+name|tpos
+operator|.
+name|row
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+name|_settextposition
+argument_list|(
+name|row
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
 comment|/*  * Check if the console size has changed and reset internals   * (in lieu of SIGWINCH for WIN32).  */
 end_comment
 
@@ -8141,7 +8269,15 @@ name|clear_bot
 parameter_list|()
 block|{
 comment|/* 	 * If we're in a non-normal attribute mode, temporarily exit 	 * the mode while we do the clear.  Some terminals fill the 	 * cleared area with the current attribute. 	 */
+if|if
+condition|(
+name|oldbot
+condition|)
 name|lower_left
+argument_list|()
+expr_stmt|;
+else|else
+name|line_left
 argument_list|()
 expr_stmt|;
 if|if
@@ -8439,14 +8575,34 @@ name|int
 name|attr
 decl_stmt|;
 block|{
-if|if
-condition|(
+name|int
+name|new_attrmode
+init|=
 name|apply_at_specials
 argument_list|(
 name|attr
 argument_list|)
+decl_stmt|;
+name|int
+name|ignore_modes
+init|=
+name|AT_ANSI
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|new_attrmode
+operator|&
+operator|~
+name|ignore_modes
+operator|)
 operator|!=
+operator|(
 name|attrmode
+operator|&
+operator|~
+name|ignore_modes
+operator|)
 condition|)
 block|{
 name|at_exit

@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2005  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -58,6 +58,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|public
+name|int
+name|forw_prompt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|sigs
@@ -90,14 +97,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|quit_at_eof
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|more_mode
+name|less_is_more
 decl_stmt|;
 end_decl_stmt
 
@@ -140,6 +140,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|final_attr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|oldbot
 decl_stmt|;
 end_decl_stmt
 
@@ -242,7 +249,7 @@ comment|/*  * If the screen is "squished", repaint it.  * "Squished" means the f
 end_comment
 
 begin_function
-specifier|static
+name|public
 name|void
 name|squish_check
 parameter_list|()
@@ -387,25 +394,11 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|more_mode
+name|less_is_more
 operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|top_scroll
-operator|==
-name|OPT_ONPLUS
-operator|||
-operator|(
-name|first_time
-operator|&&
-name|top_scroll
-operator|!=
-name|OPT_ON
-operator|)
-condition|)
 name|clear
 argument_list|()
 expr_stmt|;
@@ -451,12 +444,6 @@ condition|(
 name|top_scroll
 condition|)
 block|{
-if|if
-condition|(
-name|top_scroll
-operator|==
-name|OPT_ONPLUS
-condition|)
 name|clear
 argument_list|()
 expr_stmt|;
@@ -594,7 +581,7 @@ condition|(
 operator|(
 name|first_time
 operator|||
-name|more_mode
+name|less_is_more
 operator|)
 operator|&&
 name|pos
@@ -623,35 +610,22 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-name|top_scroll
-operator|==
-name|OPT_ON
-condition|)
-name|clear_eol
-argument_list|()
-expr_stmt|;
 name|put_line
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|clear_bg
-operator|&&
-name|apply_at_specials
-argument_list|(
-name|final_attr
-argument_list|)
-operator|!=
-name|AT_NORMAL
-condition|)
-block|{
+if|#
+directive|if
+literal|0
+comment|/* {{  		 * Can't call clear_eol here.  The cursor might be at end of line 		 * on an ignaw terminal, so clear_eol would clear the last char 		 * of the current line instead of all of the next line. 		 * If we really need to do this on clear_bg terminals, we need 		 * to find a better way. 		 * }} 		 */
+block|if (clear_bg&& apply_at_specials(final_attr) != AT_NORMAL) 		{
 comment|/* 			 * Writing the last character on the last line 			 * of the display may have scrolled the screen. 			 * If we were in standout mode, clear_bg terminals  			 * will fill the new line with the standout color. 			 * Now we're in normal mode again, so clear the line. 			 */
-name|clear_eol
-argument_list|()
+block|clear_eol(); 		}
+endif|#
+directive|endif
+name|forw_prompt
+operator|=
+literal|1
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -851,6 +825,15 @@ condition|)
 name|repaint
 argument_list|()
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|oldbot
+condition|)
+name|lower_left
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -892,7 +875,8 @@ name|pos
 decl_stmt|;
 if|if
 condition|(
-name|quit_at_eof
+name|get_quit_at_eof
+argument_list|()
 operator|&&
 name|hit_eof
 operator|&&

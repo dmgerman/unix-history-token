@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2004  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -85,6 +85,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|jump_sline
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|less_is_more
 decl_stmt|;
 end_decl_stmt
 
@@ -193,6 +200,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|constant
+name|char
+name|more_proto
+index|[]
+init|=
+literal|"--More--(?eEND ?x- Next\\: %x.:?pB%pB\\%:byte %bB?s/%s...%t)"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|public
 name|char
 modifier|*
@@ -281,6 +299,10 @@ index|]
 operator|=
 name|save
 argument_list|(
+name|less_is_more
+condition|?
+name|more_proto
+else|:
 name|m_proto
 argument_list|)
 expr_stmt|;
@@ -2023,6 +2045,24 @@ name|char
 modifier|*
 name|prompt
 decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+name|type
+operator|=
+operator|(
+operator|!
+name|less_is_more
+operator|)
+condition|?
+name|pr_type
+else|:
+name|pr_type
+condition|?
+literal|0
+else|:
+literal|1
+expr_stmt|;
 name|prompt
 operator|=
 name|pr_expand
@@ -2038,7 +2078,7 @@ name|hproto
 else|:
 name|prproto
 index|[
-name|pr_type
+name|type
 index|]
 argument_list|,
 name|sc_width
