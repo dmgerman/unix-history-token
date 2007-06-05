@@ -6552,9 +6552,8 @@ name|td
 argument_list|,
 name|newtd
 argument_list|,
-name|td
-operator|->
-name|td_lock
+operator|&
+name|sched_lock
 argument_list|)
 expr_stmt|;
 ifdef|#
