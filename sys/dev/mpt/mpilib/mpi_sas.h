@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2000-2005, LSI Logic Corporation and its contributors.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the name of the LSI Logic Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  *           Name:  mpi_sas.h  *          Title:  MPI Serial Attached SCSI structures and definitions  *  Creation Date:  August 19, 2004  *  *    mpi_sas.h Version:  01.05.02  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  08-19-04  01.05.01  Original release.  *  08-30-05  01.05.02  Added DeviceInfo bit for SEP.  *                      Added PrimFlags and Primitive field to SAS IO Unit  *                      Control request, and added a new operation code.  *  --------------------------------------------------------------------------  */
+comment|/*-  * Copyright (c) 2000-2005, LSI Logic Corporation and its contributors.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon including  *    a substantially similar Disclaimer requirement for further binary  *    redistribution.  * 3. Neither the name of the LSI Logic Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF THE COPYRIGHT  * OWNER OR CONTRIBUTOR IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *           Name:  mpi_sas.h  *          Title:  MPI Serial Attached SCSI structures and definitions  *  Creation Date:  August 19, 2004  *  *    mpi_sas.h Version:  01.05.04  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  08-19-04  01.05.01  Original release.  *  08-30-05  01.05.02  Added DeviceInfo bit for SEP.  *                      Added PrimFlags and Primitive field to SAS IO Unit  *                      Control request, and added a new operation code.  *  03-27-06  01.05.03  Added Force Full Discovery, Transmit Port Select Signal,  *                      and Remove Device operations to SAS IO Unit Control.  *                      Added DevHandle field to SAS IO Unit Control request and  *                      reply.  *  10-11-06  01.05.04  Fixed the name of a define for Operation field of SAS IO  *                      Unit Control request.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -803,7 +803,7 @@ name|Function
 decl_stmt|;
 comment|/* 03h */
 name|U16
-name|Reserved2
+name|DevHandle
 decl_stmt|;
 comment|/* 04h */
 name|U8
@@ -912,6 +912,38 @@ name|MPI_SAS_OP_SEND_PRIMITIVE
 value|(0x0A)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPI_SAS_OP_FORCE_FULL_DISCOVERY
+value|(0x0B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_OP_TRANSMIT_PORT_SELECT_SIGNAL
+value|(0x0C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_OP_TRANSMIT_REMOVE_DEVICE
+value|(0x0D)
+end_define
+
+begin_comment
+comment|/* obsolete name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI_SAS_OP_REMOVE_DEVICE
+value|(0x0D)
+end_define
+
 begin_comment
 comment|/* values for the PrimFlags field */
 end_comment
@@ -963,7 +995,7 @@ name|Function
 decl_stmt|;
 comment|/* 03h */
 name|U16
-name|Reserved2
+name|DevHandle
 decl_stmt|;
 comment|/* 04h */
 name|U8
