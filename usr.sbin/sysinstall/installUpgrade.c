@@ -1743,7 +1743,7 @@ name|extractingBin
 condition|)
 name|vsystem
 argument_list|(
-literal|"disklabel -B `awk '$2~/\\/$/ {print substr($1, 6, 3)}' /etc/fstab`"
+literal|"disklabel -B `awk '$2~/\\/$/ {print substr($1, 6, 5)}' /etc/fstab`"
 argument_list|)
 expr_stmt|;
 name|msgNotify
