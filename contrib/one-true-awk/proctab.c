@@ -23,7 +23,7 @@ name|char
 modifier|*
 name|printname
 index|[
-literal|92
+literal|93
 index|]
 init|=
 block|{
@@ -178,499 +178,506 @@ operator|(
 name|char
 operator|*
 operator|)
-literal|"AND"
+literal|"EMPTYRE"
 block|,
 comment|/* 279 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"BOR"
+literal|"AND"
 block|,
 comment|/* 280 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"APPEND"
+literal|"BOR"
 block|,
 comment|/* 281 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"EQ"
+literal|"APPEND"
 block|,
 comment|/* 282 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"GE"
+literal|"EQ"
 block|,
 comment|/* 283 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"GT"
+literal|"GE"
 block|,
 comment|/* 284 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"LE"
+literal|"GT"
 block|,
 comment|/* 285 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"LT"
+literal|"LE"
 block|,
 comment|/* 286 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"NE"
+literal|"LT"
 block|,
 comment|/* 287 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"IN"
+literal|"NE"
 block|,
 comment|/* 288 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"ARG"
+literal|"IN"
 block|,
 comment|/* 289 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"BLTIN"
+literal|"ARG"
 block|,
 comment|/* 290 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"BREAK"
+literal|"BLTIN"
 block|,
 comment|/* 291 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"CLOSE"
+literal|"BREAK"
 block|,
 comment|/* 292 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"CONTINUE"
+literal|"CLOSE"
 block|,
 comment|/* 293 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"DELETE"
+literal|"CONTINUE"
 block|,
 comment|/* 294 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"DO"
+literal|"DELETE"
 block|,
 comment|/* 295 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"EXIT"
+literal|"DO"
 block|,
 comment|/* 296 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"FOR"
+literal|"EXIT"
 block|,
 comment|/* 297 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"FUNC"
+literal|"FOR"
 block|,
 comment|/* 298 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"SUB"
+literal|"FUNC"
 block|,
 comment|/* 299 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"GSUB"
+literal|"SUB"
 block|,
 comment|/* 300 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"IF"
+literal|"GSUB"
 block|,
 comment|/* 301 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"INDEX"
+literal|"IF"
 block|,
 comment|/* 302 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"LSUBSTR"
+literal|"INDEX"
 block|,
 comment|/* 303 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"MATCHFCN"
+literal|"LSUBSTR"
 block|,
 comment|/* 304 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"NEXT"
+literal|"MATCHFCN"
 block|,
 comment|/* 305 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"NEXTFILE"
+literal|"NEXT"
 block|,
 comment|/* 306 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"ADD"
+literal|"NEXTFILE"
 block|,
 comment|/* 307 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"MINUS"
+literal|"ADD"
 block|,
 comment|/* 308 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"MULT"
+literal|"MINUS"
 block|,
 comment|/* 309 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"DIVIDE"
+literal|"MULT"
 block|,
 comment|/* 310 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"MOD"
+literal|"DIVIDE"
 block|,
 comment|/* 311 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"ASSIGN"
+literal|"MOD"
 block|,
 comment|/* 312 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"ASGNOP"
+literal|"ASSIGN"
 block|,
 comment|/* 313 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"ADDEQ"
+literal|"ASGNOP"
 block|,
 comment|/* 314 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"SUBEQ"
+literal|"ADDEQ"
 block|,
 comment|/* 315 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"MULTEQ"
+literal|"SUBEQ"
 block|,
 comment|/* 316 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"DIVEQ"
+literal|"MULTEQ"
 block|,
 comment|/* 317 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"MODEQ"
+literal|"DIVEQ"
 block|,
 comment|/* 318 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"POWEQ"
+literal|"MODEQ"
 block|,
 comment|/* 319 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"PRINT"
+literal|"POWEQ"
 block|,
 comment|/* 320 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"PRINTF"
+literal|"PRINT"
 block|,
 comment|/* 321 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"SPRINTF"
+literal|"PRINTF"
 block|,
 comment|/* 322 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"ELSE"
+literal|"SPRINTF"
 block|,
 comment|/* 323 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"INTEST"
+literal|"ELSE"
 block|,
 comment|/* 324 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"CONDEXPR"
+literal|"INTEST"
 block|,
 comment|/* 325 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"POSTINCR"
+literal|"CONDEXPR"
 block|,
 comment|/* 326 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"PREINCR"
+literal|"POSTINCR"
 block|,
 comment|/* 327 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"POSTDECR"
+literal|"PREINCR"
 block|,
 comment|/* 328 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"PREDECR"
+literal|"POSTDECR"
 block|,
 comment|/* 329 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"VAR"
+literal|"PREDECR"
 block|,
 comment|/* 330 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"IVAR"
+literal|"VAR"
 block|,
 comment|/* 331 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"VARNF"
+literal|"IVAR"
 block|,
 comment|/* 332 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"CALL"
+literal|"VARNF"
 block|,
 comment|/* 333 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"NUMBER"
+literal|"CALL"
 block|,
 comment|/* 334 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"STRING"
+literal|"NUMBER"
 block|,
 comment|/* 335 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"REGEXPR"
+literal|"STRING"
 block|,
 comment|/* 336 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"GETLINE"
+literal|"REGEXPR"
 block|,
 comment|/* 337 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"SUBSTR"
+literal|"GETLINE"
 block|,
 comment|/* 338 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"SPLIT"
+literal|"SUBSTR"
 block|,
 comment|/* 339 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"RETURN"
+literal|"SPLIT"
 block|,
 comment|/* 340 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"WHILE"
+literal|"RETURN"
 block|,
 comment|/* 341 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"CAT"
+literal|"WHILE"
 block|,
 comment|/* 342 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"UMINUS"
+literal|"CAT"
 block|,
 comment|/* 343 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"NOT"
+literal|"UMINUS"
 block|,
 comment|/* 344 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"POWER"
+literal|"NOT"
 block|,
 comment|/* 345 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"INCR"
+literal|"POWER"
 block|,
 comment|/* 346 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"DECR"
+literal|"INCR"
 block|,
 comment|/* 347 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"INDIRECT"
+literal|"DECR"
 block|,
 comment|/* 348 */
 operator|(
 name|char
 operator|*
 operator|)
-literal|"LASTTOKEN"
+literal|"INDIRECT"
 block|,
 comment|/* 349 */
+operator|(
+name|char
+operator|*
+operator|)
+literal|"LASTTOKEN"
+block|,
+comment|/* 350 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -682,7 +689,7 @@ function_decl|(
 modifier|*
 name|proctab
 index|[
-literal|92
+literal|93
 index|]
 function_decl|)
 parameter_list|(
@@ -757,6 +764,9 @@ comment|/* QUEST */
 function_decl|nullproc
 operator|,
 comment|/* PLUS */
+function_decl|nullproc
+operator|,
+comment|/* EMPTYRE */
 function_decl|boolop
 operator|,
 comment|/* AND */

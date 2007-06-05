@@ -35,7 +35,7 @@ name|xfree
 parameter_list|(
 name|a
 parameter_list|)
-value|{ if ((a) != NULL) { free((char *) a); a = NULL; } }
+value|{ if ((a) != NULL) { free((void *) (a)); (a) = NULL; } }
 end_define
 
 begin_define

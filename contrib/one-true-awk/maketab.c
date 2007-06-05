@@ -801,17 +801,7 @@ operator|>
 name|LASTTOKEN
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"maketab funny token %d %s ignored\n"
-argument_list|,
-name|tok
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
+comment|/* fprintf(stderr, "maketab funny token %d %s ignored\n", tok, buf); */
 continue|continue;
 block|}
 name|names
