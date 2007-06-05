@@ -2009,9 +2009,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|SMP
 name|printf
 argument_list|(
 literal|"spin lock %p (%s) held by %p (tid %d) too long\n"
@@ -2053,6 +2050,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
 
 begin_comment
 comment|/*  * _mtx_lock_spin: the tougher part of acquiring an MTX_SPIN lock.  *  * This is only called if we need to actually spin for the lock. Recursion  * is handled inline.  */
