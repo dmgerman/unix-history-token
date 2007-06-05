@@ -685,7 +685,7 @@ specifier|static
 name|int
 name|pick_pri
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -901,6 +901,16 @@ name|tdq
 name|tdq_cpu
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TDQ_ID
+parameter_list|(
+name|x
+parameter_list|)
+value|(0)
+end_define
 
 begin_define
 define|#
