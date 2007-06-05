@@ -111,8 +111,8 @@ end_struct
 begin_define
 define|#
 directive|define
-name|AC97_NAMELEN
-value|16
+name|AC97_MIXER_SIZE
+value|SOUND_MIXER_NRDEVICES
 end_define
 
 begin_struct
@@ -159,13 +159,13 @@ name|struct
 name|ac97mixtable_entry
 name|mix
 index|[
-literal|32
+name|AC97_MIXER_SIZE
 index|]
 decl_stmt|;
 name|char
 name|name
 index|[
-name|AC97_NAMELEN
+literal|16
 index|]
 decl_stmt|;
 name|struct
@@ -226,7 +226,7 @@ name|struct
 name|ac97mixtable_entry
 name|ac97mixtable_default
 index|[
-literal|32
+name|AC97_MIXER_SIZE
 index|]
 init|=
 block|{
@@ -3514,12 +3514,25 @@ argument_list|,
 name|AC97_REG_RESET
 argument_list|)
 expr_stmt|;
+name|k
+operator|=
+name|ac97_rdcd
+argument_list|(
+name|codec
+argument_list|,
+name|AC97_REG_RESET
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Let see if this codec can return consistent value. 	 * If not, turn on aggressive read workaround 	 * (STAC9704 comes in mind). 	 */
 if|if
 condition|(
 name|i
 operator|!=
 name|j
+operator|||
+name|j
+operator|!=
+name|k
 condition|)
 block|{
 name|codec
@@ -3905,7 +3918,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|32
+name|AC97_MIXER_SIZE
 condition|;
 name|i
 operator|++
@@ -3951,7 +3964,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|32
+name|AC97_MIXER_SIZE
 condition|;
 name|i
 operator|++
@@ -4845,7 +4858,12 @@ name|codec
 operator|->
 name|name
 argument_list|,
-name|AC97_NAMELEN
+sizeof|sizeof
+argument_list|(
+name|codec
+operator|->
+name|name
+argument_list|)
 argument_list|,
 literal|"%s:ac97"
 argument_list|,
@@ -5616,7 +5634,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|32
+name|AC97_MIXER_SIZE
 condition|;
 name|i
 operator|++
@@ -5657,7 +5675,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|32
+name|AC97_MIXER_SIZE
 condition|;
 name|i
 operator|++
@@ -5815,6 +5833,10 @@ condition|(
 name|codec
 operator|==
 name|NULL
+operator|||
+name|dev
+operator|>=
+name|AC97_MIXER_SIZE
 condition|)
 return|return
 operator|-
@@ -5880,7 +5902,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SOUND_MIXER_NRDEVICES
+name|AC97_MIXER_SIZE
 condition|;
 name|i
 operator|++
