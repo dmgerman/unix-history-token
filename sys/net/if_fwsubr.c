@@ -1371,8 +1371,6 @@ decl_stmt|;
 name|uint32_t
 name|id
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * Find an existing reassembly buffer or create a new one. 	 */
 name|enc
 operator|=
@@ -2115,8 +2113,6 @@ name|type
 decl_stmt|,
 name|isr
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * The caller has already stripped off the packet header 	 * (stream or wreqb) and marked the mbuf's M_BCAST flag 	 * appropriately. We de-encapsulate the IP packet and pass it 	 * up the line after handling link-level fragmentation. 	 */
 if|if
 condition|(
