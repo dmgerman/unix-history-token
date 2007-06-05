@@ -509,32 +509,18 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|void
-ifdef|#
-directive|ifdef
-name|__GNUC__
-name|__attribute__
-argument_list|(
-operator|(
-name|visibility
-argument_list|(
-literal|"hidden"
-argument_list|)
-operator|)
-argument_list|)
-endif|#
-directive|endif
 name|__stack_chk_fail_local
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
+parameter_list|)
 block|{
 name|__stack_chk_fail
 argument_list|()
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 end_unit
 
