@@ -1116,10 +1116,9 @@ argument_list|(
 name|SMP
 argument_list|)
 comment|/* 	 * Bind us to CPU 0 so that all shutdown code runs there.  Some 	 * systems don't shutdown properly (i.e., ACPI power off) if we 	 * run on another processor. 	 */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|sched_bind
@@ -1129,10 +1128,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1372,10 +1370,9 @@ name|subiter
 operator|++
 control|)
 block|{
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|mi_switch
@@ -1385,10 +1382,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -2080,24 +2076,14 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
+comment|/*thread_lock(td); */
 name|td
 operator|->
 name|td_flags
 operator||=
 name|TDF_INPANIC
 expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
+comment|/* thread_unlock(td); */
 if|if
 condition|(
 operator|!

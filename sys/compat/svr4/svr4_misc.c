@@ -5673,10 +5673,9 @@ operator|)
 return|;
 block|}
 comment|/* 		 * See if we have a stopped or continued process. 		 * XXX: This duplicates the same code in kern_wait(). 		 */
-name|mtx_lock_spin
+name|PROC_SLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -5724,10 +5723,9 @@ name|SVR4_WSTOPPED
 operator|)
 condition|)
 block|{
-name|mtx_unlock_spin
+name|PROC_SUNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -5863,10 +5861,9 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|mtx_unlock_spin
+name|PROC_SUNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 if|if

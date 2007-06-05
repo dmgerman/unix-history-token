@@ -924,6 +924,22 @@ operator||
 name|MTX_DUPOK
 argument_list|)
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_slock
+argument_list|,
+literal|"process slock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_SPIN
+operator||
+name|MTX_RECURSE
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_stats
@@ -3071,10 +3087,9 @@ name|ps_mtx
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_lock_spin
+name|PROC_SLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -3270,10 +3285,9 @@ operator|.
 name|rux_runtime
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|PROC_SUNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -3678,7 +3692,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fill in information that is thread specific.  * Must be called with sched_lock locked.  */
+comment|/*  * Fill in information that is thread specific.  * Must be called with p_slock locked.  */
 end_comment
 
 begin_function
@@ -3707,6 +3721,18 @@ operator|=
 name|td
 operator|->
 name|td_proc
+expr_stmt|;
+name|PROC_SLOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4114,6 +4140,11 @@ name|td
 operator|->
 name|td_sigmask
 expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4143,10 +4174,9 @@ argument_list|,
 name|kp
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|PROC_SLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -4168,10 +4198,9 @@ argument_list|,
 name|kp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|PROC_SUNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -4438,10 +4467,9 @@ operator|&
 name|KERN_PROC_NOTHREADS
 condition|)
 block|{
-name|mtx_lock_spin
+name|PROC_SLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -4464,10 +4492,9 @@ operator|&
 name|kinfo_proc
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|PROC_SUNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -4491,10 +4518,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|mtx_lock_spin
+name|PROC_SLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -4564,10 +4590,9 @@ name|kinfo_proc
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|PROC_SUNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -5003,10 +5028,9 @@ argument_list|)
 control|)
 block|{
 comment|/* 			 * Skip embryonic processes. 			 */
-name|mtx_lock_spin
+name|PROC_SLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -5018,18 +5042,16 @@ operator|==
 name|PRS_NEW
 condition|)
 block|{
-name|mtx_unlock_spin
+name|PROC_SUNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|mtx_unlock_spin
+name|PROC_SUNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK

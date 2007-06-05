@@ -825,7 +825,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|p->p_step = 0; 		if (P_SHOULDSTOP(p)) { 			p->p_xstat = sig; 			p->p_flag&= ~(P_STOPPED_TRACE|P_STOPPED_SIG); 			mtx_lock_spin(&sched_lock); 			thread_unsuspend(p); 			mtx_unlock_spin(&sched_lock); 		} else if (sig) 			psignal(p, sig);
+block|p->p_step = 0; 		if (P_SHOULDSTOP(p)) { 			p->p_xstat = sig; 			p->p_flag&= ~(P_STOPPED_TRACE|P_STOPPED_SIG); 			PROC_SLOCK(p); 			thread_unsuspend(p); 			PROC_SUNLOCK(p); 		} else if (sig) 			psignal(p, sig);
 else|#
 directive|else
 if|if

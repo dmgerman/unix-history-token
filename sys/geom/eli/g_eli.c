@@ -1459,10 +1459,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|sched_prio
@@ -1493,10 +1492,9 @@ operator|->
 name|w_number
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|G_ELI_DEBUG

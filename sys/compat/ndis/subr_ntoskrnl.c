@@ -15460,10 +15460,9 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Elevate our priority. DPCs are used to run interrupt 	 * handlers, and they should trigger as soon as possible 	 * once scheduled by an ISR. 	 */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -15507,10 +15506,9 @@ name|PRI_MIN_KERN
 expr_stmt|;
 endif|#
 directive|endif
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 while|while

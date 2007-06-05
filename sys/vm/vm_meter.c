@@ -576,10 +576,9 @@ operator|&
 name|P_SYSTEM
 condition|)
 continue|continue;
-name|mtx_lock_spin
+name|PROC_SLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -592,10 +591,9 @@ block|{
 case|case
 name|PRS_NEW
 case|:
-name|mtx_unlock_spin
+name|PROC_SUNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -609,6 +607,11 @@ argument|td
 argument_list|)
 block|{
 comment|/* Need new statistics  XXX */
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|td
@@ -619,6 +622,7 @@ block|{
 case|case
 name|TDS_INHIBITED
 case|:
+comment|/* 					 * XXX stats no longer synchronized. 					 */
 if|if
 condition|(
 name|TD_ON_LOCK
@@ -701,16 +705,25 @@ operator|.
 name|t_rq
 operator|++
 expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 continue|continue;
 default|default:
 break|break;
 block|}
-block|}
-block|}
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|PROC_SUNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Note active objects. 		 */

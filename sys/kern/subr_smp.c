@@ -637,10 +637,9 @@ name|int
 name|id
 decl_stmt|;
 comment|/* 	 * signotify() has already set TDF_ASTPENDING and TDF_NEEDSIGCHECK on 	 * this thread, so all we need to do is poke it if it is currently 	 * executing so that it executes ast(). 	 */
-name|mtx_assert
+name|THREAD_LOCK_ASSERT
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -741,14 +740,6 @@ name|map
 decl_stmt|,
 name|me
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|CTR0
 argument_list|(
 name|KTR_SMP

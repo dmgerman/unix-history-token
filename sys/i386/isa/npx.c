@@ -979,10 +979,9 @@ name|pcb_flags
 operator||=
 name|PCB_NPXTRAP
 expr_stmt|;
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 name|td
@@ -991,10 +990,9 @@ name|td_flags
 operator||=
 name|TDF_ASTPENDING
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 block|}

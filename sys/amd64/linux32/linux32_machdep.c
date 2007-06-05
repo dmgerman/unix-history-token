@@ -2354,10 +2354,9 @@ name|p2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make this runnable after we are finished with it. 	 */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td2
 argument_list|)
 expr_stmt|;
 name|TD_SET_CAN_RUN
@@ -2372,10 +2371,9 @@ argument_list|,
 name|SRQ_BORING
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td2
 argument_list|)
 expr_stmt|;
 return|return
@@ -2566,10 +2564,9 @@ name|p2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make this runnable after we are finished with it. 	 */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td2
 argument_list|)
 expr_stmt|;
 name|TD_SET_CAN_RUN
@@ -2584,10 +2581,9 @@ argument_list|,
 name|SRQ_BORING
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td2
 argument_list|)
 expr_stmt|;
 comment|/* wait for the children to exit, ie. emulate vfork */
@@ -3457,10 +3453,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Make this runnable after we are finished with it. 	 */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td2
 argument_list|)
 expr_stmt|;
 name|TD_SET_CAN_RUN
@@ -3475,10 +3470,9 @@ argument_list|,
 name|SRQ_BORING
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td2
 argument_list|)
 expr_stmt|;
 name|td

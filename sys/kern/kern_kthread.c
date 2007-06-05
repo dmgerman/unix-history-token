@@ -398,10 +398,9 @@ name|RFSTOPPED
 operator|)
 condition|)
 block|{
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 name|sched_add
@@ -411,10 +410,9 @@ argument_list|,
 name|SRQ_BORING
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 block|}

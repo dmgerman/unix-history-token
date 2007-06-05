@@ -715,10 +715,9 @@ name|p_comm
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 name|sched_prio
@@ -728,10 +727,9 @@ argument_list|,
 name|pri
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1738,10 +1736,9 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 name|sched_class
@@ -1756,10 +1753,9 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 name|td
@@ -1892,10 +1888,9 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 name|sched_class
@@ -1910,10 +1905,9 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 name|td
@@ -1989,10 +1983,9 @@ name|ithread
 operator|->
 name|it_thread
 expr_stmt|;
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 name|ithread
@@ -2022,10 +2015,9 @@ name|SRQ_INTR
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3239,10 +3231,13 @@ operator|)
 return|;
 block|}
 comment|/* 	 * If the interrupt thread is already running, then just mark this 	 * handler as being dead and let the ithread do the actual removal. 	 * 	 * During a cold boot while cold is set, msleep() does not sleep, 	 * so we have to remove the handler here rather than letting the 	 * thread do it. 	 */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|ie
+operator|->
+name|ie_thread
+operator|->
+name|it_thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -3290,10 +3285,13 @@ argument_list|,
 name|ih_next
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|ie
+operator|->
+name|ie_thread
+operator|->
+name|it_thread
 argument_list|)
 expr_stmt|;
 while|while
@@ -3566,17 +3564,16 @@ name|ie_name
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set it_need to tell the thread to keep running if it is already 	 * running.  Then, grab sched_lock and see if we actually need to 	 * put this thread on the runqueue. 	 */
+comment|/* 	 * Set it_need to tell the thread to keep running if it is already 	 * running.  Then, lock the thread and see if we actually need to 	 * put it on the runqueue. 	 */
 name|it
 operator|->
 name|it_need
 operator|=
 literal|1
 expr_stmt|;
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3645,10 +3642,9 @@ name|td_state
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3882,10 +3878,11 @@ operator|->
 name|ie_thread
 expr_stmt|;
 comment|/* 	 * If the interrupt thread is already running, then just mark this 	 * handler as being dead and let the ithread do the actual removal. 	 * 	 * During a cold boot while cold is set, msleep() does not sleep, 	 * so we have to remove the handler here rather than letting the 	 * thread do it. 	 */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|it
+operator|->
+name|it_thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -3929,10 +3926,11 @@ argument_list|,
 name|ih_next
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|it
+operator|->
+name|it_thread
 argument_list|)
 expr_stmt|;
 while|while
@@ -4214,17 +4212,16 @@ name|ie_name
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set it_need to tell the thread to keep running if it is already 	 * running.  Then, grab sched_lock and see if we actually need to 	 * put this thread on the runqueue. 	 */
+comment|/* 	 * Set it_need to tell the thread to keep running if it is already 	 * running.  Then, lock the thread and see if we actually need to 	 * put it on the runqueue. 	 */
 name|it
 operator|->
 name|it_need
 operator|=
 literal|1
 expr_stmt|;
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4293,10 +4290,9 @@ name|td_state
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -5329,10 +5325,9 @@ name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Processed all our interrupts.  Now get the sched 		 * lock.  This may take a while and it_need may get 		 * set again, so we have to check it again. 		 */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5371,10 +5366,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -5608,10 +5602,9 @@ name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Processed all our interrupts.  Now get the sched 		 * lock.  This may take a while and it_need may get 		 * set again, so we have to check it again. 		 */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5650,10 +5643,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|td
 argument_list|)
 expr_stmt|;
 block|}

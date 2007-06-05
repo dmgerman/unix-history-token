@@ -411,10 +411,9 @@ literal|"noflags"
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_lock_spin
+name|PROC_SLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -482,10 +481,9 @@ operator|=
 literal|"nochan"
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|PROC_SUNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 if|if

@@ -10601,10 +10601,9 @@ name|sc
 operator|=
 name|arg
 expr_stmt|;
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|sched_prio
@@ -10614,10 +10613,9 @@ argument_list|,
 name|PRIBIO
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|sx_xlock

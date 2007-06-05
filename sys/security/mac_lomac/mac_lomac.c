@@ -2391,10 +2391,9 @@ name|ml_flags
 operator||=
 name|MAC_LOMAC_FLAG_UPDATE
 expr_stmt|;
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|curthread
@@ -2411,10 +2410,9 @@ name|p_sflag
 operator||=
 name|PS_MACPEND
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Avoid memory allocation while holding a mutex; cache the 	 * label. 	 */

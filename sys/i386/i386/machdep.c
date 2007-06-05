@@ -5545,10 +5545,9 @@ ifdef|#
 directive|ifdef
 name|SMP
 comment|/* Schedule ourselves on the indicated cpu. */
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|sched_bind
@@ -5558,10 +5557,9 @@ argument_list|,
 name|cpu_id
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5595,10 +5593,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|sched_unbind
@@ -5606,10 +5603,9 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 endif|#

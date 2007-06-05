@@ -2376,10 +2376,9 @@ name|pri
 operator|=
 name|PRI_MAX_KERN
 expr_stmt|;
-name|mtx_lock_spin
+name|thread_lock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|sched_prio
@@ -2389,10 +2388,9 @@ argument_list|,
 name|pri
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|thread_unlock
 argument_list|(
-operator|&
-name|sched_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* If another accounting kthread is already running, just die. */

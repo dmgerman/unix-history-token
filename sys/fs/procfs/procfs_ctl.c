@@ -1035,10 +1035,9 @@ literal|"procfs_control"
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_lock_spin
+name|PROC_SLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 name|thread_unsuspend
@@ -1047,10 +1046,9 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* If it can run, let it do so. */
-name|mtx_unlock_spin
+name|PROC_SUNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1296,10 +1294,9 @@ operator|&=
 operator|~
 name|P_STOPPED_SIG
 expr_stmt|;
-name|mtx_lock_spin
+name|PROC_SLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 name|thread_unsuspend
@@ -1307,10 +1304,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|PROC_SUNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 block|}
