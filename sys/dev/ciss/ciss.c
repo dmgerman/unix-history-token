@@ -2582,6 +2582,14 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ciss_mtx
+argument_list|)
+expr_stmt|;
 comment|/* flush adapter cache */
 name|ciss_flush_adapter
 argument_list|(
@@ -2597,6 +2605,14 @@ condition|)
 name|ciss_soft_reset
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ciss_mtx
 argument_list|)
 expr_stmt|;
 return|return
