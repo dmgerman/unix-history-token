@@ -463,44 +463,12 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|DEBUG
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
 name|RET
 parameter_list|(
 name|x
 parameter_list|)
 value|{ if(dbg)printf("lex %s\n", tokname(x)); return(x); }
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RET
-parameter_list|(
-name|x
-parameter_list|)
-value|return(x)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
@@ -675,7 +643,7 @@ argument_list|,
 operator|&
 name|bp
 argument_list|,
-literal|0
+literal|"gettok"
 argument_list|)
 condition|)
 name|FATAL
@@ -780,7 +748,7 @@ argument_list|,
 operator|&
 name|bp
 argument_list|,
-literal|0
+literal|"gettok"
 argument_list|)
 condition|)
 name|FATAL
@@ -993,8 +961,9 @@ specifier|static
 name|int
 name|bufsize
 init|=
-literal|500
+literal|5
 decl_stmt|;
+comment|/* BUG: setting this small causes core dump! */
 if|if
 condition|(
 name|buf
@@ -1050,7 +1019,6 @@ name|regexpr
 argument_list|()
 return|;
 block|}
-comment|/* printf("top\n"); */
 for|for
 control|(
 init|;
@@ -1068,7 +1036,6 @@ operator|&
 name|bufsize
 argument_list|)
 expr_stmt|;
-comment|/* printf("gettok [%s]\n", buf); */
 if|if
 condition|(
 name|c
@@ -2130,7 +2097,7 @@ argument_list|,
 operator|&
 name|bp
 argument_list|,
-literal|0
+literal|"string"
 argument_list|)
 condition|)
 name|FATAL
@@ -2691,6 +2658,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* BUG: this ought to be inside the if; in theory could fault (daniel barrett) */
 name|kp
 operator|=
 name|keywords
@@ -2723,10 +2691,16 @@ condition|)
 block|{
 comment|/* special handling */
 case|case
-name|FSYSTEM
+name|BLTIN
 case|:
 if|if
 condition|(
+name|kp
+operator|->
+name|sub
+operator|==
+name|FSYSTEM
+operator|&&
 name|safe
 condition|)
 name|SYNTAX
@@ -3013,7 +2987,7 @@ argument_list|,
 operator|&
 name|bp
 argument_list|,
-literal|0
+literal|"regexpr"
 argument_list|)
 condition|)
 name|FATAL
