@@ -240,6 +240,27 @@ literal|0xfffd
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|0x10ca1734
+case|:
+comment|/* 		 * Amilo Pro V2055 with ALC655 has phone out by default 		 * disabled (surround on), leaving us only with internal 		 * speakers. This should really go to mixer. We write the 		 * Data Flow Control reg. 		 */
+name|ac97_wrcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x6a
+argument_list|,
+name|ac97_rdcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x6a
+argument_list|)
+operator||
+literal|0x0001
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
