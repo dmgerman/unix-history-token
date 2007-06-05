@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006 Broadcom Corporation  *	David Christensen<davidch@broadcom.com>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of Broadcom Corporation nor the name of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written consent.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2006-2007 Broadcom Corporation  *	David Christensen<davidch@broadcom.com>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of Broadcom Corporation nor the name of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written consent.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The following controllers are supported by this driver:  *   BCM5706C A2, A3  *   BCM5708C B1  *  * The following controllers are not supported by this driver:  * (These are not "Production" versions of the controller.)  *   *   BCM5706C A0, A1  *   BCM5706S A0, A1, A2, A3  *   BCM5708C A0, B0  *   BCM5708S A0, B0, B1  */
+comment|/*  * The following controllers are supported by this driver:  *   BCM5706C A2, A3  *   BCM5708C B1, B2  *  * The following controllers are not supported by this driver:  * (These are not "Production" versions of the controller.)  *   *   BCM5706C A0, A1  *   BCM5706S A0, A1, A2, A3  *   BCM5708C A0, B0  *   BCM5708S A0, B0, B1, B2  */
 end_comment
 
 begin_include
@@ -38,27 +38,6 @@ include|#
 directive|include
 file|<dev/bce/if_bcefw.h>
 end_include
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/* BCE Driver Version                                                       */
-end_comment
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_decl_stmt
-name|char
-name|bce_driver_version
-index|[]
-init|=
-literal|"v0.9.6"
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/****************************************************************************/
@@ -2407,7 +2386,7 @@ name|descbuf
 argument_list|,
 name|BCE_DEVDESC_MAX
 argument_list|,
-literal|"%s (%c%d), %s"
+literal|"%s (%c%d)"
 argument_list|,
 name|t
 operator|->
@@ -2446,8 +2425,6 @@ argument_list|)
 operator|&
 literal|0xf
 operator|)
-argument_list|,
-name|bce_driver_version
 argument_list|)
 expr_stmt|;
 name|device_set_desc_copy
@@ -2651,8 +2628,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): PCI memory allocation failed\n"
 argument_list|,
 name|__FILE__
@@ -2775,8 +2750,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): PCI map interrupt failed\n"
 argument_list|,
 name|__FILE__
@@ -2852,8 +2825,6 @@ name|BCE_CHIP_ID_5708_B0
 case|:
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Unsupported controller revision (%c%d)!\n"
 argument_list|,
 name|__FILE__
@@ -3134,8 +3105,6 @@ name|BCE_PCI_32BIT_FLAG
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"ASIC ID 0x%08X; Revision (%c%d); PCI%s %s %dMHz\n"
 argument_list|,
 name|sc
@@ -3233,8 +3202,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Controller initialization failed!\n"
 argument_list|,
 name|__FILE__
@@ -3261,8 +3228,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): NVRAM test failed!\n"
 argument_list|,
 name|__FILE__
@@ -3481,8 +3446,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): DMA resource allocation failed!\n"
 argument_list|,
 name|__FILE__
@@ -3519,8 +3482,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Interface allocation failed!\n"
 argument_list|,
 name|__FILE__
@@ -3707,8 +3668,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): PHY probe failed!\n"
 argument_list|,
 name|__FILE__
@@ -3798,8 +3757,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Failed to setup IRQ!\n"
 argument_list|,
 name|__FILE__
@@ -4682,8 +4639,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Error: PHY read timeout! phy = %d, reg = 0x%04X\n"
 argument_list|,
 name|__FILE__
@@ -5043,8 +4998,6 @@ name|BCE_EMAC_MDIO_COMM_START_BUSY
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): PHY write timeout!\n"
 argument_list|,
 name|__FILE__
@@ -6434,8 +6387,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Timeout error reading NVRAM at offset 0x%08X!\n"
 argument_list|,
 name|__FILE__
@@ -6681,8 +6632,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Timeout error writing NVRAM at offset 0x%08X\n"
 argument_list|,
 name|__FILE__
@@ -7063,8 +7012,6 @@ name|NULL
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Unknown Flash NVRAM found!\n"
 argument_list|,
 name|__FILE__
@@ -8554,8 +8501,6 @@ name|ENODEV
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Invalid NVRAM magic value! Expected: 0x%08X, "
 literal|"Found: 0x%08X\n"
 argument_list|,
@@ -8617,8 +8562,6 @@ name|ENODEV
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Invalid Manufacturing Information NVRAM CRC! "
 literal|"Expected: 0x%08X, Found: 0x%08X\n"
 argument_list|,
@@ -8655,8 +8598,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Invalid Feature Configuration Information "
 literal|"NVRAM CRC! Expected: 0x%08X, Found: 08%08X\n"
 argument_list|,
@@ -9528,8 +9469,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not allocate parent DMA tag!\n"
 argument_list|,
 name|__FILE__
@@ -9602,8 +9541,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not allocate status block DMA tag!\n"
 argument_list|,
 name|__FILE__
@@ -9651,8 +9588,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not allocate status block DMA memory!\n"
 argument_list|,
 name|__FILE__
@@ -9721,8 +9656,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not map status block DMA memory!\n"
 argument_list|,
 name|__FILE__
@@ -9818,8 +9751,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not allocate statistics block DMA tag!\n"
 argument_list|,
 name|__FILE__
@@ -9867,8 +9798,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not allocate statistics block DMA memory!\n"
 argument_list|,
 name|__FILE__
@@ -9937,8 +9866,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not map statistics block DMA memory!\n"
 argument_list|,
 name|__FILE__
@@ -10034,8 +9961,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not allocate TX descriptor chain DMA tag!\n"
 argument_list|,
 name|__FILE__
@@ -10103,8 +10028,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not allocate TX descriptor "
 literal|"chain DMA memory!\n"
 argument_list|,
@@ -10167,8 +10090,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not map TX descriptor chain DMA memory!\n"
 argument_list|,
 name|__FILE__
@@ -10275,8 +10196,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not allocate TX mbuf DMA tag!\n"
 argument_list|,
 name|__FILE__
@@ -10329,8 +10248,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Unable to create TX mbuf DMA map!\n"
 argument_list|,
 name|__FILE__
@@ -10404,8 +10321,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not allocate RX descriptor chain DMA tag!\n"
 argument_list|,
 name|__FILE__
@@ -10473,8 +10388,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not allocate RX descriptor chain "
 literal|"DMA memory!\n"
 argument_list|,
@@ -10553,8 +10466,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not map RX descriptor chain DMA memory!\n"
 argument_list|,
 name|__FILE__
@@ -10659,8 +10570,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Could not allocate RX mbuf DMA tag!\n"
 argument_list|,
 name|__FILE__
@@ -10713,8 +10622,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Unable to create RX mbuf DMA map!\n"
 argument_list|,
 name|__FILE__
@@ -11148,8 +11055,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Firmware synchronization timeout! "
 literal|"msg_data = 0x%08X\n"
 argument_list|,
@@ -13152,8 +13057,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Invalid Ethernet address!\n"
 argument_list|,
 name|__FILE__
@@ -13851,8 +13754,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Reset failed!\n"
 argument_list|,
 name|__FILE__
@@ -13887,8 +13788,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Byte swap is incorrect!\n"
 argument_list|,
 name|__FILE__
@@ -13929,8 +13828,6 @@ name|rc
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Firmware did not complete initialization!\n"
 argument_list|,
 name|__FILE__
@@ -14243,6 +14140,7 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+comment|/* Set the page size and clear the RV2P processor stall bits. */
 name|val
 operator|=
 operator|(
@@ -14735,7 +14633,7 @@ name|DBRUNIF
 argument_list|(
 argument|DB_RANDOMTRUE(bce_debug_bootcode_running_failure)
 argument_list|,
-argument|BCE_PRINTF(sc,
+argument|BCE_PRINTF(
 literal|"%s(%d): Simulating bootcode failure.\n"
 argument|, 			__FILE__, __LINE__); 		reg =
 literal|0
@@ -14754,8 +14652,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Bootcode not running! Found: 0x%08X, "
 literal|"Expected: 08%08X\n"
 argument_list|,
@@ -15052,8 +14948,6 @@ operator|)
 argument_list|,
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): RX producer out of range: 0x%04X> 0x%04X\n"
 argument_list|,
 name|__FILE__
@@ -15102,7 +14996,7 @@ name|DBRUNIF
 argument_list|(
 argument|DB_RANDOMTRUE(bce_debug_mbuf_allocation_failure)
 argument_list|,
-argument|BCE_PRINTF(sc,
+argument|BCE_PRINTF(
 literal|"%s(%d): Simulating mbuf allocation failure.\n"
 argument|,  				__FILE__, __LINE__); 			sc->mbuf_alloc_failed++; 			rc = ENOBUFS; 			goto bce_get_buf_exit
 argument_list|)
@@ -15318,8 +15212,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Error mapping mbuf into RX chain!\n"
 argument_list|,
 name|__FILE__
@@ -15363,8 +15255,6 @@ operator|)
 argument_list|,
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Too many free rx_bd (0x%04X> 0x%04X)!\n"
 argument_list|,
 name|__FILE__
@@ -16187,8 +16077,6 @@ operator|)
 argument_list|,
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Memory leak! Lost %d mbufs "
 literal|"from tx chain!\n"
 argument_list|,
@@ -16533,8 +16421,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Error filling RX chain: rx_bd[0x%04X]!\n"
 argument_list|,
 name|__FILE__
@@ -16839,8 +16725,6 @@ operator|)
 argument_list|,
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Memory leak! Lost %d mbufs from rx chain!\n"
 argument_list|,
 name|__FILE__
@@ -16989,6 +16873,12 @@ operator|->
 name|bce_miibus
 argument_list|)
 expr_stmt|;
+comment|/* Make sure the MII bus has been enumerated. */
+if|if
+condition|(
+name|mii
+condition|)
+block|{
 name|sc
 operator|->
 name|bce_link
@@ -17026,6 +16916,7 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -17523,6 +17414,11 @@ decl_stmt|;
 name|u32
 name|status
 decl_stmt|;
+comment|/* Clear the MBUF pointer. */
+name|m
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Convert the producer/consumer indices to an actual rx_bd index. */
 name|sw_chain_cons
 operator|=
@@ -17567,7 +17463,7 @@ name|DBRUN
 argument_list|(
 argument|BCE_VERBOSE_RECV
 argument_list|,
-argument|BCE_PRINTF(sc,
+argument|BCE_PRINTF(
 literal|"%s(): "
 argument|, __FUNCTION__);  			bce_dump_rxbd(sc, sw_chain_cons, rxbd)
 argument_list|)
@@ -17619,7 +17515,7 @@ name|DBRUNIF
 argument_list|(
 argument|(!(rxbd->rx_bd_flags& RX_BD_FLAGS_END))
 argument_list|,
-argument|BCE_PRINTF(sc,
+argument|BCE_PRINTF(
 literal|"%s(%d): Unexpected mbuf found in rx_bd[0x%04X]!\n"
 argument|, 				__FILE__, __LINE__, sw_chain_cons); 				bce_breakpoint(sc)
 argument_list|)
@@ -17706,7 +17602,7 @@ name|DBRUNIF
 argument_list|(
 argument|DB_RANDOMTRUE(bce_debug_l2fhdr_status_check)
 argument_list|,
-argument|BCE_PRINTF(sc,
+argument|BCE_PRINTF(
 literal|"Simulating l2_fhdr status error.\n"
 argument|); 				status = status | L2_FHDR_ERRORS_PHY_DECODE
 argument_list|)
@@ -17716,7 +17612,7 @@ name|DBRUNIF
 argument_list|(
 argument|((len< BCE_MIN_MTU) || (len> BCE_MAX_JUMBO_ETHER_MTU_VLAN))
 argument_list|,
-argument|BCE_PRINTF(sc,
+argument|BCE_PRINTF(
 literal|"%s(%d): Unusual frame size found. "
 literal|"Min(%d), Actual(%d), Max(%d)\n"
 argument|,  					__FILE__, __LINE__, (int) BCE_MIN_MTU,  					len, (int) BCE_MAX_JUMBO_ETHER_MTU_VLAN); 				bce_dump_mbuf(sc, m); 		 		bce_breakpoint(sc)
@@ -17829,8 +17725,6 @@ name|BCE_WARN
 argument_list|,
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Failed to allocate "
 literal|"new mbuf, incoming frame dropped!\n"
 argument_list|,
@@ -17929,7 +17823,7 @@ name|DBRUN
 argument_list|(
 argument|BCE_VERBOSE_RECV
 argument_list|,
-argument|struct ether_header *eh; 				eh = mtod(m, struct ether_header *); 				BCE_PRINTF(sc,
+argument|struct ether_header *eh; 				eh = mtod(m, struct ether_header *); 				BCE_PRINTF(
 literal|"%s(): to: %6D, from: %6D, type: 0x%04X\n"
 argument|, 					__FUNCTION__, eh->ether_dhost,
 literal|":"
@@ -18139,6 +18033,47 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
+name|bce_rx_int_next_rx
+label|:
+name|sw_prod
+operator|=
+name|NEXT_RX_BD
+argument_list|(
+name|sw_prod
+argument_list|)
+expr_stmt|;
+block|}
+name|sw_cons
+operator|=
+name|NEXT_RX_BD
+argument_list|(
+name|sw_cons
+argument_list|)
+expr_stmt|;
+comment|/* If we have a packet, pass it up the stack. */
+if|if
+condition|(
+name|m
+condition|)
+block|{
+name|sc
+operator|->
+name|rx_cons
+operator|=
+name|sw_cons
+expr_stmt|;
+name|sc
+operator|->
+name|rx_prod
+operator|=
+name|sw_prod
+expr_stmt|;
+name|sc
+operator|->
+name|rx_prod_bseq
+operator|=
+name|sw_prod_bseq
+expr_stmt|;
 name|DBPRINT
 argument_list|(
 name|sc
@@ -18182,23 +18117,49 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|bce_rx_int_next_rx
-label|:
+comment|/* Recover our place. */
+name|sw_cons
+operator|=
+name|sc
+operator|->
+name|rx_cons
+expr_stmt|;
 name|sw_prod
 operator|=
-name|NEXT_RX_BD
-argument_list|(
-name|sw_prod
-argument_list|)
+name|sc
+operator|->
+name|rx_prod
+expr_stmt|;
+name|sw_prod_bseq
+operator|=
+name|sc
+operator|->
+name|rx_prod_bseq
+expr_stmt|;
+name|hw_cons
+operator|=
+name|sc
+operator|->
+name|hw_rx_cons
+operator|=
+name|sblk
+operator|->
+name|status_rx_quick_consumer_index0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|hw_cons
+operator|&
+name|USABLE_RX_BD_PER_PAGE
+operator|)
+operator|==
+name|USABLE_RX_BD_PER_PAGE
+condition|)
+name|hw_cons
+operator|++
 expr_stmt|;
 block|}
-name|sw_cons
-operator|=
-name|NEXT_RX_BD
-argument_list|(
-name|sw_cons
-argument_list|)
-expr_stmt|;
 comment|/* Refresh hw_cons to see if there's new work */
 if|if
 condition|(
@@ -18524,7 +18485,7 @@ name|DBRUNIF
 argument_list|(
 argument|(sw_tx_chain_cons> MAX_TX_BD)
 argument_list|,
-argument|BCE_PRINTF(sc,
+argument|BCE_PRINTF(
 literal|"%s(%d): TX chain consumer out of range! "
 literal|" 0x%04X> 0x%04X\n"
 argument|, 				__FILE__, __LINE__, sw_tx_chain_cons,  				(int) MAX_TX_BD); 			bce_breakpoint(sc)
@@ -18558,7 +18519,7 @@ name|DBRUNIF
 argument_list|(
 argument|(txbd == NULL)
 argument_list|,
-argument|BCE_PRINTF(sc,
+argument|BCE_PRINTF(
 literal|"%s(%d): Unexpected NULL tx_bd[0x%04X]!\n"
 argument|,  				__FILE__, __LINE__, sw_tx_chain_cons); 			bce_breakpoint(sc)
 argument_list|)
@@ -18567,7 +18528,7 @@ name|DBRUN
 argument_list|(
 argument|BCE_INFO_SEND
 argument_list|,
-argument|BCE_PRINTF(sc,
+argument|BCE_PRINTF(
 literal|"%s(): "
 argument|, __FUNCTION__); 			bce_dump_txbd(sc, sw_tx_chain_cons, txbd)
 argument_list|)
@@ -18590,7 +18551,7 @@ name|DBRUNIF
 argument_list|(
 argument|(!(txbd->tx_bd_flags& TX_BD_FLAGS_END))
 argument_list|,
-argument|BCE_PRINTF(sc,
+argument|BCE_PRINTF(
 literal|"%s(%d): tx_bd END flag not set but "
 literal|"txmbuf == NULL!\n"
 argument|, __FILE__, __LINE__); 				bce_breakpoint(sc)
@@ -18602,8 +18563,6 @@ name|BCE_INFO_SEND
 argument_list|,
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(): Unloading map/freeing mbuf "
 literal|"from tx_bd[0x%04X]\n"
 argument_list|,
@@ -18740,30 +18699,7 @@ operator|<
 name|USABLE_TX_BD
 condition|)
 block|{
-name|DBRUNIF
-argument_list|(
-operator|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_OACTIVE
-operator|)
-argument_list|,
-name|BCE_PRINTF
-argument_list|(
-name|sc
-argument_list|,
-literal|"%s(): TX chain is open for business! Used tx_bd = %d\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|sc
-operator|->
-name|used_tx_bd
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/*		DBRUNIF((ifp->if_drv_flags& IFF_DRV_OACTIVE), 			BCE_PRINTF("%s(): TX chain is open for business! Used tx_bd = %d\n",  				__FUNCTION__, sc->used_tx_bd)); */
 name|ifp
 operator|->
 name|if_drv_flags
@@ -18937,14 +18873,6 @@ comment|/*                                                                      
 end_comment
 
 begin_comment
-comment|/* Must be called from a locked routine.                                    */
-end_comment
-
-begin_comment
-comment|/*                                                                          */
-end_comment
-
-begin_comment
 comment|/* Returns:                                                                 */
 end_comment
 
@@ -19026,8 +18954,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Controller reset failed!\n"
 argument_list|,
 name|__FILE__
@@ -19049,8 +18975,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Controller initialization failed!\n"
 argument_list|,
 name|__FILE__
@@ -19072,8 +18996,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Block initialization failed!\n"
 argument_list|,
 name|__FILE__
@@ -19350,6 +19272,34 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Initialize the controller just enough so that any management firmware    */
+end_comment
+
+begin_comment
+comment|/* running on the device will continue to operate correctly.                */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -19409,6 +19359,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Set the page size and clear the RV2P processor stall bits. */
 name|val
 operator|=
 operator|(
@@ -19869,8 +19820,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Error mapping mbuf into TX chain!\n"
 argument_list|,
 name|__FILE__
@@ -21049,8 +20998,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Error registering poll function!\n"
 argument_list|,
 name|__FILE__
@@ -21277,8 +21224,6 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Changing VLAN_MTU not supported.\n"
 argument_list|,
 name|__FILE__
@@ -21305,8 +21250,6 @@ name|BCE_MFW_ENABLE_FLAG
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Cannot change VLAN_HWTAGGING while "
 literal|"management firmware (ASF/IPMI/UMP) is running!\n"
 argument_list|,
@@ -21318,8 +21261,6 @@ expr_stmt|;
 else|else
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Changing VLAN_HWTAGGING not supported!\n"
 argument_list|,
 name|__FILE__
@@ -21421,7 +21362,7 @@ parameter_list|)
 block|{
 name|DBRUN
 argument_list|(
-argument|BCE_WARN_SEND
+argument|BCE_VERBOSE_SEND
 argument_list|,
 argument|bce_dump_driver_state(sc); 		bce_dump_status_block(sc)
 argument_list|)
@@ -21460,8 +21401,6 @@ condition|)
 return|return;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Watchdog timeout occurred, resetting!\n"
 argument_list|,
 name|__FILE__
@@ -21754,6 +21693,17 @@ name|sc
 operator|->
 name|bce_ifp
 expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_EXCESSIVE
+argument_list|,
+literal|"Entering %s()\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 name|BCE_LOCK
 argument_list|(
 name|sc
@@ -21869,7 +21819,7 @@ name|DBRUNIF
 argument_list|(
 argument|DB_RANDOMTRUE(bce_debug_unexpected_attention)
 argument_list|,
-argument|BCE_PRINTF(sc,
+argument|BCE_PRINTF(
 literal|"Simulating unexpected status attention bit set."
 argument|); 			status_attn_bits = status_attn_bits | STATUS_ATTN_BITS_PARITY_ERROR
 argument_list|)
@@ -21934,8 +21884,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"%s(%d): Fatal attention detected: 0x%08X\n"
 argument_list|,
 name|__FILE__
@@ -23304,6 +23252,17 @@ name|stats
 operator|->
 name|stat_CatchupInRuleCheckerP4Hit
 expr_stmt|;
+name|sc
+operator|->
+name|com_no_buffers
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+literal|0x120084
+argument_list|)
+expr_stmt|;
 name|DBPRINT
 argument_list|(
 name|sc
@@ -23317,6 +23276,30 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Periodic function to perform maintenance tasks.                          */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
 
 begin_function
 specifier|static
@@ -23339,8 +23322,6 @@ name|struct
 name|mii_data
 modifier|*
 name|mii
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|ifnet
@@ -23405,7 +23386,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Check that chip hasn't hang. */
+comment|/* Check that chip hasn't hung. */
 name|bce_watchdog
 argument_list|(
 name|sc
@@ -23509,8 +23490,6 @@ name|bootverbose
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"Gigabit link up\n"
 argument_list|)
 expr_stmt|;
@@ -23757,7 +23736,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*                                                                          */
+comment|/* Provides a sysctl interface to allow dumping the RX chain.               */
 end_comment
 
 begin_comment
@@ -23865,7 +23844,284 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/* Provides a sysctl interface to allow dumping the TX chain.               */
+end_comment
+
+begin_comment
 comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   0 for success, positive value for failure.                             */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|bce_sysctl_dump_tx_chain
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|int
+name|result
+decl_stmt|;
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|result
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|result
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|||
+operator|!
+name|req
+operator|->
+name|newptr
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|result
+operator|==
+literal|1
+condition|)
+block|{
+name|sc
+operator|=
+operator|(
+expr|struct
+name|bce_softc
+operator|*
+operator|)
+name|arg1
+expr_stmt|;
+name|bce_dump_tx_chain
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|USABLE_TX_BD
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|error
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Provides a sysctl interface to allow reading arbitrary registers in the  */
+end_comment
+
+begin_comment
+comment|/* device.  DO NOT ENABLE ON PRODUCTION SYSTEMS!                            */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   0 for success, positive value for failure.                             */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|bce_sysctl_reg_read
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|u32
+name|val
+decl_stmt|,
+name|result
+decl_stmt|;
+name|result
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|result
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|||
+operator|(
+name|req
+operator|->
+name|newptr
+operator|==
+name|NULL
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* Make sure the register is accessible. */
+if|if
+condition|(
+name|result
+operator|<
+literal|0x8000
+condition|)
+block|{
+name|sc
+operator|=
+operator|(
+expr|struct
+name|bce_softc
+operator|*
+operator|)
+name|arg1
+expr_stmt|;
+name|val
+operator|=
+name|REG_RD
+argument_list|(
+name|sc
+argument_list|,
+name|result
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"reg 0x%08X = 0x%08X\n"
+argument_list|,
+name|result
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|result
+operator|<
+literal|0x0280000
+condition|)
+block|{
+name|sc
+operator|=
+operator|(
+expr|struct
+name|bce_softc
+operator|*
+operator|)
+name|arg1
+expr_stmt|;
+name|val
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|result
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"reg 0x%08X = 0x%08X\n"
+argument_list|,
+name|result
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Provides a sysctl interface to force the driver to dump state and enter  */
+end_comment
+
+begin_comment
+comment|/* the debugger.  DO NOT ENABLE ON PRODUCTION SYSTEMS!                      */
 end_comment
 
 begin_comment
@@ -24033,26 +24289,6 @@ name|sc
 operator|->
 name|bce_dev
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_STRING
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"driver_version"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|bce_driver_version
-argument_list|,
-literal|0
-argument_list|,
-literal|"bce driver version"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -25360,6 +25596,28 @@ argument_list|,
 literal|"Received packets rule checker hits in Catchup path"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_UINT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"com_no_bufers"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|com_no_buffers
+argument_list|,
+literal|0
+argument_list|,
+literal|"Valid packets received but no RX buffers available"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|BCE_DEBUG
@@ -25458,6 +25716,35 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
+literal|"dump_tx_chain"
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|bce_sysctl_dump_tx_chain
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Dump tx_bd chain"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_PROC
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
 literal|"breakpoint"
 argument_list|,
 name|CTLTYPE_INT
@@ -25477,6 +25764,35 @@ argument_list|,
 literal|"I"
 argument_list|,
 literal|"Driver breakpoint"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_PROC
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"reg_read"
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|bce_sysctl_reg_read
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Register read"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -25590,8 +25906,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"mbuf: vaddr = 0x%08X:%08X, m_len = %d, m_flags = "
 argument_list|,
 name|val_hi
@@ -25667,8 +25981,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"- m_ext: vaddr = 0x%08X:%08X, ext_size = 0x%04X\n"
 argument_list|,
 name|val_hi
@@ -25741,8 +26053,6 @@ name|m
 decl_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"----------------------------"
 literal|"  tx mbuf data  "
 literal|"----------------------------\n"
@@ -25774,8 +26084,6 @@ index|]
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"txmbuf[%d]\n"
 argument_list|,
 name|chain_prod
@@ -25801,8 +26109,6 @@ expr_stmt|;
 block|}
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"----------------------------"
 literal|"----------------"
 literal|"----------------------------\n"
@@ -25812,7 +26118,27 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine prints the RX mbuf chain.  */
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Prints out the mbufs in the RX mbuf chain.                               */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
 end_comment
 
 begin_function
@@ -25839,8 +26165,6 @@ name|m
 decl_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"----------------------------"
 literal|"  rx mbuf data  "
 literal|"----------------------------\n"
@@ -25872,8 +26196,6 @@ index|]
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rxmbuf[0x%04X]\n"
 argument_list|,
 name|chain_prod
@@ -25899,8 +26221,6 @@ expr_stmt|;
 block|}
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"----------------------------"
 literal|"----------------"
 literal|"----------------------------\n"
@@ -25908,6 +26228,30 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Prints out a tx_bd structure.                                            */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
 
 begin_function
 specifier|static
@@ -25937,8 +26281,6 @@ condition|)
 comment|/* Index out of range. */
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"tx_bd[0x%04X]: Invalid tx_bd index!\n"
 argument_list|,
 name|idx
@@ -25958,8 +26300,6 @@ condition|)
 comment|/* TX Chain page pointer. */
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"tx_bd[0x%04X]: haddr = 0x%08X:%08X, chain page pointer\n"
 argument_list|,
 name|idx
@@ -25974,13 +26314,12 @@ name|tx_bd_haddr_lo
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 comment|/* Normal tx_bd entry. */
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"tx_bd[0x%04X]: haddr = 0x%08X:%08X, nbytes = 0x%08X, "
-literal|"vlan tag= 0x%4X, flags = 0x%04X\n"
+literal|"vlan tag= 0x%4X, flags = 0x%04X ("
 argument_list|,
 name|idx
 argument_list|,
@@ -26005,8 +26344,194 @@ operator|->
 name|tx_bd_flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|txbd
+operator|->
+name|tx_bd_flags
+operator|&
+name|TX_BD_FLAGS_CONN_FAULT
+condition|)
+name|printf
+argument_list|(
+literal|" CONN_FAULT"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txbd
+operator|->
+name|tx_bd_flags
+operator|&
+name|TX_BD_FLAGS_TCP_UDP_CKSUM
+condition|)
+name|printf
+argument_list|(
+literal|" TCP_UDP_CKSUM"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txbd
+operator|->
+name|tx_bd_flags
+operator|&
+name|TX_BD_FLAGS_IP_CKSUM
+condition|)
+name|printf
+argument_list|(
+literal|" IP_CKSUM"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txbd
+operator|->
+name|tx_bd_flags
+operator|&
+name|TX_BD_FLAGS_VLAN_TAG
+condition|)
+name|printf
+argument_list|(
+literal|"  VLAN"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txbd
+operator|->
+name|tx_bd_flags
+operator|&
+name|TX_BD_FLAGS_COAL_NOW
+condition|)
+name|printf
+argument_list|(
+literal|" COAL_NOW"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txbd
+operator|->
+name|tx_bd_flags
+operator|&
+name|TX_BD_FLAGS_DONT_GEN_CRC
+condition|)
+name|printf
+argument_list|(
+literal|" DONT_GEN_CRC"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txbd
+operator|->
+name|tx_bd_flags
+operator|&
+name|TX_BD_FLAGS_START
+condition|)
+name|printf
+argument_list|(
+literal|" START"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txbd
+operator|->
+name|tx_bd_flags
+operator|&
+name|TX_BD_FLAGS_END
+condition|)
+name|printf
+argument_list|(
+literal|" END"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txbd
+operator|->
+name|tx_bd_flags
+operator|&
+name|TX_BD_FLAGS_SW_OPTION_WORD
+condition|)
+name|printf
+argument_list|(
+literal|" OPTION_WORD"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txbd
+operator|->
+name|tx_bd_flags
+operator|&
+name|TX_BD_FLAGS_SW_FLAGS
+condition|)
+name|printf
+argument_list|(
+literal|" FLAGS"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txbd
+operator|->
+name|tx_bd_flags
+operator|&
+name|TX_BD_FLAGS_SW_SNAP
+condition|)
+name|printf
+argument_list|(
+literal|" SNAP"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txbd
+operator|->
+name|tx_bd_flags
+operator|&
+name|TX_BD_FLAGS_SW_LSO
+condition|)
+name|printf
+argument_list|(
+literal|" LSO"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" )\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Prints out a rx_bd structure.                                            */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
 
 begin_function
 specifier|static
@@ -26036,8 +26561,6 @@ condition|)
 comment|/* Index out of range. */
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rx_bd[0x%04X]: Invalid rx_bd index!\n"
 argument_list|,
 name|idx
@@ -26057,8 +26580,6 @@ condition|)
 comment|/* TX Chain page pointer. */
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rx_bd[0x%04X]: haddr = 0x%08X:%08X, chain page pointer\n"
 argument_list|,
 name|idx
@@ -26076,8 +26597,6 @@ else|else
 comment|/* Normal tx_bd entry. */
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rx_bd[0x%04X]: haddr = 0x%08X:%08X, nbytes = 0x%08X, "
 literal|"flags = 0x%08X\n"
 argument_list|,
@@ -26103,6 +26622,30 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Prints out a l2_fhdr structure.                                          */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -26124,8 +26667,6 @@ parameter_list|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"l2_fhdr[0x%04X]: status = 0x%08X, "
 literal|"pkt_len = 0x%04X, vlan = 0x%04x, ip_xsum = 0x%04X, "
 literal|"tcp_udp_xsum = 0x%04X\n"
@@ -26157,7 +26698,27 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine prints the TX chain.  */
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Prints out the TX chain.                                                 */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
 end_comment
 
 begin_function
@@ -26185,8 +26746,6 @@ decl_stmt|;
 comment|/* First some info about the tx_bd chain structure. */
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"----------------------------"
 literal|"  tx_bd  chain  "
 literal|"----------------------------\n"
@@ -26194,8 +26753,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"page size      = 0x%08X, tx chain pages        = 0x%08X\n"
 argument_list|,
 operator|(
@@ -26211,8 +26768,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"tx_bd per page = 0x%08X, usable tx_bd per page = 0x%08X\n"
 argument_list|,
 operator|(
@@ -26228,8 +26783,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"total tx_bd    = 0x%08X\n"
 argument_list|,
 operator|(
@@ -26240,9 +26793,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
-literal|""
 literal|"-----------------------------"
 literal|"   tx_bd data   "
 literal|"-----------------------------\n"
@@ -26305,18 +26855,36 @@ expr_stmt|;
 block|}
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
-literal|"-----------------------------"
-literal|"--------------"
-literal|"-----------------------------\n"
+literal|"----------------------------"
+literal|"----------------"
+literal|"----------------------------\n"
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * This routine prints the RX chain.  */
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Prints out the RX chain.                                                 */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
 end_comment
 
 begin_function
@@ -26344,8 +26912,6 @@ decl_stmt|;
 comment|/* First some info about the tx_bd chain structure. */
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"----------------------------"
 literal|"  rx_bd  chain  "
 literal|"----------------------------\n"
@@ -26353,15 +26919,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
-literal|"----- RX_BD Chain -----\n"
-argument_list|)
-expr_stmt|;
-name|BCE_PRINTF
-argument_list|(
-name|sc
-argument_list|,
 literal|"page size      = 0x%08X, rx chain pages        = 0x%08X\n"
 argument_list|,
 operator|(
@@ -26377,8 +26934,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rx_bd per page = 0x%08X, usable rx_bd per page = 0x%08X\n"
 argument_list|,
 operator|(
@@ -26394,8 +26949,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"total rx_bd    = 0x%08X\n"
 argument_list|,
 operator|(
@@ -26406,8 +26959,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"----------------------------"
 literal|"   rx_bd data   "
 literal|"----------------------------\n"
@@ -26470,10 +27021,8 @@ expr_stmt|;
 block|}
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"----------------------------"
-literal|"--------------"
+literal|"----------------"
 literal|"----------------------------\n"
 argument_list|)
 expr_stmt|;
@@ -26481,7 +27030,27 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine prints the status block.  */
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Prints out the status block from host memory.                            */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
 end_comment
 
 begin_function
@@ -26508,16 +27077,13 @@ name|status_block
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
-literal|"----------------------------- Status Block "
-literal|"-----------------------------\n"
+literal|"----------------------------"
+literal|"  Status Block  "
+literal|"----------------------------\n"
 argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"attn_bits  = 0x%08X, attn_bits_ack = 0x%08X, index = 0x%04X\n"
 argument_list|,
 name|sblk
@@ -26535,8 +27101,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rx_cons0   = 0x%08X, tx_cons0      = 0x%08X\n"
 argument_list|,
 name|sblk
@@ -26550,8 +27114,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"status_idx = 0x%04X\n"
 argument_list|,
 name|sblk
@@ -26572,8 +27134,6 @@ name|status_tx_quick_consumer_index1
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rx_cons1  = 0x%08X, tx_cons1      = 0x%08X\n"
 argument_list|,
 name|sblk
@@ -26597,8 +27157,6 @@ name|status_tx_quick_consumer_index2
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rx_cons2  = 0x%08X, tx_cons2      = 0x%08X\n"
 argument_list|,
 name|sblk
@@ -26622,8 +27180,6 @@ name|status_tx_quick_consumer_index3
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rx_cons3  = 0x%08X, tx_cons3      = 0x%08X\n"
 argument_list|,
 name|sblk
@@ -26647,8 +27203,6 @@ name|status_rx_quick_consumer_index5
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rx_cons4  = 0x%08X, rx_cons5      = 0x%08X\n"
 argument_list|,
 name|sblk
@@ -26672,8 +27226,6 @@ name|status_rx_quick_consumer_index7
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rx_cons6  = 0x%08X, rx_cons7      = 0x%08X\n"
 argument_list|,
 name|sblk
@@ -26697,8 +27249,6 @@ name|status_rx_quick_consumer_index9
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rx_cons8  = 0x%08X, rx_cons9      = 0x%08X\n"
 argument_list|,
 name|sblk
@@ -26722,8 +27272,6 @@ name|status_rx_quick_consumer_index11
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rx_cons10 = 0x%08X, rx_cons11     = 0x%08X\n"
 argument_list|,
 name|sblk
@@ -26747,8 +27295,6 @@ name|status_rx_quick_consumer_index13
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rx_cons12 = 0x%08X, rx_cons13     = 0x%08X\n"
 argument_list|,
 name|sblk
@@ -26772,8 +27318,6 @@ name|status_rx_quick_consumer_index15
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"rx_cons14 = 0x%08X, rx_cons15     = 0x%08X\n"
 argument_list|,
 name|sblk
@@ -26797,8 +27341,6 @@ name|status_cmd_consumer_index
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"com_prod  = 0x%08X, cmd_cons      = 0x%08X\n"
 argument_list|,
 name|sblk
@@ -26812,17 +27354,36 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
-literal|"-------------------------------------------"
-literal|"-----------------------------\n"
+literal|"----------------------------"
+literal|"----------------"
+literal|"----------------------------\n"
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * This routine prints the statistics block.  */
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Prints out the statistics block from host memory.                        */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
 end_comment
 
 begin_function
@@ -26849,18 +27410,13 @@ name|stats_block
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
-literal|""
-literal|"-----------------------------"
-literal|" Stats  Block "
-literal|"-----------------------------\n"
+literal|"----------------------------"
+literal|"  Stats  Block  "
+literal|"----------------------------\n"
 argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"IfHcInOctets         = 0x%08X:%08X, "
 literal|"IfHcInBadOctets      = 0x%08X:%08X\n"
 argument_list|,
@@ -26883,8 +27439,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"IfHcOutOctets        = 0x%08X:%08X, "
 literal|"IfHcOutBadOctets     = 0x%08X:%08X\n"
 argument_list|,
@@ -26907,8 +27461,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"IfHcInUcastPkts      = 0x%08X:%08X, "
 literal|"IfHcInMulticastPkts  = 0x%08X:%08X\n"
 argument_list|,
@@ -26931,8 +27483,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"IfHcInBroadcastPkts  = 0x%08X:%08X, "
 literal|"IfHcOutUcastPkts     = 0x%08X:%08X\n"
 argument_list|,
@@ -26955,8 +27505,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"IfHcOutMulticastPkts = 0x%08X:%08X, IfHcOutBroadcastPkts = 0x%08X:%08X\n"
 argument_list|,
 name|sblk
@@ -26984,8 +27532,6 @@ name|stat_emac_tx_stat_dot3statsinternalmactransmiterrors
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : "
 literal|"emac_tx_stat_dot3statsinternalmactransmiterrors\n"
 argument_list|,
@@ -27002,8 +27548,6 @@ name|stat_Dot3StatsCarrierSenseErrors
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : Dot3StatsCarrierSenseErrors\n"
 argument_list|,
 name|sblk
@@ -27019,8 +27563,6 @@ name|stat_Dot3StatsFCSErrors
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : Dot3StatsFCSErrors\n"
 argument_list|,
 name|sblk
@@ -27036,8 +27578,6 @@ name|stat_Dot3StatsAlignmentErrors
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : Dot3StatsAlignmentErrors\n"
 argument_list|,
 name|sblk
@@ -27053,8 +27593,6 @@ name|stat_Dot3StatsSingleCollisionFrames
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : Dot3StatsSingleCollisionFrames\n"
 argument_list|,
 name|sblk
@@ -27070,8 +27608,6 @@ name|stat_Dot3StatsMultipleCollisionFrames
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : Dot3StatsMultipleCollisionFrames\n"
 argument_list|,
 name|sblk
@@ -27087,8 +27623,6 @@ name|stat_Dot3StatsDeferredTransmissions
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : Dot3StatsDeferredTransmissions\n"
 argument_list|,
 name|sblk
@@ -27104,8 +27638,6 @@ name|stat_Dot3StatsExcessiveCollisions
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : Dot3StatsExcessiveCollisions\n"
 argument_list|,
 name|sblk
@@ -27121,8 +27653,6 @@ name|stat_Dot3StatsLateCollisions
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : Dot3StatsLateCollisions\n"
 argument_list|,
 name|sblk
@@ -27138,8 +27668,6 @@ name|stat_EtherStatsCollisions
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsCollisions\n"
 argument_list|,
 name|sblk
@@ -27155,8 +27683,6 @@ name|stat_EtherStatsFragments
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsFragments\n"
 argument_list|,
 name|sblk
@@ -27172,8 +27698,6 @@ name|stat_EtherStatsJabbers
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsJabbers\n"
 argument_list|,
 name|sblk
@@ -27189,8 +27713,6 @@ name|stat_EtherStatsUndersizePkts
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsUndersizePkts\n"
 argument_list|,
 name|sblk
@@ -27206,8 +27728,6 @@ name|stat_EtherStatsOverrsizePkts
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsOverrsizePkts\n"
 argument_list|,
 name|sblk
@@ -27223,8 +27743,6 @@ name|stat_EtherStatsPktsRx64Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsPktsRx64Octets\n"
 argument_list|,
 name|sblk
@@ -27240,8 +27758,6 @@ name|stat_EtherStatsPktsRx65Octetsto127Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsPktsRx65Octetsto127Octets\n"
 argument_list|,
 name|sblk
@@ -27257,8 +27773,6 @@ name|stat_EtherStatsPktsRx128Octetsto255Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsPktsRx128Octetsto255Octets\n"
 argument_list|,
 name|sblk
@@ -27274,8 +27788,6 @@ name|stat_EtherStatsPktsRx256Octetsto511Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsPktsRx256Octetsto511Octets\n"
 argument_list|,
 name|sblk
@@ -27291,8 +27803,6 @@ name|stat_EtherStatsPktsRx512Octetsto1023Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsPktsRx512Octetsto1023Octets\n"
 argument_list|,
 name|sblk
@@ -27308,8 +27818,6 @@ name|stat_EtherStatsPktsRx1024Octetsto1522Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsPktsRx1024Octetsto1522Octets\n"
 argument_list|,
 name|sblk
@@ -27325,8 +27833,6 @@ name|stat_EtherStatsPktsRx1523Octetsto9022Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsPktsRx1523Octetsto9022Octets\n"
 argument_list|,
 name|sblk
@@ -27342,8 +27848,6 @@ name|stat_EtherStatsPktsTx64Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsPktsTx64Octets\n"
 argument_list|,
 name|sblk
@@ -27359,8 +27863,6 @@ name|stat_EtherStatsPktsTx65Octetsto127Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsPktsTx65Octetsto127Octets\n"
 argument_list|,
 name|sblk
@@ -27376,8 +27878,6 @@ name|stat_EtherStatsPktsTx128Octetsto255Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsPktsTx128Octetsto255Octets\n"
 argument_list|,
 name|sblk
@@ -27393,8 +27893,6 @@ name|stat_EtherStatsPktsTx256Octetsto511Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsPktsTx256Octetsto511Octets\n"
 argument_list|,
 name|sblk
@@ -27410,8 +27908,6 @@ name|stat_EtherStatsPktsTx512Octetsto1023Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsPktsTx512Octetsto1023Octets\n"
 argument_list|,
 name|sblk
@@ -27427,8 +27923,6 @@ name|stat_EtherStatsPktsTx1024Octetsto1522Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsPktsTx1024Octetsto1522Octets\n"
 argument_list|,
 name|sblk
@@ -27444,8 +27938,6 @@ name|stat_EtherStatsPktsTx1523Octetsto9022Octets
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : EtherStatsPktsTx1523Octetsto9022Octets\n"
 argument_list|,
 name|sblk
@@ -27461,8 +27953,6 @@ name|stat_XonPauseFramesReceived
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : XonPauseFramesReceived\n"
 argument_list|,
 name|sblk
@@ -27478,8 +27968,6 @@ name|stat_XoffPauseFramesReceived
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : XoffPauseFramesReceived\n"
 argument_list|,
 name|sblk
@@ -27495,8 +27983,6 @@ name|stat_OutXonSent
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : OutXonSent\n"
 argument_list|,
 name|sblk
@@ -27512,8 +27998,6 @@ name|stat_OutXoffSent
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : OutXoffSent\n"
 argument_list|,
 name|sblk
@@ -27529,8 +28013,6 @@ name|stat_FlowControlDone
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : FlowControlDone\n"
 argument_list|,
 name|sblk
@@ -27546,8 +28028,6 @@ name|stat_MacControlFramesReceived
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : MacControlFramesReceived\n"
 argument_list|,
 name|sblk
@@ -27563,8 +28043,6 @@ name|stat_XoffStateEntered
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : XoffStateEntered\n"
 argument_list|,
 name|sblk
@@ -27580,8 +28058,6 @@ name|stat_IfInFramesL2FilterDiscards
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : IfInFramesL2FilterDiscards\n"
 argument_list|,
 name|sblk
@@ -27597,8 +28073,6 @@ name|stat_IfInRuleCheckerDiscards
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : IfInRuleCheckerDiscards\n"
 argument_list|,
 name|sblk
@@ -27614,8 +28088,6 @@ name|stat_IfInFTQDiscards
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : IfInFTQDiscards\n"
 argument_list|,
 name|sblk
@@ -27631,8 +28103,6 @@ name|stat_IfInMBUFDiscards
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : IfInMBUFDiscards\n"
 argument_list|,
 name|sblk
@@ -27648,8 +28118,6 @@ name|stat_IfInRuleCheckerP4Hit
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : IfInRuleCheckerP4Hit\n"
 argument_list|,
 name|sblk
@@ -27665,8 +28133,6 @@ name|stat_CatchupInRuleCheckerDiscards
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : CatchupInRuleCheckerDiscards\n"
 argument_list|,
 name|sblk
@@ -27682,8 +28148,6 @@ name|stat_CatchupInFTQDiscards
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : CatchupInFTQDiscards\n"
 argument_list|,
 name|sblk
@@ -27699,8 +28163,6 @@ name|stat_CatchupInMBUFDiscards
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : CatchupInMBUFDiscards\n"
 argument_list|,
 name|sblk
@@ -27716,8 +28178,6 @@ name|stat_CatchupInRuleCheckerP4Hit
 condition|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : CatchupInRuleCheckerP4Hit\n"
 argument_list|,
 name|sblk
@@ -27727,15 +28187,37 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
-literal|"-----------------------------"
-literal|"--------------"
-literal|"-----------------------------\n"
+literal|"----------------------------"
+literal|"----------------"
+literal|"----------------------------\n"
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Prints out a summary of the driver state.                                */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
 
 begin_function
 specifier|static
@@ -27755,11 +28237,9 @@ name|val_lo
 decl_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
-literal|"-----------------------------"
-literal|" Driver State "
-literal|"-----------------------------\n"
+literal|"----------------------------"
+literal|"  Driver State  "
+literal|"----------------------------\n"
 argument_list|)
 expr_stmt|;
 name|val_hi
@@ -27778,8 +28258,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X:%08X - (sc) driver softc structure virtual address\n"
 argument_list|,
 name|val_hi
@@ -27807,8 +28285,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X:%08X - (sc->bce_vhandle) PCI BAR virtual address\n"
 argument_list|,
 name|val_hi
@@ -27836,8 +28312,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X:%08X - (sc->status_block) status block virtual address\n"
 argument_list|,
 name|val_hi
@@ -27865,8 +28339,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X:%08X - (sc->stats_block) statistics block virtual address\n"
 argument_list|,
 name|val_hi
@@ -27894,8 +28366,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X:%08X - (sc->tx_bd_chain) tx_bd chain virtual adddress\n"
 argument_list|,
 name|val_hi
@@ -27923,8 +28393,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X:%08X - (sc->rx_bd_chain) rx_bd chain virtual address\n"
 argument_list|,
 name|val_hi
@@ -27952,8 +28420,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X:%08X - (sc->tx_mbuf_ptr) tx mbuf chain virtual address\n"
 argument_list|,
 name|val_hi
@@ -27981,8 +28447,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X:%08X - (sc->rx_mbuf_ptr) rx mbuf chain virtual address\n"
 argument_list|,
 name|val_hi
@@ -27992,8 +28456,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->interrupts_generated) h/w intrs\n"
 argument_list|,
 name|sc
@@ -28003,8 +28465,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->rx_interrupts) rx interrupts handled\n"
 argument_list|,
 name|sc
@@ -28014,8 +28474,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->tx_interrupts) tx interrupts handled\n"
 argument_list|,
 name|sc
@@ -28025,8 +28483,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->last_status_idx) status block index\n"
 argument_list|,
 name|sc
@@ -28036,8 +28492,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->tx_prod) tx producer index\n"
 argument_list|,
 name|sc
@@ -28047,8 +28501,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->tx_cons) tx consumer index\n"
 argument_list|,
 name|sc
@@ -28058,8 +28510,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->tx_prod_bseq) tx producer bseq index\n"
 argument_list|,
 name|sc
@@ -28069,8 +28519,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->rx_prod) rx producer index\n"
 argument_list|,
 name|sc
@@ -28080,8 +28528,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->rx_cons) rx consumer index\n"
 argument_list|,
 name|sc
@@ -28091,8 +28537,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->rx_prod_bseq) rx producer bseq index\n"
 argument_list|,
 name|sc
@@ -28102,8 +28546,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->rx_mbuf_alloc) rx mbufs allocated\n"
 argument_list|,
 name|sc
@@ -28113,8 +28555,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->free_rx_bd) free rx_bd's\n"
 argument_list|,
 name|sc
@@ -28124,8 +28564,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X/%08X - (sc->rx_low_watermark) rx low watermark\n"
 argument_list|,
 name|sc
@@ -28140,8 +28578,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->txmbuf_alloc) tx mbufs allocated\n"
 argument_list|,
 name|sc
@@ -28151,8 +28587,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->rx_mbuf_alloc) rx mbufs allocated\n"
 argument_list|,
 name|sc
@@ -28162,8 +28596,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->used_tx_bd) used tx_bd's\n"
 argument_list|,
 name|sc
@@ -28173,8 +28605,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X/%08X - (sc->tx_hi_watermark) tx hi watermark\n"
 argument_list|,
 name|sc
@@ -28189,8 +28619,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"         0x%08X - (sc->mbuf_alloc_failed) failed mbuf alloc\n"
 argument_list|,
 name|sc
@@ -28200,15 +28628,41 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
-literal|"-----------------------------"
-literal|"--------------"
-literal|"-----------------------------\n"
+literal|"----------------------------"
+literal|"----------------"
+literal|"----------------------------\n"
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Prints out the hardware state through a summary of important register,   */
+end_comment
+
+begin_comment
+comment|/* followed by a complete register dump.                                    */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
 
 begin_function
 specifier|static
@@ -28226,8 +28680,6 @@ name|val1
 decl_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"----------------------------"
 literal|" Hardware State "
 literal|"----------------------------\n"
@@ -28235,8 +28687,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : bootcode version\n"
 argument_list|,
 name|sc
@@ -28255,8 +28705,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : (0x%04X) misc_enable_status_bits\n"
 argument_list|,
 name|val1
@@ -28275,8 +28723,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : (0x%04X) dma_status\n"
 argument_list|,
 name|val1
@@ -28295,8 +28741,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : (0x%04X) ctx_status\n"
 argument_list|,
 name|val1
@@ -28315,8 +28759,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : (0x%04X) emac_status\n"
 argument_list|,
 name|val1
@@ -28335,8 +28777,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : (0x%04X) rpm_status\n"
 argument_list|,
 name|val1
@@ -28355,8 +28795,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : (0x%04X) tbdr_status\n"
 argument_list|,
 name|val1
@@ -28375,8 +28813,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : (0x%04X) tdma_status\n"
 argument_list|,
 name|val1
@@ -28395,8 +28831,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%08X : (0x%04X) hc_status\n"
 argument_list|,
 name|val1
@@ -28406,8 +28840,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"----------------------------"
 literal|"----------------"
 literal|"----------------------------\n"
@@ -28415,8 +28847,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"----------------------------"
 literal|" Register  Dump "
 literal|"----------------------------\n"
@@ -28439,8 +28869,6 @@ literal|0x10
 control|)
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"0x%04X: 0x%08X 0x%08X 0x%08X 0x%08X\n"
 argument_list|,
 name|i
@@ -28482,8 +28910,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-name|sc
-argument_list|,
 literal|"----------------------------"
 literal|"----------------"
 literal|"----------------------------\n"
@@ -28491,6 +28917,30 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Prints out the driver state and then enters the debugger.                */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
 
 begin_function
 specifier|static
@@ -28598,7 +29048,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Print the important status block fields. */
 name|bce_dump_status_block
 argument_list|(
 name|sc
