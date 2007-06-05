@@ -2315,6 +2315,8 @@ condition|(
 name|intbase
 operator|!=
 name|next_ioapic_base
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
