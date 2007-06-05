@@ -3250,8 +3250,16 @@ name|td
 argument_list|,
 name|newtd
 argument_list|,
-operator|&
-name|sched_lock
+name|__DEVOLATILE
+argument_list|(
+expr|struct
+name|mtx
+operator|*
+argument_list|,
+name|td
+operator|->
+name|td_lock
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Where am I?  What year is it? 		 * We are in the same thread that went to sleep above, 		 * but any amount of time may have passed. All out context 		 * will still be available as will local variables. 		 * PCPU values however may have changed as we may have 		 * changed CPU so don't trust cached values of them. 		 * New threads will go to fork_exit() instead of here 		 * so if you change things here you may need to change 		 * things there too. 		 * If the thread above was exiting it will never wake 		 * up again here, so either it has saved everything it 		 * needed to, or the thread_wait() or wait() will 		 * need to reap it. 		 */
