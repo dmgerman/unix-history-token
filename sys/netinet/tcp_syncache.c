@@ -3709,11 +3709,11 @@ name|__func__
 argument_list|,
 name|th
 operator|->
-name|th_ack
+name|th_seq
 argument_list|,
 name|sc
 operator|->
-name|sc_iss
+name|sc_irs
 argument_list|)
 expr_stmt|;
 goto|goto
