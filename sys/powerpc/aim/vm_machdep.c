@@ -637,6 +637,8 @@ argument_list|(
 name|old
 argument_list|,
 name|new
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|panic
