@@ -9180,9 +9180,7 @@ argument|); END_DEBUG  	for (i =
 literal|0
 argument|; i< SBP_NUM_TARGETS; i ++)  		sbp_cam_detach_target(&sbp->targets[i]);  	SBP_LOCK(sbp); 	xpt_async(AC_LOST_DEVICE, sbp->path, NULL); 	xpt_free_path(sbp->path); 	xpt_bus_deregister(cam_sim_path(sbp->sim)); 	cam_sim_free(sbp->sim,
 comment|/*free_devq*/
-argument|TRUE)
-argument_list|,
-argument|SBP_UNLOCK(sbp);  	sbp_logout_all(sbp);
+argument|TRUE); 	SBP_UNLOCK(sbp);  	sbp_logout_all(sbp);
 comment|/* XXX wait for logout completion */
 argument|pause(
 literal|"sbpdtc"
