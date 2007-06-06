@@ -2609,10 +2609,10 @@ block|{
 name|vm_map_entry_t
 name|ent
 decl_stmt|;
-name|vm_offset_t
+name|u_long
 name|start
 decl_stmt|;
-name|vm_offset_t
+name|u_long
 name|end
 decl_stmt|;
 name|char
@@ -2645,7 +2645,7 @@ name|mapbuf
 operator|+
 name|pos
 argument_list|,
-literal|"%x %x %*d %*d %*x %3[-rwx]"
+literal|"%lx %lx %*d %*d %*x %3[-rwx]"
 literal|" %*d %*d %*x %*s %*s %16s %*s%*[\n]%n"
 argument_list|,
 operator|&
