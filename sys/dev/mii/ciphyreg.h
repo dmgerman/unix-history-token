@@ -1773,6 +1773,82 @@ begin_comment
 comment|/* Enable ActiPHY power saving */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CIPHY_ECTL1_IOVOL
+value|0x0e00
+end_define
+
+begin_comment
+comment|/* MAC interface and I/O voltage select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CIPHY_ECTL1_INTSEL
+value|0xf000
+end_define
+
+begin_comment
+comment|/* select MAC interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CIPHY_IOVOL_3300MV
+value|0x0000
+end_define
+
+begin_comment
+comment|/* 3.3V for I/O pins */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CIPHY_IOVOL_2500MV
+value|0x0200
+end_define
+
+begin_comment
+comment|/* 2.5V for I/O pins */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CIPHY_INTSEL_GMII
+value|0x0000
+end_define
+
+begin_comment
+comment|/* GMII/MII */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CIPHY_INTSEL_RGMII
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CIPHY_INTSEL_TBI
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CIPHY_INTSEL_RTBI
+value|0x3000
+end_define
+
 begin_comment
 comment|/* Extended PHY control register #2 */
 end_comment
