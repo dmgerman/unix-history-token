@@ -150,10 +150,6 @@ name|p_hasintr
 range|:
 literal|1
 decl_stmt|;
-name|driver_filter_t
-modifier|*
-name|p_ih
-decl_stmt|;
 name|serdev_intr_t
 modifier|*
 name|p_ihsrc
@@ -3421,10 +3417,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|filt
-operator|==
-name|NULL
-operator|||
 name|cookiep
 operator|==
 name|NULL
@@ -3438,6 +3430,18 @@ condition|)
 return|return
 operator|(
 name|EINVAL
+operator|)
+return|;
+comment|/* We demand that serdev devices use filter_only interrupts. */
+if|if
+condition|(
+name|ihand
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENXIO
 operator|)
 return|;
 if|if
@@ -3555,18 +3559,6 @@ name|cookiep
 argument_list|)
 operator|)
 return|;
-comment|/* We demand that serdev devices use fast interrupts. */
-if|if
-condition|(
-name|filt
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 name|sc
 operator|->
 name|sc_serdevs
@@ -3586,12 +3578,6 @@ operator|->
 name|p_hasintr
 operator|=
 literal|1
-expr_stmt|;
-name|port
-operator|->
-name|p_ih
-operator|=
-name|filt
 expr_stmt|;
 name|port
 operator|->
@@ -3784,12 +3770,6 @@ operator|->
 name|p_hasintr
 operator|=
 literal|0
-expr_stmt|;
-name|port
-operator|->
-name|p_ih
-operator|=
-name|NULL
 expr_stmt|;
 name|port
 operator|->
