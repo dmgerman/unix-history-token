@@ -394,10 +394,10 @@ begin_struct
 struct|struct
 name|thread
 block|{
-specifier|volatile
 name|struct
 name|mtx
 modifier|*
+specifier|volatile
 name|td_lock
 decl_stmt|;
 comment|/* replaces sched lock */
@@ -855,7 +855,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|do {									\ 	struct mtx *__m = __DEVOLATILE(struct mtx *, (td)->td_lock);	\ 	if (__m !=&blocked_lock)					\ 		mtx_assert(__m, (type));				\ } while (0)
+value|do {									\ 	struct mtx *__m = (td)->td_lock;				\ 	if (__m !=&blocked_lock)					\ 		mtx_assert(__m, (type));				\ } while (0)
 end_define
 
 begin_comment

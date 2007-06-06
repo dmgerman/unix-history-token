@@ -6552,16 +6552,9 @@ name|td
 argument_list|,
 name|newtd
 argument_list|,
-name|__DEVOLATILE
-argument_list|(
-expr|struct
-name|mtx
-operator|*
-argument_list|,
 name|td
 operator|->
 name|td_lock
-argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#

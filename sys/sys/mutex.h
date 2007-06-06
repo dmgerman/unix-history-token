@@ -651,7 +651,7 @@ parameter_list|(
 name|tdp
 parameter_list|)
 define|\
-value|mtx_unlock_spin(__DEVOLATILE(struct mtx *, (tdp)->td_lock))
+value|mtx_unlock_spin((tdp)->td_lock)
 end_define
 
 begin_comment
