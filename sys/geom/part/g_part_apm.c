@@ -2132,6 +2132,13 @@ name|G_PART_ALIAS_FREEBSD_VINUM
 argument_list|)
 operator|)
 return|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'!'
+expr_stmt|;
 name|len
 operator|=
 name|MIN
@@ -2147,7 +2154,7 @@ argument_list|)
 argument_list|,
 name|bufsz
 operator|-
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -2155,6 +2162,8 @@ argument_list|(
 name|type
 argument_list|,
 name|buf
+operator|+
+literal|1
 argument_list|,
 name|len
 argument_list|)
@@ -2162,6 +2171,8 @@ expr_stmt|;
 name|buf
 index|[
 name|len
+operator|+
+literal|1
 index|]
 operator|=
 literal|'\0'
