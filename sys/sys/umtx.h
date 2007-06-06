@@ -137,13 +137,9 @@ index|]
 decl_stmt|;
 comment|/* Priority protect ceiling */
 name|uint32_t
-name|m_spincount
-decl_stmt|;
-comment|/* Max spinning cycle */
-name|uint32_t
 name|m_spare
 index|[
-literal|3
+literal|4
 index|]
 decl_stmt|;
 block|}
