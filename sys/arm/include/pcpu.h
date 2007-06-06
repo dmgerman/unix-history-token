@@ -114,7 +114,7 @@ name|PCPU_INC
 parameter_list|(
 name|member
 parameter_list|)
-value|PCPU_LAZY_ADD(member, 1)
+value|PCPU_ADD(member, 1)
 end_define
 
 begin_define
