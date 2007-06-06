@@ -292,8 +292,10 @@ comment|/*lockfunc*/
 name|busdma_lock_mutex
 argument_list|,
 comment|/*lockarg*/
-operator|&
-name|Giant
+name|FW_GMTX
+argument_list|(
+name|fc
+argument_list|)
 argument_list|,
 endif|#
 directive|endif
@@ -771,8 +773,10 @@ comment|/*lockfunc*/
 name|busdma_lock_mutex
 argument_list|,
 comment|/*lockarg*/
-operator|&
-name|Giant
+name|FW_GMTX
+argument_list|(
+name|fc
+argument_list|)
 argument_list|,
 endif|#
 directive|endif

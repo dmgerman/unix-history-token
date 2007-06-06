@@ -19,7 +19,7 @@ begin_struct
 struct|struct
 name|fwe_softc
 block|{
-comment|/* XXX this must be first for fd.post_explore() */
+comment|/* XXX this must be the first for fd.post_explore() */
 name|struct
 name|firewire_dev_comm
 name|fd
@@ -57,9 +57,33 @@ decl_stmt|;
 block|}
 name|eth_softc
 struct|;
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|FWE_LOCK
+parameter_list|(
+name|fwe
+parameter_list|)
+value|mtx_lock(&(fwe)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FWE_UNLOCK
+parameter_list|(
+name|fwe
+parameter_list|)
+value|mtx_unlock(&(fwe)->mtx)
+end_define
 
 begin_endif
 endif|#
