@@ -309,6 +309,13 @@ argument_list|,
 name|RTL8201L
 argument_list|)
 block|,
+name|MII_PHY_DESC
+argument_list|(
+name|ICPLUS
+argument_list|,
+name|IP101
+argument_list|)
+block|,
 name|MII_PHY_END
 block|}
 decl_stmt|;
