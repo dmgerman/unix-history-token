@@ -1577,15 +1577,6 @@ argument_list|,
 name|new
 argument_list|)
 expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|curtid
-argument_list|,
-name|new
-operator|->
-name|td_tid
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|COMPAT_IA32
