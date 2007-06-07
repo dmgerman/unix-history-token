@@ -1667,15 +1667,6 @@ argument_list|,
 name|new
 argument_list|)
 expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|curtid
-argument_list|,
-name|new
-operator|->
-name|td_tid
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|COMPAT_IA32
@@ -2637,15 +2628,6 @@ name|curthread
 argument_list|,
 operator|&
 name|thread0
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|curtid
-argument_list|,
-name|thread0
-operator|.
-name|td_tid
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */
