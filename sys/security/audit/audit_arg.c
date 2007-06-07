@@ -1202,8 +1202,10 @@ name|ar_arg_auid
 operator|=
 name|p
 operator|->
-name|p_au
+name|p_ucred
 operator|->
+name|cr_audit
+operator|.
 name|ai_auid
 expr_stmt|;
 name|ar
@@ -1265,8 +1267,10 @@ name|ar_arg_asid
 operator|=
 name|p
 operator|->
-name|p_au
+name|p_ucred
 operator|->
+name|cr_audit
+operator|.
 name|ai_asid
 expr_stmt|;
 name|ar
@@ -1277,8 +1281,10 @@ name|ar_arg_termid_addr
 operator|=
 name|p
 operator|->
-name|p_au
+name|p_ucred
 operator|->
+name|cr_audit
+operator|.
 name|ai_termid
 expr_stmt|;
 name|ar

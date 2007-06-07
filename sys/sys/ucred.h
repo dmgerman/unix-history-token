@@ -15,6 +15,12 @@ directive|define
 name|_SYS_UCRED_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<bsm/audit.h>
+end_include
+
 begin_comment
 comment|/*  * Credentials.  *  * Please do not inspect cr_uid directly to determine superuserness.  The  * priv(9) interface should be used to check for privilege.  */
 end_comment
@@ -104,6 +110,11 @@ modifier|*
 name|cr_label
 decl_stmt|;
 comment|/* MAC label */
+name|struct
+name|auditinfo_addr
+name|cr_audit
+decl_stmt|;
+comment|/* Audit properties. */
 block|}
 struct|;
 end_struct

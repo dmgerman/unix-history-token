@@ -3017,16 +3017,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|AUDIT
-name|audit_proc_free
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|KASSERT
 argument_list|(
 name|FIRST_THREAD_IN_PROC
