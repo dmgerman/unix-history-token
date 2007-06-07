@@ -816,16 +816,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|pmap_t
-name|pmap_install
-parameter_list|(
-name|pmap_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|pmap_invalidate_all
 parameter_list|(
@@ -2312,7 +2302,7 @@ name|SMP
 end_ifdef
 
 begin_endif
-unit|static void pmap_invalidate_page_1(void *arg) { 	void **args = arg; 	pmap_t oldpmap;  	critical_enter(); 	oldpmap = pmap_install(args[0]); 	pmap_invalidate_page_locally(args[1]); 	pmap_install(oldpmap); 	critical_exit(); }
+unit|static void pmap_invalidate_page_1(void *arg) { 	void **args = arg; 	pmap_t oldpmap;  	critical_enter(); 	oldpmap = pmap_switch(args[0]); 	pmap_invalidate_page_locally(args[1]); 	pmap_switch(oldpmap); 	critical_exit(); }
 endif|#
 directive|endif
 end_endif
@@ -3379,7 +3369,7 @@ condition|)
 continue|continue;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pmap
 argument_list|)
@@ -3415,7 +3405,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -4365,7 +4355,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pmap
 argument_list|)
@@ -4395,7 +4385,7 @@ argument_list|(
 name|pte
 argument_list|)
 expr_stmt|;
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -4456,7 +4446,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pmap
 argument_list|)
@@ -4510,7 +4500,7 @@ block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -5727,7 +5717,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pmap
 argument_list|)
@@ -5884,7 +5874,7 @@ label|:
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -5997,7 +5987,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pmap
 argument_list|)
@@ -6055,7 +6045,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -6175,7 +6165,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pmap
 argument_list|)
@@ -6308,7 +6298,7 @@ block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -6376,7 +6366,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pmap
 argument_list|)
@@ -6417,7 +6407,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -6442,7 +6432,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pmap
 argument_list|)
@@ -6726,7 +6716,7 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -6803,7 +6793,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pmap
 argument_list|)
@@ -6855,7 +6845,7 @@ name|listq
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -6899,7 +6889,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pmap
 argument_list|)
@@ -6915,7 +6905,7 @@ argument_list|,
 name|prot
 argument_list|)
 expr_stmt|;
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -7213,7 +7203,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pmap
 argument_list|)
@@ -7285,7 +7275,7 @@ name|pte
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -7634,7 +7624,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pmap
 argument_list|)
@@ -7716,7 +7706,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -7789,7 +7779,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pv
 operator|->
@@ -7844,7 +7834,7 @@ name|pv_va
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -7924,7 +7914,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pv
 operator|->
@@ -7940,7 +7930,7 @@ operator|->
 name|pv_va
 argument_list|)
 expr_stmt|;
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -8089,7 +8079,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pv
 operator|->
@@ -8141,7 +8131,7 @@ name|pv_va
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -8207,7 +8197,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pv
 operator|->
@@ -8259,7 +8249,7 @@ name|pv_va
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -8356,7 +8346,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pmap
 argument_list|)
@@ -8442,7 +8432,7 @@ name|pv_va
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -8548,7 +8538,7 @@ argument_list|)
 expr_stmt|;
 name|oldpmap
 operator|=
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|pmap
 argument_list|)
@@ -8578,7 +8568,7 @@ operator|&
 name|tpte
 expr_stmt|;
 block|}
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|oldpmap
 argument_list|)
@@ -8736,7 +8726,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|pmap_install
+name|pmap_switch
 argument_list|(
 name|vmspace_pmap
 argument_list|(
@@ -8765,12 +8755,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|THREAD_LOCK_ASSERT
-argument_list|(
-name|curthread
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|critical_enter
+argument_list|()
 expr_stmt|;
 name|prevpm
 operator|=
@@ -8785,11 +8771,9 @@ name|prevpm
 operator|==
 name|pm
 condition|)
-return|return
-operator|(
-name|prevpm
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 name|prevpm
@@ -8920,51 +8904,10 @@ name|pm
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("srlz.d");
-return|return
-operator|(
-name|prevpm
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|pmap_t
-name|pmap_install
-parameter_list|(
-name|pmap_t
-name|pm
-parameter_list|)
-block|{
-name|pmap_t
-name|prevpm
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|td
-operator|=
-name|curthread
-expr_stmt|;
-name|thread_lock
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-name|prevpm
-operator|=
-name|pmap_switch
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
-name|thread_unlock
-argument_list|(
-name|td
-argument_list|)
+name|out
+label|:
+name|critical_exit
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
