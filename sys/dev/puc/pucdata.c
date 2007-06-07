@@ -4624,6 +4624,9 @@ case|:
 operator|*
 name|res
 operator|=
+literal|0x10
+operator|+
+operator|(
 operator|(
 name|port
 operator|>
@@ -4637,6 +4640,7 @@ else|:
 name|port
 operator|>>
 literal|1
+operator|)
 expr_stmt|;
 return|return
 operator|(
