@@ -1894,7 +1894,7 @@ argument|; port< DCONS_NPORT; port ++) { 		p =&dc->port[port]; 		if (p->infd<
 literal|0
 argument|) 			continue; 		while ((len = dconschat_read_dcons(dc, port, buf, 		    sizeof(buf)))>
 literal|0
-argument|) { 			dconschat_write_socket(p->outfd, buf, len); 			dconschat_get_ptr(dc); 		} 		if ((dc->flags& F_ONE_SHOT) !=
+argument|) { 			dconschat_write_socket(p->outfd, buf, len); 			if ((err = dconschat_get_ptr(dc))) 				return (err); 		} 		if ((dc->flags& F_ONE_SHOT) !=
 literal|0
 argument|&& len<=
 literal|0
@@ -1904,15 +1904,27 @@ argument|); 	} 	return
 literal|0
 argument|; }  static int dconschat_start_session(struct dcons_state *dc) { 	int counter =
 literal|0
-argument|;  	while (
+argument|; 	int retry =
+literal|0
+argument|; 	int retry_unit_init = MAX(
 literal|1
-argument|) { 		if ((dc->flags& F_READY) ==
+argument|, poll_hz /
+literal|10
+argument|); 	int retry_unit_offline = poll_hz * DCONS_POLL_OFFLINE; 	int retry_unit = retry_unit_init; 	int retry_max = retry_unit_offline / retry_unit;  	while (
+literal|1
+argument|) { 		if (((dc->flags& F_READY) ==
 literal|0
-argument|&& 			(++counter % (poll_hz * DCONS_POLL_OFFLINE)) ==
+argument|)&& ++counter> retry_unit) { 			counter =
 literal|0
-argument|) 			dconschat_fetch_header(dc); 		if ((dc->flags& F_READY) !=
+argument|; 			retry ++; 			if (retry> retry_max) 				retry_unit = retry_unit_offline; 			if (verbose) { 				printf(
+literal|"%d/%d "
+argument|, retry, retry_max); 				fflush(stdout); 			} 			dconschat_fetch_header(dc); 		} 		if ((dc->flags& F_READY) !=
 literal|0
-argument|) 			dconschat_proc_dcons(dc); 		dconschat_proc_socket(dc); 	} 	return (
+argument|) { 			counter =
+literal|0
+argument|; 			retry =
+literal|0
+argument|; 			retry_unit = retry_unit_init; 			dconschat_proc_dcons(dc); 		} 		dconschat_proc_socket(dc); 	} 	return (
 literal|0
 argument|); }  static void usage(void) { 	fprintf(stderr,
 literal|"usage: dconschat [-brvwRT1] [-h hz] [-C port] [-G port]\n"
