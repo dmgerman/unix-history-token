@@ -26938,6 +26938,13 @@ define|#
 directive|define
 name|BCE_PHY_INT_MODE_LINK_READY_FLAG
 value|0x200
+comment|/* Values that need to be shared with the PHY driver. */
+name|u32
+name|bce_shared_hw_cfg
+decl_stmt|;
+name|u32
+name|bce_port_hw_cfg
+decl_stmt|;
 name|bus_addr_t
 name|max_bus_addr
 decl_stmt|;

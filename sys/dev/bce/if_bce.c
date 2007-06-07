@@ -286,7 +286,7 @@ name|PCI_ANY_ID
 block|,
 name|PCI_ANY_ID
 block|,
-literal|"Broadcom NetXtreme II BCM5708S 1000Base-T"
+literal|"Broadcom NetXtreme II BCM5708 1000Base-SX"
 block|}
 block|,
 block|{
@@ -3510,7 +3510,7 @@ literal|1000000
 operator|&
 literal|0xffff00
 expr_stmt|;
-comment|/* 	 * The copper based NetXtreme II controllers 	 * use an integrated PHY at address 1 while 	 * the SerDes controllers use a PHY at 	 * address 2. 	 */
+comment|/* 	 * The SerDes based NetXtreme II controllers 	 * that support 2.5Gb operation (currently  	 * 5708S) use a PHY at address 2, otherwise  	 * the PHY is present at address 1. 	 */
 name|sc
 operator|->
 name|bce_phy_addr
@@ -3545,8 +3545,8 @@ name|BCE_CHIP_NUM
 argument_list|(
 name|sc
 argument_list|)
-operator|==
-name|BCE_CHIP_NUM_5708
+operator|!=
+name|BCE_CHIP_NUM_5706
 condition|)
 block|{
 name|sc
@@ -3574,14 +3574,56 @@ name|val
 operator|&
 name|BCE_SHARED_HW_CFG_PHY_2_5G
 condition|)
+block|{
 name|sc
 operator|->
 name|bce_phy_flags
 operator||=
 name|BCE_PHY_2_5G_CAPABLE_FLAG
 expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_WARN
+argument_list|,
+literal|"Found 2.5Gb capable adapter\n"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
+block|}
+comment|/* Store config data needed by the PHY driver for backplane applications */
+name|sc
+operator|->
+name|bce_shared_hw_cfg
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|bce_shmem_base
+operator|+
+name|BCE_SHARED_HW_CFG_CONFIG
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|bce_port_hw_cfg
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|bce_shmem_base
+operator|+
+name|BCE_SHARED_HW_CFG_CONFIG
+argument_list|)
+expr_stmt|;
 comment|/* Allocate DMA memory resources. */
 if|if
 condition|(
@@ -3783,9 +3825,9 @@ name|ifp
 operator|->
 name|if_baudrate
 operator|=
-name|IF_Gbps
+name|IF_Mbps
 argument_list|(
-literal|2.5
+literal|2500ULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -3793,9 +3835,9 @@ name|ifp
 operator|->
 name|if_baudrate
 operator|=
-name|IF_Gbps
+name|IF_Mbps
 argument_list|(
-literal|1
+literal|1000
 argument_list|)
 expr_stmt|;
 name|IFQ_SET_MAXLEN
@@ -5004,7 +5046,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_WARN
+name|BCE_VERBOSE
 argument_list|,
 literal|"Invalid PHY address %d for PHY write!\n"
 argument_list|,
@@ -5284,6 +5326,9 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
+name|int
+name|val
+decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -5300,59 +5345,31 @@ operator|->
 name|bce_miibus
 argument_list|)
 expr_stmt|;
-name|DBPRINT
+name|val
+operator|=
+name|REG_RD
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
-argument_list|,
-literal|"mii_media_active = 0x%08X\n"
-argument_list|,
-name|mii
-operator|->
-name|mii_media_active
+name|BCE_EMAC_MODE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BCE_DEBUG
-comment|/* Decode the interface media flags. */
-name|BCE_PRINTF
-argument_list|(
-literal|"Media: ( "
-argument_list|)
+name|val
+operator|&=
+operator|~
+operator|(
+name|BCE_EMAC_MODE_PORT
+operator||
+name|BCE_EMAC_MODE_HALF_DUPLEX
+operator||
+name|BCE_EMAC_MODE_MAC_LOOP
+operator||
+name|BCE_EMAC_MODE_FORCE_LINK
+operator||
+name|BCE_EMAC_MODE_25G
+operator|)
 expr_stmt|;
-switch|switch
-condition|(
-name|IFM_TYPE
-argument_list|(
-name|mii
-operator|->
-name|mii_media_active
-argument_list|)
-condition|)
-block|{
-case|case
-name|IFM_ETHER
-case|:
-name|printf
-argument_list|(
-literal|"Ethernet )"
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|"Unknown )"
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|" Media Options: ( "
-argument_list|)
-expr_stmt|;
+comment|/* Set MII or GMII interface based on the speed negotiated by the PHY. */
 switch|switch
 condition|(
 name|IFM_SUBTYPE
@@ -5363,235 +5380,93 @@ name|mii_media_active
 argument_list|)
 condition|)
 block|{
-case|case
-name|IFM_AUTO
-case|:
-name|printf
-argument_list|(
-literal|"Autoselect )"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IFM_MANUAL
-case|:
-name|printf
-argument_list|(
-literal|"Manual )"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IFM_NONE
-case|:
-name|printf
-argument_list|(
-literal|"None )"
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|IFM_10_T
 case|:
-name|printf
+if|if
+condition|(
+name|BCE_CHIP_NUM
 argument_list|(
-literal|"10Base-T )"
+name|sc
+argument_list|)
+operator|!=
+name|BCE_CHIP_NUM_5706
+condition|)
+block|{
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO
+argument_list|,
+literal|"Enabling 10Mb interface.\n"
 argument_list|)
 expr_stmt|;
+name|val
+operator||=
+name|BCE_EMAC_MODE_PORT_MII_10
+expr_stmt|;
 break|break;
+block|}
+comment|/* fall-through */
 case|case
 name|IFM_100_TX
 case|:
-name|printf
+name|DBPRINT
 argument_list|(
-literal|"100Base-TX )"
+name|sc
+argument_list|,
+name|BCE_INFO
+argument_list|,
+literal|"Enabling MII interface.\n"
 argument_list|)
+expr_stmt|;
+name|val
+operator||=
+name|BCE_EMAC_MODE_PORT_MII
 expr_stmt|;
 break|break;
 case|case
-name|IFM_1000_SX
+name|IFM_2500_SX
 case|:
-name|printf
+name|DBPRINT
 argument_list|(
-literal|"1000Base-SX )"
+name|sc
+argument_list|,
+name|BCE_INFO
+argument_list|,
+literal|"Enabling 2.5G MAC mode.\n"
 argument_list|)
 expr_stmt|;
-break|break;
+name|val
+operator||=
+name|BCE_EMAC_MODE_25G
+expr_stmt|;
+comment|/* fall-through */
 case|case
 name|IFM_1000_T
 case|:
-name|printf
+case|case
+name|IFM_1000_SX
+case|:
+name|DBPRINT
 argument_list|(
-literal|"1000Base-T )"
+name|sc
+argument_list|,
+name|BCE_INFO
+argument_list|,
+literal|"Enablinb GMII interface.\n"
 argument_list|)
+expr_stmt|;
+name|val
+operator||=
+name|BCE_EMAC_MODE_PORT_GMII
 expr_stmt|;
 break|break;
 default|default:
-name|printf
-argument_list|(
-literal|"Other )"
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|" Global Options: ("
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_media_active
-operator|&
-name|IFM_FDX
-condition|)
-name|printf
-argument_list|(
-literal|" FullDuplex"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_media_active
-operator|&
-name|IFM_HDX
-condition|)
-name|printf
-argument_list|(
-literal|" HalfDuplex"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_media_active
-operator|&
-name|IFM_LOOP
-condition|)
-name|printf
-argument_list|(
-literal|" Loopback"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_media_active
-operator|&
-name|IFM_FLAG0
-condition|)
-name|printf
-argument_list|(
-literal|" Flag0"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_media_active
-operator|&
-name|IFM_FLAG1
-condition|)
-name|printf
-argument_list|(
-literal|" Flag1"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_media_active
-operator|&
-name|IFM_FLAG2
-condition|)
-name|printf
-argument_list|(
-literal|" Flag2"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" )\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|BCE_CLRBIT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_EMAC_MODE
-argument_list|,
-name|BCE_EMAC_MODE_PORT
-argument_list|)
-expr_stmt|;
-comment|/* Set MII or GMII interface based on the speed negotiated by the PHY. */
-if|if
-condition|(
-name|IFM_SUBTYPE
-argument_list|(
-name|mii
-operator|->
-name|mii_media_active
-argument_list|)
-operator|==
-name|IFM_1000_T
-operator|||
-name|IFM_SUBTYPE
-argument_list|(
-name|mii
-operator|->
-name|mii_media_active
-argument_list|)
-operator|==
-name|IFM_1000_SX
-condition|)
-block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_INFO
-argument_list|,
-literal|"Setting GMII interface.\n"
-argument_list|)
-expr_stmt|;
-name|BCE_SETBIT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_EMAC_MODE
-argument_list|,
+name|val
+operator||=
 name|BCE_EMAC_MODE_PORT_GMII
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_INFO
-argument_list|,
-literal|"Setting MII interface.\n"
-argument_list|)
-expr_stmt|;
-name|BCE_SETBIT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_EMAC_MODE
-argument_list|,
-name|BCE_EMAC_MODE_PORT_MII
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* Set half or full duplex based on the duplicity negotiated by the PHY. */
@@ -5605,29 +5480,8 @@ operator|&
 name|IFM_GMASK
 operator|)
 operator|==
-name|IFM_FDX
+name|IFM_HDX
 condition|)
-block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_INFO
-argument_list|,
-literal|"Setting Full-Duplex interface.\n"
-argument_list|)
-expr_stmt|;
-name|BCE_CLRBIT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_EMAC_MODE
-argument_list|,
-name|BCE_EMAC_MODE_HALF_DUPLEX
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|DBPRINT
 argument_list|(
@@ -5638,16 +5492,38 @@ argument_list|,
 literal|"Setting Half-Duplex interface.\n"
 argument_list|)
 expr_stmt|;
-name|BCE_SETBIT
+name|val
+operator||=
+name|BCE_EMAC_MODE_HALF_DUPLEX
+expr_stmt|;
+block|}
+else|else
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO
+argument_list|,
+literal|"Setting Full-Duplex interface.\n"
+argument_list|)
+expr_stmt|;
+name|REG_WR
 argument_list|(
 name|sc
 argument_list|,
 name|BCE_EMAC_MODE
 argument_list|,
-name|BCE_EMAC_MODE_HALF_DUPLEX
+name|val
 argument_list|)
 expr_stmt|;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* Todo: Enable this support in brgphy and bge. */
+comment|/* FLAG0 is set if RX is enabled and FLAG1 if TX is enabled */
+block|if (mii->mii_media_active& IFM_FLAG0) 		BCE_SETBIT(sc, BCE_EMAC_RX_MODE, BCE_EMAC_RX_MODE_FLOW_EN); 	if (mii->mii_media_active& IFM_FLAG1) 		BCE_SETBIT(sc, BCE_EMAC_RX_MODE, BCE_EMAC_TX_MODE_FLOW_EN);
+endif|#
+directive|endif
 block|}
 end_function
 
