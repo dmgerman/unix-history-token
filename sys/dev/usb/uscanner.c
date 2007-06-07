@@ -125,35 +125,11 @@ directive|include
 file|<sys/file.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500014
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/selinfo.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/select.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1657,19 +1633,7 @@ operator|.
 name|d_name
 operator|=
 literal|"uscanner"
-block|,
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500014
-operator|.
-name|d_bmaj
-operator|-
-literal|1
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

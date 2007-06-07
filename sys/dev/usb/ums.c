@@ -609,19 +609,7 @@ operator|.
 name|d_name
 operator|=
 literal|"ums"
-block|,
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500014
-operator|.
-name|d_bmaj
-operator|-
-literal|1
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
