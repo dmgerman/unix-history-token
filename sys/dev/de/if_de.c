@@ -18628,7 +18628,7 @@ name|m_pkthdr
 operator|.
 name|len
 operator|=
-name|MCLBYTES
+name|TULIP_RX_BUFLEN
 expr_stmt|;
 name|error
 operator|=
