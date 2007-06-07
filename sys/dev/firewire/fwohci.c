@@ -248,6 +248,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|firewire_phydma_enable
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -273,6 +281,38 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Do not send cycle start packets"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_firewire
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|phydma_enable
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|firewire_phydma_enable
+argument_list|,
+literal|1
+argument_list|,
+literal|"Allow physical request DMA from firewire"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.firewire.phydma_enable"
+argument_list|,
+operator|&
+name|firewire_phydma_enable
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -11564,7 +11604,11 @@ operator|<<
 literal|31
 argument_list|)
 expr_stmt|;
-comment|/* XXX insecure ?? */
+if|if
+condition|(
+name|firewire_phydma_enable
+condition|)
+block|{
 comment|/* allow from all nodes */
 name|OWRITE
 argument_list|(
@@ -11584,7 +11628,7 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-comment|/* 0 to 4GB regison */
+comment|/* 0 to 4GB region */
 name|OWRITE
 argument_list|(
 name|sc
@@ -11594,6 +11638,7 @@ argument_list|,
 literal|0x10000
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Set ATRetries register */
 name|OWRITE
 argument_list|(
