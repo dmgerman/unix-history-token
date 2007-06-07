@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syscallsubr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -675,9 +681,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|long
-name|id
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -781,12 +784,6 @@ name|thread_alloc
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Try the copyout as soon as we allocate the td so we don't 	 * have to tear things down in a failure case below. 	 * Here we copy out tid to two places, one for child and one 	 * for parent, because pthread can create a detached thread, 	 * if parent wants to safely access child tid, it has to provide  	 * its storage, because child thread may exit quickly and 	 * memory is freed before parent thread can access it. 	 */
-name|id
-operator|=
-name|newtd
-operator|->
-name|td_tid
-expr_stmt|;
 if|if
 condition|(
 operator|(
