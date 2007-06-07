@@ -1505,7 +1505,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|usbd_add_drv_event(USB_EVENT_DRIVER_ATTACH, ucom->sc_udev, 			   USBDEV(ucom->sc_dev));
+block|usbd_add_drv_event(USB_EVENT_DRIVER_ATTACH, ucom->sc_udev, 	    USBDEV(ucom->sc_dev));
 endif|#
 directive|endif
 name|DPRINTF
