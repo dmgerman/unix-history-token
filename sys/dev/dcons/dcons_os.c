@@ -1107,6 +1107,13 @@ block|{
 name|int
 name|c
 decl_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|dcons_poll
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dg
