@@ -2797,11 +2797,12 @@ name|sbp_status
 modifier|*
 name|sbp_status
 decl_stmt|;
-name|struct
-name|orb_info
-modifier|*
-name|norbi
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct orb_info *norbi;
+endif|#
+directive|endif
 name|sbp_status
 operator|=
 operator|&
