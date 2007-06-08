@@ -372,7 +372,6 @@ comment|/*  * Free an external mbuf to a list. We use atomic functions so that  
 end_comment
 
 begin_function
-name|__inline
 name|void
 name|hatm_ext_free
 parameter_list|(
