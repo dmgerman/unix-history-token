@@ -912,6 +912,7 @@ name|mapp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/*  	 * XXX: 	 * (dmat->alignment< dmat->maxsize) is just a quick hack; the exact 	 * alignment guarantees of malloc need to be nailed down, and the 	 * code below should be rewritten to take that into account. 	 * 	 * In the meantime, we'll return an error if malloc gets it wrong. 	 */
 if|if
 condition|(
 name|dmat
@@ -919,6 +920,14 @@ operator|->
 name|maxsize
 operator|<=
 name|PAGE_SIZE
+operator|&&
+name|dmat
+operator|->
+name|alignment
+operator|<
+name|dmat
+operator|->
+name|maxsize
 condition|)
 block|{
 operator|*
@@ -986,6 +995,25 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+if|if
+condition|(
+operator|(
+name|uintptr_t
+operator|)
+operator|*
+name|vaddr
+operator|%
+name|dmat
+operator|->
+name|alignment
+condition|)
+name|printf
+argument_list|(
+literal|"XXX: %s: alignment not respected!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1031,6 +1059,14 @@ operator|->
 name|maxsize
 operator|<=
 name|PAGE_SIZE
+operator|&&
+name|dmat
+operator|->
+name|alignment
+operator|<
+name|dmat
+operator|->
+name|maxsize
 condition|)
 name|free
 argument_list|(
@@ -1040,7 +1076,6 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|contigfree
 argument_list|(
 name|vaddr
@@ -1052,7 +1087,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
