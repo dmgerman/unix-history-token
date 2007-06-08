@@ -175,6 +175,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|DCONS_CSR_KEY_RESET_HI
+value|0x3c
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCONS_CSR_KEY_RESET_LO
+value|0x3d
+end_define
+
+begin_define
+define|#
+directive|define
 name|DCONS_HEADER_SIZE
 value|sizeof(struct dcons_buf)
 end_define
@@ -296,6 +310,13 @@ define|#
 directive|define
 name|STATE2
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|STATE3
+value|3
 end_define
 
 begin_if
