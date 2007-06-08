@@ -1200,6 +1200,22 @@ argument|wit_warn
 argument_list|)
 end_macro
 
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|witwarn2
+argument_list|,
+argument|SI_SUB_RUN_SCHEDULER
+argument_list|,
+argument|SI_ORDER_THIRD +
+literal|1
+argument_list|,
+argument|print_caddr_t
+argument_list|,
+argument|wit_warn
+argument_list|)
+end_macro
+
 begin_endif
 endif|#
 directive|endif
@@ -1227,6 +1243,22 @@ argument_list|(
 argument|diagwarn
 argument_list|,
 argument|SI_SUB_COPYRIGHT
+argument_list|,
+argument|SI_ORDER_THIRD +
+literal|2
+argument_list|,
+argument|print_caddr_t
+argument_list|,
+argument|diag_warn
+argument_list|)
+end_macro
+
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|diagwarn2
+argument_list|,
+argument|SI_SUB_RUN_SCHEDULER
 argument_list|,
 argument|SI_ORDER_THIRD +
 literal|2
