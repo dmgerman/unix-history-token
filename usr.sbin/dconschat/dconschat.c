@@ -849,12 +849,9 @@ argument_list|(
 literal|"crom read faild"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 name|buf
 operator|=
