@@ -1561,14 +1561,6 @@ argument_list|(
 name|fc
 argument_list|)
 expr_stmt|;
-name|microtime
-argument_list|(
-operator|&
-name|xfer
-operator|->
-name|tv
-argument_list|)
-expr_stmt|;
 name|xfer
 operator|->
 name|flag
@@ -1814,6 +1806,20 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|xfer
+operator|->
+name|flag
+operator|&
+name|FWXF_SENT
+operator|)
+operator|==
+literal|0
+condition|)
+comment|/* not sent yet */
+break|break;
+if|if
+condition|(
 name|timevalcmp
 argument_list|(
 operator|&
@@ -1828,20 +1834,6 @@ operator|>
 argument_list|)
 condition|)
 comment|/* the rests are newer than this */
-break|break;
-if|if
-condition|(
-operator|(
-name|xfer
-operator|->
-name|flag
-operator|&
-name|FWXF_SENT
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* not sent yet */
 break|break;
 name|device_printf
 argument_list|(

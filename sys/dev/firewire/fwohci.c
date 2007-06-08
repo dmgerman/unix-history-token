@@ -7193,6 +7193,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|microtime
+argument_list|(
+operator|&
+name|xfer
+operator|->
+name|tv
+argument_list|)
+expr_stmt|;
 name|xfer
 operator|->
 name|flag
