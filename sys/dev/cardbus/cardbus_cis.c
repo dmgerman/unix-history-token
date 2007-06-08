@@ -3150,6 +3150,8 @@ index|]
 decl_stmt|;
 name|int
 name|tupleid
+init|=
+name|CISTPL_NULL
 decl_stmt|;
 name|int
 name|len
