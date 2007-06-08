@@ -806,15 +806,6 @@ name|usb_endpoint_descriptor_t
 modifier|*
 name|ed
 decl_stmt|;
-name|char
-modifier|*
-name|devinfo
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|devname
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -842,17 +833,6 @@ name|sc
 operator|)
 argument_list|)
 expr_stmt|;
-name|devinfo
-operator|=
-name|malloc
-argument_list|(
-literal|1024
-argument_list|,
-name|M_USBDEV
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
 name|ucom
 operator|->
 name|sc_dev
@@ -864,15 +844,6 @@ operator|->
 name|sc_udev
 operator|=
 name|dev
-expr_stmt|;
-name|devname
-operator|=
-name|device_get_nameunit
-argument_list|(
-name|ucom
-operator|->
-name|sc_dev
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -900,11 +871,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"\n%s: failed to set configuration, err=%s\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"failed to set configuration, err=%s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -933,11 +906,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"\n%s: failed to get interface, err=%s\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"failed to get interface, err=%s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -959,25 +934,6 @@ operator|->
 name|iface
 expr_stmt|;
 block|}
-name|usbd_devinfo
-argument_list|(
-name|dev
-argument_list|,
-literal|0
-argument_list|,
-name|devinfo
-argument_list|)
-expr_stmt|;
-comment|/*	USB_ATTACH_SETUP;*/
-name|printf
-argument_list|(
-literal|"%s: %s\n"
-argument_list|,
-name|devname
-argument_list|,
-name|devinfo
-argument_list|)
-expr_stmt|;
 name|id
 operator|=
 name|usbd_get_interface_descriptor
@@ -1286,11 +1242,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: could not read endpoint descriptor\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"could not read endpoint descriptor\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1355,11 +1313,13 @@ name|addr
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unexpected endpoint\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"unexpected endpoint\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1377,11 +1337,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Could not find data bulk in\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"Could not find data bulk in\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1398,11 +1360,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Could not find data bulk out\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"Could not find data bulk out\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1507,13 +1471,6 @@ operator|->
 name|sc_ucom
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|devinfo
-argument_list|,
-name|M_USBDEV
-argument_list|)
-expr_stmt|;
 name|USB_ATTACH_SUCCESS_RETURN
 expr_stmt|;
 name|bad
@@ -1530,13 +1487,6 @@ operator|->
 name|sc_dying
 operator|=
 literal|1
-expr_stmt|;
-name|free
-argument_list|(
-name|devinfo
-argument_list|,
-name|M_USBDEV
-argument_list|)
 expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
 expr_stmt|;
