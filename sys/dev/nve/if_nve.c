@@ -5222,9 +5222,6 @@ name|ether_ioctl
 argument_list|(
 name|ifp
 argument_list|,
-operator|(
-name|int
-operator|)
 name|command
 argument_list|,
 name|data
