@@ -4784,6 +4784,8 @@ decl_stmt|;
 name|tstate_t
 modifier|*
 name|tptr
+init|=
+name|NULL
 decl_stmt|;
 name|uint32_t
 name|seq
