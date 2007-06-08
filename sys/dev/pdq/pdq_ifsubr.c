@@ -1112,6 +1112,11 @@ name|pdq_os_ctx
 decl_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
+name|NBPFILTER
+argument_list|)
+operator|&&
 name|NBPFILTER
 operator|>
 literal|0
