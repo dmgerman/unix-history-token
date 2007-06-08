@@ -791,9 +791,9 @@ name|tcp_hostcache
 operator|.
 name|hashsize
 operator|=
-literal|512
+name|TCP_HOSTCACHE_HASHSIZE
 expr_stmt|;
-comment|/* safe default */
+comment|/* default */
 block|}
 name|tcp_hostcache
 operator|.
