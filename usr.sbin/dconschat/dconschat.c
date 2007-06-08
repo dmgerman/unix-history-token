@@ -264,6 +264,9 @@ decl_stmt|;
 name|off_t
 name|paddr
 decl_stmt|;
+name|off_t
+name|reset
+decl_stmt|;
 define|#
 directive|define
 name|F_READY
@@ -360,6 +363,10 @@ decl_stmt|;
 name|struct
 name|termios
 name|tsave
+decl_stmt|;
+name|struct
+name|termios
+name|traw
 decl_stmt|;
 block|}
 name|sc
@@ -538,6 +545,131 @@ end_function
 begin_function
 specifier|static
 name|void
+name|dconschat_reset_target
+parameter_list|(
+name|struct
+name|dcons_state
+modifier|*
+name|dc
+parameter_list|)
+block|{
+name|char
+name|zeros
+index|[
+name|PAGE_SIZE
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|dc
+operator|->
+name|reset
+operator|==
+literal|0
+condition|)
+return|return;
+name|bzero
+argument_list|(
+operator|&
+name|zeros
+index|[
+literal|0
+index|]
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\r\n[dconschat reset target(addr=0x%zx)...]\r\n"
+argument_list|,
+name|dc
+operator|->
+name|reset
+argument_list|)
+expr_stmt|;
+name|dwrite
+argument_list|(
+name|dc
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|zeros
+argument_list|,
+name|PAGE_SIZE
+argument_list|,
+name|dc
+operator|->
+name|reset
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|dconschat_suspend
+parameter_list|(
+name|struct
+name|dcons_state
+modifier|*
+name|dc
+parameter_list|)
+block|{
+if|if
+condition|(
+name|tc_set
+condition|)
+name|tcsetattr
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+name|TCSADRAIN
+argument_list|,
+operator|&
+name|dc
+operator|->
+name|tsave
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n[dconschat suspend]\n"
+argument_list|)
+expr_stmt|;
+name|kill
+argument_list|(
+name|getpid
+argument_list|()
+argument_list|,
+name|SIGTSTP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tc_set
+condition|)
+name|tcsetattr
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+name|TCSADRAIN
+argument_list|,
+operator|&
+name|dc
+operator|->
+name|traw
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|dconschat_cleanup
 parameter_list|(
 name|int
@@ -634,6 +766,14 @@ init|=
 literal|0
 decl_stmt|,
 name|lo
+init|=
+literal|0
+decl_stmt|,
+name|reset_hi
+init|=
+literal|0
+decl_stmt|,
+name|reset_lo
 init|=
 literal|0
 decl_stmt|;
@@ -794,31 +934,47 @@ break|break;
 case|case
 literal|2
 case|:
-if|if
+switch|switch
 condition|(
 name|reg
 operator|->
 name|key
-operator|==
-name|DCONS_CSR_KEY_HI
 condition|)
+block|{
+case|case
+name|DCONS_CSR_KEY_HI
+case|:
 name|hi
 operator|=
 name|reg
 operator|->
 name|val
 expr_stmt|;
-elseif|else
-if|if
-condition|(
+break|break;
+case|case
+name|DCONS_CSR_KEY_LO
+case|:
+name|lo
+operator|=
 name|reg
 operator|->
-name|key
-operator|==
-name|DCONS_CSR_KEY_LO
-condition|)
-block|{
-name|lo
+name|val
+expr_stmt|;
+break|break;
+case|case
+name|DCONS_CSR_KEY_RESET_HI
+case|:
+name|reset_hi
+operator|=
+name|reg
+operator|->
+name|val
+expr_stmt|;
+break|break;
+case|case
+name|DCONS_CSR_KEY_RESET_LO
+case|:
+name|reset_lo
 operator|=
 name|reg
 operator|->
@@ -827,17 +983,20 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+break|break;
+case|case
+literal|0x81
+case|:
+break|break;
+default|default:
+name|state
+operator|=
+literal|0
+expr_stmt|;
 block|}
 break|break;
 block|}
 block|}
-comment|/* not found */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 name|out
 label|:
 if|if
@@ -868,6 +1027,35 @@ operator|)
 operator||
 name|lo
 expr_stmt|;
+name|dc
+operator|->
+name|reset
+operator|=
+operator|(
+operator|(
+name|off_t
+operator|)
+name|reset_hi
+operator|<<
+literal|24
+operator|)
+operator||
+name|reset_lo
+expr_stmt|;
+if|if
+condition|(
+name|dc
+operator|->
+name|paddr
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 literal|0
@@ -1641,7 +1829,7 @@ argument|; 		if (tc_set ==
 literal|0
 argument|&& 		    tcgetattr(STDIN_FILENO,&dc->tsave) ==
 literal|0
-argument|) { 			struct termios traw;  			traw = dc->tsave; 			cfmakeraw(&traw); 			tcsetattr(STDIN_FILENO, TCSADRAIN,&traw); 			tc_set =
+argument|) { 			dc->traw = dc->tsave; 			cfmakeraw(&dc->traw); 			tcsetattr(STDIN_FILENO, TCSADRAIN,&dc->traw); 			tc_set =
 literal|1
 argument|; 		} 		EV_SET(&kev, p->infd, EVFILT_READ, EV_ADD, NOTE_LOWAT,
 literal|1
@@ -1779,9 +1967,11 @@ comment|/* ~ */
 argument_list|,
 literal|2
 comment|/* ^B */
-argument|};  	while (slen>
+argument|}; 	int skip;  	while (slen>
 literal|0
-argument|) { 		if (IS_CONSOLE(p)) { 			if ((dc->flags& F_TELNET) !=
+argument|) { 		skip =
+literal|0
+argument|; 		if (IS_CONSOLE(p)) { 			if ((dc->flags& F_TELNET) !=
 literal|0
 argument|) {
 comment|/* XXX Telnet workarounds */
@@ -1795,11 +1985,36 @@ argument|; 					sp ++; 					slen --; 					continue; 				} 				if (*sp ==
 literal|0
 argument|) { 					if (verbose) 						printf(
 literal|"(0 stripped)"
-argument|); 					sp ++; 					slen --; 					continue; 				} 			} 			switch (dc->escape_state) { 			case STATE1: 				if (*sp == KEY_TILDE) 					dc->escape_state = STATE2; 				else 					dc->escape_state = STATE0; 				break; 			case STATE2: 				dc->escape_state = STATE0; 				if (*sp ==
+argument|); 					sp ++; 					slen --; 					continue; 				} 			} 			switch (dc->escape_state) { 			case STATE1: 				if (*sp == KEY_TILDE) { 					skip =
+literal|1
+argument|; 					dc->escape_state = STATE2; 				} else 					dc->escape_state = STATE0; 				break; 			case STATE2: 				dc->escape_state = STATE0; 				if (*sp ==
 literal|'.'
 argument|) 					dconschat_cleanup(
 literal|0
-argument|); 			} 			if (*sp == KEY_CR) 				dc->escape_state = STATE1; 		} else if (IS_GDB(p)) {
+argument|); 				else if ((*sp ==
+literal|0x12
+comment|/*'^R'*/
+argument|)&& (dc->reset !=
+literal|0
+argument|)) { 					dc->escape_state = STATE3; 					skip =
+literal|1
+argument|; 					printf(
+literal|"\r\n[Are you sure to "
+literal|"reset target? (y/N)]"
+argument|); 					fflush(stdout); 				} else if (*sp ==
+literal|0x1a
+comment|/*'^Z'*/
+argument|) { 					skip =
+literal|1
+argument|; 					dconschat_suspend(dc); 				} else { 					*dp++ =
+literal|'~'
+argument|; 					(*dlen) ++; 				} 				break; 			case STATE3: 				dc->escape_state = STATE0; 				skip =
+literal|1
+argument|; 				if (*sp ==
+literal|'y'
+argument|) 					dconschat_reset_target(dc); 				else 					printf(
+literal|"\r\n"
+argument|); 				break; 			} 			if (*sp == KEY_CR) 				dc->escape_state = STATE1; 		} else if (IS_GDB(p)) {
 comment|/* GDB: ^C -> CR+~+^B */
 argument|if (*sp ==
 literal|0x3
@@ -1815,7 +2030,7 @@ argument|;
 comment|/* discard rest of the packet */
 argument|slen =
 literal|0
-argument|; 				break; 			} 		} 		*dp++ = *sp++; 		(*dlen) ++; 		slen --; 	} 	return (*dlen); 			 }  static int dconschat_read_socket(struct dcons_state *dc, struct dcons_port *p) { 	struct kevent kev; 	int len
+argument|; 				break; 			} 		} 		if (!skip) { 			*dp++ = *sp; 			(*dlen) ++; 		} 		sp ++; 		slen --; 	} 	return (*dlen); 			 }  static int dconschat_read_socket(struct dcons_state *dc, struct dcons_port *p) { 	struct kevent kev; 	int len
 argument_list|,
 argument|wlen; 	char rbuf[MAX_XFER]
 argument_list|,
