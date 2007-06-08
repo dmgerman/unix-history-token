@@ -13200,9 +13200,10 @@ name|net
 operator|->
 name|lastsa
 operator|>>
-literal|3
+name|SCTP_RTT_SHIFT
 operator|)
 expr_stmt|;
+comment|/* take away 1/8th when 								 * shift=3 */
 ifdef|#
 directive|ifdef
 name|SCTP_RTTVAR_LOGGING
@@ -13227,6 +13228,7 @@ name|lastsa
 operator|+=
 name|calc_time
 expr_stmt|;
+comment|/* add 7/8th into sa when 						 * shift=3 */
 if|if
 condition|(
 name|calc_time
@@ -13247,9 +13249,10 @@ name|net
 operator|->
 name|lastsv
 operator|>>
-literal|2
+name|SCTP_RTT_VAR_SHIFT
 operator|)
 expr_stmt|;
+comment|/* take away 1/4 when 									 * VAR shift=2 */
 name|net
 operator|->
 name|lastsv
@@ -13281,15 +13284,32 @@ operator|->
 name|lastsa
 operator|=
 name|calc_time
+operator|<<
+name|SCTP_RTT_SHIFT
 expr_stmt|;
+comment|/* Multiply by 8 when 								 * shift=3 */
 name|net
 operator|->
 name|lastsv
 operator|=
 name|calc_time
-operator|>>
-literal|1
 expr_stmt|;
+if|if
+condition|(
+name|net
+operator|->
+name|lastsv
+operator|==
+literal|0
+condition|)
+block|{
+name|net
+operator|->
+name|lastsv
+operator|=
+name|SCTP_CLOCK_GRANULARITY
+expr_stmt|;
+block|}
 name|first_measure
 operator|=
 literal|1
@@ -13318,20 +13338,16 @@ label|:
 name|new_rto
 operator|=
 operator|(
-operator|(
 name|net
 operator|->
 name|lastsa
 operator|>>
-literal|2
+name|SCTP_RTT_SHIFT
 operator|)
 operator|+
 name|net
 operator|->
 name|lastsv
-operator|)
-operator|>>
-literal|1
 expr_stmt|;
 if|if
 condition|(

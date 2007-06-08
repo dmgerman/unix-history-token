@@ -13994,15 +13994,12 @@ operator||
 name|SCTP_ADDR_UNCONFIRMED
 expr_stmt|;
 block|}
+comment|/* 	 * We set this to 0, the timer code knows that this means its an 	 * initial value 	 */
 name|net
 operator|->
 name|RTO
 operator|=
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|initial_rto
+literal|0
 expr_stmt|;
 name|stcb
 operator|->

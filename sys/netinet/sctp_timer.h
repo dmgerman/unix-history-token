@@ -42,6 +42,20 @@ name|_KERNEL
 argument_list|)
 end_if
 
+begin_define
+define|#
+directive|define
+name|SCTP_RTT_SHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_RTT_VAR_SHIFT
+value|2
+end_define
+
 begin_function_decl
 name|void
 name|sctp_early_fr_timer

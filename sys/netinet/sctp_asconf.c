@@ -8080,11 +8080,7 @@ name|net
 operator|->
 name|RTO
 operator|=
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|initial_rto
+literal|0
 expr_stmt|;
 block|}
 block|}
