@@ -3380,14 +3380,13 @@ break|break;
 case|case
 name|MOD_SHUTDOWN
 case|:
-name|dg
-operator|.
-name|buf
-operator|->
-name|magic
-operator|=
+if|#
+directive|if
 literal|0
-expr_stmt|;
+comment|/* Keep connection after halt */
+block|dg.buf->magic = 0;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|err
