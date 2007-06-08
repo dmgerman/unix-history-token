@@ -6904,7 +6904,7 @@ name|fc
 operator|->
 name|status
 operator|!=
-name|FWBUSRESET
+name|FWBUSINIT
 condition|)
 comment|/* maybe out of order?? */
 goto|goto
@@ -7204,12 +7204,6 @@ condition|(
 name|err
 operator|==
 name|EBUSY
-operator|&&
-name|fc
-operator|->
-name|status
-operator|!=
-name|FWBUSRESET
 condition|)
 block|{
 name|xfer
@@ -14987,7 +14981,7 @@ argument|case FWOHCIEV_ACKCOMPL: 			{ 				struct fw_rcv_buf rb;  				if ((vec[nv
 literal|1
 argument|].iov_len -= 					sizeof(struct fwohci_trailer)) ==
 literal|0
-argument|) 					nvec--;  				rb.fc =&sc->fc; 				rb.vec = vec; 				rb.nvec = nvec; 				rb.spd = spd; 				fw_rcv(&rb); 				break; 			} 			case FWOHCIEV_BUSRST: 				if (sc->fc.status != FWBUSRESET)  					printf(
+argument|) 					nvec--;  				rb.fc =&sc->fc; 				rb.vec = vec; 				rb.nvec = nvec; 				rb.spd = spd; 				fw_rcv(&rb); 				break; 			} 			case FWOHCIEV_BUSRST: 				if ((sc->fc.status != FWBUSRESET)&& 				    (sc->fc.status != FWBUSINIT)) 					printf(
 literal|"got BUSRST packet!?\n"
 argument|); 				break; 			default: 				device_printf(sc->fc.dev,
 literal|"Async DMA Receive error err=%02x %s"
