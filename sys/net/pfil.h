@@ -390,7 +390,7 @@ name|PFIL_HOOKED
 parameter_list|(
 name|p
 parameter_list|)
-value|(&(p)->ph_nhooks> 0)
+value|((p)->ph_nhooks> 0)
 end_define
 
 begin_define
