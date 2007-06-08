@@ -967,16 +967,20 @@ argument_list|(
 literal|"gdb"
 argument_list|)
 expr_stmt|;
-name|breakpoint
-argument_list|()
+name|kdb_enter
+argument_list|(
+literal|"Break sequence on dcons gdb port"
+argument_list|)
 expr_stmt|;
 block|}
 endif|#
 directive|endif
 block|}
 else|else
-name|breakpoint
-argument_list|()
+name|kdb_enter
+argument_list|(
+literal|"Break sequence on dcons console port"
+argument_list|)
 expr_stmt|;
 block|}
 else|#
