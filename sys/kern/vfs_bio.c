@@ -9370,9 +9370,9 @@ name|nblock
 argument_list|)
 expr_stmt|;
 block|}
-name|VI_LOCK
+name|BO_LOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 name|bp
@@ -9715,9 +9715,9 @@ name|off_t
 name|offset
 decl_stmt|;
 comment|/* 		 * Buffer is not in-core, create new buffer.  The buffer 		 * returned by getnewbuf() is locked.  Note that the returned 		 * buffer is also considered valid (not marked B_INVAL). 		 */
-name|VI_UNLOCK
+name|BO_UNLOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If the user does not want us to create the buffer, bail out 		 * here. 		 */
