@@ -1081,6 +1081,40 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|mii_capabilities
+operator|=
+name|PHY_READ
+argument_list|(
+name|sc
+argument_list|,
+name|MII_BMSR
+argument_list|)
+operator|&
+name|ma
+operator|->
+name|mii_capmask
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|mii_capabilities
+operator|&
+name|BMSR_EXTSTAT
+condition|)
+name|sc
+operator|->
+name|mii_extcapabilities
+operator|=
+name|PHY_READ
+argument_list|(
+name|sc
+argument_list|,
+name|MII_EXTSR
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -1251,6 +1285,11 @@ argument_list|,
 name|BRGPHY_S1000
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"1000baseT, "
+argument_list|)
+expr_stmt|;
 name|ADD
 argument_list|(
 name|IFM_MAKEWORD
@@ -1273,7 +1312,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"1000baseTX-FDX, "
+literal|"1000baseT-FDX, "
 argument_list|)
 expr_stmt|;
 block|}
