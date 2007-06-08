@@ -7641,10 +7641,6 @@ name|struct
 name|an_reply
 name|reply
 decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|;
 name|u_int16_t
 modifier|*
 name|ptr
@@ -8070,14 +8066,6 @@ name|EIO
 operator|)
 return|;
 block|}
-name|ptr
-operator|=
-operator|(
-name|u_int16_t
-operator|*
-operator|)
-name|buf
-expr_stmt|;
 if|if
 condition|(
 name|reply
