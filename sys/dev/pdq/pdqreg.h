@@ -2339,7 +2339,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|((pdq)->pdq_pa_descriptor_block + \ 		((u_int8_t *) (m) - (u_int8_t *) (pdq)->pdq_dbp))
+value|((pdq)->pdq_pa_descriptor_block + \ 		((volatile u_int8_t *) (m) - (u_int8_t *) (pdq)->pdq_dbp))
 end_define
 
 begin_typedef
