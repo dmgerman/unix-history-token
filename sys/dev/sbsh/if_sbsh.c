@@ -5506,6 +5506,7 @@ name|sc
 operator|->
 name|cmdp
 decl_stmt|;
+specifier|volatile
 name|u_int8_t
 modifier|*
 name|databuf
