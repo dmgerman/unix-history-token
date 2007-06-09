@@ -370,6 +370,10 @@ begin_comment
 comment|/*  * We need two attachment points:  * hub to usb and hub to hub  * Every other driver only connects to hubs  */
 end_comment
 
+begin_comment
+comment|/* XXX driver_added needs special care */
+end_comment
+
 begin_expr_stmt
 name|USB_DECLARE_DRIVER_INIT
 argument_list|(
@@ -429,6 +433,10 @@ name|devclass_t
 name|uhubroot_devclass
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX driver_added needs special care */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -629,10 +637,6 @@ name|uaa
 operator|->
 name|device
 decl_stmt|;
-name|char
-modifier|*
-name|devinfo
-decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
@@ -674,28 +678,6 @@ name|tts
 init|=
 name|NULL
 decl_stmt|;
-name|devinfo
-operator|=
-name|malloc
-argument_list|(
-literal|1024
-argument_list|,
-name|M_TEMP
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|devinfo
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 name|DPRINTFN
 argument_list|(
 literal|1
@@ -711,34 +693,11 @@ name|sc_hub
 operator|=
 name|dev
 expr_stmt|;
-name|usbd_devinfo
-argument_list|(
-name|dev
-argument_list|,
-literal|1
-argument_list|,
-name|devinfo
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_dev
 operator|=
 name|self
-expr_stmt|;
-name|device_set_desc_copy
-argument_list|(
-name|self
-argument_list|,
-name|devinfo
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|devinfo
-argument_list|,
-name|M_TEMP
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
