@@ -5554,6 +5554,11 @@ block|}
 name|nfound
 operator|++
 expr_stmt|;
+name|PROC_SLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 		 * See if we have a zombie.  If so, WNOWAIT should be set, 		 * as otherwise we should have called kern_wait() up above. 		 */
 if|if
 condition|(
@@ -5580,6 +5585,11 @@ operator|)
 operator|)
 condition|)
 block|{
+name|PROC_SUNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|uap
@@ -5608,7 +5618,6 @@ name|p_xstat
 expr_stmt|;
 name|ru
 operator|=
-operator|*
 name|p
 operator|->
 name|p_ru
@@ -5673,11 +5682,6 @@ operator|)
 return|;
 block|}
 comment|/* 		 * See if we have a stopped or continued process. 		 * XXX: This duplicates the same code in kern_wait(). 		 */
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5771,7 +5775,6 @@ argument_list|)
 expr_stmt|;
 name|ru
 operator|=
-operator|*
 name|p
 operator|->
 name|p_ru
@@ -5918,7 +5921,6 @@ name|p_pid
 expr_stmt|;
 name|ru
 operator|=
-operator|*
 name|p
 operator|->
 name|p_ru

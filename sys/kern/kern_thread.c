@@ -1349,37 +1349,25 @@ operator|.
 name|v_swtch
 argument_list|)
 expr_stmt|;
-comment|/* Add the child usage to our own when the final thread exits. */
-if|if
-condition|(
-name|p
+comment|/* Save our resource usage in our process. */
+name|td
 operator|->
-name|p_numthreads
-operator|==
-literal|1
-condition|)
-name|ruadd
+name|td_ru
+operator|.
+name|ru_nvcsw
+operator|++
+expr_stmt|;
+name|rucollect
 argument_list|(
+operator|&
 name|p
 operator|->
 name|p_ru
 argument_list|,
 operator|&
-name|p
+name|td
 operator|->
-name|p_rux
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_stats
-operator|->
-name|p_cru
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_crux
+name|td_ru
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The last thread is left attached to the process 	 * So that the whole bundle gets recycled. Skip 	 * all this stuff if we never had threads. 	 * EXIT clears all sign of other threads when 	 * it goes to single threading, so the last thread always 	 * takes the short path. 	 */
@@ -1428,25 +1416,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* Impart our resource usage on another thread */
 name|td2
 operator|=
 name|FIRST_THREAD_IN_PROC
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|rucollect
-argument_list|(
-operator|&
-name|td2
-operator|->
-name|td_ru
-argument_list|,
-operator|&
-name|td
-operator|->
-name|td_ru
 argument_list|)
 expr_stmt|;
 name|sched_exit_thread
@@ -1540,7 +1514,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* Aggregate our tick statistics into our parents rux. */
+comment|/* Save our tick information with both the thread and proc locked */
 name|ruxagg
 argument_list|(
 operator|&

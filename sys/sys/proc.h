@@ -2332,7 +2332,6 @@ decl_stmt|;
 comment|/* (c) Accounting flags. */
 name|struct
 name|rusage
-modifier|*
 name|p_ru
 decl_stmt|;
 comment|/* (a) Exit information. */

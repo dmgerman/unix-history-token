@@ -401,11 +401,6 @@ name|plimit
 modifier|*
 name|plim
 decl_stmt|;
-name|struct
-name|rusage
-modifier|*
-name|ru
-decl_stmt|;
 name|int
 name|locked
 decl_stmt|;
@@ -693,25 +688,6 @@ argument_list|(
 name|process_exit
 argument_list|,
 name|p
-argument_list|)
-expr_stmt|;
-name|MALLOC
-argument_list|(
-name|ru
-argument_list|,
-expr|struct
-name|rusage
-operator|*
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|rusage
-argument_list|)
-argument_list|,
-name|M_ZOMBIE
-argument_list|,
-name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If parent is waiting for us to exit or exec, 	 * P_PPWAIT is set; we will wakeup the parent below. 	 */
@@ -1558,25 +1534,6 @@ name|p_xthread
 operator|=
 name|td
 expr_stmt|;
-comment|/* 	 * All statistics have been aggregated into the final td_ru by 	 * thread_exit().  Copy these into the proc here where wait*() 	 * can find them. 	 * XXX We will miss any statistics gathered between here and 	 * thread_exit() except for those related to clock ticks. 	 */
-operator|*
-name|ru
-operator|=
-name|td
-operator|->
-name|td_ru
-expr_stmt|;
-name|ru
-operator|->
-name|ru_nvcsw
-operator|++
-expr_stmt|;
-name|p
-operator|->
-name|p_ru
-operator|=
-name|ru
-expr_stmt|;
 comment|/* 	 * Notify interested parties of our demise. 	 */
 name|KNOTE_LOCKED
 argument_list|(
@@ -1847,6 +1804,32 @@ operator|&
 name|p
 operator|->
 name|p_klist
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Save our children's rusage information in our exit rusage. 	 */
+name|ruadd
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_ru
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_rux
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_cru
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_crux
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure the scheduler takes this thread out of its tables etc. 	 * This will also release this thread's reference to the ucred. 	 * Other thread parts to release include pcb bits and such. 	 */
@@ -2658,6 +2641,11 @@ block|}
 name|nfound
 operator|++
 expr_stmt|;
+name|PROC_SLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -2667,12 +2655,6 @@ operator|==
 name|PRS_ZOMBIE
 condition|)
 block|{
-comment|/* 			 * It is possible that the last thread of this 			 * process is still running on another CPU 			 * in thread_exit() after having dropped the process 			 * lock via PROC_UNLOCK() but before it has completed 			 * cpu_throw().  In that case, the other thread must 			 * still hold the proc slock, so simply by acquiring 			 * proc slock once we will wait long enough for the 			 * thread to exit in that case. 			 * XXX This is questionable. 			 */
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|PROC_SUNLOCK
 argument_list|(
 name|p
@@ -2709,7 +2691,6 @@ block|{
 operator|*
 name|rusage
 operator|=
-operator|*
 name|p
 operator|->
 name|p_ru
@@ -2907,6 +2888,7 @@ name|q
 operator|->
 name|p_crux
 argument_list|,
+operator|&
 name|p
 operator|->
 name|p_ru
@@ -2921,21 +2903,6 @@ name|PROC_UNLOCK
 argument_list|(
 name|q
 argument_list|)
-expr_stmt|;
-name|FREE
-argument_list|(
-name|p
-operator|->
-name|p_ru
-argument_list|,
-name|M_ZOMBIE
-argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|p_ru
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* 			 * Decrement the count of procs running with this uid. 			 */
 operator|(
@@ -3057,11 +3024,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
