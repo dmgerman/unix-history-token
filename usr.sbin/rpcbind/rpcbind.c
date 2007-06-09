@@ -313,6 +313,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|ipv6_only
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|nhosts
 init|=
 literal|0
@@ -823,6 +831,27 @@ name|nc_flag
 operator|&
 name|NC_VISIBLE
 condition|)
+if|if
+condition|(
+name|ipv6_only
+operator|==
+literal|1
+operator|&&
+name|strcmp
+argument_list|(
+name|nconf
+operator|->
+name|nc_protofmly
+argument_list|,
+literal|"inet"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* DO NOTHING */
+block|}
+else|else
 name|init_transport
 argument_list|(
 name|nconf
@@ -1245,16 +1274,37 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * XXX - using RPC library internal functions. For NC_TPI_CLTS 	 * we call this later, for each socket we like to bind. 	 */
+comment|/* 	 * XXX - using RPC library internal functions. 	 */
 if|if
 condition|(
+operator|(
+name|strcmp
+argument_list|(
 name|nconf
 operator|->
-name|nc_semantics
-operator|!=
-name|NC_TPI_CLTS
+name|nc_netid
+argument_list|,
+literal|"local"
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|strcmp
+argument_list|(
+name|nconf
+operator|->
+name|nc_netid
+argument_list|,
+literal|"unix"
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
+comment|/*  	     * For other transports we call this later, for each socket we 	     * like to bind. 	     */
 if|if
 condition|(
 operator|(
@@ -1471,14 +1521,34 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|strcmp
+argument_list|(
 name|nconf
 operator|->
-name|nc_semantics
-operator|==
-name|NC_TPI_CLTS
+name|nc_netid
+argument_list|,
+literal|"local"
+argument_list|)
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|strcmp
+argument_list|(
+name|nconf
+operator|->
+name|nc_netid
+argument_list|,
+literal|"unix"
+argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
-comment|/* 		 * If no hosts were specified, just bind to INADDR_ANY.  Otherwise 		 * make sure 127.0.0.1 is added to the list. 		 */
+comment|/* 	     * If no hosts were specified, just bind to INADDR_ANY. 	     * Otherwise  make sure 127.0.0.1 is added to the list. 	     */
 name|nhostsbak
 operator|=
 name|nhosts
@@ -1560,7 +1630,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* 		* Bind to specific IPs if asked to 		*/
+comment|/* 	     * Bind to specific IPs if asked to 	     */
 name|checkbind
 operator|=
 literal|1
@@ -1575,7 +1645,7 @@ block|{
 operator|--
 name|nhostsbak
 expr_stmt|;
-comment|/* 			 * XXX - using RPC library internal functions. 			 */
+comment|/* 		 * XXX - using RPC library internal functions. 		 */
 if|if
 condition|(
 operator|(
@@ -1590,8 +1660,33 @@ operator|<
 literal|0
 condition|)
 block|{
+name|int
+name|non_fatal
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|EPROTONOSUPPORT
+operator|&&
+name|nconf
+operator|->
+name|nc_semantics
+operator|!=
+name|NC_TPI_CLTS
+condition|)
+name|non_fatal
+operator|=
+literal|1
+expr_stmt|;
 name|syslog
 argument_list|(
+name|non_fatal
+condition|?
+name|LOG_DEBUG
+else|:
 name|LOG_ERR
 argument_list|,
 literal|"cannot create socket for %s"
@@ -1643,7 +1738,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * Skip if we have an AF_INET6 adress. 					 */
+comment|/* 			 * Skip if we have an AF_INET6 adress. 			 */
 if|if
 condition|(
 name|inet_pton
@@ -1692,7 +1787,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * Skip if we have an AF_INET adress. 					 */
+comment|/* 			 * Skip if we have an AF_INET adress. 			 */
 if|if
 condition|(
 name|inet_pton
@@ -1736,7 +1831,7 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"can't set v6-only binding for "
-literal|"udp6 socket: %m"
+literal|"ipv6 socket: %m"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1745,7 +1840,7 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/* 			 * If no hosts were specified, just bind to INADDR_ANY 			 */
+comment|/* 		 * If no hosts were specified, just bind to INADDR_ANY 		 */
 if|if
 condition|(
 name|strcmp
@@ -1767,6 +1862,35 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|strcmp
+argument_list|(
+name|nconf
+operator|->
+name|nc_netid
+argument_list|,
+literal|"local"
+argument_list|)
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|strcmp
+argument_list|(
+name|nconf
+operator|->
+name|nc_netid
+argument_list|,
+literal|"unix"
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1827,6 +1951,7 @@ name|res
 operator|->
 name|ai_addr
 expr_stmt|;
+block|}
 name|oldmask
 operator|=
 name|umask
@@ -1988,7 +2113,7 @@ condition|(
 name|debugging
 condition|)
 block|{
-comment|/* 				 * for debugging print out our universal 				 * address 				 */
+comment|/* 		     * for debugging print out our universal 		     * address 		     */
 name|char
 modifier|*
 name|uaddr
@@ -2121,95 +2246,6 @@ return|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-operator|(
-name|strcmp
-argument_list|(
-name|nconf
-operator|->
-name|nc_netid
-argument_list|,
-literal|"local"
-argument_list|)
-operator|!=
-literal|0
-operator|)
-operator|&&
-operator|(
-name|strcmp
-argument_list|(
-name|nconf
-operator|->
-name|nc_netid
-argument_list|,
-literal|"unix"
-argument_list|)
-operator|!=
-literal|0
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|aicode
-operator|=
-name|getaddrinfo
-argument_list|(
-name|NULL
-argument_list|,
-name|servname
-argument_list|,
-operator|&
-name|hints
-argument_list|,
-operator|&
-name|res
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"cannot get local address for %s: %s"
-argument_list|,
-name|nconf
-operator|->
-name|nc_netid
-argument_list|,
-name|gai_strerror
-argument_list|(
-name|aicode
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-name|addrlen
-operator|=
-name|res
-operator|->
-name|ai_addrlen
-expr_stmt|;
-name|sa
-operator|=
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-name|res
-operator|->
-name|ai_addr
-expr_stmt|;
-block|}
 name|oldmask
 operator|=
 name|umask
@@ -3449,7 +3485,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adh:iLls"
+literal|"6adh:iLls"
 name|WSOP
 argument_list|)
 operator|)
@@ -3463,6 +3499,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'6'
+case|:
+name|ipv6_only
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'a'
 case|:
@@ -3598,7 +3642,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rpcbind [-adiLls%s] [-h bindip]\n"
+literal|"usage: rpcbind [-6adiLls%s] [-h bindip]\n"
 argument_list|,
 name|WSOP
 argument_list|)
