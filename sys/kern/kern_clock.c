@@ -283,6 +283,7 @@ comment|/* Spin-lock protecting profiling statistics. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mtx
 name|time_lock
