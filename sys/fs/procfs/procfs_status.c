@@ -481,11 +481,6 @@ operator|=
 literal|"nochan"
 expr_stmt|;
 block|}
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -512,6 +507,11 @@ name|ut
 argument_list|,
 operator|&
 name|st
+argument_list|)
+expr_stmt|;
+name|PROC_SUNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|start
@@ -574,6 +574,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|PROC_SUNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sbuf_printf
 argument_list|(
 name|sb

@@ -3074,6 +3074,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|PROC_SLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|calcru
 argument_list|(
 name|p
@@ -3083,6 +3088,11 @@ name|utime
 argument_list|,
 operator|&
 name|stime
+argument_list|)
+expr_stmt|;
+name|PROC_SUNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|calccru

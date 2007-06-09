@@ -3328,6 +3328,11 @@ operator|&
 name|boottime
 argument_list|)
 expr_stmt|;
+name|PROC_SLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|calcru
 argument_list|(
 name|p
@@ -3345,6 +3350,11 @@ operator|->
 name|ki_rusage
 operator|.
 name|ru_stime
+argument_list|)
+expr_stmt|;
+name|PROC_SUNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|calccru

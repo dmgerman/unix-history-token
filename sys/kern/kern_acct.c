@@ -1281,17 +1281,12 @@ name|ac_comm
 argument_list|)
 expr_stmt|;
 comment|/* (2) The amount of user and system time that was used */
-name|rufetch
+name|rufetchcalc
 argument_list|(
 name|p
 argument_list|,
 operator|&
 name|ru
-argument_list|)
-expr_stmt|;
-name|calcru
-argument_list|(
-name|p
 argument_list|,
 operator|&
 name|ut
