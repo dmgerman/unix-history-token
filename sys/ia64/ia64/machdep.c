@@ -1218,7 +1218,7 @@ operator|+=
 literal|2
 control|)
 block|{
-name|int
+name|long
 name|size1
 init|=
 name|phys_avail
@@ -1235,7 +1235,7 @@ index|]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"0x%08lx - 0x%08lx, %d bytes (%d pages)\n"
+literal|"0x%08lx - 0x%08lx, %ld bytes (%ld pages)\n"
 argument_list|,
 name|phys_avail
 index|[
@@ -1254,8 +1254,8 @@ argument_list|,
 name|size1
 argument_list|,
 name|size1
-operator|/
-name|PAGE_SIZE
+operator|>>
+name|PAGE_SHIFT
 argument_list|)
 expr_stmt|;
 block|}
