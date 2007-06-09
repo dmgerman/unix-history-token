@@ -3919,7 +3919,7 @@ argument_list|,
 name|tcp_keepidle
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Unscale the window into a 32-bit value. 	 * This value is bogus for the TCPS_SYN_SENT state 	 * and is overwritten later. 	 */
+comment|/* 	 * Unscale the window into a 32-bit value. 	 * For the SYN_SENT state it is zero. 	 */
 name|tiwin
 operator|=
 name|th
@@ -4017,7 +4017,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * Process options only when we get SYN/ACK back. The SYN case 	 * for incoming connections is handled in tcp_syncache. 	 * XXX this is traditional behavior, may need to be cleaned up. 	 */
+comment|/* 	 * Process options only when we get SYN/ACK back. The SYN case 	 * for incoming connections is handled in tcp_syncache. 	 * According to RFC1323 the window field in a SYN (i.e., a<SYN> 	 * or<SYN,ACK>) segment itself is never scaled. 	 * XXX this is traditional behavior, may need to be cleaned up. 	 */
 if|if
 condition|(
 name|tp
@@ -4066,6 +4066,8 @@ name|to
 operator|.
 name|to_wscale
 expr_stmt|;
+block|}
+comment|/* 		 * Initial send window.  It will be updated with 		 * the next incoming segment to the scaled value. 		 */
 name|tp
 operator|->
 name|snd_wnd
@@ -4073,18 +4075,7 @@ operator|=
 name|th
 operator|->
 name|th_win
-operator|<<
-name|tp
-operator|->
-name|snd_scale
 expr_stmt|;
-name|tiwin
-operator|=
-name|tp
-operator|->
-name|snd_wnd
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|to
@@ -4115,15 +4106,6 @@ operator|=
 name|ticks
 expr_stmt|;
 block|}
-comment|/* Initial send window, already scaled. */
-name|tp
-operator|->
-name|snd_wnd
-operator|=
-name|th
-operator|->
-name|th_win
-expr_stmt|;
 if|if
 condition|(
 name|to
