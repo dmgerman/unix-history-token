@@ -850,12 +850,6 @@ decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
-name|char
-name|devinfo
-index|[
-literal|1024
-index|]
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -894,18 +888,11 @@ argument_list|(
 name|iface
 argument_list|)
 expr_stmt|;
-name|usbd_devinfo
-argument_list|(
-name|uaa
+name|sc
 operator|->
-name|device
-argument_list|,
-name|USBD_SHOW_INTERFACE_CLASS
-argument_list|,
-name|devinfo
-argument_list|)
-expr_stmt|;
-name|USB_ATTACH_SETUP
+name|sc_dev
+operator|=
+name|self
 expr_stmt|;
 comment|/* Find the two first bulk endpoints */
 for|for
