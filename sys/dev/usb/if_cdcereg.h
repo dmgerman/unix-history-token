@@ -107,12 +107,6 @@ name|struct
 name|usb_qdat
 name|q
 decl_stmt|;
-name|char
-name|devinfo
-index|[
-literal|1024
-index|]
-decl_stmt|;
 block|}
 struct|;
 end_struct
