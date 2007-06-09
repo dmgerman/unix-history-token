@@ -1160,12 +1160,6 @@ name|ed
 init|=
 name|NULL
 decl_stmt|;
-name|char
-name|devinfo
-index|[
-literal|1024
-index|]
-decl_stmt|;
 name|usbd_status
 name|error
 decl_stmt|;
@@ -1187,38 +1181,17 @@ decl_stmt|;
 comment|/* Get USB device info */
 name|sc
 operator|->
+name|sc_dev
+operator|=
+name|self
+expr_stmt|;
+name|sc
+operator|->
 name|sc_udev
 operator|=
 name|uaa
 operator|->
 name|device
-expr_stmt|;
-name|usbd_devinfo
-argument_list|(
-name|sc
-operator|->
-name|sc_udev
-argument_list|,
-literal|0
-argument_list|,
-name|devinfo
-argument_list|)
-expr_stmt|;
-name|USB_ATTACH_SETUP
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: %s\n"
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
-argument_list|,
-name|devinfo
-argument_list|)
 expr_stmt|;
 comment|/*  	 * Initialize device softc structure 	 */
 comment|/* State */
