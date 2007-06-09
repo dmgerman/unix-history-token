@@ -2871,7 +2871,7 @@ decl_stmt|;
 if|#
 directive|if
 operator|!
-name|define
+name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
