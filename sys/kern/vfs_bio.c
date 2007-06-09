@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -1951,6 +1957,9 @@ name|long
 name|physmem_est
 parameter_list|)
 block|{
+name|int
+name|maxbuf
+decl_stmt|;
 comment|/* 	 * physmem_est is in pages.  Convert it to kilobytes (assumes 	 * PAGE_SIZE is>= 1K) 	 */
 name|physmem_est
 operator|=
@@ -2043,6 +2052,27 @@ operator|=
 name|maxbcache
 operator|/
 name|BKVASIZE
+expr_stmt|;
+comment|/* XXX Avoid integer overflows later on with maxbufspace. */
+name|maxbuf
+operator|=
+operator|(
+name|INT_MAX
+operator|/
+literal|3
+operator|)
+operator|/
+name|BKVASIZE
+expr_stmt|;
+if|if
+condition|(
+name|nbuf
+operator|>
+name|maxbuf
+condition|)
+name|nbuf
+operator|=
+name|maxbuf
 expr_stmt|;
 block|}
 if|#
