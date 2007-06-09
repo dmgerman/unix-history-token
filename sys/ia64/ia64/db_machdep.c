@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -3782,6 +3788,9 @@ name|void
 modifier|*
 name|prev_jb
 decl_stmt|;
+name|size_t
+name|cnt
+decl_stmt|;
 name|char
 modifier|*
 name|dst
@@ -3818,9 +3827,13 @@ operator|*
 operator|)
 name|addr
 expr_stmt|;
+name|cnt
+operator|=
+name|size
+expr_stmt|;
 while|while
 condition|(
-name|size
+name|cnt
 operator|--
 operator|>
 literal|0
@@ -3832,6 +3845,17 @@ operator|=
 operator|*
 name|data
 operator|++
+expr_stmt|;
+name|kdb_cpu_sync_icache
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|addr
+argument_list|,
+name|size
+argument_list|)
 expr_stmt|;
 block|}
 operator|(
