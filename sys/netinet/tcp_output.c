@@ -3510,7 +3510,7 @@ name|th_flags
 operator|=
 name|flags
 expr_stmt|;
-comment|/* 	 * Calculate receive window.  Don't shrink window, 	 * but avoid silly window syndrome. 	 * 	 * XXX: RFC1323:  The Window field in a SYN (i.e., a<SYN> or 	 *<SYN,ACK>) segment itself is never scaled. 	 */
+comment|/* 	 * Calculate receive window.  Don't shrink window, 	 * but avoid silly window syndrome. 	 */
 if|if
 condition|(
 name|recwin
@@ -3597,6 +3597,39 @@ name|tp
 operator|->
 name|rcv_scale
 expr_stmt|;
+comment|/* 	 * According to RFC1323 the window field in a SYN (i.e., a<SYN> 	 * or<SYN,ACK>) segment itself is never scaled.  The<SYN,ACK> 	 * case is handled in syncache. 	 */
+if|if
+condition|(
+name|flags
+operator|&
+name|TH_SYN
+condition|)
+name|th
+operator|->
+name|th_win
+operator|=
+name|htons
+argument_list|(
+call|(
+name|u_short
+call|)
+argument_list|(
+name|min
+argument_list|(
+name|sbspace
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+argument_list|,
+name|TCP_MAXWIN
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|th
 operator|->
 name|th_win
