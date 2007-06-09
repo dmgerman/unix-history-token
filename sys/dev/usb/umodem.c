@@ -1131,20 +1131,6 @@ name|usb_cdc_cm_descriptor_t
 modifier|*
 name|cmd
 decl_stmt|;
-name|char
-modifier|*
-name|devinfo
-init|=
-name|NULL
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|devname
-decl_stmt|;
-name|usbd_status
-name|err
-decl_stmt|;
 name|int
 name|data_ifcno
 decl_stmt|;
@@ -1156,24 +1142,28 @@ name|ucom_softc
 modifier|*
 name|ucom
 decl_stmt|;
-name|devinfo
+name|id
 operator|=
-name|malloc
+name|usbd_get_interface_descriptor
 argument_list|(
-literal|1024
-argument_list|,
-name|M_USBDEV
-argument_list|,
-name|M_WAITOK
+name|sc
+operator|->
+name|sc_ctl_iface
 argument_list|)
 expr_stmt|;
-name|usbd_devinfo
+name|device_printf
 argument_list|(
-name|dev
+name|self
 argument_list|,
-literal|0
+literal|"iclass %d/%d"
 argument_list|,
-name|devinfo
+name|id
+operator|->
+name|bInterfaceClass
+argument_list|,
+name|id
+operator|->
+name|bInterfaceSubClass
 argument_list|)
 expr_stmt|;
 name|ucom
@@ -1195,13 +1185,6 @@ name|sc_dev
 operator|=
 name|self
 expr_stmt|;
-name|device_set_desc_copy
-argument_list|(
-name|self
-argument_list|,
-name|devinfo
-argument_list|)
-expr_stmt|;
 name|ucom
 operator|->
 name|sc_udev
@@ -1216,7 +1199,6 @@ name|uaa
 operator|->
 name|iface
 expr_stmt|;
-comment|/*USB_ATTACH_SETUP; */
 name|sc
 operator|->
 name|sc_udev
@@ -1230,42 +1212,6 @@ operator|=
 name|uaa
 operator|->
 name|iface
-expr_stmt|;
-name|devname
-operator|=
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
-expr_stmt|;
-comment|/* XXX ? use something else ? XXX */
-name|id
-operator|=
-name|usbd_get_interface_descriptor
-argument_list|(
-name|sc
-operator|->
-name|sc_ctl_iface
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: %s, iclass %d/%d\n"
-argument_list|,
-name|devname
-argument_list|,
-name|devinfo
-argument_list|,
-name|id
-operator|->
-name|bInterfaceClass
-argument_list|,
-name|id
-operator|->
-name|bInterfaceSubClass
-argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -1309,11 +1255,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: no CM descriptor\n"
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"no CM descriptor\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1330,11 +1278,13 @@ name|cmd
 operator|->
 name|bDataInterface
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: data interface %d, has %sCM over data, has %sbreak\n"
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"data interface %d, has %sCM over data, has %sbreak\n"
 argument_list|,
 name|data_ifcno
 argument_list|,
@@ -1445,11 +1395,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: no data interface\n"
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"no data interface\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1519,11 +1471,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: no endpoint descriptor for %d\n"
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"no endpoint descriptor for %d\n"
 argument_list|,
 name|i
 argument_list|)
@@ -1604,11 +1558,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Could not find data bulk in\n"
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"Could not find data bulk in\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1625,11 +1581,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Could not find data bulk out\n"
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"Could not find data bulk out\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1683,8 +1641,6 @@ name|sc_acm_cap
 operator|&
 name|USB_CDC_ACM_HAS_FEATURE
 condition|)
-name|err
-operator|=
 name|umodem_set_comm_feature
 argument_list|(
 name|sc
@@ -1694,27 +1650,6 @@ argument_list|,
 name|UCDC_DATA_MULTIPLEXED
 argument_list|)
 expr_stmt|;
-else|else
-name|err
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: could not set data multiplex mode\n"
-argument_list|,
-name|devname
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 name|sc
 operator|->
 name|sc_cm_over_data
@@ -1793,11 +1728,13 @@ operator|==
 name|UE_INTERRUPT
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: status change notification available\n"
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"status change notification available\n"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1883,13 +1820,6 @@ operator|->
 name|sc_ucom
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|devinfo
-argument_list|,
-name|M_USBDEV
-argument_list|)
-expr_stmt|;
 name|USB_ATTACH_SUCCESS_RETURN
 expr_stmt|;
 name|bad
@@ -1899,13 +1829,6 @@ operator|->
 name|sc_dying
 operator|=
 literal|1
-expr_stmt|;
-name|free
-argument_list|(
-name|devinfo
-argument_list|,
-name|M_USBDEV
-argument_list|)
 expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
 expr_stmt|;
@@ -2080,16 +2003,13 @@ if|if
 condition|(
 name|err
 condition|)
-name|printf
-argument_list|(
-literal|"%s: abort notify pipe failed: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"abort notify pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2110,16 +2030,13 @@ if|if
 condition|(
 name|err
 condition|)
-name|printf
-argument_list|(
-literal|"%s: close notify pipe failed: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"close notify pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2189,16 +2106,13 @@ operator|==
 name|USBD_CANCELLED
 condition|)
 return|return;
-name|printf
-argument_list|(
-literal|"%s: abnormal status: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"abnormal status: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2268,16 +2182,13 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: Invalid notification length! (%d)\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"Invalid notification length! (%d)\n"
 argument_list|,
 name|UGETW
 argument_list|(
