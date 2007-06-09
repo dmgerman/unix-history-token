@@ -2492,6 +2492,7 @@ expr_stmt|;
 name|atomic_store_rel_ptr
 argument_list|(
 operator|(
+specifier|volatile
 name|void
 operator|*
 operator|)
