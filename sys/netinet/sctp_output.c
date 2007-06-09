@@ -14742,13 +14742,6 @@ argument_list|,
 name|SCTP_SIGNATURE_SIZE
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%p is address for signature\n"
-argument_list|,
-name|foo
-argument_list|)
-expr_stmt|;
 operator|*
 name|signature
 operator|=
@@ -25103,13 +25096,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
-argument_list|(
-literal|"signature is set to %p\n"
-argument_list|,
-name|signature
-argument_list|)
-expr_stmt|;
 comment|/* Now append the cookie to the end and update the space/size */
 name|SCTP_BUF_NEXT
 argument_list|(
@@ -25228,31 +25214,6 @@ operator|)
 name|signature
 argument_list|,
 name|SCTP_SIGNATURE_SIZE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"signed first 4 bytes are %x %x %x %x\n"
-argument_list|,
-name|signature
-index|[
-literal|0
-index|]
-argument_list|,
-name|signature
-index|[
-literal|1
-index|]
-argument_list|,
-name|signature
-index|[
-literal|2
-index|]
-argument_list|,
-name|signature
-index|[
-literal|3
-index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We sifa 0 here to NOT set IP_DF if its IPv4, we ignore the return 	 * here since the timer will drive a retranmission. 	 */
