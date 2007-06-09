@@ -1889,14 +1889,28 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* When tp is gone we've lost the race. */
+comment|/* 	 * XXX: When our tcpcb went into TIMEWAIT, is gone or no 	 * longer the one we used to work with we've lost the race. 	 * This race is inherent in the current socket/inpcb life 	 * cycle system. 	 */
 if|if
 condition|(
+operator|(
+name|inp
+operator|->
+name|inp_vflag
+operator|&
+name|INP_TIMEWAIT
+operator|)
+operator|||
 name|inp
 operator|->
 name|inp_ppcb
 operator|==
 name|NULL
+operator|||
+name|inp
+operator|->
+name|inp_ppcb
+operator|!=
+name|tp
 condition|)
 block|{
 name|CTR3
