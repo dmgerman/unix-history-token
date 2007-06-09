@@ -4134,6 +4134,12 @@ literal|1
 condition|)
 return|return;
 comment|/* 			 * If the destination of this packet doesn't match the 			 * source of the original packet then this packet is 			 * not correct. 			 */
+name|icmp6
+operator|=
+name|fin
+operator|->
+name|fin_dp
+expr_stmt|;
 name|ip6
 operator|=
 operator|(
