@@ -2173,7 +2173,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/*ARRIVATO QUI*/
 if|if
 condition|(
 name|nconf
