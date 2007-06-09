@@ -905,7 +905,7 @@ decl_stmt|;
 name|uint8_t
 name|ssf_data
 index|[
-literal|4
+literal|0
 index|]
 decl_stmt|;
 block|}

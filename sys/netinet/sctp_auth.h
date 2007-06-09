@@ -960,6 +960,9 @@ parameter_list|,
 name|uint8_t
 modifier|*
 name|digest
+parameter_list|,
+name|uint32_t
+name|trailer
 parameter_list|)
 function_decl|;
 end_function_decl
