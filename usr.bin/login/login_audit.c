@@ -62,6 +62,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"login.h"
 end_include
 
@@ -377,6 +389,7 @@ begin_function
 name|void
 name|au_login_fail
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|errmsg
@@ -673,12 +686,6 @@ name|tok
 decl_stmt|;
 name|int
 name|aufd
-decl_stmt|;
-name|au_mask_t
-name|aumask
-decl_stmt|;
-name|auditinfo_t
-name|auinfo
 decl_stmt|;
 name|uid_t
 name|uid

@@ -458,6 +458,7 @@ name|char
 modifier|*
 name|path
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|;
