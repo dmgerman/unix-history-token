@@ -1975,12 +1975,10 @@ argument_list|,
 name|listq
 argument_list|)
 expr_stmt|;
-name|PCPU_INC
-argument_list|(
 name|cnt
 operator|.
 name|v_pdpages
-argument_list|)
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -2834,12 +2832,10 @@ operator|=
 name|next
 control|)
 block|{
-name|PCPU_INC
-argument_list|(
 name|cnt
 operator|.
 name|v_pdpages
-argument_list|)
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -3141,12 +3137,10 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|PCPU_INC
-argument_list|(
 name|cnt
 operator|.
 name|v_dfree
-argument_list|)
+operator|++
 expr_stmt|;
 operator|--
 name|page_shortage
@@ -3819,12 +3813,10 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * The count for pagedaemon pages is done after checking the 		 * page for eligibility... 		 */
-name|PCPU_INC
-argument_list|(
 name|cnt
 operator|.
 name|v_pdpages
-argument_list|)
+operator|++
 expr_stmt|;
 comment|/* 		 * Check to see "how much" the page has been used. 		 */
 name|actcount
@@ -4176,12 +4168,10 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|PCPU_INC
-argument_list|(
 name|cnt
 operator|.
 name|v_dfree
-argument_list|)
+operator|++
 expr_stmt|;
 name|cache_last_free
 operator|=
@@ -5152,7 +5142,6 @@ name|v_free_min
 operator|/
 literal|2
 expr_stmt|;
-comment|/* 	 * Here adds don't need to be atomic since we are only initializing 	 * v_free_min and v_free_severe. 	 */
 name|cnt
 operator|.
 name|v_free_min
@@ -5498,12 +5487,10 @@ if|if
 condition|(
 name|vm_pages_needed
 condition|)
-name|PCPU_INC
-argument_list|(
 name|cnt
 operator|.
 name|v_pdwakeups
-argument_list|)
+operator|++
 expr_stmt|;
 name|mtx_unlock
 argument_list|(

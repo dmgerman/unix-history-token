@@ -854,15 +854,10 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
-name|atomic_add_int
-argument_list|(
-operator|&
 name|cnt
 operator|.
 name|v_page_count
-argument_list|,
-literal|1
-argument_list|)
+operator|++
 expr_stmt|;
 name|m
 operator|=

@@ -16,7 +16,7 @@ name|_SYS_VMMETER_H_
 end_define
 
 begin_comment
-comment|/*  * System wide statistics counters.  */
+comment|/*  * System wide statistics counters.  * Locking:  *      a - locked by atomic operations  *      c - constant after initialization  *      f - locked by vm_page_queue_free_mtx  *      p - locked by being in the PCPU and atomicity respect to interrupts  *      q - locked by vm_page_queue_mtx  */
 end_comment
 
 begin_struct
@@ -27,202 +27,202 @@ comment|/* 	 * General system activity. 	 */
 name|u_int
 name|v_swtch
 decl_stmt|;
-comment|/* context switches */
+comment|/* (p) context switches */
 name|u_int
 name|v_trap
 decl_stmt|;
-comment|/* calls to trap */
+comment|/* (p) calls to trap */
 name|u_int
 name|v_syscall
 decl_stmt|;
-comment|/* calls to syscall() */
+comment|/* (p) calls to syscall() */
 name|u_int
 name|v_intr
 decl_stmt|;
-comment|/* device interrupts */
+comment|/* (p) device interrupts */
 name|u_int
 name|v_soft
 decl_stmt|;
-comment|/* software interrupts */
+comment|/* (p) software interrupts */
 comment|/* 	 * Virtual memory activity. 	 */
 name|u_int
 name|v_vm_faults
 decl_stmt|;
-comment|/* number of address memory faults */
+comment|/* (p) address memory faults */
 name|u_int
 name|v_cow_faults
 decl_stmt|;
-comment|/* number of copy-on-writes */
+comment|/* (p) copy-on-writes faults */
 name|u_int
 name|v_cow_optim
 decl_stmt|;
-comment|/* number of optimized copy-on-writes */
+comment|/* (p) optimized copy-on-writes faults */
 name|u_int
 name|v_zfod
 decl_stmt|;
-comment|/* pages zero filled on demand */
+comment|/* (p) pages zero filled on demand */
 name|u_int
 name|v_ozfod
 decl_stmt|;
-comment|/* optimized zero fill pages */
+comment|/* (p) optimized zero fill pages */
 name|u_int
 name|v_swapin
 decl_stmt|;
-comment|/* swap pager pageins */
+comment|/* (p) swap pager pageins */
 name|u_int
 name|v_swapout
 decl_stmt|;
-comment|/* swap pager pageouts */
+comment|/* (p) swap pager pageouts */
 name|u_int
 name|v_swappgsin
 decl_stmt|;
-comment|/* swap pager pages paged in */
+comment|/* (p) swap pager pages paged in */
 name|u_int
 name|v_swappgsout
 decl_stmt|;
-comment|/* swap pager pages paged out */
+comment|/* (p) swap pager pages paged out */
 name|u_int
 name|v_vnodein
 decl_stmt|;
-comment|/* vnode pager pageins */
+comment|/* (p) vnode pager pageins */
 name|u_int
 name|v_vnodeout
 decl_stmt|;
-comment|/* vnode pager pageouts */
+comment|/* (p) vnode pager pageouts */
 name|u_int
 name|v_vnodepgsin
 decl_stmt|;
-comment|/* vnode_pager pages paged in */
+comment|/* (p) vnode_pager pages paged in */
 name|u_int
 name|v_vnodepgsout
 decl_stmt|;
-comment|/* vnode pager pages paged out */
+comment|/* (p) vnode pager pages paged out */
 name|u_int
 name|v_intrans
 decl_stmt|;
-comment|/* intransit blocking page faults */
+comment|/* (p) intransit blocking page faults */
 name|u_int
 name|v_reactivated
 decl_stmt|;
-comment|/* number of pages reactivated from free list */
+comment|/* (q) pages reactivated from free list */
 name|u_int
 name|v_pdwakeups
 decl_stmt|;
-comment|/* number of times daemon has awaken from sleep */
+comment|/* (f) times daemon has awaken from sleep */
 name|u_int
 name|v_pdpages
 decl_stmt|;
-comment|/* number of pages analyzed by daemon */
+comment|/* (q) pages analyzed by daemon */
 name|u_int
 name|v_dfree
 decl_stmt|;
-comment|/* pages freed by daemon */
+comment|/* (q) pages freed by daemon */
 name|u_int
 name|v_pfree
 decl_stmt|;
-comment|/* pages freed by exiting processes */
+comment|/* (q) pages freed by exiting processes */
 name|u_int
 name|v_tfree
 decl_stmt|;
-comment|/* total pages freed */
+comment|/* (p) total pages freed */
 comment|/* 	 * Distribution of page usages. 	 */
 name|u_int
 name|v_page_size
 decl_stmt|;
-comment|/* page size in bytes */
+comment|/* (c) page size in bytes */
 name|u_int
 name|v_page_count
 decl_stmt|;
-comment|/* total number of pages in system */
+comment|/* (c) total number of pages in system */
 name|u_int
 name|v_free_reserved
 decl_stmt|;
-comment|/* number of pages reserved for deadlock */
+comment|/* (c) pages reserved for deadlock */
 name|u_int
 name|v_free_target
 decl_stmt|;
-comment|/* number of pages desired free */
+comment|/* (c) pages desired free */
 name|u_int
 name|v_free_min
 decl_stmt|;
-comment|/* minimum number of pages desired free */
+comment|/* (c) pages desired free */
 name|u_int
 name|v_free_count
 decl_stmt|;
-comment|/* number of pages free */
+comment|/* (f) pages free */
 name|u_int
 name|v_wire_count
 decl_stmt|;
-comment|/* number of pages wired down */
+comment|/* (a) pages wired down */
 name|u_int
 name|v_active_count
 decl_stmt|;
-comment|/* number of pages active */
+comment|/* (q) pages active */
 name|u_int
 name|v_inactive_target
 decl_stmt|;
-comment|/* number of pages desired inactive */
+comment|/* (c) pages desired inactive */
 name|u_int
 name|v_inactive_count
 decl_stmt|;
-comment|/* number of pages inactive */
+comment|/* (q) pages inactive */
 name|u_int
 name|v_cache_count
 decl_stmt|;
-comment|/* number of pages on buffer cache queue */
+comment|/* (q) pages on buffer cache queue */
 name|u_int
 name|v_cache_min
 decl_stmt|;
-comment|/* min number of pages desired on cache queue */
+comment|/* (c) min pages desired on cache queue */
 name|u_int
 name|v_cache_max
 decl_stmt|;
-comment|/* max number of pages in cached obj */
+comment|/* (c) max pages in cached obj */
 name|u_int
 name|v_pageout_free_min
 decl_stmt|;
-comment|/* min number pages reserved for kernel */
+comment|/* (c) min pages reserved for kernel */
 name|u_int
 name|v_interrupt_free_min
 decl_stmt|;
-comment|/* reserved number of pages for int code */
+comment|/* (c) reserved pages for int code */
 name|u_int
 name|v_free_severe
 decl_stmt|;
-comment|/* severe depletion of pages below this pt */
+comment|/* (c) severe page depletion point */
 comment|/* 	 * Fork/vfork/rfork activity. 	 */
 name|u_int
 name|v_forks
 decl_stmt|;
-comment|/* number of fork() calls */
+comment|/* (p) fork() calls */
 name|u_int
 name|v_vforks
 decl_stmt|;
-comment|/* number of vfork() calls */
+comment|/* (p) vfork() calls */
 name|u_int
 name|v_rforks
 decl_stmt|;
-comment|/* number of rfork() calls */
+comment|/* (p) rfork() calls */
 name|u_int
 name|v_kthreads
 decl_stmt|;
-comment|/* number of fork() calls by kernel */
+comment|/* (p) fork() calls by kernel */
 name|u_int
 name|v_forkpages
 decl_stmt|;
-comment|/* number of VM pages affected by fork() */
+comment|/* (p) VM pages affected by fork() */
 name|u_int
 name|v_vforkpages
 decl_stmt|;
-comment|/* number of VM pages affected by vfork() */
+comment|/* (p) VM pages affected by vfork() */
 name|u_int
 name|v_rforkpages
 decl_stmt|;
-comment|/* number of VM pages affected by rfork() */
+comment|/* (p) VM pages affected by rfork() */
 name|u_int
 name|v_kthreadpages
 decl_stmt|;
-comment|/* number of VM pages affected by fork() by kernel */
+comment|/* (p) VM pages affected by fork() by kernel */
 block|}
 struct|;
 end_struct
