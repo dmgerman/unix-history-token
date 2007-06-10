@@ -3918,11 +3918,6 @@ modifier|*
 name|td
 decl_stmt|;
 name|struct
-name|proc
-modifier|*
-name|mycp
-decl_stmt|;
-name|struct
 name|aiocb
 modifier|*
 name|cb
