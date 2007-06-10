@@ -2129,6 +2129,11 @@ operator|->
 name|p_start
 argument_list|)
 expr_stmt|;
+name|PROC_SLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|rufetch
 argument_list|(
 name|p
@@ -2138,6 +2143,11 @@ name|ru
 argument_list|)
 expr_stmt|;
 comment|/* Clears thread stats */
+name|PROC_SUNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_rux
