@@ -714,15 +714,6 @@ name|uaa
 operator|->
 name|device
 expr_stmt|;
-name|sc
-operator|->
-name|cdce_unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|self
-argument_list|)
-expr_stmt|;
 name|t
 operator|=
 name|cdce_lookup
@@ -791,16 +782,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: no union descriptor\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"no union descriptor\n"
 argument_list|)
 expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
@@ -901,16 +889,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: no data interface\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"no data interface\n"
 argument_list|)
 expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
@@ -972,16 +957,13 @@ name|j
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: setting alternate interface failed\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"setting alternate interface failed\n"
 argument_list|)
 expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
@@ -1041,16 +1023,13 @@ operator|!
 name|ed
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: could not read endpoint descriptor\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"could not read endpoint descriptor\n"
 argument_list|)
 expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
@@ -1143,16 +1122,13 @@ comment|/* XXX: CDC spec defines an interrupt pipe, but it is not 				 * needed 
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"%s: unexpected endpoint\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"unexpected endpoint\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1190,16 +1166,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: could not find data bulk in\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"could not find data bulk in\n"
 argument_list|)
 expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
@@ -1215,16 +1188,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: could not find data bulk out\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"could not find data bulk out\n"
 argument_list|)
 expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
@@ -1304,16 +1274,13 @@ argument_list|)
 condition|)
 block|{
 comment|/* Fake MAC address */
-name|printf
-argument_list|(
-literal|"%s: faking MAC address\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"faking MAC address\n"
 argument_list|)
 expr_stmt|;
 name|eaddr
@@ -1345,13 +1312,14 @@ index|[
 literal|5
 index|]
 operator|=
-call|(
+operator|(
 name|u_int8_t
-call|)
+operator|)
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
-name|cdce_unit
+name|cdce_dev
 argument_list|)
 expr_stmt|;
 block|}
@@ -1460,16 +1428,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: can not if_alloc()\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|CDCE_UNLOCK
@@ -1500,9 +1465,12 @@ name|ifp
 argument_list|,
 literal|"cdce"
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|sc
 operator|->
-name|cdce_unit
+name|cdce_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -2153,16 +2121,13 @@ if|if
 condition|(
 name|err
 condition|)
-name|printf
-argument_list|(
-literal|"%s: abort rx pipe failed: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"abort rx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2183,16 +2148,13 @@ if|if
 condition|(
 name|err
 condition|)
-name|printf
-argument_list|(
-literal|"%s: close rx pipe failed: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"close rx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2229,16 +2191,13 @@ if|if
 condition|(
 name|err
 condition|)
-name|printf
-argument_list|(
-literal|"%s: abort tx pipe failed: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"abort tx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2259,16 +2218,13 @@ if|if
 condition|(
 name|err
 condition|)
-name|printf
-argument_list|(
-literal|"%s: close tx pipe failed: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"close tx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2599,16 +2555,13 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: tx list init failed\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"tx list init failed\n"
 argument_list|)
 expr_stmt|;
 name|CDCE_UNLOCK
@@ -2637,16 +2590,13 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: rx list init failed\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"rx list init failed\n"
 argument_list|)
 expr_stmt|;
 name|CDCE_UNLOCK
@@ -2682,16 +2632,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: open rx pipe failed: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"open rx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2731,16 +2678,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: open tx pipe failed: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"open tx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2956,16 +2900,13 @@ name|cdce_rxeof_errors
 operator|==
 literal|0
 condition|)
-name|printf
-argument_list|(
-literal|"%s: usb error on rx: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"usb error on rx: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -3262,16 +3203,13 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: usb error on tx: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"usb error on tx: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -3466,17 +3404,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: no memory for rx list "
-literal|"-- packet dropped!\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|cdce_dev
-argument_list|)
+argument_list|,
+literal|"no memory for rx list "
+literal|"-- packet dropped!\n"
 argument_list|)
 expr_stmt|;
 name|ifp

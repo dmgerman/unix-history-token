@@ -82,9 +82,6 @@ decl_stmt|;
 name|device_t
 name|cdce_dev
 decl_stmt|;
-name|int
-name|cdce_unit
-decl_stmt|;
 name|struct
 name|ue_cdata
 name|cdce_cdata
