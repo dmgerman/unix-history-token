@@ -26074,7 +26074,7 @@ condition|)
 block|{
 case|case
 operator|(
-name|int
+name|u_long
 operator|)
 name|SPPPIOGDEFS
 case|:
@@ -26278,7 +26278,7 @@ expr_stmt|;
 break|break;
 case|case
 operator|(
-name|int
+name|u_long
 operator|)
 name|SPPPIOSDEFS
 case|:
