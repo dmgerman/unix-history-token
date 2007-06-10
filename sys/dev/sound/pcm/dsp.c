@@ -8600,10 +8600,13 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"bogus buf=%p len=%u"
+literal|"bogus buf=%p len=%ju"
 operator|,
 name|buf
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|len
 operator|)
 argument_list|)
