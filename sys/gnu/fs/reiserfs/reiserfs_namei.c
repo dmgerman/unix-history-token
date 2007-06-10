@@ -1713,7 +1713,6 @@ comment|/*  * de_bh, de_ih, de_deh (points to first element of array), de_item_n
 end_comment
 
 begin_function
-specifier|inline
 name|void
 name|set_de_name_and_namelen
 parameter_list|(

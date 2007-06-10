@@ -66,7 +66,6 @@ comment|/* Does the buffer contain a disk block which is in the tree. */
 end_comment
 
 begin_function
-specifier|inline
 name|int
 name|B_IS_IN_TREE
 parameter_list|(
@@ -95,7 +94,6 @@ comment|/* To gets item head in le form */
 end_comment
 
 begin_function
-specifier|inline
 name|void
 name|copy_item_head
 parameter_list|(
@@ -467,7 +465,6 @@ comment|/*  * This does not say which one is bigger, it only returns 1 if keys  
 end_comment
 
 begin_function
-specifier|inline
 name|int
 name|comp_le_keys
 parameter_list|(
@@ -512,7 +509,6 @@ comment|/*  * For those not familiar with binary search: n_lbound is the leftmos
 end_comment
 
 begin_function
-specifier|inline
 name|int
 name|bin_search
 parameter_list|(
@@ -675,7 +671,6 @@ comment|/*  * Get delimiting key of the buffer by looking for it in the buffers 
 end_comment
 
 begin_function
-specifier|inline
 specifier|const
 name|struct
 name|key
@@ -865,7 +860,6 @@ comment|/* Get delimiting key of the buffer at the path and its right neighbor. 
 end_comment
 
 begin_function
-specifier|inline
 specifier|const
 name|struct
 name|key
