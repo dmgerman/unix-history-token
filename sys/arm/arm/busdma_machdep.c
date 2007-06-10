@@ -1937,6 +1937,13 @@ operator||=
 name|BUS_DMA_MIN_ALLOC_COMP
 expr_stmt|;
 block|}
+else|else
+name|newtag
+operator|->
+name|bounce_zone
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|error
