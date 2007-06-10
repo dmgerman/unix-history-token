@@ -482,9 +482,6 @@ name|AXE_ENDPT_MAX
 index|]
 decl_stmt|;
 name|int
-name|axe_unit
-decl_stmt|;
-name|int
 name|axe_if_flags
 decl_stmt|;
 name|struct
