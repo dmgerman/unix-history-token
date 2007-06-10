@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20070505_0044"
+value|"20070611_0045"
 end_define
 
 begin_define
@@ -684,6 +684,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASUS_M2V_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x81e7)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASUS_M2N_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ASUS, 0x8234)
 end_define
@@ -693,6 +700,13 @@ define|#
 directive|define
 name|ASUS_M2NPVMX_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ASUS, 0x81cb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASUS_P5BWD_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x81ec)
 end_define
 
 begin_define
@@ -2284,6 +2298,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC660
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0660)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALC861
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0861)
 end_define
@@ -2374,6 +2395,13 @@ define|#
 directive|define
 name|HDA_CODEC_AD1988
 value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x1988)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1988B
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x198b)
 end_define
 
 begin_define
@@ -2629,6 +2657,12 @@ literal|"Realtek ALC262"
 block|}
 block|,
 block|{
+name|HDA_CODEC_ALC660
+block|,
+literal|"Realtek ALC660"
+block|}
+block|,
+block|{
 name|HDA_CODEC_ALC861
 block|,
 literal|"Realtek ALC861"
@@ -2692,6 +2726,12 @@ block|{
 name|HDA_CODEC_AD1988
 block|,
 literal|"Analog Devices AD1988"
+block|}
+block|,
+block|{
+name|HDA_CODEC_AD1988B
+block|,
+literal|"Analog Devices AD1988B"
 block|}
 block|,
 block|{
@@ -20558,6 +20598,18 @@ block|,
 block|{
 name|HDA_MATCH_ALL
 block|,
+name|HDA_CODEC_AD1988B
+block|,
+name|HDA_QUIRK_IVREF80
+block|,
+name|HDA_QUIRK_IVREF50
+operator||
+name|HDA_QUIRK_IVREF100
+block|}
+block|,
+block|{
+name|HDA_MATCH_ALL
+block|,
 name|HDA_CODEC_CXVENICE
 block|,
 literal|0
@@ -21459,6 +21511,9 @@ block|}
 break|break;
 case|case
 name|HDA_CODEC_AD1988
+case|:
+case|case
+name|HDA_CODEC_AD1988B
 case|:
 comment|/*w = hdac_widget_get(devinfo, 12); 		if (w != NULL) { 			w->selconn = 1; 			w->pflags |= HDA_ADC_LOCKED; 		} 		w = hdac_widget_get(devinfo, 13); 		if (w != NULL) { 			w->selconn = 4; 			w->pflags |= HDA_ADC_LOCKED; 		} 		w = hdac_widget_get(devinfo, 14); 		if (w != NULL) { 			w->selconn = 2; 			w->pflags |= HDA_ADC_LOCKED; 		}*/
 name|ctl
