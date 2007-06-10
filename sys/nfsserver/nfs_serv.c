@@ -1496,6 +1496,12 @@ decl_stmt|;
 name|struct
 name|timespec
 name|guard
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|}
 decl_stmt|;
 name|struct
 name|mount
