@@ -1027,6 +1027,10 @@ literal|1
 argument_list|,
 literal|"invalid value '%s'"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|newval
 argument_list|)
 expr_stmt|;
@@ -1065,6 +1069,10 @@ literal|1
 argument_list|,
 literal|"invalid integer '%s'"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|newval
 argument_list|)
 expr_stmt|;
@@ -1117,6 +1125,10 @@ literal|1
 argument_list|,
 literal|"invalid unsigned integer '%s'"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|newval
 argument_list|)
 expr_stmt|;
@@ -1165,6 +1177,10 @@ literal|1
 argument_list|,
 literal|"invalid long integer '%s'"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|newval
 argument_list|)
 expr_stmt|;
@@ -1214,6 +1230,10 @@ argument_list|,
 literal|"invalid unsigned long integer"
 literal|" '%s'"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|newval
 argument_list|)
 expr_stmt|;
@@ -2709,9 +2729,14 @@ index|]
 decl_stmt|,
 modifier|*
 name|fmt
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|sep
+decl_stmt|,
+modifier|*
+name|sep1
 decl_stmt|;
 name|int
 name|qoid
@@ -3231,7 +3256,7 @@ literal|18
 expr_stmt|;
 break|break;
 block|}
-name|val
+name|sep1
 operator|=
 literal|""
 expr_stmt|;
@@ -3347,7 +3372,7 @@ break|break;
 block|}
 name|fputs
 argument_list|(
-name|val
+name|sep1
 argument_list|,
 name|stdout
 argument_list|)
@@ -3384,10 +3409,6 @@ literal|'X'
 condition|)
 name|printf
 argument_list|(
-name|hflag
-condition|?
-literal|"%'#0*jx"
-else|:
 literal|"%#0*jx"
 argument_list|,
 name|flen
@@ -3444,14 +3465,14 @@ name|printf
 argument_list|(
 name|hflag
 condition|?
-literal|"%'d"
+literal|"%'jd"
 else|:
-literal|"%d"
+literal|"%jd"
 argument_list|,
 name|mv
 argument_list|)
 expr_stmt|;
-name|val
+name|sep1
 operator|=
 literal|" "
 expr_stmt|;
@@ -3919,8 +3940,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|len
+operator|<
+literal|0
+operator|||
 name|l2
 operator|<
+operator|(
+name|unsigned
+name|int
+operator|)
 name|len
 condition|)
 return|return
