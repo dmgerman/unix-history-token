@@ -984,6 +984,14 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+operator|*
+name|newpath
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|vfslocked
 operator|=
 name|VFS_LOCK_GIANT
