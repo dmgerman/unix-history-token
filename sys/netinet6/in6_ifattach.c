@@ -3119,11 +3119,14 @@ name|struct
 name|in6_multi
 modifier|*
 name|in6m
-decl_stmt|;
-name|struct
-name|in6_multi
+decl_stmt|,
 modifier|*
 name|in6m_next
+decl_stmt|;
+name|struct
+name|in6_multi_mship
+modifier|*
+name|imm
 decl_stmt|;
 comment|/* remove neighbor management table */
 name|nd6_purge
@@ -3237,6 +3240,35 @@ operator|*
 operator|)
 name|ifa
 expr_stmt|;
+comment|/* 		 * leave from multicast groups we have joined for the interface 		 */
+while|while
+condition|(
+operator|(
+name|imm
+operator|=
+name|ia
+operator|->
+name|ia6_memberships
+operator|.
+name|lh_first
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|LIST_REMOVE
+argument_list|(
+name|imm
+argument_list|,
+name|i6mm_chain
+argument_list|)
+expr_stmt|;
+name|in6_leavegroup
+argument_list|(
+name|imm
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* remove from the routing table */
 if|if
 condition|(

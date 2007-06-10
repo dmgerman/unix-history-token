@@ -165,6 +165,14 @@ name|nd_prefix
 modifier|*
 name|ia6_ndpr
 decl_stmt|;
+comment|/* multicast addresses joined from the kernel */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|in6_multi_mship
+argument_list|)
+name|ia6_memberships
+expr_stmt|;
 block|}
 struct|;
 end_struct
