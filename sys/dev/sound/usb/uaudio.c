@@ -1591,7 +1591,6 @@ end_if
 
 begin_function_decl
 specifier|static
-specifier|const
 name|int
 name|uaudio_feature_name
 parameter_list|(
@@ -7217,7 +7216,7 @@ argument_list|)
 end_if
 
 begin_function
-specifier|const
+specifier|static
 name|int
 name|uaudio_feature_name
 parameter_list|(
