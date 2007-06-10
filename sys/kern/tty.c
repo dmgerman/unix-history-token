@@ -9079,6 +9079,12 @@ comment|/* XXX this should be renamed `timo'. */
 name|struct
 name|timeval
 name|stime
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|}
 decl_stmt|;
 name|struct
 name|pgrp
