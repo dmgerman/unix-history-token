@@ -806,6 +806,15 @@ name|sc_intr_pipe
 operator|=
 name|NULL
 expr_stmt|;
+name|devname
+operator|=
+name|device_get_nameunit
+argument_list|(
+name|ucom
+operator|->
+name|sc_dev
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|usbd_set_config_index
