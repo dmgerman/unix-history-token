@@ -4307,6 +4307,12 @@ operator|->
 name|bcdDevice
 argument_list|)
 expr_stmt|;
+name|uaa
+operator|.
+name|matchlvl
+operator|=
+literal|0
+expr_stmt|;
 comment|/* First try with device specific drivers. */
 name|DPRINTF
 argument_list|(
