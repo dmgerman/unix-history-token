@@ -682,11 +682,20 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|PHYSMAP_SIZE
+value|(2 * VM_PHYSSEG_MAX)
+end_define
+
 begin_decl_stmt
-name|vm_offset_t
+name|vm_paddr_t
 name|phys_avail
 index|[
-literal|100
+name|PHYSMAP_SIZE
+operator|+
+literal|2
 index|]
 decl_stmt|;
 end_decl_stmt

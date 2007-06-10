@@ -243,6 +243,71 @@ name|VM_PHYSSEG_SPARSE
 end_define
 
 begin_comment
+comment|/*  * The number of PHYSSEG entries is equal to the number of phys_avail  * entries.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_PHYSSEG_MAX
+value|49
+end_define
+
+begin_comment
+comment|/*  * Create two free page pools: VM_FREEPOOL_DEFAULT is the default pool  * from which physical pages are allocated and VM_FREEPOOL_DIRECT is  * the pool from which physical pages for small UMA objects are  * allocated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_NFREEPOOL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREEPOOL_DEFAULT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREEPOOL_DIRECT
+value|1
+end_define
+
+begin_comment
+comment|/*  * Create one free page list.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_NFREELIST
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREELIST_DEFAULT
+value|0
+end_define
+
+begin_comment
+comment|/*  * An allocation size of 256MB is supported in order to optimize the  * use of the identity mappings in region 7 by UMA.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_NFREEORDER
+value|16
+end_define
+
+begin_comment
 comment|/*  * Manipulating region bits of an address.  */
 end_comment
 
