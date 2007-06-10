@@ -1087,6 +1087,9 @@ operator|->
 name|uh_sum
 condition|)
 block|{
+name|u_short
+name|uh_sum
+decl_stmt|;
 if|if
 condition|(
 name|m
@@ -1108,8 +1111,6 @@ name|csum_flags
 operator|&
 name|CSUM_PSEUDO_HDR
 condition|)
-name|uh
-operator|->
 name|uh_sum
 operator|=
 name|m
@@ -1119,8 +1120,6 @@ operator|.
 name|csum_data
 expr_stmt|;
 else|else
-name|uh
-operator|->
 name|uh_sum
 operator|=
 name|in_pseudo
@@ -1154,8 +1153,6 @@ name|IPPROTO_UDP
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|uh
-operator|->
 name|uh_sum
 operator|^=
 literal|0xffff
@@ -1218,8 +1215,6 @@ name|uh
 operator|->
 name|uh_ulen
 expr_stmt|;
-name|uh
-operator|->
 name|uh_sum
 operator|=
 name|in_cksum
@@ -1256,8 +1251,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|uh
-operator|->
 name|uh_sum
 condition|)
 block|{
