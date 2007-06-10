@@ -8792,15 +8792,6 @@ name|th
 operator|->
 name|th_seq
 decl_stmt|;
-name|tcp_seq
-name|save_end
-init|=
-name|th
-operator|->
-name|th_seq
-operator|+
-name|tlen
-decl_stmt|;
 name|m_adj
 argument_list|(
 name|m
@@ -8971,7 +8962,9 @@ name|tp
 argument_list|,
 name|save_start
 argument_list|,
-name|save_end
+name|save_start
+operator|+
+name|tlen
 argument_list|)
 expr_stmt|;
 if|#
