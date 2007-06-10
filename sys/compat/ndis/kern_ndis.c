@@ -3806,6 +3806,8 @@ name|p
 decl_stmt|;
 name|uint8_t
 name|irql
+init|=
+literal|0
 decl_stmt|;
 name|sc
 operator|=
@@ -3996,6 +3998,8 @@ name|senddonefunc
 decl_stmt|;
 name|uint8_t
 name|irql
+init|=
+literal|0
 decl_stmt|;
 name|sc
 operator|=
@@ -4442,6 +4446,8 @@ name|rval
 decl_stmt|;
 name|uint8_t
 name|irql
+init|=
+literal|0
 decl_stmt|;
 name|sc
 operator|=
