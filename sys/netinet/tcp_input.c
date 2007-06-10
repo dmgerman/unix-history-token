@@ -3894,7 +3894,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Segment received on connection. 	 * Reset idle time and keep-alive timer. 	 */
+comment|/* 	 * Segment received on connection. 	 * Reset idle time and keep-alive timer. 	 * XXX: This should be done after segment 	 * validation to ignore broken/spoofed segs. 	 */
 name|tp
 operator|->
 name|t_rcvtime
@@ -3919,7 +3919,7 @@ argument_list|,
 name|tcp_keepidle
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Unscale the window into a 32-bit value. 	 * For the SYN_SENT state it is zero. 	 */
+comment|/* 	 * Unscale the window into a 32-bit value. 	 * For the SYN_SENT state the scale is zero. 	 */
 name|tiwin
 operator|=
 name|th
@@ -4411,13 +4411,13 @@ name|headlocked
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 				 * this is a pure ack for outstanding data. 				 */
+comment|/* 				 * This is a pure ack for outstanding data. 				 */
 operator|++
 name|tcpstat
 operator|.
 name|tcps_predack
 expr_stmt|;
-comment|/* 				 * "bad retransmit" recovery 				 */
+comment|/* 				 * "bad retransmit" recovery. 				 */
 if|if
 condition|(
 name|tp
@@ -4689,7 +4689,7 @@ name|th
 operator|->
 name|th_ack
 expr_stmt|;
-comment|/* 				 * pull snd_wl2 up to prevent seq wrap relative 				 * to th_ack. 				 */
+comment|/* 				 * Pull snd_wl2 up to prevent seq wrap relative 				 * to th_ack. 				 */
 name|tp
 operator|->
 name|snd_wl2
@@ -4714,8 +4714,41 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-comment|/* some progress has been done */
-comment|/* 				 * If all outstanding data are acked, stop 				 * retransmit timer, otherwise restart timer 				 * using current (possibly backed-off) value. 				 * If process is waiting for space, 				 * wakeup/selwakeup/signal.  If data 				 * are ready to send, let tcp_output 				 * decide between more output or persist.  #ifdef TCPDEBUG 				if (so->so_options& SO_DEBUG) 					tcp_trace(TA_INPUT, ostate, tp, 					    (void *)tcp_saveipgen,&tcp_savetcp, 0); #endif 				 */
+comment|/* Some progress has been made. */
+comment|/* 				 * If all outstanding data are acked, stop 				 * retransmit timer, otherwise restart timer 				 * using current (possibly backed-off) value. 				 * If process is waiting for space, 				 * wakeup/selwakeup/signal.  If data 				 * are ready to send, let tcp_output 				 * decide between more output or persist. 				 */
+ifdef|#
+directive|ifdef
+name|TCPDEBUG
+if|if
+condition|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_DEBUG
+condition|)
+name|tcp_trace
+argument_list|(
+name|TA_INPUT
+argument_list|,
+name|ostate
+argument_list|,
+name|tp
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|tcp_saveipgen
+argument_list|,
+operator|&
+name|tcp_savetcp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|tp
@@ -4757,6 +4790,7 @@ operator|->
 name|t_rxtcur
 argument_list|)
 expr_stmt|;
+comment|/* 				 * NB: sowwakeup_locked() does an 				 * implicit unlock. 				 */
 name|sowwakeup
 argument_list|(
 name|so
@@ -4832,7 +4866,7 @@ name|headlocked
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * this is a pure, in-sequence data packet 			 * with nothing on the reassembly queue and 			 * we have enough buffer space to take it. 			 */
+comment|/* 			 * This is a pure, in-sequence data packet 			 * with nothing on the reassembly queue and 			 * we have enough buffer space to take it. 			 */
 comment|/* Clean receiver SACK report if present */
 if|if
 condition|(
@@ -4898,7 +4932,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-comment|/* some progress has been done */
+comment|/* Some progress has been made */
 ifdef|#
 directive|ifdef
 name|TCPDEBUG
@@ -5117,6 +5151,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* NB: sorwakeup_locked() does an implicit unlock. */
 name|sorwakeup_locked
 argument_list|(
 name|so
@@ -8033,7 +8068,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-comment|/* detect una wraparound */
+comment|/* Detect una wraparound. */
 if|if
 condition|(
 operator|(
@@ -8197,8 +8232,7 @@ condition|(
 name|ourfinisacked
 condition|)
 block|{
-comment|/* 				 * If we can't receive any more 				 * data, then closing user can proceed. 				 * Starting the timer is contrary to the 				 * specification, but if we don't get a FIN 				 * we'll hang forever. 				 */
-comment|/* XXXjl 		 * we should release the tp also, and use a 		 * compressed state. 		 */
+comment|/* 				 * If we can't receive any more 				 * data, then closing user can proceed. 				 * Starting the timer is contrary to the 				 * specification, but if we don't get a FIN 				 * we'll hang forever. 				 * 				 * XXXjl: 				 * we should release the tp also, and use a 				 * compressed state. 				 */
 if|if
 condition|(
 name|so
@@ -8886,6 +8920,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* NB: sorwakeup_locked() does an implicit unlock. */
 name|sorwakeup_locked
 argument_list|(
 name|so
@@ -8894,6 +8929,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 			 * XXX: Due to the header drop above "th" is 			 * theoretically invalid by now.  Fortunately 			 * m_adj() doesn't actually frees any mbufs 			 * when trimming from the head. 			 */
 name|thflags
 operator|=
 name|tcp_reass
@@ -10622,7 +10658,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine a reasonable value for maxseg size.  * If the route is known, check route for mtu.  * If none, use an mss that can be handled on the outgoing  * interface without forcing IP to fragment; if bigger than  * an mbuf cluster (MCLBYTES), round down to nearest multiple of MCLBYTES  * to utilize large mbufs.  If no route is found, route has no mtu,  * or the destination isn't local, use a default, hopefully conservative  * size (usually 512 or the default IP max size, but no more than the mtu  * of the interface), as we can't discover anything about intervening  * gateways or networks.  We also initialize the congestion/slow start  * window to be a single segment if the destination isn't local.  * While looking at the routing entry, we also initialize other path-dependent  * parameters from pre-set or cached values in the routing entry.  *  * Also take into account the space needed for options that we  * send regularly.  Make maxseg shorter by that amount to assure  * that we can send maxseg amount of data even when the options  * are present.  Store the upper limit of the length of options plus  * data in maxopd.  *  *  * In case of T/TCP, we call this routine during implicit connection  * setup as well (offer = -1), to initialize maxseg from the cached  * MSS of our peer.  *  * NOTE that this routine is only called when we process an incoming  * segment. Outgoing SYN/ACK MSS settings are handled in tcp_mssopt().  */
+comment|/*  * Determine a reasonable value for maxseg size.  * If the route is known, check route for mtu.  * If none, use an mss that can be handled on the outgoing  * interface without forcing IP to fragment; if bigger than  * an mbuf cluster (MCLBYTES), round down to nearest multiple of MCLBYTES  * to utilize large mbufs.  If no route is found, route has no mtu,  * or the destination isn't local, use a default, hopefully conservative  * size (usually 512 or the default IP max size, but no more than the mtu  * of the interface), as we can't discover anything about intervening  * gateways or networks.  We also initialize the congestion/slow start  * window to be a single segment if the destination isn't local.  * While looking at the routing entry, we also initialize other path-dependent  * parameters from pre-set or cached values in the routing entry.  *  * Also take into account the space needed for options that we  * send regularly.  Make maxseg shorter by that amount to assure  * that we can send maxseg amount of data even when the options  * are present.  Store the upper limit of the length of options plus  * data in maxopd.  *  * In case of T/TCP, we call this routine during implicit connection  * setup as well (offer = -1), to initialize maxseg from the cached  * MSS of our peer.  *  * NOTE that this routine is only called when we process an incoming  * segment. Outgoing SYN/ACK MSS settings are handled in tcp_mssopt().  */
 end_comment
 
 begin_function
@@ -10736,7 +10772,7 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* initialize */
+comment|/* Initialize. */
 ifdef|#
 directive|ifdef
 name|INET6
@@ -10803,7 +10839,7 @@ name|inp
 operator|->
 name|inp_socket
 expr_stmt|;
-comment|/* 	 * no route to sender, stay with default mss and return 	 */
+comment|/* 	 * No route to sender, stay with default mss and return. 	 */
 if|if
 condition|(
 name|maxmtu
@@ -10811,7 +10847,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* what have we got? */
+comment|/* What have we got? */
 switch|switch
 condition|(
 name|offer
@@ -10863,7 +10899,7 @@ literal|64
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * rmx information is now retrieved from tcp_hostcache 	 */
+comment|/* 	 * rmx information is now retrieved from tcp_hostcache. 	 */
 name|tcp_hc_get
 argument_list|(
 operator|&
@@ -10875,7 +10911,7 @@ operator|&
 name|metrics
 argument_list|)
 expr_stmt|;
-comment|/* 	 * if there's a discovered mtu int tcp hostcache, use it 	 * else, use the link mtu. 	 */
+comment|/* 	 * If there's a discovered mtu int tcp hostcache, use it 	 * else, use the link mtu. 	 */
 if|if
 condition|(
 name|metrics
@@ -10985,7 +11021,7 @@ name|t_maxopd
 operator|=
 name|mss
 expr_stmt|;
-comment|/* 	 * origoffer==-1 indicates, that no segments were received yet. 	 * In this case we just guess. 	 */
+comment|/* 	 * origoffer==-1 indicates that no segments were received yet. 	 * In this case we just guess. 	 */
 if|if
 condition|(
 operator|(
@@ -11295,7 +11331,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-comment|/* 	 * While we're here, check the others too 	 */
+comment|/* 	 * While we're here, check the others too. 	 */
 if|if
 condition|(
 name|tp
