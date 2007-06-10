@@ -104,13 +104,6 @@ parameter_list|)
 value|__builtin_ffs(x)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|uint64_t
-name|ia64_port_base
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -121,6 +114,18 @@ parameter_list|)
 value|(__volatile void*)(IA64_PHYS_TO_RR6(x))
 end_define
 
+begin_function_decl
+specifier|extern
+name|__volatile
+name|void
+modifier|*
+name|ia64_ioport_address
+parameter_list|(
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -128,7 +133,7 @@ name|__PIO_ADDR
 parameter_list|(
 name|x
 parameter_list|)
-value|(__volatile void*)(ia64_port_base |	\ 	(((x)& 0xFFFC)<< 10) | ((x)& 0xFFF))
+value|ia64_ioport_address(x)
 end_define
 
 begin_comment
