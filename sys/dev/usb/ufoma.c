@@ -1043,10 +1043,6 @@ end_macro
 
 begin_block
 block|{
-name|uByte
-modifier|*
-name|mode
-decl_stmt|;
 name|USB_MATCH_START
 argument_list|(
 name|ufoma
@@ -1173,10 +1169,6 @@ name|UMATCH_NONE
 operator|)
 return|;
 block|}
-name|mode
-operator|=
-name|mode
-expr_stmt|;
 if|#
 directive|if
 literal|0
