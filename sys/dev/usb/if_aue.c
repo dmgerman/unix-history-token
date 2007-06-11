@@ -3137,12 +3137,6 @@ argument_list|,
 name|uaa
 argument_list|)
 expr_stmt|;
-name|char
-name|devinfo
-index|[
-literal|1024
-index|]
-decl_stmt|;
 name|u_char
 name|eaddr
 index|[
@@ -3171,28 +3165,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|aue_softc
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|usbd_devinfo
-argument_list|(
-name|uaa
-operator|->
-name|device
-argument_list|,
-literal|0
-argument_list|,
-name|devinfo
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|aue_dev
@@ -3230,13 +3202,11 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: getting interface handle failed\n"
+name|self
 argument_list|,
-name|sc
-operator|->
-name|aue_unit
+literal|"getting interface handle failed\n"
 argument_list|)
 expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
@@ -3261,13 +3231,11 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: getting interface handle failed\n"
+name|self
 argument_list|,
-name|sc
-operator|->
-name|aue_unit
+literal|"getting interface handle failed\n"
 argument_list|)
 expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
@@ -3321,36 +3289,6 @@ operator|->
 name|aue_iface
 argument_list|)
 expr_stmt|;
-name|usbd_devinfo
-argument_list|(
-name|uaa
-operator|->
-name|device
-argument_list|,
-literal|0
-argument_list|,
-name|devinfo
-argument_list|)
-expr_stmt|;
-name|device_set_desc_copy
-argument_list|(
-name|self
-argument_list|,
-name|devinfo
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: %s\n"
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|self
-argument_list|)
-argument_list|,
-name|devinfo
-argument_list|)
-expr_stmt|;
 comment|/* Find endpoints. */
 for|for
 control|(
@@ -3384,13 +3322,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: couldn't get ep %d\n"
+name|self
 argument_list|,
-name|sc
-operator|->
-name|aue_unit
+literal|"couldn't get ep %d\n"
 argument_list|,
 name|i
 argument_list|)
@@ -3605,13 +3541,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: can not if_alloc()\n"
+name|self
 argument_list|,
-name|sc
-operator|->
-name|aue_unit
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|AUE_SXUNLOCK
@@ -3741,13 +3675,11 @@ name|aue_ifmedia_sts
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: MII without any PHY!\n"
+name|self
 argument_list|,
-name|sc
-operator|->
-name|aue_unit
+literal|"MII without any PHY!\n"
 argument_list|)
 expr_stmt|;
 name|if_free
@@ -4115,17 +4047,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: no memory for rx list "
-literal|"-- packet dropped!\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|aue_dev
-argument_list|)
+argument_list|,
+literal|"no memory for rx list -- packet "
+literal|"dropped!\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -4339,13 +4268,13 @@ operator|->
 name|aue_rx_notice
 argument_list|)
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: usb error on rx: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|aue_unit
+name|aue_dev
+argument_list|,
+literal|"usb error on rx: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -4678,13 +4607,13 @@ condition|)
 block|{
 return|return;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: usb error on tx: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|aue_unit
+name|aue_dev
+argument_list|,
+literal|"usb error on tx: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -5502,13 +5431,13 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: tx list init failed\n"
-argument_list|,
 name|sc
 operator|->
-name|aue_unit
+name|aue_dev
+argument_list|,
+literal|"tx list init failed\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5533,13 +5462,13 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: rx list init failed\n"
-argument_list|,
 name|sc
 operator|->
-name|aue_unit
+name|aue_dev
+argument_list|,
+literal|"rx list init failed\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5617,13 +5546,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: open rx pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|aue_unit
+name|aue_dev
+argument_list|,
+literal|"open rx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -5664,13 +5593,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: open tx pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|aue_unit
+name|aue_dev
+argument_list|,
+literal|"open tx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -6277,13 +6206,13 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: watchdog timeout\n"
-argument_list|,
 name|sc
 operator|->
-name|aue_unit
+name|aue_dev
+argument_list|,
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 name|c
@@ -6444,13 +6373,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: abort rx pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|aue_unit
+name|aue_dev
+argument_list|,
+literal|"abort rx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -6476,13 +6405,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: close rx pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|aue_unit
+name|aue_dev
+argument_list|,
+literal|"close rx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -6530,13 +6459,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: abort tx pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|aue_unit
+name|aue_dev
+argument_list|,
+literal|"abort tx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -6562,13 +6491,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: close tx pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|aue_unit
+name|aue_dev
+argument_list|,
+literal|"close tx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -6619,13 +6548,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: abort intr pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|aue_unit
+name|aue_dev
+argument_list|,
+literal|"abort intr pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -6651,13 +6580,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"aue%d: close intr pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|aue_unit
+name|aue_dev
+argument_list|,
+literal|"close intr pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
