@@ -2589,16 +2589,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_LRO
-operator|)
-operator|==
-literal|0
-operator|&&
 name|m
 operator|->
 name|m_pkthdr
