@@ -13219,6 +13219,11 @@ operator|->
 name|t_pgrp
 argument_list|)
 expr_stmt|;
+name|PROC_SLOCK
+argument_list|(
+name|pick
+argument_list|)
+expr_stmt|;
 name|calcru
 argument_list|(
 name|pick
@@ -13228,6 +13233,11 @@ name|utime
 argument_list|,
 operator|&
 name|stime
+argument_list|)
+expr_stmt|;
+name|PROC_SUNLOCK
+argument_list|(
+name|pick
 argument_list|)
 expr_stmt|;
 name|pid
