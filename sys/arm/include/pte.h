@@ -403,6 +403,42 @@ begin_comment
 comment|/*  * The ARM MMU architecture was introduced with ARM v3 (previous ARM  * architecture versions used an optional off-CPU memory controller  * to perform address translation).  *  * The ARM MMU consists of a TLB and translation table walking logic.  * There is typically one TLB per memory interface (or, put another  * way, one TLB per software-visible cache).  *  * The ARM MMU is capable of mapping memory in the following chunks:  *  *	1M	Sections (L1 table)  *  *	64K	Large Pages (L2 table)  *  *	4K	Small Pages (L2 table)  *  *	1K	Tiny Pages (L2 table)  *  * There are two types of L2 tables: Coarse Tables and Fine Tables.  * Coarse Tables can map Large and Small Pages.  Fine Tables can  * map Tiny Pages.  *  * Coarse Tables can define 4 Subpages within Large and Small pages.  * Subpages define different permissions for each Subpage within  * a Page.  *  * Coarse Tables are 1K in length.  Fine tables are 4K in length.  *  * The Translation Table Base register holds the pointer to the  * L1 Table.  The L1 Table is a 16K contiguous chunk of memory  * aligned to a 16K boundary.  Each entry in the L1 Table maps  * 1M of virtual address space, either via a Section mapping or  * via an L2 Table.  *  * In addition, the Fast Context Switching Extension (FCSE) is available  * on some ARM v4 and ARM v5 processors.  FCSE is a way of eliminating  * TLB/cache flushes on context switch by use of a smaller address space  * and a "process ID" that modifies the virtual address before being  * presented to the translation logic.  */
 end_comment
 
+begin_comment
+comment|/* ARMv6 super-sections. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1_SUP_SIZE
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* 16M */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1_SUP_OFFSET
+value|(L1_SUP_SIZE - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|L1_SUP_FRAME
+value|(~L1_SUP_OFFSET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|L1_SUP_SHIFT
+value|24
+end_define
+
 begin_define
 define|#
 directive|define
@@ -739,6 +775,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|L1_SHARED
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
 name|L1_S_XSCALE_P
 value|0x00000200
 end_define
@@ -759,6 +802,17 @@ end_define
 
 begin_comment
 comment|/* Type Extension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1_S_SUPERSEC
+value|((1)<< 18)
+end_define
+
+begin_comment
+comment|/* Section is a super-section. */
 end_comment
 
 begin_comment
@@ -1100,6 +1154,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|L2_XSCALE_L_S
+parameter_list|(
+name|x
+parameter_list|)
+value|(1<< 15)
+end_define
+
+begin_comment
+comment|/* Shared */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|L2_XSCALE_T_TEX
 parameter_list|(
 name|x
@@ -1246,6 +1314,28 @@ end_define
 
 begin_comment
 comment|/* X modifies C and B */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEX_XSCALE_E
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEX_XSCALE_T
+value|0x04
+end_define
+
+begin_comment
+comment|/* Xscale core 3 */
+end_comment
+
+begin_comment
+comment|/*  *  * Cache attributes with L2 present, S = 0  * T E X C B   L1 i-cache L1 d-cache L1 DC WP  L2 cacheable write coalesce  * 0 0 0 0 0 	N	  N 		- 	N		N   * 0 0 0 0 1	N	  N		-	N		Y  * 0 0 0 1 0	Y	  Y		WT	N		Y  * 0 0 0 1 1	Y	  Y		WB	Y		Y  * 0 0 1 0 0	N	  N		-	Y		Y  * 0 0 1 0 1	N	  N		-	N		N  * 0 0 1 1 0	Y	  Y		-	-		N  * 0 0 1 1 1	Y	  Y		WT	Y		Y  * 0 1 0 0 0	N	  N		-	N		N  * 0 1 0 0 1	N/A	N/A		N/A	N/A		N/A  * 0 1 0 1 0	N/A	N/A		N/A	N/A		N/A  * 0 1 0 1 1	N/A	N/A		N/A	N/A		N/A  * 0 1 1 X X	N/A	N/A		N/A	N/A		N/A  * 1 X 0 0 0	N	  N		-	N		Y  * 1 X 0 0 1	Y	  N		-	N		Y  * 1 X 0 1 0	Y	  N		-	N		Y  * 1 X 0 1 1	Y	  N		-	Y		Y  * 1 X 1 0 0	N	  N		-	Y		Y  * 1 X 1 0 1	Y	  Y		WT	Y		Y  * 1 X 1 1 0	Y	  Y		WT	Y		Y  * 1 X 1 1 1	Y	  Y		WT	Y		Y  *  *  *  *   * Cache attributes with L2 present, S = 1  * T E X C B   L1 i-cache L1 d-cache L1 DC WP  L2 cacheable write coalesce  * 0 0 0 0 0 	N	  N 		- 	N		N   * 0 0 0 0 1	N	  N		-	N		Y  * 0 0 0 1 0	Y	  Y		-	N		Y  * 0 0 0 1 1	Y	  Y		WT	Y		Y  * 0 0 1 0 0	N	  N		-	Y		Y  * 0 0 1 0 1	N	  N		-	N		N  * 0 0 1 1 0	Y	  Y		-	-		N  * 0 0 1 1 1	Y	  Y		WT	Y		Y  * 0 1 0 0 0	N	  N		-	N		N  * 0 1 0 0 1	N/A	N/A		N/A	N/A		N/A  * 0 1 0 1 0	N/A	N/A		N/A	N/A		N/A  * 0 1 0 1 1	N/A	N/A		N/A	N/A		N/A  * 0 1 1 X X	N/A	N/A		N/A	N/A		N/A  * 1 X 0 0 0	N	  N		-	N		Y  * 1 X 0 0 1	Y	  N		-	N		Y  * 1 X 0 1 0	Y	  N		-	N		Y  * 1 X 0 1 1	Y	  N		-	Y		Y  * 1 X 1 0 0	N	  N		-	Y		Y  * 1 X 1 0 1	Y	  Y		WT	Y		Y  * 1 X 1 1 0	Y	  Y		WT	Y		Y  * 1 X 1 1 1	Y	  Y		WT	Y		Y  */
 end_comment
 
 begin_endif

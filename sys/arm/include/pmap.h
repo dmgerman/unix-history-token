@@ -2245,6 +2245,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|pmap_kenter_supersection
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|char
