@@ -11458,9 +11458,16 @@ name|p_flag
 operator|&
 name|P_PPWAIT
 condition|)
+block|{
+name|PROC_SUNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 name|p
 operator|->
 name|p_flag
