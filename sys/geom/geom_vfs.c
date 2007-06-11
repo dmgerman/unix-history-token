@@ -111,7 +111,12 @@ operator|.
 name|bop_sync
 operator|=
 name|bufsync
-block|,	 }
+block|,
+operator|.
+name|bop_bdflush
+operator|=
+name|bufbdflush
+block|}
 decl_stmt|;
 end_decl_stmt
 
