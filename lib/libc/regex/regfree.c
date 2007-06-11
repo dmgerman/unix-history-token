@@ -113,12 +113,10 @@ begin_function
 name|void
 name|regfree
 parameter_list|(
-name|preg
-parameter_list|)
 name|regex_t
 modifier|*
 name|preg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|re_guts
