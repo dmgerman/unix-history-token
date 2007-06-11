@@ -268,6 +268,8 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
+name|int
+parameter_list|,
 name|u_int32_t
 parameter_list|)
 function_decl|;

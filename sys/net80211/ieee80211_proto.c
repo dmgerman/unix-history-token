@@ -367,6 +367,16 @@ argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|ic
+operator|->
+name|ic_mgtsend
+argument_list|,
+name|CALLOUT_MPSAFE
+argument_list|)
+expr_stmt|;
 name|ic
 operator|->
 name|ic_mcast_rate
@@ -893,7 +903,7 @@ name|void
 name|ieee80211_print_essid
 parameter_list|(
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|essid
 parameter_list|,
@@ -902,7 +912,7 @@ name|len
 parameter_list|)
 block|{
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|p
 decl_stmt|;
@@ -1044,8 +1054,13 @@ begin_function
 name|void
 name|ieee80211_dump_pkt
 parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|buf
 parameter_list|,
@@ -1221,7 +1236,7 @@ name|ether_sprintf
 argument_list|(
 operator|(
 specifier|const
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -1335,6 +1350,56 @@ break|break;
 block|}
 if|if
 condition|(
+name|IEEE80211_QOS_HAS_SEQ
+argument_list|(
+name|wh
+argument_list|)
+condition|)
+block|{
+specifier|const
+name|struct
+name|ieee80211_qosframe
+modifier|*
+name|qwh
+init|=
+operator|(
+specifier|const
+expr|struct
+name|ieee80211_qosframe
+operator|*
+operator|)
+name|buf
+decl_stmt|;
+name|printf
+argument_list|(
+literal|" QoS [TID %u%s]"
+argument_list|,
+name|qwh
+operator|->
+name|i_qos
+index|[
+literal|0
+index|]
+operator|&
+name|IEEE80211_QOS_TID
+argument_list|,
+name|qwh
+operator|->
+name|i_qos
+index|[
+literal|0
+index|]
+operator|&
+name|IEEE80211_QOS_ACKPOLICY
+condition|?
+literal|" ACM"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|wh
 operator|->
 name|i_fc
@@ -1346,39 +1411,77 @@ name|IEEE80211_FC1_WEP
 condition|)
 block|{
 name|int
-name|i
+name|off
 decl_stmt|;
-name|printf
+name|off
+operator|=
+name|ieee80211_anyhdrspace
 argument_list|(
-literal|" WEP [IV"
+name|ic
+argument_list|,
+name|wh
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|IEEE80211_WEP_IVLEN
-condition|;
-name|i
-operator|++
-control|)
 name|printf
 argument_list|(
-literal|" %.02x"
+literal|" WEP [IV %.02x %.02x %.02x"
 argument_list|,
 name|buf
 index|[
-sizeof|sizeof
-argument_list|(
-operator|*
-name|wh
-argument_list|)
+name|off
 operator|+
-name|i
+literal|0
+index|]
+argument_list|,
+name|buf
+index|[
+name|off
+operator|+
+literal|1
+index|]
+argument_list|,
+name|buf
+index|[
+name|off
+operator|+
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
+index|[
+name|off
+operator|+
+name|IEEE80211_WEP_IVLEN
+index|]
+operator|&
+name|IEEE80211_WEP_EXTIV
+condition|)
+name|printf
+argument_list|(
+literal|" %.02x %.02x %.02x"
+argument_list|,
+name|buf
+index|[
+name|off
+operator|+
+literal|4
+index|]
+argument_list|,
+name|buf
+index|[
+name|off
+operator|+
+literal|5
+index|]
+argument_list|,
+name|buf
+index|[
+name|off
+operator|+
+literal|6
 index|]
 argument_list|)
 expr_stmt|;
@@ -1388,13 +1491,9 @@ literal|" KID %u]"
 argument_list|,
 name|buf
 index|[
-sizeof|sizeof
-argument_list|(
-operator|*
-name|wh
-argument_list|)
+name|off
 operator|+
-name|i
+name|IEEE80211_WEP_IVLEN
 index|]
 operator|>>
 literal|6
@@ -1605,29 +1704,9 @@ name|ieee80211_rateset
 modifier|*
 name|srs
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|r
 decl_stmt|;
-comment|/* 	 * If the fixed rate check was requested but no 	 * fixed has been defined then just remove it. 	 */
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|IEEE80211_F_DOFRATE
-operator|)
-operator|&&
-name|ic
-operator|->
-name|ic_fixed_rate
-operator|==
-name|IEEE80211_FIXED_RATE_NONE
-condition|)
-name|flags
-operator|&=
-operator|~
-name|IEEE80211_F_DOFRATE
-expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -1636,9 +1715,11 @@ name|okrate
 operator|=
 name|badrate
 operator|=
+literal|0
+expr_stmt|;
 name|fixedrate
 operator|=
-literal|0
+name|IEEE80211_FIXED_RATE_NONE
 expr_stmt|;
 name|srs
 operator|=
@@ -1764,35 +1845,19 @@ name|badrate
 operator|=
 name|r
 expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|IEEE80211_F_DOFRATE
-condition|)
-block|{
-comment|/* 			 * Check any fixed rate is included.  			 */
+comment|/* 		 * Check for fixed rate. 		 */
 if|if
 condition|(
 name|r
 operator|==
-name|RV
-argument_list|(
-name|srs
-operator|->
-name|rs_rates
-index|[
 name|ic
 operator|->
 name|ic_fixed_rate
-index|]
-argument_list|)
 condition|)
 name|fixedrate
 operator|=
 name|r
 expr_stmt|;
-block|}
 comment|/* 		 * Check against supported rates. 		 */
 name|rix
 operator|=
@@ -1968,8 +2033,10 @@ name|IEEE80211_F_DOFRATE
 operator|)
 operator|&&
 name|fixedrate
-operator|==
-literal|0
+operator|!=
+name|ic
+operator|->
+name|ic_fixed_rate
 operator|)
 condition|)
 return|return
@@ -2028,18 +2095,27 @@ name|ieee80211_set_shortslottime
 argument_list|(
 name|ic
 argument_list|,
+name|IEEE80211_IS_CHAN_A
+argument_list|(
 name|ic
 operator|->
-name|ic_curmode
-operator|==
-name|IEEE80211_MODE_11A
+name|ic_curchan
+argument_list|)
+operator|||
+name|IEEE80211_IS_CHAN_HT
+argument_list|(
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
 operator|||
 operator|(
+name|IEEE80211_IS_CHAN_ANYG
+argument_list|(
 name|ic
 operator|->
-name|ic_curmode
-operator|==
-name|IEEE80211_MODE_11G
+name|ic_curchan
+argument_list|)
 operator|&&
 name|ic
 operator|->
@@ -2060,11 +2136,12 @@ expr_stmt|;
 comment|/* 	 * Set short preamble and ERP barker-preamble flags. 	 */
 if|if
 condition|(
+name|IEEE80211_IS_CHAN_A
+argument_list|(
 name|ic
 operator|->
-name|ic_curmode
-operator|==
-name|IEEE80211_MODE_11A
+name|ic_curchan
+argument_list|)
 operator|||
 operator|(
 name|ic
@@ -2340,10 +2417,15 @@ specifier|const
 name|struct
 name|ieee80211_rateset
 name|basic
-index|[]
+index|[
+name|IEEE80211_MODE_MAX
+index|]
 init|=
 block|{
 block|{
+operator|.
+name|rs_nrates
+operator|=
 literal|0
 block|}
 block|,
@@ -2388,11 +2470,48 @@ block|}
 block|,
 comment|/* IEEE80211_MODE_11G (mixed b/g) */
 block|{
+operator|.
+name|rs_nrates
+operator|=
 literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_FH */
 comment|/* IEEE80211_MODE_PUREG (not yet) */
+block|{
+literal|7
+block|,
+block|{
+literal|2
+block|,
+literal|4
+block|,
+literal|11
+block|,
+literal|22
+block|,
+literal|12
+block|,
+literal|24
+block|,
+literal|48
+block|}
+block|}
+block|,
+block|{
+literal|3
+block|,
+block|{
+literal|12
+block|,
+literal|24
+block|,
+literal|48
+block|}
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NA */
+comment|/* IEEE80211_MODE_11NG (mixed b/g) */
 block|{
 literal|7
 block|,
@@ -2506,19 +2625,19 @@ typedef|typedef
 struct|struct
 name|phyParamType
 block|{
-name|u_int8_t
+name|uint8_t
 name|aifsn
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|logcwmin
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|logcwmax
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|txopLimit
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|acm
 decl_stmt|;
 block|}
@@ -2543,6 +2662,10 @@ block|,
 literal|4
 block|,
 literal|6
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_AUTO */
@@ -2552,6 +2675,10 @@ block|,
 literal|4
 block|,
 literal|6
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11A */
@@ -2561,6 +2688,10 @@ block|,
 literal|5
 block|,
 literal|7
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11B */
@@ -2570,6 +2701,10 @@ block|,
 literal|4
 block|,
 literal|6
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11G */
@@ -2579,6 +2714,10 @@ block|,
 literal|5
 block|,
 literal|7
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_FH */
@@ -2588,6 +2727,10 @@ block|,
 literal|3
 block|,
 literal|5
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_A */
@@ -2597,9 +2740,54 @@ block|,
 literal|3
 block|,
 literal|5
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_G */
+block|{
+literal|2
+block|,
+literal|3
+block|,
+literal|5
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_STURBO_A */
+block|{
+literal|3
+block|,
+literal|4
+block|,
+literal|6
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NA */
+comment|/* XXXcheck*/
+block|{
+literal|3
+block|,
+literal|4
+block|,
+literal|6
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NG */
+comment|/* XXXcheck*/
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2621,6 +2809,10 @@ block|,
 literal|4
 block|,
 literal|10
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_AUTO */
@@ -2630,6 +2822,10 @@ block|,
 literal|4
 block|,
 literal|10
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11A */
@@ -2639,6 +2835,10 @@ block|,
 literal|5
 block|,
 literal|10
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11B */
@@ -2648,6 +2848,10 @@ block|,
 literal|4
 block|,
 literal|10
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11G */
@@ -2657,6 +2861,10 @@ block|,
 literal|5
 block|,
 literal|10
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_FH */
@@ -2666,6 +2874,10 @@ block|,
 literal|3
 block|,
 literal|10
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_A */
@@ -2675,9 +2887,52 @@ block|,
 literal|3
 block|,
 literal|10
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_G */
+block|{
+literal|7
+block|,
+literal|3
+block|,
+literal|10
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_STURBO_A */
+block|{
+literal|7
+block|,
+literal|4
+block|,
+literal|10
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NA */
+block|{
+literal|7
+block|,
+literal|4
+block|,
+literal|10
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NG */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2701,6 +2956,8 @@ block|,
 literal|4
 block|,
 literal|94
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_AUTO */
@@ -2712,6 +2969,8 @@ block|,
 literal|4
 block|,
 literal|94
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11A */
@@ -2723,6 +2982,8 @@ block|,
 literal|5
 block|,
 literal|188
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11B */
@@ -2734,6 +2995,8 @@ block|,
 literal|4
 block|,
 literal|94
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11G */
@@ -2745,6 +3008,8 @@ block|,
 literal|5
 block|,
 literal|188
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_FH */
@@ -2756,6 +3021,8 @@ block|,
 literal|3
 block|,
 literal|94
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_A */
@@ -2767,9 +3034,50 @@ block|,
 literal|3
 block|,
 literal|94
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_G */
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|94
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_STURBO_A */
+block|{
+literal|1
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|94
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NA */
+block|{
+literal|1
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|94
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NG */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2793,6 +3101,8 @@ block|,
 literal|3
 block|,
 literal|47
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_AUTO */
@@ -2804,6 +3114,8 @@ block|,
 literal|3
 block|,
 literal|47
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11A */
@@ -2815,6 +3127,8 @@ block|,
 literal|4
 block|,
 literal|102
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11B */
@@ -2826,6 +3140,8 @@ block|,
 literal|3
 block|,
 literal|47
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11G */
@@ -2837,6 +3153,8 @@ block|,
 literal|4
 block|,
 literal|102
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_FH */
@@ -2848,6 +3166,8 @@ block|,
 literal|2
 block|,
 literal|47
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_A */
@@ -2859,9 +3179,50 @@ block|,
 literal|2
 block|,
 literal|47
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_G */
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|47
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_STURBO_A */
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|47
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NA */
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|47
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NG */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2883,6 +3244,10 @@ block|,
 literal|4
 block|,
 literal|10
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_AUTO */
@@ -2892,6 +3257,10 @@ block|,
 literal|4
 block|,
 literal|10
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11A */
@@ -2901,6 +3270,10 @@ block|,
 literal|5
 block|,
 literal|10
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11B */
@@ -2910,6 +3283,10 @@ block|,
 literal|4
 block|,
 literal|10
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11G */
@@ -2919,6 +3296,10 @@ block|,
 literal|5
 block|,
 literal|10
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_FH */
@@ -2928,6 +3309,10 @@ block|,
 literal|3
 block|,
 literal|10
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_A */
@@ -2937,9 +3322,52 @@ block|,
 literal|3
 block|,
 literal|10
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_G */
+block|{
+literal|2
+block|,
+literal|3
+block|,
+literal|10
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_STURBO_A */
+block|{
+literal|1
+block|,
+literal|4
+block|,
+literal|10
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NA */
+block|{
+literal|1
+block|,
+literal|4
+block|,
+literal|10
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NG */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2963,6 +3391,8 @@ block|,
 literal|4
 block|,
 literal|94
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_AUTO */
@@ -2974,6 +3404,8 @@ block|,
 literal|4
 block|,
 literal|94
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11A */
@@ -2985,6 +3417,8 @@ block|,
 literal|5
 block|,
 literal|188
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11B */
@@ -2996,6 +3430,8 @@ block|,
 literal|4
 block|,
 literal|94
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11G */
@@ -3007,6 +3443,8 @@ block|,
 literal|5
 block|,
 literal|188
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_FH */
@@ -3018,6 +3456,8 @@ block|,
 literal|3
 block|,
 literal|94
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_A */
@@ -3029,9 +3469,50 @@ block|,
 literal|3
 block|,
 literal|94
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_G */
+block|{
+literal|2
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|94
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_STURBO_A */
+block|{
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|94
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NA */
+block|{
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|94
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NG */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3055,6 +3536,8 @@ block|,
 literal|3
 block|,
 literal|47
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_AUTO */
@@ -3066,6 +3549,8 @@ block|,
 literal|3
 block|,
 literal|47
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11A */
@@ -3077,6 +3562,8 @@ block|,
 literal|4
 block|,
 literal|102
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11B */
@@ -3088,6 +3575,8 @@ block|,
 literal|3
 block|,
 literal|47
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11G */
@@ -3099,6 +3588,8 @@ block|,
 literal|4
 block|,
 literal|102
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_FH */
@@ -3110,6 +3601,8 @@ block|,
 literal|2
 block|,
 literal|47
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_A */
@@ -3121,9 +3614,50 @@ block|,
 literal|2
 block|,
 literal|47
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_G */
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|47
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_STURBO_A */
+block|{
+literal|2
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|47
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NA */
+block|{
+literal|2
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|47
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NG */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3161,6 +3695,10 @@ name|wmeParams
 modifier|*
 name|wmep
 decl_stmt|;
+name|enum
+name|ieee80211_phymode
+name|mode
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -3177,6 +3715,29 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* 	 * Select mode; we can be called early in which case we 	 * always use auto mode.  We know we'll be called when 	 * entering the RUN state with bsschan setup properly 	 * so state will eventually get set correctly 	 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_bsschan
+operator|!=
+name|IEEE80211_CHAN_ANYC
+condition|)
+name|mode
+operator|=
+name|ieee80211_chan2mode
+argument_list|(
+name|ic
+operator|->
+name|ic_bsschan
+argument_list|)
+expr_stmt|;
+else|else
+name|mode
+operator|=
+name|IEEE80211_MODE_AUTO
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3204,9 +3765,7 @@ operator|=
 operator|&
 name|phyParamForAC_BK
 index|[
-name|ic
-operator|->
-name|ic_curmode
+name|mode
 index|]
 expr_stmt|;
 name|pBssPhyParam
@@ -3214,9 +3773,7 @@ operator|=
 operator|&
 name|phyParamForAC_BK
 index|[
-name|ic
-operator|->
-name|ic_curmode
+name|mode
 index|]
 expr_stmt|;
 break|break;
@@ -3228,9 +3785,7 @@ operator|=
 operator|&
 name|phyParamForAC_VI
 index|[
-name|ic
-operator|->
-name|ic_curmode
+name|mode
 index|]
 expr_stmt|;
 name|pBssPhyParam
@@ -3238,9 +3793,7 @@ operator|=
 operator|&
 name|bssPhyParamForAC_VI
 index|[
-name|ic
-operator|->
-name|ic_curmode
+name|mode
 index|]
 expr_stmt|;
 break|break;
@@ -3252,9 +3805,7 @@ operator|=
 operator|&
 name|phyParamForAC_VO
 index|[
-name|ic
-operator|->
-name|ic_curmode
+name|mode
 index|]
 expr_stmt|;
 name|pBssPhyParam
@@ -3262,9 +3813,7 @@ operator|=
 operator|&
 name|bssPhyParamForAC_VO
 index|[
-name|ic
-operator|->
-name|ic_curmode
+name|mode
 index|]
 expr_stmt|;
 break|break;
@@ -3277,9 +3826,7 @@ operator|=
 operator|&
 name|phyParamForAC_BE
 index|[
-name|ic
-operator|->
-name|ic_curmode
+name|mode
 index|]
 expr_stmt|;
 name|pBssPhyParam
@@ -3287,9 +3834,7 @@ operator|=
 operator|&
 name|bssPhyParamForAC_BE
 index|[
-name|ic
-operator|->
-name|ic_curmode
+name|mode
 index|]
 expr_stmt|;
 break|break;
@@ -3593,6 +4138,8 @@ block|,
 literal|10
 block|,
 literal|64
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_AUTO */
@@ -3604,6 +4151,8 @@ block|,
 literal|10
 block|,
 literal|64
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11A */
@@ -3615,6 +4164,8 @@ block|,
 literal|10
 block|,
 literal|64
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11B */
@@ -3626,6 +4177,8 @@ block|,
 literal|10
 block|,
 literal|64
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11G */
@@ -3637,6 +4190,8 @@ block|,
 literal|10
 block|,
 literal|64
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_FH */
@@ -3648,6 +4203,8 @@ block|,
 literal|10
 block|,
 literal|64
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_A */
@@ -3659,9 +4216,52 @@ block|,
 literal|10
 block|,
 literal|64
+block|,
+literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_TURBO_G */
+block|{
+literal|1
+block|,
+literal|3
+block|,
+literal|10
+block|,
+literal|64
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_STURBO_A */
+block|{
+literal|2
+block|,
+literal|4
+block|,
+literal|10
+block|,
+literal|64
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NA */
+comment|/*XXXcheck*/
+block|{
+literal|2
+block|,
+literal|4
+block|,
+literal|10
+block|,
+literal|64
+block|,
+literal|0
+block|}
+block|,
+comment|/* IEEE80211_MODE_11NG */
+comment|/*XXXcheck*/
 block|}
 decl_stmt|;
 name|struct
@@ -3687,6 +4287,10 @@ name|chanp
 decl_stmt|,
 modifier|*
 name|bssp
+decl_stmt|;
+name|enum
+name|ieee80211_phymode
+name|mode
 decl_stmt|;
 name|int
 name|i
@@ -3819,6 +4423,29 @@ operator|->
 name|wmep_txopLimit
 expr_stmt|;
 block|}
+comment|/* 	 * Select mode; we can be called early in which case we 	 * always use auto mode.  We know we'll be called when 	 * entering the RUN state with bsschan setup properly 	 * so state will eventually get set correctly 	 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_bsschan
+operator|!=
+name|IEEE80211_CHAN_ANYC
+condition|)
+name|mode
+operator|=
+name|ieee80211_chan2mode
+argument_list|(
+name|ic
+operator|->
+name|ic_bsschan
+argument_list|)
+expr_stmt|;
+else|else
+name|mode
+operator|=
+name|IEEE80211_MODE_AUTO
+expr_stmt|;
 comment|/* 	 * This implements agressive mode as found in certain 	 * vendors' AP's.  When there is significant high 	 * priority (VI/VO) traffic in the BSS throttle back BE 	 * traffic by using conservative parameters.  Otherwise 	 * BE uses agressive params to optimize performance of 	 * legacy/non-QoS traffic. 	 */
 if|if
 condition|(
@@ -3905,9 +4532,7 @@ name|wmep_aifsn
 operator|=
 name|phyParam
 index|[
-name|ic
-operator|->
-name|ic_curmode
+name|mode
 index|]
 operator|.
 name|aifsn
@@ -3922,9 +4547,7 @@ name|wmep_logcwmin
 operator|=
 name|phyParam
 index|[
-name|ic
-operator|->
-name|ic_curmode
+name|mode
 index|]
 operator|.
 name|logcwmin
@@ -3939,9 +4562,7 @@ name|wmep_logcwmax
 operator|=
 name|phyParam
 index|[
-name|ic
-operator|->
-name|ic_curmode
+name|mode
 index|]
 operator|.
 name|logcwmax
@@ -3964,9 +4585,7 @@ operator|)
 condition|?
 name|phyParam
 index|[
-name|ic
-operator|->
-name|ic_curmode
+name|mode
 index|]
 operator|.
 name|txopLimit
@@ -4038,7 +4657,7 @@ condition|)
 block|{
 specifier|static
 specifier|const
-name|u_int8_t
+name|uint8_t
 name|logCwMin
 index|[
 name|IEEE80211_MODE_MAX
@@ -4066,6 +4685,15 @@ comment|/* IEEE80211_MODE_TURBO_A */
 literal|3
 block|,
 comment|/* IEEE80211_MODE_TURBO_G */
+literal|3
+block|,
+comment|/* IEEE80211_MODE_STURBO_A */
+literal|3
+block|,
+comment|/* IEEE80211_MODE_11NA */
+literal|3
+block|,
+comment|/* IEEE80211_MODE_11NG */
 block|}
 decl_stmt|;
 name|chanp
@@ -4102,9 +4730,7 @@ name|wmep_logcwmin
 operator|=
 name|logCwMin
 index|[
-name|ic
-operator|->
-name|ic_curmode
+name|mode
 index|]
 expr_stmt|;
 name|IEEE80211_DPRINTF
@@ -4241,6 +4867,274 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Start a device.  If this is the first vap running on the  * underlying device then we first bring it up.  */
+end_comment
+
+begin_function
+name|int
+name|ieee80211_init
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+name|int
+name|forcescan
+parameter_list|)
+block|{
+name|IEEE80211_DPRINTF
+argument_list|(
+name|ic
+argument_list|,
+name|IEEE80211_MSG_STATE
+operator||
+name|IEEE80211_MSG_DEBUG
+argument_list|,
+literal|"%s\n"
+argument_list|,
+literal|"start running"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Kick the 802.11 state machine as appropriate. 	 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_roaming
+operator|!=
+name|IEEE80211_ROAMING_MANUAL
+condition|)
+block|{
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_STA
+condition|)
+block|{
+comment|/* 			 * Try to be intelligent about clocking the state 			 * machine.  If we're currently in RUN state then 			 * we should be able to apply any new state/parameters 			 * simply by re-associating.  Otherwise we need to 			 * re-scan to select an appropriate ap. 			 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_state
+operator|!=
+name|IEEE80211_S_RUN
+operator|||
+name|forcescan
+condition|)
+name|ieee80211_new_state
+argument_list|(
+name|ic
+argument_list|,
+name|IEEE80211_S_SCAN
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|ieee80211_new_state
+argument_list|(
+name|ic
+argument_list|,
+name|IEEE80211_S_ASSOC
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * For monitor+wds modes there's nothing to do but 			 * start running.  Otherwise, if this is the first 			 * vap to be brought up, start a scan which may be 			 * preempted if the station is locked to a particular 			 * channel. 			 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_MONITOR
+operator|||
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_WDS
+condition|)
+block|{
+name|ic
+operator|->
+name|ic_state
+operator|=
+name|IEEE80211_S_INIT
+expr_stmt|;
+comment|/* XXX*/
+name|ieee80211_new_state
+argument_list|(
+name|ic
+argument_list|,
+name|IEEE80211_S_RUN
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|ieee80211_new_state
+argument_list|(
+name|ic
+argument_list|,
+name|IEEE80211_S_SCAN
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Switch between turbo and non-turbo operating modes.  * Use the specified channel flags to locate the new  * channel, update 802.11 state, and then call back into  * the driver to effect the change.  */
+end_comment
+
+begin_function
+name|void
+name|ieee80211_dturbo_switch
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+name|int
+name|newflags
+parameter_list|)
+block|{
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+decl_stmt|;
+name|chan
+operator|=
+name|ieee80211_find_channel
+argument_list|(
+name|ic
+argument_list|,
+name|ic
+operator|->
+name|ic_bsschan
+operator|->
+name|ic_freq
+argument_list|,
+name|newflags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|chan
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* XXX should not happen */
+name|IEEE80211_DPRINTF
+argument_list|(
+name|ic
+argument_list|,
+name|IEEE80211_MSG_SUPERG
+argument_list|,
+literal|"%s: no channel with freq %u flags 0x%x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ic
+operator|->
+name|ic_bsschan
+operator|->
+name|ic_freq
+argument_list|,
+name|newflags
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|IEEE80211_DPRINTF
+argument_list|(
+name|ic
+argument_list|,
+name|IEEE80211_MSG_SUPERG
+argument_list|,
+literal|"%s: %s -> %s (freq %u flags 0x%x)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ieee80211_phymode_name
+index|[
+name|ieee80211_chan2mode
+argument_list|(
+name|ic
+operator|->
+name|ic_bsschan
+argument_list|)
+index|]
+argument_list|,
+name|ieee80211_phymode_name
+index|[
+name|ieee80211_chan2mode
+argument_list|(
+name|chan
+argument_list|)
+index|]
+argument_list|,
+name|chan
+operator|->
+name|ic_freq
+argument_list|,
+name|chan
+operator|->
+name|ic_flags
+argument_list|)
+expr_stmt|;
+name|ic
+operator|->
+name|ic_bsschan
+operator|=
+name|chan
+expr_stmt|;
+name|ic
+operator|->
+name|ic_prevchan
+operator|=
+name|ic
+operator|->
+name|ic_curchan
+expr_stmt|;
+name|ic
+operator|->
+name|ic_curchan
+operator|=
+name|chan
+expr_stmt|;
+name|ic
+operator|->
+name|ic_set_channel
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+comment|/* NB: do not need to reset ERP state 'cuz we're in sta mode */
+block|}
+end_function
+
 begin_function
 name|void
 name|ieee80211_beacon_miss
@@ -4356,6 +5250,56 @@ name|ic_bmiss_count
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_roaming
+operator|==
+name|IEEE80211_ROAMING_AUTO
+condition|)
+block|{
+comment|/* 		 * If we receive a beacon miss interrupt when using 		 * dynamic turbo, attempt to switch modes before 		 * reassociating. 		 */
+if|if
+condition|(
+name|IEEE80211_ATH_CAP
+argument_list|(
+name|ic
+argument_list|,
+name|ic
+operator|->
+name|ic_bss
+argument_list|,
+name|IEEE80211_NODE_TURBOP
+argument_list|)
+condition|)
+name|ieee80211_dturbo_switch
+argument_list|(
+name|ic
+argument_list|,
+name|ic
+operator|->
+name|ic_bsschan
+operator|->
+name|ic_flags
+operator|^
+name|IEEE80211_CHAN_TURBO
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Try to reassociate before scanning for a new ap. 		 */
+name|ieee80211_new_state
+argument_list|(
+name|ic
+argument_list|,
+name|IEEE80211_S_ASSOC
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Somebody else is controlling state changes (e.g. 		 * a user-mode app) don't do anything that would 		 * confuse them; just drop into scan mode so they'll 		 * notified of the state change and given control. 		 */
 name|ieee80211_new_state
 argument_list|(
 name|ic
@@ -4365,6 +5309,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4529,6 +5474,108 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Handle deauth with reason.  We retry only for  * the cases where we might succeed.  Otherwise  * we downgrade the ap and scan.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|sta_authretry
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+name|int
+name|reason
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|reason
+condition|)
+block|{
+case|case
+name|IEEE80211_STATUS_TIMEOUT
+case|:
+case|case
+name|IEEE80211_REASON_ASSOC_EXPIRE
+case|:
+case|case
+name|IEEE80211_REASON_NOT_AUTHED
+case|:
+case|case
+name|IEEE80211_REASON_NOT_ASSOCED
+case|:
+case|case
+name|IEEE80211_REASON_ASSOC_LEAVE
+case|:
+case|case
+name|IEEE80211_REASON_ASSOC_NOT_AUTHED
+case|:
+name|IEEE80211_SEND_MGMT
+argument_list|(
+name|ic
+argument_list|,
+name|ni
+argument_list|,
+name|IEEE80211_FC0_SUBTYPE_AUTH
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|ieee80211_scan_assoc_fail
+argument_list|(
+name|ic
+argument_list|,
+name|ic
+operator|->
+name|ic_bss
+operator|->
+name|ni_macaddr
+argument_list|,
+name|reason
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_roaming
+operator|==
+name|IEEE80211_ROAMING_AUTO
+condition|)
+name|ieee80211_check_scan
+argument_list|(
+name|ic
+argument_list|,
+name|IEEE80211_SCAN_ACTIVE
+argument_list|,
+name|IEEE80211_SCAN_FOREVER
+argument_list|,
+name|ic
+operator|->
+name|ic_des_nssid
+argument_list|,
+name|ic
+operator|->
+name|ic_des_ssid
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+end_function
+
 begin_function
 specifier|static
 name|int
@@ -4599,6 +5646,27 @@ operator|=
 name|nstate
 expr_stmt|;
 comment|/* state transition */
+name|callout_stop
+argument_list|(
+operator|&
+name|ic
+operator|->
+name|ic_mgtsend
+argument_list|)
+expr_stmt|;
+comment|/* XXX callout_drain */
+if|if
+condition|(
+name|ostate
+operator|!=
+name|IEEE80211_S_SCAN
+condition|)
+name|ieee80211_cancel_scan
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+comment|/* background scan */
 name|ni
 operator|=
 name|ic
@@ -4758,12 +5826,6 @@ name|IEEE80211_S_INIT
 condition|)
 block|{
 comment|/* NB: optimize INIT -> INIT case */
-name|ic
-operator|->
-name|ic_mgt_timer
-operator|=
-literal|0
-expr_stmt|;
 name|ieee80211_drain_ifq
 argument_list|(
 operator|&
@@ -4773,6 +5835,11 @@ name|ic_mgtq
 argument_list|)
 expr_stmt|;
 name|ieee80211_reset_bss
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+name|ieee80211_scan_flush
 argument_list|(
 name|ic
 argument_list|)
@@ -4809,6 +5876,8 @@ block|{
 case|case
 name|IEEE80211_S_INIT
 case|:
+name|createibss
+label|:
 if|if
 condition|(
 operator|(
@@ -4838,7 +5907,12 @@ operator|!=
 name|IEEE80211_CHAN_ANYC
 condition|)
 block|{
-comment|/* 				 * AP operation and we already have a channel; 				 * bypass the scan and startup immediately. 				 */
+comment|/* 				 * Already have a channel; bypass the 				 * scan and startup immediately.  Because 				 * of this explicitly sync the scanner state. 				 */
+name|ieee80211_scan_update
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|ieee80211_create_ibss
 argument_list|(
 name|ic
@@ -4851,11 +5925,23 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ieee80211_begin_scan
+name|ieee80211_check_scan
 argument_list|(
 name|ic
 argument_list|,
-name|arg
+name|IEEE80211_SCAN_ACTIVE
+operator||
+name|IEEE80211_SCAN_FLUSH
+argument_list|,
+name|IEEE80211_SCAN_FOREVER
+argument_list|,
+name|ic
+operator|->
+name|ic_des_nssid
+argument_list|,
+name|ic
+operator|->
+name|ic_des_ssid
 argument_list|)
 expr_stmt|;
 block|}
@@ -4863,20 +5949,55 @@ break|break;
 case|case
 name|IEEE80211_S_SCAN
 case|:
-comment|/* 			 * Scan next. If doing an active scan probe 			 * for the requested ap (if any). 			 */
+case|case
+name|IEEE80211_S_AUTH
+case|:
+case|case
+name|IEEE80211_S_ASSOC
+case|:
+comment|/* 			 * These can happen either because of a timeout 			 * on an assoc/auth response or because of a 			 * change in state that requires a reset.  For 			 * the former we're called with a non-zero arg 			 * that is the cause for the failure; pass this 			 * to the scan code so it can update state. 			 * Otherwise trigger a new scan unless we're in 			 * manual roaming mode in which case an application 			 * must issue an explicit scan request. 			 */
+if|if
+condition|(
+name|arg
+operator|!=
+literal|0
+condition|)
+name|ieee80211_scan_assoc_fail
+argument_list|(
+name|ic
+argument_list|,
+name|ic
+operator|->
+name|ic_bss
+operator|->
+name|ni_macaddr
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ic
 operator|->
-name|ic_flags
-operator|&
-name|IEEE80211_F_ASCAN
+name|ic_roaming
+operator|==
+name|IEEE80211_ROAMING_AUTO
 condition|)
-name|ieee80211_probe_curchan
+name|ieee80211_check_scan
 argument_list|(
 name|ic
 argument_list|,
-literal|0
+name|IEEE80211_SCAN_ACTIVE
+argument_list|,
+name|IEEE80211_SCAN_FOREVER
+argument_list|,
+name|ic
+operator|->
+name|ic_des_nssid
+argument_list|,
+name|ic
+operator|->
+name|ic_des_ssid
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4884,24 +6005,15 @@ case|case
 name|IEEE80211_S_RUN
 case|:
 comment|/* beacon miss */
-name|IEEE80211_DPRINTF
-argument_list|(
-name|ic
-argument_list|,
-name|IEEE80211_MSG_STATE
-argument_list|,
-literal|"no recent beacons from %s; rescanning\n"
-argument_list|,
-name|ether_sprintf
-argument_list|(
+if|if
+condition|(
 name|ic
 operator|->
-name|ic_bss
-operator|->
-name|ni_bssid
-argument_list|)
-argument_list|)
-expr_stmt|;
+name|ic_opmode
+operator|==
+name|IEEE80211_M_STA
+condition|)
+block|{
 name|ieee80211_sta_leave
 argument_list|(
 name|ic
@@ -4917,49 +6029,6 @@ operator|~
 name|IEEE80211_F_SIBSS
 expr_stmt|;
 comment|/* XXX */
-comment|/* FALLTHRU */
-case|case
-name|IEEE80211_S_AUTH
-case|:
-case|case
-name|IEEE80211_S_ASSOC
-case|:
-comment|/* timeout restart scan */
-name|ni
-operator|=
-name|ieee80211_find_node
-argument_list|(
-operator|&
-name|ic
-operator|->
-name|ic_scan
-argument_list|,
-name|ic
-operator|->
-name|ic_bss
-operator|->
-name|ni_macaddr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ni
-operator|!=
-name|NULL
-condition|)
-block|{
-name|ni
-operator|->
-name|ni_fails
-operator|++
-expr_stmt|;
-name|ieee80211_unref_node
-argument_list|(
-operator|&
-name|ni
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ic
@@ -4968,19 +6037,70 @@ name|ic_roaming
 operator|==
 name|IEEE80211_ROAMING_AUTO
 condition|)
-name|ieee80211_begin_scan
+name|ieee80211_check_scan
 argument_list|(
 name|ic
 argument_list|,
-name|arg
+name|IEEE80211_SCAN_ACTIVE
+argument_list|,
+name|IEEE80211_SCAN_FOREVER
+argument_list|,
+name|ic
+operator|->
+name|ic_des_nssid
+argument_list|,
+name|ic
+operator|->
+name|ic_des_ssid
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ieee80211_iterate_nodes
+argument_list|(
+operator|&
+name|ic
+operator|->
+name|ic_sta
+argument_list|,
+name|sta_disassoc
+argument_list|,
+name|ic
+argument_list|)
+expr_stmt|;
+goto|goto
+name|createibss
+goto|;
+block|}
 break|break;
 block|}
 break|break;
 case|case
 name|IEEE80211_S_AUTH
 case|:
+name|KASSERT
+argument_list|(
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_STA
+argument_list|,
+operator|(
+literal|"switch to %s state when operating in mode %u"
+operator|,
+name|ieee80211_state_name
+index|[
+name|nstate
+index|]
+operator|,
+name|ic
+operator|->
+name|ic_opmode
+operator|)
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|ostate
@@ -5013,6 +6133,8 @@ case|:
 switch|switch
 condition|(
 name|arg
+operator|&
+literal|0xff
 condition|)
 block|{
 case|case
@@ -5034,7 +6156,17 @@ break|break;
 case|case
 name|IEEE80211_FC0_SUBTYPE_DEAUTH
 case|:
-comment|/* ignore and retry scan on timeout */
+name|sta_authretry
+argument_list|(
+name|ic
+argument_list|,
+name|ni
+argument_list|,
+name|arg
+operator|>>
+literal|8
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 break|break;
@@ -5044,6 +6176,8 @@ case|:
 switch|switch
 condition|(
 name|arg
+operator|&
+literal|0xff
 condition|)
 block|{
 case|case
@@ -5108,6 +6242,28 @@ break|break;
 case|case
 name|IEEE80211_S_ASSOC
 case|:
+name|KASSERT
+argument_list|(
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_STA
+argument_list|,
+operator|(
+literal|"switch to %s state when operating in mode %u"
+operator|,
+name|ieee80211_state_name
+index|[
+name|nstate
+index|]
+operator|,
+name|ic
+operator|->
+name|ic_opmode
+operator|)
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|ostate
@@ -5118,9 +6274,6 @@ name|IEEE80211_S_INIT
 case|:
 case|case
 name|IEEE80211_S_SCAN
-case|:
-case|case
-name|IEEE80211_S_ASSOC
 case|:
 name|IEEE80211_DPRINTF
 argument_list|(
@@ -5136,6 +6289,9 @@ expr_stmt|;
 break|break;
 case|case
 name|IEEE80211_S_AUTH
+case|:
+case|case
+name|IEEE80211_S_ASSOC
 case|:
 name|IEEE80211_SEND_MGMT
 argument_list|(
@@ -5174,9 +6330,13 @@ name|ic
 argument_list|,
 name|ni
 argument_list|,
+name|arg
+condition|?
+name|IEEE80211_FC0_SUBTYPE_REASSOC_REQ
+else|:
 name|IEEE80211_FC0_SUBTYPE_ASSOC_REQ
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5212,8 +6372,37 @@ operator|->
 name|ic_opmode
 operator|==
 name|IEEE80211_M_MONITOR
+operator|||
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_WDS
+operator|||
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_HOSTAP
 condition|)
+block|{
+comment|/* 				 * Already have a channel; bypass the 				 * scan and startup immediately.  Because 				 * of this explicitly sync the scanner state. 				 */
+name|ieee80211_scan_update
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+name|ieee80211_create_ibss
+argument_list|(
+name|ic
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 comment|/* fall thru... */
 case|case
 name|IEEE80211_S_AUTH
@@ -5355,12 +6544,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|ic
-operator|->
-name|ic_mgt_timer
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|ic
@@ -5369,6 +6552,16 @@ name|ic_opmode
 operator|==
 name|IEEE80211_M_STA
 condition|)
+block|{
+name|ieee80211_scan_assoc_success
+argument_list|(
+name|ic
+argument_list|,
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|)
+expr_stmt|;
 name|ieee80211_notify_node_join
 argument_list|(
 name|ic
@@ -5380,6 +6573,7 @@ operator|==
 name|IEEE80211_FC0_SUBTYPE_ASSOC_RESP
 argument_list|)
 expr_stmt|;
+block|}
 name|if_start
 argument_list|(
 name|ifp
@@ -5517,21 +6711,21 @@ name|ni
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Enable inactivity processing. 		 * XXX 		 */
+name|callout_reset
+argument_list|(
+operator|&
 name|ic
 operator|->
-name|ic_scan
-operator|.
-name|nt_inact_timer
-operator|=
+name|ic_inact
+argument_list|,
 name|IEEE80211_INACT_WAIT
-expr_stmt|;
+operator|*
+name|hz
+argument_list|,
+name|ieee80211_node_timeout
+argument_list|,
 name|ic
-operator|->
-name|ic_sta
-operator|.
-name|nt_inact_timer
-operator|=
-name|IEEE80211_INACT_WAIT
+argument_list|)
 expr_stmt|;
 break|break;
 block|}

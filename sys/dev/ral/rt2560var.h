@@ -281,15 +281,15 @@ name|watchdog_ch
 decl_stmt|;
 name|struct
 name|callout
-name|scan_ch
-decl_stmt|;
-name|struct
-name|callout
 name|rssadapt_ch
 decl_stmt|;
 name|int
 name|sc_tx_timer
 decl_stmt|;
+name|int
+name|sc_invalid
+decl_stmt|;
+comment|/*  * The same in both up to here  * ------------------------------------------------  */
 name|uint32_t
 name|asic_rev
 decl_stmt|;
@@ -298,6 +298,9 @@ name|eeprom_rev
 decl_stmt|;
 name|uint8_t
 name|rf_rev
+decl_stmt|;
+name|uint8_t
+name|rssi_corr
 decl_stmt|;
 name|struct
 name|rt2560_tx_ring
@@ -416,6 +419,13 @@ value|sc_txtapu.th
 name|int
 name|sc_txtap_len
 decl_stmt|;
+define|#
+directive|define
+name|RAL_INPUT_RUNNING
+value|1
+name|int
+name|sc_flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -443,17 +453,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|rt2560_shutdown
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|rt2560_suspend
+name|rt2560_stop
 parameter_list|(
 name|void
 modifier|*

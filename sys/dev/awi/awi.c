@@ -746,6 +746,8 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
+name|int
+parameter_list|,
 name|u_int32_t
 parameter_list|)
 function_decl|;
@@ -2613,6 +2615,7 @@ operator|&
 name|AWI_INT_SCAN_CMPLT
 condition|)
 block|{
+comment|/* XXX revisit scanning */
 if|if
 condition|(
 name|sc
@@ -2629,14 +2632,7 @@ name|sc_substate
 operator|==
 name|AWI_ST_NONE
 condition|)
-name|ieee80211_next_scan
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ic
-argument_list|)
-expr_stmt|;
+empty_stmt|;
 block|}
 block|}
 name|sc
@@ -2950,6 +2946,9 @@ break|break;
 case|case
 name|IEEE80211_M_MONITOR
 case|:
+case|case
+name|IEEE80211_M_WDS
+case|:
 return|return
 name|ENODEV
 return|;
@@ -2996,7 +2995,12 @@ index|]
 operator|=
 name|ic
 operator|->
-name|ic_des_esslen
+name|ic_des_ssid
+index|[
+literal|0
+index|]
+operator|.
+name|len
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -3012,11 +3016,21 @@ index|]
 argument_list|,
 name|ic
 operator|->
-name|ic_des_essid
+name|ic_des_ssid
+index|[
+literal|0
+index|]
+operator|.
+name|ssid
 argument_list|,
 name|ic
 operator|->
-name|ic_des_esslen
+name|ic_des_ssid
+index|[
+literal|0
+index|]
+operator|.
+name|len
 argument_list|)
 expr_stmt|;
 comment|/* configure basic rate */
@@ -3060,16 +3074,9 @@ condition|)
 block|{
 name|rate
 operator|=
-name|rs
-operator|->
-name|rs_rates
-index|[
 name|ic
 operator|->
 name|ic_fixed_rate
-index|]
-operator|&
-name|IEEE80211_RATE_VAL
 expr_stmt|;
 block|}
 else|else
@@ -3473,8 +3480,9 @@ name|ni_chan
 operator|=
 name|ic
 operator|->
-name|ic_ibss_chan
+name|ic_des_chan
 expr_stmt|;
+comment|/* XXX? */
 name|ni
 operator|->
 name|ni_intval
@@ -3522,8 +3530,6 @@ name|ic_sup_rates
 index|[
 name|ieee80211_chan2mode
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 operator|->
 name|ni_chan
@@ -3567,7 +3573,12 @@ name|ni_esslen
 operator|=
 name|ic
 operator|->
-name|ic_des_esslen
+name|ic_des_ssid
+index|[
+literal|0
+index|]
+operator|.
+name|len
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -3577,7 +3588,12 @@ name|ni_essid
 argument_list|,
 name|ic
 operator|->
-name|ic_des_essid
+name|ic_des_ssid
+index|[
+literal|0
+index|]
+operator|.
+name|ssid
 argument_list|,
 name|ni
 operator|->
@@ -4434,8 +4450,6 @@ condition|)
 block|{
 name|ieee80211_pwrsave
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|,
 name|m0
@@ -4716,6 +4730,8 @@ operator|)
 condition|)
 name|ieee80211_dump_pkt
 argument_list|(
+name|ic
+argument_list|,
 name|m0
 operator|->
 name|m_data
@@ -5111,14 +5127,6 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* TODO: rate control */
-name|ieee80211_watchdog
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ic
-argument_list|)
-expr_stmt|;
 name|out
 label|:
 name|sc
@@ -5495,6 +5503,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|rate
+operator|=
+name|ic
+operator|->
+name|ic_fixed_rate
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -5590,14 +5604,14 @@ name|ic
 operator|->
 name|ic_fixed_rate
 operator|!=
-name|i
+name|rate
 condition|)
 block|{
 name|ic
 operator|->
 name|ic_fixed_rate
 operator|=
-name|i
+name|rate
 expr_stmt|;
 name|error
 operator|=
@@ -5878,19 +5892,7 @@ name|rate
 operator|=
 name|ic
 operator|->
-name|ic_sup_rates
-index|[
-name|mode
-index|]
-operator|.
-name|rs_rates
-index|[
-name|ic
-operator|->
 name|ic_fixed_rate
-index|]
-operator|&
-name|IEEE80211_RATE_VAL
 expr_stmt|;
 block|}
 name|imr
@@ -5917,6 +5919,9 @@ case|case
 name|IEEE80211_M_MONITOR
 case|:
 comment|/* we should never reach here */
+case|case
+name|IEEE80211_M_WDS
+case|:
 break|break;
 case|case
 name|IEEE80211_M_STA
@@ -6691,6 +6696,8 @@ operator|)
 condition|)
 name|ieee80211_dump_pkt
 argument_list|(
+name|ic
+argument_list|,
 name|m
 operator|->
 name|m_data
@@ -6775,6 +6782,7 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* XXX 0 for noise floor */
 name|ieee80211_input
 argument_list|(
 name|ic
@@ -6784,6 +6792,8 @@ argument_list|,
 name|ni
 argument_list|,
 name|rssi
+argument_list|,
+literal|0
 argument_list|,
 name|rstamp
 argument_list|)
@@ -7263,12 +7273,6 @@ name|m_len
 operator|=
 name|MHLEN
 expr_stmt|;
-name|m
-operator|->
-name|m_flags
-operator||=
-name|M_HASFCS
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -7449,6 +7453,23 @@ operator|&
 name|m
 operator|->
 name|m_next
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|top
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Strip trailing 802.11 MAC FCS. */
+name|m_adj
+argument_list|(
+name|top
+argument_list|,
+operator|-
+name|IEEE80211_CRC_LEN
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -8402,7 +8423,7 @@ name|cs_def
 expr_stmt|;
 name|ic
 operator|->
-name|ic_ibss_chan
+name|ic_curchan
 operator|=
 operator|&
 name|ic
@@ -8414,6 +8435,7 @@ operator|->
 name|cs_def
 index|]
 expr_stmt|;
+comment|/* XXX? */
 name|sc
 operator|->
 name|sc_mib_local
@@ -10474,13 +10496,8 @@ case|:
 case|case
 name|IEEE80211_S_INIT
 case|:
-name|ieee80211_begin_scan
-argument_list|(
-name|ic
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/* XXX revisit scanning */
+empty_stmt|;
 break|break;
 case|case
 name|IEEE80211_S_SCAN
@@ -11442,6 +11459,9 @@ parameter_list|,
 name|int
 name|rssi
 parameter_list|,
+name|int
+name|nf
+parameter_list|,
 name|u_int32_t
 name|rstamp
 parameter_list|)
@@ -11481,6 +11501,8 @@ argument_list|,
 name|subtype
 argument_list|,
 name|rssi
+argument_list|,
+name|nf
 argument_list|,
 name|rstamp
 argument_list|)

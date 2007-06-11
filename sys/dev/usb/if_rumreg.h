@@ -10,6 +10,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RT2573_NOISE_FLOOR
+value|-95
+end_define
+
+begin_define
+define|#
+directive|define
 name|RT2573_TX_DESC_SIZE
 value|(sizeof (struct rum_tx_desc))
 end_define

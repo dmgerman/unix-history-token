@@ -22,12 +22,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/taskqueue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<contrib/dev/ath/ah.h>
 end_include
 
@@ -94,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|ATH_TXBUF
-value|100
+value|200
 end_define
 
 begin_comment
@@ -209,6 +203,57 @@ begin_comment
 comment|/* storage space in bytes */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ATH_FF_TXQMIN
+value|2
+end_define
+
+begin_comment
+comment|/* min txq depth for staging */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_FF_TXQMAX
+value|50
+end_define
+
+begin_comment
+comment|/* maximum # of queued frames allowed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_FF_STAGEMAX
+value|5
+end_define
+
+begin_comment
+comment|/* max waiting period for staged frame*/
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|taskqueue
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|kthread
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ath_buf
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* driver-specific node state */
 end_comment
@@ -226,6 +271,15 @@ name|u_int32_t
 name|an_avgrssi
 decl_stmt|;
 comment|/* average rssi over all rx frames */
+name|struct
+name|ath_buf
+modifier|*
+name|an_ff_buf
+index|[
+name|WME_NUM_AC
+index|]
+decl_stmt|;
+comment|/* ff staging area */
 comment|/* variable-length rate control state follows */
 block|}
 struct|;
@@ -324,6 +378,17 @@ argument|ath_buf
 argument_list|)
 name|bf_list
 expr_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|ath_buf
+argument_list|)
+name|bf_stagelist
+expr_stmt|;
+comment|/* stage queue list */
+name|u_int32_t
+name|bf_age
+decl_stmt|;
+comment|/* age when placed on stageq */
 name|int
 name|bf_nseg
 decl_stmt|;
@@ -484,6 +549,19 @@ literal|12
 index|]
 decl_stmt|;
 comment|/* e.g. "ath0_txq4" */
+comment|/* 	 * Fast-frame state.  The staging queue holds awaiting 	 * a fast-frame pairing.  Buffers on this queue are 	 * assigned an ``age'' and flushed when they wait too long. 	 */
+name|TAILQ_HEAD
+argument_list|(
+argument|axq_headtype
+argument_list|,
+argument|ath_buf
+argument_list|)
+name|axq_stageq
+expr_stmt|;
+name|u_int32_t
+name|axq_curage
+decl_stmt|;
+comment|/* queue age */
 block|}
 struct|;
 end_struct
@@ -551,7 +629,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	STAILQ_INSERT_TAIL(&(_tq)->axq_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
+value|do { \ 	STAILQ_INSERT_TAIL(&(_tq)->axq_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	(_tq)->axq_curage++; \ } while (0)
 end_define
 
 begin_define
@@ -624,6 +702,8 @@ parameter_list|,
 name|struct
 name|ieee80211_node
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
@@ -768,6 +848,11 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* mcast key cache search */
+name|sc_scanning
+range|:
+literal|1
+decl_stmt|,
+comment|/* scanning active */
 name|sc_syncbeacon
 range|:
 literal|1
@@ -786,8 +871,13 @@ comment|/* extended channel mode */
 name|sc_outdoor
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* outdoor operation */
+name|sc_dturbo
+range|:
+literal|1
+decl_stmt|;
+comment|/* dynamic turbo in use */
 comment|/* rate tables */
 define|#
 directive|define
@@ -826,10 +916,20 @@ name|u_int16_t
 name|sc_curtxpow
 decl_stmt|;
 comment|/* current tx power limit */
+name|u_int16_t
+name|sc_curaid
+decl_stmt|;
+comment|/* current association id */
 name|HAL_CHANNEL
 name|sc_curchan
 decl_stmt|;
 comment|/* current h/w channel */
+name|u_int8_t
+name|sc_curbssid
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 name|u_int8_t
 name|sc_rixmap
 index|[
@@ -878,10 +978,22 @@ name|u_int8_t
 name|sc_protrix
 decl_stmt|;
 comment|/* protection rate index */
+name|u_int8_t
+name|sc_lastdatarix
+decl_stmt|;
+comment|/* last data frame rate index */
 name|u_int
 name|sc_mcastrate
 decl_stmt|;
 comment|/* ieee rate for mcastrateix */
+name|u_int
+name|sc_fftxqmin
+decl_stmt|;
+comment|/* min frames before staging */
+name|u_int
+name|sc_fftxqmax
+decl_stmt|;
+comment|/* max frames before drop */
 name|u_int
 name|sc_txantenna
 decl_stmt|;
@@ -996,6 +1108,12 @@ name|ath_bufhead
 name|sc_rxbuf
 decl_stmt|;
 comment|/* receive buffer */
+name|struct
+name|mbuf
+modifier|*
+name|sc_rxpending
+decl_stmt|;
+comment|/* pending receive data */
 name|u_int32_t
 modifier|*
 name|sc_rxlink
@@ -1044,10 +1162,6 @@ literal|12
 index|]
 decl_stmt|;
 comment|/* e.g. "ath0_buf" */
-name|int
-name|sc_tx_timer
-decl_stmt|;
-comment|/* transmit timeout */
 name|u_int
 name|sc_txqsetup
 decl_stmt|;
@@ -1158,11 +1272,6 @@ name|HAL_NODE_STATS
 name|sc_halstats
 decl_stmt|;
 comment|/* station-mode rssi stats */
-name|struct
-name|callout
-name|sc_scan_ch
-decl_stmt|;
-comment|/* callout handle for scan */
 name|struct
 name|callout
 name|sc_dfs_ch
@@ -1953,7 +2062,7 @@ parameter_list|,
 name|_outsize
 parameter_list|)
 define|\
-value|ath_hal_getdiagstate(_ah, 29, NULL, 0, (void **)(_outdata), _outsize)
+value|ath_hal_getdiagstate(_ah, 29, NULL, 0, (_outdata), _outsize)
 end_define
 
 begin_define
@@ -2578,6 +2687,17 @@ end_endif
 begin_define
 define|#
 directive|define
+name|ath_hal_hasfastframes
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_FASTFRAME, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_hasrfsilent
 parameter_list|(
 name|_ah
@@ -2688,54 +2808,6 @@ define|\
 value|ath_hal_setcapability(_ah, HAL_CAP_TPC_CTS, 0, _tpcts, NULL)
 end_define
 
-begin_if
-if|#
-directive|if
-name|HAL_ABI_VERSION
-operator|<
-literal|0x05120700
-end_if
-
-begin_define
-define|#
-directive|define
-name|ath_hal_process_noisefloor
-parameter_list|(
-name|_ah
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_getchannoise
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_c
-parameter_list|)
-value|(-96)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAL_CAP_TPC_ACK
-value|100
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAL_CAP_TPC_CTS
-value|101
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -2748,11 +2820,6 @@ parameter_list|)
 define|\
 value|((*(_ah)->ah_getChanNoise)((_ah), (_c)))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -2847,6 +2914,58 @@ name|ah
 parameter_list|)
 define|\
 value|((ah)->ah_countryCode == 843)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|HAL_ABI_VERSION
+operator|<
+literal|0x07050400
+end_if
+
+begin_comment
+comment|/* compat shims so code compilers--it won't work though */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_HT20
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_HT40PLUS
+value|0x20000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_HT40MINUS
+value|0x40000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_MODE_11NG_HT20
+value|0x008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_MODE_11NA_HT20
+value|0x010000
 end_define
 
 begin_endif

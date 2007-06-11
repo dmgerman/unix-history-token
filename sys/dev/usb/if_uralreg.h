@@ -10,6 +10,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RAL_NOISE_FLOOR
+value|-95
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAL_RSSI_CORR
+value|120
+end_define
+
+begin_define
+define|#
+directive|define
 name|RAL_RX_DESC_SIZE
 value|(sizeof (struct ural_rx_desc))
 end_define

@@ -268,15 +268,15 @@ name|watchdog_ch
 decl_stmt|;
 name|struct
 name|callout
-name|scan_ch
-decl_stmt|;
-name|struct
-name|callout
 name|rssadapt_ch
 decl_stmt|;
 name|int
 name|sc_tx_timer
 decl_stmt|;
+name|int
+name|sc_invalid
+decl_stmt|;
+comment|/*  * The same in both up to here  * ------------------------------------------------  */
 name|struct
 name|ieee80211_channel
 modifier|*
@@ -425,6 +425,13 @@ name|sc_txtap
 value|sc_txtapu.th
 name|int
 name|sc_txtap_len
+decl_stmt|;
+define|#
+directive|define
+name|RAL_INPUT_RUNNING
+value|1
+name|int
+name|sc_flags
 decl_stmt|;
 block|}
 struct|;

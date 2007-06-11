@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005 John Bicket  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*-  * Copyright (c) 2005 John Bicket  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *  */
 end_comment
 
 begin_include
@@ -3555,37 +3555,7 @@ operator|!=
 name|IEEE80211_FIXED_RATE_NONE
 condition|)
 block|{
-comment|/* 		 * A fixed rate is to be used; ic_fixed_rate is an 		 * index into the supported rate set.  Convert this 		 * to the index into the negotiated rate set for 		 * the node. 		 */
-specifier|const
-name|struct
-name|ieee80211_rateset
-modifier|*
-name|rs
-init|=
-operator|&
-name|ic
-operator|->
-name|ic_sup_rates
-index|[
-name|ic
-operator|->
-name|ic_curmode
-index|]
-decl_stmt|;
-name|int
-name|r
-init|=
-name|rs
-operator|->
-name|rs_rates
-index|[
-name|ic
-operator|->
-name|ic_fixed_rate
-index|]
-operator|&
-name|IEEE80211_RATE_VAL
-decl_stmt|;
+comment|/* 		 * A fixed rate is to be used; ic_fixed_rate is the 		 * IEEE code for this rate (sans basic bit).  Convert this 		 * to the index into the negotiated rate set for 		 * the node. 		 */
 comment|/* NB: the rate set is assumed sorted */
 name|srate
 operator|=
@@ -3609,27 +3579,21 @@ argument_list|(
 name|srate
 argument_list|)
 operator|!=
-name|r
+name|ic
+operator|->
+name|ic_fixed_rate
 condition|;
 name|srate
 operator|--
 control|)
 empty_stmt|;
-name|KASSERT
-argument_list|(
+comment|/* 		 * The fixed rate may not be available due to races 		 * and mode settings.  Also orphaned nodes created in 		 * adhoc mode may not have any rate set so this lookup 		 * can fail. 		 */
+if|if
+condition|(
 name|srate
 operator|>=
 literal|0
-argument_list|,
-operator|(
-literal|"fixed rate %d not in rate set"
-operator|,
-name|ic
-operator|->
-name|ic_fixed_rate
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
 name|sn
 operator|->
 name|static_rate_ndx

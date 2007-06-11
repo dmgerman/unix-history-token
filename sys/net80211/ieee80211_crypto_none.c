@@ -129,7 +129,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -338,7 +338,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|keyid
 parameter_list|)
 block|{
@@ -450,13 +450,13 @@ operator|*
 argument_list|)
 decl_stmt|;
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|ivp
 init|=
 operator|(
 specifier|const
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&

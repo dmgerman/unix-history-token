@@ -307,6 +307,11 @@ name|void
 modifier|*
 name|wi_intrhand
 decl_stmt|;
+name|struct
+name|ieee80211_channel
+modifier|*
+name|wi_channel
+decl_stmt|;
 name|int
 name|wi_io_addr
 decl_stmt|;
@@ -670,6 +675,30 @@ directive|define
 name|WI_FLAGS_HAS_DBMADJUST
 value|0x0400
 end_define
+
+begin_define
+define|#
+directive|define
+name|WI_FLAGS_SCANNING
+value|0x0800
+end_define
+
+begin_comment
+comment|/* driver-specific node state */
+end_comment
+
+begin_struct
+struct|struct
+name|wi_node
+block|{
+name|struct
+name|ieee80211_node
+name|ni
+decl_stmt|;
+comment|/* base class */
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct

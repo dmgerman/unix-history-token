@@ -238,7 +238,7 @@ modifier|*
 name|k
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 name|mac
 index|[
 name|IEEE80211_ADDR_LEN
@@ -425,7 +425,7 @@ modifier|*
 name|key
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 name|mac
 index|[
 name|IEEE80211_ADDR_LEN
@@ -1600,7 +1600,7 @@ modifier|*
 name|key
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 name|macaddr
 index|[
 name|IEEE80211_ADDR_LEN
@@ -1805,7 +1805,7 @@ name|ieee80211_cipher
 modifier|*
 name|cip
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|keyid
 decl_stmt|;
 comment|/* 	 * Multicast traffic always uses the multicast key. 	 * Otherwise if a unicast key is set we use that and 	 * it is always key index 0.  When no unicast key is 	 * set we fall back to the default transmit key. 	 */
@@ -1997,11 +1997,11 @@ modifier|*
 name|cip
 decl_stmt|;
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|ivp
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|keyid
 decl_stmt|;
 comment|/* NB: this minimum size data frame could be bigger */
@@ -2064,7 +2064,7 @@ argument_list|(
 name|m
 argument_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 operator|*
 argument_list|)
 operator|+
@@ -2181,7 +2181,7 @@ operator|++
 expr_stmt|;
 comment|/* XXX */
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 return|return

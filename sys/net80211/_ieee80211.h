@@ -31,6 +31,9 @@ comment|/* frequency division multiplexing */
 name|IEEE80211_T_TURBO
 block|,
 comment|/* high rate OFDM, aka turbo mode */
+name|IEEE80211_T_HT
+block|,
+comment|/* high throughput, full GI */
 block|}
 enum|;
 end_enum
@@ -89,6 +92,21 @@ init|=
 literal|6
 block|,
 comment|/* 2GHz, OFDM, 2x clock */
+name|IEEE80211_MODE_STURBO_A
+init|=
+literal|7
+block|,
+comment|/* 5GHz, OFDM, 2x clock, static */
+name|IEEE80211_MODE_11NA
+init|=
+literal|8
+block|,
+comment|/* 5GHz, w/ HT */
+name|IEEE80211_MODE_11NG
+init|=
+literal|9
+block|,
+comment|/* 2GHz, w/ HT */
 block|}
 enum|;
 end_enum
@@ -97,7 +115,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_MODE_MAX
-value|(IEEE80211_MODE_TURBO_G+1)
+value|(IEEE80211_MODE_11NG+1)
 end_define
 
 begin_enum
@@ -127,7 +145,12 @@ comment|/* Software Access Point */
 name|IEEE80211_M_MONITOR
 init|=
 literal|8
+block|,
 comment|/* Monitor mode */
+name|IEEE80211_M_WDS
+init|=
+literal|2
+comment|/* WDS link */
 block|}
 enum|;
 end_enum
@@ -140,7 +163,7 @@ value|(IEEE80211_M_MONITOR+1)
 end_define
 
 begin_comment
-comment|/*  * 802.11g protection mode.  */
+comment|/*  * 802.11g/802.11n protection mode.  */
 end_comment
 
 begin_enum
@@ -243,14 +266,31 @@ begin_struct
 struct|struct
 name|ieee80211_channel
 block|{
-name|u_int16_t
-name|ic_freq
-decl_stmt|;
-comment|/* setting in Mhz */
-name|u_int16_t
+name|uint32_t
 name|ic_flags
 decl_stmt|;
 comment|/* see below */
+name|uint16_t
+name|ic_freq
+decl_stmt|;
+comment|/* setting in Mhz */
+name|uint8_t
+name|ic_ieee
+decl_stmt|;
+comment|/* IEEE channel number */
+name|int8_t
+name|ic_maxregpower
+decl_stmt|;
+comment|/* maximum regulatory tx power in dBm */
+name|int8_t
+name|ic_maxpower
+decl_stmt|;
+comment|/* maximum tx power in .5 dBm */
+name|int8_t
+name|ic_minpower
+decl_stmt|;
+comment|/* minimum tx power in .5 dBm */
+comment|/* NB: hole, to be used for dfs */
 block|}
 struct|;
 end_struct
@@ -304,7 +344,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_TURBO
-value|0x0010
+value|0x00010
 end_define
 
 begin_comment
@@ -315,7 +355,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_CCK
-value|0x0020
+value|0x00020
 end_define
 
 begin_comment
@@ -326,7 +366,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_OFDM
-value|0x0040
+value|0x00040
 end_define
 
 begin_comment
@@ -337,7 +377,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_2GHZ
-value|0x0080
+value|0x00080
 end_define
 
 begin_comment
@@ -348,7 +388,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_5GHZ
-value|0x0100
+value|0x00100
 end_define
 
 begin_comment
@@ -359,7 +399,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_PASSIVE
-value|0x0200
+value|0x00200
 end_define
 
 begin_comment
@@ -370,7 +410,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_DYN
-value|0x0400
+value|0x00400
 end_define
 
 begin_comment
@@ -381,7 +421,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_GFSK
-value|0x0800
+value|0x00800
 end_define
 
 begin_comment
@@ -392,7 +432,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_GSM
-value|0x1000
+value|0x01000
 end_define
 
 begin_comment
@@ -402,8 +442,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_CHAN_STURBO
+value|0x02000
+end_define
+
+begin_comment
+comment|/* 11a static turbo channel only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_CHAN_HALF
-value|0x4000
+value|0x04000
 end_define
 
 begin_comment
@@ -414,12 +465,59 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_QUARTER
-value|0x8000
+value|0x08000
 end_define
 
 begin_comment
 comment|/* Quarter rate channel */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_HT20
+value|0x10000
+end_define
+
+begin_comment
+comment|/* HT 20 channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_HT40U
+value|0x20000
+end_define
+
+begin_comment
+comment|/* HT 40 channel w/ ext above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_HT40D
+value|0x40000
+end_define
+
+begin_comment
+comment|/* HT 40 channel w/ ext below */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_HT40
+value|(IEEE80211_CHAN_HT40U | IEEE80211_CHAN_HT40D)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_HT
+value|(IEEE80211_CHAN_HT20 | IEEE80211_CHAN_HT40)
+end_define
 
 begin_comment
 comment|/*  * Useful combinations of channel characteristics.  */
@@ -468,7 +566,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IEEE80211_CHAN_T
+name|IEEE80211_CHAN_108A
 define|\
 value|(IEEE80211_CHAN_5GHZ | IEEE80211_CHAN_OFDM | IEEE80211_CHAN_TURBO)
 end_define
@@ -484,9 +582,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_CHAN_ST
+define|\
+value|(IEEE80211_CHAN_108A | IEEE80211_CHAN_STURBO)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_CHAN_ALL
 define|\
-value|(IEEE80211_CHAN_2GHZ | IEEE80211_CHAN_5GHZ | IEEE80211_CHAN_GFSK | \ 	 IEEE80211_CHAN_CCK | IEEE80211_CHAN_OFDM | IEEE80211_CHAN_DYN)
+value|(IEEE80211_CHAN_2GHZ | IEEE80211_CHAN_5GHZ | IEEE80211_CHAN_GFSK | \ 	 IEEE80211_CHAN_CCK | IEEE80211_CHAN_OFDM | IEEE80211_CHAN_DYN | \ 	 IEEE80211_CHAN_HT)
 end_define
 
 begin_define
@@ -494,7 +600,7 @@ define|#
 directive|define
 name|IEEE80211_CHAN_ALLTURBO
 define|\
-value|(IEEE80211_CHAN_ALL | IEEE80211_CHAN_TURBO)
+value|(IEEE80211_CHAN_ALL | IEEE80211_CHAN_TURBO | IEEE80211_CHAN_STURBO)
 end_define
 
 begin_define
@@ -566,12 +672,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|IEEE80211_IS_CHAN_T
+name|IEEE80211_IS_CHAN_ST
 parameter_list|(
 name|_c
 parameter_list|)
 define|\
-value|(((_c)->ic_flags& IEEE80211_CHAN_T) == IEEE80211_CHAN_T)
+value|(((_c)->ic_flags& IEEE80211_CHAN_ST) == IEEE80211_CHAN_ST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_108A
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_108A) == IEEE80211_CHAN_108A)
 end_define
 
 begin_define
@@ -610,6 +727,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_IS_CHAN_PASSIVE
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_PASSIVE) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_IS_CHAN_OFDM
 parameter_list|(
 name|_c
@@ -638,6 +766,39 @@ name|_c
 parameter_list|)
 define|\
 value|(((_c)->ic_flags& IEEE80211_CHAN_GFSK) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_TURBO
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_TURBO) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_STURBO
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_STURBO) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_DTURBO
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& \ 	(IEEE80211_CHAN_TURBO | IEEE80211_CHAN_STURBO)) == IEEE80211_CHAN_TURBO)
 end_define
 
 begin_define
@@ -687,12 +848,78 @@ end_define
 begin_define
 define|#
 directive|define
-name|IEEE80211_IS_CHAN_PASSIVE
+name|IEEE80211_IS_CHAN_HT
 parameter_list|(
 name|_c
 parameter_list|)
 define|\
-value|(((_c)->ic_flags& IEEE80211_CHAN_PASSIVE) != 0)
+value|(((_c)->ic_flags& IEEE80211_CHAN_HT) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_HT20
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_HT20) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_HT40
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_HT40) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_HT40U
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_HT40U) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_HT40D
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_HT40D) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_HTA
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(IEEE80211_IS_CHAN_5GHZ(_c)&& \ 	 ((_c)->ic_flags& IEEE80211_CHAN_HT) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_HTG
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(IEEE80211_IS_CHAN_2GHZ(_c)&& \ 	 ((_c)->ic_flags& IEEE80211_CHAN_HT) != 0)
 end_define
 
 begin_comment
@@ -768,14 +995,84 @@ begin_struct
 struct|struct
 name|ieee80211_rateset
 block|{
-name|u_int8_t
+name|uint8_t
 name|rs_nrates
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|rs_rates
 index|[
 name|IEEE80211_RATE_MAXSIZE
 index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * 802.11n variant of ieee80211_rateset.  Instead  * legacy rates the entries are MCS rates.  We define  * the structure such that it can be used interchangeably  * with an ieee80211_rateset (modulo structure size).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HTRATE_MAXSIZE
+value|127
+end_define
+
+begin_struct
+struct|struct
+name|ieee80211_htrateset
+block|{
+name|uint8_t
+name|rs_nrates
+decl_stmt|;
+name|uint8_t
+name|rs_rates
+index|[
+name|IEEE80211_HTRATE_MAXSIZE
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Roaming state visible to user space.  There are two  * thresholds that control whether roaming is considered;  * when either is exceeded the 802.11 layer will check  * the scan cache for another AP.  If the cache is stale  * then a scan may be triggered.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_roam
+block|{
+name|int8_t
+name|rssi11a
+decl_stmt|;
+comment|/* rssi thresh for 11a bss */
+name|int8_t
+name|rssi11b
+decl_stmt|;
+comment|/* for 11g sta in 11b bss */
+name|int8_t
+name|rssi11bOnly
+decl_stmt|;
+comment|/* for 11b sta */
+name|uint8_t
+name|pad1
+decl_stmt|;
+name|uint8_t
+name|rate11a
+decl_stmt|;
+comment|/* rate thresh for 11a bss */
+name|uint8_t
+name|rate11b
+decl_stmt|;
+comment|/* for 11g sta in 11b bss */
+name|uint8_t
+name|rate11bOnly
+decl_stmt|;
+comment|/* for 11b sta */
+name|uint8_t
+name|pad2
 decl_stmt|;
 block|}
 struct|;

@@ -922,7 +922,7 @@ name|state
 decl_stmt|;
 define|#
 directive|define
-name|IWI_ASSOC_FAIL
+name|IWI_ASSOC_INIT
 value|0
 define|#
 directive|define
@@ -1702,6 +1702,32 @@ directive|define
 name|IWI_SCAN_TYPES
 value|5
 end_define
+
+begin_comment
+comment|/* scan result codes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWI_SCAN_COMPLETED
+value|1
+end_define
+
+begin_comment
+comment|/* scan compeleted sucessfully */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWI_SCAN_ABORTED
+value|2
+end_define
+
+begin_comment
+comment|/* scan was aborted by the driver */
+end_comment
 
 begin_comment
 comment|/* structure for command IWI_CMD_SCAN_EXT */

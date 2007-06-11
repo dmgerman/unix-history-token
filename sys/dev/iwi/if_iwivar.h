@@ -318,6 +318,17 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
+name|struct
+name|mtx
+name|sc_cmdlock
+decl_stmt|;
+name|char
+name|sc_cmdname
+index|[
+literal|12
+index|]
+decl_stmt|;
+comment|/* e.g. "iwi0_cmd" */
 name|uint8_t
 name|sc_mcast
 index|[
@@ -356,14 +367,6 @@ name|IWI_FLAG_FW_INITED
 value|(1<< 0)
 define|#
 directive|define
-name|IWI_FLAG_SCANNING
-value|(1<< 1)
-define|#
-directive|define
-name|IWI_FLAG_FW_LOADING
-value|(1<< 2)
-define|#
-directive|define
 name|IWI_FLAG_BUSY
 value|(1<< 3)
 comment|/* busy sending a command */
@@ -372,6 +375,33 @@ directive|define
 name|IWI_FLAG_ASSOCIATED
 value|(1<< 4)
 comment|/* currently associated  */
+define|#
+directive|define
+name|IWI_FLAG_CHANNEL_SCAN
+value|(1<< 5)
+name|uint32_t
+name|fw_state
+decl_stmt|;
+define|#
+directive|define
+name|IWI_FW_IDLE
+value|0
+define|#
+directive|define
+name|IWI_FW_LOADING
+value|1
+define|#
+directive|define
+name|IWI_FW_ASSOCIATING
+value|2
+define|#
+directive|define
+name|IWI_FW_DISASSOCIATING
+value|3
+define|#
+directive|define
+name|IWI_FW_SCANNING
+value|4
 name|struct
 name|iwi_cmd_ring
 name|cmdq
@@ -474,9 +504,6 @@ name|int
 name|antenna
 decl_stmt|;
 name|int
-name|dwelltime
-decl_stmt|;
-name|int
 name|bluetooth
 decl_stmt|;
 name|struct
@@ -490,6 +517,9 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+name|u_int
+name|sc_scangen
+decl_stmt|;
 name|struct
 name|task
 name|sc_radiontask
@@ -502,39 +532,19 @@ decl_stmt|;
 comment|/* radio off processing */
 name|struct
 name|task
-name|sc_scanstarttask
-decl_stmt|;
-comment|/* scan start processing */
-name|struct
-name|task
 name|sc_scanaborttask
 decl_stmt|;
-comment|/* scan abort processing */
-name|struct
-name|task
-name|sc_scandonetask
-decl_stmt|;
-comment|/* scan completed processing */
-name|struct
-name|task
-name|sc_scantask
-decl_stmt|;
-comment|/* scan channel processing */
-name|struct
-name|task
-name|sc_setwmetask
-decl_stmt|;
-comment|/* set wme params processing */
-name|struct
-name|task
-name|sc_downtask
-decl_stmt|;
-comment|/* disassociate processing */
+comment|/* cancel active scan */
 name|struct
 name|task
 name|sc_restarttask
 decl_stmt|;
 comment|/* restart adapter processing */
+name|struct
+name|task
+name|sc_opstask
+decl_stmt|;
+comment|/* scan / auth processing */
 name|unsigned
 name|int
 name|sc_softled
@@ -591,6 +601,11 @@ name|callout
 name|sc_ledtimer
 decl_stmt|;
 comment|/* led off timer */
+name|struct
+name|callout
+name|sc_wdtimer
+decl_stmt|;
+comment|/* watchdog timer */
 name|int
 name|sc_tx_timer
 decl_stmt|;
@@ -599,9 +614,68 @@ name|sc_rfkill_timer
 decl_stmt|;
 comment|/* poll for rfkill change */
 name|int
-name|sc_scan_timer
+name|sc_state_timer
 decl_stmt|;
-comment|/* scan request timeout */
+comment|/* firmware state timer */
+name|int
+name|sc_busy_timer
+decl_stmt|;
+comment|/* firmware cmd timer */
+define|#
+directive|define
+name|IWI_SCAN_START
+value|(1<< 0)
+define|#
+directive|define
+name|IWI_SET_CHANNEL
+value|(1<< 1)
+define|#
+directive|define
+name|IWI_SCAN_END
+value|(1<< 2)
+define|#
+directive|define
+name|IWI_ASSOC
+value|(1<< 3)
+define|#
+directive|define
+name|IWI_DISASSOC
+value|(1<< 4)
+define|#
+directive|define
+name|IWI_SCAN_CURCHAN
+value|(1<< 5)
+define|#
+directive|define
+name|IWI_SCAN_ALLCHAN
+value|(1<< 6)
+define|#
+directive|define
+name|IWI_SET_WME
+value|(1<< 7)
+define|#
+directive|define
+name|IWI_CMD_MAXOPS
+value|10
+name|int
+name|sc_cmd
+index|[
+name|IWI_CMD_MAXOPS
+index|]
+decl_stmt|;
+name|int
+name|sc_cmd_cur
+decl_stmt|;
+comment|/* current queued scan task */
+name|int
+name|sc_cmd_next
+decl_stmt|;
+comment|/* last queued scan task */
+name|unsigned
+name|long
+name|sc_maxdwell
+decl_stmt|;
+comment|/* max dwell time for curchan */
 name|struct
 name|bpf_if
 modifier|*
@@ -655,9 +729,54 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IWI_STATE_BEGIN
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_state
+parameter_list|)
+value|do {			\ 	KASSERT(_sc->fw_state == IWI_FW_IDLE,			\ 	    ("iwi firmware not idle"));				\ 	_sc->fw_state = _state;					\ 	_sc->sc_state_timer = 5;				\ 	DPRINTF(("enter FW state %d\n",	_state));		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_STATE_END
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_state
+parameter_list|)
+value|do {			\ 	if (_sc->fw_state == _state)				\ 		DPRINTF(("exit FW state %d\n", _state));	\ 	 else							\ 		DPRINTF(("expected FW state %d, got %d\n",	\ 			    _state, _sc->fw_state));		\ 	_sc->fw_state = IWI_FW_IDLE;				\ 	wakeup(_sc);						\ 	_sc->sc_state_timer = 0;				\ } while (0)
+end_define
+
 begin_comment
 comment|/*  * NB.: This models the only instance of async locking in iwi_init_locked  *	and must be kept in sync.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IWI_LOCK_INIT
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|mtx_init(&(sc)->sc_mtx, device_get_nameunit((sc)->sc_dev), \ 	    MTX_NETWORK_LOCK, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_LOCK_DESTROY
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_destroy(&(sc)->sc_mtx)
+end_define
 
 begin_define
 define|#
@@ -669,11 +788,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|IWI_LOCK_CHECK
+name|IWI_LOCK_ASSERT
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {				\ 	if (!mtx_owned(&(sc)->sc_mtx))	\ 		DPRINTF(("%s iwi_lock not held\n", __func__));		\ } while (0)
+value|mtx_assert(&(sc)->sc_mtx, MA_OWNED)
 end_define
 
 begin_define
@@ -694,6 +813,46 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|do {			\ 	if (!__waslocked)			\ 		mtx_unlock(&(sc)->sc_mtx);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_CMD_LOCK_INIT
+parameter_list|(
+name|sc
+parameter_list|)
+value|do { \ 	snprintf((sc)->sc_cmdname, sizeof((sc)->sc_cmdname), "%s_cmd", \ 		device_get_nameunit((sc)->sc_dev)); \ 	mtx_init(&(sc)->sc_cmdlock, (sc)->sc_cmdname, NULL, MTX_DEF); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_CMD_LOCK_DESTROY
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_destroy(&(sc)->sc_cmdlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_CMD_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->sc_cmdlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWI_CMD_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->sc_cmdlock)
 end_define
 
 end_unit

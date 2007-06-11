@@ -138,7 +138,7 @@ argument|acl
 argument_list|)
 name|acl_hash
 expr_stmt|;
-name|u_int8_t
+name|uint8_t
 name|acl_macaddr
 index|[
 name|IEEE80211_ADDR_LEN
@@ -200,7 +200,7 @@ parameter_list|(
 name|addr
 parameter_list|)
 define|\
-value|(((const u_int8_t *)(addr))[IEEE80211_ADDR_LEN - 1] % ACL_HASHSIZE)
+value|(((const uint8_t *)(addr))[IEEE80211_ADDR_LEN - 1] % ACL_HASHSIZE)
 end_define
 
 begin_expr_stmt
@@ -368,7 +368,7 @@ name|_find_acl
 argument_list|(
 argument|struct aclstate *as
 argument_list|,
-argument|const u_int8_t *macaddr
+argument|const uint8_t *macaddr
 argument_list|)
 block|{ 	struct
 name|acl
@@ -483,7 +483,7 @@ modifier|*
 name|ic
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 name|mac
 index|[
 name|IEEE80211_ADDR_LEN
@@ -557,7 +557,7 @@ modifier|*
 name|ic
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 name|mac
 index|[
 name|IEEE80211_ADDR_LEN
@@ -772,7 +772,7 @@ modifier|*
 name|ic
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 name|mac
 index|[
 name|IEEE80211_ADDR_LEN

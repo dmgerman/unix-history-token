@@ -49,7 +49,7 @@ name|u_int
 name|wk_len
 decl_stmt|;
 comment|/* key length in bytes */
-name|u_int8_t
+name|uint8_t
 name|wk_key
 index|[
 name|IEEE80211_KEYBUF_SIZE
@@ -71,7 +71,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int16_t
+name|uint16_t
 name|ieee80211_keyix
 typedef|;
 end_typedef
@@ -84,14 +84,14 @@ begin_struct
 struct|struct
 name|ieee80211_key
 block|{
-name|u_int8_t
+name|uint8_t
 name|wk_keylen
 decl_stmt|;
 comment|/* key length in bytes */
-name|u_int8_t
+name|uint8_t
 name|wk_pad
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|wk_flags
 decl_stmt|;
 define|#
@@ -127,7 +127,7 @@ name|ieee80211_keyix
 name|wk_rxkeyix
 decl_stmt|;
 comment|/* optional h/w rx key index */
-name|u_int8_t
+name|uint8_t
 name|wk_key
 index|[
 name|IEEE80211_KEYBUF_SIZE
@@ -145,11 +145,11 @@ directive|define
 name|wk_rxmic
 value|wk_key+IEEE80211_KEYBUF_SIZE+8
 comment|/* XXX can't () right */
-name|u_int64_t
+name|uint64_t
 name|wk_keyrsc
 decl_stmt|;
 comment|/* key receive sequence counter */
-name|u_int64_t
+name|uint64_t
 name|wk_keytsc
 decl_stmt|;
 comment|/* key transmit sequence counter */
@@ -292,7 +292,7 @@ name|ieee80211_keyix
 name|cs_def_txkey
 decl_stmt|;
 comment|/* default/group tx key index */
-name|u_int16_t
+name|uint16_t
 name|cs_max_keyix
 decl_stmt|;
 comment|/* max h/w key index */
@@ -350,7 +350,7 @@ name|ieee80211_key
 modifier|*
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 name|mac
 index|[
 name|IEEE80211_ADDR_LEN
@@ -454,7 +454,7 @@ name|ieee80211_key
 modifier|*
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 name|macaddr
 index|[
 name|IEEE80211_ADDR_LEN
@@ -556,7 +556,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|keyid
 parameter_list|)
 function_decl|;

@@ -10,6 +10,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RT2661_NOISE_FLOOR
+value|-95
+end_define
+
+begin_define
+define|#
+directive|define
 name|RT2661_TX_RING_COUNT
 value|32
 end_define

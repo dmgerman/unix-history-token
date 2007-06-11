@@ -205,10 +205,10 @@ modifier|*
 name|ic
 parameter_list|,
 name|int
-name|min
+name|amin
 parameter_list|,
 name|int
-name|max
+name|amax
 parameter_list|)
 block|{
 comment|/* XXX bounds check? */
@@ -216,13 +216,13 @@ name|amrr
 operator|->
 name|amrr_min_success_threshold
 operator|=
-name|min
+name|amin
 expr_stmt|;
 name|amrr
 operator|->
 name|amrr_max_success_threshold
 operator|=
-name|max
+name|amax
 expr_stmt|;
 name|amrr
 operator|->

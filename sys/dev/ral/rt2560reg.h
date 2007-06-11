@@ -10,6 +10,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RT2560_DEFAULT_RSSI_CORR
+value|0x79
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2560_NOISE_FLOOR
+value|-95
+end_define
+
+begin_define
+define|#
+directive|define
 name|RT2560_TX_RING_COUNT
 value|48
 end_define
@@ -1770,6 +1784,13 @@ define|#
 directive|define
 name|RT2560_EEPROM_TXPOWER
 value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT2560_EEPROM_CALIBRATE
+value|62
 end_define
 
 begin_comment

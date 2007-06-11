@@ -25,6 +25,16 @@ begin_comment
 comment|/* for ieee80211_nodestats */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_ht.h>
+end_include
+
+begin_comment
+comment|/* for aggregation state */
+end_comment
+
 begin_comment
 comment|/*  * Each ieee80211com instance has a single timer that fires once a  * second.  This is used to initiate various work depending on the  * state of the instance: scanning (passive or active), ``transition''  * (waiting for a response to a management frame when operating  * as a station), and node inactivity processing (when operating  * as an AP).  For inactivity processing each node has a timeout  * set in it's ni_inact field that is decremented on each timeout  * and the node is reclaimed when the counter goes to zero.  We  * use different inactivity timeout values depending on whether  * the node is associated and authorized (either by 802.1x or  * open/shared key authentication) or associated but yet to be  * authorized.  The latter timeout is shorter to more aggressively  * reclaim nodes that leave part way through the 802.1x exchange.  */
 end_comment
@@ -99,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_TRANS_WAIT
-value|5
+value|2
 end_define
 
 begin_comment
@@ -125,42 +135,42 @@ parameter_list|(
 name|addr
 parameter_list|)
 define|\
-value|(((const u_int8_t *)(addr))[IEEE80211_ADDR_LEN - 1] % \ 		IEEE80211_NODE_HASHSIZE)
+value|(((const uint8_t *)(addr))[IEEE80211_ADDR_LEN - 1] % \ 		IEEE80211_NODE_HASHSIZE)
 end_define
 
 begin_struct
 struct|struct
 name|ieee80211_rsnparms
 block|{
-name|u_int8_t
+name|uint8_t
 name|rsn_mcastcipher
 decl_stmt|;
 comment|/* mcast/group cipher */
-name|u_int8_t
+name|uint8_t
 name|rsn_mcastkeylen
 decl_stmt|;
 comment|/* mcast key length */
-name|u_int8_t
+name|uint8_t
 name|rsn_ucastcipherset
 decl_stmt|;
 comment|/* unicast cipher set */
-name|u_int8_t
+name|uint8_t
 name|rsn_ucastcipher
 decl_stmt|;
 comment|/* selected unicast cipher */
-name|u_int8_t
+name|uint8_t
 name|rsn_ucastkeylen
 decl_stmt|;
 comment|/* unicast key length */
-name|u_int8_t
+name|uint8_t
 name|rsn_keymgmtset
 decl_stmt|;
 comment|/* key mangement algorithms */
-name|u_int8_t
+name|uint8_t
 name|rsn_keymgmt
 decl_stmt|;
 comment|/* selected key mgmt algo */
-name|u_int16_t
+name|uint16_t
 name|rsn_caps
 decl_stmt|;
 comment|/* capabilities */
@@ -217,11 +227,55 @@ name|u_int
 name|ni_scangen
 decl_stmt|;
 comment|/* gen# for timeout scan */
-name|u_int8_t
+name|uint8_t
 name|ni_authmode
 decl_stmt|;
 comment|/* authentication algorithm */
-name|u_int16_t
+name|uint8_t
+name|ni_ath_flags
+decl_stmt|;
+comment|/* Atheros feature flags */
+comment|/* NB: These must have the same values as IEEE80211_ATHC_* */
+define|#
+directive|define
+name|IEEE80211_NODE_TURBOP
+value|0x0001
+comment|/* Turbo prime enable */
+define|#
+directive|define
+name|IEEE80211_NODE_COMP
+value|0x0002
+comment|/* Compresssion enable */
+define|#
+directive|define
+name|IEEE80211_NODE_FF
+value|0x0004
+comment|/* Fast Frame capable */
+define|#
+directive|define
+name|IEEE80211_NODE_XR
+value|0x0008
+comment|/* Atheros WME enable */
+define|#
+directive|define
+name|IEEE80211_NODE_AR
+value|0x0010
+comment|/* AR capable */
+define|#
+directive|define
+name|IEEE80211_NODE_BOOST
+value|0x0080
+define|#
+directive|define
+name|IEEE80211_NODE_PSUPDATE
+value|0x0200
+comment|/* power save state changed */
+define|#
+directive|define
+name|IEEE80211_NODE_CHWUPDATE
+value|0x0400
+comment|/* 11n channel width change */
+name|uint16_t
 name|ni_flags
 decl_stmt|;
 comment|/* special-purpose state */
@@ -251,53 +305,77 @@ directive|define
 name|IEEE80211_NODE_AREF
 value|0x0020
 comment|/* authentication ref held */
-name|u_int16_t
+define|#
+directive|define
+name|IEEE80211_NODE_HT
+value|0x0040
+comment|/* HT enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_HTCOMPAT
+value|0x0080
+comment|/* HT setup w/ vendor OUI's */
+name|uint16_t
+name|ni_ath_defkeyix
+decl_stmt|;
+comment|/* Atheros def key index */
+name|uint16_t
 name|ni_associd
 decl_stmt|;
 comment|/* assoc response */
-name|u_int16_t
+name|uint16_t
 name|ni_txpower
 decl_stmt|;
 comment|/* current transmit power */
-name|u_int16_t
+name|uint16_t
 name|ni_vlan
 decl_stmt|;
 comment|/* vlan tag */
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|ni_challenge
 decl_stmt|;
 comment|/* shared-key challenge */
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|ni_wpa_ie
 decl_stmt|;
-comment|/* captured WPA/RSN ie */
-name|u_int8_t
+comment|/* captured WPA ie */
+name|uint8_t
+modifier|*
+name|ni_rsn_ie
+decl_stmt|;
+comment|/* captured RSN ie */
+name|uint8_t
 modifier|*
 name|ni_wme_ie
 decl_stmt|;
 comment|/* captured WME ie */
+name|uint8_t
+modifier|*
+name|ni_ath_ie
+decl_stmt|;
+comment|/* captured Atheros ie */
 define|#
 directive|define
 name|IEEE80211_NONQOS_TID
 value|16
 comment|/* index for non-QoS sta */
-name|u_int16_t
+name|uint16_t
 name|ni_txseqs
 index|[
 literal|17
 index|]
 decl_stmt|;
 comment|/* tx seq per-tid */
-name|u_int16_t
+name|uint16_t
 name|ni_rxseqs
 index|[
 literal|17
 index|]
 decl_stmt|;
 comment|/* rx seq previous per-tid*/
-name|u_int32_t
+name|uint32_t
 name|ni_rxfragstamp
 decl_stmt|;
 comment|/* time stamp of last rx frag */
@@ -321,22 +399,26 @@ name|ni_ucastkey
 decl_stmt|;
 comment|/* unicast key */
 comment|/* hardware */
-name|u_int32_t
+name|uint32_t
 name|ni_rstamp
 decl_stmt|;
 comment|/* recv timestamp */
-name|u_int8_t
+name|int8_t
 name|ni_rssi
 decl_stmt|;
 comment|/* recv ssi */
+name|int8_t
+name|ni_noise
+decl_stmt|;
+comment|/* noise floor */
 comment|/* header */
-name|u_int8_t
+name|uint8_t
 name|ni_macaddr
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ni_bssid
 index|[
 name|IEEE80211_ADDR_LEN
@@ -345,31 +427,31 @@ decl_stmt|;
 comment|/* beacon, probe response */
 union|union
 block|{
-name|u_int8_t
+name|uint8_t
 name|data
 index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|tsf
 decl_stmt|;
 block|}
 name|ni_tstamp
 union|;
 comment|/* from last rcv'd beacon */
-name|u_int16_t
+name|uint16_t
 name|ni_intval
 decl_stmt|;
 comment|/* beacon interval */
-name|u_int16_t
+name|uint16_t
 name|ni_capinfo
 decl_stmt|;
 comment|/* capabilities */
-name|u_int8_t
+name|uint8_t
 name|ni_esslen
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ni_essid
 index|[
 name|IEEE80211_NWID_LEN
@@ -385,31 +467,82 @@ name|ieee80211_channel
 modifier|*
 name|ni_chan
 decl_stmt|;
-comment|/* XXX multiple uses */
-name|u_int16_t
+name|uint16_t
 name|ni_fhdwell
 decl_stmt|;
 comment|/* FH only */
-name|u_int8_t
+name|uint8_t
 name|ni_fhindex
 decl_stmt|;
 comment|/* FH only */
-name|u_int8_t
+name|uint8_t
 name|ni_erp
 decl_stmt|;
 comment|/* ERP from beacon/probe resp */
-name|u_int16_t
+name|uint16_t
 name|ni_timoff
 decl_stmt|;
 comment|/* byte offset to TIM ie */
-name|u_int8_t
+name|uint8_t
 name|ni_dtim_period
 decl_stmt|;
 comment|/* DTIM period */
-name|u_int8_t
+name|uint8_t
 name|ni_dtim_count
 decl_stmt|;
 comment|/* DTIM count for last bcn */
+comment|/* 11n state */
+name|uint16_t
+name|ni_htcap
+decl_stmt|;
+comment|/* HT capabilities */
+name|uint8_t
+name|ni_htparam
+decl_stmt|;
+comment|/* HT params */
+name|uint8_t
+name|ni_htctlchan
+decl_stmt|;
+comment|/* HT control channel */
+name|uint8_t
+name|ni_ht2ndchan
+decl_stmt|;
+comment|/* HT 2nd channel */
+name|uint8_t
+name|ni_htopmode
+decl_stmt|;
+comment|/* HT operating mode */
+name|uint8_t
+name|ni_htstbc
+decl_stmt|;
+comment|/* HT */
+name|uint8_t
+name|ni_reqcw
+decl_stmt|;
+comment|/* requested tx channel width */
+name|uint8_t
+name|ni_chw
+decl_stmt|;
+comment|/* negotiated channel width */
+name|struct
+name|ieee80211_htrateset
+name|ni_htrates
+decl_stmt|;
+comment|/* negotiated ht rate set */
+name|struct
+name|ieee80211_tx_ampdu
+name|ni_tx_ampdu
+index|[
+name|WME_NUM_AC
+index|]
+decl_stmt|;
+name|struct
+name|ieee80211_rx_ampdu
+name|ni_rx_ampdu
+index|[
+name|WME_NUM_TID
+index|]
+decl_stmt|;
 comment|/* others */
 name|int
 name|ni_fails
@@ -448,6 +581,13 @@ name|M_80211_NODE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_ATH
+value|(IEEE80211_NODE_FF | IEEE80211_NODE_TURBOP)
+end_define
 
 begin_define
 define|#
@@ -637,30 +777,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ieee80211_begin_scan
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ieee80211_next_scan
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ieee80211_probe_curchan
 parameter_list|(
 name|struct
@@ -699,28 +815,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|ieee80211_cancel_scan
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ieee80211_end_scan
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|ieee80211_ibss_merge
 parameter_list|(
@@ -731,6 +825,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_scan_entry
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|ieee80211_sta_join
@@ -739,8 +839,9 @@ name|struct
 name|ieee80211com
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
-name|ieee80211_node
+name|ieee80211_scan_entry
 modifier|*
 parameter_list|)
 function_decl|;
@@ -797,6 +898,17 @@ index|[
 name|IEEE80211_NODE_HASHSIZE
 index|]
 expr_stmt|;
+name|struct
+name|ieee80211_node
+modifier|*
+modifier|*
+name|nt_keyixmap
+decl_stmt|;
+comment|/* key ix -> node map */
+name|int
+name|nt_keyixmax
+decl_stmt|;
+comment|/* keyixmap size */
 specifier|const
 name|char
 modifier|*
@@ -812,49 +924,12 @@ name|nt_scangen
 decl_stmt|;
 comment|/* gen# for timeout scan */
 name|int
-name|nt_inact_timer
-decl_stmt|;
-comment|/* inactivity timer */
-name|int
 name|nt_inact_init
 decl_stmt|;
 comment|/* initial node inact setting */
-name|struct
-name|ieee80211_node
-modifier|*
-modifier|*
-name|nt_keyixmap
-decl_stmt|;
-comment|/* key ix -> node map */
-name|int
-name|nt_keyixmax
-decl_stmt|;
-comment|/* keyixmap size */
-name|void
-function_decl|(
-modifier|*
-name|nt_timeout
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211_node_table
-modifier|*
-parameter_list|)
-function_decl|;
 block|}
 struct|;
 end_struct
-
-begin_function_decl
-name|void
-name|ieee80211_node_table_reset
-parameter_list|(
-name|struct
-name|ieee80211_node_table
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|struct
@@ -867,7 +942,7 @@ name|ieee80211_node_table
 modifier|*
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -884,7 +959,7 @@ name|ieee80211com
 modifier|*
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|macaddr
 parameter_list|)
@@ -902,7 +977,7 @@ name|ieee80211_node_table
 modifier|*
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -944,7 +1019,7 @@ name|ieee80211_node_table
 modifier|*
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 specifier|const
@@ -999,7 +1074,36 @@ name|struct
 name|ieee80211_frame_min
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
+name|keyix
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|func
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ieee80211_node
+modifier|*
+name|ieee80211_find_rxnode_withkey_debug
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_frame_min
+modifier|*
+parameter_list|,
+name|uint16_t
 name|keyix
 parameter_list|,
 specifier|const
@@ -1024,37 +1128,7 @@ name|ieee80211com
 modifier|*
 parameter_list|,
 specifier|const
-name|u_int8_t
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|func
-parameter_list|,
-name|int
-name|line
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|ieee80211_node
-modifier|*
-name|ieee80211_find_node_with_channel_debug
-parameter_list|(
-name|struct
-name|ieee80211_node_table
-modifier|*
-parameter_list|,
-specifier|const
-name|u_int8_t
-modifier|*
-name|macaddr
-parameter_list|,
-name|struct
-name|ieee80211_channel
+name|uint8_t
 modifier|*
 parameter_list|,
 specifier|const
@@ -1079,7 +1153,7 @@ name|ieee80211_node_table
 modifier|*
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|macaddr
 parameter_list|,
@@ -1087,7 +1161,7 @@ name|u_int
 name|ssidlen
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|ssid
 parameter_list|,
@@ -1170,21 +1244,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ieee80211_find_node_with_channel
-parameter_list|(
-name|nt
-parameter_list|,
-name|mac
-parameter_list|,
-name|c
-parameter_list|)
-define|\
-value|ieee80211_find_node_with_channel_debug(nt, mac, c, __func__, __LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ieee80211_find_node_with_ssid
 parameter_list|(
 name|nt
@@ -1226,7 +1285,7 @@ name|ieee80211_node_table
 modifier|*
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1265,7 +1324,7 @@ name|struct
 name|ieee80211_frame_min
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|keyix
 parameter_list|)
 function_decl|;
@@ -1282,29 +1341,7 @@ name|ieee80211com
 modifier|*
 parameter_list|,
 specifier|const
-name|u_int8_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|ieee80211_node
-modifier|*
-name|ieee80211_find_node_with_channel
-parameter_list|(
-name|struct
-name|ieee80211_node_table
-modifier|*
-parameter_list|,
-specifier|const
-name|u_int8_t
-modifier|*
-name|macaddr
-parameter_list|,
-name|struct
-name|ieee80211_channel
+name|uint8_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1321,7 +1358,7 @@ name|ieee80211_node_table
 modifier|*
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|macaddr
 parameter_list|,
@@ -1329,7 +1366,7 @@ name|u_int
 name|ssidlen
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|ssid
 parameter_list|)
@@ -1348,6 +1385,17 @@ parameter_list|(
 name|struct
 name|ieee80211_node
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_node_timeout
+parameter_list|(
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1421,157 +1469,18 @@ name|ieee80211_node_table
 modifier|*
 parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 name|macaddr
 index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|ieee80211_node_join
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
-name|ieee80211_node
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ieee80211_node_leave
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
-name|ieee80211_node
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_int8_t
-name|ieee80211_getrssi
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-name|ic
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Parameters supplied when adding/updating an entry in a  * scan cache.  Pointer variables should be set to NULL  * if no data is available.  Pointer references can be to  * local data; any information that is saved will be copied.  * All multi-byte values must be in host byte order.  */
-end_comment
-
-begin_struct
-struct|struct
+begin_struct_decl
+struct_decl|struct
 name|ieee80211_scanparams
-block|{
-name|u_int16_t
-name|capinfo
-decl_stmt|;
-comment|/* 802.11 capabilities */
-name|u_int16_t
-name|fhdwell
-decl_stmt|;
-comment|/* FHSS dwell interval */
-name|u_int8_t
-name|chan
-decl_stmt|;
-comment|/* */
-name|u_int8_t
-name|bchan
-decl_stmt|;
-name|u_int8_t
-name|fhindex
-decl_stmt|;
-name|u_int8_t
-name|erp
-decl_stmt|;
-name|u_int16_t
-name|bintval
-decl_stmt|;
-name|u_int8_t
-name|timoff
-decl_stmt|;
-name|u_int8_t
-modifier|*
-name|tim
-decl_stmt|;
-name|u_int8_t
-modifier|*
-name|tstamp
-decl_stmt|;
-name|u_int8_t
-modifier|*
-name|country
-decl_stmt|;
-name|u_int8_t
-modifier|*
-name|ssid
-decl_stmt|;
-name|u_int8_t
-modifier|*
-name|rates
-decl_stmt|;
-name|u_int8_t
-modifier|*
-name|xrates
-decl_stmt|;
-name|u_int8_t
-modifier|*
-name|wpa
-decl_stmt|;
-name|u_int8_t
-modifier|*
-name|wme
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_function_decl
-name|void
-name|ieee80211_add_scan
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|ieee80211_scanparams
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|ieee80211_frame
-modifier|*
-parameter_list|,
-name|int
-name|subtype
-parameter_list|,
-name|int
-name|rssi
-parameter_list|,
-name|int
-name|rstamp
-parameter_list|)
-function_decl|;
-end_function_decl
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|void
@@ -1612,6 +1521,66 @@ parameter_list|,
 specifier|const
 name|struct
 name|ieee80211_scanparams
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_node_join
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_node_leave
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int8_t
+name|ieee80211_getrssi
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_getsignal
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|int8_t
+modifier|*
+parameter_list|,
+name|int8_t
 modifier|*
 parameter_list|)
 function_decl|;

@@ -156,11 +156,13 @@ name|ast_tx_protect
 decl_stmt|;
 comment|/* tx frames with protection */
 name|u_int32_t
-name|ast_unused1
+name|ast_tx_ctsburst
 decl_stmt|;
+comment|/* tx frames with cts and bursting */
 name|u_int32_t
-name|ast_unused2
+name|ast_tx_ctsext
 decl_stmt|;
+comment|/* tx frames with cts extension */
 name|u_int32_t
 name|ast_rx_nombuf
 decl_stmt|;
@@ -228,10 +230,6 @@ name|int8_t
 name|ast_rx_rssi
 decl_stmt|;
 comment|/* rx rssi from histogram */
-name|int8_t
-name|ast_rx_noise
-decl_stmt|;
-comment|/* rx noise floor */
 name|u_int8_t
 name|ast_tx_rate
 decl_stmt|;
@@ -303,9 +301,33 @@ name|ast_tx_raw
 decl_stmt|;
 comment|/* tx frames through raw api */
 name|u_int32_t
+name|ast_ff_txok
+decl_stmt|;
+comment|/* fast frames tx'd successfully */
+name|u_int32_t
+name|ast_ff_txerr
+decl_stmt|;
+comment|/* fast frames tx'd w/ error */
+name|u_int32_t
+name|ast_ff_rx
+decl_stmt|;
+comment|/* fast frames rx'd */
+name|u_int32_t
+name|ast_ff_flush
+decl_stmt|;
+comment|/* fast frames flushed from staging q */
+name|u_int32_t
+name|ast_tx_qfull
+decl_stmt|;
+comment|/* tx dropped 'cuz of queue limit */
+name|int8_t
+name|ast_rx_noise
+decl_stmt|;
+comment|/* rx noise floor */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|29
+literal|22
 index|]
 decl_stmt|;
 block|}
@@ -384,7 +406,7 @@ begin_define
 define|#
 directive|define
 name|ATH_RX_RADIOTAP_PRESENT
-value|(		\ 	(1<< IEEE80211_RADIOTAP_TSFT)		| \ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_CHANNEL)	| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	(1<< IEEE80211_RADIOTAP_DBM_ANTSIGNAL)	| \ 	(1<< IEEE80211_RADIOTAP_DBM_ANTNOISE)	| \ 	0)
+value|(		\ 	(1<< IEEE80211_RADIOTAP_TSFT)		| \ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	(1<< IEEE80211_RADIOTAP_DBM_ANTSIGNAL)	| \ 	(1<< IEEE80211_RADIOTAP_DBM_ANTNOISE)	| \ 	(1<< IEEE80211_RADIOTAP_XCHANNEL)	| \ 	0)
 end_define
 
 begin_struct
@@ -404,22 +426,35 @@ decl_stmt|;
 name|u_int8_t
 name|wr_rate
 decl_stmt|;
-name|u_int16_t
-name|wr_chan_freq
-decl_stmt|;
-name|u_int16_t
-name|wr_chan_flags
-decl_stmt|;
-name|u_int8_t
+name|int8_t
 name|wr_antsignal
 decl_stmt|;
-name|u_int8_t
+name|int8_t
 name|wr_antnoise
 decl_stmt|;
 name|u_int8_t
 name|wr_antenna
 decl_stmt|;
+name|u_int8_t
+name|wr_pad
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_int32_t
+name|wr_chan_flags
+decl_stmt|;
+name|u_int16_t
+name|wr_chan_freq
+decl_stmt|;
+name|u_int8_t
+name|wr_chan_ieee
+decl_stmt|;
+name|int8_t
+name|wr_chan_maxpow
+decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -427,7 +462,7 @@ begin_define
 define|#
 directive|define
 name|ATH_TX_RADIOTAP_PRESENT
-value|(		\ 	(1<< IEEE80211_RADIOTAP_TSFT)		| \ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_CHANNEL)	| \ 	(1<< IEEE80211_RADIOTAP_DBM_TX_POWER)	| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	0)
+value|(		\ 	(1<< IEEE80211_RADIOTAP_TSFT)		| \ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_DBM_TX_POWER)	| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	(1<< IEEE80211_RADIOTAP_XCHANNEL)	| \ 	0)
 end_define
 
 begin_struct
@@ -447,19 +482,26 @@ decl_stmt|;
 name|u_int8_t
 name|wt_rate
 decl_stmt|;
-name|u_int16_t
-name|wt_chan_freq
-decl_stmt|;
-name|u_int16_t
-name|wt_chan_flags
-decl_stmt|;
 name|u_int8_t
 name|wt_txpower
 decl_stmt|;
 name|u_int8_t
 name|wt_antenna
 decl_stmt|;
+name|u_int32_t
+name|wt_chan_flags
+decl_stmt|;
+name|u_int16_t
+name|wt_chan_freq
+decl_stmt|;
+name|u_int8_t
+name|wt_chan_ieee
+decl_stmt|;
+name|int8_t
+name|wt_chan_maxpow
+decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 

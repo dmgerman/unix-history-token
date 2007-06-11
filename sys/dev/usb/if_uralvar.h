@@ -21,6 +21,27 @@ name|RAL_TX_LIST_COUNT
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|URAL_SCAN_START
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|URAL_SCAN_END
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|URAL_SET_CHANNEL
+value|3
+end_define
+
 begin_struct
 struct|struct
 name|ural_rx_radiotap_header
@@ -221,9 +242,17 @@ decl_stmt|;
 name|int
 name|sc_arg
 decl_stmt|;
+name|int
+name|sc_scan_action
+decl_stmt|;
+comment|/* should be an enum */
 name|struct
 name|usb_task
 name|sc_task
+decl_stmt|;
+name|struct
+name|usb_task
+name|sc_scantask
 decl_stmt|;
 name|struct
 name|ieee80211_amrr
@@ -261,10 +290,6 @@ decl_stmt|;
 name|struct
 name|callout
 name|watchdog_ch
-decl_stmt|;
-name|struct
-name|callout
-name|scan_ch
 decl_stmt|;
 name|struct
 name|callout

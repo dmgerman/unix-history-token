@@ -1671,6 +1671,34 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* 	 * IEEE 802.11 	 */
+block|{
+literal|"802.11 com lock"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+comment|/* 	 * Network drivers 	 */
+block|{
+literal|"network driver"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 comment|/* 	 * Netgraph 	 */
 block|{
 literal|"ng_node"

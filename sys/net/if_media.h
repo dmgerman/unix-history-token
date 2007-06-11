@@ -997,6 +997,21 @@ begin_comment
 comment|/* OFDM 27Mbps */
 end_comment
 
+begin_comment
+comment|/* NB: not enough bits to express MCS fully */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_MCS
+value|24
+end_define
+
+begin_comment
+comment|/* HT MCS rate */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1063,6 +1078,28 @@ begin_comment
 comment|/* Operate in monitor mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_HT40PLUS
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Operate in 11n HT40+ mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_HT40MINUS
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Operate in 11n HT40- mode */
+end_comment
+
 begin_comment
 comment|/* operating mode for multi-mode devices */
 end_comment
@@ -1109,6 +1146,28 @@ end_define
 
 begin_comment
 comment|/* 2Ghz, GFSK mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_11NA
+value|0x00050000
+end_define
+
+begin_comment
+comment|/* 5Ghz, HT mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_11NG
+value|0x00060000
+end_define
+
+begin_comment
+comment|/* 2Ghz, HT mode */
 end_comment
 
 begin_comment
@@ -1696,14 +1755,14 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_IEEE80211_OPTION_DESCRIPTIONS
-value|{			\ 	{ IFM_IEEE80211_ADHOC, "adhoc" },				\ 	{ IFM_IEEE80211_HOSTAP, "hostap" },				\ 	{ IFM_IEEE80211_IBSS, "ibss" },					\ 	{ IFM_IEEE80211_IBSSMASTER, "ibss-master" },			\ 	{ IFM_IEEE80211_TURBO, "turbo" },				\ 	{ IFM_IEEE80211_MONITOR, "monitor" },				\ 	{ 0, NULL },							\ }
+value|{			\ 	{ IFM_IEEE80211_ADHOC, "adhoc" },				\ 	{ IFM_IEEE80211_HOSTAP, "hostap" },				\ 	{ IFM_IEEE80211_IBSS, "ibss" },					\ 	{ IFM_IEEE80211_IBSSMASTER, "ibss-master" },			\ 	{ IFM_IEEE80211_TURBO, "turbo" },				\ 	{ IFM_IEEE80211_MONITOR, "monitor" },				\ 	{ IFM_IEEE80211_HT40MINUS, "ht-" },				\ 	{ IFM_IEEE80211_HT40PLUS, "ht+" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_IEEE80211_MODE_DESCRIPTIONS
-value|{			\ 	{ IFM_AUTO, "autoselect" },					\ 	{ IFM_IEEE80211_11A, "11a" },					\ 	{ IFM_IEEE80211_11B, "11b" },					\ 	{ IFM_IEEE80211_11G, "11g" },					\ 	{ IFM_IEEE80211_FH, "fh" },					\ 	{ 0, NULL },							\ }
+value|{			\ 	{ IFM_AUTO, "autoselect" },					\ 	{ IFM_IEEE80211_11A, "11a" },					\ 	{ IFM_IEEE80211_11B, "11b" },					\ 	{ IFM_IEEE80211_11G, "11g" },					\ 	{ IFM_IEEE80211_FH, "fh" },					\ 	{ IFM_IEEE80211_11NA, "11na" },					\ 	{ IFM_IEEE80211_11NG, "11ng" },					\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define

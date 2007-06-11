@@ -91,18 +91,18 @@ begin_struct
 struct|struct
 name|ieee80211_radiotap_header
 block|{
-name|u_int8_t
+name|uint8_t
 name|it_version
 decl_stmt|;
 comment|/* Version 0. Only increases 					 * for drastic changes, 					 * introduction of compatible 					 * new fields does not count. 					 */
-name|u_int8_t
+name|uint8_t
 name|it_pad
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|it_len
 decl_stmt|;
 comment|/* length of the whole 					 * header in bytes, including 					 * it_version, it_pad, 					 * it_len, and data fields. 					 */
-name|u_int32_t
+name|uint32_t
 name|it_present
 decl_stmt|;
 comment|/* A bitmap telling which 					 * fields are present. Set bit 31 					 * (0x80000000) to extend the 					 * bitmap by another 32 bits. 					 * Additional extensions are made 					 * by setting bit 31. 					 */
@@ -117,7 +117,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Name                                 Data type       Units  * ----                                 ---------       -----  *  * IEEE80211_RADIOTAP_TSFT              u_int64_t       microseconds  *  *      Value in microseconds of the MAC's 64-bit 802.11 Time  *      Synchronization Function timer when the first bit of the  *      MPDU arrived at the MAC. For received frames, only.  *  * IEEE80211_RADIOTAP_CHANNEL           2 x u_int16_t   MHz, bitmap  *  *      Tx/Rx frequency in MHz, followed by flags (see below).  *  * IEEE80211_RADIOTAP_FHSS              u_int16_t       see below  *  *      For frequency-hopping radios, the hop set (first byte)  *      and pattern (second byte).  *  * IEEE80211_RADIOTAP_RATE              u_int8_t        500kb/s  *  *      Tx/Rx data rate  *  * IEEE80211_RADIOTAP_DBM_ANTSIGNAL     int8_t          decibels from  *                                                      one milliwatt (dBm)  *  *      RF signal power at the antenna, decibel difference from  *      one milliwatt.  *  * IEEE80211_RADIOTAP_DBM_ANTNOISE      int8_t          decibels from  *                                                      one milliwatt (dBm)  *  *      RF noise power at the antenna, decibel difference from one  *      milliwatt.  *  * IEEE80211_RADIOTAP_DB_ANTSIGNAL      u_int8_t        decibel (dB)  *  *      RF signal power at the antenna, decibel difference from an  *      arbitrary, fixed reference.  *  * IEEE80211_RADIOTAP_DB_ANTNOISE       u_int8_t        decibel (dB)  *  *      RF noise power at the antenna, decibel difference from an  *      arbitrary, fixed reference point.  *  * IEEE80211_RADIOTAP_LOCK_QUALITY      u_int16_t       unitless  *  *      Quality of Barker code lock. Unitless. Monotonically  *      nondecreasing with "better" lock strength. Called "Signal  *      Quality" in datasheets.  (Is there a standard way to measure  *      this?)  *  * IEEE80211_RADIOTAP_TX_ATTENUATION    u_int16_t       unitless  *  *      Transmit power expressed as unitless distance from max  *      power set at factory calibration.  0 is max power.  *      Monotonically nondecreasing with lower power levels.  *  * IEEE80211_RADIOTAP_DB_TX_ATTENUATION u_int16_t       decibels (dB)  *  *      Transmit power expressed as decibel distance from max power  *      set at factory calibration.  0 is max power.  Monotonically  *      nondecreasing with lower power levels.  *  * IEEE80211_RADIOTAP_DBM_TX_POWER      int8_t          decibels from  *                                                      one milliwatt (dBm)  *  *      Transmit power expressed as dBm (decibels from a 1 milliwatt  *      reference). This is the absolute power level measured at  *      the antenna port.  *  * IEEE80211_RADIOTAP_FLAGS             u_int8_t        bitmap  *  *      Properties of transmitted and received frames. See flags  *      defined below.  *  * IEEE80211_RADIOTAP_ANTENNA           u_int8_t        antenna index  *  *      Unitless indication of the Rx/Tx antenna for this packet.  *      The first antenna is antenna 0.  */
+comment|/*  * Name                                 Data type       Units  * ----                                 ---------       -----  *  * IEEE80211_RADIOTAP_TSFT              uint64_t        microseconds  *  *      Value in microseconds of the MAC's 64-bit 802.11 Time  *      Synchronization Function timer when the first bit of the  *      MPDU arrived at the MAC. For received frames, only.  *  * IEEE80211_RADIOTAP_CHANNEL           2 x uint16_t    MHz, bitmap  *  *      Tx/Rx frequency in MHz, followed by flags (see below).  *  * IEEE80211_RADIOTAP_FHSS              uint16_t        see below  *  *      For frequency-hopping radios, the hop set (first byte)  *      and pattern (second byte).  *  * IEEE80211_RADIOTAP_RATE              uint8_t         500kb/s or index  *  *      Tx/Rx data rate.  If bit 0x80 is set then it represents an  *	an MCS index and not an IEEE rate.  *  * IEEE80211_RADIOTAP_DBM_ANTSIGNAL     int8_t          decibels from  *                                                      one milliwatt (dBm)  *  *      RF signal power at the antenna, decibel difference from  *      one milliwatt.  *  * IEEE80211_RADIOTAP_DBM_ANTNOISE      int8_t          decibels from  *                                                      one milliwatt (dBm)  *  *      RF noise power at the antenna, decibel difference from one  *      milliwatt.  *  * IEEE80211_RADIOTAP_DB_ANTSIGNAL      uint8_t         decibel (dB)  *  *      RF signal power at the antenna, decibel difference from an  *      arbitrary, fixed reference.  *  * IEEE80211_RADIOTAP_DB_ANTNOISE       uint8_t         decibel (dB)  *  *      RF noise power at the antenna, decibel difference from an  *      arbitrary, fixed reference point.  *  * IEEE80211_RADIOTAP_LOCK_QUALITY      uint16_t        unitless  *  *      Quality of Barker code lock. Unitless. Monotonically  *      nondecreasing with "better" lock strength. Called "Signal  *      Quality" in datasheets.  (Is there a standard way to measure  *      this?)  *  * IEEE80211_RADIOTAP_TX_ATTENUATION    uint16_t        unitless  *  *      Transmit power expressed as unitless distance from max  *      power set at factory calibration.  0 is max power.  *      Monotonically nondecreasing with lower power levels.  *  * IEEE80211_RADIOTAP_DB_TX_ATTENUATION uint16_t        decibels (dB)  *  *      Transmit power expressed as decibel distance from max power  *      set at factory calibration.  0 is max power.  Monotonically  *      nondecreasing with lower power levels.  *  * IEEE80211_RADIOTAP_DBM_TX_POWER      int8_t          decibels from  *                                                      one milliwatt (dBm)  *  *      Transmit power expressed as dBm (decibels from a 1 milliwatt  *      reference). This is the absolute power level measured at  *      the antenna port.  *  * IEEE80211_RADIOTAP_FLAGS             uint8_t         bitmap  *  *      Properties of transmitted and received frames. See flags  *      defined below.  *  * IEEE80211_RADIOTAP_ANTENNA           uint8_t         antenna index  *  *      Unitless indication of the Rx/Tx antenna for this packet.  *      The first antenna is antenna 0.  *  * IEEE80211_RADIOTAP_XCHANNEL          uint32_t        bitmap  *                                      uint16_t        MHz  *                                      uint8_t         channel number  *                                      int8_t          .5 dBm  *  *      Extended channel specification: flags (see below) followed by  *      frequency in MHz, the corresponding IEEE channel number, and  *      finally the maximum regulatory transmit power cap in .5 dBm  *      units.  This property supersedes IEEE80211_RADIOTAP_CHANNEL  *      and only one of the two should be present.  */
 end_comment
 
 begin_enum
@@ -180,6 +180,10 @@ name|IEEE80211_RADIOTAP_DB_ANTNOISE
 init|=
 literal|13
 block|,
+name|IEEE80211_RADIOTAP_XCHANNEL
+init|=
+literal|14
+block|,
 name|IEEE80211_RADIOTAP_EXT
 init|=
 literal|31
@@ -201,7 +205,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_TURBO
-value|0x0010
+value|0x00010
 end_define
 
 begin_comment
@@ -212,7 +216,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_CCK
-value|0x0020
+value|0x00020
 end_define
 
 begin_comment
@@ -223,7 +227,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_OFDM
-value|0x0040
+value|0x00040
 end_define
 
 begin_comment
@@ -234,7 +238,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_2GHZ
-value|0x0080
+value|0x00080
 end_define
 
 begin_comment
@@ -245,7 +249,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_5GHZ
-value|0x0100
+value|0x00100
 end_define
 
 begin_comment
@@ -256,7 +260,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_PASSIVE
-value|0x0200
+value|0x00200
 end_define
 
 begin_comment
@@ -267,7 +271,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_DYN
-value|0x0400
+value|0x00400
 end_define
 
 begin_comment
@@ -278,11 +282,88 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_GFSK
-value|0x0800
+value|0x00800
 end_define
 
 begin_comment
 comment|/* GFSK channel (FHSS PHY) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_GSM
+value|0x01000
+end_define
+
+begin_comment
+comment|/* 900 MHz spectrum channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_STURBO
+value|0x02000
+end_define
+
+begin_comment
+comment|/* 11a static turbo channel only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_HALF
+value|0x04000
+end_define
+
+begin_comment
+comment|/* Half rate channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_QUARTER
+value|0x08000
+end_define
+
+begin_comment
+comment|/* Quarter rate channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_HT20
+value|0x10000
+end_define
+
+begin_comment
+comment|/* HT 20 channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_HT40U
+value|0x20000
+end_define
+
+begin_comment
+comment|/* HT 40 channel w/ ext above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_HT40D
+value|0x40000
+end_define
+
+begin_comment
+comment|/* HT 40 channel w/ ext below */
 end_comment
 
 begin_endif
@@ -373,6 +454,17 @@ end_define
 
 begin_comment
 comment|/* does not pass FCS check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RADIOTAP_F_SHORTGI
+value|0x80
+end_define
+
+begin_comment
+comment|/* HT short GI */
 end_comment
 
 begin_endif
