@@ -870,6 +870,19 @@ name|maxsegsz
 operator|=
 name|boundary
 expr_stmt|;
+if|if
+condition|(
+name|maxsegsz
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 comment|/* Return a NULL tag on failure */
 operator|*
 name|dmat
