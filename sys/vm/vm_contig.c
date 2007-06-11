@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -171,6 +177,9 @@ name|struct
 name|mount
 modifier|*
 name|mp
+decl_stmt|;
+name|int
+name|vfslocked
 decl_stmt|;
 name|object
 operator|=
@@ -313,6 +322,15 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+argument_list|)
+expr_stmt|;
 name|vn_lock
 argument_list|(
 name|vp
@@ -352,6 +370,11 @@ argument_list|,
 literal|0
 argument_list|,
 name|curthread
+argument_list|)
+expr_stmt|;
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
 argument_list|)
 expr_stmt|;
 name|vm_object_deallocate
