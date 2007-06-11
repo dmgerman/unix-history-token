@@ -526,9 +526,6 @@ index|[
 name|CUE_ENDPT_MAX
 index|]
 decl_stmt|;
-name|int
-name|cue_unit
-decl_stmt|;
 name|u_int8_t
 name|cue_mctab
 index|[
