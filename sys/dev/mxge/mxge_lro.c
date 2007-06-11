@@ -338,6 +338,14 @@ name|lro
 operator|->
 name|len
 expr_stmt|;
+name|lro
+operator|->
+name|m_head
+operator|->
+name|m_flags
+operator||=
+name|M_LRO
+expr_stmt|;
 comment|/* incorporate the latest ack into the tcp header */
 name|tcp
 operator|=
