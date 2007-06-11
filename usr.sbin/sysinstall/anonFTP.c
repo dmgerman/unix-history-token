@@ -60,14 +60,14 @@ begin_define
 define|#
 directive|define
 name|FTP_GID
-value|5
+value|14
 end_define
 
 begin_define
 define|#
 directive|define
 name|FTP_GROUP
-value|"operator"
+value|"ftp"
 end_define
 
 begin_define
@@ -601,7 +601,7 @@ name|tptr
 operator|=
 name|msgGetInput
 argument_list|(
-literal|"14"
+literal|"ftp"
 argument_list|,
 literal|"What group name to use for gid %d ?"
 argument_list|,
