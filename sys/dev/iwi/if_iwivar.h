@@ -346,6 +346,12 @@ modifier|*
 name|sc_tq
 decl_stmt|;
 comment|/* private task queue */
+name|struct
+name|taskqueue
+modifier|*
+name|sc_tq2
+decl_stmt|;
+comment|/* reset task queue */
 if|#
 directive|if
 name|__FreeBSD_version
