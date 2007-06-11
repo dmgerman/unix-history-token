@@ -2107,6 +2107,11 @@ name|p_realtimer
 decl_stmt|;
 comment|/* (c) Alarm timer. */
 name|struct
+name|rusage
+name|p_ru
+decl_stmt|;
+comment|/* (a) Exit information. */
+name|struct
 name|rusage_ext
 name|p_rux
 decl_stmt|;
@@ -2330,11 +2335,6 @@ name|u_short
 name|p_acflag
 decl_stmt|;
 comment|/* (c) Accounting flags. */
-name|struct
-name|rusage
-name|p_ru
-decl_stmt|;
-comment|/* (a) Exit information. */
 name|struct
 name|proc
 modifier|*
