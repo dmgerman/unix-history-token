@@ -150,6 +150,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_FWMEM
+value|"/dev/fwmem"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_HALT
 value|"/sbin/halt"
 end_define
