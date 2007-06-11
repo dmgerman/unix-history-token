@@ -575,11 +575,6 @@ decl_stmt|;
 name|usbd_status
 name|error
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|devname
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -604,15 +599,6 @@ operator|->
 name|sc_udev
 operator|=
 name|dev
-expr_stmt|;
-name|devname
-operator|=
-name|device_get_nameunit
-argument_list|(
-name|ucom
-operator|->
-name|sc_dev
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -640,11 +626,13 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"\n%s: failed to set configuration, err=%s\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"failed to set configuration, err=%s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -673,11 +661,13 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"\n%s: failed to get interface, err=%s\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"failed to get interface, err=%s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -753,11 +743,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: could not read endpoint descriptor\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"could not read endpoint descriptor\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -839,11 +831,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: missing endpoint\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"missing endpoint\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1402,16 +1396,13 @@ name|sc
 init|=
 name|vsc
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"%s: break %s!\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"%s: break %s!\n"
 argument_list|,
 name|onoff
 condition|?

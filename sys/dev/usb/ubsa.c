@@ -1315,11 +1315,6 @@ name|usb_endpoint_descriptor_t
 modifier|*
 name|ed
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|devname
-decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
@@ -1374,15 +1369,6 @@ name|uaa
 operator|->
 name|iface
 expr_stmt|;
-name|devname
-operator|=
-name|device_get_nameunit
-argument_list|(
-name|ucom
-operator|->
-name|sc_dev
-argument_list|)
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -1434,11 +1420,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: failed to set configuration: %s\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"failed to set configuration: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -1473,16 +1461,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: failed to get configuration descriptor\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|ucom
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"failed to get configuration descriptor\n"
 argument_list|)
 expr_stmt|;
 name|ucom
@@ -1515,11 +1500,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: failed to get interface: %s\n"
+name|ucom
+operator|->
+name|sc_dev
 argument_list|,
-name|devname
+literal|"failed to get interface: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -1589,16 +1576,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: no endpoint descriptor for %d\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|ucom
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"no endpoint descriptor for %d\n"
 argument_list|,
 name|i
 argument_list|)
@@ -1749,16 +1733,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: Could not find interrupt in\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|ucom
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"Could not find interrupt in\n"
 argument_list|)
 expr_stmt|;
 name|ucom
@@ -1790,16 +1771,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: Could not find data bulk in\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|ucom
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"Could not find data bulk in\n"
 argument_list|)
 expr_stmt|;
 name|ucom
@@ -1822,16 +1800,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: Could not find data bulk out\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|ucom
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"Could not find data bulk out\n"
 argument_list|)
 expr_stmt|;
 name|ucom
@@ -2108,18 +2083,15 @@ if|if
 condition|(
 name|err
 condition|)
-name|printf
-argument_list|(
-literal|"%s: ubsa_request: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"ubsa_request: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2432,19 +2404,15 @@ name|speed
 expr_stmt|;
 break|break;
 default|default:
-name|printf
-argument_list|(
-literal|"%s: ubsa_param: unsupported baudrate, "
-literal|"forcing default of 9600\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"ubsa_param: unsupported baud, forcing default of 9600\n"
 argument_list|)
 expr_stmt|;
 name|value
@@ -2627,19 +2595,16 @@ literal|3
 expr_stmt|;
 break|break;
 default|default:
-name|printf
-argument_list|(
-literal|"%s: ubsa_param: unsupported databits requested, "
-literal|"forcing default of 8\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"ubsa_param: unsupported databits requested, "
+literal|"forcing default of 8\n"
 argument_list|)
 expr_stmt|;
 name|value
@@ -2994,18 +2959,15 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: cannot open interrupt pipe (addr %d)\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"cannot open interrupt pipe (addr %d)\n"
 argument_list|,
 name|sc
 operator|->
@@ -3090,18 +3052,15 @@ if|if
 condition|(
 name|err
 condition|)
-name|printf
-argument_list|(
-literal|"%s: abort interrupt pipe failed: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"abort interrupt pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -3122,18 +3081,15 @@ if|if
 condition|(
 name|err
 condition|)
-name|printf
-argument_list|(
-literal|"%s: close interrupt pipe failed: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"close interrupt pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
