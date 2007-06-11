@@ -673,16 +673,13 @@ name|USB_ATTACH_SUCCESS_RETURN
 expr_stmt|;
 name|nobulk
 label|:
-name|printf
-argument_list|(
-literal|"%s: could not find %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"could not find %s\n"
 argument_list|,
 name|ermsg
 argument_list|)
@@ -982,20 +979,11 @@ if|if
 condition|(
 name|err
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"usbd_do_request_flags returned %#x\n"
-argument_list|,
-name|err
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EIO
 operator|)
 return|;
-block|}
 return|return
 operator|(
 literal|0
