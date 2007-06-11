@@ -1273,6 +1273,17 @@ begin_comment
 comment|/* Ignore runningbufspace check */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDP_INBDFLUSH
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Already in BO_BDFLUSH, do not recurse */
+end_comment
+
 begin_comment
 comment|/*  * Reasons that the current thread can not be run yet.  * More than one may apply.  */
 end_comment
