@@ -2183,6 +2183,24 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If the separator we found is the first '/', find 		 * the next one.  (This is a pathological case that 		 * occurs for paths of exactly 101 bytes that start with 		 * '/'; it occurs because the separating '/' is not 		 * stored explicitly and the reconstruction assumes that 		 * an empty prefix means there is no '/' separator.) 		 */
+if|if
+condition|(
+name|p
+operator|==
+name|pp
+condition|)
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|p
+operator|+
+literal|1
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
 comment|/* 		 * If there is no path separator, or the prefix or 		 * remaining name are too large, return an error. 		 */
 if|if
 condition|(
