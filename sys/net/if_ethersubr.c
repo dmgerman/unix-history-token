@@ -2587,6 +2587,9 @@ operator|->
 name|ether_type
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|m
@@ -2654,6 +2657,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|m
