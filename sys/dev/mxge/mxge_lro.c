@@ -1128,9 +1128,7 @@ return|;
 block|}
 if|if
 condition|(
-name|lro
-operator|->
-name|timestamp
+name|opt_bytes
 condition|)
 block|{
 name|uint32_t
