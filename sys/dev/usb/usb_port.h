@@ -384,14 +384,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|USB_MATCH_SETUP
-define|\
-value|sc->sc_dev = self
-end_define
-
-begin_define
-define|#
-directive|define
 name|USB_ATTACH
 parameter_list|(
 name|dname
@@ -431,14 +423,6 @@ define|#
 directive|define
 name|USB_ATTACH_SUCCESS_RETURN
 value|return 0
-end_define
-
-begin_define
-define|#
-directive|define
-name|USB_ATTACH_SETUP
-define|\
-value|do { \ 		sc->sc_dev = self; \ 		device_set_desc_copy(self, devinfo); \ 	} while (0)
 end_define
 
 begin_define
