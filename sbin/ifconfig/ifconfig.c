@@ -3834,7 +3834,7 @@ define|#
 directive|define
 name|IFCAPBITS
 define|\
-value|"\020\1RXCSUM\2TXCSUM\3NETCONS\4VLAN_MTU\5VLAN_HWTAGGING\6JUMBO_MTU\7POLLING" \ "\10VLAN_HWCSUM\11TSO4\12TSO6"
+value|"\020\1RXCSUM\2TXCSUM\3NETCONS\4VLAN_MTU\5VLAN_HWTAGGING\6JUMBO_MTU\7POLLING" \ "\10VLAN_HWCSUM\11TSO4\12TSO6\13LRO"
 end_define
 
 begin_comment
@@ -5168,6 +5168,25 @@ literal|"-tso"
 argument_list|,
 operator|-
 name|IFCAP_TSO
+argument_list|,
+name|setifcap
+argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
+literal|"lro"
+argument_list|,
+name|IFCAP_LRO
+argument_list|,
+name|setifcap
+argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
+literal|"-lro"
+argument_list|,
+operator|-
+name|IFCAP_LRO
 argument_list|,
 name|setifcap
 argument_list|)
