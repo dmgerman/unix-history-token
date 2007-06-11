@@ -404,42 +404,6 @@ value|_IOR(ISP_IOC, 12, struct isp_hba_device)
 end_define
 
 begin_comment
-comment|/*  * Set some internal parameters. This doesn't take effect until  * the chip is reset.  *  * Each parameter is generalized to be a name string with an integer value.  *  * Known parameters are:  *  *	Name				Value Range  *	  *	"framelength"			512,1024,2048  *	"exec_throttle"			16..255  *	"fullduplex"			0,1  *	"loopid"			0..125  */
-end_comment
-
-begin_struct
-struct|struct
-name|isp_fc_param
-block|{
-name|char
-name|param_name
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* null terminated */
-name|uint32_t
-name|parameter
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|ISP_GET_FC_PARAM
-value|_IOWR(ISP_IOC, 98, struct isp_fc_param)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SET_FC_PARAM
-value|_IOWR(ISP_IOC, 99, struct isp_fc_param)
-end_define
-
-begin_comment
 comment|/*  * Various Reset Goodies  */
 end_comment
 
