@@ -742,6 +742,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFCAP_LRO
+value|0x0400
+end_define
+
+begin_comment
+comment|/* can do Large Receive Offload */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFCAP_HWCSUM
 value|(IFCAP_RXCSUM | IFCAP_TXCSUM)
 end_define
