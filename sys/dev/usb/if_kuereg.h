@@ -554,9 +554,6 @@ name|KUE_ENDPT_MAX
 index|]
 decl_stmt|;
 name|int
-name|kue_unit
-decl_stmt|;
-name|int
 name|kue_if_flags
 decl_stmt|;
 name|u_int16_t

@@ -1087,13 +1087,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: failed to load code segment: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"failed to load code segment: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -1133,13 +1133,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: failed to load fixup segment: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"failed to load fixup segment: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -1179,13 +1179,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: failed to load trigger segment: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"failed to load trigger segment: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -1457,13 +1457,13 @@ name|kue_iface
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: getting interface handle failed\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"getting interface handle failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1625,15 +1625,6 @@ name|uaa
 operator|->
 name|device
 expr_stmt|;
-name|sc
-operator|->
-name|kue_unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|self
-argument_list|)
-expr_stmt|;
 name|id
 operator|=
 name|usbd_get_interface_descriptor
@@ -1677,13 +1668,13 @@ operator|!
 name|ed
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: couldn't get ep %d\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"couldn't get ep %d\n"
 argument_list|,
 name|i
 argument_list|)
@@ -1914,13 +1905,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: can not if_alloc()\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|KUE_UNLOCK
@@ -1951,9 +1942,12 @@ name|ifp
 argument_list|,
 literal|"kue"
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -2285,17 +2279,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: no memory for rx list "
-literal|"-- packet dropped!\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|kue_dev
-argument_list|)
+argument_list|,
+literal|"no memory for rx list "
+literal|"-- packet dropped!\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -2483,13 +2474,13 @@ operator|->
 name|kue_rx_notice
 argument_list|)
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: usb error on rx: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"usb error on rx: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2785,13 +2776,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: usb error on tx: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"usb error on tx: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -3388,13 +3379,13 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: tx list init failed\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"tx list init failed\n"
 argument_list|)
 expr_stmt|;
 name|KUE_UNLOCK
@@ -3424,13 +3415,13 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: rx list init failed\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"rx list init failed\n"
 argument_list|)
 expr_stmt|;
 name|KUE_UNLOCK
@@ -3478,13 +3469,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: open rx pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"open rx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -3530,13 +3521,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: open tx pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"open tx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -3911,13 +3902,13 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: watchdog timeout\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 name|c
@@ -4053,13 +4044,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: abort rx pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"abort rx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -4085,13 +4076,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: close rx pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"close rx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -4139,13 +4130,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: abort tx pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"abort tx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -4171,13 +4162,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: close tx pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"close tx pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -4225,13 +4216,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: abort intr pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"abort intr pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -4257,13 +4248,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"kue%d: close intr pipe failed: %s\n"
-argument_list|,
 name|sc
 operator|->
-name|kue_unit
+name|kue_dev
+argument_list|,
+literal|"close intr pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
