@@ -1225,7 +1225,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * Decide whether to commit the audit record by checking the error 	 * value from the system call and using the appropriate audit mask. 	 * 	 * XXXAUDIT: Synchronize access to audit_nae_mask? 	 */
+comment|/* 	 * Decide whether to commit the audit record by checking the error 	 * value from the system call and using the appropriate audit mask. 	 */
 if|if
 condition|(
 name|ar
@@ -1323,7 +1323,7 @@ break|break;
 case|case
 name|AUE_AUDITON
 case|:
-comment|/* Convert the auditon() command to an event */
+comment|/* Convert the auditon() command to an event. */
 name|ar
 operator|->
 name|k_ar
@@ -1477,8 +1477,6 @@ name|ar_retval
 operator|=
 name|retval
 expr_stmt|;
-comment|/* 	 * We might want to do some system-wide post-filtering here at some 	 * point. 	 */
-comment|/* 	 * Timestamp system call end. 	 */
 name|nanotime
 argument_list|(
 operator|&
@@ -1845,10 +1843,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Copy audit state from an existing credential to a new credential.  */
-end_comment
-
 begin_function
 name|void
 name|audit_cred_copy
@@ -1887,10 +1881,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Free audit state from a credential when the credential is freed.  */
-end_comment
-
 begin_function
 name|void
 name|audit_cred_destroy
@@ -1900,28 +1890,8 @@ name|ucred
 modifier|*
 name|cred
 parameter_list|)
-block|{
-name|bzero
-argument_list|(
-operator|&
-name|cred
-operator|->
-name|cr_audit
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cred
-operator|->
-name|cr_audit
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
+block|{  }
 end_function
-
-begin_comment
-comment|/*  * Allocate audit state for a new credential.  */
-end_comment
 
 begin_function
 name|void
@@ -1964,7 +1934,16 @@ name|ucred
 modifier|*
 name|cred
 parameter_list|)
-block|{  }
+block|{
+name|cred
+operator|->
+name|cr_audit
+operator|.
+name|ai_auid
+operator|=
+name|AU_DEFAUDITID
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -1988,10 +1967,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Allocate storage for a new thread.  */
-end_comment
-
 begin_function
 name|void
 name|audit_thread_alloc
@@ -2010,10 +1985,6 @@ name|NULL
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Thread destruction.  */
-end_comment
 
 begin_function
 name|void

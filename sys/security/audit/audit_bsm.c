@@ -135,10 +135,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * Forward declares.  */
-end_comment
-
 begin_function_decl
 specifier|static
 name|void
