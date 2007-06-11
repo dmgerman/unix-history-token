@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -35,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_define
@@ -54,6 +66,17 @@ modifier|*
 name|progname
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MSG_11N
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* 11n mode debug */
+end_comment
 
 begin_define
 define|#
@@ -358,6 +381,12 @@ name|flags
 index|[]
 init|=
 block|{
+block|{
+literal|"11n"
+block|,
+name|IEEE80211_MSG_11N
+block|}
+block|,
 block|{
 literal|"debug"
 block|,
@@ -735,8 +764,6 @@ modifier|*
 name|sep
 decl_stmt|;
 name|int
-name|c
-decl_stmt|,
 name|op
 decl_stmt|,
 name|i
@@ -912,9 +939,12 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|>=
+operator|<
 literal|0
-operator|&&
+condition|)
+continue|continue;
+if|if
+condition|(
 name|strncmp
 argument_list|(
 name|parent
@@ -1149,12 +1179,17 @@ operator|==
 literal|0
 condition|)
 block|{
+name|int
+name|c
+init|=
+operator|*
+name|cp
+decl_stmt|;
 if|if
 condition|(
 name|isdigit
 argument_list|(
-operator|*
-name|cp
+name|c
 argument_list|)
 condition|)
 name|bit
@@ -1175,9 +1210,14 @@ literal|1
 argument_list|,
 literal|"unknown flag %.*s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|tp
 operator|-
 name|cp
+argument_list|)
 argument_list|,
 name|cp
 argument_list|)
