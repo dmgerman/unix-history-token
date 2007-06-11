@@ -3040,6 +3040,7 @@ specifier|static
 name|int
 name|getmaxrate
 parameter_list|(
+specifier|const
 name|uint8_t
 name|rates
 index|[
@@ -3196,6 +3197,7 @@ operator|*
 literal|1024
 index|]
 decl_stmt|;
+specifier|const
 name|uint8_t
 modifier|*
 name|cp
@@ -3203,6 +3205,7 @@ decl_stmt|,
 modifier|*
 name|vp
 decl_stmt|;
+specifier|const
 name|struct
 name|ieee80211req_scan_result
 modifier|*
@@ -3281,6 +3284,7 @@ block|{
 name|sr
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ieee80211req_scan_result
 operator|*
@@ -3365,14 +3369,16 @@ expr_stmt|;
 name|vp
 operator|=
 operator|(
+operator|(
 name|u_int8_t
 operator|*
 operator|)
-operator|(
 name|sr
-operator|+
-literal|1
 operator|)
+operator|+
+name|sr
+operator|->
+name|isr_ie_off
 expr_stmt|;
 name|memcpy
 argument_list|(
