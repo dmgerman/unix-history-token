@@ -35,10 +35,31 @@ begin_comment
 comment|/* From usb_mem.h */
 end_comment
 
-begin_expr_stmt
-name|DECLARE_USB_DMA_T
-expr_stmt|;
-end_expr_stmt
+begin_struct_decl
+struct_decl|struct
+name|usb_dma_block
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|struct
+name|usb_dma_block
+modifier|*
+name|block
+decl_stmt|;
+name|u_int
+name|offs
+decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
+block|}
+name|usb_dma_t
+typedef|;
+end_typedef
 
 begin_struct_decl
 struct_decl|struct
