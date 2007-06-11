@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* @(#) $Header: /tcpdump/master/tcpdump/ieee802_11.h,v 1.9 2003/07/22 17:36:57 guy Exp $ (LBL) */
 end_comment
 
@@ -64,6 +68,13 @@ begin_define
 define|#
 directive|define
 name|IEEE802_11_SEQ_LEN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_CTL_LEN
 value|2
 end_define
 
@@ -296,6 +307,13 @@ end_comment
 begin_comment
 comment|/* RESERVED 			0xF  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CTRL_BAR
+value|0x8
+end_define
 
 begin_define
 define|#
@@ -1169,6 +1187,51 @@ define|#
 directive|define
 name|CTRL_END_ACK_HDRLEN
 value|(IEEE802_11_FC_LEN+IEEE802_11_DUR_LEN+\ 				 IEEE802_11_RA_LEN+IEEE802_11_BSSID_LEN)
+end_define
+
+begin_struct
+struct|struct
+name|ctrl_bar_t
+block|{
+name|u_int16_t
+name|fc
+decl_stmt|;
+name|u_int16_t
+name|dur
+decl_stmt|;
+name|u_int8_t
+name|ra
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|u_int8_t
+name|ta
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|u_int16_t
+name|ctl
+decl_stmt|;
+name|u_int16_t
+name|seq
+decl_stmt|;
+name|u_int8_t
+name|fcs
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CTRL_BAR_HDRLEN
+value|(IEEE802_11_FC_LEN+IEEE802_11_DUR_LEN+\ 				 IEEE802_11_RA_LEN+IEEE802_11_TA_LEN+\ 				 IEEE802_11_CTL_LEN+IEEE802_11_SEQ_LEN)
 end_define
 
 begin_define
