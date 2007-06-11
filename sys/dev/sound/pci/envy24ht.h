@@ -628,6 +628,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ENVY24HT_MT_RATE_192000
+value|0x0e
+end_define
+
+begin_define
+define|#
+directive|define
 name|ENVY24HT_MT_RATE_64000
 value|0x0f
 end_define
@@ -663,9 +670,38 @@ end_define
 begin_define
 define|#
 directive|define
+name|ENVY24HT_MT_RATE_176400
+value|0x0c
+end_define
+
+begin_define
+define|#
+directive|define
 name|ENVY24HT_MT_RATE_MASK
 value|0x0f
 end_define
+
+begin_define
+define|#
+directive|define
+name|ENVY24HT_MT_I2S
+value|0x02
+end_define
+
+begin_comment
+comment|/* I2S Data Format Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENVY24HT_MT_I2S_MLR128
+value|0x08
+end_define
+
+begin_comment
+comment|/* MCLK/LRCLK ratio 128x (or 256x) */
+end_comment
 
 begin_define
 define|#
