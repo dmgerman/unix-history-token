@@ -1411,6 +1411,8 @@ name|struct
 name|ether_vlan_header
 modifier|*
 name|evl
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|error
@@ -1537,13 +1539,6 @@ operator|.
 name|ether_vtag
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-operator|&
-name|evl
-expr_stmt|;
-comment|/* XXX silence GCC */
 block|}
 else|else
 block|{
