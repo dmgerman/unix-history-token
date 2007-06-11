@@ -918,7 +918,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: %p has %lu refs"
+literal|"%s: %p has %lu refs\n"
 argument_list|,
 name|__func__
 argument_list|,
