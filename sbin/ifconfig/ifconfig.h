@@ -620,5 +620,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * XXX expose this so modules that neeed to know of any pending  * operations on ifmedia can avoid cmd line ordering confusion.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|ifmediareq
+modifier|*
+name|ifmedia_getstate
+parameter_list|(
+name|int
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

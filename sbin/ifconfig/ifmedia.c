@@ -643,11 +643,10 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|struct
 name|ifmediareq
 modifier|*
-name|getifmediastate
+name|ifmedia_getstate
 parameter_list|(
 name|int
 name|s
@@ -980,7 +979,7 @@ name|subtype
 decl_stmt|;
 name|ifmr
 operator|=
-name|getifmediastate
+name|ifmedia_getstate
 argument_list|(
 name|s
 argument_list|)
@@ -1188,7 +1187,7 @@ name|options
 decl_stmt|;
 name|ifmr
 operator|=
-name|getifmediastate
+name|ifmedia_getstate
 argument_list|(
 name|s
 argument_list|)
@@ -1329,7 +1328,7 @@ name|inst
 decl_stmt|;
 name|ifmr
 operator|=
-name|getifmediastate
+name|ifmedia_getstate
 argument_list|(
 name|s
 argument_list|)
@@ -1448,7 +1447,7 @@ name|mode
 decl_stmt|;
 name|ifmr
 operator|=
-name|getifmediastate
+name|ifmedia_getstate
 argument_list|(
 name|s
 argument_list|)
