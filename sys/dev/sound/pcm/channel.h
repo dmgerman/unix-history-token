@@ -1346,6 +1346,13 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|PCMDIR_FAKE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMDIR_PLAY
 value|1
 end_define
@@ -1404,6 +1411,16 @@ define|#
 directive|define
 name|PCMTRIG_ABORT
 value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMTRIG_COMMON
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) == PCMTRIG_START ||		\ 				 (x) == PCMTRIG_STOP ||			\ 				 (x) == PCMTRIG_ABORT)
 end_define
 
 begin_define

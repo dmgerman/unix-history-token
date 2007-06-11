@@ -1591,6 +1591,9 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+name|PCMTRIG_STOP
+case|:
+case|case
 name|PCMTRIG_ABORT
 case|:
 name|enable
@@ -2009,6 +2012,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+name|PCMTRIG_STOP
+case|:
 case|case
 name|PCMTRIG_ABORT
 case|:

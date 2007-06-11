@@ -3001,13 +3001,11 @@ name|data
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|PCMTRIG_COMMON
+argument_list|(
 name|go
-operator|==
-name|PCMTRIG_EMLDMAWR
-operator|||
-name|go
-operator|==
-name|PCMTRIG_EMLDMARD
+argument_list|)
 condition|)
 return|return
 literal|0

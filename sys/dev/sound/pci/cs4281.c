@@ -1964,6 +1964,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PCMTRIG_STOP
+case|:
+case|case
 name|PCMTRIG_ABORT
 case|:
 name|adcdac_go

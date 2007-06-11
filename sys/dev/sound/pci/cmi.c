@@ -2128,6 +2128,17 @@ name|ch
 operator|->
 name|parent
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|PCMTRIG_COMMON
+argument_list|(
+name|go
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 name|snd_mtxlock
 argument_list|(
 name|sc
@@ -2161,6 +2172,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PCMTRIG_STOP
+case|:
+case|case
 name|PCMTRIG_ABORT
 case|:
 name|cmi_ch0_stop
@@ -2191,6 +2205,9 @@ name|ch
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PCMTRIG_STOP
+case|:
 case|case
 name|PCMTRIG_ABORT
 case|:

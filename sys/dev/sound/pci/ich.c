@@ -2601,6 +2601,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PCMTRIG_STOP
+case|:
+case|case
 name|PCMTRIG_ABORT
 case|:
 name|ICH_LOCK
@@ -2628,6 +2631,8 @@ name|run
 operator|=
 literal|0
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 return|return
