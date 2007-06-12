@@ -8304,13 +8304,11 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|MCLBYTES
-operator|*
-name|NFE_MAX_SCATTER
+name|NFE_TSO_MAXSIZE
 argument_list|,
 name|NFE_MAX_SCATTER
 argument_list|,
-name|MCLBYTES
+name|NFE_TSO_MAXSGSIZE
 argument_list|,
 literal|0
 argument_list|,
