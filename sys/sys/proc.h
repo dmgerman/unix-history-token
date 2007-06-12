@@ -564,6 +564,9 @@ modifier|*
 name|td_ucred
 decl_stmt|;
 comment|/* (k) Reference to credentials. */
+ifdef|#
+directive|ifdef
+name|KSE
 name|struct
 name|thread
 modifier|*
@@ -576,6 +579,8 @@ modifier|*
 name|td_upcall
 decl_stmt|;
 comment|/* (k + t) Upcall structure. */
+endif|#
+directive|endif
 name|u_int
 name|td_estcpu
 decl_stmt|;
@@ -1805,6 +1810,12 @@ parameter_list|)
 value|(td)->td_state = TDS_CAN_RUN
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_comment
 comment|/*  * An upcall is used when returning to userland.  If a thread does not have  * an upcall on return to userland the thread exports its context and exits.  */
 end_comment
@@ -1881,6 +1892,11 @@ end_define
 begin_comment
 comment|/* Upcall structure is exiting. */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * XXX: Does this belong in resource.h or resourcevar.h instead?  * Resource usage extension.  The times in rusage structs in the kernel are  * never up to date.  The actual times are kept as runtimes and tick counts  * (with control info in the "previous" times), and are converted when  * userland asks for rusage info.  Backwards compatibility prevents putting  * this directly in the user-visible rusage struct.  *  * Locking: (cj) means (j) for p_rux and (c) for p_crux.  */
@@ -1992,14 +2008,6 @@ modifier|*
 name|p_sigacts
 decl_stmt|;
 comment|/* (x) Signal actions, state (CPU). */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|kse_upcall
-argument_list|)
-name|p_upcalls
-expr_stmt|;
-comment|/* (j) All upcalls in the proc. */
 comment|/* 	 * The following don't make too much sense. 	 * See the td_ or ke_ versions of the same flags. 	 */
 name|int
 name|p_flag
@@ -2125,10 +2133,6 @@ name|int
 name|p_profthreads
 decl_stmt|;
 comment|/* (c) Num threads in addupc_task. */
-name|int
-name|p_maxthrwaits
-decl_stmt|;
-comment|/* (c) Max threads num waiters */
 specifier|volatile
 name|int
 name|p_exitthreads
@@ -2235,7 +2239,17 @@ modifier|*
 name|p_itimers
 decl_stmt|;
 comment|/* (c) POSIX interval timers. */
-comment|/* from ksegrp */
+ifdef|#
+directive|ifdef
+name|KSE
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|kse_upcall
+argument_list|)
+name|p_upcalls
+expr_stmt|;
+comment|/* (j) All upcalls in the proc. */
 name|int
 name|p_numupcalls
 decl_stmt|;
@@ -2258,6 +2272,8 @@ name|int
 name|p_upquantum
 decl_stmt|;
 comment|/* (n) Quantum to schedule an upcall. */
+endif|#
+directive|endif
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -4467,6 +4483,12 @@ begin_comment
 comment|/* New in KSE. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSE
+end_ifdef
+
 begin_function_decl
 name|void
 name|kse_unlink
@@ -4495,6 +4517,23 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|upcall_remove
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -4692,25 +4731,6 @@ name|void
 name|thread_reap
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|thread
-modifier|*
-name|thread_schedule_upcall
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|kse_upcall
-modifier|*
-name|ku
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4988,82 +5008,6 @@ name|void
 name|thr_exit1
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|kse_upcall
-modifier|*
-name|upcall_alloc
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|upcall_free
-parameter_list|(
-name|struct
-name|kse_upcall
-modifier|*
-name|ku
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|upcall_link
-parameter_list|(
-name|struct
-name|kse_upcall
-modifier|*
-name|ku
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|upcall_unlink
-parameter_list|(
-name|struct
-name|kse_upcall
-modifier|*
-name|ku
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|upcall_remove
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|upcall_stash
-parameter_list|(
-name|struct
-name|kse_upcall
-modifier|*
-name|ke
 parameter_list|)
 function_decl|;
 end_function_decl

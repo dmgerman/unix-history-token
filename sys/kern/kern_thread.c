@@ -808,6 +808,9 @@ name|p_threads
 argument_list|)
 expr_stmt|;
 comment|/* all threads in proc */
+ifdef|#
+directive|ifdef
+name|KSE
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -817,6 +820,8 @@ name|p_upcalls
 argument_list|)
 expr_stmt|;
 comment|/* upcall list */
+endif|#
+directive|endif
 name|sigqueue_init
 argument_list|(
 operator|&
@@ -1521,17 +1526,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|KSE
-comment|/* 			 * Because each upcall structure has an owner thread, 			 * owner thread exits only when process is in exiting 			 * state, so upcall to userland is no longer needed, 			 * deleting upcall structure is safe here. 			 * So when all threads in a group is exited, all upcalls 			 * in the group should be automatically freed. 			 *  XXXKSE This is a KSE thing and should be exported 			 * there somehow. 			 */
-name|upcall_remove
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -1948,13 +1942,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|sched_set_concurrency
-argument_list|(
-name|p
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 else|#
 directive|else
 name|p
