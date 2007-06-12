@@ -157,41 +157,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|LACP_PORT_PROMISC
-value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|LACP_PORT_LADDRCHANGED
-value|0x00000008
-end_define
-
-begin_define
-define|#
-directive|define
-name|LACP_PORT_ATTACHED
-value|0x00000010
-end_define
-
-begin_define
-define|#
-directive|define
-name|LACP_PORT_LARVAL
-value|0x00000020
-end_define
-
-begin_define
-define|#
-directive|define
-name|LACP_PORT_DETACHING
-value|0x00000040
-end_define
-
-begin_define
-define|#
-directive|define
 name|LACP_STATE_BITS
 define|\
 value|"\020"			\ 	"\001ACTIVITY"		\ 	"\002TIMEOUT"		\ 	"\003AGGREGATION"	\ 	"\004SYNC"		\ 	"\005COLLECTING"	\ 	"\006DISTRIBUTING"	\ 	"\007DEFAULTED"		\ 	"\010EXPIRED"
@@ -661,7 +626,7 @@ decl_stmt|;
 name|int
 name|la_pending
 decl_stmt|;
-comment|/* number of ports which is waiting wait_while */
+comment|/* number of ports in wait_while */
 block|}
 struct|;
 end_struct
@@ -673,7 +638,7 @@ block|{
 name|struct
 name|lagg_softc
 modifier|*
-name|lsc_lagg
+name|lsc_softc
 decl_stmt|;
 name|struct
 name|lacp_aggregator
@@ -797,10 +762,6 @@ end_define
 
 begin_comment
 comment|/* in msec */
-end_comment
-
-begin_comment
-comment|/* int tlv_check(const void *, size_t, const struct tlvhdr *,     const struct tlv_template *, boolean_t); */
 end_comment
 
 begin_define

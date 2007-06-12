@@ -140,17 +140,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LAGG_PORT_GLOBAL
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* IOCTL: global flag */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PORT_BITS
 value|"\20\01MASTER\02STACK\03ACTIVE\04COLLECTING" \ 				  "\05DISTRIBUTING\06DISABLED"
 end_define
@@ -239,10 +228,10 @@ block|{
 specifier|const
 name|char
 modifier|*
-name|tpr_name
+name|lpr_name
 decl_stmt|;
 name|int
-name|tpr_proto
+name|lpr_proto
 decl_stmt|;
 block|}
 struct|;
@@ -422,14 +411,7 @@ name|LAGG_PORTACTIVE
 parameter_list|(
 name|_tp
 parameter_list|)
-value|(					\ 	((_tp)->lp_link_state == LINK_STATE_UP)&&			\ 	((_tp)->lp_ifp->if_flags& IFF_UP)					\ )
-end_define
-
-begin_define
-define|#
-directive|define
-name|mc_enm
-value|mc_u.mcu_enm
+value|(					\ 	((_tp)->lp_link_state == LINK_STATE_UP)&&			\ 	((_tp)->lp_ifp->if_flags& IFF_UP)				\ )
 end_define
 
 begin_struct
@@ -522,13 +504,6 @@ end_comment
 begin_comment
 comment|/* Private data used by the loadbalancing protocol */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|LAGG_LB_MAXKEYS
-value|8
-end_define
 
 begin_struct
 struct|struct
@@ -793,7 +768,7 @@ comment|/* physical interface */
 name|struct
 name|lagg_softc
 modifier|*
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 comment|/* parent lagg */
 name|uint8_t

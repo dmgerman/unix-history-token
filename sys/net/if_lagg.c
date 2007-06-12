@@ -2043,7 +2043,7 @@ name|sc
 init|=
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 name|struct
 name|ifnet
@@ -2570,7 +2570,7 @@ name|ifp
 expr_stmt|;
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 operator|=
 name|sc
 expr_stmt|;
@@ -2830,7 +2830,7 @@ name|sc
 init|=
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 name|struct
 name|lagg_port
@@ -3208,7 +3208,7 @@ name|sc
 operator|=
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 operator|)
 operator|==
 name|NULL
@@ -3260,7 +3260,7 @@ if|if
 condition|(
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 operator|!=
 name|sc
 condition|)
@@ -3496,7 +3496,7 @@ name|sc
 operator|=
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 expr_stmt|;
 name|LAGG_WLOCK
 argument_list|(
@@ -3547,7 +3547,7 @@ name|sc
 init|=
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 name|strlcpy
 argument_list|(
@@ -4343,7 +4343,7 @@ name|NULL
 operator|||
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 operator|!=
 name|sc
 condition|)
@@ -4487,7 +4487,7 @@ name|NULL
 operator|||
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 operator|!=
 name|sc
 condition|)
@@ -4763,7 +4763,7 @@ name|sc
 init|=
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 name|struct
 name|ifnet
@@ -4777,7 +4777,7 @@ decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
-name|trifp
+name|scifp
 init|=
 name|sc
 operator|->
@@ -4869,7 +4869,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
-argument|&trifp->if_multiaddrs
+argument|&scifp->if_multiaddrs
 argument_list|,
 argument|ifma_link
 argument_list|)
@@ -5079,12 +5079,12 @@ name|sc
 init|=
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
-name|trifp
+name|scifp
 init|=
 name|sc
 operator|->
@@ -5112,7 +5112,7 @@ operator|=
 name|status
 condition|?
 operator|(
-name|trifp
+name|scifp
 operator|->
 name|if_flags
 operator|&
@@ -5430,12 +5430,12 @@ name|sc
 init|=
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
-name|trifp
+name|scifp
 init|=
 name|sc
 operator|->
@@ -5444,7 +5444,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|trifp
+name|scifp
 operator|->
 name|if_drv_flags
 operator|&
@@ -5486,7 +5486,7 @@ argument_list|)
 expr_stmt|;
 name|BPF_MTAP
 argument_list|(
-name|trifp
+name|scifp
 argument_list|,
 name|m
 argument_list|)
@@ -5514,12 +5514,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|trifp
+name|scifp
 operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
-name|trifp
+name|scifp
 operator|->
 name|if_ibytes
 operator|+=
@@ -5722,7 +5722,7 @@ name|sc
 operator|=
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 expr_stmt|;
 if|if
 condition|(
@@ -6586,7 +6586,7 @@ name|sc
 init|=
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 if|if
 condition|(
@@ -7338,7 +7338,7 @@ name|sc
 init|=
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 return|return
 operator|(
@@ -7371,7 +7371,7 @@ name|sc
 init|=
 name|lp
 operator|->
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 name|lagg_lb_porttable
 argument_list|(

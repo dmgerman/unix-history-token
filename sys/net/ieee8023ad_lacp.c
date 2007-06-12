@@ -1387,11 +1387,11 @@ block|{
 name|struct
 name|lagg_softc
 modifier|*
-name|lgs
+name|sc
 init|=
 name|lgp
 operator|->
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 name|struct
 name|lacp_softc
@@ -1400,7 +1400,7 @@ name|lsc
 init|=
 name|LACP_SOFTC
 argument_list|(
-name|lgs
+name|sc
 argument_list|)
 decl_stmt|;
 name|uint8_t
@@ -1538,7 +1538,7 @@ name|sc
 init|=
 name|lsc
 operator|->
-name|lsc_lagg
+name|lsc_softc
 decl_stmt|;
 name|struct
 name|lagg_port
@@ -1648,25 +1648,9 @@ name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|lgp
 operator|->
-name|lp_lagg
+name|lp_softc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|__predict_false
-argument_list|(
-name|lp
-operator|->
-name|lp_flags
-operator|&
-name|LACP_PORT_DETACHING
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|bad
-goto|;
-block|}
 if|if
 condition|(
 name|m
@@ -1776,7 +1760,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* XXX 	KASSERT(du->ldu_sph.sph_subtype == SLOWPROTOCOLS_SUBTYPE_LACP, 	    ("a very bad kassert!")); 	*/
 comment|/* 	 * ignore the version for compatibility with 	 * the future protocol revisions. 	 */
 if|#
 directive|if
@@ -1895,11 +1878,11 @@ decl_stmt|;
 name|struct
 name|lagg_softc
 modifier|*
-name|lgs
+name|sc
 init|=
 name|lgp
 operator|->
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 name|info
 operator|->
@@ -1923,7 +1906,7 @@ name|lsi_mac
 argument_list|,
 name|IF_LLADDR
 argument_list|(
-name|lgs
+name|sc
 operator|->
 name|sc_ifp
 argument_list|)
@@ -2070,7 +2053,7 @@ name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|lgp
 operator|->
-name|lp_lagg
+name|lp_softc
 argument_list|)
 expr_stmt|;
 name|m
@@ -2353,7 +2336,7 @@ name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|lgp
 operator|->
-name|lp_lagg
+name|lp_softc
 argument_list|)
 expr_stmt|;
 name|m
@@ -2632,7 +2615,7 @@ name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|lgp
 operator|->
-name|lp_lagg
+name|lp_softc
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -2738,7 +2721,7 @@ name|lp_media
 operator|=
 name|media
 expr_stmt|;
-comment|/*  	 * If the port is not an active full duplex Ethernet link then it can 	 * not be aggregated. 	 */
+comment|/* 	 * If the port is not an active full duplex Ethernet link then it can 	 * not be aggregated. 	 */
 if|if
 condition|(
 name|IFM_TYPE
@@ -2844,7 +2827,7 @@ name|sc
 init|=
 name|lsc
 operator|->
-name|lsc_lagg
+name|lsc_softc
 decl_stmt|;
 name|struct
 name|lacp_port
@@ -2939,11 +2922,11 @@ block|{
 name|struct
 name|lagg_softc
 modifier|*
-name|lgs
+name|sc
 init|=
 name|lgp
 operator|->
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 name|struct
 name|lacp_softc
@@ -2952,7 +2935,7 @@ name|lsc
 init|=
 name|LACP_SOFTC
 argument_list|(
-name|lgs
+name|sc
 argument_list|)
 decl_stmt|;
 name|struct
@@ -2997,7 +2980,7 @@ decl_stmt|;
 comment|/* XXX should be configurable */
 name|LAGG_WLOCK_ASSERT
 argument_list|(
-name|lgs
+name|sc
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -3268,7 +3251,7 @@ name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|lgp
 operator|->
-name|lp_lagg
+name|lp_softc
 argument_list|)
 expr_stmt|;
 for|for
@@ -3560,7 +3543,7 @@ name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|lgp
 operator|->
-name|lp_lagg
+name|lp_softc
 argument_list|)
 expr_stmt|;
 if|if
@@ -3777,7 +3760,7 @@ name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|lgp
 operator|->
-name|lp_lagg
+name|lp_softc
 argument_list|)
 expr_stmt|;
 if|if
@@ -3940,7 +3923,7 @@ parameter_list|(
 name|struct
 name|lagg_softc
 modifier|*
-name|lgs
+name|sc
 parameter_list|)
 block|{
 name|struct
@@ -3950,7 +3933,7 @@ name|lsc
 decl_stmt|;
 name|LAGG_WLOCK_ASSERT
 argument_list|(
-name|lgs
+name|sc
 argument_list|)
 expr_stmt|;
 name|lsc
@@ -3981,7 +3964,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|lgs
+name|sc
 operator|->
 name|sc_psc
 operator|=
@@ -3992,9 +3975,9 @@ name|lsc
 expr_stmt|;
 name|lsc
 operator|->
-name|lsc_lagg
+name|lsc_softc
 operator|=
-name|lgs
+name|sc
 expr_stmt|;
 name|lsc
 operator|->
@@ -4086,7 +4069,7 @@ expr_stmt|;
 comment|/* if the lagg is already up then do the same */
 if|if
 condition|(
-name|lgs
+name|sc
 operator|->
 name|sc_ifp
 operator|->
@@ -4096,7 +4079,7 @@ name|IFF_DRV_RUNNING
 condition|)
 name|lacp_init
 argument_list|(
-name|lgs
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -4114,7 +4097,7 @@ parameter_list|(
 name|struct
 name|lagg_softc
 modifier|*
-name|lgs
+name|sc
 parameter_list|)
 block|{
 name|struct
@@ -4124,7 +4107,7 @@ name|lsc
 init|=
 name|LACP_SOFTC
 argument_list|(
-name|lgs
+name|sc
 argument_list|)
 decl_stmt|;
 name|KASSERT
@@ -4155,7 +4138,7 @@ literal|"aggregator still attached"
 operator|)
 argument_list|)
 expr_stmt|;
-name|lgs
+name|sc
 operator|->
 name|sc_psc
 operator|=
@@ -4227,7 +4210,7 @@ parameter_list|(
 name|struct
 name|lagg_softc
 modifier|*
-name|lgs
+name|sc
 parameter_list|)
 block|{
 name|struct
@@ -4237,7 +4220,7 @@ name|lsc
 init|=
 name|LACP_SOFTC
 argument_list|(
-name|lgs
+name|sc
 argument_list|)
 decl_stmt|;
 name|callout_reset
@@ -4264,7 +4247,7 @@ parameter_list|(
 name|struct
 name|lagg_softc
 modifier|*
-name|lgs
+name|sc
 parameter_list|)
 block|{
 name|struct
@@ -4274,7 +4257,7 @@ name|lsc
 init|=
 name|LACP_SOFTC
 argument_list|(
-name|lgs
+name|sc
 argument_list|)
 decl_stmt|;
 name|callout_stop
@@ -4305,7 +4288,7 @@ parameter_list|(
 name|struct
 name|lagg_softc
 modifier|*
-name|lgs
+name|sc
 parameter_list|,
 name|struct
 name|mbuf
@@ -4320,7 +4303,7 @@ name|lsc
 init|=
 name|LACP_SOFTC
 argument_list|(
-name|lgs
+name|sc
 argument_list|)
 decl_stmt|;
 name|struct
@@ -4341,7 +4324,7 @@ name|nports
 decl_stmt|;
 name|LAGG_RLOCK_ASSERT
 argument_list|(
-name|lgs
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -5111,11 +5094,11 @@ decl_stmt|;
 name|struct
 name|lagg_softc
 modifier|*
-name|lgs
+name|sc
 init|=
 name|lgp
 operator|->
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 name|u_int
 name|media
@@ -5207,7 +5190,7 @@ literal|0x7fe0
 operator|&
 operator|(
 operator|(
-name|lgs
+name|sc
 operator|->
 name|sc_ifp
 operator|->
@@ -8138,25 +8121,9 @@ name|LAGG_RLOCK_ASSERT
 argument_list|(
 name|lgp
 operator|->
-name|lp_lagg
+name|lp_softc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|__predict_false
-argument_list|(
-name|lp
-operator|->
-name|lp_flags
-operator|&
-name|LACP_PORT_DETACHING
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|bad
-goto|;
-block|}
 if|if
 condition|(
 name|m
@@ -8266,7 +8233,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* XXX 	KASSERT(mdu->mdu_sph.sph_subtype == SLOWPROTOCOLS_SUBTYPE_MARKER, 	    ("a very bad kassert!")); 	*/
 if|if
 condition|(
 name|mdu
