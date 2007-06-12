@@ -399,24 +399,6 @@ define|\
 value|struct __CONCAT(dname,_softc) *sc = device_get_softc(self); \         struct usb_attach_arg *uaa = device_get_ivars(self)
 end_define
 
-begin_comment
-comment|/* Returns from attach */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_ATTACH_ERROR_RETURN
-value|return ENXIO
-end_define
-
-begin_define
-define|#
-directive|define
-name|USB_ATTACH_SUCCESS_RETURN
-value|return 0
-end_define
-
 begin_define
 define|#
 directive|define

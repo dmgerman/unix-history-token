@@ -1133,8 +1133,9 @@ name|sc_dying
 operator|=
 literal|1
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|printf
 argument_list|(
@@ -1235,8 +1236,9 @@ name|sc_dying
 operator|=
 literal|1
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 else|#
 directive|else
@@ -1321,8 +1323,9 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|sc
 operator|->
@@ -1543,8 +1546,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|USB_ATTACH_SUCCESS_RETURN
-expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_block
 

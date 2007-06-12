@@ -4018,8 +4018,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 block|}
 comment|/* 	 * In addition to the Control endpoint the following endpoints 	 * are required: 	 * a) bulk-in endpoint. 	 * b) bulk-out endpoint. 	 * and for Control/Bulk/Interrupt with CCI (CBI_I) 	 * c) intr-in 	 * 	 * The endpoint addresses are not fixed, so we have to read them 	 * from the device descriptors of the current interface. 	 */
@@ -4068,8 +4069,9 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 if|if
 condition|(
@@ -4274,8 +4276,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 comment|/* Open the bulk-in and -out pipe */
 name|err
@@ -4328,8 +4331,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|err
 operator|=
@@ -4381,8 +4385,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 comment|/* Open the intr-in pipe if the protocol is CBI with CCI. 	 * Note: early versions of the Zip drive do have an interrupt pipe, but 	 * this pipe is unused. 	 * 	 * We do not open the interrupt pipe as an interrupt pipe, but as a 	 * normal bulk endpoint. We send an IN transfer down the wire at the 	 * appropriate time, because we know exactly when to expect data on 	 * that endpoint. This saves bandwidth, but more important, makes the 	 * code for handling the data on that endpoint simpler. No data 	 * arriving concurrently. 	 */
 if|if
@@ -4444,8 +4449,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 block|}
 comment|/* initialisation of generic part */
@@ -4516,8 +4522,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 block|}
 comment|/* Initialise the wire protocol specific methods */
@@ -4803,8 +4810,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 comment|/* scan the new sim */
 name|err
@@ -4829,8 +4837,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 block|}
 else|else
@@ -4871,8 +4880,9 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_SUCCESS_RETURN
-expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_block
 

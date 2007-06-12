@@ -938,8 +938,9 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 if|if
 condition|(
@@ -1029,8 +1030,9 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 if|if
 condition|(
@@ -1103,8 +1105,9 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|sc
 operator|->
@@ -1541,8 +1544,9 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|USB_ATTACH_SUCCESS_RETURN
-expr_stmt|;
+return|return
+literal|0
+return|;
 name|bad
 label|:
 if|#
@@ -1557,8 +1561,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 end_block
 

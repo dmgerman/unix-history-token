@@ -893,8 +893,9 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|iend
 operator|=
@@ -1079,8 +1080,9 @@ name|sc_dying
 operator|=
 literal|1
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 block|}
 name|epcount
@@ -1156,8 +1158,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 if|if
 condition|(
@@ -1249,8 +1252,9 @@ name|sc_dying
 operator|=
 literal|1
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 if|if
 condition|(
@@ -1411,8 +1415,9 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_SUCCESS_RETURN
-expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_block
 

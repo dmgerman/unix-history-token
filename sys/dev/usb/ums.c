@@ -861,8 +861,9 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|DPRINTFN
 argument_list|(
@@ -954,8 +955,9 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|err
 operator|=
@@ -978,8 +980,9 @@ if|if
 condition|(
 name|err
 condition|)
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 if|if
 condition|(
 operator|!
@@ -1020,8 +1023,9 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 if|if
 condition|(
@@ -1048,8 +1052,9 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 if|if
 condition|(
@@ -1091,8 +1096,9 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 if|if
 condition|(
@@ -1119,8 +1125,9 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 comment|/* try to guess the Z activator: first check Z, then WHEEL */
 if|if
@@ -1366,8 +1373,9 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|printf
 argument_list|(
@@ -1510,8 +1518,9 @@ argument_list|,
 name|M_USB
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|sc
 operator|->
@@ -1939,8 +1948,9 @@ operator||=
 name|UMS_SPUR_BUT_UP
 expr_stmt|;
 block|}
-name|USB_ATTACH_SUCCESS_RETURN
-expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_block
 

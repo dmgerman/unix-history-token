@@ -670,8 +670,9 @@ name|sw
 operator|==
 name|NULL
 condition|)
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 name|id
 operator|=
 name|usbd_get_interface_descriptor
@@ -725,8 +726,9 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 if|if
 condition|(
 call|(
@@ -750,8 +752,9 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 call|(
 modifier|*
 name|sw
@@ -772,8 +775,9 @@ argument_list|(
 name|kbd
 argument_list|)
 condition|)
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 endif|#
 directive|endif
 if|if
@@ -792,8 +796,9 @@ argument_list|,
 name|bootverbose
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_SUCCESS_RETURN
-expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_block
 

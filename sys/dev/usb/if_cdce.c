@@ -791,8 +791,9 @@ argument_list|,
 literal|"no union descriptor\n"
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|data_ifcno
 operator|=
@@ -898,8 +899,9 @@ argument_list|,
 literal|"no data interface\n"
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 comment|/* 	 *<quote> 	 *  The Data Class interface of a networking device shall have a minimum 	 *  of two interface settings. The first setting (the default interface 	 *  setting) includes no endpoints and therefore no networking traffic is 	 *  exchanged whenever the default interface setting is selected. One or 	 *  more additional interface settings are used for normal operation, and 	 *  therefore each includes a pair of endpoints (one IN, and one OUT) to 	 *  exchange network traffic. Select an alternate interface setting to 	 *  initialize the network aspects of the device and to enable the 	 *  exchange of network traffic. 	 *</quote> 	 * 	 * Some devices, most notably cable modems, include interface settings 	 * that have no IN or OUT endpoint, therefore loop through the list of all 	 * available interface settings looking for one with both IN and OUT 	 * endpoints. 	 */
 name|id
@@ -966,8 +968,9 @@ argument_list|,
 literal|"setting alternate interface failed\n"
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 comment|/* Find endpoints. */
 name|id
@@ -1032,8 +1035,9 @@ argument_list|,
 literal|"could not read endpoint descriptor\n"
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 if|if
 condition|(
@@ -1175,8 +1179,9 @@ argument_list|,
 literal|"could not find data bulk in\n"
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 if|if
 condition|(
@@ -1197,8 +1202,9 @@ argument_list|,
 literal|"could not find data bulk out\n"
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|mtx_init
 argument_list|(
@@ -1450,8 +1456,9 @@ operator|->
 name|cdce_mtx
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|ifp
 operator|->
@@ -1605,8 +1612,9 @@ name|cdce_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_SUCCESS_RETURN
-expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_block
 

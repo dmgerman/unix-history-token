@@ -860,8 +860,9 @@ argument_list|,
 name|UBTBCMFW_BULK_OUT
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_SUCCESS_RETURN
-expr_stmt|;
+return|return
+literal|0
+return|;
 name|bad
 label|:
 name|ubtbcmfw_detach
@@ -869,8 +870,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 end_block
 

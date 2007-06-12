@@ -1960,8 +1960,9 @@ argument_list|,
 literal|"getting interface handle failed\n"
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|id
 operator|=
@@ -2017,8 +2018,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 if|if
 condition|(
@@ -2206,8 +2208,9 @@ operator|->
 name|cue_mtx
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|ifp
 operator|->
@@ -2331,8 +2334,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|USB_ATTACH_SUCCESS_RETURN
-expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_block
 

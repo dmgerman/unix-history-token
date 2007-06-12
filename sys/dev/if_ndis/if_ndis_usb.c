@@ -517,8 +517,9 @@ name|device
 operator|==
 name|NULL
 condition|)
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 name|sc
 operator|->
 name|ndis_dev
@@ -551,10 +552,12 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
-name|USB_ATTACH_SUCCESS_RETURN
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
+return|return
+literal|0
+return|;
 block|}
 end_block
 
