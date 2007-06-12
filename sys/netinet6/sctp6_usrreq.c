@@ -1948,20 +1948,15 @@ name|vrf_id
 operator|=
 name|SCTP_DEFAULT_VRFID
 expr_stmt|;
-comment|/* 	 * XXXRW: Other instances of getcred use SUSER_ALLOWJAIL, as socket 	 * visibility is scoped using cr_canseesocket(), which it is not 	 * here. 	 */
 name|error
 operator|=
-name|priv_check_cred
+name|priv_check
 argument_list|(
 name|req
 operator|->
 name|td
-operator|->
-name|td_ucred
 argument_list|,
-name|PRIV_NETINET_RESERVEDPORT
-argument_list|,
-literal|0
+name|PRIV_NETINET_GETCRED
 argument_list|)
 expr_stmt|;
 if|if

@@ -415,15 +415,11 @@ block|{
 comment|/* 			 * XXXRW: Is this specific check required here, as 			 * p_candebug() should implement it, or other checks 			 * are missing. 			 */
 name|error
 operator|=
-name|priv_check_cred
+name|priv_check
 argument_list|(
 name|td
-operator|->
-name|td_ucred
 argument_list|,
 name|PRIV_DEBUG_SUGID
-argument_list|,
-name|SUSER_ALLOWJAIL
 argument_list|)
 expr_stmt|;
 if|if

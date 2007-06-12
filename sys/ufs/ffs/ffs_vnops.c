@@ -3258,7 +3258,7 @@ name|a_cred
 argument_list|,
 name|PRIV_VFS_RETAINSUGID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -4688,7 +4688,7 @@ name|ucred
 argument_list|,
 name|PRIV_VFS_RETAINSUGID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 block|{

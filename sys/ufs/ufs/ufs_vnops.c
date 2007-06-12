@@ -2322,7 +2322,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * Unprivileged processes are not permitted to unset system 		 * flags, or modify flags if any system flags are set. 		 * Privileged non-jail processes may not modify system flags 		 * if securelevel> 0 and any existing system flags are set. 		 * Privileged jail processes behave like privileged non-jail 		 * processes if the security.jail.chflags_allowed sysctl is 		 * is non-zero; otherwise, they behave like unprivileged 		 * processes. 		 * 		 * XXXRW: Move implementation of jail_chflags_allowed to 		 * kern_jail.c. 		 */
+comment|/* 		 * Unprivileged processes are not permitted to unset system 		 * flags, or modify flags if any system flags are set. 		 * Privileged non-jail processes may not modify system flags 		 * if securelevel> 0 and any existing system flags are set. 		 * Privileged jail processes behave like privileged non-jail 		 * processes if the security.jail.chflags_allowed sysctl is 		 * is non-zero; otherwise, they behave like unprivileged 		 * processes. 		 */
 if|if
 condition|(
 operator|!
@@ -2332,10 +2332,6 @@ name|cred
 argument_list|,
 name|PRIV_VFS_SYSFLAGS
 argument_list|,
-name|jail_chflags_allowed
-condition|?
-name|SUSER_ALLOWJAIL
-else|:
 literal|0
 argument_list|)
 condition|)
@@ -3236,7 +3232,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_STICKYFILE
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -3272,7 +3268,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_SETGID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3489,7 +3485,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_CHOWN
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 condition|)
@@ -4069,7 +4065,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_RETAINSUGID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -11035,7 +11031,7 @@ name|cn_cred
 argument_list|,
 name|PRIV_VFS_SETGID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 block|{

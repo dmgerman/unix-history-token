@@ -3007,15 +3007,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|priv_check_cred
+name|priv_check
 argument_list|(
 name|td
-operator|->
-name|td_ucred
 argument_list|,
 name|PRIV_PROC_SETRLIMIT
-argument_list|,
-name|SUSER_ALLOWJAIL
 argument_list|)
 operator|)
 condition|)

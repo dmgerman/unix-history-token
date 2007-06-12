@@ -658,7 +658,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_BLOCKRESERVE
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|&&
 name|freespace
@@ -1181,7 +1181,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_BLOCKRESERVE
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|&&
 name|freespace

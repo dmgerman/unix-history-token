@@ -202,7 +202,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_LINK
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -245,7 +245,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_ADMIN
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -287,7 +287,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_READ
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|!=
 literal|0
@@ -313,7 +313,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_WRITE
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|!=
 literal|0
@@ -349,7 +349,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_LOOKUP
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|!=
 literal|0
@@ -372,7 +372,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_EXEC
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|!=
 literal|0
@@ -428,7 +428,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_ADMIN
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -679,7 +679,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_CHOWN
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -849,7 +849,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_SETGID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -883,7 +883,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_RETAINSUGID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -930,7 +930,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_RETAINSUGID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -1011,7 +1011,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_STICKYFILE
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 return|return

@@ -1541,7 +1541,7 @@ name|so
 operator|->
 name|so_cred
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|==
 literal|0

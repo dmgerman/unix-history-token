@@ -2331,7 +2331,7 @@ name|oldcred
 argument_list|,
 name|PRIV_DEBUG_DIFFCRED
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 block|{

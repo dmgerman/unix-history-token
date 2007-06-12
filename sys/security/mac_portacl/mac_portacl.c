@@ -1494,7 +1494,7 @@ name|cred
 argument_list|,
 name|PRIV_NETINET_RESERVEDPORT
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 return|return

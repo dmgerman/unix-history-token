@@ -1177,8 +1177,6 @@ argument_list|,
 name|PRIV_PROC_LIMIT
 argument_list|,
 name|SUSER_RUID
-operator||
-name|SUSER_ALLOWJAIL
 argument_list|)
 expr_stmt|;
 if|if

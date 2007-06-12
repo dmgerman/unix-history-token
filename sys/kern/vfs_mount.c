@@ -4533,7 +4533,7 @@ name|td_ucred
 argument_list|,
 name|PRIV_VFS_ADMIN
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

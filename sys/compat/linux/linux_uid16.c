@@ -524,7 +524,7 @@ name|oldcred
 argument_list|,
 name|PRIV_CRED_SETGROUPS
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 operator|!=

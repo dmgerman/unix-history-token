@@ -1763,7 +1763,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_ADMIN
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1794,7 +1794,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_SYSFLAGS
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1984,7 +1984,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_CHOWN
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2346,7 +2346,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_ADMIN
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

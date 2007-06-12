@@ -352,7 +352,7 @@ name|cr1
 argument_list|,
 name|PRIV_SEEOTHERUIDS
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|==
 literal|0

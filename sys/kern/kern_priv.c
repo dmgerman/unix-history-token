@@ -161,7 +161,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* 	 * Jail policy will restrict certain privileges that may otherwise be 	 * be granted. 	 * 	 * While debugging the transition from SUSER_ALLOWJAIL to Jail being 	 * aware of specific privileges, perform run-time checking that the 	 * two versions of the policy align.  This assertion will go away 	 * once the SUSER_ALLOWJAIL flag has gone away. 	 */
+comment|/* 	 * Jail policy will restrict certain privileges that may otherwise be 	 * be granted. 	 */
 name|error
 operator|=
 name|prison_priv_check
@@ -171,48 +171,6 @@ argument_list|,
 name|priv
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NOTYET
-name|KASSERT
-argument_list|(
-operator|!
-name|jailed
-argument_list|(
-name|cred
-argument_list|)
-operator|||
-name|error
-operator|==
-operator|(
-operator|(
-name|flags
-operator|&
-name|SUSER_ALLOWJAIL
-operator|)
-condition|?
-literal|0
-else|:
-name|EPERM
-operator|)
-argument_list|,
-operator|(
-literal|"priv_check_cred: prison_priv_check %d but flags %s"
-operator|,
-name|error
-operator|,
-name|flags
-operator|&
-name|SUSER_ALLOWJAIL
-condition|?
-literal|"allowjail"
-else|:
-literal|"!allowjail"
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|error

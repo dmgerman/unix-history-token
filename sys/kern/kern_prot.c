@@ -2183,7 +2183,7 @@ name|oldcred
 argument_list|,
 name|PRIV_CRED_SETUID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -2225,7 +2225,7 @@ name|oldcred
 argument_list|,
 name|PRIV_CRED_SETUID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|==
 literal|0
@@ -2507,7 +2507,7 @@ name|oldcred
 argument_list|,
 name|PRIV_CRED_SETEUID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -2760,7 +2760,7 @@ name|oldcred
 argument_list|,
 name|PRIV_CRED_SETGID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -2804,7 +2804,7 @@ name|oldcred
 argument_list|,
 name|PRIV_CRED_SETGID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|==
 literal|0
@@ -3067,7 +3067,7 @@ name|oldcred
 argument_list|,
 name|PRIV_CRED_SETEGID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -3368,7 +3368,7 @@ name|oldcred
 argument_list|,
 name|PRIV_CRED_SETGROUPS
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3694,7 +3694,7 @@ name|oldcred
 argument_list|,
 name|PRIV_CRED_SETREUID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -4078,7 +4078,7 @@ name|oldcred
 argument_list|,
 name|PRIV_CRED_SETREGID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -4531,7 +4531,7 @@ name|oldcred
 argument_list|,
 name|PRIV_CRED_SETRESUID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -4965,7 +4965,7 @@ name|oldcred
 argument_list|,
 name|PRIV_CRED_SETRESGID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -5947,7 +5947,7 @@ name|u1
 argument_list|,
 name|PRIV_SEEOTHERUIDS
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|!=
 literal|0
@@ -6089,7 +6089,7 @@ name|u1
 argument_list|,
 name|PRIV_SEEOTHERGIDS
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|!=
 literal|0
@@ -6493,7 +6493,7 @@ name|cred
 argument_list|,
 name|PRIV_SIGNAL_SUGID
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6551,7 +6551,6 @@ operator|->
 name|cr_svuid
 condition|)
 block|{
-comment|/* Not permitted without privilege. */
 name|error
 operator|=
 name|priv_check_cred
@@ -6560,7 +6559,7 @@ name|cred
 argument_list|,
 name|PRIV_SIGNAL_DIFFCRED
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6887,15 +6886,11 @@ condition|)
 block|{
 name|error
 operator|=
-name|priv_check_cred
+name|priv_check
 argument_list|(
 name|td
-operator|->
-name|td_ucred
 argument_list|,
 name|PRIV_SCHED_DIFFCRED
-argument_list|,
-name|SUSER_ALLOWJAIL
 argument_list|)
 expr_stmt|;
 if|if
@@ -7008,15 +7003,11 @@ condition|)
 block|{
 name|error
 operator|=
-name|priv_check_cred
+name|priv_check
 argument_list|(
 name|td
-operator|->
-name|td_ucred
 argument_list|,
 name|PRIV_DEBUG_UNPRIV
-argument_list|,
-name|SUSER_ALLOWJAIL
 argument_list|)
 expr_stmt|;
 if|if
@@ -7277,15 +7268,11 @@ condition|)
 block|{
 name|error
 operator|=
-name|priv_check_cred
+name|priv_check
 argument_list|(
 name|td
-operator|->
-name|td_ucred
 argument_list|,
 name|PRIV_DEBUG_DIFFCRED
-argument_list|,
-name|SUSER_ALLOWJAIL
 argument_list|)
 expr_stmt|;
 if|if
@@ -7305,15 +7292,11 @@ condition|)
 block|{
 name|error
 operator|=
-name|priv_check_cred
+name|priv_check
 argument_list|(
 name|td
-operator|->
-name|td_ucred
 argument_list|,
 name|PRIV_DEBUG_SUGID
-argument_list|,
-name|SUSER_ALLOWJAIL
 argument_list|)
 expr_stmt|;
 if|if
@@ -8384,15 +8367,11 @@ index|]
 decl_stmt|;
 name|error
 operator|=
-name|priv_check_cred
+name|priv_check
 argument_list|(
 name|td
-operator|->
-name|td_ucred
 argument_list|,
 name|PRIV_PROC_SETLOGIN
-argument_list|,
-name|SUSER_ALLOWJAIL
 argument_list|)
 expr_stmt|;
 if|if

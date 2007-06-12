@@ -1655,17 +1655,13 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|priv_check_cred
+name|priv_check
 argument_list|(
 name|req
 operator|->
 name|td
-operator|->
-name|td_ucred
 argument_list|,
 name|PRIV_NETINET_GETCRED
-argument_list|,
-name|SUSER_ALLOWJAIL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1861,6 +1857,7 @@ literal|"udp6_getcred: inp_socket == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXXRW: There should be a scoping access control check here. 	 */
 name|cru2x
 argument_list|(
 name|inp

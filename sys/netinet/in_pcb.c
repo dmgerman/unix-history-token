@@ -1760,7 +1760,7 @@ name|cred
 argument_list|,
 name|PRIV_NETINET_RESERVEDPORT
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1802,7 +1802,7 @@ name|so_cred
 argument_list|,
 name|PRIV_NETINET_REUSEPORT
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 operator|!=
 literal|0
@@ -2173,7 +2173,7 @@ name|cred
 argument_list|,
 name|PRIV_NETINET_RESERVEDPORT
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

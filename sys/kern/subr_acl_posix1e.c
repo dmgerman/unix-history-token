@@ -166,7 +166,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_LOOKUP
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 name|priv_granted
@@ -191,7 +191,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_EXEC
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 name|priv_granted
@@ -214,7 +214,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_READ
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 name|priv_granted
@@ -244,7 +244,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_WRITE
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 name|priv_granted
@@ -270,7 +270,7 @@ name|cred
 argument_list|,
 name|PRIV_VFS_ADMIN
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 name|priv_granted
