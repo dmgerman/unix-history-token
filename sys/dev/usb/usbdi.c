@@ -33,41 +33,6 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/device.h>
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_elif
-
 begin_include
 include|#
 directive|include
@@ -105,11 +70,6 @@ include|#
 directive|include
 file|<machine/cpu.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -170,15 +130,6 @@ directive|include
 file|<dev/usb/usb_quirks.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -194,11 +145,6 @@ name|d
 parameter_list|)
 value|DELAY(d)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -2650,6 +2596,7 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
+comment|/* XXX Does FreeBSD need to do something similar? */
 if|#
 directive|if
 name|defined
@@ -5273,16 +5220,12 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
+comment|/* XXX amd64 too? */
 if|#
 directive|if
 name|defined
 argument_list|(
 name|__i386__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__FreeBSD__
 argument_list|)
 name|KASSERT
 argument_list|(
@@ -6706,15 +6649,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
 begin_function
 name|int
 name|usbd_driver_load
@@ -6738,11 +6672,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
