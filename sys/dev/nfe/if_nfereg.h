@@ -10,15 +10,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFE_PCI_BA
-value|0x10
+name|NFE_RX_RING_COUNT
+value|256
 end_define
 
 begin_define
 define|#
 directive|define
-name|NFE_RX_RING_COUNT
-value|128
+name|NFE_JUMBO_RX_RING_COUNT
+value|NFE_RX_RING_COUNT
 end_define
 
 begin_define
@@ -26,6 +26,39 @@ define|#
 directive|define
 name|NFE_TX_RING_COUNT
 value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_PROC_DEFAULT
+value|((NFE_RX_RING_COUNT * 3) / 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_PROC_MIN
+value|50
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_PROC_MAX
+value|(NFE_RX_RING_COUNT - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_INC
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(x) = ((x) + 1) % y
 end_define
 
 begin_comment
@@ -68,22 +101,74 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFE_JBYTES
-value|(ETHER_MAX_LEN_JUMBO + ETHER_ALIGN)
+name|NFE_JUMBO_FRAMELEN
+value|NV_PKTLIMIT_2
 end_define
 
 begin_define
 define|#
 directive|define
-name|NFE_JPOOL_COUNT
-value|(NFE_RX_RING_COUNT + NFE_RX_HEADERS)
+name|NFE_JUMBO_MTU
+define|\
+value|(NFE_JUMBO_FRAMELEN - NFE_RX_HEADERS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_MIN_FRAMELEN
+value|(ETHER_MIN_LEN - ETHER_CRC_LEN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_JSLOTS
+value|((NFE_JUMBO_RX_RING_COUNT * 3) / 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_JRAWLEN
+value|(NFE_JUMBO_FRAMELEN + ETHER_ALIGN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_JLEN
+define|\
+value|(NFE_JRAWLEN + (sizeof(uint64_t) - (NFE_JRAWLEN % sizeof(uint64_t))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_JPAGESZ
+value|PAGE_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_RESID
+define|\
+value|(NFE_JPAGESZ - (NFE_JLEN * NFE_JSLOTS) % NFE_JPAGESZ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_JMEM
+value|((NFE_JLEN * NFE_JSLOTS) + NFE_RESID)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NFE_MAX_SCATTER
-value|(NFE_TX_RING_COUNT - 2)
+value|32
 end_define
 
 begin_define
@@ -112,6 +197,34 @@ define|#
 directive|define
 name|NFE_IMTIMER
 value|0x00c
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_MSI_MAP0
+value|0x020
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_MSI_MAP1
+value|0x024
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_MSI_IRQ_MASK
+value|0x030
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_MAC_RESET
+value|0x03c
 end_define
 
 begin_define
@@ -313,6 +426,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NFE_TX_PAUSE_FRAME
+value|0x170
+end_define
+
+begin_define
+define|#
+directive|define
 name|NFE_PHY_STATUS
 value|0x180
 end_define
@@ -397,6 +517,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|NFE_MSIX_MAP0
+value|0x3e0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_MSIX_MAP1
+value|0x3e4
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_MSIX_IRQ_STATUS
+value|0x3f0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_PWR2_CTL
+value|0x600
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_MAC_RESET_MAGIC
+value|0x00f3
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_MAC_ADDR_INORDER
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
 name|NFE_PHY_ERROR
 value|0x00001
 end_define
@@ -432,8 +594,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFE_R1_MAGIC
+name|NFE_R1_MAGIC_1000
+value|0x14050f
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_R1_MAGIC_10_100
 value|0x16070f
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_R1_MAGIC_DEFAULT
+value|0x15050f
 end_define
 
 begin_define
@@ -616,20 +792,34 @@ begin_define
 define|#
 directive|define
 name|NFE_RXFILTER_MAGIC
-value|0x007f0008
+value|0x007f0000
 end_define
 
 begin_define
 define|#
 directive|define
-name|NFE_U2M
+name|NFE_PFF_RX_PAUSE
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_PFF_LOOPBACK
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_PFF_U2M
 value|(1<< 5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NFE_PROMISC
+name|NFE_PFF_PROMISC
 value|(1<< 7)
 end_define
 
@@ -670,6 +860,20 @@ define|#
 directive|define
 name|NFE_PWR_WAKEUP
 value|(1<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_PWR2_WAKEUP_MASK
+value|0x0f11
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_PWR2_REVA3
+value|(1<< 0)
 end_define
 
 begin_define
@@ -731,8 +935,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|NFE_MISC1_TX_PAUSE
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NFE_MISC1_HDX
 value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_TX_PAUSE_FRAME_DISABLE
+value|0x1ff0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_TX_PAUSE_FRAME_ENABLE
+value|0x0c00030
 end_define
 
 begin_define
@@ -761,6 +986,78 @@ define|#
 directive|define
 name|NFE_SEED_1000T
 value|0x00007400
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_MSI_MESSAGES
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_MSI_VECTOR_0_ENABLED
+value|0x01
+end_define
+
+begin_comment
+comment|/*  * It seems that nForce supports only the lower 40 bits of a DMA address.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|BUS_SPACE_MAXADDR
+operator|<
+literal|0xFFFFFFFFFF
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NFE_DMA_MAXADDR
+value|BUS_SPACE_MAXADDR
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NFE_DMA_MAXADDR
+value|0xFFFFFFFFFF
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|NFE_ADDR_LO
+parameter_list|(
+name|x
+parameter_list|)
+value|((u_int64_t) (x)& 0xffffffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_ADDR_HI
+parameter_list|(
+name|x
+parameter_list|)
+value|((u_int64_t) (x)>> 32)
 end_define
 
 begin_comment
@@ -873,18 +1170,6 @@ name|NFE_TX_LASTFRAG_V2
 value|(1<< 13)
 define|#
 directive|define
-name|NFE_RX_IP_CSUMOK_V2
-value|0x1000
-define|#
-directive|define
-name|NFE_RX_UDP_CSUMOK_V2
-value|0x1400
-define|#
-directive|define
-name|NFE_RX_TCP_CSUMOK_V2
-value|0x1800
-define|#
-directive|define
 name|NFE_RX_ERROR1_V2
 value|(1<<2)
 define|#
@@ -911,6 +1196,13 @@ name|NFE_V2_TXERR
 value|"\020"	\ 	"\14FORCEDINT\13LASTPACKET\12UNDERFLOW\10LOSTCARRIER\09DEFERRED\02RETRY"
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFE_RING_ALIGN
+value|(sizeof(struct nfe_desc64))
+end_define
+
 begin_comment
 comment|/* flags common to V1/V2 descriptors */
 end_comment
@@ -918,8 +1210,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFE_RX_CSUMOK
-value|0x1c00
+name|NFE_RX_UDP_CSUMOK
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_RX_TCP_CSUMOK
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_RX_IP_CSUMOK
+value|(1<< 12)
 end_define
 
 begin_define
@@ -939,7 +1245,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFE_TX_TCP_CSUM
+name|NFE_RX_LEN_MASK
+value|0x3fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_TX_TCP_UDP_CSUM
 value|(1<< 10)
 end_define
 
@@ -948,6 +1261,20 @@ define|#
 directive|define
 name|NFE_TX_IP_CSUM
 value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_TX_TSO
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_TX_TSO_SHIFT
+value|14
 end_define
 
 begin_define
@@ -967,7 +1294,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4((sc)->nfe_memt, (sc)->nfe_memh, (reg))
+value|bus_read_4((sc)->nfe_res[0], (reg))
 end_define
 
 begin_define
@@ -982,7 +1309,14 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4((sc)->nfe_memt, (sc)->nfe_memh, (reg), (val))
+value|bus_write_4((sc)->nfe_res[0], (reg), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFE_TIMEOUT
+value|1000
 end_define
 
 begin_ifndef
@@ -1162,6 +1496,34 @@ define|#
 directive|define
 name|PCI_PRODUCT_NVIDIA_MCP65_LAN4
 value|0x0453
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_NVIDIA_MCP67_LAN1
+value|0x054c
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_NVIDIA_MCP67_LAN2
+value|0x054d
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_NVIDIA_MCP67_LAN3
+value|0x054e
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_NVIDIA_MCP67_LAN4
+value|0x054f
 end_define
 
 begin_define
