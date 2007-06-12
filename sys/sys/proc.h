@@ -2129,6 +2129,11 @@ name|int
 name|p_maxthrwaits
 decl_stmt|;
 comment|/* (c) Max threads num waiters */
+specifier|volatile
+name|int
+name|p_exitthreads
+decl_stmt|;
+comment|/* (j) Number of threads exiting */
 name|int
 name|p_traceflag
 decl_stmt|;

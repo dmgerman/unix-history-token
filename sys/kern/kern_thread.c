@@ -267,6 +267,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|thread_zombie
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -943,12 +955,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Stash an embarasingly extra thread into the zombie thread queue.  * Use the slpq as that must be unused by now.  */
+comment|/*  * Place an unused thread on the zombie list.  * Use the slpq as that must be unused by now.  */
 end_comment
 
 begin_function
 name|void
-name|thread_stash
+name|thread_zombie
 parameter_list|(
 name|struct
 name|thread
@@ -976,6 +988,40 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|zombie_lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Release a thread that has exited after cpu_throw().  */
+end_comment
+
+begin_function
+name|void
+name|thread_stash
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+name|atomic_subtract_rel_int
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_exitthreads
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|thread_zombie
+argument_list|(
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1279,7 +1325,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Note that we don't need to free the cred here as it 		 * is done in thread_reap(). 		 */
-name|thread_stash
+name|thread_zombie
 argument_list|(
 name|td
 operator|->
@@ -1486,6 +1532,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|atomic_add_int
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_exitthreads
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|PCPU_SET
 argument_list|(
 name|deadthread
@@ -1601,13 +1659,13 @@ literal|"Multiple threads in wait1()"
 operator|)
 argument_list|)
 expr_stmt|;
-name|FOREACH_THREAD_IN_PROC
+name|td
+operator|=
+name|FIRST_THREAD_IN_PROC
 argument_list|(
-argument|p
-argument_list|,
-argument|td
+name|p
 argument_list|)
-block|{
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KSE
@@ -1665,6 +1723,29 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* Lock the last thread so we spin until it exits cpu_throw(). */
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+comment|/* Wait for any remaining threads to exit cpu_throw(). */
+while|while
+condition|(
+name|p
+operator|->
+name|p_exitthreads
+condition|)
+name|sched_relinquish
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|cpu_thread_clean
 argument_list|(
 name|td
@@ -1677,7 +1758,6 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
-block|}
 name|thread_reap
 argument_list|()
 expr_stmt|;
@@ -1854,7 +1934,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|thread_stash
+name|thread_zombie
 argument_list|(
 name|td
 operator|->
