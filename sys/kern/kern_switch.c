@@ -2845,41 +2845,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Called from:  *  thr_create()  *  proc_init() (UMA) via sched_newproc()  */
-end_comment
-
-begin_function
-name|void
-name|sched_init_concurrency
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-block|{ }
-end_function
-
-begin_comment
-comment|/*  * Change the concurrency of an existing proc to N  * Called from:  *  kse_create()  *  kse_exit()  *  thread_exit()  *  thread_single()  */
-end_comment
-
-begin_function
-name|void
-name|sched_set_concurrency
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|int
-name|concurrency
-parameter_list|)
-block|{ }
-end_function
-
 begin_endif
 endif|#
 directive|endif
