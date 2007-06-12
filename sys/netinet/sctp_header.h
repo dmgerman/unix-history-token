@@ -69,6 +69,7 @@ name|addr
 decl_stmt|;
 comment|/* IPV4 address */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -96,6 +97,7 @@ index|]
 decl_stmt|;
 comment|/* IPV6 address */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -148,6 +150,7 @@ index|]
 decl_stmt|;
 comment|/* host name */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -183,6 +186,7 @@ index|]
 decl_stmt|;
 comment|/* array of supported address 						 * types */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -200,6 +204,7 @@ name|ph
 decl_stmt|;
 comment|/* type=SCTP_ECN_CAPABLE */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -243,6 +248,7 @@ name|SCTP_ADDRMAX
 index|]
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -263,6 +269,7 @@ name|sctp_paramhdr
 name|ph
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -285,6 +292,7 @@ name|correlation_id
 decl_stmt|;
 comment|/* correlation id for this param */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -304,6 +312,7 @@ name|addrp
 decl_stmt|;
 comment|/* max storage size */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -323,6 +332,7 @@ name|addrp
 decl_stmt|;
 comment|/* max storage size */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -349,6 +359,7 @@ literal|0
 index|]
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -366,6 +377,7 @@ name|ph
 decl_stmt|;
 comment|/* type = 0x8001  len = 4 */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -391,6 +403,7 @@ name|protocol_id
 decl_stmt|;
 comment|/* user data follows */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -407,6 +420,7 @@ name|sctp_data
 name|dp
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -444,6 +458,7 @@ decl_stmt|;
 comment|/* I-TSN */
 comment|/* optional param's follow */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -459,6 +474,13 @@ define|#
 directive|define
 name|SCTP_ADDRESS_SIZE
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_RESERVE_SPACE
+value|6
 end_define
 
 begin_comment
@@ -477,6 +499,11 @@ name|SCTP_IDENTIFICATION_SIZE
 index|]
 decl_stmt|;
 comment|/* id of who we are */
+name|struct
+name|timeval
+name|time_entered
+decl_stmt|;
+comment|/* the time I built cookie */
 name|uint32_t
 name|cookie_life
 decl_stmt|;
@@ -497,11 +524,6 @@ name|uint32_t
 name|my_vtag
 decl_stmt|;
 comment|/* my tag in INIT-ACK (for quick ref) */
-name|struct
-name|timeval
-name|time_entered
-decl_stmt|;
-comment|/* the time I built cookie */
 name|uint32_t
 name|address
 index|[
@@ -560,11 +582,16 @@ name|uint8_t
 name|loopback_scope
 decl_stmt|;
 comment|/* loopback scope information */
-name|uint16_t
+name|uint8_t
 name|reserved
+index|[
+name|SCTP_RESERVE_SPACE
+index|]
 decl_stmt|;
+comment|/* Align to 64 bits */
 comment|/* 	 * at the end is tacked on the INIT chunk and the INIT-ACK chunk 	 * (minus the cookie). 	 */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -589,6 +616,7 @@ name|uint16_t
 name|resv
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -610,6 +638,7 @@ name|reserved
 decl_stmt|;
 comment|/* Only one invalid addr type */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -630,6 +659,7 @@ name|sctp_state_cookie
 name|cookie
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -646,6 +676,7 @@ name|sctp_init
 name|init
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -662,6 +693,7 @@ name|sctp_init_chunk
 name|msg
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -707,6 +739,7 @@ name|end
 decl_stmt|;
 comment|/* Gap Ack block end */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -733,6 +766,7 @@ comment|/* number of duplicate TSNs */
 comment|/* struct sctp_gap_ack_block's follow */
 comment|/* uint32_t duplicate_tsn's follow */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -749,6 +783,7 @@ name|sctp_sack
 name|sack
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -765,6 +800,7 @@ name|sctp_heartbeat_info_param
 name|hb_info
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -781,6 +817,7 @@ name|sctp_heartbeat
 name|heartbeat
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -816,6 +853,7 @@ name|ch
 decl_stmt|;
 comment|/* optional error cause may follow */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -832,6 +870,7 @@ name|sctp_abort_chunk
 name|msg
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -851,6 +890,7 @@ name|uint32_t
 name|cumulative_tsn_ack
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -867,6 +907,7 @@ name|sctp_chunkhdr
 name|ch
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -884,6 +925,7 @@ name|ch
 decl_stmt|;
 comment|/* optional error causes follow */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -904,6 +946,7 @@ name|sctp_state_cookie
 name|cookie
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -920,6 +963,7 @@ name|sctp_chunkhdr
 name|ch
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -939,6 +983,7 @@ name|uint32_t
 name|tsn
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -958,6 +1003,7 @@ name|uint32_t
 name|tsn
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -974,6 +1020,7 @@ name|sctp_chunkhdr
 name|ch
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -994,6 +1041,7 @@ name|uint32_t
 name|time_usec
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1009,6 +1057,7 @@ name|uint32_t
 name|indication
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1030,6 +1079,7 @@ name|ph
 decl_stmt|;
 comment|/* really an error cause */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1046,6 +1096,7 @@ name|sctp_shutdown_complete_chunk
 name|shut_cmp
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1071,6 +1122,7 @@ decl_stmt|;
 comment|/* lookup address parameter (mandatory) */
 comment|/* asconf parameters follow */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1091,6 +1143,7 @@ name|serial_number
 decl_stmt|;
 comment|/* asconf parameters follow */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1115,6 +1168,7 @@ name|new_cumulative_tsn
 decl_stmt|;
 comment|/* stream/sequence pairs (sctp_strseq) follow */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1129,6 +1183,7 @@ name|uint16_t
 name|sequence
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1145,6 +1200,7 @@ name|sctp_forward_tsn_chunk
 name|msg
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1176,6 +1232,7 @@ name|uint32_t
 name|tsn_ifany
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1206,6 +1263,7 @@ literal|0
 index|]
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1241,6 +1299,7 @@ index|]
 decl_stmt|;
 comment|/* if not all list of streams */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1263,6 +1322,7 @@ index|]
 decl_stmt|;
 comment|/* if not all list of streams */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1278,6 +1338,7 @@ name|uint32_t
 name|request_seq
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1297,6 +1358,7 @@ name|uint32_t
 name|result
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1322,6 +1384,7 @@ name|uint32_t
 name|receivers_next_tsn
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1408,6 +1471,7 @@ name|sctp_stream_reset_out_request
 name|sr_req
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1424,6 +1488,7 @@ name|sctp_stream_reset_in_request
 name|sr_req
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1440,6 +1505,7 @@ name|sctp_stream_reset_tsn_request
 name|sr_req
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1456,6 +1522,7 @@ name|sctp_stream_reset_response
 name|sr_resp
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1476,6 +1543,7 @@ name|sctp_stream_reset_response_tsn
 name|sr_resp
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1514,6 +1582,7 @@ literal|0
 index|]
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1533,6 +1602,7 @@ literal|0
 index|]
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1552,6 +1622,7 @@ literal|0
 index|]
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1576,6 +1647,7 @@ literal|0
 index|]
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1594,6 +1666,7 @@ name|uint16_t
 name|padding
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 

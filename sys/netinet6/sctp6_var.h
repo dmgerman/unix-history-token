@@ -60,24 +60,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|sctp6_ctloutput
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|socket
-operator|*
-operator|,
-expr|struct
-name|sockopt
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|sctp6_input
 name|__P
 argument_list|(

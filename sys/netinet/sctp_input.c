@@ -18837,6 +18837,19 @@ operator|.
 name|a_rwnd
 argument_list|)
 expr_stmt|;
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_INPUT3
+argument_list|,
+literal|"SCTP_SACK process cum_ack:%x num_seg:%d a_rwnd:%d\n"
+argument_list|,
+name|cum_ack
+argument_list|,
+name|num_seg
+argument_list|,
+name|a_rwnd
+argument_list|)
+expr_stmt|;
 name|stcb
 operator|->
 name|asoc

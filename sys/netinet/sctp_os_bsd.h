@@ -1021,6 +1021,17 @@ value|(ticks)
 end_define
 
 begin_comment
+comment|/* The packed define for 64 bit platforms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_PACKED
+value|__attribute__((packed))
+end_define
+
+begin_comment
 comment|/*  * Functions  */
 end_comment
 

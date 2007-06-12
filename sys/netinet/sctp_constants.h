@@ -2919,7 +2919,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_ADDRMAX
-value|20
+value|24
 end_define
 
 begin_comment

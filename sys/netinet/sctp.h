@@ -65,6 +65,12 @@ decl_stmt|;
 comment|/* Adler32 C-Sum */
 comment|/* chunks follow... */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -90,6 +96,12 @@ decl_stmt|;
 comment|/* chunk length */
 comment|/* optional params follow */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -110,6 +122,12 @@ name|param_length
 decl_stmt|;
 comment|/* parameter length */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -976,6 +994,12 @@ name|length
 decl_stmt|;
 comment|/* optional cause-specific info may follow */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -987,7 +1011,7 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_INVALID_STREAM */
+comment|/* code=SCTP_ERROR_INVALID_STRE 						 * AM */
 name|uint16_t
 name|stream_id
 decl_stmt|;
@@ -996,6 +1020,12 @@ name|uint16_t
 name|reserved
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1007,13 +1037,19 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_MISSING_PARAM */
+comment|/* code=SCTP_ERROR_MISSING_PARA 						 * M */
 name|uint32_t
 name|num_missing_params
 decl_stmt|;
-comment|/* number of missing parameters */
+comment|/* number of missing 						 * parameters */
 comment|/* uint16_t param_type's follow */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1025,12 +1061,18 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_STALE_COOKIE */
+comment|/* code=SCTP_ERROR_STALE_COOKIE 						 *  */
 name|uint32_t
 name|stale_time
 decl_stmt|;
 comment|/* time in usec of staleness */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1042,8 +1084,14 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_OUT_OF_RESOURCES */
+comment|/* code=SCTP_ERROR_OUT_OF_RESOU 						 * RCES */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1055,8 +1103,14 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_UNRESOLVABLE_ADDR */
+comment|/* code=SCTP_ERROR_UNRESOLVABLE 						 * _ADDR */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1068,13 +1122,19 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_UNRECOG_CHUNK */
+comment|/* code=SCTP_ERROR_UNRECOG_CHUN 						 * K */
 name|struct
 name|sctp_chunkhdr
 name|ch
 decl_stmt|;
 comment|/* header from chunk in error */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
 struct|;
 end_struct
 

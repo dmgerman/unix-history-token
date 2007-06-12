@@ -14527,11 +14527,18 @@ literal|0
 expr_stmt|;
 comment|/* fill in at the end */
 comment|/* Fill in the stc cookie data */
-operator|*
+name|memcpy
+argument_list|(
 name|stc
-operator|=
-operator|*
+argument_list|,
 name|stc_in
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctp_state_cookie
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* tack the INIT and then the INIT-ACK onto the chain */
 name|cookie_sz
