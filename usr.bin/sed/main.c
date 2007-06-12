@@ -1768,7 +1768,7 @@ name|linenum
 operator|=
 literal|0
 expr_stmt|;
-name|resetranges
+name|resetstate
 argument_list|()
 expr_stmt|;
 block|}

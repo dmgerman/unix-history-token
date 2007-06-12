@@ -187,7 +187,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|resetranges
+name|resetstate
 parameter_list|(
 name|void
 parameter_list|)

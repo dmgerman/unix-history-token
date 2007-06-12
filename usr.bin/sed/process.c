@@ -1193,6 +1193,7 @@ break|break;
 case|case
 literal|'x'
 case|:
+comment|/* 				 * If the hold space is null, make it empty 				 * but not null.  Otherwise the pattern space 				 * will become null after the swap, which is 				 * an abnormal condition. 				 */
 if|if
 condition|(
 name|hs
@@ -1513,12 +1514,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reset all inrange markers.  */
+comment|/*  * Reset the sed processor to its initial state.  */
 end_comment
 
 begin_function
 name|void
-name|resetranges
+name|resetstate
 parameter_list|(
 name|void
 parameter_list|)
@@ -1528,6 +1529,7 @@ name|s_command
 modifier|*
 name|cp
 decl_stmt|;
+comment|/* 	 * Reset all inrange markers. 	 */
 for|for
 control|(
 name|cp
@@ -1565,6 +1567,19 @@ operator|->
 name|inrange
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 	 * Clear out the hold space. 	 */
+name|cspace
+argument_list|(
+operator|&
+name|HS
+argument_list|,
+literal|""
+argument_list|,
+literal|0
+argument_list|,
+name|REPLACE
+argument_list|)
 expr_stmt|;
 block|}
 end_function
