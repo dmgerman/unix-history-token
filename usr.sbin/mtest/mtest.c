@@ -117,6 +117,54 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_comment
+comment|/* The following two socket options are private to the kernel and libc. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IP_SETMSFILTER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IP_SETMSFILTER
+value|74
+end_define
+
+begin_comment
+comment|/* atomically set filter list */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IP_GETMSFILTER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IP_GETMSFILTER
+value|75
+end_define
+
+begin_comment
+comment|/* get filter list */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|void
@@ -567,15 +615,15 @@ index|[
 name|STR_SIZE
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|WITH_IGMPV3
 name|char
 name|str3
 index|[
 name|STR_SIZE
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_IGMPV3
 name|char
 name|filtbuf
 index|[
@@ -595,13 +643,13 @@ name|struct
 name|ip_mreq
 name|imr
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|WITH_IGMPV3
 name|struct
 name|ip_mreq_source
 name|imrs
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_IGMPV3
 name|struct
 name|ip_msfilter
 modifier|*
@@ -1164,6 +1212,7 @@ case|:
 case|case
 literal|'e'
 case|:
+comment|/* XXX: SIOCSIPMSFILTER will be made an internal API. */
 if|if
 condition|(
 operator|(
@@ -1352,7 +1401,10 @@ literal|"ok\n"
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * Allow or block traffic from a source, using the 	 * delta based api. 	 */
+endif|#
+directive|endif
+comment|/* WITH_IGMPV3 */
+comment|/* 	 * Allow or block traffic from a source, using the 	 * delta based api. 	 * XXX: Currently we allow this to be used with the ASM-only 	 *      implementation of RFC3678 in FreeBSD 7.  	 */
 case|case
 literal|'t'
 case|:
@@ -1433,6 +1485,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|WITH_IGMPV3
+comment|/* XXX: SIOCSIPMSFILTER will be made an internal API. */
 comment|/* First determine out current filter mode. */
 name|imsfp
 operator|=
@@ -1554,6 +1610,26 @@ else|:
 name|IP_DROP_SOURCE_MEMBERSHIP
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* !WITH_IGMPV3 */
+comment|/* 		 * Don't look before we leap; we may only block or unblock 		 * sources on a socket in exclude mode. 		 */
+name|opt
+operator|=
+operator|(
+operator|*
+name|cmd
+operator|==
+literal|'t'
+operator|)
+condition|?
+name|IP_UNBLOCK_SOURCE
+else|:
+name|IP_BLOCK_SOURCE
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* WITH_IGMPV3 */
 if|if
 condition|(
 name|setsockopt
@@ -1588,9 +1664,13 @@ literal|"ok\n"
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|WITH_IGMPV3
 case|case
 literal|'g'
 case|:
+comment|/* XXX: SIOCSIPMSFILTER will be made an internal API. */
 if|if
 condition|(
 operator|(
@@ -1798,20 +1878,17 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-else|#
-directive|else
+endif|#
+directive|endif
 comment|/* !WITH_IGMPV3 */
+ifndef|#
+directive|ifndef
+name|WITH_IGMPV3
 case|case
 literal|'i'
 case|:
 case|case
 literal|'e'
-case|:
-case|case
-literal|'t'
-case|:
-case|case
-literal|'b'
 case|:
 case|case
 literal|'g'
@@ -1879,6 +1956,9 @@ argument_list|(
 literal|"p ifname 1/0               - set/clear ether promisc flag\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_IGMPv3
 name|printf
 argument_list|(
 literal|"i g.g.g.g i.i.i.i n        - set n include mode src filter\n"
@@ -1889,6 +1969,8 @@ argument_list|(
 literal|"e g.g.g.g i.i.i.i n        - set n exclude mode src filter\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"t g.g.g.g i.i.i.i s.s.s.s  - allow traffic from src\n"
@@ -1899,11 +1981,16 @@ argument_list|(
 literal|"b g.g.g.g i.i.i.i s.s.s.s  - block traffic from src\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_IGMPV3
 name|printf
 argument_list|(
 literal|"g g.g.g.g i.i.i.i n        - get and show n src filters\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"f filename                 - read command(s) from file\n"

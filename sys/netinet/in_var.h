@@ -359,6 +359,27 @@ argument|router_info
 argument_list|)
 name|rti_list
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
+name|int
+name|rti_timev1
+decl_stmt|;
+comment|/* IGMPv1 querier present */
+name|int
+name|rti_timev2
+decl_stmt|;
+comment|/* IGMPv2 querier present */
+name|int
+name|rti_timer
+decl_stmt|;
+comment|/* report to general query */
+name|int
+name|rti_qrv
+decl_stmt|;
+comment|/* querier robustness */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -413,9 +434,138 @@ name|u_int
 name|inm_refcount
 decl_stmt|;
 comment|/* reference count */
+ifdef|#
+directive|ifdef
+name|notyet
+comment|/* IGMPv3 source-specific multicast fields */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|in_msfentry
+argument_list|)
+name|inm_msf
+expr_stmt|;
+comment|/* all active source filters */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|in_msfentry
+argument_list|)
+name|inm_msf_record
+expr_stmt|;
+comment|/* recorded sources */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|in_msfentry
+argument_list|)
+name|inm_msf_exclude
+expr_stmt|;
+comment|/* exclude sources */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|in_msfentry
+argument_list|)
+name|inm_msf_include
+expr_stmt|;
+comment|/* include sources */
+comment|/* XXX: should this lot go to the router_info structure? */
+comment|/* XXX: can/should these be callouts? */
+comment|/* IGMP protocol timers */
+name|int32_t
+name|inm_ti_curstate
+decl_stmt|;
+comment|/* current state timer */
+name|int32_t
+name|inm_ti_statechg
+decl_stmt|;
+comment|/* state change timer */
+comment|/* IGMP report timers */
+name|uint16_t
+name|inm_rpt_statechg
+decl_stmt|;
+comment|/* state change report timer */
+name|uint16_t
+name|inm_rpt_toxx
+decl_stmt|;
+comment|/* fmode change report timer */
+comment|/* IGMP protocol state */
+name|uint16_t
+name|inm_fmode
+decl_stmt|;
+comment|/* filter mode */
+name|uint32_t
+name|inm_recsrc_count
+decl_stmt|;
+comment|/* # of recorded sources */
+name|uint16_t
+name|inm_exclude_sock_count
+decl_stmt|;
+comment|/* # of exclude-mode sockets */
+name|uint16_t
+name|inm_gass_count
+decl_stmt|;
+comment|/* # of g-a-s queries */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_comment
+comment|/*  * Internet multicast source filter list. This list is used to store  * IP multicast source addresses for each membership on an interface.  * TODO: Allocate these structures using UMA.  * TODO: Find an easier way of linking the struct into two lists at once.  */
+end_comment
+
+begin_struct
+struct|struct
+name|in_msfentry
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|in_msfentry
+argument_list|)
+name|isf_link
+expr_stmt|;
+comment|/* next filter in all-list */
+name|TAILQ_ENTRY
+argument_list|(
+argument|in_msfentry
+argument_list|)
+name|isf_next
+expr_stmt|;
+comment|/* next filter in queue */
+name|struct
+name|in_addr
+name|isf_addr
+decl_stmt|;
+comment|/* the address of this source */
+name|uint16_t
+name|isf_refcount
+decl_stmt|;
+comment|/* reference count */
+name|uint16_t
+name|isf_reporttag
+decl_stmt|;
+comment|/* what to report to the IGMP router */
+name|uint16_t
+name|isf_rexmit
+decl_stmt|;
+comment|/* retransmission state/count */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -591,6 +741,50 @@ struct_decl|struct
 name|route
 struct_decl|;
 end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ip_moptions
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|size_t
+name|imo_match_group
+parameter_list|(
+name|struct
+name|ip_moptions
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|in_msource
+modifier|*
+name|imo_match_source
+parameter_list|(
+name|struct
+name|ip_moptions
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|struct

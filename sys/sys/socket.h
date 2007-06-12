@@ -1284,6 +1284,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_STRUCT_SOCKADDR_STORAGE_DECLARED
+end_ifndef
+
 begin_comment
 comment|/*  * RFC 2553: protocol-independent placeholder for socket addresses  */
 end_comment
@@ -1348,6 +1354,17 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|_STRUCT_SOCKADDR_STORAGE_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

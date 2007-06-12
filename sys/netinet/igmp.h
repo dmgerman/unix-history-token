@@ -52,12 +52,164 @@ begin_comment
 comment|/*  (zero for queries)             */
 end_comment
 
+begin_struct
+struct|struct
+name|igmpv3
+block|{
+name|u_char
+name|igmp_type
+decl_stmt|;
+comment|/* version& type of IGMP message  */
+name|u_char
+name|igmp_code
+decl_stmt|;
+comment|/* subtype for routing msgs        */
+name|u_short
+name|igmp_cksum
+decl_stmt|;
+comment|/* IP-style checksum               */
+name|struct
+name|in_addr
+name|igmp_group
+decl_stmt|;
+comment|/* group address being reported    */
+comment|/*  (zero for queries)             */
+name|u_char
+name|igmp_misc
+decl_stmt|;
+comment|/* reserved/suppress/robustness    */
+name|u_char
+name|igmp_qqi
+decl_stmt|;
+comment|/* querier's query interval        */
+name|u_short
+name|igmp_numsrc
+decl_stmt|;
+comment|/* number of sources               */
+comment|/*struct in_addr	igmp_sources[1];*/
+comment|/* source addresses */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|igmp_grouprec
+block|{
+name|u_char
+name|ig_type
+decl_stmt|;
+comment|/* record type */
+name|u_char
+name|ig_datalen
+decl_stmt|;
+comment|/* length of auxiliary data */
+name|u_short
+name|ig_numsrc
+decl_stmt|;
+comment|/* number of sources */
+name|struct
+name|in_addr
+name|ig_group
+decl_stmt|;
+comment|/* group address being reported */
+comment|/*struct in_addr	ig_sources[1];*/
+comment|/* source addresses */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|igmp_report
+block|{
+name|u_char
+name|ir_type
+decl_stmt|;
+comment|/* record type */
+name|u_char
+name|ir_rsv1
+decl_stmt|;
+comment|/* reserved */
+name|u_short
+name|ir_cksum
+decl_stmt|;
+comment|/* checksum */
+name|u_short
+name|ir_rsv2
+decl_stmt|;
+comment|/* reserved */
+name|u_short
+name|ir_numgrps
+decl_stmt|;
+comment|/* number of group records */
+name|struct
+name|igmp_grouprec
+name|ir_groups
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* group records */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
 name|IGMP_MINLEN
 value|8
 end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_HDRLEN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_GRPREC_HDRLEN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_PREPEND
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_QRV
+parameter_list|(
+name|pigmp
+parameter_list|)
+value|((pigmp)->igmp_misc& (0x07))
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MAXSOURCES
+parameter_list|(
+name|len
+parameter_list|)
+value|(((len) - 12)>> 2)
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_comment
 comment|/*  * Message types, including version number.  */
@@ -149,6 +301,17 @@ end_define
 
 begin_comment
 comment|/* mcast traceroute messages  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_V3_MEMBERSHIP_REPORT
+value|0x22
+end_define
+
+begin_comment
+comment|/* Ver. 3 membership report */
 end_comment
 
 begin_define

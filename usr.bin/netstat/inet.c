@@ -2599,7 +2599,7 @@ name|p
 argument_list|(
 name|udps_noportbcast
 argument_list|,
-literal|"\t%lu broadcast/multicast datagram%s dropped due to no socket\n"
+literal|"\t%lu broadcast/multicast datagram%s undelivered\n"
 argument_list|)
 expr_stmt|;
 name|p1a
@@ -2666,6 +2666,14 @@ argument_list|(
 name|udps_opackets
 argument_list|,
 literal|"\t%lu datagram%s output\n"
+argument_list|)
+expr_stmt|;
+comment|/* the next statistic is cumulative in udps_noportbcast */
+name|p
+argument_list|(
+name|udps_filtermcast
+argument_list|,
+literal|"\t%lu time%s multicast source filter matched\n"
 argument_list|)
 expr_stmt|;
 undef|#

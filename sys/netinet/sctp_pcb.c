@@ -12704,7 +12704,7 @@ operator|->
 name|inp_moptions
 condition|)
 block|{
-name|ip_freemoptions
+name|inp_freemoptions
 argument_list|(
 name|ip_pcb
 operator|->

@@ -158,6 +158,10 @@ comment|/* of no socket on port, arrived as multicast */
 name|u_long
 name|udps_noportmcast
 decl_stmt|;
+name|u_long
+name|udps_filtermcast
+decl_stmt|;
+comment|/* blocked by multicast filter */
 block|}
 struct|;
 end_struct

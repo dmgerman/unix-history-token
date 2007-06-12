@@ -59,6 +59,10 @@ name|u_int
 name|igps_snd_reports
 decl_stmt|;
 comment|/* sent membership reports */
+name|u_int
+name|igps_rcv_toolong
+decl_stmt|;
+comment|/* received with too many bytes */
 block|}
 struct|;
 end_struct
@@ -98,6 +102,31 @@ value|1
 end_define
 
 begin_comment
+comment|/*  * State masks for IGMPv3  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_V3_NONEXISTENT
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_V3_OTHERMEMBER
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_V3_IREPORTEDLAST
+value|0x04
+end_define
+
+begin_comment
 comment|/*  * We must remember what version the subnet's querier is.  * We conveniently use the IGMP message type for the proper  * membership report to keep this state.  */
 end_comment
 
@@ -115,6 +144,13 @@ name|IGMP_V2_ROUTER
 value|IGMP_V2_MEMBERSHIP_REPORT
 end_define
 
+begin_define
+define|#
+directive|define
+name|IGMP_V3_ROUTER
+value|IGMP_V3_MEMBERSHIP_REPORT
+end_define
+
 begin_comment
 comment|/*  * Revert to new router if we haven't heard from an old router in  * this amount of time.  */
 end_comment
@@ -125,6 +161,288 @@ directive|define
 name|IGMP_AGE_THRESHOLD
 value|540
 end_define
+
+begin_comment
+comment|/*  * IGMPv3 protocol defaults  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_INIT_ROBVAR
+value|2
+end_define
+
+begin_comment
+comment|/* Robustness */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MAX_ROBVAR
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_INIT_QRYINT
+value|125
+end_define
+
+begin_comment
+comment|/* Querier's Query interval */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MAX_QRYINT
+value|255
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_INIT_QRYRSP
+value|10
+end_define
+
+begin_comment
+comment|/* Query Response interval */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_DEF_QRYMRT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_UNSOL_INT
+value|1
+end_define
+
+begin_comment
+comment|/* Unsolicited Report interval */
+end_comment
+
+begin_comment
+comment|/*  * IGMPv3 report types  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_REPORT_MODE_IN
+value|1
+end_define
+
+begin_comment
+comment|/* mode-is-include */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_REPORT_MODE_EX
+value|2
+end_define
+
+begin_comment
+comment|/* mode-is-exclude */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_REPORT_TO_IN
+value|3
+end_define
+
+begin_comment
+comment|/* change-to-include */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_REPORT_TO_EX
+value|4
+end_define
+
+begin_comment
+comment|/* change-to-exclude */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_REPORT_ALLOW_NEW
+value|5
+end_define
+
+begin_comment
+comment|/* allow-new-sources */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_REPORT_BLOCK_OLD
+value|6
+end_define
+
+begin_comment
+comment|/* block-old-sources */
+end_comment
+
+begin_comment
+comment|/*  * Report types  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MASK_CUR_STATE
+value|0x01
+end_define
+
+begin_comment
+comment|/* Report current-state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MASK_ALLOW_NEW
+value|0x02
+end_define
+
+begin_comment
+comment|/* Report source as allow-new */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MASK_BLOCK_OLD
+value|0x04
+end_define
+
+begin_comment
+comment|/* Report source as block-old */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MASK_TO_IN
+value|0x08
+end_define
+
+begin_comment
+comment|/* Report source as to_in */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MASK_TO_EX
+value|0x10
+end_define
+
+begin_comment
+comment|/* Report source as to_ex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MASK_STATE_T1
+value|0x20
+end_define
+
+begin_comment
+comment|/* State at T1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MASK_STATE_T2
+value|0x40
+end_define
+
+begin_comment
+comment|/* State at T2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MASK_IF_STATE
+value|0x80
+end_define
+
+begin_comment
+comment|/* Report current-state per interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_MASK_STATE_TX
+value|(IGMP_MASK_STATE_T1 | IGMP_MASK_STATE_T2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_MASK_PENDING
+value|(IGMP_MASK_CUR_STATE |			\ 				 IGMP_MASK_ALLOW_NEW |			\ 				 IGMP_MASK_BLOCK_OLD)
+end_define
+
+begin_comment
+comment|/*  * List identifiers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_EXCLUDE_LIST
+value|1
+end_define
+
+begin_comment
+comment|/* exclude list used to tag report */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_INCLUDE_LIST
+value|2
+end_define
+
+begin_comment
+comment|/* include list used to tag report */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGMP_RECORDED_LIST
+value|3
+end_define
+
+begin_comment
+comment|/* recorded list used to tag report */
+end_comment
 
 begin_function_decl
 name|void
@@ -227,7 +545,7 @@ begin_define
 define|#
 directive|define
 name|IGMPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "stats", CTLTYPE_STRUCT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "stats", CTLTYPE_STRUCT } \ }
 end_define
 
 begin_endif

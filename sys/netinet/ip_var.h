@@ -158,7 +158,59 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure attached to inpcb.ip_moptions and  * passed to ip_output when IP multicast options are in use.  */
+comment|/*  * Multicast source list entry.  */
+end_comment
+
+begin_struct
+struct|struct
+name|in_msource
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|in_msource
+argument_list|)
+name|ims_next
+expr_stmt|;
+comment|/* next source */
+name|struct
+name|sockaddr_storage
+name|ims_addr
+decl_stmt|;
+comment|/* address of this source */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Multicast filter descriptor; there is one instance per group membership  * on a socket, allocated as an expandable vector hung off ip_moptions.  * struct in_multi contains separate IPv4-stack-wide state for IGMPv3.  */
+end_comment
+
+begin_struct
+struct|struct
+name|in_mfilter
+block|{
+name|uint16_t
+name|imf_fmode
+decl_stmt|;
+comment|/* filter mode for this socket/group */
+name|uint16_t
+name|imf_nsources
+decl_stmt|;
+comment|/* # of sources for this socket/group */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|in_msource
+argument_list|)
+name|imf_sources
+expr_stmt|;
+comment|/* source list */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure attached to inpcb.ip_moptions and  * passed to ip_output when IP multicast options are in use.  * This structure is lazy-allocated.  */
 end_comment
 
 begin_struct
@@ -203,6 +255,12 @@ modifier|*
 name|imo_membership
 decl_stmt|;
 comment|/* group memberships */
+name|struct
+name|in_mfilter
+modifier|*
+name|imo_mfilters
+decl_stmt|;
+comment|/* source filters */
 block|}
 struct|;
 end_struct
@@ -338,14 +396,14 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Flags passed to ip_output as last parameter.  */
+comment|/* flags passed to ip_output as last parameter */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP_FORWARDING
-value|0x01
+value|0x1
 end_define
 
 begin_comment
@@ -356,7 +414,7 @@ begin_define
 define|#
 directive|define
 name|IP_RAWOUTPUT
-value|0x02
+value|0x2
 end_define
 
 begin_comment
@@ -367,11 +425,22 @@ begin_define
 define|#
 directive|define
 name|IP_SENDONES
-value|0x04
+value|0x4
 end_define
 
 begin_comment
 comment|/* send all-ones broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_SENDTOIF
+value|0x8
+end_define
+
+begin_comment
+comment|/* send on specific ifnet */
 end_comment
 
 begin_define
@@ -610,6 +679,47 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|void
+name|inp_freemoptions
+parameter_list|(
+name|struct
+name|ip_moptions
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|inp_getmoptions
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|struct
+name|sockopt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|inp_setmoptions
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|struct
+name|sockopt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ip_ctloutput
 parameter_list|(
@@ -668,17 +778,6 @@ name|if_hwassist_flags
 parameter_list|,
 name|int
 name|sw_csum
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ip_freemoptions
-parameter_list|(
-name|struct
-name|ip_moptions
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

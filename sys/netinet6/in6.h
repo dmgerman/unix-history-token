@@ -1914,6 +1914,21 @@ comment|/* int; prefer temporary addresses as 				    * the source address. 				
 end_comment
 
 begin_comment
+comment|/*  * The following option is private; do not use it from user applications.  * It is deliberately defined to the same value as IP_MSFILTER.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_MSFILTER
+value|74
+end_define
+
+begin_comment
+comment|/* struct __msfilterreq; 				    * set/get multicast source filter list. 				    */
+end_comment
+
+begin_comment
 comment|/* to define items, should talk with KAME guys first, for *BSD compatibility */
 end_comment
 
@@ -1995,6 +2010,40 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_comment
+comment|/*  * Argument structure for IPV6_ADD_SOURCE_MEMBERSHIP,  * IPV6_DROP_SOURCE_MEMBERSHIP, IPV6_BLOCK_SOURCE, and IPV6_UNBLOCK_SOURCE.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ipv6_mreq_source
+block|{
+name|struct
+name|in6_addr
+name|ipv6mr_multiaddr
+decl_stmt|;
+name|struct
+name|in6_addr
+name|ipv6mr_sourceaddr
+decl_stmt|;
+name|uint32_t
+name|ipv6mr_interface
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * IPV6_PKTINFO: Packet information(RFC2292 sec 5)  */

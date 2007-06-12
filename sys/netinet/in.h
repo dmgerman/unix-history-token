@@ -275,6 +275,116 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SOCKLEN_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__socklen_t
+name|socklen_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_SOCKLEN_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Avoid collision with original definition in sys/socket.h. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_STRUCT_SOCKADDR_STORAGE_DECLARED
+end_ifndef
+
+begin_comment
+comment|/*  * RFC 2553: protocol-independent placeholder for socket addresses  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_SS_MAXSIZE
+value|128U
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SS_ALIGNSIZE
+value|(sizeof(__int64_t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SS_PAD1SIZE
+value|(_SS_ALIGNSIZE - sizeof(unsigned char) - \ 			    sizeof(sa_family_t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SS_PAD2SIZE
+value|(_SS_MAXSIZE - sizeof(unsigned char) - \ 			    sizeof(sa_family_t) - _SS_PAD1SIZE - _SS_ALIGNSIZE)
+end_define
+
+begin_struct
+struct|struct
+name|sockaddr_storage
+block|{
+name|unsigned
+name|char
+name|ss_len
+decl_stmt|;
+comment|/* address length */
+name|sa_family_t
+name|ss_family
+decl_stmt|;
+comment|/* address family */
+name|char
+name|__ss_pad1
+index|[
+name|_SS_PAD1SIZE
+index|]
+decl_stmt|;
+name|__int64_t
+name|__ss_align
+decl_stmt|;
+comment|/* force desired struct alignment */
+name|char
+name|__ss_pad2
+index|[
+name|_SS_PAD2SIZE
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|_STRUCT_SOCKADDR_STORAGE_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Socket address, internet style. */
 end_comment
@@ -2210,7 +2320,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* u_char; set/get IP multicast i/f  */
+comment|/* struct in_addr *or* struct ip_mreqn; 				      * set/get IP multicast i/f  */
 end_comment
 
 begin_define
@@ -2614,6 +2724,139 @@ comment|/* don't fragment packet */
 end_comment
 
 begin_comment
+comment|/* IPv4 Source Filter Multicast API [RFC3678] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_ADD_SOURCE_MEMBERSHIP
+value|70
+end_define
+
+begin_comment
+comment|/* join a source-specific group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_DROP_SOURCE_MEMBERSHIP
+value|71
+end_define
+
+begin_comment
+comment|/* drop a single source */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_BLOCK_SOURCE
+value|72
+end_define
+
+begin_comment
+comment|/* block a source */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_UNBLOCK_SOURCE
+value|73
+end_define
+
+begin_comment
+comment|/* unblock a source */
+end_comment
+
+begin_comment
+comment|/* The following option is private; do not use it from user applications. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_MSFILTER
+value|74
+end_define
+
+begin_comment
+comment|/* set/get filter list */
+end_comment
+
+begin_comment
+comment|/* Protocol Independent Multicast API [RFC3678] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCAST_JOIN_GROUP
+value|80
+end_define
+
+begin_comment
+comment|/* join an any-source group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCAST_LEAVE_GROUP
+value|81
+end_define
+
+begin_comment
+comment|/* leave all sources for group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCAST_JOIN_SOURCE_GROUP
+value|82
+end_define
+
+begin_comment
+comment|/* join a source-specific group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCAST_LEAVE_SOURCE_GROUP
+value|83
+end_define
+
+begin_comment
+comment|/* leave a single source */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCAST_BLOCK_SOURCE
+value|84
+end_define
+
+begin_comment
+comment|/* block a source */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCAST_UNBLOCK_SOURCE
+value|85
+end_define
+
+begin_comment
+comment|/* unblock a source */
+end_comment
+
+begin_comment
 comment|/*  * Defaults and limits for options  */
 end_comment
 
@@ -2657,6 +2900,17 @@ name|IP_MAX_MEMBERSHIPS
 value|4095
 end_define
 
+begin_define
+define|#
+directive|define
+name|IP_MAX_SOURCE_FILTER
+value|1024
+end_define
+
+begin_comment
+comment|/* # of filters per socket, per group */
+end_comment
+
 begin_comment
 comment|/*  * Argument structure for IP_ADD_MEMBERSHIP and IP_DROP_MEMBERSHIP.  */
 end_comment
@@ -2678,6 +2932,290 @@ comment|/* local IP address of interface */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Modified argument structure for IP_MULTICAST_IF, obtained from Linux.  * This is used to specify an interface index for multicast sends, as  * the IPv4 legacy APIs do not support this (unless IP_SENDIF is available).  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip_mreqn
+block|{
+name|struct
+name|in_addr
+name|imr_multiaddr
+decl_stmt|;
+comment|/* IP multicast address of group */
+name|struct
+name|in_addr
+name|imr_address
+decl_stmt|;
+comment|/* local IP address of interface */
+name|int
+name|imr_ifindex
+decl_stmt|;
+comment|/* Interface index; cast to uint32_t */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Argument structure for IPv4 Multicast Source Filter APIs. [RFC3678]  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip_mreq_source
+block|{
+name|struct
+name|in_addr
+name|imr_multiaddr
+decl_stmt|;
+comment|/* IP multicast address of group */
+name|struct
+name|in_addr
+name|imr_sourceaddr
+decl_stmt|;
+comment|/* IP address of source */
+name|struct
+name|in_addr
+name|imr_interface
+decl_stmt|;
+comment|/* local IP address of interface */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Argument structures for Protocol-Independent Multicast Source  * Filter APIs. [RFC3678]  */
+end_comment
+
+begin_struct
+struct|struct
+name|group_req
+block|{
+name|uint32_t
+name|gr_interface
+decl_stmt|;
+comment|/* interface index */
+name|struct
+name|sockaddr_storage
+name|gr_group
+decl_stmt|;
+comment|/* group address */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|group_source_req
+block|{
+name|uint32_t
+name|gsr_interface
+decl_stmt|;
+comment|/* interface index */
+name|struct
+name|sockaddr_storage
+name|gsr_group
+decl_stmt|;
+comment|/* group address */
+name|struct
+name|sockaddr_storage
+name|gsr_source
+decl_stmt|;
+comment|/* source address */
+block|}
+struct|;
+end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__MSFILTERREQ_DEFINED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__MSFILTERREQ_DEFINED
+end_define
+
+begin_comment
+comment|/*  * The following structure is private; do not use it from user applications.  * It is used to communicate IP_MSFILTER/IPV6_MSFILTER information between  * the RFC 3678 libc functions and the kernel.  */
+end_comment
+
+begin_struct
+struct|struct
+name|__msfilterreq
+block|{
+name|uint32_t
+name|msfr_ifindex
+decl_stmt|;
+comment|/* interface index */
+name|uint32_t
+name|msfr_fmode
+decl_stmt|;
+comment|/* filter mode for group */
+name|uint32_t
+name|msfr_nsrcs
+decl_stmt|;
+comment|/* # of sources in msfr_srcs */
+name|struct
+name|sockaddr_storage
+name|msfr_group
+decl_stmt|;
+comment|/* group address */
+name|struct
+name|sockaddr_storage
+modifier|*
+name|msfr_srcs
+decl_stmt|;
+comment|/* pointer to the first member 						 * of a contiguous array of 						 * sources to filter in full. 						 */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/*  * Advanced (Full-state) APIs [RFC3678]  * The RFC specifies uint_t for the 6th argument to [sg]etsourcefilter().  * We use uint32_t here to be consistent.  */
+end_comment
+
+begin_function_decl
+name|int
+name|setipv4sourcefilter
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|in_addr
+parameter_list|,
+name|struct
+name|in_addr
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|getipv4sourcefilter
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|in_addr
+parameter_list|,
+name|struct
+name|in_addr
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|setsourcefilter
+parameter_list|(
+name|int
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|socklen_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|struct
+name|sockaddr_storage
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|getsourcefilter
+parameter_list|(
+name|int
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|socklen_t
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr_storage
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Filter modes; also used to represent per-socket filter mode internally.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCAST_INCLUDE
+value|1
+end_define
+
+begin_comment
+comment|/* fmode: include these source(s) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCAST_EXCLUDE
+value|2
+end_define
+
+begin_comment
+comment|/* fmode: exclude these source(s) */
+end_comment
 
 begin_comment
 comment|/*  * Argument for IP_PORTRANGE:  * - which range to search when port is unspecified at bind() or connect()  */

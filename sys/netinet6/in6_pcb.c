@@ -1986,7 +1986,15 @@ operator|->
 name|inp_options
 argument_list|)
 expr_stmt|;
-name|ip_freemoptions
+if|if
+condition|(
+name|inp
+operator|->
+name|inp_moptions
+operator|!=
+name|NULL
+condition|)
+name|inp_freemoptions
 argument_list|(
 name|inp
 operator|->

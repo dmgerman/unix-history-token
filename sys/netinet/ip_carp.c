@@ -2235,6 +2235,14 @@ name|sc
 operator|->
 name|sc_imo
 operator|.
+name|imo_mfilters
+operator|=
+name|NULL
+expr_stmt|;
+name|sc
+operator|->
+name|sc_imo
+operator|.
 name|imo_max_memberships
 operator|=
 name|IP_MIN_MEMBERSHIPS
@@ -7451,6 +7459,21 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+name|KASSERT
+argument_list|(
+name|imo
+operator|->
+name|imo_mfilters
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: imo_mfilters != NULL"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|imo
 operator|->
 name|imo_num_memberships
