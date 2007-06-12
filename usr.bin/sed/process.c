@@ -378,10 +378,8 @@ begin_define
 define|#
 directive|define
 name|OUT
-parameter_list|(
-name|s
-parameter_list|)
-value|{ fwrite(s, sizeof(u_char), psl, outfile); fputc('\n', outfile); }
+parameter_list|()
+value|do {fwrite(ps, 1, psl, outfile); fputc('\n', outfile);} while (0)
 end_define
 
 begin_function
@@ -823,9 +821,8 @@ operator|!
 name|pd
 condition|)
 name|OUT
-argument_list|(
-argument|ps
-argument_list|)
+argument_list|()
+expr_stmt|;
 name|flush_appends
 argument_list|()
 expr_stmt|;
@@ -894,9 +891,8 @@ name|pd
 condition|)
 break|break;
 name|OUT
-argument_list|(
-argument|ps
-argument_list|)
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 literal|'P'
@@ -936,9 +932,8 @@ name|ps
 expr_stmt|;
 block|}
 name|OUT
-argument_list|(
-argument|ps
-argument_list|)
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -962,9 +957,8 @@ operator|!
 name|pd
 condition|)
 name|OUT
-argument_list|(
-argument|ps
-argument_list|)
+argument_list|()
+expr_stmt|;
 name|flush_appends
 argument_list|()
 expr_stmt|;
@@ -1289,9 +1283,8 @@ operator|!
 name|pd
 condition|)
 name|OUT
-argument_list|(
-argument|ps
-argument_list|)
+argument_list|()
+expr_stmt|;
 name|flush_appends
 argument_list|()
 expr_stmt|;
@@ -2157,9 +2150,8 @@ operator|->
 name|p
 condition|)
 name|OUT
-argument_list|(
-argument|ps
-argument_list|)
+argument_list|()
+expr_stmt|;
 comment|/* Handle the 'w' flag. */
 if|if
 condition|(
