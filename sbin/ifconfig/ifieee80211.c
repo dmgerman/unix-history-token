@@ -11602,6 +11602,14 @@ argument_list|)
 expr_stmt|;
 name|ireq
 operator|.
+name|i_data
+operator|=
+operator|&
+name|data
+expr_stmt|;
+comment|/* reset data buffer */
+name|ireq
+operator|.
 name|i_type
 operator|=
 name|IEEE80211_IOC_BSSID
@@ -12159,6 +12167,14 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+name|ireq
+operator|.
+name|i_data
+operator|=
+operator|&
+name|data
+expr_stmt|;
+comment|/* reset data buffer */
 block|}
 name|ireq
 operator|.
