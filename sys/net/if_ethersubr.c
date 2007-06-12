@@ -2610,6 +2610,16 @@ name|m_flags
 operator|&
 name|M_HASFCS
 argument_list|)
+operator|&&
+operator|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_LRO
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|if_printf
