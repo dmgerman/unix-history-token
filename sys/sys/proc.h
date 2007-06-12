@@ -1961,6 +1961,19 @@ argument_list|)
 name|p_threads
 expr_stmt|;
 comment|/* (j) all threads. */
+ifdef|#
+directive|ifdef
+name|KSE
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|kse_upcall
+argument_list|)
+name|p_upcalls
+expr_stmt|;
+comment|/* (j) All upcalls in the proc. */
+endif|#
+directive|endif
 name|struct
 name|mtx
 name|p_slock
@@ -2242,14 +2255,6 @@ comment|/* (c) POSIX interval timers. */
 ifdef|#
 directive|ifdef
 name|KSE
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|kse_upcall
-argument_list|)
-name|p_upcalls
-expr_stmt|;
-comment|/* (j) All upcalls in the proc. */
 name|int
 name|p_numupcalls
 decl_stmt|;
