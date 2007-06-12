@@ -2375,7 +2375,9 @@ parameter_list|,
 name|int
 name|mode
 parameter_list|,
-name|usb_proc_ptr
+name|struct
+name|thread
+modifier|*
 name|p
 parameter_list|)
 block|{
@@ -2631,7 +2633,9 @@ parameter_list|,
 name|int
 name|mode
 parameter_list|,
-name|usb_proc_ptr
+name|struct
+name|thread
+modifier|*
 name|p
 parameter_list|)
 block|{
@@ -2685,7 +2689,9 @@ parameter_list|,
 name|int
 name|flag
 parameter_list|,
-name|usb_proc_ptr
+name|struct
+name|thread
+modifier|*
 name|p
 parameter_list|)
 block|{
@@ -3242,7 +3248,9 @@ parameter_list|,
 name|int
 name|events
 parameter_list|,
-name|usb_proc_ptr
+name|struct
+name|thread
+modifier|*
 name|p
 parameter_list|)
 block|{

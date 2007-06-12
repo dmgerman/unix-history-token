@@ -4396,7 +4396,7 @@ comment|/* TODO */
 end_comment
 
 begin_endif
-unit|static int uvscom_ioctl(void *addr, int portno, u_long cmd, caddr_t data, int flag, 	     usb_proc_ptr p) { 	struct uvscom_softc *sc = addr; 	int error = 0;  	if (sc->sc_ucom.sc_dying) 		return (EIO);  	DPRINTF(("uvscom_ioctl: cmd = 0x%08lx\n", cmd));  	switch (cmd) { 	case TIOCNOTTY: 	case TIOCMGET: 	case TIOCMSET: 		break;  	default: 		DPRINTF(("uvscom_ioctl: unknown\n")); 		error = ENOTTY; 		break; 	}  	return (error); }
+unit|static int uvscom_ioctl(void *addr, int portno, u_long cmd, caddr_t data, int flag, 	     struct thread *p) { 	struct uvscom_softc *sc = addr; 	int error = 0;  	if (sc->sc_ucom.sc_dying) 		return (EIO);  	DPRINTF(("uvscom_ioctl: cmd = 0x%08lx\n", cmd));  	switch (cmd) { 	case TIOCNOTTY: 	case TIOCMGET: 	case TIOCMSET: 		break;  	default: 		DPRINTF(("uvscom_ioctl: unknown\n")); 		error = ENOTTY; 		break; 	}  	return (error); }
 endif|#
 directive|endif
 end_endif

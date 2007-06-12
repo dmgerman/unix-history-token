@@ -120,15 +120,6 @@ parameter_list|)
 value|(device_get_softc(bdev))
 end_define
 
-begin_typedef
-typedef|typedef
-name|struct
-name|thread
-modifier|*
-name|usb_proc_ptr
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define

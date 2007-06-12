@@ -245,7 +245,9 @@ name|caddr_t
 parameter_list|,
 name|int
 parameter_list|,
-name|usb_proc_ptr
+name|struct
+name|thread
+modifier|*
 parameter_list|)
 function_decl|;
 name|int
