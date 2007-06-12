@@ -4693,6 +4693,15 @@ operator|=
 name|ticks
 expr_stmt|;
 block|}
+name|tp
+operator|->
+name|snd_wnd
+operator|=
+name|th
+operator|->
+name|th_win
+expr_stmt|;
+comment|/* initial send window */
 if|if
 condition|(
 name|to
@@ -5750,15 +5759,6 @@ condition|)
 goto|goto
 name|drop
 goto|;
-name|tp
-operator|->
-name|snd_wnd
-operator|=
-name|th
-operator|->
-name|th_win
-expr_stmt|;
-comment|/* initial send window */
 name|tp
 operator|->
 name|irs
