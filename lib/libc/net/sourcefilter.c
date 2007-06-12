@@ -1271,6 +1271,7 @@ operator|||
 operator|!
 name|IN6_IS_ADDR_MULTICAST
 argument_list|(
+operator|&
 name|psu
 operator|->
 name|sin6
@@ -1578,6 +1579,7 @@ operator|||
 operator|!
 name|IN6_IS_ADDR_MULTICAST
 argument_list|(
+operator|&
 name|psu
 operator|->
 name|sin6
