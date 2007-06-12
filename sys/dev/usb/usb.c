@@ -1259,12 +1259,9 @@ name|err
 operator|=
 name|usbd_new_device
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|,
 name|sc
 operator|->

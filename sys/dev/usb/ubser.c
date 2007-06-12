@@ -2086,12 +2086,9 @@ block|{
 comment|/* Wait for processes to go away. */
 name|usb_detach_wait
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3922,12 +3919,9 @@ literal|0
 condition|)
 name|usb_detach_wakeup
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -1482,12 +1482,9 @@ name|ucom
 operator|->
 name|sc_udev
 argument_list|,
-name|USBDEV
-argument_list|(
 name|ucom
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -1607,14 +1604,11 @@ name|sc_ucom
 operator|.
 name|sc_udev
 argument_list|,
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

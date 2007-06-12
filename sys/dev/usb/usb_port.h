@@ -113,16 +113,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|USBDEV
-parameter_list|(
-name|bdev
-parameter_list|)
-value|(bdev)
-end_define
-
-begin_define
-define|#
-directive|define
 name|USBGETSOFTC
 parameter_list|(
 name|bdev

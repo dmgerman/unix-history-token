@@ -1185,12 +1185,9 @@ name|sc
 operator|->
 name|sc_udev
 argument_list|,
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2961,7 +2958,7 @@ block|for (i = 0; i< USB_MAX_ENDPOINTS; i++) { 		for (dir = OUT; dir<= IN; dir++
 comment|/* Wake everyone */
 block|for (i = 0; i< USB_MAX_ENDPOINTS; i++) 			wakeup(&sc->sc_endpoints[i][IN]);
 comment|/* Wait for processes to go away. */
-block|usb_detach_wait(USBDEV(sc->sc_dev)); 	} 	splx(s);
+block|usb_detach_wait(sc->sc_dev); 	} 	splx(s);
 else|#
 directive|else
 if|if
@@ -3008,12 +3005,9 @@ block|{
 comment|/* Wait for processes to go away. */
 name|usb_detach_wait
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3095,12 +3089,9 @@ name|sc
 operator|->
 name|sc_udev
 argument_list|,
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

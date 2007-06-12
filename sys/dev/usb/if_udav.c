@@ -2544,12 +2544,9 @@ name|USB_EVENT_DRIVER_ATTACH
 argument_list|,
 name|dev
 argument_list|,
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2717,12 +2714,9 @@ block|{
 comment|/* Wait for processes to go away */
 name|usb_detach_wait
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2964,12 +2958,9 @@ name|sc
 operator|->
 name|sc_udev
 argument_list|,
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2991,17 +2982,17 @@ comment|/* read memory */
 end_comment
 
 begin_comment
-unit|static int udav_mem_read(struct udav_softc *sc, int offset, void *buf, int len) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", device_get_nameunit(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff; 	len&= 0xff;  	req.bmRequestType = UT_READ_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_READ; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, buf); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: read failed. off=%04x, err=%d\n", 			 device_get_nameunit(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
+unit|static int udav_mem_read(struct udav_softc *sc, int offset, void *buf, int len) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", device_get_nameunit(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff; 	len&= 0xff;  	req.bmRequestType = UT_READ_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_READ; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, buf); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(sc->sc_dev); 	if (err) { 		DPRINTF(("%s: %s: read failed. off=%04x, err=%d\n", 			 device_get_nameunit(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
 comment|/* write memory */
 end_comment
 
 begin_comment
-unit|static int udav_mem_write(struct udav_softc *sc, int offset, void *buf, int len) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", device_get_nameunit(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff; 	len&= 0xff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, buf); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: write failed. off=%04x, err=%d\n", 			 device_get_nameunit(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
+unit|static int udav_mem_write(struct udav_softc *sc, int offset, void *buf, int len) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", device_get_nameunit(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff; 	len&= 0xff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, buf); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(sc->sc_dev); 	if (err) { 		DPRINTF(("%s: %s: write failed. off=%04x, err=%d\n", 			 device_get_nameunit(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
 comment|/* write memory */
 end_comment
 
 begin_endif
-unit|static int udav_mem_write1(struct udav_softc *sc, int offset, unsigned char ch) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", device_get_nameunit(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE1; 	USETW(req.wValue, ch); 	USETW(req.wIndex, offset); 	USETW(req.wLength, 0x0000);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, NULL); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(USBDEV(sc->sc_dev)); 	if (err) { 		DPRINTF(("%s: %s: write failed. off=%04x, err=%d\n", 			 device_get_nameunit(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
+unit|static int udav_mem_write1(struct udav_softc *sc, int offset, unsigned char ch) { 	usb_device_request_t req; 	usbd_status err;  	if (sc == NULL) 		return (0);  	DPRINTFN(0x200, 		("%s: %s: enter\n", device_get_nameunit(sc->sc_dev), __func__));  	if (sc->sc_dying) 		return (0);  	offset&= 0xffff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE1; 	USETW(req.wValue, ch); 	USETW(req.wIndex, offset); 	USETW(req.wLength, 0x0000);  	sc->sc_refcnt++; 	err = usbd_do_request(sc->sc_udev,&req, NULL); 	if (--sc->sc_refcnt< 0) 		usb_detach_wakeup(sc->sc_dev); 	if (err) { 		DPRINTF(("%s: %s: write failed. off=%04x, err=%d\n", 			 device_get_nameunit(sc->sc_dev), __func__, offset, err)); 	}  	return (err); }
 endif|#
 directive|endif
 end_endif
@@ -3154,12 +3145,9 @@ literal|0
 condition|)
 name|usb_detach_wakeup
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3344,12 +3332,9 @@ literal|0
 condition|)
 name|usb_detach_wakeup
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3608,12 +3593,9 @@ literal|0
 condition|)
 name|usb_detach_wakeup
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5126,12 +5108,9 @@ literal|0
 condition|)
 name|usb_detach_wakeup
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5590,12 +5569,9 @@ literal|0
 condition|)
 name|usb_detach_wakeup
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5901,12 +5877,9 @@ literal|0
 condition|)
 name|usb_detach_wakeup
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6201,12 +6174,9 @@ literal|0
 condition|)
 name|usb_detach_wakeup
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6627,12 +6597,9 @@ literal|0
 condition|)
 name|usb_detach_wakeup
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -8278,12 +8245,9 @@ literal|0
 condition|)
 name|usb_detach_wakeup
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

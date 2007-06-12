@@ -1327,12 +1327,9 @@ name|USB_EVENT_DRIVER_ATTACH
 argument_list|,
 name|dev
 argument_list|,
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * To have the best chance of success we do things in the exact same 	 * order as Windoze98.  This should not be necessary, but some 	 * devices do not follow the USB specs to the letter. 	 * 	 * These are the events on the bus when a hub is attached: 	 *  Get device and config descriptors (see attach code) 	 *  Get hub descriptor (see above) 	 *  For all ports 	 *     turn on power 	 *     wait for power to become stable 	 * (all below happens in explore code) 	 *  For all ports 	 *     clear C_PORT_CONNECTION 	 *  For all ports 	 *     get port status 	 *     if device connected 	 *        wait 100 ms 	 *        turn on reset 	 *        wait 	 *        clear C_PORT_RESET 	 *        get port status 	 *        proceed with device attachment 	 */
@@ -2033,12 +2030,9 @@ name|usb_disconnect_port
 argument_list|(
 name|up
 argument_list|,
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|usbd_clear_port_feature
@@ -2258,12 +2252,9 @@ name|err
 operator|=
 name|usbd_new_device
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|,
 name|dev
 operator|->
@@ -2503,12 +2494,9 @@ name|sc
 operator|->
 name|sc_hub
 argument_list|,
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
