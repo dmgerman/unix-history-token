@@ -722,7 +722,7 @@ literal|"\n"
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+name|APPEND
 argument_list|)
 expr_stmt|;
 name|cspace
@@ -734,7 +734,7 @@ name|hs
 argument_list|,
 name|hsl
 argument_list|,
-literal|0
+name|APPEND
 argument_list|)
 expr_stmt|;
 break|break;
@@ -766,7 +766,7 @@ literal|"\n"
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+name|APPEND
 argument_list|)
 expr_stmt|;
 name|cspace
@@ -778,7 +778,7 @@ name|ps
 argument_list|,
 name|psl
 argument_list|,
-literal|0
+name|APPEND
 argument_list|)
 expr_stmt|;
 break|break;
@@ -865,7 +865,7 @@ literal|"\n"
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+name|APPEND
 argument_list|)
 expr_stmt|;
 if|if
@@ -876,7 +876,7 @@ argument_list|(
 operator|&
 name|PS
 argument_list|,
-literal|0
+name|APPEND
 argument_list|)
 condition|)
 name|exit
