@@ -2625,13 +2625,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* kludge to pass faulting virtual address to sendsig */
-name|frame
-operator|->
-name|tf_err
-operator|=
-name|eva
-expr_stmt|;
 return|return
 operator|(
 operator|(
