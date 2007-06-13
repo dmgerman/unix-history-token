@@ -607,6 +607,10 @@ name|uint8_t
 name|window_probe
 decl_stmt|;
 comment|/* Doing a window probe? */
+name|uint8_t
+name|RTO_measured
+decl_stmt|;
+comment|/* Have we done the first measure */
 ifdef|#
 directive|ifdef
 name|SCTP_HIGH_SPEED

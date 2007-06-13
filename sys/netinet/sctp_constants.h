@@ -3323,7 +3323,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_CHUNK_BUFFER_SIZE
-value|2048
+value|512
 end_define
 
 begin_define

@@ -175,11 +175,7 @@ begin_decl_stmt
 name|uint32_t
 name|sctp_peer_chunk_oh
 init|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mbuf
-argument_list|)
+name|SCTPCTL_PEER_CHKOH_DEFAULT
 decl_stmt|;
 end_decl_stmt
 

@@ -13190,7 +13190,7 @@ if|if
 condition|(
 name|net
 operator|->
-name|RTO
+name|RTO_measured
 condition|)
 block|{
 name|calc_time
@@ -13279,6 +13279,12 @@ block|}
 else|else
 block|{
 comment|/* First RTO measurment */
+name|net
+operator|->
+name|RTO_measured
+operator|=
+literal|1
+expr_stmt|;
 name|net
 operator|->
 name|lastsa

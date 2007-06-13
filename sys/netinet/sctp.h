@@ -1392,6 +1392,17 @@ value|0x82
 end_define
 
 begin_comment
+comment|/* RFC4820                         */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_PAD_CHUNK
+value|0x84
+end_define
+
+begin_comment
 comment|/************0xc0 series ***********/
 end_comment
 

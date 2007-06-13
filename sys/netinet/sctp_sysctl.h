@@ -401,12 +401,8 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_PEER_CHKOH_DEFAULT
-value|0
+value|256
 end_define
-
-begin_comment
-comment|/* sizeof struct mbuf */
-end_comment
 
 begin_comment
 comment|/* maxburst: Default max burst for sctp endpoints */

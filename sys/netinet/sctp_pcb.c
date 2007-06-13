@@ -10047,7 +10047,7 @@ name|first
 decl_stmt|,
 name|last
 decl_stmt|,
-name|candiate
+name|candidate
 decl_stmt|;
 name|uint16_t
 name|count
@@ -10170,7 +10170,7 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* number of candidates */
-name|candiate
+name|candidate
 operator|=
 name|first
 operator|+
@@ -10204,7 +10204,7 @@ name|inp
 argument_list|,
 name|htons
 argument_list|(
-name|candiate
+name|candidate
 argument_list|)
 argument_list|,
 name|inp
@@ -10255,18 +10255,18 @@ return|;
 block|}
 if|if
 condition|(
-name|candiate
+name|candidate
 operator|==
 name|last
 condition|)
-name|candiate
+name|candidate
 operator|=
 name|first
 expr_stmt|;
 else|else
-name|candiate
+name|candidate
 operator|=
-name|candiate
+name|candidate
 operator|+
 literal|1
 expr_stmt|;
@@ -10276,7 +10276,7 @@ name|lport
 operator|=
 name|htons
 argument_list|(
-name|candiate
+name|candidate
 argument_list|)
 expr_stmt|;
 block|}
@@ -13990,6 +13990,12 @@ comment|/* 	 * We set this to 0, the timer code knows that this means its an 	 *
 name|net
 operator|->
 name|RTO
+operator|=
+literal|0
+expr_stmt|;
+name|net
+operator|->
+name|RTO_measured
 operator|=
 literal|0
 expr_stmt|;
