@@ -435,15 +435,11 @@ operator|<
 literal|0x3e800000
 condition|)
 return|return
-name|__kernel_sinf
+name|__kernel_sindf
 argument_list|(
 name|pi
 operator|*
 name|x
-argument_list|,
-name|zero
-argument_list|,
-literal|0
 argument_list|)
 return|;
 name|y
@@ -572,15 +568,11 @@ literal|0
 case|:
 name|y
 operator|=
-name|__kernel_sinf
+name|__kernel_sindf
 argument_list|(
 name|pi
 operator|*
 name|y
-argument_list|,
-name|zero
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -592,7 +584,7 @@ literal|2
 case|:
 name|y
 operator|=
-name|__kernel_cosf
+name|__kernel_cosdf
 argument_list|(
 name|pi
 operator|*
@@ -604,8 +596,6 @@ literal|0.5
 operator|-
 name|y
 operator|)
-argument_list|,
-name|zero
 argument_list|)
 expr_stmt|;
 break|break;
@@ -617,7 +607,7 @@ literal|4
 case|:
 name|y
 operator|=
-name|__kernel_sinf
+name|__kernel_sindf
 argument_list|(
 name|pi
 operator|*
@@ -626,10 +616,6 @@ name|one
 operator|-
 name|y
 operator|)
-argument_list|,
-name|zero
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -642,7 +628,7 @@ case|:
 name|y
 operator|=
 operator|-
-name|__kernel_cosf
+name|__kernel_cosdf
 argument_list|(
 name|pi
 operator|*
@@ -654,15 +640,13 @@ name|float
 operator|)
 literal|1.5
 operator|)
-argument_list|,
-name|zero
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|y
 operator|=
-name|__kernel_sinf
+name|__kernel_sindf
 argument_list|(
 name|pi
 operator|*
@@ -674,10 +658,6 @@ name|float
 operator|)
 literal|2.0
 operator|)
-argument_list|,
-name|zero
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -776,10 +756,10 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x1c800000
+literal|0x35000000
 condition|)
 block|{
-comment|/* |x|<2**-70, return -log(|x|) */
+comment|/* |x|<2**-21, return -log(|x|) */
 if|if
 condition|(
 name|hx

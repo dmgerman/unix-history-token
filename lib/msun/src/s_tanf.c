@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* s_tanf.c -- float version of s_tan.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  */
+comment|/* s_tanf.c -- float version of s_tan.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  * Optimized by Bruce D. Evans.  */
 end_comment
 
 begin_comment
@@ -34,11 +34,64 @@ directive|include
 file|"math.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|INLINE_KERNEL_TANDF
+end_define
+
 begin_include
 include|#
 directive|include
 file|"math_private.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"k_tanf.c"
+end_include
+
+begin_comment
+comment|/* Small multiples of pi/2 rounded to double precision. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|double
+name|t1pio2
+init|=
+literal|1
+operator|*
+name|M_PI_2
+decl_stmt|,
+comment|/* 0x3FF921FB, 0x54442D18 */
+name|t2pio2
+init|=
+literal|2
+operator|*
+name|M_PI_2
+decl_stmt|,
+comment|/* 0x400921FB, 0x54442D18 */
+name|t3pio2
+init|=
+literal|3
+operator|*
+name|M_PI_2
+decl_stmt|,
+comment|/* 0x4012D97C, 0x7F3321D2 */
+name|t4pio2
+init|=
+literal|4
+operator|*
+name|M_PI_2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0x401921FB, 0x54442D18 */
+end_comment
 
 begin_function
 name|float
@@ -53,26 +106,25 @@ name|y
 index|[
 literal|2
 index|]
-decl_stmt|,
-name|z
-init|=
-literal|0.0
 decl_stmt|;
 name|int32_t
 name|n
+decl_stmt|,
+name|hx
 decl_stmt|,
 name|ix
 decl_stmt|;
 name|GET_FLOAT_WORD
 argument_list|(
-name|ix
+name|hx
 argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-comment|/* |x| ~< pi/4 */
 name|ix
-operator|&=
+operator|=
+name|hx
+operator|&
 literal|0x7fffffff
 expr_stmt|;
 if|if
@@ -81,16 +133,151 @@ name|ix
 operator|<=
 literal|0x3f490fda
 condition|)
+block|{
+comment|/* |x| ~<= pi/4 */
+if|if
+condition|(
+name|ix
+operator|<
+literal|0x39800000
+condition|)
+comment|/* |x|< 2**-12 */
+if|if
+condition|(
+operator|(
+operator|(
+name|int
+operator|)
+name|x
+operator|)
+operator|==
+literal|0
+condition|)
 return|return
-name|__kernel_tanf
+name|x
+return|;
+comment|/* x with inexact if x != 0 */
+return|return
+name|__kernel_tandf
 argument_list|(
 name|x
-argument_list|,
-name|z
 argument_list|,
 literal|1
 argument_list|)
 return|;
+block|}
+if|if
+condition|(
+name|ix
+operator|<=
+literal|0x407b53d1
+condition|)
+block|{
+comment|/* |x| ~<= 5*pi/4 */
+if|if
+condition|(
+name|ix
+operator|<=
+literal|0x4016cbe3
+condition|)
+comment|/* |x| ~<= 3pi/4 */
+return|return
+name|__kernel_tandf
+argument_list|(
+name|x
+operator|+
+operator|(
+name|hx
+operator|>
+literal|0
+condition|?
+operator|-
+name|t1pio2
+else|:
+name|t1pio2
+operator|)
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+return|;
+else|else
+return|return
+name|__kernel_tandf
+argument_list|(
+name|x
+operator|+
+operator|(
+name|hx
+operator|>
+literal|0
+condition|?
+operator|-
+name|t2pio2
+else|:
+name|t2pio2
+operator|)
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+if|if
+condition|(
+name|ix
+operator|<=
+literal|0x40e231d5
+condition|)
+block|{
+comment|/* |x| ~<= 9*pi/4 */
+if|if
+condition|(
+name|ix
+operator|<=
+literal|0x40afeddf
+condition|)
+comment|/* |x| ~<= 7*pi/4 */
+return|return
+name|__kernel_tandf
+argument_list|(
+name|x
+operator|+
+operator|(
+name|hx
+operator|>
+literal|0
+condition|?
+operator|-
+name|t3pio2
+else|:
+name|t3pio2
+operator|)
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+return|;
+else|else
+return|return
+name|__kernel_tandf
+argument_list|(
+name|x
+operator|+
+operator|(
+name|hx
+operator|>
+literal|0
+condition|?
+operator|-
+name|t4pio2
+else|:
+name|t4pio2
+operator|)
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
 comment|/* tan(Inf or NaN) is NaN */
 elseif|else
 if|if
@@ -104,8 +291,7 @@ name|x
 operator|-
 name|x
 return|;
-comment|/* NaN */
-comment|/* argument reduction needed */
+comment|/* general argument reduction needed */
 else|else
 block|{
 name|n
@@ -117,14 +303,18 @@ argument_list|,
 name|y
 argument_list|)
 expr_stmt|;
+comment|/* integer parameter: 1 -- n even; -1 -- n odd */
 return|return
-name|__kernel_tanf
+name|__kernel_tandf
 argument_list|(
+operator|(
+name|double
+operator|)
 name|y
 index|[
 literal|0
 index|]
-argument_list|,
+operator|+
 name|y
 index|[
 literal|1
@@ -143,7 +333,6 @@ literal|1
 operator|)
 argument_list|)
 return|;
-comment|/*   1 -- n even 							      -1 -- n odd */
 block|}
 block|}
 end_function

@@ -865,35 +865,27 @@ end_function_decl
 
 begin_function_decl
 name|float
-name|__kernel_sinf
+name|__kernel_sindf
 parameter_list|(
-name|float
-parameter_list|,
-name|float
-parameter_list|,
-name|int
+name|double
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|float
-name|__kernel_cosf
+name|__kernel_cosdf
 parameter_list|(
-name|float
-parameter_list|,
-name|float
+name|double
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|float
-name|__kernel_tanf
+name|__kernel_tandf
 parameter_list|(
-name|float
-parameter_list|,
-name|float
+name|double
 parameter_list|,
 name|int
 parameter_list|)

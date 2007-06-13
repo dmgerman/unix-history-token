@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* k_sinf.c -- float version of k_sin.c  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  */
+comment|/* k_sinf.c -- float version of k_sin.c  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  * Optimized by Bruce D. Evans.  */
 end_comment
 
 begin_comment
 comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INLINE_KERNEL_SINDF
+end_ifndef
 
 begin_ifndef
 ifndef|#
@@ -28,6 +34,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -40,193 +51,127 @@ directive|include
 file|"math_private.h"
 end_include
 
+begin_comment
+comment|/* |sin(x)/x - s(x)|< 2**-37.5 (~[-4.89e-12, 4.824e-12]). */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
-name|float
-name|half
-init|=
-literal|5.0000000000e-01
-decl_stmt|,
-comment|/* 0x3f000000 */
+name|double
 name|S1
 init|=
 operator|-
-literal|1.6666667163e-01
+literal|0x15555554cbac77
+literal|.0p
+operator|-
+literal|55
 decl_stmt|,
-comment|/* 0xbe2aaaab */
+comment|/* -0.166666666416265235595 */
 name|S2
 init|=
-literal|8.3333337680e-03
+literal|0x111110896efbb2
+literal|.0p
+operator|-
+literal|59
 decl_stmt|,
-comment|/* 0x3c088889 */
+comment|/*  0.0083333293858894631756 */
 name|S3
 init|=
 operator|-
-literal|1.9841270114e-04
+literal|0x1a00f9e2cae774
+literal|.0p
+operator|-
+literal|65
 decl_stmt|,
-comment|/* 0xb9500d01 */
+comment|/* -0.000198393348360966317347 */
 name|S4
 init|=
-literal|2.7557314297e-06
-decl_stmt|,
-comment|/* 0x3638ef1b */
-name|S5
-init|=
+literal|0x16cd878c3b46a7
+literal|.0p
 operator|-
-literal|2.5050759689e-08
-decl_stmt|,
-comment|/* 0xb2d72f34 */
-name|S6
-init|=
-literal|1.5896910177e-10
+literal|71
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 0x2f2ec9d3 */
+comment|/*  0.0000027183114939898219064 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INLINE_KERNEL_SINDF
+end_ifdef
+
 begin_function
+specifier|extern
+specifier|inline
+endif|#
+directive|endif
 name|float
-name|__kernel_sinf
+name|__kernel_sindf
 parameter_list|(
-name|float
+name|double
 name|x
-parameter_list|,
-name|float
-name|y
-parameter_list|,
-name|int
-name|iy
 parameter_list|)
 block|{
-name|float
-name|z
-decl_stmt|,
+name|double
 name|r
 decl_stmt|,
-name|v
+name|s
+decl_stmt|,
+name|w
+decl_stmt|,
+name|z
 decl_stmt|;
-name|int32_t
-name|ix
-decl_stmt|;
-name|GET_FLOAT_WORD
-argument_list|(
-name|ix
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-name|ix
-operator|&=
-literal|0x7fffffff
-expr_stmt|;
-comment|/* high word of x */
-if|if
-condition|(
-name|ix
-operator|<
-literal|0x32000000
-condition|)
-comment|/* |x|< 2**-27 */
-block|{
-if|if
-condition|(
-operator|(
-name|int
-operator|)
-name|x
-operator|==
-literal|0
-condition|)
-return|return
-name|x
-return|;
-block|}
-comment|/* generate inexact */
+comment|/* Try to optimize for parallel evaluation as in k_tanf.c. */
 name|z
 operator|=
 name|x
 operator|*
 name|x
 expr_stmt|;
-name|v
+name|w
 operator|=
 name|z
 operator|*
-name|x
+name|z
 expr_stmt|;
 name|r
 operator|=
-name|S2
-operator|+
-name|z
-operator|*
-operator|(
 name|S3
 operator|+
 name|z
 operator|*
-operator|(
 name|S4
-operator|+
-name|z
-operator|*
-operator|(
-name|S5
-operator|+
-name|z
-operator|*
-name|S6
-operator|)
-operator|)
-operator|)
 expr_stmt|;
-if|if
-condition|(
-name|iy
-operator|==
-literal|0
-condition|)
+name|s
+operator|=
+name|z
+operator|*
+name|x
+expr_stmt|;
 return|return
+operator|(
 name|x
 operator|+
-name|v
+name|s
 operator|*
 operator|(
 name|S1
 operator|+
 name|z
 operator|*
-name|r
+name|S2
 operator|)
-return|;
-else|else
-return|return
-name|x
-operator|-
-operator|(
-operator|(
-name|z
+operator|)
+operator|+
+name|s
 operator|*
-operator|(
-name|half
-operator|*
-name|y
-operator|-
-name|v
+name|w
 operator|*
 name|r
-operator|)
-operator|-
-name|y
-operator|)
-operator|-
-name|v
-operator|*
-name|S1
-operator|)
 return|;
 block|}
 end_function
