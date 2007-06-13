@@ -6642,8 +6642,19 @@ argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
+comment|/* AHCI mode is correctly supported only on the ALi 5288. */
 if|if
 condition|(
+operator|(
+name|ctlr
+operator|->
+name|chip
+operator|->
+name|chipid
+operator|==
+name|ATA_ALI_5288
+operator|)
+operator|&&
 operator|(
 name|ctlr
 operator|->
