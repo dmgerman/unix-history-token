@@ -168,38 +168,6 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IPXIP
-end_ifdef
-
-begin_struct
-struct|struct
-name|ipxip_req
-block|{
-name|struct
-name|sockaddr
-name|rq_ipx
-decl_stmt|;
-comment|/* must be ipx format destination */
-name|struct
-name|sockaddr
-name|rq_ip
-decl_stmt|;
-comment|/* must be ip format gateway */
-name|short
-name|rq_flags
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|_KERNEL
 end_ifdef
 

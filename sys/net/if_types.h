@@ -2181,6 +2181,10 @@ name|IFT_IPXIP
 value|0xf9
 end_define
 
+begin_comment
+comment|/* IPX over IP tunneling; no longer used. */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

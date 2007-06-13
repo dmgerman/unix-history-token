@@ -128,12 +128,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netipx/ipx_ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netipx/ipx_pcb.h>
 end_include
 
@@ -1803,25 +1797,6 @@ operator|.
 name|ipx_pt
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|IPXIP
-case|case
-name|SO_IPXIP_ROUTE
-case|:
-name|error
-operator|=
-name|ipxip_route
-argument_list|(
-name|so
-argument_list|,
-name|sopt
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-comment|/* IPXIP */
 default|default:
 name|error
 operator|=

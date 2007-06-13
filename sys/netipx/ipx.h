@@ -308,6 +308,10 @@ name|SO_IPXIP_ROUTE
 value|5
 end_define
 
+begin_comment
+comment|/* No longer implemented. */
+end_comment
+
 begin_define
 define|#
 directive|define
