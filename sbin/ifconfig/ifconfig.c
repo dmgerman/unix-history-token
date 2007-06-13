@@ -261,12 +261,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|setipdst
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|setmask
 decl_stmt|;
 end_decl_stmt
@@ -3088,9 +3082,6 @@ name|addr
 argument_list|,
 name|DSTADDR
 argument_list|)
-expr_stmt|;
-name|setipdst
-operator|++
 expr_stmt|;
 name|clearaddr
 operator|=
