@@ -210,19 +210,6 @@ name|PWR_SUSPEND
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|config_detach
-parameter_list|(
-name|dev
-parameter_list|,
-name|flag
-parameter_list|)
-define|\
-value|do { \ 		struct usb_attach_arg *uaap = device_get_ivars(dev); \ 		device_detach(dev); \ 		free(uaap, M_USB); \ 		device_delete_child(device_get_parent(dev), dev); \ 	} while (0)
-end_define
-
 begin_typedef
 typedef|typedef
 name|struct
