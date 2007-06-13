@@ -40,6 +40,45 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Default is to crash and try to force a core dump on failure. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dump_on_failure
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Default is to print some basic information about each test. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|quiet_flag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Cumulative count of failures. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|failures
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * My own implementation of the standard assert() macro emits the  * message in the same format as GCC (file:line: message).  * It also includes some additional useful information.  * This makes it a lot easier to skim through test failures in  * Emacs.  ;-)  *  * It also supports a few special features specifically to simplify  * libarchive test harnesses:  *    failure(fmt, args) -- Stores a text string that gets  *          printed if the following assertion fails, good for  *          explaining subtle tests.  *    assertA(a, cond) -- If the test fails, also prints out any error  *          message stored in archive object 'a'.  */
 end_comment
 
@@ -68,6 +107,9 @@ modifier|*
 name|a
 parameter_list|)
 block|{
+name|failures
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|msg
@@ -115,6 +157,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|dump_on_failure
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -138,6 +185,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -639,7 +687,7 @@ end_struct
 
 begin_function
 specifier|static
-name|void
+name|int
 name|test_run
 parameter_list|(
 name|int
@@ -651,6 +699,16 @@ modifier|*
 name|tmpdir
 parameter_list|)
 block|{
+name|int
+name|failures_before
+init|=
+name|failures
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|quiet_flag
+condition|)
 name|printf
 argument_list|(
 literal|"%d: %s\n"
@@ -770,6 +828,13 @@ operator|)
 operator|(
 operator|)
 expr_stmt|;
+return|return
+operator|(
+name|failures
+operator|-
+name|failures_before
+operator|)
+return|;
 block|}
 end_function
 
@@ -804,7 +869,7 @@ name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Usage: libarchive_test<test><test> ...\n"
+literal|"Usage: libarchive_test [options]<test><test> ...\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -815,6 +880,26 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"Otherwise, specify the numbers of the tests you wish to run.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Options:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -k  Keep running after failures.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"      Default: Core dump after any failure.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -q  Quiet.\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -894,6 +979,12 @@ decl_stmt|,
 name|tests_run
 init|=
 literal|0
+decl_stmt|,
+name|tests_succeeded
+init|=
+literal|0
+decl_stmt|,
+name|opt
 decl_stmt|;
 name|time_t
 name|now
@@ -904,6 +995,63 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+while|while
+condition|(
+operator|(
+name|opt
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"kq"
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+switch|switch
+condition|(
+name|opt
+condition|)
+block|{
+case|case
+literal|'k'
+case|:
+name|dump_on_failure
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|quiet_flag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'?'
+case|:
+default|default:
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 comment|/* 	 * Create a temp directory for the following tests. 	 * Include the time the tests started as part of the name, 	 * to make it easier to track the results of multiple tests. 	 */
 name|now
 operator|=
@@ -1003,7 +1151,7 @@ if|if
 condition|(
 name|argc
 operator|==
-literal|1
+literal|0
 condition|)
 block|{
 comment|/* Default: Run all tests. */
@@ -1021,12 +1169,19 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
 name|test_run
 argument_list|(
 name|i
 argument_list|,
 name|tmpdir
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|tests_succeeded
+operator|++
 expr_stmt|;
 name|tests_run
 operator|++
@@ -1091,12 +1246,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
 name|test_run
 argument_list|(
 name|i
 argument_list|,
 name|tmpdir
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|tests_succeeded
+operator|++
 expr_stmt|;
 name|tests_run
 operator|++
@@ -1106,14 +1268,22 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"%d tests succeeded.\n"
+literal|"%d of %d tests succeeded.\n"
+argument_list|,
+name|tests_succeeded
 argument_list|,
 name|tests_run
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|tests_succeeded
+operator|==
+name|tests_run
+condition|?
 literal|0
+else|:
+literal|1
 operator|)
 return|;
 block|}
