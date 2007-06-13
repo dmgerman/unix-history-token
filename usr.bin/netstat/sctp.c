@@ -2096,7 +2096,7 @@ name|mibvar
 init|=
 literal|"net.inet.sctp.assoclist"
 decl_stmt|;
-name|u_int
+name|size_t
 name|offset
 init|=
 literal|0
