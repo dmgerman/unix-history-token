@@ -22,20 +22,10 @@ decl_stmt|;
 name|bus_dmamap_t
 name|map
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|void
 modifier|*
 name|kaddr
 decl_stmt|;
-else|#
-directive|else
-name|caddr_t
-name|kaddr
-decl_stmt|;
-endif|#
-directive|endif
 name|bus_dma_segment_t
 name|segs
 index|[
@@ -65,12 +55,6 @@ name|usb_dma_block_t
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -82,28 +66,6 @@ name|o
 parameter_list|)
 value|((dma)->block->segs[0].ds_addr + (dma)->offs + (o))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DMAADDR
-parameter_list|(
-name|dma
-parameter_list|,
-name|o
-parameter_list|)
-value|(((char *)(dma)->block->map->dm_segs[0].ds_addr) + (dma)->offs + (o))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
