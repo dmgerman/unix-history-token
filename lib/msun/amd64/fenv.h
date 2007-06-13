@@ -216,6 +216,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|__fldenvx
+parameter_list|(
+name|__env
+parameter_list|)
+value|__asm __volatile("fldenv %0" : : "m" (__env)  \ 				: "st", "st(1)", "st(2)", "st(3)", "st(4)",   \ 				"st(5)", "st(6)", "st(7)")
+end_define
+
+begin_define
+define|#
+directive|define
 name|__fnclex
 parameter_list|()
 value|__asm __volatile("fnclex")
@@ -621,7 +631,8 @@ modifier|*
 name|__envp
 parameter_list|)
 block|{
-name|__fldenv
+comment|/* 	 * XXX Using fldenvx() instead of fldenv() tells the compiler that this 	 * instruction clobbers the i387 register stack.  This happens because 	 * we restore the tag word from the saved environment.  Normally, this 	 * would happen anyway and we wouldn't care, because the ABI allows 	 * function calls to clobber the i387 regs.  However, fesetenv() is 	 * inlined, so we need to be more careful. 	 */
+name|__fldenvx
 argument_list|(
 name|__envp
 operator|->
