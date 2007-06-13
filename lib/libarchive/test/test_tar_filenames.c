@@ -21,56 +21,64 @@ begin_comment
 comment|/*  * Exercise various lengths of filenames in tar archives,  * especially around the magic sizes where ustar breaks  * filenames into prefix/suffix.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|test_filename
-argument_list|(
-argument|const char *prefix
-argument_list|,
-argument|int dlen
-argument_list|,
-argument|int flen
-argument_list|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|prefix
+parameter_list|,
+name|int
+name|dlen
+parameter_list|,
+name|int
+name|flen
+parameter_list|)
 block|{
 name|char
 name|buff
 index|[
 literal|8192
 index|]
-block|;
+decl_stmt|;
 name|char
 name|filename
 index|[
 literal|400
 index|]
-block|;
+decl_stmt|;
 name|char
 name|dirname
 index|[
 literal|400
 index|]
-block|; 	struct
+decl_stmt|;
+name|struct
 name|archive_entry
-operator|*
+modifier|*
 name|ae
-block|; 	struct
+decl_stmt|;
+name|struct
 name|archive
-operator|*
+modifier|*
 name|a
-block|;
+decl_stmt|;
 name|size_t
 name|used
-block|;
+decl_stmt|;
 name|size_t
 name|prefix_length
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 name|int
 name|i
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|prefix
@@ -93,9 +101,6 @@ name|prefix
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 init|;
@@ -115,9 +120,6 @@ index|]
 operator|=
 literal|'a'
 expr_stmt|;
-end_for
-
-begin_expr_stmt
 name|filename
 index|[
 name|i
@@ -126,9 +128,6 @@ index|]
 operator|=
 literal|'/'
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 init|;
@@ -152,9 +151,6 @@ index|]
 operator|=
 literal|'b'
 expr_stmt|;
-end_for
-
-begin_expr_stmt
 name|filename
 index|[
 name|i
@@ -163,9 +159,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|strcpy
 argument_list|(
 name|dirname
@@ -173,13 +166,7 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Create a new archive in memory. */
-end_comment
-
-begin_expr_stmt
 name|assert
 argument_list|(
 operator|(
@@ -192,9 +179,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -205,9 +189,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -218,9 +199,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -233,9 +211,6 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -256,13 +231,7 @@ name|used
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Write a file to it. 	 */
-end_comment
-
-begin_expr_stmt
 name|assert
 argument_list|(
 operator|(
@@ -275,9 +244,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|archive_entry_copy_pathname
 argument_list|(
 name|ae
@@ -285,9 +251,6 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|archive_entry_set_mode
 argument_list|(
 name|ae
@@ -297,9 +260,6 @@ operator||
 literal|0755
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|failure
 argument_list|(
 literal|"Pathname %d/%d"
@@ -309,9 +269,6 @@ argument_list|,
 name|flen
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -324,21 +281,12 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|archive_entry_free
 argument_list|(
 name|ae
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Write a dir to it (without trailing '/'). 	 */
-end_comment
-
-begin_expr_stmt
 name|assert
 argument_list|(
 operator|(
@@ -351,9 +299,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|archive_entry_copy_pathname
 argument_list|(
 name|ae
@@ -361,9 +306,6 @@ argument_list|,
 name|dirname
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|archive_entry_set_mode
 argument_list|(
 name|ae
@@ -373,9 +315,6 @@ operator||
 literal|0755
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|failure
 argument_list|(
 literal|"Dirname %d/%d"
@@ -385,9 +324,6 @@ argument_list|,
 name|flen
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -400,21 +336,12 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|archive_entry_free
 argument_list|(
 name|ae
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Tar adds a '/' to directory names. */
-end_comment
-
-begin_expr_stmt
 name|strcat
 argument_list|(
 name|dirname
@@ -422,13 +349,7 @@ argument_list|,
 literal|"/"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Write a dir to it (with trailing '/'). 	 */
-end_comment
-
-begin_expr_stmt
 name|assert
 argument_list|(
 operator|(
@@ -441,9 +362,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|archive_entry_copy_pathname
 argument_list|(
 name|ae
@@ -451,9 +369,6 @@ argument_list|,
 name|dirname
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|archive_entry_set_mode
 argument_list|(
 name|ae
@@ -463,9 +378,6 @@ operator||
 literal|0755
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|failure
 argument_list|(
 literal|"Dirname %d/%d"
@@ -475,9 +387,6 @@ argument_list|,
 name|flen
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -490,21 +399,12 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|archive_entry_free
 argument_list|(
 name|ae
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Close out the archive. */
-end_comment
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -515,17 +415,11 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|#
 directive|if
 name|ARCHIVE_API_VERSION
 operator|>
 literal|1
-end_if
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -536,31 +430,16 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_expr_stmt
 name|archive_write_finish
 argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* 	 * Now, read the data back. 	 */
-end_comment
-
-begin_expr_stmt
 name|assert
 argument_list|(
 operator|(
@@ -573,9 +452,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -586,9 +462,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -599,9 +472,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -616,13 +486,7 @@ name|used
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Read the file and check the filename. */
-end_comment
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -636,9 +500,6 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|failure
 argument_list|(
 literal|"Pathname %d/%d: %s"
@@ -653,9 +514,6 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertEqualString
 argument_list|(
 name|filename
@@ -666,9 +524,6 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertEqualInt
 argument_list|(
 operator|(
@@ -683,13 +538,7 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Read the two dirs and check the names. 	 * 	 * Both dirs should read back with the same name, since 	 * tar should add a trailing '/' to any dir that doesn't 	 * already have one. 	 */
-end_comment
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -703,9 +552,6 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|failure
 argument_list|(
 literal|"Pathname %d/%d: %s"
@@ -720,9 +566,6 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertEqualString
 argument_list|(
 name|dirname
@@ -733,9 +576,6 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assert
 argument_list|(
 operator|(
@@ -750,9 +590,6 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertA
 argument_list|(
 literal|0
@@ -766,9 +603,6 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|failure
 argument_list|(
 literal|"Pathname %d/%d: %s"
@@ -783,9 +617,6 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assertEqualString
 argument_list|(
 name|dirname
@@ -796,9 +627,6 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assert
 argument_list|(
 operator|(
@@ -813,13 +641,7 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Verify the end of the archive. */
-end_comment
-
-begin_expr_stmt
 name|assert
 argument_list|(
 literal|1
@@ -833,9 +655,6 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|assert
 argument_list|(
 literal|0
@@ -846,17 +665,11 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|#
 directive|if
 name|ARCHIVE_API_VERSION
 operator|>
 literal|1
-end_if
-
-begin_expr_stmt
 name|assert
 argument_list|(
 literal|0
@@ -867,37 +680,32 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_expr_stmt
 name|archive_read_finish
 argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
-begin_expr_stmt
-unit|}  DEFINE_TEST
-operator|(
-name|test_tar_filenames
-operator|)
+begin_macro
+name|DEFINE_TEST
+argument_list|(
+argument|test_tar_filenames
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|dlen
-block|,
+decl_stmt|,
 name|flen
-block|;
+decl_stmt|;
 comment|/* Repeat the following for a variety of dir/file lengths. */
 for|for
 control|(
@@ -946,22 +754,20 @@ name|flen
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|}  	for
-operator|(
+block|}
+for|for
+control|(
 name|dlen
 operator|=
 literal|140
-expr|;
+init|;
 name|dlen
 operator|<
 literal|160
-expr|;
+condition|;
 name|dlen
 operator|++
-operator|)
+control|)
 block|{
 for|for
 control|(
@@ -996,8 +802,9 @@ name|flen
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+block|}
+block|}
+end_block
 
-unit|} }
 end_unit
 
