@@ -1117,7 +1117,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%s %s %lu "
+literal|"%s%s Vlan%d %s %lu "
 argument_list|,
 name|prefix
 argument_list|,
@@ -1126,6 +1126,10 @@ argument_list|(
 operator|&
 name|ea
 argument_list|)
+argument_list|,
+name|ifba
+operator|->
+name|ifba_vlan
 argument_list|,
 name|ifba
 operator|->
@@ -2632,6 +2636,13 @@ name|ifba_flags
 operator|=
 name|IFBAF_STATIC
 expr_stmt|;
+name|req
+operator|.
+name|ifba_vlan
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX allow user to specify */
 if|if
 condition|(
 name|do_cmd

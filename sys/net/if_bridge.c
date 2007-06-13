@@ -322,6 +322,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_vlan_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -527,6 +533,10 @@ index|[
 name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
+name|uint16_t
+name|brt_vlan
+decl_stmt|;
+comment|/* vlan id */
 block|}
 struct|;
 end_struct
@@ -951,6 +961,8 @@ specifier|const
 name|uint8_t
 modifier|*
 parameter_list|,
+name|uint16_t
+parameter_list|,
 name|struct
 name|bridge_iflist
 modifier|*
@@ -976,6 +988,8 @@ parameter_list|,
 specifier|const
 name|uint8_t
 modifier|*
+parameter_list|,
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1030,6 +1044,8 @@ parameter_list|,
 specifier|const
 name|uint8_t
 modifier|*
+parameter_list|,
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1088,6 +1104,8 @@ parameter_list|,
 specifier|const
 name|uint8_t
 modifier|*
+parameter_list|,
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1765,6 +1783,21 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* The default bridge vlan is 1 (IEEE 802.1Q-2003 Table 9-2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VLANTAGOF
+parameter_list|(
+name|_m
+parameter_list|)
+define|\
+value|(_m->m_flags& M_VLANTAG) ? EVL_VLANOFTAG(_m->m_pkthdr.ether_vtag) : 1
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -5697,6 +5730,14 @@ name|brt_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bareq
+operator|.
+name|ifba_vlan
+operator|=
+name|brt
+operator|->
+name|brt_vlan
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5860,6 +5901,10 @@ name|req
 operator|->
 name|ifba_dst
 argument_list|,
+name|req
+operator|->
+name|ifba_vlan
+argument_list|,
 name|bif
 argument_list|,
 literal|1
@@ -5984,6 +6029,10 @@ argument_list|,
 name|req
 operator|->
 name|ifba_dst
+argument_list|,
+name|req
+operator|->
+name|ifba_vlan
 argument_list|)
 operator|)
 return|;
@@ -8000,6 +8049,9 @@ name|bridge_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|uint16_t
+name|vlan
+decl_stmt|;
 if|if
 condition|(
 name|m
@@ -8046,6 +8098,13 @@ operator|=
 name|ifp
 operator|->
 name|if_bridge
+expr_stmt|;
+name|vlan
+operator|=
+name|VLANTAGOF
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 name|BRIDGE_LOCK
 argument_list|(
@@ -8100,6 +8159,8 @@ argument_list|,
 name|eh
 operator|->
 name|ether_dhost
+argument_list|,
+name|vlan
 argument_list|)
 expr_stmt|;
 if|if
@@ -8484,6 +8545,8 @@ argument_list|,
 name|eh
 operator|->
 name|ether_dhost
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -8573,6 +8636,9 @@ name|ether_header
 modifier|*
 name|eh
 decl_stmt|;
+name|uint16_t
+name|vlan
+decl_stmt|;
 name|src_if
 operator|=
 name|m
@@ -8605,6 +8671,13 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
+expr_stmt|;
+name|vlan
+operator|=
+name|VLANTAGOF
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Look up the bridge_iflist. 	 */
 name|bif
@@ -8770,6 +8843,8 @@ name|eh
 operator|->
 name|ether_shost
 argument_list|,
+name|vlan
+argument_list|,
 name|bif
 argument_list|,
 literal|0
@@ -8839,6 +8914,8 @@ argument_list|,
 name|eh
 operator|->
 name|ether_dhost
+argument_list|,
+name|vlan
 argument_list|)
 expr_stmt|;
 if|if
@@ -9187,6 +9264,9 @@ decl_stmt|,
 modifier|*
 name|mc2
 decl_stmt|;
+name|uint16_t
+name|vlan
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -9211,6 +9291,13 @@ operator|=
 name|sc
 operator|->
 name|sc_ifp
+expr_stmt|;
+name|vlan
+operator|=
+name|VLANTAGOF
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Implement support for bridge monitoring. If this flag has been 	 * set on this interface, discard the packet once we push it through 	 * the bpf(4) machinery, but before we do, increment the byte and 	 * packet counters associated with this interface. 	 */
 if|if
@@ -9349,6 +9436,8 @@ argument_list|,
 name|eh
 operator|->
 name|ether_shost
+argument_list|,
+name|vlan
 argument_list|,
 name|bif
 argument_list|,
@@ -9691,7 +9780,7 @@ parameter_list|)
 define|\
 value|if ((iface)->if_type == IFT_GIF) \ 		continue; \
 comment|/* It is destined for us. */
-value|\ 	if (memcmp(IF_LLADDR((iface)), eh->ether_dhost,  ETHER_ADDR_LEN) == 0 \ 	    OR_CARP_CHECK_WE_ARE_DST((iface))				\ 	    ) {								\ 		if (bif->bif_flags& IFBIF_LEARNING)			\ 			(void) bridge_rtupdate(sc,			\ 			    eh->ether_shost, bif, 0, IFBAF_DYNAMIC);	\ 		m->m_pkthdr.rcvif = iface;				\ 		BRIDGE_UNLOCK(sc);					\ 		return (m);						\ 	}								\ 									\
+value|\ 	if (memcmp(IF_LLADDR((iface)), eh->ether_dhost,  ETHER_ADDR_LEN) == 0 \ 	    OR_CARP_CHECK_WE_ARE_DST((iface))				\ 	    ) {								\ 		if (bif->bif_flags& IFBIF_LEARNING)			\ 			(void) bridge_rtupdate(sc, eh->ether_shost,	\ 			    vlan, bif, 0, IFBAF_DYNAMIC);		\ 		m->m_pkthdr.rcvif = iface;				\ 		BRIDGE_UNLOCK(sc);					\ 		return (m);						\ 	}								\ 									\
 comment|/* We just received a packet that we sent out. */
 value|\ 	if (memcmp(IF_LLADDR((iface)), eh->ether_shost, ETHER_ADDR_LEN) == 0 \ 	    OR_CARP_CHECK_WE_ARE_SRC((iface))			\ 	    ) {								\ 		BRIDGE_UNLOCK(sc);					\ 		m_freem(m);						\ 		return (NULL);						\ 	}
 comment|/* 	 * Unicast.  Make sure it's not for us. 	 * 	 * Give a chance for ifp at first priority. This will help when	the 	 * packet comes through the interface like VLAN's with the same MACs 	 * on several interfaces from the same bridge. This also will save 	 * some CPU cycles in case the destination interface and the input 	 * interface (eq ifp) are the same. 	 */
@@ -10267,6 +10356,9 @@ name|uint8_t
 modifier|*
 name|dst
 parameter_list|,
+name|uint16_t
+name|vlan
+parameter_list|,
 name|struct
 name|bridge_iflist
 modifier|*
@@ -10301,6 +10393,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 802.1p frames map to vlan 1 */
+if|if
+condition|(
+name|vlan
+operator|==
+literal|0
+condition|)
+name|vlan
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * A route for this destination might already exist.  If so, 	 * update it, otherwise create a new one. 	 */
 if|if
 condition|(
@@ -10312,6 +10415,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|dst
+argument_list|,
+name|vlan
 argument_list|)
 operator|)
 operator|==
@@ -10400,6 +10505,12 @@ name|dst
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
+expr_stmt|;
+name|brt
+operator|->
+name|brt_vlan
+operator|=
+name|vlan
 expr_stmt|;
 if|if
 condition|(
@@ -10507,6 +10618,9 @@ specifier|const
 name|uint8_t
 modifier|*
 name|addr
+parameter_list|,
+name|uint16_t
+name|vlan
 parameter_list|)
 block|{
 name|struct
@@ -10529,6 +10643,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|addr
+argument_list|,
+name|vlan
 argument_list|)
 operator|)
 operator|==
@@ -10870,6 +10986,9 @@ specifier|const
 name|uint8_t
 modifier|*
 name|addr
+parameter_list|,
+name|uint16_t
+name|vlan
 parameter_list|)
 block|{
 name|struct
@@ -10877,12 +10996,18 @@ name|bridge_rtnode
 modifier|*
 name|brt
 decl_stmt|;
+name|int
+name|found
+init|=
+literal|0
+decl_stmt|;
 name|BRIDGE_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
+comment|/* 	 * If vlan is zero then we want to delete for all vlans so the lookup 	 * may return more than one. 	 */
+while|while
 condition|(
 operator|(
 name|brt
@@ -10892,16 +11017,14 @@ argument_list|(
 name|sc
 argument_list|,
 name|addr
+argument_list|,
+name|vlan
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
-return|return
-operator|(
-name|ENOENT
-operator|)
-return|;
+block|{
 name|bridge_rtnode_destroy
 argument_list|(
 name|sc
@@ -10909,9 +11032,18 @@ argument_list|,
 name|brt
 argument_list|)
 expr_stmt|;
+name|found
+operator|=
+literal|1
+expr_stmt|;
+block|}
 return|return
 operator|(
+name|found
+condition|?
 literal|0
+else|:
+name|ENOENT
 operator|)
 return|;
 block|}
@@ -11326,7 +11458,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * bridge_rtnode_lookup:  *  *	Look up a bridge route node for the specified destination.  */
+comment|/*  * bridge_rtnode_lookup:  *  *	Look up a bridge route node for the specified destination. Compare the  *	vlan id or if zero then just return the first match.  */
 end_comment
 
 begin_function
@@ -11345,6 +11477,9 @@ specifier|const
 name|uint8_t
 modifier|*
 name|addr
+parameter_list|,
+name|uint16_t
+name|vlan
 parameter_list|)
 block|{
 name|struct
@@ -11397,6 +11532,18 @@ condition|(
 name|dir
 operator|==
 literal|0
+operator|&&
+operator|(
+name|brt
+operator|->
+name|brt_vlan
+operator|==
+name|vlan
+operator|||
+name|vlan
+operator|==
+literal|0
+operator|)
 condition|)
 return|return
 operator|(
@@ -11529,6 +11676,14 @@ condition|(
 name|dir
 operator|==
 literal|0
+operator|&&
+name|brt
+operator|->
+name|brt_vlan
+operator|==
+name|lbrt
+operator|->
+name|brt_vlan
 condition|)
 return|return
 operator|(

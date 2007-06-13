@@ -655,6 +655,10 @@ name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* destination address */
+name|uint16_t
+name|ifba_vlan
+decl_stmt|;
+comment|/* vlan id */
 block|}
 struct|;
 end_struct
