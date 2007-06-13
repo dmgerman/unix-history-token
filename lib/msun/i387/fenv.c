@@ -350,20 +350,19 @@ name|envp
 parameter_list|)
 block|{
 name|int
-name|control
-decl_stmt|,
 name|mxcsr
 decl_stmt|;
-comment|/* 	 * fnstenv masks all exceptions, so we need to save and 	 * restore the control word to avoid this side effect. 	 */
-name|__fnstcw
-argument_list|(
-operator|&
-name|control
-argument_list|)
-expr_stmt|;
 name|__fnstenv
 argument_list|(
 name|envp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * fnstenv masks all exceptions, so we need to restore 	 * the old control word to avoid this side effect. 	 */
+name|__fldcw
+argument_list|(
+name|envp
+operator|->
+name|__control
 argument_list|)
 expr_stmt|;
 if|if
@@ -387,11 +386,6 @@ name|mxcsr
 argument_list|)
 expr_stmt|;
 block|}
-name|__fldcw
-argument_list|(
-name|control
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
