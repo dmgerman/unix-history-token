@@ -3082,12 +3082,9 @@ name|sc
 operator|->
 name|sc_udev
 argument_list|,
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3502,12 +3499,9 @@ name|sc
 operator|->
 name|sc_udev
 argument_list|,
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
