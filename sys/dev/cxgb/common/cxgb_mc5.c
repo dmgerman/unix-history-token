@@ -26,7 +26,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<cxgb_include.h>
+file|<common/cxgb_common.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<common/cxgb_regs.h>
 end_include
 
 begin_else
@@ -37,7 +43,13 @@ end_else
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/cxgb_include.h>
+file|<dev/cxgb/common/cxgb_common.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/cxgb/common/cxgb_regs.h>
 end_include
 
 begin_endif
@@ -1605,9 +1617,8 @@ name|adapter
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|tcam_size
-operator|==
-literal|0
 condition|)
 return|return
 literal|0

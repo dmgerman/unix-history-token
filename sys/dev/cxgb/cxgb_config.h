@@ -27,12 +27,6 @@ directive|define
 name|CONFIG_CHELSIO_T3_CORE
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_JUMBO
-end_define
-
 begin_endif
 endif|#
 directive|endif

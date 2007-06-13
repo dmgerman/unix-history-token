@@ -122,7 +122,19 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<cxgb_include.h>
+file|<cxgb_osdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ulp/toecore/toedev.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mbufq.h>
 end_include
 
 begin_else
@@ -133,7 +145,19 @@ end_else
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/cxgb_include.h>
+file|<dev/cxgb/cxgb_osdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/cxgb/sys/mbufq.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/cxgb/ulp/toecore/toedev.h>
 end_include
 
 begin_endif
@@ -226,6 +250,10 @@ decl_stmt|;
 name|struct
 name|task
 name|start_task
+decl_stmt|;
+name|struct
+name|task
+name|timer_reclaim_task
 decl_stmt|;
 name|struct
 name|cdev
@@ -881,10 +909,6 @@ name|ext_intr_task
 decl_stmt|;
 name|struct
 name|task
-name|timer_reclaim_task
-decl_stmt|;
-name|struct
-name|task
 name|slow_intr_task
 decl_stmt|;
 name|struct
@@ -912,6 +936,10 @@ comment|/* Register lock for use by the hardware layer */
 name|struct
 name|mtx
 name|mdio_lock
+decl_stmt|;
+name|struct
+name|mtx
+name|elmer_lock
 decl_stmt|;
 comment|/* Bookkeeping for the hardware layer */
 name|struct
@@ -1027,6 +1055,26 @@ parameter_list|(
 name|adapter
 parameter_list|)
 value|mtx_unlock(&(adapter)->mdio_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELMR_LOCK
+parameter_list|(
+name|adapter
+parameter_list|)
+value|mtx_lock(&(adapter)->elmer_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELMR_UNLOCK
+parameter_list|(
+name|adapter
+parameter_list|)
+value|mtx_unlock(&(adapter)->elmer_lock)
 end_define
 
 begin_define
@@ -1643,9 +1691,20 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|t3_sge_init_sw
+name|t3_sge_init_adapter
 parameter_list|(
 name|adapter_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|t3_sge_init_port
+parameter_list|(
+name|struct
+name|port_info
 modifier|*
 parameter_list|)
 function_decl|;

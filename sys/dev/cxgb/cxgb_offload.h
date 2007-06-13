@@ -556,9 +556,13 @@ name|m
 parameter_list|)
 block|{
 return|return
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+name|uint8_t
+operator|*
+argument_list|)
 return|;
 block|}
 end_function
