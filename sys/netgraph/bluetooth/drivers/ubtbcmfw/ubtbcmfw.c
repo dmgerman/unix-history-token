@@ -104,34 +104,6 @@ file|"usbdevs.h"
 end_include
 
 begin_comment
-comment|/* FreeBSD 7.0 defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USBBASEDEVICE
-value|device_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|USBDEVNAME
-value|device_get_nameunit
-end_define
-
-begin_define
-define|#
-directive|define
-name|USBDEVUNIT
-parameter_list|(
-name|bdev
-parameter_list|)
-value|device_get_unit(bdev)
-end_define
-
-begin_comment
 comment|/*  * Download firmware to BCM2033.  */
 end_comment
 
@@ -197,7 +169,7 @@ begin_struct
 struct|struct
 name|ubtbcmfw_softc
 block|{
-name|USBBASEDEVICE
+name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* base device */
@@ -602,7 +574,7 @@ name|printf
 argument_list|(
 literal|"%s: setting config no failed. %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -642,7 +614,7 @@ name|printf
 argument_list|(
 literal|"%s: getting interface handle failed. %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -685,7 +657,7 @@ name|printf
 argument_list|(
 literal|"%s: open intr in failed. %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -727,7 +699,7 @@ name|printf
 argument_list|(
 literal|"%s: open bulk out failed. %s\n"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -756,7 +728,7 @@ name|ubtbcmfw_cdevsw
 argument_list|,
 name|UBTBCMFW_MINOR
 argument_list|(
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
@@ -774,7 +746,7 @@ literal|0644
 argument_list|,
 literal|"%s"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -793,7 +765,7 @@ name|ubtbcmfw_cdevsw
 argument_list|,
 name|UBTBCMFW_MINOR
 argument_list|(
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
@@ -811,7 +783,7 @@ literal|0644
 argument_list|,
 literal|"%s.%d"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -832,7 +804,7 @@ name|ubtbcmfw_cdevsw
 argument_list|,
 name|UBTBCMFW_MINOR
 argument_list|(
-name|USBDEVUNIT
+name|device_get_unit
 argument_list|(
 name|sc
 operator|->
@@ -850,7 +822,7 @@ literal|0644
 argument_list|,
 literal|"%s.%d"
 argument_list|,
-name|USBDEVNAME
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -944,12 +916,9 @@ argument_list|)
 expr_stmt|;
 name|usb_detach_wait
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1649,12 +1618,9 @@ literal|0
 condition|)
 name|usb_detach_wakeup
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1908,12 +1874,9 @@ literal|0
 condition|)
 name|usb_detach_wakeup
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2051,12 +2014,9 @@ literal|0
 condition|)
 name|usb_detach_wakeup
 argument_list|(
-name|USBDEV
-argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
