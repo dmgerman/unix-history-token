@@ -1190,12 +1190,16 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE
-comment|/* 	 * Drain any pending records on the thread and release the trace 	 * file.  It might be better if drain-and-clear were atomic. 	 */
-name|ktrprocexit
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Disable tracing, then drain any pending records and release 	 * the trace file. 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_traceflag
+operator|!=
+literal|0
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1213,7 +1217,33 @@ name|p_traceflag
 operator|=
 literal|0
 expr_stmt|;
-comment|/* don't trace the vrele() */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ktrace_mtx
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|ktrprocexit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|ktrace_mtx
+argument_list|)
+expr_stmt|;
 name|tracevp
 operator|=
 name|p
@@ -1287,6 +1317,7 @@ argument_list|(
 name|tracecred
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * Release reference to text vnode 	 */
