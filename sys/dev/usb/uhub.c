@@ -536,14 +536,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|USB_MATCH
-argument_list|(
-argument|uhub
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|uhub_match
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_MATCH_START
 argument_list|(
@@ -600,7 +600,7 @@ name|UMATCH_NONE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -2368,14 +2368,14 @@ begin_comment
 comment|/*  * Called from process context when the hub is gone.  * Detach all devices on active ports.  */
 end_comment
 
-begin_macro
-name|USB_DETACH
-argument_list|(
-argument|uhub
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|uhub_detach
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_DETACH_START
 argument_list|(
@@ -2545,7 +2545,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int

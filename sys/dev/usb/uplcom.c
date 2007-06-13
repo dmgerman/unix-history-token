@@ -1251,14 +1251,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
-name|USB_MATCH
-argument_list|(
-argument|uplcom
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|uplcom_match
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_MATCH_START
 argument_list|(
@@ -1363,16 +1363,16 @@ name|UMATCH_NONE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|USB_ATTACH
-argument_list|(
-argument|uplcom
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|uplcom_attach
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_ATTACH_START
 argument_list|(
@@ -2310,16 +2310,16 @@ return|return
 name|ENXIO
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|USB_DETACH
-argument_list|(
-argument|uplcom
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|uplcom_detach
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_DETACH_START
 argument_list|(
@@ -2405,7 +2405,7 @@ name|rv
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static

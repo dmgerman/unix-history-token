@@ -3635,14 +3635,14 @@ return|;
 block|}
 end_function
 
-begin_macro
-name|USB_MATCH
-argument_list|(
-argument|umass
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|umass_match
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_MATCH_START
 argument_list|(
@@ -3697,16 +3697,16 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|USB_ATTACH
-argument_list|(
-argument|umass
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|umass_attach
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_ATTACH_START
 argument_list|(
@@ -4884,16 +4884,16 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|USB_DETACH
-argument_list|(
-argument|umass
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|umass_detach
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_DETACH_START
 argument_list|(
@@ -5110,7 +5110,7 @@ name|err
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static

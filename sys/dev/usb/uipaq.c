@@ -433,14 +433,14 @@ parameter_list|)
 value|((const struct uipaq_type *)usb_lookup(uipaq_devs, v, p))
 end_define
 
-begin_macro
-name|USB_MATCH
-argument_list|(
-argument|uipaq
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|uipaq_match
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_MATCH_START
 argument_list|(
@@ -500,7 +500,7 @@ name|UMATCH_NONE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static

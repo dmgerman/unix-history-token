@@ -793,14 +793,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
-name|USB_MATCH
-argument_list|(
-argument|usb
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|usb_match
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|DPRINTF
 argument_list|(
@@ -815,16 +815,16 @@ name|UMATCH_GENERIC
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|USB_ATTACH
-argument_list|(
-argument|usb
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|usb_attach
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|struct
 name|usb_softc
@@ -1312,7 +1312,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -3766,14 +3766,14 @@ comment|/* USB_USE_SOFTINTR */
 block|}
 end_function
 
-begin_macro
-name|USB_DETACH
-argument_list|(
-argument|usb
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|usb_detach
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_DETACH_START
 argument_list|(
@@ -4051,7 +4051,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static

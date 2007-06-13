@@ -486,14 +486,14 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|USB_MATCH
-argument_list|(
-argument|uftdi
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|uftdi_match
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_MATCH_START
 argument_list|(
@@ -768,16 +768,16 @@ name|UMATCH_NONE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|USB_ATTACH
-argument_list|(
-argument|uftdi
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|uftdi_attach
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_ATTACH_START
 argument_list|(
@@ -1493,7 +1493,7 @@ return|return
 name|ENXIO
 return|;
 block|}
-end_block
+end_function
 
 begin_if
 if|#
@@ -1513,14 +1513,14 @@ directive|if
 literal|1
 end_if
 
-begin_macro
-name|USB_DETACH
-argument_list|(
-argument|uftdi
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|uftdi_detach
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_DETACH_START
 argument_list|(
@@ -1565,7 +1565,7 @@ return|return
 name|rv
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

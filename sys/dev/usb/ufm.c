@@ -374,14 +374,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
-name|USB_MATCH
-argument_list|(
-argument|ufm
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|ufm_match
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_MATCH_START
 argument_list|(
@@ -456,16 +456,16 @@ return|return
 name|UMATCH_NONE
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|USB_ATTACH
-argument_list|(
-argument|ufm
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|ufm_attach
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 name|USB_ATTACH_START
 argument_list|(
@@ -689,7 +689,7 @@ return|return
 name|ENXIO
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
