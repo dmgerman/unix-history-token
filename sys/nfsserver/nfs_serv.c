@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/dirent.h>
 end_include
 
