@@ -736,6 +736,23 @@ block|}
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__GNUCLIKE_ASM
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"This file uses null asms to prevent timing loops being optimized away."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|empty_loop
@@ -757,7 +774,7 @@ condition|;
 name|i
 operator|++
 control|)
-empty_stmt|;
+asm|__asm __volatile("");
 block|}
 end_function
 
@@ -765,7 +782,9 @@ begin_function
 name|void
 name|nullfunc
 parameter_list|()
-block|{ }
+block|{
+asm|__asm __volatile("");
+block|}
 end_function
 
 begin_function
