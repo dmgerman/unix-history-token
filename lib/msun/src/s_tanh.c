@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Tanh(x)  * Return the Hyperbolic Tangent of x  *  * Method :  *				       x    -x  *				      e  - e  *	0. tanh(x) is defined to be -----------  *				       x    -x  *				      e  + e  *	1. reduce x to non-negative by tanh(-x) = -tanh(x).  *	2.  0<= x<= 2**-55 : tanh(x) := x*(one+x)  *					        -t  *	    2**-55<  x<=  1     : tanh(x) := -----; t = expm1(-2x)  *					       t + 2  *						     2  *	    1<= x<=  22.0  : tanh(x) := 1-  ----- ; t=expm1(2x)  *						   t + 2  *	    22.0<  x<= INF    : tanh(x) := 1.  *  * Special cases:  *	tanh(NaN) is NaN;  *	only tanh(0)=0 is exact for finite argument.  */
+comment|/* Tanh(x)  * Return the Hyperbolic Tangent of x  *  * Method :  *				       x    -x  *				      e  - e  *	0. tanh(x) is defined to be -----------  *				       x    -x  *				      e  + e  *	1. reduce x to non-negative by tanh(-x) = -tanh(x).  *	2.  0<= x<  2**-28 : tanh(x) := x with inexact if x != 0  *					        -t  *	    2**-28<= x<  1      : tanh(x) := -----; t = expm1(-2x)  *					       t + 2  *						     2  *	    1<= x<  22     : tanh(x) := 1 - -----; t = expm1(2x)  *						   t + 2  *	    22<= x<= INF    : tanh(x) := 1.  *  * Special cases:  *	tanh(NaN) is NaN;  *	only tanh(0)=0 is exact for finite argument.  */
 end_comment
 
 begin_include
@@ -59,6 +59,10 @@ decl_stmt|,
 name|tiny
 init|=
 literal|1.0e-300
+decl_stmt|,
+name|huge
+init|=
+literal|1.0e300
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +84,6 @@ name|jx
 decl_stmt|,
 name|ix
 decl_stmt|;
-comment|/* High word of |x|. */
 name|GET_HIGH_WORD
 argument_list|(
 name|jx
@@ -139,19 +142,23 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x3c800000
+literal|0x3e300000
 condition|)
-comment|/* |x|<2**-55 */
-return|return
-name|x
-operator|*
-operator|(
-name|one
+block|{
+comment|/* |x|<2**-28 */
+if|if
+condition|(
+name|huge
 operator|+
 name|x
-operator|)
+operator|>
+name|one
+condition|)
+return|return
+name|x
 return|;
-comment|/* tanh(small) = small */
+comment|/* tanh(tiny) = tiny with inexact */
+block|}
 if|if
 condition|(
 name|ix
@@ -212,7 +219,7 @@ name|two
 operator|)
 expr_stmt|;
 block|}
-comment|/* |x|> 22, return +-1 */
+comment|/* |x|>= 22, return +-1 */
 block|}
 else|else
 block|{
@@ -222,7 +229,7 @@ name|one
 operator|-
 name|tiny
 expr_stmt|;
-comment|/* raised inexact flag */
+comment|/* raise inexact flag */
 block|}
 return|return
 operator|(
