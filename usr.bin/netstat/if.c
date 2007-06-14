@@ -179,6 +179,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -225,7 +231,7 @@ specifier|static
 name|void
 name|sidewaysintpr
 parameter_list|(
-name|u_int
+name|int
 parameter_list|,
 name|u_long
 parameter_list|)
@@ -250,6 +256,13 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|int
+name|bdg_done
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 name|ntop_buf
 index|[
@@ -261,13 +274,6 @@ end_decl_stmt
 begin_comment
 comment|/* for inet_ntop() */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|bdg_done
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -674,7 +680,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (pfsyncstat.f || sflag<= 1) \ 	printf(m, (unsigned long long)pfsyncstat.f, plural(pfsyncstat.f))
+value|if (pfsyncstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)pfsyncstat.f, plural(pfsyncstat.f))
 define|#
 directive|define
 name|p2
@@ -683,117 +689,117 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (pfsyncstat.f || sflag<= 1) \ 	printf(m, (unsigned long long)pfsyncstat.f)
+value|if (pfsyncstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)pfsyncstat.f)
 name|p
 argument_list|(
 name|pfsyncs_ipackets
 argument_list|,
-literal|"\t%llu packet%s received (IPv4)\n"
+literal|"\t%ju packet%s received (IPv4)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_ipackets6
 argument_list|,
-literal|"\t%llu packet%s received (IPv6)\n"
+literal|"\t%ju packet%s received (IPv6)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badif
 argument_list|,
-literal|"\t\t%llu packet%s discarded for bad interface\n"
+literal|"\t\t%ju packet%s discarded for bad interface\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badttl
 argument_list|,
-literal|"\t\t%llu packet%s discarded for bad ttl\n"
+literal|"\t\t%ju packet%s discarded for bad ttl\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_hdrops
 argument_list|,
-literal|"\t\t%llu packet%s shorter than header\n"
+literal|"\t\t%ju packet%s shorter than header\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badver
 argument_list|,
-literal|"\t\t%llu packet%s discarded for bad version\n"
+literal|"\t\t%ju packet%s discarded for bad version\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badauth
 argument_list|,
-literal|"\t\t%llu packet%s discarded for bad HMAC\n"
+literal|"\t\t%ju packet%s discarded for bad HMAC\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badact
 argument_list|,
-literal|"\t\t%llu packet%s discarded for bad action\n"
+literal|"\t\t%ju packet%s discarded for bad action\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badlen
 argument_list|,
-literal|"\t\t%llu packet%s discarded for short packet\n"
+literal|"\t\t%ju packet%s discarded for short packet\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badval
 argument_list|,
-literal|"\t\t%llu state%s discarded for bad values\n"
+literal|"\t\t%ju state%s discarded for bad values\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_stale
 argument_list|,
-literal|"\t\t%llu stale state%s\n"
+literal|"\t\t%ju stale state%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badstate
 argument_list|,
-literal|"\t\t%llu failed state lookup/insert%s\n"
+literal|"\t\t%ju failed state lookup/insert%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_opackets
 argument_list|,
-literal|"\t%llu packet%s sent (IPv4)\n"
+literal|"\t%ju packet%s sent (IPv4)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_opackets6
 argument_list|,
-literal|"\t%llu packet%s sent (IPv6)\n"
+literal|"\t%ju packet%s sent (IPv6)\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|pfsyncs_onomem
 argument_list|,
-literal|"\t\t%llu send failed due to mbuf memory error\n"
+literal|"\t\t%ju send failed due to mbuf memory error\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|pfsyncs_oerrors
 argument_list|,
-literal|"\t\t%llu send error\n"
+literal|"\t\t%ju send error\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -829,12 +835,74 @@ name|short
 name|showvalue
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|lsep
+decl_stmt|,
+modifier|*
+name|rsep
+decl_stmt|;
 name|char
 name|newfmt
 index|[
 literal|32
 index|]
 decl_stmt|;
+name|lsep
+operator|=
+literal|""
+expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|fmt
+argument_list|,
+literal|"LS"
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|lsep
+operator|=
+literal|" "
+expr_stmt|;
+name|fmt
+operator|+=
+literal|2
+expr_stmt|;
+block|}
+name|rsep
+operator|=
+literal|" "
+expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|fmt
+argument_list|,
+literal|"NRS"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|rsep
+operator|=
+literal|""
+expr_stmt|;
+name|fmt
+operator|+=
+literal|3
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|showvalue
@@ -847,9 +915,13 @@ name|sprintf
 argument_list|(
 name|newfmt
 argument_list|,
-literal|"%%%ds "
+literal|"%s%%%ds%s"
+argument_list|,
+name|lsep
 argument_list|,
 name|width
+argument_list|,
+name|rsep
 argument_list|)
 expr_stmt|;
 name|printf
@@ -900,9 +972,13 @@ name|sprintf
 argument_list|(
 name|newfmt
 argument_list|,
-literal|"%%%ds "
+literal|"%s%%%ds%s"
+argument_list|,
+name|lsep
 argument_list|,
 name|width
+argument_list|,
+name|rsep
 argument_list|)
 expr_stmt|;
 name|printf
@@ -920,11 +996,15 @@ name|sprintf
 argument_list|(
 name|newfmt
 argument_list|,
-literal|"%%%d%s "
+literal|"%s%%%d%s%s"
+argument_list|,
+name|lsep
 argument_list|,
 name|width
 argument_list|,
 name|fmt
+argument_list|,
+name|rsep
 argument_list|)
 expr_stmt|;
 name|printf
@@ -947,7 +1027,7 @@ name|void
 name|intpr
 parameter_list|(
 name|int
-name|_interval
+name|interval1
 parameter_list|,
 name|u_long
 name|ifnetaddr
@@ -1074,15 +1154,12 @@ return|return;
 block|}
 if|if
 condition|(
-name|_interval
+name|interval1
 condition|)
 block|{
 name|sidewaysintpr
 argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|_interval
+name|interval1
 argument_list|,
 name|ifnetaddr
 argument_list|)
@@ -2288,7 +2365,7 @@ argument_list|)
 expr_stmt|;
 name|show_stat
 argument_list|(
-literal|"lu"
+literal|"NRSlu"
 argument_list|,
 literal|5
 argument_list|,
@@ -2303,7 +2380,7 @@ name|tflag
 condition|)
 name|show_stat
 argument_list|(
-literal|"d"
+literal|"LSd"
 argument_list|,
 literal|4
 argument_list|,
@@ -2318,7 +2395,7 @@ name|dflag
 condition|)
 name|show_stat
 argument_list|(
-literal|"d"
+literal|"LSd"
 argument_list|,
 literal|4
 argument_list|,
@@ -2703,7 +2780,7 @@ comment|/* set if alarm goes off "early" */
 end_comment
 
 begin_comment
-comment|/*  * Print a running summary of interface statistics.  * Repeat display every interval seconds, showing statistics  * collected over that interval.  Assumes that interval is non-zero.  * First line printed at top of screen is always cumulative.  * XXX - should be rewritten to use ifmib(4).  */
+comment|/*  * Print a running summary of interface statistics.  * Repeat display every interval1 seconds, showing statistics  * collected over that interval.  Assumes that interval1 is non-zero.  * First line printed at top of screen is always cumulative.  * XXX - should be rewritten to use ifmib(4).  */
 end_comment
 
 begin_function
@@ -2711,7 +2788,7 @@ specifier|static
 name|void
 name|sidewaysintpr
 parameter_list|(
-name|unsigned
+name|int
 name|interval1
 parameter_list|,
 name|u_long
@@ -2728,6 +2805,10 @@ decl_stmt|;
 name|struct
 name|ifnethead
 name|ifnethead
+decl_stmt|;
+name|struct
+name|itimerval
+name|interval_it
 decl_stmt|;
 name|struct
 name|iftot
@@ -3117,12 +3198,38 @@ name|signalled
 operator|=
 name|NO
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|alarm
-argument_list|(
+name|interval_it
+operator|.
+name|it_interval
+operator|.
+name|tv_sec
+operator|=
 name|interval1
+expr_stmt|;
+name|interval_it
+operator|.
+name|it_interval
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
+name|interval_it
+operator|.
+name|it_value
+operator|=
+name|interval_it
+operator|.
+name|it_interval
+expr_stmt|;
+name|setitimer
+argument_list|(
+name|ITIMER_REAL
+argument_list|,
+operator|&
+name|interval_it
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|first
@@ -3350,7 +3457,7 @@ argument_list|)
 expr_stmt|;
 name|show_stat
 argument_list|(
-literal|"lu"
+literal|"NRSlu"
 argument_list|,
 literal|5
 argument_list|,
@@ -3371,7 +3478,7 @@ name|dflag
 condition|)
 name|show_stat
 argument_list|(
-literal|"u"
+literal|"LSu"
 argument_list|,
 literal|5
 argument_list|,
@@ -3751,7 +3858,7 @@ argument_list|)
 expr_stmt|;
 name|show_stat
 argument_list|(
-literal|"lu"
+literal|"NRSlu"
 argument_list|,
 literal|5
 argument_list|,
@@ -3772,7 +3879,7 @@ name|dflag
 condition|)
 name|show_stat
 argument_list|(
-literal|"u"
+literal|"LSu"
 argument_list|,
 literal|5
 argument_list|,
@@ -3820,33 +3927,23 @@ name|SIGALRM
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
+while|while
 condition|(
 operator|!
 name|signalled
 condition|)
-block|{
 name|sigpause
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-block|}
-name|sigsetmask
-argument_list|(
-name|oldmask
 argument_list|)
 expr_stmt|;
 name|signalled
 operator|=
 name|NO
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|alarm
+name|sigsetmask
 argument_list|(
-name|interval1
+name|oldmask
 argument_list|)
 expr_stmt|;
 name|line
@@ -3874,7 +3971,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called if an interval expires before sidewaysintpr has completed a loop.  * Sets a flag to not wait for the alarm.  */
+comment|/*  * Set a flag to indicate that a signal from the periodic itimer has been  * caught.  */
 end_comment
 
 begin_function
