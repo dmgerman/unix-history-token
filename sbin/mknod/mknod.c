@@ -575,6 +575,12 @@ name|u_int
 operator|)
 name|mymajor
 operator|||
+operator|(
+name|long
+operator|)
+operator|(
+name|u_int
+operator|)
 name|minor
 argument_list|(
 name|dev
