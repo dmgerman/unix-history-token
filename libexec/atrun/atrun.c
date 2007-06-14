@@ -1252,7 +1252,7 @@ argument_list|)
 condition|)
 name|perr
 argument_list|(
-literal|"cannot delete saved userids"
+literal|"cannot init group access list"
 argument_list|)
 expr_stmt|;
 if|if
