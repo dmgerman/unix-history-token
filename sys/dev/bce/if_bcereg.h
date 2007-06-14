@@ -371,6 +371,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCE_CP_PHY
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CP_NVRAM
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CP_FIRMWARE
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CP_MISC
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CP_SPECIAL
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCE_CP_ALL
 value|0x00FFFFFF
 end_define
@@ -590,6 +625,146 @@ define|#
 directive|define
 name|BCE_EXCESSIVE_RESET
 value|(BCE_CP_RESET | BCE_LEVEL_EXCESSIVE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_WARN_PHY
+value|(BCE_CP_PHY | BCE_LEVEL_WARN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_INFO_PHY
+value|(BCE_CP_PHY | BCE_LEVEL_INFO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_VERBOSE_PHY
+value|(BCE_CP_PHY | BCE_LEVEL_VERBOSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_EXCESSIVE_PHY
+value|(BCE_CP_PHY | BCE_LEVEL_EXCESSIVE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_WARN_NVRAM
+value|(BCE_CP_NVRAM | BCE_LEVEL_WARN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_INFO_NVRAM
+value|(BCE_CP_NVRAM | BCE_LEVEL_INFO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_VERBOSE_NVRAM
+value|(BCE_CP_NVRAM | BCE_LEVEL_VERBOSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_EXCESSIVE_NVRAM
+value|(BCE_CP_NVRAM | BCE_LEVEL_EXCESSIVE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_WARN_FIRMWARE
+value|(BCE_CP_FIRMWARE | BCE_LEVEL_WARN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_INFO_FIRMWARE
+value|(BCE_CP_FIRMWARE | BCE_LEVEL_INFO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_VERBOSE_FIRMWARE
+value|(BCE_CP_FIRMWARE | BCE_LEVEL_VERBOSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_EXCESSIVE_FIRMWARE
+value|(BCE_CP_FIRMWARE | BCE_LEVEL_EXCESSIVE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_WARN_MISC
+value|(BCE_CP_MISC | BCE_LEVEL_WARN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_INFO_MISC
+value|(BCE_CP_MISC | BCE_LEVEL_INFO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_VERBOSE_MISC
+value|(BCE_CP_MISC | BCE_LEVEL_VERBOSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_EXCESSIVE_MISC
+value|(BCE_CP_MISC | BCE_LEVEL_EXCESSIVE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_WARN_SPECIAL
+value|(BCE_CP_SPECIAL | BCE_LEVEL_WARN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_INFO_SPECIAL
+value|(BCE_CP_SPECIAL | BCE_LEVEL_INFO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_VERBOSE_SPECIAL
+value|(BCE_CP_SPECIAL | BCE_LEVEL_VERBOSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_EXCESSIVE_SPECIAL
+value|(BCE_CP_SPECIAL | BCE_LEVEL_EXCESSIVE)
 end_define
 
 begin_define
@@ -1903,6 +2078,20 @@ define|#
 directive|define
 name|BCE_DRV_MSG_CODE_SUSPEND_NO_WOL
 value|0x09000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_DRV_MSG_CODE_UNLOAD_LNK_DN
+value|0x0b000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_DRV_MSG_CODE_CMD_SET_LINK
+value|0x10000000
 end_define
 
 begin_define
@@ -3343,6 +3532,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCE_BC_RESET_TYPE
+value|0x000001c0
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCE_BC_STATE
 value|0x000001c4
 end_define
@@ -3541,6 +3737,13 @@ define|#
 directive|define
 name|BCE_BC_STATE_ERR_TOO_MANY_RBUF
 value|(BCE_BC_STATE_SIGN | 0x0700)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_BC_CONDITION
+value|0x000001c8
 end_define
 
 begin_define
@@ -26043,13 +26246,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BCE_TX_SLACK_SPACE
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
 name|RX_PAGES
 value|2
 end_define
@@ -26087,13 +26283,6 @@ define|#
 directive|define
 name|MAX_RX_BD
 value|(TOTAL_RX_BD - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCE_RX_SLACK_SPACE
-value|(MAX_RX_BD - 8)
 end_define
 
 begin_define
@@ -26808,7 +26997,7 @@ comment|/* Interface number */
 name|struct
 name|resource
 modifier|*
-name|bce_res
+name|bce_res_mem
 decl_stmt|;
 comment|/* Device resource handle */
 name|struct
@@ -26831,7 +27020,7 @@ comment|/* Device virtual memory handle */
 name|struct
 name|resource
 modifier|*
-name|bce_irq
+name|bce_res_irq
 decl_stmt|;
 comment|/* IRQ Resource Handle */
 name|struct
@@ -26855,32 +27044,32 @@ decl_stmt|;
 define|#
 directive|define
 name|BCE_PCIX_FLAG
-value|0x01
+value|0x00000001
 define|#
 directive|define
 name|BCE_PCI_32BIT_FLAG
-value|0x02
+value|0x00000002
 define|#
 directive|define
 name|BCE_ONE_TDMA_FLAG
-value|0x04
+value|0x00000004
 comment|/* Deprecated */
 define|#
 directive|define
 name|BCE_NO_WOL_FLAG
-value|0x08
+value|0x00000008
 define|#
 directive|define
 name|BCE_USING_DAC_FLAG
-value|0x10
+value|0x00000010
 define|#
 directive|define
 name|BCE_USING_MSI_FLAG
-value|0x20
+value|0x00000020
 define|#
 directive|define
 name|BCE_MFW_ENABLE_FLAG
-value|0x40
+value|0x00000040
 comment|/* PHY specific flags. */
 name|u32
 name|bce_phy_flags
@@ -26888,31 +27077,38 @@ decl_stmt|;
 define|#
 directive|define
 name|BCE_PHY_SERDES_FLAG
-value|1
+value|0x00000001
 define|#
 directive|define
 name|BCE_PHY_CRC_FIX_FLAG
-value|2
+value|0x00000002
 define|#
 directive|define
 name|BCE_PHY_PARALLEL_DETECT_FLAG
-value|4
+value|0x00000004
 define|#
 directive|define
 name|BCE_PHY_2_5G_CAPABLE_FLAG
-value|8
+value|0x00000008
 define|#
 directive|define
 name|BCE_PHY_INT_MODE_MASK_FLAG
-value|0x300
+value|0x00000300
 define|#
 directive|define
 name|BCE_PHY_INT_MODE_AUTO_POLLING_FLAG
-value|0x100
+value|0x00000100
 define|#
 directive|define
 name|BCE_PHY_INT_MODE_LINK_READY_FLAG
-value|0x200
+value|0x00000200
+comment|/* Values that need to be shared with the PHY driver. */
+name|u32
+name|bce_shared_hw_cfg
+decl_stmt|;
+name|u32
+name|bce_port_hw_cfg
+decl_stmt|;
 name|bus_addr_t
 name|max_bus_addr
 decl_stmt|;
@@ -27048,7 +27244,11 @@ name|bce_link
 decl_stmt|;
 name|struct
 name|callout
-name|bce_stat_ch
+name|bce_tick_callout
+decl_stmt|;
+name|struct
+name|callout
+name|bce_pulse_callout
 decl_stmt|;
 name|int
 name|watchdog_timer
@@ -27212,7 +27412,13 @@ name|u16
 name|free_rx_bd
 decl_stmt|;
 name|u16
+name|max_rx_bd
+decl_stmt|;
+name|u16
 name|used_tx_bd
+decl_stmt|;
+name|u16
+name|max_tx_bd
 decl_stmt|;
 comment|/* Provides access to hardware statistics through sysctl. */
 name|u64
@@ -27409,9 +27615,17 @@ name|rx_low_watermark
 decl_stmt|;
 comment|/* Lowest number of rx_bd's free. */
 name|u32
+name|rx_empty_count
+decl_stmt|;
+comment|/* Number of times the RX chain was empty. */
+name|u32
 name|tx_hi_watermark
 decl_stmt|;
 comment|/* Greatest number of tx_bd's used. */
+name|u32
+name|tx_full_count
+decl_stmt|;
+comment|/* Number of times the TX chain was full. */
 name|u32
 name|mbuf_alloc_failed
 decl_stmt|;
