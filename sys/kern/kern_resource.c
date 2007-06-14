@@ -1450,19 +1450,6 @@ operator|)
 condition|)
 break|break;
 comment|/* Disallow setting rtprio in most cases if not superuser. */
-if|if
-condition|(
-name|priv_check
-argument_list|(
-name|td
-argument_list|,
-name|PRIV_SCHED_RTPRIO
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* can't set realtime priority */
 comment|/*  * Realtime priority has to be restricted for reasons which should be  * obvious.  However, for idle priority, there is a potential for  * system deadlock if an idleprio process gains a lock on a resource  * that other processes need (and the idleprio process can't run  * due to a CPU-bound normal process).  Fix me!  XXX  */
 if|#
 directive|if
@@ -1483,10 +1470,18 @@ endif|#
 directive|endif
 name|error
 operator|=
-name|EPERM
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_SCHED_RTPRIO
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
 break|break;
-block|}
 block|}
 name|PROC_SLOCK
 argument_list|(
@@ -1913,33 +1908,6 @@ operator|)
 condition|)
 break|break;
 comment|/* Disallow setting rtprio in most cases if not superuser. */
-if|if
-condition|(
-name|priv_check
-argument_list|(
-name|td
-argument_list|,
-name|PRIV_SCHED_RTPRIO
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* can't set someone else's */
-if|if
-condition|(
-name|uap
-operator|->
-name|pid
-condition|)
-block|{
-name|error
-operator|=
-name|EPERM
-expr_stmt|;
-break|break;
-block|}
-comment|/* can't set realtime priority */
 comment|/*  * Realtime priority has to be restricted for reasons which should be  * obvious.  However, for idle priority, there is a potential for  * system deadlock if an idleprio process gains a lock on a resource  * that other processes need (and the idleprio process can't run  * due to a CPU-bound normal process).  Fix me!  XXX  */
 if|#
 directive|if
@@ -1960,10 +1928,18 @@ endif|#
 directive|endif
 name|error
 operator|=
-name|EPERM
+name|priv_check
+argument_list|(
+name|td
+argument_list|,
+name|PRIV_SCHED_RTPRIO
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
 break|break;
-block|}
 block|}
 comment|/* 		 * If we are setting our own priority, set just our 		 * thread but if we are doing another process, 		 * do all the threads on that process. If we 		 * specify our own pid we do the latter. 		 */
 name|PROC_SLOCK
