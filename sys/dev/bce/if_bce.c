@@ -23884,9 +23884,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u32
-name|msg
-decl_stmt|;
 name|ifp
 operator|=
 name|sc
