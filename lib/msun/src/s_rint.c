@@ -44,14 +44,9 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_comment
-comment|/*  * TWO23 is long double instead of double to avoid a bug in gcc.  Without  * this, gcc thinks that TWO23[sx]+x and w-TWO23[sx] already have double  * precision and doesn't clip them to double precision when they are  * assigned and returned.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|const
-name|long
 name|double
 name|TWO52
 index|[
@@ -286,6 +281,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 		     * Some bit is set after the 0.5 bit.  To avoid the 		     * possibility of errors from double rounding in 		     * w = TWO52[sx]+x, adjust the 0.25 bit to a lower 		     * guard bit.  We do this for all j0<=51.  The 		     * adjustment is trickiest for j0==18 and j0==19 		     * since then it spans the word boundary. 		     */
 if|if
 condition|(
 name|j0
@@ -295,6 +291,17 @@ condition|)
 name|i1
 operator|=
 literal|0x40000000
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|j0
+operator|==
+literal|18
+condition|)
+name|i1
+operator|=
+literal|0x80000000
 expr_stmt|;
 else|else
 name|i0
@@ -425,6 +432,13 @@ argument_list|,
 name|i1
 argument_list|)
 expr_stmt|;
+operator|*
+operator|(
+specifier|volatile
+name|double
+operator|*
+operator|)
+operator|&
 name|w
 operator|=
 name|TWO52
@@ -434,6 +448,7 @@ index|]
 operator|+
 name|x
 expr_stmt|;
+comment|/* clip any extra precision */
 return|return
 name|w
 operator|-
