@@ -175,6 +175,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<login_cap.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -1237,6 +1254,43 @@ operator|-
 literal|'a'
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
+comment|/* 	 * For simplicity and safety, set all aspects of the user context 	 * except for a selected subset:  Don't set priority, which was 	 * set based on the queue file name according to the tradition. 	 * Don't bother to set environment, including path vars, either 	 * because it will be discarded anyway.  Although the job file 	 * should set umask, preset it here just in case. 	 */
+if|if
+condition|(
+name|setusercontext
+argument_list|(
+name|NULL
+argument_list|,
+name|pentry
+argument_list|,
+name|uid
+argument_list|,
+name|LOGIN_SETALL
+operator|&
+operator|~
+operator|(
+name|LOGIN_SETPRIORITY
+operator||
+name|LOGIN_SETPATH
+operator||
+name|LOGIN_SETENV
+operator|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+comment|/* setusercontext() logged the error */
+else|#
+directive|else
+comment|/* LOGIN_CAP */
 if|if
 condition|(
 name|initgroups
@@ -1313,6 +1367,9 @@ argument_list|(
 literal|"cannot set user id"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* LOGIN_CAP */
 if|if
 condition|(
 name|chdir
@@ -1421,6 +1478,34 @@ name|send_mail
 condition|)
 block|{
 name|PRIV_START
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
+comment|/* 	 * This time set full context to run the mailer. 	 */
+if|if
+condition|(
+name|setusercontext
+argument_list|(
+name|NULL
+argument_list|,
+name|pentry
+argument_list|,
+name|uid
+argument_list|,
+name|LOGIN_SETALL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+comment|/* setusercontext() logged the error */
+else|#
+directive|else
+comment|/* LOGIN_CAP */
 if|if
 condition|(
 name|initgroups
@@ -1497,6 +1582,9 @@ argument_list|(
 literal|"cannot set user id"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* LOGIN_CAP */
 if|if
 condition|(
 name|chdir
