@@ -9704,9 +9704,11 @@ literal|"linking chain 0x%jx -> 0x%jx\n"
 argument|, 		    (uintmax_t)prev2->bus_addr, (uintmax_t)ocb->bus_addr);
 endif|#
 directive|endif
-argument|END_DEBUG 		prev2->orb[
+argument|END_DEBUG
+comment|/* 		 * Suppress compiler optimization so that orb[1] must be written first. 		 * XXX We may need an explicit memory barrier for other architectures 		 * other than i386/amd64. 		 */
+argument|*(volatile uint32_t *)&prev2->orb[
 literal|1
-argument|] = htonl(ocb->bus_addr); 		prev2->orb[
+argument|] = htonl(ocb->bus_addr); 		*(volatile uint32_t *)&prev2->orb[
 literal|0
 argument|] =
 literal|0
