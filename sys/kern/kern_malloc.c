@@ -1054,7 +1054,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A free operation has occurred -- update malloc type statistis for the  * amount of the bucket size.  Occurs within a critical section so that the  * thread isn't preempted and doesn't migrate while updating per-CPU  * statistics.  */
+comment|/*  * A free operation has occurred -- update malloc type statistics for the  * amount of the bucket size.  Occurs within a critical section so that the  * thread isn't preempted and doesn't migrate while updating per-CPU  * statistics.  */
 end_comment
 
 begin_function
