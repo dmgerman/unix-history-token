@@ -55,6 +55,10 @@ decl_stmt|,
 name|tiny
 init|=
 literal|1.0e-30
+decl_stmt|,
+name|huge
+init|=
+literal|1.0e30
 decl_stmt|;
 end_decl_stmt
 
@@ -121,32 +125,36 @@ name|one
 return|;
 comment|/* tanh(NaN) = NaN */
 block|}
-comment|/* |x|< 22 */
+comment|/* |x|< 9 */
 if|if
 condition|(
 name|ix
 operator|<
-literal|0x41b00000
+literal|0x41100000
 condition|)
 block|{
-comment|/* |x|<22 */
+comment|/* |x|<9 */
 if|if
 condition|(
 name|ix
 operator|<
-literal|0x24000000
+literal|0x39800000
 condition|)
-comment|/* |x|<2**-55 */
-return|return
-name|x
-operator|*
-operator|(
-name|one
+block|{
+comment|/* |x|<2**-12 */
+if|if
+condition|(
+name|huge
 operator|+
 name|x
-operator|)
+operator|>
+name|one
+condition|)
+return|return
+name|x
 return|;
-comment|/* tanh(small) = small */
+comment|/* tanh(tiny) = tiny with inexact */
+block|}
 if|if
 condition|(
 name|ix
@@ -207,7 +215,7 @@ name|two
 operator|)
 expr_stmt|;
 block|}
-comment|/* |x|> 22, return +-1 */
+comment|/* |x|>= 9, return +-1 */
 block|}
 else|else
 block|{
@@ -217,7 +225,7 @@ name|one
 operator|-
 name|tiny
 expr_stmt|;
-comment|/* raised inexact flag */
+comment|/* raise inexact flag */
 block|}
 return|return
 operator|(

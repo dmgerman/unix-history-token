@@ -114,22 +114,22 @@ operator|=
 operator|-
 name|h
 expr_stmt|;
-comment|/* |x| in [0,22], return sign(x)*0.5*(E+E/(E+1))) */
+comment|/* |x| in [0,9], return sign(x)*0.5*(E+E/(E+1))) */
 if|if
 condition|(
 name|ix
 operator|<
-literal|0x41b00000
+literal|0x41100000
 condition|)
 block|{
-comment|/* |x|<22 */
+comment|/* |x|<9 */
 if|if
 condition|(
 name|ix
 operator|<
-literal|0x31800000
+literal|0x39800000
 condition|)
-comment|/* |x|<2**-28 */
+comment|/* |x|<2**-12 */
 if|if
 condition|(
 name|shuge
@@ -196,12 +196,12 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/* |x| in [22, log(maxdouble)] return 0.5*exp(|x|) */
+comment|/* |x| in [9, logf(maxfloat)] return 0.5*exp(|x|) */
 if|if
 condition|(
 name|ix
 operator|<
-literal|0x42b17180
+literal|0x42b17217
 condition|)
 return|return
 name|h
@@ -214,7 +214,7 @@ name|x
 argument_list|)
 argument_list|)
 return|;
-comment|/* |x| in [log(maxdouble), overflowthresold] */
+comment|/* |x| in [logf(maxfloat), overflowthresold] */
 if|if
 condition|(
 name|ix
