@@ -10974,11 +10974,11 @@ argument_list|(
 operator|++
 name|limit
 operator|>
-literal|2
-operator|*
 name|rx_done
 operator|->
 name|mask
+operator|/
+literal|2
 argument_list|)
 condition|)
 break|break;
@@ -11059,13 +11059,7 @@ name|map
 decl_stmt|;
 name|int
 name|idx
-decl_stmt|,
-name|limit
 decl_stmt|;
-name|limit
-operator|=
-literal|0
-expr_stmt|;
 name|tx
 operator|=
 operator|&
@@ -11193,22 +11187,6 @@ name|pkt_done
 operator|++
 expr_stmt|;
 block|}
-comment|/* limit potential for livelock by only handling 		   2 full tx rings per call */
-if|if
-condition|(
-name|__predict_false
-argument_list|(
-operator|++
-name|limit
-operator|>
-literal|2
-operator|*
-name|tx
-operator|->
-name|mask
-argument_list|)
-condition|)
-break|break;
 block|}
 comment|/* If we have space, clear IFF_OACTIVE to tell the stack that            its OK to send packets */
 if|if
