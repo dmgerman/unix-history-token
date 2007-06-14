@@ -86,6 +86,29 @@ name|ix
 operator|<=
 literal|0x3fe921fb
 condition|)
+block|{
+if|if
+condition|(
+name|ix
+operator|<
+literal|0x3e400000
+condition|)
+comment|/* |x|< 2**-27 */
+block|{
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|x
+operator|==
+literal|0
+condition|)
+return|return
+name|x
+return|;
+block|}
+comment|/* generate inexact */
 return|return
 name|__kernel_sin
 argument_list|(
@@ -96,6 +119,7 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
+block|}
 comment|/* sin(Inf or NaN) is NaN */
 elseif|else
 if|if

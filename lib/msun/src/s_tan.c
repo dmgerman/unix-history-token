@@ -86,6 +86,27 @@ name|ix
 operator|<=
 literal|0x3fe921fb
 condition|)
+block|{
+if|if
+condition|(
+name|ix
+operator|<
+literal|0x3e300000
+condition|)
+comment|/* x< 2**-28 */
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|x
+operator|==
+literal|0
+condition|)
+return|return
+name|x
+return|;
+comment|/* generate inexact */
 return|return
 name|__kernel_tan
 argument_list|(
@@ -96,6 +117,7 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
+block|}
 comment|/* tan(Inf or NaN) is NaN */
 elseif|else
 if|if
