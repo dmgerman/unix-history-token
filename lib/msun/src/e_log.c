@@ -305,7 +305,7 @@ operator|<
 literal|3
 condition|)
 block|{
-comment|/* -2**-20<= f< 2**-20 */
+comment|/* |f|< 2**-20 */
 if|if
 condition|(
 name|f
