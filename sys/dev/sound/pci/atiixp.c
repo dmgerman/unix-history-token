@@ -4017,6 +4017,11 @@ argument_list|,
 name|enable
 argument_list|)
 expr_stmt|;
+name|wakeup
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* acknowledge */
 name|atiixp_wr
@@ -4478,11 +4483,20 @@ name|polling
 operator|=
 literal|0
 expr_stmt|;
-comment|/* wait for the interrupts to happen */
 name|timeout
 operator|=
-literal|100
+literal|10
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|codec_not_ready_bits
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* wait for the interrupts to happen */
 do|do
 block|{
 name|msleep
@@ -4497,7 +4511,14 @@ name|PWAIT
 argument_list|,
 literal|"ixpslp"
 argument_list|,
+name|max
+argument_list|(
+name|hz
+operator|/
+literal|10
+argument_list|,
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4505,6 +4526,8 @@ condition|(
 name|sc
 operator|->
 name|codec_not_ready_bits
+operator|!=
+literal|0
 condition|)
 break|break;
 block|}
@@ -4514,6 +4537,7 @@ operator|--
 name|timeout
 condition|)
 do|;
+block|}
 name|sc
 operator|->
 name|polling
@@ -4527,6 +4551,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|sc
+operator|->
+name|codec_not_ready_bits
+operator|==
+literal|0
+operator|&&
 name|timeout
 operator|==
 literal|0
