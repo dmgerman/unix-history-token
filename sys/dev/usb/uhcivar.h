@@ -467,7 +467,8 @@ name|usbd_xfer_handle
 name|sc_intr_xfer
 decl_stmt|;
 comment|/* root hub interrupt transfer */
-name|usb_callout_t
+name|struct
+name|callout
 name|sc_poll_handle
 decl_stmt|;
 name|char

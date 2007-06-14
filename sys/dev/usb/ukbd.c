@@ -1873,7 +1873,8 @@ define|#
 directive|define
 name|DISCONNECTED
 value|(1<< 1)
-name|usb_callout_t
+name|struct
+name|callout
 name|ks_timeout_handle
 decl_stmt|;
 name|int
@@ -3035,11 +3036,14 @@ name|ks_ifstate
 operator|=
 literal|0
 expr_stmt|;
-name|usb_callout_init
+name|callout_init
 argument_list|(
+operator|&
 name|state
 operator|->
 name|ks_timeout_handle
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * FIXME: set the initial value for lock keys in ks_state 		 * according to the BIOS data? 		 */
@@ -3366,15 +3370,12 @@ name|ks_ifstate
 operator|)
 argument_list|)
 expr_stmt|;
-name|usb_uncallout
+name|callout_stop
 argument_list|(
+operator|&
 name|state
 operator|->
 name|ks_timeout_handle
-argument_list|,
-name|ukbd_timeout
-argument_list|,
-name|kbd
 argument_list|)
 expr_stmt|;
 if|if
@@ -3579,8 +3580,9 @@ operator|)
 name|USBD_NORMAL_COMPLETION
 operator|)
 expr_stmt|;
-name|usb_callout
+name|callout_reset
 argument_list|(
+operator|&
 name|state
 operator|->
 name|ks_timeout_handle

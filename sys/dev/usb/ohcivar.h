@@ -398,7 +398,8 @@ name|struct
 name|timeval
 name|sc_overrun_ntc
 decl_stmt|;
-name|usb_callout_t
+name|struct
+name|callout
 name|sc_tmo_rhsc
 decl_stmt|;
 name|char

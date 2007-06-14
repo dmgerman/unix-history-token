@@ -816,7 +816,8 @@ modifier|*
 name|hcpriv
 decl_stmt|;
 comment|/* private use by the HC driver */
-name|usb_callout_t
+name|struct
+name|callout
 name|timeout_handle
 decl_stmt|;
 block|}
