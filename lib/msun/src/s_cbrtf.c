@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* s_cbrtf.c -- float version of s_cbrt.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  */
+comment|/* s_cbrtf.c -- float version of s_cbrt.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  * Debugged and optimized by Bruce D. Evans.  */
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ name|B1
 init|=
 literal|709958130
 decl_stmt|,
-comment|/* B1 = (84+2/3-0.03306235651)*2**23 */
+comment|/* B1 = (127-127.0/3-0.03306235651)*2**23 */
 name|B2
 init|=
 literal|642849266
@@ -60,42 +60,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* B2 = (76+2/3-0.03306235651)*2**23 */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|float
-name|C
-init|=
-literal|5.4285717010e-01
-decl_stmt|,
-comment|/* 19/35     = 0x3f0af8b0 */
-name|D
-init|=
-operator|-
-literal|7.0530611277e-01
-decl_stmt|,
-comment|/* -864/1225 = 0xbf348ef1 */
-name|E
-init|=
-literal|1.4142856598e+00
-decl_stmt|,
-comment|/* 99/70     = 0x3fb50750 */
-name|F
-init|=
-literal|1.6071428061e+00
-decl_stmt|,
-comment|/* 45/28     = 0x3fcdb6db */
-name|G
-init|=
-literal|3.5714286566e-01
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 5/14      = 0x3eb6db6e */
+comment|/* B2 = (127-127.0/3-24/3-0.03306235651)*2**23 */
 end_comment
 
 begin_function
@@ -106,11 +71,12 @@ name|float
 name|x
 parameter_list|)
 block|{
-name|float
+name|double
 name|r
 decl_stmt|,
-name|s
-decl_stmt|,
+name|T
+decl_stmt|;
+name|float
 name|t
 decl_stmt|;
 name|int32_t
@@ -154,6 +120,15 @@ name|x
 operator|)
 return|;
 comment|/* cbrt(NaN,INF) is itself */
+comment|/* rough cbrt to 5 bits */
+if|if
+condition|(
+name|hx
+operator|<
+literal|0x00800000
+condition|)
+block|{
+comment|/* zero or subnormal? */
 if|if
 condition|(
 name|hx
@@ -165,24 +140,7 @@ operator|(
 name|x
 operator|)
 return|;
-comment|/* cbrt(0) is itself */
-name|SET_FLOAT_WORD
-argument_list|(
-name|x
-argument_list|,
-name|hx
-argument_list|)
-expr_stmt|;
-comment|/* x<- |x| */
-comment|/* rough cbrt to 5 bits */
-if|if
-condition|(
-name|hx
-operator|<
-literal|0x00800000
-condition|)
-comment|/* subnormal number */
-block|{
+comment|/* cbrt(+-0) is itself */
 name|SET_FLOAT_WORD
 argument_list|(
 name|t
@@ -206,11 +164,19 @@ name|SET_FLOAT_WORD
 argument_list|(
 name|t
 argument_list|,
+name|sign
+operator||
+operator|(
+operator|(
 name|high
+operator|&
+literal|0x7fffffff
+operator|)
 operator|/
 literal|3
 operator|+
 name|B2
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -219,66 +185,89 @@ name|SET_FLOAT_WORD
 argument_list|(
 name|t
 argument_list|,
+name|sign
+operator||
+operator|(
 name|hx
 operator|/
 literal|3
 operator|+
 name|B1
+operator|)
 argument_list|)
 expr_stmt|;
-comment|/* new cbrt to 23 bits */
-name|r
+comment|/*      * First step Newton iteration (solving t*t-x/t == 0) to 16 bits.  In      * double precision so that its terms can be arranged for efficiency      * without causing overflow or underflow.      */
+name|T
 operator|=
 name|t
+expr_stmt|;
+name|r
+operator|=
+name|T
 operator|*
-name|t
-operator|/
+name|T
+operator|*
+name|T
+expr_stmt|;
+name|T
+operator|=
+name|T
+operator|*
+operator|(
+operator|(
+name|double
+operator|)
 name|x
-expr_stmt|;
-name|s
-operator|=
-name|C
+operator|+
+name|x
 operator|+
 name|r
-operator|*
-name|t
-expr_stmt|;
-name|t
-operator|*=
-name|G
-operator|+
-name|F
+operator|)
 operator|/
 operator|(
-name|s
+name|x
 operator|+
-name|E
+name|r
 operator|+
-name|D
-operator|/
-name|s
+name|r
 operator|)
 expr_stmt|;
-comment|/* retore the sign bit */
-name|GET_FLOAT_WORD
-argument_list|(
-name|high
-argument_list|,
-name|t
-argument_list|)
+comment|/*      * Second step Newton iteration to 47 bits.  In double precision for      * efficiency and accuracy.      */
+name|r
+operator|=
+name|T
+operator|*
+name|T
+operator|*
+name|T
 expr_stmt|;
-name|SET_FLOAT_WORD
-argument_list|(
-name|t
-argument_list|,
-name|high
-operator||
-name|sign
-argument_list|)
+name|T
+operator|=
+name|T
+operator|*
+operator|(
+operator|(
+name|double
+operator|)
+name|x
+operator|+
+name|x
+operator|+
+name|r
+operator|)
+operator|/
+operator|(
+name|x
+operator|+
+name|r
+operator|+
+name|r
+operator|)
 expr_stmt|;
+comment|/* rounding to 24 bits is perfect in round-to-nearest mode */
 return|return
 operator|(
-name|t
+name|T
 operator|)
 return|;
 block|}
