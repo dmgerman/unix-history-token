@@ -86,28 +86,28 @@ literal|2
 index|]
 init|=
 block|{
-literal|6.9313812256e-01
+literal|6.9314575195e-01
 block|,
-comment|/* 0x3f317180 */
+comment|/* 0x3f317200 */
 operator|-
-literal|6.9313812256e-01
+literal|6.9314575195e-01
 block|,}
 decl_stmt|,
-comment|/* 0xbf317180 */
+comment|/* 0xbf317200 */
 name|ln2LO
 index|[
 literal|2
 index|]
 init|=
 block|{
-literal|9.0580006145e-06
+literal|1.4286067653e-06
 block|,
-comment|/* 0x3717f7d1 */
+comment|/* 0x35bfbe8e */
 operator|-
-literal|9.0580006145e-06
+literal|1.4286067653e-06
 block|,}
 decl_stmt|,
-comment|/* 0xb717f7d1 */
+comment|/* 0xb5bfbe8e */
 name|invln2
 init|=
 literal|1.4426950216e+00
