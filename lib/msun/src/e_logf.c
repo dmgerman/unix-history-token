@@ -59,44 +59,42 @@ init|=
 literal|3.355443200e+07
 decl_stmt|,
 comment|/* 0x4c000000 */
+comment|/* |(log(1+s)-log(1-s))/s - Lg(s)|< 2**-34.24 (~[-4.95e-11, 4.97e-11]). */
 name|Lg1
 init|=
-literal|6.6666668653e-01
+literal|0xaaaaaa
+literal|.0p
+operator|-
+literal|24
 decl_stmt|,
-comment|/* 3F2AAAAB */
+comment|/* 0.66666662693 */
 name|Lg2
 init|=
-literal|4.0000000596e-01
+literal|0xccce13
+literal|.0p
+operator|-
+literal|25
 decl_stmt|,
-comment|/* 3ECCCCCD */
+comment|/* 0.40000972152 */
 name|Lg3
 init|=
-literal|2.8571429849e-01
+literal|0x91e9ee
+literal|.0p
+operator|-
+literal|25
 decl_stmt|,
-comment|/* 3E924925 */
+comment|/* 0.28498786688 */
 name|Lg4
 init|=
-literal|2.2222198546e-01
-decl_stmt|,
-comment|/* 3E638E29 */
-name|Lg5
-init|=
-literal|1.8183572590e-01
-decl_stmt|,
-comment|/* 3E3A3325 */
-name|Lg6
-init|=
-literal|1.5313838422e-01
-decl_stmt|,
-comment|/* 3E1CD04F */
-name|Lg7
-init|=
-literal|1.4798198640e-01
+literal|0xf89e26
+literal|.0p
+operator|-
+literal|26
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 3E178897 */
+comment|/* 0.24279078841 */
 end_comment
 
 begin_decl_stmt
@@ -290,16 +288,16 @@ operator|(
 literal|0x007fffff
 operator|&
 operator|(
-literal|15
+literal|0x8000
 operator|+
 name|ix
 operator|)
 operator|)
 operator|<
-literal|16
+literal|0xc000
 condition|)
 block|{
-comment|/* |f|< 2**-20 */
+comment|/* -2**-9<= f< 2**-9 */
 if|if
 condition|(
 name|f
@@ -454,13 +452,7 @@ name|Lg2
 operator|+
 name|w
 operator|*
-operator|(
 name|Lg4
-operator|+
-name|w
-operator|*
-name|Lg6
-operator|)
 operator|)
 expr_stmt|;
 name|t2
@@ -472,19 +464,7 @@ name|Lg1
 operator|+
 name|w
 operator|*
-operator|(
 name|Lg3
-operator|+
-name|w
-operator|*
-operator|(
-name|Lg5
-operator|+
-name|w
-operator|*
-name|Lg7
-operator|)
-operator|)
 operator|)
 expr_stmt|;
 name|i
