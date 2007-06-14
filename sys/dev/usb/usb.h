@@ -35,6 +35,12 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_port.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -44,22 +50,11 @@ name|_KERNEL
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_port.h>
+file|"opt_usb.h"
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
@@ -90,11 +85,6 @@ name|M_USBHC
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

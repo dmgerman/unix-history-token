@@ -39,56 +39,6 @@ begin_comment
 comment|/*  * FreeBSD  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"opt_usb.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_USB
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_USBDEV
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_USBHC
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* We don't use the soft interrupt code in FreeBSD. */
 end_comment
@@ -210,15 +160,6 @@ name|PWR_SUSPEND
 value|1
 end_define
 
-begin_typedef
-typedef|typedef
-name|struct
-name|malloc_type
-modifier|*
-name|usb_malloc_type
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -236,18 +177,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|METHODS_NONE
-value|{0,0}
-end_define
-
-begin_define
-define|#
-directive|define
 name|USB_DECLARE_DRIVER
 parameter_list|(
 name|dname
 parameter_list|)
-value|USB_DECLARE_DRIVER_INIT(dname, METHODS_NONE)
+value|USB_DECLARE_DRIVER_INIT(dname, {0,0})
 end_define
 
 begin_define
