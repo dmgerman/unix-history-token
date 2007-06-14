@@ -213,6 +213,9 @@ decl_stmt|;
 name|u_long
 name|vrf_addr_hashmark
 decl_stmt|;
+name|uint32_t
+name|refcount
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1198,6 +1201,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|sctp_free_vrf
+parameter_list|(
+name|struct
+name|sctp_vrf
+modifier|*
+name|vrf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|sctp_ifa
 modifier|*
@@ -1340,6 +1355,10 @@ modifier|*
 parameter_list|,
 name|struct
 name|sockaddr
+modifier|*
+parameter_list|,
+name|struct
+name|sctp_ifa
 modifier|*
 parameter_list|,
 name|struct

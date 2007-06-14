@@ -144,6 +144,10 @@ parameter_list|,
 name|uint32_t
 parameter_list|,
 name|uint32_t
+parameter_list|,
+name|struct
+name|sctp_ifa
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

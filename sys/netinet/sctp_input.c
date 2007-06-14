@@ -764,17 +764,17 @@ name|asoc
 operator|->
 name|peers_rwnd
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SCTP_CWND_MONITOR
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SCTP_CWND_LOGGING
-argument_list|)
+if|if
+condition|(
+name|sctp_logging_level
+operator|&
+operator|(
+name|SCTP_CWND_MONITOR_ENABLE
+operator||
+name|SCTP_CWND_LOGGING_ENABLE
+operator|)
+condition|)
+block|{
 name|sctp_log_cwnd
 argument_list|(
 name|stcb
@@ -786,8 +786,7 @@ argument_list|,
 name|SCTP_CWND_INITIALIZATION
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 block|}
 block|}
 name|SCTP_TCB_SEND_LOCK
@@ -1015,9 +1014,13 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_MAP_LOGGING
+if|if
+condition|(
+name|sctp_logging_level
+operator|&
+name|SCTP_MAP_LOGGING_ENABLE
+condition|)
+block|{
 name|sctp_log_map
 argument_list|(
 literal|0
@@ -1031,8 +1034,7 @@ argument_list|,
 name|SCTP_MAP_SLIDE_RESULT
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 comment|/* This is the next one we expect */
 name|asoc
 operator|->
@@ -11239,9 +11241,6 @@ name|MAX_TSN
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_CWND_MONITOR
 name|int
 name|old_cwnd
 decl_stmt|;
@@ -11251,8 +11250,6 @@ name|net
 operator|->
 name|cwnd
 expr_stmt|;
-endif|#
-directive|endif
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_ecnereducedcwnd
@@ -11303,9 +11300,13 @@ name|net
 operator|->
 name|ssthresh
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_CWND_MONITOR
+if|if
+condition|(
+name|sctp_logging_level
+operator|&
+name|SCTP_CWND_MONITOR_ENABLE
+condition|)
+block|{
 name|sctp_log_cwnd
 argument_list|(
 name|stcb
@@ -11323,8 +11324,7 @@ argument_list|,
 name|SCTP_CWND_LOG_FROM_SAT
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 comment|/* 		 * we reduce once every RTT. So we will only lower cwnd at 		 * the next sending seq i.e. the resync_tsn. 		 */
 name|stcb
 operator|->
@@ -12194,9 +12194,13 @@ name|whoTo
 argument_list|)
 expr_stmt|;
 comment|/* fix counts and things */
-ifdef|#
-directive|ifdef
-name|SCTP_FLIGHT_LOGGING
+if|if
+condition|(
+name|sctp_logging_level
+operator|&
+name|SCTP_FLIGHT_LOGGING_ENABLE
+condition|)
+block|{
 name|sctp_misc_ints
 argument_list|(
 name|SCTP_FLIGHT_LOG_DOWN_PDRP
@@ -12225,8 +12229,7 @@ operator|.
 name|TSN_seq
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|sctp_flight_size_decrease
 argument_list|(
 name|tp1
@@ -16417,9 +16420,6 @@ name|rtt
 decl_stmt|,
 name|incr
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_CWND_MONITOR
 name|int
 name|old_cwnd
 init|=
@@ -16427,8 +16427,6 @@ name|net
 operator|->
 name|cwnd
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* need real RTT for this calc */
 name|rtt
 operator|=
@@ -16736,9 +16734,6 @@ operator|->
 name|mtu
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SCTP_CWND_MONITOR
 if|if
 condition|(
 name|net
@@ -16751,6 +16746,13 @@ literal|0
 condition|)
 block|{
 comment|/* log only changes */
+if|if
+condition|(
+name|sctp_logging_level
+operator|&
+name|SCTP_CWND_MONITOR_ENABLE
+condition|)
+block|{
 name|sctp_log_cwnd
 argument_list|(
 name|stcb
@@ -16769,8 +16771,7 @@ name|SCTP_CWND_LOG_FROM_SAT
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
+block|}
 block|}
 block|}
 end_function
@@ -17698,6 +17699,19 @@ argument_list|(
 name|SCTP_DEBUG_INPUT2
 argument_list|,
 literal|"sctp_process_control: processing a chunk type=%u, len=%u\n"
+argument_list|,
+name|ch
+operator|->
+name|chunk_type
+argument_list|,
+name|chk_length
+argument_list|)
+expr_stmt|;
+name|SCTP_LTRACE_CHK
+argument_list|(
+name|inp
+argument_list|,
+name|stcb
 argument_list|,
 name|ch
 operator|->
@@ -22310,6 +22324,13 @@ ifdef|#
 directive|ifdef
 name|SCTP_MBUF_LOGGING
 comment|/* Log in any input mbufs */
+if|if
+condition|(
+name|sctp_logging_level
+operator|&
+name|SCTP_MBUF_LOGGING_ENABLE
+condition|)
+block|{
 name|mat
 operator|=
 name|m
@@ -22342,6 +22363,7 @@ argument_list|(
 name|mat
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif

@@ -36,6 +36,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/sctputil.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/sctp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/sctp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/sctp_sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/sctp.h>
 end_include
 
@@ -43,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/sctp_uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/sctp_var.h>
 end_include
 
 begin_include
@@ -759,6 +777,13 @@ comment|/* We remove it right away */
 ifdef|#
 directive|ifdef
 name|SCTP_LOCK_LOGGING
+if|if
+condition|(
+name|sctp_logging_level
+operator|&
+name|SCTP_LOCK_LOGGING_ENABLE
+condition|)
+block|{
 name|sctp_log_lock
 argument_list|(
 name|inp
@@ -773,6 +798,7 @@ argument_list|,
 name|SCTP_LOG_LOCK_SOCK
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|TAILQ_REMOVE

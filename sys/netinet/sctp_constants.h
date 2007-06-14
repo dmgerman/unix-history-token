@@ -112,13 +112,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_STAT_LOG_SIZE
-value|80000
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_USE_THREAD_BASED_ITERATOR
 value|1
 end_define
@@ -972,7 +965,7 @@ value|118
 end_define
 
 begin_comment
-comment|/*  * To turn on various logging, you must first define SCTP_STAT_LOGGING. Then  * to get something to log you define one of the logging defines i.e.  *  * SCTP_CWND_LOGGING SCTP_BLK_LOGGING SCTP_STR_LOGGING SCTP_FR_LOGGING  *  * Any one or a combination of the logging can be turned on.  */
+comment|/*  * To turn on various logging, you must first enable 'options KTR' and  * you might want to bump the entires 'options KTR_ENTRIES=80000'.  * To get something to log you define one of the logging defines.  * (see LINT).  *  * This gets the compile in place, but you still need to turn the  * logging flag on too in the sysctl (see in sctp.h).  */
 end_comment
 
 begin_define
@@ -1104,8 +1097,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_LOG_MAX_EVENT
+name|SCTP_LOG_CHUNK_PROC
 value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LOG_ERROR_RET
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LOG_MAX_EVENT
+value|20
 end_define
 
 begin_define

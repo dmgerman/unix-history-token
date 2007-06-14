@@ -2328,7 +2328,7 @@ begin_struct
 struct|struct
 name|sctp_cwnd_log
 block|{
-name|uint32_t
+name|uint64_t
 name|time_event
 decl_stmt|;
 name|uint8_t
