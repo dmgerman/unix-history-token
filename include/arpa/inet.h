@@ -469,6 +469,9 @@ parameter_list|,
 name|char
 modifier|*
 name|buf
+parameter_list|,
+name|socklen_t
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl
