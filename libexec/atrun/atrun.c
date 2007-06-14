@@ -1961,7 +1961,7 @@ name|run_batch
 operator|=
 literal|1
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|batch_name
 argument_list|,
