@@ -211,6 +211,16 @@ name|x
 operator|*
 name|one
 expr_stmt|;
+if|if
+condition|(
+name|x
+operator|!=
+name|x
+condition|)
+comment|/* NaN */
+return|return
+name|x
+return|;
 name|GET_FLOAT_WORD
 argument_list|(
 name|ix
