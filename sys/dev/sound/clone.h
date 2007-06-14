@@ -50,7 +50,7 @@ value|0xffffff
 end_define
 
 begin_comment
-comment|/*  * Creation flags, mostly related to the behaviour of garbage collector.  *  * SND_CLONE_ENABLE     - Enable clone allocation.  * SND_CLONE_GC_ENABLE  - Enable garbage collector operation, automatically  *                        or if explicitly called upon.  * SND_CLONE_GC_UNREF   - Garbage collect during unref operation.  * SND_CLONE_GC_LASTREF - Garbage collect during last reference  *                        (refcount = 0)  * SND_CLONE_GC_EXPIRED - Don't garbage collect unless the global clone  *                        handler has been expired.  * SND_CLONE_GC_REVOKE  - Revoke clone invocation status which has been  *                        expired instead of removing and freeing it.  */
+comment|/*  * Creation flags, mostly related to the behaviour of garbage collector.  *  * SND_CLONE_ENABLE     - Enable clone allocation.  * SND_CLONE_GC_ENABLE  - Enable garbage collector operation, automatically  *                        or if explicitly called upon.  * SND_CLONE_GC_UNREF   - Garbage collect during unref operation.  * SND_CLONE_GC_LASTREF - Garbage collect during last reference  *                        (refcount = 0)  * SND_CLONE_GC_EXPIRED - Don't garbage collect unless the global clone  *                        handler has been expired.  * SND_CLONE_GC_REVOKE  - Revoke clone invocation status which has been  *                        expired instead of removing and freeing it.  * SND_CLONE_WAITOK     - malloc() is allowed to sleep while allocating  *                        clone entry.  */
 end_comment
 
 begin_define
@@ -98,6 +98,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SND_CLONE_WAITOK
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|SND_CLONE_GC_MASK
 value|(SND_CLONE_GC_ENABLE  |			\ 				 SND_CLONE_GC_UNREF   |			\ 				 SND_CLONE_GC_LASTREF |			\ 				 SND_CLONE_GC_EXPIRED |			\ 				 SND_CLONE_GC_REVOKE)
 end_define
@@ -106,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|SND_CLONE_MASK
-value|(SND_CLONE_ENABLE | SND_CLONE_GC_MASK)
+value|(SND_CLONE_ENABLE | SND_CLONE_GC_MASK |	\ 				 SND_CLONE_WAITOK)
 end_define
 
 begin_comment
@@ -163,38 +170,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SND_DIAGNOSTIC
-end_ifdef
-
-begin_function_decl
-name|struct
-name|snd_clone
-modifier|*
-name|snd_clone_create
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 name|struct
 name|snd_clone
@@ -211,11 +186,6 @@ name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int

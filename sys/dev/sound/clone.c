@@ -30,19 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -143,16 +131,6 @@ argument|snd_clone_entry
 argument_list|)
 name|head
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SND_DIAGNOSTIC
-name|struct
-name|mtx
-modifier|*
-name|lock
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|timespec
 name|tsp
@@ -188,16 +166,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|SND_CLONE_LOCKASSERT
-parameter_list|(
-name|x
-parameter_list|)
-value|do {			\ 	if ((x)->lock == NULL)					\ 		panic("%s(): NULL mutex!", __func__);		\ 	if (mtx_owned((x)->lock) == 0)				\ 		panic("%s(): mutex not owned!", __func__);	\ } while(0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|SND_CLONE_ASSERT
 parameter_list|(
 name|x
@@ -211,15 +179,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_define
-define|#
-directive|define
-name|SND_CLONE_LOCKASSERT
-parameter_list|(
-modifier|...
-parameter_list|)
-end_define
 
 begin_define
 define|#
@@ -488,7 +447,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * snd_clone_create() : Return opaque allocated clone manager. Mutex is  * not a mandatory requirement if the caller can guarantee safety across  * concurrent access.  */
+comment|/*  * snd_clone_create() : Return opaque allocated clone manager.  */
 end_comment
 
 begin_function
@@ -497,16 +456,6 @@ name|snd_clone
 modifier|*
 name|snd_clone_create
 parameter_list|(
-ifdef|#
-directive|ifdef
-name|SND_DIAGNOSTIC
-name|struct
-name|mtx
-modifier|*
-name|lock
-parameter_list|,
-endif|#
-directive|endif
 name|int
 name|typemask
 parameter_list|,
@@ -605,17 +554,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SND_DIAGNOSTIC
-name|c
-operator|->
-name|lock
-operator|=
-name|lock
-expr_stmt|;
-endif|#
-directive|endif
 name|c
 operator|->
 name|refcount
@@ -716,11 +654,6 @@ literal|"NULL snd_clone"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|c
@@ -808,11 +741,6 @@ literal|"NULL snd_clone"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|c
@@ -859,11 +787,6 @@ argument_list|,
 operator|(
 literal|"NULL snd_clone"
 operator|)
-argument_list|)
-expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
 argument_list|)
 expr_stmt|;
 if|if
@@ -922,11 +845,6 @@ literal|"NULL snd_clone"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|c
@@ -956,11 +874,6 @@ argument_list|,
 operator|(
 literal|"NULL snd_clone"
 operator|)
-argument_list|)
-expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
 argument_list|)
 expr_stmt|;
 return|return
@@ -995,11 +908,6 @@ argument_list|,
 operator|(
 literal|"NULL snd_clone"
 operator|)
-argument_list|)
-expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
 argument_list|)
 expr_stmt|;
 name|SND_CLONE_ASSERT
@@ -1088,11 +996,6 @@ literal|"NULL snd_clone"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|c
@@ -1125,11 +1028,6 @@ argument_list|,
 operator|(
 literal|"NULL snd_clone"
 operator|)
-argument_list|)
-expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
 argument_list|)
 expr_stmt|;
 name|c
@@ -1185,11 +1083,6 @@ literal|"NULL timespec"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 operator|*
 name|tsp
 operator|=
@@ -1226,11 +1119,6 @@ literal|"NULL snd_clone"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|c
@@ -1263,11 +1151,6 @@ argument_list|,
 operator|(
 literal|"NULL snd_clone"
 operator|)
-argument_list|)
-expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
 argument_list|)
 expr_stmt|;
 name|SND_CLONE_ASSERT
@@ -1375,13 +1258,6 @@ literal|"NULL parent"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|ce
-operator|->
-name|parent
-argument_list|)
-expr_stmt|;
 operator|*
 name|tsp
 operator|=
@@ -1451,13 +1327,6 @@ argument_list|,
 operator|(
 literal|"NULL parent"
 operator|)
-argument_list|)
-expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|ce
-operator|->
-name|parent
 argument_list|)
 expr_stmt|;
 return|return
@@ -1546,13 +1415,6 @@ literal|"NULL parent"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|ce
-operator|->
-name|parent
-argument_list|)
-expr_stmt|;
 name|ce
 operator|->
 name|flags
@@ -1639,11 +1501,6 @@ argument_list|,
 operator|(
 literal|"NULL snd_clone"
 operator|)
-argument_list|)
-expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
 argument_list|)
 expr_stmt|;
 if|if
@@ -1854,6 +1711,9 @@ name|struct
 name|snd_clone_entry
 modifier|*
 name|ce
+decl_stmt|,
+modifier|*
+name|tmp
 decl_stmt|;
 name|SND_CLONE_ASSERT
 argument_list|(
@@ -1866,36 +1726,6 @@ literal|"NULL snd_clone"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SND_CLONE_ASSERT
-argument_list|(
-name|c
-operator|->
-name|refcount
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"refcount> 0"
-operator|)
-argument_list|)
-expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-operator|!
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|c
-operator|->
-name|head
-argument_list|)
-condition|)
-block|{
 name|ce
 operator|=
 name|TAILQ_FIRST
@@ -1906,13 +1736,17 @@ operator|->
 name|head
 argument_list|)
 expr_stmt|;
-name|TAILQ_REMOVE
+while|while
+condition|(
+name|ce
+operator|!=
+name|NULL
+condition|)
+block|{
+name|tmp
+operator|=
+name|TAILQ_NEXT
 argument_list|(
-operator|&
-name|c
-operator|->
-name|head
-argument_list|,
 name|ce
 argument_list|,
 name|link
@@ -1939,6 +1773,10 @@ name|ce
 argument_list|,
 name|M_DEVBUF
 argument_list|)
+expr_stmt|;
+name|ce
+operator|=
+name|tmp
 expr_stmt|;
 block|}
 name|free
@@ -2009,13 +1847,6 @@ argument_list|,
 operator|(
 literal|"NULL parent"
 operator|)
-argument_list|)
-expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|ce
-operator|->
-name|parent
 argument_list|)
 expr_stmt|;
 name|ce
@@ -2110,13 +1941,6 @@ argument_list|,
 operator|(
 literal|"NULL parent"
 operator|)
-argument_list|)
-expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|ce
-operator|->
-name|parent
 argument_list|)
 expr_stmt|;
 name|ce
@@ -2246,11 +2070,6 @@ literal|"refcount< 0"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|++
@@ -2338,11 +2157,6 @@ argument_list|,
 operator|(
 literal|"refcount<= 0"
 operator|)
-argument_list|)
-expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
 argument_list|)
 expr_stmt|;
 name|c
@@ -2528,13 +2342,6 @@ literal|"NULL parent"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|ce
-operator|->
-name|parent
-argument_list|)
-expr_stmt|;
 name|dev
 operator|->
 name|si_drv2
@@ -2629,11 +2436,6 @@ argument_list|,
 operator|(
 literal|"NULL snd_clone"
 operator|)
-argument_list|)
-expr_stmt|;
-name|SND_CLONE_LOCKASSERT
-argument_list|(
-name|c
 argument_list|)
 expr_stmt|;
 name|SND_CLONE_ASSERT
@@ -3182,7 +2984,7 @@ return|;
 block|}
 name|snd_clone_alloc_new
 label|:
-comment|/* 	 * No free entries found, and we still haven't reached maximum 	 * allowable units. Allocate, setup a minimal unique entry with busy 	 * status so nobody will monkey on this new entry since we had to 	 * give up locking for further setup. Unit magic is set right here 	 * to avoid collision with other contesting handler. 	 */
+comment|/* 	 * No free entries found, and we still haven't reached maximum 	 * allowable units. Allocate, setup a minimal unique entry with busy 	 * status so nobody will monkey on this new entry. Unit magic is set 	 * right here to avoid collision with other contesting handler. 	 * The caller must be carefull here to maintain its own 	 * synchronization, as long as it will not conflict with malloc(9) 	 * operations. 	 * 	 * That said, go figure. 	 */
 name|ce
 operator|=
 name|malloc
@@ -3195,7 +2997,19 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
+operator|(
+operator|(
+name|c
+operator|->
+name|flags
+operator|&
+name|SND_CLONE_WAITOK
+operator|)
+condition|?
+name|M_WAITOK
+else|:
 name|M_NOWAIT
+operator|)
 operator||
 name|M_ZERO
 argument_list|)
