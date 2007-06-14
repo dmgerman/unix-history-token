@@ -65,9 +65,9 @@ decl_stmt|,
 comment|/* 0x33a22168 */
 name|pio4_hi
 init|=
-literal|7.8539818525e-01
+literal|7.8539812565e-01
 decl_stmt|,
-comment|/* 0x3f490fdb */
+comment|/* 0x3f490fda */
 comment|/* coefficient for R(x^2) */
 name|pS0
 init|=
