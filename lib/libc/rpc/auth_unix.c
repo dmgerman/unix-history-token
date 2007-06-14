@@ -753,7 +753,7 @@ decl_stmt|;
 name|gid_t
 name|gids
 index|[
-name|NGRPS
+name|NGROUPS_MAX
 index|]
 decl_stmt|;
 if|if
@@ -801,7 +801,7 @@ name|len
 operator|=
 name|getgroups
 argument_list|(
-name|NGRPS
+name|NGROUPS_MAX
 argument_list|,
 name|gids
 argument_list|)
@@ -811,6 +811,16 @@ literal|0
 condition|)
 name|abort
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+name|NGRPS
+condition|)
+name|len
+operator|=
+name|NGRPS
 expr_stmt|;
 comment|/* XXX: interface problem; those should all have been unsigned */
 return|return
