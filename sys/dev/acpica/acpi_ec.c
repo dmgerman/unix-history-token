@@ -353,7 +353,7 @@ name|DEV_ECDT
 parameter_list|(
 name|x
 parameter_list|)
-value|(acpi_get_magic(x) == (int)&acpi_ec_devclass)
+value|(acpi_get_magic(x) == (uintptr_t)&acpi_ec_devclass)
 end_define
 
 begin_comment
@@ -1362,7 +1362,7 @@ argument_list|(
 name|child
 argument_list|,
 operator|(
-name|int
+name|uintptr_t
 operator|)
 operator|&
 name|acpi_ec_devclass

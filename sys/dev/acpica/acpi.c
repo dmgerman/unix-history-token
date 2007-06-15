@@ -4320,7 +4320,7 @@ name|ACPI_IVAR_MAGIC
 case|:
 operator|*
 operator|(
-name|int
+name|uintptr_t
 operator|*
 operator|)
 name|result
@@ -4486,7 +4486,7 @@ operator|->
 name|ad_magic
 operator|=
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|value
 expr_stmt|;

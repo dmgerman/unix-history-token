@@ -177,7 +177,7 @@ comment|/* ACPI ivars */
 name|ACPI_HANDLE
 name|ad_handle
 decl_stmt|;
-name|int
+name|uintptr_t
 name|ad_magic
 decl_stmt|;
 name|void
@@ -691,7 +691,7 @@ argument|ACPI
 argument_list|,
 argument|MAGIC
 argument_list|,
-argument|int
+argument|uintptr_t
 argument_list|)
 end_macro
 

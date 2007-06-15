@@ -234,7 +234,7 @@ name|DEV_HPET
 parameter_list|(
 name|x
 parameter_list|)
-value|(acpi_get_magic(x) == (int)&acpi_hpet_devclass)
+value|(acpi_get_magic(x) == (uintptr_t)&acpi_hpet_devclass)
 end_define
 
 begin_decl_stmt
@@ -417,7 +417,7 @@ argument_list|(
 name|child
 argument_list|,
 operator|(
-name|int
+name|uintptr_t
 operator|)
 operator|&
 name|acpi_hpet_devclass
