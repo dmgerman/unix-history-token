@@ -2713,6 +2713,13 @@ operator|)
 return|;
 name|fail
 label|:
+name|PROC_UNLOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 name|crfree
 argument_list|(
 name|newcred
