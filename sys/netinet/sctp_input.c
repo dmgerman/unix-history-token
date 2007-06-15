@@ -17861,7 +17861,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * For cookies and all other chunks. if the 			 */
+comment|/* For cookies and all other chunks. */
 if|if
 condition|(
 name|chk_length
@@ -17872,7 +17872,7 @@ name|chunk_buf
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * use just the size of the chunk buffer so 				 * the front part of our chunks fit in 				 * contiguous space up to the chunk buffer 				 * size (508 bytes). For chunks that need to 				 * get more than that they mus use the 				 * sctp_m_getptr() function or other means 				 * (know how to parse mbuf chains). Cookies 				 * do this already. 				 */
+comment|/* 				 * use just the size of the chunk buffer so 				 * the front part of our chunks fit in 				 * contiguous space up to the chunk buffer 				 * size (508 bytes). For chunks that need to 				 * get more than that they must use the 				 * sctp_m_getptr() function or other means 				 * (e.g. know how to parse mbuf chains). 				 * Cookies do this already. 				 */
 name|ch
 operator|=
 operator|(

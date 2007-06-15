@@ -8405,6 +8405,20 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|INP_LOCK_INIT
+argument_list|(
+operator|&
+name|inp
+operator|->
+name|ip_inp
+operator|.
+name|inp
+argument_list|,
+literal|"inp"
+argument_list|,
+literal|"sctpinp"
+argument_list|)
+expr_stmt|;
 name|SCTP_INP_READ_INIT
 argument_list|(
 name|inp
@@ -13163,6 +13177,16 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* Now we must put the ep memory back into the zone pool */
+name|INP_LOCK_DESTROY
+argument_list|(
+operator|&
+name|inp
+operator|->
+name|ip_inp
+operator|.
+name|inp
+argument_list|)
+expr_stmt|;
 name|SCTP_INP_LOCK_DESTROY
 argument_list|(
 name|inp
