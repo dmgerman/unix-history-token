@@ -217,6 +217,14 @@ name|void
 name|sctp_handle_sack
 parameter_list|(
 name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|offset
+parameter_list|,
+name|struct
 name|sctp_sack_chunk
 modifier|*
 parameter_list|,
