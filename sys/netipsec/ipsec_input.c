@@ -2147,7 +2147,13 @@ name|mtag
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|mt
+operator|!=
+name|NULL
+condition|)
 block|{
 name|mt
 operator|->
