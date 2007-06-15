@@ -130,13 +130,13 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 value|KTR_SUBSYS
 end_define
 
@@ -233,7 +233,7 @@ name|incr
 expr_stmt|;
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -397,7 +397,7 @@ name|loc
 expr_stmt|;
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -486,7 +486,7 @@ name|prev_rtt
 expr_stmt|;
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -618,7 +618,7 @@ name|stream
 expr_stmt|;
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -751,7 +751,7 @@ name|total_flight_count
 expr_stmt|;
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -874,7 +874,7 @@ name|dups
 expr_stmt|;
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -971,7 +971,7 @@ name|high
 expr_stmt|;
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -1068,7 +1068,7 @@ name|tsn
 expr_stmt|;
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -1255,7 +1255,7 @@ expr_stmt|;
 block|}
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -1440,7 +1440,7 @@ expr_stmt|;
 block|}
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -1689,7 +1689,7 @@ name|augment
 expr_stmt|;
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -2029,7 +2029,7 @@ expr_stmt|;
 block|}
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -2215,7 +2215,7 @@ name|stream_queue_cnt
 expr_stmt|;
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -2322,7 +2322,7 @@ literal|0
 expr_stmt|;
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -2432,7 +2432,7 @@ name|a_rwndval
 expr_stmt|;
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -2542,7 +2542,7 @@ name|mbcnt
 expr_stmt|;
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -2608,7 +2608,7 @@ parameter_list|)
 block|{
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -2920,7 +2920,7 @@ expr_stmt|;
 block|}
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
@@ -3095,7 +3095,7 @@ name|sendlen
 expr_stmt|;
 name|CTR6
 argument_list|(
-name|SCTP_SUBSYS_KTR
+name|KTR_SCTP
 argument_list|,
 literal|"SCTP:%d[%d]:%x-%x-%x-%x"
 argument_list|,
