@@ -4359,6 +4359,10 @@ operator|>
 literal|0
 condition|)
 block|{
+name|resid
+operator|=
+literal|0
+expr_stmt|;
 name|len
 operator|=
 name|tsize
@@ -4793,6 +4797,10 @@ operator|>
 literal|0
 condition|)
 block|{
+name|resid
+operator|=
+literal|0
+expr_stmt|;
 name|len
 operator|=
 name|tsize

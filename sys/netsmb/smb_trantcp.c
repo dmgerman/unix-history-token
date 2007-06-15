@@ -2090,6 +2090,14 @@ condition|;
 control|)
 block|{
 comment|/* 		 * Poll for a response header. 		 * If we don't have one waiting, return. 		 */
+name|len
+operator|=
+literal|0
+expr_stmt|;
+name|rpcode
+operator|=
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|nbssn_recvhdr
