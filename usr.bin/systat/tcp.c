@@ -169,7 +169,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*- --0         1         2         3         4         5         6         7 --0123456789012345678901234567890123456789012345678901234567890123456789012345 00          TCP Connections                    TCP Packets 01999999999 connections initiated    999999999 total packets sent 02999999999 connections accepted     999999999 - data 03999999999 connections established  999999999 - data (retransmit by dupack) 04999999999 connections dropped      999999999 - data (retransmit by sack) 05999999999 - in embryonic state     999999999 - ack-only 06999999999 - on retransmit timeout  999999999 - window probes 07999999999 - by keepalive           999999999 - window updates 08999999999 - from listen queue      999999999 - urgent data only 09                                   999999999 - control 10                                   999999999 - resends by PMTU discovery 11          TCP Timers               999999999 total packets received 12999999999 potential rtt updates    999999999 - in sequence 13999999999 - successful             999999999 - completely duplicate 14999999999 delayed acks sent        999999999 - with some duplicate data 15999999999 retransmit timeouts      999999999 - out-of-order 16999999999 persist timeouts         999999999 - duplicate acks 17999999999 keepalive probes         999999999 - acks 18999999999 - timeouts               999999999 - window probes 19                                   999999999 - window updates 20                                   999999999 - bad checksum --0123456789012345678901234567890123456789012345678901234567890123456789012345 --0         1         2         3         4         5         6         7 */
+comment|/*- --0         1         2         3         4         5         6         7 --0123456789012345678901234567890123456789012345678901234567890123456789012345 00             TCP Connections                       TCP Packets 01999999999999 connections initiated    999999999999 total packets sent 02999999999999 connections accepted     999999999999 - data 03999999999999 connections established  999999999999 - data (retransmit by dupack) 04999999999999 connections dropped      999999999999 - data (retransmit by sack) 05999999999999 - in embryonic state     999999999999 - ack-only 06999999999999 - on retransmit timeout  999999999999 - window probes 07999999999999 - by keepalive           999999999999 - window updates 08999999999999 - from listen queue      999999999999 - urgent data only 09                                      999999999999 - control 10                                      999999999999 - resends by PMTU discovery 11             TCP Timers               999999999999 total packets received 12999999999999 potential rtt updates    999999999999 - in sequence 13999999999999 - successful             999999999999 - completely duplicate 14999999999999 delayed acks sent        999999999999 - with some duplicate data 15999999999999 retransmit timeouts      999999999999 - out-of-order 16999999999999 persist timeouts         999999999999 - duplicate acks 17999999999999 keepalive probes         999999999999 - acks 18999999999999 - timeouts               999999999999 - window probes 19                                      999999999999 - window updates 20                                      999999999999 - bad checksum --0123456789012345678901234567890123456789012345678901234567890123456789012345 --0         1         2         3         4         5         6         7 */
 end_comment
 
 begin_function
@@ -268,7 +268,7 @@ name|row
 parameter_list|,
 name|str
 parameter_list|)
-value|mvwprintw(wnd, row, 10, str)
+value|mvwprintw(wnd, row, 13, str)
 define|#
 directive|define
 name|R
@@ -277,7 +277,7 @@ name|row
 parameter_list|,
 name|str
 parameter_list|)
-value|mvwprintw(wnd, row, 45, str);
+value|mvwprintw(wnd, row, 51, str);
 name|L
 argument_list|(
 literal|0
@@ -971,7 +971,7 @@ parameter_list|,
 name|col
 parameter_list|)
 define|\
-value|mvwprintw(wnd, row, col, "%9lu", stats.stat)
+value|mvwprintw(wnd, row, col, "%12lu", stats.stat)
 define|#
 directive|define
 name|L
@@ -989,7 +989,7 @@ name|row
 parameter_list|,
 name|stat
 parameter_list|)
-value|DO(stat, row, 35)
+value|DO(stat, row, 38)
 name|L
 argument_list|(
 literal|1
