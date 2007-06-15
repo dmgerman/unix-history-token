@@ -4076,7 +4076,7 @@ literal|"%s"
 argument_list|,
 name|_
 argument_list|(
-literal|"\ ed:\tEdit then use both versions, each decorated with a header.\n\ eb:\tEdit then use both versions.\n\ el:\tEdit then use the left version.\n\ er:\tEdit then use the right version.\n\ e:\tEdit a new version.\n\ l:\tUse the left version.\n\ r:\tUse the right version.\n\ s:\tSilently include common lines.\n\ v:\tVerbosely include common lines.\n\ q:\tQuit.\n\ "
+literal|"\ ed:\tEdit then use both versions, each decorated with a header.\n\ eb:\tEdit then use both versions.\n\ el or e1:\tEdit then use the left version.\n\ er or e2:\tEdit then use the right version.\n\ e:\tDiscard both versions then edit a new one.\n\ l or 1:\tUse the left version.\n\ r or 2:\tUse the right version.\n\ s:\tSilently include common lines.\n\ v:\tVerbosely include common lines.\n\ q:\tQuit.\n\ "
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4294,6 +4294,12 @@ name|cmd0
 condition|)
 block|{
 case|case
+literal|'1'
+case|:
+case|case
+literal|'2'
+case|:
+case|case
 literal|'l'
 case|:
 case|case
@@ -4342,6 +4348,12 @@ condition|(
 name|cmd1
 condition|)
 block|{
+case|case
+literal|'1'
+case|:
+case|case
+literal|'2'
+case|:
 case|case
 literal|'b'
 case|:
@@ -4435,6 +4447,9 @@ name|cmd0
 condition|)
 block|{
 case|case
+literal|'1'
+case|:
+case|case
 literal|'l'
 case|:
 name|lf_copy
@@ -4456,6 +4471,9 @@ expr_stmt|;
 return|return
 name|true
 return|;
+case|case
+literal|'2'
+case|:
 case|case
 literal|'r'
 case|:
@@ -4623,6 +4641,9 @@ expr_stmt|;
 block|}
 comment|/* Fall through.  */
 case|case
+literal|'1'
+case|:
+case|case
 literal|'b'
 case|:
 case|case
@@ -4712,6 +4733,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Fall through.  */
+case|case
+literal|'2'
+case|:
 case|case
 literal|'b'
 case|:
