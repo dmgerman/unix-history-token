@@ -598,11 +598,8 @@ name|pentry
 operator|==
 name|NULL
 condition|)
-block|{
-name|syslog
+name|perrx
 argument_list|(
-name|LOG_ERR
-argument_list|,
 literal|"Userid %lu not found - aborting job %s"
 argument_list|,
 operator|(
@@ -614,12 +611,6 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|PRIV_START
 name|stream
 init|=
@@ -649,11 +640,8 @@ name|pentry
 operator|->
 name|pw_expire
 condition|)
-block|{
-name|syslog
+name|perrx
 argument_list|(
-name|LOG_ERR
-argument_list|,
 literal|"Userid %lu is expired - aborting job %s"
 argument_list|,
 operator|(
@@ -665,12 +653,6 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 if|if
@@ -750,22 +732,13 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-block|{
-name|syslog
+name|perrx
 argument_list|(
-name|LOG_ERR
-argument_list|,
 literal|"Symbolic link encountered in job %s - aborting"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -818,23 +791,13 @@ operator|.
 name|st_size
 operator|)
 condition|)
-block|{
-name|syslog
+name|perrx
 argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"Somebody changed files from under us for job %s - "
-literal|"aborting"
+literal|"Somebody changed files from under us for job %s - aborting"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|buf
@@ -843,22 +806,13 @@ name|st_nlink
 operator|>
 literal|1
 condition|)
-block|{
-name|syslog
+name|perrx
 argument_list|(
-name|LOG_ERR
-argument_list|,
 literal|"Somebody is trying to run a linked script for job %s"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -927,22 +881,13 @@ argument_list|)
 operator|!=
 literal|4
 condition|)
-block|{
-name|syslog
+name|perrx
 argument_list|(
-name|LOG_ERR
-argument_list|,
 literal|"File %s is in wrong format - aborting"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|mailbuf
@@ -952,24 +897,15 @@ index|]
 operator|==
 literal|'-'
 condition|)
-block|{
-name|syslog
+name|perrx
 argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"illegal mail name %s in %s"
+literal|"Illegal mail name %s in %s"
 argument_list|,
 name|mailbuf
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|mailname
 operator|=
 name|mailbuf
@@ -980,11 +916,8 @@ name|nuid
 operator|!=
 name|uid
 condition|)
-block|{
-name|syslog
+name|perrx
 argument_list|(
-name|LOG_ERR
-argument_list|,
 literal|"Job %s - userid %ld does not match file uid %lu"
 argument_list|,
 name|filename
@@ -998,23 +931,14 @@ operator|)
 name|uid
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ngid
 operator|!=
 name|gid
 condition|)
-block|{
-name|syslog
+name|perrx
 argument_list|(
-name|LOG_ERR
-argument_list|,
 literal|"Job %s - groupid %ld does not match file gid %lu"
 argument_list|,
 name|filename
@@ -1028,12 +952,6 @@ operator|)
 name|gid
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|fclose
 argument_list|(
 name|stream
@@ -1050,7 +968,8 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"cannot chdir to "
+literal|"cannot chdir to %s"
+argument_list|,
 name|ATSPOOL_DIR
 argument_list|)
 expr_stmt|;
@@ -1256,7 +1175,8 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"cannot chdir to "
+literal|"cannot chdir to %s"
+argument_list|,
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
@@ -2015,7 +1935,8 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"cannot change to "
+literal|"cannot change to %s"
+argument_list|,
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
@@ -2035,7 +1956,8 @@ name|NULL
 condition|)
 name|perr
 argument_list|(
-literal|"cannot read "
+literal|"cannot read %s"
+argument_list|,
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
@@ -2096,7 +2018,8 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"cannot stat in "
+literal|"cannot stat in %s"
+argument_list|,
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
