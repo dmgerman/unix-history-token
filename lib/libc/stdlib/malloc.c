@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2006 Jason Evans<jasone@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice(s), this list of conditions and the following disclaimer as  *    the first lines of this file unmodified other than the possible  *    addition of one or more copyright notices.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice(s), this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *******************************************************************************  *  * This allocator implementation is designed to provide scalable performance  * for multi-threaded programs on multi-processor systems.  The following  * features are included for this purpose:  *  *   + Multiple arenas are used if there are multiple CPUs, which reduces lock  *     contention and cache sloshing.  *  *   + Cache line sharing between arenas is avoided for internal data  *     structures.  *  *   + Memory is managed in chunks and runs (chunks can be split into runs),  *     rather than as individual pages.  This provides a constant-time  *     mechanism for associating allocations with particular arenas.  *  * Allocation requests are rounded up to the nearest size class, and no record  * of the original request size is maintained.  Allocations are broken into  * categories according to size class.  Assuming runtime defaults, 4 kB pages  * and a 16 byte quantum, the size classes in each category are as follows:  *  *   |====================================|  *   | Category | Subcategory    |   Size |  *   |====================================|  *   | Small    | Tiny           |      2 |  *   |          |                |      4 |  *   |          |                |      8 |  *   |          |----------------+--------|  *   |          | Quantum-spaced |     16 |  *   |          |                |     32 |  *   |          |                |     48 |  *   |          |                |    ... |  *   |          |                |    480 |  *   |          |                |    496 |  *   |          |                |    512 |  *   |          |----------------+--------|  *   |          | Sub-page       |   1 kB |  *   |          |                |   2 kB |  *   |====================================|  *   | Large                     |   4 kB |  *   |                           |   8 kB |  *   |                           |  16 kB |  *   |                           |    ... |  *   |                           | 256 kB |  *   |                           | 512 kB |  *   |====================================|  *   | Huge                      |   1 MB |  *   |                           |   2 MB |  *   |                           |   3 MB |  *   |                           |    ... |  *   |====================================|  *  * A different mechanism is used for each category:  *  *   Small : Each size class is segregated into its own set of runs.  Each run  *           maintains a bitmap of which regions are free/allocated.  *  *   Large : Each allocation is backed by a dedicated run.  Metadata are stored  *           in the associated arena chunk header maps.  *  *   Huge : Each allocation is backed by a dedicated contiguous set of chunks.  *          Metadata are stored in a separate red-black tree.  *  *******************************************************************************  */
+comment|/*-  * Copyright (C) 2006,2007 Jason Evans<jasone@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice(s), this list of conditions and the following disclaimer as  *    the first lines of this file unmodified other than the possible  *    addition of one or more copyright notices.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice(s), this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *******************************************************************************  *  * This allocator implementation is designed to provide scalable performance  * for multi-threaded programs on multi-processor systems.  The following  * features are included for this purpose:  *  *   + Multiple arenas are used if there are multiple CPUs, which reduces lock  *     contention and cache sloshing.  *  *   + Cache line sharing between arenas is avoided for internal data  *     structures.  *  *   + Memory is managed in chunks and runs (chunks can be split into runs),  *     rather than as individual pages.  This provides a constant-time  *     mechanism for associating allocations with particular arenas.  *  * Allocation requests are rounded up to the nearest size class, and no record  * of the original request size is maintained.  Allocations are broken into  * categories according to size class.  Assuming runtime defaults, 4 kB pages  * and a 16 byte quantum, the size classes in each category are as follows:  *  *   |=====================================|  *   | Category | Subcategory    |    Size |  *   |=====================================|  *   | Small    | Tiny           |       2 |  *   |          |                |       4 |  *   |          |                |       8 |  *   |          |----------------+---------|  *   |          | Quantum-spaced |      16 |  *   |          |                |      32 |  *   |          |                |      48 |  *   |          |                |     ... |  *   |          |                |     480 |  *   |          |                |     496 |  *   |          |                |     512 |  *   |          |----------------+---------|  *   |          | Sub-page       |    1 kB |  *   |          |                |    2 kB |  *   |=====================================|  *   | Large                     |    4 kB |  *   |                           |    8 kB |  *   |                           |   12 kB |  *   |                           |     ... |  *   |                           | 1012 kB |  *   |                           | 1016 kB |  *   |                           | 1020 kB |  *   |=====================================|  *   | Huge                      |    1 MB |  *   |                           |    2 MB |  *   |                           |    3 MB |  *   |                           |     ... |  *   |=====================================|  *  * A different mechanism is used for each category:  *  *   Small : Each size class is segregated into its own set of runs.  Each run  *           maintains a bitmap of which regions are free/allocated.  *  *   Large : Each allocation is backed by a dedicated run.  Metadata are stored  *           in the associated arena chunk header maps.  *  *   Huge : Each allocation is backed by a dedicated contiguous set of chunks.  *          Metadata are stored in a separate red-black tree.  *  *******************************************************************************  */
 end_comment
 
 begin_comment
@@ -5309,7 +5309,7 @@ comment|/*  * Begin arena.  */
 end_comment
 
 begin_comment
-comment|/*  * Choose an arena based on a per-thread value (fast-path code, calls slow-path  * code if necessary.  */
+comment|/*  * Choose an arena based on a per-thread value (fast-path code, calls slow-path  * code if necessary).  */
 end_comment
 
 begin_function
@@ -5337,7 +5337,7 @@ operator|==
 name|false
 condition|)
 block|{
-comment|/* 	     * Avoid the overhead of TLS for single-threaded operation.  If the 	     * app switches to threaded mode, the initial thread may end up 	     * being assigned to some other arena, but this one-time switch 	     * shouldn't cause significant issues. 	     * */
+comment|/* 	     * Avoid the overhead of TLS for single-threaded operation.  If the 	     * app switches to threaded mode, the initial thread may end up 	     * being assigned to some other arena, but this one-time switch 	     * shouldn't cause significant issues. 	     */
 return|return
 operator|(
 name|arenas
@@ -7728,7 +7728,7 @@ name|max_frun_npages
 expr_stmt|;
 block|}
 block|}
-comment|/* No usable runs.  Allocate a new chunk, then try again. */
+comment|/* 	 * No usable runs.  Create a new chunk from which to allocate the run. 	 */
 name|chunk
 operator|=
 name|arena_chunk_alloc
@@ -10448,6 +10448,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* Junk/zero-filling were already done by arena_malloc(). */
 if|if
 condition|(
 name|size
@@ -10536,14 +10537,14 @@ name|uintptr_t
 operator|)
 name|ptr
 operator|+
-name|size
+name|oldsize
 operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|oldsize
-operator|-
 name|size
+operator|-
+name|oldsize
 argument_list|)
 expr_stmt|;
 return|return
@@ -12089,11 +12090,78 @@ argument_list|(
 name|oldsize
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|opt_junk
+operator|&&
+name|size
+operator|<
+name|oldsize
+condition|)
+block|{
+name|memset
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|ptr
+operator|+
+name|size
+operator|)
+argument_list|,
+literal|0x5a
+argument_list|,
+name|oldsize
+operator|-
+name|size
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|opt_zero
+operator|&&
+name|size
+operator|>
+name|oldsize
+condition|)
+block|{
+name|memset
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|ptr
+operator|+
+name|oldsize
+operator|)
+argument_list|,
+literal|0
+argument_list|,
+name|size
+operator|-
+name|oldsize
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|ptr
 operator|)
 return|;
+block|}
 comment|/* 	 * If we get here, then size and oldsize are different enough that we 	 * need to use a different size class.  In that case, fall back to 	 * allocating new space and copying. 	 */
 name|ret
 operator|=
