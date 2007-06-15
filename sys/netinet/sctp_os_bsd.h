@@ -688,7 +688,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|if(sctp_logging_level& SCTP_LTRACE_CHUNK_ENABLE) CTR6(KTR_NET, "SCTP:%d[%d]:%x-%x-%x-%x", SCTP_LOG_CHUNK_PROC, 0, a, b, c, d)
+value|if(sctp_logging_level& SCTP_LTRACE_CHUNK_ENABLE) CTR6(KTR_SUBSYS, "SCTP:%d[%d]:%x-%x-%x-%x", SCTP_LOG_CHUNK_PROC, 0, a, b, c, d)
 end_define
 
 begin_else
@@ -735,7 +735,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|if(sctp_logging_level& SCTP_LTRACE_ERROR_ENABLE) CTR6(KTR_NET, "SCTP:%d[%d]:%x-%x-%x-%x", SCTP_LOG_ERROR_RET, 0, a, b, c, d)
+value|if(sctp_logging_level& SCTP_LTRACE_ERROR_ENABLE) CTR6(KTR_SUBSYS, "SCTP:%d[%d]:%x-%x-%x-%x", SCTP_LOG_ERROR_RET, 0, a, b, c, d)
 end_define
 
 begin_else

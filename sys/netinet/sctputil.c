@@ -137,7 +137,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_SUBSYS_KTR
-value|KTR_GEN
+value|KTR_SUBSYS
 end_define
 
 begin_endif
