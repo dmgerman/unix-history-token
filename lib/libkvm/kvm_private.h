@@ -82,6 +82,10 @@ name|vmstate
 modifier|*
 name|vmst
 decl_stmt|;
+name|int
+name|rawdump
+decl_stmt|;
+comment|/* raw dump format */
 block|}
 struct|;
 end_struct
