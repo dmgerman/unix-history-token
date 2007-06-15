@@ -375,6 +375,10 @@ decl_stmt|;
 name|uint32_t
 name|localifa_flags
 decl_stmt|;
+name|uint32_t
+name|vrf_id
+decl_stmt|;
+comment|/* vrf_id of this addr (for deleting) */
 name|uint8_t
 name|src_is_loop
 decl_stmt|;

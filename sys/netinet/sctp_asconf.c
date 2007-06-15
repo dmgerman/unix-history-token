@@ -7674,6 +7674,22 @@ name|l
 operator|->
 name|action
 expr_stmt|;
+comment|/* address's vrf_id must be the vrf_id of the assoc */
+if|if
+condition|(
+name|ifa
+operator|->
+name|vrf_id
+operator|!=
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|vrf_id
+condition|)
+block|{
+continue|continue;
+block|}
 comment|/* Same checks again for assoc */
 if|if
 condition|(

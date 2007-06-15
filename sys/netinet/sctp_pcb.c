@@ -1591,6 +1591,12 @@ argument_list|)
 expr_stmt|;
 name|sctp_ifap
 operator|->
+name|vrf_id
+operator|=
+name|vrf_id
+expr_stmt|;
+name|sctp_ifap
+operator|->
 name|ifa
 operator|=
 name|ifa
