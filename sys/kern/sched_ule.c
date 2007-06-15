@@ -422,7 +422,7 @@ begin_define
 define|#
 directive|define
 name|SCHED_PRI_RANGE
-value|(SCHED_PRI_MAX - SCHED_PRI_MIN + 1)
+value|(SCHED_PRI_MAX - SCHED_PRI_MIN)
 end_define
 
 begin_define
@@ -4310,34 +4310,11 @@ name|ts
 operator|!=
 name|NULL
 condition|)
-block|{
-name|KASSERT
-argument_list|(
-name|ts
-operator|->
-name|ts_thread
-operator|->
-name|td_priority
-operator|<=
-name|PRI_MAX_REALTIME
-argument_list|,
-operator|(
-literal|"tdq_choose: Invalid priority on realtime queue %d"
-operator|,
-name|ts
-operator|->
-name|ts_thread
-operator|->
-name|td_priority
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ts
 operator|)
 return|;
-block|}
 name|ts
 operator|=
 name|runq_choose_from
@@ -4361,14 +4338,6 @@ condition|)
 block|{
 name|KASSERT
 argument_list|(
-name|ts
-operator|->
-name|ts_thread
-operator|->
-name|td_priority
-operator|<=
-name|PRI_MAX_TIMESHARE
-operator|&&
 name|ts
 operator|->
 name|ts_thread
