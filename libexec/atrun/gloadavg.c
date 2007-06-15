@@ -89,7 +89,9 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|a
+name|fmt
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
