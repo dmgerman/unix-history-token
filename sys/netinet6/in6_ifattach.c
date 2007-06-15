@@ -3067,14 +3067,6 @@ name|sockaddr_in6
 name|sin6
 decl_stmt|;
 name|struct
-name|in6_multi
-modifier|*
-name|in6m
-decl_stmt|,
-modifier|*
-name|in6m_next
-decl_stmt|;
-name|struct
 name|in6_multi_mship
 modifier|*
 name|imm
