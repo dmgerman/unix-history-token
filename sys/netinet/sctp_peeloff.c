@@ -87,28 +87,6 @@ directive|include
 file|<netinet/sctp_auth.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|sctp_debug_on
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SCTP_DEBUG */
-end_comment
-
 begin_function
 name|int
 name|sctp_can_peel_off
