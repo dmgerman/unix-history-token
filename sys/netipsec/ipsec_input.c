@@ -375,6 +375,27 @@ literal|"null packet"
 operator|)
 argument_list|)
 expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
+name|sproto
+operator|==
+name|IPPROTO_ESP
+operator|||
+name|sproto
+operator|==
+name|IPPROTO_AH
+operator|||
+name|sproto
+operator|==
+name|IPPROTO_IPCOMP
+argument_list|,
+operator|(
+literal|"unexpected security protocol %u"
+operator|,
+name|sproto
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
