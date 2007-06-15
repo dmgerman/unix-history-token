@@ -10459,6 +10459,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
 name|key_senderror
 argument_list|(
 name|so
@@ -10467,9 +10468,6 @@ name|m
 argument_list|,
 name|EINVAL
 argument_list|)
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
 name|id
@@ -10518,6 +10516,7 @@ name|id
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
 name|key_senderror
 argument_list|(
 name|so
@@ -10526,7 +10525,7 @@ name|m
 argument_list|,
 name|EINVAL
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|sp
 operator|->
