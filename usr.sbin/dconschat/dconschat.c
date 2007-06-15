@@ -226,6 +226,27 @@ name|DCONS_POLL_HZ
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|u_char
+name|abreak
+index|[
+literal|3
+index|]
+init|=
+block|{
+literal|13
+comment|/* CR */
+block|,
+literal|126
+comment|/* ~ */
+block|,
+literal|2
+comment|/* ^B */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -233,7 +254,7 @@ name|IS_CONSOLE
 parameter_list|(
 name|p
 parameter_list|)
-value|((p)->port == 0)
+value|((p)->port == DCONS_CON)
 end_define
 
 begin_define
@@ -243,7 +264,7 @@ name|IS_GDB
 parameter_list|(
 name|p
 parameter_list|)
-value|((p)->port == 1)
+value|((p)->port == DCONS_GDB)
 end_define
 
 begin_struct
@@ -315,6 +336,9 @@ block|{
 name|int
 name|port
 decl_stmt|;
+name|int
+name|sport
+decl_stmt|;
 name|struct
 name|dcons_ch
 name|o
@@ -368,10 +392,32 @@ name|struct
 name|termios
 name|traw
 decl_stmt|;
+name|char
+name|escape
+decl_stmt|;
 block|}
 name|sc
 struct|;
 end_struct
+
+begin_function_decl
+specifier|static
+name|int
+name|dconschat_write_dcons
+parameter_list|(
+name|struct
+name|dcons_state
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -551,10 +597,15 @@ name|struct
 name|dcons_state
 modifier|*
 name|dc
+parameter_list|,
+name|struct
+name|dcons_port
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|char
-name|zeros
+name|buf
 index|[
 name|PAGE_SIZE
 index|]
@@ -568,24 +619,42 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|bzero
+name|snprintf
 argument_list|(
-operator|&
-name|zeros
-index|[
-literal|0
-index|]
+name|buf
 argument_list|,
 name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"\r\n[dconschat reset target(addr=0x%zx)...]\r\n"
 argument_list|,
 name|dc
 operator|->
 name|reset
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|p
+operator|->
+name|outfd
+argument_list|,
+name|buf
+argument_list|,
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|0
+index|]
+argument_list|,
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|dwrite
@@ -596,7 +665,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|zeros
+name|buf
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
@@ -617,8 +686,22 @@ name|struct
 name|dcons_state
 modifier|*
 name|dc
+parameter_list|,
+name|struct
+name|dcons_port
+modifier|*
+name|p
 parameter_list|)
 block|{
+if|if
+condition|(
+name|p
+operator|->
+name|sport
+operator|!=
+literal|0
+condition|)
+return|return;
 if|if
 condition|(
 name|tc_set
@@ -670,6 +753,381 @@ end_function
 begin_function
 specifier|static
 name|void
+name|dconschat_sigchld
+parameter_list|(
+name|int
+name|s
+parameter_list|)
+block|{
+name|struct
+name|kevent
+name|kev
+decl_stmt|;
+name|struct
+name|dcons_port
+modifier|*
+name|p
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|p
+operator|=
+operator|&
+name|sc
+operator|.
+name|port
+index|[
+name|DCONS_CON
+index|]
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|256
+argument_list|,
+literal|"\r\n[child exit]\r\n"
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|p
+operator|->
+name|outfd
+argument_list|,
+name|buf
+argument_list|,
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tc_set
+condition|)
+name|tcsetattr
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+name|TCSADRAIN
+argument_list|,
+operator|&
+name|sc
+operator|.
+name|traw
+argument_list|)
+expr_stmt|;
+name|EV_SET
+argument_list|(
+operator|&
+name|kev
+argument_list|,
+name|p
+operator|->
+name|infd
+argument_list|,
+name|EVFILT_READ
+argument_list|,
+name|EV_ADD
+argument_list|,
+name|NOTE_LOWAT
+argument_list|,
+literal|1
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+name|kevent
+argument_list|(
+name|sc
+operator|.
+name|kq
+argument_list|,
+operator|&
+name|kev
+argument_list|,
+literal|1
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|sc
+operator|.
+name|zero
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|dconschat_fork_gdb
+parameter_list|(
+name|struct
+name|dcons_state
+modifier|*
+name|dc
+parameter_list|,
+name|struct
+name|dcons_port
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|pid_t
+name|pid
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|256
+index|]
+decl_stmt|,
+name|com
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|struct
+name|kevent
+name|kev
+decl_stmt|;
+name|pid
+operator|=
+name|fork
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|pid
+operator|<
+literal|0
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|256
+argument_list|,
+literal|"\r\n[%s: fork failed]\r\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|p
+operator|->
+name|outfd
+argument_list|,
+name|buf
+argument_list|,
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pid
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* child */
+if|if
+condition|(
+name|tc_set
+condition|)
+name|tcsetattr
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+name|TCSADRAIN
+argument_list|,
+operator|&
+name|dc
+operator|->
+name|tsave
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|com
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"kgdb -r :%d kernel"
+argument_list|,
+name|dc
+operator|->
+name|port
+index|[
+name|DCONS_GDB
+index|]
+operator|.
+name|sport
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|256
+argument_list|,
+literal|"\n[fork %s]\n"
+argument_list|,
+name|com
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|p
+operator|->
+name|outfd
+argument_list|,
+name|buf
+argument_list|,
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|execl
+argument_list|(
+literal|"/bin/sh"
+argument_list|,
+literal|"/bin/sh"
+argument_list|,
+literal|"-c"
+argument_list|,
+name|com
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|256
+argument_list|,
+literal|"\n[fork failed]\n"
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|p
+operator|->
+name|outfd
+argument_list|,
+name|buf
+argument_list|,
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tc_set
+condition|)
+name|tcsetattr
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+name|TCSADRAIN
+argument_list|,
+operator|&
+name|dc
+operator|->
+name|traw
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|dconschat_sigchld
+argument_list|)
+expr_stmt|;
+name|EV_SET
+argument_list|(
+operator|&
+name|kev
+argument_list|,
+name|p
+operator|->
+name|infd
+argument_list|,
+name|EVFILT_READ
+argument_list|,
+name|EV_DELETE
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|kevent
+argument_list|(
+name|sc
+operator|.
+name|kq
+argument_list|,
+operator|&
+name|kev
+argument_list|,
+literal|1
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|sc
+operator|.
+name|zero
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|dconschat_cleanup
 parameter_list|(
 name|int
@@ -680,6 +1138,9 @@ name|struct
 name|dcons_state
 modifier|*
 name|dc
+decl_stmt|;
+name|int
+name|status
 decl_stmt|;
 name|dc
 operator|=
@@ -721,6 +1182,12 @@ else|else
 name|printf
 argument_list|(
 literal|"\n[dconschat exiting...]\n"
+argument_list|)
+expr_stmt|;
+name|wait
+argument_list|(
+operator|&
+name|status
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1738,7 +2205,9 @@ argument|, lost); ok: 	if (gen == ch->gen) 		rlen = pos - ch->pos; 	else 		rlen 
 if|#
 directive|if
 literal|1
-argument|if (verbose) 		printf(
+argument|if (verbose ==
+literal|1
+argument|) 		printf(
 literal|"[%d]"
 argument|, rlen); fflush(stdout);
 endif|#
@@ -1797,12 +2266,12 @@ argument|); 		return(-
 literal|1
 argument|); 	} 	return(
 literal|0
-argument|); }  static int dconschat_write_socket(int fd, char *buf, int len) { 	write(fd, buf, len); 	if (verbose>
+argument|); }   static int dconschat_write_socket(int fd, char *buf, int len) { 	write(fd, buf, len); 	if (verbose>
 literal|1
 argument|) { 		buf[len] =
 literal|0
 argument|; 		printf(
-literal|"[%s]"
+literal|"<- %s\n"
 argument|, buf); 	} 	return (
 literal|0
 argument|); }  static void dconschat_init_socket(struct dcons_state *dc, int port, char *host, int sport) { 	struct addrinfo hints
@@ -1812,7 +2281,7 @@ literal|1
 argument_list|,
 argument|error; 	char service[
 literal|10
-argument|]; 	struct kevent kev; 	struct dcons_port *p;  	p =&dc->port[port]; 	p->port = port; 	p->infd = p->outfd = -
+argument|]; 	struct kevent kev; 	struct dcons_port *p;  	p =&dc->port[port]; 	p->port = port; 	p->sport = sport; 	p->infd = p->outfd = -
 literal|1
 argument|;  	if (sport<
 literal|0
@@ -1953,18 +2422,7 @@ argument|, NULL,
 literal|0
 argument|,&dc->zero); 	return(
 literal|0
-argument|); }  static int dconschat_read_filter(struct dcons_state *dc, struct dcons_port *p,     u_char *sp, int slen, u_char *dp, int *dlen) { 	static u_char abreak[
-literal|3
-argument|] = {
-literal|13
-comment|/* CR */
-argument_list|,
-literal|126
-comment|/* ~ */
-argument_list|,
-literal|2
-comment|/* ^B */
-argument|}; 	int skip;  	while (slen>
+argument|); }  static int dconschat_read_filter(struct dcons_state *dc, struct dcons_port *p,     u_char *sp, int slen, u_char *dp, int *dlen) { 	int skip; 	char *buf;  	while (slen>
 literal|0
 argument|) { 		skip =
 literal|0
@@ -1982,40 +2440,49 @@ argument|; 					sp ++; 					slen --; 					continue; 				} 				if (*sp ==
 literal|0
 argument|) { 					if (verbose) 						printf(
 literal|"(0 stripped)"
-argument|); 					sp ++; 					slen --; 					continue; 				} 			} 			switch (dc->escape_state) { 			case STATE1: 				if (*sp == KEY_TILDE) { 					skip =
+argument|); 					sp ++; 					slen --; 					continue; 				} 			} 			switch (dc->escape_state) { 			case STATE1: 				if (*sp == dc->escape) { 					skip =
 literal|1
-argument|; 					dc->escape_state = STATE2; 				} else 					dc->escape_state = STATE0; 				break; 			case STATE2: 				dc->escape_state = STATE0; 				if (*sp ==
+argument|; 					dc->escape_state = STATE2; 				} else 					dc->escape_state = STATE0; 				break; 			case STATE2: 				dc->escape_state = STATE0; 				skip =
+literal|1
+argument|; 				if (*sp ==
 literal|'.'
 argument|) 					dconschat_cleanup(
 literal|0
-argument|); 				else if ((*sp ==
-literal|0x12
-comment|/*'^R'*/
-argument|)&& (dc->reset !=
+argument|); 				else if (*sp == CTRL(
+literal|'B'
+argument|)) { 					bcopy(abreak, dp,
+literal|3
+argument|); 					dp +=
+literal|3
+argument|; 					*dlen +=
+literal|3
+argument|; 				} 				else if (*sp == CTRL(
+literal|'G'
+argument|)) 					dconschat_fork_gdb(dc, p); 				else if ((*sp == CTRL(
+literal|'R'
+argument|))&& (dc->reset !=
 literal|0
-argument|)) { 					dc->escape_state = STATE3; 					skip =
-literal|1
-argument|; 					printf(
-literal|"\r\n[Are you sure to "
-literal|"reset target? (y/N)]"
-argument|); 					fflush(stdout); 				} else if (*sp ==
-literal|0x1a
-comment|/*'^Z'*/
-argument|) { 					skip =
-literal|1
-argument|; 					dconschat_suspend(dc); 				} else { 					*dp++ =
-literal|'~'
-argument|; 					(*dlen) ++; 				} 				break; 			case STATE3: 				dc->escape_state = STATE0; 				skip =
+argument|)) { 					dc->escape_state = STATE3; 					buf =
+literal|"\r\n[Are you sure to reset target? (y/N)]"
+argument|; 					write(p->outfd, buf, strlen(buf)); 				} else if (*sp == CTRL(
+literal|'Z'
+argument|)) 					dconschat_suspend(dc, p); 				else { 					skip =
+literal|0
+argument|; 					*dp++ = dc->escape; 					(*dlen) ++; 				} 				break; 			case STATE3: 				dc->escape_state = STATE0; 				skip =
 literal|1
 argument|; 				if (*sp ==
 literal|'y'
-argument|) 					dconschat_reset_target(dc); 				else 					printf(
+argument|) 					dconschat_reset_target(dc, p); 				else { 					write(p->outfd, sp,
+literal|1
+argument|); 					write(p->outfd,
 literal|"\r\n"
-argument|); 				break; 			} 			if (*sp == KEY_CR) 				dc->escape_state = STATE1; 		} else if (IS_GDB(p)) {
+argument|,
+literal|2
+argument|); 				} 				break; 			} 			if (*sp == KEY_CR) 				dc->escape_state = STATE1; 		} else if (IS_GDB(p)) {
 comment|/* GDB: ^C -> CR+~+^B */
-argument|if (*sp ==
-literal|0x3
-argument|&& (dc->flags& F_ALT_BREAK) !=
+argument|if (*sp == CTRL(
+literal|'C'
+argument|)&& (dc->flags& F_ALT_BREAK) !=
 literal|0
 argument|) { 				bcopy(abreak, dp,
 literal|3
@@ -2048,8 +2515,10 @@ literal|1
 argument|) { 				wbuf[wlen] =
 literal|0
 argument|; 				printf(
-literal|"(%s)\n"
-argument|, wbuf); 			} 			if (verbose) { 				printf(
+literal|"-> %s\n"
+argument|, wbuf); 			} else if (verbose ==
+literal|1
+argument|) { 				printf(
 literal|"(%d)"
 argument|, wlen); 				fflush(stdout); 			} 		} 	} else { 		if (verbose) { 			if (len ==
 literal|0
@@ -2193,7 +2662,7 @@ literal|1
 argument|;
 comment|/* disable gdb port */
 argument|while ((ch = getopt(argc, argv,
-literal|"a:bh:rt:u:vwC:G:M:N:RT1"
+literal|"a:be:h:rt:u:vwC:G:M:N:RT1"
 argument|)) != -
 literal|1
 argument|) { 		switch(ch) { 		case
@@ -2203,6 +2672,10 @@ literal|0
 argument|); 			dc->flags&= ~F_USE_CROM; 			break; 		case
 literal|'b'
 argument|: 			dc->flags |= F_ALT_BREAK; 			break; 		case
+literal|'e'
+argument|: 			dc->escape |= optarg[
+literal|0
+argument|]; 			break; 		case
 literal|'h'
 argument|: 			poll_hz = strtoul(optarg, NULL,
 literal|0
