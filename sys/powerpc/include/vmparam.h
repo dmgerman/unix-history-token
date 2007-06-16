@@ -285,6 +285,35 @@ directive|define
 name|VM_PHYSSEG_DENSE
 end_define
 
+begin_comment
+comment|/*  * Create two free page pools: VM_FREEPOOL_DEFAULT is the default pool  * from which physical pages are allocated and VM_FREEPOOL_DIRECT is  * the pool from which physical pages for small UMA objects are  * allocated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_NFREEPOOL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREEPOOL_DEFAULT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREEPOOL_DIRECT
+value|1
+end_define
+
+begin_comment
+comment|/*  * Create one free page list.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -297,6 +326,17 @@ define|#
 directive|define
 name|VM_FREELIST_DEFAULT
 value|0
+end_define
+
+begin_comment
+comment|/*  * The largest allocation size is 4MB.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_NFREEORDER
+value|11
 end_define
 
 begin_ifndef

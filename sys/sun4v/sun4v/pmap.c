@@ -182,6 +182,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_phys.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -6337,7 +6343,7 @@ control|)
 block|{
 name|m
 operator|=
-name|vm_page_alloc_contig
+name|vm_phys_alloc_contig
 argument_list|(
 name|npages
 argument_list|,
@@ -6379,7 +6385,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vm_page_alloc_contig failed - waiting to retry\n"
+literal|"vm_phys_alloc_contig failed - waiting to retry\n"
 argument_list|)
 expr_stmt|;
 name|VM_WAIT

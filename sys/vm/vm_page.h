@@ -86,17 +86,24 @@ name|md_page
 name|md
 decl_stmt|;
 comment|/* machine dependant stuff */
-name|u_short
+name|uint8_t
 name|queue
 decl_stmt|;
 comment|/* page queue index */
+name|int8_t
+name|segind
+decl_stmt|;
 name|u_short
 name|flags
-decl_stmt|,
-comment|/* see below */
-name|pc
 decl_stmt|;
-comment|/* page color */
+comment|/* see below */
+name|uint8_t
+name|order
+decl_stmt|;
+comment|/* index of the buddy queue */
+name|uint8_t
+name|pool
+decl_stmt|;
 name|u_short
 name|wire_count
 decl_stmt|;
@@ -281,10 +288,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* PQ_CACHE and PQ_FREE represents a PQ_NUMCOLORS consecutive queue. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -295,92 +298,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|PQ_FREE
+name|PQ_INACTIVE
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PQ_INACTIVE
-value|(page_queue_coloring.inactive)
-end_define
-
-begin_define
-define|#
-directive|define
 name|PQ_ACTIVE
-value|(page_queue_coloring.active)
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|PQ_CACHE
-value|(page_queue_coloring.cache)
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|PQ_HOLD
-value|(page_queue_coloring.hold)
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|PQ_COUNT
-value|(page_queue_coloring.count)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_MAXCOLORS
-value|1024
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|PQ_MAXCOUNT
-value|(4 + 2 * PQ_MAXCOLORS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_NUMCOLORS
-value|(page_queue_coloring.numcolors)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_PRIME1
-value|(page_queue_coloring.prime1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_PRIME2
-value|(page_queue_coloring.prime2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_COLORMASK
-value|(page_queue_coloring.colormask)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_MAXLENGTH
-value|(page_queue_coloring.maxlength)
+value|5
 end_define
 
 begin_comment
@@ -408,7 +362,7 @@ name|VM_PAGE_GETKNOWNQUEUE1
 parameter_list|(
 name|m
 parameter_list|)
-value|((m)->queue - (m)->pc)
+value|VM_PAGE_GETQUEUE(m)
 end_define
 
 begin_define
@@ -434,7 +388,7 @@ name|m
 parameter_list|,
 name|q
 parameter_list|)
-value|((q) - (m)->pc)
+value|(q)
 end_define
 
 begin_comment
@@ -478,7 +432,7 @@ name|m
 parameter_list|,
 name|q
 parameter_list|)
-value|(VM_PAGE_GETQUEUE(m) = (q) + (m)->pc)
+value|(VM_PAGE_GETQUEUE(m) = (q))
 end_define
 
 begin_define
@@ -505,47 +459,6 @@ name|int
 modifier|*
 name|cnt
 decl_stmt|;
-name|int
-name|lcnt
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|pq_coloring
-block|{
-name|int
-name|numcolors
-decl_stmt|;
-name|int
-name|colormask
-decl_stmt|;
-name|int
-name|prime1
-decl_stmt|;
-name|int
-name|prime2
-decl_stmt|;
-name|int
-name|inactive
-decl_stmt|;
-name|int
-name|active
-decl_stmt|;
-name|int
-name|cache
-decl_stmt|;
-name|int
-name|hold
-decl_stmt|;
-name|int
-name|count
-decl_stmt|;
-name|int
-name|maxlength
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -569,16 +482,19 @@ name|vm_page_queue_free_mtx
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pq_coloring
-name|page_queue_coloring
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * These are the flags defined for vm_page.  *  * Note: PG_UNMANAGED (used by OBJT_PHYS) indicates that the page is  * 	 not under PV management but otherwise should be treated as a  *	 normal page.  Pages not under PV management cannot be paged out  *	 via the object/vm_page_t because there is no knowledge of their  *	 pte mappings, nor can they be removed from their objects via   *	 the object, and such pages are also not on any PQ queue.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_FREE
+value|0x0002
+end_define
+
+begin_comment
+comment|/* page is free */
 end_comment
 
 begin_define
@@ -760,12 +676,32 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VM_PAGE_IS_FREE
+parameter_list|(
+name|m
+parameter_list|)
+value|(((m)->flags& PG_FREE) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_PAGE_TO_PHYS
 parameter_list|(
 name|entry
 parameter_list|)
 value|((entry)->phys_addr)
 end_define
+
+begin_function_decl
+name|vm_page_t
+name|vm_phys_paddr_to_vm_page
+parameter_list|(
+name|vm_paddr_t
+name|pa
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -792,73 +728,12 @@ block|{
 ifdef|#
 directive|ifdef
 name|VM_PHYSSEG_SPARSE
-name|int
-name|i
-decl_stmt|,
-name|j
-init|=
-literal|0
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|phys_avail
-index|[
-name|i
-operator|+
-literal|1
-index|]
-operator|<=
-name|pa
-operator|||
-name|phys_avail
-index|[
-name|i
-index|]
-operator|>
-name|pa
-condition|;
-name|i
-operator|+=
-literal|2
-control|)
-name|j
-operator|+=
-name|atop
-argument_list|(
-name|phys_avail
-index|[
-name|i
-operator|+
-literal|1
-index|]
-operator|-
-name|phys_avail
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|&
-name|vm_page_array
-index|[
-name|j
-operator|+
-name|atop
+name|vm_phys_paddr_to_vm_page
 argument_list|(
 name|pa
-operator|-
-name|phys_avail
-index|[
-name|i
-index|]
 argument_list|)
-index|]
 operator|)
 return|;
 elif|#
@@ -1210,16 +1085,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_pageq_add_new_page
-parameter_list|(
-name|vm_paddr_t
-name|pa
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vm_pageq_enqueue
 parameter_list|(
 name|int
@@ -1252,22 +1117,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_page_t
-name|vm_pageq_find
-parameter_list|(
-name|int
-name|basequeue
-parameter_list|,
-name|int
-name|index
-parameter_list|,
-name|boolean_t
-name|prefer_zero
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|vm_pageq_requeue
 parameter_list|(
@@ -1295,23 +1144,6 @@ parameter_list|,
 name|vm_pindex_t
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|vm_page_t
-name|vm_page_alloc_contig
-parameter_list|(
-name|vm_pindex_t
-parameter_list|,
-name|vm_paddr_t
-parameter_list|,
-name|vm_paddr_t
-parameter_list|,
-name|vm_offset_t
-parameter_list|,
-name|vm_offset_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1426,7 +1258,7 @@ begin_function_decl
 name|vm_page_t
 name|vm_page_select_cache
 parameter_list|(
-name|int
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
