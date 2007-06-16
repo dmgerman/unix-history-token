@@ -6636,7 +6636,6 @@ name|intr_handler_arg
 argument_list|)
 operator|)
 return|;
-else|else
 return|return
 operator|(
 name|FILTER_SCHEDULE_THREAD
@@ -6787,7 +6786,11 @@ name|flags
 argument_list|,
 name|pccard_filter
 argument_list|,
+name|intr
+condition|?
 name|pccard_intr
+else|:
+name|NULL
 argument_list|,
 name|pf
 argument_list|,
