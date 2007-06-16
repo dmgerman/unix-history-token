@@ -5403,16 +5403,12 @@ operator|->
 name|if_hwassist
 operator|=
 name|RE_CSUM_FEATURES
-operator||
-name|CSUM_TSO
 expr_stmt|;
 name|ifp
 operator|->
 name|if_capabilities
 operator|=
 name|IFCAP_HWCSUM
-operator||
-name|IFCAP_TSO4
 expr_stmt|;
 name|ifp
 operator|->
