@@ -64,14 +64,42 @@ begin_define
 define|#
 directive|define
 name|IDR_BUSY
-value|(1<<0)
+value|0x0000000000000001ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|IDR_NACK
-value|(1<<1)
+value|0x0000000000000002ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDR_CHEETAH_ALL_BUSY
+value|0x5555555555555555ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDR_CHEETAH_ALL_NACK
+value|(~IDR_CHEETAH_ALL_BUSY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDR_CHEETAH_MAX_BN_PAIRS
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDR_JALAPENO_MAX_BN_PAIRS
+value|4
 end_define
 
 begin_define
@@ -79,6 +107,13 @@ define|#
 directive|define
 name|IDC_ITID_SHIFT
 value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDC_BN_SHIFT
+value|24
 end_define
 
 begin_define
@@ -221,24 +256,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_typedef
+typedef|typedef
 name|void
-name|cpu_ipi_selected
+name|cpu_ipi_selected_t
 parameter_list|(
 name|u_int
-name|cpus
 parameter_list|,
 name|u_long
-name|d0
 parameter_list|,
 name|u_long
-name|d1
 parameter_list|,
 name|u_long
-name|d2
 parameter_list|)
 function_decl|;
-end_function_decl
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|cpu_ipi_selected_t
+modifier|*
+name|cpu_ipi_selected
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -274,8 +314,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_offset_t
-name|mp_tramp_alloc
+name|void
+name|mp_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -303,13 +343,6 @@ specifier|extern
 name|struct
 name|ipi_tlb_args
 name|ipi_tlb_args
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|mp_tramp
 decl_stmt|;
 end_decl_stmt
 

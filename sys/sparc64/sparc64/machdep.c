@@ -1625,9 +1625,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|SMP
-name|mp_tramp
-operator|=
-name|mp_tramp_alloc
+name|mp_init
 argument_list|()
 expr_stmt|;
 endif|#
