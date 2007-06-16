@@ -1337,6 +1337,24 @@ specifier|static
 name|struct
 name|fw_xfer
 modifier|*
+name|sbp_write_cmd_locked
+parameter_list|(
+name|struct
+name|sbp_dev
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|fw_xfer
+modifier|*
 name|sbp_write_cmd
 parameter_list|(
 name|struct
@@ -6127,7 +6145,7 @@ name|sc
 expr_stmt|;
 name|SBP_DEBUG
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 name|sbp_show_sdev_info
 argument_list|(
@@ -6169,6 +6187,15 @@ block|}
 name|sbp_xfer_free
 argument_list|(
 name|xfer
+argument_list|)
+expr_stmt|;
+name|SBP_LOCK
+argument_list|(
+name|sdev
+operator|->
+name|target
+operator|->
+name|sbp
 argument_list|)
 expr_stmt|;
 name|sdev
@@ -6227,6 +6254,15 @@ name|ocb
 argument_list|)
 expr_stmt|;
 block|}
+name|SBP_UNLOCK
+argument_list|(
+name|sdev
+operator|->
+name|target
+operator|->
+name|sbp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -6283,6 +6319,20 @@ name|bus_addr
 argument_list|)
 expr_stmt|;
 name|END_DEBUG
+name|mtx_assert
+argument_list|(
+operator|&
+name|sdev
+operator|->
+name|target
+operator|->
+name|sbp
+operator|->
+name|mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -6324,7 +6374,7 @@ name|ORB_POINTER_ACTIVE
 expr_stmt|;
 name|xfer
 operator|=
-name|sbp_write_cmd
+name|sbp_write_cmd_locked
 argument_list|(
 name|sdev
 argument_list|,
@@ -6567,9 +6617,27 @@ operator|&=
 operator|~
 name|ORB_DOORBELL_NEED
 expr_stmt|;
+name|SBP_LOCK
+argument_list|(
+name|sdev
+operator|->
+name|target
+operator|->
+name|sbp
+argument_list|)
+expr_stmt|;
 name|sbp_doorbell
 argument_list|(
 name|sdev
+argument_list|)
+expr_stmt|;
+name|SBP_UNLOCK
+argument_list|(
+name|sdev
+operator|->
+name|target
+operator|->
+name|sbp
 argument_list|)
 expr_stmt|;
 block|}
@@ -6644,7 +6712,7 @@ name|ORB_DOORBELL_ACTIVE
 expr_stmt|;
 name|xfer
 operator|=
-name|sbp_write_cmd
+name|sbp_write_cmd_locked
 argument_list|(
 name|sdev
 argument_list|,
@@ -6708,7 +6776,7 @@ specifier|static
 name|struct
 name|fw_xfer
 modifier|*
-name|sbp_write_cmd
+name|sbp_write_cmd_locked
 parameter_list|(
 name|struct
 name|sbp_dev
@@ -6744,6 +6812,20 @@ name|new
 init|=
 literal|0
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sdev
+operator|->
+name|target
+operator|->
+name|sbp
+operator|->
+name|mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|target
 operator|=
 name|sdev
@@ -6869,14 +6951,6 @@ block|}
 name|splx
 argument_list|(
 name|s
-argument_list|)
-expr_stmt|;
-name|microtime
-argument_list|(
-operator|&
-name|xfer
-operator|->
-name|tv
 argument_list|)
 expr_stmt|;
 if|if
@@ -7047,6 +7121,70 @@ name|dst
 expr_stmt|;
 return|return
 name|xfer
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|struct
+name|fw_xfer
+modifier|*
+name|sbp_write_cmd
+parameter_list|(
+name|struct
+name|sbp_dev
+modifier|*
+name|sdev
+parameter_list|,
+name|int
+name|tcode
+parameter_list|,
+name|int
+name|offset
+parameter_list|)
+block|{
+name|struct
+name|sbp_softc
+modifier|*
+name|sbp
+init|=
+name|sdev
+operator|->
+name|target
+operator|->
+name|sbp
+decl_stmt|;
+name|struct
+name|fw_xfer
+modifier|*
+name|xfer
+decl_stmt|;
+name|SBP_LOCK
+argument_list|(
+name|sbp
+argument_list|)
+expr_stmt|;
+name|xfer
+operator|=
+name|sbp_write_cmd_locked
+argument_list|(
+name|sdev
+argument_list|,
+name|tcode
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+name|SBP_UNLOCK
+argument_list|(
+name|sbp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|xfer
+operator|)
 return|;
 block|}
 end_function
@@ -9042,6 +9180,7 @@ argument|, xfer);
 else|#
 directive|else
 comment|/* recycle */
+comment|/* we don't need a lock here because bottom half is serialized */
 argument|STAILQ_INSERT_TAIL(&sbp->fwb.xferlist, xfer, link);
 endif|#
 directive|endif
@@ -9322,7 +9461,7 @@ comment|/* if we are in probe stage, pass only probe commands */
 argument|if (sdev->status == SBP_DEV_PROBE) { 			char *name; 			name = xpt_path_periph(ccb->ccb_h.path)->periph_name; 			printf("probe stage, periph name: %s\n", name); 			if (strcmp(name, "probe") != 0) { 				ccb->ccb_h.status = CAM_REQUEUE_REQ; 				xpt_done(ccb); 				return; 			} 		}
 endif|#
 directive|endif
-argument|if ((ocb = sbp_get_ocb(sdev)) == NULL) { 			ccb->ccb_h.status = CAM_REQUEUE_REQ; 			if (sdev->freeze ==
+argument|if ((ocb = sbp_get_ocb(sdev)) == NULL) { 			ccb->ccb_h.status = CAM_RESRC_UNAVAIL; 			if (sdev->freeze ==
 literal|0
 argument|) { 				SBP_LOCK(sdev->target->sbp); 				xpt_freeze_devq(sdev->path,
 literal|1
@@ -9646,7 +9785,7 @@ argument|) {
 comment|/* 						 * Unordered execution 						 * We need to send pointer for 						 * next ORB 						 */
 argument|sdev->flags |= ORB_LINK_DEAD; 					} 				} 			} else {
 comment|/* 				 * XXX this is not correct for unordered 				 * execution.  				 */
-argument|if (sdev->last_ocb != NULL) 					sbp_free_ocb(sdev, sdev->last_ocb); 				sdev->last_ocb = ocb; 				if (next != NULL&& 				    sbp_status->src == SRC_NO_NEXT) 					sbp_doorbell(sdev); 			} 			break; 		} else 			order ++; 	} 	SBP_UNLOCK(sdev->target->sbp); 	splx(s); SBP_DEBUG(
+argument|if (sdev->last_ocb != NULL) { 					SBP_UNLOCK(sdev->target->sbp); 					sbp_free_ocb(sdev, sdev->last_ocb); 					SBP_LOCK(sdev->target->sbp); 				} 				sdev->last_ocb = ocb; 				if (next != NULL&& 				    sbp_status->src == SRC_NO_NEXT) 					sbp_doorbell(sdev); 			} 			break; 		} else 			order ++; 	} 	SBP_UNLOCK(sdev->target->sbp); 	splx(s); SBP_DEBUG(
 literal|0
 argument|) 	if (ocb&& order>
 literal|0
@@ -9654,7 +9793,7 @@ argument|) { 		sbp_show_sdev_info(sdev,
 literal|2
 argument|); 		printf(
 literal|"unordered execution order:%d\n"
-argument|, order); 	} END_DEBUG 	return (ocb); }  static struct sbp_ocb * sbp_enqueue_ocb(struct sbp_dev *sdev, struct sbp_ocb *ocb) { 	int s = splfw(); 	struct sbp_ocb *prev, *prev2;  SBP_DEBUG(
+argument|, order); 	} END_DEBUG 	return (ocb); }  static struct sbp_ocb * sbp_enqueue_ocb(struct sbp_dev *sdev, struct sbp_ocb *ocb) { 	int s = splfw(); 	struct sbp_ocb *prev, *prev2;  	mtx_assert(&sdev->target->sbp->mtx, MA_OWNED); SBP_DEBUG(
 literal|1
 argument|) 	sbp_show_sdev_info(sdev,
 literal|2
@@ -9681,8 +9820,10 @@ endif|#
 directive|endif
 argument|END_DEBUG 	prev2 = prev = STAILQ_LAST(&sdev->ocbs, sbp_ocb, ocb); 	STAILQ_INSERT_TAIL(&sdev->ocbs, ocb, ocb);  	if (ocb->ccb != NULL) 		ocb->ccb->ccb_h.timeout_ch = timeout(sbp_timeout, (caddr_t)ocb, 					(ocb->ccb->ccb_h.timeout * hz) /
 literal|1000
-argument|);  	if (use_doorbell&& prev == NULL) 		prev2 = sdev->last_ocb;  	if (prev2 != NULL) { SBP_DEBUG(
-literal|2
+argument|);  	if (use_doorbell&& prev == NULL) 		prev2 = sdev->last_ocb;  	if (prev2 != NULL&& (ocb->sdev->flags& ORB_LINK_DEAD) ==
+literal|0
+argument|) { SBP_DEBUG(
+literal|1
 argument|)
 if|#
 directive|if
@@ -9753,7 +9894,7 @@ argument|])&
 literal|0xffff
 argument|) { 		bus_dmamap_sync(sdev->target->sbp->dmat, ocb->dmamap, 			(ntohl(ocb->orb[
 literal|4
-argument|])& ORB_CMD_IN) ? 			BUS_DMASYNC_POSTREAD : BUS_DMASYNC_POSTWRITE); 		bus_dmamap_unload(sdev->target->sbp->dmat, ocb->dmamap); 	} 	if (ocb->ccb != NULL) { 		untimeout(sbp_timeout, (caddr_t)ocb, 					ocb->ccb->ccb_h.timeout_ch); 		ocb->ccb->ccb_h.status = status; 		SBP_LOCK(sdev->target->sbp); 		xpt_done(ocb->ccb); 		SBP_UNLOCK(sdev->target->sbp); 	} 	sbp_free_ocb(sdev, ocb); }  static void sbp_abort_all_ocbs(struct sbp_dev *sdev, int status) { 	int s; 	struct sbp_ocb *ocb, *next; 	STAILQ_HEAD(, sbp_ocb) temp;  	s = splfw();  	bcopy(&sdev->ocbs,&temp, sizeof(temp)); 	STAILQ_INIT(&sdev->ocbs); 	for (ocb = STAILQ_FIRST(&temp); ocb != NULL; ocb = next) { 		next = STAILQ_NEXT(ocb, ocb); 		sbp_abort_ocb(ocb, status); 	} 	if (sdev->last_ocb != NULL) { 		sbp_free_ocb(sdev, sdev->last_ocb); 		sdev->last_ocb = NULL; 	}  	splx(s); }  static devclass_t sbp_devclass;  static device_method_t sbp_methods[] = {
+argument|])& ORB_CMD_IN) ? 			BUS_DMASYNC_POSTREAD : BUS_DMASYNC_POSTWRITE); 		bus_dmamap_unload(sdev->target->sbp->dmat, ocb->dmamap); 	} 	if (ocb->ccb != NULL) { 		untimeout(sbp_timeout, (caddr_t)ocb, 					ocb->ccb->ccb_h.timeout_ch); 		ocb->ccb->ccb_h.status = status; 		SBP_LOCK(sdev->target->sbp); 		xpt_done(ocb->ccb); 		SBP_UNLOCK(sdev->target->sbp); 	} 	sbp_free_ocb(sdev, ocb); }  static void sbp_abort_all_ocbs(struct sbp_dev *sdev, int status) { 	int s; 	struct sbp_ocb *ocb, *next; 	STAILQ_HEAD(, sbp_ocb) temp;  	s = splfw();  	STAILQ_INIT(&temp); 	SBP_LOCK(sdev->target->sbp); 	STAILQ_CONCAT(&temp,&sdev->ocbs); 	STAILQ_INIT(&sdev->ocbs); 	SBP_UNLOCK(sdev->target->sbp);  	for (ocb = STAILQ_FIRST(&temp); ocb != NULL; ocb = next) { 		next = STAILQ_NEXT(ocb, ocb); 		sbp_abort_ocb(ocb, status); 	} 	if (sdev->last_ocb != NULL) { 		sbp_free_ocb(sdev, sdev->last_ocb); 		sdev->last_ocb = NULL; 	}  	splx(s); }  static devclass_t sbp_devclass;  static device_method_t sbp_methods[] = {
 comment|/* device interface */
 argument|DEVMETHOD(device_identify,	sbp_identify), 	DEVMETHOD(device_probe,		sbp_probe), 	DEVMETHOD(device_attach,	sbp_attach), 	DEVMETHOD(device_detach,	sbp_detach), 	DEVMETHOD(device_shutdown,	sbp_shutdown),  	{
 literal|0
