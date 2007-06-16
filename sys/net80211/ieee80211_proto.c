@@ -5503,6 +5503,9 @@ name|reason
 condition|)
 block|{
 case|case
+name|IEEE80211_STATUS_SUCCESS
+case|:
+case|case
 name|IEEE80211_STATUS_TIMEOUT
 case|:
 case|case
