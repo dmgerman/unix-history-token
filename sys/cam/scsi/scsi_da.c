@@ -2556,8 +2556,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Place it in the queue of disk activities for this disk 	 */
-name|bioq_disksort
+comment|/* 	 * Place it in the queue of disk activities for this disk 	bioq_disksort(&softc->bio_queue, bp); 	 */
+name|bioq_insert_tail
 argument_list|(
 operator|&
 name|softc
