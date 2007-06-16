@@ -2032,7 +2032,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_LOGGING_LEVEL_MAX
-value|0x007fffff
+value|0xffffffff
 end_define
 
 begin_define
