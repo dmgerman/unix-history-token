@@ -25,13 +25,10 @@ decl_stmt|;
 name|int
 name|height
 decl_stmt|;
+specifier|const
 name|u_char
 name|data
-index|[
-literal|256
-operator|*
-literal|32
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;

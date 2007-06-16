@@ -34,6 +34,7 @@ file|<dev/fb/gfb.h>
 end_include
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|gfb_font
 name|bold8x16
