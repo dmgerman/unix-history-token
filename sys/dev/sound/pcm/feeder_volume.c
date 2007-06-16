@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|FVOL_MAX
-value|(1U<< FVOL_RESOLUTION)
+value|(1<< FVOL_RESOLUTION)
 end_define
 
 begin_define
@@ -101,7 +101,7 @@ parameter_list|(
 name|uint8_t
 modifier|*
 parameter_list|,
-name|uint32_t
+name|int
 modifier|*
 parameter_list|,
 name|uint32_t
@@ -127,7 +127,7 @@ parameter_list|,
 name|ENDIANS
 parameter_list|)
 define|\
-value|static uint32_t									\ feed_volume_filter_##SIGNS##FMTBIT##ENDIANS(uint8_t *b, uint32_t *vol,		\ 							uint32_t count)		\ {										\ 	int32_t j;								\ 	int i;									\ 										\ 	i = count;								\ 	b += i;									\ 										\ 	do {									\ 		b -= PCM_##FMTBIT##_BPS;					\ 		i -= PCM_##FMTBIT##_BPS;					\ 		j = PCM_READ_##SIGN##FMTBIT##_##ENDIAN(b);			\ 		j = FVOL_CALC((VOL_INTCAST)j,					\ 		    vol[(i / PCM_##FMTBIT##_BPS)& 1]);				\ 		PCM_WRITE_##SIGN##FMTBIT##_##ENDIAN(b, j);			\ 	} while (i != 0);							\ 										\ 	return (count);								\ }
+value|static uint32_t									\ feed_volume_filter_##SIGNS##FMTBIT##ENDIANS(uint8_t *b, int *vol,		\ 							uint32_t count)		\ {										\ 	int32_t j;								\ 	int i;									\ 										\ 	i = count;								\ 	b += i;									\ 										\ 	do {									\ 		b -= PCM_##FMTBIT##_BPS;					\ 		i -= PCM_##FMTBIT##_BPS;					\ 		j = PCM_READ_##SIGN##FMTBIT##_##ENDIAN(b);			\ 		j = FVOL_CALC((VOL_INTCAST)j,					\ 		    vol[(i / PCM_##FMTBIT##_BPS)& 1]);				\ 		PCM_WRITE_##SIGN##FMTBIT##_##ENDIAN(b, j);			\ 	} while (i != 0);							\ 										\ 	return (count);								\ }
 end_define
 
 begin_macro
@@ -707,7 +707,7 @@ name|feed_volume_info
 modifier|*
 name|info
 decl_stmt|;
-name|uint32_t
+name|int
 name|vol
 index|[
 literal|2
