@@ -263,6 +263,11 @@ decl_stmt|;
 name|int
 name|trigger
 decl_stmt|;
+comment|/** 	 * For interrupt manipulations. 	 */
+name|struct
+name|cv
+name|intr_cv
+decl_stmt|;
 comment|/** 	 * Increment,decrement this around operations that temporarily yield 	 * lock. 	 */
 name|unsigned
 name|int
@@ -576,6 +581,29 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(snd_unit2c((x)->unit))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHN_BUF_PARENT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|(((x) != NULL&& (x)->parentchannel != NULL&&			\ 	(x)->parentchannel->bufhard != NULL) ?				\ 	(x)->parentchannel->bufhard : (y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHN_BROADCAST
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	if ((x)->cv_waiters != 0)					\ 		cv_broadcastpri(x, PRIBIO);				\ } while(0)
 end_define
 
 begin_include
@@ -1564,7 +1592,14 @@ begin_define
 define|#
 directive|define
 name|CHN_F_RESET
-value|(CHN_F_BUSY | CHN_F_DEAD | \ 					CHN_F_HAS_VCHAN | CHN_F_VIRTUAL)
+value|(CHN_F_BUSY | CHN_F_DEAD |		\ 				 CHN_F_HAS_VCHAN | CHN_F_VIRTUAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHN_F_MMAP_INVALID
+value|(CHN_F_DEAD | CHN_F_RUNNING)
 end_define
 
 begin_define
@@ -1663,6 +1698,57 @@ define|#
 directive|define
 name|CHN_LATENCY_PROFILE_DEFAULT
 value|CHN_LATENCY_PROFILE_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHN_STARTED
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->flags& CHN_F_TRIGGERED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHN_STOPPED
+parameter_list|(
+name|c
+parameter_list|)
+value|(!CHN_STARTED(c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHN_DIRSTR
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)->direction == PCMDIR_PLAY) ? \ 				"PCMDIR_PLAY" : "PCMDIR_REC")
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHN_TIMEOUT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHN_TIMEOUT_MIN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHN_TIMEOUT_MAX
+value|10
 end_define
 
 begin_comment

@@ -798,12 +798,6 @@ name|blksz
 expr_stmt|;
 if|if
 condition|(
-name|b
-operator|->
-name|tmpbuf
-operator|==
-name|NULL
-operator|||
 name|bufsize
 operator|>
 name|b

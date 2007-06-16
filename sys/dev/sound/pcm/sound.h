@@ -542,6 +542,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|SD_F_BUSY
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|SD_F_MPSAFE
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|SD_F_REGISTERED
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
 name|SD_F_PRIO_RD
 value|0x10000000
 end_define
@@ -572,6 +593,26 @@ define|#
 directive|define
 name|SD_F_TRANSIENT
 value|0xf0000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_ALIVE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) != NULL&& (x)->lock != NULL&&	\ 				 !((x)->flags& SD_F_DYING))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_REGISTERED
+parameter_list|(
+name|x
+parameter_list|)
+value|(PCM_ALIVE(x)&&			\ 				 ((x)->flags& SD_F_REGISTERED))
 end_define
 
 begin_comment
@@ -1972,6 +2013,42 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SND_DEV_DSPHW_CD
+value|15
+end_define
+
+begin_comment
+comment|/* s16le/stereo 44100Hz CD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SND_DEV_DSP_MMAP
+value|16
+end_define
+
+begin_comment
+comment|/* OSSv4 compatible /dev/dsp_mmap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SND_DEV_LAST
+value|SND_DEV_DSP_MMAP
+end_define
+
+begin_define
+define|#
+directive|define
+name|SND_DEV_MAX
+value|PCMMAXDEV
+end_define
+
+begin_define
+define|#
+directive|define
 name|DSP_DEFAULT_SPEED
 value|8000
 end_define
@@ -2684,6 +2761,14 @@ struct|;
 block|}
 name|channels
 struct|;
+name|TAILQ_HEAD
+argument_list|(
+argument|dsp_cdevinfo_linkhead
+argument_list|,
+argument|dsp_cdevinfo
+argument_list|)
+name|dsp_cdevinfo_pool
+expr_stmt|;
 name|struct
 name|snd_clone
 modifier|*
@@ -2762,6 +2847,10 @@ decl_stmt|,
 modifier|*
 name|rec_sysctl_tree
 decl_stmt|;
+name|struct
+name|cv
+name|cv
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2835,6 +2924,213 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * For PCM_CV_[WAIT | ACQUIRE | RELEASE], be sure to surround these  * with pcm_lock/unlock() sequence, or I'll come to gnaw upon you!  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SND_DIAGNOSTIC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCM_WAIT
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	if (mtx_owned((x)->lock) == 0)					\ 		panic("%s(%d): [PCM WAIT] Mutex not owned!",		\ 		    __func__, __LINE__);				\ 	while ((x)->flags& SD_F_BUSY) {				\ 		if (snd_verbose> 3)					\ 			device_printf((x)->dev,				\ 			    "%s(%d): [PCM WAIT] calling cv_wait().\n",	\ 			    __func__, __LINE__);			\ 		cv_wait(&(x)->cv, (x)->lock);				\ 	}								\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_ACQUIRE
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	if (mtx_owned((x)->lock) == 0)					\ 		panic("%s(%d): [PCM ACQUIRE] Mutex not owned!",		\ 		    __func__, __LINE__);				\ 	if ((x)->flags& SD_F_BUSY)					\ 		panic("%s(%d): [PCM ACQUIRE] "				\ 		    "Trying to acquire BUSY cv!", __func__, __LINE__);	\ 	(x)->flags |= SD_F_BUSY;					\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_RELEASE
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	if (mtx_owned((x)->lock) == 0)					\ 		panic("%s(%d): [PCM RELEASE] Mutex not owned!",		\ 		    __func__, __LINE__);				\ 	if ((x)->flags& SD_F_BUSY) {					\ 		(x)->flags&= ~SD_F_BUSY;				\ 		if ((x)->cv.cv_waiters != 0) {				\ 			if ((x)->cv.cv_waiters> 1&& snd_verbose> 3)	\ 				device_printf((x)->dev,			\ 				    "%s(%d): [PCM RELEASE] "		\ 				    "cv_waiters=%d> 1!\n",		\ 				    __func__, __LINE__,			\ 				    (x)->cv.cv_waiters);		\ 			cv_broadcast(&(x)->cv);				\ 		}							\ 	} else								\ 		panic("%s(%d): [PCM RELEASE] Releasing non-BUSY cv!",	\ 		    __func__, __LINE__);				\ } while(0)
+end_define
+
+begin_comment
+comment|/* Quick version, for shorter path. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_ACQUIRE_QUICK
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	if (mtx_owned((x)->lock) != 0)					\ 		panic("%s(%d): [PCM ACQUIRE QUICK] Mutex owned!",	\ 		    __func__, __LINE__);				\ 	pcm_lock(x);							\ 	PCM_WAIT(x);							\ 	PCM_ACQUIRE(x);							\ 	pcm_unlock(x);							\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_RELEASE_QUICK
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	if (mtx_owned((x)->lock) != 0)					\ 		panic("%s(%d): [PCM RELEASE QUICK] Mutex owned!",	\ 		    __func__, __LINE__);				\ 	pcm_lock(x);							\ 	PCM_RELEASE(x);							\ 	pcm_unlock(x);							\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_BUSYASSERT
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	if (!((x) != NULL&& ((x)->flags& SD_F_BUSY)))			\ 		panic("%s(%d): [PCM BUSYASSERT] "			\ 		    "Failed, snddev_info=%p", __func__, __LINE__, x);	\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_GIANT_ENTER
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	int _pcm_giant = 0;						\ 	if (mtx_owned((x)->lock) != 0)					\ 		panic("%s(%d): [GIANT ENTER] PCM lock owned!",		\ 		    __func__, __LINE__);				\ 	if (mtx_owned(&Giant) != 0&& snd_verbose> 3)			\ 		device_printf((x)->dev,					\ 		    "%s(%d): [GIANT ENTER] Giant owned!\n",		\ 		    __func__, __LINE__);				\ 	if (!((x)->flags& SD_F_MPSAFE)&& mtx_owned(&Giant) == 0)	\ 		do {							\ 			mtx_lock(&Giant);				\ 			_pcm_giant = 1;					\ 		} while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_GIANT_EXIT
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	if (mtx_owned((x)->lock) != 0)					\ 		panic("%s(%d): [GIANT EXIT] PCM lock owned!",		\ 		    __func__, __LINE__);				\ 	if (!(_pcm_giant == 0 || _pcm_giant == 1))			\ 		panic("%s(%d): [GIANT EXIT] _pcm_giant screwed!",	\ 		    __func__, __LINE__);				\ 	if ((x)->flags& SD_F_MPSAFE) {					\ 		if (_pcm_giant == 1)					\ 			panic("%s(%d): [GIANT EXIT] MPSAFE Giant?",	\ 			    __func__, __LINE__);			\ 		if (mtx_owned(&Giant) != 0&& snd_verbose> 3)		\ 			device_printf((x)->dev,				\ 			    "%s(%d): [GIANT EXIT] Giant owned!\n",	\ 			    __func__, __LINE__);			\ 	}								\ 	if (_pcm_giant != 0) {						\ 		if (mtx_owned(&Giant) == 0)				\ 			panic("%s(%d): [GIANT EXIT] Giant not owned!",	\ 			    __func__, __LINE__);			\ 		_pcm_giant = 0;						\ 		mtx_unlock(&Giant);					\ 	}								\ } while(0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SND_DIAGNOSTIC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_WAIT
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	mtx_assert((x)->lock, MA_OWNED);				\ 	while ((x)->flags& SD_F_BUSY)					\ 		cv_wait(&(x)->cv, (x)->lock);				\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_ACQUIRE
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	mtx_assert((x)->lock, MA_OWNED);				\ 	KASSERT(!((x)->flags& SD_F_BUSY),				\ 	    ("%s(%d): [PCM ACQUIRE] Trying to acquire BUSY cv!",	\ 	    __func__, __LINE__));					\ 	(x)->flags |= SD_F_BUSY;					\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_RELEASE
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	mtx_assert((x)->lock, MA_OWNED);				\ 	KASSERT((x)->flags& SD_F_BUSY,					\ 	    ("%s(%d): [PCM RELEASE] Releasing non-BUSY cv!",		\ 	    __func__, __LINE__));					\ 	(x)->flags&= ~SD_F_BUSY;					\ 	if ((x)->cv.cv_waiters != 0)					\ 		cv_broadcast(&(x)->cv);					\ } while(0)
+end_define
+
+begin_comment
+comment|/* Quick version, for shorter path. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_ACQUIRE_QUICK
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	mtx_assert((x)->lock, MA_NOTOWNED);				\ 	pcm_lock(x);							\ 	PCM_WAIT(x);							\ 	PCM_ACQUIRE(x);							\ 	pcm_unlock(x);							\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_RELEASE_QUICK
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	mtx_assert((x)->lock, MA_NOTOWNED);				\ 	pcm_lock(x);							\ 	PCM_RELEASE(x);							\ 	pcm_unlock(x);							\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_BUSYASSERT
+parameter_list|(
+name|x
+parameter_list|)
+value|KASSERT(x != NULL&&			\ 				    ((x)->flags& SD_F_BUSY),		\ 				    ("%s(%d): [PCM BUSYASSERT] "	\ 				    "Failed, snddev_info=%p",		\ 				    __func__, __LINE__, x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_GIANT_ENTER
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	int _pcm_giant = 0;						\ 	mtx_assert((x)->lock, MA_NOTOWNED);				\ 	if (!((x)->flags& SD_F_MPSAFE)&& mtx_owned(&Giant) == 0)	\ 		do {							\ 			mtx_lock(&Giant);				\ 			_pcm_giant = 1;					\ 		} while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_GIANT_EXIT
+parameter_list|(
+name|x
+parameter_list|)
+value|do {					\ 	mtx_assert((x)->lock, MA_NOTOWNED);				\ 	KASSERT(_pcm_giant == 0 || _pcm_giant == 1,			\ 	    ("%s(%d): [GIANT EXIT] _pcm_giant screwed!",		\ 	    __func__, __LINE__));					\ 	KASSERT(!((x)->flags& SD_F_MPSAFE) ||				\ 	    (((x)->flags& SD_F_MPSAFE)&& _pcm_giant == 0),		\ 	    ("%s(%d): [GIANT EXIT] MPSAFE Giant?",			\ 	    __func__, __LINE__));					\ 	if (_pcm_giant != 0) {						\ 		mtx_assert(&Giant, MA_OWNED);				\ 		_pcm_giant = 0;						\ 		mtx_unlock(&Giant);					\ 	}								\ } while(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SND_DIAGNOSTIC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_GIANT_LEAVE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|PCM_GIANT_EXIT(x);						\ } while(0)
+end_define
 
 begin_ifdef
 ifdef|#

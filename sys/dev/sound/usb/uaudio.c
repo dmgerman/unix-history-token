@@ -25009,11 +25009,9 @@ condition|)
 return|return
 name|ENXIO
 return|;
-name|snd_mtxlock
+name|PCM_BUSYASSERT
 argument_list|(
 name|d
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -25033,13 +25031,6 @@ argument_list|(
 name|s
 argument_list|,
 literal|" (mixer only)"
-argument_list|)
-expr_stmt|;
-name|snd_mtxunlock
-argument_list|(
-name|d
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -25133,18 +25124,9 @@ name|verbose
 operator|<=
 literal|1
 condition|)
-block|{
-name|snd_mtxunlock
-argument_list|(
-name|d
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
 name|CHN_FOREACH
 argument_list|(
 argument|c
@@ -25154,13 +25136,6 @@ argument_list|,
 argument|channels.pcm
 argument_list|)
 block|{
-name|sbuf_printf
-argument_list|(
-name|s
-argument_list|,
-literal|"\n\t"
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|c
@@ -25178,6 +25153,13 @@ argument_list|,
 operator|(
 literal|"hosed pcm channel setup"
 operator|)
+argument_list|)
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|s
+argument_list|,
+literal|"\n\t"
 argument_list|)
 expr_stmt|;
 comment|/* it would be better to indent child channels */
@@ -25627,6 +25609,14 @@ operator|->
 name|type
 operator|==
 name|FEEDER_MIXER
+operator|||
+name|f
+operator|->
+name|desc
+operator|->
+name|type
+operator|==
+name|FEEDER_VOLUME
 condition|)
 name|sbuf_printf
 argument_list|(
@@ -25675,13 +25665,6 @@ literal|"hardware"
 argument_list|)
 expr_stmt|;
 block|}
-name|snd_mtxunlock
-argument_list|(
-name|d
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
