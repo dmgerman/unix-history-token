@@ -92,7 +92,6 @@ comment|/*  * NOTES: On the outbound side of things I need to check the sack tim
 end_comment
 
 begin_function
-name|__inline
 name|void
 name|sctp_set_rwnd
 parameter_list|(
@@ -306,7 +305,6 @@ comment|/* Calculate what the rwnd would be */
 end_comment
 
 begin_function
-name|__inline
 name|uint32_t
 name|sctp_calc_rwnd
 parameter_list|(
@@ -18161,7 +18159,6 @@ end_endif
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|sctp_cwnd_update
 parameter_list|(

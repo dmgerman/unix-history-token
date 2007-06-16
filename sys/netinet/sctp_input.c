@@ -21110,7 +21110,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|sctp_process_ecn_marked_a
 parameter_list|(
@@ -21257,7 +21256,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|sctp_process_ecn_marked_b
 parameter_list|(

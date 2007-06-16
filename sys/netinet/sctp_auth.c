@@ -107,7 +107,6 @@ comment|/* SCTP_DEBUG */
 end_comment
 
 begin_function
-specifier|inline
 name|void
 name|sctp_clear_chunklist
 parameter_list|(
@@ -486,7 +485,6 @@ block|}
 end_function
 
 begin_function
-specifier|inline
 name|size_t
 name|sctp_auth_get_chklist_size
 parameter_list|(
@@ -1223,7 +1221,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|uint32_t
 name|sctp_get_keylen
 parameter_list|(
@@ -3397,7 +3394,6 @@ block|}
 end_function
 
 begin_function
-specifier|inline
 name|uint32_t
 name|sctp_get_auth_chunk_len
 parameter_list|(

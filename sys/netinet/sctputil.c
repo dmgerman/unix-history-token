@@ -12608,7 +12608,6 @@ comment|/*  * return a pointer to a contiguous piece of data from the given mbuf
 end_comment
 
 begin_function
-name|__inline
 name|caddr_t
 name|sctp_m_getptr
 parameter_list|(
@@ -18964,7 +18963,6 @@ comment|/*  * are the two addresses the same?  currently a "scopeless" check ret
 end_comment
 
 begin_function
-name|__inline
 name|int
 name|sctp_cmpaddr
 parameter_list|(

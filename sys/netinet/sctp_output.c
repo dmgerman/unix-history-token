@@ -14784,7 +14784,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|uint8_t
 name|sctp_get_ect
 parameter_list|(
@@ -25931,7 +25930,6 @@ block|}
 end_function
 
 begin_function
-name|__inline
 name|int
 name|sctp_get_frag_point
 parameter_list|(
@@ -29193,7 +29191,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|sctp_clean_up_datalist
 parameter_list|(
@@ -29705,7 +29702,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|sctp_clean_up_ctl
 parameter_list|(
@@ -29970,7 +29966,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|int
 name|sctp_can_we_split_this
 parameter_list|(
@@ -32839,7 +32834,6 @@ block|}
 end_function
 
 begin_function
-name|__inline
 name|void
 name|sctp_fix_ecn_echo
 parameter_list|(

@@ -1469,31 +1469,17 @@ parameter_list|)
 value|sctp_m_freem(m)
 end_define
 
-begin_function
-specifier|static
-specifier|inline
-name|int
+begin_define
+define|#
+directive|define
 name|SCTP_GET_PKT_VRFID
 parameter_list|(
-name|void
-modifier|*
 name|m
 parameter_list|,
-name|uint32_t
 name|vrf_id
 parameter_list|)
-block|{
-name|vrf_id
-operator|=
-name|SCTP_DEFAULT_VRFID
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
+value|((vrf_id = SCTP_DEFAULT_VRFID) != SCTP_DEFAULT_VRFID)
+end_define
 
 begin_comment
 comment|/* Attach the chain of data into the sendable packet. */
