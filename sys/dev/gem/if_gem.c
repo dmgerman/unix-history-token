@@ -3279,7 +3279,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|r
+name|reg
 operator|&
 name|clr
 operator|)
@@ -3287,7 +3287,7 @@ operator|==
 literal|0
 operator|&&
 operator|(
-name|r
+name|reg
 operator|&
 name|set
 operator|)
@@ -3809,7 +3809,7 @@ name|sc
 argument_list|,
 name|GEM_RESET
 argument_list|,
-name|GEM_RESET_TX
+name|GEM_RESET_RX
 argument_list|,
 literal|0
 argument_list|)
