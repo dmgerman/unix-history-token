@@ -4561,12 +4561,11 @@ operator|->
 name|wire_count
 condition|)
 block|{
-name|printf
+name|panic
 argument_list|(
-literal|"vm_page_cache: attempting to cache busy page\n"
+literal|"vm_page_cache: attempting to cache busy page"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
