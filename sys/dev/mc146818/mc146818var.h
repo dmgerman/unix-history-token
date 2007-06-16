@@ -102,6 +102,34 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Default read/write functions */
+end_comment
+
+begin_function_decl
+name|u_int
+name|mc146818_def_read
+parameter_list|(
+name|device_t
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mc146818_def_write
+parameter_list|(
+name|device_t
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Chip attach function */
 end_comment
 

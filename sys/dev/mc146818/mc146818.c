@@ -103,32 +103,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|u_int
-name|mc146818_def_read
-parameter_list|(
-name|device_t
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|mc146818_def_write
-parameter_list|(
-name|device_t
-parameter_list|,
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|mc146818_attach
@@ -1229,7 +1203,6 @@ value|1
 end_define
 
 begin_function
-specifier|static
 name|u_int
 name|mc146818_def_read
 parameter_list|(
@@ -1287,7 +1260,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|mc146818_def_write
 parameter_list|(
