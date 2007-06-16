@@ -15462,17 +15462,9 @@ case|:
 case|case
 name|IPPROTO_AH
 case|:
+comment|/* 		 * RFC 4302, 2.4. Security Parameters Index (SPI), SPI values 		 * 1-255 reserved by IANA for future use, 		 * 0 for implementation specific, local use. 		 */
 if|if
 condition|(
-name|ntohl
-argument_list|(
-name|sav
-operator|->
-name|spi
-argument_list|)
-operator|>=
-literal|0
-operator|&&
 name|ntohl
 argument_list|(
 name|sav
