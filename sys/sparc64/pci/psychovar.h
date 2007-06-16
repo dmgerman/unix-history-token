@@ -26,16 +26,14 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
+name|struct
+name|mtx
+modifier|*
+name|sc_mtx
+decl_stmt|;
 comment|/* Interrupt Group Number for this device */
 name|int
 name|sc_ign
-decl_stmt|;
-comment|/* Our tags (from parent) */
-name|bus_space_tag_t
-name|sc_bustag
-decl_stmt|;
-name|bus_space_handle_t
-name|sc_bushandle
 decl_stmt|;
 name|bus_addr_t
 name|sc_pcictl
