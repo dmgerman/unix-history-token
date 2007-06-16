@@ -2084,10 +2084,10 @@ argument_list|()
 expr_stmt|;
 name|BVPRINTF
 argument_list|(
-literal|"OF_set_mmfsa_traptable\n"
+literal|"set_mmfsa_traptable\n"
 argument_list|)
 expr_stmt|;
-name|OF_set_mmfsa_traptable
+name|set_mmfsa_traptable
 argument_list|(
 operator|&
 name|tl0_base
