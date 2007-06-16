@@ -7,6 +7,10 @@ begin_comment
 comment|/*-  * Copyright (C) 1995, 1996 Wolfgang Solfrank.  * Copyright (C) 1995, 1996 TooLs GmbH.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by TooLs GmbH.  * 4. The name of TooLs GmbH may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY TOOLS GMBH ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
+begin_comment
+comment|/*-  * Copyright (C) 2000 Benno Rice.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Benno Rice ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -20,10 +24,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*-  * Copyright (C) 2000 Benno Rice.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Benno Rice ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
-end_comment
 
 begin_include
 include|#
@@ -81,7 +81,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Initialiaser */
+comment|/* Initialiser */
 end_comment
 
 begin_function
@@ -269,13 +269,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|args
 operator|.
 name|missing
+operator|)
 return|;
 block|}
 end_function
@@ -325,7 +329,7 @@ operator|)
 literal|"interpret"
 block|,
 literal|1
-block|}
+block|, 	}
 struct|;
 name|cell_t
 name|status
@@ -500,9 +504,11 @@ name|args
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|args
 operator|.
 name|ms
+operator|)
 return|;
 block|}
 end_function
@@ -559,9 +565,6 @@ name|args
 operator|.
 name|node
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|node
 expr_stmt|;
 if|if
@@ -576,13 +579,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|args
 operator|.
 name|next
+operator|)
 return|;
 block|}
 end_function
@@ -635,9 +642,6 @@ name|args
 operator|.
 name|node
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|node
 expr_stmt|;
 if|if
@@ -652,13 +656,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|args
 operator|.
 name|child
+operator|)
 return|;
 block|}
 end_function
@@ -711,9 +719,6 @@ name|args
 operator|.
 name|node
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|node
 expr_stmt|;
 if|if
@@ -728,13 +733,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|args
 operator|.
 name|parent
+operator|)
 return|;
 block|}
 end_function
@@ -787,9 +796,6 @@ name|args
 operator|.
 name|instance
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|instance
 expr_stmt|;
 if|if
@@ -804,13 +810,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|args
 operator|.
 name|package
+operator|)
 return|;
 block|}
 end_function
@@ -870,9 +880,6 @@ name|args
 operator|.
 name|package
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|package
 expr_stmt|;
 name|args
@@ -896,13 +903,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|args
 operator|.
 name|proplen
+operator|)
 return|;
 block|}
 end_function
@@ -975,9 +986,6 @@ name|args
 operator|.
 name|package
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|package
 expr_stmt|;
 name|args
@@ -1002,9 +1010,6 @@ name|args
 operator|.
 name|buflen
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|buflen
 expr_stmt|;
 if|if
@@ -1019,13 +1024,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|args
 operator|.
 name|size
+operator|)
 return|;
 block|}
 end_function
@@ -1212,9 +1221,6 @@ name|args
 operator|.
 name|package
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|package
 expr_stmt|;
 name|args
@@ -1247,13 +1253,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|args
 operator|.
 name|flag
+operator|)
 return|;
 block|}
 end_function
@@ -1330,9 +1340,6 @@ name|args
 operator|.
 name|package
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|package
 expr_stmt|;
 name|args
@@ -1357,9 +1364,6 @@ name|args
 operator|.
 name|len
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|len
 expr_stmt|;
 if|if
@@ -1374,13 +1378,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|args
 operator|.
 name|size
+operator|)
 return|;
 block|}
 end_function
@@ -1466,9 +1474,6 @@ name|args
 operator|.
 name|len
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|len
 expr_stmt|;
 if|if
@@ -1483,13 +1488,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|args
 operator|.
 name|size
+operator|)
 return|;
 block|}
 end_function
@@ -1561,13 +1570,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|args
 operator|.
 name|package
+operator|)
 return|;
 block|}
 end_function
@@ -1633,9 +1646,6 @@ name|args
 operator|.
 name|instance
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|instance
 expr_stmt|;
 name|args
@@ -1651,9 +1661,6 @@ name|args
 operator|.
 name|len
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|len
 expr_stmt|;
 if|if
@@ -1668,8 +1675,10 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
@@ -1742,9 +1751,6 @@ name|args
 operator|.
 name|package
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|package
 expr_stmt|;
 name|args
@@ -1760,9 +1766,6 @@ name|args
 operator|.
 name|len
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|len
 expr_stmt|;
 if|if
@@ -1777,8 +1780,10 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
@@ -1857,7 +1862,7 @@ block|, 	}
 struct|;
 name|cell_t
 modifier|*
-name|ip
+name|cp
 decl_stmt|;
 name|int
 name|n
@@ -1869,16 +1874,15 @@ operator|>
 literal|6
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|args
 operator|.
 name|nargs
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|nargs
 operator|+
 literal|2
@@ -1887,9 +1891,6 @@ name|args
 operator|.
 name|nreturns
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|nreturns
 operator|+
 literal|1
@@ -1907,9 +1908,6 @@ name|args
 operator|.
 name|instance
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|instance
 expr_stmt|;
 name|va_start
@@ -1921,7 +1919,7 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|ip
+name|cp
 operator|=
 name|args
 operator|.
@@ -1930,9 +1928,6 @@ operator|+
 operator|(
 name|n
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|nargs
 operator|)
 init|;
@@ -1944,7 +1939,7 @@ condition|;
 control|)
 operator|*
 operator|--
-name|ip
+name|cp
 operator|=
 name|va_arg
 argument_list|(
@@ -1965,8 +1960,10 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -1978,16 +1975,18 @@ name|nargs
 index|]
 condition|)
 return|return
+operator|(
 name|args
 operator|.
 name|args_n_results
 index|[
 name|nargs
 index|]
+operator|)
 return|;
 for|for
 control|(
-name|ip
+name|cp
 operator|=
 name|args
 operator|.
@@ -2020,7 +2019,7 @@ argument_list|)
 operator|=
 operator|*
 operator|--
-name|ip
+name|cp
 expr_stmt|;
 name|va_end
 argument_list|(
@@ -2028,13 +2027,15 @@ name|ap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Device I/O functions.  */
+comment|/*  * Device I/O functions  */
 end_comment
 
 begin_comment
@@ -2110,14 +2111,18 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|args
 operator|.
 name|instance
+operator|)
 return|;
 block|}
 end_function
@@ -2159,17 +2164,12 @@ operator|)
 literal|"close"
 block|,
 literal|1
-block|,
-literal|0
 block|, 	}
 struct|;
 name|args
 operator|.
 name|instance
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|instance
 expr_stmt|;
 name|openfirmware
@@ -2242,9 +2242,6 @@ name|args
 operator|.
 name|instance
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|instance
 expr_stmt|;
 name|args
@@ -2260,9 +2257,6 @@ name|args
 operator|.
 name|len
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|len
 expr_stmt|;
 if|if
@@ -2277,13 +2271,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|args
 operator|.
 name|actual
+operator|)
 return|;
 block|}
 end_function
@@ -2349,9 +2347,6 @@ name|args
 operator|.
 name|instance
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|instance
 expr_stmt|;
 name|args
@@ -2367,9 +2362,6 @@ name|args
 operator|.
 name|len
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|len
 expr_stmt|;
 if|if
@@ -2384,13 +2376,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|args
 operator|.
 name|actual
+operator|)
 return|;
 block|}
 end_function
@@ -2452,31 +2448,20 @@ name|args
 operator|.
 name|instance
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|instance
 expr_stmt|;
 name|args
 operator|.
 name|poshi
 operator|=
-call|(
-name|cell_t
-call|)
-argument_list|(
 name|pos
 operator|>>
 literal|32
-argument_list|)
 expr_stmt|;
 name|args
 operator|.
 name|poslo
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|pos
 expr_stmt|;
 if|if
@@ -2491,19 +2476,23 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|args
 operator|.
 name|status
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Memory functions.  */
+comment|/*  * Memory functions  */
 end_comment
 
 begin_comment
@@ -2577,18 +2566,12 @@ name|args
 operator|.
 name|size
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|size
 expr_stmt|;
 name|args
 operator|.
 name|align
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|align
 expr_stmt|;
 if|if
@@ -2604,13 +2587,16 @@ literal|1
 condition|)
 return|return
 operator|(
+operator|(
 name|void
 operator|*
 operator|)
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 operator|(
 name|void
 operator|*
@@ -2618,6 +2604,7 @@ operator|)
 name|args
 operator|.
 name|baseaddr
+operator|)
 return|;
 block|}
 end_function
@@ -2666,8 +2653,6 @@ operator|)
 literal|"release"
 block|,
 literal|2
-block|,
-literal|0
 block|, 	}
 struct|;
 name|args
@@ -2683,9 +2668,6 @@ name|args
 operator|.
 name|size
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|size
 expr_stmt|;
 name|openfirmware
@@ -2698,7 +2680,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Control transfer functions.  */
+comment|/*  * Control transfer functions  */
 end_comment
 
 begin_comment
@@ -2739,8 +2721,6 @@ operator|)
 literal|"boot"
 block|,
 literal|1
-block|,
-literal|0
 block|, 	}
 struct|;
 name|args
@@ -2763,8 +2743,8 @@ control|(
 init|;
 condition|;
 control|)
-empty_stmt|;
 comment|/* just in case */
+empty_stmt|;
 block|}
 end_function
 
@@ -2797,11 +2777,7 @@ operator|(
 name|cell_t
 operator|)
 literal|"enter"
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|openfirmware
 argument_list|(
@@ -2809,7 +2785,6 @@ operator|&
 name|args
 argument_list|)
 expr_stmt|;
-return|return;
 comment|/* We may come back. */
 block|}
 end_function
@@ -2843,11 +2818,7 @@ operator|(
 name|cell_t
 operator|)
 literal|"exit"
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|openfirmware
 argument_list|(
@@ -2860,8 +2831,8 @@ control|(
 init|;
 condition|;
 control|)
-empty_stmt|;
 comment|/* just in case */
+empty_stmt|;
 block|}
 end_function
 
@@ -2869,134 +2840,14 @@ begin_comment
 comment|/* Free<size> bytes starting at<virt>, then call<entry> with<arg>. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__notyet__
-end_ifdef
-
-begin_function
-name|void
-name|OF_chain
-parameter_list|(
-name|void
-modifier|*
-name|virt
-parameter_list|,
-name|u_int
-name|size
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|entry
-function_decl|)
-parameter_list|()
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|,
-name|u_int
-name|len
-parameter_list|)
-block|{
-specifier|static
-struct|struct
-block|{
-name|cell_t
-name|name
-decl_stmt|;
-name|cell_t
-name|nargs
-decl_stmt|;
-name|cell_t
-name|nreturns
-decl_stmt|;
-name|cell_t
-name|virt
-decl_stmt|;
-name|cell_t
-name|size
-decl_stmt|;
-name|call_t
-name|entry
-decl_stmt|;
-name|cell_t
-name|arg
-decl_stmt|;
-name|cell_t
-name|len
-decl_stmt|;
-block|}
-name|args
-init|=
-block|{
-operator|(
-name|cell_t
-operator|)
-literal|"chain"
-block|,
-literal|5
-block|,
+begin_if
+if|#
+directive|if
 literal|0
-block|, 	}
-struct|;
-name|args
-operator|.
-name|virt
-operator|=
-operator|(
-name|cell_t
-operator|)
-name|virt
-expr_stmt|;
-name|args
-operator|.
-name|size
-operator|=
-operator|(
-name|cell_t
-operator|)
-name|size
-expr_stmt|;
-name|args
-operator|.
-name|entry
-operator|=
-operator|(
-name|cell_t
-operator|)
-name|entry
-expr_stmt|;
-name|args
-operator|.
-name|arg
-operator|=
-operator|(
-name|cell_t
-operator|)
-name|arg
-expr_stmt|;
-name|args
-operator|.
-name|len
-operator|=
-operator|(
-name|cell_t
-operator|)
-name|len
-expr_stmt|;
-name|openfirmware
-argument_list|(
-operator|&
-name|args
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_if
 
 begin_else
+unit|void OF_chain(void *virt, u_int size, void (*entry)(), void *arg, u_int len) { 	static struct { 		cell_t name; 		cell_t nargs; 		cell_t nreturns; 		cell_t virt; 		cell_t size; 		cell_t entry; 		cell_t arg; 		cell_t len; 	} args = { 		(cell_t)"chain", 		5, 	};  	args.virt = (cell_t)virt; 	args.size = size; 	args.entry = (cell_t)entry; 	args.arg = (cell_t)arg; 	args.len = len; 	openfirmware(&args); }
 else|#
 directive|else
 end_else
@@ -3044,7 +2895,7 @@ comment|/* 	 * This is a REALLY dirty hack till the firmware gets this going 	 *
 if|#
 directive|if
 literal|0
-block|OF_release(virt, size);
+block|if (size> 0) 		OF_release(virt, size);
 endif|#
 directive|endif
 name|entry
@@ -3116,9 +2967,7 @@ operator|)
 literal|"SUNW,set-trap-table"
 block|,
 literal|2
-block|,
-literal|0
-block|,         }
+block|, 	}
 struct|;
 name|args
 operator|.
@@ -3133,9 +2982,6 @@ name|args
 operator|.
 name|mmfsa_ra
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|mmfsa_ra
 expr_stmt|;
 name|openfirmware

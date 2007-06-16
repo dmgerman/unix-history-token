@@ -69,7 +69,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Initialiaser */
+comment|/* Initialiser */
 end_comment
 
 begin_function
@@ -248,11 +248,7 @@ block|,
 literal|1
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
@@ -275,16 +271,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|int
-operator|)
 name|args
 operator|.
 name|missing
+operator|)
 return|;
 block|}
 end_function
@@ -325,9 +322,7 @@ block|,
 literal|0
 block|,
 literal|1
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|openfirmware
 argument_list|(
@@ -337,11 +332,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|int
-operator|)
 name|args
 operator|.
 name|ms
+operator|)
 return|;
 block|}
 end_function
@@ -392,19 +386,12 @@ block|,
 literal|1
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
 name|node
 operator|=
-operator|(
-name|u_int
-operator|)
 name|node
 expr_stmt|;
 if|if
@@ -419,16 +406,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|phandle_t
-operator|)
 name|args
 operator|.
 name|next
+operator|)
 return|;
 block|}
 end_function
@@ -475,19 +463,12 @@ block|,
 literal|1
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
 name|node
 operator|=
-operator|(
-name|u_int
-operator|)
 name|node
 expr_stmt|;
 if|if
@@ -502,16 +483,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|phandle_t
-operator|)
 name|args
 operator|.
 name|child
+operator|)
 return|;
 block|}
 end_function
@@ -558,19 +540,12 @@ block|,
 literal|1
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
 name|node
 operator|=
-operator|(
-name|u_int
-operator|)
 name|node
 expr_stmt|;
 if|if
@@ -585,16 +560,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|phandle_t
-operator|)
 name|args
 operator|.
 name|parent
+operator|)
 return|;
 block|}
 end_function
@@ -641,19 +617,12 @@ block|,
 literal|1
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
 name|instance
 operator|=
-operator|(
-name|u_int
-operator|)
 name|instance
 expr_stmt|;
 if|if
@@ -668,16 +637,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|phandle_t
-operator|)
 name|args
 operator|.
 name|package
+operator|)
 return|;
 block|}
 end_function
@@ -731,21 +701,12 @@ block|,
 literal|2
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
 name|package
 operator|=
-operator|(
-name|u_int
-operator|)
 name|package
 expr_stmt|;
 name|args
@@ -769,16 +730,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|int
-operator|)
 name|args
 operator|.
 name|proplen
+operator|)
 return|;
 block|}
 end_function
@@ -845,25 +807,12 @@ block|,
 literal|4
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
 name|package
 operator|=
-operator|(
-name|u_int
-operator|)
 name|package
 expr_stmt|;
 name|args
@@ -888,9 +837,6 @@ name|args
 operator|.
 name|buflen
 operator|=
-operator|(
-name|u_int
-operator|)
 name|buflen
 expr_stmt|;
 if|if
@@ -905,16 +851,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|int
-operator|)
 name|args
 operator|.
 name|size
+operator|)
 return|;
 block|}
 end_function
@@ -975,23 +922,12 @@ block|,
 literal|3
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
 name|package
 operator|=
-operator|(
-name|u_int
-operator|)
 name|package
 expr_stmt|;
 name|args
@@ -1024,16 +960,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|int
-operator|)
 name|args
 operator|.
 name|flag
+operator|)
 return|;
 block|}
 end_function
@@ -1104,25 +1041,12 @@ block|,
 literal|4
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
 name|package
 operator|=
-operator|(
-name|u_int
-operator|)
 name|package
 expr_stmt|;
 name|args
@@ -1147,9 +1071,6 @@ name|args
 operator|.
 name|len
 operator|=
-operator|(
-name|u_int
-operator|)
 name|len
 expr_stmt|;
 if|if
@@ -1164,16 +1085,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|int
-operator|)
 name|args
 operator|.
 name|size
+operator|)
 return|;
 block|}
 end_function
@@ -1235,15 +1157,7 @@ block|,
 literal|3
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
@@ -1267,9 +1181,6 @@ name|args
 operator|.
 name|len
 operator|=
-operator|(
-name|cell_t
-operator|)
 name|len
 expr_stmt|;
 if|if
@@ -1284,16 +1195,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|int
-operator|)
 name|args
 operator|.
 name|size
+operator|)
 return|;
 block|}
 end_function
@@ -1342,11 +1254,7 @@ block|,
 literal|1
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
@@ -1369,16 +1277,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|phandle_t
-operator|)
 name|args
 operator|.
 name|package
+operator|)
 return|;
 block|}
 end_function
@@ -1438,23 +1347,12 @@ block|,
 literal|3
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
 name|instance
 operator|=
-operator|(
-name|u_int
-operator|)
 name|instance
 expr_stmt|;
 name|args
@@ -1470,9 +1368,6 @@ name|args
 operator|.
 name|len
 operator|=
-operator|(
-name|u_int
-operator|)
 name|len
 expr_stmt|;
 if|if
@@ -1487,16 +1382,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|int
-operator|)
 name|args
 operator|.
 name|size
+operator|)
 return|;
 block|}
 end_function
@@ -1556,23 +1452,12 @@ block|,
 literal|3
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
 name|package
 operator|=
-operator|(
-name|u_int
-operator|)
 name|package
 expr_stmt|;
 name|args
@@ -1588,9 +1473,6 @@ name|args
 operator|.
 name|len
 operator|=
-operator|(
-name|u_int
-operator|)
 name|len
 expr_stmt|;
 if|if
@@ -1605,16 +1487,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|int
-operator|)
 name|args
 operator|.
 name|size
+operator|)
 return|;
 block|}
 end_function
@@ -1682,37 +1565,7 @@ block|,
 literal|2
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|}
+block|, 	}
 struct|;
 name|int
 modifier|*
@@ -1727,8 +1580,10 @@ operator|>
 literal|6
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|args
 operator|.
@@ -1759,9 +1614,6 @@ name|args
 operator|.
 name|instance
 operator|=
-operator|(
-name|u_int
-operator|)
 name|instance
 expr_stmt|;
 name|va_start
@@ -1820,8 +1672,10 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -1834,14 +1688,13 @@ index|]
 condition|)
 return|return
 operator|(
-name|int
-operator|)
 name|args
 operator|.
 name|args_n_results
 index|[
 name|nargs
 index|]
+operator|)
 return|;
 for|for
 control|(
@@ -1892,13 +1745,15 @@ name|ap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Device I/O functions.  */
+comment|/*  * Device I/O functions  */
 end_comment
 
 begin_comment
@@ -1944,11 +1799,7 @@ block|,
 literal|1
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
@@ -1978,17 +1829,18 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 return|return
 operator|(
-name|ihandle_t
-operator|)
 name|args
 operator|.
 name|instance
+operator|)
 return|;
 block|}
 end_function
@@ -2030,19 +1882,12 @@ operator|)
 literal|"close"
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
 name|instance
 operator|=
-operator|(
-name|u_int
-operator|)
 name|instance
 expr_stmt|;
 name|openfirmware
@@ -2109,23 +1954,12 @@ block|,
 literal|3
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
 name|instance
 operator|=
-operator|(
-name|u_int
-operator|)
 name|instance
 expr_stmt|;
 name|args
@@ -2141,9 +1975,6 @@ name|args
 operator|.
 name|len
 operator|=
-operator|(
-name|u_int
-operator|)
 name|len
 expr_stmt|;
 if|#
@@ -2183,8 +2014,10 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|#
 directive|if
@@ -2217,11 +2050,10 @@ endif|#
 directive|endif
 return|return
 operator|(
-name|int
-operator|)
 name|args
 operator|.
 name|actual
+operator|)
 return|;
 block|}
 end_function
@@ -2281,23 +2113,12 @@ block|,
 literal|3
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
 name|instance
 operator|=
-operator|(
-name|u_int
-operator|)
 name|instance
 expr_stmt|;
 name|args
@@ -2313,9 +2134,6 @@ name|args
 operator|.
 name|len
 operator|=
-operator|(
-name|u_int
-operator|)
 name|len
 expr_stmt|;
 if|if
@@ -2330,16 +2148,17 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|int
-operator|)
 name|args
 operator|.
 name|actual
+operator|)
 return|;
 block|}
 end_function
@@ -2395,23 +2214,12 @@ block|,
 literal|3
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
 name|instance
 operator|=
-operator|(
-name|u_int
-operator|)
 name|instance
 expr_stmt|;
 name|args
@@ -2440,22 +2248,23 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|int
-operator|)
 name|args
 operator|.
 name|status
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Memory functions.  */
+comment|/*  * Memory functions  */
 end_comment
 
 begin_comment
@@ -2514,15 +2323,7 @@ block|,
 literal|3
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
@@ -2558,13 +2359,16 @@ literal|1
 condition|)
 return|return
 operator|(
+operator|(
 name|void
 operator|*
 operator|)
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 operator|(
 name|void
 operator|*
@@ -2572,6 +2376,7 @@ operator|)
 name|args
 operator|.
 name|baseaddr
+operator|)
 return|;
 block|}
 end_function
@@ -2644,19 +2449,6 @@ operator|(
 name|cell_t
 operator|)
 literal|"claim"
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* ret */
-literal|0
 block|, 	}
 struct|;
 name|args
@@ -2681,6 +2473,9 @@ name|args
 operator|.
 name|virt
 operator|=
+operator|(
+name|cell_t
+operator|)
 name|virt
 expr_stmt|;
 if|if
@@ -2696,18 +2491,16 @@ literal|1
 condition|)
 return|return
 operator|(
-name|vm_offset_t
-operator|)
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
-name|vm_offset_t
-operator|)
 name|args
 operator|.
 name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -2778,19 +2571,6 @@ operator|(
 name|cell_t
 operator|)
 literal|"claim"
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* ret */
-literal|0
-block|,
-literal|0
 block|, 	}
 struct|;
 name|args
@@ -2824,13 +2604,16 @@ literal|1
 condition|)
 return|return
 operator|(
+operator|(
 name|void
 operator|*
 operator|)
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 operator|(
 name|void
 operator|*
@@ -2845,6 +2628,7 @@ operator||
 name|args
 operator|.
 name|phys_low
+operator|)
 operator|)
 return|;
 block|}
@@ -2894,13 +2678,7 @@ operator|)
 literal|"release"
 block|,
 literal|2
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
@@ -2985,15 +2763,7 @@ operator|(
 name|cell_t
 operator|)
 literal|"release"
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
@@ -3005,22 +2775,14 @@ name|args
 operator|.
 name|phys_hi
 operator|=
-call|(
-name|u_int32_t
-call|)
-argument_list|(
 name|phys
 operator|>>
 literal|32
-argument_list|)
 expr_stmt|;
 name|args
 operator|.
 name|phys_lo
 operator|=
-operator|(
-name|u_int32_t
-operator|)
 name|phys
 expr_stmt|;
 name|args
@@ -3039,7 +2801,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Control transfer functions.  */
+comment|/*  * Control transfer functions  */
 end_comment
 
 begin_comment
@@ -3080,11 +2842,7 @@ operator|)
 literal|"boot"
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|args
 operator|.
@@ -3106,8 +2864,8 @@ control|(
 init|;
 condition|;
 control|)
-empty_stmt|;
 comment|/* just in case */
+empty_stmt|;
 block|}
 end_function
 
@@ -3140,11 +2898,7 @@ operator|(
 name|cell_t
 operator|)
 literal|"enter"
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|openfirmware
 argument_list|(
@@ -3152,6 +2906,7 @@ operator|&
 name|args
 argument_list|)
 expr_stmt|;
+comment|/* We may come back. */
 block|}
 end_function
 
@@ -3184,11 +2939,7 @@ operator|(
 name|cell_t
 operator|)
 literal|"exit"
-block|,
-literal|0
-block|,
-literal|0
-block|}
+block|, 	}
 struct|;
 name|openfirmware
 argument_list|(
@@ -3201,8 +2952,8 @@ control|(
 init|;
 condition|;
 control|)
-empty_stmt|;
 comment|/* just in case */
+empty_stmt|;
 block|}
 end_function
 
@@ -3217,7 +2968,7 @@ literal|0
 end_if
 
 begin_else
-unit|void OF_chain(void *virt, u_int size, void (*entry)(), void *arg, u_int len) { 	static struct { 		cell_t	name; 		cell_t	nargs; 		cell_t	nreturns; 		cell_t	virt; 		cell_t	size; 		cell_t	entry; 		cell_t	arg; 		cell_t	len; 	} args = { 		(cell_t)"chain", 		5, 		0, 		0, 		0, 		0, 		0, 		0 	};  	args.virt = (cell_t)virt; 	args.size = size; 	args.entry = (cell_t)entry; 	args.arg = (cell_t)arg; 	args.len = len; 	openfirmware(&args); }
+unit|void OF_chain(void *virt, u_int size, void (*entry)(), void *arg, u_int len) { 	static struct { 		cell_t name; 		cell_t nargs; 		cell_t nreturns; 		cell_t virt; 		cell_t size; 		cell_t entry; 		cell_t arg; 		cell_t len; 	} args = { 		(cell_t)"chain", 		5, 	};  	args.virt = (cell_t)virt; 	args.size = size; 	args.entry = (cell_t)entry; 	args.arg = (cell_t)arg; 	args.len = len; 	openfirmware(&args); }
 else|#
 directive|else
 end_else
