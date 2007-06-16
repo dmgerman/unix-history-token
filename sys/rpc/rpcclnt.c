@@ -5081,6 +5081,44 @@ argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This can happen if the auth_type is neither UNIX or NULL 	 */
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|__OpenBSD__
+name|pool_put
+argument_list|(
+operator|&
+name|rpctask_pool
+argument_list|,
+name|task
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|FREE
+argument_list|(
+name|task
+argument_list|,
+name|M_RPC
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|error
+operator|=
+name|EPROTONOSUPPORT
+expr_stmt|;
+goto|goto
+name|rpcmout
+goto|;
+block|}
 comment|/* 	 * For stream protocols, insert a Sun RPC Record Mark. 	 */
 if|if
 condition|(
@@ -7982,6 +8020,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|m_freem
+argument_list|(
+name|mreq
+argument_list|)
+expr_stmt|;
 name|RPCDEBUG
 argument_list|(
 literal|"rpcauth_buildheader failed %d"
