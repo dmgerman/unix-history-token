@@ -136,7 +136,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fb/gallant12x22.h>
+file|<dev/fb/gfb.h>
 end_include
 
 begin_include
@@ -292,6 +292,7 @@ decl_stmt|;
 name|int
 name|sc_mclk_fb_div
 decl_stmt|;
+specifier|const
 name|u_char
 modifier|*
 name|sc_font
@@ -1029,6 +1030,15 @@ literal|"WRAM"
 block|,
 literal|"(unknown type)"
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|gfb_font
+name|gallant12x22
 decl_stmt|;
 end_decl_stmt
 
@@ -3069,13 +3079,17 @@ name|vi
 operator|->
 name|vi_cwidth
 operator|=
-literal|12
+name|gallant12x22
+operator|.
+name|width
 expr_stmt|;
 name|vi
 operator|->
 name|vi_cheight
 operator|=
-literal|22
+name|gallant12x22
+operator|.
+name|height
 expr_stmt|;
 name|vi
 operator|->
@@ -3093,7 +3107,9 @@ name|sc
 operator|->
 name|sc_font
 operator|=
-name|gallant12x22_data
+name|gallant12x22
+operator|.
+name|data
 expr_stmt|;
 name|sc
 operator|->
@@ -3105,7 +3121,7 @@ name|vi
 operator|->
 name|vi_cwidth
 argument_list|,
-literal|8
+name|NBBY
 argument_list|)
 expr_stmt|;
 comment|/* width in bytes */
@@ -5348,6 +5364,7 @@ name|machfb_softc
 modifier|*
 name|sc
 decl_stmt|;
+specifier|const
 name|uint8_t
 modifier|*
 name|p
