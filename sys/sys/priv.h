@@ -2447,7 +2447,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Privilege check interfaces, modeled after historic suser() interfacs, but  * with the addition of a specific privilege name.  The existing SUSER_* flag  * name space is used here.  The jail flag will likely be something that can  * be removed at some point as jail itself will be able to decide if the priv  * is appropriate, rather than the caller.  */
+comment|/*  * Privilege check interfaces, modeled after historic suser() interfacs, but  * with the addition of a specific privilege name.  No flags are currently  * defined for the API.  Historically, flags specified using the real uid  * instead of the effective uid, and whether or not the check should be  * allowed in jail.  */
 end_comment
 
 begin_struct_decl
@@ -2525,17 +2525,6 @@ name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * For historical reasons, flags to priv_check_cred() retain the SUSER_  * prefix.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SUSER_RUID
-value|2
-end_define
 
 begin_endif
 endif|#

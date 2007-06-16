@@ -138,6 +138,7 @@ name|priv
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We first evaluate policies that may deny the granting of 	 * privilege unilaterally. 	 */
 ifdef|#
 directive|ifdef
 name|MAC
@@ -180,19 +181,26 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Having determined if privilege is restricted by various policies, 	 * now determine if privilege is granted.  For now, we allow 	 * short-circuit boolean evaluation, so may not call all policies. 	 * Perhaps we should. 	 * 	 * Superuser policy grants privilege based on the effective (or in 	 * certain edge cases, real) uid being 0.  We allow the policy to be 	 * globally disabled, although this is currently of limited utility. 	 */
+comment|/* 	 * Having determined if privilege is restricted by various policies, 	 * now determine if privilege is granted.  At this point, any policy 	 * may grant privilege.  For now, we allow short-circuit boolean 	 * evaluation, so may not call all policies.  Perhaps we should. 	 * 	 * Superuser policy grants privilege based on the effective (or in 	 * the case of specific privileges, real) uid being 0.  We allow the 	 * superuser policy to be globally disabled, although this is 	 * currenty of limited utility. 	 */
 if|if
 condition|(
 name|suser_enabled
 condition|)
 block|{
-if|if
+switch|switch
 condition|(
-name|flags
-operator|&
-name|SUSER_RUID
+name|priv
 condition|)
 block|{
+case|case
+name|PRIV_MAXFILES
+case|:
+case|case
+name|PRIV_MAXPROC
+case|:
+case|case
+name|PRIV_PROC_LIMIT
+case|:
 if|if
 condition|(
 name|cred
@@ -206,9 +214,8 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-else|else
-block|{
+break|break;
+default|default:
 if|if
 condition|(
 name|cred
@@ -222,6 +229,7 @@ operator|(
 literal|0
 operator|)
 return|;
+break|break;
 block|}
 block|}
 comment|/* 	 * Now check with MAC, if enabled, to see if a policy module grants 	 * privilege. 	 */

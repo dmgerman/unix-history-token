@@ -1146,7 +1146,7 @@ name|td_ucred
 argument_list|,
 name|PRIV_MAXPROC
 argument_list|,
-name|SUSER_RUID
+literal|0
 argument_list|)
 operator|!=
 literal|0
@@ -1176,7 +1176,7 @@ name|td_ucred
 argument_list|,
 name|PRIV_PROC_LIMIT
 argument_list|,
-name|SUSER_RUID
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

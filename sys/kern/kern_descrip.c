@@ -6073,15 +6073,11 @@ name|openfiles
 operator|>=
 name|maxuserfiles
 operator|&&
-name|priv_check_cred
+name|priv_check
 argument_list|(
 name|td
-operator|->
-name|td_ucred
 argument_list|,
 name|PRIV_MAXFILES
-argument_list|,
-name|SUSER_RUID
 argument_list|)
 operator|!=
 literal|0
