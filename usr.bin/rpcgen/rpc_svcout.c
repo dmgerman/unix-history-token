@@ -573,15 +573,11 @@ block|}
 comment|/* write out dispatcher and stubs */
 name|write_programs
 argument_list|(
-name|nomain
-condition|?
 operator|(
 name|char
 operator|*
 operator|)
 name|NULL
-else|:
-literal|"static"
 argument_list|)
 expr_stmt|;
 if|if
