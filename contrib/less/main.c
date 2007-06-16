@@ -593,6 +593,15 @@ expr_stmt|;
 name|init_prompt
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|less_is_more
+condition|)
+name|scan_option
+argument_list|(
+literal|"-fG"
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|lgetenv
