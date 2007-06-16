@@ -129,6 +129,23 @@ directive|include
 file|"dev_net.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|bootprog_name
+index|[]
+decl_stmt|,
+name|bootprog_rev
+index|[]
+decl_stmt|,
+name|bootprog_date
+index|[]
+decl_stmt|,
+name|bootprog_maker
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_enum
 enum|enum
 block|{
@@ -149,20 +166,7 @@ enum|;
 end_enum
 
 begin_struct
-struct|struct
-name|memory_slice
-block|{
-name|vm_offset_t
-name|pstart
-decl_stmt|;
-name|vm_offset_t
-name|size
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
+specifier|static
 struct|struct
 name|mmu_ops
 block|{
@@ -283,6 +287,60 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|sparc64_autoload
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|ssize_t
+name|sparc64_readin
+parameter_list|(
+specifier|const
+name|int
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+specifier|const
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|ssize_t
+name|sparc64_copyin
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|sparc64_maphint
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|__elfN
 function_decl|(
 name|exec
@@ -298,16 +356,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|sparc64_autoload
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|mmu_mapin_sun4u
 parameter_list|(
 name|vm_offset_t
@@ -325,6 +373,16 @@ parameter_list|(
 name|vm_offset_t
 parameter_list|,
 name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|vm_offset_t
+name|init_heap
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -350,6 +408,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mmu_ops
 name|mmu_ops_sun4u
@@ -363,6 +422,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mmu_ops
 name|mmu_ops_sun4v
@@ -372,23 +432,6 @@ name|tlb_init_sun4v
 block|,
 name|mmu_mapin_sun4v
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|bootprog_name
-index|[]
-decl_stmt|,
-name|bootprog_rev
-index|[]
-decl_stmt|,
-name|bootprog_date
-index|[]
-decl_stmt|,
-name|bootprog_maker
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -425,12 +468,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dtlb_slot_max
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|itlb_slot_max
 decl_stmt|;
@@ -441,6 +486,7 @@ comment|/* sun4v */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|tlb_entry
 modifier|*
@@ -449,6 +495,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|is_sun4v
 init|=
@@ -457,7 +504,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * no direct TLB access on sun4v  * we somewhat arbitrarily declare enough   * slots to cover a 4GB AS with 4MB pages  */
+comment|/*  * no direct TLB access on sun4v  * we somewhat arbitrarily declare enough  * slots to cover a 4GB AS with 4MB pages  */
 end_comment
 
 begin_define
@@ -468,63 +515,7 @@ value|(1<< 10)
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|char
-name|bootprog_name
-index|[]
-decl_stmt|,
-name|bootprog_rev
-index|[]
-decl_stmt|,
-name|bootprog_date
-index|[]
-decl_stmt|,
-name|bootprog_maker
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|tlb_entry
-modifier|*
-name|dtlb_store
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|tlb_entry
-modifier|*
-name|itlb_store
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|dtlb_slot
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|itlb_slot
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|dtlb_slot_max
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|itlb_slot_max
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|vm_offset_t
 name|curkva
 init|=
@@ -533,6 +524,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|vm_offset_t
 name|heapva
 decl_stmt|;
@@ -547,16 +539,6 @@ end_decl_stmt
 begin_comment
 comment|/* OFW memory handle */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|memory_slice
-name|memslices
-index|[
-literal|18
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Machine dependent structures that the machine independent  * loader part uses.  */
@@ -599,6 +581,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|file_format
 name|sparc64_elf
@@ -1066,7 +1049,9 @@ literal|"nothing to autoload yet.\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1098,6 +1083,7 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|read
 argument_list|(
 name|fd
@@ -1110,6 +1096,7 @@ name|va
 argument_list|,
 name|len
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1154,7 +1141,9 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|len
+operator|)
 return|;
 block|}
 end_function
@@ -1312,7 +1301,6 @@ operator|+
 name|i
 operator|)
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"can't claim virtual page "
@@ -1323,7 +1311,6 @@ argument_list|,
 name|mva
 argument_list|)
 expr_stmt|;
-block|}
 name|tlb_store
 index|[
 name|mva
@@ -1435,11 +1422,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
+operator|(
 name|EFTYPE
+operator|)
 return|;
-block|}
 name|e
 operator|=
 operator|(
@@ -1470,7 +1457,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|printf
 argument_list|(
@@ -1673,7 +1662,6 @@ name|mva
 operator|!=
 name|va
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"can't claim virtual page "
@@ -1684,7 +1672,6 @@ argument_list|,
 name|mva
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* The mappings may have changed, be paranoid. */
 continue|continue;
 block|}
@@ -1697,7 +1684,9 @@ name|dtlb_slot_max
 condition|)
 name|panic
 argument_list|(
-literal|"mmu_mapin: out of dtlb_slots"
+literal|"%s: out of dtlb_slots"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -1708,7 +1697,9 @@ name|itlb_slot_max
 condition|)
 name|panic
 argument_list|(
-literal|"mmu_mapin: out of itlb_slots"
+literal|"%s: out of itlb_slots"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|data
@@ -1830,7 +1821,9 @@ name|PAGE_SIZE_4M
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1985,7 +1978,6 @@ name|mva
 operator|!=
 name|va
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"can't claim virtual page "
@@ -1996,7 +1988,6 @@ argument_list|,
 name|mva
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|tlb_store
 index|[
@@ -2078,7 +2069,9 @@ name|PAGE_SIZE_4M
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2152,7 +2145,9 @@ literal|32
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|heapva
+operator|)
 return|;
 block|}
 end_function
@@ -2211,7 +2206,9 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"main: OF_peer"
+literal|"%s: OF_peer"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 for|for
@@ -2244,7 +2241,9 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"main: OF_child"
+literal|"%s: OF_child"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -2315,7 +2314,9 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"main: OF_getprop"
+literal|"%s: OF_getprop"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -2335,7 +2336,9 @@ name|bootcpu
 condition|)
 name|panic
 argument_list|(
-literal|"init_tlb: no node for bootcpu?!?!"
+literal|"%s: no node for bootcpu?!?!"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -2378,7 +2381,9 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"init_tlb: OF_getprop"
+literal|"%s: OF_getprop"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|dtlb_store
@@ -2419,7 +2424,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"init_tlb: malloc"
+literal|"%s: malloc"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -2803,7 +2810,9 @@ name|interact
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -2920,6 +2929,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
