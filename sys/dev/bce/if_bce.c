@@ -995,6 +995,18 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|bce_dump_bc_state
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|bce_breakpoint
 parameter_list|(
 name|struct
@@ -1917,6 +1929,17 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|bce_pulse
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|bce_add_sysctls
 parameter_list|(
 name|struct
@@ -2571,19 +2594,6 @@ name|t
 operator|++
 expr_stmt|;
 block|}
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_VERBOSE_LOAD
-argument_list|,
-literal|"%s(%d): No IOCTL match found!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -2857,9 +2867,9 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_VERBOSE_LOAD
 argument_list|,
-literal|"Allocating %d MSI interrupt(s).\n"
+literal|"Allocating %d MSI interrupt(s)\n"
 argument_list|,
 name|count
 argument_list|)
@@ -2875,9 +2885,9 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_VERBOSE_LOAD
 argument_list|,
-literal|"Allocating IRQ interrupt.\n"
+literal|"Allocating IRQ interrupt\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3099,15 +3109,90 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_VERBOSE_FIRMWARE
 argument_list|,
-literal|"bce_shmem_base = 0x%08X\n"
+literal|"%s(): bce_shmem_base = 0x%08X\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|sc
 operator|->
 name|bce_shmem_base
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|bce_fw_ver
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|bce_shmem_base
+operator|+
+name|BCE_DEV_INFO_BC_REV
+argument_list|)
+expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO_FIRMWARE
+argument_list|,
+literal|"%s(): bce_fw_ver = 0x%08X\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|sc
+operator|->
+name|bce_fw_ver
+argument_list|)
+expr_stmt|;
+comment|/* Check if any management firmware is running. */
+name|val
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|bce_shmem_base
+operator|+
+name|BCE_PORT_FEATURE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|val
+operator|&
+operator|(
+name|BCE_PORT_FEATURE_ASF_ENABLED
+operator||
+name|BCE_PORT_FEATURE_IMD_ENABLED
+operator|)
+condition|)
+block|{
+name|sc
+operator|->
+name|bce_flags
+operator||=
+name|BCE_MFW_ENABLE_FLAG
+expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO_LOAD
+argument_list|,
+literal|"%s(): BCE_MFW_ENABLE_FLAG\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Get PCI bus information (speed and type). */
 name|val
 operator|=
@@ -3250,76 +3335,7 @@ name|bce_flags
 operator||=
 name|BCE_PCI_32BIT_FLAG
 expr_stmt|;
-name|BCE_PRINTF
-argument_list|(
-literal|"ASIC ID 0x%08X; Revision (%c%d); PCI%s %s %dMHz\n"
-argument_list|,
-name|sc
-operator|->
-name|bce_chipid
-argument_list|,
-operator|(
-operator|(
-name|BCE_CHIP_ID
-argument_list|(
-name|sc
-argument_list|)
-operator|&
-literal|0xf000
-operator|)
-operator|>>
-literal|12
-operator|)
-operator|+
-literal|'A'
-argument_list|,
-operator|(
-operator|(
-name|BCE_CHIP_ID
-argument_list|(
-name|sc
-argument_list|)
-operator|&
-literal|0x0ff0
-operator|)
-operator|>>
-literal|4
-operator|)
-argument_list|,
-operator|(
-operator|(
-name|sc
-operator|->
-name|bce_flags
-operator|&
-name|BCE_PCIX_FLAG
-operator|)
-condition|?
-literal|"-X"
-else|:
-literal|""
-operator|)
-argument_list|,
-operator|(
-operator|(
-name|sc
-operator|->
-name|bce_flags
-operator|&
-name|BCE_PCI_32BIT_FLAG
-operator|)
-condition|?
-literal|"32-bit"
-else|:
-literal|"64-bit"
-operator|)
-argument_list|,
-name|sc
-operator|->
-name|bus_speed_mhz
-argument_list|)
-expr_stmt|;
-comment|/* Reset the controller. */
+comment|/* Reset the controller and announce to bootcde that driver is present. */
 if|if
 condition|(
 name|bce_reset
@@ -3330,6 +3346,15 @@ name|BCE_DRV_MSG_CODE_RESET
 argument_list|)
 condition|)
 block|{
+name|BCE_PRINTF
+argument_list|(
+literal|"%s(%d): Controller reset failed!\n"
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
 name|rc
 operator|=
 name|ENXIO
@@ -3396,10 +3421,10 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Trip points control how many BDs 	 * should be ready before generating an 	 * interrupt while ticks control how long 	 * a BD can sit in the chain before 	 * generating an interrupt.  Set the default  	 * values for the RX and TX rings. 	 */
+comment|/* 	 * Trip points control how many BDs 	 * should be ready before generating an 	 * interrupt while ticks control how long 	 * a BD can sit in the chain before 	 * generating an interrupt.  Set the default  	 * values for the RX and TX chains. 	 */
 ifdef|#
 directive|ifdef
-name|BCE_DRBUG
+name|BCE_DEBUG
 comment|/* Force more frequent interrupts. */
 name|sc
 operator|->
@@ -3451,6 +3476,7 @@ literal|0
 expr_stmt|;
 else|#
 directive|else
+comment|/* Improve throughput at the expense of increased latency. */
 name|sc
 operator|->
 name|bce_tx_quick_cons_trip_int
@@ -3585,7 +3611,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_WARN
+name|BCE_INFO_LOAD
 argument_list|,
 literal|"Found 2.5Gb capable adapter\n"
 argument_list|)
@@ -3593,7 +3619,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Store config data needed by the PHY driver for backplane applications */
+comment|/* Store data needed by PHY driver for backplane applications */
 name|sc
 operator|->
 name|bce_shared_hw_cfg
@@ -3813,6 +3839,28 @@ name|ifq_drv_maxlen
 operator|=
 name|USABLE_TX_BD
 expr_stmt|;
+name|IFQ_SET_MAXLEN
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|,
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_drv_maxlen
+argument_list|)
+expr_stmt|;
+name|IFQ_SET_READY
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -3840,29 +3888,7 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-name|IFQ_SET_MAXLEN
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|,
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_drv_maxlen
-argument_list|)
-expr_stmt|;
-name|IFQ_SET_READY
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|)
-expr_stmt|;
-comment|/* Look for our PHY. */
+comment|/* Check for an MII child bus by probing the PHY. */
 if|if
 condition|(
 name|mii_phy_probe
@@ -3882,7 +3908,7 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): PHY probe failed!\n"
+literal|"%s(%d): No PHY found on child MII bus!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -3917,7 +3943,15 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|bce_stat_ch
+name|bce_tick_callout
+argument_list|)
+expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|bce_pulse_callout
 argument_list|)
 expr_stmt|;
 else|#
@@ -3927,7 +3961,22 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|bce_stat_ch
+name|bce_tick_callout
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|bce_mtx
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|callout_init_mtx
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|bce_pulse_callout
 argument_list|,
 operator|&
 name|sc
@@ -3989,6 +4038,7 @@ goto|goto
 name|bce_attach_exit
 goto|;
 block|}
+comment|/*  	 * At this point we've acquired all the resources  	 * we need to run so there's no turning back, we're 	 * cleared for launch. 	 */
 comment|/* Print some important debugging info. */
 name|DBRUN
 argument_list|(
@@ -4006,8 +4056,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Get the firmware running so IPMI still works */
 name|BCE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/*  	 * The chip reset earlier notified the bootcode that 	 * a driver is present.  We now need to start our pulse 	 * routine so that the bootcode is reminded that we're 	 * still running. 	 */
+name|bce_pulse
 argument_list|(
 name|sc
 argument_list|)
@@ -4020,6 +4075,139 @@ expr_stmt|;
 name|BCE_UNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Finally, print some useful adapter info */
+name|BCE_PRINTF
+argument_list|(
+literal|"ASIC (0x%08X); "
+argument_list|,
+name|sc
+operator|->
+name|bce_chipid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Rev (%c%d); "
+argument_list|,
+operator|(
+operator|(
+name|BCE_CHIP_ID
+argument_list|(
+name|sc
+argument_list|)
+operator|&
+literal|0xf000
+operator|)
+operator|>>
+literal|12
+operator|)
+operator|+
+literal|'A'
+argument_list|,
+operator|(
+operator|(
+name|BCE_CHIP_ID
+argument_list|(
+name|sc
+argument_list|)
+operator|&
+literal|0x0ff0
+operator|)
+operator|>>
+literal|4
+operator|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Bus (PCI%s, %s, %dMHz); "
+argument_list|,
+operator|(
+operator|(
+name|sc
+operator|->
+name|bce_flags
+operator|&
+name|BCE_PCIX_FLAG
+operator|)
+condition|?
+literal|"-X"
+else|:
+literal|""
+operator|)
+argument_list|,
+operator|(
+operator|(
+name|sc
+operator|->
+name|bce_flags
+operator|&
+name|BCE_PCI_32BIT_FLAG
+operator|)
+condition|?
+literal|"32-bit"
+else|:
+literal|"64-bit"
+operator|)
+argument_list|,
+name|sc
+operator|->
+name|bus_speed_mhz
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"F/W (0x%08X); Flags( "
+argument_list|,
+name|sc
+operator|->
+name|bce_fw_ver
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|bce_flags
+operator|&
+name|BCE_MFW_ENABLE_FLAG
+condition|)
+name|printf
+argument_list|(
+literal|"MFW "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|bce_flags
+operator|&
+name|BCE_USING_MSI_FLAG
+condition|)
+name|printf
+argument_list|(
+literal|"MSI "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|bce_phy_flags
+operator|&
+name|BCE_PHY_2_5G_CAPABLE_FLAG
+condition|)
+name|printf
+argument_list|(
+literal|"2.5G "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|")\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4098,19 +4286,20 @@ name|struct
 name|bce_softc
 modifier|*
 name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
+name|u32
+name|msg
+decl_stmt|;
 name|DBPRINT
 argument_list|(
 name|sc
@@ -4146,6 +4335,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Stop the pulse so the bootcode can go to driver absent state. */
+name|callout_stop
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|bce_pulse_callout
+argument_list|)
+expr_stmt|;
 comment|/* Stop and reset the controller. */
 name|BCE_LOCK
 argument_list|(
@@ -4157,11 +4355,28 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|bce_flags
+operator|&
+name|BCE_NO_WOL_FLAG
+condition|)
+name|msg
+operator|=
+name|BCE_DRV_MSG_CODE_UNLOAD_LNK_DN
+expr_stmt|;
+else|else
+name|msg
+operator|=
+name|BCE_DRV_MSG_CODE_UNLOAD
+expr_stmt|;
 name|bce_reset
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_DRV_MSG_CODE_RESET
+name|msg
 argument_list|)
 expr_stmt|;
 name|BCE_UNLOCK
@@ -4265,6 +4480,20 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|u32
+name|msg
+decl_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_VERBOSE_SPECIAL
+argument_list|,
+literal|"Entering %s()\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 name|BCE_LOCK
 argument_list|(
 name|sc
@@ -4275,16 +4504,44 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|bce_flags
+operator|&
+name|BCE_NO_WOL_FLAG
+condition|)
+name|msg
+operator|=
+name|BCE_DRV_MSG_CODE_UNLOAD_LNK_DN
+expr_stmt|;
+else|else
+name|msg
+operator|=
+name|BCE_DRV_MSG_CODE_UNLOAD
+expr_stmt|;
 name|bce_reset
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_DRV_MSG_CODE_RESET
+name|msg
 argument_list|)
 expr_stmt|;
 name|BCE_UNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_VERBOSE_SPECIAL
+argument_list|,
+literal|"Exiting %s()\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 block|}
@@ -4702,7 +4959,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE
+name|BCE_EXCESSIVE_PHY
 argument_list|,
 literal|"Invalid PHY address %d for PHY read!\n"
 argument_list|,
@@ -5046,7 +5303,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE
+name|BCE_EXCESSIVE_PHY
 argument_list|,
 literal|"Invalid PHY address %d for PHY write!\n"
 argument_list|,
@@ -5455,7 +5712,7 @@ name|sc
 argument_list|,
 name|BCE_INFO
 argument_list|,
-literal|"Enablinb GMII interface.\n"
+literal|"Enabling GMII interface.\n"
 argument_list|)
 expr_stmt|;
 name|val
@@ -5464,6 +5721,15 @@ name|BCE_EMAC_MODE_PORT_GMII
 expr_stmt|;
 break|break;
 default|default:
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO
+argument_list|,
+literal|"Enabling default GMII interface.\n"
+argument_list|)
+expr_stmt|;
 name|val
 operator||=
 name|BCE_EMAC_MODE_PORT_GMII
@@ -5519,7 +5785,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* Todo: Enable this support in brgphy and bge. */
+comment|/* Todo: Enable flow control support in brgphy and bge. */
 comment|/* FLAG0 is set if RX is enabled and FLAG1 if TX is enabled */
 block|if (mii->mii_media_active& IFM_FLAG0) 		BCE_SETBIT(sc, BCE_EMAC_RX_MODE, BCE_EMAC_RX_MODE_FLOW_EN); 	if (mii->mii_media_active& IFM_FLAG1) 		BCE_SETBIT(sc, BCE_EMAC_RX_MODE, BCE_EMAC_TX_MODE_FLOW_EN);
 endif|#
@@ -5588,7 +5854,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE
+name|BCE_VERBOSE_NVRAM
 argument_list|,
 literal|"Acquiring NVRAM lock.\n"
 argument_list|)
@@ -5726,7 +5992,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE
+name|BCE_VERBOSE_NVRAM
 argument_list|,
 literal|"Releasing NVRAM lock.\n"
 argument_list|)
@@ -5862,7 +6128,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE
+name|BCE_VERBOSE_NVRAM
 argument_list|,
 literal|"Enabling NVRAM write.\n"
 argument_list|)
@@ -6037,7 +6303,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE
+name|BCE_VERBOSE_NVRAM
 argument_list|,
 literal|"Disabling NVRAM write.\n"
 argument_list|)
@@ -6125,7 +6391,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE
+name|BCE_VERBOSE_NVRAM
 argument_list|,
 literal|"Enabling NVRAM access.\n"
 argument_list|)
@@ -6206,7 +6472,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE
+name|BCE_VERBOSE_NVRAM
 argument_list|,
 literal|"Disabling NVRAM access.\n"
 argument_list|)
@@ -6318,7 +6584,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE
+name|BCE_VERBOSE_NVRAM
 argument_list|,
 literal|"Erasing NVRAM page.\n"
 argument_list|)
@@ -6999,7 +7265,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE_RESET
+name|BCE_VERBOSE_NVRAM
 argument_list|,
 literal|"Entering %s()\n"
 argument_list|,
@@ -7355,7 +7621,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE_RESET
+name|BCE_VERBOSE_NVRAM
 argument_list|,
 literal|"Exiting %s()\n"
 argument_list|,
@@ -11193,7 +11459,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE
+name|BCE_VERBOSE_FIRMWARE
 argument_list|,
 literal|"bce_fw_sync(): msg_data = 0x%08X\n"
 argument_list|,
@@ -13407,7 +13673,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_MISC
 argument_list|,
 literal|"Permanent Ethernet address = %6D\n"
 argument_list|,
@@ -13471,7 +13737,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_MISC
 argument_list|,
 literal|"Setting Ethernet address = %6D\n"
 argument_list|,
@@ -13646,7 +13912,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|bce_stat_ch
+name|bce_tick_callout
 argument_list|)
 expr_stmt|;
 comment|/* Disable the transmit/receive blocks. */
@@ -13676,14 +13942,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Tell firmware that the driver is going away. */
-name|bce_reset
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_DRV_MSG_CODE_SUSPEND_NO_WOL
-argument_list|)
-expr_stmt|;
 comment|/* Free the RX lists. */
 name|bce_free_rx_chain
 argument_list|(
@@ -13709,7 +13967,7 @@ name|if_flags
 operator||=
 name|IFF_UP
 expr_stmt|;
-comment|/* 	 * If we are called from bce_detach(), mii is already NULL. 	 */
+comment|/* If we are called from bce_detach(), mii is already NULL. */
 if|if
 condition|(
 name|mii
@@ -13791,11 +14049,6 @@ argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
-name|bce_mgmt_init_locked
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -13829,9 +14082,11 @@ name|sc
 argument_list|,
 name|BCE_VERBOSE_RESET
 argument_list|,
-literal|"Entering %s()\n"
+literal|"%s(): reset_code = 0x%08X\n"
 argument_list|,
 name|__FUNCTION__
+argument_list|,
+name|reset_code
 argument_list|)
 expr_stmt|;
 comment|/* Wait for pending PCI transactions to complete. */
@@ -14076,17 +14331,6 @@ argument_list|)
 expr_stmt|;
 name|bce_reset_exit
 label|:
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_VERBOSE_RESET
-argument_list|,
-literal|"Exiting %s()\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|rc
@@ -14914,75 +15158,6 @@ goto|goto
 name|bce_blockinit_exit
 goto|;
 block|}
-comment|/* Check if any management firmware is running. */
-name|reg
-operator|=
-name|REG_RD_IND
-argument_list|(
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|bce_shmem_base
-operator|+
-name|BCE_PORT_FEATURE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|reg
-operator|&
-operator|(
-name|BCE_PORT_FEATURE_ASF_ENABLED
-operator||
-name|BCE_PORT_FEATURE_IMD_ENABLED
-operator|)
-condition|)
-block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_INFO
-argument_list|,
-literal|"Management F/W Enabled.\n"
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|bce_flags
-operator||=
-name|BCE_MFW_ENABLE_FLAG
-expr_stmt|;
-block|}
-name|sc
-operator|->
-name|bce_fw_ver
-operator|=
-name|REG_RD_IND
-argument_list|(
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|bce_shmem_base
-operator|+
-name|BCE_DEV_INFO_BC_REV
-argument_list|)
-expr_stmt|;
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_INFO
-argument_list|,
-literal|"bootcode rev = 0x%08X\n"
-argument_list|,
-name|sc
-operator|->
-name|bce_fw_ver
-argument_list|)
-expr_stmt|;
 comment|/* Allow bootcode to apply any additional fixes before enabling MAC. */
 name|rc
 operator|=
@@ -17421,7 +17596,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|bce_stat_ch
+name|bce_tick_callout
 argument_list|)
 expr_stmt|;
 name|bce_tick
@@ -17448,7 +17623,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_MISC
 argument_list|,
 literal|"Link is now UP.\n"
 argument_list|)
@@ -17469,7 +17644,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_MISC
 argument_list|,
 literal|"Link is now DOWN.\n"
 argument_list|)
@@ -18211,7 +18386,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_WARN_RECV
+name|BCE_WARN_SEND
 argument_list|,
 literal|"%s(): Invalid IP checksum = 0x%04X!\n"
 argument_list|,
@@ -18279,7 +18454,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_WARN_RECV
+name|BCE_WARN_SEND
 argument_list|,
 literal|"%s(): Invalid TCP/UDP checksum = 0x%04X!\n"
 argument_list|,
@@ -19037,7 +19212,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_WARN_SEND
+name|BCE_INFO_SEND
 argument_list|,
 literal|"%s(): Open TX chain! %d/%d (used/total)\n"
 argument_list|,
@@ -19399,7 +19574,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_MISC
 argument_list|,
 literal|"%s(): setting mtu = %d\n"
 argument_list|,
@@ -19480,7 +19655,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_RECV
 argument_list|,
 literal|"%s(): mclbytes = %d, mbuf_alloc_size = %d, "
 literal|"max_frame_size = %d\n"
@@ -19604,7 +19779,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|bce_stat_ch
+name|bce_tick_callout
 argument_list|,
 name|hz
 argument_list|,
@@ -19639,7 +19814,7 @@ comment|/* Initialize the controller just enough so that any management firmware
 end_comment
 
 begin_comment
-comment|/* running on the device will continue to operate corectly.                 */
+comment|/* running on the device will continue to operate correctly.                */
 end_comment
 
 begin_comment
@@ -19669,9 +19844,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|u32
-name|val
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -19693,49 +19865,37 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Bail out if management firmware is not running. */
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|bce_flags
+operator|&
+name|BCE_MFW_ENABLE_FLAG
+operator|)
+condition|)
+block|{
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_VERBOSE_SPECIAL
+argument_list|,
+literal|"No management firmware running...\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bce_mgmt_init_locked_exit
+goto|;
+block|}
 name|ifp
 operator|=
 name|sc
 operator|->
 name|bce_ifp
-expr_stmt|;
-comment|/* Check if the driver is still running and bail out if it is. */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_RUNNING
-condition|)
-goto|goto
-name|bce_mgmt_init_locked_exit
-goto|;
-comment|/* Initialize the on-boards CPUs */
-name|bce_init_cpus
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* Set the page size and clear the RV2P processor stall bits. */
-name|val
-operator|=
-operator|(
-name|BCM_PAGE_BITS
-operator|-
-literal|8
-operator|)
-operator|<<
-literal|24
-expr_stmt|;
-name|REG_WR
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_RV2P_CONFIG
-argument_list|,
-name|val
-argument_list|)
 expr_stmt|;
 comment|/* Enable all critical blocks in the MAC. */
 name|REG_WR
@@ -19744,11 +19904,7 @@ name|sc
 argument_list|,
 name|BCE_MISC_ENABLE_SET_BITS
 argument_list|,
-name|BCE_MISC_ENABLE_SET_BITS_RX_V2P_ENABLE
-operator||
-name|BCE_MISC_ENABLE_SET_BITS_RX_DMA_ENABLE
-operator||
-name|BCE_MISC_ENABLE_SET_BITS_COMPLETION_ENABLE
+literal|0x5ffffff
 argument_list|)
 expr_stmt|;
 name|REG_RD
@@ -21351,23 +21507,12 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_VERBOSE_RESET
-argument_list|,
-literal|"Entering %s()\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|command
 condition|)
 block|{
-comment|/* Set the MTU. */
+comment|/* Set the interface MTU. */
 case|case
 name|SIOCSIFMTU
 case|:
@@ -21401,10 +21546,20 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_MISC
 argument_list|,
-literal|"Setting new MTU of %d\n"
+literal|"SIOCSIFMTU: Changing MTU from %d to %d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
+name|ifp
+operator|->
+name|if_mtu
+argument_list|,
+operator|(
+name|int
+operator|)
 name|ifr
 operator|->
 name|ifr_mtu
@@ -21441,7 +21596,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* Set interface. */
+comment|/* Set interface flags. */
 case|case
 name|SIOCSIFFLAGS
 case|:
@@ -21449,7 +21604,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE
+name|BCE_VERBOSE_SPECIAL
 argument_list|,
 literal|"Received SIOCSIFFLAGS\n"
 argument_list|)
@@ -21478,7 +21633,7 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
-comment|/* Change the promiscuous/multicast flags as necessary. */
+comment|/* Change promiscuous/multicast flags as necessary. */
 name|bce_set_rx_mode
 argument_list|(
 name|sc
@@ -21497,7 +21652,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* The interface is down.  Check if the driver is running. */
+comment|/* The interface is down, check if driver is running. */
 if|if
 condition|(
 name|ifp
@@ -21512,6 +21667,34 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* If MFW is running, restart the controller a bit. */
+if|if
+condition|(
+name|sc
+operator|->
+name|bce_flags
+operator|&
+name|BCE_MFW_ENABLE_FLAG
+condition|)
+block|{
+name|bce_reset
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_DRV_MSG_CODE_RESET
+argument_list|)
+expr_stmt|;
+name|bce_chipinit
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|bce_mgmt_init_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 name|BCE_UNLOCK
@@ -21535,7 +21718,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE
+name|BCE_VERBOSE_MISC
 argument_list|,
 literal|"Received SIOCADDMULTI/SIOCDELMULTI\n"
 argument_list|)
@@ -21581,31 +21764,9 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE
+name|BCE_VERBOSE_MISC
 argument_list|,
 literal|"Received SIOCSIFMEDIA/SIOCGIFMEDIA\n"
-argument_list|)
-expr_stmt|;
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_VERBOSE
-argument_list|,
-literal|"bce_phy_flags = 0x%08X\n"
-argument_list|,
-name|sc
-operator|->
-name|bce_phy_flags
-argument_list|)
-expr_stmt|;
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_VERBOSE
-argument_list|,
-literal|"Copper media set/get\n"
 argument_list|)
 expr_stmt|;
 name|mii
@@ -21652,7 +21813,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_MISC
 argument_list|,
 literal|"Received SIOCSIFCAP = 0x%08X\n"
 argument_list|,
@@ -22011,20 +22172,6 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_INFO
-argument_list|,
-literal|"Received unsupported IOCTL: 0x%08X\n"
-argument_list|,
-operator|(
-name|u32
-operator|)
-name|command
-argument_list|)
-expr_stmt|;
 comment|/* We don't know how to handle the IOCTL, pass it on. */
 name|error
 operator|=
@@ -22046,17 +22193,6 @@ name|bce_ioctl_exit
 label|:
 endif|#
 directive|endif
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_VERBOSE_RESET
-argument_list|,
-literal|"Exiting %s()\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -22100,13 +22236,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|DBRUN
-argument_list|(
-argument|BCE_VERBOSE_SEND
-argument_list|,
-argument|bce_dump_driver_state(sc); 		bce_dump_status_block(sc)
-argument_list|)
-empty_stmt|;
 name|BCE_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -22148,6 +22277,13 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
+name|DBRUN
+argument_list|(
+argument|BCE_VERBOSE_SEND
+argument_list|,
+argument|bce_dump_driver_state(sc); 		bce_dump_status_block(sc)
+argument_list|)
+empty_stmt|;
 comment|/* DBRUN(BCE_FATAL, bce_breakpoint(sc)); */
 name|sc
 operator|->
@@ -22475,7 +22611,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_MISC
 argument_list|,
 literal|"Polling enabled!\n"
 argument_list|)
@@ -22973,7 +23109,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_MISC
 argument_list|,
 literal|"Enabling promiscuous mode.\n"
 argument_list|)
@@ -23002,7 +23138,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_MISC
 argument_list|,
 literal|"Enabling all multicast mode.\n"
 argument_list|)
@@ -23050,7 +23186,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_MISC
 argument_list|,
 literal|"Enabling selective multicast mode.\n"
 argument_list|)
@@ -23176,7 +23312,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_VERBOSE
+name|BCE_VERBOSE_MISC
 argument_list|,
 literal|"Enabling new receive mode: 0x%08X\n"
 argument_list|,
@@ -24022,6 +24158,111 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/* Periodic function to notify the bootcode that the driver is still        */
+end_comment
+
+begin_comment
+comment|/* present.                                                                 */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bce_pulse
+parameter_list|(
+name|void
+modifier|*
+name|xsc
+parameter_list|)
+block|{
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+init|=
+name|xsc
+decl_stmt|;
+name|u32
+name|msg
+decl_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_EXCESSIVE_MISC
+argument_list|,
+literal|"pulse\n"
+argument_list|)
+expr_stmt|;
+name|BCE_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Tell the firmware that the driver is still running. */
+name|msg
+operator|=
+operator|(
+name|u32
+operator|)
+operator|++
+name|sc
+operator|->
+name|bce_fw_drv_pulse_wr_seq
+expr_stmt|;
+name|REG_WR_IND
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|bce_shmem_base
+operator|+
+name|BCE_DRV_PULSE_MB
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+comment|/* Schedule the next pulse. */
+name|callout_reset
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|bce_pulse_callout
+argument_list|,
+name|hz
+argument_list|,
+name|bce_pulse
+argument_list|,
+name|sc
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
 comment|/* Periodic function to perform maintenance tasks.                          */
 end_comment
 
@@ -24068,9 +24309,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u32
-name|msg
-decl_stmt|;
 name|ifp
 operator|=
 name|sc
@@ -24080,44 +24318,6 @@ expr_stmt|;
 name|BCE_LOCK_ASSERT
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-comment|/* Tell the firmware that the driver is still running. */
-ifdef|#
-directive|ifdef
-name|BCE_DEBUG
-name|msg
-operator|=
-operator|(
-name|u32
-operator|)
-name|BCE_DRV_MSG_DATA_PULSE_CODE_ALWAYS_ALIVE
-expr_stmt|;
-else|#
-directive|else
-name|msg
-operator|=
-operator|(
-name|u32
-operator|)
-operator|++
-name|sc
-operator|->
-name|bce_fw_drv_pulse_wr_seq
-expr_stmt|;
-endif|#
-directive|endif
-name|REG_WR_IND
-argument_list|(
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|bce_shmem_base
-operator|+
-name|BCE_DRV_PULSE_MB
-argument_list|,
-name|msg
 argument_list|)
 expr_stmt|;
 comment|/* Update the statistics from the hardware statistics block. */
@@ -24138,19 +24338,15 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|bce_stat_ch
+name|bce_tick_callout
 argument_list|,
-comment|/* callout */
 name|hz
 argument_list|,
-comment|/* ticks */
 name|bce_tick
 argument_list|,
-comment|/* function */
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* function argument */
 comment|/* If link is up already up then we're done. */
 if|if
 condition|(
@@ -24476,7 +24672,111 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Provides a sysctl interface to allows dumping the RX chain.              */
+comment|/* Allows the bootcode state to be dumped through the sysctl interface.     */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   0 for success, positive value for failure.                             */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|bce_sysctl_bc_state
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|int
+name|result
+decl_stmt|;
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|result
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|result
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|||
+operator|!
+name|req
+operator|->
+name|newptr
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|result
+operator|==
+literal|1
+condition|)
+block|{
+name|sc
+operator|=
+operator|(
+expr|struct
+name|bce_softc
+operator|*
+operator|)
+name|arg1
+expr_stmt|;
+name|bce_dump_bc_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|error
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Provides a sysctl interface to allow dumping the RX chain.               */
 end_comment
 
 begin_comment
@@ -24584,7 +24884,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Provides a sysctl interface to allows dumping the TX chain.              */
+comment|/* Provides a sysctl interface to allow dumping the TX chain.               */
 end_comment
 
 begin_comment
@@ -24731,7 +25031,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|uint32_t
+name|u32
 name|val
 decl_stmt|,
 name|result
@@ -26635,6 +26935,35 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
+literal|"bc_state"
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|bce_sysctl_bc_state
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Bootcode state information"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_PROC
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
 literal|"dump_rx_chain"
 argument_list|,
 name|CTLTYPE_INT
@@ -28138,7 +28467,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Prints out a l2_fhdr structure.                                            */
+comment|/* Prints out a l2_fhdr structure.                                          */
 end_comment
 
 begin_comment
@@ -28213,7 +28542,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Prints out the tx chain.                                                 */
+comment|/* Prints out the TX chain.                                                 */
 end_comment
 
 begin_comment
@@ -28304,7 +28633,6 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|""
 literal|"----------------------------"
 literal|"   tx_bd data   "
 literal|"----------------------------\n"
@@ -28380,7 +28708,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Prints out the rx chain.                                                 */
+comment|/* Prints out the RX chain.                                                 */
 end_comment
 
 begin_comment
@@ -28986,7 +29314,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Prints out the statistics block.                                         */
+comment|/* Prints out the statistics block from host memory.                        */
 end_comment
 
 begin_comment
@@ -30429,7 +30757,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Prints out the hardware state through a summary of important registers,  */
+comment|/* Prints out the hardware state through a summary of important register,   */
 end_comment
 
 begin_comment
@@ -30802,6 +31130,158 @@ name|i
 operator|+
 literal|0xC
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"----------------------------"
+literal|"----------------"
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Prints out the bootcode state.                                           */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing.                                                               */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bce_dump_bc_state
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|u32
+name|val
+decl_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"----------------------------"
+literal|" Bootcode State "
+literal|"----------------------------\n"
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - bootcode version\n"
+argument_list|,
+name|sc
+operator|->
+name|bce_fw_ver
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|bce_shmem_base
+operator|+
+name|BCE_BC_RESET_TYPE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) reset_type\n"
+argument_list|,
+name|val
+argument_list|,
+name|BCE_BC_RESET_TYPE
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|bce_shmem_base
+operator|+
+name|BCE_BC_STATE
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) state\n"
+argument_list|,
+name|val
+argument_list|,
+name|BCE_BC_STATE
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|bce_shmem_base
+operator|+
+name|BCE_BC_CONDITION
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) condition\n"
+argument_list|,
+name|val
+argument_list|,
+name|BCE_BC_CONDITION
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+name|REG_RD_IND
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|bce_shmem_base
+operator|+
+name|BCE_BC_STATE_DEBUG_CMD
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X - (0x%06X) debug_cmd\n"
+argument_list|,
+name|val
+argument_list|,
+name|BCE_BC_STATE_DEBUG_CMD
 argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
@@ -31499,6 +31979,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 name|bce_dump_hw_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|bce_dump_bc_state
 argument_list|(
 name|sc
 argument_list|)
