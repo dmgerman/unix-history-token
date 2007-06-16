@@ -223,12 +223,6 @@ begin_struct
 struct|struct
 name|sbus_softc
 block|{
-name|bus_space_tag_t
-name|sc_bustag
-decl_stmt|;
-name|bus_space_handle_t
-name|sc_bushandle
-decl_stmt|;
 name|bus_dma_tag_t
 name|sc_cdmatag
 decl_stmt|;
@@ -304,6 +298,7 @@ name|driver_filter_t
 modifier|*
 name|scl_filter
 decl_stmt|;
+comment|/* filter to call */
 name|driver_intr_t
 modifier|*
 name|scl_handler
@@ -333,7 +328,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|bus_space_read_8((sc)->sc_bustag, (sc)->sc_bushandle, (off))
+value|bus_read_8((sc)->sc_sysio_res, (off))
 end_define
 
 begin_define
@@ -348,7 +343,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|bus_space_write_8((sc)->sc_bustag, (sc)->sc_bushandle, (off), (v))
+value|bus_write_8((sc)->sc_sysio_res, (off), (v))
 end_define
 
 begin_decl_stmt
@@ -524,14 +519,14 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|driver_filter_t
+name|driver_intr_t
 name|sbus_overtemp
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|driver_filter_t
+name|driver_intr_t
 name|sbus_pwrfail
 decl_stmt|;
 end_decl_stmt
@@ -1065,28 +1060,6 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_bustag
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|sc
-operator|->
-name|sc_sysio_res
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_bushandle
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|sc
-operator|->
-name|sc_sysio_res
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|OF_getprop
@@ -1600,9 +1573,12 @@ name|sc_is
 operator|.
 name|is_bustag
 operator|=
+name|rman_get_bustag
+argument_list|(
 name|sc
 operator|->
-name|sc_bustag
+name|sc_sysio_res
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -1610,9 +1586,12 @@ name|sc_is
 operator|.
 name|is_bushandle
 operator|=
+name|rman_get_bushandle
+argument_list|(
 name|sc
 operator|->
-name|sc_bushandle
+name|sc_sysio_res
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -1876,9 +1855,9 @@ name|sc_ot_ires
 argument_list|,
 name|INTR_TYPE_MISC
 argument_list|,
-name|sbus_overtemp
-argument_list|,
 name|NULL
+argument_list|,
+name|sbus_overtemp
 argument_list|,
 name|sc
 argument_list|,
@@ -1973,9 +1952,9 @@ name|sc_pf_ires
 argument_list|,
 name|INTR_TYPE_MISC
 argument_list|,
-name|sbus_pwrfail
-argument_list|,
 name|NULL
+argument_list|,
+name|sbus_pwrfail
 argument_list|,
 name|sc
 argument_list|,
@@ -2014,13 +1993,19 @@ expr_stmt|;
 comment|/* Initialize the counter-timer. */
 name|sparc64_counter_init
 argument_list|(
+name|rman_get_bustag
+argument_list|(
 name|sc
 operator|->
-name|sc_bustag
+name|sc_sysio_res
+argument_list|)
 argument_list|,
+name|rman_get_bushandle
+argument_list|(
 name|sc
 operator|->
-name|sc_bushandle
+name|sc_sysio_res
+argument_list|)
 argument_list|,
 name|SBR_TC0
 argument_list|)
@@ -2971,10 +2956,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* Write to the correct clr register, and call the actual handler. */
-end_comment
 
 begin_function
 specifier|static
@@ -4638,7 +4619,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|sbus_overtemp
 parameter_list|(
 name|void
@@ -4656,11 +4637,6 @@ argument_list|(
 name|RB_POWEROFF
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|FILTER_HANDLED
-operator|)
-return|;
 block|}
 end_function
 
@@ -4670,7 +4646,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|sbus_pwrfail
 parameter_list|(
 name|void
@@ -4688,11 +4664,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|FILTER_HANDLED
-operator|)
-return|;
 block|}
 end_function
 
@@ -4753,9 +4724,12 @@ name|sbt
 operator|->
 name|bst_parent
 operator|=
+name|rman_get_bustag
+argument_list|(
 name|sc
 operator|->
-name|sc_bustag
+name|sc_sysio_res
+argument_list|)
 expr_stmt|;
 name|sbt
 operator|->
