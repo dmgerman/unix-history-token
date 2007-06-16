@@ -124,6 +124,8 @@ condition|)
 name|OF_exit
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
 name|OF_getprop
 argument_list|(
 name|chosen
@@ -138,6 +140,12 @@ argument_list|(
 name|stdout
 argument_list|)
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|OF_exit
+argument_list|()
 expr_stmt|;
 block|}
 end_function
