@@ -711,6 +711,10 @@ name|xpt_bus_register
 argument_list|(
 name|sim
 argument_list|,
+name|isp
+operator|->
+name|isp_dev
+argument_list|,
 name|primary
 argument_list|)
 operator|!=
@@ -919,6 +923,10 @@ condition|(
 name|xpt_bus_register
 argument_list|(
 name|sim
+argument_list|,
+name|isp
+operator|->
+name|isp_dev
 argument_list|,
 name|secondary
 argument_list|)

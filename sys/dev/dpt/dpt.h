@@ -4667,6 +4667,9 @@ typedef|typedef
 struct|struct
 name|dpt_softc
 block|{
+name|device_t
+name|dev
+decl_stmt|;
 name|struct
 name|resource
 modifier|*

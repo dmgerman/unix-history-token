@@ -11021,6 +11021,10 @@ index|[
 name|i
 index|]
 argument_list|,
+name|sc
+operator|->
+name|ciss_dev
+argument_list|,
 name|i
 argument_list|)
 operator|!=
@@ -11160,6 +11164,10 @@ name|ciss_cam_sim
 index|[
 name|i
 index|]
+argument_list|,
+name|sc
+operator|->
+name|ciss_dev
 argument_list|,
 name|i
 argument_list|)

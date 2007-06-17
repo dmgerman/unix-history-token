@@ -8821,6 +8821,10 @@ index|[
 name|chn
 index|]
 argument_list|,
+name|sc
+operator|->
+name|mly_dev
+argument_list|,
 name|chn
 argument_list|)
 condition|)
@@ -8940,6 +8944,10 @@ name|mly_cam_sim
 index|[
 name|chn
 index|]
+argument_list|,
+name|sc
+operator|->
+name|mly_dev
 argument_list|,
 name|chn
 argument_list|)

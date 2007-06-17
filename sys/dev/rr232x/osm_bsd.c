@@ -6051,6 +6051,7 @@ argument_list|)
 expr_stmt|;
 return|return ;
 block|}
+comment|/* XXX No single device parent */
 if|if
 condition|(
 name|xpt_bus_register
@@ -6058,6 +6059,8 @@ argument_list|(
 name|vbus_ext
 operator|->
 name|sim
+argument_list|,
+name|NULL
 argument_list|,
 literal|0
 argument_list|)

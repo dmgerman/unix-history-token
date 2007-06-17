@@ -619,6 +619,14 @@ name|sc
 operator|->
 name|sc_aic
 operator|.
+name|dev
+operator|=
+name|dev
+expr_stmt|;
+name|sc
+operator|->
+name|sc_aic
+operator|.
 name|unit
 operator|=
 name|device_get_unit

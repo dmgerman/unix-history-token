@@ -9768,6 +9768,8 @@ name|xpt_bus_register
 argument_list|(
 name|hpt_vsim
 argument_list|,
+name|dev
+argument_list|,
 literal|0
 argument_list|)
 operator|!=

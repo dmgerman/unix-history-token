@@ -5750,6 +5750,10 @@ name|adw
 operator|->
 name|sim
 argument_list|,
+name|adw
+operator|->
+name|device
+argument_list|,
 literal|0
 argument_list|)
 operator|!=

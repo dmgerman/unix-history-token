@@ -345,6 +345,10 @@ name|sc
 operator|->
 name|sim
 argument_list|,
+name|sc
+operator|->
+name|bus_dev
+argument_list|,
 literal|0
 argument_list|)
 operator|!=

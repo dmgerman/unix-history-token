@@ -176,6 +176,9 @@ begin_struct
 struct|struct
 name|aic_softc
 block|{
+name|device_t
+name|dev
+decl_stmt|;
 name|int
 name|unit
 decl_stmt|;

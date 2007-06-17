@@ -1018,6 +1018,9 @@ begin_struct
 struct|struct
 name|ahb_softc
 block|{
+name|device_t
+name|dev
+decl_stmt|;
 name|bus_space_tag_t
 name|tag
 decl_stmt|;

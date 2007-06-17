@@ -9269,7 +9269,7 @@ argument|,
 comment|/*tagged*/
 argument|SBP_QUEUE_LEN -
 literal|1
-argument|, 				 devq);  	if (sbp->sim == NULL) { 		cam_simq_free(devq); 		return (ENXIO); 	}  	SBP_LOCK(sbp); 	if (xpt_bus_register(sbp->sim,
+argument|, 				 devq);  	if (sbp->sim == NULL) { 		cam_simq_free(devq); 		return (ENXIO); 	}  	SBP_LOCK(sbp); 	if (xpt_bus_register(sbp->sim, dev,
 comment|/*bus*/
 literal|0
 argument|) != CAM_SUCCESS) 		goto fail;  	if (xpt_create_path(&sbp->path, xpt_periph, cam_sim_path(sbp->sim), 	    CAM_TARGET_WILDCARD, CAM_LUN_WILDCARD) != CAM_REQ_CMP) { 		xpt_bus_deregister(cam_sim_path(sbp->sim)); 		goto fail; 	} 	SBP_UNLOCK(sbp);

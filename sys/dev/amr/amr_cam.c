@@ -488,6 +488,10 @@ index|[
 name|chn
 index|]
 argument_list|,
+name|sc
+operator|->
+name|amr_dev
+argument_list|,
 name|chn
 argument_list|)
 condition|)

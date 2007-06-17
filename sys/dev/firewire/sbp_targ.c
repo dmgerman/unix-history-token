@@ -8835,6 +8835,8 @@ name|sc
 operator|->
 name|sim
 argument_list|,
+name|dev
+argument_list|,
 comment|/*bus*/
 literal|0
 argument_list|)

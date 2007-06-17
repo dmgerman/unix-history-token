@@ -582,6 +582,12 @@ argument_list|)
 expr_stmt|;
 name|dpt
 operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
+name|dpt
+operator|->
 name|io_rid
 operator|=
 literal|0

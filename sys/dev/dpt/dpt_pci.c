@@ -246,6 +246,12 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|dpt
+operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
 name|command
 operator|=
 name|pci_read_config

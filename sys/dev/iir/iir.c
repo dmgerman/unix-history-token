@@ -2763,6 +2763,10 @@ index|[
 name|i
 index|]
 argument_list|,
+name|gdt
+operator|->
+name|sc_devnode
+argument_list|,
 name|i
 argument_list|)
 operator|!=

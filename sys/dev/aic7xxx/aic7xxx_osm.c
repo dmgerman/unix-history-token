@@ -849,6 +849,10 @@ name|xpt_bus_register
 argument_list|(
 name|sim
 argument_list|,
+name|ahc
+operator|->
+name|dev_softc
+argument_list|,
 name|bus_id
 argument_list|)
 operator|!=
@@ -1035,6 +1039,10 @@ condition|(
 name|xpt_bus_register
 argument_list|(
 name|sim2
+argument_list|,
+name|ahc
+operator|->
+name|dev_softc
 argument_list|,
 name|bus_id2
 argument_list|)

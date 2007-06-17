@@ -11349,6 +11349,8 @@ name|np
 operator|->
 name|sim
 argument_list|,
+name|dev
+argument_list|,
 literal|0
 argument_list|)
 operator|!=

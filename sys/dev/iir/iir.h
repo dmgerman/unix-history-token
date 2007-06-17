@@ -3598,6 +3598,9 @@ begin_struct
 struct|struct
 name|gdt_softc
 block|{
+name|device_t
+name|sc_devnode
+decl_stmt|;
 name|int
 name|sc_hanum
 decl_stmt|;

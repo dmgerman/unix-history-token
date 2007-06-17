@@ -9510,6 +9510,8 @@ name|sc
 operator|->
 name|umass_sim
 argument_list|,
+name|NULL
+argument_list|,
 name|device_get_unit
 argument_list|(
 name|sc

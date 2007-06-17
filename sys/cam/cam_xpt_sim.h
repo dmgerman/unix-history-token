@@ -47,6 +47,9 @@ name|cam_sim
 modifier|*
 name|sim
 parameter_list|,
+name|device_t
+name|parent
+parameter_list|,
 name|u_int32_t
 name|bus
 parameter_list|)

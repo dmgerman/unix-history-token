@@ -627,6 +627,9 @@ decl_stmt|;
 name|u_int
 name|generation
 decl_stmt|;
+name|device_t
+name|parent_dev
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -6065,7 +6068,8 @@ name|xpt_bus_register
 argument_list|(
 name|xpt_sim
 argument_list|,
-comment|/*bus #*/
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 operator|)
@@ -18485,6 +18489,9 @@ name|struct
 name|cam_sim
 modifier|*
 name|sim
+parameter_list|,
+name|device_t
+name|parent
 parameter_list|,
 name|u_int32_t
 name|bus

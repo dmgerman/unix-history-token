@@ -614,6 +614,10 @@ name|xpt_bus_register
 argument_list|(
 name|sim
 argument_list|,
+name|ahd
+operator|->
+name|dev_softc
+argument_list|,
 comment|/*bus_id*/
 literal|0
 argument_list|)
