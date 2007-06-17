@@ -2133,6 +2133,8 @@ name|sc
 decl_stmt|;
 name|UINT32
 name|key
+init|=
+literal|0
 decl_stmt|;
 name|sc
 operator|=
