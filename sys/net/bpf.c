@@ -2542,6 +2542,14 @@ name|dst
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+name|hlen
+operator|=
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|bpf_movein
