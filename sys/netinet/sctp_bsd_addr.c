@@ -2046,7 +2046,7 @@ name|int
 argument_list|)
 operator|)
 argument_list|,
-name|packet_log_end
+name|SCTP_PACKET_LOG_SIZE
 argument_list|)
 expr_stmt|;
 name|memcpy
