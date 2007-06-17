@@ -1789,11 +1789,11 @@ operator|!
 name|ahb
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ahb%ld: cannot malloc!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"cannot malloc!\n"
 argument_list|)
 expr_stmt|;
 return|return
