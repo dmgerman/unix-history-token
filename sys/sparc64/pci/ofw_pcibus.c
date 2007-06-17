@@ -311,17 +311,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|ofw_pcibus_softc
-block|{
-name|phandle_t
-name|ops_node
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_decl_stmt
 specifier|static
 name|devclass_t
@@ -338,11 +327,8 @@ name|ofw_pcibus_driver
 argument_list|,
 name|ofw_pcibus_methods
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ofw_pcibus_softc
-argument_list|)
+literal|1
+comment|/* no softc */
 argument_list|,
 name|pci_driver
 argument_list|)
