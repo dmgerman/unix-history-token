@@ -217,6 +217,13 @@ decl_stmt|;
 name|uint32_t
 name|gpt_smtail
 decl_stmt|;
+comment|/* 	 * gpt_sectors and gpt_heads are the fixed or synchesized number 	 * of sectors per track and heads (resp) that make up a disks 	 * geometry. This is to support partitioning schemes as well as 	 * file systems that work on a geometry. The MBR scheme and the 	 * MS-DOS (FAT) file system come to mind. 	 * We keep track of whether the geometry is fixed or synchesized 	 * so that a partitioning scheme can correct the synthesized 	 * geometry, based on the on-disk metadata. 	 */
+name|uint32_t
+name|gpt_sectors
+decl_stmt|;
+name|uint32_t
+name|gpt_heads
+decl_stmt|;
 name|int
 name|gpt_depth
 decl_stmt|;
@@ -245,6 +252,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Permissions obtained. */
+name|int
+name|gpt_fixgeom
+range|:
+literal|1
+decl_stmt|;
+comment|/* Geometry is fixed. */
 block|}
 struct|;
 end_struct
@@ -415,6 +428,23 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|void
+name|g_part_geometry_heads
+parameter_list|(
+name|off_t
+parameter_list|,
+name|u_int
+parameter_list|,
+name|off_t
+modifier|*
+parameter_list|,
+name|u_int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
