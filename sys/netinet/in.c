@@ -2968,9 +2968,6 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-name|int
-name|cmp
-decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -2979,6 +2976,17 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|mask
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|match
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|match
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3048,30 +3056,18 @@ condition|)
 return|return
 name|EINVAL
 return|;
-name|cmp
-operator|=
-literal|1
-expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* on getting an address, take the 1st match */
+comment|/* on deleting an address, do exact match */
 if|if
 condition|(
 name|cmd
-operator|==
+operator|!=
 name|SIOCGLIFADDR
 condition|)
 block|{
-comment|/* on getting an address, take the 1st match */
-name|cmp
-operator|=
-literal|0
-expr_stmt|;
-comment|/*XXX*/
-block|}
-else|else
-block|{
-comment|/* on deleting an address, do exact match */
 name|in_len2mask
 argument_list|(
 operator|&
@@ -3102,10 +3098,6 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
-name|cmp
-operator|=
-literal|1
-expr_stmt|;
 block|}
 block|}
 name|TAILQ_FOREACH
@@ -3130,8 +3122,11 @@ condition|)
 continue|continue;
 if|if
 condition|(
-operator|!
-name|cmp
+name|match
+operator|.
+name|s_addr
+operator|==
+literal|0
 condition|)
 break|break;
 name|candidate
@@ -3982,7 +3977,7 @@ value|((((x)->ia_ifp->if_flags& (IFF_LOOPBACK | IFF_POINTOPOINT)) != 0) \ 	    ?
 end_define
 
 begin_comment
-comment|/*  * Check if we have a route for the given prefix already or add a one  * accordingly.  */
+comment|/*  * Check if we have a route for the given prefix already or add one accordingly.  */
 end_comment
 
 begin_function
@@ -4027,6 +4022,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|prefix
 operator|=
 name|target
@@ -4035,6 +4031,13 @@ name|ia_dstaddr
 operator|.
 name|sin_addr
 expr_stmt|;
+name|mask
+operator|.
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
 block|{
 name|prefix
