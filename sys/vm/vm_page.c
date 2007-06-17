@@ -4978,7 +4978,6 @@ comment|/*  * Mapping function for valid bits or for dirty bits in  * a page.  M
 end_comment
 
 begin_function
-specifier|inline
 name|int
 name|vm_page_bits
 parameter_list|(
