@@ -1026,6 +1026,20 @@ operator|=
 operator|*
 name|ip
 expr_stmt|;
+else|else
+name|memset
+argument_list|(
+operator|&
+name|save_ip
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|save_ip
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Checksum extended UDP header and data. 	 */
 if|if
 condition|(
