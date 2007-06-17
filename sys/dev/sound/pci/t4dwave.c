@@ -4359,9 +4359,6 @@ index|[
 name|SND_STATUSLEN
 index|]
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|tr
 operator|=
 name|malloc
@@ -4374,26 +4371,11 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"cannot allocate softc\n"
-argument_list|)
 expr_stmt|;
-return|return
-name|ENXIO
-return|;
-block|}
 name|tr
 operator|->
 name|type
