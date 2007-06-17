@@ -1521,6 +1521,8 @@ name|rv
 decl_stmt|;
 name|int
 name|reqpage
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|ahead
