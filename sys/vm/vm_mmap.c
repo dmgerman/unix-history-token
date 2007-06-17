@@ -5087,6 +5087,8 @@ name|fitit
 decl_stmt|;
 name|vm_object_t
 name|object
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|rv
@@ -5334,6 +5336,7 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
