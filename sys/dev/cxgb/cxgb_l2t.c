@@ -113,53 +113,33 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/common/cxgb_common.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_DEFINED
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/common/cxgb_regs.h>
+file|<cxgb_include.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/common/cxgb_sge_defs.h>
+file|<dev/cxgb/cxgb_include.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/common/cxgb_t3_cpl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/common/cxgb_firmware_exports.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/common/jhash.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/cxgb_l2t.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/cxgb_offload.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -185,7 +165,7 @@ name|RT_ENADDR
 parameter_list|(
 name|rt
 parameter_list|)
-value|((char *)LLADDR(SDL((rt))))
+value|((u_char *)LLADDR(SDL((rt))))
 end_define
 
 begin_define

@@ -15,16 +15,44 @@ directive|define
 name|_CHELSIO_L2T_H
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_DEFINED
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ulp/toecore/toedev.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<dev/cxgb/ulp/toecore/toedev.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_if

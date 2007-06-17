@@ -94,8 +94,7 @@ name|uint32_t
 name|mi_offset
 decl_stmt|;
 comment|/* data offsets into cluster  */
-name|uint8_t
-modifier|*
+name|caddr_t
 name|mi_base
 decl_stmt|;
 comment|/* pointers to cluster        */
@@ -498,8 +497,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|uint8_t
-modifier|*
+name|caddr_t
 name|cl
 parameter_list|,
 name|int
@@ -580,9 +578,14 @@ name|m
 operator|->
 name|m_data
 operator|=
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|cl
 operator|+
 name|offset
+argument_list|)
 expr_stmt|;
 name|iov
 operator|=

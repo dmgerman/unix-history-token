@@ -15,29 +15,33 @@ directive|define
 name|_CXGB_OFFLOAD_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/common/cxgb_tcb.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_DEFINED
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/cxgb_l2t.h>
+file|<cxgb_include.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/toecore/toedev.h>
+file|<dev/cxgb/cxgb_include.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/common/cxgb_t3_cpl.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct
@@ -556,9 +560,13 @@ name|m
 parameter_list|)
 block|{
 return|return
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+name|uint8_t
+operator|*
+argument_list|)
 return|;
 block|}
 end_function

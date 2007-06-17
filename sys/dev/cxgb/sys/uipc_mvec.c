@@ -71,17 +71,33 @@ directive|include
 file|<machine/bus.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/cxgb_osdep.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_DEFINED
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/sys/mvec.h>
+file|<cxgb_include.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<dev/cxgb/cxgb_include.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -177,8 +193,7 @@ name|first
 decl_stmt|,
 name|len
 decl_stmt|;
-name|uint8_t
-modifier|*
+name|caddr_t
 name|cl
 decl_stmt|;
 name|struct
@@ -1316,8 +1331,7 @@ operator|->
 name|mi_base
 operator|=
 operator|(
-name|uint8_t
-operator|*
+name|caddr_t
 operator|)
 name|m
 expr_stmt|;
@@ -1960,6 +1974,7 @@ init|=
 name|NULL
 decl_stmt|;
 specifier|volatile
+name|unsigned
 name|int
 modifier|*
 name|refcnt
