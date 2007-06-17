@@ -274,27 +274,6 @@ define|\
 value|sc = devclass_get_softc(__CONCAT(dname,_devclass), unit)
 end_define
 
-begin_define
-define|#
-directive|define
-name|USB_DO_ATTACH
-parameter_list|(
-name|dev
-parameter_list|,
-name|bdev
-parameter_list|,
-name|parent
-parameter_list|,
-name|args
-parameter_list|,
-name|print
-parameter_list|,
-name|sub
-parameter_list|)
-define|\
-value|(device_probe_and_attach((bdev)) == 0 ? (bdev) : 0)
-end_define
-
 begin_include
 include|#
 directive|include
