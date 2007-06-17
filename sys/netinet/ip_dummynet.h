@@ -110,22 +110,6 @@ comment|/*  * XXX With this scaling, max 1000 flows, max weight 100, 1Gbit/s, th
 end_comment
 
 begin_comment
-comment|/*  * The OFFSET_OF macro is used to return the offset of a field within  * a structure. It is used by the heap management routines.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OFFSET_OF
-parameter_list|(
-name|type
-parameter_list|,
-name|field
-parameter_list|)
-value|((int)&( ((type *)0)->field) )
-end_define
-
-begin_comment
 comment|/*  * The maximum hash table size for queues.  This value must be a power  * of 2.  */
 end_comment
 

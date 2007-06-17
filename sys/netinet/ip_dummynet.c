@@ -8377,7 +8377,7 @@ name|idle_heap
 operator|.
 name|offset
 operator|=
-name|OFFSET_OF
+name|offsetof
 argument_list|(
 expr|struct
 name|dn_flow_queue
