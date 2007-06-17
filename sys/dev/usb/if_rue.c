@@ -1571,7 +1571,7 @@ name|rue_softc
 modifier|*
 name|sc
 init|=
-name|USBGETSOFTC
+name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
@@ -1733,7 +1733,7 @@ name|rue_softc
 modifier|*
 name|sc
 init|=
-name|USBGETSOFTC
+name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
@@ -1882,7 +1882,7 @@ comment|/* 	 * When the code below is enabled the card starts doing weird 	 * th
 if|#
 directive|if
 literal|0
-block|struct rue_softc	*sc = USBGETSOFTC(dev); 	struct mii_data		*mii = GET_MII(sc); 	int			bmcr;  	RUE_CLRBIT(sc, RUE_CR, (RUE_CR_RE | RUE_CR_TE));  	bmcr = rue_csr_read_2(sc, RUE_BMCR);  	if (IFM_SUBTYPE(mii->mii_media_active) == IFM_100_TX) 		bmcr |= RUE_BMCR_SPD_SET; 	else 		bmcr&= ~RUE_BMCR_SPD_SET;  	if ((mii->mii_media_active& IFM_GMASK) == IFM_FDX) 		bmcr |= RUE_BMCR_DUPLEX; 	else 		bmcr&= ~RUE_BMCR_DUPLEX;  	rue_csr_write_2(sc, RUE_BMCR, bmcr);  	RUE_SETBIT(sc, RUE_CR, (RUE_CR_RE | RUE_CR_TE));
+block|struct rue_softc	*sc = device_get_softc(dev); 	struct mii_data		*mii = GET_MII(sc); 	int			bmcr;  	RUE_CLRBIT(sc, RUE_CR, (RUE_CR_RE | RUE_CR_TE));  	bmcr = rue_csr_read_2(sc, RUE_BMCR);  	if (IFM_SUBTYPE(mii->mii_media_active) == IFM_100_TX) 		bmcr |= RUE_BMCR_SPD_SET; 	else 		bmcr&= ~RUE_BMCR_SPD_SET;  	if ((mii->mii_media_active& IFM_GMASK) == IFM_FDX) 		bmcr |= RUE_BMCR_DUPLEX; 	else 		bmcr&= ~RUE_BMCR_DUPLEX;  	rue_csr_write_2(sc, RUE_BMCR, bmcr);  	RUE_SETBIT(sc, RUE_CR, (RUE_CR_RE | RUE_CR_TE));
 endif|#
 directive|endif
 block|}
@@ -2360,15 +2360,26 @@ name|device_t
 name|self
 parameter_list|)
 block|{
-name|USB_ATTACH_START
-argument_list|(
-name|rue
-argument_list|,
+name|struct
+name|rue_softc
+modifier|*
 name|sc
-argument_list|,
-name|uaa
+init|=
+name|device_get_softc
+argument_list|(
+name|self
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|struct
+name|usb_attach_arg
+modifier|*
+name|uaa
+init|=
+name|device_get_ivars
+argument_list|(
+name|self
+argument_list|)
+decl_stmt|;
 name|u_char
 name|eaddr
 index|[
