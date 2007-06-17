@@ -1234,6 +1234,11 @@ decl_stmt|;
 name|POSITION
 name|epos
 decl_stmt|;
+name|int
+name|moved
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|start_attnpos
@@ -1347,8 +1352,19 @@ expr_stmt|;
 name|put_line
 argument_list|()
 expr_stmt|;
+name|moved
+operator|=
+literal|1
+expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|moved
+condition|)
+name|lower_left
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
