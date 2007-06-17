@@ -140,7 +140,7 @@ name|snd_unit_auto
 argument_list|,
 literal|0
 argument_list|,
-literal|"assign default unit to a newly attach device"
+literal|"assign default unit to a newly attached device"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
