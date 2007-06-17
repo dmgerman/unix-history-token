@@ -1569,6 +1569,10 @@ argument_list|)
 endif|#
 directive|endif
 block|}
+ifndef|#
+directive|ifndef
+name|PAM
+comment|/* PAM takes care of account expiration by itself */
 if|if
 condition|(
 name|pw
@@ -1593,6 +1597,9 @@ goto|goto
 name|eof
 goto|;
 block|}
+endif|#
+directive|endif
+comment|/* !PAM */
 name|e
 operator|->
 name|uid

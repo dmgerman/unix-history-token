@@ -270,7 +270,7 @@ name|process_crontab
 argument_list|(
 literal|"root"
 argument_list|,
-literal|"*system*"
+name|SYS_NAME
 argument_list|,
 name|SYSCRONTAB
 argument_list|,
@@ -776,7 +776,7 @@ name|strcmp
 argument_list|(
 name|fname
 argument_list|,
-literal|"*system*"
+name|SYS_NAME
 argument_list|)
 operator|&&
 operator|!

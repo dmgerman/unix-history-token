@@ -323,6 +323,17 @@ begin_comment
 comment|/* ditto */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SYS_NAME
+value|"*system*"
+end_define
+
+begin_comment
+comment|/* magic owner name for system crontab */
+end_comment
+
 begin_comment
 comment|/* NOTE: these correspond to DebugFlagNames, 				 *	defined below. 				 */
 end_comment
