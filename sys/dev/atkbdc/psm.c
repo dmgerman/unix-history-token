@@ -8313,6 +8313,13 @@ name|resolution
 operator|-
 literal|1
 expr_stmt|;
+else|else
+name|mode
+operator|.
+name|resolution
+operator|=
+literal|0
+expr_stmt|;
 name|mode
 operator|.
 name|accelfactor
