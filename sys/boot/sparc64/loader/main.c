@@ -340,6 +340,60 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|vm_offset_t
+name|claim_virt
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|size_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|vm_offset_t
+name|alloc_phys
+parameter_list|(
+name|size_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|map_phys
+parameter_list|(
+name|int
+parameter_list|,
+name|size_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|release_phys
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|__elfN
 function_decl|(
@@ -531,14 +585,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|phandle_t
-name|pmemh
+name|root
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* OFW memory handle */
-end_comment
 
 begin_comment
 comment|/*  * Machine dependent structures that the machine independent  * loader part uses.  */
@@ -1172,8 +1223,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|ret
-decl_stmt|,
 name|free_excess
 init|=
 literal|0
@@ -1214,15 +1263,12 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|pa = (vm_offset_t)OF_alloc_phys(PAGE_SIZE_256M,	PAGE_SIZE_256M);  	if (pa != -1) 		free_excess = 1; 	else
+block|pa = alloc_phys(PAGE_SIZE_256M, PAGE_SIZE_256M);  	if (pa != -1) 		free_excess = 1; 	else
 endif|#
 directive|endif
 name|pa
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|OF_alloc_phys
+name|alloc_phys
 argument_list|(
 name|size
 argument_list|,
@@ -1238,10 +1284,7 @@ literal|1
 condition|)
 name|pa
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|OF_alloc_phys
+name|alloc_phys
 argument_list|(
 name|size
 argument_list|,
@@ -1257,7 +1300,9 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"out of memory"
+literal|"%s: out of memory"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 for|for
@@ -1277,10 +1322,7 @@ control|)
 block|{
 name|mva
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|OF_claim_virt
+name|claim_virt
 argument_list|(
 name|va
 operator|+
@@ -1303,8 +1345,10 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"can't claim virtual page "
+literal|"%s: can't claim virtual page "
 literal|"(wanted %#lx, got %#lx)"
+argument_list|,
+name|__func__
 argument_list|,
 name|va
 argument_list|,
@@ -1326,10 +1370,7 @@ name|i
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ret
-operator|=
-name|OF_map_phys
+name|map_phys
 argument_list|(
 operator|-
 literal|1
@@ -1342,15 +1383,14 @@ name|pa
 operator|+
 name|i
 argument_list|)
-operator|)
 operator|!=
 literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"OF_map_phys failed: %d\n"
+literal|"%s: can't map physical page\n"
 argument_list|,
-name|ret
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1358,11 +1398,8 @@ if|if
 condition|(
 name|free_excess
 condition|)
-name|OF_release_phys
+name|release_phys
 argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
 name|pa
 argument_list|,
 name|PAGE_SIZE_256M
@@ -1374,6 +1411,233 @@ end_function
 begin_comment
 comment|/*  * other MD functions  */
 end_comment
+
+begin_function
+specifier|static
+name|vm_offset_t
+name|claim_virt
+parameter_list|(
+name|vm_offset_t
+name|virt
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|int
+name|align
+parameter_list|)
+block|{
+name|vm_offset_t
+name|mva
+decl_stmt|;
+if|if
+condition|(
+name|OF_call_method
+argument_list|(
+literal|"claim"
+argument_list|,
+name|mmu
+argument_list|,
+literal|3
+argument_list|,
+literal|1
+argument_list|,
+name|virt
+argument_list|,
+name|size
+argument_list|,
+name|align
+argument_list|,
+operator|&
+name|mva
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+operator|(
+name|vm_offset_t
+operator|)
+operator|-
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+name|mva
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|vm_offset_t
+name|alloc_phys
+parameter_list|(
+name|size_t
+name|size
+parameter_list|,
+name|int
+name|align
+parameter_list|)
+block|{
+name|cell_t
+name|phys_hi
+decl_stmt|,
+name|phys_low
+decl_stmt|;
+if|if
+condition|(
+name|OF_call_method
+argument_list|(
+literal|"claim"
+argument_list|,
+name|memory
+argument_list|,
+literal|2
+argument_list|,
+literal|2
+argument_list|,
+name|size
+argument_list|,
+name|align
+argument_list|,
+operator|&
+name|phys_low
+argument_list|,
+operator|&
+name|phys_hi
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+operator|(
+name|vm_offset_t
+operator|)
+operator|-
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+operator|(
+name|vm_offset_t
+operator|)
+name|phys_hi
+operator|<<
+literal|32
+operator||
+name|phys_low
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|map_phys
+parameter_list|(
+name|int
+name|mode
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|vm_offset_t
+name|virt
+parameter_list|,
+name|vm_offset_t
+name|phys
+parameter_list|)
+block|{
+return|return
+operator|(
+name|OF_call_method
+argument_list|(
+literal|"map"
+argument_list|,
+name|mmu
+argument_list|,
+literal|5
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|phys
+argument_list|,
+call|(
+name|uint32_t
+call|)
+argument_list|(
+name|phys
+operator|>>
+literal|32
+argument_list|)
+argument_list|,
+name|virt
+argument_list|,
+name|size
+argument_list|,
+name|mode
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|release_phys
+parameter_list|(
+name|vm_offset_t
+name|phys
+parameter_list|,
+name|u_int
+name|size
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|OF_call_method
+argument_list|(
+literal|"release"
+argument_list|,
+name|memory
+argument_list|,
+literal|3
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|phys
+argument_list|,
+call|(
+name|uint32_t
+call|)
+argument_list|(
+name|phys
+operator|>>
+literal|32
+argument_list|)
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -1514,7 +1778,9 @@ operator|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"exec returned"
+literal|"%s: exec returned"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1617,10 +1883,7 @@ condition|)
 block|{
 name|pa
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|OF_alloc_phys
+name|alloc_phys
 argument_list|(
 name|PAGE_SIZE_4M
 argument_list|,
@@ -1639,15 +1902,14 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"out of memory"
+literal|"%s: out of memory"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|mva
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|OF_claim_virt
+name|claim_virt
 argument_list|(
 name|va
 argument_list|,
@@ -1664,8 +1926,10 @@ name|va
 condition|)
 name|panic
 argument_list|(
-literal|"can't claim virtual page "
+literal|"%s: can't claim virtual page "
 literal|"(wanted %#lx, got %#lx)"
+argument_list|,
+name|__func__
 argument_list|,
 name|va
 argument_list|,
@@ -1813,7 +2077,7 @@ operator|)
 operator|-
 literal|1
 condition|)
-name|OF_release_phys
+name|release_phys
 argument_list|(
 name|pa
 argument_list|,
@@ -1844,12 +2108,6 @@ name|vm_offset_t
 name|pa
 decl_stmt|,
 name|mva
-decl_stmt|;
-name|u_long
-name|data
-decl_stmt|;
-name|int
-name|ret
 decl_stmt|;
 if|if
 condition|(
@@ -1901,7 +2159,9 @@ name|SUN4V_TLB_SLOT_MAX
 condition|)
 name|panic
 argument_list|(
-literal|"trying to map more than 4GB"
+literal|"%s: trying to map more than 4GB"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -1933,10 +2193,7 @@ condition|)
 block|{
 name|pa
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|OF_alloc_phys
+name|alloc_phys
 argument_list|(
 name|PAGE_SIZE_4M
 argument_list|,
@@ -1955,15 +2212,14 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"out of memory"
+literal|"%s: out of memory"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|mva
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|OF_claim_virt
+name|claim_virt
 argument_list|(
 name|va
 argument_list|,
@@ -1980,8 +2236,10 @@ name|va
 condition|)
 name|panic
 argument_list|(
-literal|"can't claim virtual page "
+literal|"%s: can't claim virtual page "
 literal|"(wanted %#lx, got %#lx)"
+argument_list|,
+name|__func__
 argument_list|,
 name|va
 argument_list|,
@@ -2002,10 +2260,7 @@ name|pa
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ret
-operator|=
-name|OF_map_phys
+name|map_phys
 argument_list|(
 operator|-
 literal|1
@@ -2016,15 +2271,15 @@ name|va
 argument_list|,
 name|pa
 argument_list|)
-operator|)
-operator|!=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"OF_map_phys failed: %d\n"
+literal|"%s: can't map physical page\n"
 argument_list|,
-name|ret
+name|__func__
 argument_list|)
 expr_stmt|;
 name|pa
@@ -2061,7 +2316,7 @@ operator|)
 operator|-
 literal|1
 condition|)
-name|OF_release_phys
+name|release_phys
 argument_list|(
 name|pa
 argument_list|,
@@ -2084,47 +2339,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|(
-name|pmemh
-operator|=
-name|OF_finddevice
-argument_list|(
-literal|"/memory"
-argument_list|)
-operator|)
-operator|==
-operator|(
-name|phandle_t
-operator|)
-operator|-
-literal|1
-condition|)
-name|OF_exit
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|OF_getprop
-argument_list|(
-name|pmemh
-argument_list|,
-literal|"available"
-argument_list|,
-name|memslices
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|memslices
-argument_list|)
-argument_list|)
-operator|<=
-literal|0
-condition|)
-name|OF_exit
-argument_list|()
-expr_stmt|;
 comment|/* There is no need for continuous physical heap memory. */
 name|heapva
 operator|=
@@ -2163,9 +2377,6 @@ block|{
 name|phandle_t
 name|child
 decl_stmt|;
-name|phandle_t
-name|root
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -2188,27 +2399,6 @@ literal|0
 argument_list|,
 name|ASI_UPA_CONFIG_REG
 argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|root
-operator|=
-name|OF_peer
-argument_list|(
-literal|0
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|panic
-argument_list|(
-literal|"%s: OF_peer"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 for|for
@@ -2241,7 +2431,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"%s: OF_child"
+literal|"%s: can't get child phandle"
 argument_list|,
 name|__func__
 argument_list|)
@@ -2314,7 +2504,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"%s: OF_getprop"
+literal|"%s: can't get portid"
 argument_list|,
 name|__func__
 argument_list|)
@@ -2381,7 +2571,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"%s: OF_getprop"
+literal|"%s: can't get TLB slot max."
 argument_list|,
 name|__func__
 argument_list|)
@@ -2424,7 +2614,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"%s: malloc"
+literal|"%s: can't allocate TLB store"
 argument_list|,
 name|__func__
 argument_list|)
@@ -2504,12 +2694,6 @@ modifier|*
 modifier|*
 name|dp
 decl_stmt|;
-name|phandle_t
-name|rooth
-decl_stmt|;
-name|phandle_t
-name|chosenh
-decl_stmt|;
 comment|/* 	 * Tell the Open Firmware functions where they find the ofw gate. 	 */
 name|OF_init
 argument_list|(
@@ -2578,16 +2762,30 @@ comment|/* 	 * Probe for a console. 	 */
 name|cons_probe
 argument_list|()
 expr_stmt|;
-name|rooth
+if|if
+condition|(
+operator|(
+name|root
 operator|=
 name|OF_peer
 argument_list|(
 literal|0
 argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"%s: can't get root phandle"
+argument_list|,
+name|__func__
+argument_list|)
 expr_stmt|;
 name|OF_getprop
 argument_list|(
-name|rooth
+name|root
 argument_list|,
 literal|"compatible"
 argument_list|,
@@ -2680,16 +2878,9 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 * Set up the current device. 	 */
-name|chosenh
-operator|=
-name|OF_finddevice
-argument_list|(
-literal|"/chosen"
-argument_list|)
-expr_stmt|;
 name|OF_getprop
 argument_list|(
-name|chosenh
+name|chosen
 argument_list|,
 literal|"bootpath"
 argument_list|,

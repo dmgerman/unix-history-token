@@ -763,8 +763,6 @@ name|machdep_hint
 parameter_list|)
 block|{
 name|phandle_t
-name|chosen
-decl_stmt|,
 name|netdev
 decl_stmt|;
 name|char
@@ -780,13 +778,6 @@ decl_stmt|;
 name|int
 name|pathlen
 decl_stmt|;
-name|chosen
-operator|=
-name|OF_finddevice
-argument_list|(
-literal|"/chosen"
-argument_list|)
-expr_stmt|;
 name|pathlen
 operator|=
 name|OF_getprop

@@ -385,47 +385,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_offset_t
-name|OF_claim_virt
-parameter_list|(
-name|vm_offset_t
-parameter_list|,
-name|size_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|OF_alloc_phys
-parameter_list|(
-name|size_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|OF_release
 parameter_list|(
 name|void
 modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|OF_release_phys
-parameter_list|(
-name|vm_offset_t
 parameter_list|,
 name|u_int
 parameter_list|)
@@ -493,26 +457,6 @@ name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* User interface functions */
-end_comment
-
-begin_comment
-comment|/* OF_interpret */
-end_comment
-
-begin_endif
-unit|void 		*OF_set_callback(void *); void		OF_set_symbol_lookup(void *, void *);
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Time function */
