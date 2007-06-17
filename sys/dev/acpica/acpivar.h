@@ -1983,6 +1983,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* HPET table probe*/
+end_comment
+
+begin_function_decl
+name|void
+name|acpi_hpet_table_probe
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* AC adapter interface. */
 end_comment
 

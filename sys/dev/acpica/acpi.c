@@ -2487,6 +2487,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|acpi_hpet_table_probe
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* Bring device objects and regions online. */
 if|if
 condition|(
