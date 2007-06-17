@@ -11357,7 +11357,19 @@ name|SCTP_STATE_COOKIE_ECHOED
 operator|)
 condition|)
 block|{
-comment|/* Just abandon things in the front states */
+comment|/* 				 * If we have data in queue, we don't want 				 * to just free since the app may have done, 				 * send()/close or connect/send/close. And 				 * it wants the data to get across first. 				 */
+if|if
+condition|(
+name|asoc
+operator|->
+name|asoc
+operator|.
+name|total_output_queue_size
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 					 * Just abandon things in the front 					 * states 					 */
 name|sctp_free_assoc
 argument_list|(
 name|inp
@@ -11372,6 +11384,7 @@ name|SCTP_LOC_2
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
 block|}
 name|SCTP_TCB_LOCK
 argument_list|(
