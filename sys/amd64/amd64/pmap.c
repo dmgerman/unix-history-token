@@ -7133,6 +7133,19 @@ operator|&
 name|ptepde
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pte
+operator|==
+name|NULL
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"null pte in pmap_collect"
+argument_list|)
+expr_stmt|;
+block|}
 name|tpte
 operator|=
 name|pte_load_clear
@@ -9093,6 +9106,19 @@ operator|&
 name|ptepde
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pte
+operator|==
+name|NULL
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"null pte in pmap_remove_all"
+argument_list|)
+expr_stmt|;
+block|}
 name|tpte
 operator|=
 name|pte_load_clear
