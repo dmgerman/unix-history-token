@@ -3781,6 +3781,8 @@ parameter_list|)
 block|{
 name|bus_addr_t
 name|lastaddr
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|nsegs
