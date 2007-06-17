@@ -11358,17 +11358,6 @@ operator|)
 condition|)
 block|{
 comment|/* Just abandon things in the front states */
-if|if
-condition|(
-name|asoc
-operator|->
-name|asoc
-operator|.
-name|total_output_queue_size
-operator|==
-literal|0
-condition|)
-block|{
 name|sctp_free_assoc
 argument_list|(
 name|inp
@@ -11383,7 +11372,6 @@ name|SCTP_LOC_2
 argument_list|)
 expr_stmt|;
 continue|continue;
-block|}
 block|}
 name|SCTP_TCB_LOCK
 argument_list|(

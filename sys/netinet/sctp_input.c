@@ -22468,6 +22468,17 @@ name|sh
 argument_list|)
 operator|)
 expr_stmt|;
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_INPUT1
+argument_list|,
+literal|"sctp_input() length:%d iphlen:%d\n"
+argument_list|,
+name|mlen
+argument_list|,
+name|iphlen
+argument_list|)
+expr_stmt|;
 comment|/* SCTP does not allow broadcasts or multicasts */
 if|if
 condition|(

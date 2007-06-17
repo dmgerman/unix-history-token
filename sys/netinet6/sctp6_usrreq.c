@@ -405,6 +405,17 @@ operator|*
 name|ch
 argument_list|)
 expr_stmt|;
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_INPUT1
+argument_list|,
+literal|"sctp6_input() length:%d iphlen:%d\n"
+argument_list|,
+name|pkt_len
+argument_list|,
+name|iphlen
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
