@@ -83,7 +83,8 @@ begin_decl_stmt
 name|int
 name|snd_unit
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -3711,6 +3712,19 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|snd_unit
+operator|<
+literal|0
+condition|)
+name|snd_unit
+operator|=
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5641,7 +5655,12 @@ name|dev
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Reassign default unit to the next available dev. 		 */
+comment|/* 		 * Reassign default unit to the next available dev, but 		 * first, reset snd_unit to something ridiculous. 		 */
+name|snd_unit
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|i
