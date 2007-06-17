@@ -2536,115 +2536,112 @@ name|p
 argument_list|(
 name|sctps_recvpackets
 argument_list|,
-literal|"\t%lu total input packet%s\n"
+literal|"\t%lu input packet%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_recvdatagrams
 argument_list|,
-literal|"\t%lu total input datagram%s\n"
+literal|"\t\t%lu datagram%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_recvpktwithdata
 argument_list|,
-literal|"\t%lu total packet%s that had data\n"
+literal|"\t\t%lu packet%s that had data\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_recvsacks
 argument_list|,
-literal|"\t%lu total input SACK chunk%s\n"
+literal|"\t\t%lu input SACK chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_recvdata
 argument_list|,
-literal|"\t%lu total input DATA chunk%s\n"
+literal|"\t\t%lu input DATA chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_recvdupdata
 argument_list|,
-literal|"\t%lu total input duplicate DATA chunk%s\n"
+literal|"\t\t%lu duplicate DATA chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_recvheartbeat
 argument_list|,
-literal|"\t%lu total input HB chunk%s\n"
+literal|"\t\t%lu input HB chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_recvheartbeatack
 argument_list|,
-literal|"\t%lu total input HB-ACK chunk%s\n"
+literal|"\t\t%lu HB-ACK chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_recvecne
 argument_list|,
-literal|"\t%lu total input ECNE chunk%s\n"
+literal|"\t\t%lu input ECNE chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_recvauth
 argument_list|,
-literal|"\t%lu total input AUTH chunk%s\n"
+literal|"\t\t%lu input AUTH chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_recvauthmissing
 argument_list|,
-literal|"\t%lu total input chunk%s missing AUTH\n"
+literal|"\t\t%lu chunk%s missing AUTH\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_recvivalhmacid
 argument_list|,
-literal|"\t%lu total number of invalid HMAC id%s "
-literal|"received\n"
+literal|"\t\t%lu invalid HMAC id%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_recvivalkeyid
 argument_list|,
-literal|"\t%lu total number of invalid %secret ids "
-literal|"received\n"
+literal|"\t\t%lu invalid %secret ids received\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|sctps_recvauthfailed
 argument_list|,
-literal|"\t%lu total number of auth failed\n"
+literal|"\t\t%lu auth failed\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_recvexpress
 argument_list|,
-literal|"\t%lu total fa%st path receives all one "
-literal|"chunk\n"
+literal|"\t\t%lu fa%st path receives all one chunk\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_recvexpressm
 argument_list|,
-literal|"\t%lu total fa%st path multi-part data\n"
+literal|"\t\t%lu fa%st path multi-part data\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * output statistics 	 */
@@ -2652,309 +2649,308 @@ name|p
 argument_list|(
 name|sctps_sendpackets
 argument_list|,
-literal|"\t%lu total output packet%s\n"
+literal|"\t%lu output packet%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sendsacks
 argument_list|,
-literal|"\t%lu total output SACK%s\n"
+literal|"\t\t%lu output SACK%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_senddata
 argument_list|,
-literal|"\t%lu total output DATA chunk%s\n"
+literal|"\t\t%lu output DATA chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sendretransdata
 argument_list|,
-literal|"\t%lu total output retran%smitted DATA "
-literal|"chunks\n"
+literal|"\t\t%lu retran%smitted DATA chunks\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sendfastretrans
 argument_list|,
-literal|"\t%lu total output fa%st retransmitted "
-literal|"DATA chunks\n"
+literal|"\t\t%lu fa%st retransmitted DATA chunks\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sendmultfastretrans
 argument_list|,
-literal|"\t%lu total FR'%s that happened more "
-literal|"than once to same chunk (u-del multi-fr algo).\n"
+literal|"\t\t%lu FR'%s that happened more "
+literal|"than once to same chunk.\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sendheartbeat
 argument_list|,
-literal|"\t%lu total output HB chunk%s\n"
+literal|"\t\t%lu intput HB chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sendecne
 argument_list|,
-literal|"\t%lu total output ECNE chunk%s\n"
+literal|"\t\t%lu output ECNE chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sendauth
 argument_list|,
-literal|"\t%lu total output AUTH chunk%s\n"
+literal|"\t\t%lu output AUTH chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|sctps_senderrors
 argument_list|,
-literal|"\t%lu ip_output error counter\n"
+literal|"\t\t%lu ip_output error counter\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * PCKDROPREP statistics 	 */
+name|printf
+argument_list|(
+literal|"\tPacket drop statistics:\n"
+argument_list|)
+expr_stmt|;
 name|p1a
 argument_list|(
 name|sctps_pdrpfmbox
 argument_list|,
-literal|"\t%lu packet drop from middle box\n"
+literal|"\t\t%lu from middle box\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_pdrpfehos
 argument_list|,
-literal|"\t%lu packet drop from end ho%st\n"
+literal|"\t\t%lu from end ho%st\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_pdrpmbda
 argument_list|,
-literal|"\t%lu packet drop%s with data\n"
+literal|"\t\t%lu with data\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_pdrpmbct
 argument_list|,
-literal|"\t%lu packet drop%s, non-data, non-endhost\n"
+literal|"\t\t%lu non-data, non-endhost\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_pdrpbwrpt
 argument_list|,
-literal|"\t%lu packet drop, non-endho%st, bandwidth "
-literal|"rep only\n"
+literal|"\t\t%lu non-endho%st, bandwidth rep only\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|sctps_pdrpcrupt
 argument_list|,
-literal|"\t%lu packet drop, not enough for chunk "
-literal|"header\n"
+literal|"\t\t%lu not enough for chunk header\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|sctps_pdrpnedat
 argument_list|,
-literal|"\t%lu packet drop, not enough data to confirm\n"
+literal|"\t\t%lu not enough data to confirm\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_pdrppdbrk
 argument_list|,
-literal|"\t%lu packet drop, where proce%ss_chunk_drop "
-literal|"said break\n"
+literal|"\t\t%lu where proce%ss_chunk_drop said break\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|sctps_pdrptsnnf
 argument_list|,
-literal|"\t%lu packet drop, could not find TSN\n"
+literal|"\t\t%lu failed to find TSN\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_pdrpdnfnd
 argument_list|,
-literal|"\t%lu packet drop, attempt rever%se TSN lookup\n"
+literal|"\t\t%lu attempt rever%se TSN lookup\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_pdrpdiwnp
 argument_list|,
-literal|"\t%lu packet drop, e-ho%st confirms zero-rwnd\n"
+literal|"\t\t%lu e-ho%st confirms zero-rwnd\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_pdrpdizrw
 argument_list|,
-literal|"\t%lu packet drop, midbox confirm%s no space\n"
+literal|"\t\t%lu midbox confirm%s no space\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|sctps_pdrpbadd
 argument_list|,
-literal|"\t%lu packet drop, data did not match TSN\n"
+literal|"\t\t%lu data did not match TSN\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_pdrpmark
 argument_list|,
-literal|"\t%lu packet drop, TSN'%s marked for Fast Retran\n"
+literal|"\t\t%lu TSN'%s marked for Fast Retran\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Timeouts 	 */
+name|printf
+argument_list|(
+literal|"\tTimeouts:\n"
+argument_list|)
+expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timoiterator
 argument_list|,
-literal|"\t%lu number of iterator timer%s that fired\n"
+literal|"\t\t%lu iterator timer%s fired\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timodata
 argument_list|,
-literal|"\t%lu number of T3 data time out%s\n"
+literal|"\t\t%lu T3 data time out%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timowindowprobe
 argument_list|,
-literal|"\t%lu number of window probe (T3) timer%s "
-literal|"that fired\n"
+literal|"\t\t%lu window probe (T3) timer%s fired\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timoinit
 argument_list|,
-literal|"\t%lu number of INIT timer%s that fired\n"
+literal|"\t\t%lu INIT timer%s fired\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timosack
 argument_list|,
-literal|"\t%lu number of %sack timers that fired\n"
+literal|"\t\t%lu %sack timers fired\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timoshutdown
 argument_list|,
-literal|"\t%lu number of %shutdown timers that fired\n"
+literal|"\t\t%lu %shutdown timers fired\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timoheartbeat
 argument_list|,
-literal|"\t%lu number of heartbeat timer%s that "
-literal|"fired\n"
+literal|"\t\t%lu heartbeat timer%s fired\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_timocookie
 argument_list|,
-literal|"\t%lu number of time%s a cookie timeout fired\n"
+literal|"\t\t%lu a cookie timeout fired\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_timosecret
 argument_list|,
-literal|"\t%lu number of time%s an endpoint changed its "
-literal|"cookie secret\n"
+literal|"\t\t%lu an endpoint changed its cookie"
+literal|"secret\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timopathmtu
 argument_list|,
-literal|"\t%lu number of PMTU timer%s that fired\n"
+literal|"\t\t%lu PMTU timer%s fired\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timoshutdownack
 argument_list|,
-literal|"\t%lu number of %shutdown ack timers that "
-literal|"fired\n"
+literal|"\t\t%lu %shutdown ack timers fired\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timoshutdownguard
 argument_list|,
-literal|"\t%lu number of %shutdown guard timers "
-literal|"that fired\n"
+literal|"\t\t%lu %shutdown guard timers fired\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timostrmrst
 argument_list|,
-literal|"\t%lu number of %stream reset timers that "
-literal|"fired\n"
+literal|"\t\t%lu %stream reset timers fired\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timoearlyfr
 argument_list|,
-literal|"\t%lu number of early FR timer%s that fired\n"
+literal|"\t\t%lu early FR timer%s fired\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_timoasconf
 argument_list|,
-literal|"\t%lu number of time%s an asconf timer fired\n"
+literal|"\t\t%lu an asconf timer fired\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_timoautoclose
 argument_list|,
-literal|"\t%lu number of time%s auto close timer "
-literal|"fired\n"
+literal|"\t\t%lu auto close timer fired\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timoassockill
 argument_list|,
-literal|"\t%lu number of a%soc free timers expired\n"
+literal|"\t\t%lu a%soc free timers expired\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timoinpkill
 argument_list|,
-literal|"\t%lu number of inp free timer%s expired\n"
+literal|"\t\t%lu inp free timer%s expired\n"
 argument_list|)
 expr_stmt|;
 if|#
@@ -3047,32 +3043,30 @@ argument_list|(
 name|sctps_ifnomemqueued
 argument_list|,
 literal|"\t%lu look ahead tell%s us no memory in "
-literal|"interface ring buffer or we had a send error and are queuing "
-literal|"one send.\n"
+literal|"interface\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_windowprobed
 argument_list|,
-literal|"\t%lu total number of window probe%s sent\n"
+literal|"\t%lu numbers of window probe%s sent\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_lowlevelerr
 argument_list|,
-literal|"\t%lu total time%s an output error causes us "
-literal|"to clamp down on next user send.\n"
+literal|"\t%lu time%s an output error to clamp "
+literal|"down on next user send.\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_lowlevelerrusr
 argument_list|,
-literal|"\t%lu total time%s sctp_senderrors were "
-literal|"caused from a user send from a user invoked send not a sack "
-literal|"response\n"
+literal|"\t%lu time%s sctp_senderrors were "
+literal|"caused from a user\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -3095,7 +3089,7 @@ name|p
 argument_list|(
 name|sctps_ecnereducedcwnd
 argument_list|,
-literal|"\t%lu number of time%s a ECN reduced "
+literal|"\t%lu time%s a ECN reduced "
 literal|"the cwnd\n"
 argument_list|)
 expr_stmt|;
@@ -3117,7 +3111,7 @@ name|p
 argument_list|(
 name|sctps_primary_randry
 argument_list|,
-literal|"\t%lu number of time%s the sender ran dry "
+literal|"\t%lu time%s the sender ran dry "
 literal|"of user data on primary\n"
 argument_list|)
 expr_stmt|;
@@ -3146,76 +3140,71 @@ name|p
 argument_list|(
 name|sctps_sends_with_flags
 argument_list|,
-literal|"\t%lu number of %sends with "
-literal|"sinfo_flags !=0\n"
+literal|"\t%lu %sends with sinfo_flags !=0\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sends_with_unord
 argument_list|,
-literal|"\t%lu number of undordered %sends\n"
+literal|"\t%lu unordered %sends\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sends_with_eof
 argument_list|,
-literal|"\t%lu number of %sends with EOF flag set\n"
+literal|"\t%lu %sends with EOF flag set\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sends_with_abort
 argument_list|,
-literal|"\t%lu number of %sends with ABORT "
-literal|"flag set\n"
+literal|"\t%lu %sends with ABORT flag set\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_protocol_drain_calls
 argument_list|,
-literal|"\t%lu number of time%s protocol "
-literal|"drain called\n"
+literal|"\t%lu time%s protocol drain called\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_protocol_drains_done
 argument_list|,
-literal|"\t%lu number of time%s we did a "
-literal|"protocol drain\n"
+literal|"\t%lu time%s we did a protocol "
+literal|"drain\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_read_peeks
 argument_list|,
-literal|"\t%lu number of time%s recv was called with "
-literal|"peek\n"
+literal|"\t%lu time%s recv was called with peek\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_cached_chk
 argument_list|,
-literal|"\t%lu number of cached chunk%s used\n"
+literal|"\t%lu cached chunk%s used\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_cached_strmoq
 argument_list|,
-literal|"\t%lu number of cached %stream oq's used\n"
+literal|"\t%lu cached %stream oq's used\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_left_abandon
 argument_list|,
-literal|"\t%lu number of unread me%ssage abandonded "
-literal|"by close\n"
+literal|"\t%lu unread me%ssage abandonded by close\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -3242,6 +3231,21 @@ literal|"\t%lu number of map array over-run%s via "
 literal|"fwd-tsn's\n"
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|p
+undef|#
+directive|undef
+name|p1a
+undef|#
+directive|undef
+name|p2
+undef|#
+directive|undef
+name|p2a
+undef|#
+directive|undef
+name|p3
 block|}
 end_function
 
