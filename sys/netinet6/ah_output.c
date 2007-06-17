@@ -495,9 +495,12 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
-name|struct
-name|in_addr
-name|dst
+name|in_addr_t
+name|saveaddr
+init|=
+block|{
+literal|0
+block|}
 decl_stmt|;
 name|struct
 name|in_addr
@@ -1237,9 +1240,7 @@ condition|(
 name|finaldst
 condition|)
 block|{
-name|dst
-operator|.
-name|s_addr
+name|saveaddr
 operator|=
 name|ip
 operator|->
@@ -1329,9 +1330,7 @@ name|ip_dst
 operator|.
 name|s_addr
 operator|=
-name|dst
-operator|.
-name|s_addr
+name|saveaddr
 expr_stmt|;
 block|}
 name|ipsecstat
