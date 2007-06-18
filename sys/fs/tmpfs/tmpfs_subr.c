@@ -3305,6 +3305,11 @@ name|tn_aobj_pages
 operator|=
 name|newpages
 expr_stmt|;
+name|TMPFS_LOCK
+argument_list|(
+name|tmp
+argument_list|)
+expr_stmt|;
 name|tmp
 operator|->
 name|tm_pages_used
@@ -3314,6 +3319,11 @@ name|newpages
 operator|-
 name|oldpages
 operator|)
+expr_stmt|;
+name|TMPFS_UNLOCK
+argument_list|(
+name|tmp
+argument_list|)
 expr_stmt|;
 name|node
 operator|->
