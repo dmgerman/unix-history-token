@@ -20,7 +20,7 @@ name|_SYS_PRIV_H_
 end_define
 
 begin_comment
-comment|/*  * Privilege list.  In no particular order.  *  * Think carefully before adding or reusing one of these privileges -- are  * there existing instances referring to the same privilege?  Third party  * vendors may request the assignment of privileges to be used in loadable  * modules.  Particular numeric privilege assignments are part of the  * loadable kernel module ABI, and should not be changed across minor  * releases.  *  * When adding a new privilege, remember to determine if it's appropriate for  * use in jail, and update the privilege switch in kern_jail.c as necessary.  */
+comment|/*  * Privilege list, sorted loosely by kernel subsystem.  *  * Think carefully before adding or reusing one of these privileges -- are  * there existing instances referring to the same privilege?  Third party  * vendors may request the assignment of privileges to be used in loadable  * modules.  Particular numeric privilege assignments are part of the  * loadable kernel module ABI, and should not be changed across minor  * releases.  *  * When adding a new privilege, remember to determine if it's appropriate for  * use in jail, and update the privilege switch in kern_jail.c as necessary.  */
 end_comment
 
 begin_comment
