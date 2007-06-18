@@ -35,12 +35,6 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_port.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -55,6 +49,25 @@ include|#
 directive|include
 file|"opt_usb.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_DECL
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_usb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
