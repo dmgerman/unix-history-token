@@ -1698,6 +1698,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int32_t
+name|casuword32
+parameter_list|(
+specifier|volatile
+name|uint32_t
+modifier|*
+name|base
+parameter_list|,
+name|uint32_t
+name|oldval
+parameter_list|,
+name|uint32_t
+name|newval
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|intptr_t
 name|casuptr
 parameter_list|(
