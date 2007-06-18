@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20070611_0045"
+value|"20070619_0045"
 end_define
 
 begin_define
@@ -943,6 +943,13 @@ define|#
 directive|define
 name|UNIWILL_9075_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(UNIWILL, 0x9075)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNIWILL_9080_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(UNIWILL, 0x9080)
 end_define
 
 begin_comment
@@ -3286,6 +3293,33 @@ block|}
 block|,
 block|{
 name|ACER_3681WXM_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC883
+block|,
+name|HDAC_HP_SWITCH_CTL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+literal|20
+block|,
+block|{
+literal|21
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
+name|UNIWILL_9080_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC883
 block|,
