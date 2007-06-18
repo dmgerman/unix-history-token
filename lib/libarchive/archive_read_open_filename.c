@@ -144,6 +144,10 @@ name|st_mode
 decl_stmt|;
 comment|/* Mode bits for opened file. */
 name|char
+name|can_skip
+decl_stmt|;
+comment|/* This file supports skipping. */
+name|char
 name|filename
 index|[
 literal|1
@@ -449,6 +453,12 @@ operator|->
 name|fd
 operator|=
 operator|-
+literal|1
+expr_stmt|;
+name|mine
+operator|->
+name|can_skip
+operator|=
 literal|1
 expr_stmt|;
 return|return
@@ -869,6 +879,20 @@ name|old_offset
 decl_stmt|,
 name|new_offset
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|mine
+operator|->
+name|can_skip
+condition|)
+comment|/* We can't skip, so ... */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* ... skip zero bytes. */
 comment|/* Reduce request to the next smallest multiple of block_size */
 name|request
 operator|=
@@ -884,6 +908,17 @@ name|mine
 operator|->
 name|block_size
 expr_stmt|;
+if|if
+condition|(
+name|request
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Hurray for lazy evaluation: if the first lseek fails, the second 	 * one will not be executed. 	 */
 if|if
 condition|(
@@ -926,6 +961,13 @@ literal|0
 operator|)
 condition|)
 block|{
+comment|/* If skip failed once, it will probably fail again. */
+name|mine
+operator|->
+name|can_skip
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|errno

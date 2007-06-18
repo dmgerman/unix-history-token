@@ -118,6 +118,9 @@ decl_stmt|;
 name|size_t
 name|block_size
 decl_stmt|;
+name|char
+name|can_skip
+decl_stmt|;
 name|void
 modifier|*
 name|buffer
@@ -341,6 +344,12 @@ operator|->
 name|fd
 operator|=
 name|fd
+expr_stmt|;
+name|mine
+operator|->
+name|can_skip
+operator|=
+literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -610,6 +619,18 @@ name|old_offset
 decl_stmt|,
 name|new_offset
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|mine
+operator|->
+name|can_skip
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* Reduce request to the next smallest multiple of block_size */
 name|request
 operator|=
@@ -625,6 +646,17 @@ name|mine
 operator|->
 name|block_size
 expr_stmt|;
+if|if
+condition|(
+name|request
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Hurray for lazy evaluation: if the first lseek fails, the second 	 * one will not be executed. 	 */
 if|if
 condition|(
@@ -667,6 +699,13 @@ literal|0
 operator|)
 condition|)
 block|{
+comment|/* If seek failed once, it will probably fail again. */
+name|mine
+operator|->
+name|can_skip
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|errno
