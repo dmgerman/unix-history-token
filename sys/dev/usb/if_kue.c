@@ -1546,13 +1546,11 @@ name|t
 operator|->
 name|kue_did
 condition|)
-block|{
 return|return
 operator|(
 name|UMATCH_VENDOR_PRODUCT
 operator|)
 return|;
-block|}
 name|t
 operator|++
 expr_stmt|;
