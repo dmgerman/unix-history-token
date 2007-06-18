@@ -305,6 +305,17 @@ block|}
 end_function
 
 begin_comment
+comment|/* Temporary define for 6.x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIG_HPET
+value|"HPET"
+end_define
+
+begin_comment
 comment|/* Discover the HPET via the ACPI table of the same name. */
 end_comment
 
@@ -316,7 +327,7 @@ name|device_t
 name|parent
 parameter_list|)
 block|{
-name|ACPI_TABLE_HPET
+name|HPET_TABLE
 modifier|*
 name|hpet
 decl_stmt|;
@@ -333,17 +344,14 @@ decl_stmt|;
 comment|/* Currently, ID and minimum clock tick info is unused. */
 name|status
 operator|=
-name|AcpiGetTable
+name|AcpiGetFirmwareTable
 argument_list|(
 name|ACPI_SIG_HPET
 argument_list|,
 literal|1
 argument_list|,
-operator|(
-name|ACPI_TABLE_HEADER
-operator|*
-operator|*
-operator|)
+name|ACPI_LOGICAL_ADDRESSING
+argument_list|,
 operator|&
 name|hdr
 argument_list|)
@@ -360,7 +368,7 @@ comment|/* 	 * The unit number could be derived from hdr->Sequence but we only 	
 name|hpet
 operator|=
 operator|(
-name|ACPI_TABLE_HPET
+name|HPET_TABLE
 operator|*
 operator|)
 name|hdr
@@ -369,7 +377,7 @@ if|if
 condition|(
 name|hpet
 operator|->
-name|Sequence
+name|HpetNumber
 operator|!=
 literal|0
 condition|)
@@ -379,7 +387,7 @@ literal|"ACPI HPET table warning: Sequence is non-zero (%d)\n"
 argument_list|,
 name|hpet
 operator|->
-name|Sequence
+name|HpetNumber
 argument_list|)
 expr_stmt|;
 name|child
@@ -433,7 +441,7 @@ literal|0
 argument_list|,
 name|hpet
 operator|->
-name|Address
+name|BaseAddress
 operator|.
 name|Address
 argument_list|,
