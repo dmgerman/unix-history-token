@@ -22345,6 +22345,12 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|SCTP_PACKET_LOGGING
+if|if
+condition|(
+name|sctp_logging_level
+operator|&
+name|SCTP_LAST_PACKET_TRACING
+condition|)
 name|sctp_packet_log
 argument_list|(
 name|m
