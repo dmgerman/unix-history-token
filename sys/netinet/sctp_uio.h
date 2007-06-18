@@ -3061,6 +3061,13 @@ parameter_list|)
 value|SCTP_STAT_DECR(_x)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_ALIGN_64_SA
+value|36
+end_define
+
 begin_union
 union|union
 name|sctp_sockstore
@@ -3104,6 +3111,12 @@ directive|endif
 name|struct
 name|sockaddr
 name|sa
+decl_stmt|;
+name|uint8_t
+name|reserved
+index|[
+name|SCTP_ALIGN_64_SA
+index|]
 decl_stmt|;
 block|}
 union|;

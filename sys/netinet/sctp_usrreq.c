@@ -5917,6 +5917,10 @@ name|creat_lock_on
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|stcb
+condition|)
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|stcb

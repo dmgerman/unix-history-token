@@ -5975,6 +5975,7 @@ name|asoc
 operator|->
 name|start_time
 expr_stmt|;
+comment|/* 	 * sa_ignore MEMLEAK {memory is put in the assoc mapping array and 	 * freed later whe the association is freed. 	 */
 return|return
 operator|(
 literal|0
@@ -7662,6 +7663,15 @@ name|SCTP_TIMER_TYPE_ZERO_COPY
 case|:
 if|if
 condition|(
+name|inp
+operator|==
+name|NULL
+condition|)
+block|{
+break|break;
+block|}
+if|if
+condition|(
 name|sctp_is_feature_on
 argument_list|(
 name|inp
@@ -7684,6 +7694,15 @@ break|break;
 case|case
 name|SCTP_TIMER_TYPE_ZCOPY_SENDQ
 case|:
+if|if
+condition|(
+name|inp
+operator|==
+name|NULL
+condition|)
+block|{
+break|break;
+block|}
 if|if
 condition|(
 name|sctp_is_feature_on

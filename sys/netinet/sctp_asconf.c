@@ -11773,6 +11773,22 @@ literal|2
 condition|)
 block|{
 comment|/* can't delete the last local address */
+name|SCTP_FREE
+argument_list|(
+name|asc
+argument_list|,
+name|SCTP_M_ASC_IT
+argument_list|)
+expr_stmt|;
+name|SCTP_ZONE_FREE
+argument_list|(
+name|sctppcbinfo
+operator|.
+name|ipi_zone_laddr
+argument_list|,
+name|wi
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
