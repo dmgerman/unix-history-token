@@ -202,35 +202,33 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|device_probe_t
 name|cue_match
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|device_attach_t
 name|cue_attach
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|device_detach_t
 name|cue_detach
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|device_shutdown_t
+name|cue_shutdown
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -360,16 +358,6 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|cue_shutdown
-parameter_list|(
-name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4770,7 +4758,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|cue_shutdown
 parameter_list|(
 name|device_t
@@ -4809,7 +4797,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

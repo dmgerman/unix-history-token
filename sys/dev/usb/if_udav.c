@@ -478,6 +478,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/usb_port.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -625,45 +631,54 @@ name|__FreeBSD__
 argument_list|)
 end_if
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|device_probe_t
 name|udav_match
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|device_attach_t
 name|udav_attach
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|device_detach_t
 name|udav_detach
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|void
+name|device_shutdown_t
 name|udav_shutdown
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|miibus_readreg_t
+name|udav_miibus_readreg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|miibus_writereg_t
+name|udav_miibus_writereg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|miibus_statchg_t
+name|udav_miibus_statchg
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -895,6 +910,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
 begin_function_decl
 specifier|static
 name|int
@@ -934,15 +958,6 @@ name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
 
 begin_function_decl
 specifier|static
@@ -8496,7 +8511,7 @@ operator|)
 return|;
 block|}
 specifier|static
-name|void
+name|int
 name|udav_miibus_writereg
 parameter_list|(
 name|device_t
@@ -8529,7 +8544,12 @@ name|dev
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* XXX real error? */
 name|sc
 operator|=
 name|USBGETSOFTC
@@ -8587,7 +8607,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* XXX real error? */
 block|}
 comment|/* XXX: one PHY only for the internal PHY */
 if|if
@@ -8617,7 +8642,12 @@ name|phy
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* XXX real error? */
 block|}
 name|udav_lock_mii
 argument_list|(
@@ -8702,7 +8732,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 specifier|static
 name|void
@@ -8762,7 +8796,7 @@ name|__FreeBSD__
 argument_list|)
 comment|/*  * Stop all chip I/O so that the kernel's probe routines don't  * get confused by errant DMAs when rebooting.  */
 specifier|static
-name|void
+name|int
 name|udav_shutdown
 parameter_list|(
 name|device_t
@@ -8786,7 +8820,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 specifier|static
 name|void
