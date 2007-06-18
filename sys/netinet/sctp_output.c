@@ -51916,6 +51916,7 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 else|else
+block|{
 operator|*
 name|sndout
 operator|=
@@ -51934,6 +51935,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|m

@@ -7850,6 +7850,12 @@ block|{
 name|start_timer_return
 label|:
 comment|/* set a timer to continue this later */
+if|if
+condition|(
+name|it
+operator|->
+name|stcb
+condition|)
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|it
