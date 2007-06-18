@@ -1305,7 +1305,7 @@ name|devq
 operator|=
 name|cam_simq_alloc
 argument_list|(
-literal|1
+name|maxq
 argument_list|)
 expr_stmt|;
 if|if
@@ -1347,7 +1347,7 @@ name|mpt
 argument_list|,
 literal|1
 argument_list|,
-literal|1
+name|maxq
 argument_list|,
 name|devq
 argument_list|)
@@ -1517,7 +1517,7 @@ name|mpt
 argument_list|,
 literal|1
 argument_list|,
-literal|1
+name|maxq
 argument_list|,
 name|devq
 argument_list|)
