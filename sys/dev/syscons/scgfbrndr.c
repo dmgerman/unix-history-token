@@ -358,6 +358,141 @@ directive|ifndef
 name|SC_NO_CUTPASTE
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc64__
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|u_char
+name|mouse_pointer
+index|[
+literal|22
+operator|*
+literal|2
+index|]
+init|=
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* ............ */
+literal|0x80
+block|,
+literal|0x00
+block|,
+comment|/* *........... */
+literal|0xc0
+block|,
+literal|0x00
+block|,
+comment|/* **.......... */
+literal|0xe0
+block|,
+literal|0x00
+block|,
+comment|/* ***......... */
+literal|0xf0
+block|,
+literal|0x00
+block|,
+comment|/* ****........ */
+literal|0xf8
+block|,
+literal|0x00
+block|,
+comment|/* *****....... */
+literal|0xfc
+block|,
+literal|0x00
+block|,
+comment|/* ******...... */
+literal|0xfe
+block|,
+literal|0x00
+block|,
+comment|/* *******..... */
+literal|0xff
+block|,
+literal|0x00
+block|,
+comment|/* ********.... */
+literal|0xff
+block|,
+literal|0x80
+block|,
+comment|/* *********... */
+literal|0xfc
+block|,
+literal|0xc0
+block|,
+comment|/* ******..**.. */
+literal|0xdc
+block|,
+literal|0x00
+block|,
+comment|/* **.***...... */
+literal|0x8e
+block|,
+literal|0x00
+block|,
+comment|/* *...***..... */
+literal|0x0e
+block|,
+literal|0x00
+block|,
+comment|/* ....***..... */
+literal|0x07
+block|,
+literal|0x00
+block|,
+comment|/* .....***.... */
+literal|0x04
+block|,
+literal|0x00
+block|,
+comment|/* .....*...... */
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* ............ */
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* ............ */
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* ............ */
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* ............ */
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* ............ */
+literal|0x00
+block|,
+literal|0x00
+comment|/* ............ */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|u_char
@@ -401,6 +536,11 @@ literal|0x00
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1578,6 +1718,48 @@ name|int
 name|on
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__sparc64__
+operator|(
+operator|*
+name|vidsw
+index|[
+name|scp
+operator|->
+name|sc
+operator|->
+name|adapter
+index|]
+operator|->
+name|putm
+operator|)
+operator|(
+name|scp
+operator|->
+name|sc
+operator|->
+name|adp
+operator|,
+name|x
+operator|,
+name|y
+operator|,
+name|mouse_pointer
+operator|,
+name|on
+condition|?
+literal|0xffffffff
+else|:
+literal|0x0
+operator|,
+literal|22
+operator|,
+literal|12
+operator|)
+expr_stmt|;
+else|#
+directive|else
 name|int
 name|i
 decl_stmt|,
@@ -1704,6 +1886,8 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
