@@ -2538,11 +2538,14 @@ name|device
 operator|=
 name|dev
 expr_stmt|;
-name|usb_callout_init
+name|callout_init
 argument_list|(
+operator|&
 name|xfer
 operator|->
 name|timeout_handle
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|DPRINTFN
