@@ -167,13 +167,90 @@ begin_comment
 comment|/*  * USB methods  */
 end_comment
 
-begin_expr_stmt
-name|USB_DECLARE_DRIVER
+begin_decl_stmt
+specifier|static
+name|device_probe_t
+name|ubt_match
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|device_attach_t
+name|ubt_attach
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|device_detach_t
+name|ubt_detach
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|device_method_t
+name|ubt_methods
+index|[]
+init|=
+block|{
+comment|/* Device interface */
+name|DEVMETHOD
 argument_list|(
-name|ubt
+name|device_probe
+argument_list|,
+name|ubt_match
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_attach
+argument_list|,
+name|ubt_attach
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_detach
+argument_list|,
+name|ubt_detach
+argument_list|)
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|driver_t
+name|ubt_driver
+init|=
+block|{
+literal|"ubt"
+block|,
+name|ubt_methods
+block|,
+expr|sizeof
+operator|(
+expr|struct
+name|ubt_softc
+operator|)
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|devclass_t
+name|ubt_devclass
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -962,14 +1039,14 @@ begin_comment
 comment|/*  * Probe for a USB Bluetooth device  */
 end_comment
 
-begin_macro
-name|USB_MATCH
-argument_list|(
-argument|ubt
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|ubt_match
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
 comment|/* 	 * If for some reason device should not be attached then put 	 * VendorID/ProductID pair into the list below. The format is 	 * as follows: 	 * 	 *	{ VENDOR_ID, PRODUCT_ID }, 	 * 	 * where VENDOR_ID and PRODUCT_ID are hex numbers. 	 */
 specifier|static
@@ -1019,13 +1096,16 @@ block|}
 comment|/* This should be the last item in the list */
 block|}
 decl_stmt|;
-name|USB_MATCH_START
-argument_list|(
-name|ubt
-argument_list|,
+name|struct
+name|usb_attach_arg
+modifier|*
 name|uaa
+init|=
+name|device_get_ivars
+argument_list|(
+name|self
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|usb_device_descriptor_t
 modifier|*
 name|dd
@@ -1114,34 +1194,45 @@ name|UMATCH_NONE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* USB_MATCH(ubt) */
+comment|/* ubt_match */
 end_comment
 
 begin_comment
 comment|/*  * Attach the device  */
 end_comment
 
-begin_macro
-name|USB_ATTACH
-argument_list|(
-argument|ubt
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|ubt_attach
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
-name|USB_ATTACH_START
-argument_list|(
-name|ubt
-argument_list|,
+name|struct
+name|ubt_softc
+modifier|*
 name|sc
-argument_list|,
-name|uaa
+init|=
+name|device_get_softc
+argument_list|(
+name|self
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|struct
+name|usb_attach_arg
+modifier|*
+name|uaa
+init|=
+name|device_get_ivars
+argument_list|(
+name|self
+argument_list|)
+decl_stmt|;
 name|usb_config_descriptor_t
 modifier|*
 name|cd
@@ -3101,32 +3192,35 @@ return|return
 name|ENXIO
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* USB_ATTACH(ubt) */
+comment|/* ubt_attach */
 end_comment
 
 begin_comment
 comment|/*  * Detach the device  */
 end_comment
 
-begin_macro
-name|USB_DETACH
-argument_list|(
-argument|ubt
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+specifier|static
+name|int
+name|ubt_detach
+parameter_list|(
+name|device_t
+name|self
+parameter_list|)
 block|{
-name|USB_DETACH_START
-argument_list|(
-name|ubt
-argument_list|,
+name|struct
+name|ubt_softc
+modifier|*
 name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|self
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/* Destroy Netgraph node */
 if|if
 condition|(
@@ -3510,10 +3604,10 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* USB_DETACH(ubt) */
+comment|/* ubt_detach */
 end_comment
 
 begin_comment
