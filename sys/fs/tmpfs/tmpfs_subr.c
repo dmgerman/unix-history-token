@@ -4723,7 +4723,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|nanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|now
