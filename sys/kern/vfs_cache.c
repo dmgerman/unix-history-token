@@ -2750,7 +2750,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Flush all entries referencing a particular filesystem.  *  * Since we need to check it anyway, we will flush all the invalid  * entries at the same time.  */
+comment|/*  * Flush all entries referencing a particular filesystem.  */
 end_comment
 
 begin_function
