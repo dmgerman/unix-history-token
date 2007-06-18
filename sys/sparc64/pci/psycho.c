@@ -506,6 +506,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|ofw_pci_alloc_busno_t
+name|psycho_alloc_busno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|ofw_pci_adjust_busrange_t
 name|psycho_adjust_busrange
 decl_stmt|;
@@ -665,6 +672,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|ofw_pci_alloc_busno
+argument_list|,
+name|psycho_alloc_busno
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|ofw_pci_adjust_busrange
 argument_list|,
 name|psycho_adjust_busrange
@@ -723,15 +737,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
 argument|psycho_softc
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|psycho_softcs
 operator|=
 name|SLIST_HEAD_INITIALIZER
@@ -740,6 +752,13 @@ name|psycho_softcs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|uint8_t
+name|psycho_pci_bus_cnt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -2908,9 +2927,9 @@ name|sc
 operator|->
 name|sc_pci_subbus
 operator|=
-name|ofw_pci_alloc_busno
+name|psycho_alloc_busno
 argument_list|(
-name|node
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Program the bus range registers. 	 * NOTE: for the Psycho, the second write changes the bus number the 	 * Psycho itself uses for it's configuration space, so these 	 * writes must be kept in this order! 	 * The Hummingbird/Sabre always uses bus 0, but there only can be one 	 * Hummingbird/Sabre per machine. 	 */
@@ -6155,6 +6174,37 @@ operator|(
 name|sc
 operator|->
 name|sc_node
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|psycho_alloc_busno
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+if|if
+condition|(
+name|psycho_pci_bus_cnt
+operator|==
+name|PCI_BUSMAX
+condition|)
+name|panic
+argument_list|(
+literal|"%s: out of PCI bus numbers"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|psycho_pci_bus_cnt
+operator|++
 operator|)
 return|;
 block|}

@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_global.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -129,7 +123,7 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|SUN4V
-name|u_int
+name|int
 name|secbus
 decl_stmt|;
 endif|#
@@ -171,19 +165,25 @@ literal|"ofw_pcib_gen_setup: no ofw pci parent bus!"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Setup the secondary bus number register, by allocating a new unique 	 * bus number for it; the firmware preset does not always seem to be 	 * correct. 	 */
+comment|/* 	 * Setup the secondary bus number register, if supported, by 	 * allocating a new unique bus number for it; the firmware 	 * preset does not always seem to be correct in that case. 	 */
 ifndef|#
 directive|ifndef
 name|SUN4V
 name|secbus
 operator|=
-name|ofw_pci_alloc_busno
+name|OFW_PCI_ALLOC_BUSNO
 argument_list|(
-name|sc
-operator|->
-name|ops_node
+name|bridge
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|secbus
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 name|pci_write_config
 argument_list|(
 name|bridge
@@ -245,6 +245,7 @@ argument_list|,
 name|secbus
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|ofw_bus_setup_iinfo
@@ -510,7 +511,7 @@ name|device_printf
 argument_list|(
 name|bridge
 argument_list|,
-literal|"adjusting secondary bus number from %d to %d\n"
+literal|"adjusting subordinate bus number from %d to %d\n"
 argument_list|,
 name|sc
 operator|->

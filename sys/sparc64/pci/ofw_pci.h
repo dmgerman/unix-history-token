@@ -138,15 +138,6 @@ parameter_list|)
 value|(((r)->cspace>> 24)& 0x03)
 end_define
 
-begin_function_decl
-name|uint8_t
-name|ofw_pci_alloc_busno
-parameter_list|(
-name|phandle_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
