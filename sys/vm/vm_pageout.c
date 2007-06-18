@@ -1112,7 +1112,7 @@ name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * It doesn't cost us anything to pageout OBJT_DEFAULT or OBJT_SWAP 	 * with the new swapper, but we could have serious problems paging 	 * out other object types if there is insufficient memory.   	 * 	 * Unfortunately, checking free memory here is far too late, so the 	 * check has been moved up a procedural level. 	 */
-comment|/* 	 * Don't mess with the page if it's busy, held, or special 	 */
+comment|/* 	 * Can't clean the page if it's busy or held. 	 */
 if|if
 condition|(
 operator|(
@@ -1138,14 +1138,6 @@ operator|->
 name|oflags
 operator|&
 name|VPO_BUSY
-operator|)
-operator|||
-operator|(
-name|m
-operator|->
-name|flags
-operator|&
-name|PG_UNMANAGED
 operator|)
 operator|)
 condition|)
@@ -1255,14 +1247,6 @@ operator|||
 name|p
 operator|->
 name|busy
-operator|||
-operator|(
-name|p
-operator|->
-name|flags
-operator|&
-name|PG_UNMANAGED
-operator|)
 condition|)
 block|{
 name|ib
@@ -1406,14 +1390,6 @@ operator|||
 name|p
 operator|->
 name|busy
-operator|||
-operator|(
-name|p
-operator|->
-name|flags
-operator|&
-name|PG_UNMANAGED
-operator|)
 condition|)
 block|{
 break|break;
