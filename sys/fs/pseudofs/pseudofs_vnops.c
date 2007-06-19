@@ -2485,6 +2485,8 @@ condition|(
 name|buflen
 operator|>
 name|MAXPHYS
+operator|+
+literal|1
 condition|)
 block|{
 if|if
