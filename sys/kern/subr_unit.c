@@ -3135,6 +3135,17 @@ decl_stmt|,
 modifier|*
 name|p2
 decl_stmt|;
+name|WITNESS_WARN
+argument_list|(
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
+argument_list|,
+name|NULL
+argument_list|,
+literal|"free_unr"
+argument_list|)
+expr_stmt|;
 name|p1
 operator|=
 name|Malloc
