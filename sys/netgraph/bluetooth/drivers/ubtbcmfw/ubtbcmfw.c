@@ -1184,7 +1184,7 @@ name|devclass_get_softc
 argument_list|(
 name|ubtbcmfw_devclass
 argument_list|,
-name|UBTBCMFWUNIT
+name|UBTBCMFW_UNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -1380,7 +1380,7 @@ name|devclass_get_softc
 argument_list|(
 name|ubtbcmfw_devclass
 argument_list|,
-name|UBTBCMFWUNIT
+name|UBTBCMFW_UNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -1532,7 +1532,7 @@ name|devclass_get_softc
 argument_list|(
 name|ubtbcmfw_devclass
 argument_list|,
-name|UBTBCMFWUNIT
+name|UBTBCMFW_UNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -1789,7 +1789,7 @@ name|devclass_get_softc
 argument_list|(
 name|ubtbcmfw_devclass
 argument_list|,
-name|UBTBCMFWUNIT
+name|UBTBCMFW_UNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -2037,7 +2037,7 @@ name|devclass_get_softc
 argument_list|(
 name|ubtbcmfw_devclass
 argument_list|,
-name|UBTBCMFWUNIT
+name|UBTBCMFW_UNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -2171,7 +2171,7 @@ name|devclass_get_softc
 argument_list|(
 name|ubtbcmfw_devclass
 argument_list|,
-name|UBTBCMFWUNIT
+name|UBTBCMFW_UNIT
 argument_list|(
 name|dev
 argument_list|)
