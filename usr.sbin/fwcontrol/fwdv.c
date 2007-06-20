@@ -261,7 +261,7 @@ begin_define
 define|#
 directive|define
 name|NCHUNK
-value|8
+value|64
 end_define
 
 begin_define
