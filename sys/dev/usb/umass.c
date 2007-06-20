@@ -180,7 +180,7 @@ name|m
 parameter_list|,
 name|x
 parameter_list|)
-value|if (umassdebug& (m)) logprintf x
+value|if (umassdebug& (m)) printf x
 end_define
 
 begin_define

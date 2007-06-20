@@ -159,7 +159,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (usbdebug) logprintf x
+value|if (usbdebug) printf x
 end_define
 
 begin_define
@@ -171,7 +171,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (usbdebug>(n)) logprintf x
+value|if (usbdebug>(n)) printf x
 end_define
 
 begin_decl_stmt

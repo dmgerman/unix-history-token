@@ -432,7 +432,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|do { if (uaudiodebug) logprintf x; } while (0)
+value|do { if (uaudiodebug) printf x; } while (0)
 end_define
 
 begin_define
@@ -444,7 +444,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|do { if (uaudiodebug>(n)) logprintf x; } while (0)
+value|do { if (uaudiodebug>(n)) printf x; } while (0)
 end_define
 
 begin_decl_stmt
@@ -5176,7 +5176,7 @@ operator|->
 name|wChannelConfig
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|printf
 argument_list|(
 literal|"cluster: bNrChannels=%u wChannelConfig=0x%.4x"
 argument_list|,
@@ -5212,7 +5212,7 @@ operator|&
 literal|1
 condition|)
 block|{
-name|logprintf
+name|printf
 argument_list|(
 literal|"%c%s"
 argument_list|,
@@ -5240,7 +5240,7 @@ operator|>>
 literal|1
 expr_stmt|;
 block|}
-name|logprintf
+name|printf
 argument_list|(
 literal|"> iChannelNames=%u"
 argument_list|,
@@ -13227,7 +13227,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-name|logprintf
+name|printf
 argument_list|(
 literal|"id %d:\t"
 argument_list|,
@@ -13251,7 +13251,7 @@ block|{
 case|case
 name|UDESCSUB_AC_INPUT
 case|:
-name|logprintf
+name|printf
 argument_list|(
 literal|"AC_INPUT type=%s\n"
 argument_list|,
@@ -13273,7 +13273,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|printf
 argument_list|(
 literal|"\t"
 argument_list|)
@@ -13293,7 +13293,7 @@ operator|&
 name|cluster
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -13302,7 +13302,7 @@ break|break;
 case|case
 name|UDESCSUB_AC_OUTPUT
 case|:
-name|logprintf
+name|printf
 argument_list|(
 literal|"AC_OUTPUT type=%s "
 argument_list|,
@@ -13324,7 +13324,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|printf
 argument_list|(
 literal|"src=%d\n"
 argument_list|,
@@ -13344,7 +13344,7 @@ break|break;
 case|case
 name|UDESCSUB_AC_MIXER
 case|:
-name|logprintf
+name|printf
 argument_list|(
 literal|"AC_MIXER src="
 argument_list|)
@@ -13371,7 +13371,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|logprintf
+name|printf
 argument_list|(
 literal|"%d "
 argument_list|,
@@ -13390,7 +13390,7 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|printf
 argument_list|(
 literal|"\n\t"
 argument_list|)
@@ -13410,7 +13410,7 @@ operator|&
 name|cluster
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -13419,7 +13419,7 @@ break|break;
 case|case
 name|UDESCSUB_AC_SELECTOR
 case|:
-name|logprintf
+name|printf
 argument_list|(
 literal|"AC_SELECTOR src="
 argument_list|)
@@ -13446,7 +13446,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|logprintf
+name|printf
 argument_list|(
 literal|"%d "
 argument_list|,
@@ -13465,7 +13465,7 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -13474,7 +13474,7 @@ break|break;
 case|case
 name|UDESCSUB_AC_FEATURE
 case|:
-name|logprintf
+name|printf
 argument_list|(
 literal|"AC_FEATURE src=%d\n"
 argument_list|,
@@ -13494,7 +13494,7 @@ break|break;
 case|case
 name|UDESCSUB_AC_PROCESSING
 case|:
-name|logprintf
+name|printf
 argument_list|(
 literal|"AC_PROCESSING src="
 argument_list|)
@@ -13521,7 +13521,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|logprintf
+name|printf
 argument_list|(
 literal|"%d "
 argument_list|,
@@ -13540,7 +13540,7 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|printf
 argument_list|(
 literal|"\n\t"
 argument_list|)
@@ -13560,7 +13560,7 @@ operator|&
 name|cluster
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -13569,7 +13569,7 @@ break|break;
 case|case
 name|UDESCSUB_AC_EXTENSION
 case|:
-name|logprintf
+name|printf
 argument_list|(
 literal|"AC_EXTENSION src="
 argument_list|)
@@ -13596,7 +13596,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|logprintf
+name|printf
 argument_list|(
 literal|"%d "
 argument_list|,
@@ -13615,7 +13615,7 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|printf
 argument_list|(
 literal|"\n\t"
 argument_list|)
@@ -13635,14 +13635,14 @@ operator|&
 name|cluster
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|logprintf
+name|printf
 argument_list|(
 literal|"unknown audio control (subtype=%d)\n"
 argument_list|,
@@ -13681,7 +13681,7 @@ block|{
 name|int
 name|k
 decl_stmt|;
-name|logprintf
+name|printf
 argument_list|(
 literal|"\tinput%d: "
 argument_list|,
@@ -13707,7 +13707,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|logprintf
+name|printf
 argument_list|(
 literal|"NULL\n"
 argument_list|)
@@ -13729,7 +13729,7 @@ condition|;
 name|k
 operator|++
 control|)
-name|logprintf
+name|printf
 argument_list|(
 literal|"%s "
 argument_list|,
@@ -13744,13 +13744,13 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|logprintf
+name|printf
 argument_list|(
 literal|"\toutput: "
 argument_list|)
@@ -13779,7 +13779,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|logprintf
+name|printf
 argument_list|(
 literal|"%s "
 argument_list|,
@@ -13794,7 +13794,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|printf
 argument_list|(
 literal|"\n"
 argument_list|)

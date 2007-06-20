@@ -281,13 +281,13 @@ file|<sys/syslog.h>
 end_include
 
 begin_comment
-comment|/* #define logprintf(args...)	log(LOG_DEBUG, args) */
+comment|/* #define printf(args...)	log(LOG_DEBUG, args) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|logprintf
+name|printf
 value|printf
 end_define
 

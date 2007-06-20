@@ -196,7 +196,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (ohcidebug) logprintf x
+value|if (ohcidebug) printf x
 end_define
 
 begin_define
@@ -208,7 +208,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (ohcidebug>(n)) logprintf x
+value|if (ohcidebug>(n)) printf x
 end_define
 
 begin_decl_stmt

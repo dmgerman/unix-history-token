@@ -230,7 +230,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|do { if (rumdebug> 0) logprintf x; } while (0)
+value|do { if (rumdebug> 0) printf x; } while (0)
 end_define
 
 begin_define
@@ -242,7 +242,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|do { if (rumdebug>= (n)) logprintf x; } while (0)
+value|do { if (rumdebug>= (n)) printf x; } while (0)
 end_define
 
 begin_decl_stmt

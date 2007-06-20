@@ -190,7 +190,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (ulptdebug) logprintf x
+value|if (ulptdebug) printf x
 end_define
 
 begin_define
@@ -202,7 +202,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (ulptdebug>(n)) logprintf x
+value|if (ulptdebug>(n)) printf x
 end_define
 
 begin_decl_stmt

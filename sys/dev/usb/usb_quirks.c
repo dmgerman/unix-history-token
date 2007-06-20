@@ -766,7 +766,7 @@ name|quirks
 operator|.
 name|uq_flags
 condition|)
-name|logprintf
+name|printf
 argument_list|(
 literal|"usbd_find_quirk 0x%04x/0x%04x/%x: %d\n"
 argument_list|,

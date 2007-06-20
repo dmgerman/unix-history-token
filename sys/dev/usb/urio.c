@@ -172,7 +172,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (uriodebug) logprintf x
+value|if (uriodebug) printf x
 end_define
 
 begin_define
@@ -184,7 +184,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (uriodebug>(n)) logprintf x
+value|if (uriodebug>(n)) printf x
 end_define
 
 begin_decl_stmt

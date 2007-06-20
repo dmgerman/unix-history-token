@@ -233,7 +233,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (umodemdebug> (n)) logprintf x
+value|if (umodemdebug> (n)) printf x
 end_define
 
 begin_else

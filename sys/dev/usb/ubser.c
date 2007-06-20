@@ -222,7 +222,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|do { \ 				if (ubserdebug) \ 					logprintf x; \ 			} while (0)
+value|do { \ 				if (ubserdebug) \ 					printf x; \ 			} while (0)
 end_define
 
 begin_define
@@ -234,7 +234,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|do { \ 				if (ubserdebug> (n)) \ 					logprintf x; \ 			} while (0)
+value|do { \ 				if (ubserdebug> (n)) \ 					printf x; \ 			} while (0)
 end_define
 
 begin_else

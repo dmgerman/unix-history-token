@@ -260,7 +260,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|do { \ 				if (uplcomdebug> (n)) \ 					logprintf x; \ 			} while (0)
+value|do { \ 				if (uplcomdebug> (n)) \ 					printf x; \ 			} while (0)
 end_define
 
 begin_else

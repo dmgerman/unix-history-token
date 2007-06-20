@@ -614,7 +614,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|do { if (ehcidebug) logprintf x; } while (0)
+value|do { if (ehcidebug) printf x; } while (0)
 end_define
 
 begin_decl_stmt
