@@ -633,7 +633,7 @@ name|isoptstring
 parameter_list|(
 name|s
 parameter_list|)
-value|(((s)[0] == '-' || (s)[0] == '+')&& (s)[1] != '\0')
+value|less_is_more   ? (((s)[0] == '-')&& (s)[1] != '\0') : \ 			(((s)[0] == '-' || (s)[0] == '+')&& (s)[1] != '\0')
 while|while
 condition|(
 name|argc
