@@ -824,6 +824,16 @@ block|}
 block|,
 block|{
 block|{
+name|USB_VENDOR_SAMSUNG
+block|,
+name|USB_PRODUCT_SAMSUNG_I500
+block|}
+block|,
+name|PALM4
+block|}
+block|,
+block|{
+block|{
 name|USB_VENDOR_SONY
 block|,
 name|USB_PRODUCT_SONY_CLIE_40
