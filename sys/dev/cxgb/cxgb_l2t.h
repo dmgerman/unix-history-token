@@ -133,6 +133,16 @@ parameter_list|)
 value|mtx_init((x), (str), NULL, MTX_DEF)
 end_define
 
+begin_define
+define|#
+directive|define
+name|rw_destroy
+parameter_list|(
+name|x
+parameter_list|)
+value|mtx_destroy((x))
+end_define
+
 begin_endif
 endif|#
 directive|endif
