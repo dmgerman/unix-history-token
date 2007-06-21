@@ -79,15 +79,6 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -111,11 +102,6 @@ include|#
 directive|include
 file|<sys/rman.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -622,49 +608,33 @@ name|PCI_UHCI_BASE_REG
 value|0x20
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|device_attach_t
 name|uhci_pci_attach
-parameter_list|(
-name|device_t
-name|self
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|device_detach_t
 name|uhci_pci_detach
-parameter_list|(
-name|device_t
-name|self
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|device_suspend_t
 name|uhci_pci_suspend
-parameter_list|(
-name|device_t
-name|self
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|device_resume_t
 name|uhci_pci_resume
-parameter_list|(
-name|device_t
-name|self
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static

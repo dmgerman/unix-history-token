@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_port.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usbdi.h>
 end_include
 
@@ -261,35 +255,26 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|device_probe_t
 name|ucycom_probe
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|device_attach_t
 name|ucycom_attach
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|device_detach_t
 name|ucycom_detach
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

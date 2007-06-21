@@ -21,11 +21,6 @@ decl_stmt|;
 comment|/* Device problems: */
 define|#
 directive|define
-name|UQ_NO_SET_PROTO
-value|0x0001
-comment|/* cannot handle SET PROTOCOL. */
-define|#
-directive|define
 name|UQ_SWAP_UNICODE
 value|0x0002
 comment|/* has some Unicode strings swapped. */
@@ -79,11 +74,6 @@ directive|define
 name|UQ_AU_INP_ASYNC
 value|0x0800
 comment|/* input is async despite claim of adaptive */
-define|#
-directive|define
-name|UQ_ASSUME_CM_OVER_DATA
-value|0x1000
-comment|/* modem device breaks on cm over data */
 define|#
 directive|define
 name|UQ_BROKEN_BIDIR
