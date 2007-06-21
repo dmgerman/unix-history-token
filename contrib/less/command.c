@@ -478,7 +478,7 @@ block|{
 name|clear_attn
 argument_list|()
 expr_stmt|;
-name|line_left
+name|clear_bot
 argument_list|()
 expr_stmt|;
 name|flush

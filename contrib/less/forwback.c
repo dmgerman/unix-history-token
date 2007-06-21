@@ -407,12 +407,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-name|clear_bot
-argument_list|()
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|pos
