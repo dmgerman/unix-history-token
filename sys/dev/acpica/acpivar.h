@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -80,6 +86,12 @@ include|#
 directive|include
 file|<machine/resource.h>
 end_include
+
+begin_struct_decl
+struct_decl|struct
+name|apm_clone_data
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -165,6 +177,29 @@ decl_stmt|;
 name|vm_paddr_t
 name|acpi_wakephys
 decl_stmt|;
+name|int
+name|acpi_next_sstate
+decl_stmt|;
+comment|/* Next suspend Sx state. */
+name|struct
+name|apm_clone_data
+modifier|*
+name|acpi_clone
+decl_stmt|;
+comment|/* Pseudo-dev for devd(8). */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|apm_clone_data
+argument_list|)
+name|apm_cdevs
+expr_stmt|;
+comment|/* All apm/apmctl/acpi cdevs. */
+name|struct
+name|callout
+name|susp_force_to
+decl_stmt|;
+comment|/* Force suspend if no acks. */
 block|}
 struct|;
 end_struct
@@ -191,6 +226,74 @@ comment|/* Resources */
 name|struct
 name|resource_list
 name|ad_rl
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Track device (/dev/{apm,apmctl} and /dev/acpi) notification status. */
+end_comment
+
+begin_struct
+struct|struct
+name|apm_clone_data
+block|{
+name|STAILQ_ENTRY
+argument_list|(
+argument|apm_clone_data
+argument_list|)
+name|entries
+expr_stmt|;
+name|struct
+name|cdev
+modifier|*
+name|cdev
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|ACPI_EVF_NONE
+value|0
+comment|/* /dev/apm semantics */
+define|#
+directive|define
+name|ACPI_EVF_DEVD
+value|1
+comment|/* /dev/acpi is handled via devd(8) */
+define|#
+directive|define
+name|ACPI_EVF_WRITE
+value|2
+comment|/* Device instance is opened writable. */
+name|int
+name|notify_status
+decl_stmt|;
+define|#
+directive|define
+name|APM_EV_NONE
+value|0
+comment|/* Device not yet aware of pending sleep. */
+define|#
+directive|define
+name|APM_EV_NOTIFIED
+value|1
+comment|/* Device saw next sleep state. */
+define|#
+directive|define
+name|APM_EV_ACKED
+value|2
+comment|/* Device agreed sleep can occur. */
+name|struct
+name|acpi_softc
+modifier|*
+name|acpi_sc
+decl_stmt|;
+name|struct
+name|selinfo
+name|sel_read
 decl_stmt|;
 block|}
 struct|;
@@ -1180,6 +1283,36 @@ name|acpi_SetIntrModel
 parameter_list|(
 name|int
 name|model
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|acpi_ReqSleepState
+parameter_list|(
+name|struct
+name|acpi_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|acpi_AckSleepState
+parameter_list|(
+name|struct
+name|apm_clone_data
+modifier|*
+name|clone
+parameter_list|,
+name|int
+name|error
 parameter_list|)
 function_decl|;
 end_function_decl

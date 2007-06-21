@@ -26,6 +26,32 @@ name|ACPIIO_SETSLPSTATE
 value|_IOW('P', 3, int)
 end_define
 
+begin_comment
+comment|/* DEPRECATED */
+end_comment
+
+begin_comment
+comment|/* Request S1-5 sleep state. User is notified and then sleep proceeds. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPIIO_REQSLPSTATE
+value|_IOW('P', 4, int)
+end_define
+
+begin_comment
+comment|/* Allow suspend to continue (0) or abort it (errno). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPIIO_ACKSLPSTATE
+value|_IOW('P', 5, int)
+end_define
+
 begin_struct
 struct|struct
 name|acpi_battinfo
