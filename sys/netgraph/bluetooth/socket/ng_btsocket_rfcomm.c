@@ -6970,21 +6970,30 @@ comment|/* we are done */
 comment|/* Call send function on the L2CAP socket */
 name|error
 operator|=
-name|sosend
+call|(
+modifier|*
+name|s
+operator|->
+name|l2so
+operator|->
+name|so_proto
+operator|->
+name|pr_usrreqs
+operator|->
+name|pru_send
+call|)
 argument_list|(
 name|s
 operator|->
 name|l2so
 argument_list|,
-name|NULL
-argument_list|,
-name|NULL
+literal|0
 argument_list|,
 name|m
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|curthread
 comment|/* XXX */
