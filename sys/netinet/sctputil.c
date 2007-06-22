@@ -16623,7 +16623,7 @@ argument_list|,
 operator|(
 name|SCTP_STRRESET_OUTBOUND_STR
 operator||
-name|SCTP_STRRESET_INBOUND_STR
+name|SCTP_STRRESET_FAILED
 operator|)
 argument_list|)
 expr_stmt|;
@@ -16648,7 +16648,7 @@ argument_list|,
 operator|(
 name|SCTP_STRRESET_INBOUND_STR
 operator||
-name|SCTP_STRRESET_INBOUND_STR
+name|SCTP_STRRESET_FAILED
 operator|)
 argument_list|)
 expr_stmt|;

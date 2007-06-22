@@ -676,6 +676,12 @@ decl_stmt|;
 name|sctp_assoc_t
 name|spc_assoc_id
 decl_stmt|;
+name|uint8_t
+name|spc_padding
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1355,18 +1361,15 @@ begin_struct
 struct|struct
 name|sctp_paddrparams
 block|{
-name|sctp_assoc_t
-name|spp_assoc_id
-decl_stmt|;
 name|struct
 name|sockaddr_storage
 name|spp_address
 decl_stmt|;
+name|sctp_assoc_t
+name|spp_assoc_id
+decl_stmt|;
 name|uint32_t
 name|spp_hbinterval
-decl_stmt|;
-name|uint16_t
-name|spp_pathmaxrxt
 decl_stmt|;
 name|uint32_t
 name|spp_pathmtu
@@ -1376,6 +1379,9 @@ name|spp_flags
 decl_stmt|;
 name|uint32_t
 name|spp_ipv6_flowlabel
+decl_stmt|;
+name|uint16_t
+name|spp_pathmaxrxt
 decl_stmt|;
 name|uint8_t
 name|spp_ipv4_tos
@@ -1444,12 +1450,12 @@ begin_struct
 struct|struct
 name|sctp_paddrinfo
 block|{
-name|sctp_assoc_t
-name|spinfo_assoc_id
-decl_stmt|;
 name|struct
 name|sockaddr_storage
 name|spinfo_address
+decl_stmt|;
+name|sctp_assoc_t
+name|spinfo_assoc_id
 decl_stmt|;
 name|int32_t
 name|spinfo_state
@@ -1497,12 +1503,6 @@ block|{
 name|sctp_assoc_t
 name|sasoc_assoc_id
 decl_stmt|;
-name|uint16_t
-name|sasoc_asocmaxrxt
-decl_stmt|;
-name|uint16_t
-name|sasoc_number_peer_destinations
-decl_stmt|;
 name|uint32_t
 name|sasoc_peer_rwnd
 decl_stmt|;
@@ -1512,6 +1512,12 @@ decl_stmt|;
 name|uint32_t
 name|sasoc_cookie_life
 decl_stmt|;
+name|uint16_t
+name|sasoc_asocmaxrxt
+decl_stmt|;
+name|uint16_t
+name|sasoc_number_peer_destinations
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1520,12 +1526,18 @@ begin_struct
 struct|struct
 name|sctp_setprim
 block|{
-name|sctp_assoc_t
-name|ssp_assoc_id
-decl_stmt|;
 name|struct
 name|sockaddr_storage
 name|ssp_addr
+decl_stmt|;
+name|sctp_assoc_t
+name|ssp_assoc_id
+decl_stmt|;
+name|uint8_t
+name|ssp_padding
+index|[
+literal|4
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -1535,12 +1547,18 @@ begin_struct
 struct|struct
 name|sctp_setpeerprim
 block|{
-name|sctp_assoc_t
-name|sspp_assoc_id
-decl_stmt|;
 name|struct
 name|sockaddr_storage
 name|sspp_addr
+decl_stmt|;
+name|sctp_assoc_t
+name|sspp_assoc_id
+decl_stmt|;
+name|uint8_t
+name|sspp_padding
+index|[
+literal|4
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -1837,6 +1855,7 @@ modifier|*
 name|net
 decl_stmt|;
 comment|/* network to */
+comment|/* FIXME: LP64 issue */
 name|uint32_t
 name|cwnd_new_value
 decl_stmt|;
@@ -1848,7 +1867,7 @@ comment|/* flightsize in k */
 name|uint32_t
 name|pseudo_cumack
 decl_stmt|;
-name|int
+name|uint32_t
 name|cwnd_augment
 decl_stmt|;
 comment|/* increment to it */
@@ -1997,6 +2016,7 @@ name|void
 modifier|*
 name|stcb
 decl_stmt|;
+comment|/* FIXME: LP64 issue */
 name|uint32_t
 name|n_tsn
 decl_stmt|;
@@ -2024,6 +2044,7 @@ name|void
 modifier|*
 name|stcb
 decl_stmt|;
+comment|/* FIXME: LP64 issue */
 name|uint32_t
 name|so_sbcc
 decl_stmt|;
@@ -2142,10 +2163,12 @@ name|void
 modifier|*
 name|sock
 decl_stmt|;
+comment|/* FIXME: LP64 issue */
 name|void
 modifier|*
 name|inp
 decl_stmt|;
+comment|/* FIXME: LP64 issue */
 name|uint8_t
 name|tcb_lock
 decl_stmt|;
@@ -2182,6 +2205,7 @@ name|void
 modifier|*
 name|net
 decl_stmt|;
+comment|/* FIXME: LP64 issue */
 name|uint32_t
 name|rtt
 decl_stmt|;
@@ -2197,6 +2221,7 @@ name|void
 modifier|*
 name|stcb
 decl_stmt|;
+comment|/* FIXME: LP64 issue */
 name|uint32_t
 name|total_flight
 decl_stmt|;
@@ -2221,6 +2246,7 @@ name|void
 modifier|*
 name|stcb
 decl_stmt|;
+comment|/* FIXME: LP64 issue */
 name|uint16_t
 name|send_q
 decl_stmt|;
@@ -2279,10 +2305,12 @@ name|void
 modifier|*
 name|inp
 decl_stmt|;
+comment|/* FIXME: LP64 issue */
 name|void
 modifier|*
 name|stcb
 decl_stmt|;
+comment|/* FIXME: LP64 issue */
 name|uint32_t
 name|sctp_flags
 decl_stmt|;
@@ -2305,6 +2333,7 @@ name|mbuf
 modifier|*
 name|mp
 decl_stmt|;
+comment|/* FIXME: LP64 issue */
 name|caddr_t
 name|ext
 decl_stmt|;
@@ -2420,19 +2449,19 @@ begin_struct
 struct|struct
 name|sctp_cwnd_log_req
 block|{
-name|int
+name|int32_t
 name|num_in_log
 decl_stmt|;
 comment|/* Number in log */
-name|int
+name|int32_t
 name|num_ret
 decl_stmt|;
 comment|/* Number returned */
-name|int
+name|int32_t
 name|start_at
 decl_stmt|;
 comment|/* start at this one */
-name|int
+name|int32_t
 name|end_at
 decl_stmt|;
 comment|/* end at this one */
@@ -2452,503 +2481,503 @@ struct|struct
 name|sctpstat
 block|{
 comment|/* MIB according to RFC 3873 */
-name|u_long
+name|uint32_t
 name|sctps_currestab
 decl_stmt|;
 comment|/* sctpStats  1   (Gauge32) */
-name|u_long
+name|uint32_t
 name|sctps_activeestab
 decl_stmt|;
 comment|/* sctpStats  2 (Counter32) */
-name|u_long
+name|uint32_t
 name|sctps_restartestab
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|sctps_collisionestab
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|sctps_passiveestab
 decl_stmt|;
 comment|/* sctpStats  3 (Counter32) */
-name|u_long
+name|uint32_t
 name|sctps_aborted
 decl_stmt|;
 comment|/* sctpStats  4 (Counter32) */
-name|u_long
+name|uint32_t
 name|sctps_shutdown
 decl_stmt|;
 comment|/* sctpStats  5 (Counter32) */
-name|u_long
+name|uint32_t
 name|sctps_outoftheblue
 decl_stmt|;
 comment|/* sctpStats  6 (Counter32) */
-name|u_long
+name|uint32_t
 name|sctps_checksumerrors
 decl_stmt|;
 comment|/* sctpStats  7 (Counter32) */
-name|u_long
+name|uint32_t
 name|sctps_outcontrolchunks
 decl_stmt|;
 comment|/* sctpStats  8 (Counter64) */
-name|u_long
+name|uint32_t
 name|sctps_outorderchunks
 decl_stmt|;
 comment|/* sctpStats  9 (Counter64) */
-name|u_long
+name|uint32_t
 name|sctps_outunorderchunks
 decl_stmt|;
 comment|/* sctpStats 10 (Counter64) */
-name|u_long
+name|uint32_t
 name|sctps_incontrolchunks
 decl_stmt|;
 comment|/* sctpStats 11 (Counter64) */
-name|u_long
+name|uint32_t
 name|sctps_inorderchunks
 decl_stmt|;
 comment|/* sctpStats 12 (Counter64) */
-name|u_long
+name|uint32_t
 name|sctps_inunorderchunks
 decl_stmt|;
 comment|/* sctpStats 13 (Counter64) */
-name|u_long
+name|uint32_t
 name|sctps_fragusrmsgs
 decl_stmt|;
 comment|/* sctpStats 14 (Counter64) */
-name|u_long
+name|uint32_t
 name|sctps_reasmusrmsgs
 decl_stmt|;
 comment|/* sctpStats 15 (Counter64) */
-name|u_long
+name|uint32_t
 name|sctps_outpackets
 decl_stmt|;
 comment|/* sctpStats 16 (Counter64) */
-name|u_long
+name|uint32_t
 name|sctps_inpackets
 decl_stmt|;
 comment|/* sctpStats 17 (Counter64) */
+comment|/* input statistics: */
+name|uint32_t
+name|sctps_recvpackets
+decl_stmt|;
+comment|/* total input packets        */
+name|uint32_t
+name|sctps_recvdatagrams
+decl_stmt|;
+comment|/* total input datagrams      */
+name|uint32_t
+name|sctps_recvpktwithdata
+decl_stmt|;
+comment|/* total packets that had data */
+name|uint32_t
+name|sctps_recvsacks
+decl_stmt|;
+comment|/* total input SACK chunks    */
+name|uint32_t
+name|sctps_recvdata
+decl_stmt|;
+comment|/* total input DATA chunks    */
+name|uint32_t
+name|sctps_recvdupdata
+decl_stmt|;
+comment|/* total input duplicate DATA chunks */
+name|uint32_t
+name|sctps_recvheartbeat
+decl_stmt|;
+comment|/* total input HB chunks      */
+name|uint32_t
+name|sctps_recvheartbeatack
+decl_stmt|;
+comment|/* total input HB-ACK chunks  */
+name|uint32_t
+name|sctps_recvecne
+decl_stmt|;
+comment|/* total input ECNE chunks    */
+name|uint32_t
+name|sctps_recvauth
+decl_stmt|;
+comment|/* total input AUTH chunks    */
+name|uint32_t
+name|sctps_recvauthmissing
+decl_stmt|;
+comment|/* total input chunks missing AUTH */
+name|uint32_t
+name|sctps_recvivalhmacid
+decl_stmt|;
+comment|/* total number of invalid HMAC ids 					 * received */
+name|uint32_t
+name|sctps_recvivalkeyid
+decl_stmt|;
+comment|/* total number of invalid secret ids 					 * received */
+name|uint32_t
+name|sctps_recvauthfailed
+decl_stmt|;
+comment|/* total number of auth failed */
+name|uint32_t
+name|sctps_recvexpress
+decl_stmt|;
+comment|/* total fast path receives all one 					 * chunk */
+name|uint32_t
+name|sctps_recvexpressm
+decl_stmt|;
+comment|/* total fast path multi-part data */
+comment|/* output statistics: */
+name|uint32_t
+name|sctps_sendpackets
+decl_stmt|;
+comment|/* total output packets       */
+name|uint32_t
+name|sctps_sendsacks
+decl_stmt|;
+comment|/* total output SACKs         */
+name|uint32_t
+name|sctps_senddata
+decl_stmt|;
+comment|/* total output DATA chunks   */
+name|uint32_t
+name|sctps_sendretransdata
+decl_stmt|;
+comment|/* total output retransmitted DATA 					 * chunks */
+name|uint32_t
+name|sctps_sendfastretrans
+decl_stmt|;
+comment|/* total output fast retransmitted 					 * DATA chunks */
+name|uint32_t
+name|sctps_sendmultfastretrans
+decl_stmt|;
+comment|/* total FR's that happened 						 * more than once to same 						 * chunk (u-del multi-fr 						 * algo). */
+name|uint32_t
+name|sctps_sendheartbeat
+decl_stmt|;
+comment|/* total output HB chunks     */
+name|uint32_t
+name|sctps_sendecne
+decl_stmt|;
+comment|/* total output ECNE chunks    */
+name|uint32_t
+name|sctps_sendauth
+decl_stmt|;
+comment|/* total output AUTH chunks FIXME   */
+name|uint32_t
+name|sctps_senderrors
+decl_stmt|;
+comment|/* ip_output error counter */
+comment|/* PCKDROPREP statistics: */
+name|uint32_t
+name|sctps_pdrpfmbox
+decl_stmt|;
+comment|/* Packet drop from middle box */
+name|uint32_t
+name|sctps_pdrpfehos
+decl_stmt|;
+comment|/* P-drop from end host */
+name|uint32_t
+name|sctps_pdrpmbda
+decl_stmt|;
+comment|/* P-drops with data */
+name|uint32_t
+name|sctps_pdrpmbct
+decl_stmt|;
+comment|/* P-drops, non-data, non-endhost */
+name|uint32_t
+name|sctps_pdrpbwrpt
+decl_stmt|;
+comment|/* P-drop, non-endhost, bandwidth rep 					 * only */
+name|uint32_t
+name|sctps_pdrpcrupt
+decl_stmt|;
+comment|/* P-drop, not enough for chunk header */
+name|uint32_t
+name|sctps_pdrpnedat
+decl_stmt|;
+comment|/* P-drop, not enough data to confirm */
+name|uint32_t
+name|sctps_pdrppdbrk
+decl_stmt|;
+comment|/* P-drop, where process_chunk_drop 					 * said break */
+name|uint32_t
+name|sctps_pdrptsnnf
+decl_stmt|;
+comment|/* P-drop, could not find TSN */
+name|uint32_t
+name|sctps_pdrpdnfnd
+decl_stmt|;
+comment|/* P-drop, attempt reverse TSN lookup */
+name|uint32_t
+name|sctps_pdrpdiwnp
+decl_stmt|;
+comment|/* P-drop, e-host confirms zero-rwnd */
+name|uint32_t
+name|sctps_pdrpdizrw
+decl_stmt|;
+comment|/* P-drop, midbox confirms no space */
+name|uint32_t
+name|sctps_pdrpbadd
+decl_stmt|;
+comment|/* P-drop, data did not match TSN */
+name|uint32_t
+name|sctps_pdrpmark
+decl_stmt|;
+comment|/* P-drop, TSN's marked for Fast Retran */
+comment|/* timeouts */
+name|uint32_t
+name|sctps_timoiterator
+decl_stmt|;
+comment|/* Number of iterator timers that 					 * fired */
+name|uint32_t
+name|sctps_timodata
+decl_stmt|;
+comment|/* Number of T3 data time outs */
+name|uint32_t
+name|sctps_timowindowprobe
+decl_stmt|;
+comment|/* Number of window probe (T3) timers 					 * that fired */
+name|uint32_t
+name|sctps_timoinit
+decl_stmt|;
+comment|/* Number of INIT timers that fired */
+name|uint32_t
+name|sctps_timosack
+decl_stmt|;
+comment|/* Number of sack timers that fired */
+name|uint32_t
+name|sctps_timoshutdown
+decl_stmt|;
+comment|/* Number of shutdown timers that 					 * fired */
+name|uint32_t
+name|sctps_timoheartbeat
+decl_stmt|;
+comment|/* Number of heartbeat timers that 					 * fired */
+name|uint32_t
+name|sctps_timocookie
+decl_stmt|;
+comment|/* Number of times a cookie timeout 					 * fired */
+name|uint32_t
+name|sctps_timosecret
+decl_stmt|;
+comment|/* Number of times an endpoint changed 					 * its cookie secret */
+name|uint32_t
+name|sctps_timopathmtu
+decl_stmt|;
+comment|/* Number of PMTU timers that fired */
+name|uint32_t
+name|sctps_timoshutdownack
+decl_stmt|;
+comment|/* Number of shutdown ack timers that 					 * fired */
+name|uint32_t
+name|sctps_timoshutdownguard
+decl_stmt|;
+comment|/* Number of shutdown guard 						 * timers that fired */
+name|uint32_t
+name|sctps_timostrmrst
+decl_stmt|;
+comment|/* Number of stream reset timers that 					 * fired */
+name|uint32_t
+name|sctps_timoearlyfr
+decl_stmt|;
+comment|/* Number of early FR timers that 					 * fired */
+name|uint32_t
+name|sctps_timoasconf
+decl_stmt|;
+comment|/* Number of times an asconf timer 					 * fired */
+name|uint32_t
+name|sctps_timoautoclose
+decl_stmt|;
+comment|/* Number of times auto close timer 					 * fired */
+name|uint32_t
+name|sctps_timoassockill
+decl_stmt|;
+comment|/* Number of asoc free timers expired */
+name|uint32_t
+name|sctps_timoinpkill
+decl_stmt|;
+comment|/* Number of inp free timers expired */
+comment|/* Early fast retransmission counters */
+name|uint32_t
+name|sctps_earlyfrstart
+decl_stmt|;
+name|uint32_t
+name|sctps_earlyfrstop
+decl_stmt|;
+name|uint32_t
+name|sctps_earlyfrmrkretrans
+decl_stmt|;
+name|uint32_t
+name|sctps_earlyfrstpout
+decl_stmt|;
+name|uint32_t
+name|sctps_earlyfrstpidsck1
+decl_stmt|;
+name|uint32_t
+name|sctps_earlyfrstpidsck2
+decl_stmt|;
+name|uint32_t
+name|sctps_earlyfrstpidsck3
+decl_stmt|;
+name|uint32_t
+name|sctps_earlyfrstpidsck4
+decl_stmt|;
+name|uint32_t
+name|sctps_earlyfrstrid
+decl_stmt|;
+name|uint32_t
+name|sctps_earlyfrstrout
+decl_stmt|;
+name|uint32_t
+name|sctps_earlyfrstrtmr
+decl_stmt|;
+comment|/* otheres */
+name|uint32_t
+name|sctps_hdrops
+decl_stmt|;
+comment|/* packet shorter than header */
+name|uint32_t
+name|sctps_badsum
+decl_stmt|;
+comment|/* checksum error             */
+name|uint32_t
+name|sctps_noport
+decl_stmt|;
+comment|/* no endpoint for port       */
+name|uint32_t
+name|sctps_badvtag
+decl_stmt|;
+comment|/* bad v-tag                  */
+name|uint32_t
+name|sctps_badsid
+decl_stmt|;
+comment|/* bad SID                    */
+name|uint32_t
+name|sctps_nomem
+decl_stmt|;
+comment|/* no memory                  */
+name|uint32_t
+name|sctps_fastretransinrtt
+decl_stmt|;
+comment|/* number of multiple FR in a 						 * RTT window */
+name|uint32_t
+name|sctps_markedretrans
+decl_stmt|;
+name|uint32_t
+name|sctps_naglesent
+decl_stmt|;
+comment|/* nagle allowed sending      */
+name|uint32_t
+name|sctps_naglequeued
+decl_stmt|;
+comment|/* nagle does't allow sending */
+name|uint32_t
+name|sctps_maxburstqueued
+decl_stmt|;
+comment|/* max burst dosn't allow sending */
+name|uint32_t
+name|sctps_ifnomemqueued
+decl_stmt|;
+comment|/* look ahead tells us no memory in 					 * interface ring buffer OR we had a 					 * send error and are queuing one 					 * send. */
+name|uint32_t
+name|sctps_windowprobed
+decl_stmt|;
+comment|/* total number of window probes sent */
+name|uint32_t
+name|sctps_lowlevelerr
+decl_stmt|;
+comment|/* total times an output error causes 					 * us to clamp down on next user send. */
+name|uint32_t
+name|sctps_lowlevelerrusr
+decl_stmt|;
+comment|/* total times sctp_senderrors were 					 * caused from a user send from a user 					 * invoked send not a sack response */
+name|uint32_t
+name|sctps_datadropchklmt
+decl_stmt|;
+comment|/* Number of in data drops due to 					 * chunk limit reached */
+name|uint32_t
+name|sctps_datadroprwnd
+decl_stmt|;
+comment|/* Number of in data drops due to rwnd 					 * limit reached */
+name|uint32_t
+name|sctps_ecnereducedcwnd
+decl_stmt|;
+comment|/* Number of times a ECN reduced the 					 * cwnd */
+name|uint32_t
+name|sctps_vtagexpress
+decl_stmt|;
+comment|/* Used express lookup via vtag */
+name|uint32_t
+name|sctps_vtagbogus
+decl_stmt|;
+comment|/* Collision in express lookup. */
+name|uint32_t
+name|sctps_primary_randry
+decl_stmt|;
+comment|/* Number of times the sender ran dry 					 * of user data on primary */
+name|uint32_t
+name|sctps_cmt_randry
+decl_stmt|;
+comment|/* Same for above */
+name|uint32_t
+name|sctps_slowpath_sack
+decl_stmt|;
+comment|/* Sacks the slow way */
+name|uint32_t
+name|sctps_wu_sacks_sent
+decl_stmt|;
+comment|/* Window Update only sacks sent */
+name|uint32_t
+name|sctps_sends_with_flags
+decl_stmt|;
+comment|/* number of sends with 						 * sinfo_flags !=0 */
+name|uint32_t
+name|sctps_sends_with_unord
+comment|/* number of undordered sends */
+decl_stmt|;
+name|uint32_t
+name|sctps_sends_with_eof
+decl_stmt|;
+comment|/* number of sends with EOF flag set */
+name|uint32_t
+name|sctps_sends_with_abort
+decl_stmt|;
+comment|/* number of sends with ABORT 						 * flag set */
+name|uint32_t
+name|sctps_protocol_drain_calls
+decl_stmt|;
+comment|/* number of times protocol 						 * drain called */
+name|uint32_t
+name|sctps_protocol_drains_done
+decl_stmt|;
+comment|/* number of times we did a 						 * protocol drain */
+name|uint32_t
+name|sctps_read_peeks
+decl_stmt|;
+comment|/* Number of times recv was called 					 * with peek */
+name|uint32_t
+name|sctps_cached_chk
+decl_stmt|;
+comment|/* Number of cached chunks used */
+name|uint32_t
+name|sctps_cached_strmoq
+decl_stmt|;
+comment|/* Number of cached stream oq's used */
+name|uint32_t
+name|sctps_left_abandon
+decl_stmt|;
+comment|/* Number of unread message abandonded 					 * by close */
+name|uint32_t
+name|sctps_send_burst_avoid
+decl_stmt|;
+comment|/* Send burst avoidance, 						 * already max burst inflight 						 * to net */
+name|uint32_t
+name|sctps_send_cwnd_avoid
+decl_stmt|;
+comment|/* Send cwnd full  avoidance, already 					 * max burst inflight to net */
+name|uint32_t
+name|sctps_fwdtsn_map_over
+decl_stmt|;
+comment|/* number of map array over-runs via 					 * fwd-tsn's */
 name|struct
 name|timeval
 name|sctps_discontinuitytime
 decl_stmt|;
 comment|/* sctpStats 18 (TimeStamp) */
-comment|/* input statistics: */
-name|u_long
-name|sctps_recvpackets
-decl_stmt|;
-comment|/* total input packets        */
-name|u_long
-name|sctps_recvdatagrams
-decl_stmt|;
-comment|/* total input datagrams      */
-name|u_long
-name|sctps_recvpktwithdata
-decl_stmt|;
-comment|/* total packets that had data */
-name|u_long
-name|sctps_recvsacks
-decl_stmt|;
-comment|/* total input SACK chunks    */
-name|u_long
-name|sctps_recvdata
-decl_stmt|;
-comment|/* total input DATA chunks    */
-name|u_long
-name|sctps_recvdupdata
-decl_stmt|;
-comment|/* total input duplicate DATA chunks */
-name|u_long
-name|sctps_recvheartbeat
-decl_stmt|;
-comment|/* total input HB chunks      */
-name|u_long
-name|sctps_recvheartbeatack
-decl_stmt|;
-comment|/* total input HB-ACK chunks  */
-name|u_long
-name|sctps_recvecne
-decl_stmt|;
-comment|/* total input ECNE chunks    */
-name|u_long
-name|sctps_recvauth
-decl_stmt|;
-comment|/* total input AUTH chunks    */
-name|u_long
-name|sctps_recvauthmissing
-decl_stmt|;
-comment|/* total input chunks missing AUTH */
-name|u_long
-name|sctps_recvivalhmacid
-decl_stmt|;
-comment|/* total number of invalid HMAC ids 					 * received */
-name|u_long
-name|sctps_recvivalkeyid
-decl_stmt|;
-comment|/* total number of invalid secret ids 					 * received */
-name|u_long
-name|sctps_recvauthfailed
-decl_stmt|;
-comment|/* total number of auth failed */
-name|u_long
-name|sctps_recvexpress
-decl_stmt|;
-comment|/* total fast path receives all one 					 * chunk */
-name|u_long
-name|sctps_recvexpressm
-decl_stmt|;
-comment|/* total fast path multi-part data */
-comment|/* output statistics: */
-name|u_long
-name|sctps_sendpackets
-decl_stmt|;
-comment|/* total output packets       */
-name|u_long
-name|sctps_sendsacks
-decl_stmt|;
-comment|/* total output SACKs         */
-name|u_long
-name|sctps_senddata
-decl_stmt|;
-comment|/* total output DATA chunks   */
-name|u_long
-name|sctps_sendretransdata
-decl_stmt|;
-comment|/* total output retransmitted DATA 					 * chunks */
-name|u_long
-name|sctps_sendfastretrans
-decl_stmt|;
-comment|/* total output fast retransmitted 					 * DATA chunks */
-name|u_long
-name|sctps_sendmultfastretrans
-decl_stmt|;
-comment|/* total FR's that happened 						 * more than once to same 						 * chunk (u-del multi-fr 						 * algo). */
-name|u_long
-name|sctps_sendheartbeat
-decl_stmt|;
-comment|/* total output HB chunks     */
-name|u_long
-name|sctps_sendecne
-decl_stmt|;
-comment|/* total output ECNE chunks    */
-name|u_long
-name|sctps_sendauth
-decl_stmt|;
-comment|/* total output AUTH chunks FIXME   */
-name|u_long
-name|sctps_senderrors
-decl_stmt|;
-comment|/* ip_output error counter */
-comment|/* PCKDROPREP statistics: */
-name|u_long
-name|sctps_pdrpfmbox
-decl_stmt|;
-comment|/* Packet drop from middle box */
-name|u_long
-name|sctps_pdrpfehos
-decl_stmt|;
-comment|/* P-drop from end host */
-name|u_long
-name|sctps_pdrpmbda
-decl_stmt|;
-comment|/* P-drops with data */
-name|u_long
-name|sctps_pdrpmbct
-decl_stmt|;
-comment|/* P-drops, non-data, non-endhost */
-name|u_long
-name|sctps_pdrpbwrpt
-decl_stmt|;
-comment|/* P-drop, non-endhost, bandwidth rep only */
-name|u_long
-name|sctps_pdrpcrupt
-decl_stmt|;
-comment|/* P-drop, not enough for chunk header */
-name|u_long
-name|sctps_pdrpnedat
-decl_stmt|;
-comment|/* P-drop, not enough data to confirm */
-name|u_long
-name|sctps_pdrppdbrk
-decl_stmt|;
-comment|/* P-drop, where process_chunk_drop said break */
-name|u_long
-name|sctps_pdrptsnnf
-decl_stmt|;
-comment|/* P-drop, could not find TSN */
-name|u_long
-name|sctps_pdrpdnfnd
-decl_stmt|;
-comment|/* P-drop, attempt reverse TSN lookup */
-name|u_long
-name|sctps_pdrpdiwnp
-decl_stmt|;
-comment|/* P-drop, e-host confirms zero-rwnd */
-name|u_long
-name|sctps_pdrpdizrw
-decl_stmt|;
-comment|/* P-drop, midbox confirms no space */
-name|u_long
-name|sctps_pdrpbadd
-decl_stmt|;
-comment|/* P-drop, data did not match TSN */
-name|u_long
-name|sctps_pdrpmark
-decl_stmt|;
-comment|/* P-drop, TSN's marked for Fast Retran */
-comment|/* timeouts */
-name|u_long
-name|sctps_timoiterator
-decl_stmt|;
-comment|/* Number of iterator timers that 					 * fired */
-name|u_long
-name|sctps_timodata
-decl_stmt|;
-comment|/* Number of T3 data time outs */
-name|u_long
-name|sctps_timowindowprobe
-decl_stmt|;
-comment|/* Number of window probe (T3) timers 					 * that fired */
-name|u_long
-name|sctps_timoinit
-decl_stmt|;
-comment|/* Number of INIT timers that fired */
-name|u_long
-name|sctps_timosack
-decl_stmt|;
-comment|/* Number of sack timers that fired */
-name|u_long
-name|sctps_timoshutdown
-decl_stmt|;
-comment|/* Number of shutdown timers that 					 * fired */
-name|u_long
-name|sctps_timoheartbeat
-decl_stmt|;
-comment|/* Number of heartbeat timers that 					 * fired */
-name|u_long
-name|sctps_timocookie
-decl_stmt|;
-comment|/* Number of times a cookie timeout fired */
-name|u_long
-name|sctps_timosecret
-decl_stmt|;
-comment|/* Number of times an endpoint changed its 				 * cookie secret */
-name|u_long
-name|sctps_timopathmtu
-decl_stmt|;
-comment|/* Number of PMTU timers that fired */
-name|u_long
-name|sctps_timoshutdownack
-decl_stmt|;
-comment|/* Number of shutdown ack timers that 					 * fired */
-name|u_long
-name|sctps_timoshutdownguard
-decl_stmt|;
-comment|/* Number of shutdown guard timers 					 * that fired */
-name|u_long
-name|sctps_timostrmrst
-decl_stmt|;
-comment|/* Number of stream reset timers that 					 * fired */
-name|u_long
-name|sctps_timoearlyfr
-decl_stmt|;
-comment|/* Number of early FR timers that 					 * fired */
-name|u_long
-name|sctps_timoasconf
-decl_stmt|;
-comment|/* Number of times an asconf timer fired */
-name|u_long
-name|sctps_timoautoclose
-decl_stmt|;
-comment|/* Number of times auto close timer 					 * fired */
-name|u_long
-name|sctps_timoassockill
-decl_stmt|;
-comment|/* Number of asoc free timers expired */
-name|u_long
-name|sctps_timoinpkill
-decl_stmt|;
-comment|/* Number of inp free timers expired */
-comment|/* Early fast retransmission counters */
-name|u_long
-name|sctps_earlyfrstart
-decl_stmt|;
-name|u_long
-name|sctps_earlyfrstop
-decl_stmt|;
-name|u_long
-name|sctps_earlyfrmrkretrans
-decl_stmt|;
-name|u_long
-name|sctps_earlyfrstpout
-decl_stmt|;
-name|u_long
-name|sctps_earlyfrstpidsck1
-decl_stmt|;
-name|u_long
-name|sctps_earlyfrstpidsck2
-decl_stmt|;
-name|u_long
-name|sctps_earlyfrstpidsck3
-decl_stmt|;
-name|u_long
-name|sctps_earlyfrstpidsck4
-decl_stmt|;
-name|u_long
-name|sctps_earlyfrstrid
-decl_stmt|;
-name|u_long
-name|sctps_earlyfrstrout
-decl_stmt|;
-name|u_long
-name|sctps_earlyfrstrtmr
-decl_stmt|;
-comment|/* otheres */
-name|u_long
-name|sctps_hdrops
-decl_stmt|;
-comment|/* packet shorter than header */
-name|u_long
-name|sctps_badsum
-decl_stmt|;
-comment|/* checksum error             */
-name|u_long
-name|sctps_noport
-decl_stmt|;
-comment|/* no endpoint for port       */
-name|u_long
-name|sctps_badvtag
-decl_stmt|;
-comment|/* bad v-tag                  */
-name|u_long
-name|sctps_badsid
-decl_stmt|;
-comment|/* bad SID                    */
-name|u_long
-name|sctps_nomem
-decl_stmt|;
-comment|/* no memory                  */
-name|u_long
-name|sctps_fastretransinrtt
-decl_stmt|;
-comment|/* number of multiple FR in a RTT 					 * window */
-name|u_long
-name|sctps_markedretrans
-decl_stmt|;
-name|u_long
-name|sctps_naglesent
-decl_stmt|;
-comment|/* nagle allowed sending      */
-name|u_long
-name|sctps_naglequeued
-decl_stmt|;
-comment|/* nagle does't allow sending */
-name|u_long
-name|sctps_maxburstqueued
-decl_stmt|;
-comment|/* max burst dosn't allow sending */
-name|u_long
-name|sctps_ifnomemqueued
-decl_stmt|;
-comment|/* look ahead tells us no memory in 					 * interface ring buffer OR we had a 					 * send error and are queuing one 					 * send. */
-name|u_long
-name|sctps_windowprobed
-decl_stmt|;
-comment|/* total number of window probes sent */
-name|u_long
-name|sctps_lowlevelerr
-decl_stmt|;
-comment|/* total times an output error causes 					 * us to clamp down on next user send. */
-name|u_long
-name|sctps_lowlevelerrusr
-decl_stmt|;
-comment|/* total times sctp_senderrors were 					 * caused from a user send from a user 					 * invoked send not a sack response */
-name|u_long
-name|sctps_datadropchklmt
-decl_stmt|;
-comment|/* Number of in data drops due to 					 * chunk limit reached */
-name|u_long
-name|sctps_datadroprwnd
-decl_stmt|;
-comment|/* Number of in data drops due to rwnd 					 * limit reached */
-name|u_long
-name|sctps_ecnereducedcwnd
-decl_stmt|;
-comment|/* Number of times a ECN reduced the 					 * cwnd */
-name|u_long
-name|sctps_vtagexpress
-decl_stmt|;
-comment|/* Used express lookup via vtag */
-name|u_long
-name|sctps_vtagbogus
-decl_stmt|;
-comment|/* Collision in express lookup. */
-name|u_long
-name|sctps_primary_randry
-decl_stmt|;
-comment|/* Number of times the sender ran dry 					 * of user data on primary */
-name|u_long
-name|sctps_cmt_randry
-decl_stmt|;
-comment|/* Same for above */
-name|u_long
-name|sctps_slowpath_sack
-decl_stmt|;
-comment|/* Sacks the slow way */
-name|u_long
-name|sctps_wu_sacks_sent
-decl_stmt|;
-comment|/* Window Update only sacks sent */
-name|u_long
-name|sctps_sends_with_flags
-decl_stmt|;
-comment|/* number of sends with sinfo_flags 					 * !=0 */
-name|u_long
-name|sctps_sends_with_unord
-comment|/* number of undordered sends */
-decl_stmt|;
-name|u_long
-name|sctps_sends_with_eof
-decl_stmt|;
-comment|/* number of sends with EOF flag set */
-name|u_long
-name|sctps_sends_with_abort
-decl_stmt|;
-comment|/* number of sends with ABORT flag set */
-name|u_long
-name|sctps_protocol_drain_calls
-decl_stmt|;
-comment|/* number of times protocol 						 * drain called */
-name|u_long
-name|sctps_protocol_drains_done
-decl_stmt|;
-comment|/* number of times we did a 						 * protocol drain */
-name|u_long
-name|sctps_read_peeks
-decl_stmt|;
-comment|/* Number of times recv was called with peek */
-name|u_long
-name|sctps_cached_chk
-decl_stmt|;
-comment|/* Number of cached chunks used */
-name|u_long
-name|sctps_cached_strmoq
-decl_stmt|;
-comment|/* Number of cached stream oq's used */
-name|u_long
-name|sctps_left_abandon
-decl_stmt|;
-comment|/* Number of unread message abandonded 					 * by close */
-name|u_long
-name|sctps_send_burst_avoid
-decl_stmt|;
-comment|/* Send burst avoidance, already max 					 * burst inflight to net */
-name|u_long
-name|sctps_send_cwnd_avoid
-decl_stmt|;
-comment|/* Send cwnd full  avoidance, already 					 * max burst inflight to net */
-name|u_long
-name|sctps_fwdtsn_map_over
-decl_stmt|;
-comment|/* number of map array over-runs via 					 * fwd-tsn's */
 block|}
 struct|;
 end_struct
@@ -2982,7 +3011,7 @@ name|_x
 parameter_list|,
 name|_d
 parameter_list|)
-value|atomic_add_long(&sctpstat._x, _d)
+value|atomic_add_int(&sctpstat._x, _d)
 end_define
 
 begin_define
@@ -2994,7 +3023,7 @@ name|_x
 parameter_list|,
 name|_d
 parameter_list|)
-value|atomic_subtract_long(&sctpstat._x, _d)
+value|atomic_subtract_int(&sctpstat._x, _d)
 end_define
 
 begin_comment
@@ -3061,13 +3090,6 @@ parameter_list|)
 value|SCTP_STAT_DECR(_x)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SCTP_ALIGN_64_SA
-value|36
-end_define
-
 begin_union
 union|union
 name|sctp_sockstore
@@ -3112,12 +3134,6 @@ name|struct
 name|sockaddr
 name|sa
 decl_stmt|;
-name|uint8_t
-name|reserved
-index|[
-name|SCTP_ALIGN_64_SA
-index|]
-decl_stmt|;
 block|}
 union|;
 end_union
@@ -3128,9 +3144,6 @@ name|xsctp_inpcb
 block|{
 name|uint32_t
 name|last
-decl_stmt|;
-name|uint16_t
-name|local_port
 decl_stmt|;
 name|uint32_t
 name|flags
@@ -3151,12 +3164,14 @@ name|uint32_t
 name|fragmentation_point
 decl_stmt|;
 name|uint16_t
+name|local_port
+decl_stmt|;
+name|uint16_t
 name|qlen
 decl_stmt|;
 name|uint16_t
 name|maxqlen
 decl_stmt|;
-comment|/* add more endpoint specific data here */
 block|}
 struct|;
 end_struct
@@ -3165,22 +3180,14 @@ begin_struct
 struct|struct
 name|xsctp_tcb
 block|{
-name|uint32_t
-name|last
-decl_stmt|;
-name|uint16_t
-name|local_port
-decl_stmt|;
-comment|/* sctpAssocEntry 3   */
-name|uint16_t
-name|remote_port
-decl_stmt|;
-comment|/* sctpAssocEntry 4   */
 name|union
 name|sctp_sockstore
 name|primary_addr
 decl_stmt|;
 comment|/* sctpAssocEntry 5/6 */
+name|uint32_t
+name|last
+decl_stmt|;
 name|uint32_t
 name|heartbeat_interval
 decl_stmt|;
@@ -3217,16 +3224,6 @@ name|uint32_t
 name|retransmitted_tsns
 decl_stmt|;
 comment|/* sctpAssocEntry 15  */
-name|struct
-name|timeval
-name|start_time
-decl_stmt|;
-comment|/* sctpAssocEntry 16  */
-name|struct
-name|timeval
-name|discontinuity_time
-decl_stmt|;
-comment|/* sctpAssocEntry 17  */
 name|uint32_t
 name|total_sends
 decl_stmt|;
@@ -3257,7 +3254,24 @@ decl_stmt|;
 name|uint32_t
 name|refcnt
 decl_stmt|;
-comment|/* add more association specific data here */
+name|uint16_t
+name|local_port
+decl_stmt|;
+comment|/* sctpAssocEntry 3   */
+name|uint16_t
+name|remote_port
+decl_stmt|;
+comment|/* sctpAssocEntry 4   */
+name|struct
+name|timeval
+name|start_time
+decl_stmt|;
+comment|/* sctpAssocEntry 16  */
+name|struct
+name|timeval
+name|discontinuity_time
+decl_stmt|;
+comment|/* sctpAssocEntry 17  */
 block|}
 struct|;
 end_struct
@@ -3266,20 +3280,19 @@ begin_struct
 struct|struct
 name|xsctp_laddr
 block|{
-name|uint32_t
-name|last
-decl_stmt|;
 name|union
 name|sctp_sockstore
 name|address
 decl_stmt|;
 comment|/* sctpAssocLocalAddrEntry 1/2 */
+name|uint32_t
+name|last
+decl_stmt|;
 name|struct
 name|timeval
 name|start_time
 decl_stmt|;
 comment|/* sctpAssocLocalAddrEntry 3   */
-comment|/* add more local address specific data */
 block|}
 struct|;
 end_struct
@@ -3288,26 +3301,14 @@ begin_struct
 struct|struct
 name|xsctp_raddr
 block|{
-name|uint32_t
-name|last
-decl_stmt|;
 name|union
 name|sctp_sockstore
 name|address
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 1/2 */
-name|uint8_t
-name|active
+name|uint32_t
+name|last
 decl_stmt|;
-comment|/* sctpAssocLocalRemEntry 3   */
-name|uint8_t
-name|confirmed
-decl_stmt|;
-comment|/* */
-name|uint8_t
-name|heartbeat_enabled
-decl_stmt|;
-comment|/* sctpAssocLocalRemEntry 4   */
 name|uint32_t
 name|rto
 decl_stmt|;
@@ -3336,12 +3337,23 @@ name|uint32_t
 name|mtu
 decl_stmt|;
 comment|/* */
+name|uint8_t
+name|active
+decl_stmt|;
+comment|/* sctpAssocLocalRemEntry 3   */
+name|uint8_t
+name|confirmed
+decl_stmt|;
+comment|/* */
+name|uint8_t
+name|heartbeat_enabled
+decl_stmt|;
+comment|/* sctpAssocLocalRemEntry 4   */
 name|struct
 name|timeval
 name|start_time
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 8   */
-comment|/* add more remote address specific data */
 block|}
 struct|;
 end_struct
