@@ -613,6 +613,12 @@ name|uaa
 operator|->
 name|product
 operator|==
+name|USB_PRODUCT_FTDI_CFA_635
+operator|||
+name|uaa
+operator|->
+name|product
+operator|==
 name|USB_PRODUCT_FTDI_USBSERIAL
 operator|||
 name|uaa
@@ -1014,6 +1020,9 @@ name|USB_PRODUCT_FTDI_CFA_633
 case|:
 case|case
 name|USB_PRODUCT_FTDI_CFA_634
+case|:
+case|case
+name|USB_PRODUCT_FTDI_CFA_635
 case|:
 case|case
 name|USB_PRODUCT_FTDI_USBSERIAL
