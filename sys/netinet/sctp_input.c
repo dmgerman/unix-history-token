@@ -15548,6 +15548,9 @@ name|min
 argument_list|(
 name|param_len
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|cstore
@@ -15578,6 +15581,9 @@ if|if
 condition|(
 name|param_len
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|cstore
