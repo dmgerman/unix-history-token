@@ -762,7 +762,6 @@ name|i_flag
 operator|&
 name|IN_LAZYMOD
 condition|)
-block|{
 name|ip
 operator|->
 name|i_flag
@@ -776,7 +775,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Remove the inode from its hash chain. 	 */
 name|vfs_hash_remove
 argument_list|(

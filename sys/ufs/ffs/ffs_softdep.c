@@ -12058,6 +12058,12 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
+name|ip
+operator|->
+name|i_flag
+operator||=
+name|IN_MODIFIED
+expr_stmt|;
 block|}
 end_function
 
