@@ -1032,6 +1032,13 @@ block|,
 name|USB_PRODUCT_OPTION_GT3GQUAD
 block|}
 block|,
+comment|/* Option GlobeTrotter 3G+ */
+block|{
+name|USB_VENDOR_OPTION
+block|,
+name|USB_PRODUCT_OPTION_GT3GPLUS
+block|}
+block|,
 comment|/* Huawei Mobile */
 block|{
 name|USB_VENDOR_HUAWEI
