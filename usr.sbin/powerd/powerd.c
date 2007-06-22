@@ -2202,10 +2202,8 @@ name|i
 index|]
 argument_list|)
 condition|)
-name|err
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"error setting CPU frequency %d"
 argument_list|,
 name|freqs
