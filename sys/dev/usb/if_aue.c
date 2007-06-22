@@ -638,6 +638,16 @@ block|{
 block|{
 name|USB_VENDOR_ELECOM
 block|,
+name|USB_PRODUCT_ELECOM_LDUSB20
+block|}
+block|,
+name|PII
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_ELECOM
+block|,
 name|USB_PRODUCT_ELECOM_LDUSBTX0
 block|}
 block|,
