@@ -694,6 +694,16 @@ block|}
 block|,
 block|{
 block|{
+name|USB_VENDOR_GARMIN
+block|,
+name|USB_PRODUCT_GARMIN_IQUE_3600
+block|}
+block|,
+name|PALM4
+block|}
+block|,
+block|{
+block|{
 name|USB_VENDOR_FOSSIL
 block|,
 name|USB_PRODUCT_FOSSIL_WRISTPDA
