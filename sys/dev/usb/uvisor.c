@@ -694,6 +694,16 @@ block|}
 block|,
 block|{
 block|{
+name|USB_VENDOR_FOSSIL
+block|,
+name|USB_PRODUCT_FOSSIL_WRISTPDA
+block|}
+block|,
+name|PALM4
+block|}
+block|,
+block|{
+block|{
 name|USB_VENDOR_HANDSPRING
 block|,
 name|USB_PRODUCT_HANDSPRING_VISOR
