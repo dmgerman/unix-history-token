@@ -303,6 +303,16 @@ block|{
 block|{
 name|USB_VENDOR_ACERP
 block|,
+name|USB_PRODUCT_ACERP_ACERSCAN_4300U
+block|}
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_ACERP
+block|,
 name|USB_PRODUCT_ACERP_ACERSCAN_640U
 block|}
 block|,
