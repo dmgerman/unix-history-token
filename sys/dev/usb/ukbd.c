@@ -573,7 +573,7 @@ name|ukbd_driver
 argument_list|,
 name|ukbd_devclass
 argument_list|,
-name|usbd_driver_load
+name|ukbd_driver_load
 argument_list|,
 literal|0
 argument_list|)
