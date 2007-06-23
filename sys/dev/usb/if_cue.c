@@ -193,6 +193,7 @@ block|,
 name|USB_PRODUCT_SMARTBRIDGES_SMARTLINK
 block|}
 block|,
+comment|/* Belkin F5U111 adapter covered by NETMATE entry */
 block|{
 literal|0
 block|,
