@@ -424,7 +424,7 @@ operator|)
 name|vers
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 operator|&
 name|sscf_uni_sscop_parms

@@ -189,21 +189,21 @@ begin_define
 define|#
 directive|define
 name|INT16_ALIGNMENT
-value|((int)&((struct int16_temp *)0)->y)
+value|((size_t)&((struct int16_temp *)0)->y)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INT32_ALIGNMENT
-value|((int)&((struct int32_temp *)0)->y)
+value|((size_t)&((struct int32_temp *)0)->y)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INT64_ALIGNMENT
-value|((int)&((struct int64_temp *)0)->y)
+value|((size_t)&((struct int64_temp *)0)->y)
 end_define
 
 begin_comment

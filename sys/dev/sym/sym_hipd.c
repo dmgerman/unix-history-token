@@ -627,7 +627,7 @@ parameter_list|,
 name|member
 parameter_list|)
 define|\
-value|((type *)((char *)(ptr)-(unsigned int)(&((type *)0)->member)))
+value|((type *)((char *)(ptr)-(size_t)(&((type *)0)->member)))
 end_define
 
 begin_define

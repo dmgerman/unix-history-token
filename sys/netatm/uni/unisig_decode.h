@@ -88,36 +88,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Macro to give the offset of a field in a generic IE structure  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IE_OFFSET
-parameter_list|(
-name|f
-parameter_list|)
-define|\
-value|((int)&((struct ie_generic *) 0)->f)
-end_define
-
-begin_comment
-comment|/*  * Macro to give the size of a field in a generic IE structure  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IE_FSIZE
-parameter_list|(
-name|f
-parameter_list|)
-define|\
-value|(sizeof(((struct ie_generic *) 0)->f))
-end_define
-
 begin_define
 define|#
 directive|define
@@ -125,7 +95,8 @@ name|IE_OFF_SIZE
 parameter_list|(
 name|f
 parameter_list|)
-value|IE_OFFSET(f),IE_FSIZE(f)
+define|\
+value|offsetof(struct ie_generic, f), (sizeof(((struct ie_generic *) 0)->f))
 end_define
 
 begin_comment
