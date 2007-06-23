@@ -497,6 +497,12 @@ name|USB_PRODUCT_SPAIRON_WL54G
 block|}
 block|,
 block|{
+name|USB_VENDOR_SURECOM
+block|,
+name|USB_PRODUCT_SURECOM_RT2570
+block|}
+block|,
+block|{
 name|USB_VENDOR_VTECH
 block|,
 name|USB_PRODUCT_VTECH_RT2570
