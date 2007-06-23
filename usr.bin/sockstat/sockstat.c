@@ -2572,6 +2572,13 @@ operator|-
 literal|1
 condition|)
 block|{
+comment|/* Do not warn if the process exits before we get its name. */
+if|if
+condition|(
+name|errno
+operator|!=
+name|ESRCH
+condition|)
 name|warn
 argument_list|(
 literal|"sysctl()"
