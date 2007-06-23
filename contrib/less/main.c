@@ -302,6 +302,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|no_init
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|pr_type
 decl_stmt|;
 end_decl_stmt
@@ -705,6 +712,8 @@ operator|&&
 name|get_quit_at_eof
 argument_list|()
 condition|)
+name|no_init
+operator|=
 name|quit_if_one_screen
 operator|=
 name|TRUE
