@@ -22031,7 +22031,29 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Reclaim node reference. 			 */
+comment|/* 			 * Do any callback and reclaim the node reference. 			 */
+if|if
+condition|(
+name|bf
+operator|->
+name|bf_m
+operator|->
+name|m_flags
+operator|&
+name|M_TXCB
+condition|)
+name|ieee80211_process_callback
+argument_list|(
+name|ni
+argument_list|,
+name|bf
+operator|->
+name|bf_m
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|ieee80211_free_node
 argument_list|(
 name|ni
