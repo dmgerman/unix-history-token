@@ -10499,7 +10499,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Invalid port specfication in %s\n"
+literal|"Invalid port specification in %s\n"
 argument_list|,
 name|argument
 argument_list|)
@@ -10541,6 +10541,10 @@ operator|.
 name|s_addr
 operator|=
 name|INADDR_ANY
+expr_stmt|;
+name|ok
+operator|=
+literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
