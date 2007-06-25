@@ -634,8 +634,6 @@ literal|"smbfs"
 block|,
 literal|"udf"
 block|,
-literal|"umapfs"
-block|,
 literal|"unionfs"
 block|,
 name|NULL
