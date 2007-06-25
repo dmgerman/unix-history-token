@@ -2367,6 +2367,16 @@ operator|->
 name|sc_dying
 condition|)
 return|return;
+comment|/* 	 * If there's no sc_oxfer, then ucomclose has removed it.  The buffer 	 * has just been flushed in the ttyflush() in ttyclose().  ttyflush() 	 * then calls tt_stop().  ucomstop calls ucomstart, so the right thing 	 * to do here is just abort if sc_oxfer is NULL, as everything else 	 * is cleaned up elsewhere. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_oxfer
+operator|==
+name|NULL
+condition|)
+return|return;
 name|s
 operator|=
 name|spltty
