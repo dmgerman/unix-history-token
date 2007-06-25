@@ -502,10 +502,6 @@ name|struct
 name|tmpfs_node_list
 name|tm_nodes_used
 decl_stmt|;
-name|struct
-name|tmpfs_node_list
-name|tm_nodes_avail
-decl_stmt|;
 comment|/* All node lock to protect the node list and tmp_pages_used */
 name|struct
 name|mtx
@@ -1239,11 +1235,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TMPFS_META_SIZE
+name|TMPFS_META_PAGES
 parameter_list|(
 name|tmp
 parameter_list|)
-value|((tmp)->tm_nodes_inuse * (sizeof(struct tmpfs_node) \ 				+ sizeof(struct dirent)))
+value|((tmp)->tm_nodes_inuse * (sizeof(struct tmpfs_node) \ 				+ sizeof(struct tmpfs_dirent))/PAGE_SIZE + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMPFS_FILE_PAGES
+parameter_list|(
+name|tmp
+parameter_list|)
+value|((tmp)->tm_pages_used)
 end_define
 
 begin_define
@@ -1253,7 +1259,7 @@ name|TMPFS_PAGES_AVAIL
 parameter_list|(
 name|tmp
 parameter_list|)
-value|(TMPFS_PAGES_MAX(tmp) - (tmp)->tm_pages_used - \ 			  	TMPFS_META_SIZE(tmp) / PAGE_SIZE - 1)
+value|(TMPFS_PAGES_MAX(tmp)> \ 			TMPFS_META_PAGES(tmp)+TMPFS_FILE_PAGES(tmp)? \ 			TMPFS_PAGES_MAX(tmp) - TMPFS_META_PAGES(tmp) \ 			- TMPFS_FILE_PAGES(tmp):0)
 end_define
 
 begin_endif
