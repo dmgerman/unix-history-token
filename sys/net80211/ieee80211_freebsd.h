@@ -619,7 +619,7 @@ name|msecs_to_ticks
 parameter_list|(
 name|ms
 parameter_list|)
-value|((ms)*1000/hz)
+value|(((ms)*hz)/1000)
 end_define
 
 begin_define
