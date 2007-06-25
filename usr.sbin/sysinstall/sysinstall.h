@@ -2790,7 +2790,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* FixItMode starts shell onc urrent device (ie Serial port) */
+comment|/* FixItMode starts shell on current device (ie Serial port) */
 end_comment
 
 begin_decl_stmt

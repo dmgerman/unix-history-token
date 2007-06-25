@@ -2448,7 +2448,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* we only wait for 							   shell to finish  							   it serial mode 							   since there is no 							   virtual console */
+comment|/* we only wait for 							   shell to finish  							   in serial mode 							   since there is no 							   virtual console */
 name|systemResumeDialog
 argument_list|()
 expr_stmt|;

@@ -1352,13 +1352,13 @@ expr_stmt|;
 name|systemCreateHoloshell
 argument_list|()
 expr_stmt|;
-return|return
-name|DITEM_SUCCESS
-return|;
 name|FixItMode
 operator|=
 literal|0
 expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+return|;
 block|}
 name|int
 name|installFixitCDROM
