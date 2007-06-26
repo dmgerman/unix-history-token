@@ -329,6 +329,16 @@ name|config
 operator|==
 name|ATA_CFA_MAGIC2
 operator|)
+operator|||
+operator|(
+name|atadev
+operator|->
+name|param
+operator|.
+name|config
+operator|==
+name|ATA_CFA_MAGIC3
+operator|)
 condition|)
 return|return
 literal|0
