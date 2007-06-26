@@ -140,6 +140,9 @@ name|void
 modifier|*
 name|buffer
 decl_stmt|;
+name|char
+name|can_skip
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -360,6 +363,13 @@ name|f
 operator|=
 name|f
 expr_stmt|;
+comment|/* Suppress skip by default. See below. */
+name|mine
+operator|->
+name|can_skip
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|archive_read_open2
@@ -437,6 +447,7 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
+block|{
 name|archive_read_extract_set_skip_file
 argument_list|(
 name|a
@@ -450,6 +461,14 @@ operator|.
 name|st_ino
 argument_list|)
 expr_stmt|;
+comment|/* Enable the seek optimization for regular files. */
+name|mine
+operator|->
+name|can_skip
+operator|=
+literal|1
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|ARCHIVE_OK
@@ -603,7 +622,36 @@ operator|*
 operator|)
 name|client_data
 decl_stmt|;
-comment|/* 	 * Note: the 'fd' and 'filename' versions round the request 	 * down to a multiple of the block size to ensure proper 	 * operation on block-oriented media such as tapes.  But stdio 	 * doesn't work with such media (it doesn't ensure blocking), 	 * so we don't need to bother. 	 */
+operator|(
+name|void
+operator|)
+name|a
+expr_stmt|;
+comment|/* UNUSED */
+comment|/* 	 * If we can't skip, return 0 as the amount we did step and 	 * the caller will work around by reading and discarding. 	 */
+if|if
+condition|(
+operator|!
+name|mine
+operator|->
+name|can_skip
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|request
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|#
 directive|if
 name|HAVE_FSEEKO
@@ -642,18 +690,15 @@ condition|)
 endif|#
 directive|endif
 block|{
-name|archive_set_error
-argument_list|(
-name|a
-argument_list|,
-name|errno
-argument_list|,
-literal|"Error skipping forward"
-argument_list|)
+name|mine
+operator|->
+name|can_skip
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_FATAL
+literal|0
 operator|)
 return|;
 block|}

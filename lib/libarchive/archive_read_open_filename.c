@@ -455,11 +455,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* lseek() almost never works; disable it by default.  See below. */
 name|mine
 operator|->
 name|can_skip
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -633,6 +634,7 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
+block|{
 name|archive_read_extract_set_skip_file
 argument_list|(
 name|a
@@ -646,6 +648,14 @@ operator|.
 name|st_ino
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Enabling skip here is a performance 			 * optimization for anything that supports 			 * lseek().  On FreeBSD, only regular files 			 * and raw disk devices support lseek() and 			 * there's no portable way to determine if a 			 * device is a raw disk device, so we only 			 * enable this optimization for regular files. 			 */
+name|mine
+operator|->
+name|can_skip
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* Remember mode so close can decide whether to flush. */
 name|mine
 operator|->
