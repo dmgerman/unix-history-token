@@ -14331,6 +14331,7 @@ operator|)
 name|qep
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|isp_put_request_t2
@@ -14434,6 +14435,9 @@ name|CMD_QUEUED
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|isp_pci_reset0
@@ -14449,6 +14453,9 @@ name|isp
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|isp_pci_reset1
@@ -14485,6 +14492,9 @@ name|isp
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|isp_pci_dumpregs
