@@ -169,7 +169,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*- --0         1         2         3         4         5         6         7 --0123456789012345678901234567890123456789012345678901234567890123456789012345 00          TCP Connections                    TCP Packets 01999999999 connections initiated    999999999 total packets sent 02999999999 connections accepted     999999999 - data 03999999999 connections established  999999999 - data (retransmit) 04999999999 connections dropped      999999999 - ack-only 05999999999 - in embryonic state     999999999 - window probes 06999999999 - on retransmit timeout  999999999 - window updates 07999999999 - by keepalive           999999999 - urgent data only 08999999999 - from listen queue      999999999 - control 09                                   999999999 - resends by PMTU discovery 10          TCP Timers               999999999 total packets received 11999999999 potential rtt updates    999999999 - in sequence 12999999999 - successful             999999999 - completely duplicate 13999999999 delayed acks sent        999999999 - with some duplicate data 14999999999 retransmit timeouts      999999999 - out-of-order 15999999999 persist timeouts         999999999 - duplicate acks 16999999999 keepalive probes         999999999 - acks 17999999999 - timeouts               999999999 - window probes 18                                   999999999 - window updates 19                                   999999999 - bad checksum --0123456789012345678901234567890123456789012345678901234567890123456789012345 --0         1         2         3         4         5         6         7 */
+comment|/*- --0         1         2         3         4         5         6         7 --0123456789012345678901234567890123456789012345678901234567890123456789012345 00             TCP Connections                       TCP Packets 01999999999999 connections initiated    999999999999 total packets sent 02999999999999 connections accepted     999999999999 - data 03999999999999 connections established  999999999999 - data (retransmit by dupack) 04999999999999 connections dropped      999999999999 - data (retransmit by sack) 05999999999999 - in embryonic state     999999999999 - ack-only 06999999999999 - on retransmit timeout  999999999999 - window probes 07999999999999 - by keepalive           999999999999 - window updates 08999999999999 - from listen queue      999999999999 - urgent data only 09                                      999999999999 - control 10                                      999999999999 - resends by PMTU discovery 11             TCP Timers               999999999999 total packets received 12999999999999 potential rtt updates    999999999999 - in sequence 13999999999999 - successful             999999999999 - completely duplicate 14999999999999 delayed acks sent        999999999999 - with some duplicate data 15999999999999 retransmit timeouts      999999999999 - out-of-order 16999999999999 persist timeouts         999999999999 - duplicate acks 17999999999999 keepalive probes         999999999999 - acks 18999999999999 - timeouts               999999999999 - window probes 19                                      999999999999 - window updates 20                                      999999999999 - bad checksum --0123456789012345678901234567890123456789012345678901234567890123456789012345 --0         1         2         3         4         5         6         7 */
 end_comment
 
 begin_function
@@ -268,7 +268,7 @@ name|row
 parameter_list|,
 name|str
 parameter_list|)
-value|mvwprintw(wnd, row, 10, str)
+value|mvwprintw(wnd, row, 13, str)
 define|#
 directive|define
 name|R
@@ -277,7 +277,7 @@ name|row
 parameter_list|,
 name|str
 parameter_list|)
-value|mvwprintw(wnd, row, 45, str);
+value|mvwprintw(wnd, row, 51, str);
 name|L
 argument_list|(
 literal|0
@@ -331,7 +331,7 @@ name|R
 argument_list|(
 literal|3
 argument_list|,
-literal|"- data (retransmit)"
+literal|"- data (retransmit by dupack)"
 argument_list|)
 expr_stmt|;
 name|L
@@ -345,7 +345,7 @@ name|R
 argument_list|(
 literal|4
 argument_list|,
-literal|"- ack-only"
+literal|"- data (retransmit by sack)"
 argument_list|)
 expr_stmt|;
 name|L
@@ -359,7 +359,7 @@ name|R
 argument_list|(
 literal|5
 argument_list|,
-literal|"- window probes"
+literal|"- ack-only"
 argument_list|)
 expr_stmt|;
 name|L
@@ -373,7 +373,7 @@ name|R
 argument_list|(
 literal|6
 argument_list|,
-literal|"- window updates"
+literal|"- window probes"
 argument_list|)
 expr_stmt|;
 name|L
@@ -387,7 +387,7 @@ name|R
 argument_list|(
 literal|7
 argument_list|,
-literal|"- urgent data only"
+literal|"- window updates"
 argument_list|)
 expr_stmt|;
 name|L
@@ -401,138 +401,145 @@ name|R
 argument_list|(
 literal|8
 argument_list|,
-literal|"- control"
+literal|"- urgent data only"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
 literal|9
 argument_list|,
+literal|"- control"
+argument_list|)
+expr_stmt|;
+name|R
+argument_list|(
+literal|10
+argument_list|,
 literal|"- resends by PMTU discovery"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|10
+literal|11
 argument_list|,
 literal|"TCP Timers"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|10
+literal|11
 argument_list|,
 literal|"total packets received"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|11
+literal|12
 argument_list|,
 literal|"potential rtt updates"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|11
+literal|12
 argument_list|,
 literal|"- in sequence"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|12
+literal|13
 argument_list|,
 literal|"- successful"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|12
+literal|13
 argument_list|,
 literal|"- completely duplicate"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|13
+literal|14
 argument_list|,
 literal|"delayed acks sent"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|13
+literal|14
 argument_list|,
 literal|"- with some duplicate data"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|14
+literal|15
 argument_list|,
 literal|"retransmit timeouts"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|14
+literal|15
 argument_list|,
 literal|"- out-of-order"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|15
+literal|16
 argument_list|,
 literal|"persist timeouts"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|15
+literal|16
 argument_list|,
 literal|"- duplicate acks"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|16
+literal|17
 argument_list|,
 literal|"keepalive probes"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|16
+literal|17
 argument_list|,
 literal|"- acks"
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|17
+literal|18
 argument_list|,
 literal|"- timeouts"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|17
+literal|18
 argument_list|,
 literal|"- window probes"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|18
+literal|19
 argument_list|,
 literal|"- window updates"
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|19
+literal|20
 argument_list|,
 literal|"- bad checksum"
 argument_list|)
@@ -716,7 +723,7 @@ argument_list|)
 expr_stmt|;
 name|DO
 argument_list|(
-name|tcps_sndrexmitbyte
+name|tcps_sack_rexmits
 argument_list|)
 expr_stmt|;
 name|DO
@@ -964,7 +971,7 @@ parameter_list|,
 name|col
 parameter_list|)
 define|\
-value|mvwprintw(wnd, row, col, "%9lu", stats.stat)
+value|mvwprintw(wnd, row, col, "%12lu", stats.stat)
 define|#
 directive|define
 name|L
@@ -982,7 +989,7 @@ name|row
 parameter_list|,
 name|stat
 parameter_list|)
-value|DO(stat, row, 35)
+value|DO(stat, row, 38)
 name|L
 argument_list|(
 literal|1
@@ -1036,7 +1043,7 @@ name|R
 argument_list|(
 literal|4
 argument_list|,
-name|tcps_sndacks
+name|tcps_sack_rexmits
 argument_list|)
 expr_stmt|;
 name|L
@@ -1050,7 +1057,7 @@ name|R
 argument_list|(
 literal|5
 argument_list|,
-name|tcps_sndprobe
+name|tcps_sndacks
 argument_list|)
 expr_stmt|;
 name|L
@@ -1064,7 +1071,7 @@ name|R
 argument_list|(
 literal|6
 argument_list|,
-name|tcps_sndwinup
+name|tcps_sndprobe
 argument_list|)
 expr_stmt|;
 name|L
@@ -1078,7 +1085,7 @@ name|R
 argument_list|(
 literal|7
 argument_list|,
-name|tcps_sndurg
+name|tcps_sndwinup
 argument_list|)
 expr_stmt|;
 name|L
@@ -1092,131 +1099,138 @@ name|R
 argument_list|(
 literal|8
 argument_list|,
-name|tcps_sndctrl
+name|tcps_sndurg
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
 literal|9
 argument_list|,
-name|tcps_mturesent
+name|tcps_sndctrl
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
 literal|10
 argument_list|,
+name|tcps_mturesent
+argument_list|)
+expr_stmt|;
+name|R
+argument_list|(
+literal|11
+argument_list|,
 name|tcps_rcvtotal
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|11
+literal|12
 argument_list|,
 name|tcps_segstimed
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|11
+literal|12
 argument_list|,
 name|tcps_rcvpack
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|12
+literal|13
 argument_list|,
 name|tcps_rttupdated
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|12
+literal|13
 argument_list|,
 name|tcps_rcvduppack
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|13
+literal|14
 argument_list|,
 name|tcps_delack
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|13
+literal|14
 argument_list|,
 name|tcps_rcvpartduppack
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|14
+literal|15
 argument_list|,
 name|tcps_rexmttimeo
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|14
+literal|15
 argument_list|,
 name|tcps_rcvoopack
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|15
+literal|16
 argument_list|,
 name|tcps_persisttimeo
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|15
+literal|16
 argument_list|,
 name|tcps_rcvdupack
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|16
+literal|17
 argument_list|,
 name|tcps_keepprobe
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|16
+literal|17
 argument_list|,
 name|tcps_rcvackpack
 argument_list|)
 expr_stmt|;
 name|L
 argument_list|(
-literal|17
+literal|18
 argument_list|,
 name|tcps_keeptimeo
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|17
+literal|18
 argument_list|,
 name|tcps_rcvwinprobe
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|18
+literal|19
 argument_list|,
 name|tcps_rcvwinupd
 argument_list|)
 expr_stmt|;
 name|R
 argument_list|(
-literal|19
+literal|20
 argument_list|,
 name|tcps_rcvbadsum
 argument_list|)
