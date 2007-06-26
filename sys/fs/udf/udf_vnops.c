@@ -5176,6 +5176,14 @@ name|sector
 argument_list|,
 operator|*
 name|size
+operator|+
+operator|(
+name|offset
+operator|&
+name|udfmp
+operator|->
+name|bmask
+operator|)
 argument_list|,
 name|bp
 argument_list|)
@@ -5214,10 +5222,10 @@ operator|->
 name|b_data
 index|[
 name|offset
-operator|%
+operator|&
 name|udfmp
 operator|->
-name|bsize
+name|bmask
 index|]
 expr_stmt|;
 return|return
@@ -5229,7 +5237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Translate a file offset into a logical block and then into a physical  * block.  */
+comment|/*  * Translate a file offset into a logical block and then into a physical  * block.  * max_size - maximum number of bytes that can be read starting from given  * offset, rather than beginning of calculated sector number  */
 end_comment
 
 begin_function
@@ -5474,12 +5482,9 @@ expr_stmt|;
 operator|*
 name|max_size
 operator|=
-name|GETICBLEN
-argument_list|(
-name|short_ad
-argument_list|,
-name|icb
-argument_list|)
+name|icblen
+operator|-
+name|offset
 expr_stmt|;
 break|break;
 case|case
@@ -5594,12 +5599,9 @@ expr_stmt|;
 operator|*
 name|max_size
 operator|=
-name|GETICBLEN
-argument_list|(
-name|long_ad
-argument_list|,
-name|icb
-argument_list|)
+name|icblen
+operator|-
+name|offset
 expr_stmt|;
 break|break;
 case|case
