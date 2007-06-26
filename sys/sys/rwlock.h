@@ -78,9 +78,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|RW_LOCK_RECURSED
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
 name|RW_LOCK_FLAGMASK
 define|\
-value|(RW_LOCK_READ | RW_LOCK_READ_WAITERS | RW_LOCK_WRITE_WAITERS)
+value|(RW_LOCK_READ | RW_LOCK_READ_WAITERS | RW_LOCK_WRITE_WAITERS |	\ 	RW_LOCK_RECURSED)
 end_define
 
 begin_define
@@ -97,7 +104,7 @@ begin_define
 define|#
 directive|define
 name|RW_READERS_SHIFT
-value|3
+value|4
 end_define
 
 begin_define
@@ -233,9 +240,21 @@ begin_comment
 comment|/*  * Function prototypes.  Routines that start with _ are not part of the  * external API and should not be called directly.  Wrapper macros should  * be used instead.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|rw_init
+parameter_list|(
+name|rw
+parameter_list|,
+name|name
+parameter_list|)
+value|rw_init_flags((rw), (name), 0)
+end_define
+
 begin_function_decl
 name|void
-name|rw_init
+name|rw_init_flags
 parameter_list|(
 name|struct
 name|rwlock
@@ -246,6 +265,9 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|opts
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -682,6 +704,45 @@ value|static struct rw_args name##_args = {				\ 		(rw),							\ 		(desc),						
 end_define
 
 begin_comment
+comment|/*  * Options passed to rw_init_flags().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RW_DUPOK
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|RW_NOPROFILE
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|RW_NOWITNESS
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|RW_QUIET
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|RW_RECURSE
+value|0x10
+end_define
+
+begin_comment
 comment|/*  * The INVARIANTS-enabled rw_assert() functionality.  *  * The constants need to be defined for INVARIANT_SUPPORT infrastructure  * support as _rw_assert() itself uses them and the latter implies that  * _rw_assert() must build.  */
 end_comment
 
@@ -725,6 +786,20 @@ define|#
 directive|define
 name|RA_UNLOCKED
 value|LA_UNLOCKED
+end_define
+
+begin_define
+define|#
+directive|define
+name|RA_RECURSED
+value|LA_RECURSED
+end_define
+
+begin_define
+define|#
+directive|define
+name|RA_NOTRECURSED
+value|LA_NOTRECURSED
 end_define
 
 begin_endif
