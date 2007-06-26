@@ -2198,7 +2198,7 @@ break|break;
 case|case
 name|SIOCSIFFLAGS
 case|:
-comment|/* 		 * XXXRW: Isn't this suser() redundant to the ifnet layer 		 * check? 		 */
+comment|/* 		 * XXXRW: Isn't this priv_check() redundant to the ifnet 		 * layer check? 		 */
 if|if
 condition|(
 operator|(
@@ -2271,7 +2271,7 @@ goto|;
 case|case
 name|SIOCSIFMTU
 case|:
-comment|/* 		 * XXXRW: Isn't this suser() redundant to the ifnet layer 		 * check? 		 */
+comment|/* 		 * XXXRW: Isn't this priv_check() redundant to the ifnet 		 * layer check? 		 */
 if|if
 condition|(
 operator|(
@@ -2330,7 +2330,7 @@ break|break;
 case|case
 name|SIOCADDMULTI
 case|:
-comment|/* 		 * XXXRW: Isn't this suser() redundant to the ifnet layer 		 * check? 		 */
+comment|/* 		 * XXXRW: Isn't this priv_checkr() redundant to the ifnet 		 * layer check? 		 */
 if|if
 condition|(
 operator|(
@@ -2398,7 +2398,7 @@ break|break;
 case|case
 name|SIOCDELMULTI
 case|:
-comment|/* 		 * XXXRW: Isn't this suser() redundant to the ifnet layer 		 * check? 		 */
+comment|/* 		 * XXXRW: Isn't this priv_check() redundant to the ifnet 		 * layer check? 		 */
 if|if
 condition|(
 operator|(
@@ -2466,7 +2466,7 @@ break|break;
 case|case
 name|GRESPROTO
 case|:
-comment|/* 		 * XXXRW: Isn't this suser() redundant to the ifnet layer 		 * check? 		 */
+comment|/* 		 * XXXRW: Isn't this priv_check() redundant to the ifnet 		 * layer check? 		 */
 if|if
 condition|(
 operator|(
@@ -3025,7 +3025,7 @@ break|break;
 case|case
 name|SIOCSIFPHYADDR
 case|:
-comment|/* 		 * XXXRW: Isn't this suser() redundant to the ifnet layer 		 * check? 		 */
+comment|/* 		 * XXXRW: Isn't this priv_check() redundant to the ifnet 		 * layer check? 		 */
 if|if
 condition|(
 operator|(
@@ -3124,7 +3124,7 @@ goto|;
 case|case
 name|SIOCSLIFPHYADDR
 case|:
-comment|/* 		 * XXXRW: Isn't this suser() redundant to the ifnet layer 		 * check? 		 */
+comment|/* 		 * XXXRW: Isn't this priv_check() redundant to the ifnet 		 * layer check? 		 */
 if|if
 condition|(
 operator|(
@@ -3235,7 +3235,7 @@ goto|;
 case|case
 name|SIOCDIFPHYADDR
 case|:
-comment|/* 		 * XXXRW: Isn't this suser() redundant to the ifnet layer 		 * check? 		 */
+comment|/* 		 * XXXRW: Isn't this priv_check() redundant to the ifnet 		 * layer check? 		 */
 if|if
 condition|(
 operator|(
