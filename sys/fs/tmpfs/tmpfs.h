@@ -467,7 +467,7 @@ begin_struct
 struct|struct
 name|tmpfs_mount
 block|{
-comment|/* Maximum number of memory pages available for use by the file 	 * system, set during mount time.  This variable must never be 	 * used directly as it may be bigger that the current amount of 	 * free memory; in the extreme case, it will hold the SIZE_MAX 	 * value.  Instead, use the TMPFS_PAGES_MAX macro. */
+comment|/* Maximum number of memory pages available for use by the file 	 * system, set during mount time.  This variable must never be 	 * used directly as it may be bigger than the current amount of 	 * free memory; in the extreme case, it will hold the SIZE_MAX 	 * value.  Instead, use the TMPFS_PAGES_MAX macro. */
 name|size_t
 name|tm_pages_max
 decl_stmt|;

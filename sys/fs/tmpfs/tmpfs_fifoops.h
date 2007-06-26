@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tmpfs_fifoops.h,v 1.3.2.2 2005/12/11 10:29:11 christos Exp $	*/
+comment|/*	$NetBSD: tmpfs_fifoops.h,v 1.4 2005/12/03 17:34:44 christos Exp $	*/
 end_comment
 
 begin_comment
