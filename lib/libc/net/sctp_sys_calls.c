@@ -1126,6 +1126,7 @@ operator|(
 operator|-
 literal|1
 operator|)
+return|;
 block|}
 name|at
 operator|=
