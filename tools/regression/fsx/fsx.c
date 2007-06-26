@@ -796,10 +796,23 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fsxlogf
 condition|)
+block|{
+name|va_start
+argument_list|(
+name|args
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
 name|vfprintf
 argument_list|(
 name|fsxlogf
@@ -814,6 +827,7 @@ argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
