@@ -44,6 +44,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|auditinfo_addr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|bpf_d
 struct_decl|;
 end_struct_decl
@@ -2404,6 +2410,23 @@ name|struct
 name|auditinfo
 modifier|*
 name|ai
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mac_check_proc_setaudit_addr
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|auditinfo_addr
+modifier|*
+name|aia
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -2646,11 +2646,12 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_proc_setaudit
+name|mac_check_proc_setaudit_addr
 argument_list|(
 name|oldcred
 argument_list|,
-name|NULL
+operator|&
+name|aia
 argument_list|)
 expr_stmt|;
 if|if
