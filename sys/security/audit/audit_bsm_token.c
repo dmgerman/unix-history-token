@@ -1278,7 +1278,7 @@ decl_stmt|;
 name|u_int32_t
 name|type
 init|=
-name|AF_INET6
+name|AU_IPv6
 decl_stmt|;
 name|GET_TOKEN_AREA
 argument_list|(
@@ -1319,7 +1319,7 @@ name|dptr
 argument_list|,
 name|internet_addr
 argument_list|,
-literal|5
+literal|4
 operator|*
 sizeof|sizeof
 argument_list|(
