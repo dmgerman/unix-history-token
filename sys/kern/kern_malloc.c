@@ -376,16 +376,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
+name|vm_offset_t
 name|kmembase
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
+name|vm_offset_t
 name|kmemlimit
 decl_stmt|;
 end_decl_stmt
@@ -2378,17 +2376,9 @@ name|kmem_suballoc
 argument_list|(
 name|kernel_map
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|*
-operator|)
 operator|&
 name|kmembase
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|*
-operator|)
 operator|&
 name|kmemlimit
 argument_list|,
