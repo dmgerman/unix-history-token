@@ -45,6 +45,7 @@ name|u_char
 name|an_node
 decl_stmt|;
 block|}
+name|__packed
 name|ap_node
 struct|;
 block|}
@@ -80,6 +81,7 @@ name|aapa
 name|aarp_tpu
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 

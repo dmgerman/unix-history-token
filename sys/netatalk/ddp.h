@@ -33,6 +33,7 @@ name|u_char
 name|el_type
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -124,6 +125,7 @@ decl_stmt|;
 endif|#
 directive|endif
 block|}
+name|__packed
 name|du_bits
 struct|;
 name|unsigned
@@ -151,6 +153,7 @@ name|u_char
 name|deh_sport
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -259,6 +262,7 @@ decl_stmt|;
 endif|#
 directive|endif
 block|}
+name|__packed
 name|du_bits
 struct|;
 name|unsigned
@@ -268,6 +272,7 @@ block|}
 name|dsh_u
 union|;
 block|}
+name|__packed
 struct|;
 end_struct
 
