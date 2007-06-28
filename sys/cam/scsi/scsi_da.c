@@ -1202,6 +1202,24 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * iRiver U10 MP3 player 		 * PR: usb/92306 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"iriver"
+block|,
+literal|"U10*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * X-Micro Flash Disk 		 * PR: usb/96901 		 */
 block|{
 name|T_DIRECT
