@@ -3583,7 +3583,7 @@ operator|==
 name|fnode
 argument_list|)
 expr_stmt|;
-comment|/* If re-naming a directory to another preexisting directory  	 * ensure that the target directory is empty so that its 	 * removal causes no side effects.  	 * Kern_rename gurantees the destination to be a directory 	 * if the source is one. */
+comment|/* If re-naming a directory to another preexisting directory 	 * ensure that the target directory is empty so that its 	 * removal causes no side effects. 	 * Kern_rename gurantees the destination to be a directory 	 * if the source is one. */
 if|if
 condition|(
 name|tvp
@@ -4301,7 +4301,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* Directories with more than two entries ('.' and '..') cannot be  	  * removed. */
+comment|/* Directories with more than two entries ('.' and '..') cannot be 	 * removed. */
 if|if
 condition|(
 name|node
@@ -4352,7 +4352,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* This invariant holds only if we are not trying to remove "..".  	  * We checked for that above so this is safe now. */
+comment|/* This invariant holds only if we are not trying to remove "..". 	  * We checked for that above so this is safe now. */
 name|MPASS
 argument_list|(
 name|node

@@ -92,7 +92,7 @@ file|<fs/tmpfs/tmpfs.h>
 end_include
 
 begin_comment
-comment|/*  * Default permission for root node   */
+comment|/*  * Default permission for root node  */
 end_comment
 
 begin_define
