@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tmpfs_vnops.c,v 1.20 2006/01/26 20:07:34 jmmv Exp $	*/
+comment|/*	$NetBSD: tmpfs_vnops.c,v 1.35 2007/01/04 15:42:37 elad Exp $	*/
 end_comment
 
 begin_comment
@@ -155,160 +155,8 @@ begin_comment
 comment|/* --------------------------------------------------------------------- */
 end_comment
 
-begin_comment
-comment|/*  * vnode operations vector used for files stored in a tmpfs file system.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|vop_vector
-name|tmpfs_vnodeop_entries
-init|=
-block|{
-operator|.
-name|vop_default
-operator|=
-operator|&
-name|default_vnodeops
-block|,
-operator|.
-name|vop_lookup
-operator|=
-name|vfs_cache_lookup
-block|,
-operator|.
-name|vop_cachedlookup
-operator|=
-name|tmpfs_lookup
-block|,
-operator|.
-name|vop_create
-operator|=
-name|tmpfs_create
-block|,
-operator|.
-name|vop_mknod
-operator|=
-name|tmpfs_mknod
-block|,
-operator|.
-name|vop_open
-operator|=
-name|tmpfs_open
-block|,
-operator|.
-name|vop_close
-operator|=
-name|tmpfs_close
-block|,
-operator|.
-name|vop_access
-operator|=
-name|tmpfs_access
-block|,
-operator|.
-name|vop_getattr
-operator|=
-name|tmpfs_getattr
-block|,
-operator|.
-name|vop_setattr
-operator|=
-name|tmpfs_setattr
-block|,
-operator|.
-name|vop_read
-operator|=
-name|tmpfs_read
-block|,
-operator|.
-name|vop_write
-operator|=
-name|tmpfs_write
-block|,
-operator|.
-name|vop_fsync
-operator|=
-name|tmpfs_fsync
-block|,
-operator|.
-name|vop_remove
-operator|=
-name|tmpfs_remove
-block|,
-operator|.
-name|vop_link
-operator|=
-name|tmpfs_link
-block|,
-operator|.
-name|vop_rename
-operator|=
-name|tmpfs_rename
-block|,
-operator|.
-name|vop_mkdir
-operator|=
-name|tmpfs_mkdir
-block|,
-operator|.
-name|vop_rmdir
-operator|=
-name|tmpfs_rmdir
-block|,
-operator|.
-name|vop_symlink
-operator|=
-name|tmpfs_symlink
-block|,
-operator|.
-name|vop_readdir
-operator|=
-name|tmpfs_readdir
-block|,
-operator|.
-name|vop_readlink
-operator|=
-name|tmpfs_readlink
-block|,
-operator|.
-name|vop_inactive
-operator|=
-name|tmpfs_inactive
-block|,
-operator|.
-name|vop_reclaim
-operator|=
-name|tmpfs_reclaim
-block|,
-operator|.
-name|vop_print
-operator|=
-name|tmpfs_print
-block|,
-operator|.
-name|vop_pathconf
-operator|=
-name|tmpfs_pathconf
-block|,
-operator|.
-name|vop_advlock
-operator|=
-name|tmpfs_advlock
-block|,
-operator|.
-name|vop_bmap
-operator|=
-name|VOP_EOPNOTSUPP
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
+specifier|static
 name|int
 name|tmpfs_lookup
 parameter_list|(
@@ -906,6 +754,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_create
 parameter_list|(
@@ -989,6 +838,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_mknod
 parameter_list|(
@@ -1080,6 +930,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_open
 parameter_list|(
@@ -1214,6 +1065,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_close
 parameter_list|(
@@ -2401,6 +2253,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_read
 parameter_list|(
@@ -2525,6 +2378,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_write
 parameter_list|(
@@ -2931,6 +2785,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_fsync
 parameter_list|(
@@ -2977,6 +2832,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_remove
 parameter_list|(
@@ -3196,6 +3052,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_link
 parameter_list|(
@@ -3453,6 +3310,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_rename
 parameter_list|(
@@ -4263,6 +4121,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_mkdir
 parameter_list|(
@@ -4340,6 +4199,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_rmdir
 parameter_list|(
@@ -4658,6 +4518,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_symlink
 parameter_list|(
@@ -4757,6 +4618,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_readdir
 parameter_list|(
@@ -5219,6 +5081,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_readlink
 parameter_list|(
@@ -5318,6 +5181,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_inactive
 parameter_list|(
@@ -5488,6 +5352,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_print
 parameter_list|(
@@ -5592,6 +5457,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_pathconf
 parameter_list|(
@@ -5718,6 +5584,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_advlock
 parameter_list|(
@@ -5771,6 +5638,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_vptofh
 parameter_list|(
@@ -5843,6 +5711,164 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* --------------------------------------------------------------------- */
+end_comment
+
+begin_comment
+comment|/*  * vnode operations vector used for files stored in a tmpfs file system.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|vop_vector
+name|tmpfs_vnodeop_entries
+init|=
+block|{
+operator|.
+name|vop_default
+operator|=
+operator|&
+name|default_vnodeops
+block|,
+operator|.
+name|vop_lookup
+operator|=
+name|vfs_cache_lookup
+block|,
+operator|.
+name|vop_cachedlookup
+operator|=
+name|tmpfs_lookup
+block|,
+operator|.
+name|vop_create
+operator|=
+name|tmpfs_create
+block|,
+operator|.
+name|vop_mknod
+operator|=
+name|tmpfs_mknod
+block|,
+operator|.
+name|vop_open
+operator|=
+name|tmpfs_open
+block|,
+operator|.
+name|vop_close
+operator|=
+name|tmpfs_close
+block|,
+operator|.
+name|vop_access
+operator|=
+name|tmpfs_access
+block|,
+operator|.
+name|vop_getattr
+operator|=
+name|tmpfs_getattr
+block|,
+operator|.
+name|vop_setattr
+operator|=
+name|tmpfs_setattr
+block|,
+operator|.
+name|vop_read
+operator|=
+name|tmpfs_read
+block|,
+operator|.
+name|vop_write
+operator|=
+name|tmpfs_write
+block|,
+operator|.
+name|vop_fsync
+operator|=
+name|tmpfs_fsync
+block|,
+operator|.
+name|vop_remove
+operator|=
+name|tmpfs_remove
+block|,
+operator|.
+name|vop_link
+operator|=
+name|tmpfs_link
+block|,
+operator|.
+name|vop_rename
+operator|=
+name|tmpfs_rename
+block|,
+operator|.
+name|vop_mkdir
+operator|=
+name|tmpfs_mkdir
+block|,
+operator|.
+name|vop_rmdir
+operator|=
+name|tmpfs_rmdir
+block|,
+operator|.
+name|vop_symlink
+operator|=
+name|tmpfs_symlink
+block|,
+operator|.
+name|vop_readdir
+operator|=
+name|tmpfs_readdir
+block|,
+operator|.
+name|vop_readlink
+operator|=
+name|tmpfs_readlink
+block|,
+operator|.
+name|vop_inactive
+operator|=
+name|tmpfs_inactive
+block|,
+operator|.
+name|vop_reclaim
+operator|=
+name|tmpfs_reclaim
+block|,
+operator|.
+name|vop_print
+operator|=
+name|tmpfs_print
+block|,
+operator|.
+name|vop_pathconf
+operator|=
+name|tmpfs_pathconf
+block|,
+operator|.
+name|vop_advlock
+operator|=
+name|tmpfs_advlock
+block|,
+operator|.
+name|vop_vptofh
+operator|=
+name|tmpfs_vptofh
+block|,
+operator|.
+name|vop_bmap
+operator|=
+name|VOP_EOPNOTSUPP
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

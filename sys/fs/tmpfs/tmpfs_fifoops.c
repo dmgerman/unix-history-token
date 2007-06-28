@@ -83,56 +83,8 @@ begin_comment
 comment|/* --------------------------------------------------------------------- */
 end_comment
 
-begin_comment
-comment|/*  * vnode operations vector used for fifos stored in a tmpfs file system.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|vop_vector
-name|tmpfs_fifoop_entries
-init|=
-block|{
-operator|.
-name|vop_default
-operator|=
-operator|&
-name|fifo_specops
-block|,
-operator|.
-name|vop_close
-operator|=
-name|tmpfs_fifo_close
-block|,
-operator|.
-name|vop_reclaim
-operator|=
-name|tmpfs_reclaim
-block|,
-operator|.
-name|vop_access
-operator|=
-name|tmpfs_access
-block|,
-operator|.
-name|vop_getattr
-operator|=
-name|tmpfs_getattr
-block|,
-operator|.
-name|vop_setattr
-operator|=
-name|tmpfs_setattr
-block|,
-operator|.
-name|vop_kqfilter
-operator|=
-name|tmpfs_fifo_kqfilter
-block|, }
-decl_stmt|;
-end_decl_stmt
-
 begin_function
+specifier|static
 name|int
 name|tmpfs_fifo_kqfilter
 parameter_list|(
@@ -211,6 +163,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tmpfs_fifo_close
 parameter_list|(
@@ -257,6 +210,55 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * vnode operations vector used for fifos stored in a tmpfs file system.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|vop_vector
+name|tmpfs_fifoop_entries
+init|=
+block|{
+operator|.
+name|vop_default
+operator|=
+operator|&
+name|fifo_specops
+block|,
+operator|.
+name|vop_close
+operator|=
+name|tmpfs_fifo_close
+block|,
+operator|.
+name|vop_reclaim
+operator|=
+name|tmpfs_reclaim
+block|,
+operator|.
+name|vop_access
+operator|=
+name|tmpfs_access
+block|,
+operator|.
+name|vop_getattr
+operator|=
+name|tmpfs_getattr
+block|,
+operator|.
+name|vop_setattr
+operator|=
+name|tmpfs_setattr
+block|,
+operator|.
+name|vop_kqfilter
+operator|=
+name|tmpfs_fifo_kqfilter
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

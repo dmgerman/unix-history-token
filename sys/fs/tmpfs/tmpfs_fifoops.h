@@ -62,18 +62,6 @@ name|tmpfs_fifoop_entries
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|vop_close_t
-name|tmpfs_fifo_close
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vop_kqfilter_t
-name|tmpfs_fifo_kqfilter
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* --------------------------------------------------------------------- */
 end_comment
