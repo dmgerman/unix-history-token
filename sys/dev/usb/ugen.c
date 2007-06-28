@@ -3847,7 +3847,9 @@ name|PCATCH
 argument_list|,
 literal|"ugenri"
 argument_list|,
-literal|0
+name|sce
+operator|->
+name|timeout
 argument_list|)
 expr_stmt|;
 name|sce
@@ -3878,6 +3880,20 @@ name|error
 operator|=
 name|EIO
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|EAGAIN
+condition|)
+block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* timeout, return 0 bytes */
+break|break;
+block|}
 if|if
 condition|(
 name|error
@@ -4216,7 +4232,9 @@ name|PCATCH
 argument_list|,
 literal|"ugenri"
 argument_list|,
-literal|0
+name|sce
+operator|->
+name|timeout
 argument_list|)
 expr_stmt|;
 name|sce
@@ -4247,6 +4265,20 @@ name|error
 operator|=
 name|EIO
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|EAGAIN
+condition|)
+block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* timeout, return 0 bytes */
+break|break;
+block|}
 if|if
 condition|(
 name|error
