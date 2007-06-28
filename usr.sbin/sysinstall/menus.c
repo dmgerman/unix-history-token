@@ -5866,6 +5866,29 @@ name|DIST_SRC_BASE
 block|}
 block|,
 block|{
+literal|" cddl"
+block|,
+literal|"/usr/src/cddl (software from Sun)"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|SrcDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_SRC_CDDL
+block|}
+block|,
+block|{
 literal|" contrib"
 block|,
 literal|"/usr/src/contrib (contributed software)"

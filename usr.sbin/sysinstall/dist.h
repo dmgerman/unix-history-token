@@ -282,8 +282,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|DIST_SRC_CDDL
+value|0x100000
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIST_SRC_ALL
-value|0xFFFFF
+value|0x1FFFFF
 end_define
 
 begin_comment
