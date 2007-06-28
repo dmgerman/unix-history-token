@@ -324,21 +324,21 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * These are the maximum number of bytes transferred per frame.  * If some really high speed devices should use this driver they  * may need to be increased, but this is good enough for normal modems.  */
+comment|/*  * These are the maximum number of bytes transferred per frame.  * As speeds for umodem deivces increase, these numbers will need to  * be increased.  They should be good for G3 speeds and below.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UMODEMIBUFSIZE
-value|64
+value|1024
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMODEMOBUFSIZE
-value|256
+value|1024
 end_define
 
 begin_define
