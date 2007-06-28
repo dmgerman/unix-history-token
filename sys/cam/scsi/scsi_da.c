@@ -1236,6 +1236,24 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
 block|}
+block|,
+block|{
+comment|/* 		 * Denver MP3 player 		 * PR: usb/107101 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"DENVER"
+block|,
+literal|"MP3 PLAYER"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
