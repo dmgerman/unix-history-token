@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tmpfs.h,v 1.14 2006/02/10 16:00:02 christos Exp $	*/
+comment|/*	$NetBSD: tmpfs.h,v 1.18 2006/03/31 20:27:49 riz Exp $	*/
 end_comment
 
 begin_comment
@@ -560,12 +560,12 @@ decl_stmt|;
 name|uint16_t
 name|tf_pad
 decl_stmt|;
+name|ino_t
+name|tf_id
+decl_stmt|;
 name|unsigned
 name|long
 name|tf_gen
-decl_stmt|;
-name|ino_t
-name|tf_id
 decl_stmt|;
 block|}
 struct|;
