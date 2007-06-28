@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tmpfs_subr.c,v 1.17 2005/12/11 12:24:29 christos Exp $	*/
+comment|/*	$NetBSD: tmpfs_subr.c,v 1.21 2006/06/07 22:33:39 kardel Exp $	*/
 end_comment
 
 begin_comment
@@ -284,7 +284,7 @@ name|tn_type
 operator|=
 name|type
 expr_stmt|;
-name|nanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|nnode
