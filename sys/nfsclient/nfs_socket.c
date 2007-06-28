@@ -5132,6 +5132,7 @@ operator|&
 name|nfs_reqq_mtx
 argument_list|)
 expr_stmt|;
+comment|/*  		 * nfs_timer() could've re-transmitted the request if we ended up 		 * blocking on nfs_send() too long, so check for R_SENT here. 		 */
 if|if
 condition|(
 operator|!
@@ -5142,7 +5143,11 @@ name|rep
 operator|->
 name|r_flags
 operator|&
+operator|(
+name|R_SENT
+operator||
 name|R_MUSTRESEND
+operator|)
 operator|)
 operator|==
 literal|0
