@@ -12041,7 +12041,7 @@ block|,
 literal|"By default, the console driver will not attempt to do anything\n"
 literal|"special with your screen when it's idle.  If you expect to leave your\n"
 literal|"monitor switched on and idle for long periods of time then you should\n"
-literal|"probably enable one of these screen savers to prevent phosphor burn-in."
+literal|"probably enable one of these screen savers to prevent burn-in."
 block|,
 literal|"Choose a nifty-looking screen saver"
 block|,
