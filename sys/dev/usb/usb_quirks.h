@@ -22,78 +22,88 @@ comment|/* Device problems: */
 define|#
 directive|define
 name|UQ_SWAP_UNICODE
-value|0x0002
+value|0x00000002
 comment|/* has some Unicode strings swapped. */
 define|#
 directive|define
 name|UQ_MS_REVZ
-value|0x0004
+value|0x00000004
 comment|/* mouse has Z-axis reversed */
 define|#
 directive|define
 name|UQ_NO_STRINGS
-value|0x0008
+value|0x00000008
 comment|/* string descriptors are broken. */
 define|#
 directive|define
 name|UQ_BAD_ADC
-value|0x0010
+value|0x00000010
 comment|/* bad audio spec version number. */
 define|#
 directive|define
 name|UQ_BUS_POWERED
-value|0x0020
+value|0x00000020
 comment|/* device is bus powered, despite claim */
 define|#
 directive|define
 name|UQ_BAD_AUDIO
-value|0x0040
+value|0x00000040
 comment|/* device claims audio class, but isn't */
 define|#
 directive|define
 name|UQ_SPUR_BUT_UP
-value|0x0080
+value|0x00000080
 comment|/* spurious mouse button up events */
 define|#
 directive|define
 name|UQ_AU_NO_XU
-value|0x0100
+value|0x00000100
 comment|/* audio device has broken extension unit */
 define|#
 directive|define
 name|UQ_POWER_CLAIM
-value|0x0200
+value|0x00000200
 comment|/* hub lies about power status */
 define|#
 directive|define
 name|UQ_AU_NO_FRAC
-value|0x0400
+value|0x00000400
 comment|/* don't adjust for fractional samples */
 define|#
 directive|define
 name|UQ_AU_INP_ASYNC
-value|0x0800
+value|0x00000800
 comment|/* input is async despite claim of adaptive */
 define|#
 directive|define
 name|UQ_BROKEN_BIDIR
-value|0x2000
+value|0x00002000
 comment|/* printer has broken bidir mode */
 define|#
 directive|define
 name|UQ_OPEN_CLEARSTALL
-value|0x4000
+value|0x04000
 comment|/* device needs clear endpoint stall */
 define|#
 directive|define
 name|UQ_HID_IGNORE
-value|0x8000
+value|0x00008000
 comment|/* device should be ignored by hid class */
 define|#
 directive|define
 name|UQ_KBD_IGNORE
-value|0x18000
+value|0x00018000
 comment|/* device should be ignored by both kbd and hid class */
+define|#
+directive|define
+name|UQ_MS_BAD_CLASS
+value|0x00020000
+comment|/* doesn't identify properly */
+define|#
+directive|define
+name|UQ_MS_LEADING_BYTE
+value|0x40000
+comment|/* mouse sends an unknown leading byte. */
 block|}
 struct|;
 end_struct
