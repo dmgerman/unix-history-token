@@ -1892,7 +1892,12 @@ expr|struct
 name|ieee80211_frame
 argument_list|)
 operator|+
-literal|64
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|sc_txtap
+argument_list|)
 argument_list|,
 operator|&
 name|sc
@@ -1907,7 +1912,7 @@ operator|=
 sizeof|sizeof
 name|sc
 operator|->
-name|sc_rxtapu
+name|sc_rxtap
 expr_stmt|;
 name|sc
 operator|->
@@ -1944,7 +1949,7 @@ operator|=
 sizeof|sizeof
 name|sc
 operator|->
-name|sc_txtapu
+name|sc_txtap
 expr_stmt|;
 name|sc
 operator|->
