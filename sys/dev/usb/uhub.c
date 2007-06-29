@@ -286,10 +286,10 @@ comment|/* interrupt pipe */
 name|u_int8_t
 name|sc_status
 index|[
-literal|1
+literal|32
 index|]
 decl_stmt|;
-comment|/* XXX more ports */
+comment|/* max 255 ports */
 name|u_char
 name|sc_running
 decl_stmt|;
@@ -1357,12 +1357,15 @@ name|sc
 operator|->
 name|sc_status
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|sc_status
-argument_list|)
+operator|(
+name|nports
+operator|+
+literal|1
+operator|+
+literal|7
+operator|)
+operator|/
+literal|8
 argument_list|,
 name|uhub_intr
 argument_list|,
