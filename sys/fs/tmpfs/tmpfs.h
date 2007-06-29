@@ -101,11 +101,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_include
-include|#
-directive|include
-file|<fs/tmpfs/tmpfs_uma.h>
-end_include
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_TMPFSNAME
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* --------------------------------------------------------------------- */
@@ -513,10 +515,6 @@ name|tm_dirent_pool
 decl_stmt|;
 name|uma_zone_t
 name|tm_node_pool
-decl_stmt|;
-name|struct
-name|tmpfs_str_zone
-name|tm_str_pool
 decl_stmt|;
 block|}
 struct|;

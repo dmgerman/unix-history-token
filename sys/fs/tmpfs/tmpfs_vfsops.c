@@ -114,6 +114,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_TMPFSNAME
+argument_list|,
+literal|"tmpfs name"
+argument_list|,
+literal|"tmpfs file names"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* --------------------------------------------------------------------- */
 end_comment
@@ -1268,15 +1280,7 @@ name|tmpfs_node_fini
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|tmpfs_str_zone_create
-argument_list|(
-operator|&
-name|tmp
-operator|->
-name|tm_str_pool
+name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
 comment|/* Allocate the root node. */
@@ -1325,14 +1329,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|tmpfs_str_zone_destroy
-argument_list|(
-operator|&
-name|tmp
-operator|->
-name|tm_str_pool
-argument_list|)
-expr_stmt|;
 name|uma_zdestroy
 argument_list|(
 name|tmp
@@ -1632,14 +1628,6 @@ argument_list|(
 name|tmp
 operator|->
 name|tm_node_pool
-argument_list|)
-expr_stmt|;
-name|tmpfs_str_zone_destroy
-argument_list|(
-operator|&
-name|tmp
-operator|->
-name|tm_str_pool
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
