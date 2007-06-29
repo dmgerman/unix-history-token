@@ -498,7 +498,7 @@ name|char
 name|gzip_version
 index|[]
 init|=
-literal|"FreeBSD gzip 20070126"
+literal|"FreeBSD gzip 20070528"
 decl_stmt|;
 end_decl_stmt
 
@@ -609,6 +609,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* force mode */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|kflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't delete input files */
 end_comment
 
 begin_decl_stmt
@@ -1442,6 +1453,16 @@ literal|'h'
 block|}
 block|,
 block|{
+literal|"keep"
+block|,
+name|no_argument
+block|,
+literal|0
+block|,
+literal|'k'
+block|}
+block|,
+block|{
 literal|"list"
 block|,
 name|no_argument
@@ -1710,7 +1731,7 @@ directive|else
 define|#
 directive|define
 name|OPT_LIST
-value|"123456789acdfhlLNnqrS:tVv"
+value|"123456789acdfhklLNnqrS:tVv"
 endif|#
 directive|endif
 while|while
@@ -1830,6 +1851,14 @@ case|case
 literal|'f'
 case|:
 name|fflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+name|kflag
 operator|=
 literal|1
 expr_stmt|;
@@ -5377,6 +5406,11 @@ name|struct
 name|stat
 name|nsb
 decl_stmt|;
+if|if
+condition|(
+name|kflag
+condition|)
+return|return;
 if|if
 condition|(
 name|stat
@@ -9253,6 +9287,7 @@ literal|" -d --decompress      uncompress files\n"
 literal|"    --uncompress\n"
 literal|" -f --force           force overwriting& compress links\n"
 literal|" -h --help            display this help\n"
+literal|" -k --keep            don't delete input files during operation\n"
 literal|" -l --list            list compressed file contents\n"
 literal|" -N --name            save or restore original file name and time stamp\n"
 literal|" -n --no-name         don't save original file name or time stamp\n"
