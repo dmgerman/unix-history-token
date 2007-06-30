@@ -315,6 +315,26 @@ argument_list|,
 name|mech_type
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mn
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|allocated_ctx
+condition|)
+name|free
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+return|return
+name|GSS_S_BAD_NAME
+return|;
+block|}
 comment|/* 	 * If we have a cred, find the cred for this mechanism. 	 */
 name|cred_handle
 operator|=

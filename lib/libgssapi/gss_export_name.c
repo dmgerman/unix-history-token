@@ -54,6 +54,18 @@ name|_gss_mechanism_name
 modifier|*
 name|mn
 decl_stmt|;
+name|exported_name
+operator|->
+name|value
+operator|=
+name|NULL
+expr_stmt|;
+name|exported_name
+operator|->
+name|length
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * If this name already has any attached MNs, export the first 	 * one, otherwise export based on the first mechanism in our 	 * list. 	 */
 name|mn
 operator|=

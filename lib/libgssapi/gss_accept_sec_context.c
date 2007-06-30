@@ -101,6 +101,8 @@ parameter_list|)
 block|{
 name|OM_uint32
 name|major_status
+decl_stmt|,
+name|mech_ret_flags
 decl_stmt|;
 name|struct
 name|_gss_mech_switch
@@ -602,7 +604,8 @@ name|mech_type
 argument_list|,
 name|output_token
 argument_list|,
-name|ret_flags
+operator|&
+name|mech_ret_flags
 argument_list|,
 name|time_rec
 argument_list|,
@@ -690,8 +693,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|*
-name|ret_flags
+name|mech_ret_flags
 operator|&
 name|GSS_C_DELEG_FLAG
 condition|)
@@ -855,6 +857,15 @@ name|cred
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|ret_flags
+condition|)
+operator|*
+name|ret_flags
+operator|=
+name|mech_ret_flags
+expr_stmt|;
 operator|*
 name|context_handle
 operator|=
