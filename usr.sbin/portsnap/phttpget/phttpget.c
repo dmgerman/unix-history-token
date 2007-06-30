@@ -895,7 +895,7 @@ name|connclose
 condition|?
 literal|"Connection: Close\r\n"
 else|:
-literal|""
+literal|"Connection: Keep-Alive\r\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1366,6 +1366,10 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* != 0 if connection in pipelined mode. */
+name|int
+name|keepalive
+decl_stmt|;
+comment|/* != 0 if HTTP/1.0 keep-alive rcvd. */
 name|int
 name|sd
 init|=
@@ -1983,6 +1987,10 @@ name|chunked
 operator|=
 literal|0
 expr_stmt|;
+name|keepalive
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 comment|/* Get a header line */
@@ -2172,7 +2180,7 @@ goto|;
 comment|/* Ignore the rest of the line */
 continue|continue;
 block|}
-comment|/* Check for "Connection: close" header */
+comment|/* 			 * Check for "Connection: close" or 			 * "Connection: Keep-Alive" header 			 */
 if|if
 condition|(
 name|strncmp
@@ -2205,6 +2213,21 @@ condition|)
 name|pipelined
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|hln
+argument_list|,
+literal|"Keep-Alive"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|keepalive
+operator|=
+literal|1
 expr_stmt|;
 comment|/* Next header... */
 continue|continue;
@@ -2863,6 +2886,10 @@ comment|/* 		 * If necessary, clean up this connection so that we 		 * can start
 if|if
 condition|(
 name|pipelined
+operator|==
+literal|0
+operator|&&
+name|keepalive
 operator|==
 literal|0
 condition|)
