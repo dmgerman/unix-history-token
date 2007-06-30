@@ -2541,6 +2541,46 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Public access to scan_next for drivers that are not able to scan single  * channels (e.g. for firmware-based devices).  */
+end_comment
+
+begin_function
+name|void
+name|ieee80211_scan_done
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|)
+block|{
+name|struct
+name|ieee80211_scan_state
+modifier|*
+name|ss
+init|=
+name|ic
+operator|->
+name|ic_scan
+decl_stmt|;
+name|ss
+operator|->
+name|ss_next
+operator|=
+name|ss
+operator|->
+name|ss_last
+expr_stmt|;
+comment|/* all channels are complete */
+name|scan_next
+argument_list|(
+name|ss
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Scan curchan.  If this is an active scan and the channel  * is not marked passive then send probe request frame(s).  * Arrange for the channel change after maxdwell ticks.  */
 end_comment
 
@@ -3762,13 +3802,6 @@ operator|->
 name|ss_chanmindwell
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX 			 * We want to just kick the timer and still 			 * process frames until it fires but linux 			 * will livelock unless we discard frames. 			 */
-if|#
-directive|if
-literal|0
-block|SCAN_PRIVATE(ss)->ss_iflags |= ISCAN_MINDWELL;
-else|#
-directive|else
 name|SCAN_PRIVATE
 argument_list|(
 name|ss
@@ -3776,10 +3809,8 @@ argument_list|)
 operator|->
 name|ss_iflags
 operator||=
-name|ISCAN_DISCARD
+name|ISCAN_MINDWELL
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 			 * NB: trigger at next clock tick or wait for the 			 * hardware 			 */
 name|ic
 operator|->
