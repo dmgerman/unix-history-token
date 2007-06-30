@@ -1310,6 +1310,24 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
 block|}
+block|,
+block|{
+comment|/* 		 * SAMSUNG MP0402H 		 * PR: usb/108427 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"SAMSUNG"
+block|,
+literal|"MP0402H"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
