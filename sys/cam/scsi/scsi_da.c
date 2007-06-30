@@ -1292,6 +1292,24 @@ name|DA_Q_NO_SYNC_CACHE
 operator||
 name|DA_Q_NO_PREVENT
 block|}
+block|,
+block|{
+comment|/* 		 * JNC MP3 Player 		 * PR: usb/94439 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"JNC*"
+block|,
+literal|"MP3 Player*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
