@@ -9870,7 +9870,12 @@ operator|->
 name|umass_sim
 argument_list|)
 argument_list|,
-name|CAM_TARGET_WILDCARD
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
 argument_list|,
 name|CAM_LUN_WILDCARD
 argument_list|)
@@ -10657,7 +10662,7 @@ name|cam_scsi_command
 argument_list|)
 expr_stmt|;
 comment|/* sc->transform will convert the command to the command 		 * (format) needed by the specific command set and return 		 * the converted command in a buffer pointed to be rcmd. 		 * We pass in a buffer, but if the command does not 		 * have to be transformed it returns a ptr to the original 		 * buffer (see umass_scsi_transform). 		 */
-if|if
+switch|switch
 condition|(
 name|sc
 operator|->
@@ -10677,6 +10682,9 @@ name|rcmdlen
 argument_list|)
 condition|)
 block|{
+case|case
+literal|1
+case|:
 comment|/* 			 * Handle EVPD inquiry for broken devices first 			 * NO_INQUIRY also implies NO_INQUIRY_EVPD 			 */
 if|if
 condition|(
@@ -10914,9 +10922,10 @@ operator|)
 name|ccb
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+case|case
+literal|0
+case|:
 name|ccb
 operator|->
 name|ccb_h
@@ -10930,6 +10939,24 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|=
+name|CAM_REQ_CMP
+expr_stmt|;
+name|xpt_done
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 break|break;
 block|}
@@ -11890,6 +11917,8 @@ argument_list|,
 operator|&
 name|rcmdlen
 argument_list|)
+operator|==
+literal|1
 condition|)
 block|{
 if|if
@@ -12338,6 +12367,8 @@ argument_list|,
 operator|&
 name|rcmdlen
 argument_list|)
+operator|==
+literal|1
 condition|)
 block|{
 name|sc
@@ -13184,6 +13215,13 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|1
+return|;
+comment|/* 	 * SYNCHRONIZE_CACHE isn't supported by UFI, nor should it be 	 * required for UFI devices, so it is appropriate to fake 	 * success. 	 */
+case|case
+name|SYNCHRONIZE_CACHE
+case|:
+return|return
+literal|2
 return|;
 default|default:
 name|printf
