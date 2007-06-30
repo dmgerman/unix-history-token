@@ -1936,6 +1936,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UIPROTO_MOUSE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|UICLASS_PHYSICAL
 value|0x05
 end_define
