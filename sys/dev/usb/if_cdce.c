@@ -1406,6 +1406,11 @@ operator|->
 name|iMacAddress
 argument_list|,
 name|eaddr_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|eaddr_str
+argument_list|)
 argument_list|)
 condition|)
 block|{

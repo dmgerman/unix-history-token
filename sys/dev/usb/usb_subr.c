@@ -823,6 +823,8 @@ operator|->
 name|iManufacturer
 argument_list|,
 name|v
+argument_list|,
+name|USB_MAX_STRING_LEN
 argument_list|)
 condition|)
 name|vendor
@@ -850,6 +852,8 @@ operator|->
 name|iProduct
 argument_list|,
 name|p
+argument_list|,
+name|USB_MAX_STRING_LEN
 argument_list|)
 condition|)
 name|product
@@ -5412,6 +5416,53 @@ name|device
 operator|=
 name|dev
 expr_stmt|;
+if|if
+condition|(
+name|up
+operator|->
+name|parent
+operator|&&
+name|speed
+operator|>
+name|up
+operator|->
+name|parent
+operator|->
+name|speed
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+name|printf
+argument_list|(
+literal|"%s: maxium speed of attached "
+literal|"device, %d, is higher than speed "
+literal|"of parent HUB, %d.\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|speed
+argument_list|,
+name|up
+operator|->
+name|parent
+operator|->
+name|speed
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 		 * Reduce the speed, otherwise we won't setup the 		 * proper transfer methods. 		 */
+name|speed
+operator|=
+name|up
+operator|->
+name|parent
+operator|->
+name|speed
+expr_stmt|;
+block|}
 comment|/* Locate port on upstream high speed hub */
 for|for
 control|(

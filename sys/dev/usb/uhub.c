@@ -3025,11 +3025,12 @@ name|ddesc
 operator|.
 name|iSerialNumber
 argument_list|,
-operator|&
 name|serial
-index|[
-literal|0
-index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|serial
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
