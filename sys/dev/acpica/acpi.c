@@ -11938,6 +11938,16 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
+comment|/* Check if button action is disabled. */
+if|if
+condition|(
+name|state
+operator|==
+name|ACPI_S_STATES_MAX
+operator|+
+literal|1
+condition|)
+return|return;
 comment|/* Request that the system prepare to enter the given suspend state. */
 name|ret
 operator|=
