@@ -1902,6 +1902,29 @@ literal|0
 block|}
 block|,
 block|{
+comment|/* 		 * Western Digital My Book 250GB (USB) 		 * hangs upon serial number probing. 		 * PR: 107495 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"WD"
+block|,
+literal|"2500JB External"
+block|,
+literal|"*"
+block|}
+block|,
+name|CAM_QUIRK_NOSERIAL
+block|,
+comment|/*mintags*/
+literal|0
+block|,
+comment|/*maxtags*/
+literal|0
+block|}
+block|,
+block|{
 comment|/* Default tagged queuing parameters for all devices */
 block|{
 name|T_ANY
