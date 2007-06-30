@@ -315,6 +315,13 @@ name|dev
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|table
+init|=
+name|NULL
+decl_stmt|;
 name|int
 name|fd
 decl_stmt|,
@@ -386,7 +393,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:def:ip:v"
+literal|"c:def:ip:t:v"
 argument_list|)
 operator|)
 operator|!=
@@ -447,6 +454,14 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'t'
+case|:
+name|table
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'v'
 case|:
 name|demon
@@ -489,7 +504,7 @@ argument_list|()
 expr_stmt|;
 name|hid_init
 argument_list|(
-name|NULL
+name|table
 argument_list|)
 expr_stmt|;
 if|if
@@ -1094,7 +1109,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Usage: %s [-deiv] -c config_file -f hid_dev "
-literal|"[-p pidfile]\n"
+literal|"[-p pidfile] [-t tablefile]\n"
 argument_list|,
 name|getprogname
 argument_list|()
