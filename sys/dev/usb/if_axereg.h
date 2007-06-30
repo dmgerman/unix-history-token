@@ -385,12 +385,23 @@ begin_struct
 struct|struct
 name|axe_type
 block|{
-name|u_int16_t
-name|axe_vid
+name|struct
+name|usb_devno
+name|axe_dev
 decl_stmt|;
-name|u_int16_t
-name|axe_did
+name|uint32_t
+name|axe_flags
 decl_stmt|;
+define|#
+directive|define
+name|AX178
+value|0x0001
+comment|/* AX88178 */
+define|#
+directive|define
+name|AX772
+value|0x0002
+comment|/* AX88772 */
 block|}
 struct|;
 end_struct
