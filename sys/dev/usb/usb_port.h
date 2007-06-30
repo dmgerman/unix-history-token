@@ -104,16 +104,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|USBDEVUNIT
-parameter_list|(
-name|bdev
-parameter_list|)
-value|device_get_unit(bdev)
-end_define
-
-begin_define
-define|#
-directive|define
 name|USBDEVPTRNAME
 parameter_list|(
 name|bdev
