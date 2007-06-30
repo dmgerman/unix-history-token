@@ -922,6 +922,16 @@ define|\
 value|(IEEE80211_IS_CHAN_2GHZ(_c)&& \ 	 ((_c)->ic_flags& IEEE80211_CHAN_HT) != 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN2IEEE
+parameter_list|(
+name|_c
+parameter_list|)
+value|(_c)->ic_ieee
+end_define
+
 begin_comment
 comment|/* ni_chan encoding for FH phy */
 end_comment

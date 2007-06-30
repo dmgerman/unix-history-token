@@ -3419,9 +3419,12 @@ operator|>>
 name|IEEE80211_FC0_SUBTYPE_SHIFT
 index|]
 argument_list|,
+name|IEEE80211_CHAN2IEEE
+argument_list|(
 name|sp
 operator|->
-name|chan
+name|curchan
+argument_list|)
 argument_list|,
 name|sp
 operator|->

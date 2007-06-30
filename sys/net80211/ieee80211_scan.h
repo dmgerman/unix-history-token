@@ -490,13 +490,15 @@ name|uint16_t
 name|fhdwell
 decl_stmt|;
 comment|/* FHSS dwell interval */
-name|uint8_t
-name|chan
+name|struct
+name|ieee80211_channel
+modifier|*
+name|curchan
 decl_stmt|;
-comment|/* */
 name|uint8_t
 name|bchan
 decl_stmt|;
+comment|/* chan# advertised inside beacon */
 name|uint8_t
 name|fhindex
 decl_stmt|;

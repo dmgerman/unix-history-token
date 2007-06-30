@@ -1246,9 +1246,9 @@ name|ise
 operator|->
 name|se_chan
 operator|=
-name|ic
+name|sp
 operator|->
-name|ic_curchan
+name|curchan
 expr_stmt|;
 name|ise
 operator|->

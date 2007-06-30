@@ -9692,10 +9692,8 @@ name|scan
 operator|.
 name|bchan
 operator|=
-name|ieee80211_chan2ieee
+name|IEEE80211_CHAN2IEEE
 argument_list|(
-name|ic
-argument_list|,
 name|ic
 operator|->
 name|ic_curchan
@@ -9703,11 +9701,11 @@ argument_list|)
 expr_stmt|;
 name|scan
 operator|.
-name|chan
+name|curchan
 operator|=
-name|scan
-operator|.
-name|bchan
+name|ic
+operator|->
+name|ic_curchan
 expr_stmt|;
 while|while
 condition|(
@@ -9793,7 +9791,7 @@ argument_list|)
 expr_stmt|;
 name|scan
 operator|.
-name|chan
+name|bchan
 operator|=
 name|IEEE80211_FH_CHAN
 argument_list|(
@@ -9833,7 +9831,7 @@ name|IEEE80211_T_FH
 condition|)
 name|scan
 operator|.
-name|chan
+name|bchan
 operator|=
 name|frm
 index|[
@@ -10201,9 +10199,12 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|IEEE80211_CHAN2IEEE
+argument_list|(
 name|scan
 operator|.
-name|chan
+name|curchan
+argument_list|)
 operator|!=
 name|scan
 operator|.
@@ -10236,9 +10237,12 @@ index|]
 argument_list|,
 literal|"for off-channel %u"
 argument_list|,
+name|IEEE80211_CHAN2IEEE
+argument_list|(
 name|scan
 operator|.
-name|chan
+name|curchan
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ic
