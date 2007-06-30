@@ -479,9 +479,9 @@ name|USB_PRODUCT_RALINK_RT2570_3
 block|}
 block|,
 block|{
-name|USB_VENDOR_SIEMENS3
+name|USB_VENDOR_SIEMENS2
 block|,
-name|USB_PRODUCT_SIEMENS3_WL54G
+name|USB_PRODUCT_SIEMENS2_WL54G
 block|}
 block|,
 block|{
@@ -491,9 +491,9 @@ name|USB_PRODUCT_SMC_2862WG
 block|}
 block|,
 block|{
-name|USB_VENDOR_SPAIRON
+name|USB_VENDOR_SPHAIRON
 block|,
-name|USB_PRODUCT_SPAIRON_WL54G
+name|USB_PRODUCT_SPHAIRON_UB801R
 block|}
 block|,
 block|{
