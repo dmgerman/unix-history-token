@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/ipsec.h>
+file|<netipsec/ipsec.h>
 end_include
 
 begin_include
@@ -54,25 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netkey/key_var.h>
+file|<netipsec/key_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netkey/key_debug.h>
+file|<netipsec/key_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec.h>
 end_include
 
 begin_include

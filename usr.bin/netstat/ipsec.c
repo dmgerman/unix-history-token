@@ -84,36 +84,10 @@ directive|include
 file|<netinet/in.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|FAST_IPSEC
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -870,13 +844,94 @@ argument_list|)
 expr_stmt|;
 undef|#
 directive|undef
-name|p
-undef|#
-directive|undef
 name|pes
 undef|#
 directive|undef
 name|hist
+name|p
+argument_list|(
+name|ips_in_polvio
+argument_list|,
+literal|"\t%ju inbound packet%s violated process "
+literal|"security policy\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_out_polvio
+argument_list|,
+literal|"\t%ju outbound packet%s violated process "
+literal|"security policy\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_out_nosa
+argument_list|,
+literal|"\t%ju outbound packet%s with no SA available\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_out_nomem
+argument_list|,
+literal|"\t%ju outbound packet%s failed due to "
+literal|"insufficient memory\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_out_noroute
+argument_list|,
+literal|"\t%ju outbound packet%s with no route "
+literal|"available\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_out_inval
+argument_list|,
+literal|"\t%ju invalid outbound packet%s\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_out_bundlesa
+argument_list|,
+literal|"\t%ju outbound packet%s with bundled SAs\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_mbcoalesced
+argument_list|,
+literal|"\t%ju mbuf%s coalesced during clone\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_clcoalesced
+argument_list|,
+literal|"\t%ju cluster%s coalesced during clone\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_clcopied
+argument_list|,
+literal|"\t%ju cluster%s copied during clone\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|ips_mbinserted
+argument_list|,
+literal|"\t%ju mbuf%s inserted during makespace\n"
+argument_list|)
+expr_stmt|;
+undef|#
+directive|undef
+name|p
 block|}
 end_function
 
@@ -941,12 +996,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FAST_IPSEC
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|void
@@ -970,20 +1019,6 @@ specifier|const
 name|char
 modifier|*
 name|title
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|print_newipsecstats
-parameter_list|(
-specifier|const
-name|struct
-name|newipsecstat
-modifier|*
-name|newipsecstat
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1189,175 +1224,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|print_newipsecstats
-parameter_list|(
-specifier|const
-name|struct
-name|newipsecstat
-modifier|*
-name|newipsecstat
-parameter_list|)
-block|{
-define|#
-directive|define
-name|p
-parameter_list|(
-name|f
-parameter_list|,
-name|m
-parameter_list|)
-value|if (newipsecstat->f || sflag<= 1) \     printf(m, newipsecstat->f, plural(newipsecstat->f))
-name|p
-argument_list|(
-name|ips_in_polvio
-argument_list|,
-literal|"\t%u inbound packet%s violated process "
-literal|"security policy\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|ips_out_polvio
-argument_list|,
-literal|"\t%u outbound packet%s violated process "
-literal|"security policy\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|ips_out_nosa
-argument_list|,
-literal|"\t%u outbound packet%s with no SA available\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|ips_out_nomem
-argument_list|,
-literal|"\t%u outbound packet%s failed due to "
-literal|"insufficient memory\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|ips_out_noroute
-argument_list|,
-literal|"\t%u outbound packet%s with no route "
-literal|"available\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|ips_out_inval
-argument_list|,
-literal|"\t%u invalid outbound packet%s\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|ips_out_bundlesa
-argument_list|,
-literal|"\t%u outbound packet%s with bundled SAs\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|ips_mbcoalesced
-argument_list|,
-literal|"\t%u mbuf%s coalesced during clone\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|ips_clcoalesced
-argument_list|,
-literal|"\t%u cluster%s coalesced during clone\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|ips_clcopied
-argument_list|,
-literal|"\t%u cluster%s copied during clone\n"
-argument_list|)
-expr_stmt|;
-name|p
-argument_list|(
-name|ips_mbinserted
-argument_list|,
-literal|"\t%u mbuf%s inserted during makespace\n"
-argument_list|)
-expr_stmt|;
-undef|#
-directive|undef
-name|p
-block|}
-end_function
-
-begin_function
-name|void
-name|ipsec_stats_new
-parameter_list|(
-name|u_long
-name|off
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|int
-name|family
-name|__unused
-parameter_list|)
-block|{
-name|struct
-name|newipsecstat
-name|newipsecstat
-decl_stmt|;
-if|if
-condition|(
-name|off
-operator|==
-literal|0
-condition|)
-return|return;
-name|printf
-argument_list|(
-literal|"%s:\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|kread
-argument_list|(
-name|off
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|newipsecstat
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|newipsecstat
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|print_newipsecstats
-argument_list|(
-operator|&
-name|newipsecstat
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2116,15 +1982,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FAST_IPSEC */
-end_comment
 
 begin_endif
 endif|#

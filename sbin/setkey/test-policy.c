@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netkey/keyv2.h>
+file|<netipsec/ipsec.h>
 end_include
 
 begin_include
@@ -49,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec.h>
 end_include
 
 begin_decl_stmt

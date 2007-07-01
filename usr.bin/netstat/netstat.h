@@ -477,27 +477,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FAST_IPSEC
-end_ifdef
-
-begin_function_decl
-name|void
-name|ipsec_stats_new
-parameter_list|(
-name|u_long
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 name|void
 name|esp_stats
@@ -542,11 +521,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

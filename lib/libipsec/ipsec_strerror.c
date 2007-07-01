@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/ipsec.h>
+file|<netipsec/ipsec.h>
 end_include
 
 begin_include

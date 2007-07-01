@@ -50,19 +50,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netkey/keydb.h>
+file|<netipsec/keydb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netkey/key_var.h>
+file|<netipsec/key_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netkey/key_debug.h>
+file|<netipsec/key_debug.h>
 end_include
 
 begin_include

@@ -79,36 +79,10 @@ directive|include
 file|<netinet/in.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|FAST_IPSEC
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<netkey/keysock.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
