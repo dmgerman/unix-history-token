@@ -238,6 +238,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netipsec/ipsec.h>
 end_include
 
@@ -360,8 +366,8 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|newipsecstat
-name|newipsecstat
+name|ipsecstat
+name|ipsec4stat
 decl_stmt|;
 end_decl_stmt
 
@@ -741,9 +747,9 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|newipsecstat
+name|ipsec4stat
 argument_list|,
-name|newipsecstat
+name|ipsecstat
 argument_list|,
 literal|""
 argument_list|)
@@ -832,6 +838,13 @@ ifdef|#
 directive|ifdef
 name|INET6
 end_ifdef
+
+begin_decl_stmt
+name|struct
+name|ipsecstat
+name|ipsec6stat
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1101,6 +1114,27 @@ operator|&
 name|ip6_esp_randpad
 argument_list|,
 literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_STRUCT
+argument_list|(
+name|_net_inet6_ipsec6
+argument_list|,
+name|IPSECCTL_STATS
+argument_list|,
+name|ipsecstats
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|ipsec6stat
+argument_list|,
+name|ipsecstat
 argument_list|,
 literal|""
 argument_list|)
@@ -2379,7 +2413,7 @@ literal|"getpolicy failed w/o error"
 operator|)
 argument_list|)
 expr_stmt|;
-name|newipsecstat
+name|ipsec4stat
 operator|.
 name|ips_out_inval
 operator|++
@@ -2429,7 +2463,7 @@ comment|/* fall thru... */
 case|case
 name|IPSEC_POLICY_DISCARD
 case|:
-name|newipsecstat
+name|ipsec4stat
 operator|.
 name|ips_out_polvio
 operator|++
@@ -7311,7 +7345,7 @@ if|if
 condition|(
 name|result
 condition|)
-name|newipsecstat
+name|ipsec4stat
 operator|.
 name|ips_in_polvio
 operator|++
@@ -7446,7 +7480,7 @@ if|if
 condition|(
 name|result
 condition|)
-name|newipsecstat
+name|ipsec6stat
 operator|.
 name|ips_in_polvio
 operator|++

@@ -1504,15 +1504,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_comment
-comment|/* IPSEC */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FAST_IPSEC
+end_ifdef
 
 begin_define
 define|#
@@ -1529,6 +1525,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* FAST_IPSEC */
+end_comment
 
 begin_define
 define|#

@@ -612,7 +612,7 @@ operator|->
 name|next
 condition|)
 block|{
-name|newipsecstat
+name|ipsec4stat
 operator|.
 name|ips_out_bundlesa
 operator|++
@@ -1233,7 +1233,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * IPsec processing is required, but no SA found. 		 * I assume that key_acquire() had been called 		 * to get/establish the SA. Here I discard 		 * this packet because it is responsibility for 		 * upper layer to retransmit the packet. 		 */
-name|newipsecstat
+name|ipsec4stat
 operator|.
 name|ips_out_nosa
 operator|++
@@ -2604,6 +2604,12 @@ name|state
 operator|->
 name|m
 expr_stmt|;
+name|IPSECREQUEST_LOCK
+argument_list|(
+name|isr
+argument_list|)
+expr_stmt|;
+comment|/* insure SA contents don't change */
 name|isr
 operator|=
 name|ipsec_nextisr
@@ -2655,7 +2661,8 @@ goto|goto
 name|bad
 goto|;
 block|}
-return|return
+name|error
+operator|=
 call|(
 modifier|*
 name|isr
@@ -2687,9 +2694,26 @@ argument_list|,
 name|ip6_nxt
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|IPSECREQUEST_UNLOCK
+argument_list|(
+name|isr
+argument_list|)
+expr_stmt|;
+return|return
+name|error
 return|;
 name|bad
 label|:
+if|if
+condition|(
+name|isr
+condition|)
+name|IPSECREQUEST_UNLOCK
+argument_list|(
+name|isr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -2786,7 +2810,7 @@ argument_list|(
 name|m
 operator|->
 name|m_len
-operator|!=
+operator|==
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -3077,6 +3101,10 @@ name|ip6_nxt
 operator|=
 name|IPPROTO_IPV6
 expr_stmt|;
+name|ip6
+operator|->
+name|ip6_src
+operator|=
 name|sav
 operator|->
 name|sah
@@ -3088,11 +3116,11 @@ operator|.
 name|sin6
 operator|.
 name|sin6_addr
-operator|=
+expr_stmt|;
 name|ip6
 operator|->
-name|ip6_src
-expr_stmt|;
+name|ip6_dst
+operator|=
 name|sav
 operator|->
 name|sah
@@ -3104,10 +3132,6 @@ operator|.
 name|sin6
 operator|.
 name|sin6_addr
-operator|=
-name|ip6
-operator|->
-name|ip6_dst
 expr_stmt|;
 name|ip6
 operator|->
@@ -3337,7 +3361,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|newipsecstat
+name|ipsec6stat
 operator|.
 name|ips_out_inval
 operator|++
@@ -3363,7 +3387,7 @@ operator|!
 name|m
 condition|)
 block|{
-name|newipsecstat
+name|ipsec6stat
 operator|.
 name|ips_out_nomem
 operator|++
@@ -3578,7 +3602,7 @@ operator|.
 name|ip6s_noroute
 operator|++
 expr_stmt|;
-name|newipsecstat
+name|ipsec6stat
 operator|.
 name|ips_out_noroute
 operator|++
@@ -3648,7 +3672,7 @@ operator|!
 name|m
 condition|)
 block|{
-name|newipsecstat
+name|ipsec6stat
 operator|.
 name|ips_out_nomem
 operator|++

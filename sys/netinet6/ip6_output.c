@@ -174,50 +174,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<netkey/key.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPSEC */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|FAST_IPSEC
 end_ifdef
 
@@ -237,6 +193,12 @@ begin_include
 include|#
 directive|include
 file|<netipsec/key.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/ip6_ipsec.h>
 end_include
 
 begin_endif
@@ -593,6 +555,48 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Make an extension header from option data.  hp is the source, and  * mp is the destination.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAKE_EXTHDR
+parameter_list|(
+name|hp
+parameter_list|,
+name|mp
+parameter_list|)
+define|\
+value|do {								\ 	if (hp) {							\ 		struct ip6_ext *eh = (struct ip6_ext *)(hp);		\ 		error = ip6_copyexthdr((mp), (caddr_t)(hp),		\ 		    ((eh)->ip6e_len + 1)<< 3);				\ 		if (error)						\ 			goto freehdrs;					\ 	}								\     } while (
+comment|/*CONSTCOND*/
+value|0)
+end_define
+
+begin_comment
+comment|/*  * Form a chain of extension headers.   * m is the extension header mbuf  * mp is the previous mbuf in the chain  * p is the next header  * i is the type of option.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAKE_CHAIN
+parameter_list|(
+name|m
+parameter_list|,
+name|mp
+parameter_list|,
+name|p
+parameter_list|,
+name|i
+parameter_list|)
+define|\
+value|do {\ 	if (m) {\ 		if (!hdrsplit) \ 			panic("assumption failed: hdr not split"); \ 		*mtod((m), u_char *) = *(p);\ 		*(p) = (i);\ 		p = mtod((m), u_char *);\ 		(m)->m_next = (mp)->m_next;\ 		(mp)->m_next = (m);\ 		(mp) = (m);\ 	}\     } while (
+comment|/*CONSTCOND*/
+value|0)
+end_define
+
+begin_comment
 comment|/*  * IP6 output. The packet in mbuf chain m contains a skeletal IP6  * header (with pri, len, nxt, hlim, src, dst).  * This function may modify ver and hlim only.  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  *  * type of "mtu": rt_rmx.rmx_mtu is u_long, ifnet.ifr_mtu is int, and  * nd_ifinfo.linkmtu is u_int32_t.  so we use u_long to hold largest one,  * which is rt_rmx.rmx_mtu.  */
 end_comment
 
@@ -672,6 +676,13 @@ modifier|*
 name|m
 init|=
 name|m0
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mprev
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|hlen
@@ -771,19 +782,27 @@ name|needipsec
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
+name|struct
+name|ipsec_output_state
+name|state
+decl_stmt|;
+name|struct
+name|ip6_rthdr
+modifier|*
+name|rh
+init|=
+name|NULL
+decl_stmt|;
 name|int
 name|needipsectun
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|segleft_org
 init|=
 literal|0
 decl_stmt|;
@@ -796,7 +815,7 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
-comment|/*IPSEC || FAST_IPSEC*/
+comment|/* FAST_IPSEC */
 name|ip6
 operator|=
 name|mtod
@@ -808,24 +827,28 @@ name|ip6_hdr
 operator|*
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ip6
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ip6 is NULL"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 name|finaldst
 operator|=
 name|ip6
 operator|->
 name|ip6_dst
 expr_stmt|;
-define|#
-directive|define
-name|MAKE_EXTHDR
-parameter_list|(
-name|hp
-parameter_list|,
-name|mp
-parameter_list|)
-define|\
-value|do {								\ 	if (hp) {							\ 		struct ip6_ext *eh = (struct ip6_ext *)(hp);		\ 		error = ip6_copyexthdr((mp), (caddr_t)(hp),		\ 		    ((eh)->ip6e_len + 1)<< 3);				\ 		if (error)						\ 			goto freehdrs;					\ 	}								\     } while (
-comment|/*CONSTCOND*/
-value|0)
 name|bzero
 argument_list|(
 operator|&
@@ -863,7 +886,7 @@ operator|->
 name|ip6po_rthdr
 condition|)
 block|{
-comment|/* 			 * Destination options header(1st part) 			 * This only makes sence with a routing header. 			 * See Section 9.2 of RFC 3542. 			 * Disabling this part just for MIP6 convenience is 			 * a bad idea.  We need to think carefully about a 			 * way to make the advanced API coexist with MIP6 			 * options, which might automatically be inserted in 			 * the kernel. 			 */
+comment|/* 			 * Destination options header(1st part) 			 * This only makes sense with a routing header. 			 * See Section 9.2 of RFC 3542. 			 * Disabling this part just for MIP6 convenience is 			 * a bad idea.  We need to think carefully about a 			 * way to make the advanced API coexist with MIP6 			 * options, which might automatically be inserted in 			 * the kernel. 			 */
 name|MAKE_EXTHDR
 argument_list|(
 name|opt
@@ -904,276 +927,55 @@ name|ip6e_dest2
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|IPSEC
-comment|/* get a security policy for this packet */
-if|if
-condition|(
-name|inp
-operator|==
-name|NULL
-condition|)
-name|sp
-operator|=
-name|ipsec6_getpolicybyaddr
-argument_list|(
-name|m
-argument_list|,
-name|IPSEC_DIR_OUTBOUND
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|error
-argument_list|)
-expr_stmt|;
-else|else
-name|sp
-operator|=
-name|ipsec6_getpolicybypcb
-argument_list|(
-name|m
-argument_list|,
-name|IPSEC_DIR_OUTBOUND
-argument_list|,
-name|inp
-argument_list|,
-operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|==
-name|NULL
-condition|)
-block|{
-name|ipsec6stat
-operator|.
-name|out_inval
-operator|++
-expr_stmt|;
-goto|goto
-name|freehdrs
-goto|;
-block|}
-name|error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* check policy */
-switch|switch
-condition|(
-name|sp
-operator|->
-name|policy
-condition|)
-block|{
-case|case
-name|IPSEC_POLICY_DISCARD
-case|:
-comment|/* 		 * This packet is just discarded. 		 */
-name|ipsec6stat
-operator|.
-name|out_polvio
-operator|++
-expr_stmt|;
-goto|goto
-name|freehdrs
-goto|;
-case|case
-name|IPSEC_POLICY_BYPASS
-case|:
-case|case
-name|IPSEC_POLICY_NONE
-case|:
-comment|/* no need to do IPsec. */
-name|needipsec
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-case|case
-name|IPSEC_POLICY_IPSEC
-case|:
-if|if
-condition|(
-name|sp
-operator|->
-name|req
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* acquire a policy */
-name|error
-operator|=
-name|key_spdacquire
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
-goto|goto
-name|freehdrs
-goto|;
-block|}
-name|needipsec
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-name|IPSEC_POLICY_ENTRUST
-case|:
-default|default:
-name|printf
-argument_list|(
-literal|"ip6_output: Invalid policy found. %d\n"
-argument_list|,
-name|sp
-operator|->
-name|policy
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* IPSEC */
+comment|/*  	 * IPSec checking which handles several cases. 	 * FAST IPSEC: We re-injected the packet. 	 */
 ifdef|#
 directive|ifdef
 name|FAST_IPSEC
-comment|/* get a security policy for this packet */
-if|if
-condition|(
-name|inp
-operator|==
-name|NULL
-condition|)
-name|sp
-operator|=
-name|ipsec_getpolicybyaddr
-argument_list|(
-name|m
-argument_list|,
-name|IPSEC_DIR_OUTBOUND
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|error
-argument_list|)
-expr_stmt|;
-else|else
-name|sp
-operator|=
-name|ipsec_getpolicybysock
-argument_list|(
-name|m
-argument_list|,
-name|IPSEC_DIR_OUTBOUND
-argument_list|,
-name|inp
-argument_list|,
-operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|==
-name|NULL
-condition|)
-block|{
-name|newipsecstat
-operator|.
-name|ips_out_inval
-operator|++
-expr_stmt|;
-goto|goto
-name|freehdrs
-goto|;
-block|}
-name|error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* check policy */
 switch|switch
 condition|(
-name|sp
-operator|->
-name|policy
-condition|)
-block|{
-case|case
-name|IPSEC_POLICY_DISCARD
-case|:
-comment|/* 		 * This packet is just discarded. 		 */
-name|newipsecstat
-operator|.
-name|ips_out_polvio
-operator|++
-expr_stmt|;
-goto|goto
-name|freehdrs
-goto|;
-case|case
-name|IPSEC_POLICY_BYPASS
-case|:
-case|case
-name|IPSEC_POLICY_NONE
-case|:
-comment|/* no need to do IPsec. */
-name|needipsec
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-case|case
-name|IPSEC_POLICY_IPSEC
-case|:
-if|if
-condition|(
-name|sp
-operator|->
-name|req
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* acquire a policy */
-name|error
-operator|=
-name|key_spdacquire
+name|ip6_ipsec_output
 argument_list|(
+operator|&
+name|m
+argument_list|,
+name|inp
+argument_list|,
+operator|&
+name|flags
+argument_list|,
+operator|&
+name|error
+argument_list|,
+operator|&
+name|ifp
+argument_list|,
+operator|&
 name|sp
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+case|case
+literal|1
+case|:
+comment|/* Bad packet */
 goto|goto
 name|freehdrs
 goto|;
-block|}
+case|case
+operator|-
+literal|1
+case|:
+comment|/* Do IPSec */
 name|needipsec
 operator|=
 literal|1
 expr_stmt|;
-break|break;
 case|case
-name|IPSEC_POLICY_ENTRUST
+literal|0
 case|:
+comment|/* No IPSec */
 default|default:
-name|printf
-argument_list|(
-literal|"ip6_output: Invalid policy found. %d\n"
-argument_list|,
-name|sp
-operator|->
-name|policy
-argument_list|)
-expr_stmt|;
+break|break;
 block|}
 endif|#
 directive|endif
@@ -1431,7 +1233,6 @@ name|plen
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Concatenate headers and fill in next header fields. 	 * Here we have, on "m" 	 *	IPv6 payload 	 * and we insert headers accordingly.  Finally, we should be getting: 	 *	IPv6 hbh dest1 rthdr ah* [esp* dest2 payload] 	 * 	 * during the header composing process, "m" points to IPv6 header. 	 * "mprev" points to an extension header prior to esp. 	 */
-block|{
 name|u_char
 modifier|*
 name|nexthdrp
@@ -1441,14 +1242,11 @@ name|ip6
 operator|->
 name|ip6_nxt
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
 name|mprev
-init|=
+operator|=
 name|m
-decl_stmt|;
-comment|/* 		 * we treat dest2 specially.  this makes IPsec processing 		 * much easier.  the goal here is to make mprev point the 		 * mbuf prior to dest2. 		 * 		 * result: IPv6 dest2 payload 		 * m and mprev will point to IPv6 header. 		 */
+expr_stmt|;
+comment|/* 	 * we treat dest2 specially.  this makes IPsec processing 	 * much easier.  the goal here is to make mprev point the 	 * mbuf prior to dest2. 	 * 	 * result: IPv6 dest2 payload 	 * m and mprev will point to IPv6 header. 	 */
 if|if
 condition|(
 name|exthdrs
@@ -1506,23 +1304,7 @@ operator|=
 name|IPPROTO_DSTOPTS
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|MAKE_CHAIN
-parameter_list|(
-name|m
-parameter_list|,
-name|mp
-parameter_list|,
-name|p
-parameter_list|,
-name|i
-parameter_list|)
-define|\
-value|do {\ 	if (m) {\ 		if (!hdrsplit) \ 			panic("assumption failed: hdr not split"); \ 		*mtod((m), u_char *) = *(p);\ 		*(p) = (i);\ 		p = mtod((m), u_char *);\ 		(m)->m_next = (mp)->m_next;\ 		(mp)->m_next = (m);\ 		(mp) = (m);\ 	}\     } while (
-comment|/*CONSTCOND*/
-value|0)
-comment|/* 		 * result: IPv6 hbh dest1 rthdr dest2 payload 		 * m will point to IPv6 header.  mprev will point to the 		 * extension header prior to dest2 (rthdr in the above case). 		 */
+comment|/* 	 * result: IPv6 hbh dest1 rthdr dest2 payload 	 * m will point to IPv6 header.  mprev will point to the 	 * extension header prior to dest2 (rthdr in the above case). 	 */
 name|MAKE_CHAIN
 argument_list|(
 name|exthdrs
@@ -1562,17 +1344,9 @@ argument_list|,
 name|IPPROTO_ROUTING
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
 if|if
 condition|(
 operator|!
@@ -1581,30 +1355,13 @@ condition|)
 goto|goto
 name|skip_ipsec2
 goto|;
-comment|/* 		 * pointers after IPsec headers are not valid any more. 		 * other pointers need a great care too. 		 * (IPsec routines should not mangle mbufs prior to AH/ESP) 		 */
+comment|/* 	 * pointers after IPsec headers are not valid any more. 	 * other pointers need a great care too. 	 * (IPsec routines should not mangle mbufs prior to AH/ESP) 	 */
 name|exthdrs
 operator|.
 name|ip6e_dest2
 operator|=
 name|NULL
 expr_stmt|;
-block|{
-name|struct
-name|ip6_rthdr
-modifier|*
-name|rh
-init|=
-name|NULL
-decl_stmt|;
-name|int
-name|segleft_org
-init|=
-literal|0
-decl_stmt|;
-name|struct
-name|ipsec_output_state
-name|state
-decl_stmt|;
 if|if
 condition|(
 name|exthdrs
@@ -1734,6 +1491,22 @@ goto|goto
 name|bad
 goto|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|needipsectun
+condition|)
+block|{
+comment|/*  		 * In the FAST IPSec case we have already  		 * re-injected the packet and it has been freed 		 * by the ipsec_done() function.  So, just clean  		 * up after ourselves. 		 */
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 if|if
 condition|(
 name|exthdrs
@@ -1749,13 +1522,12 @@ operator|=
 name|segleft_org
 expr_stmt|;
 block|}
-block|}
 name|skip_ipsec2
 label|:
 empty_stmt|;
 endif|#
 directive|endif
-block|}
+comment|/* FAST_IPSEC */
 comment|/* 	 * If there is a routing header, replace the destination address field 	 * with the first hop of the routing header. 	 */
 if|if
 condition|(
@@ -2224,17 +1996,10 @@ operator|=
 name|ip6_defmcasthlim
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
+comment|/* 	 * Same as similar comment above.   	 * We only want to do regular IPSEC here and leave this pure 	 * in the case that we're using FAST_IPSEC which uses 	 * this code to re-inject packets. 	 */
 if|if
 condition|(
 name|needipsec
@@ -2403,6 +2168,17 @@ goto|goto
 name|bad
 goto|;
 block|}
+else|else
+block|{
+comment|/*  			 * In the FAST IPSec case we have already  			 * re-injected the packet and it has been freed 			 * by the ipsec_done() function.  So, just clean  			 * up after ourselves. 			 */
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 name|exthdrs
 operator|.
 name|ip6e_ip6
@@ -2412,7 +2188,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* IPSEC */
+comment|/* FAST_IPSEC */
 comment|/* adjust pointer */
 name|ip6
 operator|=
@@ -3708,17 +3484,6 @@ operator|.
 name|len
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|IPSEC
-comment|/* clean ipsec history once it goes out of the node */
-name|ipsec_delaux
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|nd6_output
@@ -3818,12 +3583,6 @@ decl_stmt|;
 name|u_char
 name|nextproto
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|struct ip6ctlparam ip6cp; 		u_int32_t mtu32;
-endif|#
-directive|endif
 name|int
 name|qslots
 init|=
@@ -3854,14 +3613,6 @@ name|mtu
 operator|=
 name|IPV6_MAXPACKET
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 		 * It is believed this code is a leftover from the 		 * development of the IPV6_RECVPATHMTU sockopt and  		 * associated work to implement RFC3542. 		 * It's not entirely clear what the intent of the API 		 * is at this point, so disable this code for now. 		 * The IPV6_RECVPATHMTU sockopt and/or IPV6_DONTFRAG 		 * will send notifications if the application requests. 		 */
-comment|/* Notify a proper path MTU to applications. */
-block|mtu32 = (u_int32_t)mtu; 		bzero(&ip6cp, sizeof(ip6cp)); 		ip6cp.ip6c_cmdarg = (void *)&mtu32; 		pfctlinput2(PRC_MSGSIZE, (struct sockaddr *)&ro_pmtu->ro_dst, 		    (void *)&ip6cp);
-endif|#
-directive|endif
 name|len
 operator|=
 operator|(
@@ -4453,17 +4204,6 @@ operator|.
 name|len
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|IPSEC
-comment|/* clean ipsec history once it goes out of the node */
-name|ipsec_delaux
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|nd6_output
@@ -4544,41 +4284,6 @@ name|ro_rt
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|IPSEC
-if|if
-condition|(
-name|sp
-operator|!=
-name|NULL
-condition|)
-name|key_freesp
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* IPSEC */
-ifdef|#
-directive|ifdef
-name|FAST_IPSEC
-if|if
-condition|(
-name|sp
-operator|!=
-name|NULL
-condition|)
-name|KEY_FREESP
-argument_list|(
-operator|&
-name|sp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* FAST_IPSEC */
 return|return
 operator|(
 name|error
@@ -4618,6 +4323,10 @@ expr_stmt|;
 comment|/* FALLTHROUGH */
 name|bad
 label|:
+if|if
+condition|(
+name|m
+condition|)
 name|m_freem
 argument_list|(
 name|m
@@ -7160,17 +6869,9 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
 case|case
 name|IPV6_IPSEC_POLICY
 case|:
@@ -7270,7 +6971,7 @@ block|}
 break|break;
 endif|#
 directive|endif
-comment|/* KAME IPSEC */
+comment|/* FAST_IPSEC */
 default|default:
 name|error
 operator|=
@@ -7891,17 +7592,9 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
 case|case
 name|IPV6_IPSEC_POLICY
 case|:
@@ -8063,7 +7756,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/* KAME IPSEC */
+comment|/* FAST_IPSEC */
 default|default:
 name|error
 operator|=
@@ -9757,10 +9450,6 @@ operator|->
 name|ip6po_pktinfo
 operator|==
 name|NULL
-operator|&&
-name|canwait
-operator|==
-name|M_NOWAIT
 condition|)
 goto|goto
 name|bad
@@ -10008,10 +9697,6 @@ condition|(
 name|dst
 operator|==
 name|NULL
-operator|&&
-name|canwait
-operator|==
-name|M_NOWAIT
 condition|)
 return|return
 operator|(

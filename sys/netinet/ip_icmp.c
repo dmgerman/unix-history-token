@@ -156,29 +156,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netkey/key.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|FAST_IPSEC
 end_ifdef
 
@@ -193,12 +170,6 @@ include|#
 directive|include
 file|<netipsec/key.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|IPSEC
-end_define
 
 begin_endif
 endif|#
@@ -2906,7 +2877,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IPSEC
+name|FAST_IPSEC
 name|key_sa_routechange
 argument_list|(
 operator|(

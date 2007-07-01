@@ -23200,7 +23200,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|IPSEC
+name|FAST_IPSEC
 comment|/* 	 * I very much doubt any of the IPSEC stuff will work but I have no 	 * idea, so I will leave it in place. 	 */
 if|if
 condition|(
@@ -23219,7 +23219,7 @@ name|inp
 argument_list|)
 condition|)
 block|{
-name|ipsecstat
+name|ipsec4stat
 operator|.
 name|in_polvio
 operator|++

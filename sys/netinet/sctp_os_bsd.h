@@ -252,19 +252,19 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IPSEC
+name|FAST_IPSEC
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<netinet6/ipsec.h>
+file|<netipsec/ipsec.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netkey/key.h>
+file|<netipsec/key.h>
 end_include
 
 begin_endif
@@ -291,7 +291,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IPSEC
+name|FAST_IPSEC
 end_ifdef
 
 begin_include

@@ -307,9 +307,11 @@ define|#
 directive|define
 name|panic
 parameter_list|(
-name|param
+name|fmt
+parameter_list|,
+modifier|...
 parameter_list|)
-value|{ printf(param); exit(-1); }
+value|{ printf(fmt, ## __VA_ARGS__); exit(-1); }
 end_define
 
 begin_endif

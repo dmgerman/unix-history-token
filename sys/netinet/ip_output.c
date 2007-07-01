@@ -153,48 +153,17 @@ directive|include
 file|<netinet/ip_options.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<netinet/ip_ipsec.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FAST_IPSEC
-end_ifdef
 
 begin_include
 include|#
@@ -207,13 +176,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*IPSEC*/
+comment|/* FAST_IPSEC*/
 end_comment
 
 begin_include
@@ -1642,17 +1606,9 @@ expr_stmt|;
 block|}
 name|sendit
 label|:
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
 switch|switch
 condition|(
 name|ip_ipsec_output
@@ -1727,7 +1683,7 @@ literal|2
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* IPSEC */
+comment|/* FAST_IPSEC */
 comment|/* Jump over all PFIL processing if hooks are not active. */
 if|if
 condition|(
@@ -2324,17 +2280,6 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|IPSEC
-comment|/* clean ipsec history once it goes out of the node */
-name|ipsec_delaux
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|MBUF_STRESS_TEST
 if|if
 condition|(
@@ -2483,17 +2428,6 @@ name|m_nextpkt
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC
-comment|/* clean ipsec history once it goes out of the node */
-name|ipsec_delaux
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|error
@@ -4056,17 +3990,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
 case|case
 name|IP_IPSEC_POLICY
 case|:
@@ -4210,7 +4136,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/*IPSEC*/
+comment|/* FAST_IPSEC */
 default|default:
 name|error
 operator|=
@@ -4515,17 +4441,9 @@ name|sopt
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
 case|case
 name|IP_IPSEC_POLICY
 case|:
@@ -4618,7 +4536,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/*IPSEC*/
+comment|/* FAST_IPSEC */
 default|default:
 name|error
 operator|=

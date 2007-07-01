@@ -679,7 +679,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* old statistics for ipsec processing */
+comment|/* statistics for ipsec processing */
 end_comment
 
 begin_struct
@@ -800,18 +800,6 @@ decl_stmt|;
 name|u_quad_t
 name|spdcachemiss
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* statistics for ipsec processing */
-end_comment
-
-begin_struct
-struct|struct
-name|newipsecstat
-block|{
 name|u_int32_t
 name|ips_in_polvio
 decl_stmt|;
@@ -1104,8 +1092,8 @@ end_endif
 begin_decl_stmt
 specifier|extern
 name|struct
-name|newipsecstat
-name|newipsecstat
+name|ipsecstat
+name|ipsec4stat
 decl_stmt|;
 end_decl_stmt
 
@@ -1209,28 +1197,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|do { if (ipsec_debug) printf x; } while (0)
-end_define
-
-begin_comment
-comment|/* XXX for KAME code compatibility */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ipsec_pcbconn
-parameter_list|(
-name|_x
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ipsec_pcbdisconn
-parameter_list|(
-name|_x
-parameter_list|)
 end_define
 
 begin_function_decl

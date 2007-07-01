@@ -237,40 +237,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|FAST_IPSEC
 end_ifdef
 
@@ -283,14 +249,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netipsec/ipsec6.h>
+file|<netinet6/ip6_ipsec.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|IPSEC
-end_define
+begin_include
+include|#
+directive|include
+file|<netipsec/ipsec6.h>
+end_include
 
 begin_endif
 endif|#
@@ -913,13 +879,8 @@ expr_stmt|;
 comment|/* XXX for now */
 ifdef|#
 directive|ifdef
-name|IPSEC
-comment|/* 	 * should the inner packet be considered authentic? 	 * see comment in ah4_input(). 	 */
-if|if
-condition|(
-name|m
-condition|)
-block|{
+name|FAST_IPSEC
+comment|/* 	 * should the inner packet be considered authentic? 	 * see comment in ah4_input(). 	 * NB: m cannot be NULL when passed to the input routine 	 */
 name|m
 operator|->
 name|m_flags
@@ -934,9 +895,9 @@ operator|&=
 operator|~
 name|M_AUTHIPDGM
 expr_stmt|;
-block|}
 endif|#
 directive|endif
+comment|/* FAST_IPSEC */
 comment|/* 	 * make sure we don't have onion peering information into m_tag. 	 */
 name|ip6_delaux
 argument_list|(
@@ -2814,45 +2775,23 @@ goto|;
 block|}
 ifdef|#
 directive|ifdef
-name|IPSEC
+name|FAST_IPSEC
 comment|/* 		 * enforce IPsec policy checking if we are seeing last header. 		 * note that we do not visit this with protocols with pcb layer 		 * code - like udp/tcp/raw ip. 		 */
 if|if
 condition|(
-operator|(
-name|inet6sw
-index|[
-name|ip6_protox
-index|[
-name|nxt
-index|]
-index|]
-operator|.
-name|pr_flags
-operator|&
-name|PR_LASTHDR
-operator|)
-operator|!=
-literal|0
-operator|&&
-name|ipsec6_in_reject
+name|ip6_ipsec_input
 argument_list|(
 name|m
 argument_list|,
-name|NULL
+name|nxt
 argument_list|)
 condition|)
-block|{
-name|ipsec6stat
-operator|.
-name|in_polvio
-operator|++
-expr_stmt|;
 goto|goto
 name|bad
 goto|;
-block|}
 endif|#
 directive|endif
+comment|/* FAST_IPSEC */
 name|nxt
 operator|=
 operator|(

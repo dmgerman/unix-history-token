@@ -204,27 +204,6 @@ begin_comment
 comment|/*FAST_IPSEC*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*IPSEC*/
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -678,17 +657,9 @@ argument_list|(
 name|last
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
 comment|/* check AH/ESP integrity. */
 if|if
 condition|(
@@ -704,22 +675,10 @@ name|policyfail
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC
-name|ipsecstat
-operator|.
-name|in_polvio
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*IPSEC*/
-comment|/* do not inject data to pcb */
 block|}
 endif|#
 directive|endif
-comment|/*IPSEC || FAST_IPSEC*/
+comment|/* FAST_IPSEC */
 ifdef|#
 directive|ifdef
 name|MAC

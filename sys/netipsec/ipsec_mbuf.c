@@ -225,7 +225,7 @@ name|m_next
 operator|=
 name|n
 expr_stmt|;
-name|newipsecstat
+name|ipsec4stat
 operator|.
 name|ips_mbinserted
 operator|++
@@ -379,7 +379,7 @@ name|m_next
 operator|=
 name|n2
 expr_stmt|;
-name|newipsecstat
+name|ipsec4stat
 operator|.
 name|ips_mbinserted
 operator|++
@@ -869,7 +869,7 @@ literal|0
 condition|)
 block|{
 comment|/* The header was at the beginning of the mbuf */
-name|newipsecstat
+name|ipsec4stat
 operator|.
 name|ips_input_front
 operator|++
@@ -920,7 +920,7 @@ modifier|*
 name|mo
 decl_stmt|;
 comment|/* 		 * Part or all of the header is at the end of this mbuf, 		 * so first let's remove the remainder of the header from 		 * the beginning of the remainder of the mbuf chain, if any. 		 */
-name|newipsecstat
+name|ipsec4stat
 operator|.
 name|ips_input_end
 operator|++
@@ -1035,7 +1035,7 @@ block|}
 else|else
 block|{
 comment|/* 		 * The header lies in the "middle" of the mbuf; copy 		 * the remainder of the mbuf down over the header. 		 */
-name|newipsecstat
+name|ipsec4stat
 operator|.
 name|ips_input_middle
 operator|++

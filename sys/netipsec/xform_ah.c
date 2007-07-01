@@ -366,8 +366,8 @@ block|{
 if|if
 condition|(
 name|alg
-operator|>=
-name|AH_ALG_MAX
+operator|>
+name|SADB_AALG_MAX
 condition|)
 return|return
 name|NULL

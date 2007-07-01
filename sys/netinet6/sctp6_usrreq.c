@@ -137,6 +137,51 @@ directive|include
 file|<netinet/sctp_bsd_addr.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FAST_IPSEC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netipsec/ipsec.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<netipsec/ipsec6.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET6 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FAST_IPSEC */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -922,7 +967,7 @@ name|in6p
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IPSEC
+name|FAST_IPSEC
 comment|/* 	 * Check AH/ESP integrity. 	 */
 if|if
 condition|(
@@ -950,7 +995,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* IPSEC */
+comment|/* FAST_IPSEC */
 comment|/* 	 * CONTROL chunk processing 	 */
 name|offset
 operator|-=

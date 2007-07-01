@@ -8267,17 +8267,6 @@ goto|;
 block|}
 ifdef|#
 directive|ifdef
-name|IPSEC
-comment|/* clean ipsec history once it goes out of the node */
-name|ipsec_delaux
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|MAC
 name|mac_create_mbuf_linklayer
 argument_list|(

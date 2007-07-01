@@ -224,19 +224,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -250,7 +242,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* IPSEC */
+comment|/* FAST_IPSEC */
 end_comment
 
 begin_include
@@ -1871,17 +1863,9 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
 comment|/* 	 * Bypass packet filtering for packets from a tunnel (gif). 	 */
 if|if
 condition|(
@@ -1895,7 +1879,7 @@ name|passin
 goto|;
 endif|#
 directive|endif
-comment|/* IPSEC */
+comment|/* FAST_IPSEC */
 comment|/* 	 * Run through list of hooks for input packets. 	 * 	 * NB: Beware of the destination address changing (e.g. 	 *     by NAT rewriting).  When this happens, tell 	 *     ip_forward to do the right thing. 	 */
 comment|/* Jump over all PFIL processing if hooks are not active. */
 if|if
@@ -2557,17 +2541,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
 if|if
 condition|(
 name|ip_ipsec_fwd
@@ -2580,7 +2556,7 @@ name|bad
 goto|;
 endif|#
 directive|endif
-comment|/* IPSEC */
+comment|/* FAST_IPSEC */
 name|ip_forward
 argument_list|(
 name|m
@@ -2703,17 +2679,9 @@ name|ip_len
 operator|-=
 name|hlen
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
 comment|/* 	 * enforce IPsec policy checking if we are seeing last header. 	 * note that we do not visit this with protocols with pcb layer 	 * code - like udp/tcp/raw ip. 	 */
 if|if
 condition|(
@@ -2727,7 +2695,7 @@ name|bad
 goto|;
 endif|#
 directive|endif
-comment|/* IPSEC */
+comment|/* FAST_IPSEC */
 comment|/* 	 * Switch out to protocol's input routine. 	 */
 name|ipstat
 operator|.
@@ -5722,17 +5690,9 @@ name|code
 operator|=
 name|ICMP_UNREACH_NEEDFRAG
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
 name|mtu
 operator|=
 name|ip_ipsec_mtu
@@ -5742,7 +5702,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* IPSEC */
+comment|/* FAST_IPSEC */
 comment|/* 		 * If the MTU wasn't set before use the interface mtu or 		 * fall back to the next smaller mtu step compared to the 		 * current packet size. 		 */
 if|if
 condition|(

@@ -3552,12 +3552,6 @@ operator|=
 name|ln
 operator|->
 name|ln_hold
-operator|,
-name|ln
-operator|->
-name|ln_hold
-operator|=
-name|NULL
 init|;
 name|m_hold
 condition|;
@@ -3601,6 +3595,12 @@ name|rt
 argument_list|)
 expr_stmt|;
 block|}
+name|ln
+operator|->
+name|ln_hold
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 name|freeit
 label|:

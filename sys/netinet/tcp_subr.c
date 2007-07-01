@@ -336,50 +336,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<netkey/key.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*IPSEC*/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|FAST_IPSEC
 end_ifdef
 
@@ -417,12 +373,6 @@ include|#
 directive|include
 file|<netipsec/key.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|IPSEC
-end_define
 
 begin_endif
 endif|#
@@ -7857,7 +7807,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IPSEC
+name|FAST_IPSEC
 end_ifdef
 
 begin_comment
@@ -8119,7 +8069,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*IPSEC*/
+comment|/* FAST_IPSEC */
 end_comment
 
 begin_comment

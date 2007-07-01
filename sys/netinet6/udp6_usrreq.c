@@ -240,33 +240,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipsec6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPSEC */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|FAST_IPSEC
 end_ifdef
 
@@ -355,17 +328,9 @@ modifier|*
 name|opts
 decl_stmt|;
 comment|/* XXXRW: Not yet: INP_LOCK_ASSERT(in6p); */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|FAST_IPSEC
-argument_list|)
 comment|/* 	 * Check AH/ESP integrity. 	 */
 if|if
 condition|(
@@ -382,22 +347,16 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC
 name|ipsec6stat
 operator|.
 name|in_polvio
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* IPSEC */
 return|return;
 block|}
 endif|#
 directive|endif
-comment|/*IPSEC || FAST_IPSEC*/
+comment|/* FAST_IPSEC */
 name|opts
 operator|=
 name|NULL
