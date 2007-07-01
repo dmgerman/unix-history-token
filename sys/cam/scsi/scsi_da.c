@@ -1354,7 +1354,7 @@ name|T_DIRECT
 block|,
 name|SIP_MEDIA_REMOVABLE
 block|,
-literal|"USB*"
+literal|"USB 2.0"
 block|,
 literal|"Flash Disk*"
 block|,
