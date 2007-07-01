@@ -164,11 +164,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
-argument_list|(
-literal|"BSM auditing present\n"
-argument_list|)
-expr_stmt|;
 name|au_evclassmap_init
 argument_list|()
 expr_stmt|;

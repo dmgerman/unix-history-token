@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysproto.h>
 end_include
 
@@ -265,6 +271,24 @@ argument_list|,
 literal|"audit_text"
 argument_list|,
 literal|"Audit text storage"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_security
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|audit
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"TrustedBSD audit controls"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -818,11 +842,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
-argument_list|(
-literal|"Security auditing service present\n"
-argument_list|)
-expr_stmt|;
 name|audit_enabled
 operator|=
 literal|0
