@@ -297,7 +297,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netinet6/ipsec6.h>
+file|<netipsec/ipsec6.h>
 end_include
 
 begin_endif
