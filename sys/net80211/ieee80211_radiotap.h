@@ -175,9 +175,10 @@ name|IEEE80211_RADIOTAP_DB_ANTNOISE
 init|=
 literal|13
 block|,
+comment|/* NB: gap for netbsd definitions */
 name|IEEE80211_RADIOTAP_XCHANNEL
 init|=
-literal|14
+literal|18
 block|,
 name|IEEE80211_RADIOTAP_EXT
 init|=
