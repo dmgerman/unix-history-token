@@ -1123,6 +1123,10 @@ name|struct
 name|callout
 name|poll_jack
 decl_stmt|;
+name|struct
+name|task
+name|unsolq_task
+decl_stmt|;
 define|#
 directive|define
 name|HDAC_UNSOLQ_MAX
