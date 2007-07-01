@@ -66,6 +66,20 @@ modifier|*
 name|codec
 parameter_list|)
 block|{
+switch|switch
+condition|(
+name|ac97_getsubvendor
+argument_list|(
+name|codec
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0x11931043
+case|:
+comment|/* Not for ASUS A9T (probably else too). */
+break|break;
+default|default:
 name|ac97_wrcd
 argument_list|(
 name|codec
@@ -82,6 +96,8 @@ operator||
 literal|0x0420
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 block|}
 end_function
 
