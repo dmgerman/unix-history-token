@@ -328,6 +328,10 @@ literal|"kde"
 block|,
 literal|"Software for the K Desktop Environment."
 block|,
+literal|"kld"
+block|,
+literal|"Kernel loadable modules"
+block|,
 literal|"korean"
 block|,
 literal|"Ported software for the Korean market."
@@ -531,6 +535,10 @@ block|,
 literal|"x11-clocks"
 block|,
 literal|"X Window System based clocks."
+block|,
+literal|"x11-drivers"
+block|,
+literal|"X Window System drivers."
 block|,
 literal|"x11-fm"
 block|,
