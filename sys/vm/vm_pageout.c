@@ -3207,6 +3207,8 @@ name|struct
 name|mount
 modifier|*
 name|mp
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -3318,10 +3320,6 @@ name|object
 operator|->
 name|handle
 expr_stmt|;
-name|mp
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -3343,6 +3341,17 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|mp
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"vm_pageout_scan: mp != NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 operator|++
 name|pageout_lock_miss
 expr_stmt|;
@@ -3357,16 +3366,17 @@ condition|)
 name|vnodes_skipped
 operator|++
 expr_stmt|;
-name|vp
-operator|=
-name|NULL
-expr_stmt|;
 goto|goto
 name|unlock_and_continue
 goto|;
 block|}
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|vm_object_reference_locked
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
@@ -3396,11 +3406,6 @@ name|curthread
 argument_list|)
 condition|)
 block|{
-name|VFS_UNLOCK_GIANT
-argument_list|(
-name|vfslocked
-argument_list|)
-expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
 name|object
@@ -3411,11 +3416,6 @@ argument_list|()
 expr_stmt|;
 operator|++
 name|pageout_lock_miss
-expr_stmt|;
-name|vn_finished_write
-argument_list|(
-name|mp
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3444,7 +3444,7 @@ expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-comment|/* 				 * The page might have been moved to another 				 * queue during potential blocking in vget() 				 * above.  The page might have been freed and 				 * reused for another vnode.  The object might 				 * have been reused for another vnode. 				 */
+comment|/* 				 * The page might have been moved to another 				 * queue during potential blocking in vget() 				 * above.  The page might have been freed and 				 * reused for another vnode. 				 */
 if|if
 condition|(
 name|VM_PAGE_GETQUEUE
@@ -3459,12 +3459,6 @@ operator|->
 name|object
 operator|!=
 name|object
-operator|||
-name|object
-operator|->
-name|handle
-operator|!=
-name|vp
 operator|||
 name|TAILQ_NEXT
 argument_list|(
@@ -3492,7 +3486,7 @@ goto|goto
 name|unlock_and_continue
 goto|;
 block|}
-comment|/* 				 * The page may have been busied during the 				 * blocking in vput();  We don't move the 				 * page back onto the end of the queue so that 				 * statistics are more correct if we don't. 				 */
+comment|/* 				 * The page may have been busied during the 				 * blocking in vget().  We don't move the 				 * page back onto the end of the queue so that 				 * statistics are more correct if we don't. 				 */
 if|if
 condition|(
 name|m
@@ -3568,12 +3562,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vp
+name|mp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|!=
+name|NULL
+condition|)
 name|vput
 argument_list|(
 name|vp
@@ -3582,6 +3584,11 @@ expr_stmt|;
 name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked
+argument_list|)
+expr_stmt|;
+name|vm_object_deallocate
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 name|vn_finished_write
