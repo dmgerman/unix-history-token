@@ -25068,13 +25068,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|sctp_free_remote_addr
-argument_list|(
-name|chk
-operator|->
-name|whoTo
-argument_list|)
-expr_stmt|;
 name|sctp_free_a_chunk
 argument_list|(
 name|stcb

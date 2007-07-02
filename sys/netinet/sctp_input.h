@@ -126,6 +126,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|sctp_is_there_unsent_data
+parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
