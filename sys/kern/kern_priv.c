@@ -62,6 +62,7 @@ comment|/*  * `suser_enabled' (which can be set by the security.bsd.suser_enable
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|suser_enabled
 init|=
