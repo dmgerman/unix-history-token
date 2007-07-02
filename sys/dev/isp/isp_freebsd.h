@@ -1838,6 +1838,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_SWIZZLE_NVRAM_LONG
+parameter_list|(
+name|isp
+parameter_list|,
+name|rp
+parameter_list|)
+value|*rp = bswap32(*rp)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP_IOZGET_8
 parameter_list|(
 name|isp
@@ -2022,6 +2034,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_SWIZZLE_NVRAM_LONG
+parameter_list|(
+name|isp
+parameter_list|,
+name|rp
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP_IOZPUT_8
 parameter_list|(
 name|isp
@@ -2107,6 +2130,30 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ISP_SWAP16
+parameter_list|(
+name|isp
+parameter_list|,
+name|s
+parameter_list|)
+value|bswap16(s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_SWAP32
+parameter_list|(
+name|isp
+parameter_list|,
+name|s
+parameter_list|)
+value|bswap32(s)
+end_define
 
 begin_comment
 comment|/*  * Includes of common header files  */
