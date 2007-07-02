@@ -10692,6 +10692,8 @@ name|struct
 name|file
 modifier|*
 name|fp
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|use_rcvinfo
@@ -11135,6 +11137,10 @@ directive|endif
 comment|/* KTRACE */
 name|sctp_bad
 label|:
+if|if
+condition|(
+name|fp
+condition|)
 name|fdrop
 argument_list|(
 name|fp
@@ -11215,6 +11221,8 @@ name|struct
 name|file
 modifier|*
 name|fp
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|use_rcvinfo
@@ -11718,6 +11726,10 @@ argument_list|)
 expr_stmt|;
 name|sctp_bad1
 label|:
+if|if
+condition|(
+name|fp
+condition|)
 name|fdrop
 argument_list|(
 name|fp
@@ -11811,6 +11823,8 @@ name|struct
 name|file
 modifier|*
 name|fp
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -12456,6 +12470,10 @@ argument_list|)
 expr_stmt|;
 name|out1
 label|:
+if|if
+condition|(
+name|fp
+condition|)
 name|fdrop
 argument_list|(
 name|fp
