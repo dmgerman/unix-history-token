@@ -3171,7 +3171,7 @@ break|break;
 case|case
 name|SIOCSIFMTU
 case|:
-comment|/* 	 * XXXRW: Isn't this suser() check redundant to the one at the ifnet 	 * layer? 	 */
+comment|/* 	 * XXXRW: Isn't this priv_check() check redundant to the one at the 	 * ifnet layer? 	 */
 name|error
 operator|=
 name|priv_check
