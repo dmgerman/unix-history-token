@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2005  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -69,13 +69,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|sigs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|quit_at_eof
 decl_stmt|;
 end_decl_stmt
 
@@ -180,7 +173,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|more_mode
+name|less_is_more
 decl_stmt|;
 end_decl_stmt
 
@@ -309,6 +302,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|oldbot
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|forw_prompt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|char
 name|ungot
@@ -388,6 +395,17 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|long
+name|fraction
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The fractional part of the number */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|char
 name|optchar
 decl_stmt|;
@@ -448,7 +466,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Move the cursor to lower left before executing a command.  * This looks nicer if the command takes a long time before  * updating the screen.  */
+comment|/*  * Move the cursor to start of prompt line before executing a command.  * This looks nicer if the command takes a long time before  * updating the screen.  */
 end_comment
 
 begin_function
@@ -460,7 +478,7 @@ block|{
 name|clear_attn
 argument_list|()
 expr_stmt|;
-name|lower_left
+name|clear_bot
 argument_list|()
 expr_stmt|;
 name|flush
@@ -504,6 +522,9 @@ block|{
 name|mca
 operator|=
 name|action
+expr_stmt|;
+name|clear_bot
+argument_list|()
 expr_stmt|;
 name|clear_cmd
 argument_list|()
@@ -567,6 +588,9 @@ else|else
 name|mca
 operator|=
 name|A_B_SEARCH
+expr_stmt|;
+name|clear_bot
+argument_list|()
 expr_stmt|;
 name|clear_cmd
 argument_list|()
@@ -705,6 +729,9 @@ expr_stmt|;
 name|mca
 operator|=
 name|A_OPT_TOGGLE
+expr_stmt|;
+name|clear_bot
+argument_list|()
 expr_stmt|;
 name|clear_cmd
 argument_list|()
@@ -1112,14 +1139,21 @@ case|:
 comment|/* 		 * Entering digits of a number. 		 * Terminated by a non-digit. 		 */
 if|if
 condition|(
+operator|!
+operator|(
 operator|(
 name|c
-operator|<
+operator|>=
 literal|'0'
+operator|&&
+name|c
+operator|<=
+literal|'9'
+operator|)
 operator|||
 name|c
-operator|>
-literal|'9'
+operator|==
+literal|'.'
 operator|)
 operator|&&
 name|editchar
@@ -1142,7 +1176,10 @@ comment|/* 			 * Not part of the number. 			 * Treat as a normal command charact
 name|number
 operator|=
 name|cmd_int
-argument_list|()
+argument_list|(
+operator|&
+name|fraction
+argument_list|)
 expr_stmt|;
 name|mca
 operator|=
@@ -1703,7 +1740,7 @@ literal|'*'
 case|:
 if|if
 condition|(
-name|more_mode
+name|less_is_more
 condition|)
 break|break;
 case|case
@@ -1723,7 +1760,7 @@ literal|'@'
 case|:
 if|if
 condition|(
-name|more_mode
+name|less_is_more
 condition|)
 break|break;
 case|case
@@ -1994,7 +2031,8 @@ comment|/* 	 * If we've hit EOF on the last file, and the -E flag is set 	 * (or
 if|if
 condition|(
 operator|(
-name|quit_at_eof
+name|get_quit_at_eof
+argument_list|()
 operator|==
 name|OPT_ONPLUS
 operator|||
@@ -2032,7 +2070,7 @@ directive|if
 literal|0
 comment|/* This doesn't work well because some "te"s clear the screen. */
 comment|/* 	 * If the -e flag is set and we've hit EOF on the last file, 	 * and the file is squished (shorter than the screen), quit. 	 */
-block|if (quit_at_eof&& squished&& 	    next_ifile(curr_ifile) == NULL_IFILE) 		quit(QUIT_OK);
+block|if (get_quit_at_eof()&& squished&& 	    next_ifile(curr_ifile) == NULL_IFILE) 		quit(QUIT_OK);
 endif|#
 directive|endif
 if|#
@@ -2064,8 +2102,21 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Select the proper prompt and display it. 	 */
+comment|/* 	 * If the previous action was a forward movement,  	 * don't clear the bottom line of the display; 	 * just print the prompt since the forward movement guarantees  	 * that we're in the right position to display the prompt. 	 * Clearing the line could cause a problem: for example, if the last 	 * line displayed ended at the right screen edge without a newline, 	 * then clearing would clear the last displayed line rather than 	 * the prompt line. 	 */
+if|if
+condition|(
+operator|!
+name|forw_prompt
+condition|)
+name|clear_bot
+argument_list|()
+expr_stmt|;
 name|clear_cmd
 argument_list|()
+expr_stmt|;
+name|forw_prompt
+operator|=
+literal|0
 expr_stmt|;
 name|p
 operator|=
@@ -2104,6 +2155,9 @@ name|at_exit
 argument_list|()
 expr_stmt|;
 block|}
+name|clear_eol
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -3370,20 +3424,32 @@ name|number
 operator|<
 literal|0
 condition|)
+block|{
 name|number
 operator|=
 literal|0
 expr_stmt|;
+name|fraction
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|number
 operator|>
 literal|100
 condition|)
+block|{
 name|number
 operator|=
 literal|100
 expr_stmt|;
+name|fraction
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|cmd_exec
 argument_list|()
 expr_stmt|;
@@ -3393,6 +3459,8 @@ operator|(
 name|int
 operator|)
 name|number
+argument_list|,
+name|fraction
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3926,7 +3994,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|quit_at_eof
+name|get_quit_at_eof
+argument_list|()
 operator|&&
 name|hit_eof
 operator|&&

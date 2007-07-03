@@ -4,8 +4,15 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2005  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NEWBOT
+value|1
+end_define
 
 begin_comment
 comment|/*  * Standard include file for "less".  */
@@ -1428,6 +1435,24 @@ define|#
 directive|define
 name|READ_INTR
 value|(-2)
+end_define
+
+begin_comment
+comment|/* A fraction is represented by an int n; the fraction is n/NUM_FRAC_DENOM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUM_FRAC_DENOM
+value|1000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUM_LOG_FRAC_DENOM
+value|6
 end_define
 
 begin_comment
