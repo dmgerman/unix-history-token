@@ -1135,6 +1135,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IN6_IS_SCOPE_EMBED
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|((IN6_IS_ADDR_LINKLOCAL(a)) ||		\ 	 (IN6_IS_ADDR_MC_LINKLOCAL(a)) || 	\ 	 (IN6_IS_ADDR_MC_INTFACELOCAL(a)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IFA6_IS_DEPRECATED
 parameter_list|(
 name|a

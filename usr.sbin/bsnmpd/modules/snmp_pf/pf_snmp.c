@@ -177,7 +177,7 @@ struct|struct
 name|pfi_entry
 block|{
 name|struct
-name|pfi_if
+name|pfi_kif
 name|pfi
 decl_stmt|;
 name|u_int
@@ -2399,7 +2399,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_name
+name|pfik_name
 argument_list|,
 operator|-
 literal|1
@@ -2437,7 +2437,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_tzero
+name|pfik_tzero
 operator|)
 operator|*
 literal|100
@@ -2456,7 +2456,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_states
+name|pfik_states
 expr_stmt|;
 break|break;
 case|case
@@ -2472,7 +2472,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_rules
+name|pfik_rules
 expr_stmt|;
 break|break;
 case|case
@@ -2488,7 +2488,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_bytes
+name|pfik_bytes
 index|[
 name|IPV4
 index|]
@@ -2513,7 +2513,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_bytes
+name|pfik_bytes
 index|[
 name|IPV4
 index|]
@@ -2538,7 +2538,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_bytes
+name|pfik_bytes
 index|[
 name|IPV4
 index|]
@@ -2563,7 +2563,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_bytes
+name|pfik_bytes
 index|[
 name|IPV4
 index|]
@@ -2588,7 +2588,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_packets
+name|pfik_packets
 index|[
 name|IPV4
 index|]
@@ -2613,7 +2613,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_packets
+name|pfik_packets
 index|[
 name|IPV4
 index|]
@@ -2638,7 +2638,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_packets
+name|pfik_packets
 index|[
 name|IPV4
 index|]
@@ -2663,7 +2663,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_packets
+name|pfik_packets
 index|[
 name|IPV4
 index|]
@@ -2688,7 +2688,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_bytes
+name|pfik_bytes
 index|[
 name|IPV6
 index|]
@@ -2713,7 +2713,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_bytes
+name|pfik_bytes
 index|[
 name|IPV6
 index|]
@@ -2738,7 +2738,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_bytes
+name|pfik_bytes
 index|[
 name|IPV6
 index|]
@@ -2763,7 +2763,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_bytes
+name|pfik_bytes
 index|[
 name|IPV6
 index|]
@@ -2788,7 +2788,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_packets
+name|pfik_packets
 index|[
 name|IPV6
 index|]
@@ -2813,7 +2813,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_packets
+name|pfik_packets
 index|[
 name|IPV6
 index|]
@@ -2838,7 +2838,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_packets
+name|pfik_packets
 index|[
 name|IPV6
 index|]
@@ -2863,7 +2863,7 @@ name|e
 operator|->
 name|pfi
 operator|.
-name|pfif_packets
+name|pfik_packets
 index|[
 name|IPV6
 index|]
@@ -4260,7 +4260,7 @@ name|pfioc_iface
 name|io
 decl_stmt|;
 name|struct
-name|pfi_if
+name|pfi_kif
 modifier|*
 name|p
 init|=
@@ -4338,18 +4338,12 @@ argument_list|)
 expr_stmt|;
 name|io
 operator|.
-name|pfiio_flags
-operator|=
-name|PFI_FLAG_INSTANCE
-expr_stmt|;
-name|io
-operator|.
 name|pfiio_esize
 operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|pfi_if
+name|pfi_kif
 argument_list|)
 expr_stmt|;
 for|for
@@ -4369,7 +4363,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|pfi_if
+name|pfi_kif
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4511,7 +4505,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|pfi_if
+name|pfi_kif
 argument_list|)
 argument_list|)
 expr_stmt|;

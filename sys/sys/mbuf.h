@@ -3672,45 +3672,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PACKET_TAG_PF_ROUTED
+name|PACKET_TAG_PF
 value|21
 end_define
 
 begin_comment
-comment|/* PF routed, avoid loops */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PACKET_TAG_PF_FRAGCACHE
-value|22
-end_define
-
-begin_comment
-comment|/* PF fragment cached */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PACKET_TAG_PF_QID
-value|23
-end_define
-
-begin_comment
-comment|/* PF ALTQ queue id */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PACKET_TAG_PF_TAG
-value|24
-end_define
-
-begin_comment
-comment|/* PF tagged */
+comment|/* PF + ALTQ information */
 end_comment
 
 begin_define
@@ -3722,17 +3689,6 @@ end_define
 
 begin_comment
 comment|/* rtsock sa family */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PACKET_TAG_PF_TRANSLATE_LOCALHOST
-value|26
-end_define
-
-begin_comment
-comment|/* PF translate localhost */
 end_comment
 
 begin_define
