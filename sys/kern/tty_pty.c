@@ -3980,8 +3980,10 @@ return|return;
 operator|*
 name|dev
 operator|=
-name|make_dev_cred
+name|make_dev_credf
 argument_list|(
+name|MAKEDEV_REF
+argument_list|,
 operator|&
 name|ptc_cdevsw
 argument_list|,
@@ -4007,12 +4009,6 @@ argument_list|,
 name|u
 operator|%
 literal|32
-argument_list|)
-expr_stmt|;
-name|dev_ref
-argument_list|(
-operator|*
-name|dev
 argument_list|)
 expr_stmt|;
 operator|(
