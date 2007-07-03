@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl_osfp.c,v 1.12 2005/02/17 13:18:00 aaron Exp $ */
+comment|/*	$OpenBSD: pfctl_osfp.c,v 1.15 2006/12/13 05:10:15 itojun Exp $ */
 end_comment
 
 begin_comment
@@ -35,6 +35,24 @@ begin_include
 include|#
 directive|include
 file|<net/pfvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip6.h>
 end_include
 
 begin_include
@@ -1351,6 +1369,42 @@ operator|&
 name|fp
 argument_list|)
 expr_stmt|;
+name|fp
+operator|.
+name|fp_flags
+operator||=
+operator|(
+name|PF_OSFP_DF
+operator||
+name|PF_OSFP_INET6
+operator|)
+expr_stmt|;
+name|fp
+operator|.
+name|fp_psize
+operator|+=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip6_hdr
+argument_list|)
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+expr_stmt|;
+name|add_fingerprint
+argument_list|(
+name|dev
+argument_list|,
+name|opts
+argument_list|,
+operator|&
+name|fp
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1386,6 +1440,15 @@ condition|)
 name|free
 argument_list|(
 name|desc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tcpopts
+condition|)
+name|free
+argument_list|(
+name|tcpopts
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -3678,7 +3741,6 @@ operator|=
 name|nm
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

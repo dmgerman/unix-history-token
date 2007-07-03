@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pf_print_state.c,v 1.40 2004/12/10 22:13:26 henning Exp $	*/
+comment|/*	$OpenBSD: pf_print_state.c,v 1.44 2007/03/01 17:20:53 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -372,6 +372,15 @@ case|:
 name|printf
 argument_list|(
 literal|"no-route"
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+name|PF_ADDR_URPFFAILED
+case|:
+name|printf
+argument_list|(
+literal|"urpf-failed"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1518,7 +1527,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", %u:%u pkts, %u:%u bytes"
+literal|", %llu:%llu pkts, %llu:%llu bytes"
 argument_list|,
 name|s
 operator|->
@@ -1634,7 +1643,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"   id: %016llx creatorid: %08x\n"
+literal|"   id: %016llx creatorid: %08x%s\n"
 argument_list|,
 name|betoh64
 argument_list|(
@@ -1649,6 +1658,20 @@ name|s
 operator|->
 name|creatorid
 argument_list|)
+argument_list|,
+operator|(
+operator|(
+name|s
+operator|->
+name|sync_flags
+operator|&
+name|PFSTATE_NOSYNC
+operator|)
+condition|?
+literal|" (no-sync)"
+else|:
+literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

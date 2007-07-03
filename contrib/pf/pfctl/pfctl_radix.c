@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl_radix.c,v 1.26 2004/06/14 20:44:22 cedric Exp $ */
+comment|/*	$OpenBSD: pfctl_radix.c,v 1.27 2005/05/21 21:03:58 henning Exp $ */
 end_comment
 
 begin_comment
@@ -2353,16 +2353,13 @@ modifier|*
 name|filter
 parameter_list|,
 name|struct
-name|pfi_if
+name|pfi_kif
 modifier|*
 name|buf
 parameter_list|,
 name|int
 modifier|*
 name|size
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 block|{
 name|struct
@@ -2409,12 +2406,6 @@ argument_list|,
 sizeof|sizeof
 name|io
 argument_list|)
-expr_stmt|;
-name|io
-operator|.
-name|pfiio_flags
-operator|=
-name|flags
 expr_stmt|;
 if|if
 condition|(
@@ -2556,7 +2547,7 @@ block|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|pfi_if
+name|pfi_kif
 argument_list|)
 block|,
 expr|sizeof

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pflogd.h,v 1.2 2004/01/15 20:15:14 canacar Exp $ */
+comment|/*	$OpenBSD: pflogd.h,v 1.3 2006/01/15 16:38:04 canacar Exp $ */
 end_comment
 
 begin_comment
@@ -149,6 +149,15 @@ end_function_decl
 begin_function_decl
 name|int
 name|priv_open_log
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|priv_move_log
 parameter_list|(
 name|void
 parameter_list|)

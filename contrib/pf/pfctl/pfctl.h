@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl.h,v 1.37 2005/01/05 18:23:10 mcbride Exp $ */
+comment|/*	$OpenBSD: pfctl.h,v 1.40 2007/02/09 11:25:27 henning Exp $ */
 end_comment
 
 begin_comment
@@ -18,6 +18,19 @@ define|#
 directive|define
 name|_PFCTL_H_
 end_define
+
+begin_enum
+enum|enum
+name|pfctl_show
+block|{
+name|PFCTL_SHOW_RULES
+block|,
+name|PFCTL_SHOW_LABELS
+block|,
+name|PFCTL_SHOW_NOTHING
+block|}
+enum|;
+end_enum
 
 begin_enum
 enum|enum
@@ -539,13 +552,11 @@ name|char
 modifier|*
 parameter_list|,
 name|struct
-name|pfi_if
+name|pfi_kif
 modifier|*
 parameter_list|,
 name|int
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -772,17 +783,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|pfaltq_store
-parameter_list|(
-name|struct
-name|pf_altq
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pfaltq_free
 parameter_list|(
 name|struct
 name|pf_altq

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl_parser.h,v 1.80 2005/02/07 18:18:14 david Exp $ */
+comment|/*	$OpenBSD: pfctl_parser.h,v 1.86 2006/10/31 23:46:25 mcbride Exp $ */
 end_comment
 
 begin_comment
@@ -113,15 +113,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|PF_OPT_OPTIMIZE_PROFILE
-value|0x1000
+name|PF_OPT_MERGE
+value|0x2000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PF_OPT_MERGE
-value|0x2000
+name|PF_OPT_RECURSE
+value|0x4000
 end_define
 
 begin_define
@@ -148,6 +148,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|PF_OPTIMIZE_BASIC
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_OPTIMIZE_PROFILE
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
 name|FCNT_NAMES
 value|{ \ 	"searches", \ 	"inserts", \ 	"removals", \ 	NULL \ }
 end_define
@@ -162,22 +176,6 @@ begin_comment
 comment|/* forward definition */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|pf_opt_rule
-struct_decl|;
-end_struct_decl
-
-begin_expr_stmt
-name|TAILQ_HEAD
-argument_list|(
-name|pf_opt_queue
-argument_list|,
-name|pf_opt_rule
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
 struct|struct
 name|pfctl
@@ -189,18 +187,37 @@ name|int
 name|opts
 decl_stmt|;
 name|int
+name|optimize
+decl_stmt|;
+name|int
 name|loadopt
 decl_stmt|;
-name|u_int32_t
-name|tticket
+name|int
+name|asd
 decl_stmt|;
-comment|/* table ticket */
+comment|/* anchor stack depth */
+name|int
+name|bn
+decl_stmt|;
+comment|/* brace number */
+name|int
+name|brace
+decl_stmt|;
 name|int
 name|tdirty
 decl_stmt|;
 comment|/* kernel dirty */
-name|u_int32_t
-name|rule_nr
+define|#
+directive|define
+name|PFCTL_ANCHOR_STACK_DEPTH
+value|64
+name|struct
+name|pf_anchor
+modifier|*
+name|astack
+index|[
+name|PFCTL_ANCHOR_STACK_DEPTH
+index|]
 decl_stmt|;
 name|struct
 name|pfioc_pooladdr
@@ -221,19 +238,18 @@ name|pfr_buffer
 modifier|*
 name|trans
 decl_stmt|;
-specifier|const
-name|char
+name|struct
+name|pf_anchor
 modifier|*
 name|anchor
+decl_stmt|,
+modifier|*
+name|alast
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|ruleset
-decl_stmt|;
-name|struct
-name|pf_opt_queue
-name|opt_queue
 decl_stmt|;
 comment|/* 'set foo' options */
 name|u_int32_t
@@ -363,31 +379,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* special flags used by ifa_exists */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PF_IFA_FLAG_GROUP
-value|0x10000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PF_IFA_FLAG_DYNAMIC
-value|0x20000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PF_IFA_FLAG_CLONABLE
-value|0x40000
-end_define
 
 begin_struct
 struct|struct
@@ -600,12 +591,6 @@ name|pf_opt_tbl
 modifier|*
 name|por_dst_tbl
 decl_stmt|;
-name|char
-name|por_anchor
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
 name|u_int64_t
 name|por_profile_count
 decl_stmt|;
@@ -628,6 +613,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|pf_opt_queue
+argument_list|,
+name|pf_opt_rule
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 name|int
 name|pfctl_rules
@@ -636,6 +631,11 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
@@ -651,10 +651,14 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pfctl_optimize_rules
+name|pfctl_optimize_ruleset
 parameter_list|(
 name|struct
 name|pfctl
+modifier|*
+parameter_list|,
+name|struct
+name|pf_ruleset
 modifier|*
 parameter_list|)
 function_decl|;
@@ -707,6 +711,21 @@ name|pf_pool
 modifier|*
 parameter_list|,
 name|sa_family_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pfctl_move_pool
+parameter_list|(
+name|struct
+name|pf_pool
+modifier|*
+parameter_list|,
+name|struct
+name|pf_pool
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -863,7 +882,9 @@ name|pfctl_load_anchors
 parameter_list|(
 name|int
 parameter_list|,
-name|int
+name|struct
+name|pfctl
+modifier|*
 parameter_list|,
 name|struct
 name|pfr_buffer
@@ -1356,8 +1377,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

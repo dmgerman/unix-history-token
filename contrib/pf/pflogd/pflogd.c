@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pflogd.c,v 1.33 2005/02/09 12:09:30 henning Exp $	*/
+comment|/*	$OpenBSD: pflogd.c,v 1.37 2006/10/26 13:34:47 jmc Exp $	*/
 end_comment
 
 begin_comment
@@ -312,7 +312,7 @@ begin_function_decl
 name|int
 name|reset_dump
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -379,6 +379,16 @@ name|void
 name|usage
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|try_reset_dump
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -498,7 +508,7 @@ name|s
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"[%s] -s %d -f %s"
+literal|"[%s] -s %d -i %s -f %s"
 argument_list|,
 name|suspended
 condition|?
@@ -507,6 +517,8 @@ else|:
 literal|"running"
 argument_list|,
 name|cur_snaplen
+argument_list|,
+name|interface
 argument_list|,
 name|filename
 argument_list|)
@@ -737,14 +749,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pflogd [-Dx] [-d delay] [-f filename] "
+literal|"usage: pflogd [-Dx] [-d delay] [-f filename]"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[-s snaplen] [expression]\n"
+literal|" [-i interface] [-s snaplen]\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"              [expression]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1055,7 +1074,52 @@ begin_function
 name|int
 name|reset_dump
 parameter_list|(
-name|void
+name|int
+name|nomove
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|ret
+operator|=
+name|try_reset_dump
+argument_list|(
+name|nomove
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|<=
+literal|0
+condition|)
+break|break;
+block|}
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * tries to (re)open log file, nomove flag is used with -x switch  * returns 0: success, 1: retry (log moved), -1: error  */
+end_comment
+
+begin_function
+name|int
+name|try_reset_dump
+parameter_list|(
+name|int
+name|nomove
 parameter_list|)
 block|{
 name|struct
@@ -1119,6 +1183,7 @@ literal|0
 condition|)
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
@@ -1138,11 +1203,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 name|logmsg
 argument_list|(
 name|LOG_ERR
@@ -1157,8 +1217,14 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
@@ -1180,11 +1246,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 name|logmsg
 argument_list|(
 name|LOG_ERR
@@ -1199,8 +1260,14 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
@@ -1220,11 +1287,6 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 name|logmsg
 argument_list|(
 name|LOG_ERR
@@ -1232,8 +1294,14 @@ argument_list|,
 literal|"Failed to set output buffers"
 argument_list|)
 expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
@@ -1274,12 +1342,6 @@ argument_list|(
 name|snaplen
 argument_list|)
 condition|)
-block|{
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 name|logmsg
 argument_list|(
 name|LOG_WARNING
@@ -1287,7 +1349,6 @@ argument_list|,
 literal|"Failed, using old settings"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|hdr
 operator|.
@@ -1368,6 +1429,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
@@ -1386,12 +1448,33 @@ name|st_size
 argument_list|)
 condition|)
 block|{
-comment|/* XXX move file and continue? */
 name|fclose
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nomove
+operator|||
+name|priv_move_log
+argument_list|()
+condition|)
+block|{
+name|logmsg
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Invalid/incompatible log file, move it away"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|1
@@ -1528,13 +1611,6 @@ operator|>
 name|PFLOGD_MAXSNAPLEN
 condition|)
 block|{
-name|logmsg
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"Invalid/incompatible log file, move it away"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -2316,7 +2392,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Dxd:s:f:"
+literal|"Dxd:f:i:s:"
 argument_list|)
 operator|)
 operator|!=
@@ -2368,6 +2444,14 @@ case|case
 literal|'f'
 case|:
 name|filename
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|interface
 operator|=
 name|optarg
 expr_stmt|;
@@ -2651,7 +2735,11 @@ block|}
 if|if
 condition|(
 name|reset_dump
-argument_list|()
+argument_list|(
+name|Xflag
+argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
 if|if
@@ -2739,7 +2827,9 @@ block|{
 if|if
 condition|(
 name|reset_dump
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 condition|)
 block|{
 name|logmsg
@@ -2773,6 +2863,11 @@ name|flush_buffer
 argument_list|(
 name|dpcap
 argument_list|)
+expr_stmt|;
+else|else
+name|gotsig_hup
+operator|=
+literal|1
 expr_stmt|;
 name|gotsig_alrm
 operator|=
