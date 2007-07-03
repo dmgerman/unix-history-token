@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pf_table.c,v 1.62 2004/12/07 18:02:04 mcbride Exp $	*/
+comment|/*	$OpenBSD: pf_table.c,v 1.68 2006/05/02 10:08:45 dhartmei Exp $	*/
 end_comment
 
 begin_comment
@@ -2285,6 +2285,9 @@ name|nchange
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|u_int32_t
+name|ignore_pfrt_flags
 parameter_list|)
 block|{
 name|struct
@@ -2354,7 +2357,7 @@ name|pfr_validate_table
 argument_list|(
 name|tbl
 argument_list|,
-literal|0
+name|ignore_pfrt_flags
 argument_list|,
 name|flags
 operator|&
@@ -12128,7 +12131,7 @@ name|pfrt_anchor
 argument_list|,
 name|ac
 operator|->
-name|name
+name|path
 argument_list|,
 sizeof|sizeof
 argument_list|(

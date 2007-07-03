@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: if_pflog.h,v 1.11 2004/05/19 17:50:51 dhartmei Exp $ */
+comment|/* $OpenBSD: if_pflog.h,v 1.14 2006/10/25 11:27:01 henning Exp $ */
 end_comment
 
 begin_comment
@@ -19,6 +19,13 @@ directive|define
 name|_NET_IF_PFLOG_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|PFLOGIFS_MAX
+value|16
+end_define
+
 begin_struct
 struct|struct
 name|pflog_softc
@@ -28,6 +35,15 @@ name|ifnet
 name|sc_if
 decl_stmt|;
 comment|/* the interface */
+name|int
+name|sc_unit
+decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|pflog_softc
+argument_list|)
+name|sc_list
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -72,6 +88,18 @@ name|rulenr
 decl_stmt|;
 name|u_int32_t
 name|subrulenr
+decl_stmt|;
+name|uid_t
+name|uid
+decl_stmt|;
+name|pid_t
+name|pid
+decl_stmt|;
+name|uid_t
+name|rule_uid
+decl_stmt|;
+name|pid_t
+name|rule_pid
 decl_stmt|;
 name|u_int8_t
 name|dir
@@ -180,8 +208,10 @@ parameter_list|,
 name|f
 parameter_list|,
 name|g
+parameter_list|,
+name|h
 parameter_list|)
-value|pflog_packet(i,a,b,c,d,e,f,g)
+value|pflog_packet(i,a,b,c,d,e,f,g,h)
 end_define
 
 begin_else
@@ -211,6 +241,8 @@ parameter_list|,
 name|f
 parameter_list|,
 name|g
+parameter_list|,
+name|h
 parameter_list|)
 value|((void)0)
 end_define
