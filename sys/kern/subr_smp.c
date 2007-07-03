@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -489,7 +495,7 @@ specifier|volatile
 name|int
 name|smp_rv_waiters
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -885,11 +891,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|atomic_load_acq_int
-argument_list|(
-operator|&
 name|stopped_cpus
-argument_list|)
 operator|&
 name|map
 operator|)
@@ -898,6 +900,9 @@ name|map
 condition|)
 block|{
 comment|/* spin */
+name|cpu_spinwait
+argument_list|()
+expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
@@ -969,19 +974,16 @@ comment|/* wait for each to clear its bit */
 while|while
 condition|(
 operator|(
-name|atomic_load_acq_int
-argument_list|(
-operator|&
 name|stopped_cpus
-argument_list|)
 operator|&
 name|map
 operator|)
 operator|!=
 literal|0
 condition|)
-empty_stmt|;
-comment|/* nothing */
+name|cpu_spinwait
+argument_list|()
+expr_stmt|;
 return|return
 literal|1
 return|;
@@ -999,6 +1001,30 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* Ensure we have up-to-date values. */
+name|atomic_add_acq_int
+argument_list|(
+operator|&
+name|smp_rv_waiters
+index|[
+literal|0
+index|]
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|smp_rv_waiters
+index|[
+literal|0
+index|]
+operator|<
+name|mp_ncpus
+condition|)
+name|cpu_spinwait
+argument_list|()
+expr_stmt|;
 comment|/* setup function */
 if|if
 condition|(
@@ -1017,7 +1043,7 @@ argument_list|(
 operator|&
 name|smp_rv_waiters
 index|[
-literal|0
+literal|1
 index|]
 argument_list|,
 literal|1
@@ -1025,19 +1051,16 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|atomic_load_acq_int
-argument_list|(
-operator|&
 name|smp_rv_waiters
 index|[
-literal|0
+literal|1
 index|]
-argument_list|)
 operator|<
 name|mp_ncpus
 condition|)
-empty_stmt|;
-comment|/* nothing */
+name|cpu_spinwait
+argument_list|()
+expr_stmt|;
 comment|/* action function */
 if|if
 condition|(
@@ -1056,7 +1079,7 @@ argument_list|(
 operator|&
 name|smp_rv_waiters
 index|[
-literal|1
+literal|2
 index|]
 argument_list|,
 literal|1
@@ -1064,19 +1087,16 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|atomic_load_acq_int
-argument_list|(
-operator|&
 name|smp_rv_waiters
 index|[
-literal|1
+literal|2
 index|]
-argument_list|)
 operator|<
 name|mp_ncpus
 condition|)
-empty_stmt|;
-comment|/* nothing */
+name|cpu_spinwait
+argument_list|()
+expr_stmt|;
 comment|/* teardown function */
 if|if
 condition|(
@@ -1198,17 +1218,28 @@ name|arg
 expr_stmt|;
 name|smp_rv_waiters
 index|[
-literal|0
+literal|1
 index|]
 operator|=
 literal|0
 expr_stmt|;
 name|smp_rv_waiters
 index|[
-literal|1
+literal|2
 index|]
 operator|=
 literal|0
+expr_stmt|;
+name|atomic_store_rel_int
+argument_list|(
+operator|&
+name|smp_rv_waiters
+index|[
+literal|0
+index|]
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* signal other processors, which will enter the IPI with interrupts off */
 name|ipi_all_but_self
