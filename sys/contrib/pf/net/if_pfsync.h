@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: if_pfsync.h,v 1.19 2005/01/20 17:47:38 mcbride Exp $	*/
+comment|/*	$OpenBSD: if_pfsync.h,v 1.30 2006/10/31 14:49:01 henning Exp $	*/
 end_comment
 
 begin_comment
@@ -41,6 +41,10 @@ name|u_int8_t
 name|pfss_ttl
 decl_stmt|;
 comment|/* stashed TTL		*/
+define|#
+directive|define
+name|PFSYNC_SCRUB_FLAG_VALID
+value|0x01
 name|u_int8_t
 name|scrub_flag
 decl_stmt|;
@@ -113,12 +117,9 @@ name|wscale
 decl_stmt|;
 comment|/* window scaling factor	*/
 name|u_int8_t
-name|scrub_flag
-decl_stmt|;
-name|u_int8_t
 name|pad
 index|[
-literal|5
+literal|6
 index|]
 decl_stmt|;
 block|}
@@ -186,9 +187,15 @@ name|packets
 index|[
 literal|2
 index|]
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|u_int32_t
 name|bytes
+index|[
+literal|2
+index|]
 index|[
 literal|2
 index|]
@@ -238,6 +245,51 @@ directive|define
 name|PFSYNC_FLAG_STALE
 value|0x02
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PFSYNC_TDB
+end_ifdef
+
+begin_struct
+struct|struct
+name|pfsync_tdb
+block|{
+name|u_int32_t
+name|spi
+decl_stmt|;
+name|union
+name|sockaddr_union
+name|dst
+decl_stmt|;
+name|u_int32_t
+name|rpl
+decl_stmt|;
+name|u_int64_t
+name|cur_bytes
+decl_stmt|;
+name|u_int8_t
+name|sproto
+decl_stmt|;
+name|u_int8_t
+name|updates
+decl_stmt|;
+name|u_int8_t
+name|pad
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -438,6 +490,30 @@ block|}
 union|;
 end_union
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PFSYNC_TDB
+end_ifdef
+
+begin_union
+union|union
+name|sc_tdb_statep
+block|{
+name|struct
+name|pfsync_tdb
+modifier|*
+name|t
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -481,6 +557,15 @@ name|struct
 name|callout
 name|sc_tmo
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PFSYNC_TDB
+name|struct
+name|callout
+name|sc_tdb_tmo
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|callout
 name|sc_bulk_tmo
@@ -494,6 +579,10 @@ directive|else
 name|struct
 name|timeout
 name|sc_tmo
+decl_stmt|;
+name|struct
+name|timeout
+name|sc_tdb_tmo
 decl_stmt|;
 name|struct
 name|timeout
@@ -527,14 +616,25 @@ decl_stmt|;
 comment|/* current cumulative mbuf */
 ifdef|#
 directive|ifdef
+name|PFSYNC_TDB
+name|struct
+name|mbuf
+modifier|*
+name|sc_mbuf_tdb
+decl_stmt|;
+comment|/* dito for TDB updates */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
 name|struct
 name|ifqueue
 name|sc_ifq
 decl_stmt|;
 name|struct
-name|callout
-name|sc_send_tmo
+name|task
+name|sc_send_task
 decl_stmt|;
 endif|#
 directive|endif
@@ -546,11 +646,30 @@ name|union
 name|sc_statep
 name|sc_statep_net
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PFSYNC_TDB
+name|union
+name|sc_tdb_statep
+name|sc_statep_tdb
+decl_stmt|;
+endif|#
+directive|endif
 name|u_int32_t
 name|sc_ureq_received
 decl_stmt|;
 name|u_int32_t
 name|sc_ureq_sent
+decl_stmt|;
+name|struct
+name|pf_state
+modifier|*
+name|sc_bulk_send_next
+decl_stmt|;
+name|struct
+name|pf_state
+modifier|*
+name|sc_bulk_terminator
 decl_stmt|;
 name|int
 name|sc_bulk_tries
@@ -566,12 +685,6 @@ comment|/* number of updates/state */
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-name|LIST_ENTRY
-argument_list|(
-argument|pfsync_softc
-argument_list|)
-name|sc_next
-expr_stmt|;
 name|eventhandler_tag
 name|sc_detachtag
 decl_stmt|;
@@ -580,6 +693,15 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pfsync_softc
+modifier|*
+name|pfsyncif
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -596,7 +718,7 @@ decl_stmt|;
 define|#
 directive|define
 name|PFSYNC_VERSION
-value|2
+value|3
 name|u_int8_t
 name|af
 decl_stmt|;
@@ -655,10 +777,21 @@ value|9
 comment|/* Bulk Update Status */
 define|#
 directive|define
-name|PFSYNC_ACT_MAX
+name|PFSYNC_ACT_TDB_UPD
 value|10
+comment|/* TDB replay counter update */
+define|#
+directive|define
+name|PFSYNC_ACT_MAX
+value|11
 name|u_int8_t
 name|count
+decl_stmt|;
+name|u_int8_t
+name|pf_chksum
+index|[
+name|PF_MD5_DIGEST_LENGTH
+index|]
 decl_stmt|;
 block|}
 name|__packed
@@ -695,7 +828,7 @@ define|#
 directive|define
 name|PFSYNC_ACTIONS
 define|\
-value|"CLR ST", "INS ST", "UPD ST", "DEL ST", \ 	"UPD ST COMP", "DEL ST COMP", "INS FR", "DEL FR", \ 	"UPD REQ", "BLK UPD STAT"
+value|"CLR ST", "INS ST", "UPD ST", "DEL ST", \ 	"UPD ST COMP", "DEL ST COMP", "INS FR", "DEL FR", \ 	"UPD REQ", "BLK UPD STAT", "TDB UPD"
 end_define
 
 begin_define
@@ -839,7 +972,7 @@ name|s
 parameter_list|,
 name|d
 parameter_list|)
-value|do {		\ 	(d)->seqlo = htonl((s)->seqlo);		\ 	(d)->seqhi = htonl((s)->seqhi);		\ 	(d)->seqdiff = htonl((s)->seqdiff);	\ 	(d)->max_win = htons((s)->max_win);	\ 	(d)->mss = htons((s)->mss);		\ 	(d)->state = (s)->state;		\ 	(d)->wscale = (s)->wscale;		\ } while (0)
+value|do {		\ 	(d)->seqlo = htonl((s)->seqlo);		\ 	(d)->seqhi = htonl((s)->seqhi);		\ 	(d)->seqdiff = htonl((s)->seqdiff);	\ 	(d)->max_win = htons((s)->max_win);	\ 	(d)->mss = htons((s)->mss);		\ 	(d)->state = (s)->state;		\ 	(d)->wscale = (s)->wscale;		\ 	if ((s)->scrub) {						\ 		(d)->scrub.pfss_flags = 				\ 		    htons((s)->scrub->pfss_flags& PFSS_TIMESTAMP);	\ 		(d)->scrub.pfss_ttl = (s)->scrub->pfss_ttl;		\ 		(d)->scrub.pfss_ts_mod = htonl((s)->scrub->pfss_ts_mod);\ 		(d)->scrub.scrub_flag = PFSYNC_SCRUB_FLAG_VALID;	\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -851,7 +984,7 @@ name|s
 parameter_list|,
 name|d
 parameter_list|)
-value|do {		\ 	(d)->seqlo = ntohl((s)->seqlo);		\ 	(d)->seqhi = ntohl((s)->seqhi);		\ 	(d)->seqdiff = ntohl((s)->seqdiff);	\ 	(d)->max_win = ntohs((s)->max_win);	\ 	(d)->mss = ntohs((s)->mss);		\ 	(d)->state = (s)->state;		\ 	(d)->wscale = (s)->wscale;		\ } while (0)
+value|do {		\ 	(d)->seqlo = ntohl((s)->seqlo);		\ 	(d)->seqhi = ntohl((s)->seqhi);		\ 	(d)->seqdiff = ntohl((s)->seqdiff);	\ 	(d)->max_win = ntohs((s)->max_win);	\ 	(d)->mss = ntohs((s)->mss);		\ 	(d)->state = (s)->state;		\ 	(d)->wscale = (s)->wscale;		\ 	if ((s)->scrub.scrub_flag == PFSYNC_SCRUB_FLAG_VALID&& 	\ 	    (d)->scrub != NULL) {					\ 		(d)->scrub->pfss_flags =				\ 		    ntohs((s)->scrub.pfss_flags)& PFSS_TIMESTAMP;	\ 		(d)->scrub->pfss_ttl = (s)->scrub.pfss_ttl;		\ 		(d)->scrub->pfss_ts_mod = ntohl((s)->scrub.pfss_ts_mod);\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -876,6 +1009,30 @@ parameter_list|,
 name|d
 parameter_list|)
 value|do {				\ 	bcopy(&(s)->addr,&(d)->addr, sizeof((d)->addr));	\ 	(d)->port = (s)->port;					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pf_state_counter_hton
+parameter_list|(
+name|s
+parameter_list|,
+name|d
+parameter_list|)
+value|do {				\ 	d[0] = htonl((s>>32)&0xffffffff);			\ 	d[1] = htonl(s&0xffffffff);				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pf_state_counter_ntoh
+parameter_list|(
+name|s
+parameter_list|,
+name|d
+parameter_list|)
+value|do {				\ 	d = ntohl(s[0]);					\ 	d = d<<32;						\ 	d += ntohl(s[1]);					\ } while (0)
 end_define
 
 begin_ifdef
@@ -961,7 +1118,7 @@ name|pfsync_insert_state
 parameter_list|(
 name|st
 parameter_list|)
-value|do {				\ 	if ((st->rule.ptr->rule_flag& PFRULE_NOSYNC) ||	\ 	    (st->proto == IPPROTO_PFSYNC))			\ 		st->sync_flags |= PFSTATE_NOSYNC;		\ 	else if (!st->sync_flags)				\ 		pfsync_pack_state(PFSYNC_ACT_INS, (st), 1);	\ 	st->sync_flags&= ~PFSTATE_FROMSYNC;			\ } while (0)
+value|do {				\ 	if ((st->rule.ptr->rule_flag& PFRULE_NOSYNC) ||	\ 	    (st->proto == IPPROTO_PFSYNC))			\ 		st->sync_flags |= PFSTATE_NOSYNC;		\ 	else if (!st->sync_flags)				\ 		pfsync_pack_state(PFSYNC_ACT_INS, (st), 	\ 		    PFSYNC_FLAG_COMPRESS);			\ 	st->sync_flags&= ~PFSTATE_FROMSYNC;			\ } while (0)
 end_define
 
 begin_define
@@ -981,8 +1138,32 @@ name|pfsync_delete_state
 parameter_list|(
 name|st
 parameter_list|)
-value|do {				\ 	if (!st->sync_flags)					\ 		pfsync_pack_state(PFSYNC_ACT_DEL, (st),		\ 		    PFSYNC_FLAG_COMPRESS);			\ 	st->sync_flags&= ~PFSTATE_FROMSYNC;			\ } while (0)
+value|do {				\ 	if (!st->sync_flags)					\ 		pfsync_pack_state(PFSYNC_ACT_DEL, (st),		\ 		    PFSYNC_FLAG_COMPRESS);			\ } while (0)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PFSYNC_TDB
+end_ifdef
+
+begin_function_decl
+name|int
+name|pfsync_update_tdb
+parameter_list|(
+name|struct
+name|tdb
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

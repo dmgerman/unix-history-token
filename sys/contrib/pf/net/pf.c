@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
-comment|/*	$OpenBSD: pf.c,v 1.483 2005/03/15 17:38:43 dhartmei Exp $ */
+comment|/*	$OpenBSD: pf.c,v 1.527 2007/02/22 15:23:23 pyr Exp $ */
 end_comment
 
 begin_comment
@@ -28,6 +24,20 @@ include|#
 directive|include
 file|"opt_inet6.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -261,6 +271,52 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/kthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -281,6 +337,23 @@ include|#
 directive|include
 file|<net/route.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<net/radix_mpath.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -532,6 +605,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|debug_pfugidhack
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -552,20 +632,6 @@ end_define
 begin_comment
 comment|/*  * Global variables  */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|pf_anchor_global
-name|pf_anchors
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pf_ruleset
-name|pf_main_ruleset
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -630,44 +696,6 @@ name|u_int32_t
 name|ticket_pabuf
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|callout
-name|pf_expire_to
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* expire timeout */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|struct
-name|timeout
-name|pf_expire_to
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* expire timeout */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -837,6 +865,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|pf_modulate_sack
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|pf_pdesc
+modifier|*
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+parameter_list|,
+name|struct
+name|pf_state_peer
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -974,6 +1027,8 @@ argument_list|,
 name|u_int8_t
 argument_list|,
 name|int
+argument_list|,
+name|u_int16_t
 argument_list|,
 expr|struct
 name|ether_header
@@ -1498,19 +1553,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|pf_tag
-modifier|*
-name|pf_get_tag
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pf_match_tag
 parameter_list|(
@@ -1523,7 +1565,36 @@ name|pf_rule
 modifier|*
 parameter_list|,
 name|struct
-name|pf_tag
+name|pf_mtag
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pf_step_out_of_anchor
+parameter_list|(
+name|int
+modifier|*
+parameter_list|,
+name|struct
+name|pf_ruleset
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|pf_rule
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|pf_rule
 modifier|*
 modifier|*
 parameter_list|,
@@ -1647,6 +1718,10 @@ parameter_list|,
 name|struct
 name|pf_state
 modifier|*
+parameter_list|,
+name|struct
+name|pf_pdesc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1673,6 +1748,10 @@ parameter_list|,
 name|struct
 name|pf_state
 modifier|*
+parameter_list|,
+name|struct
+name|pf_pdesc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1683,28 +1762,9 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
-begin_function_decl
-name|int
-name|pf_socket_lookup
-parameter_list|(
-name|uid_t
-modifier|*
-parameter_list|,
-name|gid_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|pf_pdesc
-modifier|*
-parameter_list|,
-name|struct
-name|inpcb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* XXX: import */
+end_comment
 
 begin_else
 else|#
@@ -1715,12 +1775,6 @@ begin_function_decl
 name|int
 name|pf_socket_lookup
 parameter_list|(
-name|uid_t
-modifier|*
-parameter_list|,
-name|gid_t
-modifier|*
-parameter_list|,
 name|int
 parameter_list|,
 name|struct
@@ -1834,20 +1888,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
-name|int
-name|pf_add_mbuf_tag
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|pf_state
 modifier|*
@@ -1858,7 +1898,7 @@ name|pfi_kif
 modifier|*
 parameter_list|,
 name|struct
-name|pf_state
+name|pf_state_cmp
 modifier|*
 parameter_list|,
 name|u_int8_t
@@ -1917,6 +1957,13 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|pf_end_threads
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|pf_pool_limit
 name|pf_pool_limits
@@ -1930,6 +1977,22 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pool
+name|pfr_ktable_pl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pool
+name|pfr_kentry_pl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1959,6 +2022,20 @@ operator|&
 name|pf_frent_pl
 block|,
 name|PFFRAG_FRENT_HIWAT
+block|}
+block|,
+block|{
+operator|&
+name|pfr_ktable_pl
+block|,
+name|PFR_KTABLE_HIWAT
+block|}
+block|,
+block|{
+operator|&
+name|pfr_kentry_pl
+block|,
+name|PFR_KENTRY_HIWAT
 block|}
 block|}
 decl_stmt|;
@@ -1998,7 +2075,8 @@ name|r
 parameter_list|,
 name|k
 parameter_list|)
-value|(((r)->rule_flag& PFRULE_IFBOUND) ? (k) :   \ 	((r)->rule_flag& PFRULE_GRBOUND) ? (k)->pfik_parent :	       \ 	(k)->pfik_parent->pfik_parent)
+define|\
+value|((r)->rule_flag& PFRULE_IFBOUND) ? (k) : pfi_all
 end_define
 
 begin_define
@@ -2023,187 +2101,6 @@ define|\
 value|do {						\ 		if (s->nat_rule.ptr != NULL)		\ 			s->nat_rule.ptr->states--;	\ 		if (s->anchor.ptr != NULL)		\ 			s->anchor.ptr->states--;	\ 		s->rule.ptr->states--;			\ 	} while (0)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
-
-begin_function_decl
-specifier|static
-name|__inline
-name|int
-name|pf_src_compare
-parameter_list|(
-name|struct
-name|pf_src_node
-modifier|*
-parameter_list|,
-name|struct
-name|pf_src_node
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|__inline
-name|int
-name|pf_state_compare_lan_ext
-parameter_list|(
-name|struct
-name|pf_state
-modifier|*
-parameter_list|,
-name|struct
-name|pf_state
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|__inline
-name|int
-name|pf_state_compare_ext_gwy
-parameter_list|(
-name|struct
-name|pf_state
-modifier|*
-parameter_list|,
-name|struct
-name|pf_state
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|__inline
-name|int
-name|pf_state_compare_id
-parameter_list|(
-name|struct
-name|pf_state
-modifier|*
-parameter_list|,
-name|struct
-name|pf_state
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|__inline
-name|int
-name|pf_anchor_compare
-parameter_list|(
-name|struct
-name|pf_anchor
-modifier|*
-parameter_list|,
-name|struct
-name|pf_anchor
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|int
-name|pf_src_compare
-parameter_list|(
-name|struct
-name|pf_src_node
-modifier|*
-parameter_list|,
-name|struct
-name|pf_src_node
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|pf_state_compare_lan_ext
-parameter_list|(
-name|struct
-name|pf_state
-modifier|*
-parameter_list|,
-name|struct
-name|pf_state
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|pf_state_compare_ext_gwy
-parameter_list|(
-name|struct
-name|pf_state
-modifier|*
-parameter_list|,
-name|struct
-name|pf_state
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|pf_state_compare_id
-parameter_list|(
-name|struct
-name|pf_state
-modifier|*
-parameter_list|,
-name|struct
-name|pf_state
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|pf_anchor_compare
-parameter_list|(
-name|struct
-name|pf_anchor
-modifier|*
-parameter_list|,
-name|struct
-name|pf_anchor
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|struct
 name|pf_src_tree
@@ -2221,9 +2118,84 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|pf_state_queue
-name|state_updates
+name|state_list
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|int
+name|pf_src_compare
+parameter_list|(
+name|struct
+name|pf_src_node
+modifier|*
+parameter_list|,
+name|struct
+name|pf_src_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|pf_state_compare_lan_ext
+parameter_list|(
+name|struct
+name|pf_state
+modifier|*
+parameter_list|,
+name|struct
+name|pf_state
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|pf_state_compare_ext_gwy
+parameter_list|(
+name|struct
+name|pf_state
+modifier|*
+parameter_list|,
+name|struct
+name|pf_state
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|pf_state_compare_id
+parameter_list|(
+name|struct
+name|pf_state
+modifier|*
+parameter_list|,
+name|struct
+name|pf_state
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|RB_GENERATE
@@ -2293,34 +2265,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|RB_GENERATE
-argument_list|(
-name|pf_anchor_global
-argument_list|,
-name|pf_anchor
-argument_list|,
-name|entry_global
-argument_list|,
-name|pf_anchor_compare
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|RB_GENERATE
-argument_list|(
-name|pf_anchor_node
-argument_list|,
-name|pf_anchor
-argument_list|,
-name|entry_node
-argument_list|,
-name|pf_anchor_compare
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4297,70 +4241,6 @@ operator|)
 return|;
 return|return
 operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_function
-specifier|static
-name|int
-else|#
-directive|else
-specifier|static
-name|__inline
-name|int
-endif|#
-directive|endif
-name|pf_anchor_compare
-parameter_list|(
-name|struct
-name|pf_anchor
-modifier|*
-name|a
-parameter_list|,
-name|struct
-name|pf_anchor
-modifier|*
-name|b
-parameter_list|)
-block|{
-name|int
-name|c
-init|=
-name|strcmp
-argument_list|(
-name|a
-operator|->
-name|path
-argument_list|,
-name|b
-operator|->
-name|path
-argument_list|)
-decl_stmt|;
-return|return
-operator|(
-name|c
-condition|?
-operator|(
-name|c
-operator|<
-literal|0
-condition|?
-operator|-
-literal|1
-else|:
-literal|1
-operator|)
-else|:
 literal|0
 operator|)
 return|;
@@ -4500,7 +4380,7 @@ modifier|*
 name|pf_find_state_byid
 parameter_list|(
 name|struct
-name|pf_state
+name|pf_state_cmp
 modifier|*
 name|key
 parameter_list|)
@@ -4522,6 +4402,11 @@ argument_list|,
 operator|&
 name|tree_id
 argument_list|,
+operator|(
+expr|struct
+name|pf_state
+operator|*
+operator|)
 name|key
 argument_list|)
 operator|)
@@ -4541,7 +4426,7 @@ modifier|*
 name|kif
 parameter_list|,
 name|struct
-name|pf_state
+name|pf_state_cmp
 modifier|*
 name|key
 parameter_list|,
@@ -4570,20 +4455,9 @@ block|{
 case|case
 name|PF_LAN_EXT
 case|:
-for|for
-control|(
-init|;
-name|kif
-operator|!=
-name|NULL
-condition|;
-name|kif
-operator|=
-name|kif
-operator|->
-name|pfik_parent
-control|)
-block|{
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|RB_FIND
@@ -4595,12 +4469,14 @@ name|kif
 operator|->
 name|pfik_lan_ext
 argument_list|,
+operator|(
+expr|struct
+name|pf_state
+operator|*
+operator|)
 name|key
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
+operator|)
 operator|!=
 name|NULL
 condition|)
@@ -4609,7 +4485,36 @@ operator|(
 name|s
 operator|)
 return|;
-block|}
+if|if
+condition|(
+operator|(
+name|s
+operator|=
+name|RB_FIND
+argument_list|(
+name|pf_state_tree_lan_ext
+argument_list|,
+operator|&
+name|pfi_all
+operator|->
+name|pfik_lan_ext
+argument_list|,
+operator|(
+expr|struct
+name|pf_state
+operator|*
+operator|)
+name|key
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|s
+operator|)
+return|;
 return|return
 operator|(
 name|NULL
@@ -4618,20 +4523,9 @@ return|;
 case|case
 name|PF_EXT_GWY
 case|:
-for|for
-control|(
-init|;
-name|kif
-operator|!=
-name|NULL
-condition|;
-name|kif
-operator|=
-name|kif
-operator|->
-name|pfik_parent
-control|)
-block|{
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|RB_FIND
@@ -4643,12 +4537,14 @@ name|kif
 operator|->
 name|pfik_ext_gwy
 argument_list|,
+operator|(
+expr|struct
+name|pf_state
+operator|*
+operator|)
 name|key
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
+operator|)
 operator|!=
 name|NULL
 condition|)
@@ -4657,7 +4553,36 @@ operator|(
 name|s
 operator|)
 return|;
-block|}
+if|if
+condition|(
+operator|(
+name|s
+operator|=
+name|RB_FIND
+argument_list|(
+name|pf_state_tree_ext_gwy
+argument_list|,
+operator|&
+name|pfi_all
+operator|->
+name|pfik_ext_gwy
+argument_list|,
+operator|(
+expr|struct
+name|pf_state
+operator|*
+operator|)
+name|key
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|s
+operator|)
+return|;
 return|return
 operator|(
 name|NULL
@@ -4680,7 +4605,7 @@ modifier|*
 name|pf_find_state_all
 parameter_list|(
 name|struct
-name|pf_state
+name|pf_state_cmp
 modifier|*
 name|key
 parameter_list|,
@@ -4743,6 +4668,11 @@ name|kif
 operator|->
 name|pfik_lan_ext
 argument_list|,
+operator|(
+expr|struct
+name|pf_state
+operator|*
+operator|)
 name|key
 argument_list|)
 expr_stmt|;
@@ -4803,6 +4733,11 @@ name|kif
 operator|->
 name|pfik_ext_gwy
 argument_list|,
+operator|(
+expr|struct
+name|pf_state
+operator|*
+operator|)
 name|key
 argument_list|)
 expr_stmt|;
@@ -5017,20 +4952,17 @@ operator|->
 name|conn
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 operator|(
 operator|*
 name|state
 operator|)
 operator|->
-name|local_flags
-operator||=
-name|PFSTATE_SRC_CONN
+name|src
+operator|.
+name|tcp_est
+operator|=
+literal|1
 expr_stmt|;
-endif|#
-directive|endif
 name|pf_add_threshold
 argument_list|(
 operator|&
@@ -6462,10 +6394,10 @@ literal|1
 operator|)
 return|;
 block|}
-name|TAILQ_INSERT_HEAD
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|state_updates
+name|state_list
 argument_list|,
 name|state
 argument_list|,
@@ -6473,7 +6405,7 @@ name|u
 operator|.
 name|s
 operator|.
-name|entry_updates
+name|entry_list
 argument_list|)
 expr_stmt|;
 name|pf_status
@@ -6489,9 +6421,11 @@ operator|.
 name|states
 operator|++
 expr_stmt|;
-name|pfi_attach_state
+name|pfi_kif_ref
 argument_list|(
 name|kif
+argument_list|,
+name|PFI_KIF_REF_STATE
 argument_list|)
 expr_stmt|;
 if|#
@@ -6514,43 +6448,94 @@ end_function
 
 begin_function
 name|void
-name|pf_purge_timeout
+name|pf_purge_thread
 parameter_list|(
 name|void
 modifier|*
-name|arg
+name|v
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|struct
-name|callout
-modifier|*
-name|to
-init|=
-name|arg
-decl_stmt|;
-else|#
-directive|else
-name|struct
-name|timeout
-modifier|*
-name|to
-init|=
-name|arg
-decl_stmt|;
-endif|#
-directive|endif
 name|int
+name|nloops
+init|=
+literal|0
+decl_stmt|,
 name|s
 decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|tsleep
+argument_list|(
+name|pf_purge_thread
+argument_list|,
+name|PWAIT
+argument_list|,
+literal|"pftm"
+argument_list|,
+literal|1
+operator|*
+name|hz
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+name|sx_slock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
 name|PF_LOCK
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|pf_end_threads
+condition|)
+block|{
+name|pf_purge_expired_states
+argument_list|(
+name|pf_status
+operator|.
+name|states
+argument_list|)
+expr_stmt|;
+name|pf_purge_expired_fragments
+argument_list|()
+expr_stmt|;
+name|pf_purge_expired_src_nodes
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|pf_end_threads
+operator|++
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+name|PF_UNLOCK
+argument_list|()
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|pf_purge_thread
+argument_list|)
+expr_stmt|;
+name|kthread_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|s
@@ -6558,15 +6543,52 @@ operator|=
 name|splsoftnet
 argument_list|()
 expr_stmt|;
+comment|/* process a fraction of the state table every second */
 name|pf_purge_expired_states
-argument_list|()
+argument_list|(
+literal|1
+operator|+
+operator|(
+name|pf_status
+operator|.
+name|states
+operator|/
+name|pf_default_rule
+operator|.
+name|timeout
+index|[
+name|PFTM_INTERVAL
+index|]
+operator|)
+argument_list|)
 expr_stmt|;
+comment|/* purge other expired types every PFTM_INTERVAL seconds */
+if|if
+condition|(
+operator|++
+name|nloops
+operator|>=
+name|pf_default_rule
+operator|.
+name|timeout
+index|[
+name|PFTM_INTERVAL
+index|]
+condition|)
+block|{
 name|pf_purge_expired_fragments
 argument_list|()
 expr_stmt|;
 name|pf_purge_expired_src_nodes
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
+name|nloops
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -6578,47 +6600,15 @@ name|__FreeBSD__
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|callout_reset
+name|sx_sunlock
 argument_list|(
-name|to
-argument_list|,
-name|pf_default_rule
-operator|.
-name|timeout
-index|[
-name|PFTM_INTERVAL
-index|]
-operator|*
-name|hz
-argument_list|,
-name|pf_purge_timeout
-argument_list|,
-name|to
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|timeout_add
-argument_list|(
-name|to
-argument_list|,
-name|pf_default_rule
-operator|.
-name|timeout
-index|[
-name|PFTM_INTERVAL
-index|]
-operator|*
-name|hz
+operator|&
+name|pf_consistency_lock
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 block|}
 end_function
 
@@ -6677,6 +6667,19 @@ directive|ifdef
 name|__FreeBSD__
 name|KASSERT
 argument_list|(
+name|state
+operator|->
+name|timeout
+operator|!=
+name|PFTM_UNLINKED
+argument_list|,
+operator|(
+literal|"pf_state_expires: timeout == PFTM_UNLINKED"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 operator|(
 name|state
 operator|->
@@ -6692,6 +6695,15 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|KASSERT
+argument_list|(
+name|state
+operator|->
+name|timeout
+operator|!=
+name|PFTM_UNLINKED
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|state
@@ -6866,7 +6878,8 @@ begin_function
 name|void
 name|pf_purge_expired_src_nodes
 parameter_list|(
-name|void
+name|int
+name|waslocked
 parameter_list|)
 block|{
 name|struct
@@ -6876,6 +6889,11 @@ name|cur
 decl_stmt|,
 modifier|*
 name|next
+decl_stmt|;
+name|int
+name|locked
+init|=
+name|waslocked
 decl_stmt|;
 for|for
 control|(
@@ -6923,6 +6941,71 @@ operator|<=
 name|time_second
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|locked
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+operator|!
+name|sx_try_upgrade
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+condition|)
+block|{
+name|PF_UNLOCK
+argument_list|()
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+name|PF_LOCK
+argument_list|()
+expr_stmt|;
+block|}
+else|#
+directive|else
+name|rw_enter_write
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|next
+operator|=
+name|RB_NEXT
+argument_list|(
+name|pf_src_tree
+argument_list|,
+operator|&
+name|tree_src_tracking
+argument_list|,
+name|cur
+argument_list|)
+expr_stmt|;
+name|locked
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|cur
@@ -7010,6 +7093,32 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|locked
+operator|&&
+operator|!
+name|waslocked
+condition|)
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|sx_downgrade
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|rw_exit_write
+argument_list|(
+operator|&
+name|pf_consistency_lock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -7044,37 +7153,14 @@ operator|==
 name|IPPROTO_TCP
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-if|if
-condition|(
-name|s
-operator|->
-name|local_flags
-operator|&
-name|PFSTATE_SRC_CONN
-condition|)
-else|#
-directive|else
 if|if
 condition|(
 name|s
 operator|->
 name|src
 operator|.
-name|state
-operator|==
-name|PF_TCPS_PROXY_DST
-operator|||
-name|s
-operator|->
-name|timeout
-operator|>=
-name|PFTM_TCP_ESTABLISHED
+name|tcp_est
 condition|)
-endif|#
-directive|endif
 operator|--
 name|s
 operator|->
@@ -7215,9 +7301,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* callers should be at splsoftnet */
+end_comment
+
 begin_function
 name|void
-name|pf_purge_expired_state
+name|pf_unlink_state
 parameter_list|(
 name|struct
 name|pf_state
@@ -7255,6 +7345,7 @@ name|state
 operator|==
 name|PF_TCPS_PROXY_DST
 condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -7281,14 +7372,34 @@ argument|,
 literal|0
 argument|,
 literal|1
-argument|, NULL, NULL); 	RB_REMOVE(pf_state_tree_ext_gwy,&cur->u.s.kif->pfik_ext_gwy, cur); 	RB_REMOVE(pf_state_tree_lan_ext,&cur->u.s.kif->pfik_lan_ext, cur); 	RB_REMOVE(pf_state_tree_id,&tree_id, cur);
+argument|, cur->tag, NULL, NULL); 	} 	RB_REMOVE(pf_state_tree_ext_gwy,&cur->u.s.kif->pfik_ext_gwy, cur); 	RB_REMOVE(pf_state_tree_lan_ext,&cur->u.s.kif->pfik_lan_ext, cur); 	RB_REMOVE(pf_state_tree_id,&tree_id, cur);
 if|#
 directive|if
 name|NPFSYNC
-argument|pfsync_delete_state(cur);
+argument|if (cur->creatorid == pf_status.hostid) 		pfsync_delete_state(cur);
 endif|#
 directive|endif
-argument|pf_src_tree_remove_state(cur); 	if (--cur->rule.ptr->states<=
+argument|cur->timeout = PFTM_UNLINKED; 	pf_src_tree_remove_state(cur); }
+comment|/* callers should be at splsoftnet and hold the  * write_lock on pf_consistency_lock */
+argument|void pf_free_state(struct pf_state *cur) {
+if|#
+directive|if
+name|NPFSYNC
+argument|if (pfsyncif != NULL&& 	    (pfsyncif->sc_bulk_send_next == cur || 	    pfsyncif->sc_bulk_terminator == cur)) 		return;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|KASSERT(cur->timeout == PFTM_UNLINKED, 	    (
+literal|"pf_free_state: cur->timeout != PFTM_UNLINKED"
+argument|));
+else|#
+directive|else
+argument|KASSERT(cur->timeout == PFTM_UNLINKED);
+endif|#
+directive|endif
+argument|if (--cur->rule.ptr->states<=
 literal|0
 argument|&& 	    cur->rule.ptr->src_nodes<=
 literal|0
@@ -7298,9 +7409,53 @@ argument|&& 			cur->nat_rule.ptr->src_nodes<=
 literal|0
 argument|) 			pf_rm_rule(NULL, cur->nat_rule.ptr); 	if (cur->anchor.ptr != NULL) 		if (--cur->anchor.ptr->states<=
 literal|0
-argument|) 			pf_rm_rule(NULL, cur->anchor.ptr); 	pf_normalize_tcp_cleanup(cur); 	pfi_detach_state(cur->u.s.kif); 	TAILQ_REMOVE(&state_updates, cur, u.s.entry_updates); 	if (cur->tag) 		pf_tag_unref(cur->tag); 	pool_put(&pf_state_pl, cur); 	pf_status.fcounters[FCNT_STATE_REMOVALS]++; 	pf_status.states--; }  void pf_purge_expired_states(void) { 	struct pf_state		*cur
-argument_list|,
-argument|*next;  	for (cur = RB_MIN(pf_state_tree_id,&tree_id); 	    cur; cur = next) { 		next = RB_NEXT(pf_state_tree_id,&tree_id, cur); 		if (pf_state_expires(cur)<= time_second) 			pf_purge_expired_state(cur); 	} }  int pf_tbladdr_setup(struct pf_ruleset *rs, struct pf_addr_wrap *aw) { 	if (aw->type != PF_ADDR_TABLE) 		return (
+argument|) 			pf_rm_rule(NULL, cur->anchor.ptr); 	pf_normalize_tcp_cleanup(cur); 	pfi_kif_unref(cur->u.s.kif, PFI_KIF_REF_STATE); 	TAILQ_REMOVE(&state_list, cur, u.s.entry_list); 	if (cur->tag) 		pf_tag_unref(cur->tag); 	pool_put(&pf_state_pl, cur); 	pf_status.fcounters[FCNT_STATE_REMOVALS]++; 	pf_status.states--; }  void pf_purge_expired_states(u_int32_t maxcheck) { 	static struct pf_state	*cur = NULL; 	struct pf_state		*next; 	int 			 locked =
+literal|0
+argument|;  	while (maxcheck--) {
+comment|/* wrap to start of list when we hit the end */
+argument|if (cur == NULL) { 			cur = TAILQ_FIRST(&state_list); 			if (cur == NULL) 				break;
+comment|/* list empty */
+argument|}
+comment|/* get next state, as cur may get deleted */
+argument|next = TAILQ_NEXT(cur, u.s.entry_list);  		if (cur->timeout == PFTM_UNLINKED) {
+comment|/* free unlinked state */
+argument|if (! locked) {
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|if (!sx_try_upgrade(&pf_consistency_lock)) { 					 PF_UNLOCK(); 					 sx_sunlock(&pf_consistency_lock); 					 sx_xlock(&pf_consistency_lock); 					 PF_LOCK(); 				 }
+else|#
+directive|else
+argument|rw_enter_write(&pf_consistency_lock);
+endif|#
+directive|endif
+argument|locked =
+literal|1
+argument|; 			} 			pf_free_state(cur); 		} else if (pf_state_expires(cur)<= time_second) {
+comment|/* unlink and free expired state */
+argument|pf_unlink_state(cur); 			if (! locked) {
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|if (!sx_try_upgrade(&pf_consistency_lock)) { 					 PF_UNLOCK(); 					 sx_sunlock(&pf_consistency_lock); 					 sx_xlock(&pf_consistency_lock); 					 PF_LOCK(); 				 }
+else|#
+directive|else
+argument|rw_enter_write(&pf_consistency_lock);
+endif|#
+directive|endif
+argument|locked =
+literal|1
+argument|; 			} 			pf_free_state(cur); 		} 		cur = next; 	}  	if (locked)
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|sx_downgrade(&pf_consistency_lock);
+else|#
+directive|else
+argument|rw_exit_write(&pf_consistency_lock);
+endif|#
+directive|endif
+argument|}  int pf_tbladdr_setup(struct pf_ruleset *rs, struct pf_addr_wrap *aw) { 	if (aw->type != PF_ADDR_TABLE) 		return (
 literal|0
 argument|); 	if ((aw->p.tbl = pfr_attach_table(rs, aw->v.tblname)) == NULL) 		return (
 literal|1
@@ -7473,9 +7628,9 @@ argument|)) 			return (
 literal|1
 argument|); 		return (
 literal|0
-argument|); 	case PF_ADDR_DYNIFTL: 		return (aw1->p.dyn->pfid_kt != aw2->p.dyn->pfid_kt); 	case PF_ADDR_NOROUTE: 		return (
+argument|); 	case PF_ADDR_DYNIFTL: 		return (aw1->p.dyn->pfid_kt != aw2->p.dyn->pfid_kt); 	case PF_ADDR_NOROUTE: 	case PF_ADDR_URPFFAILED: 		return (
 literal|0
-argument|); 	case PF_ADDR_TABLE: 		return (aw1->p.tbl != aw2->p.tbl); 	default: 		printf(
+argument|); 	case PF_ADDR_TABLE: 		return (aw1->p.tbl != aw2->p.tbl); 	case PF_ADDR_RTLABEL: 		return (aw1->v.rtlabel != aw2->v.rtlabel); 	default: 		printf(
 literal|"invalid address type: %d\n"
 argument|, aw1->type); 		return (
 literal|1
@@ -7754,7 +7909,67 @@ argument|], u); 		break;
 endif|#
 directive|endif
 comment|/* INET6 */
-argument|} }  void
+argument|} }
+comment|/*  * Need to modulate the sequence numbers in the TCP SACK option  * (credits to Krzysztof Pfaff for report and patch)  */
+argument|int pf_modulate_sack(struct mbuf *m, int off, struct pf_pdesc *pd,     struct tcphdr *th, struct pf_state_peer *dst) { 	int hlen = (th->th_off<<
+literal|2
+argument|) - sizeof(*th)
+argument_list|,
+argument|thoptlen = hlen;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|u_int8_t opts[TCP_MAXOLEN]
+argument_list|,
+argument|*opt = opts;
+else|#
+directive|else
+argument|u_int8_t opts[MAX_TCPOPTLEN]
+argument_list|,
+argument|*opt = opts;
+endif|#
+directive|endif
+argument|int copyback =
+literal|0
+argument_list|,
+argument|i
+argument_list|,
+argument|olen; 	struct sackblk sack;
+define|#
+directive|define
+name|TCPOLEN_SACKLEN
+value|(TCPOLEN_SACK + 2)
+argument|if (hlen< TCPOLEN_SACKLEN || 	    !pf_pull_hdr(m, off + sizeof(*th), opts, hlen, NULL, NULL, pd->af)) 		return
+literal|0
+argument|;  	while (hlen>= TCPOLEN_SACKLEN) { 		olen = opt[
+literal|1
+argument|]; 		switch (*opt) { 		case TCPOPT_EOL:
+comment|/* FALLTHROUGH */
+argument|case TCPOPT_NOP: 			opt++; 			hlen--; 			break; 		case TCPOPT_SACK: 			if (olen> hlen) 				olen = hlen; 			if (olen>= TCPOLEN_SACKLEN) { 				for (i =
+literal|2
+argument|; i + TCPOLEN_SACK<= olen; 				    i += TCPOLEN_SACK) { 					memcpy(&sack,&opt[i], sizeof(sack)); 					pf_change_a(&sack.start,&th->th_sum, 					    htonl(ntohl(sack.start) - 					    dst->seqdiff),
+literal|0
+argument|); 					pf_change_a(&sack.end,&th->th_sum, 					    htonl(ntohl(sack.end) - 					    dst->seqdiff),
+literal|0
+argument|); 					memcpy(&opt[i],&sack, sizeof(sack)); 				} 				copyback =
+literal|1
+argument|; 			}
+comment|/* FALLTHROUGH */
+argument|default: 			if (olen<
+literal|2
+argument|) 				olen =
+literal|2
+argument|; 			hlen -= olen; 			opt += olen; 		} 	}  	if (copyback)
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|m_copyback(m, off + sizeof(*th), thoptlen, (caddr_t)opts);
+else|#
+directive|else
+argument|m_copyback(m, off + sizeof(*th), thoptlen, opts);
+endif|#
+directive|endif
+argument|return (copyback); }  void
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -7764,29 +7979,64 @@ directive|else
 argument|pf_send_tcp(const struct pf_rule *r, sa_family_t af,
 endif|#
 directive|endif
-argument|const struct pf_addr *saddr, const struct pf_addr *daddr,     u_int16_t sport, u_int16_t dport, u_int32_t seq, u_int32_t ack,     u_int8_t flags, u_int16_t win, u_int16_t mss, u_int8_t ttl, int tag,     struct ether_header *eh, struct ifnet *ifp) { 	struct mbuf	*m; 	int		 len =
-literal|0
-argument|, tlen;
-comment|/* make the compiler happy */
+argument|const struct pf_addr *saddr, const struct pf_addr *daddr,     u_int16_t sport, u_int16_t dport, u_int32_t seq, u_int32_t ack,     u_int8_t flags, u_int16_t win, u_int16_t mss, u_int8_t ttl, int tag,     u_int16_t rtag, struct ether_header *eh, struct ifnet *ifp) { 	struct mbuf	*m; 	int		 len, tlen;
 ifdef|#
 directive|ifdef
 name|INET
-argument|struct ip	*h = NULL;
-comment|/* make the compiler happy */
+argument|struct ip	*h;
 endif|#
 directive|endif
 comment|/* INET */
 ifdef|#
 directive|ifdef
 name|INET6
-argument|struct ip6_hdr	*h6 = NULL;
-comment|/* make the compiler happy */
+argument|struct ip6_hdr	*h6;
 endif|#
 directive|endif
 comment|/* INET6 */
-argument|struct tcphdr	*th = NULL;
-comment|/* make the compiler happy */
-argument|char *opt;
+argument|struct tcphdr	*th; 	char		*opt; 	struct pf_mtag	*pf_mtag;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|KASSERT(
+ifdef|#
+directive|ifdef
+name|INET
+argument|af == AF_INET
+else|#
+directive|else
+literal|0
+endif|#
+directive|endif
+argument|||
+ifdef|#
+directive|ifdef
+name|INET6
+argument|af == AF_INET6
+else|#
+directive|else
+literal|0
+endif|#
+directive|endif
+argument|, (
+literal|"Unsupported AF %d"
+argument|, af)); 	len =
+literal|0
+argument|; 	th = NULL;
+ifdef|#
+directive|ifdef
+name|INET
+argument|h = NULL;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+argument|h6 = NULL;
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/* maximum segment size tcp option */
 argument|tlen = sizeof(struct tcphdr); 	if (mss) 		tlen +=
 literal|4
@@ -7822,27 +8072,25 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-argument|if (tag) {
+argument|if ((pf_mtag = pf_get_mtag(m)) == NULL) { 		m_freem(m); 		return; 	} 	if (tag)
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
 argument|m->m_flags |= M_SKIP_FIREWALL;
 else|#
 directive|else
-argument|struct m_tag	*mtag;  		mtag = m_tag_get(PACKET_TAG_PF_GENERATED,
-literal|0
-argument|, M_NOWAIT); 		if (mtag == NULL) { 			m_freem(m); 			return; 		} 		m_tag_prepend(m, mtag);
+argument|pf_mtag->flags |= PF_TAG_GENERATED;
 endif|#
 directive|endif
-argument|}
+argument|pf_mtag->tag = rtag;  	if (r != NULL&& r->rtableid>=
+literal|0
+argument|) 		pf_mtag->rtableid = r->rtableid;
 ifdef|#
 directive|ifdef
 name|ALTQ
-argument|if (r != NULL&& r->qid) { 		struct m_tag	*mtag; 		struct altq_tag *atag;  		mtag = m_tag_get(PACKET_TAG_PF_QID, sizeof(*atag), M_NOWAIT); 		if (mtag != NULL) { 			atag = (struct altq_tag *)(mtag +
-literal|1
-argument|); 			atag->qid = r->qid;
+argument|if (r != NULL&& r->qid) { 		pf_mtag->qid = r->qid;
 comment|/* add hints for ecn */
-argument|atag->af = af; 			atag->hdr = mtod(m, struct ip *); 			m_tag_prepend(m, mtag); 		} 	}
+argument|pf_mtag->af = af; 		pf_mtag->hdr = mtod(m, struct ip *); 	}
 endif|#
 directive|endif
 comment|/* ALTQ */
@@ -7966,14 +8214,7 @@ argument|break;
 endif|#
 directive|endif
 comment|/* INET6 */
-argument|} }  void pf_send_icmp(struct mbuf *m, u_int8_t type, u_int8_t code, sa_family_t af,     struct pf_rule *r) {
-ifdef|#
-directive|ifdef
-name|ALTQ
-argument|struct m_tag	*mtag;
-endif|#
-directive|endif
-argument|struct mbuf	*m0;
+argument|} }  void pf_send_icmp(struct mbuf *m, u_int8_t type, u_int8_t code, sa_family_t af,     struct pf_rule *r) { 	struct pf_mtag	*pf_mtag; 	struct mbuf	*m0;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -7983,24 +8224,34 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|m0 = m_copypacket(m, M_DONTWAIT); 	if (m0 == NULL) 		return; 	m0->m_flags |= M_SKIP_FIREWALL;
+argument|m0 = m_copypacket(m, M_DONTWAIT); 	if (m0 == NULL) 		return;
 else|#
 directive|else
-argument|mtag = m_tag_get(PACKET_TAG_PF_GENERATED,
+argument|m0 = m_copy(m,
 literal|0
-argument|, M_NOWAIT); 	if (mtag == NULL) 		return; 	m0 = m_copy(m,
-literal|0
-argument|, M_COPYALL); 	if (m0 == NULL) { 		m_tag_free(mtag); 		return; 	} 	m_tag_prepend(m0, mtag);
+argument|, M_COPYALL);
 endif|#
 directive|endif
+argument|if ((pf_mtag = pf_get_mtag(m0)) == NULL) 		return;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+comment|/* XXX: revisit */
+argument|m0->m_flags |= M_SKIP_FIREWALL;
+else|#
+directive|else
+argument|pf_mtag->flags |= PF_TAG_GENERATED;
+endif|#
+directive|endif
+argument|if (r->rtableid>=
+literal|0
+argument|) 		pf_mtag->rtableid = r->rtableid;
 ifdef|#
 directive|ifdef
 name|ALTQ
-argument|if (r->qid) { 		struct altq_tag *atag;  		mtag = m_tag_get(PACKET_TAG_PF_QID, sizeof(*atag), M_NOWAIT); 		if (mtag != NULL) { 			atag = (struct altq_tag *)(mtag +
-literal|1
-argument|); 			atag->qid = r->qid;
+argument|if (r->qid) { 		pf_mtag->qid = r->qid;
 comment|/* add hints for ecn */
-argument|atag->af = af; 			atag->hdr = mtod(m0, struct ip *); 			m_tag_prepend(m0, mtag); 		} 	}
+argument|pf_mtag->af = af; 		pf_mtag->hdr = mtod(m0, struct ip *); 	}
 endif|#
 directive|endif
 comment|/* ALTQ */
@@ -8022,7 +8273,9 @@ else|#
 directive|else
 argument|icmp_error(m0, type, code,
 literal|0
-argument|, (void *)NULL);
+argument|,
+literal|0
+argument|);
 endif|#
 directive|endif
 argument|break;
@@ -8127,37 +8380,58 @@ argument|}  int pf_match_port(u_int8_t op, u_int16_t a1, u_int16_t a2, u_int16_t
 literal|0
 argument|); 	return (pf_match(op, a1, a2, u)); }  int pf_match_gid(u_int8_t op, gid_t a1, gid_t a2, gid_t g) { 	if (g == GID_MAX&& op != PF_OP_EQ&& op != PF_OP_NE) 		return (
 literal|0
-argument|); 	return (pf_match(op, a1, a2, g)); }  struct pf_tag * pf_get_tag(struct mbuf *m) { 	struct m_tag	*mtag;  	if ((mtag = m_tag_find(m, PACKET_TAG_PF_TAG, NULL)) != NULL) 		return ((struct pf_tag *)(mtag +
+argument|); 	return (pf_match(op, a1, a2, g)); }
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+argument|struct pf_mtag * pf_find_mtag(struct mbuf *m) { 	struct m_tag	*mtag;  	if ((mtag = m_tag_find(m, PACKET_TAG_PF, NULL)) == NULL) 		return (NULL);  	return ((struct pf_mtag *)(mtag +
 literal|1
-argument|)); 	else 		return (NULL); }  int pf_match_tag(struct mbuf *m, struct pf_rule *r, struct pf_tag **pftag, int *tag) { 	if (*tag == -
+argument|)); }  struct pf_mtag * pf_get_mtag(struct mbuf *m) { 	struct m_tag	*mtag;  	if ((mtag = m_tag_find(m, PACKET_TAG_PF, NULL)) == NULL) { 		mtag = m_tag_get(PACKET_TAG_PF, sizeof(struct pf_mtag), 		    M_NOWAIT); 		if (mtag == NULL) 			return (NULL); 		bzero(mtag +
 literal|1
-argument|) {
-comment|/* find mbuf tag */
-argument|*pftag = pf_get_tag(m); 		if (*pftag != NULL) 			*tag = (*pftag)->tag; 		else 			*tag =
+argument|, sizeof(struct pf_mtag)); 		m_tag_prepend(m, mtag); 	}  	return ((struct pf_mtag *)(mtag +
+literal|1
+argument|)); }
+endif|#
+directive|endif
+argument|int pf_match_tag(struct mbuf *m, struct pf_rule *r, struct pf_mtag *pf_mtag,     int *tag) { 	if (*tag == -
+literal|1
+argument|) 		*tag = pf_mtag->tag;  	return ((!r->match_tag_not&& r->match_tag == *tag) || 	    (r->match_tag_not&& r->match_tag != *tag)); }  int pf_tag_packet(struct mbuf *m, struct pf_mtag *pf_mtag, int tag, int rtableid) { 	if (tag<=
 literal|0
-argument|; 	}  	return ((!r->match_tag_not&& r->match_tag == *tag) || 	    (r->match_tag_not&& r->match_tag != *tag)); }  int pf_tag_packet(struct mbuf *m, struct pf_tag *pftag, int tag) { 	struct m_tag	*mtag;  	if (tag<=
+argument|&& rtableid<
 literal|0
 argument|) 		return (
 literal|0
-argument|);  	if (pftag == NULL) { 		mtag = m_tag_get(PACKET_TAG_PF_TAG, sizeof(*pftag), M_NOWAIT); 		if (mtag == NULL) 			return (
+argument|);  	if (pf_mtag == NULL) 		if ((pf_mtag = pf_get_mtag(m)) == NULL) 			return (
 literal|1
-argument|); 		((struct pf_tag *)(mtag +
-literal|1
-argument|))->tag = tag; 		m_tag_prepend(m, mtag); 	} else 		pftag->tag = tag;  	return (
+argument|); 	if (tag>
 literal|0
-argument|); }  static void pf_step_into_anchor(int *depth, struct pf_ruleset **rs, int n,     struct pf_rule **r, struct pf_rule **a) { 	struct pf_anchor_stackframe	*f;  	if (*depth>= sizeof(pf_anchor_stack) / 	    sizeof(pf_anchor_stack[
+argument|) 		pf_mtag->tag = tag; 	if (rtableid>=
+literal|0
+argument|) 		pf_mtag->rtableid = rtableid;  	return (
+literal|0
+argument|); }  static void pf_step_into_anchor(int *depth, struct pf_ruleset **rs, int n,     struct pf_rule **r, struct pf_rule **a,  int *match) { 	struct pf_anchor_stackframe	*f;  	(*r)->anchor->match =
+literal|0
+argument|; 	if (match) 		*match =
+literal|0
+argument|; 	if (*depth>= sizeof(pf_anchor_stack) / 	    sizeof(pf_anchor_stack[
 literal|0
 argument|])) { 		printf(
 literal|"pf_step_into_anchor: stack overflow\n"
 argument|); 		*r = TAILQ_NEXT(*r, entries); 		return; 	} else if (*depth ==
 literal|0
-argument|&& a != NULL) 		*a = *r; 	f = pf_anchor_stack + (*depth)++; 	f->rs = *rs; 	f->r = *r; 	if ((*r)->anchor_wildcard) { 		f->parent =&(*r)->anchor->children; 		if ((f->child = RB_MIN(pf_anchor_node, f->parent)) == 		    NULL) { 			*r = NULL; 			return; 		} 		*rs =&f->child->ruleset; 	} else { 		f->parent = NULL; 		f->child = NULL; 		*rs =&(*r)->anchor->ruleset; 	} 	*r = TAILQ_FIRST((*rs)->rules[n].active.ptr); }  static void pf_step_out_of_anchor(int *depth, struct pf_ruleset **rs, int n,     struct pf_rule **r, struct pf_rule **a) { 	struct pf_anchor_stackframe	*f;  	do { 		if (*depth<=
+argument|&& a != NULL) 		*a = *r; 	f = pf_anchor_stack + (*depth)++; 	f->rs = *rs; 	f->r = *r; 	if ((*r)->anchor_wildcard) { 		f->parent =&(*r)->anchor->children; 		if ((f->child = RB_MIN(pf_anchor_node, f->parent)) == 		    NULL) { 			*r = NULL; 			return; 		} 		*rs =&f->child->ruleset; 	} else { 		f->parent = NULL; 		f->child = NULL; 		*rs =&(*r)->anchor->ruleset; 	} 	*r = TAILQ_FIRST((*rs)->rules[n].active.ptr); }  int pf_step_out_of_anchor(int *depth, struct pf_ruleset **rs, int n,     struct pf_rule **r, struct pf_rule **a, int *match) { 	struct pf_anchor_stackframe	*f; 	int quick =
+literal|0
+argument|;  	do { 		if (*depth<=
 literal|0
 argument|) 			break; 		f = pf_anchor_stack + *depth -
 literal|1
-argument|; 		if (f->parent != NULL&& f->child != NULL) { 			f->child = RB_NEXT(pf_anchor_node, f->parent, f->child); 			if (f->child != NULL) { 				*rs =&f->child->ruleset; 				*r = TAILQ_FIRST((*rs)->rules[n].active.ptr); 				if (*r == NULL) 					continue; 				else 					break; 			} 		} 		(*depth)--; 		if (*depth ==
+argument|; 		if (f->parent != NULL&& f->child != NULL) { 			if (f->child->match || 			    (match != NULL&& *match)) { 				f->r->anchor->match =
+literal|1
+argument|; 				*match =
 literal|0
-argument|&& a != NULL) 			*a = NULL; 		*rs = f->rs; 		*r = TAILQ_NEXT(f->r, entries); 	} while (*r == NULL); }
+argument|; 			} 			f->child = RB_NEXT(pf_anchor_node, f->parent, f->child); 			if (f->child != NULL) { 				*rs =&f->child->ruleset; 				*r = TAILQ_FIRST((*rs)->rules[n].active.ptr); 				if (*r == NULL) 					continue; 				else 					break; 			} 		} 		(*depth)--; 		if (*depth ==
+literal|0
+argument|&& a != NULL) 			*a = NULL; 		*rs = f->rs; 		if (f->r->anchor->match || (match  != NULL&& *match)) 			quick = f->r->quick; 		*r = TAILQ_NEXT(f->r, entries); 	} while (*r == NULL);  	return (quick); }
 ifdef|#
 directive|ifdef
 name|INET6
@@ -8473,7 +8747,7 @@ argument|, af); 		printf(
 literal|"\n"
 argument|); 	}  	return (
 literal|0
-argument|); }  int pf_get_sport(sa_family_t af, u_int8_t proto, struct pf_rule *r,     struct pf_addr *saddr, struct pf_addr *daddr, u_int16_t dport,     struct pf_addr *naddr, u_int16_t *nport, u_int16_t low, u_int16_t high,     struct pf_src_node **sn) { 	struct pf_state		key; 	struct pf_addr		init_addr; 	u_int16_t		cut;  	bzero(&init_addr, sizeof(init_addr)); 	if (pf_map_addr(af, r, saddr, naddr,&init_addr, sn)) 		return (
+argument|); }  int pf_get_sport(sa_family_t af, u_int8_t proto, struct pf_rule *r,     struct pf_addr *saddr, struct pf_addr *daddr, u_int16_t dport,     struct pf_addr *naddr, u_int16_t *nport, u_int16_t low, u_int16_t high,     struct pf_src_node **sn) { 	struct pf_state_cmp	key; 	struct pf_addr		init_addr; 	u_int16_t		cut;  	bzero(&init_addr, sizeof(init_addr)); 	if (pf_map_addr(af, r, saddr, naddr,&init_addr, sn)) 		return (
 literal|1
 argument|);  	if (proto == IPPROTO_ICMP) { 		low =
 literal|1
@@ -8511,21 +8785,25 @@ argument|); 		} 	} while (! PF_AEQ(&init_addr, naddr, af) );  	return (
 literal|1
 argument|);
 comment|/* none available */
-argument|}  struct pf_rule * pf_match_translation(struct pf_pdesc *pd, struct mbuf *m, int off,     int direction, struct pfi_kif *kif, struct pf_addr *saddr, u_int16_t sport,     struct pf_addr *daddr, u_int16_t dport, int rs_num) { 	struct pf_rule		*r, *rm = NULL; 	struct pf_ruleset	*ruleset = NULL; 	struct pf_tag		*pftag = NULL; 	int			 tag = -
+argument|}  struct pf_rule * pf_match_translation(struct pf_pdesc *pd, struct mbuf *m, int off,     int direction, struct pfi_kif *kif, struct pf_addr *saddr, u_int16_t sport,     struct pf_addr *daddr, u_int16_t dport, int rs_num) { 	struct pf_rule		*r, *rm = NULL; 	struct pf_ruleset	*ruleset = NULL; 	int			 tag = -
+literal|1
+argument|; 	int			 rtableid = -
 literal|1
 argument|; 	int			 asd =
 literal|0
-argument|;  	r = TAILQ_FIRST(pf_main_ruleset.rules[rs_num].active.ptr); 	while (r&& rm == NULL) { 		struct pf_rule_addr	*src = NULL, *dst = NULL; 		struct pf_addr_wrap	*xdst = NULL;  		if (r->action == PF_BINAT&& direction == PF_IN) { 			src =&r->dst; 			if (r->rpool.cur != NULL) 				xdst =&r->rpool.cur->addr; 		} else { 			src =&r->src; 			dst =&r->dst; 		}  		r->evaluations++; 		if (r->kif != NULL&& 		    (r->kif != kif&& r->kif != kif->pfik_parent) == !r->ifnot) 			r = r->skip[PF_SKIP_IFP].ptr; 		else if (r->direction&& r->direction != direction) 			r = r->skip[PF_SKIP_DIR].ptr; 		else if (r->af&& r->af != pd->af) 			r = r->skip[PF_SKIP_AF].ptr; 		else if (r->proto&& r->proto != pd->proto) 			r = r->skip[PF_SKIP_PROTO].ptr; 		else if (PF_MISMATCHAW(&src->addr, saddr, pd->af, src->neg)) 			r = r->skip[src ==&r->src ? PF_SKIP_SRC_ADDR : 			    PF_SKIP_DST_ADDR].ptr; 		else if (src->port_op&& !pf_match_port(src->port_op, 		    src->port[
+argument|;  	r = TAILQ_FIRST(pf_main_ruleset.rules[rs_num].active.ptr); 	while (r&& rm == NULL) { 		struct pf_rule_addr	*src = NULL, *dst = NULL; 		struct pf_addr_wrap	*xdst = NULL;  		if (r->action == PF_BINAT&& direction == PF_IN) { 			src =&r->dst; 			if (r->rpool.cur != NULL) 				xdst =&r->rpool.cur->addr; 		} else { 			src =&r->src; 			dst =&r->dst; 		}  		r->evaluations++; 		if (pfi_kif_match(r->kif, kif) == r->ifnot) 			r = r->skip[PF_SKIP_IFP].ptr; 		else if (r->direction&& r->direction != direction) 			r = r->skip[PF_SKIP_DIR].ptr; 		else if (r->af&& r->af != pd->af) 			r = r->skip[PF_SKIP_AF].ptr; 		else if (r->proto&& r->proto != pd->proto) 			r = r->skip[PF_SKIP_PROTO].ptr; 		else if (PF_MISMATCHAW(&src->addr, saddr, pd->af, 		    src->neg, kif)) 			r = r->skip[src ==&r->src ? PF_SKIP_SRC_ADDR : 			    PF_SKIP_DST_ADDR].ptr; 		else if (src->port_op&& !pf_match_port(src->port_op, 		    src->port[
 literal|0
 argument|], src->port[
 literal|1
-argument|], sport)) 			r = r->skip[src ==&r->src ? PF_SKIP_SRC_PORT : 			    PF_SKIP_DST_PORT].ptr; 		else if (dst != NULL&& 		    PF_MISMATCHAW(&dst->addr, daddr, pd->af, dst->neg)) 			r = r->skip[PF_SKIP_DST_ADDR].ptr; 		else if (xdst != NULL&& PF_MISMATCHAW(xdst, daddr, pd->af,
+argument|], sport)) 			r = r->skip[src ==&r->src ? PF_SKIP_SRC_PORT : 			    PF_SKIP_DST_PORT].ptr; 		else if (dst != NULL&& 		    PF_MISMATCHAW(&dst->addr, daddr, pd->af, dst->neg, NULL)) 			r = r->skip[PF_SKIP_DST_ADDR].ptr; 		else if (xdst != NULL&& PF_MISMATCHAW(xdst, daddr, pd->af,
 literal|0
-argument|)) 			r = TAILQ_NEXT(r, entries); 		else if (dst != NULL&& dst->port_op&& 		    !pf_match_port(dst->port_op, dst->port[
+argument|, NULL)) 			r = TAILQ_NEXT(r, entries); 		else if (dst != NULL&& dst->port_op&& 		    !pf_match_port(dst->port_op, dst->port[
 literal|0
 argument|], 		    dst->port[
 literal|1
-argument|], dport)) 			r = r->skip[PF_SKIP_DST_PORT].ptr; 		else if (r->match_tag&& !pf_match_tag(m, r,&pftag,&tag)) 			r = TAILQ_NEXT(r, entries); 		else if (r->os_fingerprint != PF_OSFP_ANY&& (pd->proto != 		    IPPROTO_TCP || !pf_osfp_match(pf_osfp_fingerprint(pd, m, 		    off, pd->hdr.tcp), r->os_fingerprint))) 			r = TAILQ_NEXT(r, entries); 		else { 			if (r->tag) 				tag = r->tag; 			if (r->anchor == NULL) { 				rm = r; 			} else 				pf_step_into_anchor(&asd,&ruleset, rs_num,&r, NULL); 		} 		if (r == NULL) 			pf_step_out_of_anchor(&asd,&ruleset, rs_num,&r, NULL); 	} 	if (pf_tag_packet(m, pftag, tag)) 		return (NULL); 	if (rm != NULL&& (rm->action == PF_NONAT || 	    rm->action == PF_NORDR || rm->action == PF_NOBINAT)) 		return (NULL); 	return (rm); }  struct pf_rule * pf_get_translation(struct pf_pdesc *pd, struct mbuf *m, int off, int direction,     struct pfi_kif *kif, struct pf_src_node **sn,     struct pf_addr *saddr, u_int16_t sport,     struct pf_addr *daddr, u_int16_t dport,     struct pf_addr *naddr, u_int16_t *nport) { 	struct pf_rule	*r = NULL;  	if (direction == PF_OUT) { 		r = pf_match_translation(pd, m, off, direction, kif, saddr, 		    sport, daddr, dport, PF_RULESET_BINAT); 		if (r == NULL) 			r = pf_match_translation(pd, m, off, direction, kif, 			    saddr, sport, daddr, dport, PF_RULESET_NAT); 	} else { 		r = pf_match_translation(pd, m, off, direction, kif, saddr, 		    sport, daddr, dport, PF_RULESET_RDR); 		if (r == NULL) 			r = pf_match_translation(pd, m, off, direction, kif, 			    saddr, sport, daddr, dport, PF_RULESET_BINAT); 	}  	if (r != NULL) { 		switch (r->action) { 		case PF_NONAT: 		case PF_NOBINAT: 		case PF_NORDR: 			return (NULL); 		case PF_NAT: 			if (pf_get_sport(pd->af, pd->proto, r, saddr, 			    daddr, dport, naddr, nport, r->rpool.proxy_port[
+argument|], dport)) 			r = r->skip[PF_SKIP_DST_PORT].ptr; 		else if (r->match_tag&& !pf_match_tag(m, r, pd->pf_mtag,&tag)) 			r = TAILQ_NEXT(r, entries); 		else if (r->os_fingerprint != PF_OSFP_ANY&& (pd->proto != 		    IPPROTO_TCP || !pf_osfp_match(pf_osfp_fingerprint(pd, m, 		    off, pd->hdr.tcp), r->os_fingerprint))) 			r = TAILQ_NEXT(r, entries); 		else { 			if (r->tag) 				tag = r->tag; 			if (r->rtableid>=
+literal|0
+argument|) 				rtableid = r->rtableid; 			if (r->anchor == NULL) { 				rm = r; 			} else 				pf_step_into_anchor(&asd,&ruleset, rs_num,&r, NULL, NULL); 		} 		if (r == NULL) 			pf_step_out_of_anchor(&asd,&ruleset, rs_num,&r, 			    NULL, NULL); 	} 	if (pf_tag_packet(m, pd->pf_mtag, tag, rtableid)) 		return (NULL); 	if (rm != NULL&& (rm->action == PF_NONAT || 	    rm->action == PF_NORDR || rm->action == PF_NOBINAT)) 		return (NULL); 	return (rm); }  struct pf_rule * pf_get_translation(struct pf_pdesc *pd, struct mbuf *m, int off, int direction,     struct pfi_kif *kif, struct pf_src_node **sn,     struct pf_addr *saddr, u_int16_t sport,     struct pf_addr *daddr, u_int16_t dport,     struct pf_addr *naddr, u_int16_t *nport) { 	struct pf_rule	*r = NULL;  	if (direction == PF_OUT) { 		r = pf_match_translation(pd, m, off, direction, kif, saddr, 		    sport, daddr, dport, PF_RULESET_BINAT); 		if (r == NULL) 			r = pf_match_translation(pd, m, off, direction, kif, 			    saddr, sport, daddr, dport, PF_RULESET_NAT); 	} else { 		r = pf_match_translation(pd, m, off, direction, kif, saddr, 		    sport, daddr, dport, PF_RULESET_RDR); 		if (r == NULL) 			r = pf_match_translation(pd, m, off, direction, kif, 			    saddr, sport, daddr, dport, PF_RULESET_BINAT); 	}  	if (r != NULL) { 		switch (r->action) { 		case PF_NONAT: 		case PF_NOBINAT: 		case PF_NORDR: 			return (NULL); 		case PF_NAT: 			if (pf_get_sport(pd->af, pd->proto, r, saddr, 			    daddr, dport, naddr, nport, r->rpool.proxy_port[
 literal|0
 argument|], 			    r->rpool.proxy_port[
 literal|1
@@ -8600,10 +8878,10 @@ argument|]); 			break; 		} 		default: 			return (NULL); 		} 	}  	return (r); }  
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|pf_socket_lookup(uid_t *uid, gid_t *gid, int direction, struct pf_pdesc *pd,     struct inpcb *inp_arg)
+argument|pf_socket_lookup(int direction, struct pf_pdesc *pd, struct inpcb *inp_arg)
 else|#
 directive|else
-argument|pf_socket_lookup(uid_t *uid, gid_t *gid, int direction, struct pf_pdesc *pd)
+argument|pf_socket_lookup(int direction, struct pf_pdesc *pd)
 endif|#
 directive|endif
 argument|{ 	struct pf_addr		*saddr, *daddr; 	u_int16_t		 sport, dport;
@@ -8616,20 +8894,25 @@ directive|else
 argument|struct inpcbtable	*tb;
 endif|#
 directive|endif
-argument|struct inpcb		*inp;  	*uid = UID_MAX; 	*gid = GID_MAX;
+argument|struct inpcb		*inp;  	if (pd == NULL) 		return (-
+literal|1
+argument|); 	pd->lookup.uid = UID_MAX; 	pd->lookup.gid = GID_MAX; 	pd->lookup.pid = NO_PID;
+comment|/* XXX: revisit */
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|if (inp_arg != NULL) { 		INP_LOCK_ASSERT(inp_arg); 		if (inp_arg->inp_socket) { 			*uid = inp_arg->inp_socket->so_cred->cr_uid; 			*gid = inp_arg->inp_socket->so_cred->cr_groups[
+argument|if (inp_arg != NULL) { 		INP_LOCK_ASSERT(inp_arg); 		if (inp_arg->inp_socket) { 			pd->lookup.uid = inp_arg->inp_socket->so_cred->cr_uid; 			pd->lookup.gid = 			    inp_arg->inp_socket->so_cred->cr_groups[
 literal|0
 argument|]; 			return (
 literal|1
-argument|); 		} else 			return (
-literal|0
+argument|); 		} else 			return (-
+literal|1
 argument|); 	}
 endif|#
 directive|endif
-argument|switch (pd->proto) { 	case IPPROTO_TCP: 		sport = pd->hdr.tcp->th_sport; 		dport = pd->hdr.tcp->th_dport;
+argument|switch (pd->proto) { 	case IPPROTO_TCP: 		if (pd->hdr.tcp == NULL) 			return (-
+literal|1
+argument|); 		sport = pd->hdr.tcp->th_sport; 		dport = pd->hdr.tcp->th_dport;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -8639,7 +8922,9 @@ directive|else
 argument|tb =&tcbtable;
 endif|#
 directive|endif
-argument|break; 	case IPPROTO_UDP: 		sport = pd->hdr.udp->uh_sport; 		dport = pd->hdr.udp->uh_dport;
+argument|break; 	case IPPROTO_UDP: 		if (pd->hdr.udp == NULL) 			return (-
+literal|1
+argument|); 		sport = pd->hdr.udp->uh_sport; 		dport = pd->hdr.udp->uh_dport;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -8649,8 +8934,8 @@ directive|else
 argument|tb =&udbtable;
 endif|#
 directive|endif
-argument|break; 	default: 		return (
-literal|0
+argument|break; 	default: 		return (-
+literal|1
 argument|); 	} 	if (direction == PF_IN) { 		saddr = pd->src; 		daddr = pd->dst; 	} else { 		u_int16_t	p;  		p = sport; 		sport = dport; 		dport = p; 		saddr = pd->dst; 		daddr = pd->src; 	} 	switch (pd->af) {
 ifdef|#
 directive|ifdef
@@ -8663,15 +8948,15 @@ argument|INP_INFO_RLOCK(pi);
 comment|/* XXX LOR */
 argument|inp = in_pcblookup_hash(pi, saddr->v4, sport, daddr->v4, 			dport,
 literal|0
-argument|, NULL); 		if (inp == NULL) { 			inp = in_pcblookup_hash(pi, saddr->v4, sport, 			   daddr->v4, dport, INPLOOKUP_WILDCARD, NULL); 			if(inp == NULL) { 				INP_INFO_RUNLOCK(pi); 				return (
-literal|0
+argument|, NULL); 		if (inp == NULL) { 			inp = in_pcblookup_hash(pi, saddr->v4, sport, 			   daddr->v4, dport, INPLOOKUP_WILDCARD, NULL); 			if(inp == NULL) { 				INP_INFO_RUNLOCK(pi); 				return (-
+literal|1
 argument|); 			} 		}
 else|#
 directive|else
 argument|inp = in_pcbhashlookup(tb, saddr->v4, sport, daddr->v4, dport); 		if (inp == NULL) { 			inp = in_pcblookup_listen(tb, daddr->v4, dport,
 literal|0
-argument|); 			if (inp == NULL) 				return (
-literal|0
+argument|); 			if (inp == NULL) 				return (-
+literal|1
 argument|); 		}
 endif|#
 directive|endif
@@ -8688,15 +8973,15 @@ directive|ifdef
 name|__FreeBSD__
 argument|INP_INFO_RLOCK(pi); 		inp = in6_pcblookup_hash(pi,&saddr->v6, sport,&daddr->v6, dport,
 literal|0
-argument|, NULL); 		if (inp == NULL) { 			inp = in6_pcblookup_hash(pi,&saddr->v6, sport,&daddr->v6, dport, INPLOOKUP_WILDCARD, NULL); 			if (inp == NULL) { 				INP_INFO_RUNLOCK(pi); 				return (
-literal|0
+argument|, NULL); 		if (inp == NULL) { 			inp = in6_pcblookup_hash(pi,&saddr->v6, sport,&daddr->v6, dport, INPLOOKUP_WILDCARD, NULL); 			if (inp == NULL) { 				INP_INFO_RUNLOCK(pi); 				return (-
+literal|1
 argument|); 			} 		}
 else|#
 directive|else
 argument|inp = in6_pcbhashlookup(tb,&saddr->v6, sport,&daddr->v6, 		    dport); 		if (inp == NULL) { 			inp = in6_pcblookup_listen(tb,&daddr->v6, dport,
 literal|0
-argument|); 			if (inp == NULL) 				return (
-literal|0
+argument|); 			if (inp == NULL) 				return (-
+literal|1
 argument|); 		}
 endif|#
 directive|endif
@@ -8704,20 +8989,20 @@ argument|break;
 endif|#
 directive|endif
 comment|/* INET6 */
-argument|default: 		return (
-literal|0
+argument|default: 		return (-
+literal|1
 argument|); 	}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|INP_LOCK(inp); 	if ((inp->inp_socket == NULL) || (inp->inp_socket->so_cred == NULL)) { 		INP_UNLOCK(inp); 		INP_INFO_RUNLOCK(pi); 		return (
-literal|0
-argument|); 	} 	*uid = inp->inp_socket->so_cred->cr_uid; 	*gid = inp->inp_socket->so_cred->cr_groups[
+argument|INP_LOCK(inp); 	if ((inp->inp_socket == NULL) || (inp->inp_socket->so_cred == NULL)) { 		INP_UNLOCK(inp); 		INP_INFO_RUNLOCK(pi); 		return (-
+literal|1
+argument|); 	} 	pd->lookup.uid = inp->inp_socket->so_cred->cr_uid; 	pd->lookup.gid = inp->inp_socket->so_cred->cr_groups[
 literal|0
 argument|]; 	INP_UNLOCK(inp); 	INP_INFO_RUNLOCK(pi);
 else|#
 directive|else
-argument|*uid = inp->inp_socket->so_euid; 	*gid = inp->inp_socket->so_egid;
+argument|pd->lookup.uid = inp->inp_socket->so_euid; 	pd->lookup.gid = inp->inp_socket->so_egid; 	pd->lookup.pid = inp->inp_socket->so_cpid;
 endif|#
 directive|endif
 argument|return (
@@ -8877,29 +9162,26 @@ argument|*daddr = pd->dst; 	struct tcphdr		*th = pd->hdr.tcp; 	u_int16_t		 bport
 argument_list|,
 argument|nport =
 literal|0
-argument|; 	sa_family_t		 af = pd->af; 	int			 lookup = -
-literal|1
-argument|; 	uid_t			 uid; 	gid_t			 gid; 	struct pf_rule		*r
+argument|; 	sa_family_t		 af = pd->af; 	struct pf_rule		*r
 argument_list|,
 argument|*a = NULL; 	struct pf_ruleset	*ruleset = NULL; 	struct pf_src_node	*nsn = NULL; 	u_short			 reason; 	int			 rewrite =
 literal|0
-argument|; 	struct pf_tag		*pftag = NULL; 	int			 tag = -
+argument|; 	int			 tag = -
+literal|1
+argument_list|,
+argument|rtableid = -
 literal|1
 argument|; 	u_int16_t		 mss = tcp_mssdflt; 	int			 asd =
 literal|0
+argument|; 	int			 match =
+literal|0
 argument|;  	if (pf_check_congestion(ifq)) { 		REASON_SET(&reason, PFRES_CONGEST); 		return (PF_DROP); 	}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|PF_MPSAFE_UGID
-argument_list|)
-argument|PF_UNLOCK(); 	lookup = pf_socket_lookup(&uid,&gid, direction, pd, inp); 	PF_LOCK();
+argument|if (inp != NULL) 		pd->lookup.done = pf_socket_lookup(direction, pd, inp); 	else if (debug_pfugidhack) { 		PF_UNLOCK(); 		DPFPRINTF(PF_DEBUG_MISC, (
+literal|"pf: unlocked lookup\n"
+argument|)); 		pd->lookup.done = pf_socket_lookup(direction, pd, inp); 		PF_LOCK(); 	}
 endif|#
 directive|endif
 argument|r = TAILQ_FIRST(pf_main_ruleset.rules[PF_RULESET_FILTER].active.ptr);  	if (direction == PF_OUT) { 		bport = nport = th->th_sport;
@@ -8910,26 +9192,24 @@ argument|, af); 			rewrite++; 			if (nr->natpass) 				r = NULL; 			pd->nat_rule 
 comment|/* check incoming packet for BINAT/RDR */
 argument|if ((nr = pf_get_translation(pd, m, off, PF_IN, kif,&nsn, 		    saddr, th->th_sport, daddr, th->th_dport,&pd->naddr,&nport)) != NULL) { 			PF_ACPY(&pd->baddr, daddr, af); 			pf_change_ap(daddr,&th->th_dport, pd->ip_sum,&th->th_sum,&pd->naddr, nport,
 literal|0
-argument|, af); 			rewrite++; 			if (nr->natpass) 				r = NULL; 			pd->nat_rule = nr; 		} 	}  	while (r != NULL) { 		r->evaluations++; 		if (r->kif != NULL&& 		    (r->kif != kif&& r->kif != kif->pfik_parent) == !r->ifnot) 			r = r->skip[PF_SKIP_IFP].ptr; 		else if (r->direction&& r->direction != direction) 			r = r->skip[PF_SKIP_DIR].ptr; 		else if (r->af&& r->af != af) 			r = r->skip[PF_SKIP_AF].ptr; 		else if (r->proto&& r->proto != IPPROTO_TCP) 			r = r->skip[PF_SKIP_PROTO].ptr; 		else if (PF_MISMATCHAW(&r->src.addr, saddr, af, r->src.neg)) 			r = r->skip[PF_SKIP_SRC_ADDR].ptr; 		else if (r->src.port_op&& !pf_match_port(r->src.port_op, 		    r->src.port[
+argument|, af); 			rewrite++; 			if (nr->natpass) 				r = NULL; 			pd->nat_rule = nr; 		} 	}  	while (r != NULL) { 		r->evaluations++; 		if (pfi_kif_match(r->kif, kif) == r->ifnot) 			r = r->skip[PF_SKIP_IFP].ptr; 		else if (r->direction&& r->direction != direction) 			r = r->skip[PF_SKIP_DIR].ptr; 		else if (r->af&& r->af != af) 			r = r->skip[PF_SKIP_AF].ptr; 		else if (r->proto&& r->proto != IPPROTO_TCP) 			r = r->skip[PF_SKIP_PROTO].ptr; 		else if (PF_MISMATCHAW(&r->src.addr, saddr, af, 		    r->src.neg, kif)) 			r = r->skip[PF_SKIP_SRC_ADDR].ptr; 		else if (r->src.port_op&& !pf_match_port(r->src.port_op, 		    r->src.port[
 literal|0
 argument|], r->src.port[
 literal|1
-argument|], th->th_sport)) 			r = r->skip[PF_SKIP_SRC_PORT].ptr; 		else if (PF_MISMATCHAW(&r->dst.addr, daddr, af, r->dst.neg)) 			r = r->skip[PF_SKIP_DST_ADDR].ptr; 		else if (r->dst.port_op&& !pf_match_port(r->dst.port_op, 		    r->dst.port[
+argument|], th->th_sport)) 			r = r->skip[PF_SKIP_SRC_PORT].ptr; 		else if (PF_MISMATCHAW(&r->dst.addr, daddr, af, 		    r->dst.neg, NULL)) 			r = r->skip[PF_SKIP_DST_ADDR].ptr; 		else if (r->dst.port_op&& !pf_match_port(r->dst.port_op, 		    r->dst.port[
 literal|0
 argument|], r->dst.port[
 literal|1
-argument|], th->th_dport)) 			r = r->skip[PF_SKIP_DST_PORT].ptr; 		else if (r->tos&& !(r->tos& pd->tos)) 			r = TAILQ_NEXT(r, entries); 		else if (r->rule_flag& PFRULE_FRAGMENT) 			r = TAILQ_NEXT(r, entries); 		else if ((r->flagset& th->th_flags) != r->flags) 			r = TAILQ_NEXT(r, entries); 		else if (r->uid.op&& (lookup != -
-literal|1
-argument||| (lookup =
+argument|], th->th_dport)) 			r = r->skip[PF_SKIP_DST_PORT].ptr; 		else if (r->tos&& !(r->tos == pd->tos)) 			r = TAILQ_NEXT(r, entries); 		else if (r->rule_flag& PFRULE_FRAGMENT) 			r = TAILQ_NEXT(r, entries); 		else if ((r->flagset& th->th_flags) != r->flags) 			r = TAILQ_NEXT(r, entries); 		else if (r->uid.op&& (pd->lookup.done || (pd->lookup.done =
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|pf_socket_lookup(&uid,&gid, direction, pd, inp),
+argument|pf_socket_lookup(direction, pd, inp),
 literal|1
 argument|))&&
 else|#
 directive|else
-argument|pf_socket_lookup(&uid,&gid, direction, pd),
+argument|pf_socket_lookup(direction, pd),
 literal|1
 argument|)
 argument_list|)
@@ -8963,21 +9243,22 @@ index|[
 literal|1
 index|]
 argument_list|,
+name|pd
+operator|->
+name|lookup
+operator|.
 name|uid
 argument_list|)
 block|)
-function|r
-init|=
+name|r
+operator|=
 name|TAILQ_NEXT
 argument_list|(
 name|r
 argument_list|,
 name|entries
 argument_list|)
-function|;
-end_function
-
-begin_elseif
+expr_stmt|;
 elseif|else
 if|if
 condition|(
@@ -8988,25 +9269,24 @@ operator|.
 name|op
 operator|&&
 operator|(
+name|pd
+operator|->
 name|lookup
-operator|!=
-operator|-
-literal|1
+operator|.
+name|done
 operator|||
 operator|(
+name|pd
+operator|->
 name|lookup
+operator|.
+name|done
 operator|=
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
 name|pf_socket_lookup
 argument_list|(
-operator|&
-name|uid
-argument_list|,
-operator|&
-name|gid
-argument_list|,
 name|direction
 argument_list|,
 name|pd
@@ -9022,12 +9302,6 @@ else|#
 directive|else
 name|pf_socket_lookup
 argument_list|(
-operator|&
-name|uid
-argument_list|,
-operator|&
-name|gid
-argument_list|,
 name|direction
 argument_list|,
 name|pd
@@ -9035,22 +9309,18 @@ argument_list|)
 operator|,
 literal|1
 condition|)
-end_elseif
-
-begin_expr_stmt
-unit|)
-operator|&&
+block|)
+function|&&
 endif|#
 directive|endif
-operator|!
-name|pf_match_gid
-argument_list|(
+function|!pf_match_gid
+parameter_list|(
 name|r
 operator|->
 name|gid
 operator|.
 name|op
-argument_list|,
+parameter_list|,
 name|r
 operator|->
 name|gid
@@ -9059,7 +9329,7 @@ name|gid
 index|[
 literal|0
 index|]
-argument_list|,
+parameter_list|,
 name|r
 operator|->
 name|gid
@@ -9068,10 +9338,14 @@ name|gid
 index|[
 literal|1
 index|]
-argument_list|,
+parameter_list|,
+name|pd
+operator|->
+name|lookup
+operator|.
 name|gid
-argument_list|)
-end_expr_stmt
+parameter_list|)
+end_function
 
 begin_expr_stmt
 unit|)
@@ -9127,8 +9401,9 @@ name|m
 argument_list|,
 name|r
 argument_list|,
-operator|&
-name|pftag
+name|pd
+operator|->
+name|pf_mtag
 argument_list|,
 operator|&
 name|tag
@@ -9204,11 +9479,29 @@ if|if
 condition|(
 name|r
 operator|->
+name|rtableid
+operator|>=
+literal|0
+condition|)
+name|rtableid
+operator|=
+name|r
+operator|->
+name|rtableid
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|->
 name|anchor
 operator|==
 name|NULL
 condition|)
 block|{
+name|match
+operator|=
+literal|1
+expr_stmt|;
 operator|*
 name|rm
 operator|=
@@ -9260,6 +9553,9 @@ name|r
 argument_list|,
 operator|&
 name|a
+argument_list|,
+operator|&
+name|match
 argument_list|)
 expr_stmt|;
 block|}
@@ -9271,7 +9567,7 @@ condition|(
 name|r
 operator|==
 name|NULL
-condition|)
+operator|&&
 name|pf_step_out_of_anchor
 argument_list|(
 operator|&
@@ -9287,8 +9583,12 @@ name|r
 argument_list|,
 operator|&
 name|a
+argument_list|,
+operator|&
+name|match
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 end_if
 
 begin_expr_stmt
@@ -9332,12 +9632,29 @@ condition|(
 name|r
 operator|->
 name|log
+operator|||
+operator|(
+name|nr
+operator|!=
+name|NULL
+operator|&&
+name|nr
+operator|->
+name|natpass
+operator|&&
+name|nr
+operator|->
+name|log
+operator|)
 condition|)
 block|{
 if|if
 condition|(
 name|rewrite
 condition|)
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|m_copyback
 argument_list|(
 name|m
@@ -9356,6 +9673,25 @@ operator|)
 name|th
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|m_copyback
+argument_list|(
+name|m
+argument_list|,
+name|off
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|th
+argument_list|)
+argument_list|,
+name|th
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|PFLOG_PACKET
 argument_list|(
 name|kif
@@ -9371,10 +9707,18 @@ argument_list|,
 name|reason
 argument_list|,
 name|r
+operator|->
+name|log
+condition|?
+name|r
+else|:
+name|nr
 argument_list|,
 name|a
 argument_list|,
 name|ruleset
+argument_list|,
+name|pd
 argument_list|)
 expr_stmt|;
 block|}
@@ -9594,6 +9938,8 @@ argument|,
 literal|0
 argument|, 			    r->return_ttl,
 literal|1
+argument|,
+literal|0
 argument|, pd->eh, kif->pfik_ifp); 		} else if ((af == AF_INET)&& r->return_icmp) 			pf_send_icmp(m, r->return_icmp>>
 literal|8
 argument|, 			    r->return_icmp&
@@ -9602,14 +9948,14 @@ argument|, af, r); 		else if ((af == AF_INET6)&& r->return_icmp6) 			pf_send_icm
 literal|8
 argument|, 			    r->return_icmp6&
 literal|255
-argument|, af, r); 	}  	if (r->action == PF_DROP) 		return (PF_DROP);  	if (pf_tag_packet(m, pftag, tag)) { 		REASON_SET(&reason, PFRES_MEMORY); 		return (PF_DROP); 	}  	if (r->keep_state || nr != NULL || 	    (pd->flags& PFDESC_TCP_NORM)) {
+argument|, af, r); 	}  	if (r->action == PF_DROP) 		return (PF_DROP);  	if (pf_tag_packet(m, pd->pf_mtag, tag, rtableid)) { 		REASON_SET(&reason, PFRES_MEMORY); 		return (PF_DROP); 	}  	if (r->keep_state || nr != NULL || 	    (pd->flags& PFDESC_TCP_NORM)) {
 comment|/* create new state */
 argument|u_int16_t	 len; 		struct pf_state	*s = NULL; 		struct pf_src_node *sn = NULL;  		len = pd->tot_len - off - (th->th_off<<
 literal|2
 argument|);
 comment|/* check maximums */
 argument|if (r->max_states&& (r->states>= r->max_states)) { 			pf_status.lcounters[LCNT_STATES]++; 			REASON_SET(&reason, PFRES_MAXSTATES); 			goto cleanup; 		}
-comment|/* src node for flter rule */
+comment|/* src node for filter rule */
 argument|if ((r->rule_flag& PFRULE_SRCTRACK || 		    r->rpool.opts& PF_POOL_STICKYADDR)&& 		    pf_insert_src_node(&sn, r, saddr, af) !=
 literal|0
 argument|) { 			REASON_SET(&reason, PFRES_SRCLIMIT); 			goto cleanup; 		}
@@ -9626,17 +9972,26 @@ argument|) { 				RB_REMOVE(pf_src_tree,&tree_src_tracking, sn); 				pf_status.sc
 literal|0
 argument|&& 			    nsn->expire ==
 literal|0
-argument|) { 				RB_REMOVE(pf_src_tree,&tree_src_tracking, nsn); 				pf_status.scounters[SCNT_SRC_NODE_REMOVALS]++; 				pf_status.src_nodes--; 				pool_put(&pf_src_tree_pl, nsn); 			} 			return (PF_DROP); 		} 		bzero(s, sizeof(*s)); 		s->rule.ptr = r; 		s->nat_rule.ptr = nr; 		s->anchor.ptr = a; 		STATE_INC_COUNTERS(s); 		s->allow_opts = r->allow_opts; 		s->log = r->log&
-literal|2
-argument|; 		s->proto = IPPROTO_TCP; 		s->direction = direction; 		s->af = af; 		if (direction == PF_OUT) { 			PF_ACPY(&s->gwy.addr, saddr, af); 			s->gwy.port = th->th_sport;
+argument|) { 				RB_REMOVE(pf_src_tree,&tree_src_tracking, nsn); 				pf_status.scounters[SCNT_SRC_NODE_REMOVALS]++; 				pf_status.src_nodes--; 				pool_put(&pf_src_tree_pl, nsn); 			} 			return (PF_DROP); 		} 		bzero(s, sizeof(*s)); 		s->rule.ptr = r; 		s->nat_rule.ptr = nr; 		s->anchor.ptr = a; 		STATE_INC_COUNTERS(s); 		s->allow_opts = r->allow_opts; 		s->log = r->log& PF_LOG_ALL; 		if (nr != NULL) 			s->log |= nr->log& PF_LOG_ALL; 		s->proto = IPPROTO_TCP; 		s->direction = direction; 		s->af = af; 		if (direction == PF_OUT) { 			PF_ACPY(&s->gwy.addr, saddr, af); 			s->gwy.port = th->th_sport;
 comment|/* sport */
 argument|PF_ACPY(&s->ext.addr, daddr, af); 			s->ext.port = th->th_dport; 			if (nr != NULL) { 				PF_ACPY(&s->lan.addr,&pd->baddr, af); 				s->lan.port = bport; 			} else { 				PF_ACPY(&s->lan.addr,&s->gwy.addr, af); 				s->lan.port = s->gwy.port; 			} 		} else { 			PF_ACPY(&s->lan.addr, daddr, af); 			s->lan.port = th->th_dport; 			PF_ACPY(&s->ext.addr, saddr, af); 			s->ext.port = th->th_sport; 			if (nr != NULL) { 				PF_ACPY(&s->gwy.addr,&pd->baddr, af); 				s->gwy.port = bport; 			} else { 				PF_ACPY(&s->gwy.addr,&s->lan.addr, af); 				s->gwy.port = s->lan.port; 			} 		}  		s->src.seqlo = ntohl(th->th_seq); 		s->src.seqhi = s->src.seqlo + len +
 literal|1
 argument|; 		if ((th->th_flags& (TH_SYN|TH_ACK)) == TH_SYN&& 		    r->keep_state == PF_STATE_MODULATE) {
 comment|/* Generate sequence number modulator */
-argument|while ((s->src.seqdiff = htonl(arc4random())) ==
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|while ((s->src.seqdiff = 			    pf_new_isn(s) - s->src.seqlo) ==
 literal|0
-argument|) 				; 			pf_change_a(&th->th_seq,&th->th_sum, 			    htonl(s->src.seqlo + s->src.seqdiff),
+argument|) 				;
+else|#
+directive|else
+argument|while ((s->src.seqdiff = 			    tcp_rndiss_next() - s->src.seqlo) ==
+literal|0
+argument|) 				;
+endif|#
+directive|endif
+argument|pf_change_a(&th->th_seq,&th->th_sum, 			    htonl(s->src.seqlo + s->src.seqdiff),
 literal|0
 argument|); 			rewrite =
 literal|1
@@ -9684,6 +10039,8 @@ argument|, s->src.mss,
 literal|0
 argument|,
 literal|1
+argument|,
+literal|0
 argument|, NULL, NULL); 			REASON_SET(&reason, PFRES_SYNPROXY); 			return (PF_SYNPROXY_DROP); 		} 	}
 comment|/* copy back packet headers if we performed NAT operations */
 argument|if (rewrite) 		m_copyback(m, off, sizeof(*th), (caddr_t)th);  	return (PF_PASS); }  int pf_test_udp(struct pf_rule **rm, struct pf_state **sm, int direction,     struct pfi_kif *kif, struct mbuf *m, int off, void *h,
@@ -9702,29 +10059,26 @@ argument|*daddr = pd->dst; 	struct udphdr		*uh = pd->hdr.udp; 	u_int16_t		 bport
 argument_list|,
 argument|nport =
 literal|0
-argument|; 	sa_family_t		 af = pd->af; 	int			 lookup = -
-literal|1
-argument|; 	uid_t			 uid; 	gid_t			 gid; 	struct pf_rule		*r
+argument|; 	sa_family_t		 af = pd->af; 	struct pf_rule		*r
 argument_list|,
 argument|*a = NULL; 	struct pf_ruleset	*ruleset = NULL; 	struct pf_src_node	*nsn = NULL; 	u_short			 reason; 	int			 rewrite =
 literal|0
-argument|; 	struct pf_tag		*pftag = NULL; 	int			 tag = -
+argument|; 	int			 tag = -
+literal|1
+argument_list|,
+argument|rtableid = -
 literal|1
 argument|; 	int			 asd =
 literal|0
+argument|; 	int			 match =
+literal|0
 argument|;  	if (pf_check_congestion(ifq)) { 		REASON_SET(&reason, PFRES_CONGEST); 		return (PF_DROP); 	}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|PF_MPSAFE_UGID
-argument_list|)
-argument|PF_UNLOCK(); 	lookup = pf_socket_lookup(&uid,&gid, direction, pd, inp); 	PF_LOCK();
+argument|if (inp != NULL) 		pd->lookup.done = pf_socket_lookup(direction, pd, inp); 	else if (debug_pfugidhack) { 		PF_UNLOCK(); 		DPFPRINTF(PF_DEBUG_MISC, (
+literal|"pf: unlocked lookup\n"
+argument|)); 		pd->lookup.done = pf_socket_lookup(direction, pd, inp); 		PF_LOCK(); 	}
 endif|#
 directive|endif
 argument|r = TAILQ_FIRST(pf_main_ruleset.rules[PF_RULESET_FILTER].active.ptr);  	if (direction == PF_OUT) { 		bport = nport = uh->uh_sport;
@@ -9735,26 +10089,24 @@ argument|, af); 			rewrite++; 			if (nr->natpass) 				r = NULL; 			pd->nat_rule 
 comment|/* check incoming packet for BINAT/RDR */
 argument|if ((nr = pf_get_translation(pd, m, off, PF_IN, kif,&nsn, 		    saddr, uh->uh_sport, daddr, uh->uh_dport,&pd->naddr,&nport)) != NULL) { 			PF_ACPY(&pd->baddr, daddr, af); 			pf_change_ap(daddr,&uh->uh_dport, pd->ip_sum,&uh->uh_sum,&pd->naddr, nport,
 literal|1
-argument|, af); 			rewrite++; 			if (nr->natpass) 				r = NULL; 			pd->nat_rule = nr; 		} 	}  	while (r != NULL) { 		r->evaluations++; 		if (r->kif != NULL&& 		    (r->kif != kif&& r->kif != kif->pfik_parent) == !r->ifnot) 			r = r->skip[PF_SKIP_IFP].ptr; 		else if (r->direction&& r->direction != direction) 			r = r->skip[PF_SKIP_DIR].ptr; 		else if (r->af&& r->af != af) 			r = r->skip[PF_SKIP_AF].ptr; 		else if (r->proto&& r->proto != IPPROTO_UDP) 			r = r->skip[PF_SKIP_PROTO].ptr; 		else if (PF_MISMATCHAW(&r->src.addr, saddr, af, r->src.neg)) 			r = r->skip[PF_SKIP_SRC_ADDR].ptr; 		else if (r->src.port_op&& !pf_match_port(r->src.port_op, 		    r->src.port[
+argument|, af); 			rewrite++; 			if (nr->natpass) 				r = NULL; 			pd->nat_rule = nr; 		} 	}  	while (r != NULL) { 		r->evaluations++; 		if (pfi_kif_match(r->kif, kif) == r->ifnot) 			r = r->skip[PF_SKIP_IFP].ptr; 		else if (r->direction&& r->direction != direction) 			r = r->skip[PF_SKIP_DIR].ptr; 		else if (r->af&& r->af != af) 			r = r->skip[PF_SKIP_AF].ptr; 		else if (r->proto&& r->proto != IPPROTO_UDP) 			r = r->skip[PF_SKIP_PROTO].ptr; 		else if (PF_MISMATCHAW(&r->src.addr, saddr, af, 		    r->src.neg, kif)) 			r = r->skip[PF_SKIP_SRC_ADDR].ptr; 		else if (r->src.port_op&& !pf_match_port(r->src.port_op, 		    r->src.port[
 literal|0
 argument|], r->src.port[
 literal|1
-argument|], uh->uh_sport)) 			r = r->skip[PF_SKIP_SRC_PORT].ptr; 		else if (PF_MISMATCHAW(&r->dst.addr, daddr, af, r->dst.neg)) 			r = r->skip[PF_SKIP_DST_ADDR].ptr; 		else if (r->dst.port_op&& !pf_match_port(r->dst.port_op, 		    r->dst.port[
+argument|], uh->uh_sport)) 			r = r->skip[PF_SKIP_SRC_PORT].ptr; 		else if (PF_MISMATCHAW(&r->dst.addr, daddr, af, 		    r->dst.neg, NULL)) 			r = r->skip[PF_SKIP_DST_ADDR].ptr; 		else if (r->dst.port_op&& !pf_match_port(r->dst.port_op, 		    r->dst.port[
 literal|0
 argument|], r->dst.port[
 literal|1
-argument|], uh->uh_dport)) 			r = r->skip[PF_SKIP_DST_PORT].ptr; 		else if (r->tos&& !(r->tos& pd->tos)) 			r = TAILQ_NEXT(r, entries); 		else if (r->rule_flag& PFRULE_FRAGMENT) 			r = TAILQ_NEXT(r, entries); 		else if (r->uid.op&& (lookup != -
-literal|1
-argument||| (lookup =
+argument|], uh->uh_dport)) 			r = r->skip[PF_SKIP_DST_PORT].ptr; 		else if (r->tos&& !(r->tos == pd->tos)) 			r = TAILQ_NEXT(r, entries); 		else if (r->rule_flag& PFRULE_FRAGMENT) 			r = TAILQ_NEXT(r, entries); 		else if (r->uid.op&& (pd->lookup.done || (pd->lookup.done =
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|pf_socket_lookup(&uid,&gid, direction, pd, inp),
+argument|pf_socket_lookup(direction, pd, inp),
 literal|1
 argument|))&&
 else|#
 directive|else
-argument|pf_socket_lookup(&uid,&gid, direction, pd),
+argument|pf_socket_lookup(direction, pd),
 literal|1
 argument|)
 argument_list|)
@@ -9788,6 +10140,10 @@ index|[
 literal|1
 index|]
 argument_list|,
+name|pd
+operator|->
+name|lookup
+operator|.
 name|uid
 argument_list|)
 block|)
@@ -9810,25 +10166,24 @@ operator|.
 name|op
 operator|&&
 operator|(
+name|pd
+operator|->
 name|lookup
-operator|!=
-operator|-
-literal|1
+operator|.
+name|done
 operator|||
 operator|(
+name|pd
+operator|->
 name|lookup
+operator|.
+name|done
 operator|=
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
 name|pf_socket_lookup
 argument_list|(
-operator|&
-name|uid
-argument_list|,
-operator|&
-name|gid
-argument_list|,
 name|direction
 argument_list|,
 name|pd
@@ -9844,12 +10199,6 @@ else|#
 directive|else
 name|pf_socket_lookup
 argument_list|(
-operator|&
-name|uid
-argument_list|,
-operator|&
-name|gid
-argument_list|,
 name|direction
 argument_list|,
 name|pd
@@ -9888,6 +10237,10 @@ index|[
 literal|1
 index|]
 argument_list|,
+name|pd
+operator|->
+name|lookup
+operator|.
 name|gid
 argument_list|)
 end_if
@@ -9946,8 +10299,9 @@ name|m
 argument_list|,
 name|r
 argument_list|,
-operator|&
-name|pftag
+name|pd
+operator|->
+name|pf_mtag
 argument_list|,
 operator|&
 name|tag
@@ -10004,11 +10358,29 @@ if|if
 condition|(
 name|r
 operator|->
+name|rtableid
+operator|>=
+literal|0
+condition|)
+name|rtableid
+operator|=
+name|r
+operator|->
+name|rtableid
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|->
 name|anchor
 operator|==
 name|NULL
 condition|)
 block|{
+name|match
+operator|=
+literal|1
+expr_stmt|;
 operator|*
 name|rm
 operator|=
@@ -10060,6 +10432,9 @@ name|r
 argument_list|,
 operator|&
 name|a
+argument_list|,
+operator|&
+name|match
 argument_list|)
 expr_stmt|;
 block|}
@@ -10071,7 +10446,7 @@ condition|(
 name|r
 operator|==
 name|NULL
-condition|)
+operator|&&
 name|pf_step_out_of_anchor
 argument_list|(
 operator|&
@@ -10087,8 +10462,12 @@ name|r
 argument_list|,
 operator|&
 name|a
+argument_list|,
+operator|&
+name|match
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 end_if
 
 begin_expr_stmt
@@ -10132,12 +10511,29 @@ condition|(
 name|r
 operator|->
 name|log
+operator|||
+operator|(
+name|nr
+operator|!=
+name|NULL
+operator|&&
+name|nr
+operator|->
+name|natpass
+operator|&&
+name|nr
+operator|->
+name|log
+operator|)
 condition|)
 block|{
 if|if
 condition|(
 name|rewrite
 condition|)
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|m_copyback
 argument_list|(
 name|m
@@ -10156,6 +10552,25 @@ operator|)
 name|uh
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|m_copyback
+argument_list|(
+name|m
+argument_list|,
+name|off
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|uh
+argument_list|)
+argument_list|,
+name|uh
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|PFLOG_PACKET
 argument_list|(
 name|kif
@@ -10171,10 +10586,18 @@ argument_list|,
 name|reason
 argument_list|,
 name|r
+operator|->
+name|log
+condition|?
+name|r
+else|:
+name|nr
 argument_list|,
 name|a
 argument_list|,
 name|ruleset
+argument_list|,
+name|pd
 argument_list|)
 expr_stmt|;
 block|}
@@ -10389,9 +10812,13 @@ name|pf_tag_packet
 argument_list|(
 name|m
 argument_list|,
-name|pftag
+name|pd
+operator|->
+name|pf_mtag
 argument_list|,
 name|tag
+argument_list|,
+name|rtableid
 argument_list|)
 condition|)
 block|{
@@ -10476,7 +10903,7 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-comment|/* src node for flter rule */
+comment|/* src node for filter rule */
 if|if
 condition|(
 operator|(
@@ -10788,7 +11215,23 @@ name|r
 operator|->
 name|log
 operator|&
-literal|2
+name|PF_LOG_ALL
+expr_stmt|;
+if|if
+condition|(
+name|nr
+operator|!=
+name|NULL
+condition|)
+name|s
+operator|->
+name|log
+operator||=
+name|nr
+operator|->
+name|log
+operator|&
+name|PF_LOG_ALL
 expr_stmt|;
 name|s
 operator|->
@@ -11374,15 +11817,13 @@ name|state_icmp
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|pf_tag
-modifier|*
-name|pftag
-init|=
-name|NULL
-decl_stmt|;
 name|int
 name|tag
+init|=
+operator|-
+literal|1
+decl_stmt|,
+name|rtableid
 init|=
 operator|-
 literal|1
@@ -11400,6 +11841,11 @@ directive|endif
 comment|/* INET6 */
 name|int
 name|asd
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|match
 init|=
 literal|0
 decl_stmt|;
@@ -11955,29 +12401,15 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|pfi_kif_match
+argument_list|(
 name|r
 operator|->
 name|kif
-operator|!=
-name|NULL
-operator|&&
-operator|(
-name|r
-operator|->
+argument_list|,
 name|kif
-operator|!=
-name|kif
-operator|&&
-name|r
-operator|->
-name|kif
-operator|!=
-name|kif
-operator|->
-name|pfik_parent
-operator|)
+argument_list|)
 operator|==
-operator|!
 name|r
 operator|->
 name|ifnot
@@ -12088,6 +12520,8 @@ operator|->
 name|src
 operator|.
 name|neg
+argument_list|,
+name|kif
 argument_list|)
 condition|)
 name|r
@@ -12122,6 +12556,8 @@ operator|->
 name|dst
 operator|.
 name|neg
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 name|r
@@ -12195,7 +12631,7 @@ operator|(
 name|r
 operator|->
 name|tos
-operator|&
+operator|==
 name|pd
 operator|->
 name|tos
@@ -12265,8 +12701,9 @@ name|m
 argument_list|,
 name|r
 argument_list|,
-operator|&
-name|pftag
+name|pd
+operator|->
+name|pf_mtag
 argument_list|,
 operator|&
 name|tag
@@ -12317,11 +12754,29 @@ if|if
 condition|(
 name|r
 operator|->
+name|rtableid
+operator|>=
+literal|0
+condition|)
+name|rtableid
+operator|=
+name|r
+operator|->
+name|rtableid
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|->
 name|anchor
 operator|==
 name|NULL
 condition|)
 block|{
+name|match
+operator|=
+literal|1
+expr_stmt|;
 operator|*
 name|rm
 operator|=
@@ -12373,6 +12828,9 @@ name|r
 argument_list|,
 operator|&
 name|a
+argument_list|,
+operator|&
+name|match
 argument_list|)
 expr_stmt|;
 block|}
@@ -12381,7 +12839,7 @@ condition|(
 name|r
 operator|==
 name|NULL
-condition|)
+operator|&&
 name|pf_step_out_of_anchor
 argument_list|(
 operator|&
@@ -12397,8 +12855,12 @@ name|r
 argument_list|,
 operator|&
 name|a
+argument_list|,
+operator|&
+name|match
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 block|}
 name|r
 operator|=
@@ -12428,6 +12890,20 @@ condition|(
 name|r
 operator|->
 name|log
+operator|||
+operator|(
+name|nr
+operator|!=
+name|NULL
+operator|&&
+name|nr
+operator|->
+name|natpass
+operator|&&
+name|nr
+operator|->
+name|log
+operator|)
 condition|)
 block|{
 ifdef|#
@@ -12477,10 +12953,18 @@ argument_list|,
 name|reason
 argument_list|,
 name|r
+operator|->
+name|log
+condition|?
+name|r
+else|:
+name|nr
 argument_list|,
 name|a
 argument_list|,
 name|ruleset
+argument_list|,
+name|pd
 argument_list|)
 expr_stmt|;
 block|}
@@ -12503,9 +12987,13 @@ name|pf_tag_packet
 argument_list|(
 name|m
 argument_list|,
-name|pftag
+name|pd
+operator|->
+name|pf_mtag
 argument_list|,
 name|tag
+argument_list|,
+name|rtableid
 argument_list|)
 condition|)
 block|{
@@ -12592,7 +13080,7 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-comment|/* src node for flter rule */
+comment|/* src node for filter rule */
 if|if
 condition|(
 operator|(
@@ -12904,7 +13392,23 @@ name|r
 operator|->
 name|log
 operator|&
-literal|2
+name|PF_LOG_ALL
+expr_stmt|;
+if|if
+condition|(
+name|nr
+operator|!=
+name|NULL
+condition|)
+name|s
+operator|->
+name|log
+operator||=
+name|nr
+operator|->
+name|log
+operator|&
+name|PF_LOG_ALL
 expr_stmt|;
 name|s
 operator|->
@@ -13471,21 +13975,24 @@ decl_stmt|;
 name|u_short
 name|reason
 decl_stmt|;
-name|struct
-name|pf_tag
-modifier|*
-name|pftag
-init|=
-name|NULL
-decl_stmt|;
 name|int
 name|tag
+init|=
+operator|-
+literal|1
+decl_stmt|,
+name|rtableid
 init|=
 operator|-
 literal|1
 decl_stmt|;
 name|int
 name|asd
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|match
 init|=
 literal|0
 decl_stmt|;
@@ -13816,29 +14323,15 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|pfi_kif_match
+argument_list|(
 name|r
 operator|->
 name|kif
-operator|!=
-name|NULL
-operator|&&
-operator|(
-name|r
-operator|->
+argument_list|,
 name|kif
-operator|!=
-name|kif
-operator|&&
-name|r
-operator|->
-name|kif
-operator|!=
-name|kif
-operator|->
-name|pfik_parent
-operator|)
+argument_list|)
 operator|==
-operator|!
 name|r
 operator|->
 name|ifnot
@@ -13951,6 +14444,8 @@ operator|->
 name|src
 operator|.
 name|neg
+argument_list|,
+name|kif
 argument_list|)
 condition|)
 name|r
@@ -13987,6 +14482,8 @@ operator|->
 name|dst
 operator|.
 name|neg
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 name|r
@@ -14012,7 +14509,7 @@ operator|(
 name|r
 operator|->
 name|tos
-operator|&
+operator|==
 name|pd
 operator|->
 name|tos
@@ -14082,8 +14579,9 @@ name|m
 argument_list|,
 name|r
 argument_list|,
-operator|&
-name|pftag
+name|pd
+operator|->
+name|pf_mtag
 argument_list|,
 operator|&
 name|tag
@@ -14134,11 +14632,29 @@ if|if
 condition|(
 name|r
 operator|->
+name|rtableid
+operator|>=
+literal|0
+condition|)
+name|rtableid
+operator|=
+name|r
+operator|->
+name|rtableid
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|->
 name|anchor
 operator|==
 name|NULL
 condition|)
 block|{
+name|match
+operator|=
+literal|1
+expr_stmt|;
 operator|*
 name|rm
 operator|=
@@ -14190,6 +14706,9 @@ name|r
 argument_list|,
 operator|&
 name|a
+argument_list|,
+operator|&
+name|match
 argument_list|)
 expr_stmt|;
 block|}
@@ -14198,7 +14717,7 @@ condition|(
 name|r
 operator|==
 name|NULL
-condition|)
+operator|&&
 name|pf_step_out_of_anchor
 argument_list|(
 operator|&
@@ -14214,8 +14733,12 @@ name|r
 argument_list|,
 operator|&
 name|a
+argument_list|,
+operator|&
+name|match
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 block|}
 name|r
 operator|=
@@ -14245,6 +14768,20 @@ condition|(
 name|r
 operator|->
 name|log
+operator|||
+operator|(
+name|nr
+operator|!=
+name|NULL
+operator|&&
+name|nr
+operator|->
+name|natpass
+operator|&&
+name|nr
+operator|->
+name|log
+operator|)
 condition|)
 name|PFLOG_PACKET
 argument_list|(
@@ -14261,10 +14798,18 @@ argument_list|,
 name|reason
 argument_list|,
 name|r
+operator|->
+name|log
+condition|?
+name|r
+else|:
+name|nr
 argument_list|,
 name|a
 argument_list|,
 name|ruleset
+argument_list|,
+name|pd
 argument_list|)
 expr_stmt|;
 if|if
@@ -14483,9 +15028,13 @@ name|pf_tag_packet
 argument_list|(
 name|m
 argument_list|,
-name|pftag
+name|pd
+operator|->
+name|pf_mtag
 argument_list|,
 name|tag
+argument_list|,
+name|rtableid
 argument_list|)
 condition|)
 block|{
@@ -14567,7 +15116,7 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-comment|/* src node for flter rule */
+comment|/* src node for filter rule */
 if|if
 condition|(
 operator|(
@@ -14879,7 +15428,23 @@ name|r
 operator|->
 name|log
 operator|&
-literal|2
+name|PF_LOG_ALL
+expr_stmt|;
+if|if
+condition|(
+name|nr
+operator|!=
+name|NULL
+condition|)
+name|s
+operator|->
+name|log
+operator||=
+name|nr
+operator|->
+name|log
+operator|&
+name|PF_LOG_ALL
 expr_stmt|;
 name|s
 operator|->
@@ -15305,13 +15870,6 @@ decl_stmt|;
 name|u_short
 name|reason
 decl_stmt|;
-name|struct
-name|pf_tag
-modifier|*
-name|pftag
-init|=
-name|NULL
-decl_stmt|;
 name|int
 name|tag
 init|=
@@ -15320,6 +15878,11 @@ literal|1
 decl_stmt|;
 name|int
 name|asd
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|match
 init|=
 literal|0
 decl_stmt|;
@@ -15353,29 +15916,15 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|pfi_kif_match
+argument_list|(
 name|r
 operator|->
 name|kif
-operator|!=
-name|NULL
-operator|&&
-operator|(
-name|r
-operator|->
+argument_list|,
 name|kif
-operator|!=
-name|kif
-operator|&&
-name|r
-operator|->
-name|kif
-operator|!=
-name|kif
-operator|->
-name|pfik_parent
-operator|)
+argument_list|)
 operator|==
-operator|!
 name|r
 operator|->
 name|ifnot
@@ -15488,6 +16037,8 @@ operator|->
 name|src
 operator|.
 name|neg
+argument_list|,
+name|kif
 argument_list|)
 condition|)
 name|r
@@ -15524,6 +16075,8 @@ operator|->
 name|dst
 operator|.
 name|neg
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 name|r
@@ -15549,7 +16102,7 @@ operator|(
 name|r
 operator|->
 name|tos
-operator|&
+operator|==
 name|pd
 operator|->
 name|tos
@@ -15643,8 +16196,9 @@ name|m
 argument_list|,
 name|r
 argument_list|,
-operator|&
-name|pftag
+name|pd
+operator|->
+name|pf_mtag
 argument_list|,
 operator|&
 name|tag
@@ -15670,6 +16224,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|match
+operator|=
+literal|1
+expr_stmt|;
 operator|*
 name|rm
 operator|=
@@ -15721,6 +16279,9 @@ name|r
 argument_list|,
 operator|&
 name|a
+argument_list|,
+operator|&
+name|match
 argument_list|)
 expr_stmt|;
 block|}
@@ -15729,7 +16290,7 @@ condition|(
 name|r
 operator|==
 name|NULL
-condition|)
+operator|&&
 name|pf_step_out_of_anchor
 argument_list|(
 operator|&
@@ -15745,8 +16306,12 @@ name|r
 argument_list|,
 operator|&
 name|a
+argument_list|,
+operator|&
+name|match
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 block|}
 name|r
 operator|=
@@ -15796,6 +16361,8 @@ argument_list|,
 name|a
 argument_list|,
 name|ruleset
+argument_list|,
+name|pd
 argument_list|)
 expr_stmt|;
 if|if
@@ -15817,9 +16384,14 @@ name|pf_tag_packet
 argument_list|(
 name|m
 argument_list|,
-name|pftag
+name|pd
+operator|->
+name|pf_mtag
 argument_list|,
 name|tag
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 condition|)
 block|{
@@ -15886,7 +16458,7 @@ name|reason
 parameter_list|)
 block|{
 name|struct
-name|pf_state
+name|pf_state_cmp
 name|key
 decl_stmt|;
 name|struct
@@ -16242,7 +16814,9 @@ argument|, (*state)->src.mss,
 literal|0
 argument|,
 literal|1
-argument|, 			    NULL, NULL); 			REASON_SET(reason, PFRES_SYNPROXY); 			return (PF_SYNPROXY_DROP); 		} else if (!(th->th_flags& TH_ACK) || 		    (ntohl(th->th_ack) != (*state)->src.seqhi +
+argument|,
+literal|0
+argument|, NULL, NULL); 			REASON_SET(reason, PFRES_SYNPROXY); 			return (PF_SYNPROXY_DROP); 		} else if (!(th->th_flags& TH_ACK) || 		    (ntohl(th->th_ack) != (*state)->src.seqhi +
 literal|1
 argument|) || 		    (ntohl(th->th_seq) != (*state)->src.seqlo +
 literal|1
@@ -16274,7 +16848,7 @@ argument|, 			    (*state)->src.mss,
 literal|0
 argument|,
 literal|0
-argument|, NULL, NULL); 			REASON_SET(reason, PFRES_SYNPROXY); 			return (PF_SYNPROXY_DROP); 		} else if (((th->th_flags& (TH_SYN|TH_ACK)) != 		    (TH_SYN|TH_ACK)) || 		    (ntohl(th->th_ack) != (*state)->dst.seqhi +
+argument|, (*state)->tag, NULL, NULL); 			REASON_SET(reason, PFRES_SYNPROXY); 			return (PF_SYNPROXY_DROP); 		} else if (((th->th_flags& (TH_SYN|TH_ACK)) != 		    (TH_SYN|TH_ACK)) || 		    (ntohl(th->th_ack) != (*state)->dst.seqhi +
 literal|1
 argument|)) { 			REASON_SET(reason, PFRES_SYNPROXY); 			return (PF_DROP); 		} else { 			(*state)->dst.max_win = MAX(ntohs(th->th_win),
 literal|1
@@ -16296,7 +16870,7 @@ argument|,
 literal|0
 argument|,
 literal|0
-argument|, 			    NULL, NULL);
+argument|, 			    (*state)->tag, NULL, NULL);
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -16316,7 +16890,9 @@ argument|,
 literal|0
 argument|,
 literal|1
-argument|, 			    NULL, NULL); 			(*state)->src.seqdiff = (*state)->dst.seqhi - 			    (*state)->src.seqlo; 			(*state)->dst.seqdiff = (*state)->src.seqhi - 			    (*state)->dst.seqlo; 			(*state)->src.seqhi = (*state)->src.seqlo + 			    (*state)->dst.max_win; 			(*state)->dst.seqhi = (*state)->dst.seqlo + 			    (*state)->src.max_win; 			(*state)->src.wscale = (*state)->dst.wscale =
+argument|,
+literal|0
+argument|, NULL, NULL); 			(*state)->src.seqdiff = (*state)->dst.seqhi - 			    (*state)->src.seqlo; 			(*state)->dst.seqdiff = (*state)->src.seqhi - 			    (*state)->dst.seqlo; 			(*state)->src.seqhi = (*state)->src.seqlo + 			    (*state)->dst.max_win; 			(*state)->dst.seqhi = (*state)->dst.seqlo + 			    (*state)->src.max_win; 			(*state)->src.wscale = (*state)->dst.wscale =
 literal|0
 argument|; 			(*state)->src.state = (*state)->dst.state = 			    TCPS_ESTABLISHED; 			REASON_SET(reason, PFRES_SYNPROXY); 			return (PF_SYNPROXY_DROP); 		} 	}  	if (src->wscale&& dst->wscale&& !(th->th_flags& TH_SYN)) { 		sws = src->wscale& PF_WSCALE_MASK; 		dws = dst->wscale& PF_WSCALE_MASK; 	} else 		sws = dws =
 literal|0
@@ -16328,9 +16904,21 @@ argument|) {
 comment|/* First packet from this end. Set its state */
 argument|if ((pd->flags& PFDESC_TCP_NORM || dst->scrub)&& 		    src->scrub == NULL) { 			if (pf_normalize_tcp_init(m, off, pd, th, src, dst)) { 				REASON_SET(reason, PFRES_MEMORY); 				return (PF_DROP); 			} 		}
 comment|/* Deferred generation of sequence number modulator */
-argument|if (dst->seqdiff&& !src->seqdiff) { 			while ((src->seqdiff = htonl(arc4random())) ==
+argument|if (dst->seqdiff&& !src->seqdiff) {
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|while ((src->seqdiff = pf_new_isn(*state) - seq) ==
 literal|0
-argument|) 				; 			ack = ntohl(th->th_ack) - dst->seqdiff; 			pf_change_a(&th->th_seq,&th->th_sum, htonl(seq + 			    src->seqdiff),
+argument|) 				;
+else|#
+directive|else
+argument|while ((src->seqdiff = tcp_rndiss_next() - seq) ==
+literal|0
+argument|) 				;
+endif|#
+directive|endif
+argument|ack = ntohl(th->th_ack) - dst->seqdiff; 			pf_change_a(&th->th_seq,&th->th_sum, htonl(seq + 			    src->seqdiff),
 literal|0
 argument|); 			pf_change_a(&th->th_ack,&th->th_sum, htonl(ack),
 literal|0
@@ -16377,6 +16965,12 @@ comment|/* 		 * Many stacks (ours included) will set the ACK number in an 		 * F
 argument|ack = dst->seqlo; 	}  	if (seq == end) {
 comment|/* Ease sequencing restrictions on no data packets */
 argument|seq = src->seqlo; 		end = seq; 	}  	ackskew = dst->seqlo - ack;
+comment|/* 	 * Need to demodulate the sequence numbers in any TCP SACK options 	 * (Selective ACK). We could optionally validate the SACK values 	 * against the current ACK window, either forwards or backwards, but 	 * I'm not confident that SACK has been implemented properly 	 * everywhere. It wouldn't surprise me if several stacks accidently 	 * SACK too far backwards of previously ACKed data. There really aren't 	 * any security implications of bad SACKing unless the target stack 	 * doesn't validate the option length correctly. Someone trying to 	 * spoof into a TCP connection won't bother blindly sending SACK 	 * options anyway. 	 */
+argument|if (dst->seqdiff&& (th->th_off<<
+literal|2
+argument|)> sizeof(struct tcphdr)) { 		if (pf_modulate_sack(m, off, pd, th, dst)) 			copyback =
+literal|1
+argument|; 	}
 define|#
 directive|define
 name|MAXACKWINDOW
@@ -16392,10 +16986,12 @@ argument|(ackskew<= (MAXACKWINDOW<< sws))&&
 comment|/* Acking not more than one window forward */
 argument|((th->th_flags& TH_RST) ==
 literal|0
-argument||| orig_seq == src->seqlo || 	    (pd->flags& PFDESC_IP_REAS) ==
+argument||| orig_seq == src->seqlo || 	    (orig_seq == src->seqlo +
+literal|1
+argument|) || (pd->flags& PFDESC_IP_REAS) ==
 literal|0
 argument|)) {
-comment|/* Require an exact sequence match on resets when possible */
+comment|/* Require an exact/+1 sequence match on resets when possible */
 argument|if (dst->scrub || src->scrub) { 			if (pf_normalize_tcp_stateful(m, off, pd, reason, th, 			    *state, src, dst,&copyback)) 				return (PF_DROP); 		}
 comment|/* update max window */
 argument|if (src->max_win< win) 			src->max_win = win;
@@ -16408,7 +17004,7 @@ argument|);
 comment|/* update states */
 argument|if (th->th_flags& TH_SYN) 			if (src->state< TCPS_SYN_SENT) 				src->state = TCPS_SYN_SENT; 		if (th->th_flags& TH_FIN) 			if (src->state< TCPS_CLOSING) 				src->state = TCPS_CLOSING; 		if (th->th_flags& TH_ACK) { 			if (dst->state == TCPS_SYN_SENT) { 				dst->state = TCPS_ESTABLISHED; 				if (src->state == TCPS_ESTABLISHED&& 				    (*state)->src_node != NULL&& 				    pf_src_connlimit(state)) { 					REASON_SET(reason, PFRES_SRCLIMIT); 					return (PF_DROP); 				} 			} else if (dst->state == TCPS_CLOSING) 				dst->state = TCPS_FIN_WAIT_2; 		} 		if (th->th_flags& TH_RST) 			src->state = dst->state = TCPS_TIME_WAIT;
 comment|/* update expire time */
-argument|(*state)->expire = time_second; 		if (src->state>= TCPS_FIN_WAIT_2&& 		    dst->state>= TCPS_FIN_WAIT_2) 			(*state)->timeout = PFTM_TCP_CLOSED; 		else if (src->state>= TCPS_FIN_WAIT_2 || 		    dst->state>= TCPS_FIN_WAIT_2) 			(*state)->timeout = PFTM_TCP_FIN_WAIT; 		else if (src->state< TCPS_ESTABLISHED || 		    dst->state< TCPS_ESTABLISHED) 			(*state)->timeout = PFTM_TCP_OPENING; 		else if (src->state>= TCPS_CLOSING || 		    dst->state>= TCPS_CLOSING) 			(*state)->timeout = PFTM_TCP_CLOSING; 		else 			(*state)->timeout = PFTM_TCP_ESTABLISHED;
+argument|(*state)->expire = time_second; 		if (src->state>= TCPS_FIN_WAIT_2&& 		    dst->state>= TCPS_FIN_WAIT_2) 			(*state)->timeout = PFTM_TCP_CLOSED; 		else if (src->state>= TCPS_CLOSING&& 		    dst->state>= TCPS_CLOSING) 			(*state)->timeout = PFTM_TCP_FIN_WAIT; 		else if (src->state< TCPS_ESTABLISHED || 		    dst->state< TCPS_ESTABLISHED) 			(*state)->timeout = PFTM_TCP_OPENING; 		else if (src->state>= TCPS_CLOSING || 		    dst->state>= TCPS_CLOSING) 			(*state)->timeout = PFTM_TCP_CLOSING; 		else 			(*state)->timeout = PFTM_TCP_ESTABLISHED;
 comment|/* Fall through to PASS packet */
 argument|} else if ((dst->state< TCPS_SYN_SENT || 		dst->state>= TCPS_FIN_WAIT_2 || 		src->state>= TCPS_FIN_WAIT_2)&& 	    SEQ_GEQ(src->seqhi + MAXACKWINDOW, end)&&
 comment|/* Within a window forward of the originating packet */
@@ -16418,12 +17014,27 @@ comment|/* 		 * This currently handles three situations: 		 *  1) Stupid stacks 
 argument|if (pf_status.debug>= PF_DEBUG_MISC) { 			printf(
 literal|"pf: loose state match: "
 argument|); 			pf_print_state(*state); 			pf_print_flags(th->th_flags); 			printf(
-literal|" seq=%u ack=%u len=%u ackskew=%d pkts=%d:%d\n"
-argument|, 			    seq, ack, pd->p_len, ackskew, 			    (*state)->packets[
+literal|" seq=%u (%u) ack=%u len=%u ackskew=%d "
+literal|"pkts=%llu:%llu\n"
+argument|, seq, orig_seq, ack, pd->p_len,
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|ackskew, (unsigned long long)(*state)->packets[
 literal|0
-argument|], (*state)->packets[
+argument|], 			    (unsigned long long)(*state)->packets[
 literal|1
-argument|]); 		}  		if (dst->scrub || src->scrub) { 			if (pf_normalize_tcp_stateful(m, off, pd, reason, th, 			    *state, src, dst,&copyback)) 				return (PF_DROP); 		}
+argument|]);
+else|#
+directive|else
+argument|ackskew, (*state)->packets[
+literal|0
+argument|], 			    (*state)->packets[
+literal|1
+argument|]);
+endif|#
+directive|endif
+argument|}  		if (dst->scrub || src->scrub) { 			if (pf_normalize_tcp_stateful(m, off, pd, reason, th, 			    *state, src, dst,&copyback)) 				return (PF_DROP); 		}
 comment|/* update max window */
 argument|if (src->max_win< win) 			src->max_win = win;
 comment|/* synchronize sequencing */
@@ -16455,6 +17066,8 @@ argument|,
 literal|0
 argument|, 				    (*state)->rule.ptr->return_ttl,
 literal|1
+argument|,
+literal|0
 argument|, 				    pd->eh, kif->pfik_ifp); 			src->seqlo =
 literal|0
 argument|; 			src->seqhi =
@@ -16464,13 +17077,27 @@ literal|1
 argument|; 		} else if (pf_status.debug>= PF_DEBUG_MISC) { 			printf(
 literal|"pf: BAD state: "
 argument|); 			pf_print_state(*state); 			pf_print_flags(th->th_flags); 			printf(
-literal|" seq=%u ack=%u len=%u ackskew=%d pkts=%d:%d "
-literal|"dir=%s,%s\n"
-argument|, seq, ack, pd->p_len, ackskew, 			    (*state)->packets[
+literal|" seq=%u (%u) ack=%u len=%u ackskew=%d "
+literal|"pkts=%llu:%llu dir=%s,%s\n"
+argument|, 			    seq, orig_seq, ack, pd->p_len, ackskew,
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|(unsigned long long)(*state)->packets[
+literal|0
+argument|], 			    (unsigned long long)(*state)->packets[
+literal|1
+argument|],
+else|#
+directive|else
+argument|(*state)->packets[
 literal|0
 argument|], (*state)->packets[
 literal|1
-argument|], 			    direction == PF_IN ?
+argument|],
+endif|#
+directive|endif
+argument|direction == PF_IN ?
 literal|"in"
 argument|:
 literal|"out"
@@ -16513,7 +17140,7 @@ argument|, pd->af); 		else 			pf_change_ap(pd->dst,&th->th_dport, pd->ip_sum,&th
 literal|0
 argument|, pd->af); 		m_copyback(m, off, sizeof(*th), (caddr_t)th); 	} else if (copyback) {
 comment|/* Copyback sequence modulation or stateful scrub changes */
-argument|m_copyback(m, off, sizeof(*th), (caddr_t)th); 	}  	return (PF_PASS); }  int pf_test_state_udp(struct pf_state **state, int direction, struct pfi_kif *kif,     struct mbuf *m, int off, void *h, struct pf_pdesc *pd) { 	struct pf_state_peer	*src, *dst; 	struct pf_state		 key; 	struct udphdr		*uh = pd->hdr.udp;  	key.af = pd->af; 	key.proto = IPPROTO_UDP; 	if (direction == PF_IN)	{ 		PF_ACPY(&key.ext.addr, pd->src, key.af); 		PF_ACPY(&key.gwy.addr, pd->dst, key.af); 		key.ext.port = uh->uh_sport; 		key.gwy.port = uh->uh_dport; 	} else { 		PF_ACPY(&key.lan.addr, pd->src, key.af); 		PF_ACPY(&key.ext.addr, pd->dst, key.af); 		key.lan.port = uh->uh_sport; 		key.ext.port = uh->uh_dport; 	}  	STATE_LOOKUP();  	if (direction == (*state)->direction) { 		src =&(*state)->src; 		dst =&(*state)->dst; 	} else { 		src =&(*state)->dst; 		dst =&(*state)->src; 	}
+argument|m_copyback(m, off, sizeof(*th), (caddr_t)th); 	}  	return (PF_PASS); }  int pf_test_state_udp(struct pf_state **state, int direction, struct pfi_kif *kif,     struct mbuf *m, int off, void *h, struct pf_pdesc *pd) { 	struct pf_state_peer	*src, *dst; 	struct pf_state_cmp	 key; 	struct udphdr		*uh = pd->hdr.udp;  	key.af = pd->af; 	key.proto = IPPROTO_UDP; 	if (direction == PF_IN)	{ 		PF_ACPY(&key.ext.addr, pd->src, key.af); 		PF_ACPY(&key.gwy.addr, pd->dst, key.af); 		key.ext.port = uh->uh_sport; 		key.gwy.port = uh->uh_dport; 	} else { 		PF_ACPY(&key.lan.addr, pd->src, key.af); 		PF_ACPY(&key.ext.addr, pd->dst, key.af); 		key.lan.port = uh->uh_sport; 		key.ext.port = uh->uh_dport; 	}  	STATE_LOOKUP();  	if (direction == (*state)->direction) { 		src =&(*state)->src; 		dst =&(*state)->dst; 	} else { 		src =&(*state)->dst; 		dst =&(*state)->src; 	}
 comment|/* update states */
 argument|if (src->state< PFUDPS_SINGLE) 		src->state = PFUDPS_SINGLE; 	if (dst->state == PFUDPS_SINGLE) 		dst->state = PFUDPS_MULTIPLE;
 comment|/* update expire time */
@@ -16535,7 +17162,7 @@ argument|;
 comment|/* make the compiler happy */
 argument|int		 state_icmp =
 literal|0
-argument|;  	switch (pd->proto) {
+argument|; 	struct pf_state_cmp key;  	switch (pd->proto) {
 ifdef|#
 directive|ifdef
 name|INET
@@ -16552,7 +17179,7 @@ directive|endif
 comment|/* INET6 */
 argument|}  	if (!state_icmp) {
 comment|/* 		 * ICMP query/reply message not related to a TCP/UDP packet. 		 * Search for an ICMP state. 		 */
-argument|struct pf_state		key;  		key.af = pd->af; 		key.proto = pd->proto; 		if (direction == PF_IN)	{ 			PF_ACPY(&key.ext.addr, pd->src, key.af); 			PF_ACPY(&key.gwy.addr, pd->dst, key.af); 			key.ext.port =
+argument|key.af = pd->af; 		key.proto = pd->proto; 		if (direction == PF_IN)	{ 			PF_ACPY(&key.ext.addr, pd->src, key.af); 			PF_ACPY(&key.gwy.addr, pd->dst, key.af); 			key.ext.port =
 literal|0
 argument|; 			key.gwy.port = icmpid; 		} else { 			PF_ACPY(&key.lan.addr, pd->src, key.af); 			PF_ACPY(&key.ext.addr, pd->dst, key.af); 			key.lan.port = icmpid; 			key.ext.port =
 literal|0
@@ -16672,7 +17299,15 @@ argument|break; 				} 				default: 					terminal++; 					break; 				} 			} while
 endif|#
 directive|endif
 comment|/* INET6 */
-argument|}  		switch (pd2.proto) { 		case IPPROTO_TCP: { 			struct tcphdr		 th; 			u_int32_t		 seq; 			struct pf_state		 key; 			struct pf_state_peer	*src, *dst; 			u_int8_t		 dws; 			int			 copyback =
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|default: 			panic(
+literal|"AF not supported: %d"
+argument|, pd->af);
+endif|#
+directive|endif
+argument|}  		switch (pd2.proto) { 		case IPPROTO_TCP: { 			struct tcphdr		 th; 			u_int32_t		 seq; 			struct pf_state_peer	*src, *dst; 			u_int8_t		 dws; 			int			 copyback =
 literal|0
 argument|;
 comment|/* 			 * Only the first 8 bytes of the TCP header can be 			 * expected. Don't access any TCP header fields after 			 * th_seq, an ackskew test is not possible. 			 */
@@ -16724,7 +17359,7 @@ directive|endif
 comment|/* INET6 */
 argument|} 				m_copyback(m, off2,
 literal|8
-argument|, (caddr_t)&th); 			}  			return (PF_PASS); 			break; 		} 		case IPPROTO_UDP: { 			struct udphdr		uh; 			struct pf_state		key;  			if (!pf_pull_hdr(m, off2,&uh, sizeof(uh), 			    NULL, reason, pd2.af)) { 				DPFPRINTF(PF_DEBUG_MISC, 				    (
+argument|, (caddr_t)&th); 			}  			return (PF_PASS); 			break; 		} 		case IPPROTO_UDP: { 			struct udphdr		uh;  			if (!pf_pull_hdr(m, off2,&uh, sizeof(uh), 			    NULL, reason, pd2.af)) { 				DPFPRINTF(PF_DEBUG_MISC, 				    (
 literal|"pf: ICMP error message too short "
 literal|"(udp)\n"
 argument|)); 				return (PF_DROP); 			}  			key.af = pd2.af; 			key.proto = IPPROTO_UDP; 			if (direction == PF_IN)	{ 				PF_ACPY(&key.ext.addr, pd2.dst, key.af); 				PF_ACPY(&key.gwy.addr, pd2.src, key.af); 				key.ext.port = uh.uh_dport; 				key.gwy.port = uh.uh_sport; 			} else { 				PF_ACPY(&key.lan.addr, pd2.dst, key.af); 				PF_ACPY(&key.ext.addr, pd2.src, key.af); 				key.lan.port = uh.uh_dport; 				key.ext.port = uh.uh_sport; 			}  			STATE_LOOKUP();  			if (STATE_TRANSLATE(*state)) { 				if (direction == PF_IN) { 					pf_change_icmp(pd2.src,&uh.uh_sport, 					    daddr,&(*state)->lan.addr, 					    (*state)->lan.port,&uh.uh_sum, 					    pd2.ip_sum, icmpsum, 					    pd->ip_sum,
@@ -16750,7 +17385,7 @@ argument|} 				m_copyback(m, off2, sizeof(uh), 				    (caddr_t)&uh); 			}  			r
 ifdef|#
 directive|ifdef
 name|INET
-argument|case IPPROTO_ICMP: { 			struct icmp		iih; 			struct pf_state		key;  			if (!pf_pull_hdr(m, off2,&iih, ICMP_MINLEN, 			    NULL, reason, pd2.af)) { 				DPFPRINTF(PF_DEBUG_MISC, 				    (
+argument|case IPPROTO_ICMP: { 			struct icmp		iih;  			if (!pf_pull_hdr(m, off2,&iih, ICMP_MINLEN, 			    NULL, reason, pd2.af)) { 				DPFPRINTF(PF_DEBUG_MISC, 				    (
 literal|"pf: ICMP error message too short i"
 literal|"(icmp)\n"
 argument|)); 				return (PF_DROP); 			}  			key.af = pd2.af; 			key.proto = IPPROTO_ICMP; 			if (direction == PF_IN)	{ 				PF_ACPY(&key.ext.addr, pd2.dst, key.af); 				PF_ACPY(&key.gwy.addr, pd2.src, key.af); 				key.ext.port =
@@ -16768,7 +17403,7 @@ comment|/* INET */
 ifdef|#
 directive|ifdef
 name|INET6
-argument|case IPPROTO_ICMPV6: { 			struct icmp6_hdr	iih; 			struct pf_state		key;  			if (!pf_pull_hdr(m, off2,&iih, 			    sizeof(struct icmp6_hdr), NULL, reason, pd2.af)) { 				DPFPRINTF(PF_DEBUG_MISC, 				    (
+argument|case IPPROTO_ICMPV6: { 			struct icmp6_hdr	iih;  			if (!pf_pull_hdr(m, off2,&iih, 			    sizeof(struct icmp6_hdr), NULL, reason, pd2.af)) { 				DPFPRINTF(PF_DEBUG_MISC, 				    (
 literal|"pf: ICMP error message too short "
 literal|"(icmp6)\n"
 argument|)); 				return (PF_DROP); 			}  			key.af = pd2.af; 			key.proto = IPPROTO_ICMPV6; 			if (direction == PF_IN)	{ 				PF_ACPY(&key.ext.addr, pd2.dst, key.af); 				PF_ACPY(&key.gwy.addr, pd2.src, key.af); 				key.ext.port =
@@ -16783,7 +17418,7 @@ argument|, AF_INET6); 				} 				m_copyback(m, off, sizeof(struct icmp6_hdr), 			
 endif|#
 directive|endif
 comment|/* INET6 */
-argument|default: { 			struct pf_state		key;  			key.af = pd2.af; 			key.proto = pd2.proto; 			if (direction == PF_IN)	{ 				PF_ACPY(&key.ext.addr, pd2.dst, key.af); 				PF_ACPY(&key.gwy.addr, pd2.src, key.af); 				key.ext.port =
+argument|default: { 			key.af = pd2.af; 			key.proto = pd2.proto; 			if (direction == PF_IN)	{ 				PF_ACPY(&key.ext.addr, pd2.dst, key.af); 				PF_ACPY(&key.gwy.addr, pd2.src, key.af); 				key.ext.port =
 literal|0
 argument|; 				key.gwy.port =
 literal|0
@@ -16814,7 +17449,7 @@ argument|case AF_INET6: 					m_copyback(m, off, 					    sizeof(struct icmp6_hdr
 endif|#
 directive|endif
 comment|/* INET6 */
-argument|} 			}  			return (PF_PASS); 			break; 		} 		} 	} }  int pf_test_state_other(struct pf_state **state, int direction, struct pfi_kif *kif,     struct pf_pdesc *pd) { 	struct pf_state_peer	*src, *dst; 	struct pf_state		 key;  	key.af = pd->af; 	key.proto = pd->proto; 	if (direction == PF_IN)	{ 		PF_ACPY(&key.ext.addr, pd->src, key.af); 		PF_ACPY(&key.gwy.addr, pd->dst, key.af); 		key.ext.port =
+argument|} 			}  			return (PF_PASS); 			break; 		} 		} 	} }  int pf_test_state_other(struct pf_state **state, int direction, struct pfi_kif *kif,     struct pf_pdesc *pd) { 	struct pf_state_peer	*src, *dst; 	struct pf_state_cmp	 key;  	key.af = pd->af; 	key.proto = pd->proto; 	if (direction == PF_IN)	{ 		PF_ACPY(&key.ext.addr, pd->src, key.af); 		PF_ACPY(&key.gwy.addr, pd->dst, key.af); 		key.ext.port =
 literal|0
 argument|; 		key.gwy.port =
 literal|0
@@ -16881,51 +17516,111 @@ argument|case AF_INET6: { 		struct ip6_hdr	*h = mtod(m, struct ip6_hdr *);  		if
 endif|#
 directive|endif
 comment|/* INET6 */
-argument|} 	m_copydata(m, off, len, p); 	return (p); }  int pf_routable(struct pf_addr *addr, sa_family_t af) { 	struct sockaddr_in	*dst;
+argument|} 	m_copydata(m, off, len, p); 	return (p); }  int pf_routable(struct pf_addr *addr, sa_family_t af, struct pfi_kif *kif) { 	struct sockaddr_in	*dst; 	int			 ret =
+literal|1
+argument|; 	int			 check_mpath;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+argument|extern int		 ipmultipath;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+argument|extern int		 ip6_multipath;
+endif|#
+directive|endif
 argument|struct sockaddr_in6	*dst6; 	struct route_in6	 ro;
 else|#
 directive|else
 argument|struct route		 ro;
 endif|#
 directive|endif
-argument|bzero(&ro, sizeof(ro)); 	switch (af) { 	case AF_INET: 		dst = satosin(&ro.ro_dst); 		dst->sin_family = AF_INET; 		dst->sin_len = sizeof(*dst); 		dst->sin_addr = addr->v4; 		break;
+argument|struct radix_node	*rn; 	struct rtentry		*rt; 	struct ifnet		*ifp;  	check_mpath =
+literal|0
+argument|; 	bzero(&ro, sizeof(ro)); 	switch (af) { 	case AF_INET: 		dst = satosin(&ro.ro_dst); 		dst->sin_family = AF_INET; 		dst->sin_len = sizeof(*dst); 		dst->sin_addr = addr->v4;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+comment|/* MULTIPATH_ROUTING */
+argument|if (ipmultipath) 			check_mpath =
+literal|1
+argument|;
+endif|#
+directive|endif
+argument|break;
 ifdef|#
 directive|ifdef
 name|INET6
-argument|case AF_INET6: 		dst6 = (struct sockaddr_in6 *)&ro.ro_dst; 		dst6->sin6_family = AF_INET6; 		dst6->sin6_len = sizeof(*dst6); 		dst6->sin6_addr = addr->v6; 		break;
+argument|case AF_INET6: 		dst6 = (struct sockaddr_in6 *)&ro.ro_dst; 		dst6->sin6_family = AF_INET6; 		dst6->sin6_len = sizeof(*dst6); 		dst6->sin6_addr = addr->v6;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+comment|/* MULTIPATH_ROUTING */
+argument|if (ip6_multipath) 			check_mpath =
+literal|1
+argument|;
+endif|#
+directive|endif
+argument|break;
 endif|#
 directive|endif
 comment|/* INET6 */
 argument|default: 		return (
 literal|0
 argument|); 	}
+comment|/* Skip checks for ipsec interfaces */
+argument|if (kif != NULL&& kif->pfik_ifp->if_type == IFT_ENC) 		goto out;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-ifdef|#
-directive|ifdef
-name|RTF_PRCLONING
-argument|rtalloc_ign((struct route *)&ro, (RTF_CLONING | RTF_PRCLONING));
-else|#
-directive|else
-comment|/* !RTF_PRCLONING */
 argument|rtalloc_ign((struct route *)&ro, RTF_CLONING);
-endif|#
-directive|endif
 else|#
 directive|else
 comment|/* ! __FreeBSD__ */
 argument|rtalloc_noclone((struct route *)&ro, NO_CLONING);
 endif|#
 directive|endif
-argument|if (ro.ro_rt != NULL) { 		RTFREE(ro.ro_rt); 		return (
-literal|1
-argument|); 	}  	return (
+argument|if (ro.ro_rt != NULL) {
+comment|/* No interface given, this is a no-route check */
+argument|if (kif == NULL) 			goto out;  		if (kif->pfik_ifp == NULL) { 			ret =
 literal|0
-argument|); }  int pf_rtlabel_match(struct pf_addr *addr, sa_family_t af, struct pf_addr_wrap *aw) { 	struct sockaddr_in	*dst;
+argument|; 			goto out; 		}
+comment|/* Perform uRPF check if passed input interface */
+argument|ret =
+literal|0
+argument|; 		rn = (struct radix_node *)ro.ro_rt; 		do { 			rt = (struct rtentry *)rn;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+comment|/* CARPDEV */
+argument|if (rt->rt_ifp->if_type == IFT_CARP) 				ifp = rt->rt_ifp->if_carpdev; 			else
+endif|#
+directive|endif
+argument|ifp = rt->rt_ifp;  			if (kif->pfik_ifp == ifp) 				ret =
+literal|1
+argument|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+comment|/* MULTIPATH_ROUTING */
+argument|rn = NULL;
+else|#
+directive|else
+argument|rn = rn_mpath_next(rn);
+endif|#
+directive|endif
+argument|} while (check_mpath ==
+literal|1
+argument|&& rn != NULL&& ret ==
+literal|0
+argument|); 	} else 		ret =
+literal|0
+argument|; out: 	if (ro.ro_rt != NULL) 		RTFREE(ro.ro_rt); 	return (ret); }  int pf_rtlabel_match(struct pf_addr *addr, sa_family_t af, struct pf_addr_wrap *aw) { 	struct sockaddr_in	*dst;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -16983,9 +17678,7 @@ argument|RTFREE(ro.ro_rt); 	}  	return (ret); }
 ifdef|#
 directive|ifdef
 name|INET
-argument|void pf_route(struct mbuf **m, struct pf_rule *r, int dir, struct ifnet *oifp,     struct pf_state *s) { 	struct mbuf		*m0, *m1; 	struct m_tag		*mtag; 	struct route		 iproute; 	struct route		*ro = NULL;
-comment|/* XXX: was uninitialized */
-argument|struct sockaddr_in	*dst; 	struct ip		*ip; 	struct ifnet		*ifp = NULL; 	struct pf_addr		 naddr; 	struct pf_src_node	*sn = NULL; 	int			 error =
+argument|void pf_route(struct mbuf **m, struct pf_rule *r, int dir, struct ifnet *oifp,     struct pf_state *s, struct pf_pdesc *pd) { 	struct mbuf		*m0, *m1; 	struct route		 iproute; 	struct route		*ro = NULL; 	struct sockaddr_in	*dst; 	struct ip		*ip; 	struct ifnet		*ifp = NULL; 	struct pf_addr		 naddr; 	struct pf_src_node	*sn = NULL; 	int			 error =
 literal|0
 argument|;
 ifdef|#
@@ -16994,21 +17687,18 @@ name|__FreeBSD__
 argument|int sw_csum;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|IPSEC
+argument|struct m_tag		*mtag;
+endif|#
+directive|endif
+comment|/* IPSEC */
 argument|if (m == NULL || *m == NULL || r == NULL || 	    (dir != PF_IN&& dir != PF_OUT) || oifp == NULL) 		panic(
 literal|"pf_route: invalid parameters"
-argument|);  	if ((mtag = m_tag_find(*m, PACKET_TAG_PF_ROUTED, NULL)) == NULL) { 		if ((mtag = m_tag_get(PACKET_TAG_PF_ROUTED,
-literal|1
-argument|, M_NOWAIT)) == 		    NULL) { 			m0 = *m; 			*m = NULL; 			goto bad; 		} 		*(char *)(mtag +
-literal|1
-argument|) =
-literal|1
-argument|; 		m_tag_prepend(*m, mtag); 	} else { 		if (*(char *)(mtag +
-literal|1
-argument|)>
+argument|);  	if (pd->pf_mtag->routed++>
 literal|3
-argument|) { 			m0 = *m; 			*m = NULL; 			goto bad; 		} 		(*(char *)(mtag +
-literal|1
-argument|))++; 	}  	if (r->rt == PF_DUPTO) {
+argument|) { 		m0 = *m; 		*m = NULL; 		goto bad; 	}  	if (r->rt == PF_DUPTO) {
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -17078,17 +17768,17 @@ endif|#
 directive|endif
 comment|/* IPSEC */
 comment|/* Catch routing changes wrt. hardware checksumming for TCP or UDP. */
-argument|if (m0->m_pkthdr.csum& M_TCPV4_CSUM_OUT) { 		if (!(ifp->if_capabilities& IFCAP_CSUM_TCPv4) || 		    ifp->if_bridge != NULL) { 			in_delayed_cksum(m0); 			m0->m_pkthdr.csum&= ~M_TCPV4_CSUM_OUT;
+argument|if (m0->m_pkthdr.csum_flags& M_TCPV4_CSUM_OUT) { 		if (!(ifp->if_capabilities& IFCAP_CSUM_TCPv4) || 		    ifp->if_bridge != NULL) { 			in_delayed_cksum(m0); 			m0->m_pkthdr.csum_flags&= ~M_TCPV4_CSUM_OUT;
 comment|/* Clear */
-argument|} 	} else if (m0->m_pkthdr.csum& M_UDPV4_CSUM_OUT) { 		if (!(ifp->if_capabilities& IFCAP_CSUM_UDPv4) || 		    ifp->if_bridge != NULL) { 			in_delayed_cksum(m0); 			m0->m_pkthdr.csum&= ~M_UDPV4_CSUM_OUT;
+argument|} 	} else if (m0->m_pkthdr.csum_flags& M_UDPV4_CSUM_OUT) { 		if (!(ifp->if_capabilities& IFCAP_CSUM_UDPv4) || 		    ifp->if_bridge != NULL) { 			in_delayed_cksum(m0); 			m0->m_pkthdr.csum_flags&= ~M_UDPV4_CSUM_OUT;
 comment|/* Clear */
-argument|} 	}  	if (ntohs(ip->ip_len)<= ifp->if_mtu) { 		if ((ifp->if_capabilities& IFCAP_CSUM_IPv4)&& 		    ifp->if_bridge == NULL) { 			m0->m_pkthdr.csum |= M_IPV4_CSUM_OUT; 			ipstat.ips_outhwcsum++; 		} else { 			ip->ip_sum =
+argument|} 	}  	if (ntohs(ip->ip_len)<= ifp->if_mtu) { 		if ((ifp->if_capabilities& IFCAP_CSUM_IPv4)&& 		    ifp->if_bridge == NULL) { 			m0->m_pkthdr.csum_flags |= M_IPV4_CSUM_OUT; 			ipstat.ips_outhwcsum++; 		} else { 			ip->ip_sum =
 literal|0
 argument|; 			ip->ip_sum = in_cksum(m0, ip->ip_hl<<
 literal|2
 argument|); 		}
 comment|/* Update relevant hardware checksum stats for TCP/UDP */
-argument|if (m0->m_pkthdr.csum& M_TCPV4_CSUM_OUT) 			tcpstat.tcps_outhwcsum++; 		else if (m0->m_pkthdr.csum& M_UDPV4_CSUM_OUT) 			udpstat.udps_outhwcsum++; 		error = (*ifp->if_output)(ifp, m0, sintosa(dst), NULL); 		goto done; 	}
+argument|if (m0->m_pkthdr.csum_flags& M_TCPV4_CSUM_OUT) 			tcpstat.tcps_outhwcsum++; 		else if (m0->m_pkthdr.csum_flags& M_UDPV4_CSUM_OUT) 			udpstat.udps_outhwcsum++; 		error = (*ifp->if_output)(ifp, m0, sintosa(dst), NULL); 		goto done; 	}
 endif|#
 directive|endif
 comment|/* 	 * Too large for interface; fragment if possible. 	 * Must be able to put at least 8 bytes per fragment. 	 */
@@ -17104,7 +17794,7 @@ else|#
 directive|else
 argument|icmp_error(m0, ICMP_UNREACH, ICMP_UNREACH_NEEDFRAG,
 literal|0
-argument|, 			    ifp);
+argument|, 			    ifp->if_mtu);
 endif|#
 directive|endif
 argument|goto done; 		} else 			goto bad; 	}  	m1 = m0;
@@ -17151,23 +17841,13 @@ comment|/* INET */
 ifdef|#
 directive|ifdef
 name|INET6
-argument|void pf_route6(struct mbuf **m, struct pf_rule *r, int dir, struct ifnet *oifp,     struct pf_state *s) { 	struct mbuf		*m0; 	struct m_tag		*mtag; 	struct route_in6	 ip6route; 	struct route_in6	*ro; 	struct sockaddr_in6	*dst; 	struct ip6_hdr		*ip6; 	struct ifnet		*ifp = NULL; 	struct pf_addr		 naddr; 	struct pf_src_node	*sn = NULL; 	int			 error =
+argument|void pf_route6(struct mbuf **m, struct pf_rule *r, int dir, struct ifnet *oifp,     struct pf_state *s, struct pf_pdesc *pd) { 	struct mbuf		*m0; 	struct route_in6	 ip6route; 	struct route_in6	*ro; 	struct sockaddr_in6	*dst; 	struct ip6_hdr		*ip6; 	struct ifnet		*ifp = NULL; 	struct pf_addr		 naddr; 	struct pf_src_node	*sn = NULL; 	int			 error =
 literal|0
 argument|;  	if (m == NULL || *m == NULL || r == NULL || 	    (dir != PF_IN&& dir != PF_OUT) || oifp == NULL) 		panic(
 literal|"pf_route6: invalid parameters"
-argument|);  	if ((mtag = m_tag_find(*m, PACKET_TAG_PF_ROUTED, NULL)) == NULL) { 		if ((mtag = m_tag_get(PACKET_TAG_PF_ROUTED,
-literal|1
-argument|, M_NOWAIT)) == 		    NULL) { 			m0 = *m; 			*m = NULL; 			goto bad; 		} 		*(char *)(mtag +
-literal|1
-argument|) =
-literal|1
-argument|; 		m_tag_prepend(*m, mtag); 	} else { 		if (*(char *)(mtag +
-literal|1
-argument|)>
+argument|);  	if (pd->pf_mtag->routed++>
 literal|3
-argument|) { 			m0 = *m; 			*m = NULL; 			goto bad; 		} 		(*(char *)(mtag +
-literal|1
-argument|))++; 	}  	if (r->rt == PF_DUPTO) {
+argument|) { 		m0 = *m; 		*m = NULL; 		goto bad; 	}  	if (r->rt == PF_DUPTO) {
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -17182,7 +17862,7 @@ directive|endif
 argument|return; 	} else { 		if ((r->rt == PF_REPLYTO) == (r->direction == dir)) 			return; 		m0 = *m; 	}  	if (m0->m_len< sizeof(struct ip6_hdr)) { 		DPFPRINTF(PF_DEBUG_URGENT, 		    (
 literal|"pf_route6: m0->m_len< sizeof(struct ip6_hdr)\n"
 argument|)); 		goto bad; 	} 	ip6 = mtod(m0, struct ip6_hdr *);  	ro =&ip6route; 	bzero((caddr_t)ro, sizeof(*ro)); 	dst = (struct sockaddr_in6 *)&ro->ro_dst; 	dst->sin6_family = AF_INET6; 	dst->sin6_len = sizeof(*dst); 	dst->sin6_addr = ip6->ip6_dst;
-comment|/* Cheat. */
+comment|/* Cheat. XXX why only in the v6 case??? */
 argument|if (r->rt == PF_FASTROUTE) {
 ifdef|#
 directive|ifdef
@@ -17194,7 +17874,7 @@ else|#
 directive|else
 argument|mtag = m_tag_get(PACKET_TAG_PF_GENERATED,
 literal|0
-argument|, M_NOWAIT); 		if (mtag == NULL) 			goto bad; 		m_tag_prepend(m0, mtag); 		ip6_output(m0, NULL, NULL,
+argument|, M_NOWAIT); 		if (mtag == NULL) 			goto bad; 		m_tag_prepend(m0, mtag); 		pd->pf_mtag->flags |= PF_TAG_GENERATED; 		ip6_output(m0, NULL, NULL,
 literal|0
 argument|, NULL, NULL);
 endif|#
@@ -17215,7 +17895,7 @@ argument|if (m0->m_len< sizeof(struct ip6_hdr)) { 			DPFPRINTF(PF_DEBUG_URGENT, 
 literal|"pf_route6: m0->m_len< sizeof(struct ip6_hdr)\n"
 argument|)); 			goto bad; 		} 		ip6 = mtod(m0, struct ip6_hdr *); 	}
 comment|/* 	 * If the packet is too large for the outgoing interface, 	 * send back an icmp6 error. 	 */
-argument|if (IN6_IS_ADDR_LINKLOCAL(&dst->sin6_addr)) 		dst->sin6_addr.s6_addr16[
+argument|if (IN6_IS_SCOPE_EMBED(&dst->sin6_addr)) 		dst->sin6_addr.s6_addr16[
 literal|1
 argument|] = htons(ifp->if_index); 	if ((u_long)m0->m_pkthdr.len<= ifp->if_mtu) {
 ifdef|#
@@ -17308,6 +17988,7 @@ literal|0
 argument|); }
 else|#
 directive|else
+comment|/* !__FreeBSD__ */
 comment|/*  * check protocol (tcp/udp/icmp/icmp6) checksum and set mbuf flag  *   off is the offset where the protocol header starts  *   len is the total length of protocol header plus payload  * returns 0 when the checksum is valid, otherwise returns 1.  */
 argument|int pf_check_proto_cksum(struct mbuf *m, int off, int len, u_int8_t p,     sa_family_t af) { 	u_int16_t flag_ok, flag_bad; 	u_int16_t sum;  	switch (p) { 	case IPPROTO_TCP: 		flag_ok = M_TCP_CSUM_IN_OK; 		flag_bad = M_TCP_CSUM_IN_BAD; 		break; 	case IPPROTO_UDP: 		flag_ok = M_UDP_CSUM_IN_OK; 		flag_bad = M_UDP_CSUM_IN_BAD; 		break; 	case IPPROTO_ICMP:
 ifdef|#
@@ -17321,9 +18002,9 @@ argument|flag_ok = flag_bad =
 literal|0
 argument|; 		break; 	default: 		return (
 literal|1
-argument|); 	} 	if (m->m_pkthdr.csum& flag_ok) 		return (
+argument|); 	} 	if (m->m_pkthdr.csum_flags& flag_ok) 		return (
 literal|0
-argument|); 	if (m->m_pkthdr.csum& flag_bad) 		return (
+argument|); 	if (m->m_pkthdr.csum_flags& flag_bad) 		return (
 literal|1
 argument|); 	if (off< sizeof(struct ip) || len< sizeof(struct udphdr)) 		return (
 literal|1
@@ -17352,7 +18033,7 @@ directive|endif
 comment|/* INET6 */
 argument|default: 		return (
 literal|1
-argument|); 	} 	if (sum) { 		m->m_pkthdr.csum |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			tcpstat.tcps_rcvbadsum++; 			break; 		case IPPROTO_UDP: 			udpstat.udps_badsum++; 			break; 		case IPPROTO_ICMP: 			icmpstat.icps_checksum++; 			break;
+argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			tcpstat.tcps_rcvbadsum++; 			break; 		case IPPROTO_UDP: 			udpstat.udps_badsum++; 			break; 		case IPPROTO_ICMP: 			icmpstat.icps_checksum++; 			break;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -17362,20 +18043,12 @@ directive|endif
 comment|/* INET6 */
 argument|} 		return (
 literal|1
-argument|); 	} 	m->m_pkthdr.csum |= flag_ok; 	return (
+argument|); 	} 	m->m_pkthdr.csum_flags |= flag_ok; 	return (
 literal|0
 argument|); }
 endif|#
 directive|endif
-argument|static int pf_add_mbuf_tag(struct mbuf *m, u_int tag) { 	struct m_tag *mtag;  	if (m_tag_find(m, tag, NULL) != NULL) 		return (
-literal|0
-argument|); 	mtag = m_tag_get(tag,
-literal|0
-argument|, M_NOWAIT); 	if (mtag == NULL) 		return (
-literal|1
-argument|); 	m_tag_prepend(m, mtag); 	return (
-literal|0
-argument|); }
+comment|/* __FreeBSD__ */
 ifdef|#
 directive|ifdef
 name|INET
@@ -17404,17 +18077,41 @@ name|__FreeBSD__
 argument|PF_LOCK();
 endif|#
 directive|endif
-argument|if (!pf_status.running ||
+argument|if (!pf_status.running)
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|(m->m_flags& M_SKIP_FIREWALL)) { 		PF_UNLOCK();
-else|#
-directive|else
-argument|(m_tag_find(m, PACKET_TAG_PF_GENERATED, NULL) != NULL)) {
+argument|{ 		PF_UNLOCK();
 endif|#
 directive|endif
-argument|return (PF_PASS); 	}
+argument|return (PF_PASS);
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|}
+endif|#
+directive|endif
+argument|memset(&pd,
+literal|0
+argument|, sizeof(pd)); 	if ((pd.pf_mtag = pf_get_mtag(m)) == NULL) {
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|PF_UNLOCK();
+endif|#
+directive|endif
+argument|DPFPRINTF(PF_DEBUG_URGENT, 		    (
+literal|"pf_test: pf_get_mtag returned NULL\n"
+argument|)); 		return (PF_DROP); 	}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|if (m->m_flags& M_SKIP_FIREWALL) { 		PF_UNLOCK(); 		return (PF_PASS); 	}
+else|#
+directive|else
+argument|if (pd.pf_mtag->flags& PF_TAG_GENERATED) 		return (PF_PASS);
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -17424,7 +18121,7 @@ directive|else
 argument|if (ifp->if_type == IFT_CARP&& ifp->if_carpdev) 		ifp = ifp->if_carpdev;
 endif|#
 directive|endif
-argument|kif = pfi_index2kif[ifp->if_index]; 	if (kif == NULL) {
+argument|kif = (struct pfi_kif *)ifp->if_pf_kif; 	if (kif == NULL) {
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -17461,9 +18158,7 @@ comment|/* DIAGNOSTIC */
 endif|#
 directive|endif
 comment|/* __FreeBSD__ */
-argument|memset(&pd,
-literal|0
-argument|, sizeof(pd)); 	if (m->m_pkthdr.len< (int)sizeof(*h)) { 		action = PF_DROP; 		REASON_SET(&reason, PFRES_SHORT); 		log =
+argument|if (m->m_pkthdr.len< (int)sizeof(*h)) { 		action = PF_DROP; 		REASON_SET(&reason, PFRES_SHORT); 		log =
 literal|1
 argument|; 		goto done; 	}
 comment|/* We do IP header normalization and packet reassembly here */
@@ -17473,7 +18168,7 @@ argument|; 	if (off< (int)sizeof(*h)) { 		action = PF_DROP; 		REASON_SET(&reason
 literal|1
 argument|; 		goto done; 	}  	pd.src = (struct pf_addr *)&h->ip_src; 	pd.dst = (struct pf_addr *)&h->ip_dst; 	PF_ACPY(&pd.baddr, dir == PF_OUT ? pd.src : pd.dst, AF_INET); 	pd.ip_sum =&h->ip_sum; 	pd.proto = h->ip_p; 	pd.af = AF_INET; 	pd.tos = h->ip_tos; 	pd.tot_len = ntohs(h->ip_len); 	pd.eh = eh;
 comment|/* handle fragments that didn't get reassembled by normalization */
-argument|if (h->ip_off& htons(IP_MF | IP_OFFMASK)) { 		action = pf_test_fragment(&r, dir, kif, m, h,&pd,&a,&ruleset); 		goto done; 	}  	switch (h->ip_p) {  	case IPPROTO_TCP: { 		struct tcphdr	th;  		pd.hdr.tcp =&th; 		if (!pf_pull_hdr(m, off,&th, sizeof(th),&action,&reason, AF_INET)) { 			log = action != PF_PASS; 			goto done; 		} 		if (dir == PF_IN&& pf_check_proto_cksum(m, off, 		    ntohs(h->ip_len) - off, IPPROTO_TCP, AF_INET)) { 			action = PF_DROP; 			goto done; 		} 		pd.p_len = pd.tot_len - off - (th.th_off<<
+argument|if (h->ip_off& htons(IP_MF | IP_OFFMASK)) { 		action = pf_test_fragment(&r, dir, kif, m, h,&pd,&a,&ruleset); 		goto done; 	}  	switch (h->ip_p) {  	case IPPROTO_TCP: { 		struct tcphdr	th;  		pd.hdr.tcp =&th; 		if (!pf_pull_hdr(m, off,&th, sizeof(th),&action,&reason, AF_INET)) { 			log = action != PF_PASS; 			goto done; 		} 		if (dir == PF_IN&& pf_check_proto_cksum(m, off, 		    ntohs(h->ip_len) - off, IPPROTO_TCP, AF_INET)) { 			REASON_SET(&reason, PFRES_PROTCKSUM); 			action = PF_DROP; 			goto done; 		} 		pd.p_len = pd.tot_len - off - (th.th_off<<
 literal|2
 argument|); 		if ((th.th_flags& TH_ACK)&& pd.p_len ==
 literal|0
@@ -17499,9 +18194,9 @@ directive|else
 argument|action = pf_test_tcp(&r,&s, dir, kif, 			    m, off, h,&pd,&a,&ruleset,&ipintrq);
 endif|#
 directive|endif
-argument|break; 	}  	case IPPROTO_UDP: { 		struct udphdr	uh;  		pd.hdr.udp =&uh; 		if (!pf_pull_hdr(m, off,&uh, sizeof(uh),&action,&reason, AF_INET)) { 			log = action != PF_PASS; 			goto done; 		} 		if (dir == PF_IN&& uh.uh_sum&& pf_check_proto_cksum(m, 		    off, ntohs(h->ip_len) - off, IPPROTO_UDP, AF_INET)) { 			action = PF_DROP; 			goto done; 		} 		if (uh.uh_dport ==
+argument|break; 	}  	case IPPROTO_UDP: { 		struct udphdr	uh;  		pd.hdr.udp =&uh; 		if (!pf_pull_hdr(m, off,&uh, sizeof(uh),&action,&reason, AF_INET)) { 			log = action != PF_PASS; 			goto done; 		} 		if (dir == PF_IN&& uh.uh_sum&& pf_check_proto_cksum(m, 		    off, ntohs(h->ip_len) - off, IPPROTO_UDP, AF_INET)) { 			action = PF_DROP; 			REASON_SET(&reason, PFRES_PROTCKSUM); 			goto done; 		} 		if (uh.uh_dport ==
 literal|0
-argument||| 		    ntohs(uh.uh_ulen)> m->m_pkthdr.len - off || 		    ntohs(uh.uh_ulen)< sizeof(struct udphdr)) { 			action = PF_DROP; 			goto done; 		} 		action = pf_test_state_udp(&s, dir, kif, m, off, h,&pd); 		if (action == PF_PASS) {
+argument||| 		    ntohs(uh.uh_ulen)> m->m_pkthdr.len - off || 		    ntohs(uh.uh_ulen)< sizeof(struct udphdr)) { 			action = PF_DROP; 			REASON_SET(&reason, PFRES_SHORT); 			goto done; 		} 		action = pf_test_state_udp(&s, dir, kif, m, off, h,&pd); 		if (action == PF_PASS) {
 if|#
 directive|if
 name|NPFSYNC
@@ -17519,7 +18214,7 @@ directive|else
 argument|action = pf_test_udp(&r,&s, dir, kif, 			    m, off, h,&pd,&a,&ruleset,&ipintrq);
 endif|#
 directive|endif
-argument|break; 	}  	case IPPROTO_ICMP: { 		struct icmp	ih;  		pd.hdr.icmp =&ih; 		if (!pf_pull_hdr(m, off,&ih, ICMP_MINLEN,&action,&reason, AF_INET)) { 			log = action != PF_PASS; 			goto done; 		} 		if (dir == PF_IN&& pf_check_proto_cksum(m, off, 		    ntohs(h->ip_len) - off, IPPROTO_ICMP, AF_INET)) { 			action = PF_DROP; 			goto done; 		} 		action = pf_test_state_icmp(&s, dir, kif, m, off, h,&pd,&reason); 		if (action == PF_PASS) {
+argument|break; 	}  	case IPPROTO_ICMP: { 		struct icmp	ih;  		pd.hdr.icmp =&ih; 		if (!pf_pull_hdr(m, off,&ih, ICMP_MINLEN,&action,&reason, AF_INET)) { 			log = action != PF_PASS; 			goto done; 		} 		if (dir == PF_IN&& pf_check_proto_cksum(m, off, 		    ntohs(h->ip_len) - off, IPPROTO_ICMP, AF_INET)) { 			action = PF_DROP; 			REASON_SET(&reason, PFRES_PROTCKSUM); 			goto done; 		} 		action = pf_test_state_icmp(&s, dir, kif, m, off, h,&pd,&reason); 		if (action == PF_PASS) {
 if|#
 directive|if
 name|NPFSYNC
@@ -17561,34 +18256,34 @@ argument|&& 	    !((s&& s->allow_opts) || r->allow_opts)) { 		action = PF_DROP; 
 literal|1
 argument|; 		DPFPRINTF(PF_DEBUG_MISC, 		    (
 literal|"pf: dropping packet with ip options\n"
-argument|)); 	}  	if (s&& s->tag) 		pf_tag_packet(m, pf_get_tag(m), s->tag);
+argument|)); 	}  	if ((s&& s->tag) || r->rtableid) 		pf_tag_packet(m, pd.pf_mtag, s ? s->tag :
+literal|0
+argument|, r->rtableid);
 ifdef|#
 directive|ifdef
 name|ALTQ
-argument|if (action == PF_PASS&& r->qid) { 		struct m_tag	*mtag; 		struct altq_tag	*atag;  		mtag = m_tag_get(PACKET_TAG_PF_QID, sizeof(*atag), M_NOWAIT); 		if (mtag != NULL) { 			atag = (struct altq_tag *)(mtag +
-literal|1
-argument|); 			if (pqid || pd.tos == IPTOS_LOWDELAY) 				atag->qid = r->pqid; 			else 				atag->qid = r->qid;
+argument|if (action == PF_PASS&& r->qid) { 		if (pqid || (pd.tos& IPTOS_LOWDELAY)) 			pd.pf_mtag->qid = r->pqid; 		else 			pd.pf_mtag->qid = r->qid;
 comment|/* add hints for ecn */
-argument|atag->af = AF_INET; 			atag->hdr = h; 			m_tag_prepend(m, mtag); 		} 	}
+argument|pd.pf_mtag->af = AF_INET; 		pd.pf_mtag->hdr = h; 	}
 endif|#
 directive|endif
 comment|/* ALTQ */
 comment|/* 	 * connections redirected to loopback should not match sockets 	 * bound specifically to loopback due to security implications, 	 * see tcp_input() and in_pcblookup_listen(). 	 */
-argument|if (dir == PF_IN&& action == PF_PASS&& (pd.proto == IPPROTO_TCP || 	    pd.proto == IPPROTO_UDP)&& s != NULL&& s->nat_rule.ptr != NULL&& 	    (s->nat_rule.ptr->action == PF_RDR || 	    s->nat_rule.ptr->action == PF_BINAT)&& 	    (ntohl(pd.dst->v4.s_addr)>> IN_CLASSA_NSHIFT) == IN_LOOPBACKNET&& 	    pf_add_mbuf_tag(m, PACKET_TAG_PF_TRANSLATE_LOCALHOST)) { 		action = PF_DROP; 		REASON_SET(&reason, PFRES_MEMORY); 	}  	if (log) 		PFLOG_PACKET(kif, h, m, AF_INET, dir, reason, r, a, ruleset);  	kif->pfik_bytes[
+argument|if (dir == PF_IN&& action == PF_PASS&& (pd.proto == IPPROTO_TCP || 	    pd.proto == IPPROTO_UDP)&& s != NULL&& s->nat_rule.ptr != NULL&& 	    (s->nat_rule.ptr->action == PF_RDR || 	    s->nat_rule.ptr->action == PF_BINAT)&& 	    (ntohl(pd.dst->v4.s_addr)>> IN_CLASSA_NSHIFT) == IN_LOOPBACKNET) 		pd.pf_mtag->flags |= PF_TAG_TRANSLATE_LOCALHOST;  	if (log) { 		struct pf_rule *lr;  		if (s != NULL&& s->nat_rule.ptr != NULL&& 		    s->nat_rule.ptr->log& PF_LOG_ALL) 			lr = s->nat_rule.ptr; 		else 			lr = r; 		PFLOG_PACKET(kif, h, m, AF_INET, dir, reason, lr, a, ruleset,&pd); 	}  	kif->pfik_bytes[
 literal|0
 argument|][dir == PF_OUT][action != PF_PASS] += pd.tot_len; 	kif->pfik_packets[
 literal|0
-argument|][dir == PF_OUT][action != PF_PASS]++;  	if (action == PF_PASS || r->action == PF_DROP) { 		r->packets++; 		r->bytes += pd.tot_len; 		if (a != NULL) { 			a->packets++; 			a->bytes += pd.tot_len; 		} 		if (s != NULL) { 			dirndx = (dir == s->direction) ?
+argument|][dir == PF_OUT][action != PF_PASS]++;  	if (action == PF_PASS || r->action == PF_DROP) { 		dirndx = (dir == PF_OUT); 		r->packets[dirndx]++; 		r->bytes[dirndx] += pd.tot_len; 		if (a != NULL) { 			a->packets[dirndx]++; 			a->bytes[dirndx] += pd.tot_len; 		} 		if (s != NULL) { 			if (s->nat_rule.ptr != NULL) { 				s->nat_rule.ptr->packets[dirndx]++; 				s->nat_rule.ptr->bytes[dirndx] += pd.tot_len; 			} 			if (s->src_node != NULL) { 				s->src_node->packets[dirndx]++; 				s->src_node->bytes[dirndx] += pd.tot_len; 			} 			if (s->nat_src_node != NULL) { 				s->nat_src_node->packets[dirndx]++; 				s->nat_src_node->bytes[dirndx] += pd.tot_len; 			} 			dirndx = (dir == s->direction) ?
 literal|0
 argument|:
 literal|1
-argument|; 			s->packets[dirndx]++; 			s->bytes[dirndx] += pd.tot_len; 			if (s->nat_rule.ptr != NULL) { 				s->nat_rule.ptr->packets++; 				s->nat_rule.ptr->bytes += pd.tot_len; 			} 			if (s->src_node != NULL) { 				s->src_node->packets++; 				s->src_node->bytes += pd.tot_len; 			} 			if (s->nat_src_node != NULL) { 				s->nat_src_node->packets++; 				s->nat_src_node->bytes += pd.tot_len; 			} 		} 		tr = r; 		nr = (s != NULL) ? s->nat_rule.ptr : pd.nat_rule; 		if (nr != NULL) { 			struct pf_addr *x;
+argument|; 			s->packets[dirndx]++; 			s->bytes[dirndx] += pd.tot_len; 		} 		tr = r; 		nr = (s != NULL) ? s->nat_rule.ptr : pd.nat_rule; 		if (nr != NULL) { 			struct pf_addr *x;
 comment|/* 			 * XXX: we need to make sure that the addresses 			 * passed to pfr_update_stats() are the same than 			 * the addresses used during matching (pfr_match) 			 */
 argument|if (r ==&pf_default_rule) { 				tr = nr; 				x = (s == NULL || s->direction == dir) ?&pd.baddr :&pd.naddr; 			} else 				x = (s == NULL || s->direction == dir) ?&pd.naddr :&pd.baddr; 			if (x ==&pd.baddr || s == NULL) {
 comment|/* we need to change the address */
 argument|if (dir == PF_OUT) 					pd.src = x; 				else 					pd.dst = x; 			} 		} 		if (tr->src.addr.type == PF_ADDR_TABLE) 			pfr_update_stats(tr->src.addr.p.tbl, (s == NULL || 			    s->direction == dir) ? pd.src : pd.dst, pd.af, 			    pd.tot_len, dir == PF_OUT, r->action == PF_PASS, 			    tr->src.neg); 		if (tr->dst.addr.type == PF_ADDR_TABLE) 			pfr_update_stats(tr->dst.addr.p.tbl, (s == NULL || 			    s->direction == dir) ? pd.dst : pd.src, pd.af, 			    pd.tot_len, dir == PF_OUT, r->action == PF_PASS, 			    tr->dst.neg); 	}   	if (action == PF_SYNPROXY_DROP) { 		m_freem(*m0); 		*m0 = NULL; 		action = PF_PASS; 	} else if (r->rt)
 comment|/* pf_route can free the mbuf causing *m0 to become NULL */
-argument|pf_route(m0, r, dir, ifp, s);
+argument|pf_route(m0, r, dir, ifp, s,&pd);
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -17616,9 +18311,7 @@ argument|{ 	struct pfi_kif		*kif; 	u_short			 action, reason =
 literal|0
 argument|, log =
 literal|0
-argument|; 	struct mbuf		*m = *m0; 	struct ip6_hdr		*h = NULL;
-comment|/* make the compiler happy */
-argument|struct pf_rule		*a = NULL, *r =&pf_default_rule, *tr, *nr; 	struct pf_state		*s = NULL; 	struct pf_ruleset	*ruleset = NULL; 	struct pf_pdesc		 pd; 	int			 off, terminal =
+argument|; 	struct mbuf		*m = *m0, *n = NULL; 	struct ip6_hdr		*h; 	struct pf_rule		*a = NULL, *r =&pf_default_rule, *tr, *nr; 	struct pf_state		*s = NULL; 	struct pf_ruleset	*ruleset = NULL; 	struct pf_pdesc		 pd; 	int			 off, terminal =
 literal|0
 argument|, dirndx, rh_cnt =
 literal|0
@@ -17629,17 +18322,32 @@ name|__FreeBSD__
 argument|PF_LOCK();
 endif|#
 directive|endif
-argument|if (!pf_status.running ||
+argument|if (!pf_status.running)
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|(m->m_flags& M_SKIP_FIREWALL)) { 		PF_UNLOCK();
-else|#
-directive|else
-argument|(m_tag_find(m, PACKET_TAG_PF_GENERATED, NULL) != NULL)) {
+argument|{ 		PF_UNLOCK();
 endif|#
 directive|endif
-argument|return (PF_PASS); 	}
+argument|return (PF_PASS);
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|}
+endif|#
+directive|endif
+argument|memset(&pd,
+literal|0
+argument|, sizeof(pd)); 	if ((pd.pf_mtag = pf_get_mtag(m)) == NULL) {
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|PF_UNLOCK();
+endif|#
+directive|endif
+argument|DPFPRINTF(PF_DEBUG_URGENT, 		    (
+literal|"pf_test6: pf_get_mtag returned NULL\n"
+argument|)); 		return (PF_DROP); 	} 	if (pd.pf_mtag->flags& PF_TAG_GENERATED) 		return (PF_PASS);
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -17649,7 +18357,7 @@ directive|else
 argument|if (ifp->if_type == IFT_CARP&& ifp->if_carpdev) 		ifp = ifp->if_carpdev;
 endif|#
 directive|endif
-argument|kif = pfi_index2kif[ifp->if_index]; 	if (kif == NULL) {
+argument|kif = (struct pfi_kif *)ifp->if_pf_kif; 	if (kif == NULL) {
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -17685,9 +18393,14 @@ directive|endif
 comment|/* DIAGNOSTIC */
 endif|#
 directive|endif
-argument|memset(&pd,
-literal|0
-argument|, sizeof(pd)); 	if (m->m_pkthdr.len< (int)sizeof(*h)) { 		action = PF_DROP; 		REASON_SET(&reason, PFRES_SHORT); 		log =
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|h = NULL;
+comment|/* make the compiler happy */
+endif|#
+directive|endif
+argument|if (m->m_pkthdr.len< (int)sizeof(*h)) { 		action = PF_DROP; 		REASON_SET(&reason, PFRES_SHORT); 		log =
 literal|1
 argument|; 		goto done; 	}
 comment|/* We do IP header normalization and packet reassembly here */
@@ -17735,7 +18448,9 @@ argument|) *
 literal|8
 argument|; 			pd.proto = opt6.ip6e_nxt;
 comment|/* goto the next header */
-argument|break; 		} 		default: 			terminal++; 			break; 		} 	} while (!terminal);  	switch (pd.proto) {  	case IPPROTO_TCP: { 		struct tcphdr	th;  		pd.hdr.tcp =&th; 		if (!pf_pull_hdr(m, off,&th, sizeof(th),&action,&reason, AF_INET6)) { 			log = action != PF_PASS; 			goto done; 		} 		if (dir == PF_IN&& pf_check_proto_cksum(m, off, 		    ntohs(h->ip6_plen) - (off - sizeof(struct ip6_hdr)), 		    IPPROTO_TCP, AF_INET6)) { 			action = PF_DROP; 			REASON_SET(&reason, PFRES_PROTCKSUM); 			goto done; 		} 		pd.p_len = pd.tot_len - off - (th.th_off<<
+argument|break; 		} 		default: 			terminal++; 			break; 		} 	} while (!terminal);
+comment|/* if there's no routing header, use unmodified mbuf for checksumming */
+argument|if (!n) 		n = m;  	switch (pd.proto) {  	case IPPROTO_TCP: { 		struct tcphdr	th;  		pd.hdr.tcp =&th; 		if (!pf_pull_hdr(m, off,&th, sizeof(th),&action,&reason, AF_INET6)) { 			log = action != PF_PASS; 			goto done; 		} 		if (dir == PF_IN&& pf_check_proto_cksum(n, off, 		    ntohs(h->ip6_plen) - (off - sizeof(struct ip6_hdr)), 		    IPPROTO_TCP, AF_INET6)) { 			action = PF_DROP; 			REASON_SET(&reason, PFRES_PROTCKSUM); 			goto done; 		} 		pd.p_len = pd.tot_len - off - (th.th_off<<
 literal|2
 argument|); 		action = pf_normalize_tcp(dir, kif, m,
 literal|0
@@ -17757,9 +18472,9 @@ directive|else
 argument|action = pf_test_tcp(&r,&s, dir, kif, 			    m, off, h,&pd,&a,&ruleset,&ip6intrq);
 endif|#
 directive|endif
-argument|break; 	}  	case IPPROTO_UDP: { 		struct udphdr	uh;  		pd.hdr.udp =&uh; 		if (!pf_pull_hdr(m, off,&uh, sizeof(uh),&action,&reason, AF_INET6)) { 			log = action != PF_PASS; 			goto done; 		} 		if (dir == PF_IN&& uh.uh_sum&& pf_check_proto_cksum(m, 		    off, ntohs(h->ip6_plen) - (off - sizeof(struct ip6_hdr)), 		    IPPROTO_UDP, AF_INET6)) { 			action = PF_DROP; 			REASON_SET(&reason, PFRES_PROTCKSUM); 			goto done; 		} 		if (uh.uh_dport ==
+argument|break; 	}  	case IPPROTO_UDP: { 		struct udphdr	uh;  		pd.hdr.udp =&uh; 		if (!pf_pull_hdr(m, off,&uh, sizeof(uh),&action,&reason, AF_INET6)) { 			log = action != PF_PASS; 			goto done; 		} 		if (dir == PF_IN&& uh.uh_sum&& pf_check_proto_cksum(n, 		    off, ntohs(h->ip6_plen) - (off - sizeof(struct ip6_hdr)), 		    IPPROTO_UDP, AF_INET6)) { 			action = PF_DROP; 			REASON_SET(&reason, PFRES_PROTCKSUM); 			goto done; 		} 		if (uh.uh_dport ==
 literal|0
-argument||| 		    ntohs(uh.uh_ulen)> m->m_pkthdr.len - off || 		    ntohs(uh.uh_ulen)< sizeof(struct udphdr)) { 			action = PF_DROP; 			goto done; 		} 		action = pf_test_state_udp(&s, dir, kif, m, off, h,&pd); 		if (action == PF_PASS) {
+argument||| 		    ntohs(uh.uh_ulen)> m->m_pkthdr.len - off || 		    ntohs(uh.uh_ulen)< sizeof(struct udphdr)) { 			action = PF_DROP; 			REASON_SET(&reason, PFRES_SHORT); 			goto done; 		} 		action = pf_test_state_udp(&s, dir, kif, m, off, h,&pd); 		if (action == PF_PASS) {
 if|#
 directive|if
 name|NPFSYNC
@@ -17777,7 +18492,7 @@ directive|else
 argument|action = pf_test_udp(&r,&s, dir, kif, 			    m, off, h,&pd,&a,&ruleset,&ip6intrq);
 endif|#
 directive|endif
-argument|break; 	}  	case IPPROTO_ICMPV6: { 		struct icmp6_hdr	ih;  		pd.hdr.icmp6 =&ih; 		if (!pf_pull_hdr(m, off,&ih, sizeof(ih),&action,&reason, AF_INET6)) { 			log = action != PF_PASS; 			goto done; 		} 		if (dir == PF_IN&& pf_check_proto_cksum(m, off, 		    ntohs(h->ip6_plen) - (off - sizeof(struct ip6_hdr)), 		    IPPROTO_ICMPV6, AF_INET6)) { 			action = PF_DROP; 			REASON_SET(&reason, PFRES_PROTCKSUM); 			goto done; 		} 		action = pf_test_state_icmp(&s, dir, kif, 		    m, off, h,&pd,&reason); 		if (action == PF_PASS) {
+argument|break; 	}  	case IPPROTO_ICMPV6: { 		struct icmp6_hdr	ih;  		pd.hdr.icmp6 =&ih; 		if (!pf_pull_hdr(m, off,&ih, sizeof(ih),&action,&reason, AF_INET6)) { 			log = action != PF_PASS; 			goto done; 		} 		if (dir == PF_IN&& pf_check_proto_cksum(n, off, 		    ntohs(h->ip6_plen) - (off - sizeof(struct ip6_hdr)), 		    IPPROTO_ICMPV6, AF_INET6)) { 			action = PF_DROP; 			REASON_SET(&reason, PFRES_PROTCKSUM); 			goto done; 		} 		action = pf_test_state_icmp(&s, dir, kif, 		    m, off, h,&pd,&reason); 		if (action == PF_PASS) {
 if|#
 directive|if
 name|NPFSYNC
@@ -17819,31 +18534,31 @@ argument|if (action == PF_PASS&& rh_cnt&& 	    !((s&& s->allow_opts) || r->allow
 literal|1
 argument|; 		DPFPRINTF(PF_DEBUG_MISC, 		    (
 literal|"pf: dropping packet with dangerous v6 headers\n"
-argument|)); 	}  	if (s&& s->tag) 		pf_tag_packet(m, pf_get_tag(m), s->tag);
+argument|)); 	}  	if ((s&& s->tag) || r->rtableid) 		pf_tag_packet(m, pd.pf_mtag, s ? s->tag :
+literal|0
+argument|, r->rtableid);
 ifdef|#
 directive|ifdef
 name|ALTQ
-argument|if (action == PF_PASS&& r->qid) { 		struct m_tag	*mtag; 		struct altq_tag	*atag;  		mtag = m_tag_get(PACKET_TAG_PF_QID, sizeof(*atag), M_NOWAIT); 		if (mtag != NULL) { 			atag = (struct altq_tag *)(mtag +
-literal|1
-argument|); 			if (pd.tos == IPTOS_LOWDELAY) 				atag->qid = r->pqid; 			else 				atag->qid = r->qid;
+argument|if (action == PF_PASS&& r->qid) { 		if (pd.tos& IPTOS_LOWDELAY) 			pd.pf_mtag->qid = r->pqid; 		else 			pd.pf_mtag->qid = r->qid;
 comment|/* add hints for ecn */
-argument|atag->af = AF_INET6; 			atag->hdr = h; 			m_tag_prepend(m, mtag); 		} 	}
+argument|pd.pf_mtag->af = AF_INET6; 		pd.pf_mtag->hdr = h; 	}
 endif|#
 directive|endif
 comment|/* ALTQ */
-argument|if (dir == PF_IN&& action == PF_PASS&& (pd.proto == IPPROTO_TCP || 	    pd.proto == IPPROTO_UDP)&& s != NULL&& s->nat_rule.ptr != NULL&& 	    (s->nat_rule.ptr->action == PF_RDR || 	    s->nat_rule.ptr->action == PF_BINAT)&& 	    IN6_IS_ADDR_LOOPBACK(&pd.dst->v6)&& 	    pf_add_mbuf_tag(m, PACKET_TAG_PF_TRANSLATE_LOCALHOST)) { 		action = PF_DROP; 		REASON_SET(&reason, PFRES_MEMORY); 	}  	if (log) 		PFLOG_PACKET(kif, h, m, AF_INET6, dir, reason, r, a, ruleset);  	kif->pfik_bytes[
+argument|if (dir == PF_IN&& action == PF_PASS&& (pd.proto == IPPROTO_TCP || 	    pd.proto == IPPROTO_UDP)&& s != NULL&& s->nat_rule.ptr != NULL&& 	    (s->nat_rule.ptr->action == PF_RDR || 	    s->nat_rule.ptr->action == PF_BINAT)&& 	    IN6_IS_ADDR_LOOPBACK(&pd.dst->v6)) 		pd.pf_mtag->flags |= PF_TAG_TRANSLATE_LOCALHOST;  	if (log) { 		struct pf_rule *lr;  		if (s != NULL&& s->nat_rule.ptr != NULL&& 		    s->nat_rule.ptr->log& PF_LOG_ALL) 			lr = s->nat_rule.ptr; 		else 			lr = r; 		PFLOG_PACKET(kif, h, m, AF_INET6, dir, reason, lr, a, ruleset,&pd); 	}  	kif->pfik_bytes[
 literal|1
 argument|][dir == PF_OUT][action != PF_PASS] += pd.tot_len; 	kif->pfik_packets[
 literal|1
-argument|][dir == PF_OUT][action != PF_PASS]++;  	if (action == PF_PASS || r->action == PF_DROP) { 		r->packets++; 		r->bytes += pd.tot_len; 		if (a != NULL) { 			a->packets++; 			a->bytes += pd.tot_len; 		} 		if (s != NULL) { 			dirndx = (dir == s->direction) ?
+argument|][dir == PF_OUT][action != PF_PASS]++;  	if (action == PF_PASS || r->action == PF_DROP) { 		dirndx = (dir == PF_OUT); 		r->packets[dirndx]++; 		r->bytes[dirndx] += pd.tot_len; 		if (a != NULL) { 			a->packets[dirndx]++; 			a->bytes[dirndx] += pd.tot_len; 		} 		if (s != NULL) { 			if (s->nat_rule.ptr != NULL) { 				s->nat_rule.ptr->packets[dirndx]++; 				s->nat_rule.ptr->bytes[dirndx] += pd.tot_len; 			} 			if (s->src_node != NULL) { 				s->src_node->packets[dirndx]++; 				s->src_node->bytes[dirndx] += pd.tot_len; 			} 			if (s->nat_src_node != NULL) { 				s->nat_src_node->packets[dirndx]++; 				s->nat_src_node->bytes[dirndx] += pd.tot_len; 			} 			dirndx = (dir == s->direction) ?
 literal|0
 argument|:
 literal|1
-argument|; 			s->packets[dirndx]++; 			s->bytes[dirndx] += pd.tot_len; 			if (s->nat_rule.ptr != NULL) { 				s->nat_rule.ptr->packets++; 				s->nat_rule.ptr->bytes += pd.tot_len; 			} 			if (s->src_node != NULL) { 				s->src_node->packets++; 				s->src_node->bytes += pd.tot_len; 			} 			if (s->nat_src_node != NULL) { 				s->nat_src_node->packets++; 				s->nat_src_node->bytes += pd.tot_len; 			} 		} 		tr = r; 		nr = (s != NULL) ? s->nat_rule.ptr : pd.nat_rule; 		if (nr != NULL) { 			struct pf_addr *x;
+argument|; 			s->packets[dirndx]++; 			s->bytes[dirndx] += pd.tot_len; 		} 		tr = r; 		nr = (s != NULL) ? s->nat_rule.ptr : pd.nat_rule; 		if (nr != NULL) { 			struct pf_addr *x;
 comment|/* 			 * XXX: we need to make sure that the addresses 			 * passed to pfr_update_stats() are the same than 			 * the addresses used during matching (pfr_match) 			 */
 argument|if (r ==&pf_default_rule) { 				tr = nr; 				x = (s == NULL || s->direction == dir) ?&pd.baddr :&pd.naddr; 			} else { 				x = (s == NULL || s->direction == dir) ?&pd.naddr :&pd.baddr; 			} 			if (x ==&pd.baddr || s == NULL) { 				if (dir == PF_OUT) 					pd.src = x; 				else 					pd.dst = x; 			} 		} 		if (tr->src.addr.type == PF_ADDR_TABLE) 			pfr_update_stats(tr->src.addr.p.tbl, (s == NULL || 			    s->direction == dir) ? pd.src : pd.dst, pd.af, 			    pd.tot_len, dir == PF_OUT, r->action == PF_PASS, 			    tr->src.neg); 		if (tr->dst.addr.type == PF_ADDR_TABLE) 			pfr_update_stats(tr->dst.addr.p.tbl, (s == NULL || 			    s->direction == dir) ? pd.dst : pd.src, pd.af, 			    pd.tot_len, dir == PF_OUT, r->action == PF_PASS, 			    tr->dst.neg); 	}   	if (action == PF_SYNPROXY_DROP) { 		m_freem(*m0); 		*m0 = NULL; 		action = PF_PASS; 	} else if (r->rt)
 comment|/* pf_route6 can free the mbuf causing *m0 to become NULL */
-argument|pf_route6(m0, r, dir, ifp, s);
+argument|pf_route6(m0, r, dir, ifp, s,&pd);
 ifdef|#
 directive|ifdef
 name|__FreeBSD__

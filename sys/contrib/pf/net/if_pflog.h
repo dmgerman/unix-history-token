@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: if_pflog.h,v 1.11 2004/05/19 17:50:51 dhartmei Exp $ */
+comment|/* $OpenBSD: if_pflog.h,v 1.14 2006/10/25 11:27:01 henning Exp $ */
 end_comment
 
 begin_comment
@@ -23,6 +23,19 @@ directive|define
 name|_NET_IF_PFLOG_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|PFLOGIFS_MAX
+value|16
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct
 struct|struct
 name|pflog_softc
@@ -35,13 +48,7 @@ name|ifnet
 modifier|*
 name|sc_ifp
 decl_stmt|;
-comment|/* the interface */
-name|LIST_ENTRY
-argument_list|(
-argument|pflog_softc
-argument_list|)
-name|sc_next
-expr_stmt|;
+comment|/* the interface pointer */
 else|#
 directive|else
 name|struct
@@ -51,9 +58,27 @@ decl_stmt|;
 comment|/* the interface */
 endif|#
 directive|endif
+name|int
+name|sc_unit
+decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|pflog_softc
+argument_list|)
+name|sc_list
+expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_define
 define|#
@@ -95,6 +120,18 @@ name|rulenr
 decl_stmt|;
 name|u_int32_t
 name|subrulenr
+decl_stmt|;
+name|uid_t
+name|uid
+decl_stmt|;
+name|pid_t
+name|pid
+decl_stmt|;
+name|uid_t
+name|rule_uid
+decl_stmt|;
+name|pid_t
+name|rule_pid
 decl_stmt|;
 name|u_int8_t
 name|dir
@@ -197,6 +234,12 @@ name|pfi_kif
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|pf_pdesc
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|int
@@ -226,6 +269,10 @@ modifier|*
 parameter_list|,
 name|struct
 name|pf_ruleset
+modifier|*
+parameter_list|,
+name|struct
+name|pf_pdesc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -261,14 +308,20 @@ parameter_list|,
 name|f
 parameter_list|,
 name|g
+parameter_list|,
+name|h
 parameter_list|)
-value|do {		\ 	if (pflog_packet_ptr != NULL)			\ 		pflog_packet_ptr(i,a,b,c,d,e,f,g);	\ } while (0)
+value|do {	\ 	if (pflog_packet_ptr != NULL)		\ 	pflog_packet_ptr(i,a,b,c,d,e,f,g,h);	\ } while (0)
 end_define
 
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* ! __FreeBSD__ */
+end_comment
 
 begin_if
 if|#
@@ -300,8 +353,10 @@ parameter_list|,
 name|f
 parameter_list|,
 name|g
+parameter_list|,
+name|h
 parameter_list|)
-value|pflog_packet(i,a,b,c,d,e,f,g)
+value|pflog_packet(i,a,b,c,d,e,f,g,h)
 end_define
 
 begin_else
@@ -331,6 +386,8 @@ parameter_list|,
 name|f
 parameter_list|,
 name|g
+parameter_list|,
+name|h
 parameter_list|)
 value|((void)0)
 end_define
