@@ -7922,7 +7922,7 @@ name|B_CLUSTEROK
 operator|)
 expr_stmt|;
 block|}
-comment|/* 		 * For an interrupted write, the buffer is still valid 		 * and the write hasn't been pushed to the server yet, 		 * so we can't set BIO_ERROR and report the interruption 		 * by setting B_EINTR. For the B_ASYNC case, B_EINTR 		 * is not relevant, so the rpc attempt is essentially 		 * a noop.  For the case of a V3 write rpc not being 		 * committed to stable storage, the block is still 		 * dirty and requires either a commit rpc or another 		 * write rpc with iomode == NFSV3WRITE_FILESYNC before 		 * the block is reused. This is indicated by setting 		 * the B_DELWRI and B_NEEDCOMMIT flags. 		 * 		 * If the buffer is marked B_PAGING, it does not reside on 		 * the vp's paging queues so we cannot call bdirty().  The 		 * bp in this case is not an NFS cache block so we should 		 * be safe. XXX 		 */
+comment|/* 		 * For an interrupted write, the buffer is still valid 		 * and the write hasn't been pushed to the server yet, 		 * so we can't set BIO_ERROR and report the interruption 		 * by setting B_EINTR. For the B_ASYNC case, B_EINTR 		 * is not relevant, so the rpc attempt is essentially 		 * a noop.  For the case of a V3 write rpc not being 		 * committed to stable storage, the block is still 		 * dirty and requires either a commit rpc or another 		 * write rpc with iomode == NFSV3WRITE_FILESYNC before 		 * the block is reused. This is indicated by setting 		 * the B_DELWRI and B_NEEDCOMMIT flags. 		 * 		 * If the buffer is marked B_PAGING, it does not reside on 		 * the vp's paging queues so we cannot call bdirty().  The 		 * bp in this case is not an NFS cache block so we should 		 * be safe. XXX 		 * 		 * The logic below breaks up errors into recoverable and  		 * unrecoverable. For the former, we clear B_INVAL|B_NOCACHE 		 * and keep the buffer around for potential write retries. 		 * For the latter (eg ESTALE), we toss the buffer away (B_INVAL) 		 * and save the error in the nfsnode. This is less than ideal  		 * but necessary. Keeping such buffers around could potentially 		 * cause buffer exhaustion eventually (they can never be written 		 * out, so will get constantly be re-dirtied). It also causes 		 * all sorts of vfs panics. For non-recoverable write errors,  		 * also invalidate the attrcache, so we'll be forced to go over 		 * the wire for this object, returning an error to user on next 		 * call (most of the time). 		 */
 if|if
 condition|(
 name|error
@@ -8037,6 +8037,12 @@ name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
+name|b_flags
+operator||=
+name|B_INVAL
+expr_stmt|;
+name|bp
+operator|->
 name|b_error
 operator|=
 name|np
@@ -8058,6 +8064,12 @@ operator|->
 name|n_flag
 operator||=
 name|NWRITEERR
+expr_stmt|;
+name|np
+operator|->
+name|n_attrstamp
+operator|=
+literal|0
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
