@@ -951,7 +951,7 @@ name|sb
 parameter_list|,
 name|wf
 parameter_list|)
-value|((sb)->sb_flags& SB_LOCK ? \ 		(((wf) == M_WAITOK) ? sb_lock(sb) : EWOULDBLOCK) : \ 		((sb)->sb_flags |= SB_LOCK), 0)
+value|((sb)->sb_flags& SB_LOCK ? \ 		(((wf) == M_WAITOK) ? sb_lock(sb) : EWOULDBLOCK) : \ 		((sb)->sb_flags |= SB_LOCK, 0))
 end_define
 
 begin_comment
