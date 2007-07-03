@@ -252,7 +252,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -291,7 +291,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include

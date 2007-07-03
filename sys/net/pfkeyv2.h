@@ -1193,7 +1193,7 @@ comment|/*250*/
 end_comment
 
 begin_comment
-comment|/* for FAST_IPSEC */
+comment|/* for IPSEC */
 end_comment
 
 begin_define

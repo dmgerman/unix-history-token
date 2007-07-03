@@ -336,7 +336,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -380,7 +380,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*FAST_IPSEC*/
+comment|/*IPSEC*/
 end_comment
 
 begin_include
@@ -7807,7 +7807,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_comment
@@ -8069,7 +8069,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 end_comment
 
 begin_comment

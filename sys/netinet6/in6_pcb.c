@@ -210,7 +210,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -237,7 +237,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 end_comment
 
 begin_decl_stmt
@@ -1815,7 +1815,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 if|if
 condition|(
 name|inp
@@ -1831,7 +1831,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 name|inp
 operator|->
 name|inp_gencnt

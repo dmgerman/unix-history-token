@@ -883,7 +883,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * We only support HMAC algorithms to be able to work with 	 * fast_ipsec(4), so if we are asked only for authentication without 	 * encryption, don't pretend we can accellerate it. 	 */
+comment|/* 	 * We only support HMAC algorithms to be able to work with 	 * ipsec(4), so if we are asked only for authentication without 	 * encryption, don't pretend we can accellerate it. 	 */
 if|if
 condition|(
 name|encini

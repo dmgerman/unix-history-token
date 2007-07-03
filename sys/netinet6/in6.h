@@ -1507,7 +1507,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_define
@@ -1527,7 +1527,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 end_comment
 
 begin_define

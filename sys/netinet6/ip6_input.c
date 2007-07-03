@@ -237,7 +237,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -264,7 +264,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 end_comment
 
 begin_include
@@ -879,7 +879,7 @@ expr_stmt|;
 comment|/* XXX for now */
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 comment|/* 	 * should the inner packet be considered authentic? 	 * see comment in ah4_input(). 	 * NB: m cannot be NULL when passed to the input routine 	 */
 name|m
 operator|->
@@ -897,7 +897,7 @@ name|M_AUTHIPDGM
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 comment|/* 	 * make sure we don't have onion peering information into m_tag. 	 */
 name|ip6_delaux
 argument_list|(
@@ -2775,7 +2775,7 @@ goto|;
 block|}
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 comment|/* 		 * enforce IPsec policy checking if we are seeing last header. 		 * note that we do not visit this with protocols with pcb layer 		 * code - like udp/tcp/raw ip. 		 */
 if|if
 condition|(
@@ -2791,7 +2791,7 @@ name|bad
 goto|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 name|nxt
 operator|=
 operator|(

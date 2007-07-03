@@ -305,7 +305,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -326,7 +326,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*FAST_IPSEC*/
+comment|/*IPSEC*/
 end_comment
 
 begin_include
@@ -2114,7 +2114,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 ifdef|#
 directive|ifdef
 name|INET6
@@ -2172,7 +2172,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 comment|/* 	 * If the INPCB does not exist then all data in the incoming 	 * segment is discarded and an appropriate RST is sent back. 	 */
 if|if
 condition|(

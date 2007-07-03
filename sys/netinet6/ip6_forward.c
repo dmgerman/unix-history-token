@@ -194,7 +194,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -221,7 +221,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 end_comment
 
 begin_include
@@ -323,7 +323,7 @@ name|dst_in6
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|struct
 name|secpolicy
 modifier|*
@@ -354,7 +354,7 @@ expr_stmt|;
 comment|/* XXX bz: ip6_forward_rt */
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 comment|/* 	 * Check AH/ESP integrity. 	 */
 comment|/* 	 * Don't increment ip6s_cantforward because this is the check 	 * before forwarding packet actually. 	 */
 if|if
@@ -381,7 +381,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 comment|/* 	 * Do not forward packets to multicast destination (should be handled 	 * by ip6_mforward(). 	 * Do not forward packets with unspecified source.  It was discussed 	 * in July 2000, on the ipngwg mailing list. 	 */
 if|if
 condition|(
@@ -553,7 +553,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 comment|/* get a security policy for this packet */
 name|sp
 operator|=
@@ -1064,10 +1064,10 @@ name|skip_ipsec
 label|:
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 if|if
 condition|(
 name|ipsecrt
@@ -1354,7 +1354,7 @@ name|ro_rt
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|skip_routing
 label|:
 empty_stmt|;
@@ -1443,7 +1443,7 @@ operator|!=
 name|outzone
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 operator|&&
 operator|!
 name|ipsecrt
@@ -1652,7 +1652,7 @@ name|mtu
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|struct
 name|secpolicy
 modifier|*
@@ -1666,7 +1666,7 @@ name|ipsechdrsiz
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 name|mtu
 operator|=
 name|IN6_LINKMTU
@@ -1678,7 +1678,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 comment|/* 			 * When we do IPsec tunnel ingress, we need to play 			 * with the link value (decrement IPsec header size 			 * from mtu value).  The code is much simpler than v4 			 * case, as we have the outgoing interface for 			 * encapsulated packet as "rt->rt_ifp". 			 */
 name|sp
 operator|=
@@ -1734,7 +1734,7 @@ name|IPV6_MMTU
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 name|icmp6_error
 argument_list|(
 name|mcopy
@@ -1793,13 +1793,13 @@ name|srcrt
 operator|&&
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 operator|!
 name|ipsecrt
 operator|&&
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 operator|(
 name|rt
 operator|->

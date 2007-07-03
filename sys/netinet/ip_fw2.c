@@ -14446,7 +14446,7 @@ name|O_IPSEC
 case|:
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|match
 operator|=
 operator|(

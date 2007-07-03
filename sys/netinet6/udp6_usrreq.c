@@ -240,7 +240,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -261,7 +261,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 end_comment
 
 begin_comment
@@ -330,7 +330,7 @@ decl_stmt|;
 comment|/* XXXRW: Not yet: INP_LOCK_ASSERT(in6p); */
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 comment|/* 	 * Check AH/ESP integrity. 	 */
 if|if
 condition|(
@@ -356,7 +356,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 name|opts
 operator|=
 name|NULL

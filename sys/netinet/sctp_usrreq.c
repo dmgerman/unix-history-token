@@ -2058,7 +2058,7 @@ name|SCTP_DEFAULT_VRFID
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|uint32_t
 name|flags
 decl_stmt|;
@@ -2171,7 +2171,7 @@ name|ip_defttl
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|error
 operator|=
 name|ipsec_init_policy
@@ -2287,7 +2287,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 name|SCTP_INP_WUNLOCK
 argument_list|(
 name|inp

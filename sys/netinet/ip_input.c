@@ -227,7 +227,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -242,7 +242,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 end_comment
 
 begin_include
@@ -1865,7 +1865,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 comment|/* 	 * Bypass packet filtering for packets from a tunnel (gif). 	 */
 if|if
 condition|(
@@ -1879,7 +1879,7 @@ name|passin
 goto|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 comment|/* 	 * Run through list of hooks for input packets. 	 * 	 * NB: Beware of the destination address changing (e.g. 	 *     by NAT rewriting).  When this happens, tell 	 *     ip_forward to do the right thing. 	 */
 comment|/* Jump over all PFIL processing if hooks are not active. */
 if|if
@@ -2543,7 +2543,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 if|if
 condition|(
 name|ip_ipsec_fwd
@@ -2556,7 +2556,7 @@ name|bad
 goto|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 name|ip_forward
 argument_list|(
 name|m
@@ -2681,7 +2681,7 @@ name|hlen
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 comment|/* 	 * enforce IPsec policy checking if we are seeing last header. 	 * note that we do not visit this with protocols with pcb layer 	 * code - like udp/tcp/raw ip. 	 */
 if|if
 condition|(
@@ -2695,7 +2695,7 @@ name|bad
 goto|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 comment|/* 	 * Switch out to protocol's input routine. 	 */
 name|ipstat
 operator|.
@@ -5692,7 +5692,7 @@ name|ICMP_UNREACH_NEEDFRAG
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|mtu
 operator|=
 name|ip_ipsec_mtu
@@ -5702,7 +5702,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 comment|/* 		 * If the MTU wasn't set before use the interface mtu or 		 * fall back to the next smaller mtu step compared to the 		 * current packet size. 		 */
 if|if
 condition|(

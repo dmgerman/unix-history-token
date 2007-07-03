@@ -218,7 +218,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -239,7 +239,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 end_comment
 
 begin_include
@@ -959,7 +959,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|error
 operator|=
 name|ipsec_init_policy
@@ -983,7 +983,7 @@ name|out
 goto|;
 endif|#
 directive|endif
-comment|/*FAST_IPSEC*/
+comment|/*IPSEC*/
 ifdef|#
 directive|ifdef
 name|INET6
@@ -1074,7 +1074,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|FAST_IPSEC
+name|IPSEC
 argument_list|)
 operator|||
 name|defined
@@ -3442,7 +3442,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|ipsec4_delete_pcbpolicy
 argument_list|(
 name|inp
@@ -3450,7 +3450,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*FAST_IPSEC*/
+comment|/*IPSEC*/
 name|inp
 operator|->
 name|inp_gencnt

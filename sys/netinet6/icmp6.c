@@ -222,7 +222,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -10729,7 +10729,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|key_sa_routechange
 argument_list|(
 operator|(
@@ -10743,7 +10743,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 block|}
 name|freeit
 label|:

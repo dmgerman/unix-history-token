@@ -174,7 +174,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -207,7 +207,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 end_comment
 
 begin_include
@@ -784,7 +784,7 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|struct
 name|ipsec_output_state
 name|state
@@ -815,7 +815,7 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 name|ip6
 operator|=
 name|mtod
@@ -930,7 +930,7 @@ block|}
 comment|/*  	 * IPSec checking which handles several cases. 	 * FAST IPSEC: We re-injected the packet. 	 */
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 switch|switch
 condition|(
 name|ip6_ipsec_output
@@ -979,7 +979,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 comment|/* 	 * Calculate the total length of the extension header chain. 	 * Keep the length of the unfragmentable part for fragmentation. 	 */
 name|optlen
 operator|=
@@ -1346,7 +1346,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 if|if
 condition|(
 operator|!
@@ -1527,7 +1527,7 @@ label|:
 empty_stmt|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 comment|/* 	 * If there is a routing header, replace the destination address field 	 * with the first hop of the routing header. 	 */
 if|if
 condition|(
@@ -1998,8 +1998,8 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
-comment|/* 	 * Same as similar comment above.   	 * We only want to do regular IPSEC here and leave this pure 	 * in the case that we're using FAST_IPSEC which uses 	 * this code to re-inject packets. 	 */
+name|IPSEC
+comment|/* 	 * We may re-inject packets into the stack here. 	 */
 if|if
 condition|(
 name|needipsec
@@ -2188,7 +2188,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 comment|/* adjust pointer */
 name|ip6
 operator|=
@@ -6871,7 +6871,7 @@ block|}
 break|break;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 case|case
 name|IPV6_IPSEC_POLICY
 case|:
@@ -6971,7 +6971,7 @@ block|}
 break|break;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 default|default:
 name|error
 operator|=
@@ -7594,7 +7594,7 @@ block|}
 break|break;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 case|case
 name|IPV6_IPSEC_POLICY
 case|:
@@ -7756,7 +7756,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 default|default:
 name|error
 operator|=

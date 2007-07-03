@@ -140,7 +140,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -179,7 +179,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 end_comment
 
 begin_decl_stmt
@@ -967,7 +967,7 @@ name|in6p
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 comment|/* 	 * Check AH/ESP integrity. 	 */
 if|if
 condition|(
@@ -995,7 +995,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 comment|/* 	 * CONTROL chunk processing 	 */
 name|offset
 operator|-=

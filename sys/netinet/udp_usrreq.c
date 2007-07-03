@@ -256,7 +256,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -2098,7 +2098,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 comment|/* check AH/ESP integrity. */
 if|if
 condition|(
@@ -2124,7 +2124,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 ifdef|#
 directive|ifdef
 name|MAC

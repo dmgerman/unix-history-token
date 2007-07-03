@@ -8164,7 +8164,7 @@ name|SCTP_DEFAULT_MAXSEGMENT
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 block|{
 name|struct
 name|inpcbpolicy
@@ -8240,7 +8240,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 name|SCTP_INCR_EP_COUNT
 argument_list|()
 expr_stmt|;
@@ -12853,7 +12853,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|ipsec4_delete_pcbpolicy
 argument_list|(
 name|ip_pcb
@@ -12861,7 +12861,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 comment|/* Unlocks not needed since the socket is gone now */
 block|}
 if|if

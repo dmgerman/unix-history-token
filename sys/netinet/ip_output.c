@@ -156,7 +156,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -177,7 +177,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FAST_IPSEC*/
+comment|/* IPSEC*/
 end_comment
 
 begin_include
@@ -1608,7 +1608,7 @@ name|sendit
 label|:
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 switch|switch
 condition|(
 name|ip_ipsec_output
@@ -1683,7 +1683,7 @@ literal|2
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 comment|/* Jump over all PFIL processing if hooks are not active. */
 if|if
 condition|(
@@ -3992,7 +3992,7 @@ expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 case|case
 name|IP_IPSEC_POLICY
 case|:
@@ -4136,7 +4136,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 default|default:
 name|error
 operator|=
@@ -4443,7 +4443,7 @@ expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 case|case
 name|IP_IPSEC_POLICY
 case|:
@@ -4536,7 +4536,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 default|default:
 name|error
 operator|=

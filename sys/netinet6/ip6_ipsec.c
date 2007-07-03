@@ -132,7 +132,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -198,7 +198,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*FAST_IPSEC*/
+comment|/*IPSEC*/
 end_comment
 
 begin_include
@@ -234,7 +234,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|FAST_IPSEC
+name|IPSEC
 argument_list|)
 operator|&&
 operator|!
@@ -283,7 +283,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|struct
 name|m_tag
 modifier|*
@@ -430,7 +430,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 return|return
 literal|0
 return|;
@@ -456,7 +456,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|struct
 name|m_tag
 modifier|*
@@ -626,7 +626,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 return|return
 literal|0
 return|;
@@ -634,7 +634,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called from ip6_output().  * 1 = drop packet, 0 = continue processing packet,  * -1 = packet was reinjected and stop processing packet (FAST_IPSEC only)  */
+comment|/*  * Called from ip6_output().  * 1 = drop packet, 0 = continue processing packet,  * -1 = packet was reinjected and stop processing packet   */
 end_comment
 
 begin_function
@@ -675,7 +675,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|struct
 name|tdb_ident
 modifier|*
@@ -1115,7 +1115,7 @@ literal|1
 return|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 return|return
 literal|0
 return|;
@@ -1162,7 +1162,7 @@ name|ro
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|sp
 operator|=
 name|ipsec_getpolicybyaddr
@@ -1179,7 +1179,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 if|if
 condition|(
 name|sp
@@ -1287,7 +1287,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 name|KEY_FREESP
 argument_list|(
 operator|&
@@ -1296,7 +1296,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 block|}
 return|return
 name|mtu

@@ -302,7 +302,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -323,7 +323,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 end_comment
 
 begin_include
@@ -909,7 +909,7 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 block|{
 operator|.
 name|pr_type
@@ -1025,7 +1025,7 @@ block|, }
 block|,
 endif|#
 directive|endif
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 ifdef|#
 directive|ifdef
 name|INET
@@ -1968,7 +1968,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FAST_IPSEC
+name|IPSEC
 end_ifdef
 
 begin_expr_stmt
@@ -1995,7 +1995,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FAST_IPSEC */
+comment|/* IPSEC */
 end_comment
 
 begin_comment
