@@ -2540,6 +2540,10 @@ name|u_int32_t
 name|max_src_states
 decl_stmt|;
 name|u_int32_t
+name|spare1
+decl_stmt|;
+comment|/* netgraph */
+name|u_int32_t
 name|max_src_conn
 decl_stmt|;
 struct|struct
@@ -2589,6 +2593,10 @@ decl_stmt|;
 name|u_int16_t
 name|match_tag
 decl_stmt|;
+name|u_int16_t
+name|spare2
+decl_stmt|;
+comment|/* netgraph */
 name|struct
 name|pf_rule_uid
 name|uid
