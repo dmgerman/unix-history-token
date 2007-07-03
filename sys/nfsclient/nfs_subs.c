@@ -2498,6 +2498,8 @@ decl_stmt|;
 name|struct
 name|timespec
 name|mtime
+decl_stmt|,
+name|mtime_save
 decl_stmt|;
 name|int
 name|v3
@@ -2806,6 +2808,12 @@ operator|->
 name|va_rdev
 operator|=
 name|rdev
+expr_stmt|;
+name|mtime_save
+operator|=
+name|vap
+operator|->
+name|va_mtime
 expr_stmt|;
 name|vap
 operator|->
@@ -3318,6 +3326,29 @@ name|va_size
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * The following checks are added to prevent a race between (say) 	 * a READDIR+ and a WRITE.  	 * READDIR+, WRITE requests sent out. 	 * READDIR+ resp, WRITE resp received on client. 	 * However, the WRITE resp was handled before the READDIR+ resp 	 * causing the post op attrs from the write to be loaded first 	 * and the attrs from the READDIR+ to be loaded later. If this  	 * happens, we have stale attrs loaded into the attrcache. 	 * We detect this by for the mtime moving back. We invalidate the  	 * attrcache when this happens. 	 */
+if|if
+condition|(
+name|timespeccmp
+argument_list|(
+operator|&
+name|mtime_save
+argument_list|,
+operator|&
+name|vap
+operator|->
+name|va_mtime
+argument_list|,
+operator|>
+argument_list|)
+condition|)
+comment|/* Size changed or mtime went backwards */
+name|np
+operator|->
+name|n_attrstamp
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|vaper
