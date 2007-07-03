@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl_altq.c,v 1.86 2005/02/28 14:04:51 henning Exp $	*/
-end_comment
-
-begin_comment
-comment|/* add:	$OpenBSD: pfctl_altq.c,v 1.91 2006/11/28 00:08:50 henning Exp $	*/
+comment|/*	$OpenBSD: pfctl_altq.c,v 1.91 2006/11/28 00:08:50 henning Exp $	*/
 end_comment
 
 begin_comment
@@ -634,84 +630,6 @@ block|}
 end_function
 
 begin_function
-name|void
-name|pfaltq_free
-parameter_list|(
-name|struct
-name|pf_altq
-modifier|*
-name|a
-parameter_list|)
-block|{
-name|struct
-name|pf_altq
-modifier|*
-name|altq
-decl_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|altq
-argument_list|,
-argument|&altqs
-argument_list|,
-argument|entries
-argument_list|)
-block|{
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|a
-operator|->
-name|ifname
-argument_list|,
-name|altq
-operator|->
-name|ifname
-argument_list|,
-name|IFNAMSIZ
-argument_list|)
-operator|==
-literal|0
-operator|&&
-name|strncmp
-argument_list|(
-name|a
-operator|->
-name|qname
-argument_list|,
-name|altq
-operator|->
-name|qname
-argument_list|,
-name|PF_QNAME_SIZE
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|altqs
-argument_list|,
-name|altq
-argument_list|,
-name|entries
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|altq
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-block|}
-end_function
-
-begin_function
 name|struct
 name|pf_altq
 modifier|*
@@ -948,7 +866,7 @@ name|level
 argument_list|,
 name|bw
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|qopts
 argument_list|)
@@ -1415,8 +1333,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cannot determine interface bandwidth "
-literal|"for %s, specify an absolute bandwidth\n"
+literal|"interface %s does not know its bandwidth, "
+literal|"please specify an absolute bandwidth\n"
 argument_list|,
 name|pa
 operator|->
@@ -2752,10 +2670,6 @@ name|ptime
 operator|*
 name|maxidle_s
 expr_stmt|;
-if|if
-condition|(
-name|minburst
-condition|)
 name|offtime
 operator|=
 name|cptime
@@ -2779,11 +2693,6 @@ operator|)
 operator|/
 name|gtom
 operator|)
-expr_stmt|;
-else|else
-name|offtime
-operator|=
-name|cptime
 expr_stmt|;
 name|minidle
 operator|=

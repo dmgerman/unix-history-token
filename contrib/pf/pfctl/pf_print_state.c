@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pf_print_state.c,v 1.40 2004/12/10 22:13:26 henning Exp $	*/
+comment|/*	$OpenBSD: pf_print_state.c,v 1.44 2007/03/01 17:20:53 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -392,6 +392,15 @@ case|:
 name|printf
 argument_list|(
 literal|"no-route"
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+name|PF_ADDR_URPFFAILED
+case|:
+name|printf
+argument_list|(
+literal|"urpf-failed"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1538,8 +1547,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", %u:%u pkts, %u:%u bytes"
+literal|", %llu:%llu pkts, %llu:%llu bytes"
 argument_list|,
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|packets
@@ -1547,6 +1564,11 @@ index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|packets
@@ -1554,6 +1576,11 @@ index|[
 literal|1
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|bytes
@@ -1561,6 +1588,11 @@ index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|bytes
@@ -1569,6 +1601,39 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|s
+operator|->
+name|packets
+index|[
+literal|0
+index|]
+operator|,
+name|s
+operator|->
+name|packets
+index|[
+literal|1
+index|]
+operator|,
+name|s
+operator|->
+name|bytes
+index|[
+literal|0
+index|]
+operator|,
+name|s
+operator|->
+name|bytes
+index|[
+literal|1
+index|]
+block|)
+empty_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|s
@@ -1645,6 +1710,9 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_if
 if|if
 condition|(
 name|opts
@@ -1652,14 +1720,15 @@ operator|&
 name|PF_OPT_VERBOSE2
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"   id: %016llx creatorid: %08x%s\n"
+argument_list|,
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-name|printf
-argument_list|(
-literal|"   id: %016llx creatorid: %08x\n"
-argument_list|,
 operator|(
+name|unsigned
 name|long
 name|long
 operator|)
@@ -1676,14 +1745,9 @@ name|s
 operator|->
 name|creatorid
 argument_list|)
-argument_list|)
-expr_stmt|;
+argument_list|,
 else|#
 directive|else
-name|printf
-argument_list|(
-literal|"   id: %016llx creatorid: %08x\n"
-argument_list|,
 name|betoh64
 argument_list|(
 name|s
@@ -1697,26 +1761,38 @@ name|s
 operator|->
 name|creatorid
 argument_list|)
-argument_list|)
-expr_stmt|;
+argument_list|,
 endif|#
 directive|endif
+operator|(
+operator|(
+name|s
+operator|->
+name|sync_flags
+operator|&
+name|PFSTATE_NOSYNC
+operator|)
+condition|?
+literal|" (no-sync)"
+else|:
+literal|""
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
-block|}
-end_function
+end_if
 
-begin_function
-name|int
+begin_macro
+unit|}  int
 name|unmask
-parameter_list|(
-name|struct
-name|pf_addr
-modifier|*
-name|m
-parameter_list|,
-name|sa_family_t
-name|af
-parameter_list|)
+argument_list|(
+argument|struct pf_addr *m
+argument_list|,
+argument|sa_family_t af
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -1804,7 +1880,7 @@ name|b
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 
