@@ -61,6 +61,10 @@ define|#
 directive|define
 name|CDP_ACTIVE
 value|(1<< 0)
+define|#
+directive|define
+name|CDP_SCHED_DTR
+value|(1<< 1)
 name|u_int
 name|cdp_inuse
 decl_stmt|;
@@ -77,6 +81,26 @@ name|struct
 name|devfs_dirent
 modifier|*
 name|cdp_dirent0
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|cdev_priv
+argument_list|)
+name|cdp_dtr_list
+expr_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|cdp_dtr_cb
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+modifier|*
+name|cdp_dtr_cb_arg
 decl_stmt|;
 block|}
 struct|;
@@ -150,6 +174,14 @@ specifier|extern
 name|struct
 name|mtx
 name|devfs_de_interlock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sx
+name|clone_drain_lock
 decl_stmt|;
 end_decl_stmt
 
