@@ -70,17 +70,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|RSYSCALL_NOERROR
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|SYSCALL_NOERROR(name);					\ 	br.ret.sptk.few rp;					\ END(__sys_ ## name)
-end_define
-
-begin_define
-define|#
-directive|define
 name|PSEUDO
 parameter_list|(
 name|name
@@ -89,19 +78,6 @@ define|\
 value|ENTRY(__sys_ ## name,0);
 comment|/* XXX # of args? */
 value|\ 	WEAK_ALIAS(_ ## name, __sys_ ## name);			\ 	CALLSYS_ERROR(name);					\ 	br.ret.sptk.few rp;					\ END(__sys_ ## name);
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSEUDO_NOERROR
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|ENTRY(__sys_ ## name,0);
-comment|/* XXX # of args? */
-value|\ 	WEAK_ALIAS(_ ## name, __sys_ ## name);			\ 	CALLSYS_NOERROR(name);					\ 	br.ret.sptk.few rp;					\ END(__sys_ ## name);
 end_define
 
 end_unit

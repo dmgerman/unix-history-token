@@ -74,17 +74,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYSCALL_NOERROR
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|_SYSCALL_NOERROR(x)
-end_define
-
-begin_define
-define|#
-directive|define
 name|SYSCALL
 parameter_list|(
 name|x
@@ -96,37 +85,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|PSEUDO_NOERROR
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|_SYSCALL_NOERROR(x);						\ 	RET
-end_define
-
-begin_define
-define|#
-directive|define
 name|PSEUDO
 parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|_SYSCALL(x);							\ 	RET
+value|ENTRY(__CONCAT(__sys_, x));					\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	.set _C_LABEL(__CONCAT(_,x)),_C_LABEL(__CONCAT(__sys_,x));	\ 	SYSTRAP(x)
 end_define
 
-begin_define
-define|#
-directive|define
-name|RSYSCALL_NOERROR
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|PSEUDO_NOERROR(x)
-end_define
-
-begin_define
+begin_decl_stmt
+name|bcs
+name|PIC_SYM
+argument_list|(
+name|CERROR
+argument_list|,
+name|PLT
+argument_list|)
+name|RET
 define|#
 directive|define
 name|RSYSCALL
@@ -134,14 +109,11 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|PSEUDO(x)
-end_define
-
-begin_expr_stmt
+value|_SYSCALL(x);							\ 	RET
 operator|.
 name|globl
 name|CERROR
-end_expr_stmt
+end_decl_stmt
 
 end_unit
 
