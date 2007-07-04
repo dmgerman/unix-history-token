@@ -3432,12 +3432,6 @@ name|linux_args
 operator|->
 name|pgoff
 expr_stmt|;
-name|bsd_args
-operator|.
-name|pad
-operator|=
-literal|0
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -5161,12 +5155,6 @@ operator|=
 name|args
 operator|->
 name|fd
-expr_stmt|;
-name|sa
-operator|.
-name|pad
-operator|=
-literal|0
 expr_stmt|;
 name|sa
 operator|.

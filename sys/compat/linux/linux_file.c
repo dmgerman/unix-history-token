@@ -3929,12 +3929,6 @@ name|fd
 expr_stmt|;
 name|nuap
 operator|.
-name|pad
-operator|=
-literal|0
-expr_stmt|;
-name|nuap
-operator|.
 name|length
 operator|=
 name|args
