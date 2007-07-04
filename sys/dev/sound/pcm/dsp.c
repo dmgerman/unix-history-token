@@ -5336,11 +5336,6 @@ name|wrch
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
 break|break;
 case|case
 name|SNDCTL_DSP_SPEED
@@ -7102,11 +7097,6 @@ name|wrch
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
 break|break;
 case|case
 name|SNDCTL_DSP_SETDUPLEX
