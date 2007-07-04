@@ -2779,6 +2779,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|clean_unrhdrl
+argument_list|(
+name|devfs_inos
+argument_list|)
+expr_stmt|;
 name|dev_unlock
 argument_list|()
 expr_stmt|;
@@ -3232,6 +3237,11 @@ expr_stmt|;
 name|devfs_create
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|clean_unrhdrl
+argument_list|(
+name|devfs_inos
 argument_list|)
 expr_stmt|;
 name|dev_unlock
