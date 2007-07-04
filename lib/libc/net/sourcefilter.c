@@ -1373,7 +1373,7 @@ expr_stmt|;
 comment|/* pointer */
 return|return
 operator|(
-name|setsockopt
+name|_setsockopt
 argument_list|(
 name|s
 argument_list|,
@@ -1688,7 +1688,7 @@ name|slist
 expr_stmt|;
 name|err
 operator|=
-name|getsockopt
+name|_getsockopt
 argument_list|(
 name|s
 argument_list|,
