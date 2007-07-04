@@ -123,6 +123,12 @@ directive|include
 file|<i4b/layer4/i4b_l4.h>
 end_include
 
+begin_error
+error|#
+directive|error
+literal|"Cannot be used until I4B is locked."
+end_error
+
 begin_define
 define|#
 directive|define

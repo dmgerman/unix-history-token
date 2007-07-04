@@ -226,13 +226,11 @@ directive|include
 file|<i4b/layer4/i4b_l4.h>
 end_include
 
-begin_expr_stmt
-name|NET_NEEDS_GIANT
-argument_list|(
-literal|"i4b_ipr"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_error
+error|#
+directive|error
+literal|"Cannot be used until I4B is locked."
+end_error
 
 begin_define
 define|#
