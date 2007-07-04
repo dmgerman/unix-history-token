@@ -90,18 +90,10 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|ENTRY(__CONCAT(__sys_, x));					\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	.set _C_LABEL(__CONCAT(_,x)),_C_LABEL(__CONCAT(__sys_,x));	\ 	SYSTRAP(x)
+value|ENTRY(__CONCAT(__sys_, x));					\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	.set _C_LABEL(__CONCAT(_,x)),_C_LABEL(__CONCAT(__sys_,x));	\ 	SYSTRAP(x)							\ 	bcs PIC_SYM(CERROR, PLT)					\ 	RET
 end_define
 
-begin_decl_stmt
-name|bcs
-name|PIC_SYM
-argument_list|(
-name|CERROR
-argument_list|,
-name|PLT
-argument_list|)
-name|RET
+begin_define
 define|#
 directive|define
 name|RSYSCALL
@@ -110,10 +102,13 @@ name|x
 parameter_list|)
 define|\
 value|_SYSCALL(x);							\ 	RET
+end_define
+
+begin_expr_stmt
 operator|.
 name|globl
 name|CERROR
-end_decl_stmt
+end_expr_stmt
 
 end_unit
 
