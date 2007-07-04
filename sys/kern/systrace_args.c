@@ -4867,13 +4867,13 @@ literal|4
 expr_stmt|;
 break|break;
 block|}
-comment|/* pread */
+comment|/* freebsd6_pread */
 case|case
 literal|173
 case|:
 block|{
 name|struct
-name|pread_args
+name|freebsd6_pread_args
 modifier|*
 name|p
 init|=
@@ -4939,13 +4939,13 @@ literal|5
 expr_stmt|;
 break|break;
 block|}
-comment|/* pwrite */
+comment|/* freebsd6_pwrite */
 case|case
 literal|174
 case|:
 block|{
 name|struct
-name|pwrite_args
+name|freebsd6_pwrite_args
 modifier|*
 name|p
 init|=
@@ -5492,13 +5492,13 @@ literal|4
 expr_stmt|;
 break|break;
 block|}
-comment|/* mmap */
+comment|/* freebsd6_mmap */
 case|case
 literal|197
 case|:
 block|{
 name|struct
-name|mmap_args
+name|freebsd6_mmap_args
 modifier|*
 name|p
 init|=
@@ -5596,13 +5596,13 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-comment|/* lseek */
+comment|/* freebsd6_lseek */
 case|case
 literal|199
 case|:
 block|{
 name|struct
-name|lseek_args
+name|freebsd6_lseek_args
 modifier|*
 name|p
 init|=
@@ -5655,13 +5655,13 @@ literal|4
 expr_stmt|;
 break|break;
 block|}
-comment|/* truncate */
+comment|/* freebsd6_truncate */
 case|case
 literal|200
 case|:
 block|{
 name|struct
-name|truncate_args
+name|freebsd6_truncate_args
 modifier|*
 name|p
 init|=
@@ -5707,13 +5707,13 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* ftruncate */
+comment|/* freebsd6_ftruncate */
 case|case
 literal|201
 case|:
 block|{
 name|struct
-name|ftruncate_args
+name|freebsd6_ftruncate_args
 modifier|*
 name|p
 init|=
@@ -15039,6 +15039,342 @@ operator|*
 name|n_args
 operator|=
 literal|7
+expr_stmt|;
+break|break;
+block|}
+comment|/* pread */
+case|case
+literal|475
+case|:
+block|{
+name|struct
+name|pread_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|buf
+expr_stmt|;
+comment|/* void * */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+name|p
+operator|->
+name|nbyte
+expr_stmt|;
+comment|/* size_t */
+name|iarg
+index|[
+literal|3
+index|]
+operator|=
+name|p
+operator|->
+name|offset
+expr_stmt|;
+comment|/* off_t */
+operator|*
+name|n_args
+operator|=
+literal|4
+expr_stmt|;
+break|break;
+block|}
+comment|/* pwrite */
+case|case
+literal|476
+case|:
+block|{
+name|struct
+name|pwrite_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|buf
+expr_stmt|;
+comment|/* const void * */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+name|p
+operator|->
+name|nbyte
+expr_stmt|;
+comment|/* size_t */
+name|iarg
+index|[
+literal|3
+index|]
+operator|=
+name|p
+operator|->
+name|offset
+expr_stmt|;
+comment|/* off_t */
+operator|*
+name|n_args
+operator|=
+literal|4
+expr_stmt|;
+break|break;
+block|}
+comment|/* mmap */
+case|case
+literal|477
+case|:
+block|{
+name|struct
+name|mmap_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|uarg
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|addr
+expr_stmt|;
+comment|/* caddr_t */
+name|uarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|len
+expr_stmt|;
+comment|/* size_t */
+name|iarg
+index|[
+literal|2
+index|]
+operator|=
+name|p
+operator|->
+name|prot
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|3
+index|]
+operator|=
+name|p
+operator|->
+name|flags
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|4
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|5
+index|]
+operator|=
+name|p
+operator|->
+name|pos
+expr_stmt|;
+comment|/* off_t */
+operator|*
+name|n_args
+operator|=
+literal|6
+expr_stmt|;
+break|break;
+block|}
+comment|/* lseek */
+case|case
+literal|478
+case|:
+block|{
+name|struct
+name|lseek_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|offset
+expr_stmt|;
+comment|/* off_t */
+name|iarg
+index|[
+literal|2
+index|]
+operator|=
+name|p
+operator|->
+name|whence
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+block|}
+comment|/* truncate */
+case|case
+literal|479
+case|:
+block|{
+name|struct
+name|truncate_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|uarg
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|path
+expr_stmt|;
+comment|/* char * */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|length
+expr_stmt|;
+comment|/* off_t */
+operator|*
+name|n_args
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+block|}
+comment|/* ftruncate */
+case|case
+literal|480
+case|:
+block|{
+name|struct
+name|ftruncate_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|length
+expr_stmt|;
+comment|/* off_t */
+operator|*
+name|n_args
+operator|=
+literal|2
 expr_stmt|;
 break|break;
 block|}
