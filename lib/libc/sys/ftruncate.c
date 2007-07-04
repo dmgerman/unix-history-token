@@ -69,6 +69,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_comment
 comment|/*  * This function provides 64-bit offset padding that  * is not supplied by GCC 1.X but is supplied by GCC 2.X.  */
 end_comment
@@ -88,15 +94,28 @@ name|off_t
 name|length
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|__getosreldate
+argument_list|()
+operator|>=
+literal|700051
+condition|)
 return|return
 operator|(
-name|__syscall
+name|__sys_ftruncate
 argument_list|(
-operator|(
-name|quad_t
-operator|)
-name|SYS_ftruncate
+name|fd
 argument_list|,
+name|length
+argument_list|)
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|__sys_freebsd6_ftruncate
+argument_list|(
 name|fd
 argument_list|,
 literal|0
