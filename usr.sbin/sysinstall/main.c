@@ -184,9 +184,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|putenv
+name|setenv
 argument_list|(
-literal|"TERM=cons25w"
+literal|"TERM"
+argument_list|,
+literal|"cons25w"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

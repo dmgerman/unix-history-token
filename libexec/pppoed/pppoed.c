@@ -1182,11 +1182,6 @@ decl_stmt|;
 name|char
 name|env
 index|[
-sizeof|sizeof
-argument_list|(
-name|HISMACADDR
-argument_list|)
-operator|+
 literal|18
 index|]
 decl_stmt|,
@@ -1757,9 +1752,7 @@ argument_list|(
 name|env
 argument_list|)
 argument_list|,
-literal|"%s=%x:%x:%x:%x:%x:%x"
-argument_list|,
-name|HISMACADDR
+literal|"%x:%x:%x:%x:%x:%x"
 argument_list|,
 name|macaddr
 index|[
@@ -1794,9 +1787,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|putenv
+name|setenv
 argument_list|(
+name|HISMACADDR
+argument_list|,
 name|env
+argument_list|,
+literal|1
 argument_list|)
 operator|!=
 literal|0
@@ -1805,9 +1802,9 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"putenv: cannot set %s: %m"
+literal|"setenv: cannot set %s: %m"
 argument_list|,
-name|env
+name|HISMACADDR
 argument_list|)
 expr_stmt|;
 block|}
