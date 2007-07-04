@@ -71,6 +71,10 @@ name|int
 name|p
 decl_stmt|;
 comment|/* True if p flag */
+name|int
+name|icase
+decl_stmt|;
+comment|/* True if I flag */
 name|char
 modifier|*
 name|wfile
