@@ -686,9 +686,7 @@ name|m_tag
 modifier|*
 name|mtag
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
+comment|/* XXX int s; */
 if|if
 condition|(
 name|sp
@@ -966,11 +964,7 @@ name|sp
 operator|=
 name|NULL
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+comment|/* XXX splx(s); */
 goto|goto
 name|done
 goto|;
