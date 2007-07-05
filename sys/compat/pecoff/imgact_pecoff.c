@@ -2018,8 +2018,12 @@ name|VM_MAXUSER_ADDRESS
 decl_stmt|;
 name|u_long
 name|ldexport
+init|=
+literal|0
 decl_stmt|,
 name|ldbase
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|pecoff_opthdr
