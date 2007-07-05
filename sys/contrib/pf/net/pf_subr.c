@@ -249,8 +249,6 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|isn_offset
-decl_stmt|,
-name|isn_offset_old
 decl_stmt|;
 end_decl_stmt
 
