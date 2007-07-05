@@ -64,6 +64,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|auditinfo_addr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|bpf_d
 struct_decl|;
 end_struct_decl
