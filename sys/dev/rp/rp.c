@@ -2144,6 +2144,14 @@ operator|=
 name|Data
 expr_stmt|;
 comment|/* data byte value */
+name|DWBuf
+index|[
+literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* priority buffer pointer */
 name|rp_writech4
 argument_list|(
 name|ChP
