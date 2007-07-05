@@ -27,7 +27,7 @@ comment|/* Used to check library and kernel are the same. */
 end_comment
 
 begin_comment
-comment|/*  * Rights that can be represented in mbr_mode.  These have the same values  * as the V* rights in vnode.h, but in order to avoid sharing user and  * kernel constants, we define them here.  That will also improve ABI  * stability if the in-kernel values change.  */
+comment|/*  * Rights that can be represented in mbr_mode.  These have the same values as  * the V* rights in vnode.h, but in order to avoid sharing user and kernel  * constants, we define them here.  That will also improve ABI stability if  * the in-kernel values change.  */
 end_comment
 
 begin_define

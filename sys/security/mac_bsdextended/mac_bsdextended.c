@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005 Tom Rhodes  * Copyright (c) 1999-2002, 2007 Robert N. M. Watson  * Copyright (c) 2001-2005 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  * It was later enhanced by Tom Rhodes for the TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999-2002, 2007 Robert N. M. Watson  * Copyright (c) 2001-2005 Networks Associates Technology, Inc.  * Copyright (c) 2005 Tom Rhodes  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  * It was later enhanced by Tom Rhodes for the TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  * Developed by the TrustedBSD Project.  * "BSD Extended" MAC policy, allowing the administrator to impose  * mandatory rules regarding users and some system objects.  */
+comment|/*  * Developed by the TrustedBSD Project.  *  * "BSD Extended" MAC policy, allowing the administrator to impose mandatory  * firewall-like rules regarding users and file system objects.  */
 end_comment
 
 begin_include
@@ -300,7 +300,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This is just used for logging purposes, eventually we would like  * to log much more then failed requests.  */
+comment|/*  * This is just used for logging purposes, eventually we would like to log  * much more then failed requests.  */
 end_comment
 
 begin_decl_stmt
@@ -332,7 +332,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This tunable is here for compatibility.  It will allow the user  * to switch between the new mode (first rule matches) and the old  * functionality (all rules match).  */
+comment|/*  * This tunable is here for compatibility.  It will allow the user to switch  * between the new mode (first rule matches) and the old functionality (all  * rules match).  */
 end_comment
 
 begin_decl_stmt
@@ -546,7 +546,6 @@ name|namelen
 operator|=
 name|arg2
 expr_stmt|;
-comment|/* printf("bsdextended sysctl handler (namelen %d)\n", namelen); */
 if|if
 condition|(
 name|namelen
@@ -713,7 +712,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* printf("deletion\n"); */
 name|KASSERT
 argument_list|(
 name|ruleptr
@@ -791,7 +789,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* printf("addition\n"); */
 operator|*
 name|ruleptr
 operator|=
@@ -827,8 +824,6 @@ operator|++
 expr_stmt|;
 block|}
 else|else
-block|{
-comment|/* printf("replacement\n"); */
 operator|*
 name|rules
 index|[
@@ -837,7 +832,6 @@ index|]
 operator|=
 name|temprule
 expr_stmt|;
-block|}
 block|}
 name|out
 label|:
@@ -922,7 +916,6 @@ modifier|*
 name|mpc
 parameter_list|)
 block|{
-comment|/* Initialize ruleset lock. */
 name|mtx_init
 argument_list|(
 operator|&
@@ -935,7 +928,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* Register dynamic sysctl's for rules. */
 block|}
 end_function
 
@@ -950,14 +942,12 @@ modifier|*
 name|mpc
 parameter_list|)
 block|{
-comment|/* Destroy ruleset lock. */
 name|mtx_destroy
 argument_list|(
 operator|&
 name|mac_bsdextended_mtx
 argument_list|)
 expr_stmt|;
-comment|/* Tear down sysctls. */
 block|}
 end_function
 
@@ -1192,6 +1182,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|cred
@@ -1226,6 +1217,7 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 if|if
@@ -1506,7 +1498,9 @@ operator|!
 name|match
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -1551,7 +1545,9 @@ operator|!
 name|match
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -1596,7 +1592,9 @@ operator|!
 name|match
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -1659,7 +1657,9 @@ operator|!
 name|match
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -1723,7 +1723,9 @@ operator|!
 name|match
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -1883,7 +1885,9 @@ operator|!
 name|match
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* 	 * Is the access permitted? 	 */
@@ -1935,7 +1939,6 @@ operator|(
 name|EACCES
 operator|)
 return|;
-comment|/* Matching rule denies access */
 block|}
 comment|/* 	 * If the rule matched, permits access, and first match is enabled, 	 * return success. 	 */
 if|if
@@ -1985,7 +1988,7 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* 	 * XXXRW: More specific privilege selection needed? 	 */
+comment|/* 	 * XXXRW: More specific privilege selection needed. 	 */
 if|if
 condition|(
 name|suser_cred
@@ -3115,8 +3118,8 @@ operator|(
 name|error
 operator|)
 return|;
-name|error
-operator|=
+return|return
+operator|(
 name|mac_bsdextended_check_vp
 argument_list|(
 name|cred
@@ -3125,10 +3128,6 @@ name|vp
 argument_list|,
 name|MBI_WRITE
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
