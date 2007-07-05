@@ -372,12 +372,6 @@ name|fd
 expr_stmt|;
 name|sa
 operator|.
-name|pad
-operator|=
-literal|0
-expr_stmt|;
-name|sa
-operator|.
 name|length
 operator|=
 name|uap
