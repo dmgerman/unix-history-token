@@ -1179,7 +1179,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * In the MLD6 specification, there are 3 states and a flag. 	 * 	 * In Non-Listener state, we simply don't have a membership record. 	 * In Delaying Listener state, our timer is running (in6m->in6m_timer) 	 * In Idle Listener state, our timer is not running  	 * (in6m->in6m_timer==IN6M_TIMER_UNDEF) 	 * 	 * The flag is in6m->in6m_state, it is set to MLD_OTHERLISTENER if 	 * we have heard a report from another member, or MLD_IREPORTEDLAST 	 * if we sent the last report. 	 */
+comment|/* 	 * In the MLD6 specification, there are 3 states and a flag. 	 * 	 * In Non-Listener state, we simply don't have a membership record. 	 * In Delaying Listener state, our timer is running (in6m->in6m_timer) 	 * In Idle Listener state, our timer is not running 	 * (in6m->in6m_timer==IN6M_TIMER_UNDEF) 	 * 	 * The flag is in6m->in6m_state, it is set to MLD_OTHERLISTENER if 	 * we have heard a report from another member, or MLD_IREPORTEDLAST 	 * if we sent the last report. 	 */
 switch|switch
 condition|(
 name|mldh

@@ -5663,7 +5663,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * Also, if the address being removed is autoconf'ed, call 	 * pfxlist_onlink_check() since the release might affect the status of 	 * other (detached) addresses.  	 */
+comment|/* 	 * Also, if the address being removed is autoconf'ed, call 	 * pfxlist_onlink_check() since the release might affect the status of 	 * other (detached) addresses. 	 */
 if|if
 condition|(
 operator|(

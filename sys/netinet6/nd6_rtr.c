@@ -4933,7 +4933,7 @@ operator|&
 name|lt6_tmp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We need to treat lifetimes for temporary addresses 		 * differently, according to 		 * draft-ietf-ipv6-privacy-addrs-v2-01.txt 3.3 (1); 		 * we only update the lifetimes when they are in the maximum 		 * intervals.   		 */
+comment|/* 		 * We need to treat lifetimes for temporary addresses 		 * differently, according to 		 * draft-ietf-ipv6-privacy-addrs-v2-01.txt 3.3 (1); 		 * we only update the lifetimes when they are in the maximum 		 * intervals. 		 */
 if|if
 condition|(
 operator|(
@@ -5537,7 +5537,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-comment|/* 		 * There is at least one prefix that has a reachable router, 		 * or at least a router which probably does not advertise 		 * any prefixes.  The latter would be the case when we move 		 * to a new link where we have a router that does not provide 		 * prefixes and we configure an address by hand.   		 * Detach prefixes which have no reachable advertising   		 * router, and attach other prefixes.   		 */
+comment|/* 		 * There is at least one prefix that has a reachable router, 		 * or at least a router which probably does not advertise 		 * any prefixes.  The latter would be the case when we move 		 * to a new link where we have a router that does not provide 		 * prefixes and we configure an address by hand. 		 * Detach prefixes which have no reachable advertising 		 * router, and attach other prefixes. 		 */
 for|for
 control|(
 name|pr

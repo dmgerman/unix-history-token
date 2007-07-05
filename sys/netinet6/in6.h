@@ -1017,7 +1017,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|(IN6_IS_ADDR_MULTICAST(a)&& 	\ 	 (IPV6_ADDR_MC_SCOPE(a) == IPV6_ADDR_SCOPE_SITELOCAL))
+value|(IN6_IS_ADDR_MULTICAST(a)&&	\ 	 (IPV6_ADDR_MC_SCOPE(a) == IPV6_ADDR_SCOPE_SITELOCAL))
 end_define
 
 begin_define
@@ -1077,7 +1077,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|(IN6_IS_ADDR_MULTICAST(a)&& 	\ 	 (__IPV6_ADDR_MC_SCOPE(a) == __IPV6_ADDR_SCOPE_SITELOCAL))
+value|(IN6_IS_ADDR_MULTICAST(a)&&	\ 	 (__IPV6_ADDR_MC_SCOPE(a) == __IPV6_ADDR_SCOPE_SITELOCAL))
 end_define
 
 begin_define
@@ -1140,7 +1140,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((IN6_IS_ADDR_LINKLOCAL(a)) ||		\ 	 (IN6_IS_ADDR_MC_LINKLOCAL(a)) || 	\ 	 (IN6_IS_ADDR_MC_INTFACELOCAL(a)))
+value|((IN6_IS_ADDR_LINKLOCAL(a)) ||		\ 	 (IN6_IS_ADDR_MC_LINKLOCAL(a)) ||	\ 	 (IN6_IS_ADDR_MC_INTFACELOCAL(a)))
 end_define
 
 begin_define

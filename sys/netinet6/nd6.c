@@ -2296,7 +2296,7 @@ name|IFA_ROUTE
 operator|)
 condition|)
 block|{
-comment|/* 			 * This is an unreachable neighbor whose address is 			 * specified as the destination of a p2p interface 			 * (see in6_ifinit()).  We should not free the entry 			 * since this is sort of a "static" entry generated 			 * via interface address configuration.  			 */
+comment|/* 			 * This is an unreachable neighbor whose address is 			 * specified as the destination of a p2p interface 			 * (see in6_ifinit()).  We should not free the entry 			 * since this is sort of a "static" entry generated 			 * via interface address configuration. 			 */
 name|ln
 operator|->
 name|ln_asked
@@ -7140,7 +7140,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * ICMP6 type dependent behavior. 	 * 	 * NS: clear IsRouter if new entry 	 * RS: clear IsRouter 	 * RA: set IsRouter if there's lladdr 	 * redir: clear IsRouter if new entry 	 * 	 * RA case, (1): 	 * The spec says that we must set IsRouter in the following cases: 	 * - If lladdr exist, set IsRouter.  This means (1-5). 	 * - If it is old entry (!newentry), set IsRouter.  This means (7). 	 * So, based on the spec, in (1-5) and (7) cases we must set IsRouter. 	 * A quetion arises for (1) case.  (1) case has no lladdr in the 	 * neighbor cache, this is similar to (6). 	 * This case is rare but we figured that we MUST NOT set IsRouter. 	 * 	 * newentry olladdr  lladdr  llchange	    NS  RS  RA	redir 	 *							D R 	 *	0	n	n	--	(1)	c   ?     s 	 *	0	y	n	--	(2)	c   s     s 	 *	0	n	y	--	(3)	c   s     s 	 *	0	y	y	n	(4)	c   s     s 	 *	0	y	y	y	(5)	c   s     s 	 *	1	--	n	--	(6) c	c 	c s 	 *	1	--	y	--	(7) c	c   s	c s 	 * 	 *					(c=clear s=set) 	 */
+comment|/* 	 * ICMP6 type dependent behavior. 	 * 	 * NS: clear IsRouter if new entry 	 * RS: clear IsRouter 	 * RA: set IsRouter if there's lladdr 	 * redir: clear IsRouter if new entry 	 * 	 * RA case, (1): 	 * The spec says that we must set IsRouter in the following cases: 	 * - If lladdr exist, set IsRouter.  This means (1-5). 	 * - If it is old entry (!newentry), set IsRouter.  This means (7). 	 * So, based on the spec, in (1-5) and (7) cases we must set IsRouter. 	 * A quetion arises for (1) case.  (1) case has no lladdr in the 	 * neighbor cache, this is similar to (6). 	 * This case is rare but we figured that we MUST NOT set IsRouter. 	 * 	 * newentry olladdr  lladdr  llchange	    NS  RS  RA	redir 	 *							D R 	 *	0	n	n	--	(1)	c   ?     s 	 *	0	y	n	--	(2)	c   s     s 	 *	0	n	y	--	(3)	c   s     s 	 *	0	y	y	n	(4)	c   s     s 	 *	0	y	y	y	(5)	c   s     s 	 *	1	--	n	--	(6) c	c	c s 	 *	1	--	y	--	(7) c	c   s	c s 	 * 	 *					(c=clear s=set) 	 */
 switch|switch
 condition|(
 name|type

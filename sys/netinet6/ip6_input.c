@@ -4872,7 +4872,7 @@ case|:
 comment|/* is it possible? */
 break|break;
 default|default:
-comment|/* 			 	 * other cases have been filtered in the above. 				 * none will visit this case.  here we supply 				 * the code just in case (nxt overwritten or 				 * other cases). 				 */
+comment|/* 				 * other cases have been filtered in the above. 				 * none will visit this case.  here we supply 				 * the code just in case (nxt overwritten or 				 * other cases). 				 */
 ifdef|#
 directive|ifdef
 name|PULLDOWN_TEST

@@ -634,7 +634,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called from ip6_output().  * 1 = drop packet, 0 = continue processing packet,  * -1 = packet was reinjected and stop processing packet   */
+comment|/*  * Called from ip6_output().  * 1 = drop packet, 0 = continue processing packet,  * -1 = packet was reinjected and stop processing packet  */
 end_comment
 
 begin_function
@@ -782,7 +782,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * There are four return cases: 	 *    sp != NULL	 	    apply IPsec policy 	 *    sp == NULL, error == 0	    no IPsec handling needed 	 *    sp == NULL, error == -EINVAL  discard packet w/o error 	 *    sp == NULL, error != 0	    discard packet, report error 	 */
+comment|/* 	 * There are four return cases: 	 *    sp != NULL		    apply IPsec policy 	 *    sp == NULL, error == 0	    no IPsec handling needed 	 *    sp == NULL, error == -EINVAL  discard packet w/o error 	 *    sp == NULL, error != 0	    discard packet, report error 	 */
 if|if
 condition|(
 operator|*

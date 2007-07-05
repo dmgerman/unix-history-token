@@ -733,7 +733,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * 'Interfaces' associated with decapsulator (so we can tell  * packets that went through it from ones that get reflected  * by a broken gateway).  Different from IPv4 register_if,  * these interfaces are linked into the system ifnet list,  * because per-interface IPv6 statistics are maintained in  * ifp->if_afdata.  But it does not have any routes point   * to them.  I.e., packets can't be sent this way.  They  * only exist as a placeholder for multicast source   * verification.  */
+comment|/*  * 'Interfaces' associated with decapsulator (so we can tell  * packets that went through it from ones that get reflected  * by a broken gateway).  Different from IPv4 register_if,  * these interfaces are linked into the system ifnet list,  * because per-interface IPv6 statistics are maintained in  * ifp->if_afdata.  But it does not have any routes point  * to them.  I.e., packets can't be sent this way.  They  * only exist as a placeholder for multicast source  * verification.  */
 end_comment
 
 begin_decl_stmt
@@ -2460,7 +2460,7 @@ name|mifcp
 operator|->
 name|mif6c_mifi
 expr_stmt|;
-comment|/*  			 * it is impossible to guess the ifindex of the  			 * register interface.  So mif6c_pifi is automatically 			 * calculated. 			 */
+comment|/* 			 * it is impossible to guess the ifindex of the 			 * register interface.  So mif6c_pifi is automatically 			 * calculated. 			 */
 name|mifcp
 operator|->
 name|mif6c_pifi

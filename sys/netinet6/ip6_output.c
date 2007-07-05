@@ -574,7 +574,7 @@ value|0)
 end_define
 
 begin_comment
-comment|/*  * Form a chain of extension headers.   * m is the extension header mbuf  * mp is the previous mbuf in the chain  * p is the next header  * i is the type of option.  */
+comment|/*  * Form a chain of extension headers.  * m is the extension header mbuf  * mp is the previous mbuf in the chain  * p is the next header  * i is the type of option.  */
 end_comment
 
 begin_define
@@ -912,7 +912,7 @@ name|ip6e_dest2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * IPSec checking which handles several cases. 	 * FAST IPSEC: We re-injected the packet. 	 */
+comment|/* 	 * IPSec checking which handles several cases. 	 * FAST IPSEC: We re-injected the packet. 	 */
 ifdef|#
 directive|ifdef
 name|IPSEC
@@ -1483,7 +1483,7 @@ operator|!
 name|needipsectun
 condition|)
 block|{
-comment|/*  		 * In the FAST IPSec case we have already  		 * re-injected the packet and it has been freed 		 * by the ipsec_done() function.  So, just clean  		 * up after ourselves. 		 */
+comment|/* 		 * In the FAST IPSec case we have already 		 * re-injected the packet and it has been freed 		 * by the ipsec_done() function.  So, just clean 		 * up after ourselves. 		 */
 name|m
 operator|=
 name|NULL
@@ -2155,7 +2155,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/*  			 * In the FAST IPSec case we have already  			 * re-injected the packet and it has been freed 			 * by the ipsec_done() function.  So, just clean  			 * up after ourselves. 			 */
+comment|/* 			 * In the FAST IPSec case we have already 			 * re-injected the packet and it has been freed 			 * by the ipsec_done() function.  So, just clean 			 * up after ourselves. 			 */
 name|m
 operator|=
 name|NULL

@@ -460,7 +460,7 @@ comment|/* upcall Q overflow		   */
 name|u_quad_t
 name|mrt6s_cache_cleanups
 decl_stmt|;
-comment|/* # entries with no upcalls 	   */
+comment|/* # entries with no upcalls	   */
 name|u_quad_t
 name|mrt6s_drop_sel
 decl_stmt|;
@@ -826,13 +826,13 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-comment|/* A copy of the packet	    	    */
+comment|/* A copy of the packet		    */
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-comment|/* Interface pkt came in on 	    */
+comment|/* Interface pkt came in on	    */
 ifdef|#
 directive|ifdef
 name|UPCALL_TIMING

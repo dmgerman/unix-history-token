@@ -961,7 +961,7 @@ return|return;
 block|}
 else|else
 block|{
-comment|/*  		 * In the FAST IPSec case we have already  		 * re-injected the packet and it has been freed 		 * by the ipsec_done() function.  So, just clean  		 * up after ourselves. 		 */
+comment|/* 		 * In the FAST IPSec case we have already 		 * re-injected the packet and it has been freed 		 * by the ipsec_done() function.  So, just clean 		 * up after ourselves. 		 */
 name|m
 operator|=
 name|NULL
