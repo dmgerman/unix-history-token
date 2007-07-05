@@ -2909,6 +2909,12 @@ name|caps
 operator|.
 name|maxspeed
 condition|)
+block|{
+name|ES_UNLOCK
+argument_list|(
+name|es
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ch
@@ -2918,6 +2924,7 @@ operator|.
 name|maxspeed
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|speed
