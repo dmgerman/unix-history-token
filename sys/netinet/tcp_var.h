@@ -1960,6 +1960,7 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|)

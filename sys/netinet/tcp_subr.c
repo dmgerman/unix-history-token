@@ -9493,6 +9493,7 @@ name|void
 modifier|*
 name|ip4hdr
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|ip6hdr

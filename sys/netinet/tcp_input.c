@@ -2218,10 +2218,6 @@ operator|*
 operator|)
 name|ip
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|ip6
 argument_list|)
 operator|)
