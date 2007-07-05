@@ -1623,7 +1623,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void in6_rtqdrain() { 	struct radix_node_head *rnh = rt_tables[AF_INET6]; 	struct rtqk_arg arg;  	arg.found = arg.killed = 0; 	arg.rnh = rnh; 	arg.nextstop = 0; 	arg.draining = 1; 	arg.updating = 0; 	RADIX_NODE_HEAD_LOCK(rnh); 	rnh->rnh_walktree(rnh, in6_rtqkill,&arg); 	RADIX_NODE_HEAD_UNLOCK(rnh); }
+unit|void in6_rtqdrain(void) { 	struct radix_node_head *rnh = rt_tables[AF_INET6]; 	struct rtqk_arg arg;  	arg.found = arg.killed = 0; 	arg.rnh = rnh; 	arg.nextstop = 0; 	arg.draining = 1; 	arg.updating = 0; 	RADIX_NODE_HEAD_LOCK(rnh); 	rnh->rnh_walktree(rnh, in6_rtqkill,&arg); 	RADIX_NODE_HEAD_UNLOCK(rnh); }
 endif|#
 directive|endif
 end_endif

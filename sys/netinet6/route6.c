@@ -111,29 +111,27 @@ begin_comment
 comment|/* Disable route header processing. */
 end_comment
 
+begin_comment
+comment|/*  * proto - is unused  */
+end_comment
+
 begin_function
 name|int
 name|route6_input
 parameter_list|(
-name|mp
-parameter_list|,
-name|offp
-parameter_list|,
-name|proto
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|offp
-decl_stmt|,
+parameter_list|,
+name|int
 name|proto
-decl_stmt|;
-comment|/* proto is unused */
+parameter_list|)
 block|{
 name|struct
 name|ip6_hdr
@@ -409,7 +407,7 @@ literal|0
 end_if
 
 begin_ifdef
-unit|static int ip6_rthdr0(m, ip6, rh0) 	struct mbuf *m; 	struct ip6_hdr *ip6; 	struct ip6_rthdr0 *rh0; { 	int addrs, index; 	struct in6_addr *nextaddr, tmpaddr; 	struct in6_ifaddr *ifa;  	if (rh0->ip6r0_segleft == 0) 		return (0);  	if (rh0->ip6r0_len % 2
+unit|static int ip6_rthdr0(struct mbuf *m, struct ip6_hdr *ip6, struct ip6_rthdr0 *rh0) { 	int addrs, index; 	struct in6_addr *nextaddr, tmpaddr; 	struct in6_ifaddr *ifa;  	if (rh0->ip6r0_segleft == 0) 		return (0);  	if (rh0->ip6r0_len % 2
 ifdef|#
 directive|ifdef
 name|COMPAT_RFC1883

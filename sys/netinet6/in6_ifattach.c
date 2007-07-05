@@ -420,7 +420,7 @@ value|(!EUI64_UNIVERSAL(in6))
 end_define
 
 begin_comment
-comment|/*  * Generate a last-resort interface identifier, when the machine has no  * IEEE802/EUI64 address sources.  * The goal here is to get an interface identifier that is  * (1) random enough and (2) does not change across reboot.  * We currently use MD5(hostname) for it.  */
+comment|/*  * Generate a last-resort interface identifier, when the machine has no  * IEEE802/EUI64 address sources.  * The goal here is to get an interface identifier that is  * (1) random enough and (2) does not change across reboot.  * We currently use MD5(hostname) for it.  *  * in6 - upper 64bits are preserved  */
 end_comment
 
 begin_function
@@ -428,21 +428,16 @@ specifier|static
 name|int
 name|get_rand_ifid
 parameter_list|(
-name|ifp
-parameter_list|,
-name|in6
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|in6_addr
 modifier|*
 name|in6
-decl_stmt|;
-comment|/* upper 64bits are preserved */
+parameter_list|)
 block|{
 name|MD5_CTX
 name|ctxt
@@ -559,30 +554,19 @@ specifier|static
 name|int
 name|generate_tmp_ifid
 parameter_list|(
-name|seed0
-parameter_list|,
-name|seed1
-parameter_list|,
-name|ret
-parameter_list|)
 name|u_int8_t
 modifier|*
 name|seed0
-decl_stmt|,
-decl|*
-name|ret
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 specifier|const
 name|u_int8_t
 modifier|*
 name|seed1
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|ret
+parameter_list|)
 block|{
 name|MD5_CTX
 name|ctxt
@@ -606,7 +590,7 @@ decl_stmt|;
 name|u_int32_t
 name|val32
 decl_stmt|;
-comment|/* If there's no hisotry, start with a random seed. */
+comment|/* If there's no history, start with a random seed. */
 name|bzero
 argument_list|(
 name|nullbuf
@@ -911,31 +895,26 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * Get interface identifier for the specified interface.  * XXX assumes single sockaddr_dl (AF_LINK address) per an interface  */
+comment|/*  * Get interface identifier for the specified interface.  * XXX assumes single sockaddr_dl (AF_LINK address) per an interface  *  * in6 - upper 64bits are preserved  */
 end_comment
 
 begin_function
 name|int
 name|in6_get_hw_ifid
 parameter_list|(
-name|ifp
-parameter_list|,
-name|in6
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|in6_addr
 modifier|*
 name|in6
-decl_stmt|;
-comment|/* upper 64bits are preserved */
+parameter_list|)
 block|{
 name|struct
 name|ifaddr
@@ -1465,7 +1444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get interface identifier for the specified interface.  If it is not  * available on ifp0, borrow interface identifier from other information  * sources.  */
+comment|/*  * Get interface identifier for the specified interface.  If it is not  * available on ifp0, borrow interface identifier from other information  * sources.  *  * altifp - secondary EUI64 source  */
 end_comment
 
 begin_function
@@ -1473,28 +1452,21 @@ specifier|static
 name|int
 name|get_ifid
 parameter_list|(
-name|ifp0
-parameter_list|,
-name|altifp
-parameter_list|,
-name|in6
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp0
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ifnet
 modifier|*
 name|altifp
-decl_stmt|;
-comment|/* secondary EUI64 source */
+parameter_list|,
 name|struct
 name|in6_addr
 modifier|*
 name|in6
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -1774,26 +1746,25 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * altifp - secondary EUI64 source  */
+end_comment
+
 begin_function
 specifier|static
 name|int
 name|in6_ifattach_linklocal
 parameter_list|(
+name|struct
+name|ifnet
+modifier|*
 name|ifp
 parameter_list|,
+name|struct
+name|ifnet
+modifier|*
 name|altifp
 parameter_list|)
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|altifp
-decl_stmt|;
-comment|/* secondary EUI64 source */
 block|{
 name|struct
 name|in6_ifaddr
@@ -2274,19 +2245,20 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * ifp - must be IFT_LOOP  */
+end_comment
+
 begin_function
 specifier|static
 name|int
 name|in6_ifattach_loopback
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
-comment|/* must be IFT_LOOP */
+parameter_list|)
 block|{
 name|struct
 name|in6_aliasreq
@@ -2502,32 +2474,24 @@ begin_function
 name|int
 name|in6_nigroup
 parameter_list|(
-name|ifp
-parameter_list|,
-name|name
-parameter_list|,
-name|namelen
-parameter_list|,
-name|in6
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|namelen
-decl_stmt|;
+parameter_list|,
 name|struct
 name|in6_addr
 modifier|*
 name|in6
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -2800,28 +2764,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX multiple loopback interface needs more care.  for instance,  * nodelocal address needs to be configured onto only one of them.  * XXX multiple link-local address case  */
+comment|/*  * XXX multiple loopback interface needs more care.  for instance,  * nodelocal address needs to be configured onto only one of them.  * XXX multiple link-local address case  *  * altifp - secondary EUI64 source  */
 end_comment
 
 begin_function
 name|void
 name|in6_ifattach
 parameter_list|(
+name|struct
+name|ifnet
+modifier|*
 name|ifp
 parameter_list|,
+name|struct
+name|ifnet
+modifier|*
 name|altifp
 parameter_list|)
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|altifp
-decl_stmt|;
-comment|/* secondary EUI64 source */
 block|{
 name|struct
 name|in6_ifaddr
@@ -3030,13 +2989,11 @@ begin_function
 name|void
 name|in6_ifdetach
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|in6_ifaddr
@@ -3566,31 +3523,23 @@ begin_function
 name|int
 name|in6_get_tmpifid
 parameter_list|(
-name|ifp
-parameter_list|,
-name|retbuf
-parameter_list|,
-name|baseid
-parameter_list|,
-name|generate
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|u_int8_t
 modifier|*
 name|retbuf
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|u_int8_t
 modifier|*
 name|baseid
-decl_stmt|;
+parameter_list|,
 name|int
 name|generate
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_int8_t
 name|nullbuf
@@ -3707,12 +3656,10 @@ begin_function
 name|void
 name|in6_tmpaddrtimer
 parameter_list|(
-name|ignored_arg
-parameter_list|)
 name|void
 modifier|*
 name|ignored_arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|nd_ifinfo
@@ -3848,13 +3795,11 @@ specifier|static
 name|void
 name|in6_purgemaddrs
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|in6_multi
