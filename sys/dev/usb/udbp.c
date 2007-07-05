@@ -1038,16 +1038,11 @@ operator|!
 name|ed
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: could not read endpoint descriptor\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
+literal|"could not read endpoint descriptor\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1130,16 +1125,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: bulk-in and/or bulk-out endpoint not found\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
+literal|"bulk-in and/or bulk-out endpoint not found\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1177,16 +1167,11 @@ literal|1
 index|]
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: bulk-in and bulk-out have different packet sizes %d %d %d %d\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
+literal|"bulk-in and bulk-out have different packet sizes %d %d %d %d\n"
 argument_list|,
 name|ed_bulkin
 operator|->
@@ -1404,16 +1389,11 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: cannot open bulk-in pipe (addr %d)\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
+literal|"cannot open bulk-in pipe (addr %d)\n"
 argument_list|,
 name|sc
 operator|->
@@ -1447,16 +1427,11 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: cannot open bulk-out pipe (addr %d)\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
+literal|"cannot open bulk-out pipe (addr %d)\n"
 argument_list|,
 name|sc
 operator|->
@@ -2237,16 +2212,13 @@ operator|->
 name|sc_bulkout_bufferlen
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: Packet too large, %d> %d\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"Packet too large, %d> %d\n"
 argument_list|,
 name|pktlen
 argument_list|,
