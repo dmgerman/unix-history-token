@@ -1524,11 +1524,6 @@ name|usb_endpoint_descriptor_t
 modifier|*
 name|ed
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|devname
-decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
@@ -1561,15 +1556,6 @@ operator|=
 name|uaa
 operator|->
 name|iface
-expr_stmt|;
-name|devname
-operator|=
-name|device_get_nameunit
-argument_list|(
-name|ucom
-operator|->
-name|sc_dev
-argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -1622,11 +1608,11 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: failed to set configuration, err=%s\n"
+name|self
 argument_list|,
-name|devname
+literal|"failed to set configuration, err=%s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -1655,16 +1641,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: failed to get configuration descriptor\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|ucom
-operator|->
-name|sc_dev
-argument_list|)
+literal|"failed to get configuration descriptor\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1691,11 +1672,11 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: failed to get interface, err=%s\n"
+name|self
 argument_list|,
-name|devname
+literal|"failed to get interface, err=%s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -1759,16 +1740,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: no endpoint descriptor for %d\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|ucom
-operator|->
-name|sc_dev
-argument_list|)
+literal|"no endpoint descriptor for %d\n"
 argument_list|,
 name|i
 argument_list|)
@@ -1891,16 +1867,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Could not find data bulk in\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|ucom
-operator|->
-name|sc_dev
-argument_list|)
+literal|"Could not find data bulk in\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1917,16 +1888,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Could not find data bulk out\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|ucom
-operator|->
-name|sc_dev
-argument_list|)
+literal|"Could not find data bulk out\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1943,16 +1909,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Could not find interrupt in\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|ucom
-operator|->
-name|sc_dev
-argument_list|)
+literal|"Could not find interrupt in\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2031,16 +1992,11 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: reset failed, %s\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|ucom
-operator|->
-name|sc_dev
-argument_list|)
+literal|"reset failed, %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2305,18 +2261,15 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: uvscom_readstat: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"uvscom_readstat: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2449,18 +2402,15 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: uvscom_shutdown: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"uvscom_shutdown: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2650,18 +2600,15 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: uvscom_set_line: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"uvscom_set_line: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2786,18 +2733,15 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: uvscom_set_line_coding: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"uvscom_set_line_coding: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -2871,18 +2815,15 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: uvscom_set_line_coding: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"uvscom_set_line_coding: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -3721,18 +3662,15 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: cannot open interrupt pipe (addr %d)\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"cannot open interrupt pipe (addr %d)\n"
 argument_list|,
 name|sc
 operator|->
@@ -3944,18 +3882,15 @@ if|if
 condition|(
 name|err
 condition|)
-name|printf
-argument_list|(
-literal|"%s: abort interrupt pipe failed: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"abort interrupt pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -3976,18 +3911,15 @@ if|if
 condition|(
 name|err
 condition|)
-name|printf
-argument_list|(
-literal|"%s: close interrupt pipe failed: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"close interrupt pipe failed: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -4074,18 +4006,15 @@ operator|==
 name|USBD_CANCELLED
 condition|)
 return|return;
-name|printf
-argument_list|(
-literal|"%s: uvscom_intr: abnormal status: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"uvscom_intr: abnormal status: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(

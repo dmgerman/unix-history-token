@@ -903,11 +903,23 @@ name|PALM35
 block|}
 block|,
 comment|/*	{{ USB_VENDOR_SONY, USB_PRODUCT_SONY_CLIE_25 }, PALM4 },*/
+comment|/*	{{ USB_VENDOR_SONY, USB_PRODUCT_SONY_CLIE_TH55 }, PALM4 }, */
+comment|/* See PR 80935 */
 block|{
 block|{
 name|USB_VENDOR_SONY
 block|,
 name|USB_PRODUCT_SONY_CLIE_TJ37
+block|}
+block|,
+name|PALM4
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_TAPWAVE
+block|,
+name|USB_PRODUCT_TAPWAVE_ZODIAC
 block|}
 block|,
 name|PALM4
@@ -1047,11 +1059,6 @@ name|usb_endpoint_descriptor_t
 modifier|*
 name|ed
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|devname
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1090,15 +1097,6 @@ name|uaa
 operator|->
 name|iface
 expr_stmt|;
-name|devname
-operator|=
-name|device_get_nameunit
-argument_list|(
-name|ucom
-operator|->
-name|sc_dev
-argument_list|)
-expr_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|10
@@ -1127,11 +1125,11 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"\n%s: failed to set configuration, err=%s\n"
+name|self
 argument_list|,
-name|devname
+literal|"failed to set configuration, err=%s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -1160,11 +1158,11 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"\n%s: failed to get interface, err=%s\n"
+name|self
 argument_list|,
-name|devname
+literal|"failed to get interface, err=%s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -1262,12 +1260,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: could not read endpoint descriptor"
-literal|": %s\n"
+name|self
 argument_list|,
-name|devname
+literal|"could not read endpoint descriptor: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -1337,11 +1334,11 @@ name|addr
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: unexpected endpoint\n"
+name|self
 argument_list|,
-name|devname
+literal|"unexpected endpoint\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1359,16 +1356,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Could not find data bulk in\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|ucom
-operator|->
-name|sc_dev
-argument_list|)
+literal|"Could not find data bulk in\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1385,16 +1377,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Could not find data bulk out\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|ucom
-operator|->
-name|sc_dev
-argument_list|)
+literal|"Could not find data bulk out\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1463,16 +1450,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: init failed, %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|ucom
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"init failed, %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -1779,18 +1763,15 @@ operator|.
 name|num_ports
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: Number of ports: %d\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"Number of ports: %d\n"
 argument_list|,
 name|np
 argument_list|)
@@ -1860,18 +1841,15 @@ literal|"unknown"
 expr_stmt|;
 break|break;
 block|}
-name|printf
-argument_list|(
-literal|"%s: port %d, is for %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_ucom
 operator|.
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"port %d, is for %s\n"
 argument_list|,
 name|coninfo
 operator|.
