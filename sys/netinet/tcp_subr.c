@@ -9517,6 +9517,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
+specifier|const
 name|struct
 name|ip6_hdr
 modifier|*
@@ -9525,6 +9526,7 @@ decl_stmt|;
 name|ip6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_hdr
 operator|*
