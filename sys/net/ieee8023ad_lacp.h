@@ -929,6 +929,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|lacp_req
+parameter_list|(
+name|struct
+name|lagg_softc
+modifier|*
+parameter_list|,
+name|caddr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lacp_portreq
+parameter_list|(
+name|struct
+name|lagg_port
+modifier|*
+parameter_list|,
+name|caddr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* following constants don't include terminating NUL */
 end_comment
