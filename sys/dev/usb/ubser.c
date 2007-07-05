@@ -1038,16 +1038,11 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: failed to get number of serials\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
+literal|"failed to get number of serials\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1062,16 +1057,11 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: bogus answer on get_numser\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
+literal|"bogus answer on get_numser\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1092,16 +1082,11 @@ name|sc_numser
 operator|=
 name|MAX_SER
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: found %i serials\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
+literal|"found %i serials\n"
 argument_list|,
 name|sc
 operator|->
@@ -1195,16 +1180,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: couldn't get ep %d\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
+literal|"couldn't get ep %d\n"
 argument_list|,
 name|i
 argument_list|)
@@ -1335,16 +1315,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: could not find bulk in/out endpoint\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
+literal|"could not find bulk in/out endpoint\n"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1384,16 +1359,11 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: open bulk in error (addr %d): %s\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
+literal|"open bulk in error (addr %d): %s\n"
 argument_list|,
 name|sc
 operator|->
@@ -1435,16 +1405,11 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: open bulk out error (addr %d): %s\n"
+name|self
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
+literal|"open bulk out error (addr %d): %s\n"
 argument_list|,
 name|sc
 operator|->
@@ -2996,16 +2961,13 @@ operator|!=
 name|USBD_NORMAL_COMPLETION
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: ubserwritecb: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"ubserwritecb: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -3063,16 +3025,13 @@ operator|->
 name|sc_opkthdrlen
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: sent size too small, cc = %d\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"sent size too small, cc = %d\n"
 argument_list|,
 name|cc
 argument_list|)
@@ -3309,16 +3268,13 @@ operator|==
 name|USBD_IOERROR
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: ubserreadcb: %s - restarting\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"ubserreadcb: %s - restarting\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -3353,16 +3309,13 @@ operator|!=
 name|USBD_CANCELLED
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: ubserreadcb: %s\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"ubserreadcb: %s\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -3433,16 +3386,13 @@ operator|->
 name|sc_ibufsizepad
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: invalid receive data size, %d chars\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"invalid receive data size, %d chars\n"
 argument_list|,
 name|cc
 argument_list|)
@@ -3648,16 +3598,13 @@ name|lostcc
 operator|>
 literal|0
 condition|)
-name|printf
-argument_list|(
-literal|"%s: lost %d chars\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"lost %d chars\n"
 argument_list|,
 name|lostcc
 argument_list|)
@@ -3700,16 +3647,13 @@ literal|1
 condition|)
 block|{
 comment|/* XXX what should we do? */
-name|printf
-argument_list|(
-literal|"%s: lost %d chars\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"lost %d chars\n"
 argument_list|,
 name|cc
 argument_list|)
@@ -3738,16 +3682,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: read start failed\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
-argument_list|)
+argument_list|,
+literal|"read start failed\n"
 argument_list|)
 expr_stmt|;
 comment|/* XXX what should we do now? */
