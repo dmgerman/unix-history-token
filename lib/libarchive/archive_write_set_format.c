@@ -97,6 +97,12 @@ name|archive_write_set_format_cpio
 block|}
 block|,
 block|{
+name|ARCHIVE_FORMAT_CPIO_SVR4_NOCRC
+block|,
+name|archive_write_set_format_cpio_newc
+block|}
+block|,
+block|{
 name|ARCHIVE_FORMAT_CPIO_POSIX
 block|,
 name|archive_write_set_format_cpio

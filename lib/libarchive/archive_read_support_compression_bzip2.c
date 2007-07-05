@@ -120,6 +120,12 @@ directive|include
 file|"archive_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"archive_read_private.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -147,6 +153,10 @@ decl_stmt|;
 name|int64_t
 name|total_out
 decl_stmt|;
+name|char
+name|eof
+decl_stmt|;
+comment|/* True = found end of compressed data. */
 block|}
 struct|;
 end_struct
@@ -157,7 +167,7 @@ name|int
 name|finish
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|)
 function_decl|;
@@ -169,7 +179,7 @@ name|ssize_t
 name|read_ahead
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 specifier|const
@@ -188,7 +198,7 @@ name|ssize_t
 name|read_consume
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|size_t
@@ -202,7 +212,7 @@ name|int
 name|drive_decompressor
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -219,7 +229,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* These two functions are defined even if we lack bzlib.  See below. */
+comment|/* These two functions are defined even if we lack the library.  See below. */
 end_comment
 
 begin_function_decl
@@ -242,7 +252,7 @@ name|int
 name|init
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 specifier|const
@@ -261,11 +271,23 @@ parameter_list|(
 name|struct
 name|archive
 modifier|*
-name|a
+name|_a
 parameter_list|)
 block|{
-return|return
+name|struct
+name|archive_read
+modifier|*
+name|a
+init|=
 operator|(
+expr|struct
+name|archive_read
+operator|*
+operator|)
+name|_a
+decl_stmt|;
+if|if
+condition|(
 name|__archive_read_register_compression
 argument_list|(
 name|a
@@ -274,6 +296,17 @@ name|bid
 argument_list|,
 name|init
 argument_list|)
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
@@ -462,7 +495,7 @@ name|HAVE_BZLIB_H
 end_ifndef
 
 begin_comment
-comment|/*  * If we don't have bzlib on this system, we can't actually do the  * decompression.  We can, however, still detect bzip2-compressed  * archives and emit a useful message.  */
+comment|/*  * If we don't have the library on this system, we can't actually do the  * decompression.  We can, however, still detect compressed archives  * and emit a useful message.  */
 end_comment
 
 begin_function
@@ -471,7 +504,7 @@ name|int
 name|init
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -535,7 +568,7 @@ name|int
 name|init
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -558,12 +591,16 @@ name|ret
 decl_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_code
 operator|=
 name|ARCHIVE_COMPRESSION_BZIP2
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 operator|=
 literal|"bzip2"
@@ -593,7 +630,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -601,6 +641,8 @@ literal|"Can't allocate data for %s decompression"
 argument_list|,
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 argument_list|)
 expr_stmt|;
@@ -685,7 +727,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ENOMEM
 argument_list|,
@@ -693,6 +738,8 @@ literal|"Can't allocate %s decompression buffers"
 argument_list|,
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 argument_list|)
 expr_stmt|;
@@ -738,26 +785,34 @@ name|n
 expr_stmt|;
 name|a
 operator|->
-name|compression_read_ahead
+name|decompressor
+operator|->
+name|read_ahead
 operator|=
 name|read_ahead
 expr_stmt|;
 name|a
 operator|->
-name|compression_read_consume
+name|decompressor
+operator|->
+name|consume
 operator|=
 name|read_consume
 expr_stmt|;
 name|a
 operator|->
-name|compression_skip
+name|decompressor
+operator|->
+name|skip
 operator|=
 name|NULL
 expr_stmt|;
 comment|/* not supported */
 name|a
 operator|->
-name|compression_finish
+name|decompressor
+operator|->
+name|finish
 operator|=
 name|finish
 expr_stmt|;
@@ -816,7 +871,9 @@ condition|)
 block|{
 name|a
 operator|->
-name|compression_data
+name|decompressor
+operator|->
+name|data
 operator|=
 name|state
 expr_stmt|;
@@ -829,7 +886,10 @@ block|}
 comment|/* Library setup failed: Clean up. */
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -837,6 +897,8 @@ literal|"Internal error initializing %s library"
 argument_list|,
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 argument_list|)
 expr_stmt|;
@@ -863,7 +925,10 @@ name|BZ_PARAM_ERROR
 case|:
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -877,9 +942,12 @@ name|BZ_MEM_ERROR
 case|:
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
-name|ARCHIVE_ERRNO_MISC
+name|ENOMEM
 argument_list|,
 literal|"Internal error initializing compression library: "
 literal|"out of memory"
@@ -891,7 +959,10 @@ name|BZ_CONFIG_ERROR
 case|:
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -919,7 +990,7 @@ name|ssize_t
 name|read_ahead
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -938,11 +1009,12 @@ name|private_data
 modifier|*
 name|state
 decl_stmt|;
-name|int
+name|size_t
 name|read_avail
 decl_stmt|,
 name|was_avail
-decl_stmt|,
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|;
 name|state
@@ -954,12 +1026,9 @@ operator|*
 operator|)
 name|a
 operator|->
-name|compression_data
-expr_stmt|;
-name|was_avail
-operator|=
-operator|-
-literal|1
+name|decompressor
+operator|->
+name|data
 expr_stmt|;
 if|if
 condition|(
@@ -971,7 +1040,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_PROGRAMMER
 argument_list|,
@@ -1058,30 +1130,23 @@ expr_stmt|;
 block|}
 while|while
 condition|(
-name|was_avail
-operator|<
-name|read_avail
-operator|&&
-comment|/* Made some progress. */
 name|read_avail
 operator|<
-operator|(
-name|int
-operator|)
 name|min
 operator|&&
 comment|/* Haven't satisfied min. */
 name|read_avail
 operator|<
-operator|(
-name|int
-operator|)
 name|state
 operator|->
 name|uncompressed_buffer_size
 condition|)
 block|{
 comment|/* !full */
+name|was_avail
+operator|=
+name|read_avail
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1094,7 +1159,7 @@ argument_list|,
 name|state
 argument_list|)
 operator|)
-operator|!=
+operator|<
 name|ARCHIVE_OK
 condition|)
 return|return
@@ -1102,10 +1167,14 @@ operator|(
 name|ret
 operator|)
 return|;
-name|was_avail
-operator|=
-name|read_avail
-expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+name|ARCHIVE_EOF
+condition|)
+break|break;
+comment|/* Break on EOF even if we haven't met min. */
 name|read_avail
 operator|=
 name|state
@@ -1118,6 +1187,14 @@ name|state
 operator|->
 name|read_next
 expr_stmt|;
+if|if
+condition|(
+name|was_avail
+operator|==
+name|read_avail
+condition|)
+comment|/* No progress? */
+break|break;
 block|}
 operator|*
 name|p
@@ -1144,7 +1221,7 @@ name|ssize_t
 name|read_consume
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -1166,10 +1243,14 @@ operator|*
 operator|)
 name|a
 operator|->
-name|compression_data
+name|decompressor
+operator|->
+name|data
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|file_position
 operator|+=
 name|n
@@ -1218,7 +1299,7 @@ name|int
 name|finish
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)
@@ -1240,7 +1321,9 @@ operator|*
 operator|)
 name|a
 operator|->
-name|compression_data
+name|decompressor
+operator|->
+name|data
 expr_stmt|;
 name|ret
 operator|=
@@ -1266,7 +1349,10 @@ break|break;
 default|default:
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -1274,6 +1360,8 @@ literal|"Failed to clean up %s compressor"
 argument_list|,
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 argument_list|)
 expr_stmt|;
@@ -1296,30 +1384,11 @@ argument_list|)
 expr_stmt|;
 name|a
 operator|->
-name|compression_data
+name|decompressor
+operator|->
+name|data
 operator|=
 name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|a
-operator|->
-name|client_closer
-operator|!=
-name|NULL
-condition|)
-call|(
-name|a
-operator|->
-name|client_closer
-call|)
-argument_list|(
-name|a
-argument_list|,
-name|a
-operator|->
-name|client_data
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1339,7 +1408,7 @@ name|int
 name|drive_decompressor
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -1361,6 +1430,22 @@ name|char
 modifier|*
 name|output
 decl_stmt|;
+specifier|const
+name|void
+modifier|*
+name|read_buf
+decl_stmt|;
+if|if
+condition|(
+name|state
+operator|->
+name|eof
+condition|)
+return|return
+operator|(
+name|ARCHIVE_EOF
+operator|)
+return|;
 name|total_decompressed
 operator|=
 literal|0
@@ -1382,6 +1467,14 @@ operator|==
 literal|0
 condition|)
 block|{
+name|read_buf
+operator|=
+name|state
+operator|->
+name|stream
+operator|.
+name|next_in
+expr_stmt|;
 name|ret
 operator|=
 call|(
@@ -1390,25 +1483,33 @@ operator|->
 name|client_reader
 call|)
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|a
 operator|->
 name|client_data
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
+name|read_buf
+argument_list|)
+expr_stmt|;
 name|state
 operator|->
 name|stream
 operator|.
 name|next_in
-argument_list|)
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+name|read_buf
 expr_stmt|;
 if|if
 condition|(
@@ -1435,7 +1536,10 @@ condition|)
 block|{
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|EIO
 argument_list|,
@@ -1443,6 +1547,8 @@ literal|"Premature end of %s compressed data"
 argument_list|,
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 argument_list|)
 expr_stmt|;
@@ -1454,6 +1560,8 @@ return|;
 block|}
 name|a
 operator|->
+name|archive
+operator|.
 name|raw_position
 operator|+=
 name|ret
@@ -1535,6 +1643,12 @@ case|case
 name|BZ_STREAM_END
 case|:
 comment|/* Found end of stream. */
+name|state
+operator|->
+name|eof
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|ARCHIVE_OK
@@ -1558,7 +1672,10 @@ name|fatal
 label|:
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
@@ -1566,6 +1683,8 @@ literal|"%s decompression failed"
 argument_list|,
 name|a
 operator|->
+name|archive
+operator|.
 name|compression_name
 argument_list|)
 expr_stmt|;

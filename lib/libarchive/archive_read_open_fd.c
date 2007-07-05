@@ -118,6 +118,9 @@ decl_stmt|;
 name|size_t
 name|block_size
 decl_stmt|;
+name|char
+name|can_skip
+decl_stmt|;
 name|void
 modifier|*
 name|buffer
@@ -342,6 +345,13 @@ name|fd
 operator|=
 name|fd
 expr_stmt|;
+comment|/* lseek() hardly ever works, so disable it by default.  See below. */
+name|mine
+operator|->
+name|can_skip
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|archive_read_open2
@@ -437,6 +447,7 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
+block|{
 name|archive_read_extract_set_skip_file
 argument_list|(
 name|a
@@ -450,6 +461,14 @@ operator|.
 name|st_ino
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Enabling skip here is a performance optimization for 		 * anything that supports lseek().  On FreeBSD, only 		 * regular files and raw disk devices support lseek() and 		 * there's no portable way to determine if a device is 		 * a raw disk device, so we only enable this optimization 		 * for regular files. 		 */
+name|mine
+operator|->
+name|can_skip
+operator|=
+literal|1
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|ARCHIVE_OK
@@ -610,6 +629,18 @@ name|old_offset
 decl_stmt|,
 name|new_offset
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|mine
+operator|->
+name|can_skip
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* Reduce request to the next smallest multiple of block_size */
 name|request
 operator|=
@@ -625,6 +656,17 @@ name|mine
 operator|->
 name|block_size
 expr_stmt|;
+if|if
+condition|(
+name|request
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Hurray for lazy evaluation: if the first lseek fails, the second 	 * one will not be executed. 	 */
 if|if
 condition|(
@@ -667,6 +709,13 @@ literal|0
 operator|)
 condition|)
 block|{
+comment|/* If seek failed once, it will probably fail again. */
+name|mine
+operator|->
+name|can_skip
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|errno

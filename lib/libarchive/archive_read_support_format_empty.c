@@ -35,13 +35,19 @@ directive|include
 file|"archive_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"archive_read_private.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|int
 name|archive_read_format_empty_bid
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|)
 function_decl|;
@@ -53,7 +59,7 @@ name|int
 name|archive_read_format_empty_read_data
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 specifier|const
@@ -76,7 +82,7 @@ name|int
 name|archive_read_format_empty_read_header
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 parameter_list|,
 name|struct
@@ -93,9 +99,21 @@ parameter_list|(
 name|struct
 name|archive
 modifier|*
-name|a
+name|_a
 parameter_list|)
 block|{
+name|struct
+name|archive_read
+modifier|*
+name|a
+init|=
+operator|(
+expr|struct
+name|archive_read
+operator|*
+operator|)
+name|_a
+decl_stmt|;
 name|int
 name|r
 decl_stmt|;
@@ -132,7 +150,7 @@ name|int
 name|archive_read_format_empty_bid
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|)
@@ -150,7 +168,9 @@ operator|=
 call|(
 name|a
 operator|->
-name|compression_read_ahead
+name|decompressor
+operator|->
+name|read_ahead
 call|)
 argument_list|(
 name|a
@@ -187,7 +207,7 @@ name|int
 name|archive_read_format_empty_read_header
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
@@ -211,12 +231,16 @@ expr_stmt|;
 comment|/* UNUSED */
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_EMPTY
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"Empty file"
@@ -235,7 +259,7 @@ name|int
 name|archive_read_format_empty_read_data
 parameter_list|(
 name|struct
-name|archive
+name|archive_read
 modifier|*
 name|a
 parameter_list|,
