@@ -9088,8 +9088,6 @@ name|dr
 operator|->
 name|rtaddr
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|sa6_recoverscope
@@ -9099,6 +9097,10 @@ name|d
 operator|->
 name|rtaddr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
