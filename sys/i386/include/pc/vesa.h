@@ -25,7 +25,6 @@ name|v_sig
 index|[
 literal|4
 index|]
-name|__packed
 decl_stmt|;
 comment|/* VESA */
 name|u_int16_t
