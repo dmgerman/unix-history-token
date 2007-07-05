@@ -1708,10 +1708,16 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|framelen
+operator|=
+literal|0
+expr_stmt|;
 name|frame_ok
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|sbni_outb
 argument_list|(
 name|sc
