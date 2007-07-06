@@ -1806,6 +1806,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RL_9346_ADDR_LEN
+value|6
+end_define
+
+begin_comment
+comment|/* 93C46 1K: 128x16 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_9356_ADDR_LEN
+value|8
+end_define
+
+begin_comment
+comment|/* 93C56 2K: 256x16 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RL_9346_WRITE
 value|0x5
 end_define
