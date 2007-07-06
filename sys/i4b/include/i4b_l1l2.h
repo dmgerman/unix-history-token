@@ -22,7 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/i4b_trace.h>
+file|<i4b/include/i4b_trace.h>
 end_include
 
 begin_decl_stmt
