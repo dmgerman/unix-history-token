@@ -111,6 +111,21 @@ block|}
 end_function
 
 begin_function
+name|int
+name|archive_version_stamp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ARCHIVE_VERSION_STAMP
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 specifier|const
 name|char
 modifier|*

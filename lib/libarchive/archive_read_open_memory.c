@@ -531,8 +531,15 @@ expr_stmt|;
 comment|/* UNUSED */
 if|if
 condition|(
+operator|(
+name|off_t
+operator|)
 name|skip
 operator|>
+call|(
+name|off_t
+call|)
+argument_list|(
 name|mine
 operator|->
 name|end
@@ -540,6 +547,7 @@ operator|-
 name|mine
 operator|->
 name|buffer
+argument_list|)
 condition|)
 name|skip
 operator|=
