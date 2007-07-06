@@ -531,10 +531,13 @@ expr_stmt|;
 comment|/* UNUSED */
 if|if
 condition|(
+operator|(
+name|off_t
+operator|)
 name|skip
 operator|>
 call|(
-name|size_t
+name|off_t
 call|)
 argument_list|(
 name|mine
