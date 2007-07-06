@@ -204,6 +204,29 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * ARCHIVE_VERSION_STAMP first appeared in 1.9 and libarchive 2.2.4.  * We can approximate it for earlier versions, though.  * This is used to disable tests of features not present in the current  * version.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ARCHIVE_VERSION_STAMP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_VERSION_STAMP
+define|\
+value|(ARCHIVE_API_VERSION * 1000000 + ARCHIVE_API_FEATURE * 1000)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * "list.h" is simply created by "grep DEFINE_TEST"; it has  * a line like  *      DEFINE_TEST(test_function)  * for each test.  * Include it here with a suitable DEFINE_TEST to declare all of the  * test functions.  */
 end_comment
 
@@ -359,6 +382,20 @@ end_comment
 begin_function_decl
 name|void
 name|failure
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|skipping
 parameter_list|(
 specifier|const
 name|char

@@ -223,6 +223,18 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+name|skipping
+argument_list|(
+literal|"archive_read_support_compression_program()"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|struct
 name|archive_entry
 modifier|*
@@ -367,6 +379,8 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}

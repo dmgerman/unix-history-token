@@ -17,6 +17,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
+end_if
+
 begin_define
 define|#
 directive|define
@@ -170,6 +178,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|DEFINE_TEST
 argument_list|(
@@ -179,6 +192,18 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+name|skipping
+argument_list|(
+literal|"archive_write_disk interface"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|struct
 name|archive_entry
 modifier|*
@@ -395,6 +420,8 @@ argument_list|(
 name|ae
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

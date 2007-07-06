@@ -866,6 +866,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+comment|/* Known broken before 1.9.0. */
+name|skipping
+argument_list|(
+literal|"archive_entry_acl_next() exits with ARCHIVE_EOF"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|assertEqualInt
 argument_list|(
 name|ARCHIVE_EOF
@@ -873,6 +886,8 @@ argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assert
 argument_list|(
 operator|(

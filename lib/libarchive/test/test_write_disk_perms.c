@@ -17,6 +17,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
+end_if
+
 begin_define
 define|#
 directive|define
@@ -329,6 +337,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Exercise permission and ownership restores.  * In particular, try to exercise a bunch of border cases related  * to files/dirs that already exist, SUID/SGID bits, etc.  */
 end_comment
@@ -342,6 +355,18 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+name|skipping
+argument_list|(
+literal|"archive_write_disk interface"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|struct
 name|archive
 modifier|*
@@ -2036,6 +2061,8 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_block
 

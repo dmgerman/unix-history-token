@@ -17,6 +17,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
+end_if
+
 begin_comment
 comment|/*  * This "archive" is created by "GNU ar". Here we try to verify  * our GNU format handling functionality.  */
 end_comment
@@ -661,6 +669,11 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|DEFINE_TEST
 argument_list|(
@@ -670,6 +683,18 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+name|skipping
+argument_list|(
+literal|"test_read_support_format_ar()"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|struct
 name|archive_entry
 modifier|*
@@ -1145,6 +1170,8 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}

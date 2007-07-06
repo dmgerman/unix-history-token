@@ -314,6 +314,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
+end_if
+
+begin_comment
+comment|/* libarchive< 1.9 doesn't support these. */
+end_comment
+
 begin_comment
 comment|/* GNU tar "0.0" posix format, as written by GNU tar 1.15.1. */
 end_comment
@@ -1995,6 +2007,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -2023,6 +2040,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|failure
+argument_list|(
+literal|"This is known broken in libarchive 1.x< 1.9 and 2.x< 2.2"
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 name|buff_size
@@ -2032,6 +2054,16 @@ operator|-
 name|start_index
 argument_list|)
 expr_stmt|;
+comment|/* If the above fails, we can't test the actual contents. */
+if|if
+condition|(
+name|buff_size
+operator|<
+name|data_index
+operator|-
+name|start_index
+condition|)
+return|return;
 for|for
 control|(
 name|i
@@ -2306,9 +2338,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+comment|/* libarchive< 1.9 doesn't get this right */
+name|skipping
+argument_list|(
+literal|"offset of final sparse chunk"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|failure
 argument_list|(
-literal|"Offset at EOF must be same as file size"
+literal|"Offset of final empty chunk must be same as file size"
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -2318,6 +2363,8 @@ argument_list|,
 literal|3145728
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assert
 argument_list|(
 literal|0
@@ -2374,6 +2421,19 @@ name|archive_old
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * libarchive< 1.9 doesn't support the newer sparse formats 	 * from GNU tar 1.15 and 1.16. 	 */
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+name|skipping
+argument_list|(
+literal|"read support for GNUtar sparse format 0.0"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|verify_archive
 argument_list|(
 name|archive_0_0
@@ -2384,6 +2444,20 @@ name|archive_0_0
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+name|skipping
+argument_list|(
+literal|"read support for GNUtar sparse format 0.1"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|verify_archive
 argument_list|(
 name|archive_0_1
@@ -2394,6 +2468,20 @@ name|archive_0_1
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+name|skipping
+argument_list|(
+literal|"read support for GNUtar sparse format 1.0"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|verify_archive
 argument_list|(
 name|archive_1_0
@@ -2404,6 +2492,8 @@ name|archive_1_0
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

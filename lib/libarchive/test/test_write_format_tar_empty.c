@@ -160,13 +160,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|failure
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+comment|/* Earlier versions wrote 0-length files for empty tar archives. */
+name|skipping
 argument_list|(
-literal|"Empty tar archive should be exactly 1024 bytes, was %d."
-argument_list|,
-name|used
+literal|"empty tar archive size"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
 name|assert
 argument_list|(
 name|used
@@ -174,6 +180,8 @@ operator|==
 literal|1024
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -316,20 +324,28 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|failure
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+comment|/* Earlier versions wrote 0-length files for empty tar archives. */
+name|skipping
 argument_list|(
-literal|"Empty tar archive should be exactly 1024 bytes, was %d."
-argument_list|,
-name|used
+literal|"empty tar archive size"
 argument_list|)
 expr_stmt|;
-name|assert
+else|#
+directive|else
+name|assertEqualInt
 argument_list|(
 name|used
-operator|==
+argument_list|,
 literal|1024
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i

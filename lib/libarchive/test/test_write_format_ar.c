@@ -55,6 +55,18 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+name|skipping
+argument_list|(
+literal|"ar write support"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|struct
 name|archive_entry
 modifier|*
@@ -539,8 +551,8 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-elif|#
-directive|elif
+else|#
+directive|else
 name|archive_write_finish
 argument_list|(
 name|a
@@ -1119,8 +1131,8 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-elif|#
-directive|elif
+else|#
+directive|else
 name|archive_write_finish
 argument_list|(
 name|a
@@ -1347,6 +1359,8 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}

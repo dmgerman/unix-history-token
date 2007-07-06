@@ -17,6 +17,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* The version stamp macro was introduced after cpio write support. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -519,6 +531,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|DEFINE_TEST
 argument_list|(
@@ -528,6 +545,11 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|test_format
 argument_list|(
 name|archive_write_set_format_cpio
@@ -538,6 +560,15 @@ argument_list|(
 name|archive_write_set_format_cpio_newc
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"cpio write support"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

@@ -99,6 +99,9 @@ name|size_t
 name|xsize
 decl_stmt|;
 comment|/* For xattr tests. */
+name|int
+name|c
+decl_stmt|;
 name|assert
 argument_list|(
 operator|(
@@ -172,6 +175,11 @@ argument_list|,
 literal|24681
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 comment|/* dev */
 name|archive_entry_set_dev
 argument_list|(
@@ -190,7 +198,21 @@ argument_list|,
 literal|235
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"archive_entry_dev()"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* devmajor/devminor are tested specially below. */
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 comment|/* filetype */
 name|archive_entry_set_filetype
 argument_list|(
@@ -209,6 +231,15 @@ argument_list|,
 name|AE_IFREG
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"archive_entry_filetype()"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* fflags are tested specially below */
 comment|/* gid */
 name|archive_entry_set_gid
@@ -402,6 +433,11 @@ argument_list|,
 literal|L"whardlink"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 comment|/* ino */
 name|archive_entry_set_ino
 argument_list|(
@@ -420,6 +456,15 @@ argument_list|,
 literal|8593
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"archive_entry_ino()"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* link */
 comment|/* TODO: implement these tests. */
 comment|/* mode */
@@ -470,6 +515,11 @@ argument_list|,
 literal|24682
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 comment|/* nlink */
 name|archive_entry_set_nlink
 argument_list|(
@@ -488,6 +538,15 @@ argument_list|,
 literal|736
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"archive_entry_nlink()"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* pathname */
 name|archive_entry_set_pathname
 argument_list|(
@@ -615,6 +674,11 @@ argument_list|,
 literal|L"wpath"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 comment|/* rdev */
 name|archive_entry_set_rdev
 argument_list|(
@@ -633,6 +697,15 @@ argument_list|,
 literal|532
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|skipping
+argument_list|(
+literal|"archive_entry_rdev()"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* rdevmajor/rdevminor are tested specially below. */
 comment|/* size */
 name|archive_entry_set_size
@@ -670,6 +743,11 @@ argument_list|,
 literal|"symlinkname"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|strcpy
 argument_list|(
 name|buff
@@ -716,6 +794,8 @@ argument_list|,
 literal|"symlinkname2"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_copy_symlink_w
 argument_list|(
 name|e
@@ -1128,6 +1208,11 @@ argument_list|,
 literal|24681
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_dev
 argument_list|(
 name|e
@@ -1135,6 +1220,8 @@ argument_list|,
 literal|235
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_fflags
 argument_list|(
 name|e
@@ -1165,6 +1252,11 @@ argument_list|,
 literal|"hardlinkname"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_ino
 argument_list|(
 name|e
@@ -1172,6 +1264,8 @@ argument_list|,
 literal|8593
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_mode
 argument_list|(
 name|e
@@ -1188,6 +1282,11 @@ argument_list|,
 literal|24682
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_nlink
 argument_list|(
 name|e
@@ -1195,6 +1294,8 @@ argument_list|,
 literal|736
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_pathname
 argument_list|(
 name|e
@@ -1202,6 +1303,11 @@ argument_list|,
 literal|"path"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_rdev
 argument_list|(
 name|e
@@ -1209,6 +1315,8 @@ argument_list|,
 literal|532
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_size
 argument_list|(
 name|e
@@ -1314,6 +1422,11 @@ argument_list|,
 literal|24681
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|assertEqualInt
 argument_list|(
 name|archive_entry_dev
@@ -1324,6 +1437,8 @@ argument_list|,
 literal|235
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_fflags
 argument_list|(
 name|e
@@ -1379,6 +1494,11 @@ argument_list|,
 literal|"hardlinkname"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|assertEqualInt
 argument_list|(
 name|archive_entry_ino
@@ -1389,6 +1509,8 @@ argument_list|,
 literal|8593
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|archive_entry_mode
@@ -1419,6 +1541,11 @@ argument_list|,
 literal|24682
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|assertEqualInt
 argument_list|(
 name|archive_entry_nlink
@@ -1429,6 +1556,8 @@ argument_list|,
 literal|736
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualString
 argument_list|(
 name|archive_entry_pathname
@@ -1439,6 +1568,11 @@ argument_list|,
 literal|"path"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|assertEqualInt
 argument_list|(
 name|archive_entry_rdev
@@ -1449,6 +1583,8 @@ argument_list|,
 literal|532
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|archive_entry_size
@@ -1489,11 +1625,25 @@ argument_list|,
 literal|"user"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+name|skipping
+argument_list|(
+literal|"ACL preserved by archive_entry_clone()"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 comment|/* Verify ACL was copied. */
 name|assertEqualInt
 argument_list|(
 literal|4
 argument_list|,
+name|c
+operator|=
 name|archive_entry_acl_reset
 argument_list|(
 name|e2
@@ -1755,11 +1905,27 @@ argument_list|,
 literal|"user77"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+name|skipping
+argument_list|(
+literal|"xattr data preserved by archive_entry_clone"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 comment|/* Verify xattr was copied. */
 name|assertEqualInt
 argument_list|(
 literal|1
 argument_list|,
+name|c
+operator|=
 name|archive_entry_xattr_reset
 argument_list|(
 name|e2
@@ -1806,6 +1972,8 @@ argument_list|,
 literal|11
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Change the original */
 name|archive_entry_set_atime
 argument_list|(
@@ -1825,6 +1993,11 @@ argument_list|,
 literal|24691
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_dev
 argument_list|(
 name|e
@@ -1832,6 +2005,8 @@ argument_list|,
 literal|245
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_fflags
 argument_list|(
 name|e
@@ -1841,6 +2016,11 @@ argument_list|,
 literal|0xDA
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_filetype
 argument_list|(
 name|e
@@ -1848,6 +2028,8 @@ argument_list|,
 name|AE_IFLNK
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_gid
 argument_list|(
 name|e
@@ -1869,6 +2051,11 @@ argument_list|,
 literal|"hardlinkpath"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_ino
 argument_list|(
 name|e
@@ -1876,6 +2063,8 @@ argument_list|,
 literal|8763
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_mode
 argument_list|(
 name|e
@@ -1892,6 +2081,11 @@ argument_list|,
 literal|28642
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_nlink
 argument_list|(
 name|e
@@ -1899,6 +2093,8 @@ argument_list|,
 literal|73
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_pathname
 argument_list|(
 name|e
@@ -1906,6 +2102,11 @@ argument_list|,
 literal|"pathest"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_rdev
 argument_list|(
 name|e
@@ -1913,6 +2114,8 @@ argument_list|,
 literal|132
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_size
 argument_list|(
 name|e
@@ -1992,6 +2195,11 @@ argument_list|,
 literal|24681
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|assertEqualInt
 argument_list|(
 name|archive_entry_dev
@@ -2002,6 +2210,8 @@ argument_list|,
 literal|235
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_fflags
 argument_list|(
 name|e2
@@ -2057,6 +2267,11 @@ argument_list|,
 literal|"hardlinkname"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|assertEqualInt
 argument_list|(
 name|archive_entry_ino
@@ -2067,6 +2282,8 @@ argument_list|,
 literal|8593
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|archive_entry_mode
@@ -2097,6 +2314,11 @@ argument_list|,
 literal|24682
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|assertEqualInt
 argument_list|(
 name|archive_entry_nlink
@@ -2107,6 +2329,8 @@ argument_list|,
 literal|736
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualString
 argument_list|(
 name|archive_entry_pathname
@@ -2117,6 +2341,11 @@ argument_list|,
 literal|"path"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|assertEqualInt
 argument_list|(
 name|archive_entry_rdev
@@ -2127,6 +2356,8 @@ argument_list|,
 literal|532
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|archive_entry_size
@@ -2167,11 +2398,25 @@ argument_list|,
 literal|"user"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+name|skipping
+argument_list|(
+literal|"ACL held by clone of archive_entry"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 comment|/* Verify ACL was unchanged. */
 name|assertEqualInt
 argument_list|(
 literal|4
 argument_list|,
+name|c
+operator|=
 name|archive_entry_acl_reset
 argument_list|(
 name|e2
@@ -2433,6 +2678,20 @@ argument_list|,
 literal|"user77"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|<
+literal|1009000
+name|skipping
+argument_list|(
+literal|"xattr preserved in archive_entry copy"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 comment|/* Verify xattr was unchanged. */
 name|assertEqualInt
 argument_list|(
@@ -2444,6 +2703,8 @@ name|e2
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Release clone. */
 name|archive_entry_free
 argument_list|(
@@ -2531,6 +2792,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|assertEqualInt
 argument_list|(
 name|archive_entry_filetype
@@ -2541,6 +2807,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|archive_entry_gid
@@ -2611,6 +2879,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|assertEqualInt
 argument_list|(
 name|archive_entry_nlink
@@ -2621,6 +2894,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualString
 argument_list|(
 name|archive_entry_pathname
@@ -2902,6 +3177,11 @@ argument_list|,
 literal|234567
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|assertEqualInt
 argument_list|(
 name|archive_entry_nlink
@@ -2912,6 +3192,8 @@ argument_list|,
 literal|345
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|archive_entry_size
@@ -3010,6 +3292,11 @@ argument_list|,
 literal|432
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_dev
 argument_list|(
 name|e
@@ -3017,6 +3304,8 @@ argument_list|,
 literal|123
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_gid
 argument_list|(
 name|e
@@ -3024,6 +3313,11 @@ argument_list|,
 literal|34
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_ino
 argument_list|(
 name|e
@@ -3031,6 +3325,8 @@ argument_list|,
 literal|234
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_mode
 argument_list|(
 name|e
@@ -3054,6 +3350,11 @@ argument_list|,
 literal|543
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_nlink
 argument_list|(
 name|e
@@ -3061,6 +3362,8 @@ argument_list|,
 literal|345
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_size
 argument_list|(
 name|e
@@ -3109,6 +3412,11 @@ argument_list|,
 literal|345678
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|assertEqualInt
 argument_list|(
 name|pst
@@ -3118,6 +3426,8 @@ argument_list|,
 literal|123
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|pst
@@ -3127,6 +3437,11 @@ argument_list|,
 literal|34
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|assertEqualInt
 argument_list|(
 name|pst
@@ -3136,6 +3451,8 @@ argument_list|,
 literal|234
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|pst
@@ -3154,6 +3471,11 @@ argument_list|,
 literal|234567
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|assertEqualInt
 argument_list|(
 name|pst
@@ -3163,6 +3485,8 @@ argument_list|,
 literal|345
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualInt
 argument_list|(
 name|pst
@@ -3285,6 +3609,11 @@ argument_list|,
 literal|345677
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_dev
 argument_list|(
 name|e
@@ -3315,6 +3644,8 @@ argument_list|,
 literal|122
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_gid
 argument_list|(
 name|e
@@ -3345,6 +3676,11 @@ argument_list|,
 literal|33
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_ino
 argument_list|(
 name|e
@@ -3375,6 +3711,8 @@ argument_list|,
 literal|233
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_mode
 argument_list|(
 name|e
@@ -3437,6 +3775,11 @@ argument_list|,
 literal|234566
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_nlink
 argument_list|(
 name|e
@@ -3467,6 +3810,8 @@ argument_list|,
 literal|344
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|archive_entry_set_size
 argument_list|(
 name|e
@@ -3532,6 +3877,11 @@ comment|/* 	 * Test dev/major/minor interfaces.  Setting 'dev' or 'rdev' 	 * sho
 if|#
 directive|if
 name|__FreeBSD__
+if|#
+directive|if
+name|ARCHIVE_VERSION_STAMP
+operator|>=
+literal|1009000
 name|archive_entry_set_dev
 argument_list|(
 name|e
@@ -3716,6 +4066,8 @@ literal|0xdcba98
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* Release the experimental entry. */

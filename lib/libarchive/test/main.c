@@ -66,13 +66,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Cumulative count of failures. */
+comment|/* Cumulative count of component failures. */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
 name|failures
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Cumulative count of skipped component tests. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|skips
 init|=
 literal|0
 decl_stmt|;
@@ -91,6 +104,66 @@ literal|4096
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Inform user that we're skipping a test. */
+end_comment
+
+begin_function
+name|void
+name|skipping
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" *** SKIPPING: "
+argument_list|)
+expr_stmt|;
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+operator|++
+name|skips
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* Common handling of failed tests. */
@@ -831,8 +904,12 @@ expr_stmt|;
 return|return
 operator|(
 name|failures
-operator|-
+operator|==
 name|failures_before
+condition|?
+literal|0
+else|:
+literal|1
 operator|)
 return|;
 block|}
@@ -980,7 +1057,7 @@ name|tests_run
 init|=
 literal|0
 decl_stmt|,
-name|tests_succeeded
+name|tests_failed
 init|=
 literal|0
 decl_stmt|,
@@ -1140,6 +1217,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|quiet_flag
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Running libarchive tests in: %s\n"
@@ -1147,6 +1230,15 @@ argument_list|,
 name|tmpdir
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Exercising %s\n"
+argument_list|,
+name|archive_version
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|argc
@@ -1177,10 +1269,8 @@ name|i
 argument_list|,
 name|tmpdir
 argument_list|)
-operator|==
-literal|0
 condition|)
-name|tests_succeeded
+name|tests_failed
 operator|++
 expr_stmt|;
 name|tests_run
@@ -1254,10 +1344,8 @@ name|i
 argument_list|,
 name|tmpdir
 argument_list|)
-operator|==
-literal|0
 condition|)
-name|tests_succeeded
+name|tests_failed
 operator|++
 expr_stmt|;
 name|tests_run
@@ -1268,22 +1356,35 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"%d of %d tests succeeded.\n"
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%d of %d test groups reported failures\n"
 argument_list|,
-name|tests_succeeded
+name|tests_failed
 argument_list|,
 name|tests_run
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|" Total of %d individual tests failed.\n"
+argument_list|,
+name|failures
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" Total of %d individual tests were skipped.\n"
+argument_list|,
+name|skips
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|tests_succeeded
-operator|==
-name|tests_run
-condition|?
-literal|0
-else|:
-literal|1
+name|tests_failed
 operator|)
 return|;
 block|}
