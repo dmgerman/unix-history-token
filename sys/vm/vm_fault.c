@@ -1324,7 +1324,15 @@ name|queue
 argument_list|)
 operator|==
 name|PQ_CACHE
-operator|&&
+condition|)
+block|{
+name|cnt
+operator|.
+name|v_reactivated
+operator|++
+expr_stmt|;
+if|if
+condition|(
 name|vm_page_count_severe
 argument_list|()
 condition|)
@@ -1350,6 +1358,7 @@ expr_stmt|;
 goto|goto
 name|RetryFault
 goto|;
+block|}
 block|}
 name|vm_page_unlock_queues
 argument_list|()
@@ -4542,7 +4551,7 @@ operator|=
 name|rtm
 expr_stmt|;
 block|}
-comment|/* return number of bytes of pages */
+comment|/* return number of pages */
 return|return
 name|i
 return|;
