@@ -60,13 +60,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/i4b_ioctl.h>
+file|<i4b/i4b_ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/i4b_rbch_ioctl.h>
+file|<i4b/i4b_rbch_ioctl.h>
 end_include
 
 begin_define
