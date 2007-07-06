@@ -432,18 +432,7 @@ define|#
 directive|define
 name|USB_ATTACH_SETUP
 define|\
-value|do { \ 		sc->sc_dev = self; \ 		device_set_desc_copy(self, devinfo); \ 		device_printf(self, "%s\n", devinfo); \ 	} while (0);
-end_define
-
-begin_define
-define|#
-directive|define
-name|USB_DETACH
-parameter_list|(
-name|dname
-parameter_list|)
-define|\
-value|static int \ __CONCAT(dname,_detach)(device_t self)
+value|sc->sc_dev = self; \  #define USB_DETACH(dname) \ static int \ __CONCAT(dname,_detach)(device_t self)
 end_define
 
 begin_define
