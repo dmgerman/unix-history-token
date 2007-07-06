@@ -347,6 +347,13 @@ name|i
 init|=
 literal|0
 decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|nreturns
+argument_list|)
+expr_stmt|;
 name|args
 operator|.
 name|nreturns
@@ -366,13 +373,6 @@ operator|(
 name|cell_t
 operator|)
 name|cmd
-expr_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|nreturns
-argument_list|)
 expr_stmt|;
 while|while
 condition|(

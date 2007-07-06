@@ -994,22 +994,28 @@ name|xge_os_printf
 argument_list|(
 literal|"fifo_max_frags should be<= (PAGE_SIZE / 32) = %d"
 argument_list|,
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|PAGE_SIZE
 operator|/
 literal|32
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|xge_os_printf
 argument_list|(
 literal|"Using fifo_max_frags = %d"
 argument_list|,
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|PAGE_SIZE
 operator|/
 literal|32
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dconfig
