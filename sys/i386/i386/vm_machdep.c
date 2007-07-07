@@ -128,12 +128,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/refcount.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sf_buf.h>
 end_include
 
@@ -1005,15 +999,12 @@ operator|&
 name|RFMEM
 condition|)
 block|{
-name|refcount_acquire
-argument_list|(
-operator|&
 name|mdp2
 operator|->
 name|md_ldt
 operator|->
 name|ldt_refcnt
-argument_list|)
+operator|++
 expr_stmt|;
 block|}
 else|else
