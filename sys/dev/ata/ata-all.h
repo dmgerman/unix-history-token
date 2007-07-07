@@ -1648,6 +1648,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_CFA_MAGIC3
+value|0x8400
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATAPI_MAGIC_LSB
 value|0x14
 end_define
