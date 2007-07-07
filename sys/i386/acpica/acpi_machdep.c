@@ -1277,33 +1277,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXX Kernel should be updated to allow calls to destroy_dev() in close(). */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|apm_destroy_clone
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{
-name|destroy_dev
-argument_list|(
-operator|(
-expr|struct
-name|cdev
-operator|*
-operator|)
-name|arg
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_function
 specifier|static
 name|int
@@ -1494,12 +1467,8 @@ argument_list|,
 name|M_APMDEV
 argument_list|)
 expr_stmt|;
-name|AcpiOsExecute
+name|destroy_dev_sched
 argument_list|(
-name|OSL_GPE_HANDLER
-argument_list|,
-name|apm_destroy_clone
-argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
