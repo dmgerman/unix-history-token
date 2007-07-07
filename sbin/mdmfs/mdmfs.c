@@ -582,7 +582,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:Cc:Dd:e:F:f:hi:LlMm:Nn:O:o:p:Ss:t:Uv:w:X"
+literal|"a:b:Cc:Dd:e:F:f:hi:LlMm:NnO:o:p:Ss:t:Uv:w:X"
 argument_list|)
 operator|)
 operator|!=
@@ -841,9 +841,7 @@ argument_list|(
 operator|&
 name|newfs_arg
 argument_list|,
-literal|"-n %s"
-argument_list|,
-name|optarg
+literal|"-n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3028,9 +3026,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-DLlMNSUX] [-a maxcontig [-b block-size] [-c cylinders]\n"
+literal|"usage: %s [-DLlMNnSUX] [-a maxcontig [-b block-size] [-c cylinders]\n"
 literal|"\t[-d rotdelay] [-e maxbpg] [-F file] [-f frag-size] [-i bytes]\n"
-literal|"\t[-m percent-free] [-n rotational-positions] [-O optimization]\n"
+literal|"\t[-m percent-free] [-O optimization]\n"
 literal|"\t[-o mount-options] [-p permissions] [-s size] [-w user:group]\n"
 literal|"\tmd-device mount-point\n"
 argument_list|,
@@ -3041,9 +3039,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s -C [-lNU] [-a maxcontig] [-b block-size] [-c cylinders]\n"
+literal|"usage: %s -C [-lNUn] [-a maxcontig] [-b block-size] [-c cylinders]\n"
 literal|"\t[-d rotdelay] [-e maxbpg] [-F file] [-f frag-size] [-i bytes]\n"
-literal|"\t[-m percent-free] [-n rotational-positions] [-O optimization]\n"
+literal|"\t[-m percent-free] [-O optimization]\n"
 literal|"\t[-o mount-options] [-s size] md-device mount-point\n"
 argument_list|,
 name|name
