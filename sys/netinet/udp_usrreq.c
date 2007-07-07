@@ -2099,7 +2099,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC
-comment|/* check AH/ESP integrity. */
+comment|/* Check AH/ESP integrity. */
 if|if
 condition|(
 name|ipsec4_in_reject
@@ -2110,15 +2110,15 @@ name|inp
 argument_list|)
 condition|)
 block|{
-name|ipsec4stat
-operator|.
-name|in_polvio
-operator|++
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|n
 argument_list|)
+expr_stmt|;
+name|ipsec4stat
+operator|.
+name|in_polvio
+operator|++
 expr_stmt|;
 return|return;
 block|}
@@ -2340,6 +2340,14 @@ operator|==
 literal|0
 condition|)
 block|{
+name|SOCKBUF_UNLOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|n
@@ -2358,14 +2366,6 @@ name|udpstat
 operator|.
 name|udps_fullsock
 operator|++
-expr_stmt|;
-name|SOCKBUF_UNLOCK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_rcv
-argument_list|)
 expr_stmt|;
 block|}
 else|else
