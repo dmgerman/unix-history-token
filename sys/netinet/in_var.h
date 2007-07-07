@@ -618,17 +618,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|in_delmulti_locked
-parameter_list|(
-name|struct
-name|in_multi
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|in_delmulti_ifp
 parameter_list|(
 name|struct

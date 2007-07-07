@@ -2023,6 +2023,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|if_delmulti_ent
+parameter_list|(
+name|struct
+name|ifmultiaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|if_detach
 parameter_list|(
