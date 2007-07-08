@@ -1237,7 +1237,7 @@ name|TMPFS_META_PAGES
 parameter_list|(
 name|tmp
 parameter_list|)
-value|((tmp)->tm_nodes_inuse * (sizeof(struct tmpfs_node) \ 				+ sizeof(struct tmpfs_dirent))/PAGE_SIZE + 1)
+value|(howmany((tmp)->tm_nodes_inuse * (sizeof(struct tmpfs_node) \ 				+ sizeof(struct tmpfs_dirent)), PAGE_SIZE))
 end_define
 
 begin_define
@@ -1417,49 +1417,6 @@ name|node
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ---------------------------------------------------------------------  * USER AND KERNEL DEFINITIONS  * --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
-comment|/*  * This structure is used to communicate mount parameters between userland  * and kernel space.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TMPFS_ARGS_VERSION
-value|1
-end_define
-
-begin_struct
-struct|struct
-name|tmpfs_args
-block|{
-name|int
-name|ta_version
-decl_stmt|;
-comment|/* Size counters. */
-name|ino_t
-name|ta_nodes_max
-decl_stmt|;
-name|off_t
-name|ta_size_max
-decl_stmt|;
-comment|/* Root node attributes. */
-name|uid_t
-name|ta_root_uid
-decl_stmt|;
-name|gid_t
-name|ta_root_gid
-decl_stmt|;
-name|mode_t
-name|ta_root_mode
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_endif
 endif|#
