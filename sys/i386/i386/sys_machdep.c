@@ -187,18 +187,18 @@ parameter_list|)
 value|(NEW_MAX_LD(num)<< 3)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|NULL_LDT_BASE
 value|((caddr_t)NULL)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -3871,7 +3871,12 @@ else|#
 directive|else
 name|set_user_ldt
 argument_list|(
+operator|&
 name|td
+operator|->
+name|td_proc
+operator|->
+name|p_md
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
