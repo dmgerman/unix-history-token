@@ -4213,7 +4213,7 @@ name|LINUX_SYS_MAXSYSCALL
 block|,
 name|linux_sysent
 block|,
-literal|0xff
+literal|0
 block|,
 name|LINUX_SIGTBLSZ
 block|,
@@ -4277,7 +4277,7 @@ name|LINUX_SYS_MAXSYSCALL
 block|,
 name|linux_sysent
 block|,
-literal|0xff
+literal|0
 block|,
 name|LINUX_SIGTBLSZ
 block|,

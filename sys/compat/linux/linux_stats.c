@@ -894,6 +894,11 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
 name|translate_path_major_minor
 argument_list|(
 name|td
@@ -1152,6 +1157,13 @@ begin_comment
 comment|/* XXX - UFS_MAGIC in Linux */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LINUX_DEVFS_SUPER_MAGIC
+value|0x1373L
+end_define
+
 begin_function
 specifier|static
 name|long
@@ -1240,6 +1252,12 @@ block|{
 literal|"coda"
 block|,
 name|LINUX_CODA_SUPER_MAGIC
+block|}
+block|,
+block|{
+literal|"devfs"
+block|,
+name|LINUX_DEVFS_SUPER_MAGIC
 block|}
 block|,
 block|{
@@ -1996,7 +2014,10 @@ if|if
 condition|(
 operator|!
 name|error
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|strlen
 argument_list|(
 name|filename
@@ -2035,7 +2056,7 @@ operator|<=
 literal|'9'
 condition|)
 block|{
-comment|/* 		 * Linux checks major and minors of the slave device to make 		 * sure it's a pty deivce, so let's make him believe it is. 		 */
+comment|/* 			 * Linux checks major and minors of the slave device 			 * to make sure it's a pty deivce, so let's make him 			 * believe it is. 			 */
 name|buf
 operator|.
 name|st_rdev
@@ -2047,6 +2068,7 @@ literal|8
 operator|)
 expr_stmt|;
 block|}
+else|else
 name|translate_path_major_minor
 argument_list|(
 name|td
@@ -2057,6 +2079,7 @@ operator|&
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 name|LFREEPATH
 argument_list|(
 name|filename
@@ -2165,6 +2188,11 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
 name|translate_path_major_minor
 argument_list|(
 name|td
