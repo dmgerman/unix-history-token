@@ -29,6 +29,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|dsp_mmap_allow_prot_exec
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_snd
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|compat_linux_mmap
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|dsp_mmap_allow_prot_exec
+argument_list|,
+literal|0
+argument_list|,
+literal|"linux mmap compatibility"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -5175,11 +5205,18 @@ decl_stmt|,
 modifier|*
 name|c
 decl_stmt|;
+comment|/* 	 * Reject PROT_EXEC by default. It just doesn't makes sense. 	 * Unfortunately, we have to give up this one due to linux_mmap 	 * changes. 	 * 	 * http://lists.freebsd.org/pipermail/freebsd-emulation/2007-June/003698.html 	 * 	 */
 if|if
 condition|(
+operator|(
 name|nprot
 operator|&
 name|PROT_EXEC
+operator|)
+operator|&&
+name|dsp_mmap_allow_prot_exec
+operator|==
+literal|0
 condition|)
 return|return
 operator|-
