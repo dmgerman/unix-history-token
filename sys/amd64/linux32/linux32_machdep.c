@@ -932,8 +932,10 @@ argument_list|(
 name|iovlen
 operator|+
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|uio
+argument_list|)
 argument_list|,
 name|M_IOV
 argument_list|,
@@ -3813,7 +3815,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Linux has two extra args, restart and oldmask.  We dont use these,  * but it seems that "restart" is actually a context pointer that  * enables the signal to happen with a different register set.  */
+comment|/*  * Linux has two extra args, restart and oldmask.  We don't use these,  * but it seems that "restart" is actually a context pointer that  * enables the signal to happen with a different register set.  */
 end_comment
 
 begin_function

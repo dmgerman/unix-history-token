@@ -2455,6 +2455,10 @@ name|_udatasel
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* leave user %fs and %gs untouched */
+end_comment
+
 begin_expr_stmt
 name|PROC_LOCK
 argument_list|(
@@ -3093,6 +3097,7 @@ name|pcb_es
 operator|=
 name|_udatasel
 expr_stmt|;
+comment|/* leave user %fs and %gs untouched */
 name|PROC_LOCK
 argument_list|(
 name|p

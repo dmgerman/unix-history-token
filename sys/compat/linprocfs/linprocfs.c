@@ -4484,7 +4484,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	     	 * format: 		 *  start, end, access, offset, major, minor, inode, name. 		 */
+comment|/* 		 * format: 		 *  start, end, access, offset, major, minor, inode, name. 		 */
 name|snprintf
 argument_list|(
 name|mebuffer

@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_I386_LINUX_LINUX_H_
+name|_I386_LINUX_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_I386_LINUX_LINUX_H_
+name|_I386_LINUX_H_
 end_define
 
 begin_include
@@ -501,7 +501,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* address space limit */
+comment|/* Address space limit */
 end_comment
 
 begin_define
@@ -1509,7 +1509,7 @@ name|void
 modifier|*
 name|_addr
 decl_stmt|;
-comment|/* faulting insn/memory ref. */
+comment|/* Faulting insn/memory ref. */
 block|}
 name|_sigfault
 struct|;
@@ -1711,7 +1711,7 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-comment|/* env is ignored */
+comment|/* env is ignored. */
 name|u_int32_t
 name|mxcsr
 decl_stmt|;
@@ -1725,7 +1725,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* reg data is ignored */
+comment|/* reg data is ignored. */
 name|struct
 name|l_xmmreg
 name|_xmm
@@ -1920,63 +1920,70 @@ begin_define
 define|#
 directive|define
 name|LINUX_O_RDONLY
-value|00
+value|00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_WRONLY
-value|01
+value|00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_RDWR
-value|02
+value|00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_O_ACCMODE
+value|00000003
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_CREAT
-value|0100
+value|00000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_EXCL
-value|0200
+value|00000200
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_NOCTTY
-value|0400
+value|00000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_TRUNC
-value|01000
+value|00001000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_APPEND
-value|02000
+value|00002000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_NONBLOCK
-value|04000
+value|00004000
 end_define
 
 begin_define
@@ -1990,54 +1997,54 @@ begin_define
 define|#
 directive|define
 name|LINUX_O_SYNC
-value|010000
+value|00010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_FASYNC
-value|020000
+value|00020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_DIRECT
-value|040000
+value|00040000
 end_define
 
 begin_comment
-comment|/* direct disk access hint */
+comment|/* Direct disk access hint */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_LARGEFILE
-value|0100000
+value|00100000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_DIRECTORY
-value|0200000
+value|00200000
 end_define
 
 begin_comment
-comment|/* must be a directory */
+comment|/* Must be a directory */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LINUX_O_NOFOLLOW
-value|0400000
+value|00400000
 end_define
 
 begin_comment
-comment|/* don't follow links */
+comment|/* Do not follow links */
 end_comment
 
 begin_define
@@ -2157,6 +2164,13 @@ define|#
 directive|define
 name|LINUX_F_UNLCK
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_AT_FDCWD
+value|-100
 end_define
 
 begin_comment
@@ -2954,7 +2968,7 @@ value|ifr_ifrn.ifrn_name
 end_define
 
 begin_comment
-comment|/* interface name */
+comment|/* Interface name */
 end_comment
 
 begin_define

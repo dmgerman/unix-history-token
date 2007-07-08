@@ -1669,7 +1669,7 @@ name|ff
 operator||=
 name|RFFDG
 expr_stmt|;
-comment|/* 	 * Attempt to detect when linux_clone(2) is used for creating 	 * kernel threads. Unfortunately despite the existence of the 	 * CLONE_THREAD flag, version of linuxthreads package used in 	 * most popular distros as of beginning of 2005 doesn't make 	 * any use of it. Therefore, this detection relay fully on 	 * empirical observation that linuxthreads sets certain 	 * combination of flags, so that we can make more or less 	 * precise detection and notify the FreeBSD kernel that several 	 * processes are in fact part of the same threading group, so 	 * that special treatment is necessary for signal delivery 	 * between those processes and fd locking. 	 */
+comment|/* 	 * Attempt to detect when linux_clone(2) is used for creating 	 * kernel threads. Unfortunately despite the existence of the 	 * CLONE_THREAD flag, version of linuxthreads package used in 	 * most popular distros as of beginning of 2005 doesn't make 	 * any use of it. Therefore, this detection relies on 	 * empirical observation that linuxthreads sets certain 	 * combination of flags, so that we can make more or less 	 * precise detection and notify the FreeBSD kernel that several 	 * processes are in fact part of the same threading group, so 	 * that special treatment is necessary for signal delivery 	 * between those processes and fd locking. 	 */
 if|if
 condition|(
 operator|(
@@ -2297,7 +2297,7 @@ name|flags
 operator||=
 name|MAP_STACK
 expr_stmt|;
-comment|/* The linux MAP_GROWSDOWN option does not limit auto 		 * growth of the region.  Linux mmap with this option 		 * takes as addr the inital BOS, and as len, the initial 		 * region size.  It can then grow down from addr without 		 * limit.  However, linux threads has an implicit internal 		 * limit to stack size of STACK_SIZE.  Its just not 		 * enforced explicitly in linux.  But, here we impose 		 * a limit of (STACK_SIZE - GUARD_SIZE) on the stack 		 * region, since we can do this with our mmap. 		 * 		 * Our mmap with MAP_STACK takes addr as the maximum 		 * downsize limit on BOS, and as len the max size of 		 * the region.  It them maps the top SGROWSIZ bytes, 		 * and autgrows the region down, up to the limit 		 * in addr. 		 * 		 * If we don't use the MAP_STACK option, the effect 		 * of this code is to allocate a stack region of a 		 * fixed size of (STACK_SIZE - GUARD_SIZE). 		 */
+comment|/* The linux MAP_GROWSDOWN option does not limit auto 		 * growth of the region.  Linux mmap with this option 		 * takes as addr the inital BOS, and as len, the initial 		 * region size.  It can then grow down from addr without 		 * limit.  However, linux threads has an implicit internal 		 * limit to stack size of STACK_SIZE.  Its just not 		 * enforced explicitly in linux.  But, here we impose 		 * a limit of (STACK_SIZE - GUARD_SIZE) on the stack 		 * region, since we can do this with our mmap. 		 * 		 * Our mmap with MAP_STACK takes addr as the maximum 		 * downsize limit on BOS, and as len the max size of 		 * the region.  It them maps the top SGROWSIZ bytes, 		 * and auto grows the region down, up to the limit 		 * in addr. 		 * 		 * If we don't use the MAP_STACK option, the effect 		 * of this code is to allocate a stack region of a 		 * fixed size of (STACK_SIZE - GUARD_SIZE). 		 */
 comment|/* This gives us TOS */
 name|bsd_args
 operator|.

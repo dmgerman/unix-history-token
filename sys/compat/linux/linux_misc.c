@@ -1356,6 +1356,7 @@ name|VREG
 operator|)
 condition|)
 block|{
+comment|/* EACCESS is what exec(2) returns. */
 name|error
 operator|=
 name|ENOEXEC

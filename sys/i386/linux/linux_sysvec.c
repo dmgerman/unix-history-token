@@ -530,7 +530,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Linux syscalls return negative errno's, we do positive and map them  */
+comment|/*  * Linux syscalls return negative errno's, we do positive and map them  * Reference:  *   FreeBSD: src/sys/sys/errno.h  *   Linux:   linux-2.6.17.8/include/asm-generic/errno-base.h  *            linux-2.6.17.8/include/asm-generic/errno.h  */
 end_comment
 
 begin_decl_stmt
