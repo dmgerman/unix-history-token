@@ -375,6 +375,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|kern_close
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|fd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kern_connect
 parameter_list|(
 name|struct
