@@ -1463,18 +1463,21 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|getcwd
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): getcwd(%p, %ld)\n"
+name|ARGS
+argument_list|(
+name|getcwd
 argument_list|,
-operator|(
-name|long
-operator|)
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_pid
+literal|"%p, %ld"
+argument_list|)
 argument_list|,
 name|args
 operator|->

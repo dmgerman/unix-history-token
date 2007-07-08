@@ -60,6 +60,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|LINUX_SIG_VALID
+parameter_list|(
+name|sig
+parameter_list|)
+value|((sig)<= LINUX_NSIG&& (sig)> 0)
+end_define
+
 begin_endif
 endif|#
 directive|endif

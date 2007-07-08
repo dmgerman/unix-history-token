@@ -735,13 +735,11 @@ name|sig
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|LINUX_SIG_VALID
+argument_list|(
 name|linux_sig
-operator|<=
-literal|0
-operator|||
-name|linux_sig
-operator|>
-name|LINUX_NSIG
+argument_list|)
 condition|)
 return|return
 operator|(
