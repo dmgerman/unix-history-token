@@ -462,11 +462,6 @@ name|caddr_t
 operator|)
 name|zp
 expr_stmt|;
-name|vhold
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|vp
 operator|->
 name|v_vnlock
@@ -2777,11 +2772,6 @@ operator|(
 name|caddr_t
 operator|)
 name|zp
-expr_stmt|;
-name|vhold
-argument_list|(
-name|vp
-argument_list|)
 expr_stmt|;
 name|vp
 operator|->

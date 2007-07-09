@@ -14110,7 +14110,7 @@ operator|>
 literal|1
 argument_list|)
 expr_stmt|;
-name|vdropl
+name|VI_UNLOCK
 argument_list|(
 name|vp
 argument_list|)
