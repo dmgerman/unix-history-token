@@ -12,7 +12,7 @@ comment|/*-  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rig
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)udp_var.h	8.1 (Berkeley) 6/10/93  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)udp_var.h	8.1 (Berkeley) 6/10/93  */
 end_comment
 
 begin_include
@@ -277,21 +277,18 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|udp6_detach
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|socket
-operator|*
+modifier|*
 name|so
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -327,11 +324,15 @@ name|mbuf
 modifier|*
 name|opts
 decl_stmt|;
-comment|/* XXXRW: Not yet: INP_LOCK_ASSERT(in6p); */
+name|INP_LOCK_ASSERT
+argument_list|(
+name|in6p
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC
-comment|/* 	 * Check AH/ESP integrity. 	 */
+comment|/* Check AH/ESP integrity. */
 if|if
 condition|(
 name|ipsec6_in_reject
@@ -501,19 +502,16 @@ init|=
 operator|*
 name|mp
 decl_stmt|;
-specifier|register
 name|struct
 name|ip6_hdr
 modifier|*
 name|ip6
 decl_stmt|;
-specifier|register
 name|struct
 name|udphdr
 modifier|*
 name|uh
 decl_stmt|;
-specifier|register
 name|struct
 name|inpcb
 modifier|*
@@ -570,7 +568,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
 block|}
 ifndef|#
@@ -645,7 +645,9 @@ operator|!
 name|uh
 condition|)
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
 endif|#
 directive|endif
@@ -696,7 +698,7 @@ name|udps_badlen
 operator|++
 expr_stmt|;
 goto|goto
-name|bad
+name|badunlocked
 goto|;
 block|}
 comment|/* 	 * Checksum extended UDP header and data. 	 */
@@ -715,7 +717,7 @@ name|udps_nosum
 operator|++
 expr_stmt|;
 goto|goto
-name|bad_unlocked
+name|badunlocked
 goto|;
 block|}
 if|if
@@ -740,7 +742,7 @@ name|udps_badsum
 operator|++
 expr_stmt|;
 goto|goto
-name|bad_unlocked
+name|badunlocked
 goto|;
 block|}
 comment|/* 	 * Construct sockaddr format source address. 	 */
@@ -782,10 +784,8 @@ name|inpcb
 modifier|*
 name|last
 decl_stmt|;
-comment|/* 		 * Deliver a multicast datagram to all sockets 		 * for which the local and remote addresses and ports match 		 * those of the incoming datagram.  This allows more than 		 * one process to receive multicasts on the same port. 		 * (This really ought to be done for unicast datagrams as 		 * well, but that would cause problems with existing 		 * applications that open both address-specific sockets and 		 * a wildcard socket listening to the same port -- they would 		 * end up receiving duplicates of every unicast datagram. 		 * Those applications open the multiple sockets to overcome an 		 * inadequacy of the UDP socket interface, but for backwards 		 * compatibility we avoid the problem here rather than 		 * fixing the interface.  Maybe 4.5BSD will remedy this?) 		 */
-comment|/* 		 * In a case that laddr should be set to the link-local 		 * address (this happens in RIPng), the multicast address 		 * specified in the received packet does not match with 		 * laddr. To cure this situation, the matching is relaxed 		 * if the receiving interface is the same as one specified 		 * in the socket and if the destination multicast address 		 * matches one of the multicast groups specified in the socket. 		 */
-comment|/* 		 * KAME note: traditionally we dropped udpiphdr from mbuf here. 		 * We need udphdr for IPsec processing so we do that later. 		 */
-comment|/* 		 * Locate pcb(s) for datagram. 		 * (Algorithm copied from raw_intr().) 		 * 		 * XXXRW: The individual inpcbs need to be locked in the 		 * style of udp_input(). 		 */
+comment|/* 		 * In the event that laddr should be set to the link-local 		 * address (this happens in RIPng), the multicast address 		 * specified in the received packet will not match laddr.  To 		 * handle this situation, matching is relaxed if the 		 * receiving interface is the same as one specified in the 		 * socket and if the destination multicast address matches 		 * one of the multicast groups specified in the socket. 		 */
+comment|/* 		 * KAME note: traditionally we dropped udpiphdr from mbuf 		 * here.  We need udphdr for IPsec processing so we do that 		 * later. 		 */
 name|last
 operator|=
 name|NULL
@@ -949,7 +949,7 @@ name|last
 operator|=
 name|in6p
 expr_stmt|;
-comment|/* 			 * Don't look for additional matches if this one does 			 * not have either the SO_REUSEPORT or SO_REUSEADDR 			 * socket options set.  This heuristic avoids searching 			 * through all pcbs in the common case of a non-shared 			 * port.  It assumes that an application will never 			 * clear these options after setting them. 			 */
+comment|/* 			 * Don't look for additional matches if this one does 			 * not have either the SO_REUSEPORT or SO_REUSEADDR 			 * socket options set.  This heuristic avoids 			 * searching through all pcbs in the common case of a 			 * non-shared port.  It assumes that an application 			 * will never clear these options after setting them. 			 */
 if|if
 condition|(
 operator|(
@@ -977,7 +977,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * No matching pcb found; discard datagram. 			 * (No need to send an ICMP Port Unreachable 			 * for a broadcast or multicast datgram.) 			 */
+comment|/* 			 * No matching pcb found; discard datagram.  (No need 			 * to send an ICMP Port Unreachable for a broadcast 			 * or multicast datgram.) 			 */
 name|udpstat
 operator|.
 name|udps_noport
@@ -989,7 +989,7 @@ name|udps_noportmcast
 operator|++
 expr_stmt|;
 goto|goto
-name|bad
+name|badheadlocked
 goto|;
 block|}
 name|INP_LOCK
@@ -1021,7 +1021,9 @@ name|udbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
 block|}
 comment|/* 	 * Locate pcb for datagram. 	 */
@@ -1150,7 +1152,7 @@ name|udps_noportmcast
 operator|++
 expr_stmt|;
 goto|goto
-name|bad
+name|badheadlocked
 goto|;
 block|}
 name|INP_INFO_RUNLOCK
@@ -1171,7 +1173,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
 block|}
 name|INP_LOCK
@@ -1203,9 +1207,11 @@ name|udbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
-name|bad
+name|badheadlocked
 label|:
 name|INP_INFO_RUNLOCK
 argument_list|(
@@ -1213,7 +1219,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|bad_unlocked
+name|badunlocked
 label|:
 if|if
 condition|(
@@ -1225,7 +1231,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
 block|}
 end_function
@@ -1458,7 +1466,7 @@ name|ip6
 condition|)
 block|{
 comment|/* 		 * XXX: We assume that when IPV6 is non NULL, 		 * M and OFF are valid. 		 */
-comment|/* check if we can safely examine src and dst ports */
+comment|/* Check if we can safely examine src and dst ports. */
 if|if
 condition|(
 name|m
@@ -2090,7 +2098,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|INP_INFO_WLOCK
@@ -2121,7 +2131,9 @@ name|udbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|inp
@@ -2194,7 +2206,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2401,7 +2415,9 @@ name|udbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2802,7 +2818,9 @@ name|udbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -3019,7 +3037,9 @@ name|udbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3240,7 +3260,7 @@ name|in6p_laddr
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * when remote addr is IPv4-mapped 				 * address, local addr should not be 				 * an IPv6 address; since you cannot 				 * determine how to map IPv6 source 				 * address to IPv4. 				 */
+comment|/* 				 * When remote addr is IPv4-mapped address, 				 * local addr should not be an IPv6 address; 				 * since you cannot determine how to map IPv6 				 * source address to IPv4. 				 */
 name|error
 operator|=
 name|EINVAL
@@ -3331,7 +3351,9 @@ name|udbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|bad
 label|:
