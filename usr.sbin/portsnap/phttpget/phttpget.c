@@ -135,6 +135,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|char
+modifier|*
+name|env_HTTP_TIMEOUT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -463,6 +471,9 @@ name|proxy_auth_pass
 init|=
 name|NULL
 decl_stmt|;
+name|long
+name|http_timeout
+decl_stmt|;
 name|env_HTTP_PROXY
 operator|=
 name|getenv
@@ -752,6 +763,69 @@ name|env_HTTP_USER_AGENT
 operator|=
 literal|"phttpget/0.1"
 expr_stmt|;
+name|env_HTTP_TIMEOUT
+operator|=
+name|getenv
+argument_list|(
+literal|"HTTP_TIMEOUT"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|env_HTTP_TIMEOUT
+operator|!=
+name|NULL
+condition|)
+block|{
+name|http_timeout
+operator|=
+name|strtol
+argument_list|(
+name|env_HTTP_TIMEOUT
+argument_list|,
+operator|&
+name|p
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|env_HTTP_TIMEOUT
+operator|==
+literal|'\0'
+operator|)
+operator|||
+operator|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+operator|)
+operator|||
+operator|(
+name|http_timeout
+operator|<
+literal|0
+operator|)
+condition|)
+name|warnx
+argument_list|(
+literal|"HTTP_TIMEOUT (%s) is not a positive integer"
+argument_list|,
+name|env_HTTP_TIMEOUT
+argument_list|)
+expr_stmt|;
+else|else
+name|timo
+operator|.
+name|tv_sec
+operator|=
+name|http_timeout
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -821,7 +895,7 @@ name|connclose
 condition|?
 literal|"Connection: Close\r\n"
 else|:
-literal|""
+literal|"Connection: Keep-Alive\r\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1292,6 +1366,10 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* != 0 if connection in pipelined mode. */
+name|int
+name|keepalive
+decl_stmt|;
+comment|/* != 0 if HTTP/1.0 keep-alive rcvd. */
 name|int
 name|sd
 init|=
@@ -1909,6 +1987,10 @@ name|chunked
 operator|=
 literal|0
 expr_stmt|;
+name|keepalive
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 comment|/* Get a header line */
@@ -2098,7 +2180,7 @@ goto|;
 comment|/* Ignore the rest of the line */
 continue|continue;
 block|}
-comment|/* Check for "Connection: close" header */
+comment|/* 			 * Check for "Connection: close" or 			 * "Connection: Keep-Alive" header 			 */
 if|if
 condition|(
 name|strncmp
@@ -2131,6 +2213,21 @@ condition|)
 name|pipelined
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|hln
+argument_list|,
+literal|"Keep-Alive"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|keepalive
+operator|=
+literal|1
 expr_stmt|;
 comment|/* Next header... */
 continue|continue;
@@ -2789,6 +2886,10 @@ comment|/* 		 * If necessary, clean up this connection so that we 		 * can start
 if|if
 condition|(
 name|pipelined
+operator|==
+literal|0
+operator|&&
+name|keepalive
 operator|==
 literal|0
 condition|)
