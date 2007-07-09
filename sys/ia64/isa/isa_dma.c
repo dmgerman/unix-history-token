@@ -1202,6 +1202,9 @@ if|if
 condition|(
 operator|!
 name|dma_tag
+index|[
+name|chan
+index|]
 operator|||
 operator|!
 name|dma_map
