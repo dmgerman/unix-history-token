@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / EAP-PSK shared routines  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP server/peer: EAP-PSK shared routines  * Copyright (c) 2004-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -34,13 +34,6 @@ define|#
 directive|define
 name|EAP_PSK_TEK_LEN
 value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|EAP_PSK_MSK_LEN
-value|64
 end_define
 
 begin_define
@@ -92,6 +85,52 @@ name|EAP_PSK_E_FLAG
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|EAP_PSK_FLAGS_GET_T
+parameter_list|(
+name|flags
+parameter_list|)
+value|(((flags)& 0xc0)>> 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EAP_PSK_FLAGS_SET_T
+parameter_list|(
+name|t
+parameter_list|)
+value|((u8) (t)<< 6)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|,
+name|1
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
+
 begin_comment
 comment|/* Shared prefix for all EAP-PSK frames */
 end_comment
@@ -118,12 +157,7 @@ name|u8
 name|flags
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
 
@@ -160,12 +194,7 @@ index|]
 decl_stmt|;
 comment|/* Followed by variable length ID_S */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
 
@@ -214,12 +243,7 @@ index|]
 decl_stmt|;
 comment|/* Followed by variable length ID_P */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
 
@@ -262,12 +286,7 @@ index|]
 decl_stmt|;
 comment|/* Followed by variable length PCHANNEL */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
 
@@ -304,14 +323,33 @@ index|]
 decl_stmt|;
 comment|/* Followed by variable length PCHANNEL */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
 
 begin_function_decl
 name|void
@@ -354,6 +392,10 @@ parameter_list|,
 name|u8
 modifier|*
 name|msk
+parameter_list|,
+name|u8
+modifier|*
+name|emsk
 parameter_list|)
 function_decl|;
 end_function_decl

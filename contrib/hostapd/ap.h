@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * hostapd / Station table data structures  * Copyright (c) 2002-2004, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -71,47 +75,33 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WLAN_STA_PREAUTH
+name|WLAN_STA_SHORT_PREAMBLE
 value|BIT(7)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WLAN_RATE_1M
-value|BIT(0)
+name|WLAN_STA_PREAUTH
+value|BIT(8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WLAN_RATE_2M
-value|BIT(1)
+name|WLAN_STA_WME
+value|BIT(9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|WLAN_RATE_5M5
-value|BIT(2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WLAN_RATE_11M
-value|BIT(3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WLAN_RATE_COUNT
-value|4
+name|WLAN_STA_NONERP
+value|BIT(31)
 end_define
 
 begin_comment
-comment|/* Maximum size of Supported Rates info element. IEEE 802.11 has a limit of 8,  * but some pre-standard IEEE 802.11g products use longer elements. */
+comment|/* Maximum number of supported rates (from both Supported Rates and Extended  * Supported Rates IEs). */
 end_comment
 
 begin_define
@@ -163,8 +153,35 @@ index|[
 name|WLAN_SUPP_RATES_MAX
 index|]
 decl_stmt|;
+name|int
+name|supported_rates_len
+decl_stmt|;
+name|unsigned
+name|int
+name|nonerp_set
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|int
+name|no_short_slot_time_set
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|int
+name|no_short_preamble_set
+range|:
+literal|1
+decl_stmt|;
+name|u16
+name|auth_alg
+decl_stmt|;
 name|u8
-name|tx_supp_rates
+name|previous_ap
+index|[
+literal|6
+index|]
 decl_stmt|;
 enum|enum
 block|{
@@ -233,81 +250,34 @@ modifier|*
 name|challenge
 decl_stmt|;
 comment|/* IEEE 802.11 Shared Key Authentication Challenge */
-name|int
-name|pairwise
-decl_stmt|;
-comment|/* Pairwise cipher suite, WPA_CIPHER_* */
-name|u8
-modifier|*
-name|wpa_ie
-decl_stmt|;
-name|size_t
-name|wpa_ie_len
-decl_stmt|;
 name|struct
 name|wpa_state_machine
 modifier|*
 name|wpa_sm
-decl_stmt|;
-enum|enum
-block|{
-name|WPA_VERSION_NO_WPA
-init|=
-literal|0
-comment|/* WPA not used */
-block|,
-name|WPA_VERSION_WPA
-init|=
-literal|1
-comment|/* WPA / IEEE 802.11i/D3.0 */
-block|,
-name|WPA_VERSION_WPA2
-init|=
-literal|2
-comment|/* WPA2 / IEEE 802.11i */
-block|}
-name|wpa
-enum|;
-name|int
-name|wpa_key_mgmt
-decl_stmt|;
-comment|/* the selected WPA_KEY_MGMT_* */
-name|struct
-name|rsn_pmksa_cache
-modifier|*
-name|pmksa
 decl_stmt|;
 name|struct
 name|rsn_preauth_interface
 modifier|*
 name|preauth_iface
 decl_stmt|;
-name|u8
-name|req_replay_counter
-index|[
-literal|8
-comment|/* WPA_REPLAY_COUNTER_LEN */
-index|]
+name|struct
+name|hostapd_ssid
+modifier|*
+name|ssid
 decl_stmt|;
+comment|/* SSID selection based on (Re)AssocReq */
+name|struct
+name|hostapd_ssid
+modifier|*
+name|ssid_probe
+decl_stmt|;
+comment|/* SSID selection based on ProbeReq */
 name|int
-name|req_replay_counter_used
-decl_stmt|;
-name|u32
-name|dot11RSNAStatsTKIPLocalMICFailures
-decl_stmt|;
-name|u32
-name|dot11RSNAStatsTKIPRemoteMICFailures
+name|vlan_id
 decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|MAX_STA_COUNT
-value|1024
-end_define
 
 begin_comment
 comment|/* Maximum number of AIDs to use for STAs; must be 2007 or lower  * (8802.11 limitation) */
@@ -360,6 +330,28 @@ define|#
 directive|define
 name|AP_DEAUTH_DELAY
 value|(1)
+end_define
+
+begin_comment
+comment|/* Number of seconds to keep STA entry with Authenticated flag after it has  * been disassociated. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AP_MAX_INACTIVITY_AFTER_DISASSOC
+value|(1 * 30)
+end_define
+
+begin_comment
+comment|/* Number of seconds to keep STA entry after it has been deauthenticated. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AP_MAX_INACTIVITY_AFTER_DEAUTH
+value|(1 * 5)
 end_define
 
 begin_endif

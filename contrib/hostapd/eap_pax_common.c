@@ -1,24 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / EAP-PAX shared routines  * Copyright (c) 2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP server/peer: EAP-PAX shared routines  * Copyright (c) 2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
+file|"includes.h"
 end_include
 
 begin_include
@@ -40,7 +28,7 @@ file|"eap_pax_common.h"
 end_include
 
 begin_comment
-comment|/**  * eap_pax_kdf - PAX Key Derivation Function  * @mac_id: MAC ID (EAP_PAX_MAC_*) / currently, only HMAC_SHA1_128 is supported  * @key: Secret key (X)  * @key_len: Length of the secret key in bytes  * @identifier: Public identifier for the key (Y)  * @entropy: Exchanged entropy to seed the KDF (Z)  * @entropy_len: Length of the entropy in bytes  * @output_len: Output len in bytes (W)  * @output: Buffer for the derived key  * Returns: 0 on success, -1 failed  *  * draft-clancy-eap-pax-04.txt, chap. 2.5: PAX-KDF-W(X, Y, Z)  */
+comment|/**  * eap_pax_kdf - PAX Key Derivation Function  * @mac_id: MAC ID (EAP_PAX_MAC_*) / currently, only HMAC_SHA1_128 is supported  * @key: Secret key (X)  * @key_len: Length of the secret key in bytes  * @identifier: Public identifier for the key (Y)  * @entropy: Exchanged entropy to seed the KDF (Z)  * @entropy_len: Length of the entropy in bytes  * @output_len: Output len in bytes (W)  * @output: Buffer for the derived key  * Returns: 0 on success, -1 failed  *  * RFC 4746, Section 2.6: PAX-KDF-W(X, Y, Z)  */
 end_comment
 
 begin_function
@@ -136,7 +124,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* TODO: add support for EAP_PAX_MAC_AES_CBC_MAC_128 */
+comment|/* TODO: add support for EAP_PAX_HMAC_SHA256_128 */
 if|if
 condition|(
 name|mac_id
@@ -164,7 +152,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|strlen
+name|os_strlen
 argument_list|(
 name|identifier
 argument_list|)
@@ -249,7 +237,7 @@ argument_list|,
 name|mac
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|pos
 argument_list|,
@@ -344,7 +332,7 @@ decl_stmt|;
 name|size_t
 name|count
 decl_stmt|;
-comment|/* TODO: add support for EAP_PAX_MAC_AES_CBC_MAC_128 */
+comment|/* TODO: add support for EAP_PAX_HMAC_SHA256_128 */
 if|if
 condition|(
 name|mac_id
@@ -438,7 +426,7 @@ argument_list|,
 name|hash
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|mac
 argument_list|,

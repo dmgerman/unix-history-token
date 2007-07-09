@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - Layer2 packet interface definition  * Copyright (c) 2003-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * This file defines an interface for layer 2 (link layer) packet sending and  * receiving. l2_packet_linux.c is one implementation for such a layer 2  * implementation using Linux packet sockets and l2_packet_pcap.c another one  * using libpcap and libdnet. When porting %wpa_supplicant to other operating  * systems, a new l2_packet implementation may need to be added.  */
+comment|/*  * WPA Supplicant - Layer2 packet interface definition  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * This file defines an interface for layer 2 (link layer) packet sending and  * receiving. l2_packet_linux.c is one implementation for such a layer 2  * implementation using Linux packet sockets and l2_packet_pcap.c another one  * using libpcap and libdnet. When porting %wpa_supplicant to other operating  * systems, a new l2_packet implementation may need to be added.  */
 end_comment
 
 begin_ifndef
@@ -78,6 +78,32 @@ name|l2_packet_data
 struct_decl|;
 end_struct_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|,
+name|1
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
+
 begin_struct
 struct|struct
 name|l2_ethhdr
@@ -98,14 +124,33 @@ name|u16
 name|h_proto
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
 
 begin_comment
 comment|/**  * l2_packet_init - Initialize l2_packet interface  * @ifname: Interface name  * @own_addr: Optional own MAC address if available from driver interface or  *	%NULL if not available  * @protocol: Ethernet protocol number in host byte order  * @rx_callback: Callback function that will be called for each received packet  * @rx_callback_ctx: Callback data (ctx) for calls to rx_callback()  * @l2_hdr: 1 = include layer 2 header, 0 = do not include header  * Returns: Pointer to internal data or %NULL on failure  *  * rx_callback function will be called with src_addr pointing to the source  * address (MAC address) of the the packet. If l2_hdr is set to 0, buf  * points to len bytes of the payload after the layer 2 header and similarly,  * TX buffers start with payload. This behavior can be changed by setting  * l2_hdr=1 to include the layer 2 header in the data buffer.  */

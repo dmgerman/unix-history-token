@@ -1,36 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd - command line interface for hostapd daemon  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd - command line interface for hostapd daemon  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|"includes.h"
 end_include
 
 begin_include
@@ -61,7 +37,7 @@ init|=
 literal|"hostapd_cli v"
 name|VERSION_STR
 literal|"\n"
-literal|"Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi> and contributors"
+literal|"Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi> and contributors"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,7 +74,7 @@ literal|"GNU General Public License for more details.\n"
 literal|"\n"
 literal|"You should have received a copy of the GNU General Public License\n"
 literal|"along with this program; if not, write to the Free Software\n"
-literal|"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+literal|"Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA\n"
 literal|"\n"
 literal|"Alternatively, this software may be distributed under the terms of the\n"
 literal|"BSD license.\n"
@@ -142,8 +118,9 @@ name|commands_help
 init|=
 literal|"Commands:\n"
 literal|"   mib                  get MIB variables (dot1x, dot11, radius)\n"
-literal|"   sta<addr>           get MIB vatiables for one station\n"
+literal|"   sta<addr>           get MIB variables for one station\n"
 literal|"   all_sta              get MIB variables for all stations\n"
+literal|"   new_sta<addr>       add a new station\n"
 literal|"   help                 show this usage help\n"
 literal|"   interface [ifname]   show interfaces/select interface\n"
 literal|"   level<debug level>  change debug level\n"
@@ -681,6 +658,77 @@ name|buf
 argument_list|)
 argument_list|,
 literal|"STA %s"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+name|wpa_ctrl_command
+argument_list|(
+name|ctrl
+argument_list|,
+name|buf
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|hostapd_cli_cmd_new_sta
+parameter_list|(
+name|struct
+name|wpa_ctrl
+modifier|*
+name|ctrl
+parameter_list|,
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+block|{
+name|char
+name|buf
+index|[
+literal|64
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|!=
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Invalid 'new_sta' command - exactly one argument, STA "
+literal|"address, is required.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"NEW_STA %s"
 argument_list|,
 name|argv
 index|[
@@ -1428,6 +1476,12 @@ block|{
 literal|"all_sta"
 block|,
 name|hostapd_cli_cmd_all_sta
+block|}
+block|,
+block|{
+literal|"new_sta"
+block|,
+name|hostapd_cli_cmd_new_sta
 block|}
 block|,
 block|{
@@ -2191,6 +2245,11 @@ return|;
 case|case
 literal|'i'
 case|:
+name|free
+argument_list|(
+name|ctrl_ifname
+argument_list|)
+expr_stmt|;
 name|ctrl_ifname
 operator|=
 name|strdup
