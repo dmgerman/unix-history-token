@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -102,6 +108,31 @@ include|#
 directive|include
 file|"l2_packet.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u8
+name|pae_group_addr
+index|[
+name|ETH_ALEN
+index|]
+init|=
+block|{
+literal|0x01
+block|,
+literal|0x80
+block|,
+literal|0xc2
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x03
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -726,7 +757,7 @@ decl_stmt|;
 name|char
 name|pcap_filter
 index|[
-literal|100
+literal|200
 index|]
 decl_stmt|,
 name|pcap_err
@@ -833,7 +864,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"pcap_set_datalinke(DLT_EN10MB): %s\n"
+literal|"pcap_set_datalink(DLT_EN10MB): %s\n"
 argument_list|,
 name|pcap_geterr
 argument_list|(
@@ -857,15 +888,34 @@ argument_list|(
 name|pcap_filter
 argument_list|)
 argument_list|,
-literal|"ether dst "
+literal|"not ether src "
 name|MACSTR
-literal|" and ether proto 0x%x"
+literal|" and "
+literal|"( ether dst "
+name|MACSTR
+literal|" or ether dst "
+name|MACSTR
+literal|" ) and "
+literal|"ether proto 0x%x"
 argument_list|,
 name|MAC2STR
 argument_list|(
 name|l2
 operator|->
 name|own_addr
+argument_list|)
+argument_list|,
+comment|/* do not receive own packets */
+name|MAC2STR
+argument_list|(
+name|l2
+operator|->
+name|own_addr
+argument_list|)
+argument_list|,
+name|MAC2STR
+argument_list|(
+name|pae_group_addr
 argument_list|)
 argument_list|,
 name|protocol
