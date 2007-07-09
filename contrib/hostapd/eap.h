@@ -3,6 +3,10 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
+begin_comment
+comment|/*  * hostapd / EAP Standalone Authenticator state machine (RFC 4137)  * Copyright (c) 2004-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -27,6 +31,12 @@ directive|include
 file|"eap_defs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"eap_methods.h"
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|eap_sm
@@ -44,12 +54,20 @@ begin_struct
 struct|struct
 name|eap_user
 block|{
-name|u8
+struct|struct
+block|{
+name|int
+name|vendor
+decl_stmt|;
+name|u32
+name|method
+decl_stmt|;
+block|}
 name|methods
 index|[
 name|EAP_MAX_METHODS
 index|]
-decl_stmt|;
+struct|;
 name|u8
 modifier|*
 name|password
@@ -57,6 +75,10 @@ decl_stmt|;
 name|size_t
 name|password_len
 decl_stmt|;
+name|int
+name|password_hash
+decl_stmt|;
+comment|/* whether password is hashed with 			    * nt_password_hash() */
 name|int
 name|phase2
 decl_stmt|;
@@ -286,18 +308,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u8
-name|eap_get_type
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|eap_set_eapRespData
 parameter_list|(
@@ -320,6 +330,30 @@ end_function_decl
 begin_function_decl
 name|void
 name|eap_sm_notify_cached
+parameter_list|(
+name|struct
+name|eap_sm
+modifier|*
+name|sm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|eap_sm_pending_cb
+parameter_list|(
+name|struct
+name|eap_sm
+modifier|*
+name|sm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|eap_sm_method_pending
 parameter_list|(
 name|struct
 name|eap_sm
@@ -402,24 +436,6 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|u8
-name|eap_get_type
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-block|{
-return|return
-name|EAP_TYPE_NONE
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
 name|void
 name|eap_set_eapRespData
 parameter_list|(
@@ -451,6 +467,38 @@ modifier|*
 name|sm
 parameter_list|)
 block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|eap_sm_pending_cb
+parameter_list|(
+name|struct
+name|eap_sm
+modifier|*
+name|sm
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|eap_sm_method_pending
+parameter_list|(
+name|struct
+name|eap_sm
+modifier|*
+name|sm
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_endif
