@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * wpa_supplicant/hostapd control interface library  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * wpa_supplicant/hostapd control interface library  * Copyright (c) 2004-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -185,7 +185,7 @@ modifier|*
 name|reply_len
 parameter_list|)
 function_decl|;
-comment|/**  * wpa_ctrl_pending - Check whether there are pending event messages  * @ctrl: Control interface data from wpa_ctrl_open()  * Returns: Non-zero if there are pending messages  *  * This function will check whether there are any pending control interface  * message available to be received with wpa_ctrl_recv(). wpa_ctrl_pending() is  * only used for event messages, i.e., wpa_ctrl_attach() must have been used to  * register the control interface as an event monitor.  */
+comment|/**  * wpa_ctrl_pending - Check whether there are pending event messages  * @ctrl: Control interface data from wpa_ctrl_open()  * Returns: 1 if there are pending messages, 0 if no, or -1 on error  *  * This function will check whether there are any pending control interface  * message available to be received with wpa_ctrl_recv(). wpa_ctrl_pending() is  * only used for event messages, i.e., wpa_ctrl_attach() must have been used to  * register the control interface as an event monitor.  */
 name|int
 name|wpa_ctrl_pending
 parameter_list|(

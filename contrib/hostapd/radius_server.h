@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * hostapd / RADIUS authentication server  * Copyright (c) 2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -98,6 +102,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|radius_server_eap_pending_cb
+parameter_list|(
+name|struct
+name|radius_server_data
+modifier|*
+name|data
+parameter_list|,
+name|void
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -164,6 +184,24 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|radius_server_eap_pending_cb
+parameter_list|(
+name|struct
+name|radius_server_data
+modifier|*
+name|data
+parameter_list|,
+name|void
+modifier|*
+name|ctx
+parameter_list|)
+block|{ }
 end_function
 
 begin_endif

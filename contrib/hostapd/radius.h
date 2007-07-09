@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * hostapd / RADIUS message processing  * Copyright (c) 2002-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -13,6 +17,32 @@ end_define
 
 begin_comment
 comment|/* RFC 2865 - RADIUS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|,
+name|1
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
 end_comment
 
 begin_struct
@@ -37,12 +67,7 @@ index|]
 decl_stmt|;
 comment|/* followed by length-20 octets of attributes */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
 
@@ -101,12 +126,7 @@ decl_stmt|;
 comment|/* including this header */
 comment|/* followed by length-2 octets of attribute value */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
 
@@ -240,6 +260,14 @@ name|RADIUS_ATTR_NAS_PORT_TYPE
 init|=
 literal|61
 block|,
+name|RADIUS_ATTR_TUNNEL_TYPE
+init|=
+literal|64
+block|,
+name|RADIUS_ATTR_TUNNEL_MEDIUM_TYPE
+init|=
+literal|65
+block|,
 name|RADIUS_ATTR_CONNECT_INFO
 init|=
 literal|77
@@ -251,6 +279,10 @@ block|,
 name|RADIUS_ATTR_MESSAGE_AUTHENTICATOR
 init|=
 literal|80
+block|,
+name|RADIUS_ATTR_TUNNEL_PRIVATE_GROUP_ID
+init|=
+literal|81
 block|,
 name|RADIUS_ATTR_ACCT_INTERIM_INTERVAL
 init|=
@@ -486,6 +518,77 @@ name|RADIUS_ACCT_TERMINATE_CAUSE_HOST_REQUEST
 value|18
 end_define
 
+begin_define
+define|#
+directive|define
+name|RADIUS_TUNNEL_TAGS
+value|32
+end_define
+
+begin_comment
+comment|/* Tunnel-Type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIUS_TUNNEL_TYPE_PPTP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADIUS_TUNNEL_TYPE_L2TP
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADIUS_TUNNEL_TYPE_IPIP
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADIUS_TUNNEL_TYPE_GRE
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADIUS_TUNNEL_TYPE_VLAN
+value|13
+end_define
+
+begin_comment
+comment|/* Tunnel-Medium-Type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIUS_TUNNEL_MEDIUM_TYPE_IPV4
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADIUS_TUNNEL_MEDIUM_TYPE_IPV6
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADIUS_TUNNEL_MEDIUM_TYPE_802
+value|6
+end_define
+
 begin_struct
 struct|struct
 name|radius_attr_vendor
@@ -497,12 +600,7 @@ name|u8
 name|vendor_length
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
 
@@ -544,6 +642,30 @@ literal|17
 block|}
 enum|;
 end_enum
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
 
 begin_struct
 struct|struct
@@ -952,6 +1074,7 @@ name|radius_msg
 modifier|*
 name|msg
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|data
@@ -1101,6 +1224,18 @@ name|buf
 parameter_list|,
 name|size_t
 name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|radius_msg_get_vlanid
+parameter_list|(
+name|struct
+name|radius_msg
+modifier|*
+name|msg
 parameter_list|)
 function_decl|;
 end_function_decl

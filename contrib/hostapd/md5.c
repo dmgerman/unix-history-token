@@ -1,24 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * MD5 hash implementation and interface functions  * Copyright (c) 2003-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * MD5 hash implementation and interface functions  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
+file|"includes.h"
 end_include
 
 begin_include
@@ -87,9 +75,6 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 specifier|const
 name|u8
 modifier|*
@@ -99,6 +84,8 @@ literal|6
 index|]
 decl_stmt|;
 name|size_t
+name|i
+decl_stmt|,
 name|_len
 index|[
 literal|6
@@ -146,7 +133,7 @@ expr_stmt|;
 block|}
 comment|/* the HMAC_MD5 transform looks like: 	 * 	 * MD5(K XOR opad, MD5(K XOR ipad, text)) 	 * 	 * where K is an n byte key 	 * ipad is the byte 0x36 repeated 64 times 	 * opad is the byte 0x5c repeated 64 times 	 * and text is the data being protected */
 comment|/* start out by storing key in ipad */
-name|memset
+name|os_memset
 argument_list|(
 name|k_pad
 argument_list|,
@@ -158,7 +145,7 @@ name|k_pad
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|k_pad
 argument_list|,
@@ -255,7 +242,7 @@ argument_list|,
 name|mac
 argument_list|)
 expr_stmt|;
-name|memset
+name|os_memset
 argument_list|(
 name|k_pad
 argument_list|,
@@ -267,7 +254,7 @@ name|k_pad
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|k_pad
 argument_list|,
@@ -389,11 +376,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EAP_TLS_FUNCS
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INTERNAL_MD5
+end_ifdef
 
 begin_struct
 struct|struct
@@ -420,6 +407,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CONFIG_CRYPTO_INTERNAL
+end_ifndef
 
 begin_function_decl
 specifier|static
@@ -475,6 +468,15 @@ name|context
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_CRYPTO_INTERNAL */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -535,7 +537,7 @@ block|{
 name|MD5_CTX
 name|ctx
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|MD5Init
@@ -715,7 +717,6 @@ comment|/*  * Start MD5 accumulation.  Set bit count to 0 and buffer to mysterio
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|MD5Init
 parameter_list|(
@@ -787,7 +788,6 @@ comment|/*  * Update context to reflect the concatenation of another buffer full
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|MD5Update
 parameter_list|(
@@ -909,7 +909,7 @@ operator|<
 name|t
 condition|)
 block|{
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|p
 argument_list|,
@@ -920,7 +920,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|p
 argument_list|,
@@ -970,7 +970,7 @@ operator|>=
 literal|64
 condition|)
 block|{
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|ctx
 operator|->
@@ -1015,7 +1015,7 @@ literal|64
 expr_stmt|;
 block|}
 comment|/* Handle any remaining bytes of data. */
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|ctx
 operator|->
@@ -1034,7 +1034,6 @@ comment|/*  * Final wrapup - pad to 64-byte boundary with the bit pattern  * 1 0
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|MD5Final
 parameter_list|(
@@ -1108,7 +1107,7 @@ literal|8
 condition|)
 block|{
 comment|/* Two lots of padding:  Pad the first block to 64 bytes */
-name|memset
+name|os_memset
 argument_list|(
 name|p
 argument_list|,
@@ -1142,7 +1141,7 @@ name|in
 argument_list|)
 expr_stmt|;
 comment|/* Now fill the next block with 56 bytes */
-name|memset
+name|os_memset
 argument_list|(
 name|ctx
 operator|->
@@ -1157,7 +1156,7 @@ block|}
 else|else
 block|{
 comment|/* Pad block to 56 bytes */
-name|memset
+name|os_memset
 argument_list|(
 name|p
 argument_list|,
@@ -1248,7 +1247,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|digest
 argument_list|,
@@ -1259,7 +1258,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-name|memset
+name|os_memset
 argument_list|(
 name|ctx
 argument_list|,
@@ -2876,7 +2875,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !EAP_TLS_FUNCS */
+comment|/* INTERNAL_MD5 */
 end_comment
 
 end_unit
