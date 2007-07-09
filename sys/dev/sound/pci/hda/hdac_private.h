@@ -923,6 +923,20 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|HDAC_CHN_RUNNING
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDAC_CHN_SUSPEND
+value|0x00000002
+end_define
+
 begin_struct
 struct|struct
 name|hdac_chan
@@ -983,8 +997,8 @@ name|uint32_t
 modifier|*
 name|dmapos
 decl_stmt|;
-name|int
-name|active
+name|uint32_t
+name|flags
 decl_stmt|;
 name|int
 name|dir
@@ -1013,6 +1027,20 @@ end_struct
 begin_comment
 comment|/****************************************************************************  * struct hdac_softc  *  * This structure holds the current state of the hdac driver.  ****************************************************************************/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HDAC_F_DMA_NOCACHE
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDAC_F_MSI
+value|0x00000002
+end_define
 
 begin_struct
 struct|struct
@@ -1044,8 +1072,8 @@ decl_stmt|;
 name|uint32_t
 name|pci_subvendor
 decl_stmt|;
-name|int
-name|nocache
+name|uint32_t
+name|flags
 decl_stmt|;
 name|int
 name|num_iss
