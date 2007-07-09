@@ -882,6 +882,10 @@ name|struct
 name|usb_qdat
 name|rue_qdat
 decl_stmt|;
+name|struct
+name|usb_task
+name|rue_tick_task
+decl_stmt|;
 block|}
 struct|;
 end_struct
