@@ -190,7 +190,7 @@ comment|/* fsinfo block number */
 name|u_long
 name|pm_nxtfree
 decl_stmt|;
-comment|/* next free cluster in fsinfo block */
+comment|/* next place to search for a free cluster */
 name|u_int
 name|pm_fatmult
 decl_stmt|;
