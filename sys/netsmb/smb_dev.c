@@ -747,7 +747,7 @@ argument_list|,
 name|M_NSMBDEV
 argument_list|)
 expr_stmt|;
-name|destroy_dev
+name|destroy_dev_sched
 argument_list|(
 name|dev
 argument_list|)
@@ -1725,6 +1725,15 @@ argument_list|(
 name|dev_clone
 argument_list|,
 name|nsmb_dev_tag
+argument_list|)
+expr_stmt|;
+name|drain_dev_clone_events
+argument_list|()
+expr_stmt|;
+name|destroy_dev_drain
+argument_list|(
+operator|&
+name|nsmb_cdevsw
 argument_list|)
 expr_stmt|;
 name|printf
