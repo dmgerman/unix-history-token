@@ -302,6 +302,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|udp_blackhole
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|udp_log_in_vain
 decl_stmt|;
 end_decl_stmt
