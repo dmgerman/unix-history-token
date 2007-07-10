@@ -5630,6 +5630,10 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  *	Replace the given page with a copy.  The copied page assumes  *	the portion of the given page's "wire_count" that is not the  *	responsibility of this copy-on-write mechanism.  *  *	The object containing the given page must have a non-zero  *	paging-in-progress count and be locked.  */
+end_comment
+
 begin_function
 name|void
 name|vm_page_cowfault
@@ -5652,6 +5656,28 @@ operator|=
 name|m
 operator|->
 name|object
+expr_stmt|;
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|object
+operator|->
+name|paging_in_progress
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"vm_page_cowfault: object %p's paging-in-progress count is zero."
+operator|,
+name|object
+operator|)
+argument_list|)
 expr_stmt|;
 name|pindex
 operator|=
@@ -5715,12 +5741,33 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|vm_page_lookup
+argument_list|(
+name|object
+argument_list|,
+name|pindex
+argument_list|)
+condition|)
+block|{
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
 goto|goto
 name|retry_alloc
 goto|;
+block|}
+else|else
+block|{
+comment|/* 			 * Page disappeared during the wait. 			 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
 block|}
 if|if
 condition|(
