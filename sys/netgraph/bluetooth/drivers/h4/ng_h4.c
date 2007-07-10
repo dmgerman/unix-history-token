@@ -137,13 +137,11 @@ begin_comment
 comment|/*****************************************************************************  *****************************************************************************  ** This node implements a Bluetooth HCI UART transport layer as per chapter  ** H4 of the Bluetooth Specification Book v1.1. It is a terminal line   ** discipline that is also a netgraph node. Installing this line discipline   ** on a terminal device instantiates a new netgraph node of this type, which   ** allows access to the device via the "hook" hook of the node.  **  ** Once the line discipline is installed, you can find out the name of the   ** corresponding netgraph node via a NGIOCGINFO ioctl().  *****************************************************************************  *****************************************************************************/
 end_comment
 
-begin_expr_stmt
-name|NET_NEEDS_GIANT
-argument_list|(
-literal|"ng_h4"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_error
+error|#
+directive|error
+literal|"NET_NEEDS_GIANT"
+end_error
 
 begin_comment
 comment|/* MALLOC define */
