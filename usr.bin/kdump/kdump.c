@@ -1206,7 +1206,7 @@ name|KTR_CSW
 case|:
 name|type
 operator|=
-literal|"CSW"
+literal|"CSW "
 expr_stmt|;
 break|break;
 case|case
