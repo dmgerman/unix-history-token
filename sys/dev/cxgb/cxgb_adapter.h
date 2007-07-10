@@ -769,6 +769,13 @@ name|tx_sw_desc
 struct_decl|;
 end_struct_decl
 
+begin_define
+define|#
+directive|define
+name|TXQ_TRANSMITTING
+value|0x1
+end_define
+
 begin_struct
 struct|struct
 name|sge_txq
@@ -821,7 +828,16 @@ name|phys_addr
 decl_stmt|;
 name|struct
 name|task
-name|qresume_tsk
+name|qresume_task
+decl_stmt|;
+name|struct
+name|task
+name|qreclaim_task
+decl_stmt|;
+name|struct
+name|port_info
+modifier|*
+name|port
 decl_stmt|;
 name|uint32_t
 name|cntxt_id
