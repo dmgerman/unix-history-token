@@ -2038,12 +2038,6 @@ condition|(
 name|ifc
 operator|->
 name|loopid
-operator|<
-literal|0
-operator|||
-name|ifc
-operator|->
-name|loopid
 operator|>=
 name|MAX_FC_TARG
 condition|)
@@ -3945,8 +3939,11 @@ expr_stmt|;
 if|if
 condition|(
 name|lun
-operator|<
-literal|0
+operator|>=
+name|ISP_MAX_LUNS
+argument_list|(
+name|isp
+argument_list|)
 condition|)
 block|{
 return|return
@@ -4501,10 +4498,6 @@ name|CAM_LUN_WILDCARD
 operator|)
 operator|&&
 operator|(
-name|lun
-operator|<
-literal|0
-operator|||
 name|lun
 operator|>=
 operator|(
