@@ -487,9 +487,11 @@ comment|/* Maximum number of possible nodes for this file system; set 	 * during
 name|ino_t
 name|tm_nodes_max
 decl_stmt|;
-comment|/* Number of nodes currently allocated.  This number only grows. 	 * When it reaches tm_nodes_max, no more new nodes can be allocated. 	 * Of course, the old, unused ones can be reused. */
-name|ino_t
-name|tm_nodes_last
+comment|/* unrhdr used to allocate inode numbers */
+name|struct
+name|unrhdr
+modifier|*
+name|tm_ino_unr
 decl_stmt|;
 comment|/* Number of nodes currently that are in use. */
 name|ino_t

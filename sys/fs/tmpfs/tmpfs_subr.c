@@ -315,6 +315,17 @@ name|tn_mode
 operator|=
 name|mode
 expr_stmt|;
+name|nnode
+operator|->
+name|tn_id
+operator|=
+name|alloc_unr
+argument_list|(
+name|tmp
+operator|->
+name|tm_ino_unr
+argument_list|)
+expr_stmt|;
 comment|/* Type-specific initialization. */
 switch|switch
 condition|(
@@ -667,6 +678,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|free_unr
+argument_list|(
+name|tmp
+operator|->
+name|tm_ino_unr
+argument_list|,
+name|node
+operator|->
+name|tn_id
+argument_list|)
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|tmp
