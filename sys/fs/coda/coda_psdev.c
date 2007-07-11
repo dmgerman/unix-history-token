@@ -365,6 +365,15 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mnt
+argument_list|,
+operator|(
+literal|"Coda: tried to open uninitialized cfs device"
+operator|)
+argument_list|)
+expr_stmt|;
 name|vcp
 operator|=
 operator|&
@@ -502,26 +511,32 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mi
+argument_list|,
+operator|(
+literal|"Coda: closing unknown cfs device"
+operator|)
+argument_list|)
+expr_stmt|;
 name|vcp
 operator|=
 operator|&
-operator|(
 name|mi
 operator|->
 name|mi_vcomm
-operator|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
+name|KASSERT
+argument_list|(
 name|VC_OPEN
 argument_list|(
 name|vcp
 argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"vcclose: not open"
+argument_list|,
+operator|(
+literal|"Coda: closing unopened cfs device"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* prevent future operations on this vfs from succeeding by auto-      * unmounting any vfs mounted via this device. This frees user or      * sysadm from having to remember where all mount points are located.      * Put this before WAKEUPs to avoid queuing new messages between      * the WAKEUP and the unmount (which can happen if we're unlucky)      */

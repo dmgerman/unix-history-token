@@ -502,6 +502,13 @@ argument_list|,
 name|mi_list
 argument_list|)
 expr_stmt|;
+name|mnt
+operator|->
+name|dev
+operator|=
+operator|*
+name|dev
+expr_stmt|;
 block|}
 end_function
 
@@ -539,10 +546,12 @@ name|dev
 operator|==
 name|dev
 condition|)
-break|break;
-block|}
 return|return
 name|mnt
+return|;
+block|}
+return|return
+name|NULL
 return|;
 block|}
 end_function
