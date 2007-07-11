@@ -56,14 +56,10 @@ name|p
 parameter_list|,
 comment|/*out*/
 name|struct
-name|cdev
+name|vnode
 modifier|*
 modifier|*
-name|dev
-parameter_list|,
-name|ino_t
-modifier|*
-name|inode
+name|vp
 parameter_list|)
 function_decl|;
 end_function_decl

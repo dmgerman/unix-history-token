@@ -227,16 +227,6 @@ name|c_symlen
 decl_stmt|;
 comment|/* length of symbolic link */
 name|struct
-name|cdev
-modifier|*
-name|c_device
-decl_stmt|;
-comment|/* associated vnode device */
-name|ino_t
-name|c_inode
-decl_stmt|;
-comment|/* associated vnode inode */
-name|struct
 name|cnode
 modifier|*
 name|c_next

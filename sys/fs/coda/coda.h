@@ -2692,9 +2692,9 @@ name|int
 name|fd
 decl_stmt|;
 name|struct
-name|file
+name|vnode
 modifier|*
-name|fh
+name|vp
 decl_stmt|;
 block|}
 struct|;
