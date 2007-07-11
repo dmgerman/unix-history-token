@@ -209,6 +209,12 @@ parameter_list|)
 value|mtx_unlock_spin(&lprof_locks[LPROF_LHASH(hash)])
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -596,6 +602,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -604,6 +619,12 @@ end_else
 begin_comment
 comment|/* !LOCK_PROFILING */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_function
 specifier|static
@@ -754,6 +775,15 @@ block|{
 empty_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
