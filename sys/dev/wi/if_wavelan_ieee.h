@@ -66,25 +66,17 @@ name|WI_MAX_DATALEN
 value|512
 end_define
 
-begin_struct
-struct|struct
-name|wi_req
-block|{
-name|u_int16_t
-name|wi_len
-decl_stmt|;
-name|u_int16_t
-name|wi_type
-decl_stmt|;
-name|u_int16_t
-name|wi_val
-index|[
-name|WI_MAX_DATALEN
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|struct wi_req { 	u_int16_t	wi_len; 	u_int16_t	wi_type; 	u_int16_t	wi_val[WI_MAX_DATALEN]; };
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Private LTV records (interpreted only by the driver). This is  * a minor kludge to allow reading the interface statistics from  * the driver.  */
