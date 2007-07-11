@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / Network configuration structures  * Copyright (c) 2003-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / Network configuration structures  * Copyright (c) 2003-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,27 @@ define|#
 directive|define
 name|CONFIG_SSID_H
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BIT
+parameter_list|(
+name|n
+parameter_list|)
+value|(1<< (n))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -49,6 +70,28 @@ directive|define
 name|WPA_CIPHER_CCMP
 value|BIT(4)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_IEEE80211W
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|WPA_CIPHER_AES_128_CMAC
+value|BIT(5)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_IEEE80211W */
+end_comment
 
 begin_define
 define|#
@@ -137,8 +180,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|EAP_PSK_LEN
+name|EAP_PSK_LEN_MIN
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|EAP_PSK_LEN_MAX
+value|32
 end_define
 
 begin_define
@@ -181,6 +231,13 @@ define|#
 directive|define
 name|DEFAULT_GROUP
 value|(WPA_CIPHER_CCMP | WPA_CIPHER_TKIP | \ 		       WPA_CIPHER_WEP104 | WPA_CIPHER_WEP40)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_FRAGMENT_SIZE
+value|1398
 end_define
 
 begin_comment
@@ -271,6 +328,9 @@ comment|/** 	 * scan_ssid - Scan this SSID with Probe Requests 	 * 	 * scan_ssid
 name|int
 name|scan_ssid
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE8021X_EAPOL
 comment|/** 	 * identity - EAP Identity 	 */
 name|u8
 modifier|*
@@ -289,16 +349,16 @@ comment|/** 	 * anonymous_identity_len - Length of anonymous_identity 	 */
 name|size_t
 name|anonymous_identity_len
 decl_stmt|;
-comment|/** 	 * eappsk - EAP-PSK pre-shared key 	 */
+comment|/** 	 * eappsk - EAP-PSK/PAX/SAKE pre-shared key 	 */
 name|u8
 modifier|*
 name|eappsk
 decl_stmt|;
-comment|/** 	 * eappsk_len - EAP-PSK pre-shared key length 	 * 	 * This field is always 16 for the current version of EAP-PSK. 	 */
+comment|/** 	 * eappsk_len - EAP-PSK/PAX/SAKE pre-shared key length 	 * 	 * This field is always 16 for the current version of EAP-PSK/PAX and 	 * 32 for EAP-SAKE. 	 */
 name|size_t
 name|eappsk_len
 decl_stmt|;
-comment|/** 	 * nai - User NAI (for EAP-PSK) 	 */
+comment|/** 	 * nai - User NAI (for EAP-PSK/PAX/SAKE) 	 */
 name|u8
 modifier|*
 name|nai
@@ -316,7 +376,7 @@ comment|/** 	 * password_len - Length of password field 	 */
 name|size_t
 name|password_len
 decl_stmt|;
-comment|/** 	 * ca_cert - File path to CA certificate file (PEM/DER) 	 * 	 * This file can have one or more trusted CA certificates. If ca_cert 	 * and ca_path are not included, server certificate will not be 	 * verified. This is insecure and a trusted CA certificate should 	 * always be configured when using EAP-TLS/TTLS/PEAP. Full path to the 	 * file should be used since working directory may change when 	 * wpa_supplicant is run in the background. 	 * 	 * Alternatively, a named configuration blob can be used by setting 	 * this to blob://<blob name>. 	 * 	 * On Windows, trusted CA certificates can be loaded from the system 	 * certificate store by setting this to cert_store://<name>, e.g., 	 * ca_cert="cert_store://CA" or ca_cert="cert_store://ROOT". 	 */
+comment|/** 	 * ca_cert - File path to CA certificate file (PEM/DER) 	 * 	 * This file can have one or more trusted CA certificates. If ca_cert 	 * and ca_path are not included, server certificate will not be 	 * verified. This is insecure and a trusted CA certificate should 	 * always be configured when using EAP-TLS/TTLS/PEAP. Full path to the 	 * file should be used since working directory may change when 	 * wpa_supplicant is run in the background. 	 * 	 * Alternatively, a named configuration blob can be used by setting 	 * this to blob://<blob name>. 	 * 	 * On Windows, trusted CA certificates can be loaded from the system 	 * certificate store by setting this to cert_store://<name>, e.g., 	 * ca_cert="cert_store://CA" or ca_cert="cert_store://ROOT". 	 * Note that when running wpa_supplicant as an application, the user 	 * certificate store (My user account) is used, whereas computer store 	 * (Computer account) is used when running wpasvc as a service. 	 */
 name|u8
 modifier|*
 name|ca_cert
@@ -331,7 +391,7 @@ name|u8
 modifier|*
 name|client_cert
 decl_stmt|;
-comment|/** 	 * private_key - File path to client private key file (PEM/DER/PFX) 	 * 	 * When PKCS#12/PFX file (.p12/.pfx) is used, client_cert should be 	 * commented out. Both the private key and certificate will be read 	 * from the PKCS#12 file in this case. Full path to the file should be 	 * used since working directory may change when wpa_supplicant is run 	 * in the background. 	 * 	 * Windows certificate store can be used by leaving client_cert out and 	 * configuring private_key in one of the following formats: 	 * 	 * cert://substring_to_match 	 * 	 * hash://certificate_thumbprint_in_hex 	 * 	 * For example: private_key="hash://63093aa9c47f56ae88334c7b65a4" 	 * 	 * Alternatively, a named configuration blob can be used by setting 	 * this to blob://<blob name>. 	 */
+comment|/** 	 * private_key - File path to client private key file (PEM/DER/PFX) 	 * 	 * When PKCS#12/PFX file (.p12/.pfx) is used, client_cert should be 	 * commented out. Both the private key and certificate will be read 	 * from the PKCS#12 file in this case. Full path to the file should be 	 * used since working directory may change when wpa_supplicant is run 	 * in the background. 	 * 	 * Windows certificate store can be used by leaving client_cert out and 	 * configuring private_key in one of the following formats: 	 * 	 * cert://substring_to_match 	 * 	 * hash://certificate_thumbprint_in_hex 	 * 	 * For example: private_key="hash://63093aa9c47f56ae88334c7b65a4" 	 * 	 * Note that when running wpa_supplicant as an application, the user 	 * certificate store (My user account) is used, whereas computer store 	 * (Computer account) is used when running wpasvc as a service. 	 * 	 * Alternatively, a named configuration blob can be used by setting 	 * this to blob://<blob name>. 	 */
 name|u8
 modifier|*
 name|private_key
@@ -351,7 +411,7 @@ name|u8
 modifier|*
 name|subject_match
 decl_stmt|;
-comment|/** 	 * altsubject_match - Constraint for server certificate alt. subject 	 * 	 * This substring is matched against the alternative subject name of 	 * the authentication server certificate. If this string is set, the 	 * server sertificate is only accepted if it contains this string in an 	 * alternative subject name extension. 	 * 	 * altSubjectName string is in following format: TYPE:VALUE 	 * 	 * Example: DNS:server.example.com 	 * 	 * Following types are supported: EMAIL, DNS, URI 	 */
+comment|/** 	 * altsubject_match - Constraint for server certificate alt. subject 	 * 	 * Semicolon separated string of entries to be matched against the 	 * alternative subject name of the authentication server certificate. 	 * If this string is set, the server sertificate is only accepted if it 	 * contains one of the entries in an alternative subject name 	 * extension. 	 * 	 * altSubjectName string is in following format: TYPE:VALUE 	 * 	 * Example: EMAIL:server@example.com 	 * Example: DNS:server.example.com;DNS:server2.example.com 	 * 	 * Following types are supported: EMAIL, DNS, URI 	 */
 name|u8
 modifier|*
 name|altsubject_match
@@ -396,8 +456,9 @@ name|u8
 modifier|*
 name|altsubject_match2
 decl_stmt|;
-comment|/** 	 * eap_methods - Allowed EAP methods 	 * 	 * Zero (EAP_TYPE_NONE) terminated list of allowed EAP methods or %NULL 	 * if all methods are accepted. 	 */
-name|u8
+comment|/** 	 * eap_methods - Allowed EAP methods 	 * 	 * (vendor=EAP_VENDOR_IETF,method=EAP_TYPE_NONE) terminated list of 	 * allowed EAP methods or %NULL if all methods are accepted. 	 */
+name|struct
+name|eap_method_type
 modifier|*
 name|eap_methods
 decl_stmt|;
@@ -447,6 +508,9 @@ comment|/** 	 * eapol_flags - Bit field of IEEE 802.1X/EAPOL options (EAPOL_FLAG
 name|int
 name|eapol_flags
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* IEEE8021X_EAPOL */
 define|#
 directive|define
 name|NUM_WEP_KEYS
@@ -480,6 +544,13 @@ comment|/** 	 * proactive_key_caching - Enable proactive key caching 	 * 	 * Thi
 name|int
 name|proactive_key_caching
 decl_stmt|;
+comment|/** 	 * mixed_cell - Whether mixed cells are allowed 	 * 	 * This option can be used to configure whether so called mixed cells, 	 * i.e., networks that use both plaintext and encryption in the same 	 * SSID, are allowed. This is disabled (0) by default. Enable by 	 * setting this to 1. 	 */
+name|int
+name|mixed_cell
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE8021X_EAPOL
 comment|/** 	 * otp - One-time-password 	 * 	 * This field should not be set in configuration step. It is only used 	 * internally when OTP is entered through the control interface. 	 */
 name|u8
 modifier|*
@@ -536,10 +607,16 @@ name|char
 modifier|*
 name|pac_file
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* IEEE8021X_EAPOL */
 comment|/** 	 * mode - IEEE 802.11 operation mode (Infrastucture/IBSS) 	 * 	 * 0 = infrastructure (Managed) mode, i.e., associate with an AP. 	 * 	 * 1 = IBSS (ad-hoc, peer-to-peer) 	 * 	 * Note: IBSS can only be used with key_mgmt NONE (plaintext and 	 * static WEP) and key_mgmt=WPA-NONE (fixed group key TKIP/CCMP). In 	 * addition, ap_scan has to be set to 2 for IBSS. WPA-None requires 	 * following network block options: proto=WPA, key_mgmt=WPA-NONE, 	 * pairwise=NONE, group=TKIP (or CCMP, but not both), and psk must also 	 * be set (either directly or using ASCII passphrase). 	 */
 name|int
 name|mode
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE8021X_EAPOL
 comment|/** 	 * mschapv2_retry - MSCHAPv2 retry in progress 	 * 	 * This field is used internally by EAP-MSCHAPv2 and should not be set 	 * as part of configuration. 	 */
 name|int
 name|mschapv2_retry
@@ -553,10 +630,55 @@ comment|/** 	 * new_password_len - Length of new_password field 	 */
 name|size_t
 name|new_password_len
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* IEEE8021X_EAPOL */
 comment|/** 	 * disabled - Whether this network is currently disabled 	 * 	 * 0 = this network can be used (default). 	 * 1 = this network block is disabled (can be enabled through 	 * ctrl_iface, e.g., with wpa_cli or wpa_gui). 	 */
 name|int
 name|disabled
 decl_stmt|;
+comment|/** 	 * peerkey -  Whether PeerKey handshake for direct links is allowed 	 * 	 * This is only used when both RSN/WPA2 and IEEE 802.11e (QoS) are 	 * enabled. 	 * 	 * 0 = disabled (default) 	 * 1 = enabled 	 */
+name|int
+name|peerkey
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE8021X_EAPOL
+comment|/** 	 * fragment_size - Maximum EAP fragment size in bytes (default 1398) 	 * 	 * This value limits the fragment size for EAP methods that support 	 * fragmentation (e.g., EAP-TLS and EAP-PEAP). This value should be set 	 * small enough to make the EAP messages fit in MTU of the network 	 * interface used for EAPOL. The default value is suitable for most 	 * cases. 	 */
+name|int
+name|fragment_size
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* IEEE8021X_EAPOL */
+comment|/** 	 * id_str - Network identifier string for external scripts 	 * 	 * This value is passed to external ctrl_iface monitors in 	 * WPA_EVENT_CONNECTED event and wpa_cli sets this as WPA_ID_STR 	 * environment variable for action scripts. 	 */
+name|char
+modifier|*
+name|id_str
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_IEEE80211W
+comment|/** 	 * ieee80211w - Whether management frame protection is enabled 	 * 	 * This value is used to configure policy for management frame 	 * protection (IEEE 802.11w). 0 = disabled, 1 = optional, 2 = required. 	 */
+enum|enum
+block|{
+name|NO_IEEE80211W
+init|=
+literal|0
+block|,
+name|IEEE80211W_OPTIONAL
+init|=
+literal|1
+block|,
+name|IEEE80211W_REQUIRED
+init|=
+literal|2
+block|}
+name|ieee80211w
+enum|;
+endif|#
+directive|endif
+comment|/* CONFIG_IEEE80211W */
 block|}
 struct|;
 end_struct
@@ -571,6 +693,9 @@ modifier|*
 name|ssid
 parameter_list|,
 name|int
+name|vendor
+parameter_list|,
+name|u32
 name|method
 parameter_list|)
 function_decl|;

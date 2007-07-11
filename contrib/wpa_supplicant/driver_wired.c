@@ -1,30 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - wired Ethernet driver interface  * Copyright (c) 2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - wired Ethernet driver interface  * Copyright (c) 2005-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|"includes.h"
 end_include
 
 begin_include
@@ -36,14 +18,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<net/if.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__linux__
+end_ifdef
 
 begin_include
 include|#
@@ -51,11 +33,35 @@ directive|include
 file|<netpacket/packet.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __linux__ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|<net/if_dl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
 
 begin_include
 include|#
@@ -135,25 +141,6 @@ end_struct
 begin_function
 specifier|static
 name|int
-name|wpa_driver_wired_set_wpa
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-name|int
-name|enabled
-parameter_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
 name|wpa_driver_wired_get_ssid
 parameter_list|(
 name|void
@@ -193,7 +180,7 @@ name|bssid
 parameter_list|)
 block|{
 comment|/* Report PAE group address as the "BSSID" for wired connection. */
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|bssid
 argument_list|,
@@ -258,7 +245,7 @@ operator|-
 literal|1
 return|;
 block|}
-name|memset
+name|os_memset
 argument_list|(
 operator|&
 name|ifr
@@ -271,7 +258,7 @@ name|ifr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|os_strncpy
 argument_list|(
 name|ifr
 operator|.
@@ -384,7 +371,7 @@ operator|-
 literal|1
 return|;
 block|}
-name|memset
+name|os_memset
 argument_list|(
 operator|&
 name|ifr
@@ -397,7 +384,7 @@ name|ifr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|os_strncpy
 argument_list|(
 name|ifr
 operator|.
@@ -514,7 +501,7 @@ operator|-
 literal|1
 return|;
 block|}
-name|memset
+name|os_memset
 argument_list|(
 operator|&
 name|ifr
@@ -527,7 +514,7 @@ name|ifr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|os_strncpy
 argument_list|(
 name|ifr
 operator|.
@@ -538,6 +525,9 @@ argument_list|,
 name|IFNAMSIZ
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__linux__
 name|ifr
 operator|.
 name|ifr_hwaddr
@@ -546,7 +536,7 @@ name|sa_family
 operator|=
 name|AF_UNSPEC
 expr_stmt|;
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|ifr
 operator|.
@@ -559,6 +549,86 @@ argument_list|,
 name|ETH_ALEN
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __linux__ */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+block|{
+name|struct
+name|sockaddr_dl
+modifier|*
+name|dlp
+decl_stmt|;
+name|dlp
+operator|=
+operator|(
+expr|struct
+name|sockaddr_dl
+operator|*
+operator|)
+operator|&
+name|ifr
+operator|.
+name|ifr_addr
+expr_stmt|;
+name|dlp
+operator|->
+name|sdl_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_dl
+argument_list|)
+expr_stmt|;
+name|dlp
+operator|->
+name|sdl_family
+operator|=
+name|AF_LINK
+expr_stmt|;
+name|dlp
+operator|->
+name|sdl_index
+operator|=
+literal|0
+expr_stmt|;
+name|dlp
+operator|->
+name|sdl_nlen
+operator|=
+literal|0
+expr_stmt|;
+name|dlp
+operator|->
+name|sdl_alen
+operator|=
+name|ETH_ALEN
+expr_stmt|;
+name|dlp
+operator|->
+name|sdl_slen
+operator|=
+literal|0
+expr_stmt|;
+name|os_memcpy
+argument_list|(
+name|LLADDR
+argument_list|(
+name|dlp
+argument_list|)
+argument_list|,
+name|addr
+argument_list|,
+name|ETH_ALEN
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 if|if
 condition|(
 name|ioctl
@@ -646,7 +716,7 @@ return|return
 operator|-
 literal|1
 return|;
-name|memset
+name|os_memset
 argument_list|(
 operator|&
 name|mreq
@@ -682,7 +752,7 @@ name|mr_alen
 operator|=
 name|ETH_ALEN
 expr_stmt|;
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|mreq
 operator|.
@@ -773,7 +843,7 @@ name|flags
 decl_stmt|;
 name|drv
 operator|=
-name|malloc
+name|os_zalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -791,20 +861,7 @@ condition|)
 return|return
 name|NULL
 return|;
-name|memset
-argument_list|(
-name|drv
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|drv
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|strncpy
+name|os_strncpy
 argument_list|(
 name|drv
 operator|->
@@ -857,6 +914,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* __linux__ */
 name|drv
 operator|->
 name|pf_sock
@@ -866,6 +924,7 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* __linux__ */
 if|if
 condition|(
 name|wpa_driver_wired_get_ifflags
@@ -991,7 +1050,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|drv
 argument_list|)
@@ -1043,7 +1102,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|drv
 argument_list|)
@@ -1266,7 +1325,7 @@ operator|->
 name|pf_sock
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|drv
 argument_list|)
@@ -1290,11 +1349,6 @@ operator|.
 name|desc
 operator|=
 literal|"wpa_supplicant wired Ethernet driver"
-block|,
-operator|.
-name|set_wpa
-operator|=
-name|wpa_driver_wired_set_wpa
 block|,
 operator|.
 name|get_ssid

@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - ASCII passphrase to WPA PSK tool  * Copyright (c) 2003-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - ASCII passphrase to WPA PSK tool  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
+file|"includes.h"
 end_include
 
 begin_include
@@ -193,14 +187,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|strlen
+name|os_strlen
 argument_list|(
 name|passphrase
 argument_list|)
 operator|<
 literal|8
 operator|||
-name|strlen
+name|os_strlen
 argument_list|(
 name|passphrase
 argument_list|)
@@ -223,7 +217,7 @@ name|passphrase
 argument_list|,
 name|ssid
 argument_list|,
-name|strlen
+name|os_strlen
 argument_list|(
 name|ssid
 argument_list|)

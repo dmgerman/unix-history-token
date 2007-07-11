@@ -1,76 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - test code  * Copyright (c) 2003-2006, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * IEEE 802.1X Supplicant test code (to be used in place of wpa_supplicant.c.  * Not used in production version.  */
+comment|/*  * WPA Supplicant - test code  * Copyright (c) 2003-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * IEEE 802.1X Supplicant test code (to be used in place of wpa_supplicant.c.  * Not used in production version.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"includes.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CONFIG_NATIVE_WINDOWS
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arpa/inet.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_NATIVE_WINDOWS */
-end_comment
 
 begin_include
 include|#
@@ -94,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"eapol_sm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"eap.h"
 end_include
 
 begin_include
@@ -177,7 +120,9 @@ modifier|*
 name|wpa_supplicant_drivers
 index|[]
 init|=
-block|{ }
+block|{
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -256,6 +201,16 @@ decl_stmt|;
 name|size_t
 name|eap_identity_len
 decl_stmt|;
+name|char
+modifier|*
+name|connect_info
+decl_stmt|;
+name|u8
+name|own_addr
+index|[
+name|ETH_ALEN
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -292,6 +247,7 @@ name|void
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|addr
@@ -322,7 +278,7 @@ name|ap
 decl_stmt|;
 name|maxlen
 operator|=
-name|strlen
+name|os_strlen
 argument_list|(
 name|fmt
 argument_list|)
@@ -331,7 +287,7 @@ literal|100
 expr_stmt|;
 name|format
 operator|=
-name|malloc
+name|os_malloc
 argument_list|(
 name|maxlen
 argument_list|)
@@ -353,7 +309,7 @@ if|if
 condition|(
 name|addr
 condition|)
-name|snprintf
+name|os_snprintf
 argument_list|(
 name|format
 argument_list|,
@@ -372,7 +328,7 @@ name|fmt
 argument_list|)
 expr_stmt|;
 else|else
-name|snprintf
+name|os_snprintf
 argument_list|(
 name|format
 argument_list|,
@@ -395,7 +351,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|format
 argument_list|)
@@ -450,7 +406,7 @@ operator|==
 name|AF_INET
 condition|)
 block|{
-name|snprintf
+name|os_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -524,6 +480,27 @@ directive|endif
 comment|/* CONFIG_IPV6 */
 return|return
 name|buf
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|hostapd_ip_diff
+parameter_list|(
+name|struct
+name|hostapd_ip_addr
+modifier|*
+name|a
+parameter_list|,
+name|struct
+name|hostapd_ip_addr
+modifier|*
+name|b
+parameter_list|)
+block|{
+return|return
+literal|0
 return|;
 block|}
 end_function
@@ -680,7 +657,7 @@ block|{
 name|pos
 operator|++
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|e
 operator|->
@@ -705,7 +682,7 @@ name|e
 operator|->
 name|eap_identity
 operator|=
-name|malloc
+name|os_malloc
 argument_list|(
 name|e
 operator|->
@@ -719,7 +696,7 @@ operator|->
 name|eap_identity
 condition|)
 block|{
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|e
 operator|->
@@ -813,7 +790,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|snprintf
+name|os_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -849,7 +826,7 @@ operator|*
 operator|)
 name|buf
 argument_list|,
-name|strlen
+name|os_strlen
 argument_list|(
 name|buf
 argument_list|)
@@ -910,7 +887,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|snprintf
+name|os_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -919,7 +896,11 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"CONNECT 11Mbps 802.11b"
+literal|"%s"
+argument_list|,
+name|e
+operator|->
+name|connect_info
 argument_list|)
 expr_stmt|;
 if|if
@@ -937,7 +918,7 @@ operator|*
 operator|)
 name|buf
 argument_list|,
-name|strlen
+name|os_strlen
 argument_list|(
 name|buf
 argument_list|)
@@ -1068,7 +1049,7 @@ argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|msg
 argument_list|)
@@ -1329,7 +1310,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|memcmp
+name|os_memcmp
 argument_list|(
 name|pmk
 argument_list|,
@@ -1342,11 +1323,26 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"WARNING: PMK mismatch\n"
 argument_list|)
 expr_stmt|;
+name|wpa_hexdump
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"PMK from AS"
+argument_list|,
+name|e
+operator|->
+name|authenticator_pmk
+argument_list|,
+name|PMK_LEN
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1397,7 +1393,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|memcmp
+name|os_memcmp
 argument_list|(
 name|pmk
 argument_list|,
@@ -1410,11 +1406,26 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"WARNING: PMK mismatch\n"
 argument_list|)
 expr_stmt|;
+name|wpa_hexdump
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"PMK from AS"
+argument_list|,
+name|e
+operator|->
+name|authenticator_pmk
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1448,6 +1459,11 @@ block|}
 if|if
 condition|(
 name|ret
+operator|&&
+operator|!
+name|e
+operator|->
+name|no_mppe_keys
 condition|)
 name|e
 operator|->
@@ -1577,7 +1593,7 @@ name|ctx
 decl_stmt|;
 name|ctx
 operator|=
-name|malloc
+name|os_zalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1603,19 +1619,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|memset
-argument_list|(
-name|ctx
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ctx
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|ctx
 operator|->
 name|ctx
@@ -1732,7 +1735,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
+name|os_free
 argument_list|(
 name|ctx
 argument_list|)
@@ -1753,7 +1756,7 @@ name|current_ssid
 operator|=
 name|ssid
 expr_stmt|;
-name|memset
+name|os_memset
 argument_list|(
 operator|&
 name|eapol_conf
@@ -1867,7 +1870,7 @@ operator|->
 name|radius
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|e
 operator|->
@@ -1888,7 +1891,7 @@ operator|->
 name|last_recv_radius
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|e
 operator|->
@@ -1896,7 +1899,7 @@ name|last_recv_radius
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|os_free
 argument_list|(
 name|e
 operator|->
@@ -1935,7 +1938,7 @@ operator|->
 name|auth_server
 condition|)
 block|{
-name|free
+name|os_free
 argument_list|(
 name|e
 operator|->
@@ -1946,7 +1949,7 @@ operator|->
 name|shared_secret
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|e
 operator|->
@@ -1956,7 +1959,7 @@ name|auth_server
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|os_free
 argument_list|(
 name|e
 operator|->
@@ -1976,11 +1979,27 @@ operator|->
 name|scard
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|wpa_s
+operator|->
+name|ctrl_iface
+condition|)
+block|{
 name|wpa_supplicant_ctrl_iface_deinit
 argument_list|(
 name|wpa_s
+operator|->
+name|ctrl_iface
 argument_list|)
 expr_stmt|;
+name|wpa_s
+operator|->
+name|ctrl_iface
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|wpa_config_free
 argument_list|(
 name|wpa_s
@@ -2254,6 +2273,24 @@ case|:
 return|return
 literal|"OTP"
 return|;
+case|case
+name|EAP_TYPE_FAST
+case|:
+return|return
+literal|"FAST"
+return|;
+case|case
+name|EAP_TYPE_SAKE
+case|:
+return|return
+literal|"SAKE"
+return|;
+case|case
+name|EAP_TYPE_PSK
+case|:
+return|return
+literal|"PSK"
+return|;
 default|default:
 return|return
 literal|"Unknown"
@@ -2343,7 +2380,7 @@ literal|"could not extract "
 literal|"EAP-Message from RADIUS message"
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|e
 operator|->
@@ -2383,7 +2420,7 @@ literal|"too short EAP packet "
 literal|"received from authentication server"
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|eap
 argument_list|)
@@ -2430,7 +2467,7 @@ block|{
 case|case
 name|EAP_CODE_REQUEST
 case|:
-name|snprintf
+name|os_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -2459,7 +2496,7 @@ break|break;
 case|case
 name|EAP_CODE_RESPONSE
 case|:
-name|snprintf
+name|os_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -2488,7 +2525,7 @@ break|break;
 case|case
 name|EAP_CODE_SUCCESS
 case|:
-name|snprintf
+name|os_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -2505,7 +2542,7 @@ break|break;
 case|case
 name|EAP_CODE_FAILURE
 case|:
-name|snprintf
+name|os_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -2522,7 +2559,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 default|default:
-name|snprintf
+name|os_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -2573,7 +2610,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 comment|/* sta->eapol_sm->be_auth.idFromServer = hdr->identifier; */
-name|free
+name|os_free
 argument_list|(
 name|e
 operator|->
@@ -2596,16 +2633,16 @@ block|{
 name|struct
 name|ieee802_1x_hdr
 modifier|*
-name|hdr
+name|dot1x
 decl_stmt|;
-name|hdr
+name|dot1x
 operator|=
-name|malloc
+name|os_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
-name|hdr
+name|dot1x
 argument_list|)
 operator|+
 name|len
@@ -2613,24 +2650,24 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|hdr
+name|dot1x
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|hdr
+name|dot1x
 operator|->
 name|version
 operator|=
 name|EAPOL_VERSION
 expr_stmt|;
-name|hdr
+name|dot1x
 operator|->
 name|type
 operator|=
 name|IEEE802_1X_TYPE_EAP_PACKET
 expr_stmt|;
-name|hdr
+name|dot1x
 operator|->
 name|length
 operator|=
@@ -2639,14 +2676,14 @@ argument_list|(
 name|len
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|os_memcpy
 argument_list|(
 operator|(
 name|u8
 operator|*
 operator|)
 operator|(
-name|hdr
+name|dot1x
 operator|+
 literal|1
 operator|)
@@ -2674,20 +2711,20 @@ operator|(
 name|u8
 operator|*
 operator|)
-name|hdr
+name|dot1x
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|hdr
+name|dot1x
 argument_list|)
 operator|+
 name|len
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
-name|hdr
+name|dot1x
 argument_list|)
 expr_stmt|;
 block|}
@@ -2757,7 +2794,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
+name|os_free
 argument_list|(
 name|keys
 argument_list|)
@@ -2842,7 +2879,7 @@ name|keys
 operator|->
 name|recv_len
 expr_stmt|;
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|e
 operator|->
@@ -2858,21 +2895,21 @@ name|authenticator_pmk_len
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|os_free
 argument_list|(
 name|keys
 operator|->
 name|send
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|keys
 operator|->
 name|recv
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|keys
 argument_list|)
@@ -3058,7 +3095,7 @@ operator|->
 name|last_recv_radius
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|e
 operator|->
@@ -3203,14 +3240,18 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
+name|os_memcpy
+argument_list|(
 name|wpa_s
 operator|->
 name|own_addr
-index|[
-literal|5
-index|]
-operator|=
-literal|2
+argument_list|,
+name|e
+operator|->
+name|own_addr
+argument_list|,
+name|ETH_ALEN
+argument_list|)
 expr_stmt|;
 name|e
 operator|->
@@ -3229,7 +3270,7 @@ operator||
 literal|1
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|os_strncpy
 argument_list|(
 name|wpa_s
 operator|->
@@ -3249,7 +3290,7 @@ name|e
 operator|->
 name|radius_conf
 operator|=
-name|malloc
+name|os_zalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3267,21 +3308,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|memset
-argument_list|(
-name|e
-operator|->
-name|radius_conf
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|hostapd_radius_servers
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|e
 operator|->
 name|radius_conf
@@ -3292,7 +3318,7 @@ literal|1
 expr_stmt|;
 name|as
 operator|=
-name|malloc
+name|os_zalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3308,22 +3334,17 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|memset
+if|#
+directive|if
+name|defined
 argument_list|(
-name|as
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|as
-argument_list|)
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
 name|CONFIG_NATIVE_WINDOWS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_ANSI_C_EXTRA
+argument_list|)
 block|{
 name|int
 name|a
@@ -3420,7 +3441,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* CONFIG_NATIVE_WINDOWS */
+comment|/* CONFIG_NATIVE_WINDOWS or CONFIG_ANSI_C_EXTRA */
 name|inet_aton
 argument_list|(
 name|authsrv
@@ -3437,7 +3458,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* CONFIG_NATIVE_WINDOWS */
+comment|/* CONFIG_NATIVE_WINDOWS or CONFIG_ANSI_C_EXTRA */
 name|as
 operator|->
 name|addr
@@ -3460,7 +3481,7 @@ operator|(
 name|u8
 operator|*
 operator|)
-name|strdup
+name|os_strdup
 argument_list|(
 name|secret
 argument_list|)
@@ -3469,7 +3490,7 @@ name|as
 operator|->
 name|shared_secret_len
 operator|=
-name|strlen
+name|os_strlen
 argument_list|(
 name|secret
 argument_list|)
@@ -3569,7 +3590,7 @@ index|]
 decl_stmt|;
 name|unsigned
 name|char
-name|rand
+name|_rand
 index|[
 literal|16
 index|]
@@ -3631,9 +3652,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|j
-decl_stmt|,
 name|res
+decl_stmt|;
+name|size_t
+name|j
 decl_stmt|;
 define|#
 directive|define
@@ -3786,15 +3808,15 @@ name|len
 argument_list|)
 expr_stmt|;
 comment|/* NOTE: Permanent Username: 1 | IMSI */
-name|memset
+name|os_memset
 argument_list|(
-name|rand
+name|_rand
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|rand
+name|_rand
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3804,7 +3826,7 @@ name|scard_gsm_auth
 argument_list|(
 name|scard
 argument_list|,
-name|rand
+name|_rand
 argument_list|,
 name|sres
 argument_list|,
@@ -3814,15 +3836,15 @@ condition|)
 goto|goto
 name|failed
 goto|;
-name|memset
+name|os_memset
 argument_list|(
-name|rand
+name|_rand
 argument_list|,
 literal|0xff
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|rand
+name|_rand
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3832,7 +3854,7 @@ name|scard_gsm_auth
 argument_list|(
 name|scard
 argument_list|,
-name|rand
+name|_rand
 argument_list|,
 name|sres
 argument_list|,
@@ -3856,7 +3878,7 @@ name|i
 operator|++
 control|)
 block|{
-name|memset
+name|os_memset
 argument_list|(
 name|rand_
 index|[
@@ -4049,7 +4071,7 @@ literal|"Trying to use UMTS authentication"
 argument_list|)
 expr_stmt|;
 comment|/* seq 39 (0x28) */
-name|memset
+name|os_memset
 argument_list|(
 name|aka_rand
 argument_list|,
@@ -4058,7 +4080,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|os_memcpy
 argument_list|(
 name|aka_autn
 argument_list|,
@@ -4223,7 +4245,7 @@ index|]
 decl_stmt|;
 name|unsigned
 name|char
-name|rand
+name|_rand
 index|[
 literal|16
 index|]
@@ -4247,7 +4269,8 @@ name|num_triplets
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|j
 decl_stmt|;
 if|if
@@ -4289,7 +4312,7 @@ name|argc
 operator|<=
 literal|2
 operator|||
-name|strcmp
+name|os_strcmp
 argument_list|(
 name|argv
 index|[
@@ -4406,15 +4429,15 @@ name|i
 operator|++
 control|)
 block|{
-name|memset
+name|os_memset
 argument_list|(
-name|rand
+name|_rand
 argument_list|,
 name|i
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|rand
+name|_rand
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4424,7 +4447,7 @@ name|scard_gsm_auth
 argument_list|(
 name|scard
 argument_list|,
-name|rand
+name|_rand
 argument_list|,
 name|sres
 argument_list|,
@@ -4534,7 +4557,7 @@ name|printf
 argument_list|(
 literal|"%02X"
 argument_list|,
-name|rand
+name|_rand
 index|[
 name|j
 index|]
@@ -4610,10 +4633,16 @@ name|printf
 argument_list|(
 literal|"usage:\n"
 literal|"eapol_test [-nWS] -c<conf> [-a<AS IP>] [-p<AS port>] "
-literal|"[-s<AS secret>] [-r<count>]\n"
+literal|"[-s<AS secret>] \\\n"
+literal|"           [-r<count>] [-t<timeout>] [-C<Connect-Info>] \\\n"
+literal|"           [-M<client MAC address>]\n"
 literal|"eapol_test scard\n"
 literal|"eapol_test sim<PIN><num triplets> [debug]\n"
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"options:\n"
 literal|"  -c<conf> = configuration file\n"
 literal|"  -a<AS IP> = IP address of the authentication server, "
@@ -4626,6 +4655,12 @@ literal|"  -r<count> = number of re-authentications\n"
 literal|"  -W = wait for a control interface monitor before starting\n"
 literal|"  -S = save configuration after authentiation\n"
 literal|"  -n = no MPPE keys expected\n"
+literal|"  -t<timeout> = sets timeout in seconds (default: 30 s)\n"
+literal|"  -C<Connect-Info> = RADIUS Connect-Info (default: "
+literal|"CONNECT 11Mbps 802.11b)\n"
+literal|"  -M<client MAC address> = Set own MAC address "
+literal|"(Calling-Station-Id,\n"
+literal|"                           default: 02:00:00:00:00:01)\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4686,42 +4721,21 @@ name|conf
 init|=
 name|NULL
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CONFIG_NATIVE_WINDOWS
-name|WSADATA
-name|wsaData
+name|int
+name|timeout
+init|=
+literal|30
 decl_stmt|;
 if|if
 condition|(
-name|WSAStartup
-argument_list|(
-name|MAKEWORD
-argument_list|(
-literal|2
-argument_list|,
-literal|0
-argument_list|)
-argument_list|,
-operator|&
-name|wsaData
-argument_list|)
+name|os_program_init
+argument_list|()
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Could not find a usable WinSock.dll\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
-block|}
-endif|#
-directive|endif
-comment|/* CONFIG_NATIVE_WINDOWS */
-name|memset
+name|os_memset
 argument_list|(
 operator|&
 name|eapol_test
@@ -4732,6 +4746,23 @@ sizeof|sizeof
 argument_list|(
 name|eapol_test
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|eapol_test
+operator|.
+name|connect_info
+operator|=
+literal|"CONNECT 11Mbps 802.11b"
+expr_stmt|;
+name|os_memcpy
+argument_list|(
+name|eapol_test
+operator|.
+name|own_addr
+argument_list|,
+literal|"\x02\x00\x00\x00\x00\x01"
+argument_list|,
+name|ETH_ALEN
 argument_list|)
 expr_stmt|;
 name|wpa_debug_level
@@ -4756,7 +4787,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:c:np:r:s:SW"
+literal|"a:c:C:M:np:r:s:St:W"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4786,6 +4817,40 @@ name|conf
 operator|=
 name|optarg
 expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+name|eapol_test
+operator|.
+name|connect_info
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+if|if
+condition|(
+name|hwaddr_aton
+argument_list|(
+name|optarg
+argument_list|,
+name|eapol_test
+operator|.
+name|own_addr
+argument_list|)
+condition|)
+block|{
+name|usage
+argument_list|()
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 break|break;
 case|case
 literal|'n'
@@ -4836,6 +4901,17 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'t'
+case|:
+name|timeout
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'W'
 case|:
 name|wait_for_monitor
@@ -4858,7 +4934,7 @@ name|argc
 operator|>
 name|optind
 operator|&&
-name|strcmp
+name|os_strcmp
 argument_list|(
 name|argv
 index|[
@@ -4882,7 +4958,7 @@ name|argc
 operator|>
 name|optind
 operator|&&
-name|strcmp
+name|os_strcmp
 argument_list|(
 name|argv
 index|[
@@ -4934,13 +5010,46 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|eap_peer_register_methods
+argument_list|()
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_ERROR
+argument_list|,
+literal|"Failed to register EAP methods"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
 name|eloop_init
 argument_list|(
 operator|&
 name|wpa_s
 argument_list|)
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_ERROR
+argument_list|,
+literal|"Failed to initialize event loop"
+argument_list|)
 expr_stmt|;
-name|memset
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|os_memset
 argument_list|(
 operator|&
 name|wpa_s
@@ -5026,13 +5135,23 @@ argument_list|,
 name|as_secret
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|wpa_s
+operator|.
+name|ctrl_iface
+operator|=
 name|wpa_supplicant_ctrl_iface_init
 argument_list|(
 operator|&
 name|wpa_s
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wpa_s
+operator|.
+name|ctrl_iface
+operator|==
+name|NULL
 condition|)
 block|{
 name|printf
@@ -5102,13 +5221,14 @@ name|wait_for_monitor
 condition|)
 name|wpa_supplicant_ctrl_iface_wait
 argument_list|(
-operator|&
 name|wpa_s
+operator|.
+name|ctrl_iface
 argument_list|)
 expr_stmt|;
 name|eloop_register_timeout
 argument_list|(
-literal|30
+name|timeout
 argument_list|,
 literal|0
 argument_list|,
@@ -5134,39 +5254,20 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|eloop_register_signal
+name|eloop_register_signal_terminate
 argument_list|(
-name|SIGINT
-argument_list|,
 name|eapol_test_terminate
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|eloop_register_signal
+name|eloop_register_signal_reconfig
 argument_list|(
-name|SIGTERM
-argument_list|,
 name|eapol_test_terminate
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|CONFIG_NATIVE_WINDOWS
-name|eloop_register_signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|eapol_test_terminate
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* CONFIG_NATIVE_WINDOWS */
 name|eloop_run
 argument_list|()
 expr_stmt|;
@@ -5179,6 +5280,10 @@ name|eapol_test
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|eapol_test
+operator|.
+name|no_mppe_keys
 condition|)
 name|ret
 operator|=
@@ -5228,6 +5333,9 @@ operator|&
 name|wpa_s
 argument_list|)
 expr_stmt|;
+name|eap_peer_unregister_methods
+argument_list|()
+expr_stmt|;
 name|eloop_destroy
 argument_list|()
 expr_stmt|;
@@ -5270,15 +5378,9 @@ argument_list|(
 literal|"SUCCESS\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CONFIG_NATIVE_WINDOWS
-name|WSACleanup
+name|os_program_deinit
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* CONFIG_NATIVE_WINDOWS */
 return|return
 name|ret
 return|;

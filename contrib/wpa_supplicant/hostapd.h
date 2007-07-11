@@ -12,7 +12,7 @@ name|HOSTAPD_H
 end_define
 
 begin_comment
-comment|/*  * Minimal version of hostapd header files for eapol_test to build  * radiusclient.c.  */
+comment|/*  * Minimal version of hostapd header files for eapol_test to build  * radius_client.c.  */
 end_comment
 
 begin_include
@@ -29,6 +29,7 @@ name|void
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|addr
@@ -46,19 +47,15 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|__attribute__
+function_decl|PRINTF_FORMAT
 parameter_list|(
-function_decl|(format
-parameter_list|(
-name|printf
-parameter_list|,
 function_decl|5
 operator|,
 function_decl|6
 end_function_decl
 
 begin_empty_stmt
-unit|)))
+unit|)
 empty_stmt|;
 end_empty_stmt
 
@@ -90,9 +87,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_function_decl
+name|int
+name|hostapd_ip_diff
+parameter_list|(
+name|struct
+name|hostapd_ip_addr
+modifier|*
+name|a
+parameter_list|,
+name|struct
+name|hostapd_ip_addr
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_enum
 enum|enum

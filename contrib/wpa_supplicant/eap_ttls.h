@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / EAP-TTLS (draft-ietf-pppext-eap-ttls-03.txt)  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP server/peer: EAP-TTLS (draft-ietf-pppext-eap-ttls-03.txt)  * Copyright (c) 2004-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -75,7 +75,7 @@ parameter_list|,
 name|pos
 parameter_list|)
 define|\
-value|do { \ 	int pad; \ 	pad = (4 - (((pos) - (start))& 3))& 3; \ 	memset((pos), 0, pad); \ 	pos += pad; \ } while(0)
+value|do { \ 	int __pad; \ 	__pad = (4 - (((pos) - (start))& 3))& 3; \ 	os_memset((pos), 0, __pad); \ 	pos += __pad; \ } while (0)
 end_define
 
 begin_comment

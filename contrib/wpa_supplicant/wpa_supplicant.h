@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * wpa_supplicant - Exported functions for wpa_supplicant modules  * Copyright (c) 2003-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * wpa_supplicant - Exported functions for wpa_supplicant modules  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -54,6 +54,9 @@ name|EVENT_INTERFACE_STATUS
 block|,
 comment|/** 	 * EVENT_PMKID_CANDIDATE - Report a candidate AP for pre-authentication 	 * 	 * This event can be used to inform wpa_supplicant about candidates for 	 * RSN (WPA2) pre-authentication. If wpa_supplicant is not responsible 	 * for scan request (ap_scan=2 mode), this event is required for 	 * pre-authentication. If wpa_supplicant is performing scan request 	 * (ap_scan=1), this event is optional since scan results can be used 	 * to add pre-authentication candidates. union 	 * wpa_event_data::pmkid_candidate is used to report the BSSID of the 	 * candidate and priority of the candidate, e.g., based on the signal 	 * strength, in order to try to pre-authenticate first with candidates 	 * that are most likely targets for re-association. 	 * 	 * EVENT_PMKID_CANDIDATE can be called whenever the driver has updates 	 * on the candidate list. In addition, it can be called for the current 	 * AP and APs that have existing PMKSA cache entries. wpa_supplicant 	 * will automatically skip pre-authentication in cases where a valid 	 * PMKSA exists. When more than one candidate exists, this event should 	 * be generated once for each candidate. 	 * 	 * Driver will be notified about successful pre-authentication with 	 * struct wpa_driver_ops::add_pmkid() calls. 	 */
 name|EVENT_PMKID_CANDIDATE
+block|,
+comment|/** 	 * EVENT_STKSTART - Request STK handshake (MLME-STKSTART.request) 	 * 	 * This event can be used to inform wpa_supplicant about desire to set 	 * up secure direct link connection between two stations as defined in 	 * IEEE 802.11e with a new PeerKey mechanism that replaced the original 	 * STAKey negotiation. The caller will need to set peer address for the 	 * event. 	 */
+name|EVENT_STKSTART
 block|}
 name|wpa_event_type
 typedef|;
@@ -118,7 +121,7 @@ block|{
 name|char
 name|ifname
 index|[
-literal|20
+literal|100
 index|]
 decl_stmt|;
 enum|enum
@@ -154,6 +157,19 @@ decl_stmt|;
 block|}
 name|pmkid_candidate
 struct|;
+comment|/** 	 * struct stkstart - Data for EVENT_STKSTART 	 */
+struct|struct
+name|stkstart
+block|{
+name|u8
+name|peer
+index|[
+name|ETH_ALEN
+index|]
+decl_stmt|;
+block|}
+name|stkstart
+struct|;
 block|}
 union|;
 end_union
@@ -178,60 +194,6 @@ name|union
 name|wpa_event_data
 modifier|*
 name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * wpa_msg - Conditional printf for default target and ctrl_iface monitors  * @wpa_s: pointer to wpa_supplicant data; this is the ctx variable registered  *	with struct wpa_driver_ops::init()  * @level: priority level (MSG_*) of the message  * @fmt: printf format string, followed by optional arguments  *  * This function is used to print conditional debugging and error messages. The  * output may be directed to stdout, stderr, and/or syslog based on  * configuration. This function is like wpa_printf(), but it also sends the  * same message to all attached ctrl_iface monitors.  *  * Note: New line '\n' is added to the end of the text when printing to stdout.  */
-end_comment
-
-begin_function_decl
-name|void
-name|wpa_msg
-parameter_list|(
-name|struct
-name|wpa_supplicant
-modifier|*
-name|wpa_s
-parameter_list|,
-name|int
-name|level
-parameter_list|,
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(format
-parameter_list|(
-name|printf
-parameter_list|,
-function_decl|3
-operator|,
-function_decl|4
-end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|wpa_ssid_txt
-parameter_list|(
-name|u8
-modifier|*
-name|ssid
-parameter_list|,
-name|size_t
-name|ssid_len
 parameter_list|)
 function_decl|;
 end_function_decl

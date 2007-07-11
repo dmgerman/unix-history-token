@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / EAPOL state machines  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / EAPOL state machines  * Copyright (c) 2004-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -253,6 +253,18 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|)
+function_decl|;
+comment|/** 	 * aborted_cached - Notify that cached PMK attempt was aborted 	 * @ctx: Callback context (ctx) 	 */
+name|void
+function_decl|(
+modifier|*
+name|aborted_cached
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
 comment|/** 	 * opensc_engine_path - Path to the OpenSSL engine for opensc 	 * 	 * This is an OpenSSL specific configuration option for loading OpenSC 	 * engine (engine_opensc.so); if %NULL, this engine is not loaded. 	 */
@@ -643,6 +655,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|eapol_sm_notify_lower_layer_success
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|eapol_sm_invalidate_cached_session
 parameter_list|(
 name|struct
 name|eapol_sm
@@ -1080,6 +1104,20 @@ specifier|static
 specifier|inline
 name|void
 name|eapol_sm_notify_lower_layer_success
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|eapol_sm_invalidate_cached_session
 parameter_list|(
 name|struct
 name|eapol_sm

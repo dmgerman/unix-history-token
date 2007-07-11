@@ -15,7 +15,7 @@ begin_define
 define|#
 directive|define
 name|VERSION_STR
-value|"0.4.8"
+value|"0.5.8"
 end_define
 
 begin_endif

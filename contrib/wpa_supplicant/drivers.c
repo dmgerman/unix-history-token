@@ -1,13 +1,40 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / driver interface list  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / driver interface list  * Copyright (c) 2004-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|"includes.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_DRIVER_WEXT
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|wpa_driver_ops
+name|wpa_driver_wext_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* driver_wext.c */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_DRIVER_WEXT */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -142,33 +169,6 @@ end_endif
 
 begin_comment
 comment|/* CONFIG_DRIVER_ATMEL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_WEXT
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|wpa_driver_ops
-name|wpa_driver_wext_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* driver_wext.c */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_DRIVER_WEXT */
 end_comment
 
 begin_ifdef
@@ -370,6 +370,15 @@ init|=
 block|{
 ifdef|#
 directive|ifdef
+name|CONFIG_DRIVER_WEXT
+operator|&
+name|wpa_driver_wext_ops
+block|,
+endif|#
+directive|endif
+comment|/* CONFIG_DRIVER_WEXT */
+ifdef|#
+directive|ifdef
 name|CONFIG_DRIVER_HOSTAP
 operator|&
 name|wpa_driver_hostap_ops
@@ -413,15 +422,6 @@ block|,
 endif|#
 directive|endif
 comment|/* CONFIG_DRIVER_ATMEL */
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_WEXT
-operator|&
-name|wpa_driver_wext_ops
-block|,
-endif|#
-directive|endif
-comment|/* CONFIG_DRIVER_WEXT */
 ifdef|#
 directive|ifdef
 name|CONFIG_DRIVER_NDISWRAPPER
