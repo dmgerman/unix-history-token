@@ -684,7 +684,6 @@ name|v_vflag
 operator||=
 name|VV_ROOT
 expr_stmt|;
-comment|/*  cp = make_coda_node(&ctlfid, vfsp, VCHR);     The above code seems to cause a loop in the cnode links.     I don't totally understand when it happens, it is caught     when closing down the system.  */
 name|cp
 operator|=
 name|make_coda_node
@@ -692,7 +691,7 @@ argument_list|(
 operator|&
 name|ctlfid
 argument_list|,
-literal|0
+name|vfsp
 argument_list|,
 name|VCHR
 argument_list|)
