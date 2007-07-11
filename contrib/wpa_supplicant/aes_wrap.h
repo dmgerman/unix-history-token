@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * AES-based functions  *  * - AES Key Wrap Algorithm (128-bit KEK) (RFC3394)  * - One-Key CBC MAC (OMAC1) hash with AES-128  * - AES-128 CTR mode encryption  * - AES-128 EAX mode encryption/decryption  * - AES-128 CBC  *  * Copyright (c) 2003-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * AES-based functions  *  * - AES Key Wrap Algorithm (128-bit KEK) (RFC3394)  * - One-Key CBC MAC (OMAC1) hash with AES-128  * - AES-128 CTR mode encryption  * - AES-128 EAX mode encryption/decryption  * - AES-128 CBC  *  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef

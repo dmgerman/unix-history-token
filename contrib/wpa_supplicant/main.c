@@ -1,37 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / main() function for UNIX like OSes and MinGW  * Copyright (c) 2003-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / main() function for UNIX like OSes and MinGW  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|"includes.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__linux__
+end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<fcntl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __linux__ */
+end_comment
 
 begin_include
 include|#
@@ -74,7 +71,43 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
-name|wpa_supplicant_full_license
+name|wpa_supplicant_full_license1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|wpa_supplicant_full_license2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|wpa_supplicant_full_license3
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|wpa_supplicant_full_license4
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|wpa_supplicant_full_license5
 decl_stmt|;
 end_decl_stmt
 
@@ -112,12 +145,13 @@ name|printf
 argument_list|(
 literal|"%s\n\n%s\n"
 literal|"usage:\n"
-literal|"  wpa_supplicant [-BddehLqqvwW] [-P<pid file>] "
+literal|"  wpa_supplicant [-BddehLqquvwW] [-P<pid file>] "
 literal|"[-g<global ctrl>] \\\n"
 literal|"        -i<ifname> -c<config file> [-C<ctrl>] [-D<driver>] "
 literal|"[-p<driver_param>] \\\n"
-literal|"        [-N -i<ifname> -c<conf> [-C<ctrl>] [-D<driver>] "
-literal|"[-p<driver_param>] ...]\n"
+literal|"        [-b<br_ifname> [-N -i<ifname> -c<conf> [-C<ctrl>] "
+literal|"[-D<driver>] \\\n"
+literal|"        [-p<driver_param>] [-b<br_ifname>] ...]\n"
 literal|"\n"
 literal|"drivers:\n"
 argument_list|,
@@ -167,6 +201,7 @@ name|CONFIG_NO_STDOUT_DEBUG
 name|printf
 argument_list|(
 literal|"options:\n"
+literal|"  -b = optional bridge interface name\n"
 literal|"  -B = run daemon in the background\n"
 literal|"  -c = Configuration file\n"
 literal|"  -C = ctrl_interface parameter (only used if -c is not)\n"
@@ -178,9 +213,20 @@ literal|"  -K = include keys (passwords, etc.) in debug output\n"
 literal|"  -t = include timestamp in debug messages\n"
 literal|"  -h = show this help text\n"
 literal|"  -L = show license (GPL and BSD)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"  -p = driver parameters\n"
 literal|"  -P = PID file\n"
 literal|"  -q = decrease debugging verbosity (-qq even less)\n"
+ifdef|#
+directive|ifdef
+name|CONFIG_CTRL_IFACE_DBUS
+literal|"  -u = enable DBus control interface\n"
+endif|#
+directive|endif
+comment|/* CONFIG_CTRL_IFACE_DBUS */
 literal|"  -v = show version\n"
 literal|"  -w = wait for interface to be added, if needed\n"
 literal|"  -W = wait for a control interface monitor before starting\n"
@@ -212,11 +258,19 @@ directive|ifndef
 name|CONFIG_NO_STDOUT_DEBUG
 name|printf
 argument_list|(
-literal|"%s\n\n%s\n"
+literal|"%s\n\n%s%s%s%s%s\n"
 argument_list|,
 name|wpa_supplicant_version
 argument_list|,
-name|wpa_supplicant_full_license
+name|wpa_supplicant_full_license1
+argument_list|,
+name|wpa_supplicant_full_license2
+argument_list|,
+name|wpa_supplicant_full_license3
+argument_list|,
+name|wpa_supplicant_full_license4
+argument_list|,
+name|wpa_supplicant_full_license5
 argument_list|)
 expr_stmt|;
 endif|#
@@ -233,6 +287,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__linux__
 name|int
 name|s
 decl_stmt|,
@@ -277,6 +334,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* __linux__ */
 block|}
 end_function
 
@@ -310,6 +370,9 @@ name|int
 name|iface_count
 decl_stmt|,
 name|exitcode
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|struct
 name|wpa_params
@@ -320,42 +383,16 @@ name|wpa_global
 modifier|*
 name|global
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CONFIG_NATIVE_WINDOWS
-name|WSADATA
-name|wsaData
-decl_stmt|;
 if|if
 condition|(
-name|WSAStartup
-argument_list|(
-name|MAKEWORD
-argument_list|(
-literal|2
-argument_list|,
-literal|0
-argument_list|)
-argument_list|,
-operator|&
-name|wsaData
-argument_list|)
+name|os_program_init
+argument_list|()
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Could not find a usable WinSock.dll\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
-block|}
-endif|#
-directive|endif
-comment|/* CONFIG_NATIVE_WINDOWS */
-name|memset
+name|os_memset
 argument_list|(
 operator|&
 name|params
@@ -378,7 +415,7 @@ name|iface
 operator|=
 name|ifaces
 operator|=
-name|malloc
+name|os_zalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -397,19 +434,6 @@ return|return
 operator|-
 literal|1
 return|;
-name|memset
-argument_list|(
-name|iface
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|iface
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|iface_count
 operator|=
 literal|1
@@ -431,7 +455,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Bc:C:D:dg:hi:KLNp:P:qtvwW"
+literal|"b:Bc:C:D:dg:hi:KLNp:P:qtuvwW"
 argument_list|)
 expr_stmt|;
 if|if
@@ -446,6 +470,16 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'b'
+case|:
+name|iface
+operator|->
+name|bridge_ifname
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 case|case
 literal|'B'
 case|:
@@ -498,10 +532,9 @@ literal|"CONFIG_NO_STDOUT_DEBUG=y build time "
 literal|"option.\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+goto|goto
+name|out
+goto|;
 else|#
 directive|else
 comment|/* CONFIG_NO_STDOUT_DEBUG */
@@ -530,10 +563,13 @@ case|:
 name|usage
 argument_list|()
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+name|exitcode
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 case|case
 literal|'i'
 case|:
@@ -559,10 +595,13 @@ case|:
 name|license
 argument_list|()
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+name|exitcode
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 case|case
 literal|'p'
 case|:
@@ -576,11 +615,18 @@ break|break;
 case|case
 literal|'P'
 case|:
+name|os_free
+argument_list|(
+name|params
+operator|.
+name|pid_file
+argument_list|)
+expr_stmt|;
 name|params
 operator|.
 name|pid_file
 operator|=
-name|rel2abs_path
+name|os_rel2abs_path
 argument_list|(
 name|optarg
 argument_list|)
@@ -604,6 +650,22 @@ name|wpa_debug_timestamp
 operator|++
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|CONFIG_CTRL_IFACE_DBUS
+case|case
+literal|'u'
+case|:
+name|params
+operator|.
+name|dbus_ctrl_interface
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* CONFIG_CTRL_IFACE_DBUS */
 case|case
 literal|'v'
 case|:
@@ -614,10 +676,13 @@ argument_list|,
 name|wpa_supplicant_version
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+name|exitcode
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 case|case
 literal|'w'
 case|:
@@ -644,7 +709,7 @@ operator|++
 expr_stmt|;
 name|iface
 operator|=
-name|realloc
+name|os_realloc
 argument_list|(
 name|ifaces
 argument_list|,
@@ -663,17 +728,9 @@ name|iface
 operator|==
 name|NULL
 condition|)
-block|{
-name|free
-argument_list|(
-name|ifaces
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
+goto|goto
+name|out
+goto|;
 name|ifaces
 operator|=
 name|iface
@@ -688,7 +745,7 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-name|memset
+name|os_memset
 argument_list|(
 name|iface
 argument_list|,
@@ -706,10 +763,13 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+name|exitcode
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 block|}
 name|exitcode
@@ -741,6 +801,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 for|for
 control|(
@@ -798,18 +861,26 @@ name|iface_count
 operator|==
 literal|1
 operator|&&
+operator|(
 name|params
 operator|.
 name|ctrl_interface
+operator|||
+name|params
+operator|.
+name|dbus_ctrl_interface
+operator|)
 condition|)
 break|break;
 name|usage
 argument_list|()
 expr_stmt|;
-return|return
+name|exitcode
+operator|=
 operator|-
 literal|1
-return|;
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -850,27 +921,23 @@ argument_list|(
 name|global
 argument_list|)
 expr_stmt|;
-name|free
+name|out
+label|:
+name|os_free
 argument_list|(
 name|ifaces
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|params
 operator|.
 name|pid_file
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CONFIG_NATIVE_WINDOWS
-name|WSACleanup
+name|os_program_deinit
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* CONFIG_NATIVE_WINDOWS */
 return|return
 name|exitcode
 return|;

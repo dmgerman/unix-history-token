@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / PC/SC smartcard interface for USIM, GSM SIM  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / PC/SC smartcard interface for USIM, GSM SIM  * Copyright (c) 2004-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -45,6 +45,13 @@ define|#
 directive|define
 name|SCARD_FILE_GSM_EF_IMSI
 value|0x6F07
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCARD_FILE_EF_DIR
+value|0x2F00
 end_define
 
 begin_define
@@ -172,10 +179,11 @@ name|scard_data
 modifier|*
 name|scard
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
-name|rand
+name|_rand
 parameter_list|,
 name|unsigned
 name|char
@@ -199,11 +207,13 @@ name|scard_data
 modifier|*
 name|scard
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
-name|rand
+name|_rand
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

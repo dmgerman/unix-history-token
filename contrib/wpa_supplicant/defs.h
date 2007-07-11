@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - Common definitions  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - Common definitions  * Copyright (c) 2004-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -76,6 +76,10 @@ block|,
 name|WPA_ALG_TKIP
 block|,
 name|WPA_ALG_CCMP
+block|,
+name|WPA_ALG_IGTK
+block|,
+name|WPA_ALG_DHV
 block|}
 name|wpa_alg
 typedef|;
@@ -152,6 +156,48 @@ block|}
 name|wpa_states
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|MLME_SETPROTECTION_PROTECT_TYPE_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLME_SETPROTECTION_PROTECT_TYPE_RX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLME_SETPROTECTION_PROTECT_TYPE_TX
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLME_SETPROTECTION_PROTECT_TYPE_RX_TX
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLME_SETPROTECTION_KEY_TYPE_GROUP
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLME_SETPROTECTION_KEY_TYPE_PAIRWISE
+value|1
+end_define
 
 begin_endif
 endif|#

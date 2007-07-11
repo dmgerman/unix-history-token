@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant/hostapd / Shared EAP definitions  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP server/peer: Shared EAP definitions  * Copyright (c) 2004-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,32 @@ begin_comment
 comment|/* RFC 3748 - Extensible Authentication Protocol (EAP) */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|,
+name|1
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
+
 begin_struct
 struct|struct
 name|eap_hdr
@@ -35,14 +61,33 @@ decl_stmt|;
 comment|/* including code and identifier; network byte order */
 comment|/* followed by length-4 octets of data */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
 
 begin_enum
 enum|enum
@@ -121,7 +166,7 @@ block|,
 name|EAP_TYPE_SIM
 init|=
 literal|18
-comment|/* draft-haverinen-pppext-eap-sim-12.txt */
+comment|/* RFC 4186 */
 block|,
 name|EAP_TYPE_TTLS
 init|=
@@ -131,7 +176,7 @@ block|,
 name|EAP_TYPE_AKA
 init|=
 literal|23
-comment|/* draft-arkko-pppext-eap-aka-12.txt */
+comment|/* RFC 4187 */
 block|,
 name|EAP_TYPE_PEAP
 init|=
@@ -151,26 +196,64 @@ block|,
 name|EAP_TYPE_FAST
 init|=
 literal|43
-comment|/* draft-cam-winget-eap-fast-00.txt */
+comment|/* draft-cam-winget-eap-fast-05.txt */
 block|,
 name|EAP_TYPE_PAX
 init|=
 literal|46
+comment|/* RFC 4746 */
 block|,
-comment|/* draft-clancy-eap-pax-04.txt */
-name|EAP_TYPE_EXPANDED_NAK
+name|EAP_TYPE_PSK
+init|=
+literal|47
+comment|/* RFC 4764 */
+block|,
+name|EAP_TYPE_SAKE
+init|=
+literal|48
+comment|/* RFC 4763 */
+block|,
+name|EAP_TYPE_EXPANDED
 init|=
 literal|254
 comment|/* RFC 3748 */
 block|,
-name|EAP_TYPE_PSK
+name|EAP_TYPE_GPSK
 init|=
 literal|255
-comment|/* EXPERIMENTAL - type not yet allocated 			    * draft-bersani-eap-psk-09 */
+comment|/* EXPERIMENTAL - type not yet allocated 			     * draft-ietf-emu-eap-gpsk-01.txt */
 block|}
 name|EapType
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* SMI Network Management Private Enterprise Code for vendor specific types */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|EAP_VENDOR_IETF
+init|=
+literal|0
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|EAP_MSK_LEN
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|EAP_EMSK_LEN
+value|64
+end_define
 
 begin_endif
 endif|#

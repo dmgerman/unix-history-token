@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / EAP-TLS/PEAP/TTLS/FAST common functions  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP peer: EAP-TLS/PEAP/TTLS/FAST common functions  * Copyright (c) 2004-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -57,6 +57,10 @@ name|int
 name|include_tls_length
 decl_stmt|;
 comment|/* include TLS length field even if the TLS 				 * data is not fragmented */
+name|int
+name|tls_ia
+decl_stmt|;
+comment|/* Enable TLS/IA */
 name|struct
 name|eap_sm
 modifier|*
@@ -163,6 +167,7 @@ name|eap_ssl_data
 modifier|*
 name|data
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|label
@@ -222,7 +227,7 @@ name|eap_ssl_data
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|EapType
 name|eap_type
 parameter_list|,
 name|int
@@ -268,7 +273,7 @@ parameter_list|,
 name|u8
 name|id
 parameter_list|,
-name|int
+name|EapType
 name|eap_type
 parameter_list|,
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / Configuration file structures  * Copyright (c) 2003-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / Configuration file structures  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -14,42 +14,6 @@ define|#
 directive|define
 name|CONFIG_H
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_CTRL_IFACE
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CONFIG_CTRL_IFACE_UDP
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<grp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_CTRL_IFACE_UDP */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_CTRL_IFACE */
-end_comment
 
 begin_define
 define|#
@@ -143,31 +107,16 @@ comment|/** 	 * ap_scan - AP scanning/selection 	 * 	 * By default, wpa_supplica
 name|int
 name|ap_scan
 decl_stmt|;
-comment|/** 	 * ctrl_interface - Directory for UNIX domain sockets 	 * 	 * This variable is used to configure where the UNIX domain sockets 	 * for the control interface are created. If UDP-based ctrl_iface is 	 * used, this variable can be set to any string (i.e., %NULL is not 	 * allowed). 	 */
+comment|/** 	 * ctrl_interface - Parameters for the control interface 	 * 	 * If this is specified, %wpa_supplicant will open a control interface 	 * that is available for external programs to manage %wpa_supplicant. 	 * The meaning of this string depends on which control interface 	 * mechanism is used. For all cases, the existance of this parameter 	 * in configuration is used to determine whether the control interface 	 * is enabled. 	 * 	 * For UNIX domain sockets (default on Linux and BSD): This is a 	 * directory that will be created for UNIX domain sockets for listening 	 * to requests from external programs (CLI/GUI, etc.) for status 	 * information and configuration. The socket file will be named based 	 * on the interface name, so multiple %wpa_supplicant processes can be 	 * run at the same time if more than one interface is used. 	 * /var/run/wpa_supplicant is the recommended directory for sockets and 	 * by default, wpa_cli will use it when trying to connect with 	 * %wpa_supplicant. 	 * 	 * Access control for the control interface can be configured 	 * by setting the directory to allow only members of a group 	 * to use sockets. This way, it is possible to run 	 * %wpa_supplicant as root (since it needs to change network 	 * configuration and open raw sockets) and still allow GUI/CLI 	 * components to be run as non-root users. However, since the 	 * control interface can be used to change the network 	 * configuration, this access needs to be protected in many 	 * cases. By default, %wpa_supplicant is configured to use gid 	 * 0 (root). If you want to allow non-root users to use the 	 * control interface, add a new group and change this value to 	 * match with that group. Add users that should have control 	 * interface access to this group. 	 * 	 * When configuring both the directory and group, use following format: 	 * DIR=/var/run/wpa_supplicant GROUP=wheel 	 * DIR=/var/run/wpa_supplicant GROUP=0 	 * (group can be either group name or gid) 	 * 	 * For UDP connections (default on Windows): The value will be ignored. 	 * This variable is just used to select that the control interface is 	 * to be created. The value can be set to, e.g., udp 	 * (ctrl_interface=udp). 	 * 	 * For Windows Named Pipe: This value can be used to set the security 	 * descriptor for controlling access to the control interface. Security 	 * descriptor can be set using Security Descriptor String Format (see 	 * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/secauthz/security/security_descriptor_string_format.asp). 	 * The descriptor string needs to be prefixed with SDDL=. For example, 	 * ctrl_interface=SDDL=D: would set an empty DACL (which will reject 	 * all connections). 	 */
 name|char
 modifier|*
 name|ctrl_interface
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CONFIG_CTRL_IFACE
-ifndef|#
-directive|ifndef
-name|CONFIG_CTRL_IFACE_UDP
-comment|/** 	 * ctrl_interface_gid - Group identity for the UNIX domain sockets 	 * 	 * Access control for the control interface can be configured 	 * by setting the directory to allow only members of a group 	 * to use sockets. This way, it is possible to run 	 * wpa_supplicant as root (since it needs to change network 	 * configuration and open raw sockets) and still allow GUI/CLI 	 * components to be run as non-root users. However, since the 	 * control interface can be used to change the network 	 * configuration, this access needs to be protected in many 	 * cases. By default, wpa_supplicant is configured to use gid 	 * 0 (root). If you want to allow non-root users to use the 	 * control interface, add a new group and change this value to 	 * match with that group. Add users that should have control 	 * interface access to this group. 	 */
-name|gid_t
-name|ctrl_interface_gid
+comment|/** 	 * ctrl_interface_group - Control interface group (DEPRECATED) 	 * 	 * This variable is only used for backwards compatibility. Group for 	 * UNIX domain sockets should now be specified using GROUP=<group> in 	 * ctrl_interface variable. 	 */
+name|char
+modifier|*
+name|ctrl_interface_group
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* CONFIG_CTRL_IFACE_UDP */
-comment|/** 	 * ctrl_interface_gid_set - Whether ctrl_interface_gid is used 	 * 	 * If this variable is zero, ctrl_interface_gid value is not used and 	 * group will not be changed from the value it got by default 	 * when the directory or socket was created. 	 */
-name|int
-name|ctrl_interface_gid_set
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* CONFIG_CTRL_IFACE */
 comment|/** 	 * fast_reauth - EAP fast re-authentication (session resumption) 	 * 	 * By default, fast re-authentication is enabled for all EAP methods 	 * that support it. This variable can be used to disable fast 	 * re-authentication (by setting fast_reauth=0). Normally, there is no 	 * need to disable fast re-authentication. 	 */
 name|int
 name|fast_reauth
@@ -222,7 +171,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Protypes for common functions from config.c */
+comment|/* Prototypes for common functions from config.c */
 end_comment
 
 begin_function_decl
@@ -351,6 +300,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+modifier|*
+name|wpa_config_get_no_key
+parameter_list|(
+name|struct
+name|wpa_ssid
+modifier|*
+name|ssid
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|var
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|wpa_config_update_psk
 parameter_list|(
@@ -463,6 +430,52 @@ name|driver_param
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CONFIG_NO_STDOUT_DEBUG
+end_ifndef
+
+begin_function_decl
+name|void
+name|wpa_config_debug_dump_networks
+parameter_list|(
+name|struct
+name|wpa_config
+modifier|*
+name|config
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* CONFIG_NO_STDOUT_DEBUG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wpa_config_debug_dump_networks
+parameter_list|(
+name|c
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_NO_STDOUT_DEBUG */
+end_comment
 
 begin_comment
 comment|/* Prototypes for backend specific functions from the selected config_*.c */

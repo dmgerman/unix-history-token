@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / EAP-PAX shared routines  * Copyright (c) 2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP server/peer: EAP-PAX shared routines  * Copyright (c) 2005-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,32 @@ define|#
 directive|define
 name|EAP_PAX_COMMON_H
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|,
+name|1
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
 
 begin_struct
 struct|struct
@@ -50,14 +76,33 @@ name|public_key_id
 decl_stmt|;
 comment|/* Followed by variable length payload and ICV */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
 
 begin_comment
 comment|/* op_code: */
@@ -123,6 +168,13 @@ name|EAP_PAX_FLAGS_CE
 value|0x02
 end_define
 
+begin_define
+define|#
+directive|define
+name|EAP_PAX_FLAGS_AI
+value|0x04
+end_define
+
 begin_comment
 comment|/* mac_id: */
 end_comment
@@ -137,7 +189,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EAP_PAX_MAC_AES_CBC_MAC_128
+name|EAP_PAX_HMAC_SHA256_128
 value|0x02
 end_define
 
@@ -155,8 +207,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|EAP_PAX_DH_GROUP_3072_MODP
+name|EAP_PAX_DH_GROUP_2048_MODP
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|EAP_PAX_DH_GROUP_3072_MODP
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|EAP_PAX_DH_GROUP_NIST_ECC_P_256
+value|0x03
 end_define
 
 begin_comment
@@ -173,8 +239,47 @@ end_define
 begin_define
 define|#
 directive|define
-name|EAP_PAX_PUBLIC_KEY_RSA_OAEP_2048
+name|EAP_PAX_PUBLIC_KEY_RSAES_OAEP
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|EAP_PAX_PUBLIC_KEY_RSA_PKCS1_V1_5
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|EAP_PAX_PUBLIC_KEY_EL_GAMAL_NIST_ECC
+value|0x03
+end_define
+
+begin_comment
+comment|/* ADE type: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EAP_PAX_ADE_VENDOR_SPECIFIC
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|EAP_PAX_ADE_CLIENT_CHANNEL_BINDING
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|EAP_PAX_ADE_SERVER_CHANNEL_BINDING
+value|0x03
 end_define
 
 begin_define
@@ -182,13 +287,6 @@ define|#
 directive|define
 name|EAP_PAX_RAND_LEN
 value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|EAP_PAX_MSK_LEN
-value|64
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / EAP-TLV (draft-josefsson-pppext-eap-tls-eap-07.txt)  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP peer method: EAP-TLV (draft-josefsson-pppext-eap-tls-eap-07.txt)  * Copyright (c) 2004-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -122,6 +122,32 @@ name|EAP_TLV_TYPE_MANDATORY
 value|0x8000
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|,
+name|1
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
+
 begin_struct
 struct|struct
 name|eap_tlv_hdr
@@ -133,6 +159,7 @@ name|u16
 name|length
 decl_stmt|;
 block|}
+name|STRUCT_PACKED
 struct|;
 end_struct
 
@@ -153,12 +180,7 @@ name|u16
 name|nak_type
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
 
@@ -176,12 +198,7 @@ name|u16
 name|status
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
 
@@ -199,12 +216,7 @@ name|u16
 name|status
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
 
@@ -243,12 +255,7 @@ literal|20
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
 
@@ -272,14 +279,33 @@ name|u16
 name|result
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|STRUCT_PACKED
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
 
 begin_define
 define|#

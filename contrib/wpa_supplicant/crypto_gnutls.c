@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / wrapper functions for libgcrypt  * Copyright (c) 2004-2005, Jouni Malinen<jkmaline@cc.hut.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / wrapper functions for libgcrypt  * Copyright (c) 2004-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|"includes.h"
 end_include
 
 begin_include
@@ -64,7 +58,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -321,7 +315,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -431,7 +425,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -511,22 +505,30 @@ block|}
 end_function
 
 begin_function
-name|void
-name|sha1_transform
+name|int
+name|fips186_2_prf
 parameter_list|(
-name|u8
-modifier|*
-name|state
-parameter_list|,
 specifier|const
 name|u8
-name|data
-index|[
-literal|64
-index|]
+modifier|*
+name|seed
+parameter_list|,
+name|size_t
+name|seed_len
+parameter_list|,
+name|u8
+modifier|*
+name|x
+parameter_list|,
+name|size_t
+name|xlen
 parameter_list|)
 block|{
 comment|/* FIX: how to do this with libgcrypt? */
+return|return
+operator|-
+literal|1
+return|;
 block|}
 end_function
 
