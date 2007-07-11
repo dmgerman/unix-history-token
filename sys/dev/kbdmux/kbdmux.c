@@ -3207,6 +3207,15 @@ operator|=
 literal|0x6f
 expr_stmt|;
 break|break;
+case|case
+literal|0x64
+case|:
+comment|/* [JP106USB] backslash, underscore */
+name|keycode
+operator|=
+literal|0x73
+expr_stmt|;
+break|break;
 default|default:
 comment|/* ignore everything else */
 goto|goto
