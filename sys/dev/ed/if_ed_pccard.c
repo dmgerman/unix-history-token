@@ -843,6 +843,17 @@ block|,
 block|{
 name|PCMCIA_CARD
 argument_list|(
+name|MICRORESEARCH
+argument_list|,
+name|MR10TPC
+argument_list|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
 name|NDC
 argument_list|,
 name|ND5100_E
