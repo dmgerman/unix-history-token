@@ -693,7 +693,7 @@ name|ctlfid
 argument_list|,
 name|vfsp
 argument_list|,
-name|VCHR
+name|VREG
 argument_list|)
 expr_stmt|;
 name|coda_ctlvp
