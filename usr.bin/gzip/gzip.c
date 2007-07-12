@@ -498,7 +498,7 @@ name|char
 name|gzip_version
 index|[]
 init|=
-literal|"FreeBSD gzip 20070528"
+literal|"FreeBSD gzip 20070711"
 decl_stmt|;
 end_decl_stmt
 
@@ -8453,6 +8453,8 @@ argument_list|(
 name|path_argv
 argument_list|,
 name|FTS_PHYSICAL
+operator||
+name|FTS_NOCHDIR
 argument_list|,
 name|NULL
 argument_list|)
@@ -8525,7 +8527,7 @@ name|handle_file
 argument_list|(
 name|entry
 operator|->
-name|fts_name
+name|fts_path
 argument_list|,
 name|entry
 operator|->
@@ -9272,12 +9274,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+ifdef|#
+directive|ifdef
+name|SMALL
 literal|"usage: %s [-"
 name|OPT_LIST
 literal|"] [<file> [<file> ...]]\n"
-ifndef|#
-directive|ifndef
-name|SMALL
+argument_list|,
+else|#
+directive|else
+literal|"usage: %s [-123456789acdfhklLNnqrtVv] [-S .suffix] [<file> [<file> ...]]\n"
 literal|" -1 --fast            fastest (worst) compression\n"
 literal|" -2 .. -8             set compression level\n"
 literal|" -9 --best            best (slowest) compression\n"
@@ -9298,9 +9304,6 @@ literal|"    --suffix .suf\n"
 literal|" -t --test            test compressed file\n"
 literal|" -V --version         display program version\n"
 literal|" -v --verbose         print extra statistics\n"
-argument_list|,
-else|#
-directive|else
 argument_list|,
 endif|#
 directive|endif
