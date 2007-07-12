@@ -575,21 +575,6 @@ define|\
 value|((dirclu) == MSDOSFSROOT \ 	 ? roottobn((pmp), (dirofs)) \ 	 : cntobn((pmp), (dirclu)))
 end_define
 
-begin_comment
-comment|/*  * Calculate fsinfo block size  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|fsi_size
-parameter_list|(
-name|pmp
-parameter_list|)
-define|\
-value|(1024<< ((pmp)->pm_BlkPerSec>> 2))
-end_define
-
 begin_function_decl
 name|void
 name|msdosfs_fileno_init

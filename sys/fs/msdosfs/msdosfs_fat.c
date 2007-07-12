@@ -1497,10 +1497,9 @@ name|pmp
 operator|->
 name|pm_fsinfo
 argument_list|,
-name|fsi_size
-argument_list|(
 name|pmp
-argument_list|)
+operator|->
+name|pm_bpcluster
 argument_list|,
 name|NOCRED
 argument_list|,
