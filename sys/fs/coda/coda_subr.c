@@ -68,25 +68,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<coda/coda.h>
+file|<fs/coda/coda.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<coda/cnode.h>
+file|<fs/coda/cnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<coda/coda_subr.h>
+file|<fs/coda/coda_subr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<coda/coda_namecache.h>
+file|<fs/coda/coda_namecache.h>
 end_include
 
 begin_decl_stmt

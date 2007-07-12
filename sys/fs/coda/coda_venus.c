@@ -74,25 +74,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<coda/coda.h>
+file|<fs/coda/coda.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<coda/cnode.h>
+file|<fs/coda/cnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<coda/coda_venus.h>
+file|<fs/coda/coda_venus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<coda/coda_pioctl.h>
+file|<fs/coda/coda_pioctl.h>
 end_include
 
 begin_define

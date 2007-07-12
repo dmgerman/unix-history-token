@@ -50,7 +50,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<coda/coda_kernel.h>
+file|<fs/coda/coda_kernel.h>
 end_include
 
 begin_comment

@@ -92,25 +92,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<coda/coda.h>
+file|<fs/coda/coda.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<coda/cnode.h>
+file|<fs/coda/cnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<coda/coda_vnops.h>
+file|<fs/coda/coda_vnops.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<coda/coda_psdev.h>
+file|<fs/coda/coda_psdev.h>
 end_include
 
 begin_decl_stmt

@@ -82,37 +82,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<coda/coda.h>
+file|<fs/coda/coda.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<coda/cnode.h>
+file|<fs/coda/cnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<coda/coda_vfsops.h>
+file|<fs/coda/coda_vfsops.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<coda/coda_venus.h>
+file|<fs/coda/coda_venus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<coda/coda_subr.h>
+file|<fs/coda/coda_subr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<coda/coda_opstats.h>
+file|<fs/coda/coda_opstats.h>
 end_include
 
 begin_expr_stmt
