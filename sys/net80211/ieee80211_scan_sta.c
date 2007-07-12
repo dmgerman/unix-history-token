@@ -256,14 +256,6 @@ comment|/* not seen in previous scans */
 name|uint8_t
 name|se_flags
 decl_stmt|;
-define|#
-directive|define
-name|STA_SSID_MATCH
-value|0x01
-define|#
-directive|define
-name|STA_BSSID_MATCH
-value|0x02
 name|uint32_t
 name|se_avgrssi
 decl_stmt|;
@@ -367,6 +359,109 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * match_bss returns a bitmask describing if an entry is suitable  * for use.  If non-zero the entry was deemed not suitable and it's  * contents explains why.  The following flags are or'd to to this  * mask and can be used to figure out why the entry was rejected.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCH_CHANNEL
+value|0x001
+end_define
+
+begin_comment
+comment|/* channel mismatch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCH_CAPINFO
+value|0x002
+end_define
+
+begin_comment
+comment|/* capabilities mismatch, e.g. no ess */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCH_PRIVACY
+value|0x004
+end_define
+
+begin_comment
+comment|/* privacy mismatch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCH_RATE
+value|0x008
+end_define
+
+begin_comment
+comment|/* rate set mismatch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCH_SSID
+value|0x010
+end_define
+
+begin_comment
+comment|/* ssid mismatch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCH_BSSID
+value|0x020
+end_define
+
+begin_comment
+comment|/* bssid mismatch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCH_FAILS
+value|0x040
+end_define
+
+begin_comment
+comment|/* too many failed auth attempts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCH_NOTSEEN
+value|0x080
+end_define
+
+begin_comment
+comment|/* not seen in recent scans */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCH_RSSI
+value|0x100
+end_define
+
+begin_comment
+comment|/* rssi deemed too low to use */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -3097,34 +3192,6 @@ decl_stmt|;
 name|int
 name|weight
 decl_stmt|;
-comment|/* desired bssid */
-name|PREFER
-argument_list|(
-name|a
-operator|->
-name|se_flags
-argument_list|,
-name|b
-operator|->
-name|se_flags
-argument_list|,
-name|STA_BSSID_MATCH
-argument_list|)
-expr_stmt|;
-comment|/* desired ssid */
-name|PREFER
-argument_list|(
-name|a
-operator|->
-name|se_flags
-argument_list|,
-name|b
-operator|->
-name|se_flags
-argument_list|,
-name|STA_SSID_MATCH
-argument_list|)
-expr_stmt|;
 comment|/* privacy support */
 name|PREFER
 argument_list|(
@@ -3734,7 +3801,7 @@ argument_list|)
 condition|)
 name|fail
 operator||=
-literal|0x01
+name|MATCH_CHANNEL
 expr_stmt|;
 comment|/* 	 * NB: normally the desired mode is used to construct 	 * the channel list, but it's possible for the scan 	 * cache to include entries for stations outside this 	 * list so we check the desired mode here to weed them 	 * out. 	 */
 if|if
@@ -3764,7 +3831,7 @@ index|]
 condition|)
 name|fail
 operator||=
-literal|0x01
+name|MATCH_CHANNEL
 expr_stmt|;
 if|if
 condition|(
@@ -3789,7 +3856,7 @@ literal|0
 condition|)
 name|fail
 operator||=
-literal|0x02
+name|MATCH_CAPINFO
 expr_stmt|;
 block|}
 else|else
@@ -3808,7 +3875,7 @@ literal|0
 condition|)
 name|fail
 operator||=
-literal|0x02
+name|MATCH_CAPINFO
 expr_stmt|;
 block|}
 if|if
@@ -3834,7 +3901,7 @@ literal|0
 condition|)
 name|fail
 operator||=
-literal|0x04
+name|MATCH_PRIVACY
 expr_stmt|;
 block|}
 else|else
@@ -3850,7 +3917,7 @@ name|IEEE80211_CAPINFO_PRIVACY
 condition|)
 name|fail
 operator||=
-literal|0x04
+name|MATCH_PRIVACY
 expr_stmt|;
 block|}
 name|rate
@@ -3870,7 +3937,7 @@ name|IEEE80211_RATE_BASIC
 condition|)
 name|fail
 operator||=
-literal|0x08
+name|MATCH_RATE
 expr_stmt|;
 if|if
 condition|(
@@ -3880,6 +3947,7 @@ name|ss_nssid
 operator|!=
 literal|0
 operator|&&
+operator|!
 name|match_ssid
 argument_list|(
 name|se
@@ -3895,19 +3963,9 @@ operator|->
 name|ss_ssid
 argument_list|)
 condition|)
-name|se0
-operator|->
-name|se_flags
+name|fail
 operator||=
-name|STA_SSID_MATCH
-expr_stmt|;
-else|else
-name|se0
-operator|->
-name|se_flags
-operator|&=
-operator|~
-name|STA_SSID_MATCH
+name|MATCH_SSID
 expr_stmt|;
 if|if
 condition|(
@@ -3919,6 +3977,7 @@ operator|&
 name|IEEE80211_F_DESBSSID
 operator|)
 operator|&&
+operator|!
 name|IEEE80211_ADDR_EQ
 argument_list|(
 name|ic
@@ -3930,19 +3989,9 @@ operator|->
 name|se_bssid
 argument_list|)
 condition|)
-name|se0
-operator|->
-name|se_flags
+name|fail
 operator||=
-name|STA_BSSID_MATCH
-expr_stmt|;
-else|else
-name|se0
-operator|->
-name|se_flags
-operator|&=
-operator|~
-name|STA_BSSID_MATCH
+name|MATCH_BSSID
 expr_stmt|;
 if|if
 condition|(
@@ -3954,8 +4003,9 @@ name|STA_FAILS_MAX
 condition|)
 name|fail
 operator||=
-literal|0x40
+name|MATCH_FAILS
 expr_stmt|;
+comment|/* NB: entries may be present awaiting purge, skip */
 if|if
 condition|(
 name|se0
@@ -3966,7 +4016,7 @@ name|STA_PURGE_SCANS
 condition|)
 name|fail
 operator||=
-literal|0x80
+name|MATCH_NOTSEEN
 expr_stmt|;
 if|if
 condition|(
@@ -3978,7 +4028,7 @@ name|STA_RSSI_MIN
 condition|)
 name|fail
 operator||=
-literal|0x100
+name|MATCH_RSSI
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3999,13 +4049,13 @@ literal|" %c %s"
 argument_list|,
 name|fail
 operator|&
-literal|0x40
+name|MATCH_FAILS
 condition|?
 literal|'='
 else|:
 name|fail
 operator|&
-literal|0x80
+name|MATCH_NOTSEEN
 condition|?
 literal|'^'
 else|:
@@ -4034,13 +4084,11 @@ operator|->
 name|se_bssid
 argument_list|)
 argument_list|,
-name|se0
-operator|->
-name|se_flags
+name|fail
 operator|&
-name|STA_BSSID_MATCH
+name|MATCH_BSSID
 condition|?
-literal|'*'
+literal|'!'
 else|:
 literal|' '
 argument_list|)
@@ -4060,7 +4108,7 @@ argument_list|)
 argument_list|,
 name|fail
 operator|&
-literal|0x01
+name|MATCH_CHANNEL
 condition|?
 literal|'!'
 else|:
@@ -4077,7 +4125,7 @@ name|se_rssi
 argument_list|,
 name|fail
 operator|&
-literal|0x100
+name|MATCH_RSSI
 condition|?
 literal|'!'
 else|:
@@ -4098,7 +4146,7 @@ literal|2
 argument_list|,
 name|fail
 operator|&
-literal|0x08
+name|MATCH_RATE
 condition|?
 literal|'!'
 else|:
@@ -4133,7 +4181,7 @@ literal|"????"
 argument_list|,
 name|fail
 operator|&
-literal|0x02
+name|MATCH_CAPINFO
 condition|?
 literal|'!'
 else|:
@@ -4158,7 +4206,7 @@ literal|"no"
 argument_list|,
 name|fail
 operator|&
-literal|0x04
+name|MATCH_PRIVACY
 condition|?
 literal|'!'
 else|:
@@ -4185,13 +4233,11 @@ name|printf
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|se0
-operator|->
-name|se_flags
+name|fail
 operator|&
-name|STA_SSID_MATCH
+name|MATCH_SSID
 condition|?
-literal|"*"
+literal|"!"
 else|:
 literal|""
 argument_list|)
