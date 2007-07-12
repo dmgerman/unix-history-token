@@ -221,13 +221,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|MSDOSFS_DFLTBSIZE
-value|4096
-end_define
-
 begin_if
 if|#
 directive|if
@@ -2150,7 +2143,7 @@ name|pmp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Read the boot sector of the filesystem, and then check the 	 * boot signature.  If not a dos boot sector then error out. 	 * 	 * NOTE: 2048 is a maximum sector size in current... 	 */
+comment|/* 	 * Read the boot sector of the filesystem, and then check the 	 * boot signature.  If not a dos boot sector then error out. 	 * 	 * NOTE: 8192 is a magic size that works for ffs. 	 */
 name|error
 operator|=
 name|bread
@@ -2159,7 +2152,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-literal|2048
+literal|8192
 argument_list|,
 name|NOCRED
 argument_list|,
@@ -3086,16 +3079,29 @@ name|pm_fatblocksize
 operator|=
 literal|3
 operator|*
-name|pmp
-operator|->
-name|pm_BytesPerSec
+literal|512
 expr_stmt|;
 else|else
 name|pmp
 operator|->
 name|pm_fatblocksize
 operator|=
-name|MSDOSFS_DFLTBSIZE
+name|PAGE_SIZE
+expr_stmt|;
+name|pmp
+operator|->
+name|pm_fatblocksize
+operator|=
+name|roundup
+argument_list|(
+name|pmp
+operator|->
+name|pm_fatblocksize
+argument_list|,
+name|pmp
+operator|->
+name|pm_BytesPerSec
+argument_list|)
 expr_stmt|;
 name|pmp
 operator|->
