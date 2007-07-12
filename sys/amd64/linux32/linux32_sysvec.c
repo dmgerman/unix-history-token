@@ -5243,7 +5243,10 @@ block|,
 name|exec_linux_setregs
 block|,
 name|linux32_fixlimit
-block|}
+block|,
+operator|&
+name|linux32_maxssiz
+block|, }
 decl_stmt|;
 end_decl_stmt
 

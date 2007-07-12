@@ -397,6 +397,10 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|u_long
+modifier|*
+name|sv_maxssiz
+decl_stmt|;
 block|}
 struct|;
 end_struct
