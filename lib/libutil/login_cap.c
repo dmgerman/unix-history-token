@@ -592,7 +592,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * login_getclassbyname() get the login class by its name.  * If the name given is NULL or empty, the default class  * LOGIN_DEFCLASS (ie. "default") is fetched. If the  * 'pwd' argument is non-NULL and contains an non-NULL  * dir entry, then the file _FILE_LOGIN_CONF is picked  * up from that directory and used before the system  * login database.  * Return a filled-out login_cap_t structure, including  * class name, and the capability record buffer.  */
+comment|/*  * login_getclassbyname()  * Get the login class by its name.  * If the name given is NULL or empty, the default class  * LOGIN_DEFCLASS (i.e., "default") is fetched.  * If the name given is LOGIN_MECLASS and  * 'pwd' argument is non-NULL and contains an non-NULL  * dir entry, then the file _FILE_LOGIN_CONF is picked  * up from that directory and used before the system  * login database. In that case the system login database  * is looked up using LOGIN_MECLASS, too, which is a bug.  * Return a filled-out login_cap_t structure, including  * class name, and the capability record buffer.  */
 end_comment
 
 begin_function
@@ -805,6 +805,7 @@ operator|++
 expr_stmt|;
 comment|/* only use 'secure' data */
 block|}
+comment|/* 	 * XXX: Why to add the system database if the class is `me'? 	 */
 if|if
 condition|(
 name|_secure_path
@@ -1157,7 +1158,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * login_getclass()  * Get the login class for a given password entry from  * the system (only) login class database.  * If the password entry's class field is not set, or  * the class specified does not exist, then use the  * default of LOGIN_DEFCLASS (ie. "default").  * Return a filled-out login_cap_t structure, including  * class name, and the capability record buffer.  */
+comment|/*  * login_getpwclass()  * Get the login class for a given password entry from  * the system (only) login class database.  * If the password entry's class field is not set, or  * the class specified does not exist, then use the  * default of LOGIN_DEFCLASS (i.e., "default") for an unprivileged  * user or that of LOGIN_DEFROOTCLASS (i.e., "root") for a super-user.  * Return a filled-out login_cap_t structure, including  * class name, and the capability record buffer.  */
 end_comment
 
 begin_function
@@ -1218,6 +1219,7 @@ else|:
 name|LOGIN_DEFCLASS
 expr_stmt|;
 block|}
+comment|/*      * XXX: pwd should be unused by login_getclassbyname() unless cls is `me',      *      so NULL can be passed instead of pwd for more safety.      */
 return|return
 name|login_getclassbyname
 argument_list|(
@@ -1230,7 +1232,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * login_getuserclass()  * Get the login class for a given password entry, allowing user  * overrides via ~/.login_conf.  */
+comment|/*  * login_getuserclass()  * Get the `me' login class, allowing user overrides via ~/.login_conf.  * Note that user overrides are allowed only in the `me' class.  */
 end_comment
 
 begin_function
