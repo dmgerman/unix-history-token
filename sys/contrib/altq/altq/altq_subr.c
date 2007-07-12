@@ -3836,16 +3836,12 @@ end_decl_stmt
 begin_decl_stmt
 name|u_int32_t
 name|machclk_freq
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int32_t
 name|machclk_per_tick
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -3983,15 +3979,8 @@ literal|0
 condition|)
 return|return;
 comment|/* Total setting for this level gives the new frequency in MHz. */
-name|machclk_freq
-operator|=
-name|level
-operator|->
-name|total_set
-operator|.
-name|freq
-operator|*
-literal|1000000
+name|init_machclk
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -4005,7 +3994,7 @@ name|tsc_freq_changed
 argument_list|,
 name|NULL
 argument_list|,
-name|EVENTHANDLER_PRI_ANY
+name|EVENTHANDLER_PRI_LAST
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4020,8 +4009,9 @@ comment|/* __FreeBSD_version>= 700035 */
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|init_machclk
+name|init_machclk_setup
 parameter_list|(
 name|void
 parameter_list|)
@@ -4135,6 +4125,35 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_function
+name|void
+name|init_machclk
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|static
+name|int
+name|called
+decl_stmt|;
+comment|/* Call one-time initialization function. */
+if|if
+condition|(
+operator|!
+name|called
+condition|)
+block|{
+name|init_machclk_setup
+argument_list|()
+expr_stmt|;
+name|called
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|machclk_usepcc
