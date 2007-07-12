@@ -348,6 +348,9 @@ name|int
 name|expire
 decl_stmt|;
 name|int
+name|prune
+decl_stmt|;
+name|int
 name|purgeall
 decl_stmt|;
 block|}
@@ -559,6 +562,29 @@ name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
 argument_list|,
+name|prune
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|tcp_hostcache
+operator|.
+name|prune
+argument_list|,
+literal|0
+argument_list|,
+literal|"Time between purge runs"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp_hostcache
+argument_list|,
+name|OID_AUTO
+argument_list|,
 name|purge
 argument_list|,
 name|CTLFLAG_RW
@@ -709,6 +735,12 @@ name|expire
 operator|=
 name|TCP_HOSTCACHE_EXPIRE
 expr_stmt|;
+name|tcp_hostcache
+operator|.
+name|prune
+operator|=
+name|TCP_HOSTCACHE_PRUNE
+expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"net.inet.tcp.hostcache.hashsize"
@@ -759,9 +791,9 @@ name|tcp_hostcache
 operator|.
 name|hashsize
 operator|=
-literal|512
+name|TCP_HOSTCACHE_HASHSIZE
 expr_stmt|;
-comment|/* safe default */
+comment|/* default */
 block|}
 name|tcp_hostcache
 operator|.
@@ -916,7 +948,9 @@ argument_list|(
 operator|&
 name|tcp_hc_callout
 argument_list|,
-name|TCP_HOSTCACHE_PRUNE
+name|tcp_hostcache
+operator|.
+name|prune
 operator|*
 name|hz
 argument_list|,
@@ -2610,7 +2644,9 @@ name|hc_entry
 operator|->
 name|rmx_expire
 operator|-=
-name|TCP_HOSTCACHE_PRUNE
+name|tcp_hostcache
+operator|.
+name|prune
 expr_stmt|;
 block|}
 name|THC_UNLOCK
@@ -2632,7 +2668,9 @@ argument_list|(
 operator|&
 name|tcp_hc_callout
 argument_list|,
-name|TCP_HOSTCACHE_PRUNE
+name|tcp_hostcache
+operator|.
+name|prune
 operator|*
 name|hz
 argument_list|,
