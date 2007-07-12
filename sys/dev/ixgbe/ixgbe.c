@@ -27,7 +27,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<dev/ixgbe/ixgbe.h>
+file|"ixgbe.h"
 end_include
 
 begin_comment
@@ -2359,7 +2359,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|ifp
 operator|->
@@ -6872,6 +6871,20 @@ expr|struct
 name|ether_vlan_header
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
+name|msix
+condition|)
+comment|/* Don't use CSUM with RSS */
+name|ifp
+operator|->
+name|if_capabilities
+operator||=
+name|IFCAP_TSO4
+expr_stmt|;
+else|else
 name|ifp
 operator|->
 name|if_capabilities
