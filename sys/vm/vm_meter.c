@@ -2679,17 +2679,5 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|SYSCTL_INT(_vm_stats_misc, OID_AUTO, 	page_mask, CTLFLAG_RD,&page_mask, 0, ""); SYSCTL_INT(_vm_stats_misc, OID_AUTO, 	page_shift, CTLFLAG_RD,&page_shift, 0, ""); SYSCTL_INT(_vm_stats_misc, OID_AUTO, 	first_page, CTLFLAG_RD,&first_page, 0, ""); SYSCTL_INT(_vm_stats_misc, OID_AUTO, 	last_page, CTLFLAG_RD,&last_page, 0, "");
-endif|#
-directive|endif
-end_endif
-
 end_unit
 
