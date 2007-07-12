@@ -248,7 +248,7 @@ name|thz
 parameter_list|,
 name|unsigned
 name|int
-name|ticks
+name|centisecs
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -259,7 +259,7 @@ name|void
 name|rest
 parameter_list|(
 name|int
-name|ticks
+name|centisecs
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -307,7 +307,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* emit tone of frequency thz for given number of ticks */
+comment|/* emit tone of frequency thz for given number of centisecs */
 end_comment
 
 begin_function
@@ -317,13 +317,13 @@ name|tone
 parameter_list|(
 name|thz
 parameter_list|,
-name|ticks
+name|centisecs
 parameter_list|)
 name|unsigned
 name|int
 name|thz
 decl_stmt|,
-name|ticks
+name|centisecs
 decl_stmt|;
 block|{
 name|unsigned
@@ -332,6 +332,8 @@ name|divisor
 decl_stmt|;
 name|int
 name|sps
+decl_stmt|,
+name|timo
 decl_stmt|;
 if|if
 condition|(
@@ -354,11 +356,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"tone: thz=%d ticks=%d\n"
+literal|"tone: thz=%d centisecs=%d\n"
 argument_list|,
 name|thz
 argument_list|,
-name|ticks
+name|centisecs
 argument_list|)
 expr_stmt|;
 endif|#
@@ -405,9 +407,17 @@ name|ppi_spkr_on
 argument_list|()
 expr_stmt|;
 comment|/*      * Set timeout to endtone function, then give up the timeslice.      * This is so other processes can execute while the tone is being      * emitted.      */
+name|timo
+operator|=
+name|centisecs
+operator|*
+name|hz
+operator|/
+literal|100
+expr_stmt|;
 if|if
 condition|(
-name|ticks
+name|timo
 operator|>
 literal|0
 condition|)
@@ -422,7 +432,7 @@ name|PCATCH
 argument_list|,
 literal|"spkrtn"
 argument_list|,
-name|ticks
+name|timo
 argument_list|)
 expr_stmt|;
 name|ppi_spkr_off
@@ -445,7 +455,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* rest for given number of ticks */
+comment|/* rest for given number of centisecs */
 end_comment
 
 begin_function
@@ -453,12 +463,15 @@ specifier|static
 name|void
 name|rest
 parameter_list|(
-name|ticks
+name|centisecs
 parameter_list|)
 name|int
-name|ticks
+name|centisecs
 decl_stmt|;
 block|{
+name|int
+name|timo
+decl_stmt|;
 comment|/*      * Set timeout to endrest function, then give up the timeslice.      * This is so other processes can execute while the rest is being      * waited out.      */
 ifdef|#
 directive|ifdef
@@ -470,15 +483,23 @@ name|printf
 argument_list|(
 literal|"rest: %d\n"
 argument_list|,
-name|ticks
+name|centisecs
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
+name|timo
+operator|=
+name|centisecs
+operator|*
+name|hz
+operator|/
+literal|100
+expr_stmt|;
 if|if
 condition|(
-name|ticks
+name|timo
 operator|>
 literal|0
 condition|)
@@ -493,7 +514,7 @@ name|PCATCH
 argument_list|,
 literal|"spkrrs"
 argument_list|,
-name|ticks
+name|timo
 argument_list|)
 expr_stmt|;
 block|}
@@ -1002,7 +1023,7 @@ expr_stmt|;
 name|whole
 operator|=
 operator|(
-name|hz
+literal|100
 operator|*
 name|SECS_PER_MIN
 operator|*
@@ -1892,7 +1913,7 @@ expr_stmt|;
 name|whole
 operator|=
 operator|(
-name|hz
+literal|100
 operator|*
 name|SECS_PER_MIN
 operator|*
