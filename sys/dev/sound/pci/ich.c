@@ -2750,6 +2750,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PCMTRIG_STOP
+case|:
+case|case
 name|PCMTRIG_ABORT
 case|:
 name|ICH_LOCK
@@ -2777,6 +2780,8 @@ name|run
 operator|=
 literal|0
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 return|return
@@ -3905,6 +3910,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Just in case the timecounter screwed. It is possible, really. */
+if|if
+condition|(
+name|wait_us
+operator|>
+literal|0
+condition|)
 name|actual_48k_rate
 operator|=
 operator|(
@@ -3919,6 +3931,11 @@ literal|250000
 operator|)
 operator|/
 name|wait_us
+expr_stmt|;
+else|else
+name|actual_48k_rate
+operator|=
+literal|48000
 expr_stmt|;
 if|if
 condition|(
@@ -4394,9 +4411,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|sc
 operator|=
 name|malloc
@@ -4409,28 +4423,11 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"cannot allocate softc\n"
-argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 name|sc
 operator|->
 name|ich_lock
