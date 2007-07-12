@@ -140,17 +140,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LAGG_PORT_GLOBAL
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* IOCTL: global flag */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PORT_BITS
 value|"\20\01MASTER\02STACK\03ACTIVE\04COLLECTING" \ 				  "\05DISTRIBUTING\06DISABLED"
 end_define
@@ -239,10 +228,10 @@ block|{
 specifier|const
 name|char
 modifier|*
-name|tpr_name
+name|lpr_name
 decl_stmt|;
 name|int
-name|tpr_proto
+name|lpr_proto
 decl_stmt|;
 block|}
 struct|;
@@ -265,6 +254,60 @@ end_define
 begin_comment
 comment|/*  * lagg ioctls.  */
 end_comment
+
+begin_comment
+comment|/*  * LACP current operational parameters structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|lacp_opreq
+block|{
+name|uint16_t
+name|actor_prio
+decl_stmt|;
+name|uint8_t
+name|actor_mac
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint16_t
+name|actor_key
+decl_stmt|;
+name|uint16_t
+name|actor_portprio
+decl_stmt|;
+name|uint16_t
+name|actor_portno
+decl_stmt|;
+name|uint8_t
+name|actor_state
+decl_stmt|;
+name|uint16_t
+name|partner_prio
+decl_stmt|;
+name|uint8_t
+name|partner_mac
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint16_t
+name|partner_key
+decl_stmt|;
+name|uint16_t
+name|partner_portprio
+decl_stmt|;
+name|uint16_t
+name|partner_portno
+decl_stmt|;
+name|uint8_t
+name|partner_state
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* lagg port settings */
@@ -296,6 +339,19 @@ name|u_int32_t
 name|rp_flags
 decl_stmt|;
 comment|/* port flags */
+union|union
+block|{
+name|struct
+name|lacp_opreq
+name|rpsc_lacp
+decl_stmt|;
+block|}
+name|rp_psc
+union|;
+define|#
+directive|define
+name|rp_lacpreq
+value|rp_psc.rpsc_lacp
 block|}
 struct|;
 end_struct
@@ -354,6 +410,19 @@ name|int
 name|ra_ports
 decl_stmt|;
 comment|/* total port count */
+union|union
+block|{
+name|struct
+name|lacp_opreq
+name|rpsc_lacp
+decl_stmt|;
+block|}
+name|ra_psc
+union|;
+define|#
+directive|define
+name|ra_lacpreq
+value|ra_psc.rpsc_lacp
 block|}
 struct|;
 end_struct
@@ -422,14 +491,7 @@ name|LAGG_PORTACTIVE
 parameter_list|(
 name|_tp
 parameter_list|)
-value|(					\ 	((_tp)->lp_link_state == LINK_STATE_UP)&&			\ 	((_tp)->lp_ifp->if_flags& IFF_UP)					\ )
-end_define
-
-begin_define
-define|#
-directive|define
-name|mc_enm
-value|mc_u.mcu_enm
+value|(					\ 	((_tp)->lp_link_state == LINK_STATE_UP)&&			\ 	((_tp)->lp_ifp->if_flags& IFF_UP)				\ )
 end_define
 
 begin_struct
@@ -522,13 +584,6 @@ end_comment
 begin_comment
 comment|/* Private data used by the loadbalancing protocol */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|LAGG_LB_MAXKEYS
-value|8
-end_define
 
 begin_struct
 struct|struct
@@ -794,6 +849,32 @@ name|lagg_softc
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|sc_req
+function_decl|)
+parameter_list|(
+name|struct
+name|lagg_softc
+modifier|*
+parameter_list|,
+name|caddr_t
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|sc_portreq
+function_decl|)
+parameter_list|(
+name|struct
+name|lagg_port
+modifier|*
+parameter_list|,
+name|caddr_t
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -811,7 +892,7 @@ comment|/* physical interface */
 name|struct
 name|lagg_softc
 modifier|*
-name|lp_lagg
+name|lp_softc
 decl_stmt|;
 comment|/* parent lagg */
 name|uint8_t
