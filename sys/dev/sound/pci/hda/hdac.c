@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20070702_0046"
+value|"20070710_0047"
 end_define
 
 begin_define
@@ -196,7 +196,7 @@ name|s
 parameter_list|,
 name|attr
 parameter_list|)
-value|do {				\ 	vm_offset_t va = (vm_offset_t)(v);				\ 	vm_size_t sz = (vm_size_t)(s);					\ 	if ((sc) != NULL&& (sc)->nocache != 0&& va != 0&& sz != 0)	\ 		(void)pmap_change_attr(va, sz, (attr));			\ } while(0)
+value|do {				\ 	vm_offset_t va = (vm_offset_t)(v);				\ 	vm_size_t sz = (vm_size_t)(s);					\ 	if ((sc) != NULL&& ((sc)->flags& HDAC_F_DMA_NOCACHE)&&	\ 	    va != 0&& sz != 0)						\ 		(void)pmap_change_attr(va, sz, (attr));			\ } while(0)
 end_define
 
 begin_else
@@ -337,6 +337,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_63XXESB
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x269a)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_82801G
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x27d8)
 end_define
@@ -351,8 +358,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|HDA_INTEL_63XXESB
-value|HDA_MODEL_CONSTRUCT(INTEL, 0x269a)
+name|HDA_INTEL_82801I
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x293e)
 end_define
 
 begin_define
@@ -1710,6 +1717,12 @@ literal|"Intel 82801F"
 block|}
 block|,
 block|{
+name|HDA_INTEL_63XXESB
+block|,
+literal|"Intel 631x/632xESB"
+block|}
+block|,
+block|{
 name|HDA_INTEL_82801G
 block|,
 literal|"Intel 82801G"
@@ -1722,9 +1735,9 @@ literal|"Intel 82801H"
 block|}
 block|,
 block|{
-name|HDA_INTEL_63XXESB
+name|HDA_INTEL_82801I
 block|,
-literal|"Intel 631x/632xESB"
+literal|"Intel 82801I"
 block|}
 block|,
 block|{
@@ -2427,6 +2440,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC268
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0268)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALC660
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0660)
 end_define
@@ -2783,6 +2803,12 @@ block|{
 name|HDA_CODEC_ALC262
 block|,
 literal|"Realtek ALC262"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC268
+block|,
+literal|"Realtek ALC268"
 block|}
 block|,
 block|{
@@ -6142,11 +6168,14 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|!
+operator|(
 name|ch
 operator|->
-name|blkcnt
-operator|==
-literal|0
+name|flags
+operator|&
+name|HDAC_CHN_RUNNING
+operator|)
 condition|)
 return|return
 operator|(
@@ -7429,9 +7458,9 @@ operator|(
 operator|(
 name|sc
 operator|->
-name|nocache
-operator|!=
-literal|0
+name|flags
+operator|&
+name|HDAC_F_DMA_NOCACHE
 operator|)
 condition|?
 name|BUS_DMA_NOCACHE
@@ -7904,6 +7933,62 @@ name|irq_rid
 operator|=
 literal|0x0
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|602106
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|HDAC_F_MSI
+operator|)
+operator|&&
+operator|(
+name|result
+operator|=
+name|pci_msi_count
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+operator|)
+operator|==
+literal|1
+operator|&&
+name|pci_alloc_msi
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+operator|&
+name|result
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|irq
+operator|->
+name|irq_rid
+operator|=
+literal|0x1
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|sc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|HDAC_F_MSI
+expr_stmt|;
 name|irq
 operator|->
 name|irq_res
@@ -8099,6 +8184,36 @@ operator|->
 name|irq_res
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|602106
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|HDAC_F_MSI
+operator|)
+operator|&&
+name|irq
+operator|->
+name|irq_rid
+operator|==
+literal|0x1
+condition|)
+name|pci_release_msi
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|irq
 operator|->
 name|irq_handle
@@ -8110,6 +8225,12 @@ operator|->
 name|irq_res
 operator|=
 name|NULL
+expr_stmt|;
+name|irq
+operator|->
+name|irq_rid
+operator|=
+literal|0x0
 expr_stmt|;
 block|}
 end_function
@@ -11497,11 +11618,14 @@ name|ptr
 decl_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|ch
 operator|->
-name|active
-operator|==
-literal|0
+name|flags
+operator|&
+name|HDAC_CHN_RUNNING
+operator|)
 condition|)
 return|return
 operator|(
@@ -11627,7 +11751,7 @@ name|hda_chan_active
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->play.active + (sc)->rec.active)
+value|(((sc)->play.flags | (sc)->rec.flags)&	\ 				 HDAC_CHN_RUNNING)
 end_define
 
 begin_function
@@ -12299,9 +12423,10 @@ argument_list|)
 expr_stmt|;
 name|ch
 operator|->
-name|active
-operator|=
-literal|0
+name|flags
+operator|&=
+operator|~
+name|HDAC_CHN_RUNNING
 expr_stmt|;
 if|if
 condition|(
@@ -12348,9 +12473,9 @@ name|sc
 operator|->
 name|play
 operator|.
-name|active
-operator|!=
-literal|0
+name|flags
+operator|&
+name|HDAC_CHN_RUNNING
 condition|)
 name|ch
 operator|=
@@ -12772,9 +12897,9 @@ argument_list|)
 expr_stmt|;
 name|ch
 operator|->
-name|active
-operator|=
-literal|1
+name|flags
+operator||=
+name|HDAC_CHN_RUNNING
 expr_stmt|;
 block|}
 end_function
@@ -19033,6 +19158,60 @@ empty_stmt|;
 block|}
 if|#
 directive|if
+name|__FreeBSD_version
+operator|>=
+literal|602106
+if|if
+condition|(
+name|resource_int_value
+argument_list|(
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"msi"
+argument_list|,
+operator|&
+name|i
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|i
+operator|!=
+literal|0
+operator|&&
+name|pci_msi_count
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|1
+condition|)
+name|sc
+operator|->
+name|flags
+operator||=
+name|HDAC_F_MSI
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|sc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|HDAC_F_MSI
+expr_stmt|;
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__i386__
@@ -19044,9 +19223,9 @@ name|__amd64__
 argument_list|)
 name|sc
 operator|->
-name|nocache
-operator|=
-literal|1
+name|flags
+operator||=
+name|HDAC_F_DMA_NOCACHE
 expr_stmt|;
 if|if
 condition|(
@@ -19079,9 +19258,10 @@ else|#
 directive|else
 name|sc
 operator|->
-name|nocache
-operator|=
-literal|0
+name|flags
+operator|&=
+operator|~
+name|HDAC_F_DMA_NOCACHE
 expr_stmt|;
 endif|#
 directive|endif
@@ -19114,9 +19294,10 @@ condition|)
 continue|continue;
 name|sc
 operator|->
-name|nocache
-operator|=
-literal|0
+name|flags
+operator|&=
+operator|~
+name|HDAC_F_DMA_NOCACHE
 expr_stmt|;
 if|if
 condition|(
@@ -19259,9 +19440,9 @@ name|__amd64__
 argument_list|)
 name|sc
 operator|->
-name|nocache
-operator|=
-literal|1
+name|flags
+operator||=
+name|HDAC_F_DMA_NOCACHE
 expr_stmt|;
 endif|#
 directive|endif
@@ -19286,12 +19467,10 @@ name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"DMA Coherency: %s / vendor=0x%04x\n"
-argument|, 		    (sc->nocache ==
-literal|0
-argument|) ?
-literal|"PCIe snoop"
-argument|:
+argument|, 		    (sc->flags& HDAC_F_DMA_NOCACHE) ?
 literal|"Uncacheable"
+argument|:
+literal|"PCIe snoop"
 argument|, vendor);
 argument_list|)
 empty_stmt|;
