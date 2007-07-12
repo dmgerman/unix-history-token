@@ -2661,7 +2661,8 @@ argument|] = -
 literal|1
 argument|;
 comment|/* disable gdb port */
-argument|while ((ch = getopt(argc, argv,
+comment|/* default escape char */
+argument|dc->escape = KEY_TILDE;  	while ((ch = getopt(argc, argv,
 literal|"a:be:h:rt:u:vwC:G:M:N:RT1"
 argument|)) != -
 literal|1
@@ -2673,7 +2674,7 @@ argument|); 			dc->flags&= ~F_USE_CROM; 			break; 		case
 literal|'b'
 argument|: 			dc->flags |= F_ALT_BREAK; 			break; 		case
 literal|'e'
-argument|: 			dc->escape |= optarg[
+argument|: 			dc->escape = optarg[
 literal|0
 argument|]; 			break; 		case
 literal|'h'
