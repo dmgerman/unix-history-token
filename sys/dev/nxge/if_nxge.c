@@ -8804,12 +8804,9 @@ expr_stmt|;
 comment|/* Get MAC address and update in HAL */
 name|ifaddrp
 operator|=
-name|ifaddr_byindex
-argument_list|(
 name|ifnetp
 operator|->
-name|if_index
-argument_list|)
+name|if_addr
 expr_stmt|;
 name|sockaddrp
 operator|=
