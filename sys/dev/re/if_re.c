@@ -5099,7 +5099,7 @@ name|sc
 operator|->
 name|rl_eewidth
 operator|=
-literal|6
+name|RL_9356_ADDR_LEN
 expr_stmt|;
 name|re_read_eeprom
 argument_list|(
@@ -5126,7 +5126,7 @@ name|sc
 operator|->
 name|rl_eewidth
 operator|=
-literal|8
+name|RL_9346_ADDR_LEN
 expr_stmt|;
 comment|/* 	 * Get station address from the EEPROM. 	 */
 name|re_read_eeprom
