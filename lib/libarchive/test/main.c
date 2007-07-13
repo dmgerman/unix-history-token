@@ -1284,7 +1284,6 @@ while|while
 condition|(
 operator|*
 operator|(
-operator|++
 name|argv
 operator|)
 operator|!=
@@ -1352,6 +1351,9 @@ name|tests_run
 operator|++
 expr_stmt|;
 block|}
+name|argv
+operator|++
+expr_stmt|;
 block|}
 block|}
 name|printf
