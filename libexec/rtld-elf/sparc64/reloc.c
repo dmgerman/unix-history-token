@@ -1809,6 +1809,13 @@ operator|-
 literal|1
 decl_stmt|;
 comment|/* 	 * The dynamic loader may be called from a thread, we have 	 * limited amounts of stack available so we cannot use alloca(). 	 */
+if|if
+condition|(
+name|obj
+operator|!=
+name|obj_rtld
+condition|)
+block|{
 name|cache
 operator|=
 name|mmap
@@ -1835,6 +1842,12 @@ name|cache
 operator|==
 name|MAP_FAILED
 condition|)
+name|cache
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
 name|cache
 operator|=
 name|NULL
