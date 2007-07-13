@@ -767,6 +767,38 @@ name|AGP_I810_PGTBL_CTL
 value|0x2020
 end_define
 
+begin_comment
+comment|/**  * This field determines the actual size of the global GTT on the 965  * and G33  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AGP_I810_PGTBL_SIZE_MASK
+value|0x0000000e
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I810_PGTBL_SIZE_512KB
+value|(0<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I810_PGTBL_SIZE_256KB
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I810_PGTBL_SIZE_128KB
+value|(2<< 1)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -831,8 +863,12 @@ begin_define
 define|#
 directive|define
 name|AGP_I830_GCC1_GMS
-value|0x70
+value|0xf0
 end_define
+
+begin_comment
+comment|/* Top bit reserved pre-G33 */
+end_comment
 
 begin_define
 define|#
@@ -1103,6 +1139,63 @@ define|#
 directive|define
 name|AGP_I915_MSAC_GMASIZE_256
 value|0x00
+end_define
+
+begin_comment
+comment|/*  * G965 registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AGP_I965_GTTMMADR
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I965_MSAC
+value|0x62
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I965_MSAC_GMASIZE_128
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I965_MSAC_GMASIZE_256
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I965_MSAC_GMASIZE_512
+value|0x06
+end_define
+
+begin_comment
+comment|/*  * G33 registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AGP_G33_GCC1_GMS_STOLEN_128M
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G33_GCC1_GMS_STOLEN_256M
+value|0x90
 end_define
 
 begin_comment
