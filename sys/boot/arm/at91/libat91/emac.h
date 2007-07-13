@@ -455,11 +455,19 @@ name|MII_STS_LINK_STAT
 value|0x04
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|BOOT_KB920X
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BOOT_CENTIPAD
+argument_list|)
+end_if
 
 begin_define
 define|#

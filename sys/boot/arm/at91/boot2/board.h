@@ -21,5 +21,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|drvread
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|unsigned
+parameter_list|,
+name|unsigned
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
