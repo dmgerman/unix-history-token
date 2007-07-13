@@ -9742,6 +9742,9 @@ case|:
 case|case
 name|IFT_BRIDGE
 case|:
+case|case
+name|IFT_IEEE8023ADLAG
+case|:
 name|bcopy
 argument_list|(
 name|lladdr
@@ -9758,9 +9761,6 @@ comment|/* 		 * XXX We also need to store the lladdr in LLADDR(sdl), 		 * which 
 comment|/* FALLTHROUGH */
 case|case
 name|IFT_ARCNET
-case|:
-case|case
-name|IFT_IEEE8023ADLAG
 case|:
 name|bcopy
 argument_list|(
