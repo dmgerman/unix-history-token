@@ -529,5 +529,45 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Special customized read-from-memory interface. */
+end_comment
+
+begin_function_decl
+name|int
+name|read_open_memory
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|read_open_memory
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
