@@ -7301,7 +7301,7 @@ name|if_timer
 operator|=
 literal|5
 expr_stmt|;
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
