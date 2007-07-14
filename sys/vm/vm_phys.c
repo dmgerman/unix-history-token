@@ -1493,47 +1493,17 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_phys_free_pages
-argument_list|(
-name|m
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Allocate a contiguous, power of two-sized set of physical pages  * from the free lists.  */
-end_comment
-
-begin_function
-name|vm_page_t
-name|vm_phys_alloc_pages
-parameter_list|(
-name|int
-name|pool
-parameter_list|,
-name|int
-name|order
-parameter_list|)
-block|{
-name|vm_page_t
-name|m
-decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
-name|m
-operator|=
-name|vm_phys_alloc_pages_locked
+name|vm_phys_free_pages
 argument_list|(
-name|pool
+name|m
 argument_list|,
-name|order
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -1542,21 +1512,16 @@ operator|&
 name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|m
-operator|)
-return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a contiguous, power of two-sized set of physical pages  * from the free lists.  */
+comment|/*  * Allocate a contiguous, power of two-sized set of physical pages  * from the free lists.  *  * The free page queues must be locked.  */
 end_comment
 
 begin_function
 name|vm_page_t
-name|vm_phys_alloc_pages_locked
+name|vm_phys_alloc_pages
 parameter_list|(
 name|int
 name|pool
@@ -1592,7 +1557,7 @@ operator|<
 name|VM_NFREEPOOL
 argument_list|,
 operator|(
-literal|"vm_phys_alloc_pages_locked: pool %d is out of range"
+literal|"vm_phys_alloc_pages: pool %d is out of range"
 operator|,
 name|pool
 operator|)
@@ -1605,7 +1570,7 @@ operator|<
 name|VM_NFREEORDER
 argument_list|,
 operator|(
-literal|"vm_phys_alloc_pages_locked: order %d is out of range"
+literal|"vm_phys_alloc_pages: order %d is out of range"
 operator|,
 name|order
 operator|)
@@ -2126,49 +2091,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free a contiguous, power of two-sized set of physical pages.  */
+comment|/*  * Free a contiguous, power of two-sized set of physical pages.  *  * The free page queues must be locked.  */
 end_comment
 
 begin_function
 name|void
 name|vm_phys_free_pages
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|,
-name|int
-name|order
-parameter_list|)
-block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_page_queue_free_mtx
-argument_list|)
-expr_stmt|;
-name|vm_phys_free_pages_locked
-argument_list|(
-name|m
-argument_list|,
-name|order
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_page_queue_free_mtx
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Free a contiguous, power of two-sized set of physical pages.  */
-end_comment
-
-begin_function
-name|void
-name|vm_phys_free_pages_locked
 parameter_list|(
 name|vm_page_t
 name|m
@@ -2204,7 +2132,7 @@ operator|==
 name|VM_NFREEORDER
 argument_list|,
 operator|(
-literal|"vm_phys_free_pages_locked: page %p has unexpected order %d"
+literal|"vm_phys_free_pages: page %p has unexpected order %d"
 operator|,
 name|m
 operator|,
@@ -2223,7 +2151,7 @@ operator|<
 name|VM_NFREEPOOL
 argument_list|,
 operator|(
-literal|"vm_phys_free_pages_locked: page %p has unexpected pool %d"
+literal|"vm_phys_free_pages: page %p has unexpected pool %d"
 operator|,
 name|m
 operator|,
@@ -2240,7 +2168,7 @@ operator|<
 name|VM_NFREEORDER
 argument_list|,
 operator|(
-literal|"vm_phys_free_pages_locked: order %d is out of range"
+literal|"vm_phys_free_pages: order %d is out of range"
 operator|,
 name|order
 operator|)
@@ -2761,7 +2689,7 @@ operator|&
 name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
-name|vm_phys_free_pages_locked
+name|vm_phys_free_pages
 argument_list|(
 name|m
 argument_list|,
@@ -3487,7 +3415,7 @@ name|order
 operator|)
 argument_list|)
 expr_stmt|;
-name|vm_phys_free_pages_locked
+name|vm_phys_free_pages
 argument_list|(
 name|m
 argument_list|,

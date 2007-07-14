@@ -2936,7 +2936,7 @@ block|{
 comment|/* 		 * Allocate from the free queue if the number of free pages 		 * exceeds the minimum for the request class. 		 */
 name|m
 operator|=
-name|vm_phys_alloc_pages_locked
+name|vm_phys_alloc_pages
 argument_list|(
 name|object
 operator|!=
@@ -3053,7 +3053,7 @@ return|;
 block|}
 name|m
 operator|=
-name|vm_phys_alloc_pages_locked
+name|vm_phys_alloc_pages
 argument_list|(
 name|object
 operator|!=
@@ -3896,7 +3896,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|vm_phys_free_pages_locked
+name|vm_phys_free_pages
 argument_list|(
 name|m
 argument_list|,
@@ -3909,7 +3909,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|vm_phys_free_pages_locked
+name|vm_phys_free_pages
 argument_list|(
 name|m
 argument_list|,
