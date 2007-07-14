@@ -376,6 +376,18 @@ value|test_assert_equal_wstring(__FILE__, __LINE__, (v1), #v1, (v2), #v2, NULL)
 end_define
 
 begin_comment
+comment|/*  * This would be simple with C99 variadic macros, but I don't want to  * require that.  Instead, I insert a function call before each  * skipping() call to pass the file and line information down.  Crude,  * but effective.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|skipping
+define|\
+value|skipping_setup(__FILE__, __LINE__);test_skipping
+end_define
+
+begin_comment
 comment|/* Function declarations.  These are defined in test_utility.c. */
 end_comment
 
@@ -395,7 +407,20 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|skipping
+name|skipping_setup
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_skipping
 parameter_list|(
 specifier|const
 name|char
