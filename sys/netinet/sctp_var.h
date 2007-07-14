@@ -199,7 +199,7 @@ name|_stcb
 parameter_list|,
 name|_chk
 parameter_list|)
-value|{ \         if ((_chk)->whoTo) { \                 sctp_free_remote_addr((_chk)->whoTo); \                 (_chk)->whoTo = NULL; \ 	} \ 	if (((_stcb)->asoc.free_chunk_cnt> sctp_asoc_free_resc_limit) || \ 	    (sctppcbinfo.ipi_free_chunks> sctp_system_free_resc_limit)) { \ 		SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_chunk, (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} else { \ 		TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 		(_stcb)->asoc.free_chunk_cnt++; \ 		atomic_add_int(&sctppcbinfo.ipi_free_chunks, 1); \ 	} \ }
+value|{ \         SCTP_TCB_LOCK_ASSERT((_stcb)); \         if ((_chk)->whoTo) { \                 sctp_free_remote_addr((_chk)->whoTo); \                 (_chk)->whoTo = NULL; \ 	} \ 	if (((_stcb)->asoc.free_chunk_cnt> sctp_asoc_free_resc_limit) || \ 	    (sctppcbinfo.ipi_free_chunks> sctp_system_free_resc_limit)) { \ 		SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_chunk, (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} else { \ 		TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 		(_stcb)->asoc.free_chunk_cnt++; \ 		atomic_add_int(&sctppcbinfo.ipi_free_chunks, 1); \ 	} \ }
 end_define
 
 begin_define
@@ -284,16 +284,6 @@ parameter_list|)
 value|do { \ 	struct mbuf *_m; \ 	_m = (data); \ 	while(_m&& (SCTP_BUF_LEN(_m) == 0)) { \ 		(data)  = SCTP_BUF_NEXT(_m); \ 		SCTP_BUF_NEXT(_m) = NULL; \ 		sctp_m_free(_m); \ 		_m = (data); \ 	} \ } while (0)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RANDY_WILL_USE_LATER
-end_ifdef
-
-begin_comment
-comment|/* this will be the non-invarant version */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -307,13 +297,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|sctp_flight_size_increase
+parameter_list|(
+name|tp1
+parameter_list|)
+value|do { \        (tp1)->whoTo->flight_size += (tp1)->book_size; \ } while (0)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCTP_FS_SPEC_LOG
+end_ifdef
+
+begin_define
+define|#
+directive|define
 name|sctp_total_flight_decrease
 parameter_list|(
 name|stcb
 parameter_list|,
 name|tp1
 parameter_list|)
-value|do { \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		stcb->asoc.total_flight = 0; \ 		stcb->asoc.total_flight_count = 0; \ 	} \ } while (0)
+value|do { \         if(stcb->asoc.fs_index> SCTP_FS_SPEC_LOG_SIZE) \ 		stcb->asoc.fs_index = 0;\ 	stcb->asoc.fslog[stcb->asoc.fs_index].total_flight = stcb->asoc.total_flight; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].tsn = tp1->rec.data.TSN_seq; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].book = tp1->book_size; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].sent = tp1->sent; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].incr = 0; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].decr = 1; \ 	stcb->asoc.fs_index++; \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		stcb->asoc.total_flight = 0; \ 		stcb->asoc.total_flight_count = 0; \ 	} \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_total_flight_increase
+parameter_list|(
+name|stcb
+parameter_list|,
+name|tp1
+parameter_list|)
+value|do { \         if(stcb->asoc.fs_index> SCTP_FS_SPEC_LOG_SIZE) \ 		stcb->asoc.fs_index = 0;\ 	stcb->asoc.fslog[stcb->asoc.fs_index].total_flight = stcb->asoc.total_flight; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].tsn = tp1->rec.data.TSN_seq; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].book = tp1->book_size; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].sent = tp1->sent; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].incr = 1; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].decr = 0; \ 	stcb->asoc.fs_index++; \        (stcb)->asoc.total_flight_count++; \        (stcb)->asoc.total_flight += (tp1)->book_size; \ } while (0)
 end_define
 
 begin_else
@@ -324,38 +342,13 @@ end_else
 begin_define
 define|#
 directive|define
-name|sctp_flight_size_decrease
-parameter_list|(
-name|tp1
-parameter_list|)
-value|do { \ 	if (tp1->whoTo->flight_size>= tp1->book_size) \ 		tp1->whoTo->flight_size -= tp1->book_size; \ 	else \ 		panic("flight size corruption"); \ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|sctp_total_flight_decrease
 parameter_list|(
 name|stcb
 parameter_list|,
 name|tp1
 parameter_list|)
-value|do { \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		panic("total flight size corruption"); \ 	} \ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|sctp_flight_size_increase
-parameter_list|(
-name|tp1
-parameter_list|)
-value|do { \        (tp1)->whoTo->flight_size += (tp1)->book_size; \ } while (0)
+value|do { \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		stcb->asoc.total_flight = 0; \ 		stcb->asoc.total_flight_count = 0; \ 	} \ } while (0)
 end_define
 
 begin_define
@@ -369,6 +362,11 @@ name|tp1
 parameter_list|)
 value|do { \        (stcb)->asoc.total_flight_count++; \        (stcb)->asoc.total_flight += (tp1)->book_size; \ } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct

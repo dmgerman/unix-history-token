@@ -500,6 +500,17 @@ value|0x00001201
 end_define
 
 begin_comment
+comment|/* JRS - Pluggable Congestion Control Socket option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_PLUGGABLE_CC
+value|0x00001202
+end_define
+
+begin_comment
 comment|/* read only */
 end_comment
 
@@ -725,6 +736,43 @@ define|#
 directive|define
 name|SCTP_SET_INITIAL_DBG_SEQ
 value|0x00009f00
+end_define
+
+begin_comment
+comment|/* JRS - Supported congestion control modules for pluggable  * congestion control  */
+end_comment
+
+begin_comment
+comment|/* Standard TCP Congestion Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_CC_RFC2581
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* High Speed TCP Congestion Control (Floyd) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_CC_HSTCP
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* HTCP Congestion Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_CC_HTCP
+value|0x00000002
 end_define
 
 begin_comment

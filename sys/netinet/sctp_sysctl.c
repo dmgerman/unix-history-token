@@ -421,9 +421,29 @@ end_decl_stmt
 
 begin_decl_stmt
 name|uint32_t
+name|sctp_cmt_pf
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
 name|sctp_max_retran_chunk
 init|=
 name|SCTPCTL_MAX_RETRAN_CHUNK_DEFAULT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* JRS - Variable for default congestion control module */
+end_comment
+
+begin_decl_stmt
+name|uint32_t
+name|sctp_default_cc_module
+init|=
+name|SCTPCTL_DEFAULT_CC_MODULE_DEFAULT
 decl_stmt|;
 end_decl_stmt
 
@@ -3401,6 +3421,48 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"CMT ON/OFF flag"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_net_inet_sctp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|cmt_pf
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sctp_cmt_pf
+argument_list|,
+literal|0
+argument_list|,
+literal|"CMT PF type flag"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_net_inet_sctp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|default_cc_module
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sctp_default_cc_module
+argument_list|,
+literal|0
+argument_list|,
+literal|"Default congestion control module"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

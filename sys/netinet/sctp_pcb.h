@@ -716,6 +716,9 @@ decl_stmt|;
 name|uint32_t
 name|sctp_sws_receiver
 decl_stmt|;
+name|uint32_t
+name|sctp_default_cc_module
+decl_stmt|;
 comment|/* authentication related fields */
 name|struct
 name|sctp_keyhead
@@ -1704,22 +1707,6 @@ parameter_list|,
 name|struct
 name|sctp_ifa
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sctp_set_initial_cc_param
-parameter_list|(
-name|struct
-name|sctp_tcb
-modifier|*
-parameter_list|,
-name|struct
-name|sctp_nets
-modifier|*
-name|net
 parameter_list|)
 function_decl|;
 end_function_decl

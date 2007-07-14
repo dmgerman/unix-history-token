@@ -142,6 +142,43 @@ value|4
 end_define
 
 begin_comment
+comment|/* JRS - Values defined for the HTCP algorithm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALPHA_BASE
+value|(1<<7)
+end_define
+
+begin_comment
+comment|/* 1.0 with shift<< 7 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BETA_MIN
+value|(1<<6)
+end_define
+
+begin_comment
+comment|/* 0.5 with shift<< 7 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BETA_MAX
+value|102
+end_define
+
+begin_comment
+comment|/* 0.8 with shift<< 7 */
+end_comment
+
+begin_comment
 comment|/* Places that CWND log can happen from */
 end_comment
 
@@ -2174,6 +2211,17 @@ define|#
 directive|define
 name|SCTP_ADDR_REQ_PRIMARY
 value|0x400
+end_define
+
+begin_comment
+comment|/* JRS 5/13/07 - Added potentially failed state for CMT PF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_ADDR_PF
+value|0x800
 end_define
 
 begin_define

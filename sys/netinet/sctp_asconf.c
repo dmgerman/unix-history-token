@@ -8085,6 +8085,12 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* 					 * Now we deleted our src address, 					 * should we not also now reset the 					 * cwnd/rto to start as if its a new 					 * address? 					 */
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|cc_functions
+operator|.
 name|sctp_set_initial_cc_param
 argument_list|(
 name|stcb
