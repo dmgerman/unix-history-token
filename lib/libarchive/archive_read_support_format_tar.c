@@ -5086,6 +5086,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+break|break;
 case|case
 literal|'2'
 case|:
