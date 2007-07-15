@@ -1054,10 +1054,10 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assertA
+name|assertEqualInt
 argument_list|(
 name|ARCHIVE_WARN
-operator|==
+argument_list|,
 name|archive_write_finish_entry
 argument_list|(
 name|a
