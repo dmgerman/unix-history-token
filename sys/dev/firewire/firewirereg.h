@@ -435,6 +435,12 @@ index|[
 literal|0x40
 index|]
 decl_stmt|;
+name|u_char
+name|last_tlabel
+index|[
+literal|0x40
+index|]
+decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
