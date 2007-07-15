@@ -33,6 +33,12 @@ directive|include
 file|"archive_string.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"archive_private.h"
+end_include
+
 begin_comment
 comment|/*  * Like 'vsprintf', but ensures the target is big enough, resizing if  * necessary.  */
 end_comment
@@ -74,11 +80,22 @@ decl_stmt|,
 modifier|*
 name|p2
 decl_stmt|;
+if|if
+condition|(
 name|__archive_string_ensure
 argument_list|(
 name|as
 argument_list|,
 literal|64
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|__archive_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 if|if

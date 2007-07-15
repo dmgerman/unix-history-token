@@ -4645,7 +4645,9 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
-comment|/* Read the body into the string. */
+comment|/* Fail if we can't make our buffer big enough. */
+if|if
+condition|(
 name|archive_string_ensure
 argument_list|(
 name|as
@@ -4654,7 +4656,29 @@ name|size
 operator|+
 literal|1
 argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ENOMEM
+argument_list|,
+literal|"No memory"
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
+comment|/* Read the body into the string. */
 name|padded_size
 operator|=
 operator|(
@@ -9778,6 +9802,8 @@ init|;
 condition|;
 control|)
 block|{
+if|if
+condition|(
 name|archive_string_ensure
 argument_list|(
 operator|&
@@ -9789,7 +9815,28 @@ name|total_size
 operator|+
 name|bytes_read
 argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ENOMEM
+argument_list|,
+literal|"Can't allocate working buffer"
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 name|memcpy
 argument_list|(
 name|tar
