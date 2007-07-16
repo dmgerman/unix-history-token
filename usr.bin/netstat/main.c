@@ -876,7 +876,7 @@ modifier|*
 name|pr_name
 decl_stmt|;
 comment|/* well-known name */
-name|u_long
+name|int
 name|pr_usesysctl
 decl_stmt|;
 comment|/* non-zero if we use sysctl, not kvm */
@@ -3676,9 +3676,6 @@ argument_list|(
 name|kvmd
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
