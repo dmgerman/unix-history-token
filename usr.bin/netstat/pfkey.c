@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -288,6 +294,10 @@ name|name
 parameter_list|,
 name|int
 name|family
+name|__unused
+parameter_list|,
+name|int
+name|proto
 name|__unused
 parameter_list|)
 block|{

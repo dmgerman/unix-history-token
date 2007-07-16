@@ -228,6 +228,10 @@ parameter_list|,
 name|int
 name|af1
 name|__unused
+parameter_list|,
+name|int
+name|proto
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -645,6 +649,10 @@ name|name
 parameter_list|,
 name|int
 name|af1
+name|__unused
+parameter_list|,
+name|int
+name|proto
 name|__unused
 parameter_list|)
 block|{
@@ -1325,6 +1333,10 @@ parameter_list|,
 name|int
 name|af1
 name|__unused
+parameter_list|,
+name|int
+name|proto
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1610,6 +1622,10 @@ name|name
 parameter_list|,
 name|int
 name|af
+name|__unused
+parameter_list|,
+name|int
+name|proto
 name|__unused
 parameter_list|)
 block|{

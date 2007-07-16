@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -277,7 +283,6 @@ name|pfsync_stats
 parameter_list|(
 name|u_long
 name|off
-name|__unused
 parameter_list|,
 specifier|const
 name|char
@@ -286,6 +291,10 @@ name|name
 parameter_list|,
 name|int
 name|af1
+name|__unused
+parameter_list|,
+name|int
+name|proto
 name|__unused
 parameter_list|)
 block|{
@@ -304,6 +313,11 @@ expr|struct
 name|pfsyncstats
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|live
+condition|)
+block|{
 if|if
 condition|(
 name|zflag
@@ -360,6 +374,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+block|}
+else|else
+name|kread
+argument_list|(
+name|off
+argument_list|,
+operator|&
+name|pfsyncstat
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s:\n"

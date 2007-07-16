@@ -248,6 +248,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|live
+condition|)
+block|{
+if|if
+condition|(
 name|sysctlbyname
 argument_list|(
 literal|"net.inet6.ip6.mif6table"
@@ -270,21 +275,10 @@ argument_list|(
 literal|"sysctl: net.inet6.ip6.mif6table"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mifaddr
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"No IPv6 multicast forwarding configured in "
-literal|"the running system.\n"
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
+block|}
+else|else
 name|kread
 argument_list|(
 name|mifaddr
@@ -301,7 +295,6 @@ name|mif6table
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|saved_numeric_addr
 operator|=
 name|numeric_addr
@@ -473,6 +466,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|live
+condition|)
+block|{
+if|if
+condition|(
 name|sysctlbyname
 argument_list|(
 literal|"net.inet6.ip6.mf6ctable"
@@ -495,22 +493,10 @@ argument_list|(
 literal|"sysctl: net.inet6.ip6.mf6ctable"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mfcaddr
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"No IPv6 multicast forwarding configured in "
-literal|"the running system.\n"
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * XXX: Try KVM if the module is neither compiled nor loaded. 		 * The correct behaviour would be to always use KVM if 		 * the -M option is specified to netstat(1). 		 */
+block|}
+else|else
 name|kread
 argument_list|(
 name|mfcaddr
@@ -527,7 +513,6 @@ name|mf6ctable
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|banner_printed
 operator|=
 literal|0
@@ -825,6 +810,11 @@ name|mrtstat
 decl_stmt|;
 if|if
 condition|(
+name|live
+condition|)
+block|{
+if|if
+condition|(
 name|sysctlbyname
 argument_list|(
 literal|"net.inet6.ip6.mrt6stat"
@@ -848,21 +838,10 @@ argument_list|(
 literal|"sysctl: net.inet6.ip6.mrt6stat"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mstaddr
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"No IPv6 multicast forwarding configured in the "
-literal|"running system.\n"
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
+block|}
+else|else
 name|kread
 argument_list|(
 name|mstaddr
@@ -880,7 +859,6 @@ name|mrtstat
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"IPv6 multicast forwarding:\n"

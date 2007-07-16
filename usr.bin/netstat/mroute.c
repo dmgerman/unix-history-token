@@ -213,6 +213,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|live
+condition|)
+block|{
+if|if
+condition|(
 name|sysctlbyname
 argument_list|(
 literal|"net.inet.ip.mfctable"
@@ -235,22 +240,10 @@ argument_list|(
 literal|"sysctl: net.inet.ip.mfctable"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mfcaddr
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"No IPv4 multicast forwarding configured in "
-literal|"the running system.\n"
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * XXX: Try KVM if the module is neither compiled nor loaded. 		 * The correct behaviour would be to always use KVM if 		 * the -M option is specified to netstat(1). 		 */
+block|}
+else|else
 name|kread
 argument_list|(
 name|mfcaddr
@@ -267,7 +260,6 @@ name|mfctable
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|len
 operator|=
 sizeof|sizeof
@@ -275,6 +267,11 @@ argument_list|(
 name|viftable
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|live
+condition|)
+block|{
 if|if
 condition|(
 name|sysctlbyname
@@ -299,22 +296,10 @@ argument_list|(
 literal|"sysctl: net.inet.ip.viftable"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vifaddr
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"No IPv4 multicast forwarding configured in "
-literal|"the running system.\n"
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
-comment|/* XXX KVM */
+block|}
+else|else
 name|kread
 argument_list|(
 name|vifaddr
@@ -331,7 +316,6 @@ name|viftable
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|saved_numeric_addr
 operator|=
 name|numeric_addr
@@ -1229,6 +1213,11 @@ name|mrtstat
 decl_stmt|;
 if|if
 condition|(
+name|live
+condition|)
+block|{
+if|if
+condition|(
 name|sysctlbyname
 argument_list|(
 literal|"net.inet.ip.mrtstat"
@@ -1252,23 +1241,10 @@ argument_list|(
 literal|"sysctl: net.inet.ip.mrtstat"
 argument_list|)
 expr_stmt|;
-comment|/* Compatability with older kernels - candidate for removal */
-if|if
-condition|(
-name|mstaddr
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"No IPv4 multicast forwarding configured in "
-literal|"the running system.\n"
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
-comment|/* XXX KVM */
+block|}
+else|else
 name|kread
 argument_list|(
 name|mstaddr
@@ -1286,7 +1262,6 @@ name|mrtstat
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"IPv4 multicast forwarding:\n"

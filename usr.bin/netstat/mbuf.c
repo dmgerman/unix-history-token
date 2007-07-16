@@ -71,6 +71,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -252,17 +258,7 @@ name|mlen
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|live
 decl_stmt|;
-name|live
-operator|=
-operator|(
-name|kvmd
-operator|==
-name|NULL
-operator|)
-expr_stmt|;
 name|mtlp
 operator|=
 name|memstat_mtl_alloc
