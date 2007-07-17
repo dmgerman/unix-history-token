@@ -1118,8 +1118,9 @@ break|break;
 default|default:
 name|ret
 operator|=
-operator|-
+operator|(
 name|EOPNOTSUPP
+operator|)
 expr_stmt|;
 block|}
 return|return
@@ -1375,8 +1376,9 @@ literal|7
 operator|)
 condition|)
 return|return
-operator|-
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -1427,8 +1429,9 @@ name|pmtx
 expr_stmt|;
 else|else
 return|return
-operator|-
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|ret
 operator|=
@@ -1462,7 +1465,9 @@ condition|(
 name|ret
 condition|)
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 break|break;
 block|}
@@ -1636,12 +1641,13 @@ block|}
 default|default:
 name|ret
 operator|=
-operator|-
 name|EOPNOTSUPP
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -2072,8 +2078,9 @@ name|adapter
 argument_list|)
 condition|)
 return|return
-operator|-
+operator|(
 name|EAGAIN
+operator|)
 return|;
 return|return
 name|cxgb_ulp_iscsi_ctl
@@ -2112,8 +2119,9 @@ name|adapter
 argument_list|)
 condition|)
 return|return
-operator|-
+operator|(
 name|EAGAIN
+operator|)
 return|;
 return|return
 name|cxgb_rdma_ctl
@@ -2127,8 +2135,9 @@ argument_list|)
 return|;
 default|default:
 return|return
-operator|-
+operator|(
 name|EOPNOTSUPP
+operator|)
 return|;
 block|}
 return|return
@@ -2168,12 +2177,10 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"%d unexpected offload packets, first data %u\n"
+literal|"%d unexpected offload packets, first data 0x%x\n"
 argument_list|,
 name|n
 argument_list|,
-name|ntohl
-argument_list|(
 operator|*
 name|mtod
 argument_list|(
@@ -2184,7 +2191,6 @@ index|]
 argument_list|,
 name|uint32_t
 operator|*
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6565,8 +6571,9 @@ operator|->
 name|tid_tab
 condition|)
 return|return
-operator|-
+operator|(
 name|ENOMEM
+operator|)
 return|;
 name|t
 operator|->
@@ -7880,7 +7887,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int offload_info_read_proc(char *buf, char **start, off_t offset, 				  int length, int *eof, void *data) { 	struct toe_data *d = data; 	struct tid_info *t =&d->tid_maps; 	int len;  	len = sprintf(buf, "TID range: 0..%d, in use: %u\n" 		      "STID range: %d..%d, in use: %u\n" 		      "ATID range: %d..%d, in use: %u\n" 		      "MSS: %u\n", 		      t->ntids - 1, atomic_read(&t->tids_in_use), t->stid_base, 		      t->stid_base + t->nstids - 1, t->stids_in_use, 		      t->atid_base, t->atid_base + t->natids - 1, 		      t->atids_in_use, d->tx_max_chunk); 	if (len> length) 		len = length; 	*eof = 1; 	return len; }  static int offload_info_proc_setup(struct proc_dir_entry *dir, 				   struct toe_data *d) { 	struct proc_dir_entry *p;  	if (!dir) 		return -EINVAL;  	p = create_proc_read_entry("info", 0, dir, offload_info_read_proc, d); 	if (!p) 		return -ENOMEM;  	p->owner = THIS_MODULE; 	return 0; }   static int offload_devices_read_proc(char *buf, char **start, off_t offset, 				     int length, int *eof, void *data) { 	int len; 	struct toedev *dev; 	struct net_device *ndev; 	 	len = sprintf(buf, "Device           Interfaces\n"); 	 	mtx_lock(&cxgb_db_lock); 	TAILQ_FOREACH(dev,&ofld_dev_list, ofld_entry) {	 		len += sprintf(buf + len, "%-16s", dev->name); 		read_lock(&dev_base_lock); 		for (ndev = dev_base; ndev; ndev = ndev->next) { 			if (TOEDEV(ndev) == dev) 				len += sprintf(buf + len, " %s", ndev->name); 		} 		read_unlock(&dev_base_lock); 		len += sprintf(buf + len, "\n"); 		if (len>= length) 			break; 	} 	mtx_unlock(&cxgb_db_lock); 	 	if (len> length) 		len = length; 	*eof = 1; 	return len; }
+unit|static int offload_info_read_proc(char *buf, char **start, off_t offset, 				  int length, int *eof, void *data) { 	struct toe_data *d = data; 	struct tid_info *t =&d->tid_maps; 	int len;  	len = sprintf(buf, "TID range: 0..%d, in use: %u\n" 		      "STID range: %d..%d, in use: %u\n" 		      "ATID range: %d..%d, in use: %u\n" 		      "MSS: %u\n", 		      t->ntids - 1, atomic_read(&t->tids_in_use), t->stid_base, 		      t->stid_base + t->nstids - 1, t->stids_in_use, 		      t->atid_base, t->atid_base + t->natids - 1, 		      t->atids_in_use, d->tx_max_chunk); 	if (len> length) 		len = length; 	*eof = 1; 	return len; }  static int offload_info_proc_setup(struct proc_dir_entry *dir, 				   struct toe_data *d) { 	struct proc_dir_entry *p;  	if (!dir) 		return (EINVAL);  	p = create_proc_read_entry("info", 0, dir, offload_info_read_proc, d); 	if (!p) 		return (ENOMEM);  	p->owner = THIS_MODULE; 	return 0; }   static int offload_devices_read_proc(char *buf, char **start, off_t offset, 				     int length, int *eof, void *data) { 	int len; 	struct toedev *dev; 	struct net_device *ndev; 	 	len = sprintf(buf, "Device           Interfaces\n"); 	 	mtx_lock(&cxgb_db_lock); 	TAILQ_FOREACH(dev,&ofld_dev_list, ofld_entry) {	 		len += sprintf(buf + len, "%-16s", dev->name); 		read_lock(&dev_base_lock); 		for (ndev = dev_base; ndev; ndev = ndev->next) { 			if (TOEDEV(ndev) == dev) 				len += sprintf(buf + len, " %s", ndev->name); 		} 		read_unlock(&dev_base_lock); 		len += sprintf(buf + len, "\n"); 		if (len>= length) 			break; 	} 	mtx_unlock(&cxgb_db_lock); 	 	if (len> length) 		len = length; 	*eof = 1; 	return len; }
 endif|#
 directive|endif
 end_endif

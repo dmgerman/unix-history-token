@@ -39,6 +39,29 @@ directive|include
 file|<dev/mii/mii.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_DEFINED
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<common/cxgb_version.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cxgb_config.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -50,6 +73,11 @@ include|#
 directive|include
 file|<dev/cxgb/cxgb_config.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -315,6 +343,35 @@ end_define
 begin_comment
 comment|/* max descriptors per packet    */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TX_START_MIN_DESC
+value|(TX_MAX_DESC<< 2)
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|TX_START_MAX_DESC
+value|(TX_ETH_Q_SIZE>> 2)
+end_define
+
+begin_comment
+comment|/* maximum number of descriptors */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -641,6 +698,13 @@ define|#
 directive|define
 name|net_device
 value|ifnet
+end_define
+
+begin_define
+define|#
+directive|define
+name|cpu_to_be32
+value|htobe32
 end_define
 
 begin_comment

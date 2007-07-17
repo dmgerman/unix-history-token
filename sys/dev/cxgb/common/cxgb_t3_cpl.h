@@ -15,33 +15,6 @@ directive|define
 name|T3_CPL_H
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__LITTLE_ENDIAN_BITFIELD
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__BIG_ENDIAN_BITFIELD
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<asm/byteorder.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_enum
 enum|enum
 name|CPL_opcode
@@ -390,6 +363,10 @@ block|,
 name|CPL_CONN_POLICY_ASK
 init|=
 literal|1
+block|,
+name|CPL_CONN_POLICY_FILTER
+init|=
+literal|2
 block|,
 name|CPL_CONN_POLICY_DENY
 init|=
@@ -1854,6 +1831,40 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> S_CPU_IDX)& M_CPU_IDX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_OPT1_VLAN
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_OPT1_VLAN
+value|0xFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_OPT1_VLAN
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_OPT1_VLAN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_OPT1_VLAN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> S_OPT1_VLAN)& M_OPT1_VLAN)
 end_define
 
 begin_define
@@ -3523,6 +3534,44 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* tx_data_wr.flags fields */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_TX_ACK_PAGES
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_TX_ACK_PAGES
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_TX_ACK_PAGES
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_TX_ACK_PAGES)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_TX_ACK_PAGES
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> S_TX_ACK_PAGES)& M_TX_ACK_PAGES)
+end_define
+
+begin_comment
 comment|/* tx_data_wr.param fields */
 end_comment
 
@@ -4460,7 +4509,7 @@ name|__be32
 name|ddp_report
 decl_stmt|;
 block|}
-name|__U
+name|u
 union|;
 name|__be32
 name|ulp_crc

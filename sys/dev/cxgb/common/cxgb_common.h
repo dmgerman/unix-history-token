@@ -46,15 +46,6 @@ end_endif
 begin_enum
 enum|enum
 block|{
-name|MAX_NPORTS
-init|=
-literal|4
-block|,
-name|TP_TMR_RES
-init|=
-literal|200
-block|,
-comment|/* TP timer resolution in usec */
 name|MAX_FRAME_SIZE
 init|=
 literal|10240
@@ -95,6 +86,24 @@ init|=
 literal|128
 block|,
 comment|/* size of protocol sram */
+name|MAX_NPORTS
+init|=
+literal|4
+block|,
+name|TP_TMR_RES
+init|=
+literal|200
+block|,
+name|TP_SRAM_OFFSET
+init|=
+literal|4096
+block|,
+comment|/* TP SRAM content offset in eeprom */
+name|TP_SRAM_LEN
+init|=
+literal|2112
+block|,
+comment|/* TP SRAM content offset in eeprom */
 block|}
 enum|;
 end_enum
@@ -167,11 +176,11 @@ literal|1
 block|,
 name|TP_VERSION_MINOR
 init|=
-literal|0
+literal|1
 block|,
 name|TP_VERSION_MICRO
 init|=
-literal|44
+literal|0
 block|}
 enum|;
 end_enum
@@ -290,7 +299,7 @@ literal|4
 block|,
 name|FW_VERSION_MINOR
 init|=
-literal|1
+literal|5
 block|,
 name|FW_VERSION_MICRO
 init|=
@@ -1414,6 +1423,10 @@ block|,
 name|T3_REV_B2
 init|=
 literal|3
+block|,
+name|T3_REV_C
+init|=
+literal|4
 block|, }
 enum|;
 end_enum
@@ -1709,6 +1722,10 @@ decl_stmt|;
 name|unsigned
 name|int
 name|rx_xcnt
+decl_stmt|;
+name|unsigned
+name|int
+name|rx_ocnt
 decl_stmt|;
 name|u64
 name|rx_mcnt
@@ -2281,6 +2298,17 @@ define|#
 directive|define
 name|MAC_STATS_ACCUM_SECS
 value|180
+end_define
+
+begin_comment
+comment|/* The external MAC needs accumulation every 30 seconds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VSC_STATS_ACCUM_SECS
+value|30
 end_define
 
 begin_define
@@ -2979,6 +3007,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|t3_get_tp_version
+parameter_list|(
+name|adapter_t
+modifier|*
+name|adapter
+parameter_list|,
+name|u32
+modifier|*
+name|vers
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|t3_check_tpsram_version
 parameter_list|(
 name|adapter_t
@@ -2996,6 +3039,7 @@ name|adapter_t
 modifier|*
 name|adapter
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|tp_ram
@@ -3015,6 +3059,7 @@ name|adapter_t
 modifier|*
 name|adapter
 parameter_list|,
+specifier|const
 specifier|const
 name|u8
 modifier|*
@@ -3165,6 +3210,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|t3_enable_filters
+parameter_list|(
+name|adapter_t
+modifier|*
+name|adap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|t3_config_rss
 parameter_list|(
 name|adapter_t
@@ -3215,6 +3271,7 @@ name|adapter_t
 modifier|*
 name|adap
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|data
@@ -4291,6 +4348,24 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|t3_vsc7323_set_mtu
+parameter_list|(
+name|adapter_t
+modifier|*
+name|adap
+parameter_list|,
+name|unsigned
+name|int
+name|mtu
+parameter_list|,
+name|int
+name|port
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|t3_vsc7323_set_addr
 parameter_list|(
 name|adapter_t
@@ -4302,24 +4377,6 @@ name|addr
 index|[
 literal|6
 index|]
-parameter_list|,
-name|int
-name|port
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|t3_vsc7323_set_mtu
-parameter_list|(
-name|adapter_t
-modifier|*
-name|adap
-parameter_list|,
-name|unsigned
-name|int
-name|mtu
 parameter_list|,
 name|int
 name|port

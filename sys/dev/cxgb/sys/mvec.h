@@ -562,6 +562,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|if
+condition|(
+name|n
+condition|)
+name|n
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_PKTHDR
+expr_stmt|;
+end_if
+
 begin_return
 return|return
 operator|(

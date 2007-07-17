@@ -85,6 +85,8 @@ block|,
 name|CH_SET_FILTER
 block|,
 name|CH_SET_HW_SCHED
+block|,
+name|CH_DEL_FILTER
 block|, }
 enum|;
 end_enum
@@ -289,6 +291,92 @@ name|int32_t
 name|flow_ipg
 decl_stmt|;
 comment|/* usec */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ch_filter_tuple
+block|{
+name|uint32_t
+name|sip
+decl_stmt|;
+name|uint32_t
+name|dip
+decl_stmt|;
+name|uint16_t
+name|sport
+decl_stmt|;
+name|uint16_t
+name|dport
+decl_stmt|;
+name|uint16_t
+name|vlan
+range|:
+literal|12
+decl_stmt|;
+name|uint16_t
+name|vlan_prio
+range|:
+literal|3
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ch_filter
+block|{
+name|uint32_t
+name|cmd
+decl_stmt|;
+name|uint32_t
+name|filter_id
+decl_stmt|;
+name|struct
+name|ch_filter_tuple
+name|val
+decl_stmt|;
+name|struct
+name|ch_filter_tuple
+name|mask
+decl_stmt|;
+name|uint16_t
+name|mac_addr_idx
+decl_stmt|;
+name|uint8_t
+name|mac_hit
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|proto
+range|:
+literal|2
+decl_stmt|;
+name|uint8_t
+name|want_filter_id
+range|:
+literal|1
+decl_stmt|;
+comment|/* report filter TID instead of RSS hash */
+name|uint8_t
+name|pass
+range|:
+literal|1
+decl_stmt|;
+comment|/* whether to pass or drop packets */
+name|uint8_t
+name|rss
+range|:
+literal|1
+decl_stmt|;
+comment|/* use RSS or specified qset */
+name|uint8_t
+name|qset
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -696,6 +784,20 @@ define|#
 directive|define
 name|CHELSIO_SET_HW_SCHED
 value|_IOWR('f', CH_SET_HW_SCHED, struct ch_hw_sched)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_SET_FILTER
+value|_IOW('f', CH_SET_FILTER, struct ch_filter)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_DEL_FILTER
+value|_IOW('f', CH_DEL_FILTER, struct ch_filter)
 end_define
 
 begin_define

@@ -446,6 +446,14 @@ literal|1
 operator|<<
 literal|4
 operator|)
+block|,
+name|TPS_UPTODATE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|5
+operator|)
 block|, }
 enum|;
 end_enum
@@ -985,6 +993,12 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|filter_info
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|adapter
@@ -1076,6 +1090,25 @@ name|msix_intr_tag
 index|[
 name|SGE_QSETS
 index|]
+decl_stmt|;
+name|uint8_t
+name|rxpkt_map
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* maps RX_PKT interface values to port ids */
+name|uint8_t
+name|rrss_map
+index|[
+name|SGE_QSETS
+index|]
+decl_stmt|;
+comment|/* revers RSS map table */
+name|struct
+name|filter_info
+modifier|*
+name|filters
 decl_stmt|;
 comment|/* Tasks */
 name|struct
