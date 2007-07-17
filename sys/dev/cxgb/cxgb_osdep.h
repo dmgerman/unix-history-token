@@ -320,7 +320,7 @@ begin_define
 define|#
 directive|define
 name|TX_START_MAX_DESC
-value|(TX_MAX_DESC<< 2)
+value|(TX_MAX_DESC<< 3)
 end_define
 
 begin_comment
@@ -388,7 +388,7 @@ begin_define
 define|#
 directive|define
 name|L1_CACHE_BYTES
-value|32
+value|64
 end_define
 
 begin_function
