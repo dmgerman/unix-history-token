@@ -324,7 +324,7 @@ parameter_list|(
 name|rssi
 parameter_list|)
 define|\
-value|((rssi)> (RAL_NOISE_FLOOR + RAL_RSSI_CORR) ?	\ 	 ((rssi) - RAL_NOISE_FLOOR + RAL_RSSI_CORR) : 0)
+value|((rssi)> (RAL_NOISE_FLOOR + RAL_RSSI_CORR) ?	\ 	 ((rssi) - (RAL_NOISE_FLOOR + RAL_RSSI_CORR)) : 0)
 end_define
 
 begin_comment
