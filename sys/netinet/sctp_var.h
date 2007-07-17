@@ -319,7 +319,7 @@ name|stcb
 parameter_list|,
 name|tp1
 parameter_list|)
-value|do { \         if(stcb->asoc.fs_index> SCTP_FS_SPEC_LOG_SIZE) \ 		stcb->asoc.fs_index = 0;\ 	stcb->asoc.fslog[stcb->asoc.fs_index].total_flight = stcb->asoc.total_flight; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].tsn = tp1->rec.data.TSN_seq; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].book = tp1->book_size; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].sent = tp1->sent; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].incr = 0; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].decr = 1; \ 	stcb->asoc.fs_index++; \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		stcb->asoc.total_flight = 0; \ 		stcb->asoc.total_flight_count = 0; \ 	} \ } while (0)
+value|do { \         if(stcb->asoc.fs_index> SCTP_FS_SPEC_LOG_SIZE) \ 		stcb->asoc.fs_index = 0;\ 	stcb->asoc.fslog[stcb->asoc.fs_index].total_flight = stcb->asoc.total_flight; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].tsn = tp1->rec.data.TSN_seq; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].book = tp1->book_size; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].sent = tp1->sent; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].incr = 0; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].decr = 1; \ 	stcb->asoc.fs_index++; \         tp1->window_probe = 0; \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		stcb->asoc.total_flight = 0; \ 		stcb->asoc.total_flight_count = 0; \ 	} \ } while (0)
 end_define
 
 begin_define

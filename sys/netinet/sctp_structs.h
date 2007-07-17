@@ -1255,6 +1255,10 @@ begin_struct
 struct|struct
 name|sctp_tsn_log
 block|{
+name|void
+modifier|*
+name|stcb
+decl_stmt|;
 name|uint32_t
 name|tsn
 decl_stmt|;
@@ -1269,6 +1273,12 @@ name|sz
 decl_stmt|;
 name|uint16_t
 name|flgs
+decl_stmt|;
+name|uint16_t
+name|in_pos
+decl_stmt|;
+name|uint16_t
+name|in_out
 decl_stmt|;
 block|}
 struct|;
@@ -1876,6 +1886,12 @@ index|[
 name|SCTP_TSN_LOG_SIZE
 index|]
 decl_stmt|;
+name|uint32_t
+name|cumack_log
+index|[
+name|SCTP_TSN_LOG_SIZE
+index|]
+decl_stmt|;
 name|uint16_t
 name|tsn_in_at
 decl_stmt|;
@@ -1887,6 +1903,9 @@ name|tsn_in_wrapped
 decl_stmt|;
 name|uint16_t
 name|tsn_out_wrapped
+decl_stmt|;
+name|uint16_t
+name|cumack_log_at
 decl_stmt|;
 endif|#
 directive|endif

@@ -296,11 +296,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * draft-ietf-tsvwg-addip-sctp  *  * Address management only currently supported For the bound all case: the asoc  * local addr list is always a "DO NOT USE" list For the subset bound case:  * If ASCONFs are allowed: the endpoint local addr list is the usable address  * list the asoc local addr list is the "DO NOT USE" list If ASCONFs are not  * allowed: the endpoint local addr list is the default usable list the asoc  * local addr list is the usable address list  *  * An ASCONF parameter queue exists per asoc which holds the pending address  * operations.  Lists are updated upon receipt of ASCONF-ACK.  *  * Deleted addresses are always immediately removed from the lists as they will  * (shortly) no longer exist in the kernel.  We send ASCONFs as a courtesy,  * only if allowed.  */
+comment|/*  * draft-ietf-tsvwg-addip-sctp  *  * An ASCONF parameter queue exists per asoc which holds the pending address  * operations.  Lists are updated upon receipt of ASCONF-ACK.  *  * A restricted_addrs list exists per assoc to hold local addresses that are  * not (yet) usable by the assoc as a source address.  These addresses are  * either pending an ASCONF operation (and exist on the ASCONF parameter  * queue), or they are permanently restricted (the peer has returned an  * ERROR indication to an ASCONF(ADD), or the peer does not support ASCONF).  *  * Deleted addresses are always immediately removed from the lists as they will  * (shortly) no longer exist in the kernel.  We send ASCONFs as a courtesy,  * only if allowed.  */
 end_comment
 
 begin_comment
-comment|/*  * ASCONF parameter processing response_required: set if a reply is required  * (eg. SUCCESS_REPORT) returns a mbuf to an "error" response parameter or  * NULL/"success" if ok FIX: allocating this many mbufs on the fly is pretty  * inefficient...  */
+comment|/*  * ASCONF parameter processing.  * response_required: set if a reply is required (eg. SUCCESS_REPORT).  * returns a mbuf to an "error" response parameter or NULL/"success" if ok.  * FIX: allocating this many mbufs on the fly is pretty inefficient...  */
 end_comment
 
 begin_function
@@ -5770,7 +5770,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * process an asconf queue param aparam: parameter to process, will be  * removed from the queue flag: 1=success, 0=failure  */
+comment|/*  * process an asconf queue param.  * aparam: parameter to process, will be removed from the queue.  * flag: 1=success case, 0=failure case  */
 end_comment
 
 begin_function
@@ -6551,7 +6551,7 @@ name|stcb
 argument_list|,
 name|aa
 argument_list|,
-name|SCTP_SUCCESS_REPORT
+literal|1
 argument_list|)
 expr_stmt|;
 else|else
@@ -6561,7 +6561,7 @@ name|stcb
 argument_list|,
 name|aa
 argument_list|,
-name|SCTP_ERROR_CAUSE_IND
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6906,7 +6906,6 @@ return|return;
 block|}
 block|}
 comment|/* put this address on the "pending/do not use yet" list */
-comment|/* 	 * Note: we do this primarily for the subset bind case We don't have 	 * scoping flags at the EP level, so we must add link local/site 	 * local addresses to the EP, then need to "negate" them here. 	 * Recall that this routine is only called for the subset bound 	 * w/ASCONF allowed case. 	 */
 name|sctp_add_local_addr_assoc
 argument_list|(
 name|stcb
@@ -9023,7 +9022,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * builds an ASCONF chunk from queued ASCONF params returns NULL on error (no  * mbuf, no ASCONF params queued, etc)  */
+comment|/*  * builds an ASCONF chunk from queued ASCONF params.  * returns NULL on error (no mbuf, no ASCONF params queued, etc).  */
 end_comment
 
 begin_function

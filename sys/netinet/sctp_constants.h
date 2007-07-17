@@ -142,6 +142,24 @@ value|4
 end_define
 
 begin_comment
+comment|/* constants for rto calc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sctp_align_safe_nocopy
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_align_unsafe_makecopy
+value|1
+end_define
+
+begin_comment
 comment|/* JRS - Values defined for the HTCP algorithm */
 end_comment
 

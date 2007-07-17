@@ -895,6 +895,8 @@ block|}
 comment|/* 			 * JRS 5/14/07 - If CMT PF is on and the destination 			 * is in PF state, set the destination to active 			 * state and set the cwnd to one or two MTU's based 			 * on whether PF1 or PF2 is being used. 			 *  			 * Should we stop any running T3 timer here? 			 */
 if|if
 condition|(
+name|sctp_cmt_on_off
+operator|&&
 name|sctp_cmt_pf
 operator|&&
 operator|(
@@ -3320,6 +3322,8 @@ block|}
 comment|/* 			 * JRS 5/14/07 - If CMT PF is on and the destination 			 * is in PF state, set the destination to active 			 * state and set the cwnd to one or two MTU's based 			 * on whether PF1 or PF2 is being used. 			 *  			 * Should we stop any running T3 timer here? 			 */
 if|if
 condition|(
+name|sctp_cmt_on_off
+operator|&&
 name|sctp_cmt_pf
 operator|&&
 operator|(
@@ -4535,7 +4539,8 @@ name|ca
 parameter_list|)
 block|{
 return|return
-name|ticks
+name|sctp_get_tick_count
+argument_list|()
 operator|-
 name|ca
 operator|->
@@ -4609,7 +4614,8 @@ name|ca
 operator|->
 name|last_cong
 operator|=
-name|ticks
+name|sctp_get_tick_count
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -4870,7 +4876,8 @@ block|{
 name|uint32_t
 name|now
 init|=
-name|ticks
+name|sctp_get_tick_count
+argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -6033,7 +6040,8 @@ name|htcp_ca
 operator|.
 name|last_cong
 operator|=
-name|ticks
+name|sctp_get_tick_count
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -6528,6 +6536,8 @@ block|}
 comment|/* 			 * JRS 5/14/07 - If CMT PF is on and the destination 			 * is in PF state, set the destination to active 			 * state and set the cwnd to one or two MTU's based 			 * on whether PF1 or PF2 is being used. 			 *  			 * Should we stop any running T3 timer here? 			 */
 if|if
 condition|(
+name|sctp_cmt_on_off
+operator|&&
 name|sctp_cmt_pf
 operator|&&
 operator|(
@@ -7183,7 +7193,8 @@ name|htcp_ca
 operator|.
 name|last_cong
 operator|=
-name|ticks
+name|sctp_get_tick_count
+argument_list|()
 expr_stmt|;
 comment|/* 	 * make a small adjustment to cwnd and force to CA. 	 */
 if|if

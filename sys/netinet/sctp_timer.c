@@ -807,6 +807,8 @@ comment|/* 				 * Add debug message here if destination is 				 * not in PF stat
 comment|/* Stop any running T3 timers here? */
 if|if
 condition|(
+name|sctp_cmt_on_off
+operator|&&
 name|sctp_cmt_pf
 condition|)
 block|{
@@ -3234,12 +3236,6 @@ expr_stmt|;
 comment|/* reset the TSN for striking and other FR stuff */
 name|chk
 operator|->
-name|window_probe
-operator|=
-literal|0
-expr_stmt|;
-name|chk
-operator|->
 name|rec
 operator|.
 name|data
@@ -3577,7 +3573,7 @@ directive|ifdef
 name|INVARIANTS
 name|SCTP_PRINTF
 argument_list|(
-literal|"Local Audit says there are %d for retran asoc cnt:%d\n"
+literal|"Local Audit says there are %d for retran asoc cnt:%d we marked:%d this time\n"
 argument_list|,
 name|cnt_mk
 argument_list|,
@@ -3586,6 +3582,8 @@ operator|->
 name|asoc
 operator|.
 name|sent_queue_retran_cnt
+argument_list|,
+name|num_mk
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4206,6 +4204,8 @@ block|}
 comment|/* 	 * JRS 5/14/07 - If CMT PF is on and the destination if not already 	 * in PF state, set the destination to PF state and store the 	 * current time as the time that the destination was last active. In 	 * addition, find an alternate destination with PF-based 	 * find_alt_net(). 	 */
 if|if
 condition|(
+name|sctp_cmt_on_off
+operator|&&
 name|sctp_cmt_pf
 condition|)
 block|{
@@ -4232,7 +4232,8 @@ name|net
 operator|->
 name|last_active
 operator|=
-name|ticks
+name|sctp_get_tick_count
+argument_list|()
 expr_stmt|;
 name|SCTPDBG
 argument_list|(
@@ -4672,6 +4673,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|sctp_cmt_on_off
+operator|&&
 name|sctp_cmt_pf
 operator|&&
 operator|(

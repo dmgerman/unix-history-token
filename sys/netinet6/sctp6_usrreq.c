@@ -2899,8 +2899,6 @@ operator|)
 operator|&
 name|sin
 argument_list|,
-name|NULL
-argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -2973,8 +2971,6 @@ argument_list|(
 name|so
 argument_list|,
 name|addr
-argument_list|,
-name|NULL
 argument_list|,
 name|p
 argument_list|)

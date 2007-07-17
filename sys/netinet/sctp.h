@@ -984,35 +984,35 @@ begin_define
 define|#
 directive|define
 name|SCTP_CAUSE_DELETING_LAST_ADDR
-value|0x0100
+value|0xa0
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_CAUSE_RESOURCE_SHORTAGE
-value|0x0101
+value|0xa1
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_CAUSE_DELETING_SRC_ADDR
-value|0x0102
+value|0xa2
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_CAUSE_ILLEGAL_ASCONF_ACK
-value|0x0103
+value|0xa3
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_CAUSE_REQUEST_REFUSED
-value|0x0104
+value|0xa4
 end_define
 
 begin_comment
@@ -1936,6 +1936,43 @@ directive|define
 name|SCTP_PACKET_LOG_SIZE
 value|65536
 end_define
+
+begin_comment
+comment|/* Maximum delays and such a user can set for options that  * take ms.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_MAX_SACK_DELAY
+value|500
+end_define
+
+begin_comment
+comment|/* per RFC4960 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_MAX_HB_INTERVAL
+value|14400000
+end_define
+
+begin_comment
+comment|/* 4 hours in ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_MAX_COOKIE_LIFE
+value|3600000
+end_define
+
+begin_comment
+comment|/* 1 hour in ms */
+end_comment
 
 begin_comment
 comment|/* Types of logging/KTR tracing  that can be enabled via the  * sysctl net.inet.sctp.sctp_logging. You must also enable  * SUBSYS tracing.  * Note that you must have the SCTP option in the kernel  * to enable these as well.  */
