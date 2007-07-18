@@ -338,6 +338,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|mtx
+name|sched_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|sched_tdcnt
@@ -1996,6 +2003,20 @@ name|ts_thread
 operator|=
 operator|&
 name|thread0
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+literal|"sched lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_SPIN
+operator||
+name|MTX_RECURSE
+argument_list|)
 expr_stmt|;
 block|}
 end_function

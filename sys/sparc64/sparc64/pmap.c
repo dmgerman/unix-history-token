@@ -236,6 +236,41 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* XXX */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_sched.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SCHED_4BSD
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"sparc64 only works with SCHED_4BSD which uses a global scheduler lock."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|sched_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Virtual and physical address of message buffer.  */
 end_comment
 

@@ -1371,14 +1371,6 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|mtx
-name|sched_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
 name|Giant
 decl_stmt|;
 end_decl_stmt
