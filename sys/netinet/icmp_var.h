@@ -229,8 +229,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BANDLIM_ICMP6_UNREACH
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|BANDLIM_MAX
-value|4
+value|5
 end_define
 
 begin_endif

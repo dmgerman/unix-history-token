@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -180,7 +186,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/ip_icmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/icmp_var.h>
 end_include
 
 begin_include
@@ -263,6 +281,12 @@ end_endif
 begin_comment
 comment|/* IPSEC */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
+end_include
 
 begin_comment
 comment|/*  * UDP protocol inplementation.  * Per RFC 768, August, 1980.  */
@@ -358,6 +382,30 @@ block|}
 endif|#
 directive|endif
 comment|/* IPSEC */
+ifdef|#
+directive|ifdef
+name|MAC
+if|if
+condition|(
+name|mac_check_inpcb_deliver
+argument_list|(
+name|in6p
+argument_list|,
+name|n
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|n
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 name|opts
 operator|=
 name|NULL
@@ -656,6 +704,18 @@ operator|.
 name|udps_ipackets
 operator|++
 expr_stmt|;
+comment|/* 	 * Destination port of 0 is illegal, based on RFC768. 	 */
+if|if
+condition|(
+name|uh
+operator|->
+name|uh_dport
+operator|==
+literal|0
+condition|)
+goto|goto
+name|badunlocked
+goto|;
 name|plen
 operator|=
 name|ntohs
@@ -821,6 +881,24 @@ operator|!=
 name|uh
 operator|->
 name|uh_dport
+condition|)
+continue|continue;
+comment|/* 			 * XXX: Do not check source port of incoming datagram 			 * unless inp_connect() has been called to bind the 			 * fport part of the 4-tuple; the source could be 			 * trying to talk to us with an ephemeral port. 			 */
+if|if
+condition|(
+name|in6p
+operator|->
+name|inp_fport
+operator|!=
+literal|0
+operator|&&
+name|in6p
+operator|->
+name|inp_fport
+operator|!=
+name|uh
+operator|->
+name|uh_sport
 condition|)
 continue|continue;
 if|if
@@ -1161,6 +1239,25 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|udp_blackhole
+condition|)
+goto|goto
+name|badunlocked
+goto|;
+if|if
+condition|(
+name|badport_bandlim
+argument_list|(
+name|BANDLIM_ICMP6_UNREACH
+argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|badunlocked
+goto|;
 name|icmp6_error
 argument_list|(
 name|m
@@ -3320,6 +3417,18 @@ name|out
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_mbuf_from_inpcb
+argument_list|(
+name|inp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|error
