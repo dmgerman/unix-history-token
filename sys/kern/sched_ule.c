@@ -526,17 +526,6 @@ name|PRI_MIN_KERN
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|SCHED_BAL_SECS
-value|2
-end_define
-
-begin_comment
-comment|/* How often we run the rebalance algorithm. */
-end_comment
-
 begin_comment
 comment|/*  * tdq - per processor runqs and statistics.  All fields are protected by the  * tdq_lock.  The load and lowpri may be accessed without to avoid excess  * locking in sched_pickcpu();  */
 end_comment
@@ -704,7 +693,16 @@ specifier|static
 name|int
 name|rebalance
 init|=
-literal|0
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|balance_secs
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -713,16 +711,7 @@ specifier|static
 name|int
 name|pick_pri
 init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|pick_zero
-init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -745,15 +734,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|tryselfidle
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|steal_htt
 init|=
 literal|0
@@ -765,7 +745,16 @@ specifier|static
 name|int
 name|steal_idle
 init|=
-literal|0
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|steal_thresh
+init|=
+literal|2
 decl_stmt|;
 end_decl_stmt
 
@@ -2438,7 +2427,7 @@ operator|%
 operator|(
 name|hz
 operator|*
-name|SCHED_BAL_SECS
+name|balance_secs
 operator|)
 argument_list|)
 argument_list|,
@@ -2621,7 +2610,7 @@ operator|%
 operator|(
 name|hz
 operator|*
-name|SCHED_BAL_SECS
+name|balance_secs
 operator|)
 argument_list|)
 argument_list|,
@@ -3402,7 +3391,7 @@ if|if
 condition|(
 name|highload
 operator|<
-literal|2
+name|steal_thresh
 condition|)
 break|break;
 name|steal
@@ -3422,8 +3411,8 @@ condition|(
 name|steal
 operator|->
 name|tdq_transferable
-operator|>
-literal|1
+operator|>=
+name|steal_thresh
 operator|&&
 operator|(
 name|ts
@@ -3942,18 +3931,11 @@ modifier|*
 name|ts
 decl_stmt|;
 name|int
-name|first
-decl_stmt|;
-name|int
 name|word
 decl_stmt|;
 name|int
 name|bit
 decl_stmt|;
-name|first
-operator|=
-literal|0
-expr_stmt|;
 name|rqb
 operator|=
 operator|&
@@ -4045,11 +4027,8 @@ argument|rqh
 argument_list|,
 argument|ts_procq
 argument_list|)
-block|{
 if|if
 condition|(
-name|first
-operator|&&
 name|THREAD_CAN_MIGRATE
 argument_list|(
 name|ts
@@ -4062,11 +4041,6 @@ operator|(
 name|ts
 operator|)
 return|;
-name|first
-operator|=
-literal|1
-expr_stmt|;
-block|}
 block|}
 block|}
 return|return
@@ -4680,6 +4654,31 @@ operator|(
 name|self
 operator|)
 return|;
+comment|/* 	 * Don't migrate a running thread from sched_switch(). 	 */
+if|if
+condition|(
+name|flags
+operator|&
+name|SRQ_OURSELF
+condition|)
+block|{
+name|CTR1
+argument_list|(
+name|KTR_ULE
+argument_list|,
+literal|"YIELDING %d"
+argument_list|,
+name|curthread
+operator|->
+name|td_priority
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|self
+operator|)
+return|;
+block|}
 name|pri
 operator|=
 name|ts
@@ -4788,60 +4787,6 @@ name|ts_cpu
 operator|)
 return|;
 block|}
-comment|/* 	 * Try ourself first; If we're running something lower priority this 	 * may have some locality with the waking thread and execute faster 	 * here. 	 */
-if|if
-condition|(
-name|tryself
-condition|)
-block|{
-comment|/* 		 * If we're being awoken by an interrupt thread or the waker 		 * is going right to sleep run here as well. 		 */
-if|if
-condition|(
-operator|(
-name|TDQ_SELF
-argument_list|()
-operator|->
-name|tdq_load
-operator|<=
-literal|1
-operator|)
-operator|&&
-operator|(
-name|flags
-operator|&
-operator|(
-name|SRQ_YIELDING
-operator|)
-operator|||
-name|curthread
-operator|->
-name|td_pri_class
-operator|==
-name|PRI_ITHD
-operator|)
-condition|)
-block|{
-name|CTR2
-argument_list|(
-name|KTR_ULE
-argument_list|,
-literal|"tryself load %d flags %d"
-argument_list|,
-name|TDQ_SELF
-argument_list|()
-operator|->
-name|tdq_load
-argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|self
-operator|)
-return|;
-block|}
-block|}
 comment|/* 	 * Look for an idle group. 	 */
 name|CTR1
 argument_list|(
@@ -4869,9 +4814,10 @@ operator|--
 name|cpu
 operator|)
 return|;
+comment|/* 	 * If there are no idle cores see if we can run the thread locally.  This may 	 * improve locality among sleepers and wakers when there is shared data. 	 */
 if|if
 condition|(
-name|tryselfidle
+name|tryself
 operator|&&
 name|pri
 operator|<
@@ -4884,7 +4830,7 @@ name|CTR1
 argument_list|(
 name|KTR_ULE
 argument_list|,
-literal|"tryselfidle %d"
+literal|"tryself %d"
 argument_list|,
 name|curthread
 operator|->
@@ -4897,16 +4843,6 @@ name|self
 operator|)
 return|;
 block|}
-comment|/* 	 * XXX Under heavy load mysql performs way better if you 	 * serialize the non-running threads on one cpu.  This is 	 * a horrible hack. 	 */
-if|if
-condition|(
-name|pick_zero
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/*  	 * Now search for the cpu running the lowest priority thread with 	 * the least load. 	 */
 if|if
 condition|(
@@ -10470,27 +10406,6 @@ name|_kern_sched
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|pick_zero
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|pick_zero
-argument_list|,
-literal|0
-argument_list|,
-literal|"If there are no idle cpus pick cpu0"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_kern_sched
-argument_list|,
-name|OID_AUTO
-argument_list|,
 name|affinity
 argument_list|,
 name|CTLFLAG_RW
@@ -10533,16 +10448,16 @@ name|_kern_sched
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|tryselfidle
+name|balance
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|tryselfidle
+name|rebalance
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enables the long-term load balancer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10554,16 +10469,16 @@ name|_kern_sched
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|balance
+name|balance_secs
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|rebalance
+name|balance_secs
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enables the long-term load balancer"
+literal|"Average frequence in seconds to run the long-term balancer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10606,6 +10521,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Attempts to steal work from other cores before idling"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_sched
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|steal_thresh
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|steal_thresh
+argument_list|,
+literal|0
+argument_list|,
+literal|"Minimum load on remote cpu before we'll steal"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
