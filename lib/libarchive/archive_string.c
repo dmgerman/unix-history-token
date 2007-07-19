@@ -87,6 +87,8 @@ name|size_t
 name|s
 parameter_list|)
 block|{
+if|if
+condition|(
 name|__archive_string_ensure
 argument_list|(
 name|as
@@ -98,6 +100,15 @@ operator|+
 name|s
 operator|+
 literal|1
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|__archive_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -157,6 +168,8 @@ modifier|*
 name|src
 parameter_list|)
 block|{
+if|if
+condition|(
 name|__archive_string_ensure
 argument_list|(
 name|dest
@@ -166,6 +179,15 @@ operator|->
 name|length
 operator|+
 literal|1
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|__archive_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -244,6 +266,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Returns NULL on any allocation failure. */
+end_comment
 
 begin_function
 name|struct
@@ -326,7 +352,6 @@ operator|->
 name|buffer_length
 argument_list|)
 expr_stmt|;
-comment|/* TODO: Return null instead and fix up all of our callers to 	 * handle this correctly. */
 if|if
 condition|(
 name|as
@@ -335,13 +360,11 @@ name|s
 operator|==
 name|NULL
 condition|)
-name|__archive_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Out of memory"
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 return|return
 operator|(
 name|as

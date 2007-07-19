@@ -1549,6 +1549,8 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
+if|if
+condition|(
 name|archive_string_ensure
 argument_list|(
 operator|&
@@ -1559,6 +1561,15 @@ argument_list|,
 name|zip
 operator|->
 name|filename_length
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|__archive_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 name|archive_strncpy
