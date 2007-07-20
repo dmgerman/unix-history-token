@@ -4622,7 +4622,7 @@ operator|=
 name|blkno
 expr_stmt|;
 block|}
-name|clrbuf
+name|vfs_bio_clrbuf
 argument_list|(
 name|bp
 argument_list|)
