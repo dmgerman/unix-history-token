@@ -441,6 +441,10 @@ index|[
 literal|0x40
 index|]
 decl_stmt|;
+name|struct
+name|mtx
+name|tlabel_lock
+decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
