@@ -881,6 +881,11 @@ operator|->
 name|mi_rootvp
 argument_list|)
 expr_stmt|;
+name|vrele
+argument_list|(
+name|coda_ctlvp
+argument_list|)
+expr_stmt|;
 name|active
 operator|=
 name|coda_kill
