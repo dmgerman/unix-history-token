@@ -27,6 +27,12 @@ directive|include
 file|<sys/_rwlock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/lock_profile.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -213,7 +219,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {	\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int contested = 0;                                              \         uint64_t waitstart = 0;                                         \ 						                        \ 	if (!_rw_write_lock((rw), _tid)) {				\ 		lock_profile_obtain_lock_failed(&(rw)->lock_object,	\&contested,&waitstart);				\ 		_rw_wlock_hard((rw), _tid, (file), (line));		\ 	}                                                               \ 	lock_profile_obtain_lock_success(&(rw)->lock_object, contested,	\ 	    waitstart, (file), (line));					\ } while (0)
+value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 						                        \ 	if (!_rw_write_lock((rw), _tid))				\ 		_rw_wlock_hard((rw), _tid, (file), (line));		\ 	else								\ 		lock_profile_obtain_lock_success(&(rw)->lock_object, 0,	\ 		    0, (file), (line));					\ } while (0)
 end_define
 
 begin_comment
