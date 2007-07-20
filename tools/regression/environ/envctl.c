@@ -123,17 +123,19 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:  %s [-DGUcht] [-gu name] [-p name=value] "
+literal|"Usage:  %s [-CDGUchrt] [-gu name] [-p name=value] "
 literal|"[(-S|-s name) value overwrite]\n\n"
 literal|"Options:\n"
+literal|"  -C\t\t\t\tClear environ variable with NULL pointer\n"
 literal|"  -D\t\t\t\tDump environ\n"
 literal|"  -G name\t\t\tgetenv(NULL)\n"
 literal|"  -S value overwrite\t\tsetenv(NULL, value, overwrite)\n"
 literal|"  -U\t\t\t\tunsetenv(NULL)\n"
-literal|"  -c\t\t\t\tClear environ variable\n"
+literal|"  -c\t\t\t\tClear environ variable with calloc()'d memory\n"
 literal|"  -g name\t\t\tgetenv(name)\n"
 literal|"  -h\t\t\t\tHelp\n"
 literal|"  -p name=value\t\t\tputenv(name=value)\n"
+literal|"  -r\t\t\t\treplace environ with { \"FOO=bar\", NULL }\n"
 literal|"  -s name value overwrite\tsetenv(name, value, overwrite)\n"
 literal|"  -t\t\t\t\tOutput is suitable for testing (no newlines)\n"
 literal|"  -u name\t\t\tunsetenv(name)\n"
@@ -163,10 +165,12 @@ parameter_list|)
 block|{
 name|char
 modifier|*
-name|cleanEnv
+name|staticEnv
 index|[]
 init|=
 block|{
+literal|"FOO=bar"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -217,7 +221,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"DGS:Ucg:hp:s:tu:"
+literal|"CDGS:Ucg:hp:rs:tu:"
 argument_list|)
 operator|)
 operator|!=
@@ -231,6 +235,31 @@ name|arg
 condition|)
 block|{
 case|case
+literal|'C'
+case|:
+name|environ
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+name|environ
+operator|=
+name|calloc
+argument_list|(
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|environ
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'D'
 case|:
 name|errno
@@ -239,14 +268,6 @@ literal|0
 expr_stmt|;
 name|dump_environ
 argument_list|()
-expr_stmt|;
-break|break;
-case|case
-literal|'c'
-case|:
-name|environ
-operator|=
-name|cleanEnv
 expr_stmt|;
 break|break;
 case|case
@@ -321,6 +342,14 @@ name|errno
 argument_list|,
 name|eol
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|environ
+operator|=
+name|staticEnv
 expr_stmt|;
 break|break;
 case|case
