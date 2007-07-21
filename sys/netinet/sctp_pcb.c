@@ -9840,8 +9840,26 @@ name|EINVAL
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 if|if
 condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"null proc/thread"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|p
+operator|&&
 name|jailed
 argument_list|(
 name|p
@@ -15156,8 +15174,14 @@ name|override_tag
 parameter_list|,
 name|uint32_t
 name|vrf_id
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|p
 parameter_list|)
 block|{
+comment|/* note the p argument is only valid in unbound sockets */
 name|struct
 name|sctp_tcb
 modifier|*
@@ -15496,12 +15520,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-operator|(
-expr|struct
-name|thread
-operator|*
-operator|)
-name|NULL
+name|p
 argument_list|)
 operator|)
 condition|)
@@ -22196,6 +22215,10 @@ block|}
 else|else
 block|{
 comment|/* 					 * strange, address is in another 					 * assoc? straighten out locks. 					 */
+if|if
+condition|(
+name|stcb_tmp
+condition|)
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|stcb_tmp
@@ -22529,6 +22552,10 @@ block|}
 else|else
 block|{
 comment|/* 					 * strange, address is in another 					 * assoc? straighten out locks. 					 */
+if|if
+condition|(
+name|stcb_tmp
+condition|)
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|stcb_tmp

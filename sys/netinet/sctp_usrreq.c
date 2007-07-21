@@ -6114,6 +6114,13 @@ argument_list|,
 literal|0
 argument_list|,
 name|vrf_id
+argument_list|,
+operator|(
+expr|struct
+name|thread
+operator|*
+operator|)
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -16789,7 +16796,7 @@ name|sctp_getaddresses
 modifier|*
 name|addrs
 decl_stmt|;
-name|int
+name|size_t
 name|sz
 decl_stmt|;
 name|struct
@@ -17002,7 +17009,7 @@ name|sctp_getaddresses
 modifier|*
 name|addrs
 decl_stmt|;
-name|int
+name|size_t
 name|sz
 decl_stmt|;
 name|struct
@@ -17947,6 +17954,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|vrf_id
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if

@@ -8974,17 +8974,6 @@ condition|)
 block|{
 continue|continue;
 block|}
-if|if
-condition|(
-name|laddr
-operator|->
-name|ifa
-operator|==
-name|NULL
-condition|)
-block|{
-continue|continue;
-block|}
 comment|/* is the address restricted ? */
 if|if
 condition|(

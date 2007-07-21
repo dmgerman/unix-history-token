@@ -16337,6 +16337,7 @@ block|}
 else|else
 block|{
 comment|/* 					 * JRS 5/18/07 - If only CMT is on, 					 * use the CMT version of 					 * find_alt_net() 					 */
+comment|/* sa_ignore NO_NULL_CHK */
 name|alt
 operator|=
 name|sctp_find_alternate_net

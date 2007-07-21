@@ -732,9 +732,9 @@ argument_list|,
 argument|next_spoke
 argument_list|)
 block|{
-comment|/* sa_ignore FREED_MEMORY */
 name|is_there_another
 label|:
+comment|/* sa_ignore FREED_MEMORY */
 name|sp
 operator|=
 name|TAILQ_FIRST
@@ -7603,6 +7603,7 @@ operator|+
 name|cookie_len
 expr_stmt|;
 comment|/* 	 * now that we know the INIT/INIT-ACK are in place, create a new TCB 	 * and popluate 	 */
+comment|/* 	 * Here we do a trick, we set in NULL for the proc/thread argument. 	 * We do this since in effect we only use the p argument when the 	 * socket is unbound and we must do an implicit bind. Since we are 	 * getting a cookie, we cannot be unbound. 	 */
 name|stcb
 operator|=
 name|sctp_aloc_assoc
@@ -7626,6 +7627,13 @@ name|initiate_tag
 argument_list|)
 argument_list|,
 name|vrf_id
+argument_list|,
+operator|(
+expr|struct
+name|thread
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -22063,6 +22071,7 @@ expr_stmt|;
 goto|goto
 name|out_now
 goto|;
+comment|/* sa_ignore NOTREACHED */
 break|break;
 case|case
 name|SCTP_STATE_EMPTY
@@ -22088,6 +22097,7 @@ expr_stmt|;
 goto|goto
 name|out_now
 goto|;
+comment|/* sa_ignore NOTREACHED */
 break|break;
 case|case
 name|SCTP_STATE_OPEN
