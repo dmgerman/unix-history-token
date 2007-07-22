@@ -471,7 +471,7 @@ block|,
 block|{
 name|USB_VENDOR_METAGEEK
 block|,
-name|USB_PRODUCT_METAGEEK_WISPY
+name|USB_PRODUCT_METAGEEK_WISPYX
 block|,
 name|ANY
 block|,
