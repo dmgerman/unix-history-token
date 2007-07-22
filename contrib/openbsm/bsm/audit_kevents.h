@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005 Apple Computer, Inc.  * All rights reserved.  *  * @APPLE_BSD_LICENSE_HEADER_START@  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * @APPLE_BSD_LICENSE_HEADER_END@  *  * $P4: //depot/projects/trustedbsd/openbsm/bsm/audit_kevents.h#47 $  */
+comment|/*  * Copyright (c) 2005 Apple Computer, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bsm/audit_kevents.h#52 $  */
 end_comment
 
 begin_ifndef
@@ -43,6 +43,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUE_FORKALL
+value|AUE_FORK
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AUE_OPEN
 value|3
 end_define
@@ -74,6 +85,10 @@ directive|define
 name|AUE_DELETE
 value|AUE_UNLINK
 end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
 
 begin_define
 define|#
@@ -141,6 +156,10 @@ directive|define
 name|AUE_CHECKUSERACCESS
 value|AUE_ACCESS
 end_define
+
+begin_comment
+comment|/* Darwin-specific. */
+end_comment
 
 begin_define
 define|#
@@ -903,6 +922,10 @@ name|AUE_SYSTEMBOOT
 value|113
 end_define
 
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1112,8 +1135,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_AUDISTAT
+name|AUE_AUDITSTAT
 value|150
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_REVOKE
+value|151
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC
+value|152
 end_define
 
 begin_comment
@@ -1136,6 +1177,39 @@ define|#
 directive|define
 name|AUE_EXITPROM
 value|154
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_IFLOAT
+value|155
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PFLOAT
+value|156
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_UPRIV
+value|157
 end_define
 
 begin_comment
@@ -1226,6 +1300,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUE_GETDENTS
+value|193
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUE_LSEEK
 value|194
 end_define
@@ -1262,8 +1343,15 @@ name|AUE_READV
 value|198
 end_define
 
+begin_define
+define|#
+directive|define
+name|AUE_OSTAT
+value|199
+end_define
+
 begin_comment
-comment|/* XXXRW: XXX Solaris old stat()? */
+comment|/* Solaris-specific. */
 end_comment
 
 begin_define
@@ -1310,8 +1398,15 @@ begin_comment
 comment|/* XXXRW: Solaris old nice? */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AUE_OSETPGRP
+value|204
+end_define
+
 begin_comment
-comment|/* XXXRW: Solaris old setpgrp? */
+comment|/* Solaris-specific. */
 end_comment
 
 begin_define
@@ -1321,17 +1416,34 @@ name|AUE_SETGID
 value|205
 end_define
 
-begin_comment
-comment|/* XXXRW: Solaris old setgid? */
-end_comment
+begin_define
+define|#
+directive|define
+name|AUE_READL
+value|206
+end_define
 
 begin_comment
-comment|/* XXXRW: Solaris readl? */
+comment|/* Solaris-specific. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AUE_READVL
+value|207
+end_define
+
 begin_comment
-comment|/* XXXRW: Solaris readvl()? */
+comment|/* Solaris-specific. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_FSTAT
+value|208
+end_define
 
 begin_define
 define|#
@@ -1361,6 +1473,10 @@ name|AUE_PRIOCNTLSYS
 value|212
 end_define
 
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1388,6 +1504,10 @@ directive|define
 name|AUE_PUTMSG
 value|216
 end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
 
 begin_define
 define|#
@@ -1520,12 +1640,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_UTSSYS
+name|AUE_FUSERS
 value|233
 end_define
 
 begin_comment
-comment|/* Solaris-specific. */
+comment|/* Solaris-specific; also UTSSYS? */
 end_comment
 
 begin_define
@@ -1542,12 +1662,20 @@ name|AUE_XSTAT
 value|235
 end_define
 
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AUE_LXSTAT
 value|236
 end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
 
 begin_define
 define|#
@@ -1596,8 +1724,15 @@ name|AUE_FORK1
 value|241
 end_define
 
+begin_define
+define|#
+directive|define
+name|AUE_MODCTL
+value|242
+end_define
+
 begin_comment
-comment|/* XXXRW: Solaris modctl()? */
+comment|/* Solaris-specific. */
 end_comment
 
 begin_define
@@ -1643,12 +1778,20 @@ name|AUE_SOCKACCEPT
 value|247
 end_define
 
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AUE_SOCKCONNECT
 value|248
 end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
 
 begin_define
 define|#
@@ -1657,12 +1800,20 @@ name|AUE_SOCKSEND
 value|249
 end_define
 
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AUE_SOCKRECEIVE
 value|250
 end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
 
 begin_define
 define|#
@@ -1677,6 +1828,17 @@ directive|define
 name|AUE_FACLSET
 value|252
 end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_DOORFS
+value|253
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
 
 begin_define
 define|#
@@ -1802,7 +1964,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_SOCK_CONFIG
+name|AUE_SOCKCONFIG
 value|265
 end_define
 
@@ -1827,6 +1989,147 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUE_UMOUNT2
+value|268
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_FSAT
+value|269
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPENAT_R
+value|270
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_OPENAT_RC
+value|271
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_OPENAT_RT
+value|272
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_OPENAT_RTC
+value|273
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_OPENAT_W
+value|274
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_OPENAT_WC
+value|275
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_OPENAT_WT
+value|276
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_OPENAT_WTC
+value|277
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_OPENAT_RW
+value|278
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_OPENAT_RWC
+value|279
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_OPENAT_RWT
+value|280
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_OPENAT_RWTC
+value|281
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_RENAMEAT
+value|282
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_FSTATAT
+value|283
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_FCHOWNAT
+value|284
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_FUTIMESAT
+value|285
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_UNLINKAT
+value|286
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUE_CLOCK_SETTIME
 value|287
 end_define
@@ -1837,6 +2140,138 @@ directive|define
 name|AUE_NTP_ADJTIME
 value|288
 end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_SETPPRIV
+value|289
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MODDEVPLCY
+value|290
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MODADDPRIV
+value|291
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CRYPTOADM
+value|292
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CONFIGKSSL
+value|293
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_BRANDSYS
+value|294
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PF_POLICY_ADDRULE
+value|295
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PF_POLICY_DELRULE
+value|296
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PF_POLICY_CLONE
+value|297
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PF_POLICY_FLIP
+value|298
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PF_POLICY_FLUSH
+value|299
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PF_POLICY_ALGS
+value|300
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
 
 begin_comment
 comment|/*  * Events added for Apple Darwin that potentially collide with future Solaris  * BSM events.  These are assigned AUE_DARWIN prefixes, and are deprecated in  * new trails.  Systems generating these events should switch to the new  * identifiers that avoid colliding with the Solaris identifier space.  */
@@ -1898,10 +2333,6 @@ name|AUE_DARWIN_REBOOT
 value|308
 end_define
 
-begin_comment
-comment|/* XXX: See AUE_REBOOT. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1930,10 +2361,6 @@ name|AUE_DARWIN_SETPRIORITY
 value|312
 end_define
 
-begin_comment
-comment|/* XXX: See AUE_SETPRIORITY. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1941,20 +2368,12 @@ name|AUE_DARWIN_SETTIMEOFDAY
 value|313
 end_define
 
-begin_comment
-comment|/* XXX: See AUE_SETTIMEOFDAY. */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|AUE_DARWIN_FLOCK
 value|314
 end_define
-
-begin_comment
-comment|/* XXX: See AUE_FLOCK. */
-end_comment
 
 begin_define
 define|#
@@ -1976,10 +2395,6 @@ directive|define
 name|AUE_DARWIN_SOCKETPAIR
 value|317
 end_define
-
-begin_comment
-comment|/* XXXRW: See AUE_SOCKETPAIR. */
-end_comment
 
 begin_define
 define|#
@@ -2013,10 +2428,6 @@ name|AUE_DARWIN_NFSSVC
 value|321
 end_define
 
-begin_comment
-comment|/* XXX: See AUE_NFS_SVC. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -2024,20 +2435,12 @@ name|AUE_DARWIN_GETFH
 value|322
 end_define
 
-begin_comment
-comment|/* XXX: See AUE_NFS_GETFH. */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|AUE_DARWIN_QUOTACTL
 value|323
 end_define
-
-begin_comment
-comment|/* XXX: See AUE_QUOTACTL. */
-end_comment
 
 begin_define
 define|#
@@ -2096,20 +2499,12 @@ name|AUE_DARWIN_TRUNCATE
 value|329
 end_define
 
-begin_comment
-comment|/* XXX: See AUE_TRUNCATE. */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|AUE_DARWIN_FTRUNCATE
 value|330
 end_define
-
-begin_comment
-comment|/* XXX: See AUE_FTRUNCATE. */
-end_comment
 
 begin_define
 define|#
@@ -2389,7 +2784,7 @@ comment|/* Darwin-specific. */
 end_comment
 
 begin_comment
-comment|/*  * Audit event identifiers added as part of OpenBSM, generally corresponding  * to events in FreeBSD, Darwin, and Linux that were not present in Solaris.  * These often duplicate events added to the Solaris set by Darwin, but use  * event identifiers in a higher range in order to avoid colliding with  * future Solaris additions.  */
+comment|/*  * Audit event identifiers added as part of OpenBSM, generally corresponding  * to events in FreeBSD, Darwin, and Linux that were not present in Solaris.  * These often duplicate events added to the Solaris set by Darwin, but use  * event identifiers in a higher range in order to avoid colliding with  * future Solaris additions.  *  * If an event in this section is later added to Solaris, we prefer the  * Solaris event identifier, and add _OPENBSM_ to the OpenBSM-specific  * identifier so that old trails can still be processed, but new trails use  * the Solaris identifier.  */
 end_comment
 
 begin_define
@@ -2444,9 +2839,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_REVOKE
+name|AUE_OPENBSM_REVOKE
 value|43008
 end_define
+
+begin_comment
+comment|/* Solaris event now preferred. */
+end_comment
 
 begin_define
 define|#
@@ -2533,9 +2932,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_FSTAT
+name|AUE_OPENBSM_FSTAT
 value|43018
 end_define
+
+begin_comment
+comment|/* Solaris event now preferred. */
+end_comment
 
 begin_define
 define|#
@@ -3803,6 +4206,116 @@ define|#
 directive|define
 name|AUE_MUNLOCKALL
 value|43142
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CLOSEFROM
+value|43143
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_FEXECVE
+value|43144
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_FACCESSAT
+value|43145
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_FCHMODAT
+value|43146
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_LINKAT
+value|43147
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MKDIRAT
+value|43148
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MKFIFOAT
+value|43149
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MKNODAT
+value|43150
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_READLINKAT
+value|43151
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_SYMLINKAT
+value|43152
 end_define
 
 begin_comment
