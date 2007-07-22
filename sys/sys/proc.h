@@ -564,9 +564,6 @@ modifier|*
 name|td_ucred
 decl_stmt|;
 comment|/* (k) Reference to credentials. */
-ifdef|#
-directive|ifdef
-name|KSE
 name|struct
 name|thread
 modifier|*
@@ -579,8 +576,6 @@ modifier|*
 name|td_upcall
 decl_stmt|;
 comment|/* (k + t) Upcall structure. */
-endif|#
-directive|endif
 name|u_int
 name|td_estcpu
 decl_stmt|;
@@ -1810,12 +1805,6 @@ parameter_list|)
 value|(td)->td_state = TDS_CAN_RUN
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
 begin_comment
 comment|/*  * An upcall is used when returning to userland.  If a thread does not have  * an upcall on return to userland the thread exports its context and exits.  */
 end_comment
@@ -1893,11 +1882,6 @@ begin_comment
 comment|/* Upcall structure is exiting. */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * XXX: Does this belong in resource.h or resourcevar.h instead?  * Resource usage extension.  The times in rusage structs in the kernel are  * never up to date.  The actual times are kept as runtimes and tick counts  * (with control info in the "previous" times), and are converted when  * userland asks for rusage info.  Backwards compatibility prevents putting  * this directly in the user-visible rusage struct.  *  * Locking: (cj) means (j) for p_rux and (c) for p_crux.  */
 end_comment
@@ -1961,9 +1945,6 @@ argument_list|)
 name|p_threads
 expr_stmt|;
 comment|/* (j) all threads. */
-ifdef|#
-directive|ifdef
-name|KSE
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1972,8 +1953,6 @@ argument_list|)
 name|p_upcalls
 expr_stmt|;
 comment|/* (j) All upcalls in the proc. */
-endif|#
-directive|endif
 name|struct
 name|mtx
 name|p_slock
@@ -2252,9 +2231,6 @@ modifier|*
 name|p_itimers
 decl_stmt|;
 comment|/* (c) POSIX interval timers. */
-ifdef|#
-directive|ifdef
-name|KSE
 name|int
 name|p_numupcalls
 decl_stmt|;
@@ -2277,8 +2253,6 @@ name|int
 name|p_upquantum
 decl_stmt|;
 comment|/* (n) Quantum to schedule an upcall. */
-endif|#
-directive|endif
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
