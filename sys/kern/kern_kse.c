@@ -255,19 +255,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|upcall_free
-parameter_list|(
-name|struct
-name|kse_upcall
-modifier|*
-name|ku
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|mtx
@@ -320,26 +307,6 @@ operator|(
 name|ku
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|upcall_free
-parameter_list|(
-name|struct
-name|kse_upcall
-modifier|*
-name|ku
-parameter_list|)
-block|{
-name|uma_zfree
-argument_list|(
-name|upcall_zone
-argument_list|,
-name|ku
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
