@@ -10733,7 +10733,7 @@ name|obj
 operator|=
 name|SLOT
 argument_list|(
-name|dvplabel
+name|vplabel
 argument_list|)
 expr_stmt|;
 if|if
