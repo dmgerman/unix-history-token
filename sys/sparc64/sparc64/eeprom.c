@@ -528,6 +528,8 @@ condition|(
 name|bootverbose
 condition|)
 block|{
+if|if
+condition|(
 name|mk48txx_gettime
 argument_list|(
 name|dev
@@ -535,7 +537,17 @@ argument_list|,
 operator|&
 name|ts
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"invalid time"
+argument_list|)
 expr_stmt|;
+else|else
 name|device_printf
 argument_list|(
 name|dev

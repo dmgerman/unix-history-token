@@ -2445,6 +2445,9 @@ name|year
 operator|+=
 literal|100
 expr_stmt|;
+comment|/* Should we set dow = -1 because some clocks don't set it correctly? */
+if|if
+condition|(
 name|clock_ct_to_ts
 argument_list|(
 operator|&
@@ -2453,7 +2456,15 @@ argument_list|,
 operator|&
 name|ts
 argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Invalid time in clock: check and reset the date!\n"
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|ts
 operator|.
 name|tv_sec

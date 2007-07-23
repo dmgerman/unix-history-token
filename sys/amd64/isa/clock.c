@@ -2573,12 +2573,7 @@ name|wrong_time
 label|:
 name|printf
 argument_list|(
-literal|"Invalid time in real time clock.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Check and reset the date immediately!\n"
+literal|"Invalid time in clock: check and reset the date!\n"
 argument_list|)
 expr_stmt|;
 block|}

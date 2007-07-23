@@ -537,7 +537,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/* Another sanity check. */
+comment|/* XXX Dow sanity check. Dow is not used, so should we check it? */
 if|if
 condition|(
 name|ct

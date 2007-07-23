@@ -444,6 +444,8 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
 name|clock_ct_to_ts
 argument_list|(
 operator|&
@@ -451,6 +453,11 @@ name|ct
 argument_list|,
 operator|&
 name|ts
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"Invalid time in clock: check and reset the date!\n"
 argument_list|)
 expr_stmt|;
 name|ts
