@@ -1216,8 +1216,14 @@ name|tmp
 operator|->
 name|tm_maxfilesize
 operator|=
+operator|(
+name|cnt
+operator|.
+name|v_page_count
+operator|+
 name|get_swpgtotal
 argument_list|()
+operator|)
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
