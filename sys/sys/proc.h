@@ -4481,15 +4481,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|kse_GC
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|kseinit
 parameter_list|(
 name|void

@@ -1886,7 +1886,17 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KSE
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|upcall_remove
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|thread_unlock
 argument_list|(
 name|td
 argument_list|)
