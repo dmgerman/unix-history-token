@@ -81,6 +81,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -893,6 +899,10 @@ parameter_list|,
 name|int
 name|af1
 name|__unused
+parameter_list|,
+name|int
+name|proto
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1313,6 +1323,10 @@ parameter_list|,
 name|int
 name|af
 name|__unused
+parameter_list|,
+name|int
+name|proto
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1571,6 +1585,10 @@ name|name
 parameter_list|,
 name|int
 name|af
+name|__unused
+parameter_list|,
+name|int
+name|proto
 name|__unused
 parameter_list|)
 block|{
@@ -1838,6 +1856,10 @@ parameter_list|,
 name|int
 name|af
 name|__unused
+parameter_list|,
+name|int
+name|proto
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -2068,6 +2090,10 @@ name|name
 parameter_list|,
 name|int
 name|af
+name|__unused
+parameter_list|,
+name|int
+name|proto
 name|__unused
 parameter_list|)
 block|{

@@ -159,6 +159,10 @@ parameter_list|,
 name|int
 name|af1
 name|__unused
+parameter_list|,
+name|int
+name|proto
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -247,6 +251,13 @@ decl_stmt|;
 name|int
 name|fileid
 decl_stmt|;
+comment|/* Can't do this for core dumps. */
+if|if
+condition|(
+operator|!
+name|live
+condition|)
+return|return;
 comment|/* See if module is loaded */
 if|if
 condition|(

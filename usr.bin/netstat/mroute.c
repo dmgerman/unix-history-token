@@ -207,6 +207,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|live
+operator|||
 name|sysctlbyname
 argument_list|(
 literal|"net.inet.ip.mfctable"
@@ -222,6 +225,12 @@ literal|0
 argument_list|)
 operator|<
 literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|live
 condition|)
 block|{
 name|warn
@@ -243,6 +252,7 @@ literal|"No IPv4 multicast routing compiled into this system.\n"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 name|kread
 argument_list|(
@@ -270,6 +280,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|live
+operator|||
 name|sysctlbyname
 argument_list|(
 literal|"net.inet.ip.viftable"
@@ -285,6 +298,12 @@ literal|0
 argument_list|)
 operator|<
 literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|live
 condition|)
 block|{
 name|warn
@@ -306,6 +325,7 @@ literal|"No IPv4 multicast routing compiled into this system.\n"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 name|kread
 argument_list|(
@@ -1183,6 +1203,9 @@ name|mrtstat
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|live
+operator|||
 name|sysctlbyname
 argument_list|(
 literal|"net.inet.ip.mrtstat"
@@ -1199,6 +1222,12 @@ literal|0
 argument_list|)
 operator|<
 literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|live
 condition|)
 block|{
 name|warn
@@ -1220,6 +1249,7 @@ literal|"No IPv4 multicast routing compiled into this system.\n"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 name|kread
 argument_list|(

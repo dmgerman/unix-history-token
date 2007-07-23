@@ -230,6 +230,17 @@ begin_comment
 comment|/* address family */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|live
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if we are examining a live system */
+end_comment
+
 begin_function_decl
 name|int
 name|kread
@@ -237,11 +248,11 @@ parameter_list|(
 name|u_long
 name|addr
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|size_t
 name|size
 parameter_list|)
 function_decl|;
@@ -281,6 +292,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|sotoxsocket
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+name|struct
+name|xsocket
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|protopr
 parameter_list|(
@@ -289,6 +315,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -306,6 +334,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -319,6 +349,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -336,6 +368,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -349,6 +383,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -366,6 +402,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -379,6 +417,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -396,6 +436,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -409,6 +451,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -432,6 +476,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -453,6 +499,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -466,6 +514,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -483,6 +533,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -496,6 +548,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -529,6 +583,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -552,6 +608,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -579,6 +637,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -592,6 +652,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -704,6 +766,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -722,6 +786,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -955,6 +1021,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -968,6 +1036,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -985,6 +1055,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -998,6 +1070,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -1015,6 +1089,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1028,6 +1104,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -1045,6 +1123,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1058,6 +1138,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -1075,6 +1157,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1088,6 +1172,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -1105,6 +1191,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1113,7 +1201,13 @@ begin_function_decl
 name|void
 name|unixpr
 parameter_list|(
-name|void
+name|u_long
+parameter_list|,
+name|u_long
+parameter_list|,
+name|u_long
+parameter_list|,
+name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1127,6 +1221,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -1144,6 +1240,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1159,6 +1257,8 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1172,6 +1272,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -1198,6 +1300,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
