@@ -315,6 +315,9 @@ define|#
 directive|define
 name|NFE_TX_FLOW_CTRL
 value|0x0040
+name|int
+name|nfe_jumbo_disable
+decl_stmt|;
 name|uint32_t
 name|rxtxctl
 decl_stmt|;
