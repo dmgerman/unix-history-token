@@ -3503,6 +3503,9 @@ expr_stmt|;
 name|sc
 operator|->
 name|rl_irq
+index|[
+literal|0
+index|]
 operator|=
 name|bus_alloc_resource_any
 argument_list|(
@@ -3523,6 +3526,9 @@ condition|(
 name|sc
 operator|->
 name|rl_irq
+index|[
+literal|0
+index|]
 operator|==
 name|NULL
 condition|)
@@ -4143,6 +4149,9 @@ argument_list|,
 name|sc
 operator|->
 name|rl_irq
+index|[
+literal|0
+index|]
 argument_list|,
 name|INTR_TYPE_NET
 operator||
@@ -4158,6 +4167,9 @@ operator|&
 name|sc
 operator|->
 name|rl_intrhand
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -4337,6 +4349,9 @@ condition|(
 name|sc
 operator|->
 name|rl_intrhand
+index|[
+literal|0
+index|]
 condition|)
 name|bus_teardown_intr
 argument_list|(
@@ -4345,10 +4360,16 @@ argument_list|,
 name|sc
 operator|->
 name|rl_irq
+index|[
+literal|0
+index|]
 argument_list|,
 name|sc
 operator|->
 name|rl_intrhand
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -4356,6 +4377,9 @@ condition|(
 name|sc
 operator|->
 name|rl_irq
+index|[
+literal|0
+index|]
 condition|)
 name|bus_release_resource
 argument_list|(
@@ -4368,6 +4392,9 @@ argument_list|,
 name|sc
 operator|->
 name|rl_irq
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 if|if
