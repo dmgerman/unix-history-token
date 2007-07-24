@@ -1414,6 +1414,10 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
+name|sctp_ifa
+modifier|*
+parameter_list|,
+name|struct
 name|thread
 modifier|*
 parameter_list|)
@@ -1820,7 +1824,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sctp_add_local_addr_assoc
+name|sctp_add_local_addr_restricted
 parameter_list|(
 name|struct
 name|sctp_tcb
@@ -1829,15 +1833,13 @@ parameter_list|,
 name|struct
 name|sctp_ifa
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|sctp_del_local_addr_assoc
+name|sctp_del_local_addr_restricted
 parameter_list|(
 name|struct
 name|sctp_tcb

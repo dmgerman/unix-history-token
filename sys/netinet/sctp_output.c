@@ -13549,7 +13549,7 @@ return|;
 block|}
 name|plan_d
 label|:
-comment|/* 	 * plan_d: We are in trouble. No preferred address on the emit 	 * interface. And not even a perfered address on all interfaces. Go 	 * out and see if we can find an acceptable address somewhere 	 * amongst all interfaces. 	 */
+comment|/* 	 * plan_d: We are in trouble. No preferred address on the emit 	 * interface. And not even a preferred address on all interfaces. Go 	 * out and see if we can find an acceptable address somewhere 	 * amongst all interfaces. 	 */
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_OUTPUT2
@@ -13681,7 +13681,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Ok we can find NO address to source from that is not on our 	 * negative list and non_asoc_address is NOT ok, or its on our 	 * negative list. We cant source to it :-( 	 */
+comment|/* 	 * Ok we can find NO address to source from that is not on our 	 * restricted list and non_asoc_address is NOT ok, or it is on our 	 * restricted list. We can't source to it :-( 	 */
 return|return
 operator|(
 name|NULL
@@ -13769,7 +13769,7 @@ decl_stmt|;
 name|sa_family_t
 name|fam
 decl_stmt|;
-comment|/* 	 * Rules: - Find the route if needed, cache if I can. - Look at 	 * interface address in route, Is it in the bound list. If so we 	 * have the best source. - If not we must rotate amongst the 	 * addresses. 	 *  	 * Cavets and issues 	 *  	 * Do we need to pay attention to scope. We can have a private address 	 * or a global address we are sourcing or sending to. So if we draw 	 * it out zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 	 * For V4 ------------------------------------------ source     * 	 * dest  *  result -----------------------------------------<a> 	 * Private    *    Global  *	NAT 	 * -----------------------------------------<b>  Private    * 	 * Private *  No problem ----------------------------------------- 	 *<c>  Global     *    Private *  Huh, How will this work? 	 * -----------------------------------------<d>  Global     * 	 * Global  *  No Problem ------------------------------------------ 	 * zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz For V6 	 * ------------------------------------------ source     *      dest  * 	 * result -----------------------------------------<a>  Linklocal  * 	 * Global  *	-----------------------------------------<b> 	 * Linklocal  * Linklocal  *  No problem 	 * -----------------------------------------<c>  Global     * 	 * Linklocal  *  Huh, How will this work? 	 * -----------------------------------------<d>  Global     * 	 * Global  *  No Problem ------------------------------------------ 	 * zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 	 *  	 * And then we add to that what happens if there are multiple addresses 	 * assigned to an interface. Remember the ifa on a ifn is a linked 	 * list of addresses. So one interface can have more than one IP 	 * address. What happens if we have both a private and a global 	 * address? Do we then use context of destination to sort out which 	 * one is best? And what about NAT's sending P->G may get you a NAT 	 * translation, or should you select the G thats on the interface in 	 * preference. 	 *  	 * Decisions: 	 *  	 * - count the number of addresses on the interface. - if its one, no 	 * problem except case<c>. For<a> we will assume a NAT out there. 	 * - if there are more than one, then we need to worry about scope P 	 * or G. We should prefer G -> G and P -> P if possible. Then as a 	 * secondary fall back to mixed types G->P being a last ditch one. - 	 * The above all works for bound all, but bound specific we need to 	 * use the same concept but instead only consider the bound 	 * addresses. If the bound set is NOT assigned to the interface then 	 * we must use rotation amongst the bound addresses.. 	 */
+comment|/* 	 * Rules: - Find the route if needed, cache if I can. - Look at 	 * interface address in route, Is it in the bound list. If so we 	 * have the best source. - If not we must rotate amongst the 	 * addresses. 	 *  	 * Cavets and issues 	 *  	 * Do we need to pay attention to scope. We can have a private address 	 * or a global address we are sourcing or sending to. So if we draw 	 * it out zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 	 * For V4 ------------------------------------------ source     * 	 * dest  *  result -----------------------------------------<a> 	 * Private    *    Global  *	NAT 	 * -----------------------------------------<b>  Private    * 	 * Private *  No problem ----------------------------------------- 	 *<c>  Global     *    Private *  Huh, How will this work? 	 * -----------------------------------------<d>  Global     * 	 * Global  *  No Problem ------------------------------------------ 	 * zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz For V6 	 * ------------------------------------------ source     *      dest  * 	 * result -----------------------------------------<a>  Linklocal  * 	 * Global  *	-----------------------------------------<b> 	 * Linklocal  * Linklocal  *  No problem 	 * -----------------------------------------<c>  Global     * 	 * Linklocal  *  Huh, How will this work? 	 * -----------------------------------------<d>  Global     * 	 * Global  *  No Problem ------------------------------------------ 	 * zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 	 *  	 * And then we add to that what happens if there are multiple addresses 	 * assigned to an interface. Remember the ifa on a ifn is a linked 	 * list of addresses. So one interface can have more than one IP 	 * address. What happens if we have both a private and a global 	 * address? Do we then use context of destination to sort out which 	 * one is best? And what about NAT's sending P->G may get you a NAT 	 * translation, or should you select the G thats on the interface in 	 * preference. 	 *  	 * Decisions: 	 *  	 * - count the number of addresses on the interface. - if it is one, no 	 * problem except case<c>. For<a> we will assume a NAT out there. 	 * - if there are more than one, then we need to worry about scope P 	 * or G. We should prefer G -> G and P -> P if possible. Then as a 	 * secondary fall back to mixed types G->P being a last ditch one. - 	 * The above all works for bound all, but bound specific we need to 	 * use the same concept but instead only consider the bound 	 * addresses. If the bound set is NOT assigned to the interface then 	 * we must use rotation amongst the bound addresses.. 	 */
 if|if
 condition|(
 name|ro
@@ -13962,7 +13962,7 @@ operator|&
 name|SCTP_PCB_FLAGS_BOUNDALL
 condition|)
 block|{
-comment|/* 		 * When bound to all if the address list is set it is a 		 * negative list. Addresses being added by asconf. 		 */
+comment|/* 		 * Bound all case 		 */
 name|answer
 operator|=
 name|sctp_choose_boundall
@@ -13992,7 +13992,7 @@ name|answer
 operator|)
 return|;
 block|}
-comment|/* 	 * Three possiblities here: 	 *  	 * a) stcb is NULL, which means we operate only from the list of 	 * addresses (ifa's) bound to the endpoint and we care not about the 	 * list. b) stcb is NOT-NULL, which means we have an assoc structure 	 * and auto-asconf is on. This means that the list of addresses is a 	 * NOT list. We use the list from the inp, but any listed address in 	 * our list is NOT yet added. However if the non_asoc_addr_ok is set 	 * we CAN use an address NOT available (i.e. being added). Its a 	 * negative list. c) stcb is NOT-NULL, which means we have an assoc 	 * structure and auto-asconf is off. This means that the list of 	 * addresses is the ONLY addresses I can use.. its positive. 	 *  	 * Note we collapse b& c into the same function just like in the v6 	 * address selection. 	 */
+comment|/* 	 * Subset bound case 	 */
 if|if
 condition|(
 name|stcb
@@ -15785,6 +15785,16 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|out_of_asoc_ok
+condition|)
+block|{
+comment|/* do not cache */
+goto|goto
+name|temp_v4_src
+goto|;
+block|}
 comment|/* Cache the source address */
 name|net
 operator|->
@@ -15860,6 +15870,8 @@ name|sctp_ifa
 modifier|*
 name|_lsrc
 decl_stmt|;
+name|temp_v4_src
+label|:
 name|_lsrc
 operator|=
 name|sctp_source_address_selection
@@ -17075,6 +17087,16 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|out_of_asoc_ok
+condition|)
+block|{
+comment|/* do not cache */
+goto|goto
+name|temp_v6_src
+goto|;
+block|}
 comment|/* Cache the source address */
 name|net
 operator|->
@@ -17156,6 +17178,8 @@ name|sctp_ifa
 modifier|*
 name|_lsrc
 decl_stmt|;
+name|temp_v6_src
+label|:
 name|_lsrc
 operator|=
 name|sctp_source_address_selection
@@ -34789,6 +34813,11 @@ name|asconf
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 						 * should sysctl this: don't 						 * bundle data with ASCONF 						 * since it requires AUTH 						 */
+name|no_data_chunks
+operator|=
+literal|1
+expr_stmt|;
 block|}
 name|chk
 operator|->
@@ -34826,10 +34855,7 @@ argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
-name|asconf
-operator|=
-literal|0
-expr_stmt|;
+comment|/* 						 * do NOT clear the asconf 						 * flag as it is used to do 						 * appropriate source 						 * address selection. 						 */
 block|}
 if|if
 condition|(
@@ -35973,10 +35999,7 @@ argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
-name|asconf
-operator|=
-literal|0
-expr_stmt|;
+comment|/* 				 * do NOT clear the asconf flag as it is 				 * used to do appropriate source address 				 * selection. 				 */
 block|}
 if|if
 condition|(
@@ -38456,7 +38479,7 @@ modifier|*
 name|net
 parameter_list|)
 block|{
-comment|/* 	 * formulate and queue an ASCONF to the peer ASCONF parameters 	 * should be queued on the assoc queue 	 */
+comment|/* 	 * formulate and queue an ASCONF to the peer. ASCONF parameters 	 * should be queued on the assoc queue. 	 */
 name|struct
 name|sctp_tmit_chunk
 modifier|*
@@ -38658,7 +38681,7 @@ name|uint32_t
 name|retrans
 parameter_list|)
 block|{
-comment|/* 	 * formulate and queue a asconf-ack back to sender the asconf-ack 	 * must be stored in the tcb 	 */
+comment|/* 	 * formulate and queue a asconf-ack back to sender. the asconf-ack 	 * must be stored in the tcb. 	 */
 name|struct
 name|sctp_tmit_chunk
 modifier|*
@@ -55837,16 +55860,6 @@ name|sctp_stream_queue_pending
 modifier|*
 name|sp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|struct
-name|sctp_stream_queue_pending
-modifier|*
-name|msp
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|sctp_stream_out
 modifier|*
@@ -56025,40 +56038,6 @@ argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|msp
-operator|=
-name|TAILQ_LAST
-argument_list|(
-operator|&
-name|strm
-operator|->
-name|outqueue
-argument_list|,
-name|sctp_streamhead
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|msp
-operator|&&
-operator|(
-name|msp
-operator|->
-name|msg_is_complete
-operator|==
-literal|0
-operator|)
-condition|)
-name|panic
-argument_list|(
-literal|"Huh, new mesg and old not done?"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sp

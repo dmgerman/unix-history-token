@@ -2430,6 +2430,8 @@ name|so
 argument_list|,
 name|addr
 argument_list|,
+name|NULL
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -5205,7 +5207,6 @@ name|sctp_laddr
 modifier|*
 name|laddr
 decl_stmt|;
-comment|/* The list is a NEGATIVE list */
 name|LIST_FOREACH
 argument_list|(
 argument|laddr
@@ -6074,6 +6075,8 @@ operator|=
 name|sctp_inpcb_bind
 argument_list|(
 name|so
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -16129,9 +16132,12 @@ name|asoc
 operator|.
 name|cookie_life
 operator|=
+name|MSEC_TO_TICKS
+argument_list|(
 name|sasoc
 operator|->
 name|sasoc_cookie_life
+argument_list|)
 expr_stmt|;
 block|}
 name|SCTP_TCB_UNLOCK
@@ -17780,6 +17786,8 @@ name|so
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -18244,6 +18252,8 @@ operator|=
 name|sctp_inpcb_bind
 argument_list|(
 name|so
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

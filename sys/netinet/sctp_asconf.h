@@ -153,8 +153,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
-name|sctp_iterator_ep
+name|sctp_asconf_iterator_ep
 parameter_list|(
 name|struct
 name|sctp_inpcb
@@ -172,8 +173,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
-name|sctp_iterator_stcb
+name|sctp_asconf_iterator_stcb
 parameter_list|(
 name|struct
 name|sctp_inpcb
@@ -196,27 +198,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|sctp_iterator_ep_end
-parameter_list|(
-name|struct
-name|sctp_inpcb
-modifier|*
-name|inp
-parameter_list|,
+specifier|extern
 name|void
-modifier|*
-name|ptr
-parameter_list|,
-name|uint32_t
-name|val
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sctp_iterator_end
+name|sctp_asconf_iterator_end
 parameter_list|(
 name|void
 modifier|*

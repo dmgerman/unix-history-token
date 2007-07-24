@@ -5816,7 +5816,7 @@ decl_stmt|,
 modifier|*
 name|chk
 decl_stmt|;
-comment|/* is this the first send, or a retransmission? */
+comment|/* is this a first send, or a retransmission? */
 if|if
 condition|(
 name|stcb
@@ -5839,7 +5839,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Retransmission of the existing ASCONF needed... */
+comment|/* 		 * Retransmission of the existing ASCONF is needed 		 */
 comment|/* find the existing ASCONF */
 name|TAILQ_FOREACH
 argument_list|(
@@ -5907,7 +5907,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 		 * PETER? FIX? How will the following code ever run? If the 		 * max_send_times is hit, threshold managment will blow away 		 * the association? 		 */
 if|if
 condition|(
 name|asconf
@@ -5921,7 +5920,7 @@ operator|.
 name|max_send_times
 condition|)
 block|{
-comment|/* 			 * Something is rotten, peer is not responding to 			 * ASCONFs but maybe is to data etc.  e.g. it is not 			 * properly handling the chunk type upper bits Mark 			 * this peer as ASCONF incapable and cleanup 			 */
+comment|/* 			 * Something is rotten: our peer is not responding 			 * to ASCONFs but apparently is to other chunks. 			 * i.e. it is not properly handling the chunk type 			 * upper bits. Mark this peer as ASCONF incapable 			 * and cleanup. 			 */
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_TIMER1
@@ -5942,7 +5941,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * cleared theshold management now lets backoff the address 		 *& select an alternate 		 */
+comment|/* 		 * cleared threshold management, so now backoff the net and 		 * select an alternate 		 */
 name|sctp_backoff_on_timeout
 argument_list|(
 name|stcb
@@ -5992,7 +5991,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* See if a ECN Echo is also stranded */
+comment|/* See if an ECN Echo is also stranded */
 name|TAILQ_FOREACH
 argument_list|(
 argument|chk
@@ -6084,7 +6083,7 @@ operator|&
 name|SCTP_ADDR_NOT_REACHABLE
 condition|)
 block|{
-comment|/* 			 * If the address went un-reachable, we need to move 			 * to alternates for ALL chk's in queue 			 */
+comment|/* 			 * If the address went un-reachable, we need to move 			 * to the alternate for ALL chunks in queue 			 */
 name|sctp_move_all_chunks_to_alt
 argument_list|(
 name|stcb

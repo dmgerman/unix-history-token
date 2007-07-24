@@ -1587,7 +1587,7 @@ name|struct
 name|sctp_timer
 name|asconf_timer
 decl_stmt|;
-comment|/* Asconf */
+comment|/* asconf */
 name|struct
 name|sctp_timer
 name|strreset_timer
@@ -1597,7 +1597,7 @@ name|struct
 name|sctp_timer
 name|shut_guard_timer
 decl_stmt|;
-comment|/* guard */
+comment|/* shutdown guard */
 name|struct
 name|sctp_timer
 name|autoclose_timer
@@ -1608,15 +1608,22 @@ name|sctp_timer
 name|delayed_event_timer
 decl_stmt|;
 comment|/* timer for delayed events */
-comment|/* list of local addresses when add/del in progress */
+comment|/* list of restricted local addresses */
 name|struct
 name|sctpladdr
 name|sctp_restricted_addrs
+decl_stmt|;
+comment|/* last local address pending deletion (waiting for an address add) */
+name|struct
+name|sctp_ifa
+modifier|*
+name|asconf_addr_del_pending
 decl_stmt|;
 name|struct
 name|sctpnetlisthead
 name|nets
 decl_stmt|;
+comment|/* remote address list */
 comment|/* Free chunk list */
 name|struct
 name|sctpchunk_listhead
@@ -1658,9 +1665,6 @@ name|sctp_iterator
 modifier|*
 name|stcb_starting_point_for_iterator
 decl_stmt|;
-comment|/* ASCONF destination address last sent to */
-comment|/*	struct sctp_nets *asconf_last_sent_to;*/
-comment|/* Peter, greppign for the above shows only on strange set  * I don't think we need it so I have commented it out.  */
 comment|/* ASCONF save the last ASCONF-ACK so we can resend it if necessary */
 name|struct
 name|mbuf
@@ -2179,7 +2183,6 @@ comment|/* 	 * lock flag: 0 is ok to send, 1+ (duals as a retran count) is 	 * a
 name|uint16_t
 name|asconf_sent
 decl_stmt|;
-comment|/* possibly removable REM */
 name|uint16_t
 name|mapping_array_size
 decl_stmt|;
@@ -2260,6 +2263,10 @@ comment|/* is the hb disabled? */
 name|uint8_t
 name|default_tos
 decl_stmt|;
+name|uint8_t
+name|asconf_del_pending
+decl_stmt|;
+comment|/* asconf delete last addr pending */
 comment|/* ECN Nonce stuff */
 name|uint8_t
 name|receiver_nonce_sum

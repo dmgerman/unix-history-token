@@ -11316,7 +11316,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * set ASCONF timer if ASCONFs are pending and allowed (eg. 		 * addresses changed when init/cookie echo in flight) 		 */
+comment|/* 		 * send ASCONF if parameters are pending and ASCONFs are 		 * allowed (eg. addresses changed when init/cookie echo were 		 * in flight) 		 */
 if|if
 condition|(
 operator|(
@@ -11352,6 +11352,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SCTP_TIMER_BASED_ASCONF
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_ASCONF
@@ -11369,6 +11372,21 @@ operator|.
 name|primary_destination
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|sctp_send_asconf
+argument_list|(
+name|stcb
+argument_list|,
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|primary_destination
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 comment|/* Toss the cookie if I can */

@@ -9684,6 +9684,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* sctp_ifap is used to bypass normal local address validation checks */
+end_comment
+
 begin_function
 name|int
 name|sctp_inpcb_bind
@@ -9697,6 +9701,11 @@ name|struct
 name|sockaddr
 modifier|*
 name|addr
+parameter_list|,
+name|struct
+name|sctp_ifa
+modifier|*
+name|sctp_ifap
 parameter_list|,
 name|struct
 name|thread
@@ -10770,6 +10779,19 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 		 * first find the interface with the bound address need to 		 * zero out the port to find the address! yuck! can't do 		 * this earlier since need port for sctp_pcb_findep() 		 */
+if|if
+condition|(
+name|sctp_ifap
+operator|!=
+name|NULL
+condition|)
+name|ifa
+operator|=
+name|sctp_ifap
+expr_stmt|;
+else|else
+block|{
+comment|/* 			 * Note for BSD we hit here always other O/S's will 			 * pass things in via the sctp_ifap argument 			 * (Panda). 			 */
 name|ifa
 operator|=
 name|sctp_find_ifa_by_addr
@@ -10787,6 +10809,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ifa
@@ -15520,6 +15543,13 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
+operator|(
+expr|struct
+name|sctp_ifa
+operator|*
+operator|)
+name|NULL
+argument_list|,
 name|p
 argument_list|)
 operator|)
@@ -20205,12 +20235,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add the addr to the TCB local address list For the BOUNDALL or dynamic  * case, this is a "pending" address list (eg. addresses waiting for an  * ASCONF-ACK response) For the subset binding, static case, this is a  * "valid" address list  */
+comment|/*  * Add the address to the TCB local address restricted list.  * This is a "pending" address list (eg. addresses waiting for an  * ASCONF-ACK response) and cannot be used as a valid source address.  */
 end_comment
 
 begin_function
 name|void
-name|sctp_add_local_addr_assoc
+name|sctp_add_local_addr_restricted
 parameter_list|(
 name|struct
 name|sctp_tcb
@@ -20221,9 +20251,6 @@ name|struct
 name|sctp_ifa
 modifier|*
 name|ifa
-parameter_list|,
-name|int
-name|restricted_list
 parameter_list|)
 block|{
 name|struct
@@ -20485,12 +20512,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove an address from the TCB local address list  */
+comment|/*  * Remove a local address from the TCB local address restricted list  */
 end_comment
 
 begin_function
 name|void
-name|sctp_del_local_addr_assoc
+name|sctp_del_local_addr_restricted
 parameter_list|(
 name|struct
 name|sctp_tcb

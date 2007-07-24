@@ -4103,7 +4103,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * process an ADD/DELETE IP ack from peer.  * addr  corresponding sctp_ifa to the address being added/deleted.  * type: SCTP_ADD_IP_ADDRESS or SCTP_DEL_IP_ADDRESS.  * flag: 1=success, 0=failure.  */
+comment|/*  * process an ADD/DELETE IP ack from peer.  * addr: corresponding sctp_ifa to the address being added/deleted.  * type: SCTP_ADD_IP_ADDRESS or SCTP_DEL_IP_ADDRESS.  * flag: 1=success, 0=failure.  */
 end_comment
 
 begin_function
@@ -4135,8 +4135,8 @@ condition|(
 name|flag
 condition|)
 block|{
-comment|/* success case, so remove from the list */
-name|sctp_del_local_addr_assoc
+comment|/* success case, so remove from the restricted list */
+name|sctp_del_local_addr_restricted
 argument_list|(
 name|stcb
 argument_list|,
@@ -4149,13 +4149,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * add an asconf add/delete IP address parameter to the queue.  * type = SCTP_ADD_IP_ADDRESS, SCTP_DEL_IP_ADDRESS, SCTP_SET_PRIM_ADDR.  * returns 0 if completed, non-zero if not completed.  * NOTE: if adding, but delete already scheduled (and not yet sent out),  * simply remove from queue.  Same for deleting an address already scheduled  * for add.  If a duplicate operation is found, ignore the new one.  */
+comment|/*  * add an asconf add/delete/set primary IP address parameter to the queue.  * type = SCTP_ADD_IP_ADDRESS, SCTP_DEL_IP_ADDRESS, SCTP_SET_PRIM_ADDR.  * returns 0 if queued, -1 if not queued/removed.  * NOTE: if adding, but a delete for the same address is already scheduled  * (and not yet sent out), simply remove it from queue.  Same for deleting  * an address already scheduled for add.  If a duplicate operation is found,  * ignore the new one.  */
 end_comment
 
 begin_function
 specifier|static
-name|uint32_t
-name|sctp_asconf_queue_add
+name|int
+name|sctp_asconf_queue_mgmt
 parameter_list|(
 name|struct
 name|sctp_tcb
@@ -4184,25 +4184,6 @@ name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-comment|/* see if peer supports ASCONF */
-if|if
-condition|(
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|peer_supports_asconf
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
 comment|/* make sure the request isn't already in the queue */
 for|for
 control|(
@@ -4280,19 +4261,21 @@ block|}
 comment|/* is the negative request already in queue, and not sent */
 if|if
 condition|(
+operator|(
 name|aa
 operator|->
 name|sent
 operator|==
 literal|0
+operator|)
 operator|&&
-comment|/* add requested, delete already queued */
-operator|(
 operator|(
 name|type
 operator|==
 name|SCTP_ADD_IP_ADDRESS
+operator|)
 operator|&&
+operator|(
 name|aa
 operator|->
 name|ap
@@ -4304,30 +4287,10 @@ operator|.
 name|param_type
 operator|==
 name|SCTP_DEL_IP_ADDRESS
-operator|)
-operator|||
-comment|/* delete requested, add already queued */
-operator|(
-name|type
-operator|==
-name|SCTP_DEL_IP_ADDRESS
-operator|&&
-name|aa
-operator|->
-name|ap
-operator|.
-name|aph
-operator|.
-name|ph
-operator|.
-name|param_type
-operator|==
-name|SCTP_ADD_IP_ADDRESS
-operator|)
 operator|)
 condition|)
 block|{
-comment|/* delete the existing entry in the queue */
+comment|/* add requested, delete already queued */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -4342,33 +4305,105 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-comment|/* take the entry off the appropriate list */
-name|sctp_asconf_addr_mgmt_ack
+comment|/* remove the ifa from the restricted list */
+name|sctp_del_local_addr_restricted
+argument_list|(
+name|stcb
+argument_list|,
+name|ifa
+argument_list|)
+expr_stmt|;
+comment|/* free the asconf param */
+name|SCTP_FREE
+argument_list|(
+name|aa
+argument_list|,
+name|SCTP_M_ASC_ADDR
+argument_list|)
+expr_stmt|;
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_ASCONF2
+argument_list|,
+literal|"asconf_queue_mgmt: add removes queued entry\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|aa
+operator|->
+name|sent
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|type
+operator|==
+name|SCTP_DEL_IP_ADDRESS
+operator|)
+operator|&&
+operator|(
+name|aa
+operator|->
+name|ap
+operator|.
+name|aph
+operator|.
+name|ph
+operator|.
+name|param_type
+operator|==
+name|SCTP_ADD_IP_ADDRESS
+operator|)
+condition|)
+block|{
+comment|/* delete requested, add already queued */
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|asconf_queue
+argument_list|,
+name|aa
+argument_list|,
+name|next
+argument_list|)
+expr_stmt|;
+comment|/* remove the aa->ifa from the restricted list */
+name|sctp_del_local_addr_restricted
 argument_list|(
 name|stcb
 argument_list|,
 name|aa
 operator|->
 name|ifa
-argument_list|,
-name|type
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
-comment|/* free the entry */
-name|sctp_free_ifa
-argument_list|(
-name|aa
-operator|->
-name|ifa
-argument_list|)
-expr_stmt|;
+comment|/* free the asconf param */
 name|SCTP_FREE
 argument_list|(
 name|aa
 argument_list|,
 name|SCTP_M_ASC_ADDR
+argument_list|)
+expr_stmt|;
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_ASCONF2
+argument_list|,
+literal|"asconf_queue_mgmt: delete removes queued entry\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4410,7 +4445,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_ASCONF1
 argument_list|,
-literal|"asconf_queue_add: failed to get memory!\n"
+literal|"asconf_queue_mgmt: failed to get memory!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4588,7 +4623,9 @@ name|struct
 name|sockaddr_in
 modifier|*
 name|sin
-init|=
+decl_stmt|;
+name|sin
+operator|=
 operator|(
 expr|struct
 name|sockaddr_in
@@ -4600,7 +4637,7 @@ operator|->
 name|address
 operator|.
 name|sa
-decl_stmt|;
+expr_stmt|;
 name|sa
 operator|=
 operator|(
@@ -4737,7 +4774,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_ASCONF2
 argument_list|,
-literal|"asconf_queue_add: appended asconf ADD_IP_ADDRESS: "
+literal|"asconf_queue_mgmt: inserted asconf ADD_IP_ADDRESS: "
 argument_list|)
 expr_stmt|;
 name|SCTPDBG_ADDR
@@ -4784,7 +4821,7 @@ condition|)
 block|{
 name|SCTP_PRINTF
 argument_list|(
-literal|"asconf_queue_add: inserted asconf DEL_IP_ADDRESS: "
+literal|"asconf_queue_mgmt: appended asconf DEL_IP_ADDRESS: "
 argument_list|)
 expr_stmt|;
 name|SCTPDBG_ADDR
@@ -4799,7 +4836,7 @@ else|else
 block|{
 name|SCTP_PRINTF
 argument_list|(
-literal|"asconf_queue_add: inserted asconf SET_PRIM_ADDR: "
+literal|"asconf_queue_mgmt: appended asconf SET_PRIM_ADDR: "
 argument_list|)
 expr_stmt|;
 name|SCTPDBG_ADDR
@@ -4823,12 +4860,302 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * add an asconf operation for the given ifa and type.  * type = SCTP_ADD_IP_ADDRESS, SCTP_DEL_IP_ADDRESS, SCTP_SET_PRIM_ADDR.  * returns 0 if completed, -1 if not completed, 1 if immediate send is  * advisable.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|sctp_asconf_queue_add
+parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|,
+name|struct
+name|sctp_ifa
+modifier|*
+name|ifa
+parameter_list|,
+name|uint16_t
+name|type
+parameter_list|)
+block|{
+name|uint32_t
+name|status
+decl_stmt|;
+name|int
+name|pending_delete_queued
+init|=
+literal|0
+decl_stmt|;
+comment|/* see if peer supports ASCONF */
+if|if
+condition|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|peer_supports_asconf
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+comment|/* 	 * if this is deleting the last address from the assoc, mark it as 	 * pending. 	 */
+if|if
+condition|(
+operator|(
+name|type
+operator|==
+name|SCTP_DEL_IP_ADDRESS
+operator|)
+operator|&&
+operator|!
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|asconf_del_pending
+operator|&&
+operator|(
+name|sctp_local_addr_count
+argument_list|(
+name|stcb
+argument_list|)
+operator|<
+literal|2
+operator|)
+condition|)
+block|{
+comment|/* set the pending delete info only */
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|asconf_del_pending
+operator|=
+literal|1
+expr_stmt|;
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|asconf_addr_del_pending
+operator|=
+name|ifa
+expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
+name|ifa
+operator|->
+name|refcount
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_ASCONF2
+argument_list|,
+literal|"asconf_queue_add: mark delete last address pending\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+comment|/* 	 * if this is an add, and there is a delete also pending (i.e. the 	 * last local address is being changed), queue the pending delete 	 * too. 	 */
+if|if
+condition|(
+operator|(
+name|type
+operator|==
+name|SCTP_ADD_IP_ADDRESS
+operator|)
+operator|&&
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|asconf_del_pending
+condition|)
+block|{
+comment|/* queue in the pending delete */
+if|if
+condition|(
+name|sctp_asconf_queue_mgmt
+argument_list|(
+name|stcb
+argument_list|,
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|asconf_addr_del_pending
+argument_list|,
+name|SCTP_DEL_IP_ADDRESS
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_ASCONF2
+argument_list|,
+literal|"asconf_queue_add: queing pending delete\n"
+argument_list|)
+expr_stmt|;
+name|pending_delete_queued
+operator|=
+literal|1
+expr_stmt|;
+comment|/* clear out the pending delete info */
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|asconf_del_pending
+operator|=
+literal|0
+expr_stmt|;
+name|sctp_free_ifa
+argument_list|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|asconf_addr_del_pending
+argument_list|)
+expr_stmt|;
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|asconf_addr_del_pending
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
+comment|/* queue an asconf parameter */
+name|status
+operator|=
+name|sctp_asconf_queue_mgmt
+argument_list|(
+name|stcb
+argument_list|,
+name|ifa
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pending_delete_queued
+operator|&&
+operator|(
+name|status
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|struct
+name|sctp_nets
+modifier|*
+name|net
+decl_stmt|;
+comment|/* 		 * since we know that the only/last address is now being 		 * changed in this case, reset the cwnd/rto on all nets to 		 * start as a new address and path.  Also clear the error 		 * counts to give the assoc the best chance to complete the 		 * address change. 		 */
+name|TAILQ_FOREACH
+argument_list|(
+argument|net
+argument_list|,
+argument|&stcb->asoc.nets
+argument_list|,
+argument|sctp_next
+argument_list|)
+block|{
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|cc_functions
+operator|.
+name|sctp_set_initial_cc_param
+argument_list|(
+name|stcb
+argument_list|,
+name|net
+argument_list|)
+expr_stmt|;
+name|net
+operator|->
+name|RTO
+operator|=
+literal|0
+expr_stmt|;
+name|net
+operator|->
+name|error_count
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|overall_error_count
+operator|=
+literal|0
+expr_stmt|;
+comment|/* queue in an advisory set primary too */
+operator|(
+name|void
+operator|)
+name|sctp_asconf_queue_mgmt
+argument_list|(
+name|stcb
+argument_list|,
+name|ifa
+argument_list|,
+name|SCTP_SET_PRIM_ADDR
+argument_list|)
+expr_stmt|;
+comment|/* let caller know we should send this out immediately */
+name|status
+operator|=
+literal|1
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|status
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * add an asconf add/delete IP address parameter to the queue by addr.  * type = SCTP_ADD_IP_ADDRESS, SCTP_DEL_IP_ADDRESS, SCTP_SET_PRIM_ADDR.  * returns 0 if completed, non-zero if not completed.  * NOTE: if adding, but delete already scheduled (and not yet sent out),  * simply remove from queue.  Same for deleting an address already scheduled  * for add.  If a duplicate operation is found, ignore the new one.  */
 end_comment
 
 begin_function
 specifier|static
-name|uint32_t
+name|int
 name|sctp_asconf_queue_add_sa
 parameter_list|(
 name|struct
@@ -5008,7 +5335,6 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-comment|/* free the entry */
 name|sctp_free_ifa
 argument_list|(
 name|aa
@@ -5016,6 +5342,7 @@ operator|->
 name|ifa
 argument_list|)
 expr_stmt|;
+comment|/* free the entry */
 name|SCTP_FREE
 argument_list|(
 name|aa
@@ -5066,28 +5393,16 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-comment|/* take the entry off the appropriate list */
-name|sctp_asconf_addr_mgmt_ack
+name|sctp_del_local_addr_restricted
 argument_list|(
 name|stcb
 argument_list|,
 name|aa
 operator|->
 name|ifa
-argument_list|,
-name|type
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* free the entry */
-name|sctp_free_ifa
-argument_list|(
-name|aa
-operator|->
-name|ifa
-argument_list|)
-expr_stmt|;
 name|SCTP_FREE
 argument_list|(
 name|aa
@@ -6604,6 +6919,9 @@ name|asconf_queue
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SCTP_TIMER_BASED_ASCONF
 comment|/* we have more params, so restart our timer */
 name|sctp_timer_start
 argument_list|(
@@ -6618,6 +6936,18 @@ argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* we have more params, so send out more */
+name|sctp_send_asconf
+argument_list|(
+name|stcb
+argument_list|,
+name|net
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -6906,13 +7236,11 @@ return|return;
 block|}
 block|}
 comment|/* put this address on the "pending/do not use yet" list */
-name|sctp_add_local_addr_assoc
+name|sctp_add_local_addr_restricted
 argument_list|(
 name|stcb
 argument_list|,
 name|ifa
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * check address scope if address is out of scope, don't queue 	 * anything... note: this would leave the address on both inp and 	 * asoc lists 	 */
@@ -7172,7 +7500,7 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 			 * if queued ok, and in correct state, set the 			 * ASCONF timer if in non-open state, we will set 			 * this timer when the state does go open and do all 			 * the asconf's 			 */
+comment|/* 			 * if queued ok, and in the open state, send out the 			 * ASCONF.  If in the non-open state, these will be 			 * sent when the state goes open. 			 */
 if|if
 condition|(
 name|status
@@ -7190,6 +7518,9 @@ operator|==
 name|SCTP_STATE_OPEN
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SCTP_TIMER_BASED_ASCONF
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_ASCONF
@@ -7205,6 +7536,21 @@ operator|.
 name|primary_destination
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|sctp_send_asconf
+argument_list|(
+name|stcb
+argument_list|,
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|primary_destination
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 block|}
@@ -7213,7 +7559,7 @@ end_function
 
 begin_function
 name|int
-name|sctp_iterator_ep
+name|sctp_asconf_iterator_ep
 parameter_list|(
 name|struct
 name|sctp_inpcb
@@ -7430,8 +7776,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|sctp_iterator_ep_end
+name|sctp_asconf_iterator_ep_end
 parameter_list|(
 name|struct
 name|sctp_inpcb
@@ -7598,7 +7945,7 @@ end_function
 
 begin_function
 name|void
-name|sctp_iterator_stcb
+name|sctp_asconf_iterator_stcb
 parameter_list|(
 name|struct
 name|sctp_inpcb
@@ -7642,6 +7989,11 @@ name|int
 name|type
 decl_stmt|,
 name|status
+decl_stmt|;
+name|int
+name|num_queued
+init|=
+literal|0
 decl_stmt|;
 name|asc
 operator|=
@@ -7967,7 +8319,6 @@ return|return;
 else|else
 continue|continue;
 block|}
-comment|/* put this address on the "pending/do not use yet" list */
 if|if
 condition|(
 name|type
@@ -7975,13 +8326,12 @@ operator|==
 name|SCTP_ADD_IP_ADDRESS
 condition|)
 block|{
-name|sctp_add_local_addr_assoc
+comment|/* prevent this address from being used as a source */
+name|sctp_add_local_addr_restricted
 argument_list|(
 name|stcb
 argument_list|,
 name|ifa
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -8129,7 +8479,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * must validate the ifa in question is in 				 * the ep 				 */
+comment|/* must validate the ifa is in the ep */
 if|if
 condition|(
 name|sctp_is_addr_in_ep
@@ -8211,11 +8561,7 @@ name|inp
 argument_list|,
 name|SCTP_PCB_FLAGS_DO_ASCONF
 argument_list|)
-condition|)
-block|{
-comment|/* does the peer do asconf? */
-if|if
-condition|(
+operator|&&
 name|stcb
 operator|->
 name|asoc
@@ -8235,13 +8581,9 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 				 * if queued ok, and in correct state, set 				 * the ASCONF timer if in non-open state, we 				 * will set this timer when the state does 				 * go open and do all the asconf's 				 */
+comment|/* 			 * if queued ok, and in the open state, update the 			 * count of queued params.  If in the non-open 			 * state, these get sent when the assoc goes open. 			 */
 if|if
 condition|(
-name|status
-operator|==
-literal|0
-operator|&&
 name|SCTP_GET_STATE
 argument_list|(
 operator|&
@@ -8253,12 +8595,30 @@ operator|==
 name|SCTP_STATE_OPEN
 condition|)
 block|{
-name|sctp_timer_start
+if|if
+condition|(
+name|status
+operator|>=
+literal|0
+condition|)
+block|{
+name|num_queued
+operator|++
+expr_stmt|;
+block|}
+block|}
+block|}
+block|}
+comment|/* 	 * If we have queued params in the open state, send out an ASCONF. 	 */
+if|if
+condition|(
+name|num_queued
+operator|>
+literal|0
+condition|)
+block|{
+name|sctp_send_asconf
 argument_list|(
-name|SCTP_TIMER_TYPE_ASCONF
-argument_list|,
-name|inp
-argument_list|,
 name|stcb
 argument_list|,
 name|stcb
@@ -8270,14 +8630,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
-block|}
-block|}
 end_function
 
 begin_function
 name|void
-name|sctp_iterator_end
+name|sctp_asconf_iterator_end
 parameter_list|(
 name|void
 modifier|*
@@ -8397,11 +8754,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sa is the sockaddr to ask the peer to set primary to returns: 0 =  * completed, -1 = error  */
+comment|/*  * sa is the sockaddr to ask the peer to set primary to.  * returns: 0 = completed, -1 = error  */
 end_comment
 
 begin_function
-name|int32_t
+name|int
 name|sctp_set_primary_ip_address_sa
 parameter_list|(
 name|struct
@@ -8431,6 +8788,22 @@ argument_list|)
 condition|)
 block|{
 comment|/* set primary queuing succeeded */
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
+literal|"set_primary_ip_address_sa: queued on tcb=%p, "
+argument_list|,
+name|stcb
+argument_list|)
+expr_stmt|;
+name|SCTPDBG_ADDR
+argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
+name|sa
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SCTP_GET_STATE
@@ -8444,6 +8817,9 @@ operator|==
 name|SCTP_STATE_OPEN
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SCTP_TIMER_BASED_ASCONF
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_ASCONF
@@ -8461,23 +8837,22 @@ operator|.
 name|primary_destination
 argument_list|)
 expr_stmt|;
-block|}
-name|SCTPDBG
+else|#
+directive|else
+name|sctp_send_asconf
 argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-literal|"set_primary_ip_address_sa: queued on tcb=%p, "
+name|stcb
 argument_list|,
 name|stcb
+operator|->
+name|asoc
+operator|.
+name|primary_destination
 argument_list|)
 expr_stmt|;
-name|SCTPDBG_ADDR
-argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-name|sa
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
+block|}
 block|}
 else|else
 block|{
@@ -8567,37 +8942,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* set primary queuing succeeded */
-if|if
-condition|(
-name|SCTP_GET_STATE
-argument_list|(
-operator|&
-name|stcb
-operator|->
-name|asoc
-argument_list|)
-operator|==
-name|SCTP_STATE_OPEN
-condition|)
-block|{
-name|sctp_timer_start
-argument_list|(
-name|SCTP_TIMER_TYPE_ASCONF
-argument_list|,
-name|stcb
-operator|->
-name|sctp_ep
-argument_list|,
-name|stcb
-argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|primary_destination
-argument_list|)
-expr_stmt|;
-block|}
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_ASCONF1
@@ -8619,6 +8963,55 @@ operator|.
 name|sa
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SCTP_GET_STATE
+argument_list|(
+operator|&
+name|stcb
+operator|->
+name|asoc
+argument_list|)
+operator|==
+name|SCTP_STATE_OPEN
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|SCTP_TIMER_BASED_ASCONF
+name|sctp_timer_start
+argument_list|(
+name|SCTP_TIMER_TYPE_ASCONF
+argument_list|,
+name|stcb
+operator|->
+name|sctp_ep
+argument_list|,
+name|stcb
+argument_list|,
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|primary_destination
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|sctp_send_asconf
+argument_list|(
+name|stcb
+argument_list|,
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|primary_destination
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 block|}
 block|}
 comment|/* for each stcb */
@@ -9089,6 +9482,24 @@ name|asoc
 operator|.
 name|asconf_queue
 argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+comment|/* can't send a new one if there is one in flight already */
+if|if
+condition|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|asconf_sent
+operator|>
+literal|0
 condition|)
 block|{
 return|return
@@ -10424,7 +10835,7 @@ argument_list|,
 name|SCTP_DEL_IP_ADDRESS
 argument_list|)
 expr_stmt|;
-comment|/* 				 * if queued ok, and in correct state, set 				 * the ASCONF timer 				 */
+comment|/* 				 * if queued ok, and in correct state, send 				 * out the ASCONF. 				 */
 if|if
 condition|(
 name|status
@@ -10442,6 +10853,9 @@ operator|==
 name|SCTP_STATE_OPEN
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SCTP_TIMER_BASED_ASCONF
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_ASCONF
@@ -10459,6 +10873,21 @@ operator|.
 name|primary_destination
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|sctp_send_asconf
+argument_list|(
+name|stcb
+argument_list|,
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|primary_destination
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 block|}
@@ -11873,11 +12302,11 @@ name|void
 operator|)
 name|sctp_initiate_iterator
 argument_list|(
-name|sctp_iterator_ep
+name|sctp_asconf_iterator_ep
 argument_list|,
-name|sctp_iterator_stcb
+name|sctp_asconf_iterator_stcb
 argument_list|,
-name|sctp_iterator_ep_end
+name|sctp_asconf_iterator_ep_end
 argument_list|,
 name|SCTP_PCB_ANY_FLAGS
 argument_list|,
@@ -11893,7 +12322,7 @@ name|asc
 argument_list|,
 literal|0
 argument_list|,
-name|sctp_iterator_end
+name|sctp_asconf_iterator_end
 argument_list|,
 name|inp
 argument_list|,
