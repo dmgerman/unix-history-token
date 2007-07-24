@@ -1406,6 +1406,17 @@ block|,
 literal|0
 block|}
 block|,
+comment|/* ShanTou ST268 USB NIC */
+block|{
+block|{
+name|USB_VENDOR_SHANTOU
+block|,
+name|USB_PRODUCT_SHANTOU_ST268
+block|}
+block|,
+literal|0
+block|}
+block|,
 if|#
 directive|if
 literal|0
