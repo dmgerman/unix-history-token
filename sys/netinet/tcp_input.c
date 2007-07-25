@@ -4735,7 +4735,6 @@ operator|->
 name|t_rxtcur
 argument_list|)
 expr_stmt|;
-comment|/* 				 * NB: sowwakeup_locked() does an 				 * implicit unlock. 				 */
 name|sowwakeup
 argument_list|(
 name|so
@@ -5794,6 +5793,7 @@ goto|goto
 name|drop
 goto|;
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|TCPS_FIN_WAIT_1
 case|:
@@ -8008,6 +8008,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* NB: sowwakeup_locked() does an implicit unlock. */
 name|sowwakeup_locked
 argument_list|(
 name|so
@@ -9003,7 +9004,7 @@ name|t_starttime
 operator|=
 name|ticks
 expr_stmt|;
-comment|/*FALLTHROUGH*/
+comment|/* FALLTHROUGH */
 case|case
 name|TCPS_ESTABLISHED
 case|:
