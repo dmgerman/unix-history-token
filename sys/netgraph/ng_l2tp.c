@@ -4697,7 +4697,7 @@ operator|==
 literal|0
 operator|)
 operator|^
-name|callout_pending
+name|callout_active
 argument_list|(
 operator|&
 name|seq
@@ -4708,11 +4708,11 @@ argument_list|,
 operator|(
 literal|"%s: xwin %d full but rack timer %s running"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|i
 operator|,
-name|callout_pending
+name|callout_active
 argument_list|(
 operator|&
 name|seq
@@ -4744,7 +4744,7 @@ comment|/* Start retransmit timer if not already running */
 if|if
 condition|(
 operator|!
-name|callout_pending
+name|callout_active
 argument_list|(
 operator|&
 name|seq
@@ -5146,6 +5146,26 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
+comment|/* And the global one. */
+name|priv
+operator|->
+name|stats
+operator|.
+name|xmitPackets
+operator|++
+expr_stmt|;
+name|priv
+operator|->
+name|stats
+operator|.
+name|xmitOctets
+operator|+=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
 comment|/* Send packet */
 name|NG_FWD_NEW_DATA
 argument_list|(
@@ -5270,7 +5290,7 @@ argument_list|,
 operator|(
 literal|"%s: peer_win is zero"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5851,7 +5871,7 @@ argument_list|,
 operator|(
 literal|"%s: nack=%d> %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|nack
 operator|,
@@ -6072,7 +6092,7 @@ block|}
 comment|/* Stop xmit timer */
 if|if
 condition|(
-name|callout_pending
+name|callout_active
 argument_list|(
 operator|&
 name|seq
@@ -6301,7 +6321,7 @@ comment|/* Start receive ack timer, if not already running */
 if|if
 condition|(
 operator|!
-name|callout_pending
+name|callout_active
 argument_list|(
 operator|&
 name|seq
@@ -6383,23 +6403,36 @@ name|priv
 operator|->
 name|seq
 decl_stmt|;
+comment|/* Make sure callout is still active before doing anything */
+if|if
+condition|(
+name|callout_pending
+argument_list|(
+operator|&
+name|seq
+operator|->
+name|xack_timer
+argument_list|)
+operator|||
+operator|(
+operator|!
+name|callout_active
+argument_list|(
+operator|&
+name|seq
+operator|->
+name|xack_timer
+argument_list|)
+operator|)
+condition|)
+return|return;
 comment|/* Sanity check */
 name|L2TP_SEQ_CHECK
 argument_list|(
 name|seq
 argument_list|)
 expr_stmt|;
-comment|/* If ack is still outstanding, send a ZLB */
-if|if
-condition|(
-name|seq
-operator|->
-name|xack
-operator|!=
-name|seq
-operator|->
-name|nr
-condition|)
+comment|/* Send a ZLB */
 name|ng_l2tp_xmit_ctrl
 argument_list|(
 name|priv
@@ -6411,7 +6444,8 @@ operator|->
 name|ns
 argument_list|)
 expr_stmt|;
-comment|/* Done */
+comment|/* callout_deactivate() is not needed here  	    as ng_uncallout() was called by ng_l2tp_xmit_ctrl() */
+comment|/* Sanity check */
 name|L2TP_SEQ_CHECK
 argument_list|(
 name|seq
@@ -6471,26 +6505,35 @@ decl_stmt|;
 name|u_int
 name|delay
 decl_stmt|;
+comment|/* Make sure callout is still active before doing anything */
+if|if
+condition|(
+name|callout_pending
+argument_list|(
+operator|&
+name|seq
+operator|->
+name|rack_timer
+argument_list|)
+operator|||
+operator|(
+operator|!
+name|callout_active
+argument_list|(
+operator|&
+name|seq
+operator|->
+name|rack_timer
+argument_list|)
+operator|)
+condition|)
+return|return;
 comment|/* Sanity check */
 name|L2TP_SEQ_CHECK
 argument_list|(
 name|seq
 argument_list|)
 expr_stmt|;
-comment|/* Make sure peer's ack is still outstanding before doing anything */
-if|if
-condition|(
-name|seq
-operator|->
-name|rack
-operator|==
-name|seq
-operator|->
-name|ns
-condition|)
-goto|goto
-name|done
-goto|;
 name|priv
 operator|->
 name|stats
@@ -6643,9 +6686,8 @@ operator|->
 name|rack
 argument_list|)
 expr_stmt|;
-name|done
-label|:
-comment|/* Done */
+comment|/* callout_deactivate() is not needed here  	    as ng_callout() is getting called each time */
+comment|/* Sanity check */
 name|L2TP_SEQ_CHECK
 argument_list|(
 name|seq
@@ -6694,6 +6736,37 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* Stop ack timer: we're sending an ack with this packet. 	   Doing this before to keep state predictable after error. */
+if|if
+condition|(
+name|callout_active
+argument_list|(
+operator|&
+name|seq
+operator|->
+name|xack_timer
+argument_list|)
+condition|)
+name|ng_uncallout
+argument_list|(
+operator|&
+name|seq
+operator|->
+name|xack_timer
+argument_list|,
+name|priv
+operator|->
+name|node
+argument_list|)
+expr_stmt|;
+name|seq
+operator|->
+name|xack
+operator|=
+name|seq
+operator|->
+name|nr
+expr_stmt|;
 comment|/* If no mbuf passed, send an empty packet (ZLB) */
 if|if
 condition|(
@@ -6973,37 +7046,6 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-comment|/* Stop ack timer: we're sending an ack with this packet */
-if|if
-condition|(
-name|callout_pending
-argument_list|(
-operator|&
-name|seq
-operator|->
-name|xack_timer
-argument_list|)
-condition|)
-name|ng_uncallout
-argument_list|(
-operator|&
-name|seq
-operator|->
-name|xack_timer
-argument_list|,
-name|priv
-operator|->
-name|node
-argument_list|)
-expr_stmt|;
-name|seq
-operator|->
-name|xack
-operator|=
-name|seq
-operator|->
-name|nr
-expr_stmt|;
 comment|/* Send packet */
 name|NG_SEND_DATA_ONLY
 argument_list|(
@@ -7084,7 +7126,7 @@ name|CHECK
 parameter_list|(
 name|p
 parameter_list|)
-value|KASSERT((p), ("%s: not: %s", __FUNCTION__, #p))
+value|KASSERT((p), ("%s: not: %s", __func__, #p))
 name|CHECK
 argument_list|(
 name|seq
@@ -7196,7 +7238,7 @@ operator|==
 literal|0
 operator|)
 operator|^
-name|callout_pending
+name|callout_active
 argument_list|(
 operator|&
 name|seq
@@ -7213,7 +7255,7 @@ operator|==
 literal|0
 operator|)
 operator|^
-name|callout_pending
+name|callout_active
 argument_list|(
 operator|&
 name|seq
