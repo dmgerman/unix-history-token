@@ -3360,6 +3360,16 @@ operator|->
 name|callout_handle
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Force the report (non-boot) protocol. 	 * 	 * Mice without boot protocol support may choose not to implement 	 * Set_Protocol at all; do not check for error. 	 */
+name|usbd_set_protocol
+argument_list|(
+name|sc
+operator|->
+name|sc_iface
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* Set up interrupt pipe. */
 name|err
 operator|=
