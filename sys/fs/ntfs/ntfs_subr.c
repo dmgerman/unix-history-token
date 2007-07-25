@@ -4444,7 +4444,7 @@ comment|/* Buffer to read directory's blocks  */
 name|u_int32_t
 name|blsize
 decl_stmt|;
-name|u_int32_t
+name|u_int64_t
 name|rdsize
 decl_stmt|;
 comment|/* Length of data to read from current block */
@@ -4641,7 +4641,7 @@ block|}
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntlookupfile: blksz: %d, rdsz: %d\n"
+literal|"ntfs_ntlookupfile: blksz: %d, rdsz: %jd\n"
 operator|,
 name|blsize
 operator|,
@@ -5814,7 +5814,7 @@ expr_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntreaddir: indexalloc: %d, cpbl: %d\n"
+literal|"ntfs_ntreaddir: indexalloc: %jd, cpbl: %d\n"
 operator|,
 name|iavap
 operator|->
@@ -6782,7 +6782,7 @@ operator|)
 return|;
 name|towrite
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|left
 argument_list|,
@@ -6987,7 +6987,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|off_t
 name|off
 decl_stmt|;
 name|int
@@ -7209,7 +7209,7 @@ block|{
 comment|/* 			 * Always read and write single clusters at a time - 			 * we need to avoid requesting differently-sized 			 * blocks at the same disk offsets to avoid 			 * confusing the buffer cache. 			 */
 name|tocopy
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|left
 argument_list|,
@@ -7510,7 +7510,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|off_t
 name|off
 decl_stmt|;
 operator|*
@@ -7713,7 +7713,7 @@ block|{
 comment|/* 					 * Always read single clusters at a 					 * time - we need to avoid reading 					 * differently-sized blocks at the 					 * same disk offsets to avoid 					 * confusing the buffer cache. 					 */
 name|tocopy
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|left
 argument_list|,
@@ -7901,7 +7901,7 @@ else|else
 block|{
 name|tocopy
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|left
 argument_list|,
@@ -8189,7 +8189,7 @@ operator|)
 return|;
 name|toread
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|left
 argument_list|,
@@ -8641,7 +8641,7 @@ condition|)
 break|break;
 name|tocopy
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|left
 argument_list|,
