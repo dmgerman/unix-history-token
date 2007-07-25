@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: client.c,v 1.176.2.13.4.31 2006/07/22 01:09:38 marka Exp $ */
+comment|/* $Id: client.c,v 1.176.2.13.4.31.6.1 2007/06/26 04:14:55 marka Exp $ */
 end_comment
 
 begin_include
@@ -5662,6 +5662,35 @@ name|cleanup
 goto|;
 block|}
 block|}
+comment|/* 	 * Hash the incoming request here as it is after 	 * dns_dispatch_importrecv(). 	 */
+name|dns_dispatch_hash
+argument_list|(
+operator|&
+name|client
+operator|->
+name|now
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|client
+operator|->
+name|now
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dns_dispatch_hash
+argument_list|(
+name|isc_buffer_base
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|,
+name|isc_buffer_usedlength
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * It's a request.  Parse it. 	 */
 name|result
 operator|=
