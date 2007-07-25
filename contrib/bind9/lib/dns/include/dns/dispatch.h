@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: dispatch.h,v 1.48.18.2 2005/04/29 00:16:12 marka Exp $ */
+comment|/* $Id: dispatch.h,v 1.48.18.2.22.1 2007/06/26 02:58:54 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -600,6 +600,24 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Inform the dispatcher of a socket receive.  This is used for sockets  * shared between dispatchers and clients.  If the dispatcher fails to copy  * or send the event, nothing happens.  *  * Requires:  *\li 	disp is valid, and the attribute DNS_DISPATCHATTR_NOLISTEN is set.  * 	event != NULL  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_dispatch_hash
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Feed 'data' to the dispatch query id generator where 'len' is the size  * of 'data'.  */
 end_comment
 
 begin_macro
