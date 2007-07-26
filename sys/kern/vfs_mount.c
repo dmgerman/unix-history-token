@@ -7264,16 +7264,16 @@ operator|&=
 operator|~
 name|VI_MOUNT
 expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
 name|dvp
 operator|->
 name|v_mountedhere
 operator|=
 name|NULL
-expr_stmt|;
-name|VI_UNLOCK
-argument_list|(
-name|dvp
-argument_list|)
 expr_stmt|;
 comment|/* Set up the real rootvnode, and purge the cache */
 name|TAILQ_FIRST
