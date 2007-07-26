@@ -814,6 +814,27 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_MONITOR
+condition|)
+block|{
+name|ifp
+operator|->
+name|if_ipackets
+operator|++
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* 		 * Send packet; if hook is not connected, mbuf will get 		 * freed. 		 */
 name|NG_SEND_DATA_ONLY
 argument_list|(
