@@ -2025,7 +2025,7 @@ name|nd
 operator|.
 name|ni_vp
 expr_stmt|;
-name|ASSERT_VOP_LOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
 argument_list|,
