@@ -11879,24 +11879,13 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
-operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
 name|IFF_NEEDSGIANT
-operator|)
-operator|!=
-literal|0
-operator|&&
-name|debug_mpsafenet
-operator|!=
-literal|0
 condition|)
 block|{
 if|if
@@ -11965,18 +11954,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-comment|/* 	 * This code must be entered with Giant, and should never run if 	 * we're not running with debug.mpsafenet. 	 */
-name|KASSERT
-argument_list|(
-name|debug_mpsafenet
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"if_start_deferred: debug.mpsafenet"
-operator|)
-argument_list|)
-expr_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
 name|ifp

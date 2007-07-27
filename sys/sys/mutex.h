@@ -1436,18 +1436,7 @@ value|do {							\ 	int _val = (rval);						\ 	mtx_unlock(&Giant);						\ 	retur
 end_define
 
 begin_comment
-comment|/*  * Network MPSAFE temporary workarounds.  When debug_mpsafenet  * is 1 the network is assumed to operate without Giant on the  * input path and protocols that require Giant must collect it  * on entry.  When 0 Giant is grabbed in the network interface  * ISR's and in the netisr path and there is no need to grab  * the Giant lock.  Note that, unlike PICKUP_GIANT() and  * DROP_GIANT(), these macros directly wrap mutex operations  * without special recursion handling.  *  * This mechanism is intended as temporary until everything of  * importance is properly locked.  Note: the semantics for  * NET_{LOCK,UNLOCK}_GIANT() are not the same as DROP_GIANT()  * and PICKUP_GIANT(), as they are plain mutex operations  * without a recursion counter.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|debug_mpsafenet
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* defined in net/netisr.c */
+comment|/*  * With the advent of fine-grained locking, the Giant lock is no longer  * required around the network stack.  These macros exist for historical  * reasons, allowing conditional acquisition of Giant based on a debugging  * setting, and will be removed.  */
 end_comment
 
 begin_define
@@ -1455,7 +1444,7 @@ define|#
 directive|define
 name|NET_LOCK_GIANT
 parameter_list|()
-value|do {						\ 	if (!debug_mpsafenet)						\ 		mtx_lock(&Giant);					\ } while (0)
+value|do {						\ } while (0)
 end_define
 
 begin_define
@@ -1463,7 +1452,7 @@ define|#
 directive|define
 name|NET_UNLOCK_GIANT
 parameter_list|()
-value|do {						\ 	if (!debug_mpsafenet)						\ 		mtx_unlock(&Giant);					\ } while (0)
+value|do {						\ } while (0)
 end_define
 
 begin_define
@@ -1471,14 +1460,14 @@ define|#
 directive|define
 name|NET_ASSERT_GIANT
 parameter_list|()
-value|do {						\ 	if (!debug_mpsafenet)						\ 		mtx_assert(&Giant, MA_OWNED);				\ } while (0)
+value|do {						\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NET_CALLOUT_MPSAFE
-value|(debug_mpsafenet ? CALLOUT_MPSAFE : 0)
+value|CALLOUT_MPSAFE
 end_define
 
 begin_struct

@@ -980,29 +980,6 @@ define|\
 value|getenv_string((path), (var), (size))
 end_define
 
-begin_function_decl
-name|void
-name|net_warn_not_mpsafe
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|component
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|NET_NEEDS_GIANT
-parameter_list|(
-name|component
-parameter_list|)
-define|\
-value|SYSINIT(__CONCAT(__net_warn_not_mpsafe_, __LINE__),		\ 	    SI_SUB_SETTINGS, SI_ORDER_SECOND, net_warn_not_mpsafe, component);
-end_define
-
 begin_struct
 struct|struct
 name|intr_config_hook

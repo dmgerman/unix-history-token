@@ -14999,32 +14999,6 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|501114
-if|if
-condition|(
-operator|!
-name|debug_mpsafenet
-operator|&&
-name|ce_mpsafenet
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"WORNING! Network stack is not MPSAFE. "
-literal|"Turning off debug.ce.mpsafenet.\n"
-argument_list|)
-expr_stmt|;
-name|ce_mpsafenet
-operator|=
-literal|0
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
 literal|502103
 if|if
 condition|(

@@ -2176,11 +2176,7 @@ name|osc
 operator|->
 name|timer
 argument_list|,
-name|debug_mpsafenet
-condition|?
 name|CALLOUT_MPSAFE
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 name|ath_rate_sysctlattach

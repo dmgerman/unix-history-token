@@ -13600,25 +13600,6 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|debug_mpsafenet
-operator|&&
-name|cp_mpsafenet
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"WORNING! Network stack is not MPSAFE. "
-literal|"Turning off debug.cp.mpsafenet.\n"
-argument_list|)
-expr_stmt|;
-name|cp_mpsafenet
-operator|=
-literal|0
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|cp_mpsafenet
 condition|)
 name|cp_cdevsw
