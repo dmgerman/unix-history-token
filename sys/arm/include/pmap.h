@@ -906,7 +906,7 @@ begin_define
 define|#
 directive|define
 name|L1_S_CACHE_MASK_xscale
-value|(L1_S_B|L1_S_C|L1_S_XSCALE_TEX(TEX_XSCALE_X))
+value|(L1_S_B|L1_S_C|L1_S_XSCALE_TEX(TEX_XSCALE_X)|\     				L1_S_XSCALE_TEX(TEX_XSCALE_T))
 end_define
 
 begin_define
@@ -941,7 +941,7 @@ begin_define
 define|#
 directive|define
 name|L2_L_CACHE_MASK_xscale
-value|(L2_B|L2_C|L2_XSCALE_L_TEX(TEX_XSCALE_X))
+value|(L2_B|L2_C|L2_XSCALE_L_TEX(TEX_XSCALE_X) | \     				L2_XSCALE_L_TEX(TEX_XSCALE_T))
 end_define
 
 begin_define
@@ -997,7 +997,7 @@ begin_define
 define|#
 directive|define
 name|L2_S_CACHE_MASK_xscale
-value|(L2_B|L2_C|L2_XSCALE_T_TEX(TEX_XSCALE_X))
+value|(L2_B|L2_C|L2_XSCALE_T_TEX(TEX_XSCALE_X)| \     				 L2_XSCALE_T_TEX(TEX_XSCALE_X))
 end_define
 
 begin_define
@@ -1339,6 +1339,28 @@ end_define
 begin_elif
 elif|#
 directive|elif
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|PMAP_NEEDS_PTE_SYNC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMAP_INCLUDE_PTE_SYNC
+end_define
+
+begin_elif
+elif|#
+directive|elif
 operator|(
 name|ARM_MMU_SA1
 operator|==
@@ -1473,7 +1495,7 @@ parameter_list|(
 name|pte
 parameter_list|)
 define|\
-value|do {									\ 	if (PMAP_NEEDS_PTE_SYNC)					\ 		cpu_dcache_wb_range((vm_offset_t)(pte), sizeof(pt_entry_t));\ } while (
+value|do {									\ 	if (PMAP_NEEDS_PTE_SYNC) {					\ 		cpu_dcache_wb_range((vm_offset_t)(pte), sizeof(pt_entry_t));\ 		cpu_l2cache_wb_range((vm_offset_t)(pte), sizeof(pt_entry_t));\ 	}\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
@@ -1489,6 +1511,8 @@ name|cnt
 parameter_list|)
 define|\
 value|do {									\ 	if (PMAP_NEEDS_PTE_SYNC) {					\ 		cpu_dcache_wb_range((vm_offset_t)(pte),			\ 		    (cnt)<< 2);
+comment|/* * sizeof(pt_entry_t) */
+value|\ 		cpu_l2cache_wb_range((vm_offset_t)(pte), 		\ 		    (cnt)<< 2);
 comment|/* * sizeof(pt_entry_t) */
 value|\ 	}								\ } while (
 comment|/*CONSTCOND*/
@@ -1866,6 +1890,26 @@ end_endif
 begin_comment
 comment|/* ARM_MMU_XSCALE == 1 */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ARM_HAVE_SUPERSECTIONS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2245,6 +2289,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARM_HAVE_SUPERSECTIONS
+end_ifdef
+
 begin_function_decl
 name|void
 name|pmap_kenter_supersection
@@ -2258,6 +2308,11 @@ name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern

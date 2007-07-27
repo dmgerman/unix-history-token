@@ -1993,13 +1993,42 @@ name|xscale_use_minidata
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Make sure it is L2-cachable */
+name|pte_l1_s_cache_mode
+operator||=
+name|L1_S_XSCALE_TEX
+argument_list|(
+name|TEX_XSCALE_T
+argument_list|)
+expr_stmt|;
 name|pte_l1_s_cache_mode_pt
 operator|=
+name|pte_l1_s_cache_mode
+operator|&
+operator|~
+name|L1_S_XSCALE_P
+expr_stmt|;
+name|pte_l2_l_cache_mode
+operator||=
+name|L2_XSCALE_L_TEX
+argument_list|(
+name|TEX_XSCALE_T
+argument_list|)
+expr_stmt|;
 name|pte_l2_l_cache_mode_pt
 operator|=
+name|pte_l1_s_cache_mode
+expr_stmt|;
+name|pte_l2_s_cache_mode
+operator||=
+name|L2_XSCALE_T_TEX
+argument_list|(
+name|TEX_XSCALE_T
+argument_list|)
+expr_stmt|;
 name|pte_l2_s_cache_mode_pt
 operator|=
-literal|0
+name|pte_l2_s_cache_mode
 expr_stmt|;
 else|#
 directive|else
@@ -9944,6 +9973,12 @@ begin_comment
 comment|/***************************************************  * Low level mapping routines.....  ***************************************************/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARM_HAVE_SUPERSECTIONS
+end_ifdef
+
 begin_comment
 comment|/* Map a super section into the KVA. */
 end_comment
@@ -9972,7 +10007,7 @@ operator||
 operator|(
 name|pa
 operator|&
-name|L1_SUP_OFFSET
+name|L1_SUP_FRAME
 operator|)
 operator||
 operator|(
@@ -9983,7 +10018,7 @@ operator|>>
 literal|32
 operator|)
 operator|&
-literal|0x8
+literal|0xf
 operator|)
 operator|<<
 literal|20
@@ -10009,6 +10044,8 @@ modifier|*
 name|l1
 decl_stmt|;
 name|vm_offset_t
+name|va0
+decl_stmt|,
 name|va_end
 decl_stmt|;
 name|KASSERT
@@ -10026,7 +10063,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"Not a valid section mapping"
+literal|"Not a valid super section mapping"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -10051,11 +10088,11 @@ name|pd
 operator||=
 name|pte_l1_s_cache_mode_pt
 expr_stmt|;
-name|va
+name|va0
 operator|=
 name|va
 operator|&
-name|L1_SUP_OFFSET
+name|L1_SUP_FRAME
 expr_stmt|;
 name|va_end
 operator|=
@@ -10072,6 +10109,10 @@ argument_list|,
 argument|l1_link
 argument_list|)
 block|{
+name|va
+operator|=
+name|va0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -10114,6 +10155,11 @@ block|}
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Map a section into the KVA. */
@@ -13369,6 +13415,28 @@ literal|"huh"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* XXX: what to do about the bits> 32 ? */
+if|if
+condition|(
+name|l1pd
+operator|&
+name|L1_S_SUPERSEC
+condition|)
+name|pa
+operator|=
+operator|(
+name|l1pd
+operator|&
+name|L1_SUP_FRAME
+operator|)
+operator||
+operator|(
+name|va
+operator|&
+name|L1_SUP_OFFSET
+operator|)
+expr_stmt|;
+else|else
 name|pa
 operator|=
 operator|(
@@ -13615,6 +13683,28 @@ literal|"huh"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* XXX: what to do about the bits> 32 ? */
+if|if
+condition|(
+name|l1pd
+operator|&
+name|L1_S_SUPERSEC
+condition|)
+name|pa
+operator|=
+operator|(
+name|l1pd
+operator|&
+name|L1_SUP_FRAME
+operator|)
+operator||
+operator|(
+name|va
+operator|&
+name|L1_SUP_OFFSET
+operator|)
+expr_stmt|;
+else|else
 name|pa
 operator|=
 operator|(
