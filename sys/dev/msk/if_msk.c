@@ -10955,15 +10955,13 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MCLBYTES
-operator|*
-name|MSK_MAXTXSEGS
+name|MSK_TSO_MAXSIZE
 argument_list|,
 comment|/* maxsize */
 name|MSK_MAXTXSEGS
 argument_list|,
 comment|/* nsegments */
-name|MCLBYTES
+name|MSK_TSO_MAXSGSIZE
 argument_list|,
 comment|/* maxsegsize */
 literal|0
