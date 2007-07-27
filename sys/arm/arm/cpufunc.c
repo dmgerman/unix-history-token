@@ -443,6 +443,18 @@ operator|)
 name|arm7tdmi_cache_flushID
 block|,
 comment|/* idcache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_all	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_inv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wb_range	*/
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
@@ -592,6 +604,18 @@ operator|)
 name|arm8_cache_purgeID
 block|,
 comment|/* idcache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_all	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_inv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wb_range	*/
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
@@ -725,6 +749,18 @@ comment|/* idcache_wbinv_all	*/
 name|arm9_idcache_wbinv_range
 block|,
 comment|/* idcache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_all	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_inv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wb_range	*/
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
@@ -853,6 +889,18 @@ comment|/* idcache_wbinv_all	*/
 name|arm10_idcache_wbinv_range
 block|,
 comment|/* idcache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_all	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_inv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wb_range	*/
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
@@ -986,6 +1034,18 @@ comment|/* idcache_wbinv_all	*/
 name|sa1_cache_purgeID_rng
 block|,
 comment|/* idcache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_all	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_inv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wb_range	*/
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
@@ -1127,6 +1187,18 @@ comment|/* idcache_wbinv_all	*/
 name|sa1_cache_purgeID_rng
 block|,
 comment|/* idcache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_all	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_inv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wb_range	*/
 comment|/* Other functions */
 name|sa11x0_drain_readbuf
 block|,
@@ -1256,6 +1328,18 @@ comment|/* idcache_wbinv_all	*/
 name|sa1_cache_purgeID_rng
 block|,
 comment|/* idcache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_all	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_inv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wb_range	*/
 comment|/* Other functions */
 name|ixp12x0_drain_readbuf
 block|,
@@ -1413,6 +1497,18 @@ comment|/* idcache_wbinv_all	*/
 name|xscale_cache_purgeID_rng
 block|,
 comment|/* idcache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_all 	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_inv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wb_range	*/
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
@@ -1520,7 +1616,7 @@ comment|/* Cache operations */
 name|xscalec3_cache_syncI
 block|,
 comment|/* icache_sync_all	*/
-name|xscale_cache_syncI_rng
+name|xscalec3_cache_syncI_rng
 block|,
 comment|/* icache_sync_range	*/
 name|xscalec3_cache_purgeD
@@ -1541,6 +1637,18 @@ comment|/* idcache_wbinv_all	*/
 name|xscalec3_cache_purgeID_rng
 block|,
 comment|/* idcache_wbinv_range	*/
+name|xscalec3_l2cache_purge
+block|,
+comment|/* l2cache_wbinv_all	*/
+name|xscalec3_l2cache_purge_rng
+block|,
+comment|/* l2cache_wbinv_range	*/
+name|xscalec3_l2cache_flush_rng
+block|,
+comment|/* l2cache_inv_range	*/
+name|xscalec3_l2cache_clean_rng
+block|,
+comment|/* l2cache_wb_range	*/
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
@@ -7012,14 +7120,9 @@ modifier|*
 name|args
 decl_stmt|;
 block|{
-ifndef|#
-directive|ifndef
-name|CPU_XSCALE_CORE3
 name|uint32_t
 name|auxctl
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|cpuctrl
 decl_stmt|,
@@ -7075,6 +7178,9 @@ operator||
 name|CPU_CONTROL_CPCLK
 operator||
 name|CPU_CONTROL_VECRELOC
+operator||
+expr|\
+name|CPU_CONTROL_L2_ENABLE
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -7115,6 +7221,15 @@ name|cpuctrl
 operator||=
 name|CPU_CONTROL_VECRELOC
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_CORE3
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_L2_ENABLE
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Clear out the cache */
 name|cpu_idcache_wbinv_all
 argument_list|()
@@ -7132,9 +7247,6 @@ argument_list|,
 name|cpuctrl
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|CPU_XSCALE_CORE3
 comment|/* Make sure write coalescing is turned on */
 asm|__asm __volatile("mrc p15, 0, %0, c1, c0, 1"
 block|:
@@ -7177,6 +7289,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_CORE3
+end_ifdef
+
+begin_expr_stmt
+name|auxctl
+operator||=
+name|XSCALE_AUXCTL_LLR
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|auxctl
+operator||=
+name|XSCALE_AUXCTL_MD_MASK
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_asm
 asm|__asm __volatile("mcr p15, 0, %0, c1, c0, 1"
 end_asm
@@ -7193,11 +7330,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 unit|}
