@@ -127,6 +127,28 @@ directive|include
 file|<arm/xscale/i80321/i80321var.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ICU_INT_TIMER0
+value|(8)
+end_define
+
+begin_comment
+comment|/* XXX: Can't include i81342reg.h because  			       definitions overrides the ones from i80321reg.h 			       */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -185,11 +207,19 @@ name|counts_per_hz
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|XSCALE_DISABLE_CCNT
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -268,9 +298,17 @@ operator|~
 literal|0u
 block|,
 comment|/* counter_mask */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|XSCALE_DISABLE_CCNT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
+argument_list|)
 name|COUNTS_PER_SEC
 block|,
 else|#
@@ -434,7 +472,15 @@ block|{
 name|uint32_t
 name|rv
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+asm|__asm __volatile("mrc p6, 0, %0, c1, c9, 0"
+else|#
+directive|else
 asm|__asm __volatile("mrc p6, 0, %0, c1, c1, 0"
+endif|#
+directive|endif
 block|:
 literal|"=r"
 operator|(
@@ -462,7 +508,15 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+asm|__asm __volatile("mcr p6, 0, %0, c1, c9, 0"
+else|#
+directive|else
 asm|__asm __volatile("mcr p6, 0, %0, c1, c1, 0"
+endif|#
+directive|endif
 block|: 		:
 literal|"r"
 operator|(
@@ -484,7 +538,15 @@ block|{
 name|uint32_t
 name|rv
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+asm|__asm __volatile("mrc p6, 0, %0, c3, c9, 0"
+else|#
+directive|else
 asm|__asm __volatile("mrc p6, 0, %0, c3, c1, 0"
+endif|#
+directive|endif
 block|:
 literal|"=r"
 operator|(
@@ -512,7 +574,15 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+asm|__asm __volatile("mcr p6, 0, %0, c3, c9, 0"
+else|#
+directive|else
 asm|__asm __volatile("mcr p6, 0, %0, c3, c1, 0"
+endif|#
+directive|endif
 block|: 		:
 literal|"r"
 operator|(
@@ -532,7 +602,15 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
-asm|__asm __volatile("mcr p6, 1, %0, c5, c1, 0"
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+asm|__asm __volatile("mcr p6, 0, %0, c5, c9, 0"
+else|#
+directive|else
+asm|__asm __volatile("mcr p6, 0, %0, c5, c1, 0"
+endif|#
+directive|endif
 block|: 		:
 literal|"r"
 operator|(
@@ -554,7 +632,15 @@ block|{
 name|uint32_t
 name|rv
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+asm|__asm __volatile("mrc p6, 0, %0, c0, c9, 0"
+else|#
+directive|else
 asm|__asm __volatile("mrc p6, 0, %0, c0, c1, 0"
+endif|#
+directive|endif
 block|:
 literal|"=r"
 operator|(
@@ -582,7 +668,15 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+asm|__asm __volatile("mcr p6, 0, %0, c0, c9, 0"
+else|#
+directive|else
 asm|__asm __volatile("mcr p6, 0, %0, c0, c1, 0"
+endif|#
+directive|endif
 block|: 		:
 literal|"r"
 operator|(
@@ -604,7 +698,15 @@ block|{
 name|uint32_t
 name|rv
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+asm|__asm __volatile("mrc p6, 0, %0, c2, c9, 0"
+else|#
+directive|else
 asm|__asm __volatile("mrc p6, 0, %0, c2, c1, 0"
+endif|#
+directive|endif
 block|:
 literal|"=r"
 operator|(
@@ -632,7 +734,15 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+asm|__asm __volatile("mcr p6, 0, %0, c2, c9, 0"
+else|#
+directive|else
 asm|__asm __volatile("mcr p6, 0, %0, c2, c1, 0"
+endif|#
+directive|endif
 block|: 		:
 literal|"r"
 operator|(
@@ -652,7 +762,15 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+asm|__asm __volatile("mcr p6, 0, %0, c4, c9, 0"
+else|#
+directive|else
 asm|__asm __volatile("mcr p6, 0, %0, c4, c1, 0"
+endif|#
+directive|endif
 block|: 		:
 literal|"r"
 operator|(
@@ -672,7 +790,15 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+asm|__asm __volatile("mcr p6, 0, %0, c6, c9, 0"
+else|#
+directive|else
 asm|__asm __volatile("mcr p6, 0, %0, c6, c1, 0"
+endif|#
+directive|endif
 block|: 		:
 literal|"r"
 operator|(
@@ -694,7 +820,15 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+asm|__asm __volatile("mrc p6, 0, %0, c6, c9, 0" : "=r" (ret));
+else|#
+directive|else
 asm|__asm __volatile("mrc p6, 0, %0, c6, c1, 0" : "=r" (ret));
+endif|#
+directive|endif
 return|return
 operator|(
 name|ret
@@ -714,9 +848,17 @@ modifier|*
 name|tc
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|XSCALE_DISABLE_CCNT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
+argument_list|)
 name|uint32_t
 name|cur
 init|=
@@ -979,10 +1121,21 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+name|ICU_INT_TIMER0
+argument_list|,
+name|ICU_INT_TIMER0
+argument_list|,
+else|#
+directive|else
 name|ICU_INT_TMR0
 argument_list|,
 name|ICU_INT_TMR0
 argument_list|,
+endif|#
+directive|endif
 literal|1
 argument_list|,
 name|RF_ACTIVE
@@ -1071,9 +1224,19 @@ name|rid
 operator|=
 literal|0
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|XSCALE_DISABLE_CCNT
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
+argument_list|)
 comment|/* Enable the clock count register. */
 asm|__asm __volatile("mrc p14, 0, %0, c0, c0, 0\n" : "=r" (rid));
 name|rid

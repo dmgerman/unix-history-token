@@ -118,7 +118,15 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+asm|__asm __volatile("mcr p6, 0, %0, c7, c9, 0"
+else|#
+directive|else
 asm|__asm __volatile("mcr p6, 0, %0, c7, c1, 0"
+endif|#
+directive|endif
 block|: 		:
 literal|"r"
 operator|(
