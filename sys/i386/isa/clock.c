@@ -2566,7 +2566,14 @@ literal|2000
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Should we set dow = -1 because some clocks don't set it correctly? */
+comment|/* Set dow = -1 because some clocks don't set it correctly. */
+name|ct
+operator|.
+name|dow
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|clock_ct_to_ts
