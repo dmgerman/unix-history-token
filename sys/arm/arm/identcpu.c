@@ -1574,6 +1574,32 @@ argument_list|(
 literal|" IC enabled"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+if|if
+condition|(
+operator|(
+name|ctrl
+operator|&
+name|CPU_CONTROL_L2_ENABLE
+operator|)
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" L2 disabled"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" L2 enabled"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 break|break;
