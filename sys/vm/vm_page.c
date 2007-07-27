@@ -4577,6 +4577,11 @@ name|PQ_CACHE
 argument_list|)
 condition|)
 return|return;
+name|cnt
+operator|.
+name|v_tcached
+operator|++
+expr_stmt|;
 comment|/* 	 * Remove all pmaps and indicate that the page is not 	 * writeable or mapped. 	 */
 name|pmap_remove_all
 argument_list|(

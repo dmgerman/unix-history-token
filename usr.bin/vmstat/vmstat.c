@@ -2113,6 +2113,13 @@ name|GET_VM_STATS
 argument_list|(
 name|vm
 argument_list|,
+name|v_tcached
+argument_list|)
+expr_stmt|;
+name|GET_VM_STATS
+argument_list|(
+name|vm
+argument_list|,
 name|v_dfree
 argument_list|)
 expr_stmt|;
@@ -3915,6 +3922,18 @@ argument_list|,
 name|sum
 operator|.
 name|v_rforkpages
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u pages cached\n"
+argument_list|,
+name|sum
+operator|.
+name|v_tcached
 argument_list|)
 expr_stmt|;
 operator|(

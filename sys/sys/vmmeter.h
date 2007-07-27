@@ -114,6 +114,10 @@ name|v_pdpages
 decl_stmt|;
 comment|/* (q) pages analyzed by daemon */
 name|u_int
+name|v_tcached
+decl_stmt|;
+comment|/* (q) total pages cached */
+name|u_int
 name|v_dfree
 decl_stmt|;
 comment|/* (q) pages freed by daemon */
