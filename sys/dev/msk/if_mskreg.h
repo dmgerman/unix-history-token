@@ -15643,7 +15643,7 @@ begin_define
 define|#
 directive|define
 name|MSK_TSO_MAXSIZE
-value|65535
+value|(65535 + sizeof(struct ether_vlan_header))
 end_define
 
 begin_define
