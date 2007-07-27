@@ -745,7 +745,6 @@ argument_list|,
 name|ATU_OCCAR
 argument_list|,
 name|addr
-comment|/*& ~3*/
 argument_list|)
 expr_stmt|;
 name|va
@@ -846,7 +845,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"i803218_read_config: invalid size %d\n"
+literal|"i80321_read_config: invalid size %d\n"
 argument_list|,
 name|bytes
 argument_list|)
