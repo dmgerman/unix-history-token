@@ -281,6 +281,12 @@ directive|include
 file|<netinet/tcpip.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_syncache.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
