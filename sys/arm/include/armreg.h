@@ -1113,6 +1113,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPU_CONTROL_L2_ENABLE
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* L2 Cache enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPU_CONTROL_IDC_ENABLE
 value|CPU_CONTROL_DC_ENABLE
 end_define
@@ -1141,6 +1152,10 @@ end_define
 
 begin_comment
 comment|/* ECC protect page table access */
+end_comment
+
+begin_comment
+comment|/* Note: XSCale core 3 uses those for LLR DCcahce attributes */
 end_comment
 
 begin_define
@@ -1182,6 +1197,21 @@ directive|define
 name|XSCALE_AUXCTL_MD_MASK
 value|0x00000030
 end_define
+
+begin_comment
+comment|/* Xscale Core 3 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XSCALE_AUXCTL_LLR
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Enable L2 for LLR Cache */
+end_comment
 
 begin_comment
 comment|/* Cache type register definitions */
