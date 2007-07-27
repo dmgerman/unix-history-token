@@ -120,6 +120,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|__startC
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -256,6 +265,52 @@ define|#
 directive|define
 name|cpu_idcache_wbinv_all
 value|xscale_cache_purgeID
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CPU_XSCALE_81342
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|cpu_idcache_wbinv_all
+value|xscalec3_cache_purgeID
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_XSCALE_81342
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|cpu_l2cache_wbinv_all
+value|xscalec3_l2cache_purge
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|cpu_l2cache_wbinv_all
+parameter_list|()
 end_define
 
 begin_endif
@@ -603,7 +658,7 @@ end_function_decl
 
 begin_function
 name|void
-name|_start
+name|_startC
 parameter_list|(
 name|void
 parameter_list|)
@@ -919,6 +974,12 @@ end_endif
 
 begin_expr_stmt
 name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|cpu_l2cache_wbinv_all
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -2735,7 +2796,7 @@ begin_define
 define|#
 directive|define
 name|PMAP_DOMAIN_KERNEL
-value|15
+value|0
 end_define
 
 begin_comment
@@ -3141,6 +3202,8 @@ name|int
 operator|)
 operator|&
 name|func_end
+operator|+
+literal|800
 argument_list|,
 literal|0
 argument_list|)
@@ -3156,6 +3219,9 @@ operator|=
 name|altdst
 expr_stmt|;
 name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
+name|cpu_l2cache_wbinv_all
 argument_list|()
 expr_stmt|;
 asm|__asm __volatile("mrc p15, 0, %0, c1, c0, 0\n"
@@ -3339,6 +3405,8 @@ name|int
 operator|)
 operator|&
 name|load_kernel
+operator|+
+literal|800
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3369,6 +3437,8 @@ argument_list|(
 operator|&
 name|load_kernel
 argument_list|)
+operator|+
+literal|800
 argument_list|,
 name|sp
 argument_list|)
