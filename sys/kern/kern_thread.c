@@ -1130,6 +1130,14 @@ name|td_next
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|KSE
+name|upcall_reap
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
