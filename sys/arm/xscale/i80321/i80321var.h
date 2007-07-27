@@ -37,17 +37,6 @@ directive|include
 file|<sys/rman.h>
 end_include
 
-begin_comment
-comment|/*  * There are roughly 32 interrupt sources.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NIRQ
-value|32
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|struct
