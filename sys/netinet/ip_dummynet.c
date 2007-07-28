@@ -10588,7 +10588,7 @@ argument_list|(
 operator|&
 name|dn_timeout
 argument_list|,
-name|NET_CALLOUT_MPSAFE
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_reset

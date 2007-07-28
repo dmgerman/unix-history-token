@@ -21647,7 +21647,7 @@ argument_list|(
 operator|&
 name|ipfw_timeout
 argument_list|,
-name|NET_CALLOUT_MPSAFE
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|bzero

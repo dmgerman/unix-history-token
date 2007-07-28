@@ -2263,7 +2263,7 @@ name|sc
 operator|->
 name|sc_ad_tmo
 argument_list|,
-name|NET_CALLOUT_MPSAFE
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -2273,7 +2273,7 @@ name|sc
 operator|->
 name|sc_md_tmo
 argument_list|,
-name|NET_CALLOUT_MPSAFE
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -2283,7 +2283,7 @@ name|sc
 operator|->
 name|sc_md6_tmo
 argument_list|,
-name|NET_CALLOUT_MPSAFE
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|ifp

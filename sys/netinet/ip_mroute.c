@@ -2867,7 +2867,7 @@ argument_list|(
 operator|&
 name|expire_upcalls_ch
 argument_list|,
-name|NET_CALLOUT_MPSAFE
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|bw_upcalls_n
@@ -2892,7 +2892,7 @@ argument_list|(
 operator|&
 name|bw_upcalls_ch
 argument_list|,
-name|NET_CALLOUT_MPSAFE
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -2900,7 +2900,7 @@ argument_list|(
 operator|&
 name|bw_meter_ch
 argument_list|,
-name|NET_CALLOUT_MPSAFE
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 block|}

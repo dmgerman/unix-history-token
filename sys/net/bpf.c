@@ -1744,7 +1744,7 @@ name|d
 operator|->
 name|bd_callout
 argument_list|,
-name|NET_CALLOUT_MPSAFE
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|knlist_init

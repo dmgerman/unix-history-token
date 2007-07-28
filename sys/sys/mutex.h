@@ -1463,13 +1463,6 @@ parameter_list|()
 value|do {						\ } while (0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|NET_CALLOUT_MPSAFE
-value|CALLOUT_MPSAFE
-end_define
-
 begin_struct
 struct|struct
 name|mtx_args

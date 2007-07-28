@@ -1592,7 +1592,7 @@ name|pfsyncif
 operator|->
 name|sc_tmo
 argument_list|,
-name|NET_CALLOUT_MPSAFE
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1605,7 +1605,7 @@ name|pfsyncif
 operator|->
 name|sc_tdb_tmo
 argument_list|,
-name|NET_CALLOUT_MPSAFE
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1617,7 +1617,7 @@ name|pfsyncif
 operator|->
 name|sc_bulk_tmo
 argument_list|,
-name|NET_CALLOUT_MPSAFE
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -1627,7 +1627,7 @@ name|pfsyncif
 operator|->
 name|sc_bulkfail_tmo
 argument_list|,
-name|NET_CALLOUT_MPSAFE
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 else|#
