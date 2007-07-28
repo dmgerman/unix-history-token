@@ -4396,7 +4396,7 @@ name|TH_SYN
 operator|)
 operator|)
 operator|==
-name|TH_ACK
+name|TH_SYN
 argument_list|,
 operator|(
 literal|"%s: unexpected tcp flags"
