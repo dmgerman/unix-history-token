@@ -1713,6 +1713,13 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|tcp_log_in_vain
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|tcp_mssdflt
 decl_stmt|;
 end_decl_stmt

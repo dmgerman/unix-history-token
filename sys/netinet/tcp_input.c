@@ -147,6 +147,16 @@ directive|include
 file|<net/route.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|TCPSTATES
+end_define
+
+begin_comment
+comment|/* for logging */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -386,7 +396,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|tcp_log_in_vain
 init|=
@@ -2883,7 +2892,7 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
-literal|"SYN is missing, segment rejected\n"
+literal|"SYN is missing, segment ignored\n"
 argument_list|,
 name|s
 argument_list|,
@@ -2992,7 +3001,7 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
-literal|"SYN|FIN segment rejected (based on "
+literal|"SYN|FIN segment ignored (based on "
 literal|"sysctl setting)\n"
 argument_list|,
 name|s
@@ -3163,7 +3172,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
 literal|"Connection attempt from broad- or multicast "
-literal|"link layer address rejected\n"
+literal|"link layer address ignored\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3230,7 +3239,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
 literal|"Connection attempt to/from self "
-literal|"rejected\n"
+literal|"ignored\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3284,7 +3293,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
 literal|"Connection attempt from/to multicast "
-literal|"address rejected\n"
+literal|"address ignored\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3347,7 +3356,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
 literal|"Connection attempt from/to self "
-literal|"rejected\n"
+literal|"ignored\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3433,7 +3442,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"%s; %s: Listen socket: "
 literal|"Connection attempt from/to broad- "
-literal|"or multicast address rejected\n"
+literal|"or multicast address ignored\n"
 argument_list|,
 name|s
 argument_list|,
@@ -6094,6 +6103,10 @@ operator|&&
 name|tlen
 condition|)
 block|{
+name|char
+modifier|*
+name|s
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|headlocked
@@ -6106,6 +6119,56 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|s
+operator|=
+name|tcp_log_addrs
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_inc
+argument_list|,
+name|th
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s; %s: %s: Received data after socket "
+literal|"was closed, sending RST and removing tcpcb\n"
+argument_list|,
+name|s
+argument_list|,
+name|__func__
+argument_list|,
+name|tcpstates
+index|[
+name|tp
+operator|->
+name|t_state
+index|]
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|s
+argument_list|,
+name|M_TCPLOG
+argument_list|)
+expr_stmt|;
+block|}
 name|tp
 operator|=
 name|tcp_close
