@@ -127,7 +127,7 @@ begin_define
 define|#
 directive|define
 name|MAXARGS
-value|5
+value|6
 end_define
 
 begin_function
