@@ -660,6 +660,10 @@ decl_stmt|;
 name|acpi_user_init
 argument_list|()
 expr_stmt|;
+name|addr
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Attempt to use kenv or sysctl to find RSD PTR record. */
 if|if
 condition|(
