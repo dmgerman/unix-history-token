@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: pf.c,v 1.483 2005/03/15 17:38:43 dhartmei Exp $ */
+comment|/*	$OpenBSD: pf.c,v 1.502.2.1 2006/05/02 22:55:52 brad Exp $ */
 end_comment
 
 begin_comment
@@ -764,6 +764,31 @@ parameter_list|,
 name|u_int8_t
 parameter_list|,
 name|sa_family_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pf_modulate_sack
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|pf_pdesc
+modifier|*
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+parameter_list|,
+name|struct
+name|pf_state_peer
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7537,7 +7562,44 @@ argument|], u); }
 endif|#
 directive|endif
 comment|/* INET6 */
-argument|void pf_change_icmp(struct pf_addr *ia, u_int16_t *ip, struct pf_addr *oa,     struct pf_addr *na, u_int16_t np, u_int16_t *pc, u_int16_t *h2c,     u_int16_t *ic, u_int16_t *hc, u_int8_t u, sa_family_t af) { 	struct pf_addr	oia
+comment|/*  * Need to modulate the sequence numbers in the TCP SACK option  */
+argument|int pf_modulate_sack(struct mbuf *m, int off, struct pf_pdesc *pd,     struct tcphdr *th, struct pf_state_peer *dst) { 	int hlen = (th->th_off<<
+literal|2
+argument|) - sizeof(*th)
+argument_list|,
+argument|thoptlen = hlen; 	u_int8_t opts[MAX_TCPOPTLEN]
+argument_list|,
+argument|*opt = opts; 	int copyback =
+literal|0
+argument_list|,
+argument|i
+argument_list|,
+argument|olen; 	struct sackblk sack;
+define|#
+directive|define
+name|TCPOLEN_SACKLEN
+value|(TCPOLEN_SACK + 2)
+argument|if (hlen< TCPOLEN_SACKLEN || 	    !pf_pull_hdr(m, off + sizeof(*th), opts, hlen, NULL, NULL, pd->af)) 		return
+literal|0
+argument|;  	while (hlen>= TCPOLEN_SACKLEN) { 		olen = opt[
+literal|1
+argument|]; 		switch (*opt) { 		case TCPOPT_EOL:
+comment|/* FALLTHROUGH */
+argument|case TCPOPT_NOP: 			opt++; 			hlen--; 			break; 		case TCPOPT_SACK: 			if (olen> hlen) 				olen = hlen; 			if (olen>= TCPOLEN_SACKLEN) { 				for (i =
+literal|2
+argument|; i + TCPOLEN_SACK<= olen; 				    i += TCPOLEN_SACK) { 					memcpy(&sack,&opt[i], sizeof(sack)); 					pf_change_a(&sack.start,&th->th_sum, 					    htonl(ntohl(sack.start) - 					    dst->seqdiff),
+literal|0
+argument|); 					pf_change_a(&sack.end,&th->th_sum, 					    htonl(ntohl(sack.end) - 					    dst->seqdiff),
+literal|0
+argument|); 					memcpy(&opt[i],&sack, sizeof(sack)); 				} 				copyback =
+literal|1
+argument|; 			}
+comment|/* FALLTHROUGH */
+argument|default: 			if (olen<
+literal|2
+argument|) 				olen =
+literal|2
+argument|; 			hlen -= olen; 			opt += olen; 		} 	}  	if (copyback) 		m_copyback(m, off + sizeof(*th), thoptlen, opts); 	return (copyback); }  void pf_change_icmp(struct pf_addr *ia, u_int16_t *ip, struct pf_addr *oa,     struct pf_addr *na, u_int16_t np, u_int16_t *pc, u_int16_t *h2c,     u_int16_t *ic, u_int16_t *hc, u_int8_t u, sa_family_t af) { 	struct pf_addr	oia
 argument_list|,
 argument|ooa;  	PF_ACPY(&oia, ia, af); 	PF_ACPY(&ooa, oa, af);
 comment|/* Change inner protocol port, fix inner protocol checksum. */
@@ -16278,6 +16340,12 @@ comment|/* 		 * Many stacks (ours included) will set the ACK number in an 		 * F
 argument|ack = dst->seqlo; 	}  	if (seq == end) {
 comment|/* Ease sequencing restrictions on no data packets */
 argument|seq = src->seqlo; 		end = seq; 	}  	ackskew = dst->seqlo - ack;
+comment|/* 	 * Need to demodulate the sequence numbers in any TCP SACK options 	 * (Selective ACK). We could optionally validate the SACK values 	 * against the current ACK window, either forwards or backwards, but 	 * I'm not confident that SACK has been implemented properly 	 * everywhere. It wouldn't surprise me if several stacks accidently 	 * SACK too far backwards of previously ACKed data. There really aren't 	 * any security implications of bad SACKing unless the target stack 	 * doesn't validate the option length correctly. Someone trying to 	 * spoof into a TCP connection won't bother blindly sending SACK 	 * options anyway. 	 */
+argument|if (dst->seqdiff&& (th->th_off<<
+literal|2
+argument|)> sizeof(struct tcphdr)) { 		if (pf_modulate_sack(m, off, pd, th, dst)) 			copyback =
+literal|1
+argument|; 	}
 define|#
 directive|define
 name|MAXACKWINDOW
