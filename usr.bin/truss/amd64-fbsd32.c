@@ -624,7 +624,11 @@ name|iorequest
 operator|.
 name|piod_len
 operator|=
+operator|(
+literal|1
+operator|+
 name|nargs
+operator|)
 operator|*
 expr|sizeof
 operator|(

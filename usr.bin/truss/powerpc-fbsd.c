@@ -355,6 +355,11 @@ name|syscall
 modifier|*
 name|sc
 decl_stmt|;
+comment|/* Account for a 64-bit argument with corresponding alignment. */
+name|nargs
+operator|+=
+literal|2
+expr_stmt|;
 name|cpid
 operator|=
 name|trussinfo
