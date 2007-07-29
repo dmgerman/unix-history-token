@@ -16917,6 +16917,19 @@ condition|)
 goto|goto
 name|out
 goto|;
+comment|/* 	 * Restore the original value of the BAR.  We may have reprogrammed 	 * the BAR of the low-level console device and when booting verbose, 	 * we need the console device addressable. 	 */
+name|pci_write_config
+argument_list|(
+name|child
+argument_list|,
+operator|*
+name|rid
+argument_list|,
+name|map
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|PCI_BAR_MEM
