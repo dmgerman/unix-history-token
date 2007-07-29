@@ -1226,7 +1226,7 @@ name|device_printf
 argument_list|(
 name|self
 argument_list|,
-literal|"iclass %d/%d"
+literal|"iclass %d/%d\n"
 argument_list|,
 name|id
 operator|->
