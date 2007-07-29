@@ -4705,7 +4705,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s; %s: Reveived duplicate SYN, "
+literal|"%s; %s: Received duplicate SYN, "
 literal|"resetting timer and retransmitting SYN|ACK\n"
 argument_list|,
 name|s
