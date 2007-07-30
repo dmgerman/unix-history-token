@@ -1873,6 +1873,14 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
+name|map_vhpt
+argument_list|(
+name|pmap_vhpt_base
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 asm|__asm __volatile("mov cr.pta=%0;; srlz.i;;" ::
 literal|"r"
 operator|(

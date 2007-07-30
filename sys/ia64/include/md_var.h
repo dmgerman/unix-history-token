@@ -427,6 +427,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|map_vhpt
+parameter_list|(
+name|uintptr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|os_boot_rendez
 parameter_list|(
 name|void

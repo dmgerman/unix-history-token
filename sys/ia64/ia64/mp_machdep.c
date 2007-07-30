@@ -332,6 +332,11 @@ operator|)
 name|pcpup
 argument_list|)
 expr_stmt|;
+name|map_vhpt
+argument_list|(
+name|ap_vhpt
+argument_list|)
+expr_stmt|;
 asm|__asm __volatile("mov cr.pta=%0;; srlz.i;;" ::
 literal|"r"
 operator|(

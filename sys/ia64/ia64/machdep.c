@@ -1824,10 +1824,98 @@ end_function
 
 begin_function
 name|void
-name|map_pal_code
+name|map_vhpt
 parameter_list|(
-name|void
+name|uintptr_t
+name|vhpt
 parameter_list|)
+block|{
+name|pt_entry_t
+name|pte
+decl_stmt|;
+name|uint64_t
+name|psr
+decl_stmt|;
+name|pte
+operator|=
+name|PTE_PRESENT
+operator||
+name|PTE_MA_WB
+operator||
+name|PTE_ACCESSED
+operator||
+name|PTE_DIRTY
+operator||
+name|PTE_PL_KERN
+operator||
+name|PTE_AR_RW
+expr_stmt|;
+name|pte
+operator||=
+name|vhpt
+operator|&
+name|PTE_PPN_MASK
+expr_stmt|;
+asm|__asm __volatile("ptr.d %0,%1" :: "r"(vhpt),
+literal|"r"
+operator|(
+name|IA64_ID_PAGE_SHIFT
+operator|<<
+literal|2
+operator|)
+block|)
+function|;
+end_function
+
+begin_asm
+asm|__asm __volatile("mov   %0=psr" : "=r"(psr));
+end_asm
+
+begin_asm
+asm|__asm __volatile("rsm   psr.ic|psr.i");
+end_asm
+
+begin_asm
+asm|__asm __volatile("srlz.i");
+end_asm
+
+begin_asm
+asm|__asm __volatile("mov   cr.ifa=%0" :: "r"(vhpt));
+end_asm
+
+begin_asm
+asm|__asm __volatile("mov   cr.itir=%0" :: "r"(IA64_ID_PAGE_SHIFT<< 2));
+end_asm
+
+begin_asm
+asm|__asm __volatile("itr.d dtr[%0]=%1" :: "r"(2), "r"(pte));
+end_asm
+
+begin_asm
+asm|__asm __volatile("srlz.d");
+end_asm
+
+begin_comment
+comment|/* XXX not needed. */
+end_comment
+
+begin_asm
+asm|__asm __volatile("mov   psr.l=%0" :: "r" (psr));
+end_asm
+
+begin_asm
+asm|__asm __volatile("srlz.i");
+end_asm
+
+begin_macro
+unit|}  void
+name|map_pal_code
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|pt_entry_t
 name|pte
@@ -1878,8 +1966,11 @@ operator|<<
 literal|2
 operator|)
 block|)
-function|;
-end_function
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_asm
 asm|__asm __volatile("mov	%0=psr" : "=r"(psr));
