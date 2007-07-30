@@ -293,14 +293,24 @@ begin_define
 define|#
 directive|define
 name|atomic_load_acq_ptr
-value|atomic_load_acq_64
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|((void *)atomic_load_acq_64((volatile uint64_t *)p))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_store_rel_ptr
-value|atomic_store_rel_64
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_store_rel_64((volatile uint64_t *)p, (uint64_t)v)
 end_define
 
 begin_define
@@ -1016,6 +1026,10 @@ name|atomic_subtract_rel_long
 value|atomic_subtract_rel_64
 end_define
 
+begin_comment
+comment|/* XXX Needs casting. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1285,13 +1299,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|atomic_cmpset_ptr
-value|atomic_cmpset_64
-end_define
-
-begin_define
-define|#
-directive|define
 name|atomic_cmpset_acq_int
 value|atomic_cmpset_acq_32
 end_define
@@ -1321,14 +1328,37 @@ begin_define
 define|#
 directive|define
 name|atomic_cmpset_acq_ptr
-value|atomic_cmpset_acq_64
+parameter_list|(
+name|p
+parameter_list|,
+name|o
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|(atomic_cmpset_acq_64((volatile uint64_t *)p, (uint64_t)o, (uint64_t)n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_ptr
+value|atomic_cmpset_acq_ptr
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_rel_ptr
-value|atomic_cmpset_rel_64
+parameter_list|(
+name|p
+parameter_list|,
+name|o
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|(atomic_cmpset_rel_64((volatile uint64_t *)p, (uint64_t)o, (uint64_t)n))
 end_define
 
 begin_function
