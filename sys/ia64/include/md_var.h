@@ -398,7 +398,7 @@ begin_function_decl
 name|int
 name|interrupt
 parameter_list|(
-name|uint64_t
+name|u_int
 parameter_list|,
 name|struct
 name|trapframe
