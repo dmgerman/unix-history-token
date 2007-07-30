@@ -378,9 +378,11 @@ name|TCPSTATES
 end_ifdef
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|char
+specifier|const
 modifier|*
+specifier|const
 name|tcpstates
 index|[]
 init|=

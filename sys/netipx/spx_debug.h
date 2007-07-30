@@ -175,15 +175,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|tcpstates
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|spx_trace

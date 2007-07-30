@@ -47,6 +47,16 @@ directive|include
 file|<sys/protosw.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|TCPSTATES
+end_define
+
+begin_comment
+comment|/* for logging */
+end_comment
+
 begin_include
 include|#
 directive|include

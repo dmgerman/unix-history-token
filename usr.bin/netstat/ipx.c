@@ -80,6 +80,12 @@ directive|include
 file|<net/route.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|TCPSTATES
+end_define
+
 begin_include
 include|#
 directive|include
@@ -199,15 +205,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|tcpstates
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Print a summary of connections related to a Network Systems  * protocol.  For SPX, also give state of connection.  * Listening processes (aflag) are suppressed unless the  * -a (all) flag is specified.  */

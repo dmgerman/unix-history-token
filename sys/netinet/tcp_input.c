@@ -6142,9 +6142,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|TCPDEBUG
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -6164,22 +6161,6 @@ name|t_state
 index|]
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"%s; %s: Received data after socket "
-literal|"was closed, sending RST and removing tcpcb\n"
-argument_list|,
-name|s
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|free
 argument_list|(
 name|s

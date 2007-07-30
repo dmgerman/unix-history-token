@@ -287,27 +287,6 @@ begin_comment
 comment|/*  * TCP protocol interface to socket abstraction.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCPDEBUG
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|tcpstates
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|int
