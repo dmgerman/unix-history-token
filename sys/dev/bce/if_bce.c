@@ -1560,6 +1560,18 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|bce_fill_rx_chain
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|bce_init_rx_chain
 parameter_list|(
@@ -3335,7 +3347,7 @@ name|bce_flags
 operator||=
 name|BCE_PCI_32BIT_FLAG
 expr_stmt|;
-comment|/* Reset the controller and announce to bootcde that driver is present. */
+comment|/* Reset the controller and announce to bootcode that driver is present. */
 if|if
 condition|(
 name|bce_reset
@@ -13942,7 +13954,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Free the RX lists. */
+comment|/* Free RX buffers. */
 name|bce_free_rx_chain
 argument_list|(
 name|sc
@@ -15252,6 +15264,18 @@ comment|/*                                                                      
 end_comment
 
 begin_comment
+comment|/* Todo: Consider writing the hardware mailboxes here to make rx_bd's       */
+end_comment
+
+begin_comment
+comment|/* available to the hardware as soon as possible.                           */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
 comment|/* Returns:                                                                 */
 end_comment
 
@@ -15297,7 +15321,7 @@ decl_stmt|;
 name|bus_dma_segment_t
 name|segs
 index|[
-literal|4
+name|BCE_MAX_SEGMENTS
 index|]
 decl_stmt|;
 name|struct
@@ -15398,6 +15422,7 @@ operator|*
 name|prod_bseq
 argument_list|)
 expr_stmt|;
+comment|/* Check whether this is a new mbuf allocation. */
 if|if
 condition|(
 name|m
@@ -15405,13 +15430,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* Simulate an mbuf allocation failure. */
 name|DBRUNIF
 argument_list|(
 argument|DB_RANDOMTRUE(bce_debug_mbuf_allocation_failure)
 argument_list|,
-argument|BCE_PRINTF(
-literal|"%s(%d): Simulating mbuf allocation failure.\n"
-argument|,  				__FILE__, __LINE__); 			sc->mbuf_alloc_failed++; 			rc = ENOBUFS; 			goto bce_get_buf_exit
+argument|sc->mbuf_alloc_failed++;  			sc->mbuf_sim_alloc_failed++; 			rc = ENOBUFS; 			goto bce_get_buf_exit
 argument_list|)
 empty_stmt|;
 comment|/* This is a new mbuf allocation. */
@@ -15444,15 +15468,10 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-name|DBRUNIF
-argument_list|(
-literal|1
-argument_list|,
 name|sc
 operator|->
 name|mbuf_alloc_failed
 operator|++
-argument_list|)
 expr_stmt|;
 name|rc
 operator|=
@@ -15472,6 +15491,15 @@ name|rx_mbuf_alloc
 operator|++
 argument_list|)
 expr_stmt|;
+comment|/* Simulate an mbuf cluster allocation failure. */
+name|DBRUNIF
+argument_list|(
+argument|DB_RANDOMTRUE(bce_debug_mbuf_allocation_failure)
+argument_list|,
+argument|m_freem(m_new); 			sc->rx_mbuf_alloc--; 			sc->mbuf_alloc_failed++;  			sc->mbuf_sim_alloc_failed++; 			rc = ENOBUFS; 			goto bce_get_buf_exit
+argument_list|)
+empty_stmt|;
+comment|/* Attach a cluster to the mbuf. */
 name|m_cljget
 argument_list|(
 name|m_new
@@ -15523,15 +15551,10 @@ name|rx_mbuf_alloc
 operator|--
 argument_list|)
 expr_stmt|;
-name|DBRUNIF
-argument_list|(
-literal|1
-argument_list|,
 name|sc
 operator|->
 name|mbuf_alloc_failed
 operator|++
-argument_list|)
 expr_stmt|;
 name|rc
 operator|=
@@ -15541,6 +15564,7 @@ goto|goto
 name|bce_get_buf_exit
 goto|;
 block|}
+comment|/* Initialize the mbuf cluster. */
 name|m_new
 operator|->
 name|m_len
@@ -15558,6 +15582,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Reuse an existing mbuf. */
 name|m_new
 operator|=
 name|m
@@ -15618,6 +15643,7 @@ argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
+comment|/* Handle any mapping errors. */
 if|if
 condition|(
 name|error
@@ -15655,36 +15681,62 @@ goto|goto
 name|bce_get_buf_exit
 goto|;
 block|}
-comment|/* Watch for overflow. */
-name|DBRUNIF
-argument_list|(
-operator|(
-name|sc
-operator|->
-name|free_rx_bd
+comment|/* Make sure there is room in the receive chain. */
+if|if
+condition|(
+name|nsegs
 operator|>
-name|USABLE_RX_BD
-operator|)
-argument_list|,
-name|BCE_PRINTF
-argument_list|(
-literal|"%s(%d): Too many free rx_bd (0x%04X> 0x%04X)!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
 name|sc
 operator|->
 name|free_rx_bd
+condition|)
+block|{
+name|bus_dmamap_unload
+argument_list|(
+name|sc
+operator|->
+name|rx_mbuf_tag
 argument_list|,
-operator|(
-name|u16
-operator|)
-name|USABLE_RX_BD
-argument_list|)
+name|map
 argument_list|)
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|m_new
+argument_list|)
+expr_stmt|;
+name|DBRUNIF
+argument_list|(
+literal|1
+argument_list|,
+name|sc
+operator|->
+name|rx_mbuf_alloc
+operator|--
+argument_list|)
+expr_stmt|;
+name|rc
+operator|=
+name|EFBIG
+expr_stmt|;
+goto|goto
+name|bce_get_buf_exit
+goto|;
+block|}
+ifdef|#
+directive|ifdef
+name|BCE_DEBUG
+comment|/* Track the distribution of buffer segments. */
+name|sc
+operator|->
+name|rx_mbuf_segs
+index|[
+name|nsegs
+index|]
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Update some debug statistic counters */
 name|DBRUNIF
 argument_list|(
@@ -15714,7 +15766,9 @@ name|sc
 operator|->
 name|free_rx_bd
 operator|==
-literal|0
+name|sc
+operator|->
+name|max_rx_bd
 operator|)
 argument_list|,
 name|sc
@@ -16513,6 +16567,12 @@ argument_list|,
 name|BCE_TX_CHAIN_PAGE_SZ
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|used_tx_bd
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Check if we lost any mbufs in the process. */
 name|DBRUNIF
 argument_list|(
@@ -16542,6 +16602,210 @@ argument_list|(
 name|sc
 argument_list|,
 name|BCE_VERBOSE_RESET
+argument_list|,
+literal|"Exiting %s()\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Add mbufs to the RX chain until its full or an mbuf allocation error     */
+end_comment
+
+begin_comment
+comment|/* occurs.                                                                  */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Nothing                                                                */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bce_fill_rx_chain
+parameter_list|(
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|u16
+name|prod
+decl_stmt|,
+name|chain_prod
+decl_stmt|;
+name|u32
+name|prod_bseq
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_DEBUG
+name|int
+name|rx_mbuf_alloc_before
+decl_stmt|,
+name|free_rx_bd_before
+decl_stmt|;
+endif|#
+directive|endif
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_EXCESSIVE_RECV
+argument_list|,
+literal|"Entering %s()\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+name|prod
+operator|=
+name|sc
+operator|->
+name|rx_prod
+expr_stmt|;
+name|prod_bseq
+operator|=
+name|sc
+operator|->
+name|rx_prod_bseq
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_DEBUG
+name|rx_mbuf_alloc_before
+operator|=
+name|sc
+operator|->
+name|rx_mbuf_alloc
+expr_stmt|;
+name|free_rx_bd_before
+operator|=
+name|sc
+operator|->
+name|free_rx_bd
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Keep filling the RX chain until it's full. */
+while|while
+condition|(
+name|sc
+operator|->
+name|free_rx_bd
+operator|>
+literal|0
+condition|)
+block|{
+name|chain_prod
+operator|=
+name|RX_CHAIN_IDX
+argument_list|(
+name|prod
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bce_get_buf
+argument_list|(
+name|sc
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|prod
+argument_list|,
+operator|&
+name|chain_prod
+argument_list|,
+operator|&
+name|prod_bseq
+argument_list|)
+condition|)
+block|{
+comment|/* Bail out if we can't add an mbuf to the chain. */
+break|break;
+block|}
+name|prod
+operator|=
+name|NEXT_RX_BD
+argument_list|(
+name|prod
+argument_list|)
+expr_stmt|;
+block|}
+if|#
+directive|if
+literal|0
+block|DBRUNIF((sc->rx_mbuf_alloc - rx_mbuf_alloc_before), 		BCE_PRINTF("%s(): Installed %d mbufs in %d rx_bd entries.\n", 		__FUNCTION__, (sc->rx_mbuf_alloc - rx_mbuf_alloc_before),  		(free_rx_bd_before - sc->free_rx_bd)));
+endif|#
+directive|endif
+comment|/* Save the RX chain producer index. */
+name|sc
+operator|->
+name|rx_prod
+operator|=
+name|prod
+expr_stmt|;
+name|sc
+operator|->
+name|rx_prod_bseq
+operator|=
+name|prod_bseq
+expr_stmt|;
+comment|/* Tell the chip about the waiting rx_bd's. */
+name|REG_WR16
+argument_list|(
+name|sc
+argument_list|,
+name|MB_RX_CID_ADDR
+operator|+
+name|BCE_L2CTX_HOST_BDIDX
+argument_list|,
+name|sc
+operator|->
+name|rx_prod
+argument_list|)
+expr_stmt|;
+name|REG_WR
+argument_list|(
+name|sc
+argument_list|,
+name|MB_RX_CID_ADDR
+operator|+
+name|BCE_L2CTX_HOST_BSEQ
+argument_list|,
+name|sc
+operator|->
+name|rx_prod_bseq
+argument_list|)
+expr_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_EXCESSIVE_RECV
 argument_list|,
 literal|"Exiting %s()\n"
 argument_list|,
@@ -16598,14 +16862,7 @@ name|rc
 init|=
 literal|0
 decl_stmt|;
-name|u16
-name|prod
-decl_stmt|,
-name|chain_prod
-decl_stmt|;
 name|u32
-name|prod_bseq
-decl_stmt|,
 name|val
 decl_stmt|;
 name|DBPRINT
@@ -16843,83 +17100,11 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-comment|/* Allocate mbuf clusters for the rx_bd chain. */
-name|prod
-operator|=
-name|prod_bseq
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-name|prod
-operator|<
-name|TOTAL_RX_BD
-condition|)
-block|{
-name|chain_prod
-operator|=
-name|RX_CHAIN_IDX
-argument_list|(
-name|prod
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bce_get_buf
+comment|/* Fill up the RX chain. */
+name|bce_fill_rx_chain
 argument_list|(
 name|sc
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|prod
-argument_list|,
-operator|&
-name|chain_prod
-argument_list|,
-operator|&
-name|prod_bseq
 argument_list|)
-condition|)
-block|{
-name|BCE_PRINTF
-argument_list|(
-literal|"%s(%d): Error filling RX chain: rx_bd[0x%04X]!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-name|chain_prod
-argument_list|)
-expr_stmt|;
-name|rc
-operator|=
-name|ENOBUFS
-expr_stmt|;
-break|break;
-block|}
-name|prod
-operator|=
-name|NEXT_RX_BD
-argument_list|(
-name|prod
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Save the RX chain producer index. */
-name|sc
-operator|->
-name|rx_prod
-operator|=
-name|prod
-expr_stmt|;
-name|sc
-operator|->
-name|rx_prod_bseq
-operator|=
-name|prod_bseq
 expr_stmt|;
 for|for
 control|(
@@ -16954,33 +17139,6 @@ name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Tell the chip about the waiting rx_bd's. */
-name|REG_WR16
-argument_list|(
-name|sc
-argument_list|,
-name|MB_RX_CID_ADDR
-operator|+
-name|BCE_L2CTX_HOST_BDIDX
-argument_list|,
-name|sc
-operator|->
-name|rx_prod
-argument_list|)
-expr_stmt|;
-name|REG_WR
-argument_list|(
-name|sc
-argument_list|,
-name|MB_RX_CID_ADDR
-operator|+
-name|BCE_L2CTX_HOST_BSEQ
-argument_list|,
-name|sc
-operator|->
-name|rx_prod_bseq
-argument_list|)
-expr_stmt|;
 name|DBRUN
 argument_list|(
 name|BCE_VERBOSE_RECV
@@ -17052,6 +17210,14 @@ block|{
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_DEBUG
+name|int
+name|rx_mbuf_alloc_before
+decl_stmt|;
+endif|#
+directive|endif
 name|DBPRINT
 argument_list|(
 name|sc
@@ -17063,6 +17229,17 @@ argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_DEBUG
+name|rx_mbuf_alloc_before
+operator|=
+name|sc
+operator|->
+name|rx_mbuf_alloc
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Free any mbufs still in the RX mbuf chain. */
 for|for
 control|(
@@ -17148,6 +17325,32 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|DBRUNIF
+argument_list|(
+operator|(
+name|rx_mbuf_alloc_before
+operator|-
+name|sc
+operator|->
+name|rx_mbuf_alloc
+operator|)
+argument_list|,
+name|BCE_PRINTF
+argument_list|(
+literal|"%s(): Released %d mbufs.\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+operator|(
+name|rx_mbuf_alloc_before
+operator|-
+name|sc
+operator|->
+name|rx_mbuf_alloc
+operator|)
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Clear each RX chain page. */
 for|for
 control|(
@@ -17177,6 +17380,14 @@ index|]
 argument_list|,
 name|BCE_RX_CHAIN_PAGE_SZ
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|free_rx_bd
+operator|=
+name|sc
+operator|->
+name|max_rx_bd
 expr_stmt|;
 comment|/* Check if we lost any mbufs in the process. */
 name|DBRUNIF
@@ -17885,7 +18096,7 @@ name|sc
 operator|->
 name|free_rx_bd
 operator|==
-literal|0
+name|USABLE_RX_BD
 operator|)
 argument_list|,
 name|sc
@@ -18057,7 +18268,7 @@ name|sw_chain_cons
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Remove the mbuf from the driver's chain. */
+comment|/* Remove the mbuf from the RX chain. */
 name|m
 operator|=
 name|sc
@@ -18142,6 +18353,7 @@ name|L2_FHDR_ERRORS_GIANT_FRAME
 operator|)
 condition|)
 block|{
+comment|/* Log the error and release the mbuf. */
 name|ifp
 operator|->
 name|if_ierrors
@@ -18157,130 +18369,16 @@ name|l2fhdr_status_errors
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* Reuse the mbuf for a new frame. */
-if|if
-condition|(
-name|bce_get_buf
+comment|/* Todo: Reuse the mbuf to improve performance. */
+name|m_freem
 argument_list|(
-name|sc
-argument_list|,
 name|m
-argument_list|,
-operator|&
-name|sw_prod
-argument_list|,
-operator|&
-name|sw_chain_prod
-argument_list|,
-operator|&
-name|sw_prod_bseq
-argument_list|)
-condition|)
-block|{
-name|DBRUNIF
-argument_list|(
-literal|1
-argument_list|,
-name|bce_breakpoint
-argument_list|(
-name|sc
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"bce%d: Can't reuse RX mbuf!\n"
-argument_list|,
-name|sc
-operator|->
-name|bce_unit
-argument_list|)
-expr_stmt|;
-block|}
-goto|goto
-name|bce_rx_int_next_rx
-goto|;
-block|}
-comment|/*  			 * Get a new mbuf for the rx_bd.   If no new 			 * mbufs are available then reuse the current mbuf, 			 * log an ierror on the interface, and generate 			 * an error in the system log. 			 */
-if|if
-condition|(
-name|bce_get_buf
-argument_list|(
-name|sc
-argument_list|,
+name|m
+operator|=
 name|NULL
-argument_list|,
-operator|&
-name|sw_prod
-argument_list|,
-operator|&
-name|sw_chain_prod
-argument_list|,
-operator|&
-name|sw_prod_bseq
-argument_list|)
-condition|)
-block|{
-name|DBRUN
-argument_list|(
-name|BCE_WARN
-argument_list|,
-name|BCE_PRINTF
-argument_list|(
-literal|"%s(%d): Failed to allocate "
-literal|"new mbuf, incoming frame dropped!\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-argument_list|)
 expr_stmt|;
-name|ifp
-operator|->
-name|if_ierrors
-operator|++
-expr_stmt|;
-comment|/* Try and reuse the exisitng mbuf. */
-if|if
-condition|(
-name|bce_get_buf
-argument_list|(
-name|sc
-argument_list|,
-name|m
-argument_list|,
-operator|&
-name|sw_prod
-argument_list|,
-operator|&
-name|sw_chain_prod
-argument_list|,
-operator|&
-name|sw_prod_bseq
-argument_list|)
-condition|)
-block|{
-name|DBRUNIF
-argument_list|(
-literal|1
-argument_list|,
-name|bce_breakpoint
-argument_list|(
-name|sc
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"bce%d: Double mbuf allocation failure!"
-argument_list|,
-name|sc
-operator|->
-name|bce_unit
-argument_list|)
-expr_stmt|;
-block|}
 goto|goto
 name|bce_rx_int_next_rx
 goto|;
@@ -18563,18 +18661,6 @@ name|rx_cons
 operator|=
 name|sw_cons
 expr_stmt|;
-name|sc
-operator|->
-name|rx_prod
-operator|=
-name|sw_prod
-expr_stmt|;
-name|sc
-operator|->
-name|rx_prod_bseq
-operator|=
-name|sw_prod_bseq
-expr_stmt|;
 name|DBPRINT
 argument_list|(
 name|sc
@@ -18624,41 +18710,6 @@ operator|=
 name|sc
 operator|->
 name|rx_cons
-expr_stmt|;
-name|sw_prod
-operator|=
-name|sc
-operator|->
-name|rx_prod
-expr_stmt|;
-name|sw_prod_bseq
-operator|=
-name|sc
-operator|->
-name|rx_prod_bseq
-expr_stmt|;
-name|hw_cons
-operator|=
-name|sc
-operator|->
-name|hw_rx_cons
-operator|=
-name|sblk
-operator|->
-name|status_rx_quick_consumer_index0
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|hw_cons
-operator|&
-name|USABLE_RX_BD_PER_PAGE
-operator|)
-operator|==
-name|USABLE_RX_BD_PER_PAGE
-condition|)
-name|hw_cons
-operator|++
 expr_stmt|;
 block|}
 comment|/* Refresh hw_cons to see if there's new work */
@@ -18712,6 +18763,18 @@ name|BUS_SPACE_BARRIER_READ
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* No new packets to process.  Refill the RX chain and exit. */
+name|sc
+operator|->
+name|rx_cons
+operator|=
+name|sw_cons
+expr_stmt|;
+name|bce_fill_rx_chain
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|int
@@ -18740,50 +18803,6 @@ name|i
 index|]
 argument_list|,
 name|BUS_DMASYNC_PREWRITE
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|rx_cons
-operator|=
-name|sw_cons
-expr_stmt|;
-name|sc
-operator|->
-name|rx_prod
-operator|=
-name|sw_prod
-expr_stmt|;
-name|sc
-operator|->
-name|rx_prod_bseq
-operator|=
-name|sw_prod_bseq
-expr_stmt|;
-name|REG_WR16
-argument_list|(
-name|sc
-argument_list|,
-name|MB_RX_CID_ADDR
-operator|+
-name|BCE_L2CTX_HOST_BDIDX
-argument_list|,
-name|sc
-operator|->
-name|rx_prod
-argument_list|)
-expr_stmt|;
-name|REG_WR
-argument_list|(
-name|sc
-argument_list|,
-name|MB_RX_CID_ADDR
-operator|+
-name|BCE_L2CTX_HOST_BSEQ
-argument_list|,
-name|sc
-operator|->
-name|rx_prod_bseq
 argument_list|)
 expr_stmt|;
 name|DBPRINT
@@ -20025,6 +20044,14 @@ comment|/*   0 for success, positive value for failure.                         
 end_comment
 
 begin_comment
+comment|/* Modified:                                                                */
+end_comment
+
+begin_comment
+comment|/*   m_head: May be set to NULL if MBUF is excessively fragmented.          */
+end_comment
+
+begin_comment
 comment|/****************************************************************************/
 end_comment
 
@@ -20544,6 +20571,7 @@ operator|==
 name|EFBIG
 condition|)
 block|{
+comment|/* The mbuf is too fragmented for our DMA mapping. */
 name|DBPRINT
 argument_list|(
 name|sc
@@ -20564,7 +20592,7 @@ argument_list|,
 argument|bce_dump_mbuf(sc, m0);
 argument_list|)
 empty_stmt|;
-comment|/* Try to defrag the mbuf if there are too many segments. */
+comment|/* Try to defrag the mbuf. */
 name|m0
 operator|=
 name|m_defrag
@@ -20593,6 +20621,11 @@ operator|*
 name|m_head
 operator|=
 name|NULL
+expr_stmt|;
+name|sc
+operator|->
+name|mbuf_alloc_failed
+operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -20634,6 +20667,12 @@ operator|==
 name|ENOMEM
 condition|)
 block|{
+comment|/* Insufficient DMA buffers available. */
+name|sc
+operator|->
+name|tx_dma_map_failures
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -20648,6 +20687,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* Still can't map the mbuf, release it and return an error. */
 name|BCE_PRINTF
 argument_list|(
 literal|"%s(%d): Unknown error mapping mbuf into TX chain!\n"
@@ -20667,6 +20707,11 @@ name|m_head
 operator|=
 name|NULL
 expr_stmt|;
+name|sc
+operator|->
+name|tx_dma_map_failures
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
@@ -20682,6 +20727,12 @@ operator|==
 name|ENOMEM
 condition|)
 block|{
+comment|/* Insufficient DMA buffers available. */
+name|sc
+operator|->
+name|tx_dma_map_failures
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -20705,6 +20756,11 @@ operator|*
 name|m_head
 operator|=
 name|NULL
+expr_stmt|;
+name|sc
+operator|->
+name|tx_dma_map_failures
+operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -21235,6 +21291,12 @@ name|m_head
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|m_head
+operator|!=
+name|NULL
+condition|)
 name|IFQ_DRV_PREPEND
 argument_list|(
 operator|&
@@ -24869,7 +24931,9 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|USABLE_RX_BD
+name|sc
+operator|->
+name|max_rx_bd
 argument_list|)
 expr_stmt|;
 block|}
@@ -25638,18 +25702,18 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"mbuf_alloc_failed"
+literal|"mbuf_sim_alloc_failed"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|sc
 operator|->
-name|mbuf_alloc_failed
+name|mbuf_sim_alloc_failed
 argument_list|,
 literal|0
 argument_list|,
-literal|"mbuf cluster allocation failures"
+literal|"mbuf cluster simulated allocation failures"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT
@@ -25674,8 +25738,252 @@ argument_list|,
 literal|"The number of TSO frames received"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rx_mbuf_segs[1]"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rx_mbuf_segs
+index|[
+literal|1
+index|]
+argument_list|,
+literal|0
+argument_list|,
+literal|"mbuf cluster with 1 segment"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rx_mbuf_segs[2]"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rx_mbuf_segs
+index|[
+literal|2
+index|]
+argument_list|,
+literal|0
+argument_list|,
+literal|"mbuf cluster with 2 segments"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rx_mbuf_segs[3]"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rx_mbuf_segs
+index|[
+literal|3
+index|]
+argument_list|,
+literal|0
+argument_list|,
+literal|"mbuf cluster with 3 segments"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rx_mbuf_segs[4]"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rx_mbuf_segs
+index|[
+literal|4
+index|]
+argument_list|,
+literal|0
+argument_list|,
+literal|"mbuf cluster with 4 segments"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rx_mbuf_segs[5]"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rx_mbuf_segs
+index|[
+literal|5
+index|]
+argument_list|,
+literal|0
+argument_list|,
+literal|"mbuf cluster with 5 segments"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rx_mbuf_segs[6]"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rx_mbuf_segs
+index|[
+literal|6
+index|]
+argument_list|,
+literal|0
+argument_list|,
+literal|"mbuf cluster with 6 segments"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rx_mbuf_segs[7]"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rx_mbuf_segs
+index|[
+literal|7
+index|]
+argument_list|,
+literal|0
+argument_list|,
+literal|"mbuf cluster with 7 segments"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rx_mbuf_segs[8]"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|rx_mbuf_segs
+index|[
+literal|8
+index|]
+argument_list|,
+literal|0
+argument_list|,
+literal|"mbuf cluster with 8 segments"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"mbuf_alloc_failed"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|mbuf_alloc_failed
+argument_list|,
+literal|0
+argument_list|,
+literal|"mbuf cluster allocation failures"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tx_dma_map_failures"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|tx_dma_map_failures
+argument_list|,
+literal|0
+argument_list|,
+literal|"tx dma mapping failures"
+argument_list|)
+expr_stmt|;
 name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
@@ -30617,6 +30925,37 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
+literal|"         0x%08X - (sc->tx_mbuf_alloc) tx mbufs allocated\n"
+argument_list|,
+name|sc
+operator|->
+name|tx_mbuf_alloc
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"         0x%08X - (sc->used_tx_bd) used tx_bd's\n"
+argument_list|,
+name|sc
+operator|->
+name|used_tx_bd
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"0x%08X/%08X - (sc->tx_hi_watermark) tx hi watermark\n"
+argument_list|,
+name|sc
+operator|->
+name|tx_hi_watermark
+argument_list|,
+name|sc
+operator|->
+name|max_tx_bd
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
 literal|"     0x%04X(0x%04X) - (sc->rx_prod) rx producer index\n"
 argument_list|,
 name|sc
@@ -30695,51 +31034,22 @@ argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"         0x%08X - (sc->txmbuf_alloc) tx mbufs allocated\n"
-argument_list|,
-name|sc
-operator|->
-name|tx_mbuf_alloc
-argument_list|)
-expr_stmt|;
-name|BCE_PRINTF
-argument_list|(
-literal|"         0x%08X - (sc->rx_mbuf_alloc) rx mbufs allocated\n"
-argument_list|,
-name|sc
-operator|->
-name|rx_mbuf_alloc
-argument_list|)
-expr_stmt|;
-name|BCE_PRINTF
-argument_list|(
-literal|"         0x%08X - (sc->used_tx_bd) used tx_bd's\n"
-argument_list|,
-name|sc
-operator|->
-name|used_tx_bd
-argument_list|)
-expr_stmt|;
-name|BCE_PRINTF
-argument_list|(
-literal|"0x%08X/%08X - (sc->tx_hi_watermark) tx hi watermark\n"
-argument_list|,
-name|sc
-operator|->
-name|tx_hi_watermark
-argument_list|,
-name|sc
-operator|->
-name|max_tx_bd
-argument_list|)
-expr_stmt|;
-name|BCE_PRINTF
-argument_list|(
-literal|"         0x%08X - (sc->mbuf_alloc_failed) failed mbuf alloc\n"
+literal|"         0x%08X - (sc->mbuf_alloc_failed) "
+literal|"mbuf alloc failures\n"
 argument_list|,
 name|sc
 operator|->
 name|mbuf_alloc_failed
+argument_list|)
+expr_stmt|;
+name|BCE_PRINTF
+argument_list|(
+literal|"         0x%08X - (sc->mbuf_sim_alloc_failed) "
+literal|"simulated mbuf alloc failures\n"
+argument_list|,
+name|sc
+operator|->
+name|mbuf_sim_alloc_failed
 argument_list|)
 expr_stmt|;
 name|BCE_PRINTF
@@ -31933,7 +32243,9 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|USABLE_RX_BD
+name|sc
+operator|->
+name|max_rx_bd
 argument_list|)
 expr_stmt|;
 name|bce_dump_l2fhdr
@@ -31960,7 +32272,9 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|USABLE_RX_BD
+name|sc
+operator|->
+name|max_rx_bd
 argument_list|)
 expr_stmt|;
 name|bce_dump_status_block
