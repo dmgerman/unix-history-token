@@ -2158,6 +2158,13 @@ begin_define
 define|#
 directive|define
 name|AT91RM92_OHCI_BASE
+value|0xdfe00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_OHCI_PA_BASE
 value|0x00300000
 end_define
 
