@@ -30987,11 +30987,6 @@ name|scb
 operator|->
 name|ahc_softc
 expr_stmt|;
-name|ahc_lock
-argument_list|(
-name|ahc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -31043,11 +31038,6 @@ name|ahc
 argument_list|)
 expr_stmt|;
 block|}
-name|ahc_unlock
-argument_list|(
-name|ahc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -354,17 +354,7 @@ operator|!=
 literal|0
 condition|)
 break|break;
-name|aic_unlock
-argument_list|(
-name|aic
-argument_list|)
-expr_stmt|;
 name|aic_recover_commands
-argument_list|(
-name|aic
-argument_list|)
-expr_stmt|;
-name|aic_lock
 argument_list|(
 name|aic
 argument_list|)
