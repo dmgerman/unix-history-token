@@ -2032,7 +2032,6 @@ literal|0
 case|:
 if|if
 condition|(
-operator|(
 name|frame
 operator|->
 name|fixreg
@@ -2041,13 +2040,14 @@ literal|0
 index|]
 operator|==
 name|SYS___syscall
-operator|)
 operator|&&
-operator|(
+name|code
+operator|!=
+name|SYS_freebsd6_lseek
+operator|&&
 name|code
 operator|!=
 name|SYS_lseek
-operator|)
 condition|)
 block|{
 comment|/* 			 * 64-bit return, 32-bit syscall. Fixup byte order 			 */
