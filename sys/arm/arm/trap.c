@@ -3661,11 +3661,13 @@ operator|)
 operator|==
 name|SYS___syscall
 operator|&&
-operator|(
+name|code
+operator|!=
+name|SYS_freebsd6_lseek
+operator|&&
 name|code
 operator|!=
 name|SYS_lseek
-operator|)
 condition|)
 block|{
 comment|/* 			 * 64-bit return, 32-bit syscall. Fixup byte order 			 */
