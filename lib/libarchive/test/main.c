@@ -40,6 +40,36 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Interix doesn't define these in a standard header. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__INTERIX__
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Default is to crash and try to force a core dump on failure. */
 end_comment
 
@@ -325,6 +355,10 @@ name|int
 name|line
 parameter_list|)
 block|{
+name|skipped_filename
+operator|=
+name|filename
+expr_stmt|;
 name|skipped_line
 operator|=
 name|line
