@@ -38,6 +38,16 @@ value|940897795
 end_define
 
 begin_comment
+comment|/* 64bit stats presence flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_STATS64
+end_define
+
+begin_comment
 comment|/* Maximum number of supported links */
 end_comment
 
@@ -314,6 +324,12 @@ comment|/* takes link #, clears link stats */
 name|NGM_PPP_GETCLR_LINK_STATS
 block|,
 comment|/* takes link #, returns& clrs stats */
+name|NGM_PPP_GET_LINK_STATS64
+block|,
+comment|/* takes link #, returns stats64 struct */
+name|NGM_PPP_GETCLR_LINK_STATS64
+block|,
+comment|/* takes link #, returns stats64& clrs */
 block|}
 enum|;
 end_enum
@@ -581,6 +597,61 @@ define|#
 directive|define
 name|NG_PPP_STATS_TYPE_INFO
 value|{				\ 	  { "xmitFrames",&ng_parse_uint32_type	},	\ 	  { "xmitOctets",&ng_parse_uint32_type	},	\ 	  { "recvFrames",&ng_parse_uint32_type	},	\ 	  { "recvOctets",&ng_parse_uint32_type	},	\ 	  { "badProtos",&ng_parse_uint32_type	},	\ 	  { "runts",&ng_parse_uint32_type	},	\ 	  { "dupFragments",&ng_parse_uint32_type	},	\ 	  { "dropFragments",&ng_parse_uint32_type	},	\ 	  { NULL }						\ }
+end_define
+
+begin_comment
+comment|/* Statistics struct for a link (or the bundle if NG_PPP_BUNDLE_LINKNUM) */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_ppp_link_stat64
+block|{
+name|u_int64_t
+name|xmitFrames
+decl_stmt|;
+comment|/* xmit frames on link */
+name|u_int64_t
+name|xmitOctets
+decl_stmt|;
+comment|/* xmit octets on link */
+name|u_int64_t
+name|recvFrames
+decl_stmt|;
+comment|/* recv frames on link */
+name|u_int64_t
+name|recvOctets
+decl_stmt|;
+comment|/* recv octets on link */
+name|u_int64_t
+name|badProtos
+decl_stmt|;
+comment|/* frames rec'd with bogus protocol */
+name|u_int64_t
+name|runts
+decl_stmt|;
+comment|/* Too short MP fragments */
+name|u_int64_t
+name|dupFragments
+decl_stmt|;
+comment|/* MP frames with duplicate seq # */
+name|u_int64_t
+name|dropFragments
+decl_stmt|;
+comment|/* MP fragments we had to drop */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_STATS64_TYPE_INFO
+value|{			\ 	  { "xmitFrames",&ng_parse_uint64_type	},	\ 	  { "xmitOctets",&ng_parse_uint64_type	},	\ 	  { "recvFrames",&ng_parse_uint64_type	},	\ 	  { "recvOctets",&ng_parse_uint64_type	},	\ 	  { "badProtos",&ng_parse_uint64_type	},	\ 	  { "runts",&ng_parse_uint64_type	},	\ 	  { "dupFragments",&ng_parse_uint64_type	},	\ 	  { "dropFragments",&ng_parse_uint64_type	},	\ 	  { NULL }						\ }
 end_define
 
 begin_endif
