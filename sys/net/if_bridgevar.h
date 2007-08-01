@@ -546,8 +546,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFBIF_PRIVATE
+value|0x0800
+end_define
+
+begin_comment
+comment|/* if is a private segment */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFBIFBITS
-value|"\020\001LEARNING\002DISCOVER\003STP\004SPAN" \ 			"\005STICKY\006EDGE\007AUTOEDGE\010PTP\011AUTOPTP"
+value|"\020\001LEARNING\002DISCOVER\003STP\004SPAN" \ 			"\005STICKY\014PRIVATE\006EDGE\007AUTOEDGE\010PTP" \ 			"\011AUTOPTP"
 end_define
 
 begin_define
