@@ -5662,6 +5662,35 @@ name|cleanup
 goto|;
 block|}
 block|}
+comment|/* 	 * Hash the incoming request here as it is after 	 * dns_dispatch_importrecv(). 	 */
+name|dns_dispatch_hash
+argument_list|(
+operator|&
+name|client
+operator|->
+name|now
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|client
+operator|->
+name|now
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dns_dispatch_hash
+argument_list|(
+name|isc_buffer_base
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|,
+name|isc_buffer_usedlength
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * It's a request.  Parse it. 	 */
 name|result
 operator|=
