@@ -4631,15 +4631,6 @@ argument_list|,
 name|retval
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-comment|/* Last, setup the cpu topology now that we have probed CPUs */
-name|mp_topology
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
