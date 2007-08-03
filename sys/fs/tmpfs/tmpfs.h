@@ -446,6 +446,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|TMPFS_NODE_MTX
+parameter_list|(
+name|node
+parameter_list|)
+value|(&(node)->tn_interlock)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TMPFS_VNODE_ALLOCATING
 value|1
 end_define
