@@ -1499,7 +1499,7 @@ name|pm_fsinfo
 argument_list|,
 name|pmp
 operator|->
-name|pm_bpcluster
+name|pm_BytesPerSec
 argument_list|,
 name|NOCRED
 argument_list|,
