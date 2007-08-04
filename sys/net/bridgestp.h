@@ -223,6 +223,13 @@ name|BSTP_PORT_ADMEDGE
 value|0x0040
 end_define
 
+begin_define
+define|#
+directive|define
+name|BSTP_PORT_PNDCOST
+value|0x0080
+end_define
+
 begin_comment
 comment|/* BPDU priority */
 end_comment
