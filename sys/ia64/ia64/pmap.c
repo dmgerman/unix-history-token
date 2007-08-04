@@ -1881,9 +1881,8 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("mov cr.pta=%0;; srlz.i;;" ::
-literal|"r"
-operator|(
+name|ia64_set_pta
+argument_list|(
 name|pmap_vhpt_base
 index|[
 literal|0
@@ -1902,38 +1901,25 @@ literal|2
 operator|)
 operator|+
 literal|1
-operator|)
-block|)
-function|;
-end_function
-
-begin_expr_stmt
+argument_list|)
+expr_stmt|;
+name|ia64_srlz_i
+argument_list|()
+expr_stmt|;
 name|virtual_avail
 operator|=
 name|VM_MIN_KERNEL_ADDRESS
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|virtual_end
 operator|=
 name|VM_MAX_KERNEL_ADDRESS
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Initialize the kernel pmap (which is statically allocated). 	 */
-end_comment
-
-begin_expr_stmt
 name|PMAP_LOCK_INIT
 argument_list|(
 name|kernel_pmap
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|i
@@ -1956,18 +1942,12 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-end_for
-
-begin_expr_stmt
 name|kernel_pmap
 operator|->
 name|pm_active
 operator|=
 literal|1
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -1976,9 +1956,6 @@ operator|->
 name|pm_pvlist
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PCPU_SET
 argument_list|(
 name|current_pmap
@@ -1986,13 +1963,7 @@ argument_list|,
 name|kernel_pmap
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Region 5 is mapped via the vhpt. 	 */
-end_comment
-
-begin_expr_stmt
 name|ia64_set_rr
 argument_list|(
 name|IA64_RR_BASE
@@ -2015,13 +1986,7 @@ operator||
 literal|1
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Region 6 is direct mapped UC and region 7 is direct mapped 	 * WC. The details of this is controlled by the Alt {I,D}TLB 	 * handlers. Here we just make sure that they have the largest  	 * possible page size to minimise TLB usage. 	 */
-end_comment
-
-begin_expr_stmt
 name|ia64_set_rr
 argument_list|(
 name|IA64_RR_BASE
@@ -2042,9 +2007,6 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ia64_set_rr
 argument_list|(
 name|IA64_RR_BASE
@@ -2065,28 +2027,23 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
+name|ia64_srlz_d
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Clear out any random TLB entries left over from booting. 	 */
-end_comment
-
-begin_expr_stmt
 name|pmap_invalidate_all
 argument_list|(
 name|kernel_pmap
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|map_gateway_page
 argument_list|()
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|int
 name|pmap_vhpt_population
 parameter_list|(
@@ -8911,7 +8868,9 @@ argument_list|,
 name|pm
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("srlz.d");
+name|ia64_srlz_d
+argument_list|()
+expr_stmt|;
 name|out
 label|:
 name|critical_exit
