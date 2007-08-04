@@ -1875,37 +1875,49 @@ begin_asm
 asm|__asm __volatile("rsm   psr.ic|psr.i");
 end_asm
 
-begin_asm
-asm|__asm __volatile("srlz.i");
-end_asm
+begin_expr_stmt
+name|ia64_srlz_i
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
-begin_asm
-asm|__asm __volatile("mov   cr.ifa=%0" :: "r"(vhpt));
-end_asm
+begin_expr_stmt
+name|ia64_set_ifa
+argument_list|(
+name|vhpt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_asm
-asm|__asm __volatile("mov   cr.itir=%0" :: "r"(IA64_ID_PAGE_SHIFT<< 2));
-end_asm
+begin_expr_stmt
+name|ia64_set_itir
+argument_list|(
+name|IA64_ID_PAGE_SHIFT
+operator|<<
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ia64_srlz_d
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_asm
 asm|__asm __volatile("itr.d dtr[%0]=%1" :: "r"(2), "r"(pte));
 end_asm
 
 begin_asm
-asm|__asm __volatile("srlz.d");
-end_asm
-
-begin_comment
-comment|/* XXX not needed. */
-end_comment
-
-begin_asm
 asm|__asm __volatile("mov   psr.l=%0" :: "r" (psr));
 end_asm
 
-begin_asm
-asm|__asm __volatile("srlz.i");
-end_asm
+begin_expr_stmt
+name|ia64_srlz_i
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 unit|}  void
@@ -1980,44 +1992,48 @@ begin_asm
 asm|__asm __volatile("rsm	psr.ic|psr.i");
 end_asm
 
-begin_asm
-asm|__asm __volatile("srlz.i");
-end_asm
-
-begin_asm
-asm|__asm __volatile("mov	cr.ifa=%0" ::
-end_asm
+begin_expr_stmt
+name|ia64_srlz_i
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
-literal|"r"
-operator|(
+name|ia64_set_ifa
+argument_list|(
 name|IA64_PHYS_TO_RR7
 argument_list|(
 name|ia64_pal_base
 argument_list|)
-operator|)
+argument_list|)
+expr_stmt|;
 end_expr_stmt
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_expr_stmt
+name|ia64_set_itir
+argument_list|(
+name|IA64_ID_PAGE_SHIFT
+operator|<<
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_asm
-asm|__asm __volatile("mov	cr.itir=%0" :: "r"(IA64_ID_PAGE_SHIFT<< 2));
-end_asm
+begin_expr_stmt
+name|ia64_srlz_d
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_asm
 asm|__asm __volatile("itr.d	dtr[%0]=%1" :: "r"(1), "r"(pte));
 end_asm
 
-begin_asm
-asm|__asm __volatile("srlz.d");
-end_asm
-
-begin_comment
-comment|/* XXX not needed. */
-end_comment
+begin_expr_stmt
+name|ia64_srlz_d
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_asm
 asm|__asm __volatile("itr.i	itr[%0]=%1" :: "r"(1), "r"(pte));
@@ -2027,9 +2043,11 @@ begin_asm
 asm|__asm __volatile("mov	psr.l=%0" :: "r" (psr));
 end_asm
 
-begin_asm
-asm|__asm __volatile("srlz.i");
-end_asm
+begin_expr_stmt
+name|ia64_srlz_i
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 unit|}  void
@@ -2097,29 +2115,45 @@ begin_asm
 asm|__asm __volatile("rsm	psr.ic|psr.i");
 end_asm
 
-begin_asm
-asm|__asm __volatile("srlz.i");
-end_asm
+begin_expr_stmt
+name|ia64_srlz_i
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
-begin_asm
-asm|__asm __volatile("mov	cr.ifa=%0" :: "r"(VM_MAX_ADDRESS));
-end_asm
+begin_expr_stmt
+name|ia64_set_ifa
+argument_list|(
+name|VM_MAX_ADDRESS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_asm
-asm|__asm __volatile("mov	cr.itir=%0" :: "r"(PAGE_SHIFT<< 2));
-end_asm
+begin_expr_stmt
+name|ia64_set_itir
+argument_list|(
+name|PAGE_SHIFT
+operator|<<
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ia64_srlz_d
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_asm
 asm|__asm __volatile("itr.d	dtr[%0]=%1" :: "r"(3), "r"(pte));
 end_asm
 
-begin_asm
-asm|__asm __volatile("srlz.d");
-end_asm
-
-begin_comment
-comment|/* XXX not needed. */
-end_comment
+begin_expr_stmt
+name|ia64_srlz_d
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_asm
 asm|__asm __volatile("itr.i	itr[%0]=%1" :: "r"(3), "r"(pte));
@@ -2129,9 +2163,11 @@ begin_asm
 asm|__asm __volatile("mov	psr.l=%0" :: "r" (psr));
 end_asm
 
-begin_asm
-asm|__asm __volatile("srlz.i");
-end_asm
+begin_expr_stmt
+name|ia64_srlz_i
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Expose the mapping to userland in ar.k5 */
@@ -3364,6 +3400,9 @@ name|ia64_set_tpr
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|ia64_srlz_d
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Save our current context so that we have a known (maybe even 	 * sane) context as the initial context for new threads that are 	 * forked from us. If any of those threads (including thread0) 	 * does something wrong, we may be lucky and return here where 	 * we're ready for them with a nice panic. 	 */
 if|if
