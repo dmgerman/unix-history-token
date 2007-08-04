@@ -1578,6 +1578,32 @@ asm|__asm __volatile("rsm psr.dfh;; srlz.d");
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_srlz_d
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("srlz.d");
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_srlz_i
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("srlz.i;;");
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
