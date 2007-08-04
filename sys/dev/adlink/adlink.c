@@ -373,6 +373,11 @@ operator|=
 name|D_VERSION
 block|,
 operator|.
+name|d_flags
+operator|=
+name|D_NEEDGIANT
+block|,
+operator|.
 name|d_ioctl
 operator|=
 name|adlink_ioctl
