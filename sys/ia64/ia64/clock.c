@@ -210,6 +210,9 @@ name|CLOCK_VECTOR
 argument_list|)
 expr_stmt|;
 comment|/* highest priority class */
+name|ia64_srlz_d
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
