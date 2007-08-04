@@ -708,7 +708,7 @@ block|}
 if|if
 condition|(
 name|less_is_more
-operator|&&
+operator|||
 name|get_quit_at_eof
 argument_list|()
 condition|)
