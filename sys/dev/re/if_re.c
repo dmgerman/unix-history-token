@@ -4155,6 +4155,12 @@ name|ds_len
 expr_stmt|;
 name|d
 operator|->
+name|rl_vlanctl
+operator|=
+literal|0
+expr_stmt|;
+name|d
+operator|->
 name|rl_bufaddr_lo
 operator|=
 name|htole32
