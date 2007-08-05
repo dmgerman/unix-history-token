@@ -463,12 +463,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Check that the specified range of the device allows the desired 	 * protection. 	 * 	 * XXX assumes VM_PROT_* == PROT_* 	 */
 name|npages
 operator|=
@@ -515,12 +509,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
@@ -635,12 +623,6 @@ name|sx_xunlock
 argument_list|(
 operator|&
 name|dev_pager_sx
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|dev_relthread
@@ -838,12 +820,6 @@ argument_list|(
 literal|"dev_pager_getpage: no cdevsw"
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|prot
 operator|=
 name|PROT_READ
@@ -882,12 +858,6 @@ argument_list|,
 operator|(
 literal|"dev_pager_getpage: map function returns error"
 operator|)
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|dev_relthread
