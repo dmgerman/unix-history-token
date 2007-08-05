@@ -26,7 +26,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * UltraSPARC IOMMU support; used by both the PCI and SBus code.  * Currently, the IOTSBs are synchronized, because determining the bus the map  * is to be loaded for is not possible with the current busdma code.  * The code is structured so that the IOMMUs can be easily divorced when that  * is fixed.  *  * TODO:  * - As soon as there is a newbus way to get a parent dma tag, divorce the  *   IOTSBs.  * - Support sub-page boundaries.  * - Fix alignment handling for small allocations (the possible page offset  *   of malloc()ed memory is not handled at all). Revise interaction of  *   alignment with the load_mbuf and load_uio functions.  * - Handle lowaddr and highaddr in some way, and try to work out a way  *   for filter callbacks to work. Currently, only lowaddr is honored  *   in that no addresses above it are considered at all.  * - Implement BUS_DMA_ALLOCNOW in bus_dma_tag_create as far as possible.  * - Check the possible return values and callback error arguments;  *   the callback currently gets called in error conditions where it should  *   not be.  * - When running out of DVMA space, return EINPROGRESS in the non-  *   BUS_DMA_NOWAIT case and delay the callback until sufficient space  *   becomes available.  * - Use the streaming cache unless BUS_DMA_COHERENT is specified; do not  *   flush the streaming cache when coherent mappings are synced.  * - Add bounce buffers to support machines with more than 16GB of RAM.  */
+comment|/*  * UltraSPARC IOMMU support; used by both the PCI and SBus code.  *  * TODO:  * - Support sub-page boundaries.  * - Fix alignment handling for small allocations (the possible page offset  *   of malloc()ed memory is not handled at all). Revise interaction of  *   alignment with the load_mbuf and load_uio functions.  * - Handle lowaddr and highaddr in some way, and try to work out a way  *   for filter callbacks to work. Currently, only lowaddr is honored  *   in that no addresses above it are considered at all.  * - Implement BUS_DMA_ALLOCNOW in bus_dma_tag_create as far as possible.  * - Check the possible return values and callback error arguments;  *   the callback currently gets called in error conditions where it should  *   not be.  * - When running out of DVMA space, return EINPROGRESS in the non-  *   BUS_DMA_NOWAIT case and delay the callback until sufficient space  *   becomes available.  * - Use the streaming cache unless BUS_DMA_COHERENT is specified; do not  *   flush the streaming cache when coherent mappings are synced.  */
 end_comment
 
 begin_include
@@ -229,90 +229,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Protects iommu_maplruq, dm_reslist of all maps on the queue and all  * iommu states as long as the TSBs are synchronized.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|mtx
-name|iommu_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * The following 4 variables need to be moved to the per-IOMMU state once  * the IOTSBs are divorced.  * LRU queue handling for lazy resource allocation.  */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|TAILQ_HEAD
-argument_list|(
-argument|iommu_maplruq_head
-argument_list|,
-argument|bus_dmamap
-argument_list|)
-name|iommu_maplruq
-operator|=
-name|TAILQ_HEAD_INITIALIZER
-argument_list|(
-name|iommu_maplruq
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* DVMA space rman. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|rman
-name|iommu_dvma_rman
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Virtual and physical address of the TSB. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|u_int64_t
-modifier|*
-name|iommu_tsb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vm_offset_t
-name|iommu_ptsb
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* List of all IOMMUs. */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|iommu_state
-argument_list|)
-name|iommu_insts
-operator|=
-name|STAILQ_HEAD_INITIALIZER
-argument_list|(
-name|iommu_insts
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*  * Helpers. Some of these take unused iommu states as parameters, to ease the  * transition to divorced TSBs.  */
+comment|/*  * Helpers  */
 end_comment
 
 begin_define
@@ -385,7 +302,7 @@ parameter_list|,
 name|tte
 parameter_list|)
 define|\
-value|(iommu_tsb[IOTSBSLOT(va)] = (tte))
+value|((is)->is_tsb[IOTSBSLOT(va)] = (tte))
 end_define
 
 begin_define
@@ -398,7 +315,7 @@ parameter_list|,
 name|va
 parameter_list|)
 define|\
-value|iommu_tsb[IOTSBSLOT(va)]
+value|(is)->is_tsb[IOTSBSLOT(va)]
 end_define
 
 begin_comment
@@ -473,7 +390,7 @@ value|IOMMU_RES_SIZE((r)->dr_res)
 end_define
 
 begin_comment
-comment|/* Locking macros. */
+comment|/* Locking macros */
 end_comment
 
 begin_define
@@ -483,7 +400,7 @@ name|IS_LOCK
 parameter_list|(
 name|is
 parameter_list|)
-value|mtx_lock(&iommu_mtx)
+value|mtx_lock(&is->is_mtx)
 end_define
 
 begin_define
@@ -493,7 +410,7 @@ name|IS_LOCK_ASSERT
 parameter_list|(
 name|is
 parameter_list|)
-value|mtx_assert(&iommu_mtx, MA_OWNED)
+value|mtx_assert(&is->is_mtx, MA_OWNED)
 end_define
 
 begin_define
@@ -503,7 +420,7 @@ name|IS_UNLOCK
 parameter_list|(
 name|is
 parameter_list|)
-value|mtx_unlock(&iommu_mtx)
+value|mtx_unlock(&is->is_mtx)
 end_define
 
 begin_comment
@@ -525,23 +442,9 @@ name|bus_addr_t
 name|va
 parameter_list|)
 block|{
-name|struct
-name|iommu_state
-modifier|*
-name|it
-decl_stmt|;
-comment|/* 	 * Since the TSB is shared for now, the TLBs of all IOMMUs 	 * need to be flushed. 	 */
-name|STAILQ_FOREACH
-argument_list|(
-argument|it
-argument_list|,
-argument|&iommu_insts
-argument_list|,
-argument|is_link
-argument_list|)
 name|IOMMU_WRITE8
 argument_list|(
-name|it
+name|is
 argument_list|,
 name|is_iommu
 argument_list|,
@@ -588,7 +491,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|is
@@ -615,7 +517,6 @@ name|va
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_comment
@@ -637,23 +538,9 @@ name|bus_addr_t
 name|va
 parameter_list|)
 block|{
-name|struct
-name|iommu_state
-modifier|*
-name|it
-decl_stmt|;
-comment|/* 	 * Need to flush the streaming buffers of all IOMMUs, we cannot 	 * determine which one was used for the transaction. 	 */
-name|STAILQ_FOREACH
-argument_list|(
-argument|it
-argument_list|,
-argument|&iommu_insts
-argument_list|,
-argument|is_link
-argument_list|)
 name|iommu_strbuf_flushpg
 argument_list|(
-name|it
+name|is
 argument_list|,
 name|va
 argument_list|)
@@ -677,28 +564,14 @@ modifier|*
 name|is
 parameter_list|)
 block|{
-name|struct
-name|iommu_state
-modifier|*
-name|it
-decl_stmt|;
 name|IS_LOCK_ASSERT
 argument_list|(
 name|is
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Need to sync the streaming buffers of all IOMMUs, we cannot 	 * determine which one was used for the transaction. 	 */
-name|STAILQ_FOREACH
-argument_list|(
-argument|it
-argument_list|,
-argument|&iommu_insts
-argument_list|,
-argument|is_link
-argument_list|)
 name|iommu_strbuf_flush_sync
 argument_list|(
-name|it
+name|is
 argument_list|)
 expr_stmt|;
 block|}
@@ -749,7 +622,9 @@ condition|)
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|iommu_maplruq
+name|is
+operator|->
+name|is_maplruq
 argument_list|,
 name|map
 argument_list|,
@@ -759,7 +634,9 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|iommu_maplruq
+name|is
+operator|->
+name|is_maplruq
 argument_list|,
 name|map
 argument_list|,
@@ -805,7 +682,9 @@ condition|)
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|iommu_maplruq
+name|is
+operator|->
+name|is_maplruq
 argument_list|,
 name|map
 argument_list|,
@@ -848,11 +727,6 @@ name|int
 name|resvpg
 parameter_list|)
 block|{
-name|struct
-name|iommu_state
-modifier|*
-name|first
-decl_stmt|;
 name|vm_size_t
 name|size
 decl_stmt|;
@@ -943,20 +817,13 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|STAILQ_EMPTY
-argument_list|(
-operator|&
-name|iommu_insts
-argument_list|)
-condition|)
-block|{
-comment|/* 		 * First IOMMU to be registered; set up resource mamangement 		 * and allocate TSB memory. 		 */
+comment|/* 	 * Set up resource mamangement. 	 */
 name|mtx_init
 argument_list|(
 operator|&
-name|iommu_mtx
+name|is
+operator|->
+name|is_mtx
 argument_list|,
 literal|"iommu"
 argument_list|,
@@ -981,13 +848,17 @@ name|IOTTE_SHIFT
 operator|)
 operator|)
 expr_stmt|;
-name|iommu_dvma_rman
+name|is
+operator|->
+name|is_dvma_rman
 operator|.
 name|rm_type
 operator|=
 name|RMAN_ARRAY
 expr_stmt|;
-name|iommu_dvma_rman
+name|is
+operator|->
+name|is_dvma_rman
 operator|.
 name|rm_descr
 operator|=
@@ -998,7 +869,9 @@ condition|(
 name|rman_init
 argument_list|(
 operator|&
-name|iommu_dvma_rman
+name|is
+operator|->
+name|is_dvma_rman
 argument_list|)
 operator|!=
 literal|0
@@ -1006,7 +879,9 @@ operator|||
 name|rman_manage_region
 argument_list|(
 operator|&
-name|iommu_dvma_rman
+name|is
+operator|->
+name|is_dvma_rman
 argument_list|,
 operator|(
 name|is
@@ -1036,8 +911,18 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Allocate memory for I/O page tables.  They need to be 		 * physically contiguous. 		 */
-name|iommu_tsb
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|is
+operator|->
+name|is_maplruq
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Allocate memory for I/O page tables.  They need to be 	 * physically contiguous. 	 */
+name|is
+operator|->
+name|is_tsb
 operator|=
 name|contigmalloc
 argument_list|(
@@ -1059,7 +944,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|iommu_tsb
+name|is
+operator|->
+name|is_tsb
 operator|==
 literal|0
 condition|)
@@ -1070,72 +957,27 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|iommu_ptsb
+name|is
+operator|->
+name|is_ptsb
 operator|=
 name|pmap_kextract
 argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
-name|iommu_tsb
+name|is
+operator|->
+name|is_tsb
 argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
-name|iommu_tsb
+name|is
+operator|->
+name|is_tsb
 argument_list|,
 name|size
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * Not the first IOMMU; just check that the parameters match 		 * those of the first one. 		 */
-name|first
-operator|=
-name|STAILQ_FIRST
-argument_list|(
-operator|&
-name|iommu_insts
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|is
-operator|->
-name|is_tsbsize
-operator|!=
-name|first
-operator|->
-name|is_tsbsize
-operator|||
-name|is
-operator|->
-name|is_dvmabase
-operator|!=
-name|first
-operator|->
-name|is_dvmabase
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"%s: secondary IOMMU state does not "
-literal|"match primary"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|STAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|iommu_insts
-argument_list|,
-name|is
-argument_list|,
-name|is_link
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize streaming buffer, if it is there. 	 */
@@ -1241,7 +1083,9 @@ name|is_iommu
 argument_list|,
 name|IMR_TSB
 argument_list|,
-name|iommu_ptsb
+name|is
+operator|->
+name|is_ptsb
 argument_list|)
 expr_stmt|;
 comment|/* Enable IOMMU in diagnostic mode */
@@ -1381,7 +1225,9 @@ name|KASSERT
 argument_list|(
 name|pa
 operator|<=
-name|IOMMU_MAXADDR
+name|is
+operator|->
+name|is_pmaxaddr
 argument_list|,
 operator|(
 literal|"iommu_enter: XXX: physical address too large (%#lx)"
@@ -1640,13 +1486,17 @@ name|idx
 operator|=
 name|phys
 operator|-
-name|iommu_ptsb
+name|is
+operator|->
+name|is_ptsb
 expr_stmt|;
 if|if
 condition|(
 name|phys
 operator|<
-name|iommu_ptsb
+name|is
+operator|->
+name|is_ptsb
 operator|||
 name|idx
 operator|>
@@ -2128,7 +1978,9 @@ operator|=
 name|rman_reserve_resource_bound
 argument_list|(
 operator|&
-name|iommu_dvma_rman
+name|is
+operator|->
+name|is_dvma_rman
 argument_list|,
 literal|0L
 argument_list|,
@@ -2786,7 +2638,9 @@ operator|=
 name|TAILQ_LAST
 argument_list|(
 operator|&
-name|iommu_maplruq
+name|is
+operator|->
+name|is_maplruq
 argument_list|,
 name|iommu_maplruq_head
 argument_list|)
@@ -2798,7 +2652,9 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|iommu_maplruq
+name|is
+operator|->
+name|is_maplruq
 argument_list|)
 expr_stmt|;
 name|complete
@@ -2932,7 +2788,7 @@ name|error
 decl_stmt|,
 name|mflags
 decl_stmt|;
-comment|/* 	 * XXX: This will break for 32 bit transfers on machines with more than 	 * 16G (1<< 34 bytes) of memory. 	 */
+comment|/* 	 * XXX: This will break for 32 bit transfers on machines with more 	 * than is->is_pmaxaddr memory. 	 */
 if|if
 condition|(
 operator|(

@@ -912,6 +912,17 @@ begin_comment
 comment|/* Streaming buffer diag regs */
 end_comment
 
+begin_comment
+comment|/* Width of the physical addresses the IOMMU translates to */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBUS_IOMMU_BITS
+value|41
+end_define
+
 begin_endif
 endif|#
 directive|endif

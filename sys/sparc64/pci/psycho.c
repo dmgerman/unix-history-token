@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
@@ -163,12 +169,6 @@ begin_include
 include|#
 directive|include
 file|<machine/ver.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
 end_include
 
 begin_include
@@ -2380,6 +2380,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2395,6 +2397,37 @@ argument_list|(
 literal|"%s: malloc iommu_state failed"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_mode
+operator|==
+name|PSYCHO_MODE_SABRE
+condition|)
+name|sc
+operator|->
+name|sc_is
+operator|->
+name|is_pmaxaddr
+operator|=
+name|IOMMU_MAXADDR
+argument_list|(
+name|SABRE_IOMMU_BITS
+argument_list|)
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|sc_is
+operator|->
+name|is_pmaxaddr
+operator|=
+name|IOMMU_MAXADDR
+argument_list|(
+name|PSYCHO_IOMMU_BITS
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2547,7 +2580,11 @@ literal|8
 argument_list|,
 literal|0
 argument_list|,
-name|IOMMU_MAXADDR
+name|sc
+operator|->
+name|sc_is
+operator|->
+name|is_pmaxaddr
 argument_list|,
 operator|~
 literal|0
@@ -2556,7 +2593,11 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|IOMMU_MAXADDR
+name|sc
+operator|->
+name|sc_is
+operator|->
+name|is_pmaxaddr
 argument_list|,
 literal|0xff
 argument_list|,
@@ -5059,7 +5100,7 @@ name|pci_clr
 operator|=
 name|intrclrptr
 expr_stmt|;
-comment|/* 	 * The Sabre-APB-combination has a bug where it does not drain 	 * DMA write data for devices behind additional PCI-PCI bridges 	 * underneath the APB PCI-PCI bridge. The workaround is to do 	 * a read on the farest PCI-PCI bridge followed by a read of the 	 * PCI DMA write sync register of the Sabre. 	 * XXX installing the workaround for an affected device and the 	 * actual workaround in psycho_intr_stub() should be moved to 	 * psycho(4)-specific bus_dma_tag_create() and bus_dmamap_sync() 	 * methods, respectively, once we make use of BUS_GET_DMA_TAG(), 	 * so the workaround isn't only applied for interrupt handlers 	 * but also for polling(4) callbacks. 	 */
+comment|/* 	 * The Sabre-APB-combination has a bug where it does not drain 	 * DMA write data for devices behind additional PCI-PCI bridges 	 * underneath the APB PCI-PCI bridge. The workaround is to do 	 * a read on the farest PCI-PCI bridge followed by a read of the 	 * PCI DMA write sync register of the Sabre. 	 * XXX installing the workaround for an affected device and the 	 * actual workaround in psycho_intr_stub() should be moved to 	 * psycho(4)-specific bus_dma_tag_create() and bus_dmamap_sync() 	 * methods, respectively, once DMA tag creation is newbus'ified, 	 * so the workaround isn't only applied for interrupt handlers 	 * but also for polling(4) callbacks. 	 */
 if|if
 condition|(
 name|sc

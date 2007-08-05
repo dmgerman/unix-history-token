@@ -74,7 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
 end_include
 
 begin_include
@@ -104,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/bus_common.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus_private.h>
 end_include
 
@@ -116,25 +134,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bus_common.h>
+file|<machine/iommuvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/iommuvar.h>
 end_include
 
 begin_include
@@ -1571,6 +1577,17 @@ name|sc
 operator|->
 name|sc_is
 operator|.
+name|is_pmaxaddr
+operator|=
+name|IOMMU_MAXADDR
+argument_list|(
+name|SBUS_IOMMU_BITS
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_is
+operator|.
 name|is_bustag
 operator|=
 name|rman_get_bustag
@@ -1738,7 +1755,11 @@ literal|8
 argument_list|,
 literal|0
 argument_list|,
-name|IOMMU_MAXADDR
+name|sc
+operator|->
+name|sc_is
+operator|.
+name|is_pmaxaddr
 argument_list|,
 operator|~
 literal|0
@@ -1747,7 +1768,11 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|IOMMU_MAXADDR
+name|sc
+operator|->
+name|sc_is
+operator|.
+name|is_pmaxaddr
 argument_list|,
 literal|0xff
 argument_list|,

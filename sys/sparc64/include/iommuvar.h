@@ -57,17 +57,58 @@ value|trunc_page(x)
 end_define
 
 begin_comment
-comment|/*  * Per-IOMMU state. The parenthesized comments indicate the locking strategy:  *	i - protected by iommu_mtx.  *	r - read-only after initialization.  *	* - comment refers to pointer target / target hardware registers  *	    (for bus_addr_t).  * iommu_map_lruq is also locked by iommu_mtx. Elements of iommu_tsb may only  * be accessed from functions operating on the map owning the corresponding  * resource, so the locking the user is required to do to protect the map is  * sufficient. As soon as the TSBs are divorced, these will be moved into struct  * iommu_state, and each state struct will get its own lock.  * iommu_dvma_rman needs to be moved there too, but has its own internal lock.  */
+comment|/*  * LRU queue handling for lazy resource allocation  */
+end_comment
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|iommu_maplruq_head
+argument_list|,
+name|bus_dmamap
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Per-IOMMU state. The parenthesized comments indicate the locking strategy:  *	i - protected by is_mtx.  *	r - read-only after initialization.  *	* - comment refers to pointer target / target hardware registers  *	    (for bus_addr_t).  * is_maplruq is also locked by is_mtx. Elements of is_tsb may only be  * accessed from functions operating on the map owning the corresponding  * resource, so the locking the user is required to do to protect the  * map is sufficient.  * dm_reslist of all maps are locked by is_mtx as well.  * is_dvma_rman has its own internal lock.  */
 end_comment
 
 begin_struct
 struct|struct
 name|iommu_state
 block|{
+name|struct
+name|mtx
+name|is_mtx
+decl_stmt|;
+name|struct
+name|rman
+name|is_dvma_rman
+decl_stmt|;
+comment|/* DVMA space rman */
+name|struct
+name|iommu_maplruq_head
+name|is_maplruq
+decl_stmt|;
+comment|/* (i) LRU queue */
+name|vm_paddr_t
+name|is_ptsb
+decl_stmt|;
+comment|/* (r) TSB physical address */
+name|u_int64_t
+modifier|*
+name|is_tsb
+decl_stmt|;
+comment|/* (*i) TSB virtual address */
 name|int
 name|is_tsbsize
 decl_stmt|;
 comment|/* (r) 0 = 8K, ... */
+name|u_int64_t
+name|is_pmaxaddr
+decl_stmt|;
+comment|/* (r) max. physical address */
 name|u_int64_t
 name|is_dvmabase
 decl_stmt|;
@@ -149,19 +190,12 @@ name|bus_addr_t
 name|is_dtcmp
 decl_stmt|;
 comment|/* (r, *r) */
-name|STAILQ_ENTRY
-argument_list|(
-argument|iommu_state
-argument_list|)
-name|is_link
-expr_stmt|;
-comment|/* (r) */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* interfaces for PCI/SBUS code */
+comment|/* interfaces for PCI/SBus code */
 end_comment
 
 begin_function_decl

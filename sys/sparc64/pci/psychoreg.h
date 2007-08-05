@@ -1766,6 +1766,24 @@ begin_comment
 comment|/* Subordinate bus number register */
 end_comment
 
+begin_comment
+comment|/* Width of the physical addresses the IOMMU translates to */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSYCHO_IOMMU_BITS
+value|41
+end_define
+
+begin_define
+define|#
+directive|define
+name|SABRE_IOMMU_BITS
+value|34
+end_define
+
 begin_endif
 endif|#
 directive|endif

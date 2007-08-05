@@ -162,15 +162,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|IOMMU_BITS
-value|34
-end_define
-
-begin_define
-define|#
-directive|define
 name|IOMMU_MAXADDR
-value|((1UL<< IOMMU_BITS) - 1)
+parameter_list|(
+name|bits
+parameter_list|)
+value|((1UL<< (bits)) - 1)
 end_define
 
 begin_comment
@@ -444,7 +440,7 @@ begin_define
 define|#
 directive|define
 name|IOTTE_PAMASK
-value|0x000001ffffffe000UL
+value|0x000007ffffffe000UL
 end_define
 
 begin_comment
