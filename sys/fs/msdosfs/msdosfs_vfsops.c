@@ -3232,7 +3232,7 @@ name|bp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Check FSInfo. 	 */
+comment|/* 	 * Check the fsinfo sector if we have one.  Silently fix up our 	 * in-core copy of fp->fsinxtfree if it is unknown (0xffffffff) 	 * or too large.  Ignore fp->fsinfree for now, since we need to 	 * read the entire FAT anyway to fill the inuse map. 	 */
 if|if
 condition|(
 name|pmp
@@ -3340,8 +3340,10 @@ condition|(
 name|pmp
 operator|->
 name|pm_nxtfree
-operator|==
-literal|0xffffffff
+operator|>
+name|pmp
+operator|->
+name|pm_maxcluster
 condition|)
 name|pmp
 operator|->
@@ -3367,43 +3369,21 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * Check and validate (or perhaps invalidate?) the fsinfo structure? 	 */
+comment|/* 	 * Finish initializing pmp->pm_nxtfree (just in case the first few 	 * sectors aren't properly reserved in the FAT).  This completes 	 * the fixup for fp->fsinxtfree, and fixes up the zero-initialized 	 * value if there is no fsinfo.  We will use pmp->pm_nxtfree 	 * internally even if there is no fsinfo. 	 */
 if|if
 condition|(
 name|pmp
 operator|->
-name|pm_fsinfo
-operator|&&
-name|pmp
-operator|->
 name|pm_nxtfree
-operator|>
-name|pmp
-operator|->
-name|pm_maxcluster
+operator|<
+name|CLUST_FIRST
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Next free cluster in FSInfo (%lu) exceeds maxcluster (%lu)\n"
-argument_list|,
 name|pmp
 operator|->
 name|pm_nxtfree
-argument_list|,
-name|pmp
-operator|->
-name|pm_maxcluster
-argument_list|)
-expr_stmt|;
-name|error
 operator|=
-name|EINVAL
+name|CLUST_FIRST
 expr_stmt|;
-goto|goto
-name|error_exit
-goto|;
-block|}
 comment|/* 	 * Allocate memory for the bitmap of allocated clusters, and then 	 * fill it in. 	 */
 name|pmp
 operator|->
