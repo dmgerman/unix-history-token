@@ -476,17 +476,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|lp_capabilities
-value|lp_ifp->if_capabilities
-end_define
-
-begin_comment
-comment|/* capabilities */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PORTACTIVE
 parameter_list|(
 name|_tp
