@@ -2612,6 +2612,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DC_TX_LIST_RSVD
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|DC_MIN_FRAMELEN
 value|60
 end_define
@@ -2784,12 +2791,6 @@ name|dc_tx_cons
 decl_stmt|;
 name|int
 name|dc_tx_cnt
-decl_stmt|;
-name|int
-name|dc_rx_err
-decl_stmt|;
-name|int
-name|dc_rx_cur
 decl_stmt|;
 name|int
 name|dc_rx_prod
