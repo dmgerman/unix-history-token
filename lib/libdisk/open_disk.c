@@ -208,6 +208,10 @@ name|d
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|line
+init|=
+literal|1
 decl_stmt|;
 name|char
 modifier|*
@@ -260,6 +264,7 @@ index|[
 literal|10
 index|]
 decl_stmt|;
+comment|/* 	 * Locate the disk (by name) in our sysctl output 	 */
 for|for
 control|(
 name|p
@@ -281,6 +286,9 @@ name|p
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|,
+name|line
+operator|++
 control|)
 block|{
 if|if
@@ -303,6 +311,7 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
+comment|/* Skip anything not with index 0 */
 if|if
 condition|(
 name|strcmp
@@ -313,6 +322,7 @@ literal|"0"
 argument_list|)
 condition|)
 continue|continue;
+comment|/* Skip anything not a disk */
 name|a
 operator|=
 name|strsep
@@ -441,19 +451,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"BARF %d<%d>\n"
+literal|"libdisk: Int_Open_Disk(%s): can't parse length in line %d (r='%s')\n"
 argument_list|,
-name|__LINE__
+name|name
 argument_list|,
-operator|*
+name|line
+argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 name|a
 operator|=
@@ -486,19 +495,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"BARF %d<%d>\n"
+literal|"libdisk: Int_Open_Disk(%s): can't parse sector size in line %d (r='%s')\n"
 argument_list|,
-name|__LINE__
+name|name
 argument_list|,
-operator|*
+name|line
+argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 if|if
 condition|(
@@ -552,6 +560,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Try to parse any fields after the sector size in the DISK entry line */
 for|for
 control|(
 init|;
@@ -605,19 +614,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"BARF %d<%d>\n"
+literal|"libdisk: Int_Open_Disk(%s): can't parse parameter '%s' in line %d (r='%s')\n"
 argument_list|,
-name|__LINE__
+name|name
 argument_list|,
-operator|*
+name|a
+argument_list|,
+name|line
+argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 if|if
 condition|(
@@ -655,11 +665,15 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"HUH ?<%s><%s>\n"
+literal|"libdisk: Int_Open_Disk(%s): unknown parameter '%s' with value '%s' in line %d, ignored\n"
+argument_list|,
+name|name
 argument_list|,
 name|a
 argument_list|,
 name|b
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 block|}
@@ -694,6 +708,10 @@ name|p
 operator|=
 name|q
 expr_stmt|;
+name|line
+operator|++
+expr_stmt|;
+comment|/* p is now the start of the line _after_ the DISK entry */
 name|lo
 index|[
 literal|0
@@ -714,6 +732,9 @@ condition|;
 name|p
 operator|=
 name|q
+operator|,
+name|line
+operator|++
 control|)
 block|{
 name|sn
@@ -752,6 +773,7 @@ literal|" "
 argument_list|)
 expr_stmt|;
 comment|/* Index */
+comment|/* 		 * If we find index 0 again, this means we've encountered another disk, so it's safe to assume this disk 		 * has been processed. 		 */
 if|if
 condition|(
 operator|!
@@ -783,19 +805,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"BARF %d<%d>\n"
+literal|"libdisk: Int_Open_Disk(%s): can't parse depth '%s' in line %d (r='%s')\n"
 argument_list|,
-name|__LINE__
+name|name
 argument_list|,
-operator|*
+name|a
+argument_list|,
+name|line
+argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 name|t
 operator|=
@@ -850,19 +873,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"BARF %d<%d>\n"
+literal|"libdisk: Int_Open_Disk(%s): can't parse length '%s' in line %d (r='%s')\n"
 argument_list|,
-name|__LINE__
+name|name
 argument_list|,
-operator|*
+name|a
+argument_list|,
+name|line
+argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+continue|continue;
 block|}
 name|a
 operator|=
@@ -895,19 +917,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"BARF %d<%d>\n"
+literal|"libdisk: Int_Open_Disk(%s): can't parse sector size '%s' in line %d (r='%s')\n"
 argument_list|,
-name|__LINE__
+name|name
 argument_list|,
-operator|*
+name|a
+argument_list|,
+name|line
+argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+continue|continue;
 block|}
 for|for
 control|(
@@ -999,19 +1020,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"BARF %d<%d>\n"
+literal|"libdisk: Int_Open_Disk(%s): can't parse parameter '%s' in line %d (r='%s')\n"
 argument_list|,
-name|__LINE__
+name|name
 argument_list|,
-operator|*
+name|a
+argument_list|,
+name|line
+argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
