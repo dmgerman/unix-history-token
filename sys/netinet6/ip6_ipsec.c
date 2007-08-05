@@ -222,7 +222,7 @@ end_comment
 
 begin_function
 name|int
-name|ip6_ipsec_filtergif
+name|ip6_ipsec_filtertunnel
 parameter_list|(
 name|struct
 name|mbuf
@@ -240,9 +240,9 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|IPSEC_FILTERGIF
+name|IPSEC_FILTERTUNNEL
 argument_list|)
-comment|/* 	 * Bypass packet filtering for packets from a tunnel (gif). 	 */
+comment|/* 	 * Bypass packet filtering for packets from a tunnel. 	 */
 if|if
 condition|(
 name|m_tag_find

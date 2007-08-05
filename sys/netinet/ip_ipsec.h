@@ -17,7 +17,7 @@ end_define
 
 begin_function_decl
 name|int
-name|ip_ipsec_filtergif
+name|ip_ipsec_filtertunnel
 parameter_list|(
 name|struct
 name|mbuf

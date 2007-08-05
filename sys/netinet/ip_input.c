@@ -1869,7 +1869,7 @@ name|IPSEC
 comment|/* 	 * Bypass packet filtering for packets from a tunnel (gif). 	 */
 if|if
 condition|(
-name|ip_ipsec_filtergif
+name|ip_ipsec_filtertunnel
 argument_list|(
 name|m
 argument_list|)
