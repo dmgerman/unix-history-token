@@ -1496,7 +1496,7 @@ name|u_int64_t
 name|v
 parameter_list|)
 block|{
-asm|__asm __volatile("mov rr[%0]=%1;; srlz.d;;"
+asm|__asm __volatile("mov rr[%0]=%1"
 operator|::
 literal|"r"
 operator|(
