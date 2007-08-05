@@ -598,12 +598,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Gain a reference to the object. 		 */
-name|vm_object_reference
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pindex
