@@ -386,15 +386,11 @@ name|uint32_t
 name|ifbr_ifsflags
 decl_stmt|;
 comment|/* member if flags */
-name|uint8_t
-name|ifbr_state
+name|uint32_t
+name|ifbr_stpflags
 decl_stmt|;
-comment|/* member if STP state */
-name|uint8_t
-name|ifbr_priority
-decl_stmt|;
-comment|/* member if STP priority */
-name|uint8_t
+comment|/* member if STP flags */
+name|uint32_t
 name|ifbr_path_cost
 decl_stmt|;
 comment|/* member if STP cost */
@@ -402,10 +398,10 @@ name|uint8_t
 name|ifbr_portno
 decl_stmt|;
 comment|/* member if port number */
-name|uint32_t
-name|ifbr_stpflags
+name|uint8_t
+name|ifbr_priority
 decl_stmt|;
-comment|/* member if STP flags */
+comment|/* member if STP priority */
 name|uint8_t
 name|ifbr_proto
 decl_stmt|;
@@ -414,6 +410,10 @@ name|uint8_t
 name|ifbr_role
 decl_stmt|;
 comment|/* member if STP role */
+name|uint8_t
+name|ifbr_state
+decl_stmt|;
+comment|/* member if STP state */
 block|}
 struct|;
 end_struct
