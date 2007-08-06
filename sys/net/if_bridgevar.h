@@ -1054,16 +1054,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BRIDGE_LOCKED
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_owned(&(_sc)->sc_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BRIDGE_LOCK_ASSERT
 parameter_list|(
 name|_sc
