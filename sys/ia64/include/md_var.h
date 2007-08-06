@@ -395,11 +395,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|interrupt
 parameter_list|(
-name|u_int
-parameter_list|,
 name|struct
 name|trapframe
 modifier|*
