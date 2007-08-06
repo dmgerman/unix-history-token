@@ -2136,6 +2136,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_STATE_WAS_ABORTED
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_STATE_MASK
 value|0x007f
 end_define
