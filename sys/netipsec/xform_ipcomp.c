@@ -908,9 +908,6 @@ decl_stmt|;
 name|caddr_t
 name|addr
 decl_stmt|;
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|crd
 operator|=
 name|crp
@@ -1111,9 +1108,6 @@ name|crypto_dispatch
 argument_list|(
 name|crp
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 return|return
 name|error
@@ -1404,9 +1398,6 @@ operator|&
 name|sav
 argument_list|)
 expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
-expr_stmt|;
 return|return
 name|error
 return|;
@@ -1452,9 +1443,6 @@ name|crypto_freereq
 argument_list|(
 name|crp
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 return|return
 name|error
@@ -2353,9 +2341,6 @@ name|skip
 decl_stmt|,
 name|rlen
 decl_stmt|;
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|tc
 operator|=
 operator|(
@@ -2526,9 +2511,6 @@ name|crypto_dispatch
 argument_list|(
 name|crp
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 return|return
 name|error
@@ -2791,9 +2773,6 @@ argument_list|(
 name|isr
 argument_list|)
 expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
-expr_stmt|;
 return|return
 name|error
 return|;
@@ -2834,9 +2813,6 @@ name|crypto_freereq
 argument_list|(
 name|crp
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 return|return
 name|error

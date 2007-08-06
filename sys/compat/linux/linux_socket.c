@@ -2666,9 +2666,6 @@ name|error
 operator|)
 return|;
 comment|/* 	 * Linux doesn't return EISCONN the first time it occurs, 	 * when on a non-blocking socket. Instead it returns the 	 * error getsockopt(SOL_SOCKET, SO_ERROR) would return on BSD. 	 * 	 * XXXRW: Instead of using fgetsock(), check that it is a 	 * socket and use the file descriptor reference instead of 	 * creating a new one. 	 */
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|fgetsock
@@ -2745,9 +2742,6 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-name|NET_UNLOCK_GIANT
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|error

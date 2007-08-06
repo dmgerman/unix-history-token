@@ -1428,9 +1428,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -1668,9 +1665,6 @@ name|EOPNOTSUPP
 expr_stmt|;
 break|break;
 block|}
-name|NET_UNLOCK_GIANT
-argument_list|()
-expr_stmt|;
 return|return
 name|error
 return|;

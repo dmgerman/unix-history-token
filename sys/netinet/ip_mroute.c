@@ -468,7 +468,7 @@ define|#
 directive|define
 name|MROUTER_LOCK_ASSERT
 parameter_list|()
-value|do {					\ 	mtx_assert(&mrouter_mtx, MA_OWNED);				\ 	NET_ASSERT_GIANT();						\ } while (0)
+value|mtx_assert(&mrouter_mtx, MA_OWNED)
 end_define
 
 begin_define
@@ -517,7 +517,7 @@ define|#
 directive|define
 name|MFC_LOCK_ASSERT
 parameter_list|()
-value|do {					\ 	mtx_assert(&mfc_mtx, MA_OWNED);					\ 	NET_ASSERT_GIANT();						\ } while (0)
+value|mtx_assert(&mfc_mtx, MA_OWNED)
 end_define
 
 begin_define

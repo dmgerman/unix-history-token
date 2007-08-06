@@ -2778,9 +2778,6 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Create socket and set its recieve timeout. 	 */
 name|error
 operator|=
@@ -4457,9 +4454,6 @@ name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|socreate

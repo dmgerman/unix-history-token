@@ -988,9 +988,6 @@ return|return
 name|error
 return|;
 comment|/* An extra reference on `fp' has been held for us by falloc(). */
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|socreate
@@ -1010,9 +1007,6 @@ name|td_ucred
 argument_list|,
 name|td
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 if|if
 condition|(

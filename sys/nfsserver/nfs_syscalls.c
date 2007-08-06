@@ -524,9 +524,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -596,9 +593,11 @@ if|if
 condition|(
 name|error
 condition|)
-goto|goto
-name|done2
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -619,9 +618,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-goto|goto
-name|done2
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 name|fp
@@ -638,9 +639,12 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-goto|goto
-name|done2
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* XXXRW: Should be EINVAL? */
 block|}
 comment|/* 		 * Get the client address for connected sockets. 		 */
 if|if
@@ -691,9 +695,11 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-goto|goto
-name|done2
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 block|}
 name|error
@@ -754,11 +760,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|done2
-label|:
-name|NET_UNLOCK_GIANT
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -810,9 +811,6 @@ name|error
 decl_stmt|,
 name|s
 decl_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 name|so
 operator|=
 name|fp
@@ -1298,9 +1296,6 @@ decl_stmt|;
 name|u_quad_t
 name|cur_usec
 decl_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|nolint
@@ -2695,9 +2690,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -3198,9 +3190,6 @@ decl_stmt|,
 modifier|*
 name|nslp
 decl_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 name|NFSD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;

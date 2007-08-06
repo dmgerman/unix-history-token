@@ -10565,9 +10565,6 @@ operator|->
 name|sctp_socket
 expr_stmt|;
 comment|/* 			 * We do this to keep the sockets side happy durin 			 * the sonewcon ONLY. 			 */
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|SCTP_TCB_UNLOCK
 argument_list|(
 operator|(
@@ -10584,9 +10581,6 @@ name|oso
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 name|SCTP_INP_WLOCK
 argument_list|(

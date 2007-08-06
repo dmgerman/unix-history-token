@@ -6944,9 +6944,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|ifp
 operator|=
 name|adapter
@@ -7024,9 +7021,6 @@ name|em_enable_intr
 argument_list|(
 name|adapter
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 block|}
 end_function

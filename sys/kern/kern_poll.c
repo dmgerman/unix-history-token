@@ -1378,9 +1378,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1435,9 +1432,6 @@ operator|&
 name|poll_mtx
 argument_list|)
 expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -1465,9 +1459,6 @@ decl_stmt|;
 name|int
 name|kern_load
 decl_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1665,9 +1656,6 @@ name|arg
 init|=
 name|POLL_ONLY
 decl_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1821,9 +1809,6 @@ operator|,
 name|__func__
 operator|)
 argument_list|)
-expr_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -2009,9 +1994,6 @@ operator|,
 name|__func__
 operator|)
 argument_list|)
-expr_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -2212,9 +2194,6 @@ name|polling
 operator|=
 name|val
 expr_stmt|;
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
@@ -2303,9 +2282,6 @@ expr_stmt|;
 block|}
 block|}
 name|IFNET_RUNLOCK
-argument_list|()
-expr_stmt|;
-name|NET_UNLOCK_GIANT
 argument_list|()
 expr_stmt|;
 name|log

@@ -691,9 +691,6 @@ name|from
 operator|=
 name|NULL
 expr_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Create socket and set its recieve timeout. 	 */
 if|if
 condition|(

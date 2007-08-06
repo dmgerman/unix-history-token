@@ -4635,19 +4635,11 @@ name|lastrx
 operator|>
 name|bmisstimeout
 condition|)
-block|{
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|ieee80211_beacon_miss
 argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
-expr_stmt|;
-block|}
 else|else
 name|sc
 operator|->
@@ -15902,10 +15894,6 @@ decl_stmt|;
 name|u_int64_t
 name|tsf
 decl_stmt|;
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
-comment|/* XXX */
 name|DPRINTF
 argument_list|(
 name|sc
@@ -16981,10 +16969,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
-expr_stmt|;
-comment|/* XXX */
 undef|#
 directive|undef
 name|PA2DESC

@@ -2709,9 +2709,6 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&

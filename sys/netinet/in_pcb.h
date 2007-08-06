@@ -770,7 +770,7 @@ name|INP_LOCK_ASSERT
 parameter_list|(
 name|inp
 parameter_list|)
-value|do {					\ 	mtx_assert(&(inp)->inp_mtx, MA_OWNED);				\ 	NET_ASSERT_GIANT();						\ } while (0)
+value|mtx_assert(&(inp)->inp_mtx, MA_OWNED)
 end_define
 
 begin_define
@@ -853,7 +853,7 @@ name|INP_INFO_RLOCK_ASSERT
 parameter_list|(
 name|ipi
 parameter_list|)
-value|do {				\ 	mtx_assert(&(ipi)->ipi_mtx, MA_OWNED);				\ 	NET_ASSERT_GIANT();						\ } while (0)
+value|mtx_assert(&(ipi)->ipi_mtx, MA_OWNED)
 end_define
 
 begin_define
@@ -863,7 +863,7 @@ name|INP_INFO_WLOCK_ASSERT
 parameter_list|(
 name|ipi
 parameter_list|)
-value|do {				\ 	mtx_assert(&(ipi)->ipi_mtx, MA_OWNED);				\ 	NET_ASSERT_GIANT();						\ } while (0)
+value|mtx_assert(&(ipi)->ipi_mtx, MA_OWNED)
 end_define
 
 begin_define
@@ -873,7 +873,7 @@ name|INP_INFO_UNLOCK_ASSERT
 parameter_list|(
 name|ipi
 parameter_list|)
-value|do {				\ 	mtx_assert(&(ipi)->ipi_mtx, MA_NOTOWNED);			\ } while (0)
+value|mtx_assert(&(ipi)->ipi_mtx, MA_NOTOWNED)
 end_define
 
 begin_define

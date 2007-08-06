@@ -264,7 +264,7 @@ name|BPFD_LOCK_ASSERT
 parameter_list|(
 name|bd
 parameter_list|)
-value|do {				\ 	mtx_assert(&(bd)->bd_mtx, MA_OWNED);			\ 	NET_ASSERT_GIANT();					\ } while (0)
+value|mtx_assert(&(bd)->bd_mtx, MA_OWNED);
 end_define
 
 begin_comment

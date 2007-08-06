@@ -2785,7 +2785,6 @@ name|export
 operator|!=
 name|NULL
 condition|)
-comment|/* Should also NET_LOCK_GIANT(). */
 name|NG_FWD_ITEM_HOOK_FLAGS
 argument_list|(
 name|error

@@ -9673,9 +9673,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 operator|*
 name|spp
 operator|=
@@ -9803,9 +9800,6 @@ modifier|*
 name|so
 parameter_list|)
 block|{
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 name|ACCEPT_LOCK
 argument_list|()
 expr_stmt|;

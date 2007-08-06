@@ -2711,9 +2711,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 call|(
@@ -2733,9 +2730,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|mc
@@ -2749,10 +2743,6 @@ name|error
 operator|==
 literal|0
 condition|)
-block|{
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -2765,10 +2755,6 @@ argument_list|,
 name|mc
 argument_list|)
 expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
-expr_stmt|;
-block|}
 else|else
 name|m_freem
 argument_list|(
@@ -3107,9 +3093,6 @@ name|EINVAL
 expr_stmt|;
 else|else
 block|{
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|ifp
 operator|=
 name|d
@@ -3133,9 +3116,6 @@ name|cmd
 argument_list|,
 name|addr
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 block|}
 break|break;
@@ -3300,9 +3280,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|ifpromisc
@@ -3315,9 +3292,6 @@ name|bif_ifp
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 if|if
 condition|(

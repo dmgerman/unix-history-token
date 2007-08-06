@@ -1113,7 +1113,7 @@ define|#
 directive|define
 name|DUMMYNET_LOCK_ASSERT
 parameter_list|()
-value|do {				\ 	mtx_assert(&dummynet_mtx, MA_OWNED);			\ 	NET_ASSERT_GIANT();					\ } while (0)
+value|mtx_assert(&dummynet_mtx, MA_OWNED)
 end_define
 
 begin_function_decl
@@ -3420,9 +3420,6 @@ comment|/* generic parameter to handler */
 name|int
 name|i
 decl_stmt|;
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|DUMMYNET_LOCK
 argument_list|()
 expr_stmt|;
@@ -3880,9 +3877,6 @@ name|dummynet
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 block|}
 end_function

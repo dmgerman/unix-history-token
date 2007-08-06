@@ -1826,10 +1826,6 @@ name|flags
 decl_stmt|,
 name|error
 decl_stmt|;
-comment|/* 	 * XXXRW: For now, assert Giant here since the NFS server upcall 	 * will perform socket operations requiring Giant in a non-mpsafe 	 * kernel. 	 */
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 name|NFSD_UNLOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -3450,9 +3446,6 @@ name|soflags
 decl_stmt|,
 name|flags
 decl_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 name|NFSD_UNLOCK_ASSERT
 argument_list|()
 expr_stmt|;

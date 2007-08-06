@@ -1435,34 +1435,6 @@ parameter_list|)
 value|do {							\ 	int _val = (rval);						\ 	mtx_unlock(&Giant);						\ 	return (_val);							\ } while (0)
 end_define
 
-begin_comment
-comment|/*  * With the advent of fine-grained locking, the Giant lock is no longer  * required around the network stack.  These macros exist for historical  * reasons, allowing conditional acquisition of Giant based on a debugging  * setting, and will be removed.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NET_LOCK_GIANT
-parameter_list|()
-value|do {						\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NET_UNLOCK_GIANT
-parameter_list|()
-value|do {						\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NET_ASSERT_GIANT
-parameter_list|()
-value|do {						\ } while (0)
-end_define
-
 begin_struct
 struct|struct
 name|mtx_args

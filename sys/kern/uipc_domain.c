@@ -1946,9 +1946,6 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|dp
@@ -2031,9 +2028,6 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|dp

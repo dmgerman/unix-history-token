@@ -1264,9 +1264,6 @@ argument_list|(
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|SOCK_LOCK
 argument_list|(
 name|so
@@ -1285,9 +1282,6 @@ name|SOCK_UNLOCK
 argument_list|(
 name|so
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 name|error
 operator|=
@@ -2347,9 +2341,6 @@ name|fp
 operator|->
 name|f_data
 expr_stmt|;
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|mac_socket_label_set
@@ -2362,9 +2353,6 @@ name|so
 argument_list|,
 name|intlabel
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 block|}
 name|mac_socket_label_free

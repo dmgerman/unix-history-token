@@ -2347,9 +2347,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|NET_ASSERT_GIANT
-argument_list|()
-expr_stmt|;
 if|#
 directive|if
 name|defined

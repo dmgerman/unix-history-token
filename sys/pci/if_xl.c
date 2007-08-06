@@ -9448,9 +9448,6 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|XL_LOCK
 argument_list|(
 name|sc
@@ -9475,9 +9472,6 @@ name|XL_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 block|}
 end_function
