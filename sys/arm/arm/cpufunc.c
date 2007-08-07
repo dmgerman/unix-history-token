@@ -446,12 +446,24 @@ comment|/* idcache_wbinv_range	*/
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_all	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_inv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range	*/
@@ -607,12 +619,24 @@ comment|/* idcache_wbinv_range	*/
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_all	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_inv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range	*/
@@ -752,12 +776,24 @@ comment|/* idcache_wbinv_range	*/
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_all	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_inv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range	*/
@@ -892,12 +928,24 @@ comment|/* idcache_wbinv_range	*/
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_all	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_inv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range	*/
@@ -1037,12 +1085,24 @@ comment|/* idcache_wbinv_range	*/
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_all	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_inv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range	*/
@@ -1190,12 +1250,24 @@ comment|/* idcache_wbinv_range	*/
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_all	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_inv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range	*/
@@ -1331,12 +1403,24 @@ comment|/* idcache_wbinv_range	*/
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_all	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_inv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range	*/
@@ -1500,12 +1584,24 @@ comment|/* idcache_wbinv_range	*/
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_all 	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_inv_range	*/
+operator|(
+name|void
+operator|*
+operator|)
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wb_range	*/
