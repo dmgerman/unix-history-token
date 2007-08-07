@@ -508,6 +508,8 @@ name|OPTION_NEWER_MTIME_THAN
 block|,
 name|OPTION_NODUMP
 block|,
+name|OPTION_NO_SAME_OWNER
+block|,
 name|OPTION_NO_SAME_PERMISSIONS
 block|,
 name|OPTION_NULL
@@ -903,7 +905,7 @@ name|no_argument
 block|,
 name|NULL
 block|,
-literal|'o'
+name|OPTION_NO_SAME_OWNER
 block|}
 block|,
 block|{
@@ -1885,6 +1887,18 @@ operator|->
 name|option_honor_nodump
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_NO_SAME_OWNER
+case|:
+comment|/* GNU tar */
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_OWNER
 expr_stmt|;
 break|break;
 case|case
