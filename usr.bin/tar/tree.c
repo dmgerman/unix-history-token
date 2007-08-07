@@ -21,11 +21,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_STAT_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DIRENT_H
+end_ifdef
 
 begin_include
 include|#
@@ -33,11 +50,33 @@ directive|include
 file|<dirent.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERRNO_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FCNTL_H
+end_ifdef
 
 begin_include
 include|#
@@ -45,11 +84,33 @@ directive|include
 file|<fcntl.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
 
 begin_include
 include|#
@@ -57,11 +118,27 @@ directive|include
 file|<string.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1604,7 +1681,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test whether current entry is a dir or dir link.  */
+comment|/*  * Test whether current entry is a dir or link to a dir.  */
 end_comment
 
 begin_function
@@ -1617,29 +1694,13 @@ modifier|*
 name|t
 parameter_list|)
 block|{
-comment|/* If we've already pulled stat(), just use that. */
-if|if
-condition|(
-name|t
-operator|->
-name|flags
-operator|&
-name|hasStat
-condition|)
-return|return
-operator|(
-name|S_ISDIR
-argument_list|(
-name|tree_current_stat
-argument_list|(
-name|t
-argument_list|)
-operator|->
-name|st_mode
-argument_list|)
-operator|)
-return|;
-comment|/* If we've already pulled lstat(), we may be able to use that. */
+specifier|const
+name|struct
+name|stat
+modifier|*
+name|st
+decl_stmt|;
+comment|/* 	 * If we already have lstat() info, then try some 	 * cheap tests to determine if this is a dir. 	 */
 if|if
 condition|(
 name|t
@@ -1665,7 +1726,8 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* If it's not a dir and not a link, we're done. */
+comment|/* Not a dir; might be a link to a dir. */
+comment|/* If it's not a link, then it's not a link to a dir. */
 if|if
 condition|(
 operator|!
@@ -1682,17 +1744,31 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 		 * If the above two tests fail, then it's a link, but 		 * we don't know whether it's a link to a dir or a 		 * non-dir. 		 */
+comment|/* 		 * It's a link, but we don't know what it's a link to, 		 * so we'll have to use stat(). 		 */
 block|}
-comment|/* TODO: Use a more efficient mechanism when available. */
-return|return
-operator|(
-name|S_ISDIR
-argument_list|(
+name|st
+operator|=
 name|tree_current_stat
 argument_list|(
 name|t
 argument_list|)
+expr_stmt|;
+comment|/* If we can't stat it, it's not a dir. */
+if|if
+condition|(
+name|st
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
+comment|/* Use the definitive test.  Hopefully this is cached. */
+return|return
+operator|(
+name|S_ISDIR
+argument_list|(
+name|st
 operator|->
 name|st_mode
 argument_list|)
@@ -1702,7 +1778,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test whether current entry is a physical directory.  */
+comment|/*  * Test whether current entry is a physical directory.  Usually, we  * already have at least one of stat() or lstat() in memory, so we  * use tricks to try to avoid an extra trip to the disk.  */
 end_comment
 
 begin_function
@@ -1715,20 +1791,28 @@ modifier|*
 name|t
 parameter_list|)
 block|{
-comment|/* If we've already pulled lstat(), just use that. */
+specifier|const
+name|struct
+name|stat
+modifier|*
+name|st
+decl_stmt|;
+comment|/* 	 * If stat() says it isn't a dir, then it's not a dir. 	 * If stat() data is cached, this check is free, so do it first. 	 */
 if|if
 condition|(
+operator|(
 name|t
 operator|->
 name|flags
 operator|&
-name|hasLstat
-condition|)
-return|return
+name|hasStat
+operator|)
+operator|&&
 operator|(
+operator|!
 name|S_ISDIR
 argument_list|(
-name|tree_current_lstat
+name|tree_current_stat
 argument_list|(
 name|t
 argument_list|)
@@ -1736,16 +1820,34 @@ operator|->
 name|st_mode
 argument_list|)
 operator|)
-return|;
-comment|/* TODO: Use a more efficient mechanism when available. */
+condition|)
 return|return
-operator|(
-name|S_ISDIR
-argument_list|(
+literal|0
+return|;
+comment|/* 	 * Either stat() said it was a dir (in which case, we have 	 * to determine whether it's really a link to a dir) or 	 * stat() info wasn't available.  So we use lstat(), which 	 * hopefully is already cached. 	 */
+name|st
+operator|=
 name|tree_current_lstat
 argument_list|(
 name|t
 argument_list|)
+expr_stmt|;
+comment|/* If we can't stat it, it's not a dir. */
+if|if
+condition|(
+name|st
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
+comment|/* Use the definitive test.  Hopefully this is cached. */
+return|return
+operator|(
+name|S_ISDIR
+argument_list|(
+name|st
 operator|->
 name|st_mode
 argument_list|)
@@ -1768,37 +1870,31 @@ modifier|*
 name|t
 parameter_list|)
 block|{
-comment|/* If we've already pulled lstat(), just use that. */
+specifier|const
+name|struct
+name|stat
+modifier|*
+name|st
+init|=
+name|tree_current_lstat
+argument_list|(
+name|t
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
-name|t
-operator|->
-name|flags
-operator|&
-name|hasLstat
+name|st
+operator|==
+name|NULL
 condition|)
 return|return
-operator|(
-name|S_ISLNK
-argument_list|(
-name|tree_current_lstat
-argument_list|(
-name|t
-argument_list|)
-operator|->
-name|st_mode
-argument_list|)
-operator|)
+literal|0
 return|;
-comment|/* TODO: Use a more efficient mechanism when available. */
 return|return
 operator|(
 name|S_ISLNK
 argument_list|(
-name|tree_current_lstat
-argument_list|(
-name|t
-argument_list|)
+name|st
 operator|->
 name|st_mode
 argument_list|)

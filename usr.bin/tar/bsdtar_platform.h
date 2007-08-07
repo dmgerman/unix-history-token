@@ -142,6 +142,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_ERRNO_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_FCHDIR
 value|1
 end_define
