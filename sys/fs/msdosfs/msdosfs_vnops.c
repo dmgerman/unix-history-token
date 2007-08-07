@@ -891,7 +891,7 @@ operator|->
 name|pm_mask
 operator|)
 expr_stmt|;
-comment|/* 	 * Disallow write attempts on read-only filesystems; 	 * unless the file is a socket, fifo, or a block or 	 * character device resident on the filesystem. 	 */
+comment|/* 	 * Disallow writing to directories and regular files if the 	 * filesystem is read-only. 	 */
 if|if
 condition|(
 name|mode
@@ -908,9 +908,6 @@ condition|)
 block|{
 case|case
 name|VDIR
-case|:
-case|case
-name|VLNK
 case|:
 case|case
 name|VREG
@@ -2008,7 +2005,6 @@ operator|!=
 name|VNOVAL
 condition|)
 block|{
-comment|/* 		 * Disallow write attempts on read-only filesystems; 		 * unless the file is a socket, fifo, or a block or 		 * character device resident on the filesystem. 		 */
 switch|switch
 condition|(
 name|vp
@@ -2025,11 +2021,9 @@ name|EISDIR
 operator|)
 return|;
 case|case
-name|VLNK
-case|:
-case|case
 name|VREG
 case|:
+comment|/* 			 * Truncation is only supported for regular files, 			 * Disallow it if the filesystem is read-only. 			 */
 if|if
 condition|(
 name|vp
@@ -2047,6 +2041,7 @@ operator|)
 return|;
 break|break;
 default|default:
+comment|/* 			 * According to POSIX, the result is unspecified 			 * for file types other than regular files, 			 * directories and shared memory objects.  We 			 * don't support any file types except regular 			 * files and directories in this file system, so 			 * this (default) case is unreachable and can do 			 * anything.  Keep falling through to detrunc() 			 * for now. 			 */
 break|break;
 block|}
 name|error
