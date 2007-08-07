@@ -94,12 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/interruptvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr_machdep.h>
 end_include
 

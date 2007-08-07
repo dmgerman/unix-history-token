@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcb.h>
 end_include
 
@@ -153,12 +159,6 @@ begin_include
 include|#
 directive|include
 file|<machine/sr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/interruptvar.h>
 end_include
 
 begin_function_decl
@@ -214,18 +214,6 @@ begin_function_decl
 specifier|extern
 name|void
 name|decr_intr
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|trap
 parameter_list|(
 name|struct
 name|trapframe

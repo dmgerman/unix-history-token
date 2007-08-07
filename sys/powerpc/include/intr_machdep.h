@@ -70,6 +70,26 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* XXX temporary. */
+end_comment
+
+begin_function_decl
+name|void
+name|ext_intr_install
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|new_extint
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|intr_init
