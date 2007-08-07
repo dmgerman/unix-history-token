@@ -200,18 +200,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* protect against object creation */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|sx
-name|dev_pager_sx
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* protect list manipulation */
 end_comment
 
@@ -313,14 +301,6 @@ operator|&
 name|dev_pager_object_list
 argument_list|)
 expr_stmt|;
-name|sx_init
-argument_list|(
-operator|&
-name|dev_pager_sx
-argument_list|,
-literal|"dev_pager create"
-argument_list|)
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -393,6 +373,8 @@ name|dev
 decl_stmt|;
 name|vm_object_t
 name|object
+decl_stmt|,
+name|object1
 decl_stmt|;
 name|vm_pindex_t
 name|pindex
@@ -521,13 +503,17 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Lock to prevent object creation race condition. 	 */
-name|sx_xlock
+name|mtx_lock
 argument_list|(
 operator|&
-name|dev_pager_sx
+name|dev_pager_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Look up pager, creating as necessary. 	 */
+name|object1
+operator|=
+name|NULL
+expr_stmt|;
 name|object
 operator|=
 name|vm_pager_object_lookup
@@ -546,7 +532,13 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Allocate object and associate it with the pager. 		 */
-name|object
+name|mtx_unlock
+argument_list|(
+operator|&
+name|dev_pager_mtx
+argument_list|)
+expr_stmt|;
+name|object1
 operator|=
 name|vm_object_allocate
 argument_list|(
@@ -554,6 +546,55 @@ name|OBJT_DEVICE
 argument_list|,
 name|pindex
 argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|dev_pager_mtx
+argument_list|)
+expr_stmt|;
+name|object
+operator|=
+name|vm_pager_object_lookup
+argument_list|(
+operator|&
+name|dev_pager_object_list
+argument_list|,
+name|handle
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|object
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 			 * We raced with other thread while allocating object. 			 */
+if|if
+condition|(
+name|pindex
+operator|>
+name|object
+operator|->
+name|size
+condition|)
+name|object
+operator|->
+name|size
+operator|=
+name|pindex
+expr_stmt|;
+block|}
+else|else
+block|{
+name|object
+operator|=
+name|object1
+expr_stmt|;
+name|object1
+operator|=
+name|NULL
 expr_stmt|;
 name|object
 operator|->
@@ -573,12 +614,6 @@ operator|.
 name|devp_pglist
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|dev_pager_mtx
-argument_list|)
-expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -589,12 +624,7 @@ argument_list|,
 name|pager_object_list
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dev_pager_mtx
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -613,15 +643,20 @@ operator|=
 name|pindex
 expr_stmt|;
 block|}
-name|sx_xunlock
+name|mtx_unlock
 argument_list|(
 operator|&
-name|dev_pager_sx
+name|dev_pager_mtx
 argument_list|)
 expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|vm_object_deallocate
+argument_list|(
+name|object1
 argument_list|)
 expr_stmt|;
 return|return
@@ -646,6 +681,11 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -666,6 +706,11 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|dev_pager_mtx
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free up our fake pages. 	 */
