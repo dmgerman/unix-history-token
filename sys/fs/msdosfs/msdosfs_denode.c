@@ -835,27 +835,23 @@ comment|/* 		 * Since DOS directory entries that describe directories 		 * have 
 name|u_long
 name|size
 decl_stmt|;
-comment|/* 		 * XXX Sometimes, these arrives that . entry have cluster 		 * number 0, when it shouldn't.  Use real cluster number 		 * instead of what is written in directory entry. 		 */
+comment|/* 		 * XXX it sometimes happens that the "." entry has cluster 		 * number 0 when it shouldn't.  Use the actual cluster number 		 * instead of what is written in directory entry. 		 */
 if|if
 condition|(
-operator|(
 name|diroffset
 operator|==
 literal|0
-operator|)
 operator|&&
-operator|(
 name|ldep
 operator|->
 name|de_StartCluster
 operator|!=
 name|dirclust
-operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"deget(): . entry at clust %ld != %ld\n"
+literal|"deget(): \".\" entry at clust %lu != %lu\n"
 argument_list|,
 name|dirclust
 argument_list|,
@@ -1577,12 +1573,12 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 operator|&&
-operator|(
 name|allerror
 operator|==
 literal|0
-operator|)
 condition|)
 name|allerror
 operator|=
