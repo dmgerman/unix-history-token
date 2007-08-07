@@ -104,6 +104,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|HAVE_ATTR_XATTR_H
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -146,6 +152,12 @@ name|HAVE_ERRNO_H
 value|1
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|HAVE_EXT2FS_EXT2_FS_H
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -164,6 +176,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_FNMATCH
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_FNMATCH_H
 value|1
 end_define
 
@@ -236,6 +255,18 @@ directive|define
 name|HAVE_LIMITS_H
 value|1
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_LINUX_FS_H
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_LINUX_EXT2_FS_H
+end_undef
 
 begin_define
 define|#
