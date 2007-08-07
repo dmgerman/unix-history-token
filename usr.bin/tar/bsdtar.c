@@ -193,6 +193,10 @@ directive|include
 file|"bsdtar.h"
 end_include
 
+begin_comment
+comment|/*  * Per POSIX.1-1988, tar defaults to reading/writing archives to/from  * the default tape device for the system.  Pick something reasonable here.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1170,7 +1174,7 @@ name|extract_flags
 operator|=
 name|ARCHIVE_EXTRACT_TIME
 expr_stmt|;
-comment|/* Default for root user: preserve ownership on extract. */
+comment|/* Defaults for root user: */
 if|if
 condition|(
 name|bsdtar
@@ -1179,12 +1183,15 @@ name|user_uid
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* --same-owner */
 name|bsdtar
 operator|->
 name|extract_flags
 operator||=
 name|ARCHIVE_EXTRACT_OWNER
 expr_stmt|;
+block|}
 comment|/* Rewrite traditional-style tar arguments, if used. */
 name|argv
 operator|=
@@ -1213,6 +1220,7 @@ operator|=
 name|argc
 expr_stmt|;
 comment|/* Process all remaining arguments now. */
+comment|/* 	 * Comments following each option indicate where that option 	 * originated:  SUSv2, POSIX, GNU tar, star, etc.  If there's 	 * no such comment, then I don't know of anyone else who 	 * implements that option. 	 */
 while|while
 condition|(
 operator|(
@@ -1350,6 +1358,7 @@ break|break;
 case|case
 name|OPTION_FORMAT
 case|:
+comment|/* GNU tar, others */
 name|bsdtar
 operator|->
 name|create_format
@@ -1428,6 +1437,7 @@ break|break;
 case|case
 name|OPTION_HELP
 case|:
+comment|/* GNU tar, others */
 name|long_help
 argument_list|(
 name|bsdtar
@@ -1443,6 +1453,7 @@ case|case
 literal|'I'
 case|:
 comment|/* GNU tar */
+comment|/* 			 * TODO: Allow 'names' to come from an archive, 			 * not just a text file.  Design a good UI for 			 * allowing names and mode/owner to be read 			 * from an archive, with contents coming from 			 * disk.  This can be used to "refresh" an 			 * archive or to design archives with special 			 * permissions without having to create those 			 * permissions on disk. 			 */
 name|bsdtar
 operator|->
 name|names_from_file
@@ -1453,6 +1464,7 @@ break|break;
 case|case
 name|OPTION_INCLUDE
 case|:
+comment|/* 			 * Noone else has the @archive extension, so 			 * noone else needs this to filter entries 			 * when transforming archives. 			 */
 if|if
 condition|(
 name|include
@@ -1630,6 +1642,7 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+comment|/* 		 * Selecting files by time: 		 *    --newer-?time='date' Only files newer than 'date' 		 *    --newer-?time-than='file' Only files newer than time 		 *         on specified file (useful for incremental backups) 		 * TODO: Add corresponding "older" options to reverse these. 		 */
 case|case
 name|OPTION_NEWER_CTIME
 case|:
@@ -1805,7 +1818,7 @@ break|break;
 case|case
 literal|'o'
 case|:
-comment|/* SUSv2 and GNU conflict here */
+comment|/* SUSv2 and GNU conflict here, but not fatally */
 name|option_o
 operator|=
 literal|1
@@ -1815,7 +1828,7 @@ break|break;
 case|case
 name|OPTION_ONE_FILE_SYSTEM
 case|:
-comment|/* -l in GNU tar */
+comment|/* GNU tar */
 name|bsdtar
 operator|->
 name|option_dont_traverse_mounts
@@ -1979,10 +1992,20 @@ break|break;
 case|case
 name|OPTION_VERSION
 case|:
+comment|/* GNU convention */
 name|version
 argument_list|()
 expr_stmt|;
 break|break;
+if|#
+directive|if
+literal|0
+comment|/* 		 * The -W longopt feature is handled inside of 		 * bsdtar_getop(), so -W is not available here. 		 */
+block|case 'W':
+comment|/* Obscure, but useful GNU convention. */
+block|break;
+endif|#
+directive|endif
 case|case
 literal|'w'
 case|:
@@ -2192,6 +2215,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Sanity-check options. 	 */
+comment|/* If no "real" mode was specified, treat -h as --help. */
 if|if
 condition|(
 operator|(
@@ -2216,6 +2240,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Otherwise, a mode is required. */
 if|if
 condition|(
 name|bsdtar
