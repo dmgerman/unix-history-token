@@ -15,10 +15,6 @@ begin_comment
 comment|/*-  * Written by Paul Popelka (paulp@uts.amdahl.com)  *  * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *  * This software is provided "as is".  *  * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *  * October 1992  */
 end_comment
 
-begin_comment
-comment|/*  * System include files.  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -46,27 +42,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/mount.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|iconv_functions
-modifier|*
-name|msdosfs_iconv
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * MSDOSFS include files.  */
-end_comment
 
 begin_include
 include|#
@@ -77,14 +60,23 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/msdosfs/msdosfsmount.h>
+file|<fs/msdosfs/direntry.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/msdosfs/direntry.h>
+file|<fs/msdosfs/msdosfsmount.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|iconv_functions
+modifier|*
+name|msdosfs_iconv
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
