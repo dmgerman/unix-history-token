@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/iconv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -39,12 +45,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/iconv.h>
 end_include
 
 begin_expr_stmt

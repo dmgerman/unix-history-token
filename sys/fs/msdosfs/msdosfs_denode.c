@@ -30,13 +30,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
+file|<sys/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -48,13 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/clock.h>
+file|<sys/mount.h>
 end_include
 
 begin_include
@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/msdosfs/msdosfsmount.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fs/msdosfs/direntry.h>
 end_include
 
@@ -103,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<fs/msdosfs/fat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/msdosfs/msdosfsmount.h>
 end_include
 
 begin_expr_stmt

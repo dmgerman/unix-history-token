@@ -30,19 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/namei.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -54,13 +42,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/msdosfs/bpb.h>
+file|<sys/namei.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/msdosfs/msdosfsmount.h>
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/msdosfs/bpb.h>
 end_include
 
 begin_include
@@ -79,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<fs/msdosfs/fat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/msdosfs/msdosfsmount.h>
 end_include
 
 begin_comment

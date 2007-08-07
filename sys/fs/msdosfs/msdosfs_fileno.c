@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/mount.h>
 end_include
 
 begin_include
@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/msdosfs/msdosfsmount.h>
+file|<fs/msdosfs/direntry.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/msdosfs/direntry.h>
+file|<fs/msdosfs/msdosfsmount.h>
 end_include
 
 begin_expr_stmt
