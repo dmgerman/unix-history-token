@@ -458,6 +458,34 @@ parameter_list|)
 value|(dsisr& 0x1f)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_struct_decl
+struct_decl|struct
+name|trapframe
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|trap
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
