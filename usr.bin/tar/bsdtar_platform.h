@@ -191,6 +191,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_GRP_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_INTTYPES_H
 value|1
 end_define
@@ -293,6 +300,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_PATHS_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_PWD_H
 value|1
 end_define
 
