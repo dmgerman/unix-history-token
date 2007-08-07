@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/buf.h>
 end_include
 
@@ -67,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
 end_include
 
 begin_include

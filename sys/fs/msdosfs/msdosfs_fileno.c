@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -73,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<fs/msdosfs/bpb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fs/msdosfs/bootsect.h>
 end_include
 
 begin_include
