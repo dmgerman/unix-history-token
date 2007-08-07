@@ -1148,7 +1148,7 @@ expr_stmt|;
 name|fileid
 operator|+=
 operator|(
-name|uint64_t
+name|uoff_t
 operator|)
 name|dep
 operator|->
@@ -2024,7 +2024,6 @@ operator|(
 name|EISDIR
 operator|)
 return|;
-comment|/* NOT REACHED */
 case|case
 name|VLNK
 case|:
@@ -3958,7 +3957,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-comment|/* 	 * Flush our dirty buffers. 	 */
 name|vop_stdfsync
 argument_list|(
 name|ap
@@ -4315,7 +4313,6 @@ directive|endif
 comment|/* 	 * Check for cross-device rename. 	 */
 if|if
 condition|(
-operator|(
 name|fvp
 operator|->
 name|v_mount
@@ -4323,12 +4320,10 @@ operator|!=
 name|tdvp
 operator|->
 name|v_mount
-operator|)
 operator|||
 operator|(
 name|tvp
 operator|&&
-operator|(
 name|fvp
 operator|->
 name|v_mount
@@ -4336,7 +4331,6 @@ operator|!=
 name|tvp
 operator|->
 name|v_mount
-operator|)
 operator|)
 condition|)
 block|{
@@ -5643,7 +5637,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_mkdir_args
-comment|/* { 		struct vnode *a_dvp; 		struvt vnode **a_vpp; 		struvt componentname *a_cnp; 		struct vattr *a_vap; 	} */
+comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struvt componentname *a_cnp; 		struct vattr *a_vap; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -7442,7 +7436,7 @@ block|{
 name|fileno
 operator|=
 operator|(
-name|uint64_t
+name|uoff_t
 operator|)
 name|offset
 operator|/
