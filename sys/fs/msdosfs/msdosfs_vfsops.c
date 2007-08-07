@@ -30,13 +30,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<sys/iconv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
 end_include
 
 begin_include
@@ -66,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -78,41 +108,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
+file|<geom/geom.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_comment
-comment|/* defines ALLPERMS */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/iconv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fs/msdosfs/bpb.h>
+file|<geom/geom_vfs.h>
 end_include
 
 begin_include
@@ -124,7 +126,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/msdosfs/msdosfsmount.h>
+file|<fs/msdosfs/bpb.h>
 end_include
 
 begin_include
@@ -148,13 +150,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<geom/geom.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<geom/geom_vfs.h>
+file|<fs/msdosfs/msdosfsmount.h>
 end_include
 
 begin_comment
