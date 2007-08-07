@@ -266,8 +266,6 @@ name|struct
 name|iconv_functions
 modifier|*
 name|msdosfs_iconv
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -2135,7 +2133,7 @@ name|bp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* both used in error_exit */
+comment|/* This and pmp both used in error_exit. */
 name|pmp
 operator|=
 name|NULL
