@@ -327,6 +327,11 @@ name|int32_t
 name|status
 decl_stmt|;
 comment|/* The entry status. */
+name|enum
+name|TruthValue
+name|priv_set
+decl_stmt|;
+comment|/* The private flag. */
 comment|/* dot1dStp subtree objects. */
 name|int32_t
 name|path_cost
@@ -1463,6 +1468,30 @@ name|bp
 parameter_list|,
 name|uint32_t
 name|enable
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Set 'private' flag. */
+end_comment
+
+begin_function_decl
+name|int
+name|bridge_port_set_private
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|bif_name
+parameter_list|,
+name|struct
+name|bridge_port
+modifier|*
+name|bp
+parameter_list|,
+name|uint32_t
+name|priv_set
 parameter_list|)
 function_decl|;
 end_function_decl
