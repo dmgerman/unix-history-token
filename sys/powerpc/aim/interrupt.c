@@ -241,6 +241,9 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|register_t
+name|ee
+decl_stmt|;
 name|td
 operator|=
 name|curthread
@@ -312,13 +315,34 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* 		 * Re-enable interrupts and call the generic trap code 		 */
-if|#
-directive|if
+comment|/* Re-enable interrupts if applicable. */
+name|ee
+operator|=
+name|framep
+operator|->
+name|srr1
+operator|&
+name|PSL_EE
+expr_stmt|;
+if|if
+condition|(
+name|ee
+operator|!=
 literal|0
-block|printf("powerpc_interrupt: got trap\n"); 		mtmsr(mfmsr() | PSL_EE); 		isync();
-endif|#
-directive|endif
+condition|)
+block|{
+name|mtmsr
+argument_list|(
+name|mfmsr
+argument_list|()
+operator||
+name|ee
+argument_list|)
+expr_stmt|;
+name|isync
+argument_list|()
+expr_stmt|;
+block|}
 name|trap
 argument_list|(
 name|framep
