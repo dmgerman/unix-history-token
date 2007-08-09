@@ -1572,12 +1572,6 @@ argument_list|(
 name|IFT_ETHER
 argument_list|)
 expr_stmt|;
-name|ifp
-operator|->
-name|if_softc
-operator|=
-name|sc
-expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -1603,6 +1597,12 @@ name|ENOSPC
 operator|)
 return|;
 block|}
+name|ifp
+operator|->
+name|if_softc
+operator|=
+name|sc
+expr_stmt|;
 comment|/* 	 * NB: no locking is needed here; don't put it here 	 *     unless you can prove it! 	 */
 name|error
 operator|=
