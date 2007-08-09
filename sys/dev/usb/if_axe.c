@@ -2279,7 +2279,7 @@ name|axe_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|AXE_CMD_READ_NODEID
+name|AXE_172_CMD_READ_NODEID
 argument_list|,
 literal|0
 argument_list|,
@@ -4091,7 +4091,7 @@ name|axe_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|AXE_CMD_WRITE_IPG0
+name|AXE_172_CMD_WRITE_IPG0
 argument_list|,
 literal|0
 argument_list|,
@@ -4109,7 +4109,7 @@ name|axe_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|AXE_CMD_WRITE_IPG1
+name|AXE_172_CMD_WRITE_IPG1
 argument_list|,
 literal|0
 argument_list|,
@@ -4127,7 +4127,7 @@ name|axe_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|AXE_CMD_WRITE_IPG2
+name|AXE_172_CMD_WRITE_IPG2
 argument_list|,
 literal|0
 argument_list|,
@@ -4144,7 +4144,7 @@ expr_stmt|;
 comment|/* Enable receiver, set RX mode */
 name|rxmode
 operator|=
-name|AXE_RXCMD_UNICAST
+name|AXE_172_RXCMD_UNICAST
 operator||
 name|AXE_RXCMD_MULTICAST
 operator||
