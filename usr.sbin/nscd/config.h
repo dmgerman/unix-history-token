@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__CACHED_CONFIG_H__
+name|__NSCD_CONFIG_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__CACHED_CONFIG_H__
+name|__NSCD_CONFIG_H__
 end_define
 
 begin_include
@@ -97,14 +97,14 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_SOCKET_PATH
-value|"/var/run/cached"
+value|"/var/run/nscd"
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_PIDFILE_PATH
-value|"/var/run/cached.pid"
+value|"/var/run/nscd.pid"
 end_define
 
 begin_define

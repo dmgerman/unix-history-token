@@ -140,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"cachedcli.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"cachelib.h"
 end_include
 
@@ -165,6 +159,12 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"nscdcli.h"
 end_include
 
 begin_include
@@ -195,7 +195,7 @@ begin_define
 define|#
 directive|define
 name|CONFIG_PATH
-value|"/etc/cached.conf"
+value|"/etc/nscd.conf"
 end_define
 
 begin_endif
@@ -207,7 +207,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_CONFIG_PATH
-value|"cached.conf"
+value|"nscd.conf"
 end_define
 
 begin_define
@@ -422,7 +422,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cached v0.2 (20 Oct 2005)\nwas developed during SoC 2005\n"
+literal|"nscd v0.2 (20 Oct 2005)\nwas developed during SoC 2005\n"
 argument_list|)
 expr_stmt|;
 name|TRACE_OUT
@@ -445,7 +445,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cached [-dnst] [-i cachename] [-I cachename]\n"
+literal|"usage: nscd [-dnst] [-i cachename] [-I cachename]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3121,10 +3121,10 @@ literal|256
 index|]
 decl_stmt|;
 name|struct
-name|cached_connection_params
+name|nscd_connection_params
 name|connection_params
 decl_stmt|;
-name|cached_connection
+name|nscd_connection
 name|connection
 decl_stmt|;
 name|int
@@ -3232,7 +3232,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|cached_connection_params
+name|nscd_connection_params
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3244,7 +3244,7 @@ name|DEFAULT_SOCKET_PATH
 expr_stmt|;
 name|connection
 operator|=
-name|open_cached_connection__
+name|open_nscd_connection__
 argument_list|(
 operator|&
 name|connection_params
@@ -3254,7 +3254,7 @@ if|if
 condition|(
 name|connection
 operator|==
-name|INVALID_CACHED_CONNECTION
+name|INVALID_NSCD_CONNECTION
 condition|)
 name|errx
 argument_list|(
@@ -3272,7 +3272,7 @@ condition|)
 block|{
 name|result
 operator|=
-name|cached_transform__
+name|nscd_transform__
 argument_list|(
 name|connection
 argument_list|,
@@ -3328,7 +3328,7 @@ argument_list|)
 expr_stmt|;
 name|result
 operator|=
-name|cached_transform__
+name|nscd_transform__
 argument_list|(
 name|connection
 argument_list|,
@@ -3361,7 +3361,7 @@ literal|"succeeded"
 argument_list|)
 expr_stmt|;
 block|}
-name|close_cached_connection__
+name|close_nscd_connection__
 argument_list|(
 name|connection
 argument_list|)

@@ -137,7 +137,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"cached message (from %s): %s"
+literal|"nscd message (from %s): %s"
 argument_list|,
 name|sender
 argument_list|,
@@ -238,7 +238,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"cached error (from %s): %s"
+literal|"nscd error (from %s): %s"
 argument_list|,
 name|sender
 argument_list|,

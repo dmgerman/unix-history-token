@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__CACHED_DEBUG_H__
+name|__NSCD_DEBUG_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__CACHED_DEBUG_H__
+name|__NSCD_DEBUG_H__
 end_define
 
 begin_define

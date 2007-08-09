@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__CACHED_LOG_H__
+name|__NSCD_LOG_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__CACHED_LOG_H__
+name|__NSCD_LOG_H__
 end_define
 
 begin_define

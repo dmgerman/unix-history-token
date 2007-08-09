@@ -826,7 +826,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|NS_CACHED_EID_CHECKING
+name|NS_NSCD_EID_CHECKING
 if|if
 condition|(
 name|check_query_eids

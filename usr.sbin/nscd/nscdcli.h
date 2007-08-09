@@ -6,18 +6,18 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__CACHED_CACHEDCLI_H__
+name|__NSCD_NSCDCLI_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__CACHED_CACHEDCLI_H__
+name|__NSCD_NSCDCLI_H__
 end_define
 
 begin_struct
 struct|struct
-name|cached_connection_params
+name|nscd_connection_params
 block|{
 name|char
 modifier|*
@@ -33,7 +33,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|cached_connection_
+name|nscd_connection_
 block|{
 name|int
 name|sockfd
@@ -55,34 +55,34 @@ end_comment
 begin_typedef
 typedef|typedef
 name|struct
-name|cached_connection_
+name|nscd_connection_
 modifier|*
-name|cached_connection
+name|nscd_connection
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 name|struct
-name|cached_connection_
+name|nscd_connection_
 modifier|*
-name|cached_mp_write_session
+name|nscd_mp_write_session
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 name|struct
-name|cached_connection_
+name|nscd_connection_
 modifier|*
-name|cached_mp_read_session
+name|nscd_mp_read_session
 typedef|;
 end_typedef
 
 begin_define
 define|#
 directive|define
-name|INVALID_CACHED_CONNECTION
+name|INVALID_NSCD_CONNECTION
 value|(NULL)
 end_define
 
@@ -92,11 +92,11 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|cached_connection
-name|open_cached_connection__
+name|nscd_connection
+name|open_nscd_connection__
 parameter_list|(
 name|struct
-name|cached_connection_params
+name|nscd_connection_params
 specifier|const
 modifier|*
 parameter_list|)
@@ -106,9 +106,9 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|close_cached_connection__
+name|close_nscd_connection__
 parameter_list|(
-name|cached_connection
+name|nscd_connection
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -116,9 +116,9 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|cached_transform__
+name|nscd_transform__
 parameter_list|(
-name|cached_connection
+name|nscd_connection
 parameter_list|,
 specifier|const
 name|char

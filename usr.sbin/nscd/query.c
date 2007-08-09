@@ -942,12 +942,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|NS_CACHED_EID_CHECKING
+name|NS_NSCD_EID_CHECKING
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|NS_STRICT_CACHED_EID_CHECKING
+name|NS_STRICT_NSCD_EID_CHECKING
 argument_list|)
 comment|/*  * This check is probably a bit redundant - per-user cache is always separated  * by the euid/egid pair  */
 if|if
@@ -962,7 +962,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|NS_STRICT_CACHED_EID_CHECKING
+name|NS_STRICT_NSCD_EID_CHECKING
 name|TRACE_OUT
 argument_list|(
 name|on_query_startup
@@ -2369,7 +2369,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|NS_CACHED_EID_CHECKING
+name|NS_NSCD_EID_CHECKING
 if|if
 condition|(
 name|check_query_eids
@@ -3289,7 +3289,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|NS_CACHED_EID_CHECKING
+name|NS_NSCD_EID_CHECKING
 if|if
 condition|(
 name|check_query_eids

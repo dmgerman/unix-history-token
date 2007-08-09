@@ -92,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"cachedcli.h"
+file|"nscdcli.h"
 end_include
 
 begin_include
@@ -104,7 +104,7 @@ end_include
 begin_define
 define|#
 directive|define
-name|DEFAULT_CACHED_IO_TIMEOUT
+name|DEFAULT_NSCD_IO_TIMEOUT
 value|4
 end_define
 
@@ -114,7 +114,7 @@ name|int
 name|safe_write
 parameter_list|(
 name|struct
-name|cached_connection_
+name|nscd_connection_
 modifier|*
 parameter_list|,
 specifier|const
@@ -132,7 +132,7 @@ name|int
 name|safe_read
 parameter_list|(
 name|struct
-name|cached_connection_
+name|nscd_connection_
 modifier|*
 parameter_list|,
 name|void
@@ -149,7 +149,7 @@ name|int
 name|send_credentials
 parameter_list|(
 name|struct
-name|cached_connection_
+name|nscd_connection_
 modifier|*
 parameter_list|,
 name|int
@@ -163,7 +163,7 @@ name|int
 name|safe_write
 parameter_list|(
 name|struct
-name|cached_connection_
+name|nscd_connection_
 modifier|*
 name|connection
 parameter_list|,
@@ -208,7 +208,7 @@ name|timeout
 operator|.
 name|tv_sec
 operator|=
-name|DEFAULT_CACHED_IO_TIMEOUT
+name|DEFAULT_NSCD_IO_TIMEOUT
 expr_stmt|;
 name|timeout
 operator|.
@@ -357,7 +357,7 @@ name|int
 name|safe_read
 parameter_list|(
 name|struct
-name|cached_connection_
+name|nscd_connection_
 modifier|*
 name|connection
 parameter_list|,
@@ -401,7 +401,7 @@ name|timeout
 operator|.
 name|tv_sec
 operator|=
-name|DEFAULT_CACHED_IO_TIMEOUT
+name|DEFAULT_NSCD_IO_TIMEOUT
 expr_stmt|;
 name|timeout
 operator|.
@@ -550,7 +550,7 @@ name|int
 name|send_credentials
 parameter_list|(
 name|struct
-name|cached_connection_
+name|nscd_connection_
 modifier|*
 name|connection
 parameter_list|,
@@ -868,19 +868,19 @@ end_function
 
 begin_function
 name|struct
-name|cached_connection_
+name|nscd_connection_
 modifier|*
-name|open_cached_connection__
+name|open_nscd_connection__
 parameter_list|(
 name|struct
-name|cached_connection_params
+name|nscd_connection_params
 specifier|const
 modifier|*
 name|params
 parameter_list|)
 block|{
 name|struct
-name|cached_connection_
+name|nscd_connection_
 modifier|*
 name|retval
 decl_stmt|;
@@ -902,7 +902,7 @@ name|res
 decl_stmt|;
 name|TRACE_IN
 argument_list|(
-name|open_cached_connection
+name|open_nscd_connection
 argument_list|)
 expr_stmt|;
 name|assert
@@ -997,7 +997,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE_OUT
 argument_list|(
-name|open_cached_connection
+name|open_nscd_connection
 argument_list|)
 expr_stmt|;
 return|return
@@ -1022,7 +1022,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|cached_connection_
+name|nscd_connection_
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1042,7 +1042,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|cached_connection_
+name|nscd_connection_
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1168,7 +1168,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE_OUT
 argument_list|(
-name|open_cached_connection
+name|open_nscd_connection
 argument_list|)
 expr_stmt|;
 return|return
@@ -1181,17 +1181,17 @@ end_function
 
 begin_function
 name|void
-name|close_cached_connection__
+name|close_nscd_connection__
 parameter_list|(
 name|struct
-name|cached_connection_
+name|nscd_connection_
 modifier|*
 name|connection
 parameter_list|)
 block|{
 name|TRACE_IN
 argument_list|(
-name|close_cached_connection
+name|close_nscd_connection
 argument_list|)
 expr_stmt|;
 name|assert
@@ -1229,7 +1229,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE_OUT
 argument_list|(
-name|close_cached_connection
+name|close_nscd_connection
 argument_list|)
 expr_stmt|;
 block|}
@@ -1237,10 +1237,10 @@ end_function
 
 begin_function
 name|int
-name|cached_transform__
+name|nscd_transform__
 parameter_list|(
 name|struct
-name|cached_connection_
+name|nscd_connection_
 modifier|*
 name|connection
 parameter_list|,
@@ -1264,7 +1264,7 @@ name|result
 decl_stmt|;
 name|TRACE_IN
 argument_list|(
-name|cached_transform
+name|nscd_transform
 argument_list|)
 expr_stmt|;
 name|error_code
@@ -1418,7 +1418,7 @@ name|fin
 label|:
 name|TRACE_OUT
 argument_list|(
-name|cached_transform
+name|nscd_transform
 argument_list|)
 expr_stmt|;
 return|return

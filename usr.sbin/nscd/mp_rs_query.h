@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__CACHED_MP_RS_QUERY_H__
+name|__NSCD_MP_RS_QUERY_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__CACHED_MP_RS_QUERY_H__
+name|__NSCD_MP_RS_QUERY_H__
 end_define
 
 begin_function_decl
