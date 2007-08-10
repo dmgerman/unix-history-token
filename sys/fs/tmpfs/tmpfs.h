@@ -706,6 +706,8 @@ name|struct
 name|tmpfs_node
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -714,7 +716,6 @@ parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
