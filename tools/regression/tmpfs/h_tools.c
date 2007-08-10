@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: h_tools.c,v 1.7 2006/11/09 16:20:06 jmmv Exp $	*/
+comment|/*	$NetBSD: h_tools.c,v 1.8 2007/07/23 15:05:43 jmmv Exp $	*/
 end_comment
 
 begin_comment
@@ -839,7 +839,8 @@ condition|)
 return|return
 name|EXIT_FAILURE
 return|;
-return|return
+if|if
+condition|(
 name|rename
 argument_list|(
 name|argv
@@ -852,6 +853,22 @@ index|[
 literal|2
 index|]
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"rename"
+argument_list|)
+expr_stmt|;
+return|return
+name|EXIT_FAILURE
+return|;
+block|}
+return|return
+name|EXIT_SUCCESS
 return|;
 block|}
 end_function
