@@ -5793,7 +5793,7 @@ name|V_TXPKT_INTF
 argument_list|(
 name|p
 operator|->
-name|port
+name|port_id
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX need to add VLAN support for 6.x 	 */

@@ -6295,7 +6295,7 @@ operator|->
 name|if_softc
 operator|)
 operator|->
-name|port
+name|port_id
 argument_list|)
 expr_stmt|;
 if|if

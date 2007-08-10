@@ -2902,7 +2902,7 @@ index|[
 name|i
 index|]
 operator|.
-name|port
+name|port_id
 operator|=
 name|i
 expr_stmt|;
@@ -4976,7 +4976,7 @@ literal|"Port %d %s"
 argument_list|,
 name|p
 operator|->
-name|port
+name|port_id
 argument_list|,
 name|p
 operator|->
@@ -5190,7 +5190,7 @@ argument_list|)
 argument_list|,
 name|p
 operator|->
-name|port
+name|port_id
 argument_list|)
 expr_stmt|;
 name|PORT_LOCK_INIT
@@ -5753,7 +5753,7 @@ literal|"cxgb_port_taskq%d"
 argument_list|,
 name|p
 operator|->
-name|port
+name|port_id
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -8991,7 +8991,7 @@ name|open_device_map
 argument_list|,
 name|p
 operator|->
-name|port
+name|port_id
 argument_list|)
 expr_stmt|;
 name|ADAPTER_UNLOCK
@@ -9042,7 +9042,7 @@ name|sc
 argument_list|,
 name|p
 operator|->
-name|port
+name|port_id
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -9063,7 +9063,7 @@ name|sc
 argument_list|,
 name|p
 operator|->
-name|port
+name|port_id
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -9193,7 +9193,7 @@ name|adapter
 argument_list|,
 name|p
 operator|->
-name|port
+name|port_id
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -9253,7 +9253,7 @@ name|open_device_map
 argument_list|,
 name|p
 operator|->
-name|port
+name|port_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -11158,7 +11158,7 @@ name|adapter
 argument_list|,
 name|p
 operator|->
-name|port
+name|port_id
 argument_list|)
 expr_stmt|;
 name|p
@@ -13035,7 +13035,7 @@ name|port_idx
 init|=
 name|pi
 operator|->
-name|port
+name|port_id
 decl_stmt|;
 if|if
 condition|(

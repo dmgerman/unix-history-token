@@ -347,7 +347,7 @@ decl_stmt|;
 endif|#
 directive|endif
 name|int
-name|port
+name|port_id
 decl_stmt|;
 name|uint8_t
 name|hw_addr
