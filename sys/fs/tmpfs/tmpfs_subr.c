@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tmpfs_subr.c,v 1.21 2006/06/07 22:33:39 kardel Exp $	*/
+comment|/*	$NetBSD: tmpfs_subr.c,v 1.35 2007/07/09 21:10:50 ad Exp $	*/
 end_comment
 
 begin_comment
@@ -966,6 +966,8 @@ parameter_list|)
 block|{
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|vnode
@@ -1007,8 +1009,9 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+operator|(
+name|void
+operator|)
 name|vget
 argument_list|(
 name|vp
@@ -1027,13 +1030,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-name|error
-return|;
 comment|/* 		 * Make sure the vnode is still there after 		 * getting the interlock to avoid racing a free. 		 */
 if|if
 condition|(
@@ -1160,8 +1156,9 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+operator|(
+name|void
+operator|)
 name|vn_lock
 argument_list|(
 name|vp
@@ -1173,32 +1170,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-name|vp
-operator|->
-name|v_data
-operator|=
-name|NULL
-expr_stmt|;
-name|vput
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|vp
-operator|=
-name|NULL
-expr_stmt|;
-goto|goto
-name|unlock
-goto|;
-block|}
 name|vp
 operator|->
 name|v_data
@@ -2461,7 +2432,7 @@ name|uio
 operator|->
 name|uio_offset
 operator|=
-name|TMPFS_DIRCOOKIE
+name|tmpfs_dircookie
 argument_list|(
 name|de
 argument_list|)
@@ -2546,7 +2517,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|TMPFS_DIRCOOKIE
+name|tmpfs_dircookie
 argument_list|(
 name|de
 argument_list|)
@@ -2936,7 +2907,7 @@ name|uio
 operator|->
 name|uio_offset
 operator|=
-name|TMPFS_DIRCOOKIE
+name|tmpfs_dircookie
 argument_list|(
 name|de
 argument_list|)
