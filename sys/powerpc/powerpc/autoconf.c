@@ -47,6 +47,12 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/intr_machdep.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|device_t
@@ -197,7 +203,11 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-comment|/* 	 * Enable device interrupts 	 */
+comment|/* 	 * Now that we're guaranteed to have a PIC driver (or we'll never 	 * have one), program it with all the previously setup interrupts. 	 */
+name|powerpc_enable_intr
+argument_list|()
+expr_stmt|;
+comment|/* Enable external interrupts. */
 name|mtmsr
 argument_list|(
 name|mfmsr

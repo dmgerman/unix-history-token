@@ -170,33 +170,14 @@ begin_struct
 struct|struct
 name|hrowpic_softc
 block|{
-name|struct
-name|rman
-name|sc_rman
-decl_stmt|;
-comment|/* resource mgr for IRQs */
-name|u_int32_t
-name|sc_irq
-index|[
-name|HROWPIC_IRQMAX
-index|]
-decl_stmt|;
-comment|/* allocated IRQ flags */
-name|u_int32_t
-name|sc_softreg
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* ENABLE reg copy */
 name|device_t
-name|sc_maciodev
+name|sc_dev
 decl_stmt|;
 comment|/* macio device */
 name|struct
 name|resource
 modifier|*
-name|sc_memr
+name|sc_rres
 decl_stmt|;
 comment|/* macio bus resource */
 name|bus_space_tag_t
@@ -205,6 +186,22 @@ decl_stmt|;
 comment|/* macio bus tag/handle */
 name|bus_space_handle_t
 name|sc_bh
+decl_stmt|;
+name|int
+name|sc_rrid
+decl_stmt|;
+name|uint32_t
+name|sc_softreg
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* ENABLE reg copy */
+name|u_int
+name|sc_vector
+index|[
+name|HROWPIC_IRQMAX
+index|]
 decl_stmt|;
 block|}
 struct|;
