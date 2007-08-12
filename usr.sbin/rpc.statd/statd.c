@@ -850,17 +850,17 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-name|init_file
-argument_list|(
-literal|"/var/db/statd.status"
-argument_list|)
-expr_stmt|;
 name|freenetconfigent
 argument_list|(
 name|nconf
 argument_list|)
 expr_stmt|;
 block|}
+name|init_file
+argument_list|(
+literal|"/var/db/statd.status"
+argument_list|)
+expr_stmt|;
 comment|/* Note that it is NOT sensible to run this program from inetd - the 	*/
 comment|/* protocol assumes that it will run immediately at boot time.	*/
 name|daemon
