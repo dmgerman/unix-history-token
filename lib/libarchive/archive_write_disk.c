@@ -6805,6 +6805,16 @@ operator|&=
 operator|~
 name|S_ISGID
 expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|flags
+operator|&
+name|ARCHIVE_EXTRACT_OWNER
+condition|)
+block|{
+comment|/* 				 * This is only an error if you 				 * requested owner restore.  If you 				 * didn't, we'll try to restore 				 * sgid/suid, but won't consider it a 				 * problem if we can't. 				 */
 name|archive_set_error
 argument_list|(
 operator|&
@@ -6822,6 +6832,7 @@ name|r
 operator|=
 name|ARCHIVE_WARN
 expr_stmt|;
+block|}
 block|}
 comment|/* While we're here, double-check the UID. */
 if|if
@@ -6850,6 +6861,15 @@ operator|&=
 operator|~
 name|S_ISUID
 expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|flags
+operator|&
+name|ARCHIVE_EXTRACT_OWNER
+condition|)
+block|{
 name|archive_set_error
 argument_list|(
 operator|&
@@ -6867,6 +6887,7 @@ name|r
 operator|=
 name|ARCHIVE_WARN
 expr_stmt|;
+block|}
 block|}
 name|a
 operator|->
@@ -6910,6 +6931,15 @@ operator|&=
 operator|~
 name|S_ISUID
 expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|flags
+operator|&
+name|ARCHIVE_EXTRACT_OWNER
+condition|)
+block|{
 name|archive_set_error
 argument_list|(
 operator|&
@@ -6927,6 +6957,7 @@ name|r
 operator|=
 name|ARCHIVE_WARN
 expr_stmt|;
+block|}
 block|}
 name|a
 operator|->
