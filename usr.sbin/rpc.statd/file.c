@@ -545,8 +545,10 @@ operator|*
 operator|)
 name|MAP_FAILED
 condition|)
-name|warn
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"unable to mmap() status file"
 argument_list|)
 expr_stmt|;
