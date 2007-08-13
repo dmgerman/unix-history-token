@@ -943,6 +943,14 @@ operator|->
 name|mfi_io_lock
 argument_list|)
 expr_stmt|;
+name|sx_xunlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mfi_config_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EBUSY
