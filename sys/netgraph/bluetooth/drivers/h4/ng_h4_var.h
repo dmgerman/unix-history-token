@@ -4,7 +4,7 @@ comment|/*  * ng_h4_var.h  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_h4_var.h,v 1.1 2002/11/24 19:46:55 max Exp $  * $FreeBSD$  *   * Based on:  * ---------  *  * FreeBSD: src/sys/netgraph/ng_tty.h  * Author: Archie Cobbs<archie@freebsd.org>  */
+comment|/*-  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_h4_var.h,v 1.5 2005/10/31 17:57:43 max Exp $  * $FreeBSD$  *   * Based on:  * ---------  *  * FreeBSD: src/sys/netgraph/ng_tty.h  * Author: Archie Cobbs<archie@freebsd.org>  */
 end_comment
 
 begin_ifndef
@@ -120,15 +120,6 @@ name|node_p
 name|node
 decl_stmt|;
 comment|/* Netgraph node */
-name|u_int32_t
-name|flags
-decl_stmt|;
-comment|/* Flags */
-define|#
-directive|define
-name|NG_H4_TIMEOUT
-value|(1<< 0)
-comment|/* A timeout is pending */
 name|ng_h4_node_debug_ep
 name|debug
 decl_stmt|;
@@ -193,7 +184,8 @@ parameter_list|(
 name|s
 parameter_list|)
 value|bzero(&(s), sizeof((s)))
-name|ng_bt_mbufq_t
+name|struct
+name|ifqueue
 name|outq
 decl_stmt|;
 comment|/* Queue of outgoing mbuf's */
@@ -202,6 +194,20 @@ directive|define
 name|NG_H4_DEFAULTQLEN
 value|12
 comment|/* XXX max number of mbuf's in outq */
+define|#
+directive|define
+name|NG_H4_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|IF_LOCK(&sc->outq)
+define|#
+directive|define
+name|NG_H4_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|IF_UNLOCK(&sc->outq)
 define|#
 directive|define
 name|NG_H4_IBUF_SIZE
@@ -231,6 +237,10 @@ name|callout
 name|timo
 decl_stmt|;
 comment|/* See man timeout(9) */
+name|u_int8_t
+name|dying
+decl_stmt|;
+comment|/* are we dying? */
 block|}
 name|ng_h4_info_t
 typedef|;
