@@ -66179,6 +66179,7 @@ name|DEFAULT_ABI
 operator|==
 name|ABI_DARWIN
 operator|||
+operator|(
 call|(
 modifier|*
 name|targetm
@@ -66188,6 +66189,19 @@ call|)
 argument_list|(
 name|decl
 argument_list|)
+operator|&&
+operator|(
+name|DEFAULT_ABI
+operator|!=
+name|ABI_AIX
+operator|||
+operator|!
+name|DECL_EXTERNAL
+argument_list|(
+name|decl
+argument_list|)
+operator|)
+operator|)
 condition|)
 block|{
 name|tree

@@ -10788,6 +10788,23 @@ condition|(
 name|processing_template_decl
 condition|)
 break|break;
+if|if
+condition|(
+name|DECL_P
+argument_list|(
+name|t
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"%qD is not a variable in clause %qs"
+argument_list|,
+name|t
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|else
 name|error
 argument_list|(
 literal|"%qE is not a variable in clause %qs"
@@ -10841,7 +10858,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"%qE appears more than once in data clauses"
+literal|"%qD appears more than once in data clauses"
 argument_list|,
 name|t
 argument_list|)

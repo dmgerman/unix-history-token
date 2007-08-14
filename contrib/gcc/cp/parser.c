@@ -11077,9 +11077,12 @@ argument_list|)
 operator|==
 name|SCOPE_REF
 condition|)
+block|{
+comment|/* At this point, we do not know if DECL is a valid 		   integral constant expression.  We assume that it is 		   in fact such an expression, so that code like:  		      template<int N> struct A { 			int a[B<N>::i]; 		      }; 		      		   is accepted.  At template-instantiation time, we 		   will check that B<N>::i is actually a constant.  */
 return|return
 name|decl
 return|;
+block|}
 comment|/* Check to see if DECL is a local variable in a context 	       where that is forbidden.  */
 if|if
 condition|(

@@ -7121,6 +7121,22 @@ index|[
 name|i
 index|]
 expr_stmt|;
+comment|/* If BB is not executed in each iteration of the loop, we cannot 	 use the operations in it to infer reliable upper bound on the 	 # of iterations of the loop.  */
+if|if
+condition|(
+operator|!
+name|dominated_by_p
+argument_list|(
+name|CDI_DOMINATORS
+argument_list|,
+name|loop
+operator|->
+name|latch
+argument_list|,
+name|bb
+argument_list|)
+condition|)
+continue|continue;
 for|for
 control|(
 name|bsi

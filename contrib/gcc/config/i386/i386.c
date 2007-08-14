@@ -61461,6 +61461,19 @@ operator|<
 name|MAX_386_STACK_LOCALS
 argument_list|)
 expr_stmt|;
+comment|/* Virtual slot is valid only before vregs are instantiated.  */
+name|gcc_assert
+argument_list|(
+operator|(
+name|n
+operator|==
+name|SLOT_VIRTUAL
+operator|)
+operator|==
+operator|!
+name|virtuals_instantiated
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|s
@@ -65076,6 +65089,8 @@ block|,
 name|IX86_BUILTIN_VEC_EXT_V4SI
 block|,
 name|IX86_BUILTIN_VEC_EXT_V8HI
+block|,
+name|IX86_BUILTIN_VEC_EXT_V16QI
 block|,
 name|IX86_BUILTIN_VEC_EXT_V2SI
 block|,
@@ -72362,7 +72377,7 @@ argument_list|)
 expr_stmt|;
 name|def_builtin
 argument_list|(
-name|MASK_SSE
+name|MASK_SSE2
 argument_list|,
 literal|"__builtin_ia32_vec_ext_v2df"
 argument_list|,
@@ -72386,7 +72401,7 @@ argument_list|)
 expr_stmt|;
 name|def_builtin
 argument_list|(
-name|MASK_SSE
+name|MASK_SSE2
 argument_list|,
 literal|"__builtin_ia32_vec_ext_v2di"
 argument_list|,
@@ -72434,7 +72449,7 @@ argument_list|)
 expr_stmt|;
 name|def_builtin
 argument_list|(
-name|MASK_SSE
+name|MASK_SSE2
 argument_list|,
 literal|"__builtin_ia32_vec_ext_v4si"
 argument_list|,
@@ -72458,7 +72473,7 @@ argument_list|)
 expr_stmt|;
 name|def_builtin
 argument_list|(
-name|MASK_SSE
+name|MASK_SSE2
 argument_list|,
 literal|"__builtin_ia32_vec_ext_v8hi"
 argument_list|,
@@ -72517,6 +72532,30 @@ argument_list|,
 name|IX86_BUILTIN_VEC_EXT_V2SI
 argument_list|)
 expr_stmt|;
+name|ftype
+operator|=
+name|build_function_type_list
+argument_list|(
+name|intQI_type_node
+argument_list|,
+name|V16QI_type_node
+argument_list|,
+name|integer_type_node
+argument_list|,
+name|NULL_TREE
+argument_list|)
+expr_stmt|;
+name|def_builtin
+argument_list|(
+name|MASK_SSE2
+argument_list|,
+literal|"__builtin_ia32_vec_ext_v16qi"
+argument_list|,
+name|ftype
+argument_list|,
+name|IX86_BUILTIN_VEC_EXT_V16QI
+argument_list|)
+expr_stmt|;
 comment|/* Access to the vec_set patterns.  */
 name|ftype
 operator|=
@@ -72535,7 +72574,7 @@ argument_list|)
 expr_stmt|;
 name|def_builtin
 argument_list|(
-name|MASK_SSE
+name|MASK_SSE2
 argument_list|,
 literal|"__builtin_ia32_vec_set_v8hi"
 argument_list|,
@@ -75839,7 +75878,7 @@ name|assign_386_stack_local
 argument_list|(
 name|SImode
 argument_list|,
-name|SLOT_TEMP
+name|SLOT_VIRTUAL
 argument_list|)
 expr_stmt|;
 name|emit_move_insn
@@ -75869,7 +75908,7 @@ name|assign_386_stack_local
 argument_list|(
 name|SImode
 argument_list|,
-name|SLOT_TEMP
+name|SLOT_VIRTUAL
 argument_list|)
 expr_stmt|;
 name|emit_insn
@@ -78002,6 +78041,9 @@ name|IX86_BUILTIN_VEC_EXT_V4SI
 case|:
 case|case
 name|IX86_BUILTIN_VEC_EXT_V8HI
+case|:
+case|case
+name|IX86_BUILTIN_VEC_EXT_V16QI
 case|:
 case|case
 name|IX86_BUILTIN_VEC_EXT_V2SI

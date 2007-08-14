@@ -4354,7 +4354,21 @@ name|prev_try
 operator|->
 name|outer
 control|)
-empty_stmt|;
+if|if
+condition|(
+name|prev_try
+operator|->
+name|type
+operator|==
+name|ERT_MUST_NOT_THROW
+condition|)
+block|{
+name|prev_try
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+block|}
 comment|/* Remap all of the internal catch and cleanup linkages.  Since we       duplicate entire subtrees, all of the referenced regions will have      been copied too.  And since we renumbered them as a block, a simple      bit of arithmetic finds us the index for the replacement region.  */
 for|for
 control|(

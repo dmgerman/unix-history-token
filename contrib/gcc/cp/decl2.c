@@ -4069,6 +4069,13 @@ name|field
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|DECL_ANON_UNION_VAR_P
+argument_list|(
+name|decl
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
 name|base
 operator|=
 name|get_base_address

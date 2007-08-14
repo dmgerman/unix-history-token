@@ -7572,17 +7572,31 @@ argument_list|(
 name|stmt
 argument_list|)
 decl_stmt|;
-comment|/* Initially assume that the statement has no volatile operands.  */
+comment|/* Initially assume that the statement has no volatile operands and      does not take the address of any symbols.  */
 if|if
 condition|(
 name|ann
 condition|)
+block|{
 name|ann
 operator|->
 name|has_volatile_ops
 operator|=
 name|false
 expr_stmt|;
+if|if
+condition|(
+name|ann
+operator|->
+name|addresses_taken
+condition|)
+name|ann
+operator|->
+name|addresses_taken
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|start_ssa_stmt_operands
 argument_list|()
 expr_stmt|;

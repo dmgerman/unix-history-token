@@ -19283,12 +19283,20 @@ name|high0
 expr_stmt|;
 name|in_p
 operator|=
-operator|(
-name|low
-operator|!=
-literal|0
-operator|)
+literal|1
 expr_stmt|;
+if|if
+condition|(
+name|low
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* We are in the weird situation where high0> high1 but 		 high1 has no successor.  Punt.  */
+return|return
+literal|0
+return|;
+block|}
 block|}
 elseif|else
 if|if
@@ -19312,12 +19320,20 @@ argument_list|)
 expr_stmt|;
 name|in_p
 operator|=
-operator|(
-name|high
-operator|!=
-literal|0
-operator|)
+literal|1
 expr_stmt|;
+if|if
+condition|(
+name|high
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* low0< low1 but low1 has no predecessor.  Punt.  */
+return|return
+literal|0
+return|;
+block|}
 block|}
 else|else
 return|return
@@ -19382,12 +19398,20 @@ name|high1
 expr_stmt|;
 name|in_p
 operator|=
-operator|(
-name|low
-operator|!=
-literal|0
-operator|)
+literal|1
 expr_stmt|;
+if|if
+condition|(
+name|low
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* high1> high0 but high0 has no successor.  Punt.  */
+return|return
+literal|0
+return|;
+block|}
 block|}
 block|}
 else|else
@@ -60437,8 +60461,31 @@ block|}
 block|}
 comment|/* ... fall through ...  */
 default|default:
+block|{
+name|tree
+name|type
+init|=
+name|TREE_TYPE
+argument_list|(
+name|t
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
+operator|(
+name|TYPE_PRECISION
+argument_list|(
+name|type
+argument_list|)
+operator|!=
+literal|1
+operator|||
+name|TYPE_UNSIGNED
+argument_list|(
+name|type
+argument_list|)
+operator|)
+operator|&&
 name|truth_value_p
 argument_list|(
 name|TREE_CODE
@@ -60447,10 +60494,11 @@ name|t
 argument_list|)
 argument_list|)
 condition|)
-comment|/* Truth values evaluate to 0 or 1, which is nonnegative.  */
+comment|/* Truth values evaluate to 0 or 1, which is nonnegative unless we              have a signed:1 type (where the value is -1 and 0).  */
 return|return
-literal|1
+name|true
 return|;
+block|}
 block|}
 comment|/* We don't know sign of `t', so be conservative and return false.  */
 return|return

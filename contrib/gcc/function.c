@@ -19848,6 +19848,26 @@ argument_list|(
 name|NOTE_INSN_PROLOGUE_END
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PROFILE_BEFORE_PROLOGUE
+comment|/* Ensure that instructions are not moved into the prologue when 	 profiling is on.  The call to the profiling routine can be 	 emitted within the live range of a call-clobbered register.  */
+if|if
+condition|(
+name|current_function_profile
+condition|)
+name|emit_insn
+argument_list|(
+name|gen_rtx_ASM_INPUT
+argument_list|(
+name|VOIDmode
+argument_list|,
+literal|""
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|seq
 operator|=
 name|get_insns
