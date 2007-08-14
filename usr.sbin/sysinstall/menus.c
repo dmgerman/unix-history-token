@@ -947,20 +947,6 @@ literal|"HARDWARE"
 block|}
 block|,
 block|{
-literal|" Doc, Install"
-block|,
-literal|"The distribution installation guide."
-block|,
-name|NULL
-block|,
-name|dmenuDisplayFile
-block|,
-name|NULL
-block|,
-literal|"INSTALL"
-block|}
-block|,
-block|{
 literal|" Doc, Copyright"
 block|,
 literal|"The distribution copyright notices."
@@ -1662,12 +1648,10 @@ literal|"select one of the options below by using the arrow keys or typing the\n
 literal|"first character of the option name you're interested in.  Invoke an\n"
 literal|"option with [SPACE] or [ENTER].  To exit, use [TAB] to move to Exit."
 block|,
-literal|"Press F1 for Installation Guide"
+name|NULL
 block|,
-comment|/* help line */
-literal|"INSTALL"
+name|NULL
 block|,
-comment|/* help file */
 block|{
 block|{
 literal|" Select "
@@ -1922,21 +1906,7 @@ literal|"HARDWARE"
 block|}
 block|,
 block|{
-literal|"4 Install"
-block|,
-literal|"A step-by-step guide to installing FreeBSD."
-block|,
-name|NULL
-block|,
-name|dmenuDisplayFile
-block|,
-name|NULL
-block|,
-literal|"INSTALL"
-block|}
-block|,
-block|{
-literal|"5 Copyright"
+literal|"4 Copyright"
 block|,
 literal|"The FreeBSD Copyright notices."
 block|,
@@ -1950,7 +1920,7 @@ literal|"COPYRIGHT"
 block|}
 block|,
 block|{
-literal|"6 Release"
+literal|"5 Release"
 block|,
 literal|"The release notes for this version of FreeBSD."
 block|,
@@ -1964,7 +1934,7 @@ literal|"RELNOTES"
 block|}
 block|,
 block|{
-literal|"7 Shortcuts"
+literal|"6 Shortcuts"
 block|,
 literal|"Creating shortcuts to sysinstall."
 block|,
@@ -1978,7 +1948,7 @@ literal|"shortcuts"
 block|}
 block|,
 block|{
-literal|"8 HTML Docs"
+literal|"7 HTML Docs"
 block|,
 literal|"Go to the HTML documentation menu (post-install)."
 block|,
@@ -2544,9 +2514,9 @@ literal|"FreeBSD distribution.  If you are seeing this menu it is because\n"
 literal|"more than one CD/DVD drive was found on your system.  Please select one\n"
 literal|"of the following CD/DVD drives as your installation drive."
 block|,
-literal|"Press F1 to read the installation guide"
+name|NULL
 block|,
-literal|"INSTALL"
+name|NULL
 block|,
 block|{
 block|{
@@ -2598,9 +2568,9 @@ literal|"into a \"FREEBSD\" subdirectory on one of your DOS partitions.\n"
 literal|"Otherwise, please select the DOS partition containing the FreeBSD\n"
 literal|"distribution files."
 block|,
-literal|"Press F1 to read the installation guide"
+name|NULL
 block|,
-literal|"INSTALL"
+name|NULL
 block|,
 block|{
 block|{
@@ -2626,7 +2596,7 @@ literal|"guaranteed to carry the full range of possible distributions."
 block|,
 literal|"Select a site that's close!"
 block|,
-literal|"INSTALL"
+name|NULL
 block|,
 block|{
 block|{
@@ -4887,9 +4857,9 @@ literal|"poor random-access devices, so we extract _everything_ on the tape\n"
 literal|"in one pass).  If you have sufficient space for this, then you should\n"
 literal|"select one of the following tape devices detected on your system."
 block|,
-literal|"Press F1 to read the installation guide"
+name|NULL
 block|,
-literal|"INSTALL"
+name|NULL
 block|,
 block|{
 block|{
@@ -7354,9 +7324,9 @@ literal|"This is the custom installation menu. You may use this menu to specify\
 literal|"details on the type of distribution you wish to have, where you wish\n"
 literal|"to install it from and how you wish to allocate disk storage to FreeBSD."
 block|,
-literal|"Press F1 to read the installation guide"
+name|NULL
 block|,
-literal|"INSTALL"
+name|NULL
 block|,
 block|{
 block|{
