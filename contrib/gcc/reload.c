@@ -5188,6 +5188,13 @@ name|MEM_P
 argument_list|(
 name|in
 argument_list|)
+operator|||
+name|GET_CODE
+argument_list|(
+name|in
+argument_list|)
+operator|==
+name|PLUS
 operator|)
 operator|&&
 name|reg_overlap_mentioned_for_reload_p
@@ -29888,6 +29895,13 @@ name|PLUS
 condition|)
 return|return
 operator|(
+name|rtx_equal_p
+argument_list|(
+name|x
+argument_list|,
+name|in
+argument_list|)
+operator|||
 name|reg_overlap_mentioned_for_reload_p
 argument_list|(
 name|x
