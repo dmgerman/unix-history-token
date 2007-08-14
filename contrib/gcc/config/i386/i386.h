@@ -5140,9 +5140,11 @@ begin_enum
 enum|enum
 name|ix86_stack_slot
 block|{
-name|SLOT_TEMP
+name|SLOT_VIRTUAL
 init|=
 literal|0
+block|,
+name|SLOT_TEMP
 block|,
 name|SLOT_CW_STORED
 block|,
