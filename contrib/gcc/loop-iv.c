@@ -6250,9 +6250,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCALAR_INT_MODE_P
+argument_list|(
 name|mode
-operator|!=
-name|VOIDmode
+argument_list|)
 operator|&&
 name|rtx_equal_p
 argument_list|(

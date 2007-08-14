@@ -637,13 +637,6 @@ name|SCALAR_TYPE_P
 argument_list|(
 name|type
 argument_list|)
-operator|||
-name|TREE_CODE
-argument_list|(
-name|type
-argument_list|)
-operator|==
-name|COMPLEX_TYPE
 condition|)
 name|init
 operator|=
@@ -710,8 +703,9 @@ continue|continue;
 comment|/* Note that for class types there will be FIELD_DECLs 	     corresponding to base classes as well.  Thus, iterating 	     over TYPE_FIELDs will result in correct initialization of 	     all of the subobjects.  */
 if|if
 condition|(
+operator|!
 name|static_storage_p
-operator|&&
+operator|||
 operator|!
 name|zero_init_p
 argument_list|(
@@ -6461,13 +6455,7 @@ else|:
 name|NULL_TREE
 operator|)
 argument_list|,
-operator|(
-name|placement_allocation_fn_p
-condition|?
 name|alloc_fn
-else|:
-name|NULL_TREE
-operator|)
 argument_list|)
 expr_stmt|;
 if|if

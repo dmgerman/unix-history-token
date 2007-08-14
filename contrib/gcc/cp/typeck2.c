@@ -2585,6 +2585,14 @@ block|}
 comment|/* Handle scalar types (including conversions) and references.  */
 if|if
 condition|(
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|!=
+name|COMPLEX_TYPE
+operator|&&
+operator|(
 name|SCALAR_TYPE_P
 argument_list|(
 name|type
@@ -2593,6 +2601,7 @@ operator|||
 name|code
 operator|==
 name|REFERENCE_TYPE
+operator|)
 condition|)
 return|return
 name|convert_for_initialization
@@ -5090,11 +5099,15 @@ condition|)
 block|{
 name|exp
 operator|=
-name|build_constructor
+name|build_zero_init
 argument_list|(
 name|type
 argument_list|,
-name|NULL
+comment|/*nelts=*/
+name|NULL_TREE
+argument_list|,
+comment|/*static_storage_p=*/
+name|false
 argument_list|)
 expr_stmt|;
 return|return

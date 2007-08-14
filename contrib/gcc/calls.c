@@ -4864,6 +4864,7 @@ name|int
 name|i
 decl_stmt|;
 comment|/* If this is a libcall, then precompute all arguments so that we do not      get extraneous instructions emitted as part of the libcall sequence.  */
+comment|/* If we preallocated the stack space, and some arguments must be passed      on the stack, then we must precompute any parameter which contains a      function call which will store arguments on the stack.      Otherwise, evaluating the parameter may clobber previous parameters      which have already been stored into the stack.  (we have code to avoid      such case by saving the outgoing stack arguments, but it results in      worse code)  */
 if|if
 condition|(
 operator|(
@@ -4873,6 +4874,9 @@ name|ECF_LIBCALL_BLOCK
 operator|)
 operator|==
 literal|0
+operator|&&
+operator|!
+name|ACCUMULATE_OUTGOING_ARGS
 condition|)
 return|return;
 for|for
@@ -4893,6 +4897,29 @@ name|enum
 name|machine_mode
 name|mode
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|ECF_LIBCALL_BLOCK
+operator|)
+operator|==
+literal|0
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|args
+index|[
+name|i
+index|]
+operator|.
+name|tree_value
+argument_list|)
+operator|!=
+name|CALL_EXPR
+condition|)
+continue|continue;
 comment|/* If this is an addressable type, we cannot pre-evaluate it.  */
 name|gcc_assert
 argument_list|(

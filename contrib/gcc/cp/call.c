@@ -14688,7 +14688,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Build a call to operator delete.  This has to be handled very specially,    because the restrictions on what signatures match are different from all    other call instances.  For a normal delete, only a delete taking (void *)    or (void *, size_t) is accepted.  For a placement delete, only an exact    match with the placement new is accepted.     CODE is either DELETE_EXPR or VEC_DELETE_EXPR.    ADDR is the pointer to be deleted.    SIZE is the size of the memory block to be deleted.    GLOBAL_P is true if the delete-expression should not consider    class-specific delete operators.    PLACEMENT is the corresponding placement new call, or NULL_TREE.    If PLACEMENT is non-NULL, then ALLOC_FN is the allocation function    called to perform the placement new.  */
+comment|/* Build a call to operator delete.  This has to be handled very specially,    because the restrictions on what signatures match are different from all    other call instances.  For a normal delete, only a delete taking (void *)    or (void *, size_t) is accepted.  For a placement delete, only an exact    match with the placement new is accepted.     CODE is either DELETE_EXPR or VEC_DELETE_EXPR.    ADDR is the pointer to be deleted.    SIZE is the size of the memory block to be deleted.    GLOBAL_P is true if the delete-expression should not consider    class-specific delete operators.    PLACEMENT is the corresponding placement new call, or NULL_TREE.     If this call to "operator delete" is being generated as part to    deallocate memory allocated via a new-expression (as per [expr.new]    which requires that if the initialization throws an exception then    we call a deallocation function), then ALLOC_FN is the allocation    function.  */
 end_comment
 
 begin_function
@@ -15035,13 +15035,16 @@ name|t
 condition|)
 break|break;
 block|}
-comment|/* On the second pass, the second argument must be 	     "size_t".  */
+comment|/* On the second pass, look for a function with exactly two 	     arguments: "void *" and "size_t".  */
 elseif|else
 if|if
 condition|(
 name|pass
 operator|==
 literal|1
+comment|/* For "operator delete(void *, ...)" there will be 		      no second argument, but we will not get an exact 		      match above.  */
+operator|&&
+name|t
 operator|&&
 name|same_type_p
 argument_list|(
@@ -15167,14 +15170,30 @@ name|args
 argument_list|)
 return|;
 block|}
-comment|/* If we are doing placement delete we do nothing if we don't find a      matching op delete.  */
+comment|/* [expr.new]       If no unambiguous matching deallocation function can be found,      propagating the exception does not cause the object's memory to      be freed.  */
 if|if
 condition|(
+name|alloc_fn
+condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|placement
 condition|)
+name|warning
+argument_list|(
+literal|0
+argument_list|,
+literal|"no corresponding deallocation function for `%D'"
+argument_list|,
+name|alloc_fn
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL_TREE
 return|;
+block|}
 name|error
 argument_list|(
 literal|"no suitable %<operator %s%> for %qT"

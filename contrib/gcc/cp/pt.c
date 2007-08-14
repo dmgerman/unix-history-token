@@ -332,7 +332,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|bool
 name|resolve_overloaded_unification
 parameter_list|(
 name|tree
@@ -34949,7 +34949,7 @@ name|arg
 argument_list|)
 condition|)
 block|{
-comment|/* [temp.deduct.type] A template-argument can be deduced from 		 a pointer to function or pointer to member function 		 argument if the set of overloaded functions does not 		 contain function templates and at most one of a set of 		 overloaded functions provides a unique match.  */
+comment|/* [temp.deduct.type]   	         A template-argument can be deduced from a pointer to 		 function or pointer to member function argument if 		 the set of overloaded functions does not contain 		 function templates and at most one of a set of 		 overloaded functions provides a unique match.  */
 if|if
 condition|(
 name|resolve_overloaded_unification
@@ -34966,13 +34966,11 @@ name|strict
 argument_list|,
 name|sub_strict
 argument_list|)
-operator|!=
-literal|0
 condition|)
+continue|continue;
 return|return
 literal|1
 return|;
-continue|continue;
 block|}
 name|arg
 operator|=
@@ -35162,12 +35160,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Subroutine of type_unification_real.  Args are like the variables at the    call site.  ARG is an overloaded function (or template-id); we try    deducing template args from each of the overloads, and if only one    succeeds, we go with that.  Modifies TARGS and returns 0 on success.  */
+comment|/* Subroutine of type_unification_real.  Args are like the variables    at the call site.  ARG is an overloaded function (or template-id);    we try deducing template args from each of the overloads, and if    only one succeeds, we go with that.  Modifies TARGS and returns    true on success.  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|bool
 name|resolve_overloaded_unification
 parameter_list|(
 name|tree
@@ -35414,25 +35412,28 @@ expr_stmt|;
 block|}
 block|}
 block|}
-else|else
-block|{
-name|gcc_assert
-argument_list|(
+elseif|else
+if|if
+condition|(
 name|TREE_CODE
 argument_list|(
 name|arg
 argument_list|)
-operator|==
+operator|!=
 name|OVERLOAD
-operator|||
+operator|&&
 name|TREE_CODE
 argument_list|(
 name|arg
 argument_list|)
-operator|==
+operator|!=
 name|FUNCTION_DECL
-argument_list|)
-expr_stmt|;
+condition|)
+comment|/* If ARG is, for example, "(0,&f)" then its type will be unknown        -- but the deduction does not succeed because the expression is        not just the function on its own.  */
+return|return
+name|false
+return|;
+else|else
 for|for
 control|(
 init|;
@@ -35472,7 +35473,6 @@ argument_list|,
 name|addr_p
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* [temp.deduct.type] A template-argument can be deduced from a pointer      to function or pointer to member function argument if the set of      overloaded functions does not contain function templates and at most      one of a set of overloaded functions provides a unique match.       So if we found multiple possibilities, we return success but don't      deduce anything.  */
 if|if
 condition|(
@@ -35525,10 +35525,10 @@ condition|(
 name|good
 condition|)
 return|return
-literal|0
+name|true
 return|;
 return|return
-literal|1
+name|false
 return|;
 block|}
 end_function
@@ -44250,36 +44250,12 @@ argument_list|)
 operator|==
 name|TREE_LIST
 condition|)
-block|{
-for|for
-control|(
-init|;
-name|expression
-condition|;
-name|expression
-operator|=
-name|TREE_CHAIN
-argument_list|(
-name|expression
-argument_list|)
-control|)
-if|if
-condition|(
-name|value_dependent_expression_p
-argument_list|(
-name|TREE_VALUE
-argument_list|(
-name|expression
-argument_list|)
-argument_list|)
-condition|)
 return|return
-name|true
+name|any_value_dependent_elements_p
+argument_list|(
+name|expression
+argument_list|)
 return|;
-return|return
-name|false
-return|;
-block|}
 return|return
 name|value_dependent_expression_p
 argument_list|(
@@ -45084,6 +45060,49 @@ name|args
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Returns TRUE if LIST (a TREE_LIST whose TREE_VALUEs are    expressions) contains any value-dependent expressions.  */
+end_comment
+
+begin_function
+name|bool
+name|any_value_dependent_elements_p
+parameter_list|(
+name|tree
+name|list
+parameter_list|)
+block|{
+for|for
+control|(
+init|;
+name|list
+condition|;
+name|list
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|list
+argument_list|)
+control|)
+if|if
+condition|(
+name|value_dependent_expression_p
+argument_list|(
+name|TREE_VALUE
+argument_list|(
+name|list
+argument_list|)
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
 return|return
 name|false
 return|;
