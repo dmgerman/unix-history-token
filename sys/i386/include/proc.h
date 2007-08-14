@@ -61,6 +61,10 @@ name|register_t
 name|md_saved_flags
 decl_stmt|;
 comment|/* (k) */
+name|register_t
+name|md_fault_addr
+decl_stmt|;
+comment|/* (k) */
 block|}
 struct|;
 end_struct

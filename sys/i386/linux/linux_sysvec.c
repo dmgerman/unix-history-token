@@ -1871,9 +1871,11 @@ operator|(
 name|void
 operator|*
 operator|)
-name|regs
+name|td
 operator|->
-name|tf_err
+name|td_md
+operator|.
+name|md_fault_addr
 expr_stmt|;
 comment|/* 	 * Build the signal context to be used by sigreturn. 	 */
 name|frame
