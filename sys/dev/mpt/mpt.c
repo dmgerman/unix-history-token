@@ -4751,6 +4751,14 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
+name|mpt_callout_init
+argument_list|(
+operator|&
+name|req
+operator|->
+name|callout
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if

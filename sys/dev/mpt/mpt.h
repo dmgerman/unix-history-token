@@ -3032,17 +3032,6 @@ define|\
 value|callout_stop(&(req)->callout)
 end_define
 
-begin_define
-define|#
-directive|define
-name|mpt_req_timeout_init
-parameter_list|(
-name|req
-parameter_list|)
-define|\
-value|callout_init(&(req)->callout)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -3190,17 +3179,6 @@ name|arg
 parameter_list|)
 define|\
 value|callout_stop(&(req)->callout)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mpt_req_timeout_init
-parameter_list|(
-name|req
-parameter_list|)
-define|\
-value|callout_init(&(req)->callout, 1)
 end_define
 
 begin_else
