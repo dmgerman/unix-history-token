@@ -4,7 +4,11 @@ comment|// File based streams -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+end_comment
+
+begin_comment
+comment|// 2006, 2007
 end_comment
 
 begin_comment
@@ -723,7 +727,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**        *  @brief  Opens an external file.        *  @param  s  The name of the file.        *  @param  mode  The open mode flags.        *  @return  @c this on success, NULL on failure        *        *  If a file is already open, this function immediately fails.        *  Otherwise it tries to open the file named @a s using the flags        *  given in @a mode.        *        *  [Table 92 gives the relation between openmode combinations and the        *  equivalent fopen() flags, but the table has not been copied yet.]       */
+comment|/**        *  @brief  Opens an external file.        *  @param  s  The name of the file.        *  @param  mode  The open mode flags.        *  @return  @c this on success, NULL on failure        *        *  If a file is already open, this function immediately fails.        *  Otherwise it tries to open the file named @a s using the flags        *  given in @a mode.        *        *  Table 92, adapted here, gives the relation between openmode        *  combinations and the equivalent fopen() flags.        *  (NB: lines in|out|app and binary|in|out|app per DR 596)        *  +---------------------------------------------------------+        *  | ios_base Flag combination            stdio equivalent   |        *  |binary  in  out  trunc  app                              |        *  +---------------------------------------------------------+        *  |             +                        "w"                |        *  |             +           +            "a"                |        *  |             +     +                  "w"                |        *  |         +                            "r"                |        *  |         +   +                        "r+"               |        *  |         +   +     +                  "w+"               |        *  |         +   +           +            "a+"               |        *  +---------------------------------------------------------+        *  |   +         +                        "wb"               |        *  |   +         +           +            "ab"               |        *  |   +         +     +                  "wb"               |        *  |   +     +                            "rb"               |        *  |   +     +   +                        "r+b"              |        *  |   +     +   +     +                  "w+b"              |        *  |   +     +   +           +            "a+b"              |        *  +---------------------------------------------------------+        */
 end_comment
 
 begin_decl_stmt
