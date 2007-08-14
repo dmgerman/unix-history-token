@@ -593,6 +593,8 @@ name|u_int
 name|sticks
 init|=
 literal|0
+decl_stmt|,
+name|type
 decl_stmt|;
 name|int
 name|i
@@ -602,8 +604,6 @@ decl_stmt|,
 name|ucode
 init|=
 literal|0
-decl_stmt|,
-name|type
 decl_stmt|,
 name|code
 decl_stmt|;
@@ -1913,9 +1913,10 @@ block|{
 name|int
 name|code
 decl_stmt|,
-name|type
-decl_stmt|,
 name|ss
+decl_stmt|;
+name|u_int
+name|type
 decl_stmt|;
 name|long
 name|esp
