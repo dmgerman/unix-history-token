@@ -12,8 +12,14 @@ comment|/* This is the default PTHREADS implementation of the public OpenMP    l
 end_comment
 
 begin_comment
-comment|/* We need Unix98 extensions to get recursive locks.  */
+comment|/* We need Unix98 extensions to get recursive locks.  On Tru64 UNIX V4.0F,    the declarations are available without _XOPEN_SOURCE, which actually    breaks compilation.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__osf__
+end_ifndef
 
 begin_define
 define|#
@@ -21,6 +27,11 @@ directive|define
 name|_XOPEN_SOURCE
 value|500
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
