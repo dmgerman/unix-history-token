@@ -431,7 +431,7 @@ literal|"acls"
 block|,
 literal|"exec"
 block|,
-literal|"atime"
+literal|"noatime"
 block|,
 literal|"union"
 block|,
@@ -439,11 +439,11 @@ literal|"suiddir"
 block|,
 literal|"multilabel"
 block|,
-literal|"symfollow"
+literal|"nosymfollow"
 block|,
-literal|"clusterr"
+literal|"noclusterr"
 block|,
-literal|"clusterw"
+literal|"noclusterw"
 block|,
 literal|"force"
 block|,

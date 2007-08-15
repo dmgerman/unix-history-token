@@ -168,7 +168,7 @@ init|=
 block|{
 literal|"from"
 block|,
-literal|"atime"
+literal|"noatime"
 block|,
 literal|"export"
 block|,
