@@ -877,6 +877,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSR_IA32_EXT_CONFIG
+value|0x0ee
+end_define
+
+begin_comment
+comment|/* Undocumented. Core Solo/Duo only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MSR_MTRRcap
 value|0x0fe
 end_define
