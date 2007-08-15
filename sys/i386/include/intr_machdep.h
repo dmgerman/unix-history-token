@@ -576,6 +576,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|nexus_add_irq
+parameter_list|(
+name|u_long
+name|irq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|msi_alloc
 parameter_list|(
@@ -591,14 +601,6 @@ parameter_list|,
 name|int
 modifier|*
 name|irqs
-parameter_list|,
-name|int
-modifier|*
-name|newirq
-parameter_list|,
-name|int
-modifier|*
-name|newcount
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -654,10 +656,6 @@ parameter_list|,
 name|int
 modifier|*
 name|irq
-parameter_list|,
-name|int
-modifier|*
-name|new
 parameter_list|)
 function_decl|;
 end_function_decl
