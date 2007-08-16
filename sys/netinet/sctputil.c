@@ -15621,6 +15621,14 @@ operator|==
 name|NULL
 operator|)
 operator|||
+operator|(
+name|stcb
+operator|->
+name|sctp_socket
+operator|==
+name|NULL
+operator|)
+operator|||
 name|sctp_is_feature_off
 argument_list|(
 name|stcb

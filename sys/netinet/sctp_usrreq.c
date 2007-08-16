@@ -4942,11 +4942,8 @@ name|actual
 operator|+=
 sizeof|sizeof
 argument_list|(
-sizeof|sizeof
-argument_list|(
 expr|struct
 name|sockaddr_in6
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

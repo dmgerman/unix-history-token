@@ -4103,6 +4103,120 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * cleanup any cached source addresses that may be topologically  * incorrect after a new address has been added to this interface.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|sctp_asconf_nets_cleanup
+parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|,
+name|struct
+name|sctp_ifn
+modifier|*
+name|ifn
+parameter_list|)
+block|{
+name|struct
+name|sctp_nets
+modifier|*
+name|net
+decl_stmt|;
+comment|/* 	 * Ideally, we want to only clear cached routes and source addresses 	 * that are topologically incorrect.  But since there is no easy way 	 * to know whether the newly added address on the ifn would cause a 	 * routing change (i.e. a new egress interface would be chosen) 	 * without doing a new routing lookup and source address selection, 	 * we will (for now) just flush any cached route using a different 	 * ifn (and cached source addrs) and let output re-choose them 	 * during the next send on that net. 	 */
+name|TAILQ_FOREACH
+argument_list|(
+argument|net
+argument_list|,
+argument|&stcb->asoc.nets
+argument_list|,
+argument|sctp_next
+argument_list|)
+block|{
+comment|/* 		 * clear any cached route (and cached source address) if the 		 * route's interface is NOT the same as the address change. 		 * If it's the same interface, just clear the cached source 		 * address. 		 */
+if|if
+condition|(
+name|SCTP_ROUTE_HAS_VALID_IFN
+argument_list|(
+operator|&
+name|net
+operator|->
+name|ro
+argument_list|)
+operator|&&
+name|SCTP_GET_IF_INDEX_FROM_ROUTE
+argument_list|(
+operator|&
+name|net
+operator|->
+name|ro
+argument_list|)
+operator|!=
+name|ifn
+operator|->
+name|ifn_index
+condition|)
+block|{
+comment|/* clear any cached route */
+name|RTFREE
+argument_list|(
+name|net
+operator|->
+name|ro
+operator|.
+name|ro_rt
+argument_list|)
+expr_stmt|;
+name|net
+operator|->
+name|ro
+operator|.
+name|ro_rt
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* clear any cached source address */
+if|if
+condition|(
+name|net
+operator|->
+name|src_addr_selected
+condition|)
+block|{
+name|sctp_free_ifa
+argument_list|(
+name|net
+operator|->
+name|ro
+operator|.
+name|_s_addr
+argument_list|)
+expr_stmt|;
+name|net
+operator|->
+name|ro
+operator|.
+name|_s_addr
+operator|=
+name|NULL
+expr_stmt|;
+name|net
+operator|->
+name|src_addr_selected
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*  * process an ADD/DELETE IP ack from peer.  * addr: corresponding sctp_ifa to the address being added/deleted.  * type: SCTP_ADD_IP_ADDRESS or SCTP_DEL_IP_ADDRESS.  * flag: 1=success, 0=failure.  */
 end_comment
 
@@ -4128,7 +4242,7 @@ name|uint32_t
 name|flag
 parameter_list|)
 block|{
-comment|/* 	 * do the necessary asoc list work- if we get a failure indication, 	 * leave the address on the "do not use" asoc list if we get a 	 * success indication, remove the address from the list 	 */
+comment|/* 	 * do the necessary asoc list work- if we get a failure indication, 	 * leave the address on the assoc's restricted list.  If we get a 	 * success indication, remove the address from the restricted list. 	 */
 comment|/* 	 * Note: this will only occur for ADD_IP_ADDRESS, since 	 * DEL_IP_ADDRESS is never actually added to the list... 	 */
 if|if
 condition|(
@@ -4141,6 +4255,16 @@ argument_list|(
 name|stcb
 argument_list|,
 name|addr
+argument_list|)
+expr_stmt|;
+comment|/* 		 * clear any cached, topologically incorrect source 		 * addresses 		 */
+name|sctp_asconf_nets_cleanup
+argument_list|(
+name|stcb
+argument_list|,
+name|addr
+operator|->
+name|ifn_p
 argument_list|)
 expr_stmt|;
 block|}

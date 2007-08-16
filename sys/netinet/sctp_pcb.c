@@ -17391,6 +17391,12 @@ name|inp
 argument_list|,
 name|SCTP_PCB_FLAGS_PDAPIEVNT
 argument_list|)
+operator|&&
+operator|(
+name|so
+operator|!=
+name|NULL
+operator|)
 condition|)
 block|{
 comment|/* 						 * Need to add a PD-API 						 * aborted indication. 						 * Setting the control_pdapi 						 * assures that it will be 						 * added right after this 						 * msg. 						 */
