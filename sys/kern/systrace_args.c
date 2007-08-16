@@ -15378,6 +15378,55 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
+comment|/* thr_kill2 */
+case|case
+literal|481
+case|:
+block|{
+name|struct
+name|thr_kill2_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|pid
+expr_stmt|;
+comment|/* pid_t */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|id
+expr_stmt|;
+comment|/* long */
+name|iarg
+index|[
+literal|2
+index|]
+operator|=
+name|p
+operator|->
+name|sig
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+block|}
 default|default:
 operator|*
 name|n_args

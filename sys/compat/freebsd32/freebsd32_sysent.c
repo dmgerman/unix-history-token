@@ -10117,6 +10117,28 @@ literal|0
 block|}
 block|,
 comment|/* 480 = freebsd32_ftruncate */
+block|{
+name|AS
+argument_list|(
+name|thr_kill2_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|thr_kill2
+block|,
+name|AUE_KILL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* 481 = thr_kill2 */
 block|}
 decl_stmt|;
 end_decl_stmt

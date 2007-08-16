@@ -1454,6 +1454,9 @@ comment|/* 479 = truncate */
 literal|"ftruncate"
 block|,
 comment|/* 480 = ftruncate */
+literal|"thr_kill2"
+block|,
+comment|/* 481 = thr_kill2 */
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -2620,8 +2620,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_MAXSYSCALL
+name|SYS_thr_kill2
 value|481
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_MAXSYSCALL
+value|482
 end_define
 
 end_unit
