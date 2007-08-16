@@ -6839,7 +6839,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Increment the offset to the next ISN_BYTES_PER_SECOND / hz boundary  * to keep time flowing at a relatively constant rate.  If the random  * increments have already pushed us past the projected offset, do nothing.  */
+comment|/*  * Increment the offset to the next ISN_BYTES_PER_SECOND / 100 boundary  * to keep time flowing at a relatively constant rate.  If the random  * increments have already pushed us past the projected offset, do nothing.  */
 end_comment
 
 begin_function
@@ -6868,9 +6868,12 @@ literal|100
 expr_stmt|;
 if|if
 condition|(
+name|SEQ_GT
+argument_list|(
 name|projected_offset
-operator|>
+argument_list|,
 name|isn_offset
+argument_list|)
 condition|)
 name|isn_offset
 operator|=
