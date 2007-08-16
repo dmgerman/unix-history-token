@@ -155,6 +155,42 @@ name|proc_t
 typedef|;
 end_typedef
 
+begin_if
+if|#
+directive|if
+operator|(
+name|KSTACK_PAGES
+operator|*
+name|PAGE_SIZE
+operator|)
+operator|<
+literal|16384
+end_if
+
+begin_define
+define|#
+directive|define
+name|ZFS_KSTACK_PAGES
+value|(16384 / PAGE_SIZE)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ZFS_KSTACK_PAGES
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|__inline
@@ -245,7 +281,7 @@ name|p
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|ZFS_KSTACK_PAGES
 argument_list|,
 literal|"solthread %p"
 argument_list|,
