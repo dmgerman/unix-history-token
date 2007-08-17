@@ -813,6 +813,27 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* find out how many devices we have */
+if|if
+condition|(
+operator|(
+name|num_devices
+operator|=
+name|devstat_getnumdevs
+argument_list|(
+name|kd
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"can't get number of devices"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Figure out how many devices we should display. 	 */
 if|if
 condition|(
@@ -821,6 +842,17 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|xflag
+operator|>
+literal|0
+condition|)
+name|maxshowdevs
+operator|=
+name|num_devices
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|oflag
@@ -910,27 +942,6 @@ literal|3
 expr_stmt|;
 block|}
 block|}
-comment|/* find out how many devices we have */
-if|if
-condition|(
-operator|(
-name|num_devices
-operator|=
-name|devstat_getnumdevs
-argument_list|(
-name|kd
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"can't get number of devices"
-argument_list|)
-expr_stmt|;
 name|cur
 operator|.
 name|dinfo
