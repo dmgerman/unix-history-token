@@ -287,7 +287,7 @@ name|int32_t
 name|class_ipg
 decl_stmt|;
 comment|/* tenths of nanoseconds */
-name|int32_t
+name|uint32_t
 name|flow_ipg
 decl_stmt|;
 comment|/* usec */

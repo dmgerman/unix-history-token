@@ -2197,7 +2197,7 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|u8 name##_kword[2]; u8 name##_len; u8 name##_data[len]
+value|u8 name##_kword[2]; u8 name##_len; char name##_data[len]
 end_define
 
 begin_comment

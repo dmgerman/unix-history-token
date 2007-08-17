@@ -2871,7 +2871,7 @@ condition|)
 name|atomic_cmpset_ptr
 argument_list|(
 operator|(
-name|long
+name|uintptr_t
 operator|*
 operator|)
 operator|&

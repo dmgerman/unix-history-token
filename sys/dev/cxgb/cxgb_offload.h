@@ -633,6 +633,7 @@ name|int
 name|ntids
 decl_stmt|;
 specifier|volatile
+name|unsigned
 name|int
 name|tids_in_use
 decl_stmt|;

@@ -5623,8 +5623,6 @@ name|txqs
 decl_stmt|;
 name|unsigned
 name|int
-name|nsegs
-decl_stmt|,
 name|ndesc
 decl_stmt|,
 name|flits
@@ -5635,6 +5633,8 @@ name|mlen
 decl_stmt|;
 name|int
 name|err
+decl_stmt|,
+name|nsegs
 decl_stmt|,
 name|tso_info
 init|=
@@ -5876,7 +5876,7 @@ name|tcphdr
 modifier|*
 name|tcp
 decl_stmt|;
-name|uint8_t
+name|char
 modifier|*
 name|pkthdr
 decl_stmt|,
@@ -5951,7 +5951,7 @@ name|mtod
 argument_list|(
 name|m0
 argument_list|,
-name|uint8_t
+name|char
 operator|*
 argument_list|)
 expr_stmt|;
@@ -8812,19 +8812,12 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
 name|unsigned
 name|int
 name|pidx
 decl_stmt|,
 name|gen
 decl_stmt|,
-name|nsegs
-decl_stmt|;
-name|unsigned
-name|int
 name|ndesc
 decl_stmt|;
 name|struct
@@ -8845,6 +8838,10 @@ name|int
 name|i
 decl_stmt|,
 name|cleaned
+decl_stmt|,
+name|ret
+decl_stmt|,
+name|nsegs
 decl_stmt|;
 name|struct
 name|tx_sw_desc

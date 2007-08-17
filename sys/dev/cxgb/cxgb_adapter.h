@@ -1016,7 +1016,7 @@ argument_list|)
 name|adapter_entry
 expr_stmt|;
 comment|/* PCI register resources */
-name|uint32_t
+name|int
 name|regs_rid
 decl_stmt|;
 name|struct
