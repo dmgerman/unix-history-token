@@ -994,13 +994,9 @@ operator|)
 name|addr
 operator|)
 operator|(
-name|RB_BOOTINFO
-operator||
-operator|(
 name|opts
 operator|&
 name|RBX_MASK
-operator|)
 operator|)
 expr_stmt|;
 block|}
