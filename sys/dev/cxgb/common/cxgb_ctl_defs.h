@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2003-2007 Chelsio Communications.  All rights reserved.  *  * This program is distributed in the hope that it will be useful, but WITHOUT  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or  * FITNESS FOR A PARTICULAR PURPOSE.  See the LICENSE file included in this  * release for licensing terms and conditions.  *  * $FreeBSD$  */
+comment|/*  * Copyright (C) 2003-2006 Chelsio Communications.  All rights reserved.  *  * This program is distributed in the hope that it will be useful, but WITHOUT  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or  * FITNESS FOR A PARTICULAR PURPOSE.  See the LICENSE file included in this  * release for licensing terms and conditions.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -40,12 +40,6 @@ name|GET_DDP_PARAMS
 block|,
 name|GET_PORTS
 block|,
-name|FAILOVER
-block|,
-name|FAILOVER_DONE
-block|,
-name|FAILOVER_CLEAR
-block|,
 name|ULP_ISCSI_GET_PARAMS
 block|,
 name|ULP_ISCSI_SET_PARAMS
@@ -61,6 +55,16 @@ block|,
 name|RDMA_CTRL_QP_SETUP
 block|,
 name|RDMA_GET_MEM
+block|,
+name|FAILOVER
+block|,
+name|FAILOVER_DONE
+block|,
+name|FAILOVER_CLEAR
+block|,
+name|GET_CPUIDX_OF_QSET
+block|,
+name|GET_RX_PAGE_INFO
 block|, }
 enum|;
 end_enum
@@ -193,11 +197,11 @@ name|nports
 decl_stmt|;
 comment|/* number of ports on this adapter */
 name|struct
-name|ifnet
+name|net_device
 modifier|*
 name|lldevs
 index|[
-literal|4
+literal|2
 index|]
 decl_stmt|;
 block|}
@@ -257,6 +261,28 @@ name|pci_dev
 modifier|*
 name|pdev
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Offload TX/RX page information.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ofld_page_info
+block|{
+name|unsigned
+name|int
+name|page_size
+decl_stmt|;
+comment|/* Page size, should be a power of 2 */
+name|unsigned
+name|int
+name|num
+decl_stmt|;
+comment|/* Number of pages */
 block|}
 struct|;
 end_struct

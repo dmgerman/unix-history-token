@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cxgb_l2t.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<common/cxgb_common.h>
 end_include
 
@@ -54,19 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<common/cxgb_tcb.h>
+file|<dev/cxgb/common/cxgb_ctl_defs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<common/cxgb_ctl_defs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<common/cxgb_sge_defs.h>
+file|<dev/cxgb/common/cxgb_sge_defs.h>
 end_include
 
 begin_include
@@ -125,12 +113,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/cxgb_l2t.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/cxgb/cxgb_offload.h>
 end_include
 
@@ -138,12 +120,6 @@ begin_include
 include|#
 directive|include
 file|<dev/cxgb/common/cxgb_regs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/common/cxgb_tcb.h>
 end_include
 
 begin_include

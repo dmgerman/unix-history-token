@@ -121,13 +121,13 @@ end_struct
 
 begin_struct_decl
 struct_decl|struct
-name|rtentry
+name|ifnet
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|ifnet
+name|rt_entry
 struct_decl|;
 end_struct_decl
 

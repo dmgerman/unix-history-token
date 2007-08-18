@@ -686,6 +686,34 @@ name|net_device
 value|ifnet
 end_define
 
+begin_define
+define|#
+directive|define
+name|cpu_to_be32
+value|htobe32
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|if_name
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|if_name
+parameter_list|(
+name|ifp
+parameter_list|)
+value|(ifp)->if_xname
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Standard PHY definitions */
 end_comment

@@ -347,7 +347,7 @@ decl_stmt|;
 endif|#
 directive|endif
 name|int
-name|port
+name|port_id
 decl_stmt|;
 name|uint8_t
 name|hw_addr
@@ -445,6 +445,14 @@ operator|(
 literal|1
 operator|<<
 literal|4
+operator|)
+block|,
+name|TPS_UPTODATE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|5
 operator|)
 block|, }
 enum|;
@@ -769,6 +777,13 @@ name|tx_sw_desc
 struct_decl|;
 end_struct_decl
 
+begin_define
+define|#
+directive|define
+name|TXQ_TRANSMITTING
+value|0x1
+end_define
+
 begin_struct
 struct|struct
 name|sge_txq
@@ -821,7 +836,16 @@ name|phys_addr
 decl_stmt|;
 name|struct
 name|task
-name|qresume_tsk
+name|qresume_task
+decl_stmt|;
+name|struct
+name|task
+name|qreclaim_task
+decl_stmt|;
+name|struct
+name|port_info
+modifier|*
+name|port
 decl_stmt|;
 name|uint32_t
 name|cntxt_id
@@ -969,6 +993,12 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|filter_info
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|adapter
@@ -986,7 +1016,7 @@ argument_list|)
 name|adapter_entry
 expr_stmt|;
 comment|/* PCI register resources */
-name|uint32_t
+name|int
 name|regs_rid
 decl_stmt|;
 name|struct
@@ -1060,6 +1090,25 @@ name|msix_intr_tag
 index|[
 name|SGE_QSETS
 index|]
+decl_stmt|;
+name|uint8_t
+name|rxpkt_map
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* maps RX_PKT interface values to port ids */
+name|uint8_t
+name|rrss_map
+index|[
+name|SGE_QSETS
+index|]
+decl_stmt|;
+comment|/* revers RSS map table */
+name|struct
+name|filter_info
+modifier|*
+name|filters
 decl_stmt|;
 comment|/* Tasks */
 name|struct
@@ -1330,7 +1379,7 @@ name|PORT_LOCK_ASSERT_OWNED
 parameter_list|(
 name|port
 parameter_list|)
-value|sx_assert(&(port)->lock, SX_LOCKED)
+value|sx_assert(&(port)->lock, SA_LOCKED)
 end_define
 
 begin_define
@@ -1382,7 +1431,7 @@ name|ADAPTER_LOCK_ASSERT_NOTOWNED
 parameter_list|(
 name|adap
 parameter_list|)
-value|sx_assert(&(adap)->lock, SX_UNLOCKED)
+value|sx_assert(&(adap)->lock, SA_UNLOCKED)
 end_define
 
 begin_else
