@@ -502,7 +502,6 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	 * Lock to prevent object creation race condition. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
