@@ -1537,12 +1537,6 @@ begin_comment
 comment|/* 16 bytes minimum memory chunk */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__amd64__
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -1553,27 +1547,6 @@ end_define
 begin_comment
 comment|/* 1 PAGE  maximum */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MEMO_PAGE_ORDER
-value|1
-end_define
-
-begin_comment
-comment|/* 2 PAGEs maximum on amd64 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -1624,12 +1597,6 @@ name|MEMO_CLUSTER_MASK
 value|(MEMO_CLUSTER_SIZE-1)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__amd64__
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -1647,34 +1614,6 @@ name|p
 parameter_list|)
 value|free((p), M_DEVBUF)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|get_pages
-parameter_list|()
-value|contigmalloc(MEMO_CLUSTER_SIZE, M_DEVBUF, \ 				    0, 0, 1LL<< 32, PAGE_SIZE, 1LL<< 32)
-end_define
-
-begin_define
-define|#
-directive|define
-name|free_pages
-parameter_list|(
-name|p
-parameter_list|)
-value|contigfree((p), MEMO_CLUSTER_SIZE, M_DEVBUF)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
@@ -2808,7 +2747,7 @@ argument_list|,
 operator|&
 name|baddr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3214,7 +3153,7 @@ name|MEMO_CLUSTER_SIZE
 argument_list|,
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-name|BUS_SPACE_MAXADDR_32BIT
+name|BUS_SPACE_MAXADDR
 argument_list|,
 name|NULL
 argument_list|,
@@ -5913,6 +5852,16 @@ decl_stmt|,
 name|rv_scntl4
 decl_stmt|;
 comment|/* 	 *  Target data. 	 */
+ifdef|#
+directive|ifdef
+name|__amd64__
+name|struct
+name|sym_tcb
+modifier|*
+name|target
+decl_stmt|;
+else|#
+directive|else
 name|struct
 name|sym_tcb
 name|target
@@ -5920,6 +5869,8 @@ index|[
 name|SYM_CONF_MAX_TARGET
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 *  Target control block bus address array used by the SCRIPT  	 *  on reselection. 	 */
 name|u32
 modifier|*
@@ -34494,6 +34445,42 @@ name|fw
 operator|->
 name|name
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__amd64__
+name|np
+operator|->
+name|target
+operator|=
+name|sym_calloc_dma
+argument_list|(
+name|SYM_CONF_MAX_TARGET
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+operator|(
+name|np
+operator|->
+name|target
+operator|)
+argument_list|)
+argument_list|,
+literal|"TARGET"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|np
+operator|->
+name|target
+condition|)
+goto|goto
+name|attach_failed
+goto|;
+endif|#
+directive|endif
 comment|/* 	 * Edit its name. 	 */
 name|snprintf
 argument_list|(
@@ -36319,6 +36306,38 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+ifdef|#
+directive|ifdef
+name|__amd64__
+if|if
+condition|(
+name|np
+operator|->
+name|target
+condition|)
+name|sym_mfree_dma
+argument_list|(
+name|np
+operator|->
+name|target
+argument_list|,
+name|SYM_CONF_MAX_TARGET
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+operator|(
+name|np
+operator|->
+name|target
+operator|)
+argument_list|)
+argument_list|,
+literal|"TARGET"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|np
