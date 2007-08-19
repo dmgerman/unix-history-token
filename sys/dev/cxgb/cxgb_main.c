@@ -10152,9 +10152,16 @@ name|m0
 operator|=
 name|m
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INVARIANTS
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>
+literal|700000
 comment|/* 		 * Clean up after net stack sloppiness 		 * before calling m_sanity 		 */
 name|m0
 operator|=
