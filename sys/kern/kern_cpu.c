@@ -1881,6 +1881,8 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|,
+name|n
+decl_stmt|,
 name|numdevs
 decl_stmt|;
 name|uint64_t
@@ -2070,11 +2072,11 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
+name|n
 operator|=
 literal|0
 init|;
-name|i
+name|n
 operator|<
 name|numdevs
 operator|&&
@@ -2084,7 +2086,7 @@ name|freq
 operator|==
 name|CPUFREQ_VAL_UNKNOWN
 condition|;
-name|i
+name|n
 operator|++
 control|)
 block|{
@@ -2095,7 +2097,7 @@ name|device_is_attached
 argument_list|(
 name|devs
 index|[
-name|i
+name|n
 index|]
 argument_list|)
 condition|)
@@ -2106,7 +2108,7 @@ name|CPUFREQ_DRV_GET
 argument_list|(
 name|devs
 index|[
-name|i
+name|n
 index|]
 argument_list|,
 operator|&
