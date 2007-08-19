@@ -253,7 +253,7 @@ begin_define
 define|#
 directive|define
 name|MAX_LEN
-value|2048
+value|4096
 end_define
 
 begin_ifndef
