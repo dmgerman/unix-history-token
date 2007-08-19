@@ -4904,6 +4904,11 @@ name|NG_HOOKSIZ
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Queue the function above. 	 * Procesing continues in that function in the lock context of 	 * the other node. 	 */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
 name|ng_send_fn
 argument_list|(
 name|node2
@@ -4917,7 +4922,23 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"failed in ng_con_nodes(): %d\n"
+argument_list|,
+name|error
+argument_list|)
 expr_stmt|;
+name|ng_destroy_hook
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+comment|/* also zaps peer */
+block|}
 name|NG_HOOK_UNREF
 argument_list|(
 name|hook
@@ -4931,7 +4952,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
