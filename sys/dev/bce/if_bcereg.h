@@ -2416,6 +2416,20 @@ name|BCE_DRV_PULSE_SEQ_MASK
 value|0x00007fff
 end_define
 
+begin_define
+define|#
+directive|define
+name|BCE_MB_ARGS_0
+value|0x00000014
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_MB_ARGS_1
+value|0x00000018
+end_define
+
 begin_comment
 comment|/* Indicate to the firmware not to go into the  * OS absent when it is not getting driver pulse.  * This is used for debugging. */
 end_comment
@@ -27587,6 +27601,14 @@ comment|/* Provides access to certain firmware statistics. */
 name|u32
 name|com_no_buffers
 decl_stmt|;
+comment|/* Mbuf allocation failure counter. */
+name|u32
+name|mbuf_alloc_failed
+decl_stmt|;
+comment|/* TX DMA mapping failure counter. */
+name|u32
+name|tx_dma_map_failures
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|BCE_DEBUG
@@ -27596,6 +27618,15 @@ name|tx_mbuf_alloc
 decl_stmt|;
 name|int
 name|rx_mbuf_alloc
+decl_stmt|;
+comment|/* Track the distribution buffer segments. */
+name|u32
+name|rx_mbuf_segs
+index|[
+name|BCE_MAX_SEGMENTS
+operator|+
+literal|1
+index|]
 decl_stmt|;
 comment|/* Track how many and what type of interrupts are generated. */
 name|u32
@@ -27627,9 +27658,9 @@ name|tx_full_count
 decl_stmt|;
 comment|/* Number of times the TX chain was full. */
 name|u32
-name|mbuf_alloc_failed
+name|mbuf_sim_alloc_failed
 decl_stmt|;
-comment|/* Mbuf allocation failure counter. */
+comment|/* Mbuf simulated allocation failure counter. */
 name|u32
 name|l2fhdr_status_errors
 decl_stmt|;
