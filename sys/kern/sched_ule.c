@@ -5919,6 +5919,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
+comment|/* 	 * Set steal thresh to log2(mp_ncpu) but no greater than 4.  This 	 * prevents excess thrashing on large machines and excess idle on 	 * smaller machines. 	 */
+name|steal_thresh
+operator|=
+name|min
+argument_list|(
+name|ffs
+argument_list|(
+name|mp_ncpus
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 name|affinity
 operator|=
 name|SCHED_AFFINITY_DEFAULT
