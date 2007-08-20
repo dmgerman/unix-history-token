@@ -596,6 +596,10 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|&&
+name|error
+operator|!=
+name|ENOENT
 condition|)
 return|return
 name|error
@@ -626,6 +630,10 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|&&
+name|error
+operator|!=
+name|ENOENT
 condition|)
 return|return
 name|error
@@ -650,6 +658,10 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|&&
+name|error
+operator|!=
+name|ENOENT
 condition|)
 return|return
 name|error
@@ -674,6 +686,10 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|&&
+name|error
+operator|!=
+name|ENOENT
 condition|)
 return|return
 name|error
@@ -698,6 +714,10 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|&&
+name|error
+operator|!=
+name|ENOENT
 condition|)
 return|return
 name|error
