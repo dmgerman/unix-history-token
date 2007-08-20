@@ -1093,8 +1093,6 @@ modifier|*
 name|pc
 decl_stmt|;
 name|int
-name|cpu_id
-decl_stmt|,
 name|error
 decl_stmt|,
 name|i
@@ -1364,14 +1362,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Bind to the target CPU before switching, if necessary. */
-name|cpu_id
-operator|=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-expr_stmt|;
+comment|/* Bind to the target CPU before switching. */
 name|pc
 operator|=
 name|cpu_get_pcpu
@@ -1381,15 +1372,6 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cpu_id
-operator|!=
-name|pc
-operator|->
-name|pc_cpuid
-condition|)
-block|{
 name|thread_lock
 argument_list|(
 name|curthread
@@ -1409,7 +1391,6 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-block|}
 name|CF_DEBUG
 argument_list|(
 literal|"setting abs freq %d on %s (cpu %d)\n"
@@ -1442,15 +1423,6 @@ argument_list|,
 name|set
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cpu_id
-operator|!=
-name|pc
-operator|->
-name|pc_cpuid
-condition|)
-block|{
 name|thread_lock
 argument_list|(
 name|curthread
@@ -1466,7 +1438,6 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
@@ -1523,14 +1494,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Bind to the target CPU before switching, if necessary. */
-name|cpu_id
-operator|=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-expr_stmt|;
+comment|/* Bind to the target CPU before switching. */
 name|pc
 operator|=
 name|cpu_get_pcpu
@@ -1540,15 +1504,6 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cpu_id
-operator|!=
-name|pc
-operator|->
-name|pc_cpuid
-condition|)
-block|{
 name|thread_lock
 argument_list|(
 name|curthread
@@ -1568,7 +1523,6 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-block|}
 name|CF_DEBUG
 argument_list|(
 literal|"setting rel freq %d on %s (cpu %d)\n"
@@ -1601,15 +1555,6 @@ argument_list|,
 name|set
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cpu_id
-operator|!=
-name|pc
-operator|->
-name|pc_cpuid
-condition|)
-block|{
 name|thread_lock
 argument_list|(
 name|curthread
@@ -1625,7 +1570,6 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
