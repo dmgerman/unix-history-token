@@ -7567,8 +7567,6 @@ name|int
 name|bit
 decl_stmt|,
 name|field
-decl_stmt|,
-name|page_req
 decl_stmt|;
 name|pv_entry_t
 name|pv
@@ -7775,14 +7773,6 @@ return|;
 block|}
 block|}
 comment|/* No free items, allocate another chunk */
-name|page_req
-operator|=
-name|try
-condition|?
-name|VM_ALLOC_NORMAL
-else|:
-name|VM_ALLOC_SYSTEM
-expr_stmt|;
 name|m
 operator|=
 name|vm_page_alloc
@@ -7791,7 +7781,7 @@ name|NULL
 argument_list|,
 name|colour
 argument_list|,
-name|page_req
+name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_NOOBJ
 argument_list|)
@@ -7867,7 +7857,7 @@ name|NULL
 argument_list|,
 name|colour
 argument_list|,
-name|VM_ALLOC_SYSTEM
+name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_NOOBJ
 argument_list|)
