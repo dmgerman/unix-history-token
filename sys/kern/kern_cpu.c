@@ -1068,8 +1068,6 @@ modifier|*
 name|pc
 decl_stmt|;
 name|int
-name|cpu_id
-decl_stmt|,
 name|error
 decl_stmt|,
 name|i
@@ -1348,14 +1346,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Bind to the target CPU before switching, if necessary. */
-name|cpu_id
-operator|=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-expr_stmt|;
+comment|/* Bind to the target CPU before switching. */
 name|pc
 operator|=
 name|cpu_get_pcpu
@@ -1365,15 +1356,6 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cpu_id
-operator|!=
-name|pc
-operator|->
-name|pc_cpuid
-condition|)
-block|{
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1395,7 +1377,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-block|}
 name|CF_DEBUG
 argument_list|(
 literal|"setting abs freq %d on %s (cpu %d)\n"
@@ -1428,15 +1409,6 @@ argument_list|,
 name|set
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cpu_id
-operator|!=
-name|pc
-operator|->
-name|pc_cpuid
-condition|)
-block|{
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1454,7 +1426,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
@@ -1511,14 +1482,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Bind to the target CPU before switching, if necessary. */
-name|cpu_id
-operator|=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-expr_stmt|;
+comment|/* Bind to the target CPU before switching. */
 name|pc
 operator|=
 name|cpu_get_pcpu
@@ -1528,15 +1492,6 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cpu_id
-operator|!=
-name|pc
-operator|->
-name|pc_cpuid
-condition|)
-block|{
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1558,7 +1513,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-block|}
 name|CF_DEBUG
 argument_list|(
 literal|"setting rel freq %d on %s (cpu %d)\n"
@@ -1591,15 +1545,6 @@ argument_list|,
 name|set
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cpu_id
-operator|!=
-name|pc
-operator|->
-name|pc_cpuid
-condition|)
-block|{
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1617,7 +1562,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
@@ -1863,6 +1807,8 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|,
+name|n
+decl_stmt|,
 name|numdevs
 decl_stmt|;
 name|uint64_t
@@ -2052,11 +1998,11 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
+name|n
 operator|=
 literal|0
 init|;
-name|i
+name|n
 operator|<
 name|numdevs
 operator|&&
@@ -2066,7 +2012,7 @@ name|freq
 operator|==
 name|CPUFREQ_VAL_UNKNOWN
 condition|;
-name|i
+name|n
 operator|++
 control|)
 block|{
@@ -2077,7 +2023,7 @@ name|device_is_attached
 argument_list|(
 name|devs
 index|[
-name|i
+name|n
 index|]
 argument_list|)
 condition|)
@@ -2088,7 +2034,7 @@ name|CPUFREQ_DRV_GET
 argument_list|(
 name|devs
 index|[
-name|i
+name|n
 index|]
 argument_list|,
 operator|&
