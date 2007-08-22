@@ -150,6 +150,16 @@ parameter_list|)
 value|_START_ENTRY; \ 			.globl CNAME(x); .type CNAME(x),@function; CNAME(x):
 end_define
 
+begin_define
+define|#
+directive|define
+name|END
+parameter_list|(
+name|x
+parameter_list|)
+value|.size x, . - x
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

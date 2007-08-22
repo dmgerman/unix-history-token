@@ -130,6 +130,16 @@ begin_comment
 comment|/* opcode for `ret' */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|END
+parameter_list|(
+name|name
+parameter_list|)
+value|.size name, . - name
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

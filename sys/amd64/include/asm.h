@@ -177,6 +177,16 @@ end_endif
 begin_define
 define|#
 directive|define
+name|END
+parameter_list|(
+name|x
+parameter_list|)
+value|.size x, . - x
+end_define
+
+begin_define
+define|#
+directive|define
 name|RCSID
 parameter_list|(
 name|x
