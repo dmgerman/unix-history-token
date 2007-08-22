@@ -277,6 +277,10 @@ name|int
 name|watchdog_done
 decl_stmt|;
 comment|/* cache of done */
+name|int
+name|watchdog_rx_pause
+decl_stmt|;
+comment|/* cache of pause rq recvd */
 block|}
 name|mxge_tx_buf_t
 typedef|;
@@ -579,6 +583,12 @@ decl_stmt|;
 name|int
 name|tx_defrag
 decl_stmt|;
+name|int
+name|media_flags
+decl_stmt|;
+name|int
+name|need_media_probe
+decl_stmt|;
 name|mxge_dma_t
 name|dmabench_dma
 decl_stmt|;
@@ -655,6 +665,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MXGE_XFP_COMPLIANCE_BYTE
+value|131
+end_define
+
+begin_define
+define|#
+directive|define
 name|MXGE_HIGHPART_TO_U32
 parameter_list|(
 name|X
@@ -672,6 +689,24 @@ name|X
 parameter_list|)
 value|((uint32_t)(X))
 end_define
+
+begin_struct
+struct|struct
+name|mxge_media_type
+block|{
+name|int
+name|flag
+decl_stmt|;
+name|uint8_t
+name|bitmask
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* implement our own memory barriers, since bus_space_barrier    cannot handle write-combining regions */
