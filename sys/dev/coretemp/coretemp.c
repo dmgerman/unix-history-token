@@ -457,6 +457,12 @@ decl_stmt|;
 name|int
 name|cpu_mask
 decl_stmt|;
+name|sc
+operator|->
+name|sc_dev
+operator|=
+name|dev
+expr_stmt|;
 name|pdev
 operator|=
 name|device_get_parent
@@ -495,7 +501,7 @@ name|cpu_id
 operator|&
 literal|15
 expr_stmt|;
-comment|/* 	 * Check for errata AE18. 	 * "Processor Digital Thermal Sensor (DTS) Readout stops 	 *  updating upon returning from C3/C4 state." 	 * 	 * Adapted from the Linux coretemp driver.  	 */
+comment|/* 	 * Check for errata AE18. 	 * "Processor Digital Thermal Sensor (DTS) Readout stops 	 *  updating upon returning from C3/C4 state." 	 * 	 * Adapted from the Linux coretemp driver. 	 */
 if|if
 condition|(
 name|cpu_model
@@ -531,10 +537,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"This processor behaves "
-literal|"erronously regarding to Intel errata "
-literal|"AE18.\nPlease update your BIOS or the "
-literal|"CPU microcode.\n"
+literal|"not supported (Intel errata "
+literal|"AE18), try updating your BIOS\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -545,6 +549,12 @@ return|;
 block|}
 block|}
 comment|/* 	 * On some Core 2 CPUs, there's an undocumented MSR that 	 * can tell us if Tj(max) is 100 or 85. 	 * 	 * The if-clause for CPUs having the MSR_IA32_EXT_CONFIG was adapted 	 * from the Linux coretemp driver. 	 */
+name|sc
+operator|->
+name|sc_tjmax
+operator|=
+literal|100
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -553,8 +563,8 @@ operator|==
 literal|0xf
 operator|&&
 name|cpu_mask
-operator|>
-literal|3
+operator|>=
+literal|2
 operator|)
 operator|||
 name|cpu_model
@@ -571,13 +581,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|msr
-operator|>>
+operator|&
+operator|(
+literal|1
+operator|<<
 literal|30
 operator|)
-operator|&
-literal|0x1
 condition|)
 name|sc
 operator|->
@@ -586,13 +596,6 @@ operator|=
 literal|85
 expr_stmt|;
 block|}
-else|else
-name|sc
-operator|->
-name|sc_tjmax
-operator|=
-literal|100
-expr_stmt|;
 comment|/* 	 * Add the "temperature" MIB to dev.cpu.N. 	 */
 name|sc
 operator|->
@@ -688,6 +691,9 @@ name|dev
 parameter_list|)
 block|{
 name|uint64_t
+name|msr
+decl_stmt|;
+name|int
 name|temp
 decl_stmt|;
 name|int
@@ -708,6 +714,12 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|char
+name|stemp
+index|[
+literal|16
+index|]
+decl_stmt|;
 name|thread_lock
 argument_list|(
 name|curthread
@@ -726,18 +738,33 @@ name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The digital temperature reading is located at bit 16 	 * of MSR_THERM_STATUS. 	 * 	 * There is a bit on that MSR that indicates whether the 	 * temperature is valid or not. 	 * 	 * The temperature is computed by subtracting the temperature 	 * reading by Tj(max). 	 */
-name|temp
+name|msr
 operator|=
 name|rdmsr
 argument_list|(
 name|MSR_THERM_STATUS
 argument_list|)
 expr_stmt|;
+name|thread_lock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|sched_unbind
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check for Thermal Status and Thermal Status Log. 	 */
 if|if
 condition|(
 operator|(
-name|temp
+name|msr
 operator|&
 literal|0x3
 operator|)
@@ -751,48 +778,12 @@ argument_list|,
 literal|"PROCHOT asserted\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check for Critical Temperature Status and Critical 	 * Temperature Log. 	 * 	 * If we reach a critical level, allow devctl(4) to catch this 	 * and shutdown the system. 	 */
-if|if
-condition|(
-operator|(
-operator|(
-name|temp
-operator|>>
-literal|4
-operator|)
-operator|&
-literal|0x3
-operator|)
-operator|==
-literal|0x3
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Critical Temperature detected.\n"
-literal|"Advising system shutdown.\n"
-argument_list|)
-expr_stmt|;
-name|devctl_notify
-argument_list|(
-literal|"CPU"
-argument_list|,
-literal|"coretemp"
-argument_list|,
-literal|"temperature"
-argument_list|,
-literal|"notify=0x1"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Bit 31 contains "Reading valid" 	 */
 if|if
 condition|(
 operator|(
 operator|(
-name|temp
+name|msr
 operator|>>
 literal|31
 operator|)
@@ -812,7 +803,7 @@ name|sc_tjmax
 operator|-
 operator|(
 operator|(
-name|temp
+name|msr
 operator|>>
 literal|16
 operator|)
@@ -820,19 +811,66 @@ operator|&
 literal|0x7f
 operator|)
 expr_stmt|;
-return|return
-operator|(
-operator|(
-name|int
-operator|)
+block|}
+else|else
 name|temp
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 	 * Check for Critical Temperature Status and Critical 	 * Temperature Log. 	 * It doesn't really matter if the current temperature is 	 * invalid because the "Critical Temperature Log" bit will 	 * tell us if the Critical Temperature has been reached in 	 * past. It's not directly related to the current temperature. 	 * 	 * If we reach a critical level, allow devctl(4) to catch this 	 * and shutdown the system. 	 */
+if|if
+condition|(
+operator|(
+operator|(
+name|msr
+operator|>>
+literal|4
 operator|)
-return|;
+operator|&
+literal|0x3
+operator|)
+operator|==
+literal|0x3
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"critical temperature detected, "
+literal|"suggest system shutdown\n"
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|stemp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|stemp
+argument_list|)
+argument_list|,
+literal|"%d"
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
+name|devctl_notify
+argument_list|(
+literal|"coretemp"
+argument_list|,
+literal|"Thermal"
+argument_list|,
+name|stemp
+argument_list|,
+literal|"notify=0xcc"
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
-operator|-
-literal|1
+name|temp
 operator|)
 return|;
 block|}
