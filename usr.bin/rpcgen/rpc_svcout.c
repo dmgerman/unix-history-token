@@ -552,7 +552,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"mutex_t _svcstate_lock;"
+literal|"pthread_mutex_t _svcstate_lock;"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -2365,7 +2365,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\tmutex_lock(&_svcstate_lock);\n"
+literal|"\tpthread_mutex_lock(&_svcstate_lock);\n"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -2383,7 +2383,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\tmutex_unlock(&_svcstate_lock);\n"
+literal|"\tpthread_mutex_unlock(&_svcstate_lock);\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3200,7 +3200,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"%smutex_lock(&_svcstate_lock);\n"
+literal|"%spthread_mutex_lock(&_svcstate_lock);\n"
 argument_list|,
 name|space
 argument_list|)
@@ -3222,7 +3222,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"%smutex_unlock(&_svcstate_lock);\n"
+literal|"%spthread_mutex_unlock(&_svcstate_lock);\n"
 argument_list|,
 name|space
 argument_list|)
@@ -3603,7 +3603,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\tmutex_lock(&_svcstate_lock);\n"
+literal|"\tpthread_mutex_lock(&_svcstate_lock);\n"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -3721,7 +3721,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\t\t\t\tmutex_unlock(&_svcstate_lock);\n"
+literal|"\t\t\t\tpthread_mutex_unlock(&_svcstate_lock);\n"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -3813,7 +3813,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\tmutex_unlock(&_svcstate_lock);\n"
+literal|"\tpthread_mutex_unlock(&_svcstate_lock);\n"
 argument_list|)
 expr_stmt|;
 name|f_print
