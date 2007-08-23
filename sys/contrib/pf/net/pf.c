@@ -16650,7 +16650,7 @@ literal|8
 argument|, NULL, reason, 			    pd2.af)) { 				DPFPRINTF(PF_DEBUG_MISC, 				    (
 literal|"pf: ICMP error message too short "
 literal|"(tcp)\n"
-argument|)); 				return (PF_DROP); 			}  			key.af = pd2.af; 			key.proto = IPPROTO_TCP; 			if (direction == PF_IN)	{ 				PF_ACPY(&key.ext.addr, pd2.dst, key.af); 				PF_ACPY(&key.gwy.addr, pd2.src, key.af); 				key.ext.port = th.th_dport; 				key.gwy.port = th.th_sport; 			} else { 				PF_ACPY(&key.lan.addr, pd2.dst, key.af); 				PF_ACPY(&key.ext.addr, pd2.src, key.af); 				key.lan.port = th.th_dport; 				key.ext.port = th.th_sport; 			}  			STATE_LOOKUP();  			if (direction == (*state)->direction) { 				src =&(*state)->dst; 				dst =&(*state)->src; 			} else { 				src =&(*state)->src; 				dst =&(*state)->dst; 			}  			if (src->wscale&& dst->wscale&& 			    !(th.th_flags& TH_SYN)) 				dws = dst->wscale& PF_WSCALE_MASK; 			else 				dws =
+argument|)); 				return (PF_DROP); 			}  			key.af = pd2.af; 			key.proto = IPPROTO_TCP; 			if (direction == PF_IN)	{ 				PF_ACPY(&key.ext.addr, pd2.dst, key.af); 				PF_ACPY(&key.gwy.addr, pd2.src, key.af); 				key.ext.port = th.th_dport; 				key.gwy.port = th.th_sport; 			} else { 				PF_ACPY(&key.lan.addr, pd2.dst, key.af); 				PF_ACPY(&key.ext.addr, pd2.src, key.af); 				key.lan.port = th.th_dport; 				key.ext.port = th.th_sport; 			}  			STATE_LOOKUP();  			if (direction == (*state)->direction) { 				src =&(*state)->dst; 				dst =&(*state)->src; 			} else { 				src =&(*state)->src; 				dst =&(*state)->dst; 			}  			if (src->wscale&& dst->wscale) 				dws = dst->wscale& PF_WSCALE_MASK; 			else 				dws =
 literal|0
 argument|;
 comment|/* Demodulate sequence number */
