@@ -3243,7 +3243,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"#include<sysent.h> /* getdtablesize, open */\n"
+literal|"#include<sys/sysent.h> /* getdtablesize, open */\n"
 argument_list|)
 expr_stmt|;
 name|f_print
