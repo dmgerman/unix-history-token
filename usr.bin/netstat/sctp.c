@@ -3045,14 +3045,14 @@ name|p
 argument_list|(
 name|sctps_naglesent
 argument_list|,
-literal|"\t%lu nagle allowed %sending\n"
+literal|"\t%lu RFC813 allowed %sending\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_naglequeued
 argument_list|,
-literal|"\t%lu nagle doe%s't allow sending\n"
+literal|"\t%lu RFC813 does not allow sending\n"
 argument_list|)
 expr_stmt|;
 name|p
