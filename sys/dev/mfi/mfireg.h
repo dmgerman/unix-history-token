@@ -411,6 +411,10 @@ name|MFI_DCMD_LD_SET_PROP
 init|=
 literal|0x03040000
 block|,
+name|MFI_DCMD_LD_DELETE
+init|=
+literal|0x03090000
+block|,
 name|MFI_DCMD_CFG_READ
 init|=
 literal|0x04010000
