@@ -2689,6 +2689,9 @@ operator|.
 name|is_tx_nodefkey
 operator|++
 expr_stmt|;
+goto|goto
+name|bad
+goto|;
 block|}
 block|}
 else|else
