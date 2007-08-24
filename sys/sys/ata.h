@@ -2445,6 +2445,58 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ata_ioc_raid_status
+block|{
+name|int
+name|lun
+decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+name|int
+name|interleave
+decl_stmt|;
+name|int
+name|status
+decl_stmt|;
+name|int
+name|progress
+decl_stmt|;
+name|int
+name|total_disks
+decl_stmt|;
+struct|struct
+block|{
+name|int
+name|state
+decl_stmt|;
+define|#
+directive|define
+name|AR_DISK_ONLINE
+value|0x01
+define|#
+directive|define
+name|AR_DISK_PRESENT
+value|0x02
+define|#
+directive|define
+name|AR_DISK_SPARE
+value|0x04
+name|int
+name|lun
+decl_stmt|;
+block|}
+name|disks
+index|[
+literal|16
+index|]
+struct|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ATA RAID ioctl calls */
 end_comment
@@ -2466,8 +2518,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IOCATARAIDSTATUS
+name|IOCATARAIDSTATUS_OLD
 value|_IOWR('a', 202, struct ata_ioc_raid_config)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCATARAIDSTATUS
+value|_IOWR('a', 202, struct ata_ioc_raid_status)
 end_define
 
 begin_define
