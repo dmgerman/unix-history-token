@@ -1015,13 +1015,52 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_LOG_MAX_TYPES
+name|SCTP_MAP_TSN_ENTERS
 value|118
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_THRESHOLD_CLEAR
+value|119
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_THRESHOLD_INCR
+value|120
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LOG_MAX_TYPES
+value|121
 end_define
 
 begin_comment
 comment|/*  * To turn on various logging, you must first enable 'options KTR' and  * you might want to bump the entires 'options KTR_ENTRIES=80000'.  * To get something to log you define one of the logging defines.  * (see LINT).  *  * This gets the compile in place, but you still need to turn the  * logging flag on too in the sysctl (see in sctp.h).  */
 end_comment
+
+begin_comment
+comment|/* For SCTP only logging */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_MAX_LOGGING_SIZE
+value|30000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_TRACE_PARAMS
+value|6
+end_define
 
 begin_define
 define|#
@@ -2155,6 +2194,18 @@ parameter_list|(
 name|asoc
 parameter_list|)
 value|((asoc)->state& SCTP_STATE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SET_STATE
+parameter_list|(
+name|asoc
+parameter_list|,
+name|newstate
+parameter_list|)
+value|((asoc)->state = ((asoc)->state& ~SCTP_STATE_MASK) |  newstate)
 end_define
 
 begin_comment
@@ -3762,6 +3813,13 @@ define|#
 directive|define
 name|SCTP_FROM_SCTP_PANDA
 value|0xb0000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_FROM_SCTP_SYSCTL
+value|0xc0000000
 end_define
 
 begin_comment

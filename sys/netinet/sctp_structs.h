@@ -1940,9 +1940,6 @@ name|uint32_t
 name|my_last_reported_rwnd
 decl_stmt|;
 name|uint32_t
-name|my_rwnd_control_len
-decl_stmt|;
-name|uint32_t
 name|sctp_frag_point
 decl_stmt|;
 name|uint32_t
@@ -1951,11 +1948,11 @@ decl_stmt|;
 name|uint32_t
 name|sb_cc
 decl_stmt|;
-comment|/* shadow of sb_cc in one-2-one */
+comment|/* shadow of sb_cc */
 name|uint32_t
-name|sb_mbcnt
+name|my_rwnd_control_len
 decl_stmt|;
-comment|/* shadow of sb_mbcnt in one-2-one */
+comment|/* shadow of sb_mbcnt used for rwnd 					 * control */
 comment|/* 32 bit nonce stuff */
 name|uint32_t
 name|nonce_resync_tsn

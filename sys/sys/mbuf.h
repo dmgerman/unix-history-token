@@ -637,7 +637,7 @@ begin_define
 define|#
 directive|define
 name|M_NOTIFICATION
-value|0x2000
+value|M_PROTO5
 end_define
 
 begin_comment

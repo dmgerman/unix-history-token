@@ -2146,6 +2146,13 @@ name|SCTP_LAST_PACKET_TRACING
 value|0x01000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_THRESHOLD_LOGGING
+value|0x02000000
+end_define
+
 begin_endif
 endif|#
 directive|endif

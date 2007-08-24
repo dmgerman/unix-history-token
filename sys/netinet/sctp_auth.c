@@ -3294,7 +3294,6 @@ return|;
 block|}
 name|bzero
 argument_list|(
-operator|&
 name|new_authinfo
 argument_list|,
 sizeof|sizeof
