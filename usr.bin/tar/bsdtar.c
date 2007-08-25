@@ -1323,6 +1323,31 @@ name|extract_flags
 operator||=
 name|ARCHIVE_EXTRACT_OWNER
 expr_stmt|;
+comment|/* -p */
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_PERM
+expr_stmt|;
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_ACL
+expr_stmt|;
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_XATTR
+expr_stmt|;
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_FFLAGS
+expr_stmt|;
 block|}
 comment|/* Rewrite traditional-style tar arguments, if used. */
 name|argv
@@ -1936,7 +1961,34 @@ case|case
 name|OPTION_NO_SAME_PERMISSIONS
 case|:
 comment|/* GNU tar */
-comment|/* 			 * This is always the default in FreeBSD's 			 * version of GNU tar; it's also the default 			 * behavior for bsdtar, so treat the 			 * command-line option as a no-op. 			 */
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_PERM
+expr_stmt|;
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_ACL
+expr_stmt|;
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_XATTR
+expr_stmt|;
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_FFLAGS
+expr_stmt|;
 break|break;
 case|case
 name|OPTION_NULL
