@@ -1379,7 +1379,15 @@ name|pc
 operator|)
 operator|==
 name|PQ_CACHE
-operator|&&
+condition|)
+block|{
+name|cnt
+operator|.
+name|v_reactivated
+operator|++
+expr_stmt|;
+if|if
+condition|(
 name|vm_page_count_severe
 argument_list|()
 condition|)
@@ -1405,6 +1413,7 @@ expr_stmt|;
 goto|goto
 name|RetryFault
 goto|;
+block|}
 block|}
 comment|/* 			 * Mark page busy for other processes, and the  			 * pagedaemon.  If it still isn't completely valid 			 * (readable), jump to readrest, else break-out ( we 			 * found the page ). 			 */
 name|vm_page_busy
@@ -4691,7 +4700,7 @@ operator|=
 name|rtm
 expr_stmt|;
 block|}
-comment|/* return number of bytes of pages */
+comment|/* return number of pages */
 return|return
 name|i
 return|;
