@@ -4086,6 +4086,10 @@ expr_stmt|;
 comment|/* 	 * If we opened a file earlier, write it out now.  Note that 	 * the format handler might have reset the size field to zero 	 * to inform us that the archive body won't get stored.  In 	 * that case, just skip the write. 	 */
 if|if
 condition|(
+name|e
+operator|>=
+name|ARCHIVE_WARN
+operator|&&
 name|fd
 operator|>=
 literal|0
