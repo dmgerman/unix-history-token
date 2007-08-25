@@ -1232,8 +1232,12 @@ name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"%d "
+literal|"%lu "
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|st
 operator|->
 name|st_uid
@@ -1326,8 +1330,12 @@ name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"%d"
+literal|"%lu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|st
 operator|->
 name|st_gid
@@ -1372,8 +1380,12 @@ name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"%d,%u"
+literal|"%lu,%lu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|major
 argument_list|(
 name|st
@@ -1383,6 +1395,7 @@ argument_list|)
 argument_list|,
 operator|(
 name|unsigned
+name|long
 operator|)
 name|minor
 argument_list|(
