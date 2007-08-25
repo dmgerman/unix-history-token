@@ -1107,6 +1107,12 @@ argument_list|,
 name|mdio_ops
 argument_list|)
 expr_stmt|;
+name|t3_os_sleep
+argument_list|(
+literal|20
+argument_list|)
+expr_stmt|;
+comment|/* PHY needs ~10ms to start responding to MDIO */
 block|}
 end_function
 
