@@ -1073,6 +1073,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* A basic set of security flags to request from libarchive. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SECURITY
+define|\
+value|(ARCHIVE_EXTRACT_SECURE_SYMLINKS		\ 	 | ARCHIVE_EXTRACT_SECURE_NODOTDOT)
+end_define
+
 begin_function
 name|int
 name|main
@@ -1286,6 +1298,13 @@ operator|->
 name|extract_flags
 operator|=
 name|ARCHIVE_EXTRACT_TIME
+expr_stmt|;
+comment|/* Default: Perform basic security checks. */
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|SECURITY
 expr_stmt|;
 comment|/* Defaults for root user: */
 if|if
@@ -1975,6 +1994,13 @@ case|case
 literal|'P'
 case|:
 comment|/* GNU tar */
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|SECURITY
+expr_stmt|;
 name|bsdtar
 operator|->
 name|option_absolute_paths
