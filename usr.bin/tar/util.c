@@ -1892,7 +1892,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle --strip-components and any future path-rewriting options.  * Returns non-zero if the pathname should not be extracted.  */
+comment|/*  * Handle --strip-components and any future path-rewriting options.  * Returns non-zero if the pathname should not be extracted.  *  * TODO: Support pax-style regex path rewrites.  */
 end_comment
 
 begin_function
