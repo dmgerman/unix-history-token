@@ -4631,7 +4631,7 @@ name|sc
 operator|->
 name|mfi_config_lock
 argument_list|,
-name|SA_XLOCKED
+name|SX_XLOCKED
 argument_list|)
 expr_stmt|;
 name|mtx_assert
