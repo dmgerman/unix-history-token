@@ -840,12 +840,20 @@ name|len
 operator|&
 literal|1
 condition|)
-comment|/* pad to multiple of 2 */
+block|{
+comment|/* Zero pad to multiple of 2 */
 name|ie
 operator|->
 name|len
 operator|++
 expr_stmt|;
+operator|*
+name|frm
+operator|++
+operator|=
+literal|0
+expr_stmt|;
+block|}
 return|return
 name|frm
 return|;
