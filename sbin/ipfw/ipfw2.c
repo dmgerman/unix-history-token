@@ -12933,6 +12933,10 @@ block|{
 comment|/* skip rules from another set */
 name|bcopy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|d
 operator|->
@@ -13120,6 +13124,10 @@ condition|)
 block|{
 name|bcopy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|d
 operator|->
@@ -13478,6 +13486,10 @@ condition|)
 block|{
 name|bcopy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|d
 operator|->
