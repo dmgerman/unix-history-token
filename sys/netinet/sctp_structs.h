@@ -1535,6 +1535,50 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* used to save ASCONF-ACK chunks for retransmission */
+end_comment
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|sctp_asconf_ackhead
+argument_list|,
+name|sctp_asconf_ack
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|sctp_asconf_ack
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|sctp_asconf_ack
+argument_list|)
+name|next
+expr_stmt|;
+name|uint32_t
+name|serial_number
+decl_stmt|;
+name|struct
+name|sctp_nets
+modifier|*
+name|last_sent_to
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|data
+decl_stmt|;
+name|uint16_t
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Here we have information about each individual association that we track.  * We probably in production would be more dynamic. But for ease of  * implementation we will have a fixed array that we hunt for in a linear  * fashion.  */
 end_comment
 
@@ -1667,9 +1711,8 @@ name|stcb_starting_point_for_iterator
 decl_stmt|;
 comment|/* ASCONF save the last ASCONF-ACK so we can resend it if necessary */
 name|struct
-name|mbuf
-modifier|*
-name|last_asconf_ack_sent
+name|sctp_asconf_ackhead
+name|asconf_ack_sent
 decl_stmt|;
 comment|/* 	 * pointer to last stream reset queued to control queue by us with 	 * requests. 	 */
 name|struct
@@ -2142,6 +2185,9 @@ name|uint32_t
 name|chunks_on_out_queue
 decl_stmt|;
 comment|/* total chunks floating around, 					 * locked by send socket buffer */
+name|uint32_t
+name|peers_adaptation
+decl_stmt|;
 name|uint16_t
 name|peer_hmac_id
 decl_stmt|;
@@ -2374,6 +2420,12 @@ name|in_restart_hash
 decl_stmt|;
 name|uint8_t
 name|assoc_up_sent
+decl_stmt|;
+name|uint8_t
+name|adaptation_needed
+decl_stmt|;
+name|uint8_t
+name|adaptation_sent
 decl_stmt|;
 comment|/* CMT variables */
 name|uint8_t

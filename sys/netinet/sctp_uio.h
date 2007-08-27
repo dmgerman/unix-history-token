@@ -211,6 +211,9 @@ decl_stmt|;
 name|uint16_t
 name|sinfo_flags
 decl_stmt|;
+name|uint16_t
+name|sinfo_pr_policy
+decl_stmt|;
 name|uint32_t
 name|sinfo_ppid
 decl_stmt|;
@@ -251,6 +254,9 @@ name|sinfo_ssn
 decl_stmt|;
 name|uint16_t
 name|sinfo_flags
+decl_stmt|;
+name|uint16_t
+name|sinfo_pr_policy
 decl_stmt|;
 name|uint32_t
 name|sinfo_ppid
@@ -424,6 +430,17 @@ end_define
 
 begin_comment
 comment|/* end of message signal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_PR_POLICY_VALID
+value|0x4000
+end_define
+
+begin_comment
+comment|/* pr sctp policy valid */
 end_comment
 
 begin_define

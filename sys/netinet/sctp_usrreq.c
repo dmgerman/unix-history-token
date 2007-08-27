@@ -2518,7 +2518,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|sctp_close
 parameter_list|(
@@ -3177,7 +3176,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|sctp_disconnect
 parameter_list|(
@@ -4047,6 +4045,18 @@ literal|0
 operator|)
 return|;
 block|}
+else|else
+block|{
+name|sctp_chunk_output
+argument_list|(
+name|inp
+argument_list|,
+name|stcb
+argument_list|,
+name|SCTP_OUTPUT_FROM_CLOSING
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|SCTP_TCB_UNLOCK
 argument_list|(
@@ -4667,6 +4677,18 @@ expr_stmt|;
 goto|goto
 name|skip_unlock
 goto|;
+block|}
+else|else
+block|{
+name|sctp_chunk_output
+argument_list|(
+name|inp
+argument_list|,
+name|stcb
+argument_list|,
+name|SCTP_OUTPUT_FROM_CLOSING
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|SCTP_TCB_UNLOCK

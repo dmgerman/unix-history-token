@@ -104,6 +104,58 @@ parameter_list|)
 value|((inp->sctp_features& feature) == 0)
 end_define
 
+begin_comment
+comment|/* managing mobility_feature in inpcb (by micchie) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sctp_mobility_feature_on
+parameter_list|(
+name|inp
+parameter_list|,
+name|feature
+parameter_list|)
+value|(inp->sctp_mobility_features |= feature)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_mobility_feature_off
+parameter_list|(
+name|inp
+parameter_list|,
+name|feature
+parameter_list|)
+value|(inp->sctp_mobility_features&= ~feature)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_is_mobility_feature_on
+parameter_list|(
+name|inp
+parameter_list|,
+name|feature
+parameter_list|)
+value|(inp->sctp_mobility_features& feature)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_is_mobility_feature_off
+parameter_list|(
+name|inp
+parameter_list|,
+name|feature
+parameter_list|)
+value|((inp->sctp_mobility_features& feature) == 0)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -199,7 +251,7 @@ name|_stcb
 parameter_list|,
 name|_chk
 parameter_list|)
-value|{ \         SCTP_TCB_LOCK_ASSERT((_stcb)); \         if ((_chk)->whoTo) { \                 sctp_free_remote_addr((_chk)->whoTo); \                 (_chk)->whoTo = NULL; \ 	} \ 	if (((_stcb)->asoc.free_chunk_cnt> sctp_asoc_free_resc_limit) || \ 	    (sctppcbinfo.ipi_free_chunks> sctp_system_free_resc_limit)) { \ 		SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_chunk, (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} else { \ 		TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 		(_stcb)->asoc.free_chunk_cnt++; \ 		atomic_add_int(&sctppcbinfo.ipi_free_chunks, 1); \ 	} \ }
+value|{ \         if(_stcb) { \           SCTP_TCB_LOCK_ASSERT((_stcb)); \           if ((_chk)->whoTo) { \                   sctp_free_remote_addr((_chk)->whoTo); \                   (_chk)->whoTo = NULL; \           } \           if (((_stcb)->asoc.free_chunk_cnt> sctp_asoc_free_resc_limit) || \                (sctppcbinfo.ipi_free_chunks> sctp_system_free_resc_limit)) { \ 	 	SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_chunk, (_chk)); \ 	 	SCTP_DECR_CHK_COUNT(); \ 	  } else { \ 	 	TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 	 	(_stcb)->asoc.free_chunk_cnt++; \ 	 	atomic_add_int(&sctppcbinfo.ipi_free_chunks, 1); \           } \         } else { \ 		SCTP_ZONE_FREE(sctppcbinfo.ipi_zone_chunk, (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} \ }
 end_define
 
 begin_define
@@ -237,7 +289,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	uint32_t val; \ 	val = atomic_fetchadd_int(&(sb)->sb_cc,-(SCTP_BUF_LEN((m)))); \ 	if (val< SCTP_BUF_LEN((m))) { \ 	   panic("sb_cc goes negative"); \ 	} \ 	val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-(MSIZE)); \ 	if (val< MSIZE) { \ 	    panic("sb_mbcnt goes negative"); \ 	} \ 	if (SCTP_BUF_IS_EXTENDED(m)) { \ 		val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-(SCTP_BUF_EXTEND_SIZE(m))); \ 		if (val< SCTP_BUF_EXTEND_SIZE(m)) { \ 		    panic("sb_mbcnt goes negative2"); \ 		} \ 	} \ 	if (((ctl)->do_not_ref_stcb == 0)&& stcb) {\ 	  val = atomic_fetchadd_int(&(stcb)->asoc.sb_cc,-(SCTP_BUF_LEN((m)))); \ 	  if (val< SCTP_BUF_LEN((m))) {\ 	     panic("stcb->sb_cc goes negative"); \ 	  } \ 	  val = atomic_fetchadd_int(&(stcb)->asoc.my_rwnd_control_len,-(MSIZE)); \ 	  if (val< MSIZE) { \ 	     panic("asoc->mbcnt goes negative"); \ 	  } \ 	} \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_subtract_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
+value|{ \ 	uint32_t val; \ 	val = atomic_fetchadd_int(&(sb)->sb_cc,-(SCTP_BUF_LEN((m)))); \ 	if (val< SCTP_BUF_LEN((m))) { \ 	   panic("sb_cc goes negative"); \ 	} \ 	val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-(MSIZE)); \ 	if (val< MSIZE) { \ 	    panic("sb_mbcnt goes negative"); \ 	} \ 	if (((ctl)->do_not_ref_stcb == 0)&& stcb) {\ 	  val = atomic_fetchadd_int(&(stcb)->asoc.sb_cc,-(SCTP_BUF_LEN((m)))); \ 	  if (val< SCTP_BUF_LEN((m))) {\ 	     panic("stcb->sb_cc goes negative"); \ 	  } \ 	  val = atomic_fetchadd_int(&(stcb)->asoc.my_rwnd_control_len,-(MSIZE)); \ 	  if (val< MSIZE) { \ 	     panic("asoc->mbcnt goes negative"); \ 	  } \ 	} \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_subtract_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
 end_define
 
 begin_define
@@ -251,7 +303,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	atomic_add_int(&(sb)->sb_cc,SCTP_BUF_LEN((m))); \ 	atomic_add_int(&(sb)->sb_mbcnt, MSIZE); \ 	if (SCTP_BUF_IS_EXTENDED(m)) \ 		atomic_add_int(&(sb)->sb_mbcnt,SCTP_BUF_EXTEND_SIZE(m)); \ 	if (stcb) { \ 		atomic_add_int(&(stcb)->asoc.sb_cc,SCTP_BUF_LEN((m))); \ 		atomic_add_int(&(stcb)->asoc.my_rwnd_control_len, MSIZE); \ 	} \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_add_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
+value|{ \ 	atomic_add_int(&(sb)->sb_cc,SCTP_BUF_LEN((m))); \ 	atomic_add_int(&(sb)->sb_mbcnt, MSIZE); \ 	if (stcb) { \ 		atomic_add_int(&(stcb)->asoc.sb_cc,SCTP_BUF_LEN((m))); \ 		atomic_add_int(&(stcb)->asoc.my_rwnd_control_len, MSIZE); \ 	} \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_add_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
 end_define
 
 begin_define
@@ -391,6 +443,30 @@ struct_decl|struct
 name|sctphdr
 struct_decl|;
 end_struct_decl
+
+begin_function_decl
+name|void
+name|sctp_close
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sctp_disconnect
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void

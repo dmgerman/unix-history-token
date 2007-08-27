@@ -562,6 +562,9 @@ decl_stmt|;
 name|sctp_zone_t
 name|ipi_zone_strmoq
 decl_stmt|;
+name|sctp_zone_t
+name|ipi_zone_asconf_ack
+decl_stmt|;
 name|struct
 name|mtx
 name|ipi_ep_mtx
@@ -970,6 +973,10 @@ name|uint32_t
 name|sctp_features
 decl_stmt|;
 comment|/* Feature flags */
+name|uint32_t
+name|sctp_mobility_features
+decl_stmt|;
+comment|/* Mobility  Feature flags */
 name|struct
 name|sctp_pcb
 name|sctp_ep

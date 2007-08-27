@@ -98,6 +98,9 @@ parameter_list|,
 name|struct
 name|sctp_tcb
 modifier|*
+parameter_list|,
+name|int
+name|i
 parameter_list|)
 function_decl|;
 end_function_decl

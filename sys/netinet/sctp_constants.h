@@ -56,6 +56,17 @@ value|1080
 end_define
 
 begin_comment
+comment|/* We need at least 2k of space for us, inits  * larger than that lets abort.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_LARGEST_INIT_ACCEPTED
+value|(65535 - 2048)
+end_define
+
+begin_comment
 comment|/* Number of addresses where we just skip the counting */
 end_comment
 
@@ -1282,6 +1293,92 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* default MOBILITY_BASE mode enable(1)/disable(0) value (sysctl) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCTP_APPLE_MOBILITY_BASE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_MOBILITY_BASE
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_MOBILITY_BASE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* default MOBILITY_FASTHANDOFF mode enable(1)/disable(0) value (sysctl) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCTP_APPLE_MOBILITY_FASTHANDOFF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_MOBILITY_FASTHANDOFF
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_MOBILITY_FASTHANDOFF
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Theshold for rwnd updates, we have to read (sb_hiwat>>  * SCTP_RWND_HIWAT_SHIFT) before we will look to see if we need to send a  * window update sack. When we look, we compare the last rwnd we sent vs the  * current rwnd. It too must be greater than this value. Using 3 divdes the  * hiwat by 8, so for 200k rwnd we need to read 24k. For a 64k rwnd we need  * to read 8k. This seems about right.. I hope :-D.. we do set a  * min of a MTU on it so if the rwnd is real small we will insist  * on a full MTU of 1500 bytes.  */
 end_comment
 
@@ -1694,6 +1791,13 @@ define|#
 directive|define
 name|SCTP_OUTPUT_FROM_DRAIN
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_OUTPUT_FROM_CLOSING
+value|16
 end_define
 
 begin_comment
@@ -3464,6 +3568,17 @@ name|SCTP_PARAM_BUFFER_SIZE
 value|512
 end_define
 
+begin_comment
+comment|/* small chunk store for looking at chunk_list in auth */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SMALL_CHUNK_STORE
+value|260
+end_define
+
 begin_define
 define|#
 directive|define
@@ -3636,24 +3751,6 @@ define|#
 directive|define
 name|SCTP_NOTIFY_PARTIAL_DELVIERY_INDICATION
 value|18
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_NOTIFY_ADAPTATION_INDICATION
-value|19
-end_define
-
-begin_comment
-comment|/* same as above */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_NOTIFY_ADAPTION_INDICATION
-value|19
 end_define
 
 begin_define
