@@ -1129,8 +1129,10 @@ argument_list|(
 name|kbd_cmd
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"keymap=%s\n"
 argument_list|,
 name|km
