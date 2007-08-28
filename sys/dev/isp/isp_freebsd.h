@@ -740,13 +740,13 @@ block|{
 name|char
 name|wwnn
 index|[
-literal|17
+literal|19
 index|]
 decl_stmt|;
 name|char
 name|wwpn
 index|[
-literal|17
+literal|19
 index|]
 decl_stmt|;
 block|}
