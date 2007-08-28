@@ -10940,7 +10940,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|EDESTADDRREQ
+name|EADDRNOTAVAIL
 expr_stmt|;
 goto|goto
 name|out

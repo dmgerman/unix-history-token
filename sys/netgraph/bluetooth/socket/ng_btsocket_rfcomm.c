@@ -3636,7 +3636,7 @@ literal|30
 condition|)
 return|return
 operator|(
-name|EDESTADDRREQ
+name|EADDRNOTAVAIL
 operator|)
 return|;
 comment|/* 	 * XXX FIXME - This is FUBAR. socreate() will call soalloc(1), i.e. 	 * soalloc() is allowed to sleep in MALLOC. This creates "could sleep" 	 * WITNESS warnings. To work around this problem we will create L2CAP 	 * socket first and then check if we actually need it. Note that we  	 * will not check for errors in socreate() because if we failed to  	 * create L2CAP socket at this point we still might have already open 	 * session. 	 */
