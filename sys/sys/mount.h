@@ -3009,6 +3009,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|statfs_scale_blocks
+parameter_list|(
+name|struct
+name|statfs
+modifier|*
+name|sf
+parameter_list|,
+name|long
+name|max_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|vfsconf
 modifier|*
