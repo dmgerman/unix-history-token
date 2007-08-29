@@ -5580,11 +5580,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|IWI_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
