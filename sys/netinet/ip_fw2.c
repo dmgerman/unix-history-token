@@ -14162,13 +14162,6 @@ name|hdr
 operator|=
 name|ip
 expr_stmt|;
-name|m_tag_prepend
-argument_list|(
-name|m
-argument_list|,
-name|mtag
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 case|case
