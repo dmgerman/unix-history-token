@@ -3254,6 +3254,20 @@ name|LINUX_CLOCK_MONOTONIC_HR
 value|5
 end_define
 
+begin_typedef
+typedef|typedef
+name|int
+name|l_timer_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|l_mqd_t
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif
