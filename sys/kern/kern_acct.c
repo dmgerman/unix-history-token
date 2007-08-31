@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -2022,19 +2028,6 @@ comment|/* Normalized exponent */
 name|int
 name|shift
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|val
-operator|>=
-literal|0
-argument_list|,
-operator|(
-literal|"encode_long: -ve value %ld"
-operator|,
-name|val
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|val
@@ -2046,6 +2039,27 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|val
+operator|<
+literal|0
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"encode_long: negative value %ld in accounting record"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+name|LONG_MAX
+expr_stmt|;
+block|}
 name|norm_exp
 operator|=
 name|fls
