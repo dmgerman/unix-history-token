@@ -99,6 +99,10 @@ name|ap
 decl_stmt|;
 block|{
 name|struct
+name|mbnambuf
+name|nb
+decl_stmt|;
+name|struct
 name|vnode
 modifier|*
 name|vdp
@@ -547,7 +551,10 @@ operator|=
 name|NULL
 expr_stmt|;
 name|mbnambuf_init
-argument_list|()
+argument_list|(
+operator|&
+name|nb
+argument_list|)
 expr_stmt|;
 comment|/* 	 * The outer loop ranges over the clusters that make up the 	 * directory.  Note that the root directory is different from all 	 * other directories.  It has a fixed number of blocks that are not 	 * part of the pool of allocatable clusters.  So, we treat it a 	 * little differently. The root directory starts at "cluster" 0. 	 */
 name|diroff
@@ -706,7 +713,10 @@ operator|-
 literal|1
 expr_stmt|;
 name|mbnambuf_init
-argument_list|()
+argument_list|(
+operator|&
+name|nb
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -781,6 +791,9 @@ name|chksum
 operator|=
 name|win2unixfn
 argument_list|(
+operator|&
+name|nb
+argument_list|,
 operator|(
 expr|struct
 name|winentry
@@ -799,6 +812,9 @@ name|chksum
 operator|=
 name|winChkName
 argument_list|(
+operator|&
+name|nb
+argument_list|,
 operator|(
 specifier|const
 name|u_char
