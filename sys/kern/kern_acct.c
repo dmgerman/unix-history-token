@@ -2050,7 +2050,7 @@ name|log
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"encode_long: negative value %ld in accounting record"
+literal|"encode_long: negative value %ld in accounting record\n"
 argument_list|,
 name|val
 argument_list|)
