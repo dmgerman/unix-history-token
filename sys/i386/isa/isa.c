@@ -987,6 +987,13 @@ argument_list|(
 name|r
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bh
+operator|!=
+name|NULL
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -1041,6 +1048,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
