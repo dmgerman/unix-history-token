@@ -348,6 +348,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|expand_number
+parameter_list|(
+name|char
+modifier|*
+name|_buf
+parameter_list|,
+name|int64_t
+modifier|*
+name|_num
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|char
 modifier|*
