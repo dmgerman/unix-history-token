@@ -234,7 +234,7 @@ name|OID_AUTO
 argument_list|,
 name|arc_max
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|zfs_arc_max
@@ -255,7 +255,7 @@ name|OID_AUTO
 argument_list|,
 name|arc_min
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|zfs_arc_min
