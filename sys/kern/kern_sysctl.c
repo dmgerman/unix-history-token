@@ -6295,8 +6295,6 @@ name|useracc
 argument_list|(
 name|new
 argument_list|,
-name|req
-operator|.
 name|newlen
 argument_list|,
 name|VM_PROT_READ
