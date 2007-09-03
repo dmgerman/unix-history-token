@@ -17,33 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* XXX we use functions that might not exist. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_compat.h"
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COMPAT_43
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"Unable to compile Linux-emulator due to missing COMPAT_43 option!"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include

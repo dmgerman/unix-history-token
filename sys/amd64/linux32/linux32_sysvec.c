@@ -30,23 +30,6 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|COMPAT_43
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"Unable to compile Linux-emulator due to missing COMPAT_43 option!"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|COMPAT_IA32
 end_ifndef
 
