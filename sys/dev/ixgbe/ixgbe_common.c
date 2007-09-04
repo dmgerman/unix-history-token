@@ -502,14 +502,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Set up flow control */
-name|ixgbe_setup_fc
-argument_list|(
-name|hw
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Set No Snoop Disable */
 name|ctrl_ext
 operator|=

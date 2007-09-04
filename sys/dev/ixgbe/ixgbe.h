@@ -264,38 +264,20 @@ comment|/* Tunables */
 end_comment
 
 begin_comment
-comment|/* ** The number of queues: right now significant performance ** seems to be gained by using muliple RX queues. The ** infrastructure for multiple TX is there but its not ** completely working, dont set greater than 1 for now. ** OTHER is the vector used for link changes, it also  ** should only be set to 1. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_TX_QUEUES
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_RX_QUEUES
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_OTHER
-value|1
-end_define
-
-begin_comment
-comment|/*  * TxDescriptors Valid Range: 64-4096 Default Value: 2048 This value is the  * number of transmit descriptors allocated by the driver. Increasing this  * value allows the driver to queue more transmits. Each descriptor is 16  * bytes.  */
+comment|/*  * TxDescriptors Valid Range: 64-4096 Default Value: 256 This value is the  * number of transmit descriptors allocated by the driver. Increasing this  * value allows the driver to queue more transmits. Each descriptor is 16  * bytes. Performance tests have show the 2K value to be optimal for top  * performance.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_TXD
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|PERFORM_TXD
 value|2048
 end_define
 
@@ -314,13 +296,20 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * RxDescriptors Valid Range: 64-4096 Default Value: 2048 This value is the  * number of receive descriptors allocated by the driver. Increasing this  * value allows the driver to buffer more incoming packets. Each descriptor  * is 16 bytes.  A receive buffer is also allocated for each descriptor. The  * maximum MTU size is 16110.  *   */
+comment|/*  * RxDescriptors Valid Range: 64-4096 Default Value: 256 This value is the  * number of receive descriptors allocated for each RX queue. Increasing this  * value allows the driver to buffer more incoming packets. Each descriptor  * is 16 bytes.  A receive buffer is also allocated for each descriptor.   *   * Note: with 8 rings and a dual port card, it is possible to bump up   *	against the system mbuf pool limit, you can tune nmbclusters  *	to adjust for this.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_RXD
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|PERFORM_RXD
 value|2048
 end_define
 
@@ -336,6 +325,17 @@ define|#
 directive|define
 name|MIN_RXD
 value|64
+end_define
+
+begin_comment
+comment|/* Alignment for rings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBA_ALIGN
+value|128
 end_define
 
 begin_comment
@@ -389,26 +389,29 @@ name|IXGBE_MAX_FRAME_SIZE
 value|0x3F00
 end_define
 
+begin_comment
+comment|/* Flow control constants */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PERFORMANCE_MTU
-value|9000
+name|IXGBE_FC_PAUSE
+value|0x680
 end_define
 
-begin_comment
-comment|/* Best thruput results */
-end_comment
-
-begin_comment
-comment|/* ** This controls the size mbuf pool used, it ** may ultimately be automatic, but for now its ** a compile time option.  **	- use MCLBYTES for legacy size */
-end_comment
+begin_define
+define|#
+directive|define
+name|IXGBE_FC_HI
+value|0x20000
+end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_RXBUF
-value|MJUMPAGESIZE
+name|IXGBE_FC_LO
+value|0x10000
 end_define
 
 begin_comment
@@ -609,21 +612,78 @@ value|18
 end_define
 
 begin_comment
+comment|/* For 6.X code compatibility */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|700000
+end_if
+
+begin_define
+define|#
+directive|define
+name|ETHER_BPF_MTAP
+value|BPF_MTAP
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_TSO
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCAP_TSO4
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILTER_STRAY
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILTER_HANDLED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Interrupt Moderation parameters   * 	for now we hardcode, later  *	it would be nice to do dynamic  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DEFAULT_ITR
+name|MAX_IRQ_SEC
 value|8000
 end_define
 
 begin_define
 define|#
 directive|define
+name|DEFAULT_ITR
+value|1000000000/(MAX_IRQ_SEC * 256)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINK_ITR
-value|1950
+value|1000000000/(1950 * 256)
 end_define
 
 begin_comment
@@ -751,10 +811,6 @@ decl_stmt|;
 name|u32
 name|me
 decl_stmt|;
-name|struct
-name|mtx
-name|mtx
-decl_stmt|;
 name|union
 name|ixgbe_adv_tx_desc
 modifier|*
@@ -804,10 +860,6 @@ name|adapter
 decl_stmt|;
 name|u32
 name|me
-decl_stmt|;
-name|struct
-name|mtx
-name|mtx
 decl_stmt|;
 name|u32
 name|payload
@@ -945,7 +997,25 @@ name|if_flags
 decl_stmt|;
 name|struct
 name|mtx
+name|core_mtx
+decl_stmt|;
+name|struct
 name|mtx
+name|tx_mtx
+decl_stmt|;
+comment|/* Legacy Fast Intr handling */
+name|struct
+name|task
+name|link_task
+decl_stmt|;
+name|struct
+name|task
+name|rxtx_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|tq
 decl_stmt|;
 comment|/* Info about the board itself */
 name|uint32_t
@@ -1047,59 +1117,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LOCK_INIT
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_name
-parameter_list|)
-define|\
-value|mtx_init(&(_sc)->mtx, _name, MTX_NETWORK_LOCK, MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&(_sc)->mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_UNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_unlock(&(_sc)->mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LOCK_ASSERT
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_assert(&(_sc)->mtx, MA_OWNED)
-end_define
 
 begin_endif
 endif|#

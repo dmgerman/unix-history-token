@@ -439,7 +439,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|booleant
+name|boolean_t
 name|bool
 typedef|;
 end_typedef
