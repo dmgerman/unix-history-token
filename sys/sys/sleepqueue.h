@@ -16,7 +16,7 @@ name|_SYS_SLEEPQUEUE_H_
 end_define
 
 begin_comment
-comment|/*  * Sleep queue interface.  Sleep/wakeup and condition variables use a sleep  * queue for the queue of threads blocked on a sleep channel.  *  * A thread calls sleepq_lock() to lock the sleep queue chain associated  * with a given wait channel.  A thread can then call call sleepq_add() to  * add themself onto a sleep queue and call one of the sleepq_wait()  * functions to actually go to sleep.  If a thread needs to abort a sleep  * operation it should call sleepq_release() to unlock the associated sleep  * queue chain lock.  If the thread also needs to remove itself from a queue  * it just enqueued itself on, it can use sleepq_remove() instead.  *  * If the thread only wishes to sleep for a limited amount of time, it can  * call sleepq_set_timeout() after sleepq_add() to setup a timeout.  It  * should then use one of the sleepq_timedwait() functions to block.  *  * If the thread wants to the sleep to be interruptible by signals, it can  * call sleepq_catch_signals() after sleepq_add().  It should then use  * one of the sleepq_wait_sig() functions to block.  After the thread has  * been resumed, it should call sleepq_calc_signal_retval() to determine  * if it should return EINTR or ERESTART passing in the value returned from  * the earlier call to sleepq_catch_signals().  *  * A thread is normally resumed from a sleep queue by either the  * sleepq_signal() or sleepq_broadcast() functions.  Sleepq_signal() wakes  * the thread with the highest priority that is sleeping on the specified  * wait channel.  Sleepq_broadcast() wakes all threads that are sleeping  * on the specified wait channel.  A thread sleeping in an interruptible  * sleep can be interrupted by calling sleepq_abort().  A thread can also  * be removed from a specified sleep queue using the sleepq_remove()  * function.  Note that the sleep queue chain must first be locked via  * sleepq_lock() when calling sleepq_signal() and sleepq_broadcast().  *  * Each thread allocates a sleep queue at thread creation via sleepq_alloc()  * and releases it at thread destruction via sleepq_free().  Note that  * a sleep queue is not tied to a specific thread and that the sleep queue  * released at thread destruction may not be the same sleep queue that the  * thread allocated when it was created.  *  * XXX: Some other parts of the kernel such as ithread sleeping may end up  * using this interface as well (death to TDI_IWAIT!)  */
+comment|/*  * Sleep queue interface.  Sleep/wakeup, condition variables, and sx  * locks use a sleep queue for the queue of threads blocked on a sleep  * channel.  *  * A thread calls sleepq_lock() to lock the sleep queue chain associated  * with a given wait channel.  A thread can then call call sleepq_add() to  * add themself onto a sleep queue and call one of the sleepq_wait()  * functions to actually go to sleep.  If a thread needs to abort a sleep  * operation it should call sleepq_release() to unlock the associated sleep  * queue chain lock.  If the thread also needs to remove itself from a queue  * it just enqueued itself on, it can use sleepq_remove() instead.  *  * If the thread only wishes to sleep for a limited amount of time, it can  * call sleepq_set_timeout() after sleepq_add() to setup a timeout.  It  * should then use one of the sleepq_timedwait() functions to block.  *  * If the thread wants to the sleep to be interruptible by signals, it can  * call sleepq_catch_signals() after sleepq_add().  It should then use  * one of the sleepq_wait_sig() functions to block.  After the thread has  * been resumed, it should call sleepq_calc_signal_retval() to determine  * if it should return EINTR or ERESTART passing in the value returned from  * the earlier call to sleepq_catch_signals().  *  * A thread is normally resumed from a sleep queue by either the  * sleepq_signal() or sleepq_broadcast() functions.  Sleepq_signal() wakes  * the thread with the highest priority that is sleeping on the specified  * wait channel.  Sleepq_broadcast() wakes all threads that are sleeping  * on the specified wait channel.  A thread sleeping in an interruptible  * sleep can be interrupted by calling sleepq_abort().  A thread can also  * be removed from a specified sleep queue using the sleepq_remove()  * function.  Note that the sleep queue chain must first be locked via  * sleepq_lock() when calling sleepq_signal() and sleepq_broadcast().  *  * Each thread allocates a sleep queue at thread creation via sleepq_alloc()  * and releases it at thread destruction via sleepq_free().  Note that  * a sleep queue is not tied to a specific thread and that the sleep queue  * released at thread destruction may not be the same sleep queue that the  * thread allocated when it was created.  *  * XXX: Some other parts of the kernel such as ithread sleeping may end up  * using this interface as well (death to TDI_IWAIT!)  */
 end_comment
 
 begin_struct_decl
@@ -79,6 +79,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SLEEPQ_SX
+value|0x03
+end_define
+
+begin_comment
+comment|/* Used by an sx lock. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SLEEPQ_INTERRUPTIBLE
 value|0x100
 end_define
@@ -113,7 +124,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sleepq_add
+name|sleepq_add_queue
 parameter_list|(
 name|void
 modifier|*
@@ -125,6 +136,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -144,10 +157,12 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sleepq_broadcast
+name|sleepq_broadcast_queue
 parameter_list|(
 name|void
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
@@ -215,10 +230,12 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sleepq_signal
+name|sleepq_signal_queue
 parameter_list|(
 name|void
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
@@ -283,6 +300,57 @@ name|wchan
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Preserve source compat with 6.x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sleepq_add
+parameter_list|(
+name|wchan
+parameter_list|,
+name|lock
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|sleepq_add_queue(wchan, lock, wmesg, flags, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sleepq_broadcast
+parameter_list|(
+name|wchan
+parameter_list|,
+name|flags
+parameter_list|,
+name|pri
+parameter_list|)
+define|\
+value|sleepq_broadcast_queue(wchan, flags, pri, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sleepq_signal
+parameter_list|(
+name|wchan
+parameter_list|,
+name|flags
+parameter_list|,
+name|pri
+parameter_list|)
+define|\
+value|sleepq_signal_queue(wchan, flags, pri, 0)
+end_define
 
 begin_endif
 endif|#

@@ -15,8 +15,14 @@ directive|define
 name|_SYS__SX_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
 begin_comment
-comment|/*  * Shared/exclusive lock main structure definition.  */
+comment|/*  * Shared/exclusive lock main structure definition.  *  * Note, to preserve compatibility we have extra fields from  * the previous implementation left over.  */
 end_comment
 
 begin_struct
@@ -27,14 +33,41 @@ name|struct
 name|lock_object
 name|lock_object
 decl_stmt|;
+comment|/* was: struct mtx *sx_lock; */
 specifier|volatile
 name|uintptr_t
 name|sx_lock
 decl_stmt|;
+comment|/* was: int sx_cnt; */
 specifier|volatile
 name|unsigned
 name|sx_recurse
 decl_stmt|;
+comment|/* 	 * The following fields are unused but kept to preserve 	 * sizeof(struct sx) for 6.x compat. 	 */
+name|struct
+name|cv
+name|sx_shrd_cv
+decl_stmt|;
+comment|/* unused */
+name|int
+name|sx_shrd_wcnt
+decl_stmt|;
+comment|/* unused */
+name|struct
+name|cv
+name|sx_excl_cv
+decl_stmt|;
+comment|/* unused */
+name|int
+name|sx_excl_wcnt
+decl_stmt|;
+comment|/* unused */
+name|struct
+name|thread
+modifier|*
+name|sx_xholder
+decl_stmt|;
+comment|/* unused */
 block|}
 struct|;
 end_struct

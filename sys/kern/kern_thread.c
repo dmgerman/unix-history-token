@@ -1208,7 +1208,7 @@ name|thread_init
 argument_list|,
 name|thread_fini
 argument_list|,
-name|UMA_ALIGN_CACHE
+name|THREAD_ALIGN
 argument_list|,
 literal|0
 argument_list|)

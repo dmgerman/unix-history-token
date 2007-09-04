@@ -393,8 +393,15 @@ comment|/***************  * In pictures:  With a single run queue used by all pr
 end_comment
 
 begin_comment
-comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * The first KSE available in the correct group will run this thread.  * If several are available, use the one on the same CPU as last time.  * When waiting to be run, threads are hung off the KSEGRP in priority order.  * With N runnable and queued KSEs in the KSEGRP, the first N threads  * are linked to them. Other threads are not yet assigned.  */
+comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * The first KSE available in the correct group will run this thread.  * If several are available, use the one on the same CPU as last time.  * When waiting to be run, threads are hung off the KSEGRP in priority order.  * With N runnable and queued KSEs in the KSEGRP, the first N threads  * are linked to them. Other threads are not yet assigned.  *  * We must force at least 16 byte alignment for "struct thread"  * because the rwlocks and sxlocks expect to use the bottom bits  * of the pointer for bookkeeping information.  *  * This causes problems for the thread0 data structure because it  * may not be properly aligned otherwise.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|THREAD_ALIGN
+value|16
+end_define
 
 begin_struct
 struct|struct
@@ -499,6 +506,10 @@ name|int
 name|td_dupfd
 decl_stmt|;
 comment|/* (k) Ret value from fdopen. XXX */
+name|int
+name|td_sqqueue
+decl_stmt|;
+comment|/* (t) Sleepqueue queue blocked on. */
 name|void
 modifier|*
 name|td_wchan
@@ -527,6 +538,10 @@ name|short
 name|td_locks
 decl_stmt|;
 comment|/* (k) Count of non-spin locks. */
+name|u_char
+name|td_tsqueue
+decl_stmt|;
+comment|/* (t) Turnstile queue blocked on. */
 name|struct
 name|turnstile
 modifier|*
@@ -756,6 +771,15 @@ name|td_ar
 decl_stmt|;
 comment|/* (k) Active audit record, if any. */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|aligned
+argument_list|(
+name|THREAD_ALIGN
+argument_list|)
+operator|)
+argument_list|)
 struct|;
 end_struct
 
