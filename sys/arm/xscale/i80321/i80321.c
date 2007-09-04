@@ -1112,21 +1112,6 @@ argument_list|,
 name|preg
 argument_list|)
 expr_stmt|;
-name|preg
-operator|=
-name|bus_space_read_4
-argument_list|(
-name|sc
-operator|->
-name|sc_st
-argument_list|,
-name|sc
-operator|->
-name|sc_atu_sh
-argument_list|,
-name|PCIR_COMMAND
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* Initialize the bus space tags. */
 name|i80321_io_bs_init
