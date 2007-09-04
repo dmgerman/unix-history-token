@@ -1016,6 +1016,9 @@ name|missing_cap
 operator|&&
 operator|!
 name|know_dumb
+operator|&&
+operator|!
+name|less_is_more
 condition|)
 name|error
 argument_list|(
