@@ -290,7 +290,14 @@ name|int8_t
 name|ic_minpower
 decl_stmt|;
 comment|/* minimum tx power in .5 dBm */
-comment|/* NB: hole, to be used for dfs */
+name|uint8_t
+name|ic_state
+decl_stmt|;
+comment|/* dynamic state */
+name|uint8_t
+name|ic_extieee
+decl_stmt|;
+comment|/* HT40 extension channel number */
 block|}
 struct|;
 end_struct
@@ -344,7 +351,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_TURBO
-value|0x00010
+value|0x00000010
 end_define
 
 begin_comment
@@ -355,7 +362,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_CCK
-value|0x00020
+value|0x00000020
 end_define
 
 begin_comment
@@ -366,7 +373,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_OFDM
-value|0x00040
+value|0x00000040
 end_define
 
 begin_comment
@@ -377,7 +384,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_2GHZ
-value|0x00080
+value|0x00000080
 end_define
 
 begin_comment
@@ -388,7 +395,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_5GHZ
-value|0x00100
+value|0x00000100
 end_define
 
 begin_comment
@@ -399,7 +406,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_PASSIVE
-value|0x00200
+value|0x00000200
 end_define
 
 begin_comment
@@ -410,7 +417,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_DYN
-value|0x00400
+value|0x00000400
 end_define
 
 begin_comment
@@ -421,7 +428,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_GFSK
-value|0x00800
+value|0x00000800
 end_define
 
 begin_comment
@@ -432,7 +439,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_GSM
-value|0x01000
+value|0x00001000
 end_define
 
 begin_comment
@@ -443,7 +450,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_STURBO
-value|0x02000
+value|0x00002000
 end_define
 
 begin_comment
@@ -454,7 +461,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_HALF
-value|0x04000
+value|0x00004000
 end_define
 
 begin_comment
@@ -465,7 +472,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_QUARTER
-value|0x08000
+value|0x00008000
 end_define
 
 begin_comment
@@ -476,7 +483,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_HT20
-value|0x10000
+value|0x00010000
 end_define
 
 begin_comment
@@ -487,7 +494,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_HT40U
-value|0x20000
+value|0x00020000
 end_define
 
 begin_comment
@@ -498,11 +505,66 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_HT40D
-value|0x40000
+value|0x00040000
 end_define
 
 begin_comment
 comment|/* HT 40 channel w/ ext below */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_DFS
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* DFS required */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_4MSXMIT
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* 4ms limit on frame length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_NOADHOC
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* adhoc mode not allowed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_NOHOSTAP
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* hostap mode not allowed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_11D
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* 802.11d required */
 end_comment
 
 begin_define
@@ -925,11 +987,114 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_IS_CHAN_DFS
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_DFS) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_NOADHOC
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_NOADHOC) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_NOHOSTAP
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_NOHOSTAP) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_11D
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_11D) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_CHAN2IEEE
 parameter_list|(
 name|_c
 parameter_list|)
 value|(_c)->ic_ieee
+end_define
+
+begin_comment
+comment|/* dynamic state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHANSTATE_RADAR
+value|0x01
+end_define
+
+begin_comment
+comment|/* radar detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHANSTATE_CACDONE
+value|0x02
+end_define
+
+begin_comment
+comment|/* CAC completed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHANSTATE_NORADAR
+value|0x10
+end_define
+
+begin_comment
+comment|/* post notify on radar clear */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_RADAR
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_state& IEEE80211_CHANSTATE_RADAR) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_CACDONE
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_state& IEEE80211_CHANSTATE_CACDONE) != 0)
 end_define
 
 begin_comment
