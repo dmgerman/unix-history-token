@@ -1686,14 +1686,6 @@ argument_list|,
 name|TS_SHARED_LOCK
 argument_list|)
 expr_stmt|;
-name|turnstile_release
-argument_list|(
-operator|&
-name|rw
-operator|->
-name|lock_object
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 name|lock_profile_release_lock
@@ -2597,14 +2589,6 @@ argument_list|,
 name|TS_EXCLUSIVE_LOCK
 argument_list|)
 expr_stmt|;
-name|turnstile_release
-argument_list|(
-operator|&
-name|rw
-operator|->
-name|lock_object
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3103,6 +3087,7 @@ name|v
 operator|&
 name|RW_LOCK_READ_WAITERS
 condition|)
+block|{
 name|turnstile_unpend_queue
 argument_list|(
 name|ts
@@ -3110,11 +3095,13 @@ argument_list|,
 name|TS_EXCLUSIVE_LOCK
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
 name|ts
 condition|)
+block|{
 name|turnstile_disown
 argument_list|(
 name|ts
@@ -3128,6 +3115,7 @@ operator|->
 name|lock_object
 argument_list|)
 expr_stmt|;
+block|}
 name|out
 label|:
 name|LOCK_LOG_LOCK
