@@ -7429,6 +7429,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 			 * Cancel any background scan. 			 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_SCAN
+condition|)
+name|ieee80211_cancel_scan
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|STAILQ_INIT
 argument_list|(
 operator|&
@@ -7548,20 +7562,6 @@ argument_list|(
 name|ni
 argument_list|,
 name|m
-argument_list|)
-expr_stmt|;
-comment|/* 				 * If we're in power save mode 'cuz of a bg 				 * scan cancel it so the traffic can flow. 				 * The packet we just queued will automatically 				 * get sent when we drop out of power save. 				 * XXX locking 				 */
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_flags
-operator|&
-name|IEEE80211_F_SCAN
-condition|)
-name|ieee80211_cancel_scan
-argument_list|(
-name|ic
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8100,6 +8100,12 @@ operator|->
 name|if_timer
 operator|=
 literal|5
+expr_stmt|;
+name|ic
+operator|->
+name|ic_lastdata
+operator|=
+name|ticks
 expr_stmt|;
 if|#
 directive|if

@@ -9351,6 +9351,20 @@ operator|==
 name|NULL
 condition|)
 break|break;
+comment|/* 			 * Cancel any background scan. 			 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_SCAN
+condition|)
+name|ieee80211_cancel_scan
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m0
@@ -9603,6 +9617,12 @@ operator|->
 name|sc_tx_timer
 operator|=
 literal|5
+expr_stmt|;
+name|ic
+operator|->
+name|ic_lastdata
+operator|=
+name|ticks
 expr_stmt|;
 name|callout_reset
 argument_list|(
