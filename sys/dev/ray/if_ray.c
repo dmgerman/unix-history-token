@@ -349,6 +349,55 @@ directive|include
 file|<dev/ray/if_rayvar.h>
 end_include
 
+begin_typedef
+typedef|typedef
+name|uint8_t
+modifier|*
+name|ieee80211_mgt_beacon_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint8_t
+modifier|*
+name|ieee80211_mgt_auth_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_AUTH_ALGORITHM
+parameter_list|(
+name|auth
+parameter_list|)
+define|\
+value|((auth)[0] | ((auth)[1]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_AUTH_TRANSACTION
+parameter_list|(
+name|auth
+parameter_list|)
+define|\
+value|((auth)[2] | ((auth)[3]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_AUTH_STATUS
+parameter_list|(
+name|auth
+parameter_list|)
+define|\
+value|((auth)[4] | ((auth)[5]<< 8))
+end_define
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
