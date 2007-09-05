@@ -1237,7 +1237,7 @@ name|uint8_t
 name|param_oui_type
 decl_stmt|;
 name|uint8_t
-name|param_oui_sybtype
+name|param_oui_subtype
 decl_stmt|;
 name|uint8_t
 name|param_version
@@ -1360,7 +1360,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_ACTION_CAT_HT
-value|5
+value|7
 end_define
 
 begin_comment
@@ -1424,7 +1424,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* HT - MIMO Power Save */
+comment|/* HT - MIMO Power Save (NB: D2.04) */
 end_comment
 
 begin_struct
@@ -2026,14 +2026,6 @@ begin_comment
 comment|/*  * BEACON management packets  *  *	octet timestamp[8]  *	octet beacon interval[2]  *	octet capability information[2]  *	information element  *		octet elemid  *		octet length  *		octet information[length]  */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|uint8_t
-modifier|*
-name|ieee80211_mgt_beacon_t
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -2112,8 +2104,15 @@ name|IEEE80211_CAPINFO_CHNL_AGILITY
 value|0x0080
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_CAPINFO_SPECTRUM_MGMT
+value|0x0100
+end_define
+
 begin_comment
-comment|/* bits 8-9 are reserved */
+comment|/* bit 9 is reserved */
 end_comment
 
 begin_define
@@ -2857,10 +2856,14 @@ name|uint8_t
 name|hi_byte1
 decl_stmt|;
 comment|/* ht ie byte 1 */
-name|uint16_t
-name|hi_byte23
+name|uint8_t
+name|hi_byte2
 decl_stmt|;
-comment|/* ht ie bytes 2+3 */
+comment|/* ht ie byte 2 */
+name|uint8_t
+name|hi_byte3
+decl_stmt|;
+comment|/* ht ie byte 3 */
 name|uint16_t
 name|hi_byte45
 decl_stmt|;
@@ -3082,19 +3085,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_HTINFO_OPMODE_MIXED
-value|0x01
-end_define
-
-begin_comment
-comment|/* protection required */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IEEE80211_HTINFO_OPMODE_PROTOPT
-value|0x02
+value|0x01
 end_define
 
 begin_comment
@@ -3104,9 +3096,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_HTINFO_OPMODE_TBD
+name|IEEE80211_HTINFO_OPMODE_HT20PR
+value|0x02
+end_define
+
+begin_comment
+comment|/* protection for HT20 sta's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HTINFO_OPMODE_MIXED
 value|0x03
 end_define
+
+begin_comment
+comment|/* protection for legacy sta's*/
+end_comment
 
 begin_define
 define|#
@@ -3404,6 +3411,38 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * 802.11h Channel Switch Announcement (CSA).  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_csa_ie
+block|{
+name|uint8_t
+name|csa_ie
+decl_stmt|;
+comment|/* IEEE80211_ELEMID_CHANSWITCHANN */
+name|uint8_t
+name|csa_len
+decl_stmt|;
+name|uint8_t
+name|csa_mode
+decl_stmt|;
+comment|/* Channel Switch Mode */
+name|uint8_t
+name|csa_newchan
+decl_stmt|;
+comment|/* New Channel Number */
+name|uint8_t
+name|csa_count
+decl_stmt|;
+comment|/* Channel Switch Count */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Atheros advanced capability information element.  */
 end_comment
 
@@ -3493,12 +3532,9 @@ name|__packed
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_CHALLENGE_LEN
-value|128
-end_define
+begin_comment
+comment|/* rate set entries are in .5 Mb/s units, and potentially marked as basic */
+end_comment
 
 begin_define
 define|#
@@ -3857,48 +3893,18 @@ comment|/* voice */
 end_comment
 
 begin_comment
-comment|/*  * AUTH management packets  *  *	octet algo[2]  *	octet seq[2]  *	octet status[2]  *	octet chal.id  *	octet chal.length  *	octet chal.text[253]  */
+comment|/*  * AUTH management packets  *  *	octet algo[2]  *	octet seq[2]  *	octet status[2]  *	octet chal.id  *	octet chal.length  *	octet chal.text[253]		NB: 1-253 bytes  */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|uint8_t
-modifier|*
-name|ieee80211_mgt_auth_t
-typedef|;
-end_typedef
+begin_comment
+comment|/* challenge length for shared key auth */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_AUTH_ALGORITHM
-parameter_list|(
-name|auth
-parameter_list|)
-define|\
-value|((auth)[0] | ((auth)[1]<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_AUTH_TRANSACTION
-parameter_list|(
-name|auth
-parameter_list|)
-define|\
-value|((auth)[2] | ((auth)[3]<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_AUTH_STATUS
-parameter_list|(
-name|auth
-parameter_list|)
-define|\
-value|((auth)[4] | ((auth)[5]<< 8))
+name|IEEE80211_CHALLENGE_LEN
+value|128
 end_define
 
 begin_define
@@ -3959,7 +3965,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Reason codes  *  * Unlisted codes are reserved  */
+comment|/*  * Reason and status codes.  *  * Reason codes are used in management frames to indicate why an  * action took place (e.g. on disassociation).  Status codes are  * used in management frames to indicate the result of an operation.  *  * Unlisted codes are reserved  */
 end_comment
 
 begin_enum
@@ -4001,22 +4007,76 @@ name|IEEE80211_REASON_ASSOC_NOT_AUTHED
 init|=
 literal|9
 block|,
-name|IEEE80211_REASON_RSN_REQUIRED
+name|IEEE80211_REASON_DISASSOC_PWRCAP_BAD
+init|=
+literal|10
+block|,
+comment|/* 11h */
+name|IEEE80211_REASON_DISASSOC_SUPCHAN_BAD
 init|=
 literal|11
 block|,
-name|IEEE80211_REASON_RSN_INCONSISTENT
-init|=
-literal|12
-block|,
+comment|/* 11h */
 name|IEEE80211_REASON_IE_INVALID
 init|=
 literal|13
 block|,
+comment|/* 11i */
 name|IEEE80211_REASON_MIC_FAILURE
 init|=
 literal|14
 block|,
+comment|/* 11i */
+name|IEEE80211_REASON_4WAY_HANDSHAKE_TIMEOUT
+init|=
+literal|15
+block|,
+comment|/* 11i */
+name|IEEE80211_REASON_GROUP_KEY_UPDATE_TIMEOUT
+init|=
+literal|16
+block|,
+comment|/* 11i */
+name|IEEE80211_REASON_IE_IN_4WAY_DIFFERS
+init|=
+literal|17
+block|,
+comment|/* 11i */
+name|IEEE80211_REASON_GROUP_CIPHER_INVALID
+init|=
+literal|18
+block|,
+comment|/* 11i */
+name|IEEE80211_REASON_PAIRWISE_CIPHER_INVALID
+init|=
+literal|19
+block|,
+comment|/* 11i */
+name|IEEE80211_REASON_AKMP_INVALID
+init|=
+literal|20
+block|,
+comment|/* 11i */
+name|IEEE80211_REASON_UNSUPP_RSN_IE_VERSION
+init|=
+literal|21
+block|,
+comment|/* 11i */
+name|IEEE80211_REASON_INVALID_RSN_IE_CAP
+init|=
+literal|22
+block|,
+comment|/* 11i */
+name|IEEE80211_REASON_802_1X_AUTH_FAILED
+init|=
+literal|23
+block|,
+comment|/* 11i */
+name|IEEE80211_REASON_CIPHER_SUITE_REJECTED
+init|=
+literal|24
+block|,
+comment|/* 11i */
 name|IEEE80211_STATUS_SUCCESS
 init|=
 literal|0
@@ -4065,30 +4125,78 @@ name|IEEE80211_STATUS_SP_REQUIRED
 init|=
 literal|19
 block|,
+comment|/* 11b */
 name|IEEE80211_STATUS_PBCC_REQUIRED
 init|=
 literal|20
 block|,
+comment|/* 11b */
 name|IEEE80211_STATUS_CA_REQUIRED
 init|=
 literal|21
 block|,
-name|IEEE80211_STATUS_TOO_MANY_STATIONS
+comment|/* 11b */
+name|IEEE80211_STATUS_SPECMGMT_REQUIRED
 init|=
 literal|22
 block|,
-name|IEEE80211_STATUS_RATES
+comment|/* 11h */
+name|IEEE80211_STATUS_PWRCAP_REQUIRED
 init|=
 literal|23
 block|,
+comment|/* 11h */
+name|IEEE80211_STATUS_SUPCHAN_REQUIRED
+init|=
+literal|24
+block|,
+comment|/* 11h */
 name|IEEE80211_STATUS_SHORTSLOT_REQUIRED
 init|=
 literal|25
 block|,
+comment|/* 11g */
 name|IEEE80211_STATUS_DSSSOFDM_REQUIRED
 init|=
 literal|26
-block|, }
+block|,
+comment|/* 11g */
+name|IEEE80211_STATUS_INVALID_IE
+init|=
+literal|40
+block|,
+comment|/* 11i */
+name|IEEE80211_STATUS_GROUP_CIPHER_INVALID
+init|=
+literal|41
+block|,
+comment|/* 11i */
+name|IEEE80211_STATUS_PAIRWISE_CIPHER_INVALID
+init|=
+literal|42
+block|,
+comment|/* 11i */
+name|IEEE80211_STATUS_AKMP_INVALID
+init|=
+literal|43
+block|,
+comment|/* 11i */
+name|IEEE80211_STATUS_UNSUPP_RSN_IE_VERSION
+init|=
+literal|44
+block|,
+comment|/* 11i */
+name|IEEE80211_STATUS_INVALID_RSN_IE_CAP
+init|=
+literal|45
+block|,
+comment|/* 11i */
+name|IEEE80211_STATUS_CIPHER_SUITE_REJECTED
+init|=
+literal|46
+block|,
+comment|/* 11i */
+block|}
 enum|;
 end_enum
 

@@ -3027,7 +3027,7 @@ argument_list|(
 operator|&
 name|htinfo
 operator|->
-name|hi_byte23
+name|hi_byte2
 argument_list|)
 expr_stmt|;
 name|ni

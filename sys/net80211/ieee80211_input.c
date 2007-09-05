@@ -12377,7 +12377,7 @@ name|ni
 argument_list|,
 name|IEEE80211_FC0_SUBTYPE_DEAUTH
 argument_list|,
-name|IEEE80211_REASON_RSN_REQUIRED
+name|IEEE80211_REASON_IE_INVALID
 argument_list|)
 expr_stmt|;
 name|ieee80211_node_leave
