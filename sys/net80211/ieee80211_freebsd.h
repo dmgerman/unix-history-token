@@ -749,6 +749,13 @@ begin_comment
 comment|/* do tx complete callback */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_80211_TX
+value|(0x60000|M_PROTO1|M_WME_AC_MASK|M_PROTO4|M_PROTO5)
+end_define
+
 begin_comment
 comment|/* rx path usage */
 end_comment
@@ -763,6 +770,24 @@ end_define
 begin_comment
 comment|/* A-MPDU processing done */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|M_WEP
+value|M_PROTO2
+end_define
+
+begin_comment
+comment|/* WEP done by hardware */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_80211_RX
+value|(M_AMPDU|M_WEP)
+end_define
 
 begin_comment
 comment|/*  * Encode WME access control bits in the PROTO flags.  * This is safe since it's passed directly in to the  * driver and there's no chance someone else will clobber  * them on us.  */

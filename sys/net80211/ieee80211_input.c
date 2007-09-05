@@ -1665,6 +1665,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* XXX M_WEP and IEEE80211_F_PRIVACY */
 name|key
 operator|=
 name|NULL
@@ -1999,9 +2000,21 @@ operator|&
 name|IEEE80211_F_DROPUNENC
 operator|)
 operator|&&
+operator|(
 name|key
 operator|==
 name|NULL
+operator|&&
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_WEP
+operator|)
+operator|==
+literal|0
+operator|)
 operator|&&
 name|eh
 operator|->
@@ -3201,6 +3214,14 @@ name|ni
 argument_list|,
 name|rx_ucast
 argument_list|)
+expr_stmt|;
+comment|/* clear driver/net80211 flags before passing up */
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_80211_RX
 expr_stmt|;
 comment|/* perform as a bridge within the AP */
 if|if
