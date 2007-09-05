@@ -4207,13 +4207,6 @@ modifier|*
 name|sx
 decl_stmt|;
 comment|/* 	 * Check to see if this thread is blocked on an sx lock. 	 * First, we check the lock class.  If that is ok, then we 	 * compare the lock name against the wait message. 	 */
-define|#
-directive|define
-name|LOCK_CLASS
-parameter_list|(
-name|lo
-parameter_list|)
-value|(lo)->lo_class
 name|sx
 operator|=
 name|td
