@@ -10365,6 +10365,8 @@ name|AWI_DRV_INFASSOC
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -10503,6 +10505,8 @@ case|case
 name|IEEE80211_S_SCAN
 case|:
 comment|/* scan next */
+break|break;
+default|default:
 break|break;
 block|}
 if|if

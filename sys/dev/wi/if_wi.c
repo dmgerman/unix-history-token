@@ -13400,6 +13400,8 @@ argument_list|,
 name|arg
 argument_list|)
 return|;
+default|default:
+break|break;
 block|}
 return|return
 literal|0

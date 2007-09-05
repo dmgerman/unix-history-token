@@ -43,11 +43,26 @@ init|=
 literal|3
 block|,
 comment|/* try to assoc */
-name|IEEE80211_S_RUN
+name|IEEE80211_S_CAC
 init|=
 literal|4
 block|,
-comment|/* associated */
+comment|/* doing channel availability check */
+name|IEEE80211_S_RUN
+init|=
+literal|5
+block|,
+comment|/* operational (e.g. associated) */
+name|IEEE80211_S_CSA
+init|=
+literal|6
+block|,
+comment|/* channel switch announce pending */
+name|IEEE80211_S_SLEEP
+init|=
+literal|7
+block|,
+comment|/* power save */
 block|}
 enum|;
 end_enum
@@ -56,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_S_MAX
-value|(IEEE80211_S_RUN+1)
+value|(IEEE80211_S_SLEEP+1)
 end_define
 
 begin_define

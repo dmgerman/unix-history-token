@@ -4580,6 +4580,7 @@ case|:
 case|case
 name|IEEE80211_S_ASSOC
 case|:
+default|default:
 break|break;
 block|}
 return|return

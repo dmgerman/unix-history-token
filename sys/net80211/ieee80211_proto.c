@@ -259,8 +259,18 @@ comment|/* IEEE80211_S_AUTH */
 literal|"ASSOC"
 block|,
 comment|/* IEEE80211_S_ASSOC */
+literal|"CAC"
+block|,
+comment|/* IEEE80211_S_CAC */
 literal|"RUN"
+block|,
 comment|/* IEEE80211_S_RUN */
+literal|"CSA"
+block|,
+comment|/* IEEE80211_S_CSA */
+literal|"SLEEP"
+block|,
+comment|/* IEEE80211_S_SLEEP */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5820,6 +5830,8 @@ case|case
 name|IEEE80211_S_AUTH
 case|:
 break|break;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -6077,6 +6089,8 @@ name|createibss
 goto|;
 block|}
 break|break;
+default|default:
+break|break;
 block|}
 break|break;
 case|case
@@ -6240,6 +6254,8 @@ block|}
 break|break;
 block|}
 break|break;
+default|default:
+break|break;
 block|}
 break|break;
 case|case
@@ -6343,6 +6359,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+default|default:
 break|break;
 block|}
 break|break;
@@ -6584,6 +6602,8 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX not authorized yet */
 break|break;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -6730,6 +6750,8 @@ argument_list|,
 name|ic
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 return|return
