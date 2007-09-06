@@ -791,6 +791,15 @@ modifier|*
 name|ni
 parameter_list|)
 block|{
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ni
+operator|->
+name|ni_ic
+decl_stmt|;
 name|ni
 operator|->
 name|ni_flags
