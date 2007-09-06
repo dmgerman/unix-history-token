@@ -138,6 +138,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INTIGN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& INTMAP_IGN_MASK)>> INTMAP_IGN_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INTVEC
 parameter_list|(
 name|x
@@ -186,6 +196,19 @@ name|mid
 parameter_list|)
 define|\
 value|(((mr)& ~INTMAP_TID_MASK) | ((mid)<< INTMAP_TID_SHIFT) | INTMAP_V)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTMAP_VEC
+parameter_list|(
+name|ign
+parameter_list|,
+name|inr
+parameter_list|)
+define|\
+value|(((ign)<< INTMAP_IGN_SHIFT) | (inr))
 end_define
 
 begin_comment

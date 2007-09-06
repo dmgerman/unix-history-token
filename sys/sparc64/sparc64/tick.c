@@ -394,6 +394,9 @@ name|int
 name|count
 decl_stmt|;
 comment|/* 	 * The sequence of reading the TICK register, calculating the value 	 * of the next tick and writing it to the TICK_CMPR register must not 	 * be interrupted, not even by an IPI, otherwise a value that is in 	 * the past could be written in the worst case, causing hardclock to 	 * stop. 	 */
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|adj
 operator|=
 name|PCPU_GET
@@ -548,6 +551,9 @@ name|tickadj
 argument_list|,
 name|adj
 argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 block|}
 end_function

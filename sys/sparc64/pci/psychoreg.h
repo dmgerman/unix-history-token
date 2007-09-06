@@ -1117,6 +1117,17 @@ comment|/* IOMMU streaming buffer registers. */
 end_comment
 
 begin_comment
+comment|/* INO defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSYCHO_MAX_INO
+value|0x3f
+end_define
+
+begin_comment
 comment|/* Device space defines */
 end_comment
 

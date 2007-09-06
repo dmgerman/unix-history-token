@@ -913,6 +913,17 @@ comment|/* Streaming buffer diag regs */
 end_comment
 
 begin_comment
+comment|/* INO defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBUS_MAX_INO
+value|0x3f
+end_define
+
+begin_comment
 comment|/* Width of the physical addresses the IOMMU translates to */
 end_comment
 
