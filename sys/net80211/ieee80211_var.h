@@ -1637,6 +1637,17 @@ begin_comment
 comment|/* CONF: 4 addr allowed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_INACT
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* CONF: sta inact handling */
+end_comment
+
 begin_comment
 comment|/* 0x00000006 reserved */
 end_comment

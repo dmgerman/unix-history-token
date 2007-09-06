@@ -2199,6 +2199,17 @@ begin_comment
 comment|/* support pre-D1.10 HT ie's */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_INACTIVITY
+value|94
+end_define
+
+begin_comment
+comment|/* sta inactivity handling */
+end_comment
+
 begin_comment
 comment|/*  * Scan result data returned for IEEE80211_IOC_SCAN_RESULTS.  * Each result is a fixed size structure followed by a variable  * length SSID and one or more variable length information elements.  * The size of each variable length item is found in the fixed  * size structure and the entire length of the record is specified  * in isr_len.  Result records are rounded to a multiple of 4 bytes.  */
 end_comment
