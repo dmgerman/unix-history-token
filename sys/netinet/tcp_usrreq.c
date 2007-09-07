@@ -7521,21 +7521,19 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"t_inpcb: %p   t_timers: %p   tt_active: %x\n"
+literal|"tt_rexmt: %p   tt_persist: %p   tt_keep: %p\n"
 argument_list|,
 name|tp
 operator|->
-name|t_inpcb
+name|tt_rexmt
 argument_list|,
 name|tp
 operator|->
-name|t_timers
+name|tt_persist
 argument_list|,
 name|tp
 operator|->
-name|t_timers
-operator|->
-name|tt_active
+name|tt_keep
 argument_list|)
 expr_stmt|;
 name|db_print_indent
@@ -7545,38 +7543,19 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"tt_delack: %i   tt_rexmt: %i   tt_keep: %i   "
-literal|"tt_persist: %i   tt_2msl: %i\n"
+literal|"tt_2msl: %p   tt_delack: %p   t_inpcb: %p\n"
 argument_list|,
 name|tp
 operator|->
-name|t_timers
+name|tt_2msl
+argument_list|,
+name|tp
 operator|->
 name|tt_delack
 argument_list|,
 name|tp
 operator|->
-name|t_timers
-operator|->
-name|tt_rexmt
-argument_list|,
-name|tp
-operator|->
-name|t_timers
-operator|->
-name|tt_keep
-argument_list|,
-name|tp
-operator|->
-name|t_timers
-operator|->
-name|tt_persist
-argument_list|,
-name|tp
-operator|->
-name|t_timers
-operator|->
-name|tt_2msl
+name|t_inpcb
 argument_list|)
 expr_stmt|;
 name|db_print_indent

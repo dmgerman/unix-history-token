@@ -243,11 +243,35 @@ name|t_dupacks
 decl_stmt|;
 comment|/* consecutive dup acks recd */
 name|struct
-name|tcp_timer
+name|callout
 modifier|*
-name|t_timers
+name|tt_rexmt
 decl_stmt|;
 comment|/* retransmit timer */
+name|struct
+name|callout
+modifier|*
+name|tt_persist
+decl_stmt|;
+comment|/* retransmit persistence */
+name|struct
+name|callout
+modifier|*
+name|tt_keep
+decl_stmt|;
+comment|/* keepalive */
+name|struct
+name|callout
+modifier|*
+name|tt_2msl
+decl_stmt|;
+comment|/* 2*msl TIME_WAIT timer */
+name|struct
+name|callout
+modifier|*
+name|tt_delack
+decl_stmt|;
+comment|/* delayed ACK timer */
 name|struct
 name|inpcb
 modifier|*
