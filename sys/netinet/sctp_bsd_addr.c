@@ -639,6 +639,9 @@ case|case
 name|IFT_PTPSERIAL
 case|:
 case|case
+name|IFT_OTHER
+case|:
+case|case
 name|IFT_PPP
 case|:
 case|case
@@ -1300,6 +1303,12 @@ operator|->
 name|ifa_ifp
 operator|->
 name|if_index
+argument_list|,
+name|ifa
+operator|->
+name|ifa_ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We don't bump refcount here so when it completes the 		 * final delete will happen. 		 */

@@ -1652,6 +1652,11 @@ name|sctp_timer
 name|delayed_event_timer
 decl_stmt|;
 comment|/* timer for delayed events */
+name|struct
+name|sctp_timer
+name|delete_prim_timer
+decl_stmt|;
+comment|/* deleting primary dst */
 comment|/* list of restricted local addresses */
 name|struct
 name|sctpladdr
@@ -1662,6 +1667,12 @@ name|struct
 name|sctp_ifa
 modifier|*
 name|asconf_addr_del_pending
+decl_stmt|;
+comment|/* Deleted primary destination (used to stop timer) */
+name|struct
+name|sctp_nets
+modifier|*
+name|deleted_primary
 decl_stmt|;
 name|struct
 name|sctpnetlisthead

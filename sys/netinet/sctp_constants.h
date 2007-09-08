@@ -2103,35 +2103,42 @@ begin_define
 define|#
 directive|define
 name|SCTP_RESPONSE_TO_USER_REQ
-value|0x000f
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_INTERNAL_ERROR
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_SHUTDOWN_GUARD_EXPIRES
+name|SCTP_INTERNAL_ERROR
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_RECEIVED_SACK
+name|SCTP_SHUTDOWN_GUARD_EXPIRES
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_PEER_FAULTY
+name|SCTP_RECEIVED_SACK
 value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PEER_FAULTY
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ICMP_REFUSED
+value|0x0200
 end_define
 
 begin_comment
@@ -2717,6 +2724,13 @@ name|SCTP_TIMER_TYPE_ZCOPY_SENDQ
 value|21
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_TIMER_TYPE_PRIM_DELETED
+value|22
+end_define
+
 begin_comment
 comment|/* add new timers here - and increment LAST */
 end_comment
@@ -2725,7 +2739,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_TIMER_TYPE_LAST
-value|22
+value|23
 end_define
 
 begin_define
@@ -4588,6 +4602,24 @@ begin_define
 define|#
 directive|define
 name|SCTP_SO_NOT_LOCKED
+value|0
+end_define
+
+begin_comment
+comment|/*-  * For address locks, do we hold the lock?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_ADDR_LOCKED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ADDR_NOT_LOCKED
 value|0
 end_define
 

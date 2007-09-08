@@ -11840,6 +11840,18 @@ block|{
 comment|/* address has been removed */
 continue|continue;
 block|}
+if|if
+condition|(
+name|laddr
+operator|->
+name|action
+operator|==
+name|SCTP_DEL_IP_ADDRESS
+condition|)
+block|{
+comment|/* address is being deleted */
+continue|continue;
+block|}
 name|sifa
 operator|=
 name|sctp_is_ifa_addr_preferred
@@ -11964,6 +11976,18 @@ name|NULL
 condition|)
 block|{
 comment|/* address has been removed */
+continue|continue;
+block|}
+if|if
+condition|(
+name|laddr
+operator|->
+name|action
+operator|==
+name|SCTP_DEL_IP_ADDRESS
+condition|)
+block|{
+comment|/* address is being deleted */
 continue|continue;
 block|}
 name|sifa
@@ -12425,6 +12449,18 @@ block|{
 comment|/* address has been removed */
 continue|continue;
 block|}
+if|if
+condition|(
+name|laddr
+operator|->
+name|action
+operator|==
+name|SCTP_DEL_IP_ADDRESS
+condition|)
+block|{
+comment|/* address is being deleted */
+continue|continue;
+block|}
 name|sifa
 operator|=
 name|sctp_is_ifa_addr_preferred
@@ -12589,6 +12625,18 @@ name|NULL
 condition|)
 block|{
 comment|/* address has been removed */
+continue|continue;
+block|}
+if|if
+condition|(
+name|laddr
+operator|->
+name|action
+operator|==
+name|SCTP_DEL_IP_ADDRESS
+condition|)
+block|{
+comment|/* address is being deleted */
 continue|continue;
 block|}
 name|sifa
@@ -15940,7 +15988,11 @@ name|_s_addr
 operator|->
 name|localifa_flags
 operator|&
+operator|(
 name|SCTP_BEING_DELETED
+operator||
+name|SCTP_ADDR_IFA_UNUSEABLE
+operator|)
 operator|)
 condition|)
 block|{
@@ -15967,6 +16019,27 @@ name|src_addr_selected
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|ro
+operator|->
+name|ro_rt
+condition|)
+block|{
+name|RTFREE
+argument_list|(
+name|ro
+operator|->
+name|ro_rt
+argument_list|)
+expr_stmt|;
+name|ro
+operator|->
+name|ro_rt
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -17293,6 +17366,7 @@ name|ro
 operator|.
 name|_s_addr
 operator|&&
+operator|(
 name|net
 operator|->
 name|ro
@@ -17301,7 +17375,12 @@ name|_s_addr
 operator|->
 name|localifa_flags
 operator|&
+operator|(
 name|SCTP_BEING_DELETED
+operator||
+name|SCTP_ADDR_IFA_UNUSEABLE
+operator|)
+operator|)
 condition|)
 block|{
 name|sctp_free_ifa
@@ -17327,6 +17406,27 @@ name|src_addr_selected
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|ro
+operator|->
+name|ro_rt
+condition|)
+block|{
+name|RTFREE
+argument_list|(
+name|ro
+operator|->
+name|ro_rt
+argument_list|)
+expr_stmt|;
+name|ro
+operator|->
+name|ro_rt
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -24203,6 +24303,8 @@ else|else
 block|{
 name|uint32_t
 name|vtag
+decl_stmt|,
+name|itsn
 decl_stmt|;
 if|if
 condition|(
@@ -24245,6 +24347,16 @@ name|vtag
 argument_list|)
 expr_stmt|;
 comment|/* get a TSN to use too */
+name|itsn
+operator|=
+name|sctp_select_initial_TSN
+argument_list|(
+operator|&
+name|inp
+operator|->
+name|sctp_ep
+argument_list|)
+expr_stmt|;
 name|initackm_out
 operator|->
 name|msg
@@ -24255,13 +24367,7 @@ name|initial_tsn
 operator|=
 name|htonl
 argument_list|(
-name|sctp_select_initial_TSN
-argument_list|(
-operator|&
-name|inp
-operator|->
-name|sctp_ep
-argument_list|)
+name|itsn
 argument_list|)
 expr_stmt|;
 name|SCTP_TCB_LOCK
@@ -29363,7 +29469,7 @@ name|ca
 operator|->
 name|m
 operator|=
-name|m
+name|mat
 expr_stmt|;
 block|}
 name|ret
@@ -31280,6 +31386,7 @@ condition|(
 name|send_lock_up
 condition|)
 block|{
+comment|/* sa_ignore NO_NULL_CHK */
 name|SCTP_TCB_SEND_UNLOCK
 argument_list|(
 name|stcb
@@ -34093,6 +34200,7 @@ name|nets
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * JRI-TODO: CMT-MPI. Simply set the first 			 * destination (net) to be optimized for the next 			 * message to be pulled out of the outwheel. 1. peek 			 * at outwheel 2. If large message, set net = 			 * highest_cwnd 3. If small message, set net = 			 * lowest rtt 			 */
 block|}
 else|else
 block|{
@@ -34164,6 +34272,46 @@ condition|)
 block|{
 break|break;
 block|}
+comment|/* 			 * JRI: if dest is unreachable or unconfirmed, do 			 * not send data to it 			 */
+if|if
+condition|(
+operator|(
+name|net
+operator|->
+name|dest_state
+operator|&
+name|SCTP_ADDR_NOT_REACHABLE
+operator|)
+operator|||
+operator|(
+name|net
+operator|->
+name|dest_state
+operator|&
+name|SCTP_ADDR_UNCONFIRMED
+operator|)
+condition|)
+block|{
+continue|continue;
+block|}
+comment|/* 			 * JRI: if dest is in PF state, do not send data to 			 * it 			 */
+if|if
+condition|(
+name|sctp_cmt_on_off
+operator|&&
+name|sctp_cmt_pf
+operator|&&
+operator|(
+name|net
+operator|->
+name|dest_state
+operator|&
+name|SCTP_ADDR_PF
+operator|)
+condition|)
+block|{
+continue|continue;
+block|}
 if|if
 condition|(
 operator|(
@@ -34201,7 +34349,7 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * @@@ JRI : this for loop we are in takes in each 			 * net, if its's got space in cwnd and has data sent 			 * to it (when CMT is off) then it calls 			 * sctp_fill_outqueue for the net. This gets data on 			 * the send queue for that network. 			 *  			 * In sctp_fill_outqueue TSN's are assigned and data is 			 * copied out of the stream buffers. Note mostly 			 * copy by reference (we hope). 			 */
+comment|/* 			 * JRI : this for loop we are in takes in each net, 			 * if its's got space in cwnd and has data sent to 			 * it (when CMT is off) then it calls 			 * sctp_fill_outqueue for the net. This gets data on 			 * the send queue for that network. 			 *  			 * In sctp_fill_outqueue TSN's are assigned and data is 			 * copied out of the stream buffers. Note mostly 			 * copy by reference (we hope). 			 */
 if|if
 condition|(
 name|sctp_logging_level
@@ -39351,18 +39499,6 @@ operator|->
 name|last_sent_to
 operator|=
 name|net
-expr_stmt|;
-name|atomic_add_int
-argument_list|(
-operator|&
-name|latest_ack
-operator|->
-name|last_sent_to
-operator|->
-name|ref_count
-argument_list|,
-literal|1
-argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -44667,6 +44803,7 @@ argument_list|,
 name|a_chk
 argument_list|)
 expr_stmt|;
+comment|/* sa_ignore NO_NULL_CHK */
 if|if
 condition|(
 name|stcb
@@ -48444,6 +48581,7 @@ name|unsigned
 name|int
 name|chk_length
 decl_stmt|;
+comment|/* sa_ignore NO_NULL_CHK */
 name|asoc
 operator|=
 operator|&
@@ -55192,13 +55330,7 @@ name|SCTP_EOF
 operator|)
 operator|&&
 operator|(
-name|uio
-operator|)
-operator|&&
-operator|(
-name|uio
-operator|->
-name|uio_resid
+name|sndlen
 operator|==
 literal|0
 operator|)
@@ -55789,6 +55921,20 @@ argument_list|,
 name|EWOULDBLOCK
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sndlen
+operator|>
+name|SCTP_SB_LIMIT_SND
+argument_list|(
+name|so
+argument_list|)
+condition|)
+name|error
+operator|=
+name|EMSGSIZE
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|EWOULDBLOCK
@@ -56407,15 +56553,9 @@ block|}
 else|else
 block|{
 comment|/* Must fit in a MTU */
-if|if
-condition|(
-name|uio
-condition|)
 name|tot_out
 operator|=
-name|uio
-operator|->
-name|uio_resid
+name|sndlen
 expr_stmt|;
 name|tot_demand
 operator|=
@@ -56429,6 +56569,35 @@ name|sctp_paramhdr
 argument_list|)
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|tot_demand
+operator|>
+name|SCTP_DEFAULT_ADD_MORE
+condition|)
+block|{
+comment|/* To big */
+name|SCTP_LTRACE_ERR_RET
+argument_list|(
+name|NULL
+argument_list|,
+name|stcb
+argument_list|,
+name|net
+argument_list|,
+name|SCTP_FROM_SCTP_OUTPUT
+argument_list|,
+name|EMSGSIZE
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EMSGSIZE
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|mm
 operator|=
 name|sctp_get_mbuf_for_msg
@@ -56831,13 +57000,8 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|uio
-operator|->
-name|uio_resid
+name|sndlen
 operator|>
-operator|(
-name|int
-operator|)
 name|SCTP_SB_LIMIT_SND
 argument_list|(
 name|stcb
@@ -56871,6 +57035,39 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
+name|uio
+operator|==
+name|NULL
+operator|)
+operator|&&
+name|user_marks_eor
+condition|)
+block|{
+comment|/*- 		 * We do not support eeor mode for 		 * sending with mbuf chains (like sendfile). 		 */
+name|SCTP_LTRACE_ERR_RET
+argument_list|(
+name|NULL
+argument_list|,
+name|stcb
+argument_list|,
+name|net
+argument_list|,
+name|SCTP_FROM_SCTP_OUTPUT
+argument_list|,
+name|EINVAL
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|out_unlocked
+goto|;
+block|}
+if|if
+condition|(
 name|user_marks_eor
 condition|)
 block|{
@@ -56884,9 +57081,7 @@ block|{
 comment|/*- 		 * For non-eeor the whole message must fit in 		 * the socket send buffer. 		 */
 name|local_add_more
 operator|=
-name|uio
-operator|->
-name|uio_resid
+name|sndlen
 expr_stmt|;
 block|}
 name|len
@@ -56993,9 +57188,7 @@ name|so
 argument_list|,
 name|asoc
 argument_list|,
-name|uio
-operator|->
-name|uio_resid
+name|sndlen
 argument_list|)
 expr_stmt|;
 block|}
@@ -57198,25 +57391,9 @@ expr_stmt|;
 comment|/* 	 * sndlen covers for mbuf case uio_resid covers for the non-mbuf 	 * case NOTE: uio will be null when top/mbuf is passed 	 */
 if|if
 condition|(
-operator|(
 name|sndlen
 operator|==
 literal|0
-operator|)
-operator|||
-operator|(
-operator|(
-name|uio
-operator|)
-operator|&&
-operator|(
-name|uio
-operator|->
-name|uio_resid
-operator|==
-literal|0
-operator|)
-operator|)
 condition|)
 block|{
 if|if

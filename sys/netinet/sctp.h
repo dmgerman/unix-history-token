@@ -1842,7 +1842,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_MOBILITY_DO_FASTHANDOFF
+name|SCTP_MOBILITY_PRIM_DELETED
 value|0x00000004
 end_define
 

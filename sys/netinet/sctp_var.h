@@ -578,7 +578,10 @@ expr|struct
 name|sctp_inpcb
 operator|*
 operator|,
-name|int
+expr|struct
+name|ip
+operator|*
+name|ip
 operator|,
 expr|struct
 name|sctphdr

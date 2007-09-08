@@ -69,12 +69,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -2518,6 +2512,20 @@ end_struct
 
 begin_struct
 struct|struct
+name|sctp_timeval
+block|{
+name|uint32_t
+name|tv_sec
+decl_stmt|;
+name|uint32_t
+name|tv_usec
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sctpstat
 block|{
 comment|/* MIB according to RFC 3873 */
@@ -2820,6 +2828,10 @@ name|sctps_timoasconf
 decl_stmt|;
 comment|/* Number of times an asconf timer 					 * fired */
 name|uint32_t
+name|sctps_timodelprim
+decl_stmt|;
+comment|/* Number of times a prim_deleted 					 * timer fired */
+name|uint32_t
 name|sctps_timoautoclose
 decl_stmt|;
 comment|/* Number of times auto close timer 					 * fired */
@@ -3014,10 +3026,10 @@ name|sctps_fwdtsn_map_over
 decl_stmt|;
 comment|/* number of map array over-runs via 					 * fwd-tsn's */
 name|struct
-name|timeval
+name|sctp_timeval
 name|sctps_discontinuitytime
 decl_stmt|;
-comment|/* sctpStats 18 (TimeStamp) */
+comment|/* sctpStats 18 							 * (TimeStamp) */
 block|}
 struct|;
 end_struct
@@ -3303,12 +3315,12 @@ name|remote_port
 decl_stmt|;
 comment|/* sctpAssocEntry 4   */
 name|struct
-name|timeval
+name|sctp_timeval
 name|start_time
 decl_stmt|;
 comment|/* sctpAssocEntry 16  */
 name|struct
-name|timeval
+name|sctp_timeval
 name|discontinuity_time
 decl_stmt|;
 comment|/* sctpAssocEntry 17  */
@@ -3329,7 +3341,7 @@ name|uint32_t
 name|last
 decl_stmt|;
 name|struct
-name|timeval
+name|sctp_timeval
 name|start_time
 decl_stmt|;
 comment|/* sctpAssocLocalAddrEntry 3   */
@@ -3390,7 +3402,7 @@ name|heartbeat_enabled
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 4   */
 name|struct
-name|timeval
+name|sctp_timeval
 name|start_time
 decl_stmt|;
 comment|/* sctpAssocLocalRemEntry 8   */

@@ -1380,6 +1380,84 @@ value|0
 end_define
 
 begin_comment
+comment|/* cmt_use_dac: CMT DAC on/off flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_CMT_USE_DAC
+value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_CMT_USE_DAC_DESC
+value|"CMT DAC on/off flag"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_CMT_USE_DAC_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_CMT_USE_DAC_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_CMT_USE_DAC_DEFAULT
+value|0
+end_define
+
+begin_comment
+comment|/* JRS 5/2107 - CMT PF type flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_CMT_PF
+value|36
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_CMT_PF_DESC
+value|"CMT PF type flag"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_CMT_PF_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_CMT_PF_MAX
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_CMT_PF_DEFAULT
+value|0
+end_define
+
+begin_comment
 comment|/* cwnd_maxburst: Use a CWND adjusting maxburst */
 end_comment
 
@@ -1387,7 +1465,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_CWND_MAXBURST
-value|35
+value|37
 end_define
 
 begin_define
@@ -1426,7 +1504,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_EARLY_FAST_RETRAN
-value|36
+value|38
 end_define
 
 begin_define
@@ -1458,45 +1536,6 @@ value|0
 end_define
 
 begin_comment
-comment|/* deadlock_detect: SMP Deadlock detection on/off */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_DEADLOCK_DETECT
-value|37
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_DEADLOCK_DETECT_DESC
-value|"SMP Deadlock detection on/off"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_DEADLOCK_DETECT_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_DEADLOCK_DETECT_MAX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_DEADLOCK_DETECT_DEFAULT
-value|0
-end_define
-
-begin_comment
 comment|/* early_fast_retran_msec: Early Fast Retransmit minimum timer value */
 end_comment
 
@@ -1504,7 +1543,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_EARLY_FAST_RETRAN_MSEC
-value|38
+value|39
 end_define
 
 begin_define
@@ -1543,7 +1582,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_ASCONF_AUTH_NOCHK
-value|39
+value|40
 end_define
 
 begin_define
@@ -1582,7 +1621,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_AUTH_DISABLE
-value|40
+value|41
 end_define
 
 begin_define
@@ -1621,7 +1660,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_NAT_FRIENDLY
-value|41
+value|42
 end_define
 
 begin_define
@@ -1660,7 +1699,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_ABC_L_VAR
-value|42
+value|43
 end_define
 
 begin_define
@@ -1699,7 +1738,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_MAX_CHAINED_MBUFS
-value|43
+value|44
 end_define
 
 begin_define
@@ -1728,45 +1767,6 @@ define|#
 directive|define
 name|SCTPCTL_MAX_CHAINED_MBUFS_DEFAULT
 value|SCTP_DEFAULT_MBUFS_IN_CHAIN
-end_define
-
-begin_comment
-comment|/* cmt_use_dac: CMT DAC on/off flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_USE_DAC
-value|44
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_USE_DAC_DESC
-value|"CMT DAC on/off flag"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_USE_DAC_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_USE_DAC_MAX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_USE_DAC_DEFAULT
-value|0
 end_define
 
 begin_comment
@@ -1823,7 +1823,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_HB_MAX_BURST_DESC
-value|"Confirmation Heartbeat max burst?"
+value|"Confirmation Heartbeat max burst"
 end_define
 
 begin_define
@@ -2043,45 +2043,6 @@ value|0
 end_define
 
 begin_comment
-comment|/* JRS 5/2107 - CMT PF type flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_PF
-value|52
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_PF_DESC
-value|"CMT PF type flag"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_PF_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_PF_MAX
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_PF_DEFAULT
-value|0
-end_define
-
-begin_comment
 comment|/* JRS - default congestion control module sysctl */
 end_comment
 
@@ -2089,7 +2050,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_DEFAULT_CC_MODULE
-value|53
+value|52
 end_define
 
 begin_define
@@ -2128,7 +2089,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_DEFAULT_FRAG_INTERLEAVE
-value|54
+value|53
 end_define
 
 begin_define
@@ -2167,7 +2128,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_MOBILITY_BASE
-value|55
+value|54
 end_define
 
 begin_define
@@ -2206,7 +2167,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_MOBILITY_FASTHANDOFF
-value|56
+value|55
 end_define
 
 begin_define
@@ -2237,11 +2198,14 @@ name|SCTPCTL_MOBILITY_FASTHANDOFF_DEFAULT
 value|SCTP_DEFAULT_MOBILITY_FASTHANDOFF
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SCTP_DEBUG
-end_ifdef
+argument_list|)
+end_if
 
 begin_comment
 comment|/* debug: Configure debug output */
@@ -2251,7 +2215,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_DEBUG
-value|57
+value|56
 end_define
 
 begin_define
@@ -2280,59 +2244,6 @@ define|#
 directive|define
 name|SCTPCTL_DEBUG_DEFAULT
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_MAXID
-value|57
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_MAXID
-value|58
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Names for SCTP sysctl objects variables.  * Must match the OIDs above.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "autoasconf", CTLTYPE_INT }, \ 	{ "ecn_enable", CTLTYPE_INT }, \ 	{ "ecn_nonce", CTLTYPE_INT }, \ 	{ "strict_sack", CTLTYPE_INT }, \ 	{ "looback_nocsum", CTLTYPE_INT }, \ 	{ "strict_init", CTLTYPE_INT }, \ 	{ "peer_chkoh", CTLTYPE_INT }, \ 	{ "maxburst", CTLTYPE_INT }, \ 	{ "maxchunks", CTLTYPE_INT }, \ 	{ "delayed_sack_time", CTLTYPE_INT }, \ 	{ "sack_freq", CTLTYPE_INT }, \ 	{ "heartbeat_interval", CTLTYPE_INT }, \ 	{ "pmtu_raise_time", CTLTYPE_INT }, \ 	{ "shutdown_guard_time", CTLTYPE_INT }, \ 	{ "secret_lifetime", CTLTYPE_INT }, \ 	{ "rto_max", CTLTYPE_INT }, \ 	{ "rto_min", CTLTYPE_INT }, \ 	{ "rto_initial", CTLTYPE_INT }, \ 	{ "init_rto_max", CTLTYPE_INT }, \ 	{ "valid_cookie_life", CTLTYPE_INT }, \ 	{ "init_rtx_max", CTLTYPE_INT }, \ 	{ "assoc_rtx_max", CTLTYPE_INT }, \ 	{ "path_rtx_max", CTLTYPE_INT }, \ 	{ "outgoing_streams", CTLTYPE_INT }, \ 	{ "cmt_on_off", CTLTYPE_INT }, \ 	{ "cmt_on_pf", CTLTYPE_INT }, \ 	{ "default_cc_module", CTLTYPE_INT }, \ 	{ "cwnd_maxburst", CTLTYPE_INT }, \ 	{ "early_fast_retran", CTLTYPE_INT }, \ 	{ "deadlock_detect", CTLTYPE_INT }, \ 	{ "early_fast_retran_msec", CTLTYPE_INT }, \ 	{ "asconf_auth_nochk", CTLTYPE_INT }, \ 	{ "auth_disable", CTLTYPE_INT }, \ 	{ "nat_friendly", CTLTYPE_INT }, \ 	{ "abc_l_var", CTLTYPE_INT }, \ 	{ "max_mbuf_chain", CTLTYPE_INT }, \ 	{ "cmt_use_dac", CTLTYPE_INT }, \ 	{ "do_sctp_drain", CTLTYPE_INT }, \ 	{ "warm_crc_table", CTLTYPE_INT }, \ 	{ "abort_at_limit", CTLTYPE_INT }, \ 	{ "strict_data_order", CTLTYPE_INT }, \ 	{ "tcbhashsize", CTLTYPE_INT }, \ 	{ "pcbhashsize", CTLTYPE_INT }, \ 	{ "chunkscale", CTLTYPE_INT }, \ 	{ "min_split_point", CTLTYPE_INT }, \ 	{ "add_more_on_output", CTLTYPE_INT }, \ 	{ "sys_resource", CTLTYPE_INT }, \ 	{ "asoc_resource", CTLTYPE_INT }, \ 	{ "min_residual", CTLTYPE_INT }, \ 	{ "max_retran_chunk", CTLTYPE_INT }, \ 	{ "sctp_logging", CTLTYPE_INT }, \ 	{ "frag_interleave", CTLTYPE_INT }, \ 	{ "mobility_base", CTLTYPE_INT }, \ 	{ "mobility_fasthandoff", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "autoasconf", CTLTYPE_INT }, \ 	{ "ecn_enable", CTLTYPE_INT }, \ 	{ "ecn_nonce", CTLTYPE_INT }, \ 	{ "strict_sack", CTLTYPE_INT }, \ 	{ "looback_nocsum", CTLTYPE_INT }, \ 	{ "strict_init", CTLTYPE_INT }, \ 	{ "peer_chkoh", CTLTYPE_INT }, \ 	{ "maxburst", CTLTYPE_INT }, \ 	{ "maxchunks", CTLTYPE_INT }, \ 	{ "delayed_sack_time", CTLTYPE_INT }, \ 	{ "sack_freq", CTLTYPE_INT }, \ 	{ "heartbeat_interval", CTLTYPE_INT }, \ 	{ "pmtu_raise_time", CTLTYPE_INT }, \ 	{ "shutdown_guard_time", CTLTYPE_INT }, \ 	{ "secret_lifetime", CTLTYPE_INT }, \ 	{ "rto_max", CTLTYPE_INT }, \ 	{ "rto_min", CTLTYPE_INT }, \ 	{ "rto_initial", CTLTYPE_INT }, \ 	{ "init_rto_max", CTLTYPE_INT }, \ 	{ "valid_cookie_life", CTLTYPE_INT }, \ 	{ "init_rtx_max", CTLTYPE_INT }, \ 	{ "assoc_rtx_max", CTLTYPE_INT }, \ 	{ "path_rtx_max", CTLTYPE_INT }, \ 	{ "outgoing_streams", CTLTYPE_INT }, \ 	{ "cmt_on_off", CTLTYPE_INT }, \ 	{ "cmt_on_pf", CTLTYPE_INT }, \ 	{ "default_cc_module", CTLTYPE_INT }, \ 	{ "cwnd_maxburst", CTLTYPE_INT }, \ 	{ "early_fast_retran", CTLTYPE_INT }, \ 	{ "deadlock_detect", CTLTYPE_INT }, \ 	{ "early_fast_retran_msec", CTLTYPE_INT }, \ 	{ "asconf_auth_nochk", CTLTYPE_INT }, \ 	{ "auth_disable", CTLTYPE_INT }, \ 	{ "nat_friendly", CTLTYPE_INT }, \ 	{ "abc_l_var", CTLTYPE_INT }, \ 	{ "max_mbuf_chain", CTLTYPE_INT }, \ 	{ "cmt_use_dac", CTLTYPE_INT }, \ 	{ "do_sctp_drain", CTLTYPE_INT }, \ 	{ "warm_crc_table", CTLTYPE_INT }, \ 	{ "abort_at_limit", CTLTYPE_INT }, \ 	{ "strict_data_order", CTLTYPE_INT }, \ 	{ "tcbhashsize", CTLTYPE_INT }, \ 	{ "pcbhashsize", CTLTYPE_INT }, \ 	{ "chunkscale", CTLTYPE_INT }, \ 	{ "min_split_point", CTLTYPE_INT }, \ 	{ "add_more_on_output", CTLTYPE_INT }, \ 	{ "sys_resource", CTLTYPE_INT }, \ 	{ "asoc_resource", CTLTYPE_INT }, \ 	{ "min_residual", CTLTYPE_INT }, \ 	{ "max_retran_chunk", CTLTYPE_INT }, \ 	{ "sctp_logging", CTLTYPE_INT }, \ 	{ "frag_interleave", CTLTYPE_INT }, \ 	{ "mobility_base", CTLTYPE_INT }, \ 	{ "mobility_fasthandoff", CTLTYPE_INT }, \ }
 end_define
 
 begin_endif
@@ -2591,6 +2502,13 @@ name|sctp_cmt_on_off
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|sctp_cmt_use_dac
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* JRS 5/21/07 - CMT PF type flag variables  */
 end_comment
@@ -2599,24 +2517,6 @@ begin_decl_stmt
 specifier|extern
 name|uint32_t
 name|sctp_cmt_pf
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* JRS - Variable for the default congestion control module */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|sctp_default_cc_module
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|sctp_default_frag_interleave
 decl_stmt|;
 end_decl_stmt
 
@@ -2631,20 +2531,6 @@ begin_decl_stmt
 specifier|extern
 name|uint32_t
 name|sctp_early_fr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|sctp_use_rttvar_cc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|sctp_says_check_for_deadlock
 decl_stmt|;
 end_decl_stmt
 
@@ -2687,13 +2573,6 @@ begin_decl_stmt
 specifier|extern
 name|uint32_t
 name|sctp_mbuf_threshold_count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|sctp_cmt_use_dac
 decl_stmt|;
 end_decl_stmt
 
@@ -2746,6 +2625,24 @@ name|sctp_logging_level
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* JRS - Variable for the default congestion control module */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|sctp_default_cc_module
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|sctp_default_frag_interleave
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|uint32_t
@@ -2789,11 +2686,14 @@ name|sctpstat
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SYSCTL_DECL
-end_ifdef
+argument_list|)
+end_if
 
 begin_expr_stmt
 name|SYSCTL_DECL
