@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*	$KAME: udp6_usrreq.c,v 1.27 2001/05/21 05:45:10 jinmei Exp $	*/
 end_comment
 
@@ -16,7 +12,7 @@ comment|/*-  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rig
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)udp_var.h	8.1 (Berkeley) 6/10/93  */
+comment|/*-  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1995  *	The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)udp_usrreq.c	8.6 (Berkeley) 5/23/95  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -47,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
 end_include
 
 begin_include
@@ -107,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socketvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_include
@@ -293,7 +277,7 @@ file|<security/mac/mac_framework.h>
 end_include
 
 begin_comment
-comment|/*  * UDP protocol inplementation.  * Per RFC 768, August, 1980.  */
+comment|/*  * UDP protocol implementation.  * Per RFC 768, August, 1980.  */
 end_comment
 
 begin_decl_stmt
@@ -326,7 +310,7 @@ parameter_list|(
 name|struct
 name|inpcb
 modifier|*
-name|in6p
+name|inp
 parameter_list|,
 name|struct
 name|mbuf
@@ -354,7 +338,7 @@ name|opts
 decl_stmt|;
 name|INP_LOCK_ASSERT
 argument_list|(
-name|in6p
+name|inp
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -367,7 +351,7 @@ name|ipsec6_in_reject
 argument_list|(
 name|n
 argument_list|,
-name|in6p
+name|inp
 argument_list|)
 condition|)
 block|{
@@ -393,7 +377,7 @@ if|if
 condition|(
 name|mac_check_inpcb_deliver
 argument_list|(
-name|in6p
+name|inp
 argument_list|,
 name|n
 argument_list|)
@@ -416,13 +400,13 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|in6p
+name|inp
 operator|->
 name|in6p_flags
 operator|&
 name|IN6P_CONTROLOPTS
 operator|||
-name|in6p
+name|inp
 operator|->
 name|inp_socket
 operator|->
@@ -432,7 +416,7 @@ name|SO_TIMESTAMP
 condition|)
 name|ip6_savecontrol
 argument_list|(
-name|in6p
+name|inp
 argument_list|,
 name|n
 argument_list|,
@@ -455,7 +439,7 @@ argument_list|)
 expr_stmt|;
 name|so
 operator|=
-name|in6p
+name|inp
 operator|->
 name|inp_socket
 expr_stmt|;
@@ -567,7 +551,7 @@ decl_stmt|;
 name|struct
 name|inpcb
 modifier|*
-name|in6p
+name|inp
 decl_stmt|;
 name|int
 name|off
@@ -856,7 +840,7 @@ name|NULL
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
-argument|in6p
+argument|inp
 argument_list|,
 argument|&udb
 argument_list|,
@@ -866,7 +850,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|in6p
+name|inp
 operator|->
 name|inp_vflag
 operator|&
@@ -878,7 +862,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|in6p
+name|inp
 operator|->
 name|in6p_lport
 operator|!=
@@ -890,13 +874,13 @@ continue|continue;
 comment|/* 			 * XXX: Do not check source port of incoming datagram 			 * unless inp_connect() has been called to bind the 			 * fport part of the 4-tuple; the source could be 			 * trying to talk to us with an ephemeral port. 			 */
 if|if
 condition|(
-name|in6p
+name|inp
 operator|->
 name|inp_fport
 operator|!=
 literal|0
 operator|&&
-name|in6p
+name|inp
 operator|->
 name|inp_fport
 operator|!=
@@ -911,7 +895,7 @@ operator|!
 name|IN6_IS_ADDR_UNSPECIFIED
 argument_list|(
 operator|&
-name|in6p
+name|inp
 operator|->
 name|in6p_laddr
 argument_list|)
@@ -923,7 +907,7 @@ operator|!
 name|IN6_ARE_ADDR_EQUAL
 argument_list|(
 operator|&
-name|in6p
+name|inp
 operator|->
 name|in6p_laddr
 argument_list|,
@@ -941,7 +925,7 @@ operator|!
 name|IN6_IS_ADDR_UNSPECIFIED
 argument_list|(
 operator|&
-name|in6p
+name|inp
 operator|->
 name|in6p_faddr
 argument_list|)
@@ -953,7 +937,7 @@ operator|!
 name|IN6_ARE_ADDR_EQUAL
 argument_list|(
 operator|&
-name|in6p
+name|inp
 operator|->
 name|in6p_faddr
 argument_list|,
@@ -963,7 +947,7 @@ operator|->
 name|ip6_src
 argument_list|)
 operator|||
-name|in6p
+name|inp
 operator|->
 name|in6p_fport
 operator|!=
@@ -1029,7 +1013,7 @@ block|}
 block|}
 name|last
 operator|=
-name|in6p
+name|inp
 expr_stmt|;
 comment|/* 			 * Don't look for additional matches if this one does 			 * not have either the SO_REUSEPORT or SO_REUSEADDR 			 * socket options set.  This heuristic avoids 			 * searching through all pcbs in the common case of a 			 * non-shared port.  It assumes that an application 			 * will never clear these options after setting them. 			 */
 if|if
@@ -1037,7 +1021,7 @@ condition|(
 operator|(
 name|last
 operator|->
-name|in6p_socket
+name|inp_socket
 operator|->
 name|so_options
 operator|&
@@ -1109,7 +1093,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Locate pcb for datagram. 	 */
-name|in6p
+name|inp
 operator|=
 name|in6_pcblookup_hash
 argument_list|(
@@ -1145,7 +1129,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|in6p
+name|inp
 operator|==
 name|NULL
 condition|)
@@ -1281,12 +1265,12 @@ return|;
 block|}
 name|INP_LOCK
 argument_list|(
-name|in6p
+name|inp
 argument_list|)
 expr_stmt|;
 name|udp6_append
 argument_list|(
-name|in6p
+name|inp
 argument_list|,
 name|m
 argument_list|,
@@ -1298,7 +1282,7 @@ argument_list|)
 expr_stmt|;
 name|INP_UNLOCK
 argument_list|(
-name|in6p
+name|inp
 argument_list|)
 expr_stmt|;
 name|INP_INFO_RUNLOCK
@@ -2021,36 +2005,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|in6pcb
-value|inpcb
-end_define
-
-begin_define
-define|#
-directive|define
-name|udp6stat
-value|udpstat
-end_define
-
-begin_define
-define|#
-directive|define
-name|udp6s_opackets
-value|udps_opackets
-end_define
-
 begin_function
 specifier|static
 name|int
 name|udp6_output
 parameter_list|(
 name|struct
-name|in6pcb
+name|inpcb
 modifier|*
-name|in6p
+name|inp
 parameter_list|,
 name|struct
 name|mbuf
@@ -2170,7 +2133,7 @@ name|tmp
 decl_stmt|;
 name|INP_LOCK_ASSERT
 argument_list|(
-name|in6p
+name|inp
 argument_list|)
 expr_stmt|;
 name|priv
@@ -2271,7 +2234,7 @@ argument_list|,
 operator|&
 name|opt
 argument_list|,
-name|in6p
+name|inp
 operator|->
 name|in6p_outputopts
 argument_list|,
@@ -2295,7 +2258,7 @@ block|}
 else|else
 name|optp
 operator|=
-name|in6p
+name|inp
 operator|->
 name|in6p_outputopts
 expr_stmt|;
@@ -2335,7 +2298,7 @@ operator|!
 name|IN6_IS_ADDR_UNSPECIFIED
 argument_list|(
 operator|&
-name|in6p
+name|inp
 operator|->
 name|in6p_faddr
 argument_list|)
@@ -2368,7 +2331,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|in6p
+name|inp
 operator|->
 name|in6p_flags
 operator|&
@@ -2391,7 +2354,7 @@ operator|!
 name|IN6_IS_ADDR_UNSPECIFIED
 argument_list|(
 operator|&
-name|in6p
+name|inp
 operator|->
 name|in6p_laddr
 argument_list|)
@@ -2400,7 +2363,7 @@ operator|!
 name|IN6_IS_ADDR_V4MAPPED
 argument_list|(
 operator|&
-name|in6p
+name|inp
 operator|->
 name|in6p_laddr
 argument_list|)
@@ -2437,14 +2400,14 @@ name|sin6
 argument_list|,
 name|optp
 argument_list|,
-name|in6p
+name|inp
 operator|->
 name|in6p_moptions
 argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|in6p
+name|inp
 operator|->
 name|in6p_laddr
 argument_list|,
@@ -2487,7 +2450,7 @@ else|else
 name|laddr
 operator|=
 operator|&
-name|in6p
+name|inp
 operator|->
 name|in6p_laddr
 expr_stmt|;
@@ -2515,7 +2478,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|in6p
+name|inp
 operator|->
 name|in6p_lport
 operator|==
@@ -2528,7 +2491,7 @@ name|in6_pcbsetport
 argument_list|(
 name|laddr
 argument_list|,
-name|in6p
+name|inp
 argument_list|,
 name|td
 operator|->
@@ -2549,7 +2512,7 @@ condition|(
 name|IN6_IS_ADDR_UNSPECIFIED
 argument_list|(
 operator|&
-name|in6p
+name|inp
 operator|->
 name|in6p_faddr
 argument_list|)
@@ -2568,7 +2531,7 @@ condition|(
 name|IN6_IS_ADDR_V4MAPPED
 argument_list|(
 operator|&
-name|in6p
+name|inp
 operator|->
 name|in6p_faddr
 argument_list|)
@@ -2577,7 +2540,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|in6p
+name|inp
 operator|->
 name|in6p_flags
 operator|&
@@ -2611,20 +2574,20 @@ block|}
 name|laddr
 operator|=
 operator|&
-name|in6p
+name|inp
 operator|->
 name|in6p_laddr
 expr_stmt|;
 name|faddr
 operator|=
 operator|&
-name|in6p
+name|inp
 operator|->
 name|in6p_faddr
 expr_stmt|;
 name|fport
 operator|=
-name|in6p
+name|inp
 operator|->
 name|in6p_fport
 expr_stmt|;
@@ -2697,7 +2660,7 @@ name|udp6
 operator|->
 name|uh_sport
 operator|=
-name|in6p
+name|inp
 operator|->
 name|in6p_lport
 expr_stmt|;
@@ -2762,7 +2725,7 @@ name|ip6
 operator|->
 name|ip6_flow
 operator|=
-name|in6p
+name|inp
 operator|->
 name|in6p_flowinfo
 operator|&
@@ -2800,7 +2763,7 @@ name|ip6_hlim
 operator|=
 name|in6_selecthlim
 argument_list|(
-name|in6p
+name|inp
 argument_list|,
 name|NULL
 argument_list|)
@@ -2856,9 +2819,9 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-name|udp6stat
+name|udpstat
 operator|.
-name|udp6s_opackets
+name|udps_opackets
 operator|++
 expr_stmt|;
 name|error
@@ -2873,13 +2836,13 @@ name|NULL
 argument_list|,
 name|flags
 argument_list|,
-name|in6p
+name|inp
 operator|->
 name|in6p_moptions
 argument_list|,
 name|NULL
 argument_list|,
-name|in6p
+name|inp
 argument_list|)
 expr_stmt|;
 break|break;
