@@ -2816,6 +2816,17 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|rt
+operator|->
+name|rt_flags
+operator|&
+name|RTF_LLINFO
+operator|)
+condition|)
 name|rt
 operator|->
 name|rt_flags
