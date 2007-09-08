@@ -1249,6 +1249,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|sa
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -1419,6 +1421,8 @@ operator|->
 name|ro
 operator|.
 name|_l_addr
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -2071,6 +2075,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|sa
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -2565,6 +2571,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|sa
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -7261,6 +7269,8 @@ argument_list|,
 name|SCTP_CAUSE_ILLEGAL_ASCONF_ACK
 argument_list|,
 name|NULL
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9801,7 +9811,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_ASCONF1
 argument_list|,
-literal|": queued on stcb=%p, "
+literal|"set_primary_ip_address: queued on stcb=%p, "
 argument_list|,
 name|stcb
 argument_list|)

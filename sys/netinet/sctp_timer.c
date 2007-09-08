@@ -537,6 +537,8 @@ argument_list|,
 name|stcb
 argument_list|,
 name|SCTP_OUTPUT_FROM_EARLY_FR_TMR
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -842,6 +844,8 @@ name|void
 operator|*
 operator|)
 name|net
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -1152,6 +1156,8 @@ argument_list|,
 name|SCTP_FAILED_THRESHOLD
 argument_list|,
 name|oper
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return
@@ -3022,6 +3028,8 @@ operator|->
 name|asoc
 operator|.
 name|sent_queue
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -3084,6 +3092,8 @@ operator|->
 name|asoc
 operator|.
 name|sent_queue
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -4959,6 +4969,8 @@ argument_list|(
 name|inp
 argument_list|,
 name|stcb
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return
@@ -5140,6 +5152,8 @@ argument_list|(
 name|inp
 argument_list|,
 name|stcb
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return
@@ -5364,6 +5378,8 @@ argument_list|,
 name|SCTP_INTERNAL_ERROR
 argument_list|,
 name|oper
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -6688,6 +6704,8 @@ argument_list|,
 name|stcb
 argument_list|,
 name|SCTP_OUTPUT_FROM_T3
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -7676,6 +7694,8 @@ argument_list|,
 name|stcb
 argument_list|,
 name|SCTP_OUTPUT_FROM_AUTOCLOSE_TMR
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 comment|/* Are we clean? */
@@ -8445,6 +8465,8 @@ operator|->
 name|stcb
 argument_list|,
 name|SCTP_OUTPUT_FROM_T3
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 name|SCTP_TCB_UNLOCK

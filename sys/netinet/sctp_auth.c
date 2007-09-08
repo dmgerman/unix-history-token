@@ -8524,6 +8524,8 @@ operator|->
 name|so_rcv
 argument_list|,
 literal|1
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}

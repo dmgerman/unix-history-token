@@ -11922,6 +11922,11 @@ operator|=
 name|nasoc
 control|)
 block|{
+name|SCTP_TCB_LOCK
+argument_list|(
+name|asoc
+argument_list|)
+expr_stmt|;
 name|nasoc
 operator|=
 name|LIST_NEXT
@@ -11929,11 +11934,6 @@ argument_list|(
 name|asoc
 argument_list|,
 name|sctp_tcblist
-argument_list|)
-expr_stmt|;
-name|SCTP_TCB_LOCK
-argument_list|(
-name|asoc
 argument_list|)
 expr_stmt|;
 if|if
@@ -11948,12 +11948,7 @@ name|SCTP_STATE_ABOUT_TO_BE_FREED
 condition|)
 block|{
 comment|/* Skip guys being freed */
-name|asoc
-operator|->
-name|sctp_socket
-operator|=
-name|NULL
-expr_stmt|;
+comment|/* asoc->sctp_socket = NULL; FIXME MT */
 name|cnt_in_sd
 operator|++
 expr_stmt|;
@@ -12210,6 +12205,8 @@ argument_list|(
 name|asoc
 argument_list|,
 name|op_err
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 name|SCTP_STAT_INCR_COUNTER32
@@ -12443,7 +12440,9 @@ name|inp
 argument_list|,
 name|asoc
 argument_list|,
-name|SCTP_OUTPUT_FROM_CLOSING
+name|SCTP_OUTPUT_FROM_SHUT_TMR
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -12736,6 +12735,8 @@ argument_list|(
 name|asoc
 argument_list|,
 name|op_err
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 name|SCTP_STAT_INCR_COUNTER32
@@ -12809,6 +12810,8 @@ argument_list|,
 name|asoc
 argument_list|,
 name|SCTP_OUTPUT_FROM_CLOSING
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -13117,6 +13120,8 @@ argument_list|(
 name|asoc
 argument_list|,
 name|op_err
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 name|SCTP_STAT_INCR_COUNTER32
@@ -17562,11 +17567,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* first, lets purge the entry from the hash table. */
-name|SCTP_TCB_LOCK_ASSERT
-argument_list|(
-name|stcb
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SCTP_LOG_CLOSING
@@ -26390,6 +26390,8 @@ argument_list|,
 name|stcb
 argument_list|,
 name|SCTP_OUTPUT_FROM_DRAIN
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 name|reneged_asoc_ids

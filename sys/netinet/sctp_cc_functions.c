@@ -861,6 +861,8 @@ name|void
 operator|*
 operator|)
 name|net
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 comment|/* now was it the primary? if so restore */
@@ -3288,6 +3290,8 @@ name|void
 operator|*
 operator|)
 name|net
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 comment|/* now was it the primary? if so restore */
@@ -4405,6 +4409,8 @@ argument_list|,
 name|stcb
 argument_list|,
 name|SCTP_OUTPUT_FROM_EARLY_FR_TMR
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * make a small adjustment to cwnd and force to CA. 	 */
@@ -6502,6 +6508,8 @@ name|void
 operator|*
 operator|)
 name|net
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 comment|/* now was it the primary? if so restore */
@@ -7185,6 +7193,8 @@ argument_list|,
 name|stcb
 argument_list|,
 name|SCTP_OUTPUT_FROM_EARLY_FR_TMR
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 name|net

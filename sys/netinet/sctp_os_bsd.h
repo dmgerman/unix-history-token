@@ -1220,6 +1220,13 @@ name|SCTP_PACKED
 value|__attribute__((packed))
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_UNUSED
+value|__attribute__((unused))
+end_define
+
 begin_comment
 comment|/*  * Functions  */
 end_comment

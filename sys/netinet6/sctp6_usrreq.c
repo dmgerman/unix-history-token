@@ -687,7 +687,9 @@ name|in6p
 argument_list|,
 name|stcb
 argument_list|,
-literal|2
+name|SCTP_OUTPUT_FROM_INPUT_ERROR
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -4420,6 +4422,8 @@ argument_list|(
 name|inp
 argument_list|,
 name|stcb
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 name|SCTP_TCB_UNLOCK

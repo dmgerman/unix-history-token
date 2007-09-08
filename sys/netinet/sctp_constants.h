@@ -4573,6 +4573,24 @@ name|SCTP_DEF_SYSTEM_RESC_LIMIT
 value|1000
 end_define
 
+begin_comment
+comment|/*-  * defines for socket lock states.  * Used by __APPLE__ and SCTP_SO_LOCK_TESTING  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SO_LOCKED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SO_NOT_LOCKED
+value|0
+end_define
+
 begin_define
 define|#
 directive|define
