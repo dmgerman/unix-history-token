@@ -516,6 +516,8 @@ name|OPTION_NULL
 block|,
 name|OPTION_ONE_FILE_SYSTEM
 block|,
+name|OPTION_POSIX
+block|,
 name|OPTION_STRIP_COMPONENTS
 block|,
 name|OPTION_TOTALS
@@ -938,6 +940,16 @@ block|,
 name|NULL
 block|,
 name|OPTION_ONE_FILE_SYSTEM
+block|}
+block|,
+block|{
+literal|"posix"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_POSIX
 block|}
 block|,
 block|{
@@ -2087,6 +2099,17 @@ operator|->
 name|extract_flags
 operator||=
 name|ARCHIVE_EXTRACT_FFLAGS
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_POSIX
+case|:
+comment|/* GNU tar */
+name|bsdtar
+operator|->
+name|create_format
+operator|=
+literal|"pax"
 expr_stmt|;
 break|break;
 case|case
