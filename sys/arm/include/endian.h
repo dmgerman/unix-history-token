@@ -419,6 +419,13 @@ name|__uint16_t
 name|v
 parameter_list|)
 block|{
+name|__uint32_t
+name|ret
+init|=
+name|v
+operator|&
+literal|0xffff
+decl_stmt|;
 asm|__asm __volatile(
 literal|"mov    %0, %0, ror #8\n"
 literal|"orr    %0, %0, %0, lsr #16\n"
@@ -426,7 +433,7 @@ literal|"bic    %0, %0, %0, lsl #16"
 operator|:
 literal|"+r"
 operator|(
-name|v
+name|ret
 operator|)
 block|)
 function|;
@@ -435,7 +442,10 @@ end_function
 begin_return
 return|return
 operator|(
-name|v
+operator|(
+name|__uint16_t
+operator|)
+name|ret
 operator|)
 return|;
 end_return
