@@ -684,9 +684,8 @@ name|bus_dmamap_t
 name|desc_map
 decl_stmt|;
 name|struct
-name|mbuf
-modifier|*
-name|m
+name|t3_mbuf_hdr
+name|rspq_mh
 decl_stmt|;
 define|#
 directive|define
@@ -701,6 +700,24 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DISABLE_MBUF_IOVEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|rspq_mbuf
+value|rspq_mh.mh_head
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct
