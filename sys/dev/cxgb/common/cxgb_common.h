@@ -56,6 +56,11 @@ init|=
 literal|8192
 block|,
 comment|/* Serial EEPROM size */
+name|SERNUM_LEN
+init|=
+literal|16
+block|,
+comment|/* Serial # length */
 name|RSS_TABLE_SIZE
 init|=
 literal|64
@@ -299,7 +304,7 @@ literal|4
 block|,
 name|FW_VERSION_MINOR
 init|=
-literal|5
+literal|7
 block|,
 name|FW_VERSION_MICRO
 init|=
@@ -1253,6 +1258,14 @@ name|int
 name|mem_timing
 decl_stmt|;
 name|u8
+name|sn
+index|[
+name|SERNUM_LEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|u8
 name|eth_base
 index|[
 literal|6
@@ -1737,6 +1750,9 @@ decl_stmt|;
 name|unsigned
 name|int
 name|txen
+decl_stmt|;
+name|u64
+name|rx_pause
 decl_stmt|;
 name|struct
 name|mac_stats

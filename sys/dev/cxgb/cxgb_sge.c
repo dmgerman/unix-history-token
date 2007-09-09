@@ -5591,6 +5591,10 @@ name|mbuf
 modifier|*
 modifier|*
 name|m
+parameter_list|,
+name|int
+modifier|*
+name|free
 parameter_list|)
 block|{
 name|adapter_t
@@ -5637,10 +5641,6 @@ decl_stmt|,
 name|nsegs
 decl_stmt|,
 name|tso_info
-init|=
-literal|0
-decl_stmt|,
-name|qsidx
 init|=
 literal|0
 decl_stmt|;
@@ -5702,29 +5702,20 @@ name|p
 operator|->
 name|adapter
 expr_stmt|;
-if|if
-condition|(
-name|sc
+name|DPRINTF
+argument_list|(
+literal|"t3_encap port_id=%d qsidx=%d "
+argument_list|,
+name|p
 operator|->
-name|params
-operator|.
-name|nports
-operator|<=
-literal|2
-condition|)
-name|qsidx
-operator|=
+name|port_id
+argument_list|,
 name|p
 operator|->
 name|first_qset
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|"t3_encap qsidx=%d"
-argument_list|,
-name|qsidx
 argument_list|)
 expr_stmt|;
+comment|/* port_id=1 qsid=1 txpkt_intf=2 tx_chan=0 */
 name|qs
 operator|=
 operator|&
@@ -5734,7 +5725,9 @@ name|sge
 operator|.
 name|qs
 index|[
-name|qsidx
+name|p
+operator|->
+name|first_qset
 index|]
 expr_stmt|;
 name|txq
@@ -5801,13 +5794,17 @@ argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
-literal|"mlen=%d pktintf=%d\n"
+literal|"mlen=%d txpkt_intf=%d tx_chan=%d\n"
 argument_list|,
 name|mlen
 argument_list|,
 name|p
 operator|->
 name|txpkt_intf
+argument_list|,
+name|p
+operator|->
+name|tx_chan
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX handle checksum, TSO, and VLAN here 	 *	  	 */
@@ -6196,10 +6193,10 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m0
-argument_list|)
+operator|*
+name|free
+operator|=
+literal|1
 expr_stmt|;
 name|flits
 operator|=

@@ -558,6 +558,9 @@ name|uint16_t
 name|ip_len
 decl_stmt|;
 name|uint16_t
+name|mss
+decl_stmt|;
+name|uint16_t
 name|vtag
 decl_stmt|;
 name|uint8_t
@@ -2122,6 +2125,10 @@ name|struct
 name|mbuf
 modifier|*
 modifier|*
+parameter_list|,
+name|int
+modifier|*
+name|free
 parameter_list|)
 function_decl|;
 end_function_decl

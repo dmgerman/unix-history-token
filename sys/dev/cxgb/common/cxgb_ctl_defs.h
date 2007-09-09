@@ -57,14 +57,24 @@ block|,
 name|RDMA_GET_MEM
 block|,
 name|FAILOVER
+init|=
+literal|30
 block|,
 name|FAILOVER_DONE
+init|=
+literal|31
 block|,
 name|FAILOVER_CLEAR
+init|=
+literal|32
 block|,
 name|GET_CPUIDX_OF_QSET
+init|=
+literal|40
 block|,
 name|GET_RX_PAGE_INFO
+init|=
+literal|50
 block|, }
 enum|;
 end_enum
