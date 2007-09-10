@@ -247,6 +247,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * HTCP algorithms are directly taken from  * R.N.Shorten, D.J.Leith and are work/outcome from  * a Cisco-URP grant to enhance HTCP for satellite  * communications. We use the BSD Liscense  * granted from his source and have modified his  * algorithms to fit within the SCTP BSD framework.  */
+end_comment
+
 begin_function_decl
 name|void
 name|sctp_htcp_set_initial_cc_param

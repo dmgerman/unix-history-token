@@ -4744,9 +4744,9 @@ decl_stmt|;
 name|struct
 name|sctp_tmit_chunk
 modifier|*
-name|chk
+name|debug_chk
 decl_stmt|;
-comment|//for debug
+comment|/* for debug */
 if|if
 condition|(
 name|dstnet
@@ -4996,7 +4996,7 @@ argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
-argument|chk
+argument|debug_chk
 argument_list|,
 argument|&stcb->asoc.sent_queue
 argument_list|,
@@ -5015,7 +5015,7 @@ argument_list|(
 name|SCTP_DEBUG_ASCONF1
 argument_list|,
 operator|&
-name|chk
+name|debug_chk
 operator|->
 name|whoTo
 operator|->
@@ -5032,7 +5032,7 @@ name|SCTP_DEBUG_ASCONF1
 argument_list|,
 literal|"state is %d\n"
 argument_list|,
-name|chk
+name|debug_chk
 operator|->
 name|sent
 argument_list|)
