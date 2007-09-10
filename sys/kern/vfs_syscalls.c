@@ -8648,7 +8648,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_delete
+name|mac_check_vnode_unlink
 argument_list|(
 name|td
 operator|->
@@ -18132,7 +18132,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_delete
+name|mac_check_vnode_unlink
 argument_list|(
 name|td
 operator|->
