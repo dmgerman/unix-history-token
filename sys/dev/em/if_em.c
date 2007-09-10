@@ -11243,6 +11243,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 operator|(
 name|adapter
 operator|->
@@ -11254,8 +11256,6 @@ name|pci_cmd_word
 operator|&
 name|PCIM_CMD_BUSMASTEREN
 operator|)
-operator|==
-literal|0
 operator|&&
 operator|(
 name|adapter
@@ -11267,6 +11267,7 @@ operator|.
 name|pci_cmd_word
 operator|&
 name|PCIM_CMD_MEMEN
+operator|)
 operator|)
 condition|)
 block|{
@@ -11525,7 +11526,7 @@ name|mac
 operator|.
 name|type
 operator|>
-name|e1000_82542
+name|e1000_82543
 operator|)
 operator|&&
 operator|(
@@ -11815,7 +11816,7 @@ operator|.
 name|mac
 operator|.
 name|type
-operator|>
+operator|>=
 name|e1000_82571
 condition|)
 block|{
@@ -17302,7 +17303,7 @@ name|CSUM_UDP
 condition|)
 name|type_tucmd_mlhl
 operator||=
-name|E1000_ADVTXD_TUCMD_L4T_TCP
+name|E1000_ADVTXD_TUCMD_L4T_UDP
 expr_stmt|;
 break|break;
 block|}

@@ -271,17 +271,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|EM_TSO_SEG_SIZE
-value|4096
-end_define
-
-begin_comment
-comment|/* Max dma seg size */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MAX_NUM_MULTICAST_ADDRESSES
 value|128
 end_define
