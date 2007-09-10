@@ -4741,12 +4741,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|struct
-name|sctp_tmit_chunk
-modifier|*
-name|debug_chk
-decl_stmt|;
-comment|/* for debug */
 if|if
 condition|(
 name|dstnet
@@ -4980,65 +4974,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Debug code */
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-literal|"assoc_immediate_retrans: calling chunk_output, retran_cnt is %d\n"
-argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|sent_queue_retran_cnt
-argument_list|)
-expr_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|debug_chk
-argument_list|,
-argument|&stcb->asoc.sent_queue
-argument_list|,
-argument|sctp_next
-argument_list|)
-block|{
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-literal|"assoc_immediate_retrans: chk->whoTo is "
-argument_list|)
-expr_stmt|;
-name|SCTPDBG_ADDR
-argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-operator|&
-name|debug_chk
-operator|->
-name|whoTo
-operator|->
-name|ro
-operator|.
-name|_l_addr
-operator|.
-name|sa
-argument_list|)
-expr_stmt|;
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-literal|"state is %d\n"
-argument_list|,
-name|debug_chk
-operator|->
-name|sent
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* end Debug code */
 name|sctp_chunk_output
 argument_list|(
 name|stcb
@@ -5151,12 +5086,6 @@ name|sctp_tmit_chunk
 modifier|*
 name|chk
 decl_stmt|;
-name|int
-name|cnt
-init|=
-literal|0
-decl_stmt|;
-comment|/* debug */
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_ASCONF1
@@ -5253,27 +5182,9 @@ operator|.
 name|sent_queue_retran_cnt
 argument_list|)
 expr_stmt|;
-name|cnt
-operator|++
-expr_stmt|;
 block|}
 block|}
 block|}
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-literal|"%d chunks are marked to RESEND, retran_cnt is %d\n"
-argument_list|,
-name|cnt
-argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|sent_queue_retran_cnt
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -5519,7 +5430,6 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|//have to be considered...
 name|changed
 operator|=
 literal|0
