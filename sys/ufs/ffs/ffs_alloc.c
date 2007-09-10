@@ -5615,6 +5615,18 @@ name|dirsize
 operator|=
 name|curdirsize
 expr_stmt|;
+if|if
+condition|(
+name|dirsize
+operator|<=
+literal|0
+condition|)
+name|maxcontigdirs
+operator|=
+literal|0
+expr_stmt|;
+comment|/* dirsize overflowed */
+else|else
 name|maxcontigdirs
 operator|=
 name|min
