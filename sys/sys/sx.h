@@ -171,17 +171,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|void
 name|sx_init
 parameter_list|(
+name|struct
+name|sx
+modifier|*
 name|sx
 parameter_list|,
-name|desc
+specifier|const
+name|char
+modifier|*
+name|description
 parameter_list|)
-value|sx_init_flags((sx), (desc), 0)
-end_define
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
