@@ -6402,10 +6402,14 @@ condition|(
 name|kmem_used
 argument_list|()
 operator|>
+operator|(
 name|kmem_size
 argument_list|()
+operator|*
+literal|4
+operator|)
 operator|/
-literal|2
+literal|5
 condition|)
 return|return
 operator|(
@@ -12198,7 +12202,7 @@ name|MAX
 argument_list|(
 name|arc_c
 operator|*
-literal|4
+literal|6
 argument_list|,
 name|arc_c_max
 argument_list|)
