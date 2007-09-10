@@ -12,13 +12,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ipsec.h"
+file|"opt_inet6.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_inet6.h"
+file|"opt_ipsec.h"
 end_include
 
 begin_include
@@ -31,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
 end_include
 
 begin_include
@@ -138,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -162,13 +162,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
+file|<netinet/in_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in_pcb.h>
+file|<netinet/in_systm.h>
 end_include
 
 begin_include
@@ -287,13 +287,13 @@ comment|/*  * UDP protocol implementation.  * Per RFC 768, August, 1980.  */
 end_comment
 
 begin_comment
-comment|/*  * BSD 4.2 defaulted the udp checksum to be off.  Turning off udp checksums  * removes the only data integrity mechanism for packets and malformed  * packets that would otherwise be discarded by bad checksums may cause  * problems (especially for NFS data blocks).  */
+comment|/*  * BSD 4.2 defaulted the udp checksum to be off.  Turning off udp checksums  * removes the only data integrity mechanism for packets and malformed  * packets that would otherwise be discarded due to bad checksums, and may  * cause problems (especially for NFS data blocks).  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
-name|udpcksum
+name|udp_cksum
 init|=
 literal|1
 decl_stmt|;
@@ -311,7 +311,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|udpcksum
+name|udp_cksum
 argument_list|,
 literal|0
 argument_list|,
@@ -1955,7 +1955,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * Check for a multicast source filter 					 * entry on this socket for this group. 					 * MCAST_EXCLUDE is the default 					 * behaviour. It means default accept; 					 * entries, if present, denote sources 					 * to be excluded from delivery. 					 */
+comment|/* 					 * Check for a multicast source filter 					 * entry on this socket for this group. 					 * MCAST_EXCLUDE is the default 					 * behaviour.  It means default accept; 					 * entries, if present, denote sources 					 * to be excluded from delivery. 					 */
 name|ims
 operator|=
 name|imo_match_source
@@ -2512,23 +2512,6 @@ modifier|*
 name|uh
 decl_stmt|;
 name|struct
-name|inpcb
-modifier|*
-function_decl|(
-modifier|*
-name|notify
-function_decl|)
-parameter_list|(
-name|struct
-name|inpcb
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-init|=
-name|udp_notify
-function_decl|;
-name|struct
 name|in_addr
 name|faddr
 decl_stmt|;
@@ -2685,10 +2668,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-call|(
-modifier|*
-name|notify
-call|)
+name|udp_notify
 argument_list|(
 name|inp
 argument_list|,
@@ -2725,7 +2705,7 @@ index|[
 name|cmd
 index|]
 argument_list|,
-name|notify
+name|udp_notify
 argument_list|)
 expr_stmt|;
 block|}
@@ -2762,7 +2742,7 @@ name|struct
 name|xinpgen
 name|xig
 decl_stmt|;
-comment|/* 	 * The process of preparing the TCB list is too time-consuming and 	 * resource-intensive to repeat twice on every request. 	 */
+comment|/* 	 * The process of preparing the PCB list is too time-consuming and 	 * resource-intensive to repeat twice on every request. 	 */
 if|if
 condition|(
 name|req
@@ -3582,7 +3562,7 @@ decl_stmt|;
 name|int
 name|unlock_udbinfo
 decl_stmt|;
-comment|/* 	 * udp_output() may need to temporarily bind or connect the current 	 * inpcb.  As such, we don't know up front what inpcb locks we will 	 * need.  Do any work to decide what is needed up front before 	 * acquiring locks. 	 */
+comment|/* 	 * udp_output() may need to temporarily bind or connect the current 	 * inpcb.  As such, we don't know up front whether we will need the 	 * pcbinfo lock or not.  Do any work to decide what is needed up 	 * front before acquiring any locks. 	 */
 if|if
 condition|(
 name|len
@@ -3901,7 +3881,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * If the IP_SENDSRCADDR control message was specified, override the 	 * source address for this datagram. Its use is invalidated if the 	 * address thus specified is incomplete or clobbers other inpcbs. 	 */
+comment|/* 	 * If the IP_SENDSRCADDR control message was specified, override the 	 * source address for this datagram.  Its use is invalidated if the 	 * address thus specified is incomplete or clobbers other inpcbs. 	 */
 name|laddr
 operator|=
 name|inp
@@ -4398,7 +4378,7 @@ expr_stmt|;
 comment|/* 	 * Set up checksum and output datagram. 	 */
 if|if
 condition|(
-name|udpcksum
+name|udp_cksum
 condition|)
 block|{
 if|if
