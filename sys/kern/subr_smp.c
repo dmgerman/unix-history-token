@@ -621,7 +621,7 @@ argument|cpu_mp
 argument_list|,
 argument|SI_SUB_CPU
 argument_list|,
-argument|SI_ORDER_SECOND
+argument|SI_ORDER_THIRD
 argument_list|,
 argument|mp_start
 argument_list|,

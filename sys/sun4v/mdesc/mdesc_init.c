@@ -117,7 +117,7 @@ name|mdesc_init
 argument_list|,
 name|SI_SUB_CPU
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_SECOND
 argument_list|,
 name|mdesc_postvm_init
 argument_list|,

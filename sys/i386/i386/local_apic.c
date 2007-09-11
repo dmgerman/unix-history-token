@@ -4641,7 +4641,7 @@ argument|apic_init
 argument_list|,
 argument|SI_SUB_CPU
 argument_list|,
-argument|SI_ORDER_FIRST
+argument|SI_ORDER_SECOND
 argument_list|,
 argument|apic_init
 argument_list|,

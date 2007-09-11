@@ -1825,7 +1825,7 @@ argument_list|,
 argument|SI_SUB_CPU -
 literal|1
 argument_list|,
-argument|SI_ORDER_FIRST
+argument|SI_ORDER_SECOND
 argument_list|,
 argument|madt_register
 argument_list|,
