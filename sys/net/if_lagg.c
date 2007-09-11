@@ -3922,7 +3922,26 @@ name|rp_flags
 operator||=
 name|LAGG_PORT_MASTER
 expr_stmt|;
-comment|/* FALLTHROUGH */
+if|if
+condition|(
+name|lp
+operator|==
+name|lagg_link_active
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|sc_primary
+argument_list|)
+condition|)
+name|rp
+operator|->
+name|rp_flags
+operator||=
+name|LAGG_PORT_ACTIVE
+expr_stmt|;
+break|break;
 case|case
 name|LAGG_PROTO_ROUNDROBIN
 case|:
