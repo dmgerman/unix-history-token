@@ -917,11 +917,22 @@ argument_list|,
 name|channel
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|listen
 argument_list|(
 name|acceptsock
 argument_list|,
 literal|10
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Could not listen on socket"
 argument_list|)
 expr_stmt|;
 name|ss
