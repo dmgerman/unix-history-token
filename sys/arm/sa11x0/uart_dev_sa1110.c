@@ -406,6 +406,7 @@ block|{
 while|while
 condition|(
 operator|!
+operator|(
 name|uart_getreg
 argument_list|(
 name|bas
@@ -414,6 +415,7 @@ name|SACOM_SR1
 argument_list|)
 operator|&
 name|SR1_TNF
+operator|)
 condition|)
 empty_stmt|;
 name|uart_setreg
@@ -952,6 +954,7 @@ block|{
 while|while
 condition|(
 operator|!
+operator|(
 name|uart_getreg
 argument_list|(
 operator|&
@@ -963,6 +966,7 @@ name|SACOM_SR1
 argument_list|)
 operator|&
 name|SR1_TNF
+operator|)
 condition|)
 empty_stmt|;
 name|uart_setreg
