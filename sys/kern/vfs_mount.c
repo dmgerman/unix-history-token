@@ -6097,6 +6097,8 @@ operator|->
 name|mnt_kern_flag
 operator||=
 name|MNTK_UNMOUNT
+operator||
+name|MNTK_NOINSMNTQ
 expr_stmt|;
 comment|/* Allow filesystems to detect that a forced unmount is in progress. */
 if|if
@@ -6161,6 +6163,8 @@ operator|&=
 operator|~
 operator|(
 name|MNTK_UNMOUNT
+operator||
+name|MNTK_NOINSMNTQ
 operator||
 name|MNTK_UNMOUNTF
 operator|)
@@ -6473,6 +6477,18 @@ name|fsrootvp
 argument_list|)
 expr_stmt|;
 block|}
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&=
+operator|~
+name|MNTK_NOINSMNTQ
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6491,6 +6507,12 @@ name|mnt_syncer
 operator|==
 name|NULL
 condition|)
+block|{
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -6504,6 +6526,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+block|}
 name|mp
 operator|->
 name|mnt_kern_flag

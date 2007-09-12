@@ -4544,7 +4544,7 @@ name|mp
 operator|->
 name|mnt_kern_flag
 operator|&
-name|MNTK_UNMOUNT
+name|MNTK_NOINSMNTQ
 operator|)
 operator|!=
 literal|0

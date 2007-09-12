@@ -1188,7 +1188,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/*  * Internal filesystem control flags stored in mnt_kern_flag.  *  * MNTK_UNMOUNT locks the mount entry so that name lookup cannot proceed  * past the mount point.  This keeps the subtree stable during mounts  * and unmounts.  *  * MNTK_UNMOUNTF permits filesystems to detect a forced unmount while  * dounmount() is still waiting to lock the mountpoint. This allows  * the filesystem to cancel operations that might otherwise deadlock  * with the unmount attempt (used by NFS).  */
+comment|/*  * Internal filesystem control flags stored in mnt_kern_flag.  *  * MNTK_UNMOUNT locks the mount entry so that name lookup cannot proceed  * past the mount point.  This keeps the subtree stable during mounts  * and unmounts.  *  * MNTK_UNMOUNTF permits filesystems to detect a forced unmount while  * dounmount() is still waiting to lock the mountpoint. This allows  * the filesystem to cancel operations that might otherwise deadlock  * with the unmount attempt (used by NFS).  *  * MNTK_NOINSMNTQ is strict subset of MNTK_UNMOUNT. They are separated  * to allow for failed unmount attempt to restore the syncer vnode for  * the mount.  */
 end_comment
 
 begin_define
@@ -1222,6 +1222,17 @@ end_define
 
 begin_comment
 comment|/* async disabled by softdep */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_NOINSMNTQ
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* insmntque is not allowed */
 end_comment
 
 begin_define
