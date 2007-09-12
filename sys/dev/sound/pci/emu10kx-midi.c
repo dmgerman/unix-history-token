@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_emu10kx.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/sound/pci/emu10kx.h>
 end_include
 
@@ -465,9 +459,10 @@ name|NULL
 condition|)
 block|{
 comment|/* We should read MIDI event to unlock card after 		 * interrupt. XXX - check, why this happens.  */
-ifdef|#
-directive|ifdef
-name|SND_EMU10KX_DEBUG
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|sc
@@ -479,8 +474,6 @@ argument_list|,
 name|intr_status
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -724,9 +717,12 @@ name|scp
 operator|->
 name|mtx
 argument_list|,
-literal|"emu10kx_midi"
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
-name|NULL
+literal|"midi softc"
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -809,17 +805,6 @@ name|IPR_A_MIDIRECVBUFEMPTY2
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|inte_val
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 name|scp
 operator|->
 name|ihandle

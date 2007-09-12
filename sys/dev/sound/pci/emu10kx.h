@@ -56,11 +56,15 @@ name|NUM_G
 value|64
 end_define
 
+begin_comment
+comment|/* XXX some (empty) samples are played when play buffer is> EMUPAGESIZE */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EMU_PLAY_BUFSZ
-value|EMUPAGESIZE*16
+value|EMUPAGESIZE
 end_define
 
 begin_comment
@@ -107,6 +111,20 @@ define|#
 directive|define
 name|EMU_VAR_ISEMU10K1
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMU_VAR_MCH_DISABLED
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMU_VAR_MCH_REC
+value|4
 end_define
 
 begin_define
