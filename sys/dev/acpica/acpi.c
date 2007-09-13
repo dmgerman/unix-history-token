@@ -9753,6 +9753,21 @@ name|ENXIO
 operator|)
 return|;
 block|}
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+comment|/* This platform does not support acpi suspend/resume. */
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+endif|#
+directive|endif
 comment|/* If a suspend request is already in progress, just return. */
 name|ACPI_LOCK
 argument_list|(
@@ -9905,6 +9920,21 @@ name|ret
 decl_stmt|,
 name|sleeping
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+comment|/* This platform does not support acpi suspend/resume. */
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+endif|#
+directive|endif
 comment|/* If no pending sleep state, return an error. */
 name|ACPI_LOCK
 argument_list|(
