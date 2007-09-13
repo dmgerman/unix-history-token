@@ -665,6 +665,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MXGE_PCI_DEVICE_Z8E_9
+value|0x0009
+end_define
+
+begin_define
+define|#
+directive|define
 name|MXGE_XFP_COMPLIANCE_BYTE
 value|131
 end_define
