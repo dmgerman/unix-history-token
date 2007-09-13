@@ -501,6 +501,27 @@ name|SCTPCTL_MOBILITY_FASTHANDOFF_DEFAULT
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCTP_LOCAL_TRACE_BUF
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|struct
+name|sctp_log
+name|sctp_log
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4792,7 +4813,7 @@ name|_net_inet_sctp
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|logging
+name|log_level
 argument_list|,
 name|CTLTYPE_INT
 operator||
@@ -4958,6 +4979,41 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCTP_LOCAL_TRACE_BUF
+argument_list|)
+end_if
+
+begin_expr_stmt
+name|SYSCTL_STRUCT
+argument_list|(
+name|_net_inet_sctp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|log
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sctp_log
+argument_list|,
+name|sctp_log
+argument_list|,
+literal|"SCTP logging (struct sctp_log)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -5016,7 +5072,7 @@ name|sctpstat
 argument_list|,
 name|sctpstat
 argument_list|,
-literal|"SCTP statistics (struct sctps_stat, netinet/sctp.h"
+literal|"SCTP statistics (struct sctp_stat)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

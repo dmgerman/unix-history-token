@@ -1055,24 +1055,6 @@ begin_comment
 comment|/*  * To turn on various logging, you must first enable 'options KTR' and  * you might want to bump the entires 'options KTR_ENTRIES=80000'.  * To get something to log you define one of the logging defines.  * (see LINT).  *  * This gets the compile in place, but you still need to turn the  * logging flag on too in the sysctl (see in sctp.h).  */
 end_comment
 
-begin_comment
-comment|/* For SCTP only logging */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_MAX_LOGGING_SIZE
-value|30000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_TRACE_PARAMS
-value|6
-end_define
-
 begin_define
 define|#
 directive|define

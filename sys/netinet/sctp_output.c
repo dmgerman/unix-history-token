@@ -37998,7 +37998,7 @@ name|chk
 operator|->
 name|flags
 operator|=
-literal|0
+name|CHUNK_FLAGS_FRAGMENT_OK
 expr_stmt|;
 name|chk
 operator|->
@@ -59157,6 +59157,21 @@ name|top
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|srcv
+operator|->
+name|sinfo_flags
+operator|&
+name|SCTP_EOF
+condition|)
+block|{
+comment|/* 			 * This should only happen for Panda for the mbuf 			 * send case, which does NOT yet support EEOR mode. 			 * Thus, we can just set this flag to do the proper 			 * EOF handling. 			 */
+name|got_all_of_the_send
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

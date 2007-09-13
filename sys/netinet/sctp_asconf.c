@@ -4574,13 +4574,6 @@ operator|&
 name|SCTP_ADDR_UNCONFIRMED
 condition|)
 block|{
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-literal|"move_chunks_from_deleted_prim: specified destination is UNCONFIRMED\n"
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 if|if
@@ -4594,13 +4587,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-literal|"move_chunks_from_deleted_prim: Funny, old primary is not stored\n"
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|asoc
@@ -4750,13 +4736,6 @@ operator|&
 name|SCTP_ADDR_UNCONFIRMED
 condition|)
 block|{
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-literal|"assoc_immediate_retrans: specified destination is UNCONFIRMED\n"
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 if|if
@@ -4770,13 +4749,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-literal|"assoc_immediate_retrans: Funny, old primary is not stored\n"
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 if|if
@@ -4797,7 +4769,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_ASCONF1
 argument_list|,
-literal|"Deleted primary is "
+literal|"assoc_immediate_retrans: Deleted primary is "
 argument_list|)
 expr_stmt|;
 name|SCTPDBG_ADDR
@@ -4841,13 +4813,6 @@ operator|.
 name|_l_addr
 operator|.
 name|sa
-argument_list|)
-expr_stmt|;
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-literal|"Stopping send timer and calling t3rxt_timer\n"
 argument_list|)
 expr_stmt|;
 name|sctp_timer_stop
@@ -4933,13 +4898,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-literal|"t3rxt_timer error\n"
-argument_list|)
-expr_stmt|;
 name|SCTP_INP_DECR_REF
 argument_list|(
 name|stcb
@@ -5090,14 +5048,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_ASCONF1
 argument_list|,
-literal|"net_immediate_retrans:\n"
-argument_list|)
-expr_stmt|;
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_ASCONF1
-argument_list|,
-literal|"RTO is %d\n"
+literal|"net_immediate_retrans: RTO is %d\n"
 argument_list|,
 name|net
 operator|->

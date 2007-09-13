@@ -146,6 +146,7 @@ specifier|const
 name|char
 modifier|*
 name|str
+name|SCTP_UNUSED
 parameter_list|,
 name|uint32_t
 name|a
