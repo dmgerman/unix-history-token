@@ -726,7 +726,7 @@ specifier|register
 name|bpf_u_int32
 name|k
 decl_stmt|;
-name|int32_t
+name|u_int32_t
 name|mem
 index|[
 name|BPF_MEMWORDS
