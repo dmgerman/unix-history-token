@@ -1269,6 +1269,11 @@ name|sq_hash
 argument_list|)
 expr_stmt|;
 block|}
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1329,6 +1334,11 @@ operator|~
 name|TDF_SLEEPABORT
 expr_stmt|;
 block|}
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
