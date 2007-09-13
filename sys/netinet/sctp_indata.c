@@ -18491,6 +18491,7 @@ argument_list|(
 name|tp1
 argument_list|)
 expr_stmt|;
+comment|/* sa_ignore NO_NULL_CHK */
 name|sctp_total_flight_decrease
 argument_list|(
 name|stcb
@@ -18543,6 +18544,7 @@ name|whoTo
 operator|->
 name|RTO
 operator|=
+comment|/* 							 * sa_ignore 							 * NO_NULL_CHK 							 */
 name|sctp_calculate_rto
 argument_list|(
 name|stcb
@@ -18601,6 +18603,7 @@ operator|&
 name|SCTP_CWND_LOGGING_ENABLE
 condition|)
 block|{
+comment|/* sa_ignore NO_NULL_CHK */
 name|sctp_log_cwnd
 argument_list|(
 name|stcb
@@ -18697,6 +18700,7 @@ operator|->
 name|data
 condition|)
 block|{
+comment|/* sa_ignore NO_NULL_CHK */
 name|sctp_free_bufspace
 argument_list|(
 name|stcb
@@ -18776,6 +18780,7 @@ break|break;
 block|}
 block|}
 block|}
+comment|/* sa_ignore NO_NULL_CHK */
 if|if
 condition|(
 name|stcb
@@ -18818,6 +18823,7 @@ operator|&
 name|SCTP_WAKE_LOGGING_ENABLE
 condition|)
 block|{
+comment|/* sa_ignore NO_NULL_CHK */
 name|sctp_wakeup_log
 argument_list|(
 name|stcb
@@ -22069,6 +22075,7 @@ operator|->
 name|data
 condition|)
 block|{
+comment|/* sa_ignore NO_NULL_CHK */
 name|sctp_free_bufspace
 argument_list|(
 name|stcb
@@ -22170,6 +22177,7 @@ condition|)
 do|;
 name|done_with_it
 label|:
+comment|/* sa_ignore NO_NULL_CHK */
 if|if
 condition|(
 operator|(
@@ -25770,6 +25778,7 @@ name|sequence
 expr_stmt|;
 block|}
 comment|/* now kick the stream the new way */
+comment|/* sa_ignore NO_NULL_CHK */
 name|sctp_kick_prsctp_reorder_queue
 argument_list|(
 name|stcb
@@ -25791,6 +25800,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* now lets kick out and check for more fragmented delivery */
+comment|/* sa_ignore NO_NULL_CHK */
 name|sctp_deliver_reasm_check
 argument_list|(
 name|stcb

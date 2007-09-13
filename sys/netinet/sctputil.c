@@ -9477,8 +9477,6 @@ condition|)
 block|{
 break|break;
 block|}
-if|if
-condition|(
 name|sctp_delete_prim_timer
 argument_list|(
 name|inp
@@ -9487,12 +9485,7 @@ name|stcb
 argument_list|,
 name|net
 argument_list|)
-condition|)
-block|{
-goto|goto
-name|out_decr
-goto|;
-block|}
+expr_stmt|;
 name|SCTP_STAT_INCR
 argument_list|(
 name|sctps_timodelprim

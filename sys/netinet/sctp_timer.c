@@ -6214,7 +6214,7 @@ comment|/* Mobility adaptation */
 end_comment
 
 begin_function
-name|int
+name|void
 name|sctp_delete_prim_timer
 parameter_list|(
 name|struct
@@ -6258,11 +6258,7 @@ argument_list|,
 name|SCTP_MOBILITY_PRIM_DELETED
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 name|SCTPDBG
 argument_list|(
@@ -6313,11 +6309,7 @@ argument_list|,
 name|SCTP_MOBILITY_PRIM_DELETED
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 

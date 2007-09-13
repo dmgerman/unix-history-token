@@ -26914,12 +26914,12 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_OUTPUT
 argument_list|,
-name|EAGAIN
+name|EINVAL
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|EAGAIN
+name|EINVAL
 expr_stmt|;
 goto|goto
 name|out_now
@@ -48581,7 +48581,14 @@ name|unsigned
 name|int
 name|chk_length
 decl_stmt|;
-comment|/* sa_ignore NO_NULL_CHK */
+if|if
+condition|(
+operator|!
+name|stcb
+condition|)
+block|{
+return|return;
+block|}
 name|asoc
 operator|=
 operator|&
@@ -57504,12 +57511,12 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_OUTPUT
 argument_list|,
-name|EAGAIN
+name|EINVAL
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|EAGAIN
+name|EINVAL
 expr_stmt|;
 goto|goto
 name|out

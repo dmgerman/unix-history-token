@@ -320,7 +320,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|sctp_delete_prim_timer
 parameter_list|(
 name|struct

@@ -15467,6 +15467,7 @@ argument_list|,
 name|chk
 argument_list|)
 expr_stmt|;
+comment|/* sa_ignore NO_NULL_CHK */
 name|stcb
 operator|->
 name|asoc

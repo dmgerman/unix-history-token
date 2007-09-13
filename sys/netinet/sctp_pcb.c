@@ -27435,6 +27435,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
+comment|/* sa_ignore NO_NULL_CHK */
 name|sctp_send_sack
 argument_list|(
 name|stcb
