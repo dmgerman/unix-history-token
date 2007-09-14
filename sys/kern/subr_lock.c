@@ -1445,15 +1445,6 @@ condition|(
 name|l
 operator|->
 name|lpo_acqtime
-operator|&&
-operator|!
-operator|(
-name|lo
-operator|->
-name|lo_flags
-operator|&
-name|LO_NOPROFILE
-operator|)
 condition|)
 block|{
 specifier|const

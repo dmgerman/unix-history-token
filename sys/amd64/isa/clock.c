@@ -2090,6 +2090,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_SPIN
+operator||
+name|MTX_NOPROFILE
 argument_list|)
 expr_stmt|;
 name|set_timer_freq

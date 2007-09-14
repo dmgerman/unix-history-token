@@ -464,6 +464,15 @@ name|lo_profile_obj
 decl_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|lo
+operator|->
+name|lo_flags
+operator|&
+name|LO_NOPROFILE
+operator|)
+operator|&&
 name|lock_prof_enable
 operator|&&
 operator|*
@@ -526,6 +535,15 @@ block|{
 comment|/* don't reset the timer when/if recursing */
 if|if
 condition|(
+operator|!
+operator|(
+name|lo
+operator|->
+name|lo_flags
+operator|&
+name|LO_NOPROFILE
+operator|)
+operator|&&
 name|lock_prof_enable
 operator|&&
 name|lo
@@ -590,6 +608,15 @@ name|lo_profile_obj
 decl_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|lo
+operator|->
+name|lo_flags
+operator|&
+name|LO_NOPROFILE
+operator|)
+operator|&&
 name|l
 operator|->
 name|lpo_acqtime
