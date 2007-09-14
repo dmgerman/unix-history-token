@@ -452,6 +452,54 @@ comment|/* unit select */
 end_comment
 
 begin_comment
+comment|/* Data Rate Select Register DSR (enhanced controller) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I8207X_DSR_SR
+value|0x80
+end_define
+
+begin_comment
+comment|/* software reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I8207X_DSR_LP
+value|0x40
+end_define
+
+begin_comment
+comment|/* low power */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I8207X_DSR_PS
+value|0x1c
+end_define
+
+begin_comment
+comment|/* precompensation select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I8207X_DSR_RS
+value|0x03
+end_define
+
+begin_comment
+comment|/* data rate select */
+end_comment
+
+begin_comment
 comment|/* Commands */
 end_comment
 
@@ -496,7 +544,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_READTRK
-value|2
+value|0x02
 end_define
 
 begin_comment
@@ -507,7 +555,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_SPECIFY
-value|3
+value|0x03
 end_define
 
 begin_comment
@@ -518,7 +566,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_SENSED
-value|4
+value|0x04
 end_define
 
 begin_comment
@@ -529,7 +577,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_WRITE
-value|5
+value|0x05
 end_define
 
 begin_comment
@@ -540,7 +588,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_READ
-value|6
+value|0x06
 end_define
 
 begin_comment
@@ -551,7 +599,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_RECAL
-value|7
+value|0x07
 end_define
 
 begin_comment
@@ -562,7 +610,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_SENSEI
-value|8
+value|0x08
 end_define
 
 begin_comment
@@ -573,7 +621,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_WRITEDEL
-value|9
+value|0x09
 end_define
 
 begin_comment
@@ -584,7 +632,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_READID
-value|0xa
+value|0x0a
 end_define
 
 begin_comment
@@ -595,7 +643,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_READDEL
-value|0xc
+value|0x0c
 end_define
 
 begin_comment
@@ -606,7 +654,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_FORMAT
-value|0xd
+value|0x0d
 end_define
 
 begin_comment
@@ -617,11 +665,22 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_SEEK
-value|0xf
+value|0x0f
 end_define
 
 begin_comment
 comment|/*  seek drive - requires unit select byte 				 *  and new cyl byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NE7CMD_VERSION
+value|0x10
+end_define
+
+begin_comment
+comment|/*  get version */
 end_comment
 
 begin_define
@@ -664,18 +723,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NE7CMD_VERSION
-value|0x10
+name|I8207X_DUMPREG
+value|0x0e
 end_define
 
 begin_comment
-comment|/*  version (ok for all controllers) */
+comment|/*  dump internal registers */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|I8207X_CONFIGURE
+name|I8207X_CONFIG
 value|0x13
 end_define
 
