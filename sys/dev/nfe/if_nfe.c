@@ -5091,7 +5091,7 @@ name|sc
 argument_list|,
 name|NFE_TX_CTL
 argument_list|,
-name|NFE_TX_START
+name|txctl
 argument_list|)
 expr_stmt|;
 name|NFE_WRITE
@@ -5100,7 +5100,7 @@ name|sc
 argument_list|,
 name|NFE_RX_CTL
 argument_list|,
-name|NFE_RX_START
+name|rxctl
 argument_list|)
 expr_stmt|;
 name|NFE_UNLOCK
