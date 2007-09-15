@@ -454,6 +454,16 @@ literal|"Intel 82915G (915G GMCH) SVGA controller"
 block|}
 block|,
 block|{
+literal|0x258A8086
+block|,
+name|CHIP_I915
+block|,
+literal|0x00020000
+block|,
+literal|"Intel E7221 SVGA controller"
+block|}
+block|,
+block|{
 literal|0x25928086
 block|,
 name|CHIP_I915
