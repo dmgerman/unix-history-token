@@ -1843,10 +1843,14 @@ expr_stmt|;
 name|newEnvActive
 operator|++
 expr_stmt|;
-comment|/* No need to rebuild environ if the variable was reused. */
+comment|/* No need to rebuild environ if an active variable was reused. */
 if|if
 condition|(
 name|reuse
+operator|&&
+name|newEnvActive
+operator|==
+name|envActive
 condition|)
 return|return
 operator|(
