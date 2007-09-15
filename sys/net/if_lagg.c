@@ -102,6 +102,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/taskqueue.h>
 end_include
 
@@ -1781,7 +1793,7 @@ name|lagg_port
 modifier|*
 name|lp
 decl_stmt|;
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -1847,7 +1859,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -2035,7 +2047,7 @@ init|=
 operator|~
 literal|0
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -2206,7 +2218,7 @@ name|pending
 init|=
 literal|0
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -2382,7 +2394,7 @@ name|int
 name|error
 decl_stmt|;
 comment|/* Grab a local reference of the queue and remove it from the softc */
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -2407,7 +2419,7 @@ argument_list|)
 operator|=
 name|NULL
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -2514,7 +2526,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -2941,7 +2953,7 @@ name|m
 init|=
 literal|0
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -3043,7 +3055,7 @@ name|lp
 operator|->
 name|lp_ifp
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -3439,7 +3451,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|LAGG_LOCK
+name|LAGG_RLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -3467,7 +3479,7 @@ name|error
 operator|=
 name|ENOENT
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_RUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -3481,7 +3493,7 @@ argument_list|,
 name|rp
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_RUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -3527,7 +3539,7 @@ name|error
 condition|)
 break|break;
 comment|/* Update lagg interface capabilities */
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -3537,7 +3549,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -3766,7 +3778,7 @@ name|lp
 operator|->
 name|lp_softc
 expr_stmt|;
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -3784,7 +3796,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4032,7 +4044,7 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 return|return;
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4080,7 +4092,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4108,7 +4120,7 @@ name|sc
 operator|->
 name|sc_ifp
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -4277,7 +4289,7 @@ block|{
 case|case
 name|SIOCGLAGG
 case|:
-name|LAGG_LOCK
+name|LAGG_RLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4307,7 +4319,7 @@ expr|struct
 name|lagg_reqport
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_RUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4325,7 +4337,7 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|LAGG_LOCK
+name|LAGG_RLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4441,7 +4453,7 @@ name|rpbuf
 argument_list|)
 expr_stmt|;
 block|}
-name|LAGG_UNLOCK
+name|LAGG_RUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4525,7 +4537,7 @@ operator|!=
 name|LAGG_PROTO_NONE
 condition|)
 block|{
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4612,7 +4624,7 @@ name|sc_portreq
 operator|=
 name|NULL
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4691,7 +4703,7 @@ operator|.
 name|ti_proto
 argument_list|)
 expr_stmt|;
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4727,7 +4739,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4778,7 +4790,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|LAGG_LOCK
+name|LAGG_RLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4811,7 +4823,7 @@ name|error
 operator|=
 name|ENOENT
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_RUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4825,7 +4837,7 @@ argument_list|,
 name|rp
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_RUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4877,7 +4889,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4891,7 +4903,7 @@ argument_list|,
 name|tpif
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4943,7 +4955,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4976,7 +4988,7 @@ name|error
 operator|=
 name|ENOENT
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4992,7 +5004,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5002,7 +5014,7 @@ case|case
 name|SIOCSIFFLAGS
 case|:
 comment|/* Set flags on ports too */
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5024,7 +5036,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5050,7 +5062,7 @@ operator|)
 condition|)
 block|{
 comment|/* 			 * If interface is marked down and it is running, 			 * then stop and disable it. 			 */
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5060,7 +5072,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5106,7 +5118,7 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5118,7 +5130,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -5233,7 +5245,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -5507,7 +5519,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -5681,7 +5693,7 @@ name|lagg_mc
 modifier|*
 name|mc
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -5808,7 +5820,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|LAGG_LOCK_ASSERT
+name|LAGG_WLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -6001,6 +6013,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|LAGG_RLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -6042,12 +6059,6 @@ name|sc_proto
 operator|!=
 name|LAGG_PROTO_NONE
 condition|)
-block|{
-name|LAGG_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 call|(
@@ -6062,12 +6073,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 name|m_freem
 argument_list|(
@@ -6100,6 +6105,11 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|LAGG_RUNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -6187,7 +6197,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|LAGG_LOCK
+name|LAGG_RLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -6238,7 +6248,7 @@ operator|.
 name|len
 expr_stmt|;
 block|}
-name|LAGG_UNLOCK
+name|LAGG_RUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -6349,7 +6359,7 @@ name|IFM_ETHER
 operator||
 name|IFM_AUTO
 expr_stmt|;
-name|LAGG_LOCK
+name|LAGG_RLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -6377,7 +6387,7 @@ operator||=
 name|IFM_ACTIVE
 expr_stmt|;
 block|}
-name|LAGG_UNLOCK
+name|LAGG_RUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -6439,7 +6449,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -6462,7 +6472,7 @@ argument_list|(
 name|lp
 argument_list|)
 expr_stmt|;
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -6498,7 +6508,7 @@ init|=
 name|NULL
 decl_stmt|;
 comment|// int new_link = LINK_STATE_DOWN;
-name|LAGG_LOCK_ASSERT
+name|LAGG_RLOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -8456,7 +8466,7 @@ name|lp
 argument_list|)
 expr_stmt|;
 comment|/* unlocking is safe here */
-name|LAGG_UNLOCK
+name|LAGG_WUNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -8468,7 +8478,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|LAGG_LOCK
+name|LAGG_WLOCK
 argument_list|(
 name|sc
 argument_list|)

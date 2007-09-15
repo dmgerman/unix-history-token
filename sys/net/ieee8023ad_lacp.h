@@ -668,6 +668,15 @@ expr_stmt|;
 name|u_int32_t
 name|lsc_hashkey
 decl_stmt|;
+name|struct
+name|task
+name|lsc_qtask
+decl_stmt|;
+name|struct
+name|ifqueue
+name|lsc_queue
+decl_stmt|;
+comment|/* pdu input queue */
 block|}
 struct|;
 end_struct
