@@ -241,6 +241,10 @@ name|callout
 name|sc_tick_ch
 decl_stmt|;
 comment|/* tick callout */
+name|int
+name|sc_wdog_timer
+decl_stmt|;
+comment|/* watchdog timer */
 comment|/* The following bus handles are to be provided by the bus front-end */
 name|bus_dma_tag_t
 name|sc_pdmatag
