@@ -1490,7 +1490,10 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 comment|/* parent */
 literal|1
@@ -1518,7 +1521,7 @@ comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_WAITOK
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL
@@ -1595,7 +1598,7 @@ operator|->
 name|sc_memsize
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_WAITOK
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL

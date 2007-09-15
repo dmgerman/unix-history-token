@@ -1749,9 +1749,9 @@ name|sc_first_td
 operator|=
 name|bix
 expr_stmt|;
-name|ifp
+name|sc
 operator|->
-name|if_timer
+name|sc_wdog_timer
 operator|=
 name|sc
 operator|->
@@ -2530,9 +2530,9 @@ name|enq
 operator|>
 literal|0
 condition|)
-name|ifp
+name|sc
 operator|->
-name|if_timer
+name|sc_wdog_timer
 operator|=
 literal|5
 expr_stmt|;
