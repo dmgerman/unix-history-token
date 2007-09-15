@@ -2090,7 +2090,10 @@ operator||
 name|IFF_SIMPLEX
 operator||
 name|IFF_MULTICAST
+operator||
+name|IFF_NEEDSGIANT
 expr_stmt|;
+comment|/* USB stack is still under Giant lock */
 name|ifp
 operator|->
 name|if_init
