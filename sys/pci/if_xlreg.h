@@ -2985,6 +2985,10 @@ modifier|*
 name|xl_ifp
 decl_stmt|;
 comment|/* interface info */
+name|device_t
+name|xl_dev
+decl_stmt|;
+comment|/* device info */
 name|struct
 name|ifmedia
 name|ifmedia
@@ -3062,6 +3066,9 @@ decl_stmt|;
 name|struct
 name|callout
 name|xl_stat_callout
+decl_stmt|;
+name|int
+name|xl_wdog_timer
 decl_stmt|;
 name|int
 name|xl_flags
