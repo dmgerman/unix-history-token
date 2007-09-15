@@ -1683,6 +1683,13 @@ index|]
 decl_stmt|;
 name|KASSERT
 argument_list|(
+name|pageout_status
+index|[
+name|i
+index|]
+operator|==
+name|VM_PAGER_PEND
+operator|||
 operator|(
 name|mt
 operator|->
