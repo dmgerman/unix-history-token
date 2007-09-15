@@ -306,7 +306,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46gklmpshoT"
+literal|"46gklmpsho"
 argument_list|)
 operator|)
 operator|!=
@@ -434,7 +434,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: finger [-46gklmpshoT] [user ...] [user@host ...]\n"
+literal|"usage: finger [-46gklmpsho] [user ...] [user@host ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
