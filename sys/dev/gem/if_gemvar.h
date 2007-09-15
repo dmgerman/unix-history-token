@@ -327,6 +327,10 @@ name|callout
 name|sc_rx_ch
 decl_stmt|;
 comment|/* delayed rx callout */
+name|int
+name|sc_wdog_timer
+decl_stmt|;
+comment|/* watchdog timer */
 comment|/* The following bus handles are to be provided by the bus front-end */
 name|bus_space_tag_t
 name|sc_bustag
