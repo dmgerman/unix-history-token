@@ -5582,7 +5582,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * clear any cached, topologically incorrect source 		 * addresses 		 */
+comment|/* clear any cached/topologically incorrect source addresses */
 name|sctp_asconf_nets_cleanup
 argument_list|(
 name|stcb
@@ -6182,6 +6182,11 @@ argument_list|,
 name|SCTP_M_ASC_ADDR
 argument_list|)
 expr_stmt|;
+name|sctp_free_ifa
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -6624,13 +6629,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * add an asconf add/delete IP address parameter to the queue by addr.  * type = SCTP_ADD_IP_ADDRESS, SCTP_DEL_IP_ADDRESS, SCTP_SET_PRIM_ADDR.  * returns 0 if completed, non-zero if not completed.  * NOTE: if adding, but delete already scheduled (and not yet sent out),  * simply remove from queue.  Same for deleting an address already scheduled  * for add.  If a duplicate operation is found, ignore the new one.  */
+comment|/*-  * add an asconf delete IP address parameter to the queue by sockaddr and  * possibly with no sctp_ifa available.  This is only called by the routine  * that checks the addresses in an INIT-ACK against the current address list.  * returns 0 if completed, non-zero if not completed.  * NOTE: if an add is already scheduled (and not yet sent out), simply  * remove it from queue.  If a duplicate operation is found, ignore the  * new one.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|sctp_asconf_queue_add_sa
+name|sctp_asconf_queue_sa_delete
 parameter_list|(
 name|struct
 name|sctp_tcb
@@ -6641,9 +6646,6 @@ name|struct
 name|sockaddr
 modifier|*
 name|sa
-parameter_list|,
-name|uint16_t
-name|type
 parameter_list|)
 block|{
 name|struct
@@ -6754,7 +6756,7 @@ name|ph
 operator|.
 name|param_type
 operator|==
-name|type
+name|SCTP_DEL_IP_ADDRESS
 condition|)
 block|{
 return|return
@@ -6776,68 +6778,6 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|type
-operator|==
-name|SCTP_ADD_IP_ADDRESS
-operator|&&
-name|aa
-operator|->
-name|ap
-operator|.
-name|aph
-operator|.
-name|ph
-operator|.
-name|param_type
-operator|==
-name|SCTP_DEL_IP_ADDRESS
-condition|)
-block|{
-comment|/* add requested, delete already queued */
-comment|/* delete the existing entry in the queue */
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|asconf_queue
-argument_list|,
-name|aa
-argument_list|,
-name|next
-argument_list|)
-expr_stmt|;
-name|sctp_free_ifa
-argument_list|(
-name|aa
-operator|->
-name|ifa
-argument_list|)
-expr_stmt|;
-comment|/* free the entry */
-name|SCTP_FREE
-argument_list|(
-name|aa
-argument_list|,
-name|SCTP_M_ASC_ADDR
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|type
-operator|==
-name|SCTP_DEL_IP_ADDRESS
-operator|&&
 name|aa
 operator|->
 name|ap
@@ -6851,8 +6791,7 @@ operator|==
 name|SCTP_ADD_IP_ADDRESS
 condition|)
 block|{
-comment|/* delete requested, add already queued */
-comment|/* delete the existing entry in the queue */
+comment|/* add already queued, so remove existing entry */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -6893,6 +6832,7 @@ return|;
 block|}
 block|}
 comment|/* for each aa */
+comment|/* find any existing ifa-- NOTE ifa CAN be allowed to be NULL */
 if|if
 condition|(
 name|stcb
@@ -6925,21 +6865,6 @@ argument_list|,
 name|SCTP_ADDR_NOT_LOCKED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ifa
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* Invalid address */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
 comment|/* adding new request to the queue */
 name|SCTP_MALLOC
 argument_list|(
@@ -6970,7 +6895,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_ASCONF1
 argument_list|,
-literal|"asconf_queue_add_sa: failed to get memory!\n"
+literal|"sctp_asconf_queue_sa_delete: failed to get memory!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6992,7 +6917,7 @@ name|ph
 operator|.
 name|param_type
 operator|=
-name|type
+name|SCTP_DEL_IP_ADDRESS
 expr_stmt|;
 name|aa
 operator|->
@@ -7000,6 +6925,10 @@ name|ifa
 operator|=
 name|ifa
 expr_stmt|;
+if|if
+condition|(
+name|ifa
+condition|)
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -7220,6 +7149,15 @@ argument_list|,
 name|SCTP_M_ASC_ADDR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifa
+condition|)
+name|sctp_free_ifa
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -7234,33 +7172,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* clear sent flag */
-comment|/* 	 * if we are deleting an address it should go out last otherwise, 	 * add it to front of the pending queue 	 */
-if|if
-condition|(
-name|type
-operator|==
-name|SCTP_ADD_IP_ADDRESS
-condition|)
-block|{
-comment|/* add goes to the front of the queue */
-name|TAILQ_INSERT_HEAD
-argument_list|(
-operator|&
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|asconf_queue
-argument_list|,
-name|aa
-argument_list|,
-name|next
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* delete and set primary goes to the back of the queue */
+comment|/* delete goes to the back of the queue */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -7275,7 +7187,6 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -7676,6 +7587,12 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|aparam
+operator|->
+name|ifa
+condition|)
 name|sctp_free_ifa
 argument_list|(
 name|aparam
@@ -7747,6 +7664,10 @@ name|struct
 name|sctp_nets
 modifier|*
 name|net
+parameter_list|,
+name|int
+modifier|*
+name|abort_no_unlock
 parameter_list|)
 block|{
 name|struct
@@ -7883,6 +7804,11 @@ name|NULL
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
+expr_stmt|;
+operator|*
+name|abort_no_unlock
+operator|=
+literal|1
 expr_stmt|;
 return|return;
 block|}
@@ -8420,6 +8346,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|net
+argument_list|,
+name|SCTP_ADDR_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8615,6 +8543,9 @@ name|ifa
 parameter_list|,
 name|uint16_t
 name|type
+parameter_list|,
+name|int
+name|addr_locked
 parameter_list|)
 block|{
 name|int
@@ -9023,6 +8954,8 @@ operator|->
 name|asoc
 operator|.
 name|primary_destination
+argument_list|,
+name|addr_locked
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10092,6 +10025,8 @@ operator|->
 name|asoc
 operator|.
 name|primary_destination
+argument_list|,
+name|SCTP_ADDR_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -10238,16 +10173,71 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
-comment|/* NOTE: we currently don't check the validity of the address! */
+name|uint32_t
+name|vrf_id
+decl_stmt|;
+name|struct
+name|sctp_ifa
+modifier|*
+name|ifa
+decl_stmt|;
+comment|/* find the ifa for the desired set primary */
+if|if
+condition|(
+name|stcb
+condition|)
+block|{
+name|vrf_id
+operator|=
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|vrf_id
+expr_stmt|;
+block|}
+else|else
+block|{
+name|vrf_id
+operator|=
+name|SCTP_DEFAULT_VRFID
+expr_stmt|;
+block|}
+name|ifa
+operator|=
+name|sctp_find_ifa_by_addr
+argument_list|(
+name|sa
+argument_list|,
+name|vrf_id
+argument_list|,
+name|SCTP_ADDR_NOT_LOCKED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifa
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Invalid address */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* queue an ASCONF:SET_PRIM_ADDR to be sent */
 if|if
 condition|(
 operator|!
-name|sctp_asconf_queue_add_sa
+name|sctp_asconf_queue_add
 argument_list|(
 name|stcb
 argument_list|,
-name|sa
+name|ifa
 argument_list|,
 name|SCTP_SET_PRIM_ADDR
 argument_list|)
@@ -10314,6 +10304,8 @@ operator|->
 name|asoc
 operator|.
 name|primary_destination
+argument_list|,
+name|SCTP_ADDR_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10473,6 +10465,8 @@ operator|->
 name|asoc
 operator|.
 name|primary_destination
+argument_list|,
+name|SCTP_ADDR_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10497,6 +10491,9 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+parameter_list|,
+name|int
+name|addr_locked
 parameter_list|)
 block|{
 name|struct
@@ -10516,6 +10513,12 @@ name|sctp_ifa
 modifier|*
 name|sctp_ifa
 decl_stmt|;
+if|if
+condition|(
+name|addr_locked
+operator|==
+name|SCTP_ADDR_NOT_LOCKED
+condition|)
 name|SCTP_IPI_ADDR_LOCK
 argument_list|()
 expr_stmt|;
@@ -10537,6 +10540,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|addr_locked
+operator|==
+name|SCTP_ADDR_NOT_LOCKED
+condition|)
 name|SCTP_IPI_ADDR_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -10665,6 +10674,12 @@ argument_list|)
 condition|)
 continue|continue;
 comment|/* found a valid local v4 address to use */
+if|if
+condition|(
+name|addr_locked
+operator|==
+name|SCTP_ADDR_NOT_LOCKED
+condition|)
 name|SCTP_IPI_ADDR_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -10782,6 +10797,12 @@ argument_list|)
 condition|)
 continue|continue;
 comment|/* found a valid local v6 address to use */
+if|if
+condition|(
+name|addr_locked
+operator|==
+name|SCTP_ADDR_NOT_LOCKED
+condition|)
 name|SCTP_IPI_ADDR_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -10799,6 +10820,12 @@ block|}
 block|}
 block|}
 comment|/* no valid addresses found */
+if|if
+condition|(
+name|addr_locked
+operator|==
+name|SCTP_ADDR_NOT_LOCKED
+condition|)
 name|SCTP_IPI_ADDR_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -10902,6 +10929,9 @@ parameter_list|,
 name|int
 modifier|*
 name|retlen
+parameter_list|,
+name|int
+name|addr_locked
 parameter_list|)
 block|{
 name|struct
@@ -11549,6 +11579,8 @@ operator|=
 name|sctp_find_valid_localaddr
 argument_list|(
 name|stcb
+argument_list|,
+name|addr_locked
 argument_list|)
 expr_stmt|;
 else|else
@@ -12307,13 +12339,11 @@ block|{
 comment|/* queue an ASCONF DEL_IP_ADDRESS */
 name|status
 operator|=
-name|sctp_asconf_queue_add_sa
+name|sctp_asconf_queue_sa_delete
 argument_list|(
 name|stcb
 argument_list|,
 name|sa
-argument_list|,
-name|SCTP_DEL_IP_ADDRESS
 argument_list|)
 expr_stmt|;
 comment|/* 				 * if queued ok, and in correct state, send 				 * out the ASCONF. 				 */
@@ -12365,6 +12395,8 @@ operator|->
 name|asoc
 operator|.
 name|primary_destination
+argument_list|,
+name|SCTP_ADDR_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 endif|#
@@ -13123,6 +13155,8 @@ operator|->
 name|ifa
 argument_list|,
 name|SCTP_ADD_IP_ADDRESS
+argument_list|,
+name|SCTP_ADDR_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -13321,6 +13355,8 @@ argument_list|,
 name|sctp_ifa
 argument_list|,
 name|SCTP_ADD_IP_ADDRESS
+argument_list|,
+name|SCTP_ADDR_LOCKED
 argument_list|)
 expr_stmt|;
 block|}

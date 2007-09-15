@@ -977,7 +977,7 @@ value|0x000d
 end_define
 
 begin_comment
-comment|/* Error causes from draft-ietf-tsvwg-addip-sctp */
+comment|/* Error causes from RFC5061 */
 end_comment
 
 begin_define
@@ -1016,7 +1016,7 @@ value|0xa4
 end_define
 
 begin_comment
-comment|/* Error causes from draft-ietf-tsvwg-sctp-auth */
+comment|/* Error causes from RFC4895 */
 end_comment
 
 begin_define
@@ -1300,7 +1300,7 @@ value|0x0e
 end_define
 
 begin_comment
-comment|/* draft-ietf-tsvwg-sctp-auth */
+comment|/* RFC4895 */
 end_comment
 
 begin_define
@@ -1319,7 +1319,7 @@ comment|/************0x80 series ***********/
 end_comment
 
 begin_comment
-comment|/* draft-ietf-tsvwg-addip-sctp */
+comment|/* RFC5061 */
 end_comment
 
 begin_define
@@ -1378,7 +1378,7 @@ value|0xc0
 end_define
 
 begin_comment
-comment|/* draft-ietf-tsvwg-addip-sctp */
+comment|/* RFC5061 */
 end_comment
 
 begin_define

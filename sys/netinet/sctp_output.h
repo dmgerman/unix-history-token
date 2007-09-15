@@ -439,6 +439,9 @@ parameter_list|,
 name|struct
 name|sctp_nets
 modifier|*
+parameter_list|,
+name|int
+name|addr_locked
 parameter_list|)
 function_decl|;
 end_function_decl

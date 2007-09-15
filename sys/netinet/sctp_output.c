@@ -39132,6 +39132,9 @@ name|struct
 name|sctp_nets
 modifier|*
 name|net
+parameter_list|,
+name|int
+name|addr_locked
 parameter_list|)
 block|{
 comment|/* 	 * formulate and queue an ASCONF to the peer. ASCONF parameters 	 * should be queued on the assoc queue. 	 */
@@ -39167,6 +39170,8 @@ name|stcb
 argument_list|,
 operator|&
 name|len
+argument_list|,
+name|addr_locked
 argument_list|)
 expr_stmt|;
 if|if

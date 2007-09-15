@@ -52,13 +52,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_MAXDGRAM
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_MAXDGRAM_DESC
 value|"Maximum outgoing SCTP buffer size"
 end_define
@@ -91,13 +84,6 @@ end_comment
 begin_comment
 comment|/* recvspace: Maximum incoming SCTP buffer size */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_RECVSPACE
-value|2
-end_define
 
 begin_define
 define|#
@@ -138,13 +124,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_AUTOASCONF
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_AUTOASCONF_DESC
 value|"Enable SCTP Auto-ASCONF"
 end_define
@@ -173,13 +152,6 @@ end_define
 begin_comment
 comment|/* ecn_enable: Enable SCTP ECN */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ECN_ENABLE
-value|4
-end_define
 
 begin_define
 define|#
@@ -216,13 +188,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_ECN_NONCE
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_ECN_NONCE_DESC
 value|"Enable SCTP ECN Nonce"
 end_define
@@ -251,13 +216,6 @@ end_define
 begin_comment
 comment|/* strict_sacks: Enable SCTP Strict SACK checking */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_SACKS
-value|6
-end_define
 
 begin_define
 define|#
@@ -294,13 +252,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_LOOPBACK_NOCSUM
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_LOOPBACK_NOCSUM_DESC
 value|"Enable NO Csum on packets sent on loopback"
 end_define
@@ -329,13 +280,6 @@ end_define
 begin_comment
 comment|/* strict_init: Enable strict INIT/INIT-ACK singleton enforcement */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_INIT
-value|8
-end_define
 
 begin_define
 define|#
@@ -372,13 +316,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_PEER_CHKOH
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_PEER_CHKOH_DESC
 value|"Amount to debit peers rwnd per chunk sent"
 end_define
@@ -407,13 +344,6 @@ end_define
 begin_comment
 comment|/* maxburst: Default max burst for sctp endpoints */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_MAXBURST
-value|10
-end_define
 
 begin_define
 define|#
@@ -450,13 +380,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_MAXCHUNKS
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_MAXCHUNKS_DESC
 value|"Default max chunks on queue per asoc"
 end_define
@@ -485,13 +408,6 @@ end_define
 begin_comment
 comment|/* tcbhashsize: Tuneable for Hash table sizes */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_TCBHASHSIZE
-value|12
-end_define
 
 begin_define
 define|#
@@ -528,13 +444,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_PCBHASHSIZE
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_PCBHASHSIZE_DESC
 value|"Tunable for PCB hash table sizes"
 end_define
@@ -563,13 +472,6 @@ end_define
 begin_comment
 comment|/* min_split_point: Minimum size when splitting a chunk */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_MIN_SPLIT_POINT
-value|14
-end_define
 
 begin_define
 define|#
@@ -606,13 +508,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_CHUNKSCALE
-value|15
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_CHUNKSCALE_DESC
 value|"Tuneable for Scaling of number of chunks and messages"
 end_define
@@ -641,13 +536,6 @@ end_define
 begin_comment
 comment|/* delayed_sack_time: Default delayed SACK timer in msec */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_DELAYED_SACK_TIME
-value|16
-end_define
 
 begin_define
 define|#
@@ -684,13 +572,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_SACK_FREQ
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_SACK_FREQ_DESC
 value|"Default SACK frequency"
 end_define
@@ -719,13 +600,6 @@ end_define
 begin_comment
 comment|/* sys_resource: Max number of cached resources in the system */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_SYS_RESOURCE
-value|18
-end_define
 
 begin_define
 define|#
@@ -762,13 +636,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_ASOC_RESOURCE
-value|19
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_ASOC_RESOURCE_DESC
 value|"Max number of cached resources in an asoc"
 end_define
@@ -797,13 +664,6 @@ end_define
 begin_comment
 comment|/* heartbeat_interval: Default heartbeat interval in msec */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_HEARTBEAT_INTERVAL
-value|20
-end_define
 
 begin_define
 define|#
@@ -840,13 +700,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_PMTU_RAISE_TIME
-value|21
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_PMTU_RAISE_TIME_DESC
 value|"Default PMTU raise timer in sec"
 end_define
@@ -875,13 +728,6 @@ end_define
 begin_comment
 comment|/* shutdown_guard_time: Default shutdown guard timer in sec */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_SHUTDOWN_GUARD_TIME
-value|22
-end_define
 
 begin_define
 define|#
@@ -918,13 +764,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_SECRET_LIFETIME
-value|23
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_SECRET_LIFETIME_DESC
 value|"Default secret lifetime in sec"
 end_define
@@ -953,13 +792,6 @@ end_define
 begin_comment
 comment|/* rto_max: Default maximum retransmission timeout in msec */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_RTO_MAX
-value|24
-end_define
 
 begin_define
 define|#
@@ -996,13 +828,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_RTO_MIN
-value|25
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_RTO_MIN_DESC
 value|"Default minimum retransmission timeout in msec"
 end_define
@@ -1031,13 +856,6 @@ end_define
 begin_comment
 comment|/* rto_initial: Default initial retransmission timeout in msec */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_RTO_INITIAL
-value|26
-end_define
 
 begin_define
 define|#
@@ -1074,13 +892,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_INIT_RTO_MAX
-value|27
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_INIT_RTO_MAX_DESC
 value|"Default maximum retransmission timeout during association setup in msec"
 end_define
@@ -1109,13 +920,6 @@ end_define
 begin_comment
 comment|/* valid_cookie_life: Default cookie lifetime in sec */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_VALID_COOKIE_LIFE
-value|28
-end_define
 
 begin_define
 define|#
@@ -1152,13 +956,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_INIT_RTX_MAX
-value|29
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_INIT_RTX_MAX_DESC
 value|"Default maximum number of retransmission for INIT chunks"
 end_define
@@ -1187,13 +984,6 @@ end_define
 begin_comment
 comment|/* assoc_rtx_max: Default maximum number of retransmissions per association */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ASSOC_RTX_MAX
-value|30
-end_define
 
 begin_define
 define|#
@@ -1230,13 +1020,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_PATH_RTX_MAX
-value|31
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_PATH_RTX_MAX_DESC
 value|"Default maximum of retransmissions per path"
 end_define
@@ -1265,13 +1048,6 @@ end_define
 begin_comment
 comment|/* add_more_on_output: When space wise is it worthwhile to try to add more to a socket send buffer */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ADD_MORE_ON_OUTPUT
-value|32
-end_define
 
 begin_define
 define|#
@@ -1308,13 +1084,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_OUTGOING_STREAMS
-value|33
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_OUTGOING_STREAMS_DESC
 value|"Default number of outgoing streams"
 end_define
@@ -1343,13 +1112,6 @@ end_define
 begin_comment
 comment|/* cmt_on_off: CMT on/off flag */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_ON_OFF
-value|34
-end_define
 
 begin_define
 define|#
@@ -1386,13 +1148,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_CMT_USE_DAC
-value|35
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_CMT_USE_DAC_DESC
 value|"CMT DAC on/off flag"
 end_define
@@ -1421,13 +1176,6 @@ end_define
 begin_comment
 comment|/* JRS 5/2107 - CMT PF type flag */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_CMT_PF
-value|36
-end_define
 
 begin_define
 define|#
@@ -1464,13 +1212,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_CWND_MAXBURST
-value|37
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_CWND_MAXBURST_DESC
 value|"Use a CWND adjusting maxburst"
 end_define
@@ -1499,13 +1240,6 @@ end_define
 begin_comment
 comment|/* early_fast_retran: Early Fast Retransmit with timer */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_EARLY_FAST_RETRAN
-value|38
-end_define
 
 begin_define
 define|#
@@ -1542,13 +1276,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_EARLY_FAST_RETRAN_MSEC
-value|39
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_EARLY_FAST_RETRAN_MSEC_DESC
 value|"Early Fast Retransmit minimum timer value"
 end_define
@@ -1577,13 +1304,6 @@ end_define
 begin_comment
 comment|/* asconf_auth_nochk: Disable SCTP ASCONF AUTH requirement */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ASCONF_AUTH_NOCHK
-value|40
-end_define
 
 begin_define
 define|#
@@ -1620,13 +1340,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_AUTH_DISABLE
-value|41
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_AUTH_DISABLE_DESC
 value|"Disable SCTP AUTH function"
 end_define
@@ -1655,13 +1368,6 @@ end_define
 begin_comment
 comment|/* nat_friendly: SCTP NAT friendly operation */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_NAT_FRIENDLY
-value|42
-end_define
 
 begin_define
 define|#
@@ -1698,13 +1404,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_ABC_L_VAR
-value|43
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_ABC_L_VAR_DESC
 value|"SCTP ABC max increase per SACK (L)"
 end_define
@@ -1733,13 +1432,6 @@ end_define
 begin_comment
 comment|/* max_chained_mbufs: Default max number of small mbufs on a chain */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_MAX_CHAINED_MBUFS
-value|44
-end_define
 
 begin_define
 define|#
@@ -1776,13 +1468,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_DO_SCTP_DRAIN
-value|45
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_DO_SCTP_DRAIN_DESC
 value|"Should SCTP respond to the drain calls"
 end_define
@@ -1811,13 +1496,6 @@ end_define
 begin_comment
 comment|/* hb_max_burst: Confirmation Heartbeat max burst? */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_HB_MAX_BURST
-value|46
-end_define
 
 begin_define
 define|#
@@ -1854,13 +1532,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_ABORT_AT_LIMIT
-value|47
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_ABORT_AT_LIMIT_DESC
 value|"When one-2-one hits qlimit abort"
 end_define
@@ -1889,13 +1560,6 @@ end_define
 begin_comment
 comment|/* strict_data_order: Enforce strict data ordering, abort if control inside data */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_DATA_ORDER
-value|48
-end_define
 
 begin_define
 define|#
@@ -1932,13 +1596,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_MIN_REDIDUAL
-value|49
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_MIN_RESIDUAL_DESC
 value|"Minimum residual data chunk in second part of split"
 end_define
@@ -1967,13 +1624,6 @@ end_define
 begin_comment
 comment|/* max_retran_chunk: max chunk retransmissions */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_MAX_RETRAN_CHUNK
-value|50
-end_define
 
 begin_define
 define|#
@@ -2010,13 +1660,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_LOGGING_LEVEL
-value|51
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_LOGGING_LEVEL_DESC
 value|"Ltrace/KTR trace logging level"
 end_define
@@ -2045,13 +1688,6 @@ end_define
 begin_comment
 comment|/* JRS - default congestion control module sysctl */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_DEFAULT_CC_MODULE
-value|52
-end_define
 
 begin_define
 define|#
@@ -2088,13 +1724,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_DEFAULT_FRAG_INTERLEAVE
-value|53
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_DEFAULT_FRAG_INTERLEAVE_DESC
 value|"Default fragment interleave level"
 end_define
@@ -2127,13 +1756,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTPCTL_MOBILITY_BASE
-value|54
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTPCTL_MOBILITY_BASE_DESC
 value|"Enable SCTP base mobility"
 end_define
@@ -2162,13 +1784,6 @@ end_define
 begin_comment
 comment|/* mobility_fasthandoff: Enable SCTP fast handoff support */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_MOBILITY_FASTHANDOFF
-value|55
-end_define
 
 begin_define
 define|#
@@ -2210,13 +1825,6 @@ end_if
 begin_comment
 comment|/* debug: Configure debug output */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_DEBUG
-value|56
-end_define
 
 begin_define
 define|#
