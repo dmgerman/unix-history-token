@@ -148,7 +148,8 @@ modifier|*
 name|fsname
 decl_stmt|;
 comment|/* mounted file system name */
-name|long
+name|void
+modifier|*
 name|auxdata
 decl_stmt|;
 comment|/* auxiliary data for application */
@@ -217,7 +218,8 @@ name|char
 modifier|*
 name|fsname
 parameter_list|,
-name|long
+name|void
+modifier|*
 name|auxdata
 parameter_list|)
 function_decl|;
@@ -259,7 +261,8 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|void
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -277,7 +280,8 @@ parameter_list|,
 name|int
 name|maxrun
 parameter_list|,
-name|int
+name|void
+modifier|*
 function_decl|(
 modifier|*
 name|docheck
@@ -300,7 +304,8 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|void
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -337,7 +342,8 @@ name|sumstatus
 decl_stmt|,
 name|status
 decl_stmt|;
-name|long
+name|void
+modifier|*
 name|auxdata
 decl_stmt|;
 name|char
@@ -411,7 +417,7 @@ name|fsp
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 continue|continue;
 if|if
@@ -1336,7 +1342,8 @@ name|char
 modifier|*
 name|fsname
 parameter_list|,
-name|long
+name|void
+modifier|*
 name|auxdata
 parameter_list|)
 block|{
@@ -1581,7 +1588,8 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|void
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
