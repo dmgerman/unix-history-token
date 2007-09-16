@@ -1430,16 +1430,6 @@ name|sc
 operator|->
 name|wire4
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"Setting controller bus width to 4\n"
-argument_list|)
-expr_stmt|;
 name|WR4
 argument_list|(
 name|sc
@@ -1456,18 +1446,7 @@ operator||
 name|MCI_SDCR_SDCBUS
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"Setting controller bus width to 1\n"
-argument_list|)
-expr_stmt|;
 name|WR4
 argument_list|(
 name|sc
@@ -1485,7 +1464,6 @@ operator|~
 name|MCI_SDCR_SDCBUS
 argument_list|)
 expr_stmt|;
-block|}
 name|WR4
 argument_list|(
 name|sc
