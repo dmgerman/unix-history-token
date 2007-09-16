@@ -656,21 +656,6 @@ decl_stmt|;
 name|uint32_t
 name|value
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"Turning PLLB %#x %s\n"
-argument_list|,
-name|sc
-operator|->
-name|pllb_init
-argument_list|,
-name|on
-condition|?
-literal|"on"
-else|:
-literal|"off"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|on
@@ -719,11 +704,6 @@ operator|!=
 name|on
 condition|)
 continue|continue;
-name|printf
-argument_list|(
-literal|"Done!\n"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -748,21 +728,6 @@ name|sc
 init|=
 name|pmc_softc
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"Turning SC %#x %s\n"
-argument_list|,
-name|clk
-operator|->
-name|pmc_mask
-argument_list|,
-name|on
-condition|?
-literal|"on"
-else|:
-literal|"off"
-argument_list|)
-expr_stmt|;
 name|WR4
 argument_list|(
 name|sc
@@ -823,18 +788,6 @@ operator|->
 name|pmc_mask
 condition|)
 continue|continue;
-name|printf
-argument_list|(
-literal|"Done SCSR is now: %#x!\n"
-argument_list|,
-name|RD4
-argument_list|(
-name|sc
-argument_list|,
-name|PMC_SCSR
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -859,21 +812,6 @@ name|sc
 init|=
 name|pmc_softc
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"Turning PC %#x %s\n"
-argument_list|,
-name|clk
-operator|->
-name|pmc_mask
-argument_list|,
-name|on
-condition|?
-literal|"on"
-else|:
-literal|"off"
-argument_list|)
-expr_stmt|;
 name|WR4
 argument_list|(
 name|sc
@@ -934,18 +872,6 @@ operator|->
 name|pmc_mask
 condition|)
 continue|continue;
-name|printf
-argument_list|(
-literal|"Done PCSR is now: %#x!\n"
-argument_list|,
-name|RD4
-argument_list|(
-name|sc
-argument_list|,
-name|PMC_PCSR
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1043,15 +969,6 @@ name|clk
 parameter_list|)
 block|{
 comment|/* XXX LOCKING? XXX */
-name|printf
-argument_list|(
-literal|"Enable %s\n"
-argument_list|,
-name|clk
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|clk
