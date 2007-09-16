@@ -4721,7 +4721,7 @@ name|priv
 operator|->
 name|conf
 operator|.
-name|enableVJCompression
+name|enableVJDecompression
 condition|)
 block|{
 name|NG_FREE_ITEM
