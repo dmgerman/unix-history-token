@@ -21765,7 +21765,7 @@ operator|->
 name|sctp_socket
 operator|->
 name|so_qlen
-operator|>
+operator|>=
 name|inp
 operator|->
 name|sctp_socket
