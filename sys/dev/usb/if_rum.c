@@ -12737,8 +12737,6 @@ operator|=
 name|ieee80211_beacon_alloc
 argument_list|(
 name|ic
-argument_list|,
-name|ic
 operator|->
 name|ic_bss
 argument_list|,

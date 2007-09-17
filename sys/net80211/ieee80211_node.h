@@ -116,6 +116,17 @@ begin_comment
 comment|/* mgt frame tx timer (secs) */
 end_comment
 
+begin_comment
+comment|/* threshold for aging overlapping non-ERP bss */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NONERP_PRESENT_AGE
+value|msecs_to_ticks(60*1000)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1453,6 +1464,17 @@ name|ieee80211_dump_nodes
 parameter_list|(
 name|struct
 name|ieee80211_node_table
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_notify_erp
+parameter_list|(
+name|struct
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;

@@ -4323,8 +4323,6 @@ name|m
 operator|=
 name|ieee80211_beacon_alloc
 argument_list|(
-name|ic
-argument_list|,
 name|ni
 argument_list|,
 operator|&

@@ -536,6 +536,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_beacon_offsets
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|ieee80211_ht_update_beacon
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_beacon_offsets
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

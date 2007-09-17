@@ -1412,11 +1412,23 @@ begin_struct
 struct|struct
 name|ieee80211_beacon_offsets
 block|{
+name|uint8_t
+name|bo_flags
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* update/state flags */
 name|uint16_t
 modifier|*
 name|bo_caps
 decl_stmt|;
 comment|/* capabilities */
+name|uint8_t
+modifier|*
+name|bo_cfp
+decl_stmt|;
+comment|/* start of CFParms element */
 name|uint8_t
 modifier|*
 name|bo_tim
@@ -1429,7 +1441,7 @@ decl_stmt|;
 comment|/* start of WME parameters */
 name|uint8_t
 modifier|*
-name|bo_trailer
+name|bo_tim_trailer
 decl_stmt|;
 comment|/* start of fixed-size trailer */
 name|uint16_t
@@ -1437,9 +1449,9 @@ name|bo_tim_len
 decl_stmt|;
 comment|/* atim/dtim length in bytes */
 name|uint16_t
-name|bo_trailer_len
+name|bo_tim_trailer_len
 decl_stmt|;
-comment|/* trailer length in bytes */
+comment|/* tim trailer length in bytes */
 name|uint8_t
 modifier|*
 name|bo_erp
@@ -1450,6 +1462,24 @@ modifier|*
 name|bo_htinfo
 decl_stmt|;
 comment|/* start of HT info element */
+name|uint8_t
+modifier|*
+name|bo_appie
+decl_stmt|;
+comment|/* start of AppIE element */
+name|uint16_t
+name|bo_appie_len
+decl_stmt|;
+comment|/* AppIE length in bytes */
+name|uint16_t
+name|bo_csa_trailer_len
+decl_stmt|;
+empty_stmt|;
+name|uint8_t
+modifier|*
+name|bo_csa
+decl_stmt|;
+comment|/* start of CSA element */
 block|}
 struct|;
 end_struct
@@ -1461,10 +1491,6 @@ modifier|*
 name|ieee80211_beacon_alloc
 parameter_list|(
 name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
 name|ieee80211_node
 modifier|*
 parameter_list|,
@@ -1475,14 +1501,60 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Beacon frame updates are signaled through calls to ic_update_beacon  * with one of the IEEE80211_BEACON_* tokens defined below.  For devices  * that construct beacon frames on the host this can trigger a rebuild  * or defer the processing.  For devices that offload beacon frame  * handling this callback can be used to signal a rebuild.  The bo_flags  * array in the ieee80211_beacon_offsets structure is intended to record  * deferred processing requirements; ieee80211_beacon_update uses the  * state to optimize work.  Since this structure is owned by the driver  * and not visible to the 802.11 layer drivers must supply an ic_update_beacon  * callback that marks the flag bits and schedules (as necessary) an update.  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|IEEE80211_BEACON_CAPS
+init|=
+literal|0
+block|,
+comment|/* capabilities */
+name|IEEE80211_BEACON_TIM
+init|=
+literal|1
+block|,
+comment|/* DTIM/ATIM */
+name|IEEE80211_BEACON_WME
+init|=
+literal|2
+block|,
+name|IEEE80211_BEACON_ERP
+init|=
+literal|3
+block|,
+comment|/* Extended Rate Phy */
+name|IEEE80211_BEACON_HTINFO
+init|=
+literal|4
+block|,
+comment|/* HT Information */
+name|IEEE80211_BEACON_APPIE
+init|=
+literal|5
+block|,
+comment|/* Application IE's */
+name|IEEE80211_BEACON_CFP
+init|=
+literal|6
+block|,
+comment|/* CFParms */
+name|IEEE80211_BEACON_CSA
+init|=
+literal|7
+block|,
+comment|/* Channel Switch Announcement */
+block|}
+enum|;
+end_enum
+
 begin_function_decl
 name|int
 name|ieee80211_beacon_update
 parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
 name|struct
 name|ieee80211_node
 modifier|*
@@ -1496,7 +1568,7 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|int
-name|broadcast
+name|mcast
 parameter_list|)
 function_decl|;
 end_function_decl

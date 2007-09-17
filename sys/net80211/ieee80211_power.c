@@ -590,11 +590,15 @@ name|ic_ps_pending
 operator|--
 expr_stmt|;
 block|}
+comment|/* NB: we know ic is in RUN state so no need to check */
 name|ic
 operator|->
-name|ic_flags
-operator||=
-name|IEEE80211_F_TIMUPDATE
+name|ic_update_beacon
+argument_list|(
+name|ic
+argument_list|,
+name|IEEE80211_BEACON_TIM
+argument_list|)
 expr_stmt|;
 block|}
 name|IEEE80211_BEACON_UNLOCK

@@ -670,6 +670,14 @@ name|uint16_t
 name|ic_sta_assoc
 decl_stmt|;
 comment|/* stations associated */
+name|uint8_t
+name|ic_curhtprotmode
+decl_stmt|;
+comment|/* HTINFO bss state */
+name|int
+name|ic_lastnonerp
+decl_stmt|;
+comment|/* last time non-ERP sta noted*/
 name|struct
 name|ifqueue
 name|ic_mgtq
@@ -914,6 +922,20 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
+parameter_list|)
+function_decl|;
+comment|/* [schedule] beacon frame update */
+name|void
+function_decl|(
+modifier|*
+name|ic_update_beacon
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 comment|/* update device state for 802.11 slot time change */
@@ -1484,17 +1506,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_F_TIMUPDATE
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* STATUS: update beacon tim */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IEEE80211_F_WPA1
 value|0x00800000
 end_define
@@ -1567,17 +1578,6 @@ end_define
 
 begin_comment
 comment|/* CONF: dis. internal bridge */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_F_WMEUPDATE
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* STATUS: update beacon wme */
 end_comment
 
 begin_define
@@ -1666,12 +1666,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_ERPUPDATE
+name|IEEE80211_FEXT_NONERP_PR
 value|0x00000200
 end_define
 
 begin_comment
-comment|/* STATUS: update ERP element */
+comment|/* STATUS: non-ERP sta present*/
 end_comment
 
 begin_define
@@ -2568,6 +2568,45 @@ expr_stmt|;
 return|return
 name|size
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Notify a driver that beacon state has been updated.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ieee80211_beacon_notify
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+name|int
+name|what
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_state
+operator|==
+name|IEEE80211_S_RUN
+condition|)
+name|ic
+operator|->
+name|ic_update_beacon
+argument_list|(
+name|ic
+argument_list|,
+name|what
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

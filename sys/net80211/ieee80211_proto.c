@@ -314,6 +314,22 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
+name|void
+name|null_update_beacon
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+name|int
+name|item
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
 name|void
 name|ieee80211_proto_attach
 parameter_list|(
@@ -437,6 +453,12 @@ operator|->
 name|ic_newstate
 operator|=
 name|ieee80211_newstate
+expr_stmt|;
+name|ic
+operator|->
+name|ic_update_beacon
+operator|=
+name|null_update_beacon
 expr_stmt|;
 comment|/* initialize management frame handlers */
 name|ic
@@ -4793,11 +4815,12 @@ operator|)
 operator|&
 name|WME_QOSINFO_COUNT
 expr_stmt|;
+name|ieee80211_beacon_notify
+argument_list|(
 name|ic
-operator|->
-name|ic_flags
-operator||=
-name|IEEE80211_F_WMEUPDATE
+argument_list|,
+name|IEEE80211_BEACON_WME
+argument_list|)
 expr_stmt|;
 block|}
 name|wme
