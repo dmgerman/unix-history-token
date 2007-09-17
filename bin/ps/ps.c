@@ -4840,7 +4840,7 @@ name|UREADOK
 parameter_list|(
 name|ki
 parameter_list|)
-value|(forceuread || (ki->ki_p->ki_sflag& PS_INMEM))
+value|(forceuread || (ki->ki_p->ki_flag& P_INMEM))
 end_define
 
 begin_function
@@ -4859,9 +4859,9 @@ name|ki
 operator|->
 name|ki_p
 operator|->
-name|ki_sflag
+name|ki_flag
 operator|&
-name|PS_INMEM
+name|P_INMEM
 condition|)
 block|{
 comment|/* 		 * The u-area might be swapped out, and we can't get 		 * at it because we have a crashdump and no swap. 		 * If it's here fill in these fields, otherwise, just 		 * leave them 0. 		 */

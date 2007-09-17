@@ -2498,14 +2498,12 @@ name|ts
 operator|->
 name|ts_thread
 operator|->
-name|td_proc
-operator|->
-name|p_sflag
+name|td_flags
 operator|&
-name|PS_INMEM
+name|TDF_INMEM
 argument_list|,
 operator|(
-literal|"runq_remove_idx: process swapped out"
+literal|"runq_remove_idx: thread swapped out"
 operator|)
 argument_list|)
 expr_stmt|;

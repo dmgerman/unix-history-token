@@ -1803,7 +1803,7 @@ name|td
 operator|->
 name|td_flags
 operator|=
-literal|0
+name|TDF_INMEM
 expr_stmt|;
 name|LIST_INIT
 argument_list|(

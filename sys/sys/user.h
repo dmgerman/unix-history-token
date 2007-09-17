@@ -819,6 +819,21 @@ value|ki_rusage_ch.ru_utime
 end_define
 
 begin_comment
+comment|/*  *  Legacy PS_ flag.  This moved to p_flag but is maintained for  *  compatibility.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_INMEM
+value|0x00001
+end_define
+
+begin_comment
+comment|/* Loaded into memory. */
+end_comment
+
+begin_comment
 comment|/* ki_sessflag values */
 end_comment
 

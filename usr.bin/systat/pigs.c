@@ -776,9 +776,9 @@ index|[
 name|i
 index|]
 operator|.
-name|ki_sflag
+name|ki_flag
 operator|&
-name|PS_INMEM
+name|P_INMEM
 operator|)
 operator|==
 literal|0

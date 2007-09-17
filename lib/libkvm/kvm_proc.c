@@ -906,7 +906,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if ((proc.p_sflag& PS_INMEM)&& proc.p_stats != NULL) { 			if (KREAD(kd, (u_long)proc.p_stats,&pstats)) { 				_kvm_err(kd, kd->program, 				    "can't read stats at %x", proc.p_stats); 				return (-1); 			} 			kp->ki_start = pstats.p_start;
+block|if ((proc.p_flag& P_INMEM)&& proc.p_stats != NULL) { 			if (KREAD(kd, (u_long)proc.p_stats,&pstats)) { 				_kvm_err(kd, kd->program, 				    "can't read stats at %x", proc.p_stats); 				return (-1); 			} 			kp->ki_start = pstats.p_start;
 comment|/* 			 * XXX: The times here are probably zero and need 			 * to be calculated from the raw data in p_rux and 			 * p_crux. 			 */
 block|kp->ki_rusage = pstats.p_ru; 			kp->ki_childstime = pstats.p_cru.ru_stime; 			kp->ki_childutime = pstats.p_cru.ru_utime;
 comment|/* Some callers want child-times in a single value */
@@ -1869,9 +1869,7 @@ name|kp
 operator|->
 name|ki_sflag
 operator|=
-name|proc
-operator|.
-name|p_sflag
+literal|0
 expr_stmt|;
 name|kp
 operator|->

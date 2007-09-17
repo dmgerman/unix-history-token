@@ -1057,9 +1057,9 @@ name|td
 operator|->
 name|td_proc
 operator|->
-name|p_sflag
+name|p_flag
 operator|&
-name|PS_INMEM
+name|P_INMEM
 operator|)
 operator|==
 literal|0
@@ -1133,9 +1133,9 @@ name|td
 operator|->
 name|td_proc
 operator|->
-name|p_sflag
+name|p_flag
 operator|&
-name|PS_INMEM
+name|P_INMEM
 operator|)
 operator|==
 literal|0

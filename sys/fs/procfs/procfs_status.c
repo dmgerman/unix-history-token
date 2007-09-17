@@ -411,11 +411,6 @@ literal|"noflags"
 argument_list|)
 expr_stmt|;
 block|}
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KSE
@@ -485,9 +480,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_sflag
+name|p_flag
 operator|&
-name|PS_INMEM
+name|P_INMEM
 condition|)
 block|{
 name|struct
@@ -498,6 +493,11 @@ name|ut
 decl_stmt|,
 name|st
 decl_stmt|;
+name|PROC_SLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|calcru
 argument_list|(
 name|p
@@ -573,12 +573,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -586,7 +580,6 @@ argument_list|,
 literal|" -1,-1 -1,-1 -1,-1"
 argument_list|)
 expr_stmt|;
-block|}
 name|sbuf_printf
 argument_list|(
 name|sb

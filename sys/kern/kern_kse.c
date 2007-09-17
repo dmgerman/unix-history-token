@@ -4328,6 +4328,12 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
+name|spare
+operator|->
+name|td_flags
+operator|=
+name|TDF_INMEM
+expr_stmt|;
 block|}
 end_function
 
@@ -4502,12 +4508,6 @@ operator|->
 name|td_upcall
 operator|=
 name|ku
-expr_stmt|;
-name|td2
-operator|->
-name|td_flags
-operator|=
-literal|0
 expr_stmt|;
 name|td2
 operator|->

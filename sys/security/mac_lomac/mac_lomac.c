@@ -2401,14 +2401,8 @@ operator|->
 name|td_flags
 operator||=
 name|TDF_ASTPENDING
-expr_stmt|;
-name|curthread
-operator|->
-name|td_proc
-operator|->
-name|p_sflag
-operator||=
-name|PS_MACPEND
+operator||
+name|TDF_MACPEND
 expr_stmt|;
 name|thread_unlock
 argument_list|(

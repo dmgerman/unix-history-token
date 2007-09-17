@@ -881,6 +881,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_INMEM
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Thread's stack is in memory. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_SINTR
 value|0x00000008
 end_define
@@ -1090,12 +1101,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED22
+name|TDF_SWAPINREQ
 value|0x00400000
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* Swapin request due to wakeup. */
 end_comment
 
 begin_define
@@ -1151,6 +1162,39 @@ end_define
 
 begin_comment
 comment|/* Reserved for scheduler private use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_ALRMPEND
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Pending SIGVTALRM needs to be posted. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_PROFPEND
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Pending SIGPROF needs to be posted. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_MACPEND
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* AST-based MAC event pending. */
 end_comment
 
 begin_comment
@@ -2005,10 +2049,6 @@ name|int
 name|p_flag
 decl_stmt|;
 comment|/* (c) P_* flags. */
-name|int
-name|p_sflag
-decl_stmt|;
-comment|/* (j) PS_* flags. */
 enum|enum
 block|{
 name|PRS_NEW
@@ -2745,6 +2785,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|P_INMEM
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Loaded into memory. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_SWAPPINGOUT
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Process is being swapped out. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_SWAPPINGIN
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Process is being swapped in. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|P_STOPPED
 value|(P_STOPPED_SIG|P_STOPPED_SINGLE|P_STOPPED_TRACE)
 end_define
@@ -2758,87 +2831,6 @@ name|p
 parameter_list|)
 value|((p)->p_flag& P_STOPPED)
 end_define
-
-begin_comment
-comment|/* These flags are kept in p_sflag and are protected with proc slock. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_INMEM
-value|0x00001
-end_define
-
-begin_comment
-comment|/* Loaded into memory. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_ALRMPEND
-value|0x00020
-end_define
-
-begin_comment
-comment|/* Pending SIGVTALRM needs to be posted. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_PROFPEND
-value|0x00040
-end_define
-
-begin_comment
-comment|/* Pending SIGPROF needs to be posted. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_SWAPINREQ
-value|0x00100
-end_define
-
-begin_comment
-comment|/* Swapin request due to wakeup. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_SWAPPINGOUT
-value|0x00200
-end_define
-
-begin_comment
-comment|/* Process is being swapped out. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_SWAPPINGIN
-value|0x04000
-end_define
-
-begin_comment
-comment|/* Process is being swapped in. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_MACPEND
-value|0x08000
-end_define
-
-begin_comment
-comment|/* AST-based MAC event pending. */
-end_comment
 
 begin_comment
 comment|/*  * These were process status values (p_stat), now they are only used in  * legacy conversion code.  */
@@ -3367,7 +3359,7 @@ name|_PHOLD
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	KASSERT(!((p)->p_flag& P_WEXIT) || (p) == curproc,		\ 	    ("PHOLD of exiting process"));				\ 	(p)->p_lock++;							\ 	if (((p)->p_sflag& PS_INMEM) == 0)				\ 		faultin((p));						\ } while (0)
+value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	KASSERT(!((p)->p_flag& P_WEXIT) || (p) == curproc,		\ 	    ("PHOLD of exiting process"));				\ 	(p)->p_lock++;							\ 	if (((p)->p_flag& P_INMEM) == 0)				\ 		faultin((p));						\ } while (0)
 end_define
 
 begin_define

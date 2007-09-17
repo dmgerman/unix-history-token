@@ -9314,14 +9314,12 @@ name|KASSERT
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_sflag
+name|td_flags
 operator|&
-name|PS_INMEM
+name|TDF_INMEM
 argument_list|,
 operator|(
-literal|"sched_add: process swapped out"
+literal|"sched_add: thread swapped out"
 operator|)
 argument_list|)
 expr_stmt|;

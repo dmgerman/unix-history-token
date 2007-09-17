@@ -4009,14 +4009,12 @@ name|KASSERT
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_sflag
+name|td_flags
 operator|&
-name|PS_INMEM
+name|TDF_INMEM
 argument_list|,
 operator|(
-literal|"sched_add: process swapped out"
+literal|"sched_add: thread swapped out"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4410,14 +4408,12 @@ name|KASSERT
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_sflag
+name|td_flags
 operator|&
-name|PS_INMEM
+name|TDF_INMEM
 argument_list|,
 operator|(
-literal|"sched_add: process swapped out"
+literal|"sched_add: thread swapped out"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4588,14 +4584,12 @@ name|KASSERT
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_sflag
+name|td_flags
 operator|&
-name|PS_INMEM
+name|TDF_INMEM
 argument_list|,
 operator|(
-literal|"sched_rem: process swapped out"
+literal|"sched_rem: thread swapped out"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4854,14 +4848,12 @@ name|ts
 operator|->
 name|ts_thread
 operator|->
-name|td_proc
-operator|->
-name|p_sflag
+name|td_flags
 operator|&
-name|PS_INMEM
+name|TDF_INMEM
 argument_list|,
 operator|(
-literal|"sched_choose: process swapped out"
+literal|"sched_choose: thread swapped out"
 operator|)
 argument_list|)
 expr_stmt|;

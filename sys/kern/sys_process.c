@@ -217,7 +217,7 @@ name|PROC_ACTION
 parameter_list|(
 name|action
 parameter_list|)
-value|do {					\ 	int error;							\ 									\ 	PROC_LOCK_ASSERT(td->td_proc, MA_OWNED);			\ 	if ((td->td_proc->p_sflag& PS_INMEM) == 0)			\ 		error = EIO;						\ 	else								\ 		error = (action);					\ 	return (error);							\ } while(0)
+value|do {					\ 	int error;							\ 									\ 	PROC_LOCK_ASSERT(td->td_proc, MA_OWNED);			\ 	if ((td->td_proc->p_flag& P_INMEM) == 0)			\ 		error = EIO;						\ 	else								\ 		error = (action);					\ 	return (error);							\ } while(0)
 end_define
 
 begin_function

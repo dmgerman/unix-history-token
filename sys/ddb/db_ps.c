@@ -538,9 +538,9 @@ condition|(
 operator|!
 name|p
 operator|->
-name|p_sflag
+name|p_flag
 operator|&
-name|PS_INMEM
+name|P_INMEM
 condition|)
 name|strlcat
 argument_list|(
