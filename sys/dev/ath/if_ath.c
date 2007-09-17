@@ -24151,7 +24151,16 @@ block|,
 comment|/* IEEE80211_S_ASSOC */
 name|HAL_LED_RUN
 block|,
+comment|/* IEEE80211_S_CAC */
+name|HAL_LED_RUN
+block|,
 comment|/* IEEE80211_S_RUN */
+name|HAL_LED_RUN
+block|,
+comment|/* IEEE80211_S_CSA */
+name|HAL_LED_RUN
+block|,
+comment|/* IEEE80211_S_SLEEP */
 block|}
 decl_stmt|;
 name|DPRINTF
