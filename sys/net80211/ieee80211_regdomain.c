@@ -723,15 +723,11 @@ comment|/* suppress dup's */
 continue|continue;
 if|if
 condition|(
-operator|(
 name|c
 operator|->
 name|ic_flags
 operator|&
 name|skip
-operator|)
-operator|==
-literal|0
 condition|)
 comment|/* skip band, etc. */
 continue|continue;
