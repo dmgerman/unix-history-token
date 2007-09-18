@@ -1140,6 +1140,28 @@ parameter_list|)
 value|((chan)%IEEE80211_FH_CHANMOD)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_TID_SIZE
+value|(WME_NUM_TID+1)
+end_define
+
+begin_comment
+comment|/* WME TID's +1 for non-QoS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NONQOS_TID
+value|WME_NUM_TID
+end_define
+
+begin_comment
+comment|/* index for non-QoS sta */
+end_comment
+
 begin_comment
 comment|/*  * 802.11 rate set.  */
 end_comment

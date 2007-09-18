@@ -367,25 +367,20 @@ modifier|*
 name|ni_ath_ie
 decl_stmt|;
 comment|/* captured Atheros ie */
-define|#
-directive|define
-name|IEEE80211_NONQOS_TID
-value|16
-comment|/* index for non-QoS sta */
+comment|/* tx seq per-tid */
 name|uint16_t
 name|ni_txseqs
 index|[
-literal|17
-index|]
-decl_stmt|;
-comment|/* tx seq per-tid */
-name|uint16_t
-name|ni_rxseqs
-index|[
-literal|17
+name|IEEE80211_TID_SIZE
 index|]
 decl_stmt|;
 comment|/* rx seq previous per-tid*/
+name|uint16_t
+name|ni_rxseqs
+index|[
+name|IEEE80211_TID_SIZE
+index|]
+decl_stmt|;
 name|uint32_t
 name|ni_rxfragstamp
 decl_stmt|;

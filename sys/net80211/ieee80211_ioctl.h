@@ -1042,20 +1042,21 @@ name|uint16_t
 name|isi_vlan
 decl_stmt|;
 comment|/* vlan tag */
+comment|/* NB: [IEEE80211_NONQOS_TID] holds seq#'s for non-QoS stations */
 name|uint16_t
 name|isi_txseqs
 index|[
-literal|17
+name|IEEE80211_TID_SIZE
 index|]
 decl_stmt|;
-comment|/* seq to be transmitted */
+comment|/* tx seq #/TID */
 name|uint16_t
 name|isi_rxseqs
 index|[
-literal|17
+name|IEEE80211_TID_SIZE
 index|]
 decl_stmt|;
-comment|/* seq previous for qos frames*/
+comment|/* rx seq#/TID */
 name|uint16_t
 name|isi_inact
 decl_stmt|;
