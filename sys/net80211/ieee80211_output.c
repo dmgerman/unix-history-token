@@ -3612,6 +3612,14 @@ operator|->
 name|i_addr1
 argument_list|)
 operator|&&
+operator|(
+name|ic
+operator|->
+name|ic_caps
+operator|&
+name|IEEE80211_C_TXFRAG
+operator|)
+operator|&&
 operator|!
 name|isff
 operator|)
