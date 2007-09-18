@@ -631,6 +631,8 @@ name|rs_rates
 index|[
 name|i
 index|]
+operator||
+name|IEEE80211_RATE_MCS
 argument_list|,
 name|mode
 argument_list|)

@@ -1233,6 +1233,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_RATE_MCS
+value|0x80
+end_define
+
 begin_comment
 comment|/*  * Roaming state visible to user space.  There are two  * thresholds that control whether roaming is considered;  * when either is exceeded the 802.11 layer will check  * the scan cache for another AP.  If the cache is stale  * then a scan may be triggered.  */
 end_comment
