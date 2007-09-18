@@ -149,7 +149,7 @@ literal|"auth"
 block|,
 literal|"deauth"
 block|,
-literal|"reserved#13"
+literal|"action"
 block|,
 literal|"reserved#14"
 block|,
