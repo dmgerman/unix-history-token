@@ -1078,28 +1078,6 @@ begin_comment
 comment|/* Operate in monitor mode */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IFM_IEEE80211_HT40PLUS
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* Operate in 11n HT40+ mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFM_IEEE80211_HT40MINUS
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* Operate in 11n HT40- mode */
-end_comment
-
 begin_comment
 comment|/* operating mode for multi-mode devices */
 end_comment
@@ -1755,7 +1733,7 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_IEEE80211_OPTION_DESCRIPTIONS
-value|{			\ 	{ IFM_IEEE80211_ADHOC, "adhoc" },				\ 	{ IFM_IEEE80211_HOSTAP, "hostap" },				\ 	{ IFM_IEEE80211_IBSS, "ibss" },					\ 	{ IFM_IEEE80211_IBSSMASTER, "ibss-master" },			\ 	{ IFM_IEEE80211_TURBO, "turbo" },				\ 	{ IFM_IEEE80211_MONITOR, "monitor" },				\ 	{ IFM_IEEE80211_HT40MINUS, "ht-" },				\ 	{ IFM_IEEE80211_HT40PLUS, "ht+" },				\ 	{ 0, NULL },							\ }
+value|{			\ 	{ IFM_IEEE80211_ADHOC, "adhoc" },				\ 	{ IFM_IEEE80211_HOSTAP, "hostap" },				\ 	{ IFM_IEEE80211_IBSS, "ibss" },					\ 	{ IFM_IEEE80211_IBSSMASTER, "ibss-master" },			\ 	{ IFM_IEEE80211_TURBO, "turbo" },				\ 	{ IFM_IEEE80211_MONITOR, "monitor" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
