@@ -4461,7 +4461,7 @@ name|stcb
 argument_list|,
 name|SCTP_OUTPUT_FROM_T3
 argument_list|,
-name|SCTP_SO_NOT_LOCKED
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -5712,7 +5712,7 @@ name|size
 init|=
 literal|0
 decl_stmt|;
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_RLOCK
 argument_list|()
 expr_stmt|;
 comment|/* fill up addresses for the endpoint's default vrf */
@@ -5733,7 +5733,7 @@ operator|->
 name|def_vrf_id
 argument_list|)
 expr_stmt|;
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -6002,7 +6002,7 @@ name|cnt
 init|=
 literal|0
 decl_stmt|;
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_RLOCK
 argument_list|()
 expr_stmt|;
 comment|/* count addresses for the endpoint's default VRF */
@@ -6017,7 +6017,7 @@ operator|->
 name|def_vrf_id
 argument_list|)
 expr_stmt|;
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return

@@ -942,7 +942,7 @@ name|hold_addr_lock
 operator|==
 literal|0
 condition|)
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_WLOCK
 argument_list|()
 expr_stmt|;
 name|LIST_REMOVE
@@ -976,7 +976,7 @@ name|hold_addr_lock
 operator|==
 literal|0
 condition|)
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_WUNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* Take away the reference, and possibly free it */
@@ -1021,7 +1021,7 @@ name|sctp_ifap
 init|=
 name|NULL
 decl_stmt|;
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_RLOCK
 argument_list|()
 expr_stmt|;
 name|vrf
@@ -1240,7 +1240,7 @@ name|SCTP_ADDR_IFA_UNUSEABLE
 expr_stmt|;
 name|out
 label|:
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -1279,7 +1279,7 @@ name|sctp_ifap
 init|=
 name|NULL
 decl_stmt|;
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_RLOCK
 argument_list|()
 expr_stmt|;
 name|vrf
@@ -1498,7 +1498,7 @@ name|SCTP_ADDR_VALID
 expr_stmt|;
 name|out
 label|:
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -1582,7 +1582,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* How granular do we need the locks to be here? */
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_WLOCK
 argument_list|()
 expr_stmt|;
 name|sctp_ifnp
@@ -1636,7 +1636,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -1655,7 +1655,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * build one and add it, can't hold lock until after malloc 		 * done though. 		 */
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_WUNLOCK
 argument_list|()
 expr_stmt|;
 name|SCTP_MALLOC
@@ -1832,7 +1832,7 @@ operator|->
 name|ifalist
 argument_list|)
 expr_stmt|;
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_WLOCK
 argument_list|()
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -1959,7 +1959,7 @@ argument_list|)
 expr_stmt|;
 name|exit_stage_left
 label|:
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -2073,7 +2073,7 @@ name|exit_stage_left
 goto|;
 block|}
 block|}
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_WUNLOCK
 argument_list|()
 expr_stmt|;
 name|SCTP_MALLOC
@@ -2417,7 +2417,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_WLOCK
 argument_list|()
 expr_stmt|;
 name|hash_addr_head
@@ -2502,7 +2502,7 @@ operator|=
 name|new_ifn_af
 expr_stmt|;
 block|}
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_WUNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -2706,7 +2706,7 @@ name|sctp_ifap
 init|=
 name|NULL
 decl_stmt|;
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_WLOCK
 argument_list|()
 expr_stmt|;
 name|vrf
@@ -2933,6 +2933,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|SCTP_IPI_ADDR_WUNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -3180,7 +3183,7 @@ endif|#
 directive|endif
 name|out_now
 label|:
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_WUNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -3217,10 +3220,10 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_PCB1
 argument_list|,
-literal|"Lost and address change ???\n"
+literal|"Lost an address change?\n"
 argument_list|)
 expr_stmt|;
-comment|/* Opps, must decrement the count */
+comment|/* Oops, must decrement the count */
 name|sctp_free_ifa
 argument_list|(
 name|sctp_ifap

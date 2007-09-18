@@ -10376,7 +10376,7 @@ name|inp
 operator|->
 name|def_vrf_id
 expr_stmt|;
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_RLOCK
 argument_list|()
 expr_stmt|;
 name|vrf
@@ -10393,7 +10393,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -10902,7 +10902,7 @@ block|}
 block|}
 block|}
 block|}
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -14140,7 +14140,7 @@ operator|)
 name|to
 argument_list|)
 expr_stmt|;
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_RLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -14176,7 +14176,7 @@ argument_list|,
 name|fam
 argument_list|)
 expr_stmt|;
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -14237,7 +14237,7 @@ name|fam
 argument_list|)
 expr_stmt|;
 block|}
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return

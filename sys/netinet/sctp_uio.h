@@ -3432,7 +3432,7 @@ begin_struct
 struct|struct
 name|sctp_log_entry
 block|{
-name|u_int64_t
+name|uint64_t
 name|timestamp
 decl_stmt|;
 name|uint32_t

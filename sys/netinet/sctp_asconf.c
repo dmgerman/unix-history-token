@@ -7187,6 +7187,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
+comment|/* sa_ignore MEMLEAK {memory is put on the tailq} */
 return|return
 operator|(
 literal|0
@@ -10182,11 +10183,6 @@ modifier|*
 name|ifa
 decl_stmt|;
 comment|/* find the ifa for the desired set primary */
-if|if
-condition|(
-name|stcb
-condition|)
-block|{
 name|vrf_id
 operator|=
 name|stcb
@@ -10195,14 +10191,6 @@ name|asoc
 operator|.
 name|vrf_id
 expr_stmt|;
-block|}
-else|else
-block|{
-name|vrf_id
-operator|=
-name|SCTP_DEFAULT_VRFID
-expr_stmt|;
-block|}
 name|ifa
 operator|=
 name|sctp_find_ifa_by_addr
@@ -10519,7 +10507,7 @@ name|addr_locked
 operator|==
 name|SCTP_ADDR_NOT_LOCKED
 condition|)
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_RLOCK
 argument_list|()
 expr_stmt|;
 name|vrf
@@ -10546,7 +10534,7 @@ name|addr_locked
 operator|==
 name|SCTP_ADDR_NOT_LOCKED
 condition|)
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -10680,7 +10668,7 @@ name|addr_locked
 operator|==
 name|SCTP_ADDR_NOT_LOCKED
 condition|)
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -10803,7 +10791,7 @@ name|addr_locked
 operator|==
 name|SCTP_ADDR_NOT_LOCKED
 condition|)
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -10826,7 +10814,7 @@ name|addr_locked
 operator|==
 name|SCTP_ADDR_NOT_LOCKED
 condition|)
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -13245,7 +13233,7 @@ else|else
 block|{
 return|return;
 block|}
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_RLOCK
 argument_list|()
 expr_stmt|;
 name|vrf
@@ -13262,7 +13250,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return;
@@ -13364,7 +13352,7 @@ block|}
 comment|/* end foreach ifa */
 block|}
 comment|/* end foreach ifn */
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 block|}

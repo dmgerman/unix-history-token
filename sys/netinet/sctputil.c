@@ -1918,7 +1918,7 @@ name|lock
 operator|.
 name|info_lock
 operator|=
-name|mtx_owned
+name|rw_wowned
 argument_list|(
 operator|&
 name|sctppcbinfo
@@ -24048,7 +24048,7 @@ name|holds_lock
 operator|==
 literal|0
 condition|)
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_RLOCK
 argument_list|()
 expr_stmt|;
 name|vrf
@@ -24071,7 +24071,7 @@ name|holds_lock
 operator|==
 literal|0
 condition|)
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -24114,20 +24114,17 @@ name|SCTP_PRINTF
 argument_list|(
 literal|"hash_of_addr:%x mask:%x table:%x - "
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|hash_of_addr
 argument_list|,
 operator|(
-name|u_int
+name|uint32_t
 operator|)
 name|vrf
 operator|->
 name|vrf_addr_hashmark
 argument_list|,
 call|(
-name|u_int
+name|uint32_t
 call|)
 argument_list|(
 name|hash_of_addr
@@ -24154,7 +24151,7 @@ name|holds_lock
 operator|==
 literal|0
 condition|)
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -24242,7 +24239,7 @@ name|holds_lock
 operator|==
 literal|0
 condition|)
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -24297,7 +24294,7 @@ name|holds_lock
 operator|==
 literal|0
 condition|)
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -24315,7 +24312,7 @@ name|holds_lock
 operator|==
 literal|0
 condition|)
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -31705,7 +31702,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_RLOCK
 argument_list|()
 expr_stmt|;
 name|vrf
@@ -31727,7 +31724,7 @@ name|NULL
 condition|)
 block|{
 comment|/* no vrf, no addresses */
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -32028,7 +32025,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return

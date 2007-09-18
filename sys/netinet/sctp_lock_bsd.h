@@ -91,10 +91,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_INP_INFO_LOCK_DESTROY
+parameter_list|()
+value|do { \         if(rw_wowned(sctppcbinfo.ipi_ep_mtx)) { \              rw_wunlock(&sctppcbinfo.ipi_ep_mtx); \         } \         rw_destroy(sctppcbinfo.ipi_ep_mtx); \       }  while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_INP_INFO_LOCK_INIT
 parameter_list|()
 define|\
-value|mtx_init(&sctppcbinfo.ipi_ep_mtx, "sctp-info", "inp_info", MTX_DEF)
+value|rw_init(&sctppcbinfo.ipi_ep_mtx, "sctp-info");
 end_define
 
 begin_define
@@ -102,7 +110,7 @@ define|#
 directive|define
 name|SCTP_INP_INFO_RLOCK
 parameter_list|()
-value|do { 					\              mtx_lock(&sctppcbinfo.ipi_ep_mtx);                         \ } while (0)
+value|do { 					\              rw_rlock(&sctppcbinfo.ipi_ep_mtx);                         \ } while (0)
 end_define
 
 begin_define
@@ -110,7 +118,23 @@ define|#
 directive|define
 name|SCTP_INP_INFO_WLOCK
 parameter_list|()
-value|do { 					\              mtx_lock(&sctppcbinfo.ipi_ep_mtx);                         \ } while (0)
+value|do { 					\             rw_wlock(&sctppcbinfo.ipi_ep_mtx);                         \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_INP_INFO_RUNLOCK
+parameter_list|()
+value|rw_runlock(&sctppcbinfo.ipi_ep_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_INP_INFO_WUNLOCK
+parameter_list|()
+value|rw_wunlock(&sctppcbinfo.ipi_ep_mtx)
 end_define
 
 begin_define
@@ -119,7 +143,7 @@ directive|define
 name|SCTP_IPI_ADDR_INIT
 parameter_list|()
 define|\
-value|mtx_init(&sctppcbinfo.ipi_addr_mtx, "sctp-addr", "sctp_addr", MTX_DEF)
+value|rw_init(&sctppcbinfo.ipi_addr_mtx, "sctp-addr")
 end_define
 
 begin_define
@@ -127,24 +151,39 @@ define|#
 directive|define
 name|SCTP_IPI_ADDR_DESTROY
 parameter_list|()
-define|\
-value|mtx_destroy(&sctppcbinfo.ipi_addr_mtx)
+value|do  { \         if(rw_wowned(sctppcbinfo.ipi_addr_mtx)) { \              rw_wunlock(&sctppcbinfo.ipi_addr_mtx); \         } \ 	rw_destroy(&sctppcbinfo.ipi_addr_mtx) \       }  while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_IPI_ADDR_LOCK
+name|SCTP_IPI_ADDR_RLOCK
 parameter_list|()
-value|do { 					\              mtx_lock(&sctppcbinfo.ipi_addr_mtx);                         \ } while (0)
+value|do { 					\              rw_rlock(&sctppcbinfo.ipi_addr_mtx);                         \ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_IPI_ADDR_UNLOCK
+name|SCTP_IPI_ADDR_WLOCK
 parameter_list|()
-value|mtx_unlock(&sctppcbinfo.ipi_addr_mtx)
+value|do { 					\              rw_wlock(&sctppcbinfo.ipi_addr_mtx);                         \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_IPI_ADDR_RUNLOCK
+parameter_list|()
+value|rw_runlock(&sctppcbinfo.ipi_addr_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_IPI_ADDR_WUNLOCK
+parameter_list|()
+value|rw_wunlock(&sctppcbinfo.ipi_addr_mtx)
 end_define
 
 begin_define
@@ -213,22 +252,6 @@ name|SCTP_IP_PKTLOG_DESTROY
 parameter_list|()
 define|\
 value|mtx_destroy(&sctppcbinfo.ipi_pktlog_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_INP_INFO_RUNLOCK
-parameter_list|()
-value|mtx_unlock(&sctppcbinfo.ipi_ep_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_INP_INFO_WUNLOCK
-parameter_list|()
-value|mtx_unlock(&sctppcbinfo.ipi_ep_mtx)
 end_define
 
 begin_comment
