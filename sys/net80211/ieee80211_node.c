@@ -3259,6 +3259,14 @@ operator|&
 name|IEEE80211_NODE_PWR_MGT
 condition|)
 block|{
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_opmode
+operator|!=
+name|IEEE80211_M_STA
+condition|)
 name|ic
 operator|->
 name|ic_ps_sta
