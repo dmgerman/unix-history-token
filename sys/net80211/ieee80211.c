@@ -994,6 +994,12 @@ name|ic_bsschan
 operator|=
 name|IEEE80211_CHAN_ANYC
 expr_stmt|;
+name|ic
+operator|->
+name|ic_prevchan
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* arbitrarily pick the first channel */
 name|ic
 operator|->
