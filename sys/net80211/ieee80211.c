@@ -3010,11 +3010,14 @@ name|ieee80211_rateset
 modifier|*
 name|rs
 decl_stmt|;
+comment|/* NB: skip AUTO since it has no rates */
 for|for
 control|(
 name|mode
 operator|=
 name|IEEE80211_MODE_AUTO
+operator|+
+literal|1
 init|;
 name|mode
 operator|<
