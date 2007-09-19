@@ -68,7 +68,7 @@ name|todir
 parameter_list|)
 comment|/* push out string */
 define|\
-value|if (where_count> (int)sizeof(STARTSTRING)-1) { \ 	strcat(where_args, "|/usr/bin/tar --unlink -xpf - -C "); \ 	strcat(where_args, todir); \ 	if (system(where_args)) { \ 	    cleanup(0); \ 	    errx(2, "%s: can not invoke %ld byte tar pipeline: %s", \ 		 __func__, (long)strlen(where_args), where_args); \ 	} \ 	strcpy(where_args, STARTSTRING); \ 	where_count = sizeof(STARTSTRING)-1; \     } \     if (perm_count) { \ 	apply_perms(todir, perm_args); \ 	perm_args[0] = 0;\ 	perm_count = 0; \     }
+value|if (where_count> (int)sizeof(STARTSTRING)-1) { \ 	strcat(where_args, "|/usr/bin/tar --unlink -xpPf - -C "); \ 	strcat(where_args, todir); \ 	if (system(where_args)) { \ 	    cleanup(0); \ 	    errx(2, "%s: can not invoke %ld byte tar pipeline: %s", \ 		 __func__, (long)strlen(where_args), where_args); \ 	} \ 	strcpy(where_args, STARTSTRING); \ 	where_count = sizeof(STARTSTRING)-1; \     } \     if (perm_count) { \ 	apply_perms(todir, perm_args); \ 	perm_args[0] = 0;\ 	perm_count = 0; \     }
 end_define
 
 begin_function
