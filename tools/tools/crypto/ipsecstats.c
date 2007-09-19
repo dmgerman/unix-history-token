@@ -324,7 +324,7 @@ name|fmt
 parameter_list|)
 value|if (x) printf(fmt "\n", x)
 name|struct
-name|newipsecstat
+name|ipsecstat
 name|ips
 decl_stmt|;
 name|struct
