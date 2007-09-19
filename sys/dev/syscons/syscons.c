@@ -6286,9 +6286,6 @@ condition|)
 return|return
 literal|0
 return|;
-while|while
-condition|(
-operator|(
 name|error
 operator|=
 name|tsleep
@@ -6306,11 +6303,7 @@ literal|"waitvt"
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-operator|==
-name|ERESTART
-condition|)
-empty_stmt|;
+expr_stmt|;
 return|return
 name|error
 return|;
