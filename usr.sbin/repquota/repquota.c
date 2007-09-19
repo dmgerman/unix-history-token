@@ -1214,7 +1214,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"User%*s    used     soft     hard  grace     used    soft    hard  grace\n"
+literal|"%s%*s   used     soft     hard  grace     used    soft    hard  grace\n"
+argument_list|,
+name|type
+operator|==
+name|USRQUOTA
+condition|?
+literal|"User "
+else|:
+literal|"Group"
 argument_list|,
 name|max
 argument_list|(
