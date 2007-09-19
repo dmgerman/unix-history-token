@@ -2302,21 +2302,35 @@ begin_define
 define|#
 directive|define
 name|PCIM_PCAP_D0PME
-value|0x1000
+value|0x0800
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCIM_PCAP_D1PME
-value|0x2000
+value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCIM_PCAP_D2PME
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_PCAP_D3PME_HOT
 value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_PCAP_D3PME_COLD
+value|0x8000
 end_define
 
 begin_define
