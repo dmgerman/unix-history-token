@@ -1820,13 +1820,6 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
-block|{
-literal|"descriptor tables"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
 endif|#
 directive|endif
 ifdef|#
@@ -1965,21 +1958,6 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
-comment|/* 	 * leaf locks 	 */
-block|{
-literal|"allpmaps"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
-block|{
-literal|"icu"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
 ifdef|#
 directive|ifdef
 name|SMP
@@ -1990,29 +1968,27 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
+endif|#
+directive|endif
+comment|/* 	 * leaf locks 	 */
 block|{
-literal|"tlb"
+literal|"icu"
 block|,
 operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|__sparc64__
+argument_list|)
 block|{
 literal|"ipi"
 block|,
@@ -2022,6 +1998,23 @@ block|}
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__i386__
+block|{
+literal|"allpmaps"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
+literal|"descriptor tables"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
 endif|#
 directive|endif
 block|{
@@ -2032,7 +2025,7 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
-literal|"mutex profiling lock"
+literal|"mprof lock"
 block|,
 operator|&
 name|lock_class_mtx_spin

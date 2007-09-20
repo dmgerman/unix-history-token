@@ -2663,14 +2663,6 @@ directive|include
 file|<vm/uma.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|kse_zombie_lock
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  *  Allocate scheduler specific per-process resources.  * The thread and proc have already been linked in.  *  * Called from:  *  proc_init() (UMA init method)  */
 end_comment
