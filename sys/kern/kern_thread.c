@@ -3033,6 +3033,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|sched_sleep
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|TD_SET_SUSPENDED
 argument_list|(
 name|td
@@ -3124,6 +3129,11 @@ name|p
 operator|->
 name|p_suspcount
 operator|++
+expr_stmt|;
+name|sched_sleep
+argument_list|(
+name|td
+argument_list|)
 expr_stmt|;
 name|TD_SET_SUSPENDED
 argument_list|(
