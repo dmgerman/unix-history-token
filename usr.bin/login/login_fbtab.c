@@ -181,7 +181,7 @@ literal|"r"
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|fp
@@ -196,7 +196,7 @@ literal|"r"
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 while|while

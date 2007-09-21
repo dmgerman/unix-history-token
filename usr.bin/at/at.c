@@ -789,11 +789,7 @@ literal|"r+"
 argument_list|)
 operator|)
 operator|!=
-operator|(
-name|FILE
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -866,11 +862,7 @@ literal|"w"
 argument_list|)
 operator|)
 operator|!=
-operator|(
-name|FILE
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 block|{
 name|fprintf
