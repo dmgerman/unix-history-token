@@ -426,7 +426,7 @@ begin_define
 define|#
 directive|define
 name|PCI_PRODUCT_LSI_SAS1078
-value|0x0060
+value|0x0062
 end_define
 
 begin_endif
