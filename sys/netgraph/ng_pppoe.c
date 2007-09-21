@@ -6830,17 +6830,6 @@ decl_stmt|;
 name|sessp
 name|sp
 decl_stmt|;
-name|int
-name|hooks
-decl_stmt|;
-name|hooks
-operator|=
-name|NG_NODE_NUMHOOKS
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-comment|/* This one already not counted. */
 if|if
 condition|(
 name|hook
@@ -7234,27 +7223,6 @@ name|hook
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-comment|/* 		 * Work out how many session hooks there are. 		 * Node goes away on last session hook removal. 		 */
-if|if
-condition|(
-name|privp
-operator|->
-name|ethernet_hook
-condition|)
-name|hooks
-operator|-=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|privp
-operator|->
-name|debug_hook
-condition|)
-name|hooks
-operator|-=
-literal|1
 expr_stmt|;
 block|}
 if|if
