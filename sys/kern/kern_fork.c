@@ -1956,6 +1956,12 @@ name|p_flag
 operator|=
 name|P_INMEM
 expr_stmt|;
+name|p2
+operator|->
+name|p_swtick
+operator|=
+name|ticks
+expr_stmt|;
 if|if
 condition|(
 name|p1

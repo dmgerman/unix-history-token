@@ -257,10 +257,6 @@ name|ts_cpu
 decl_stmt|;
 comment|/* CPU that we have affinity for. */
 name|int
-name|ts_slptick
-decl_stmt|;
-comment|/* Tick when we went to sleep. */
-name|int
 name|ts_slice
 decl_stmt|;
 comment|/* Ticks of slice remaining. */
@@ -8030,9 +8026,7 @@ argument_list|)
 expr_stmt|;
 name|td
 operator|->
-name|td_sched
-operator|->
-name|ts_slptick
+name|td_slptick
 operator|=
 name|ticks
 expr_stmt|;
@@ -8077,13 +8071,13 @@ expr_stmt|;
 comment|/* 	 * If we slept for more than a tick update our interactivity and 	 * priority. 	 */
 name|slptick
 operator|=
-name|ts
+name|td
 operator|->
-name|ts_slptick
+name|td_slptick
 expr_stmt|;
-name|ts
+name|td
 operator|->
-name|ts_slptick
+name|td_slptick
 operator|=
 literal|0
 expr_stmt|;
@@ -9966,20 +9960,6 @@ operator|>>
 name|FSHIFT
 expr_stmt|;
 block|}
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_swtime
-operator|=
-name|ts
-operator|->
-name|ts_ltick
-operator|-
-name|ts
-operator|->
-name|ts_ftick
-expr_stmt|;
 name|thread_unlock
 argument_list|(
 name|td
@@ -10929,23 +10909,17 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ps compat */
+comment|/* ps compat.  All cpu percentages from ULE are weighted. */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|fixpt_t
+name|int
 name|ccpu
 init|=
-literal|0.95122942450071400909
-operator|*
-name|FSCALE
+literal|0.0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* exp(-1/20) */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_INT

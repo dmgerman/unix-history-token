@@ -581,9 +581,9 @@ name|td_estcpu
 decl_stmt|;
 comment|/* (t) estimated cpu utilization */
 name|u_int
-name|td_slptime
+name|td_slptick
 decl_stmt|;
-comment|/* (t) How long completely blocked. */
+comment|/* (t) Time at sleep. */
 name|struct
 name|rusage
 name|td_ru
@@ -2138,9 +2138,9 @@ name|p_vmspace
 decl_stmt|;
 comment|/* (b) Address space. */
 name|u_int
-name|p_swtime
+name|p_swtick
 decl_stmt|;
-comment|/* (j) Time swapped in or out. */
+comment|/* (j) Tick when swapped in or out. */
 name|struct
 name|itimerval
 name|p_realtimer
