@@ -3357,10 +3357,6 @@ name|SCTP_DEBUG_PCB4
 value|0x00800000
 end_define
 
-begin_comment
-comment|/* unused */
-end_comment
-
 begin_define
 define|#
 directive|define
