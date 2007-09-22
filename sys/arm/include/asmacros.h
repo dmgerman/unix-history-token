@@ -134,15 +134,15 @@ value|\ 	ldr	r5, =0xe0000004;
 comment|/* Check if there's any RAS */
 value|\ 	ldr	r3, [r5];						   \ 	cmp	r3, #0;
 comment|/* Is the update needed ? */
-value|\ 	beq	1f;							   \ 	ldr	lr, [r0, #16];						   \ 	ldr	r1, =0xe0000008;					   \ 	ldr	r4, [r1];
+value|\ 	ldrgt	lr, [r0, #16];						   \ 	ldrgt	r1, =0xe0000008;					   \ 	ldrgt	r4, [r1];
 comment|/* Get the end of the RAS */
-value|\ 	mov	r2, #0;
+value|\ 	movgt	r2, #0;
 comment|/* Reset the magic addresses */
-value|\ 	str	r2, [r5];						   \ 	str	r2, [r1];						   \ 	cmp	lr, r3;
+value|\ 	strgt	r2, [r5];						   \ 	strgt	r2, [r1];						   \ 	cmpgt	lr, r3;
 comment|/* Were we in the RAS ? */
-value|\ 	blt	1f;							   \ 	cmp	lr, r4;							   \ 	strlt	r3, [r0, #16];
+value|\ 	cmpgt	r4, lr;							   \ 	strgt	r3, [r0, #16];
 comment|/* Yes, update the pc */
-value|\ 	1:								   \ 	mrs	r0, spsr_all;
+value|\ 	mrs	r0, spsr_all;
 comment|/* Put the SPSR on the stack */
 value|\ 	str	r0, [sp, #-4]!
 end_define
