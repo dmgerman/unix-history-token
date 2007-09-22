@@ -1336,6 +1336,9 @@ name|warnx
 argument_list|(
 name|CorruptEnvFindMsg
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nameLen
 argument_list|,
 name|envVars
