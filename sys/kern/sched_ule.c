@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002-2007, Jeffrey Roberson<jeff@freebsd.org>  * Al
 end_comment
 
 begin_comment
-comment|/*  * This file implements the ULE scheduler.  ULE supports independent CPU  * run queues and fine grain locking.  It has superior interactive  * performance under load even on uni-processor systems.  *  * etymology:  *   ULE is the last three letters in schedule.  It owes it's name to a  * generic user created for a scheduling system by Paul Mikesell at  * Isilon Systems and a general lack of creativity on the part of the author.  */
+comment|/*  * This file implements the ULE scheduler.  ULE supports independent CPU  * run queues and fine grain locking.  It has superior interactive  * performance under load even on uni-processor systems.  *  * etymology:  *   ULE is the last three letters in schedule.  It owes its name to a  * generic user created for a scheduling system by Paul Mikesell at  * Isilon Systems and a general lack of creativity on the part of the author.  */
 end_comment
 
 begin_include
@@ -3055,6 +3055,19 @@ argument_list|,
 name|low
 argument_list|)
 expr_stmt|;
+comment|/* 		 * IPI the target cpu to force it to reschedule with the new 		 * workload. 		 */
+name|ipi_selected
+argument_list|(
+literal|1
+operator|<<
+name|TDQ_ID
+argument_list|(
+name|low
+argument_list|)
+argument_list|,
+name|IPI_PREEMPT
+argument_list|)
+expr_stmt|;
 block|}
 name|TDQ_UNLOCK
 argument_list|(
@@ -3239,11 +3252,6 @@ argument_list|,
 name|td
 argument_list|,
 name|SRQ_YIELDING
-argument_list|)
-expr_stmt|;
-name|tdq_notify
-argument_list|(
-name|ts
 argument_list|)
 expr_stmt|;
 block|}
@@ -4294,7 +4302,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|notyet
-comment|/* 	 * If the thread isn't running it's lockptr is a 	 * turnstile or a sleepqueue.  We can just lock_set without 	 * blocking. 	 */
+comment|/* 	 * If the thread isn't running its lockptr is a 	 * turnstile or a sleepqueue.  We can just lock_set without 	 * blocking. 	 */
 if|if
 condition|(
 name|TD_CAN_RUN
@@ -6115,13 +6123,19 @@ operator|!=
 name|PRI_TIMESHARE
 condition|)
 return|return;
-comment|/* 	 * If the score is interactive we place the thread in the realtime 	 * queue with a priority that is less than kernel and interrupt 	 * priorities.  These threads are not subject to nice restrictions. 	 * 	 * Scores greater than this are placed on the normal timeshare queue 	 * where the priority is partially decided by the most recent cpu 	 * utilization and the rest is decided by nice value. 	 */
+comment|/* 	 * If the score is interactive we place the thread in the realtime 	 * queue with a priority that is less than kernel and interrupt 	 * priorities.  These threads are not subject to nice restrictions. 	 * 	 * Scores greater than this are placed on the normal timeshare queue 	 * where the priority is partially decided by the most recent cpu 	 * utilization and the rest is decided by nice value. 	 * 	 * The nice value of the process has a linear effect on the calculated 	 * score.  Negative nice values make it easier for a thread to be 	 * considered interactive. 	 */
 name|score
 operator|=
 name|sched_interact_score
 argument_list|(
 name|td
 argument_list|)
+operator|-
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_nice
 expr_stmt|;
 if|if
 condition|(
@@ -10917,7 +10931,7 @@ specifier|static
 name|int
 name|ccpu
 init|=
-literal|0.0
+literal|0
 decl_stmt|;
 end_decl_stmt
 
