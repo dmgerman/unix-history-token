@@ -51,6 +51,288 @@ end_define
 begin_define
 define|#
 directive|define
+name|IOP34X_ADMA0_OFFSET
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA1_OFFSET
+value|0x00080200
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA2_OFFSET
+value|0x00080400
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_SIZE
+value|0x200
+end_define
+
+begin_comment
+comment|/* ADMA Registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_CCR
+value|0x0000
+end_define
+
+begin_comment
+comment|/* Channel Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_CSR
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Channel Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_DAR
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Descriptor Address Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_IPCR
+value|0x0018
+end_define
+
+begin_comment
+comment|/* Internal Interface Parity Ctrl Reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_NDAR
+value|0x0024
+end_define
+
+begin_comment
+comment|/* Next Descriptor Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_DCR
+value|0x0028
+end_define
+
+begin_comment
+comment|/* Descriptor Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_IE
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_TR
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Transfert Direction */
+end_comment
+
+begin_comment
+comment|/*   *               Source                   Destination  *  00         Host I/O Interface	Local Memory  *  01         Local Memory             Host I/O Interface  *  10         Internal Bus             Local Memory  *  11         Local Memory             Internal Bus  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_SS
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* Source selection */
+end_comment
+
+begin_comment
+comment|/* 0000: Data Transfer / CRC / Memory Block Fill */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_ZRBCE
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* Zero Result Buffer Check Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_MBFE
+value|(1<< 8)
+end_define
+
+begin_comment
+comment|/* Memory Block Fill Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_CGE
+value|(1<< 9)
+end_define
+
+begin_comment
+comment|/* CRC Generation enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_CTD
+value|(1<< 10)
+end_define
+
+begin_comment
+comment|/* CRC Transfer disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_CSFD
+value|(1<< 11)
+end_define
+
+begin_comment
+comment|/* CRC Seed fetch disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_SWBE
+value|(1<< 12)
+end_define
+
+begin_comment
+comment|/* Status write back enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_ESE
+value|(1<< 13)
+end_define
+
+begin_comment
+comment|/* Endian swap enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_PQUTE
+value|(1<< 16)
+end_define
+
+begin_comment
+comment|/* P+Q Update Transfer Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_DXE
+value|(1<< 17)
+end_define
+
+begin_comment
+comment|/* Dual XOR Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_PQTE
+value|(1<< 18)
+end_define
+
+begin_comment
+comment|/* P+Q Transfer Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_PTD
+value|(1<< 19)
+end_define
+
+begin_comment
+comment|/* P Transfer Disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_ROE
+value|(1<< 30)
+end_define
+
+begin_comment
+comment|/* Relaxed Ordering Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOP34X_ADMA_NSE
+value|(1<< 31)
+end_define
+
+begin_comment
+comment|/* No Snoop Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IOP34X_PBBAR0
 value|0x81588
 end_define
