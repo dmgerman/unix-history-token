@@ -14832,6 +14832,10 @@ if|if
 condition|(
 name|_arm_bzero
 operator|&&
+name|size
+operator|>=
+name|_min_bzero_size
+operator|&&
 name|_arm_bzero
 argument_list|(
 operator|(
@@ -15052,6 +15056,10 @@ block|{
 if|if
 condition|(
 name|_arm_bzero
+operator|&&
+name|size
+operator|>=
+name|_min_bzero_size
 operator|&&
 name|_arm_bzero
 argument_list|(
@@ -15844,6 +15852,10 @@ expr_stmt|;
 if|if
 condition|(
 name|_arm_memcpy
+operator|&&
+name|PAGE_SIZE
+operator|>=
+name|_min_memcpy_size
 operator|&&
 name|_arm_memcpy
 argument_list|(
