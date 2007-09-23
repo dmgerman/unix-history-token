@@ -3820,7 +3820,7 @@ argument_list|(
 name|LVL_ERROR
 argument_list|,
 literal|"ALLOCATION TABLE CORRUPTED FOR %s "
-literal|"(%d sectors don't match, max %d allocations)"
+literal|"(%d sectors don't match, max %zu allocations)"
 argument_list|,
 name|sc
 operator|->
