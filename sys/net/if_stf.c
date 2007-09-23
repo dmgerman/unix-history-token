@@ -2679,7 +2679,7 @@ if|if
 condition|(
 name|rt
 condition|)
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -2689,7 +2689,7 @@ operator|-
 literal|1
 return|;
 block|}
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
