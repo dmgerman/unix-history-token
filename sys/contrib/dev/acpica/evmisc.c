@@ -935,6 +935,22 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * Update the global lock handle and check for wraparound. The handle is      * only used for the external global lock interfaces, but it is updated      * here to properly handle the case where a single thread may acquire the      * lock via both the AML and the AcpiAcquireGlobalLock interfaces. The      * handle is therefore updated on the first acquire from a given thread      * regardless of where the acquisition request originated.      */
+name|AcpiGbl_GlobalLockHandle
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|AcpiGbl_GlobalLockHandle
+operator|==
+literal|0
+condition|)
+block|{
+name|AcpiGbl_GlobalLockHandle
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/*      * Make sure that a global lock actually exists. If not, just treat      * the lock as a standard mutex.      */
 if|if
 condition|(
