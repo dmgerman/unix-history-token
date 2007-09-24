@@ -6126,6 +6126,10 @@ return|return;
 comment|/* 	 * If the score is interactive we place the thread in the realtime 	 * queue with a priority that is less than kernel and interrupt 	 * priorities.  These threads are not subject to nice restrictions. 	 * 	 * Scores greater than this are placed on the normal timeshare queue 	 * where the priority is partially decided by the most recent cpu 	 * utilization and the rest is decided by nice value. 	 * 	 * The nice value of the process has a linear effect on the calculated 	 * score.  Negative nice values make it easier for a thread to be 	 * considered interactive. 	 */
 name|score
 operator|=
+name|imax
+argument_list|(
+literal|0
+argument_list|,
 name|sched_interact_score
 argument_list|(
 name|td
@@ -6136,6 +6140,7 @@ operator|->
 name|td_proc
 operator|->
 name|p_nice
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
