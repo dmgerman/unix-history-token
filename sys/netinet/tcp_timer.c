@@ -1057,6 +1057,11 @@ name|TCPDEBUG
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|tp
 operator|->
 name|t_inpcb
 operator|->
@@ -1065,6 +1070,7 @@ operator|->
 name|so_options
 operator|&
 name|SO_DEBUG
+operator|)
 condition|)
 name|tcp_trace
 argument_list|(
