@@ -1918,23 +1918,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/*          * If this was the first acquisition of the Global Lock by this thread,          * create a new handle. Otherwise, return the existing handle.          */
-if|if
-condition|(
-name|AcpiGbl_GlobalLockMutex
-operator|->
-name|Mutex
-operator|.
-name|AcquisitionDepth
-operator|==
-literal|1
-condition|)
-block|{
-name|AcpiGbl_GlobalLockHandle
-operator|++
-expr_stmt|;
-block|}
-comment|/* Return the global lock handle */
+comment|/* Return the global lock handle (updated in AcpiEvAcquireGlobalLock) */
 operator|*
 name|Handle
 operator|=
