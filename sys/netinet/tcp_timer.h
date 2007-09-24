@@ -293,6 +293,39 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct
+struct|struct
+name|tcp_timer
+block|{
+name|struct
+name|callout
+name|tt_rexmt
+decl_stmt|;
+comment|/* retransmit timer */
+name|struct
+name|callout
+name|tt_persist
+decl_stmt|;
+comment|/* retransmit persistence */
+name|struct
+name|callout
+name|tt_keep
+decl_stmt|;
+comment|/* keepalive */
+name|struct
+name|callout
+name|tt_2msl
+decl_stmt|;
+comment|/* 2*msl TIME_WAIT timer */
+name|struct
+name|callout
+name|tt_delack
+decl_stmt|;
+comment|/* delayed ACK timer */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define

@@ -7523,15 +7523,24 @@ name|db_printf
 argument_list|(
 literal|"tt_rexmt: %p   tt_persist: %p   tt_keep: %p\n"
 argument_list|,
+operator|&
 name|tp
+operator|->
+name|t_timers
 operator|->
 name|tt_rexmt
 argument_list|,
+operator|&
 name|tp
+operator|->
+name|t_timers
 operator|->
 name|tt_persist
 argument_list|,
+operator|&
 name|tp
+operator|->
+name|t_timers
 operator|->
 name|tt_keep
 argument_list|)
@@ -7545,11 +7554,17 @@ name|db_printf
 argument_list|(
 literal|"tt_2msl: %p   tt_delack: %p   t_inpcb: %p\n"
 argument_list|,
+operator|&
 name|tp
+operator|->
+name|t_timers
 operator|->
 name|tt_2msl
 argument_list|,
+operator|&
 name|tp
+operator|->
+name|t_timers
 operator|->
 name|tt_delack
 argument_list|,
