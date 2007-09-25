@@ -286,13 +286,20 @@ name|VM_PHYSSEG_DENSE
 end_define
 
 begin_comment
-comment|/*  * Create two free page pools: VM_FREEPOOL_DEFAULT is the default pool  * from which physical pages are allocated and VM_FREEPOOL_DIRECT is  * the pool from which physical pages for small UMA objects are  * allocated.  */
+comment|/*  * Create three free page pools: VM_FREEPOOL_DEFAULT is the default pool  * from which physical pages are allocated and VM_FREEPOOL_DIRECT is  * the pool from which physical pages for small UMA objects are  * allocated.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VM_NFREEPOOL
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREEPOOL_CACHE
 value|2
 end_define
 

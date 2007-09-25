@@ -136,6 +136,10 @@ argument_list|)
 name|pager_object_list
 expr_stmt|;
 comment|/* list of all objects of this pager type */
+name|vm_page_t
+name|cache
+decl_stmt|;
+comment|/* root of the cache page splay tree */
 name|void
 modifier|*
 name|handle

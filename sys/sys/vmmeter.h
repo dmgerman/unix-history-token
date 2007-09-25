@@ -104,7 +104,7 @@ comment|/* (p) intransit blocking page faults */
 name|u_int
 name|v_reactivated
 decl_stmt|;
-comment|/* (q) pages reactivated from free list */
+comment|/* (f) pages reactivated from free list */
 name|u_int
 name|v_pdwakeups
 decl_stmt|;
@@ -173,7 +173,7 @@ comment|/* (q) pages inactive */
 name|u_int
 name|v_cache_count
 decl_stmt|;
-comment|/* (q) pages on buffer cache queue */
+comment|/* (f) pages on buffer cache queue */
 name|u_int
 name|v_cache_min
 decl_stmt|;

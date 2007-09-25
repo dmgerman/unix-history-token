@@ -312,29 +312,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|PQ_CACHE
+name|PQ_HOLD
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|PQ_HOLD
+name|PQ_COUNT
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|PQ_COUNT
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
 name|PQ_MAXCOUNT
-value|5
+value|4
 end_define
 
 begin_comment
@@ -358,16 +351,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VM_PAGE_GETKNOWNQUEUE1
-parameter_list|(
-name|m
-parameter_list|)
-value|VM_PAGE_GETQUEUE(m)
-end_define
-
-begin_define
-define|#
-directive|define
 name|VM_PAGE_GETKNOWNQUEUE2
 parameter_list|(
 name|m
@@ -376,36 +359,8 @@ value|VM_PAGE_GETQUEUE(m)
 end_define
 
 begin_comment
-comment|/* Given the real queue number and a page color return the well know queue. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_RESOLVEQUEUE
-parameter_list|(
-name|m
-parameter_list|,
-name|q
-parameter_list|)
-value|(q)
-end_define
-
-begin_comment
 comment|/* Returns true if the page is in the named well known queue. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_INQUEUE1
-parameter_list|(
-name|m
-parameter_list|,
-name|q
-parameter_list|)
-value|(VM_PAGE_GETKNOWNQUEUE1(m) == (q))
-end_define
 
 begin_define
 define|#
@@ -422,18 +377,6 @@ end_define
 begin_comment
 comment|/* Sets the queue a page is on. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_SETQUEUE1
-parameter_list|(
-name|m
-parameter_list|,
-name|q
-parameter_list|)
-value|(VM_PAGE_GETQUEUE(m) = (q))
-end_define
 
 begin_define
 define|#
@@ -484,6 +427,17 @@ end_decl_stmt
 
 begin_comment
 comment|/*  * These are the flags defined for vm_page.  *  * Note: PG_UNMANAGED (used by OBJT_PHYS) indicates that the page is  * 	 not under PV management but otherwise should be treated as a  *	 normal page.  Pages not under PV management cannot be paged out  *	 via the object/vm_page_t because there is no knowledge of their  *	 pte mappings, nor can they be removed from their objects via   *	 the object, and such pages are also not on any PQ queue.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_CACHED
+value|0x0001
+end_define
+
+begin_comment
+comment|/* page is cached */
 end_comment
 
 begin_define
@@ -630,7 +584,7 @@ file|<vm/vm_param.h>
 end_include
 
 begin_comment
-comment|/*  * Each pageable resident page falls into one of five lists:  *  *	free  *		Available for allocation now.  *  *	cache  *		Almost available for allocation. Still in an  *		object, but clean and immediately freeable at  *		non-interrupt times.  *  *	hold  *		Will become free after a pending I/O operation  *		completes.  *  * The following lists are LRU sorted:  *  *	inactive  *		Low activity, candidates for reclamation.  *		This is the list of pages that should be  *		paged out next.  *  *	active  *		Pages that are "active" i.e. they have been  *		recently referenced.  *  */
+comment|/*  * Each pageable resident page falls into one of five lists:  *  *	free  *		Available for allocation now.  *  *	cache  *		Almost available for allocation. Still associated with  *		an object, but clean and immediately freeable.  *  *	hold  *		Will become free after a pending I/O operation  *		completes.  *  * The following lists are LRU sorted:  *  *	inactive  *		Low activity, candidates for reclamation.  *		This is the list of pages that should be  *		paged out next.  *  *	active  *		Pages that are "active" i.e. they have been  *		recently referenced.  *  */
 end_comment
 
 begin_decl_stmt
@@ -946,6 +900,28 @@ begin_comment
 comment|/* Do not busy the page */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_IFCACHED
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Fail if the page is not cached */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_IFNOTCACHED
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Fail if the page is cached */
+end_comment
+
 begin_function_decl
 name|void
 name|vm_page_flag_set
@@ -1098,16 +1074,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_pageq_remove_nowakeup
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vm_pageq_remove
 parameter_list|(
 name|vm_page_t
@@ -1167,6 +1133,37 @@ name|vm_page_cache
 parameter_list|(
 specifier|register
 name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_cache_free
+parameter_list|(
+name|vm_object_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_cache_remove
+parameter_list|(
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_cache_transfer
+parameter_list|(
+name|vm_object_t
+parameter_list|,
+name|vm_pindex_t
+parameter_list|,
+name|vm_object_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1250,15 +1247,6 @@ parameter_list|,
 name|vm_object_t
 parameter_list|,
 name|vm_pindex_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|vm_page_t
-name|vm_page_select_cache
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

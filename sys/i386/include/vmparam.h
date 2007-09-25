@@ -199,13 +199,20 @@ value|17
 end_define
 
 begin_comment
-comment|/*  * Create one free page pool.  Since the i386 kernel virtual address  * space does not include a mapping onto the machine's entire physical  * memory, VM_FREEPOOL_DIRECT is defined as an alias for the default  * pool, VM_FREEPOOL_DEFAULT.  */
+comment|/*  * Create two free page pools.  Since the i386 kernel virtual address  * space does not include a mapping onto the machine's entire physical  * memory, VM_FREEPOOL_DIRECT is defined as an alias for the default  * pool, VM_FREEPOOL_DEFAULT.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VM_NFREEPOOL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREEPOOL_CACHE
 value|1
 end_define
 
