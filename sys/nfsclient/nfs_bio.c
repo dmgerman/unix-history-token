@@ -6546,6 +6546,31 @@ name|again
 goto|;
 block|}
 block|}
+comment|/* We might have lost our nfsiod */
+if|if
+condition|(
+name|nmp
+operator|->
+name|nm_bufqiods
+operator|==
+literal|0
+condition|)
+block|{
+name|NFS_DPF
+argument_list|(
+name|ASYNCIO
+argument_list|,
+operator|(
+literal|"nfs_asyncio: no iods after mount %p queue was drained, looping\n"
+operator|,
+name|nmp
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
 if|if
 condition|(
 name|bp
