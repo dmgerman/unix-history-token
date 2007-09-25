@@ -4092,6 +4092,8 @@ argument_list|,
 name|tpindex
 argument_list|,
 name|VM_ALLOC_IFCACHED
+operator||
+name|VM_ALLOC_NOBUSY
 argument_list|)
 expr_stmt|;
 block|}
