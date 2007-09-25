@@ -4029,6 +4029,8 @@ directive|if
 name|HAVE_LIBZ
 operator|>
 literal|0
+name|end
+operator|=
 name|gzgets
 argument_list|(
 name|fp
