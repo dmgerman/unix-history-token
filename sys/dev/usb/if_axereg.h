@@ -396,7 +396,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* AX88178 documentation says to always write 1 to reserved bit... */
+comment|/* AX88178/88772 documentation says to always write 1 to bit 2 */
 end_comment
 
 begin_define
@@ -405,6 +405,10 @@ directive|define
 name|AXE_178_MEDIA_MAGIC
 value|0x0004
 end_define
+
+begin_comment
+comment|/* AX88772 documentation says to always write 0 to bit 3 */
+end_comment
 
 begin_define
 define|#
@@ -521,6 +525,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AXE_178_RXCMD_AP
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
 name|AXE_RXCMD_ENABLE
 value|0x0080
 end_define
@@ -529,6 +540,38 @@ begin_define
 define|#
 directive|define
 name|AXE_178_RXCMD_MFB
+value|0x0300
+end_define
+
+begin_comment
+comment|/* Max Frame Burst */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AXE_178_RXCMD_MFB_2048
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXE_178_RXCMD_MFB_4096
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXE_178_RXCMD_MFB_8192
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXE_178_RXCMD_MFB_16384
 value|0x0300
 end_define
 
@@ -671,6 +714,21 @@ end_define
 
 begin_struct
 struct|struct
+name|axe_sframe_hdr
+block|{
+name|uint16_t
+name|len
+decl_stmt|;
+name|uint16_t
+name|ilen
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|axe_type
 block|{
 name|struct
@@ -680,6 +738,11 @@ decl_stmt|;
 name|uint32_t
 name|axe_flags
 decl_stmt|;
+define|#
+directive|define
+name|AX172
+value|0x0000
+comment|/* AX88172 */
 define|#
 directive|define
 name|AX178
@@ -840,8 +903,11 @@ name|struct
 name|usb_task
 name|axe_tick_task
 decl_stmt|;
-name|u_int
+name|int
 name|axe_bufsz
+decl_stmt|;
+name|int
+name|axe_boundary
 decl_stmt|;
 block|}
 struct|;
