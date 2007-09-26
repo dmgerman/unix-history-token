@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|GEM_NRXDESC
-value|128
+value|256
 end_define
 
 begin_define
@@ -96,16 +96,6 @@ define|#
 directive|define
 name|GEM_NRXDESC_MASK
 value|(GEM_NRXDESC - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEM_PREVRX
-parameter_list|(
-name|x
-parameter_list|)
-value|((x - 1)& GEM_NRXDESC_MASK)
 end_define
 
 begin_define
@@ -276,6 +266,10 @@ name|ifnet
 modifier|*
 name|sc_ifp
 decl_stmt|;
+name|struct
+name|mtx
+name|sc_mtx
+decl_stmt|;
 name|device_t
 name|sc_miibus
 decl_stmt|;
@@ -292,7 +286,7 @@ comment|/* generic device information */
 name|u_char
 name|sc_enaddr
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 name|struct
@@ -309,7 +303,6 @@ name|int
 name|sc_wdog_timer
 decl_stmt|;
 comment|/* watchdog timer */
-comment|/* The following bus handles are to be provided by the bus front-end */
 name|void
 modifier|*
 name|sc_ih
@@ -343,20 +336,9 @@ name|sc_dmamap
 decl_stmt|;
 comment|/* bus dma handle */
 name|int
-name|sc_phys
-index|[
-literal|2
-index|]
+name|sc_phyad
 decl_stmt|;
-comment|/* MII instance -> PHY map */
-name|int
-name|sc_mif_config
-decl_stmt|;
-comment|/* Selected MII reg setting */
-name|int
-name|sc_pci
-decl_stmt|;
-comment|/* XXXXX -- PCI buses are LE. */
+comment|/* addr. of PHY to use or -1 for any */
 name|u_int
 name|sc_variant
 decl_stmt|;
@@ -370,21 +352,54 @@ define|#
 directive|define
 name|GEM_SUN_GEM
 value|1
-comment|/* Sun GEM variant */
+comment|/* Sun GEM */
+define|#
+directive|define
+name|GEM_SUN_ERI
+value|2
+comment|/* Sun ERI */
 define|#
 directive|define
 name|GEM_APPLE_GMAC
-value|2
-comment|/* Apple GMAC variant */
+value|3
+comment|/* Apple GMAC */
+define|#
+directive|define
+name|GEM_APPLE_K2_GMAC
+value|4
+comment|/* Apple K2 GMAC */
+define|#
+directive|define
+name|GEM_IS_APPLE
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|((sc)->sc_variant == GEM_APPLE_GMAC ||				\ 	(sc)->sc_variant == GEM_APPLE_K2_GMAC)
 name|u_int
 name|sc_flags
 decl_stmt|;
 comment|/* */
 define|#
 directive|define
-name|GEM_GIGABIT
-value|0x0001
-comment|/* has a gigabit PHY */
+name|GEM_INITED
+value|(1<< 0)
+comment|/* reset persistent regs initialized */
+define|#
+directive|define
+name|GEM_LINK
+value|(1<< 1)
+comment|/* link is up */
+define|#
+directive|define
+name|GEM_PCI
+value|(1<< 2)
+comment|/* XXX PCI busses are little-endian */
+define|#
+directive|define
+name|GEM_SERDES
+value|(1<< 3)
+comment|/* use the SERDES */
 comment|/* 	 * Ring buffer DMA stuff. 	 */
 name|bus_dma_segment_t
 name|sc_cdseg
@@ -462,20 +477,10 @@ decl_stmt|;
 comment|/* Rx FIFO size (bytes) */
 comment|/* ========== */
 name|int
-name|sc_inited
-decl_stmt|;
-name|int
-name|sc_debug
-decl_stmt|;
-name|int
 name|sc_ifflags
 decl_stmt|;
 name|int
 name|sc_csum_features
-decl_stmt|;
-name|struct
-name|mtx
-name|sc_mtx
 decl_stmt|;
 block|}
 struct|;
@@ -490,7 +495,8 @@ name|sc
 parameter_list|,
 name|v
 parameter_list|)
-value|(((sc)->sc_pci) ? le64toh(v) : be64toh(v))
+define|\
+value|((((sc)->sc_flags& GEM_PCI) != 0) ? le64toh(v) : be64toh(v))
 end_define
 
 begin_define
@@ -502,7 +508,8 @@ name|sc
 parameter_list|,
 name|v
 parameter_list|)
-value|(((sc)->sc_pci) ? htole64(v) : htobe64(v))
+define|\
+value|((((sc)->sc_flags& GEM_PCI) != 0) ? htole64(v) : htobe64(v))
 end_define
 
 begin_define
@@ -539,7 +546,33 @@ parameter_list|,
 name|ops
 parameter_list|)
 define|\
-value|bus_dmamap_sync((sc)->sc_cdmatag, (sc)->sc_cddmamap, (ops));	\  #define	GEM_INIT_RXDESC(sc, x)						\ do {									\ 	struct gem_rxsoft *__rxs =&sc->sc_rxsoft[(x)];			\ 	struct gem_desc *__rxd =&sc->sc_rxdescs[(x)];			\ 	struct mbuf *__m = __rxs->rxs_mbuf;				\ 									\ 	__m->m_data = __m->m_ext.ext_buf;				\ 	__rxd->gd_addr =						\ 	    GEM_DMA_WRITE((sc), __rxs->rxs_paddr);			\ 	__rxd->gd_flags =						\ 	    GEM_DMA_WRITE((sc),						\ 			(((__m->m_ext.ext_size)<<GEM_RD_BUFSHIFT)	\& GEM_RD_BUFSIZE) | GEM_RD_OWN);	\ } while (0)
+value|bus_dmamap_sync((sc)->sc_cdmatag, (sc)->sc_cddmamap, (ops));
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_INIT_RXDESC
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|do {									\ 	struct gem_rxsoft *__rxs =&sc->sc_rxsoft[(x)];			\ 	struct gem_desc *__rxd =&sc->sc_rxdescs[(x)];			\ 	struct mbuf *__m = __rxs->rxs_mbuf;				\ 									\ 	__m->m_data = __m->m_ext.ext_buf;				\ 	__rxd->gd_addr =						\ 	    GEM_DMA_WRITE((sc), __rxs->rxs_paddr);			\ 	__rxd->gd_flags =						\ 	    GEM_DMA_WRITE((sc),						\ 			(((__m->m_ext.ext_size)<< GEM_RD_BUFSHIFT)	\& GEM_RD_BUFSIZE) | GEM_RD_OWN);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_UPDATE_RXDESC
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|do {									\ 	struct gem_rxsoft *__rxs =&sc->sc_rxsoft[(x)];			\ 	struct gem_desc *__rxd =&sc->sc_rxdescs[(x)];			\ 	struct mbuf *__m = __rxs->rxs_mbuf;				\ 									\ 	__rxd->gd_flags =						\ 	    GEM_DMA_WRITE((sc),						\ 			(((__m->m_ext.ext_size)<< GEM_RD_BUFSHIFT)	\& GEM_RD_BUFSIZE) | GEM_RD_OWN);	\ } while (0)
 end_define
 
 begin_define
@@ -685,17 +718,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|ifmediareq
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|gem_reset
-parameter_list|(
-name|struct
-name|gem_softc
 modifier|*
 parameter_list|)
 function_decl|;
