@@ -1971,7 +1971,7 @@ operator|/
 literal|1024
 operator|)
 expr_stmt|;
-comment|/* 	 * The nominal buffer size (and minimum KVA allocation) is BKVASIZE. 	 * For the first 64MB of ram nominally allocate sufficient buffers to 	 * cover 1/4 of our ram.  Beyond the first 64MB allocate additional 	 * buffers to cover 1/20 of our ram over 64MB.  When auto-sizing 	 * the buffer cache we limit the eventual kva reservation to 	 * maxbcache bytes. 	 * 	 * factor represents the 1/4 x ram conversion. 	 */
+comment|/* 	 * The nominal buffer size (and minimum KVA allocation) is BKVASIZE. 	 * For the first 64MB of ram nominally allocate sufficient buffers to 	 * cover 1/4 of our ram.  Beyond the first 64MB allocate additional 	 * buffers to cover 1/10 of our ram over 64MB.  When auto-sizing 	 * the buffer cache we limit the eventual kva reservation to 	 * maxbcache bytes. 	 * 	 * factor represents the 1/4 x ram conversion. 	 */
 if|if
 condition|(
 name|nbuf
