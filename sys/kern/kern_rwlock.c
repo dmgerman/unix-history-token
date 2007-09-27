@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_no_adaptive_rwlocks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -73,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|<sys/turnstile.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock_profile.h>
 end_include
 
 begin_include
@@ -292,11 +292,6 @@ name|int
 name|opts
 parameter_list|)
 block|{
-name|struct
-name|lock_object
-modifier|*
-name|lock
-decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
@@ -379,46 +374,21 @@ name|rw_recurse
 operator|=
 literal|0
 expr_stmt|;
-name|lock
-operator|=
+name|lock_init
+argument_list|(
 operator|&
 name|rw
 operator|->
 name|lock_object
-expr_stmt|;
-name|lock
-operator|->
-name|lo_class
-operator|=
+argument_list|,
 operator|&
 name|lock_class_rw
-expr_stmt|;
-name|lock
-operator|->
-name|lo_flags
-operator|=
-name|flags
-expr_stmt|;
-name|lock
-operator|->
-name|lo_name
-operator|=
-name|lock
-operator|->
-name|lo_type
-operator|=
-name|name
-expr_stmt|;
-name|LOCK_LOG_INIT
-argument_list|(
-name|lock
 argument_list|,
-name|opts
-argument_list|)
-expr_stmt|;
-name|WITNESS_INIT
-argument_list|(
-name|lock
+name|name
+argument_list|,
+name|NULL
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -434,16 +404,6 @@ modifier|*
 name|rw
 parameter_list|)
 block|{
-name|LOCK_LOG_DESTROY
-argument_list|(
-operator|&
-name|rw
-operator|->
-name|lock_object
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|rw
@@ -476,7 +436,7 @@ name|rw_lock
 operator|=
 name|RW_DESTROYED
 expr_stmt|;
-name|WITNESS_DESTROY
+name|lock_destroy
 argument_list|(
 operator|&
 name|rw
@@ -1130,6 +1090,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|ADAPTIVE_RWLOCKS
+comment|/* 		 * If the owner is running on another CPU, spin until 		 * the owner stops running or the state of the lock 		 * changes. 		 */
 name|owner
 operator|=
 operator|(
@@ -1142,7 +1103,6 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the owner is running on another CPU, spin until 		 * the owner stops running or the state of the lock 		 * changes. 		 */
 if|if
 condition|(
 name|TD_IS_RUNNING
@@ -1724,7 +1684,6 @@ name|int
 name|line
 parameter_list|)
 block|{
-comment|//struct turnstile *ts;
 ifdef|#
 directive|ifdef
 name|ADAPTIVE_RWLOCKS
