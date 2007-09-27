@@ -506,10 +506,6 @@ name|int
 name|td_dupfd
 decl_stmt|;
 comment|/* (k) Ret value from fdopen. XXX */
-name|int
-name|td_sqqueue
-decl_stmt|;
-comment|/* (t) Sleepqueue queue blocked on. */
 name|void
 modifier|*
 name|td_wchan
@@ -541,7 +537,11 @@ comment|/* (k) Count of non-spin locks. */
 name|u_char
 name|td_tsqueue
 decl_stmt|;
-comment|/* (t) Turnstile queue blocked on. */
+comment|/* (j) Turnstile queue blocked on. */
+name|char
+name|td_sqqueue
+decl_stmt|;
+comment|/* (j) Sleepqueue queue blocked on. */
 name|struct
 name|turnstile
 modifier|*

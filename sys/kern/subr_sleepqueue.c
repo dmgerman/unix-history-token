@@ -2484,6 +2484,9 @@ name|sq
 operator|->
 name|sq_blocked
 index|[
+operator|(
+name|int
+operator|)
 name|td
 operator|->
 name|td_sqqueue
