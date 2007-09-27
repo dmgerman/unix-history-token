@@ -22,7 +22,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Intel XScale Network Processing Engine (NPE) support.  *  * Each NPE has an ixpnpeX device associated with it that is  * attached at boot.  Depending on the microcode loaded into  * an NPE there may be an Ethernet interface (npeX) or some  * other network interface (e.g. for ATM).  This file has support  * for loading microcode images and the associated NPE CPU  * manipulations (start, stop, reset).  *  * The code here basically replaces the npeDl and npeMh classes  * in the Intel Access Library (IAL).  *  * NB: Microcode images comes from ixNpeMicrocode.c  */
+comment|/*  * Intel XScale Network Processing Engine (NPE) support.  *  * Each NPE has an ixpnpeX device associated with it that is  * attached at boot.  Depending on the microcode loaded into  * an NPE there may be an Ethernet interface (npeX) or some  * other network interface (e.g. for ATM).  This file has support  * for loading microcode images and the associated NPE CPU  * manipulations (start, stop, reset).  *  * The code here basically replaces the npeDl and npeMh classes  * in the Intel Access Library (IAL).  *  * NB: Microcode images are loaded with firmware(9).  To  *     include microcode in a static kernel include the  *     ixpnpe_fw device.  Otherwise the firmware will be  *     automatically loaded from the filesystem.  */
 end_comment
 
 begin_include
@@ -88,7 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/endian.h>
+file|<sys/linker.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/firmware.h>
 end_include
 
 begin_include
@@ -143,12 +149,6 @@ begin_include
 include|#
 directive|include
 file|<arm/xscale/ixp425/ixp425_npevar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arm/xscale/ixp425/IxNpeMicrocode.c>
 end_include
 
 begin_struct
@@ -1869,6 +1869,12 @@ name|uint32_t
 modifier|*
 name|imageCodePtr
 decl_stmt|;
+specifier|const
+name|struct
+name|firmware
+modifier|*
+name|fw
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1910,13 +1916,32 @@ condition|)
 return|return
 name|error
 return|;
+name|fw
+operator|=
+name|firmware_get
+argument_list|(
+name|imageName
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fw
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOENT
+return|;
+comment|/* Locate desired image in files w/ combined images */
 name|error
 operator|=
 name|npe_findimage
 argument_list|(
 name|sc
 argument_list|,
-name|IxNpeMicrocode_array
+name|fw
+operator|->
+name|data
 argument_list|,
 name|imageId
 argument_list|,
@@ -2006,6 +2031,13 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
+name|firmware_put
+argument_list|(
+name|fw
+argument_list|,
+name|FIRMWARE_UNLOAD
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -2235,15 +2267,12 @@ name|sc
 argument_list|,
 name|npeMemAddress
 argument_list|,
-name|htobe32
-argument_list|(
 name|bp
 operator|->
 name|data
 index|[
 name|i
 index|]
-argument_list|)
 argument_list|,
 name|verify
 argument_list|)
@@ -2360,15 +2389,12 @@ name|sc
 argument_list|,
 name|npeMemAddress
 argument_list|,
-name|htobe32
-argument_list|(
 name|bp
 operator|->
 name|data
 index|[
 name|i
 index|]
-argument_list|)
 argument_list|,
 name|verify
 argument_list|)
@@ -2599,10 +2625,7 @@ name|cNum
 argument_list|,
 name|reg
 argument_list|,
-name|htobe32
-argument_list|(
 name|regVal
-argument_list|)
 argument_list|,
 name|verify
 argument_list|)
