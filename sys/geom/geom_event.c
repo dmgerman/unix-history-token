@@ -448,6 +448,11 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|g_cancel_event
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
 name|wf
 operator|=
 name|pp
