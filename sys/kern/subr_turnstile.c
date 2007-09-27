@@ -383,38 +383,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX: stats, remove me */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|turnstile_nullowners
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_debug
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|turnstile_nullowners
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|turnstile_nullowners
-argument_list|,
-literal|0
-argument_list|,
-literal|"called with null owner on a shared queue"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
@@ -2404,6 +2372,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|queue
+operator|==
+name|TS_SHARED_QUEUE
+condition|)
+name|MPASS
+argument_list|(
+name|owner
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|owner
 condition|)
 name|MPASS
@@ -2417,21 +2398,6 @@ operator|==
 name|P_MAGIC
 argument_list|)
 expr_stmt|;
-comment|/* XXX: stats, remove me */
-if|if
-condition|(
-operator|!
-name|owner
-operator|&&
-name|queue
-operator|==
-name|TS_SHARED_QUEUE
-condition|)
-block|{
-name|turnstile_nullowners
-operator|++
-expr_stmt|;
-block|}
 name|MPASS
 argument_list|(
 name|queue
@@ -2848,6 +2814,12 @@ directive|endif
 comment|/* Save who we are blocked on and switch. */
 name|td
 operator|->
+name|td_tsqueue
+operator|=
+name|queue
+expr_stmt|;
+name|td
+operator|->
 name|td_blocked
 operator|=
 name|ts
@@ -2994,15 +2966,6 @@ operator|->
 name|p_magic
 operator|==
 name|P_MAGIC
-argument_list|)
-expr_stmt|;
-name|MPASS
-argument_list|(
-name|ts
-operator|->
-name|ts_owner
-operator|==
-name|curthread
 argument_list|)
 expr_stmt|;
 name|tc
@@ -3584,7 +3547,16 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Remove the turnstile from this thread's list of contested locks 	 * since this thread doesn't own it anymore.  New threads will 	 * not be blocking on the turnstile until it is claimed by a new 	 * owner. 	 */
+comment|/* 	 * Remove the turnstile from this thread's list of contested locks 	 * since this thread doesn't own it anymore.  New threads will 	 * not be blocking on the turnstile until it is claimed by a new 	 * owner.  There might not be a current owner if this is a shared 	 * lock. 	 */
+if|if
+condition|(
+name|ts
+operator|->
+name|ts_owner
+operator|!=
+name|NULL
+condition|)
+block|{
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -3610,6 +3582,7 @@ operator|&
 name|td_contested_lock
 argument_list|)
 expr_stmt|;
+block|}
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -3744,6 +3717,17 @@ name|td_lockname
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|td
+operator|->
+name|td_tsqueue
+operator|=
+literal|0xff
+expr_stmt|;
+endif|#
+directive|endif
 name|TD_CLR_LOCK
 argument_list|(
 name|td
