@@ -112,30 +112,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|turnstile_wakeup
-parameter_list|(
-name|turnstile
-parameter_list|)
-value|turnstile_broadcast(turnstile)
-end_define
-
-begin_define
-define|#
-directive|define
-name|turnstile_broadcast
-parameter_list|(
-name|turnstile
-parameter_list|)
-define|\
-value|turnstile_broadcast_queue(turnstile, TS_EXCLUSIVE_QUEUE)
-end_define
-
 begin_function_decl
 name|void
-name|turnstile_broadcast_queue
+name|turnstile_broadcast
 parameter_list|(
 name|struct
 name|turnstile
@@ -168,20 +147,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|turnstile_empty
-parameter_list|(
-name|turnstile
-parameter_list|)
-define|\
-value|turnstile_empty_queue(turnstile, TS_EXCLUSIVE_QUEUE);
-end_define
-
 begin_function_decl
 name|int
-name|turnstile_empty_queue
+name|turnstile_empty
 parameter_list|(
 name|struct
 name|turnstile
@@ -203,22 +171,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|turnstile_head
-parameter_list|(
-name|turnstile
-parameter_list|)
-define|\
-value|turnstile_head_queue(turnstile, TS_EXCLUSIVE_QUEUE)
-end_define
-
 begin_function_decl
 name|struct
 name|thread
 modifier|*
-name|turnstile_head_queue
+name|turnstile_head
 parameter_list|(
 name|struct
 name|turnstile
@@ -264,21 +221,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|int
 name|turnstile_signal
 parameter_list|(
-name|turnstile
-parameter_list|)
-define|\
-value|turnstile_signal_queue(turnstile, TS_EXCLUSIVE_QUEUE)
-end_define
-
-begin_function_decl
-name|int
-name|turnstile_signal_queue
-parameter_list|(
 name|struct
 name|turnstile
 modifier|*
@@ -289,33 +235,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|turnstile
-modifier|*
-name|turnstile_trywait
-parameter_list|(
-name|struct
-name|lock_object
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
+name|void
 name|turnstile_unpend
 parameter_list|(
-name|turnstile
-parameter_list|)
-define|\
-value|turnstile_unpend_queue(turnstile, TS_EXCLUSIVE_QUEUE);
-end_define
-
-begin_function_decl
-name|void
-name|turnstile_unpend_queue
-parameter_list|(
 name|struct
 name|turnstile
 modifier|*
@@ -325,22 +247,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|turnstile_wait
-parameter_list|(
-name|lock_object
-parameter_list|,
-name|thread
-parameter_list|)
-define|\
-value|turnstile_wait_queue(lock_object, thread, TS_EXCLUSIVE_QUEUE)
-end_define
-
 begin_function_decl
 name|void
-name|turnstile_wait_queue
+name|turnstile_wait
 parameter_list|(
 name|struct
 name|lock_object

@@ -2314,7 +2314,7 @@ end_comment
 
 begin_function
 name|void
-name|turnstile_wait_queue
+name|turnstile_wait
 parameter_list|(
 name|struct
 name|lock_object
@@ -2934,7 +2934,7 @@ end_comment
 
 begin_function
 name|int
-name|turnstile_signal_queue
+name|turnstile_signal
 parameter_list|(
 name|struct
 name|turnstile
@@ -3188,7 +3188,7 @@ end_comment
 
 begin_function
 name|void
-name|turnstile_broadcast_queue
+name|turnstile_broadcast
 parameter_list|(
 name|struct
 name|turnstile
@@ -3403,7 +3403,7 @@ end_comment
 
 begin_function
 name|void
-name|turnstile_unpend_queue
+name|turnstile_unpend
 parameter_list|(
 name|struct
 name|turnstile
@@ -3995,7 +3995,7 @@ begin_function
 name|struct
 name|thread
 modifier|*
-name|turnstile_head_queue
+name|turnstile_head
 parameter_list|(
 name|struct
 name|turnstile
@@ -4076,7 +4076,7 @@ end_comment
 
 begin_function
 name|int
-name|turnstile_empty_queue
+name|turnstile_empty
 parameter_list|(
 name|struct
 name|turnstile

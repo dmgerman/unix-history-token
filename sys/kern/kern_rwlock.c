@@ -1196,7 +1196,7 @@ argument_list|,
 name|rw
 argument_list|)
 expr_stmt|;
-name|turnstile_wait_queue
+name|turnstile_wait
 argument_list|(
 operator|&
 name|rw
@@ -1632,14 +1632,14 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|turnstile_broadcast_queue
+name|turnstile_broadcast
 argument_list|(
 name|ts
 argument_list|,
 name|TS_EXCLUSIVE_QUEUE
 argument_list|)
 expr_stmt|;
-name|turnstile_unpend_queue
+name|turnstile_unpend
 argument_list|(
 name|ts
 argument_list|,
@@ -2105,7 +2105,7 @@ argument_list|,
 name|rw
 argument_list|)
 expr_stmt|;
-name|turnstile_wait_queue
+name|turnstile_wait
 argument_list|(
 operator|&
 name|rw
@@ -2397,7 +2397,7 @@ operator|&
 name|RW_LOCK_WRITE_WAITERS
 operator|&&
 operator|!
-name|turnstile_empty_queue
+name|turnstile_empty
 argument_list|(
 name|ts
 argument_list|,
@@ -2434,7 +2434,7 @@ name|ADAPTIVE_RWLOCKS
 comment|/* 	 * We have to make sure that we actually have waiters to 	 * wakeup.  If they are all spinning, then we just need to 	 * disown the turnstile and return. 	 */
 if|if
 condition|(
-name|turnstile_empty_queue
+name|turnstile_empty
 argument_list|(
 name|ts
 argument_list|,
@@ -2524,7 +2524,7 @@ else|:
 literal|"write"
 argument_list|)
 expr_stmt|;
-name|turnstile_broadcast_queue
+name|turnstile_broadcast
 argument_list|(
 name|ts
 argument_list|,
@@ -2541,7 +2541,7 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-name|turnstile_unpend_queue
+name|turnstile_unpend
 argument_list|(
 name|ts
 argument_list|,
@@ -2966,7 +2966,7 @@ name|v
 operator|&
 name|RW_LOCK_READ_WAITERS
 operator|&&
-name|turnstile_empty_queue
+name|turnstile_empty
 argument_list|(
 name|ts
 argument_list|,
@@ -2985,7 +2985,7 @@ name|v
 operator|&
 name|RW_LOCK_WRITE_WAITERS
 operator|&&
-name|turnstile_empty_queue
+name|turnstile_empty
 argument_list|(
 name|ts
 argument_list|,
@@ -3014,7 +3014,7 @@ name|v
 operator|&
 name|RW_LOCK_READ_WAITERS
 condition|)
-name|turnstile_broadcast_queue
+name|turnstile_broadcast
 argument_list|(
 name|ts
 argument_list|,
@@ -3047,7 +3047,7 @@ operator|&
 name|RW_LOCK_READ_WAITERS
 condition|)
 block|{
-name|turnstile_unpend_queue
+name|turnstile_unpend
 argument_list|(
 name|ts
 argument_list|,

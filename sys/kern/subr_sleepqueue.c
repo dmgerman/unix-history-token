@@ -934,7 +934,7 @@ end_comment
 
 begin_function
 name|void
-name|sleepq_add_queue
+name|sleepq_add
 parameter_list|(
 name|void
 modifier|*
@@ -2818,7 +2818,7 @@ end_comment
 
 begin_function
 name|void
-name|sleepq_signal_queue
+name|sleepq_signal
 parameter_list|(
 name|void
 modifier|*
@@ -3001,7 +3001,7 @@ end_comment
 
 begin_function
 name|void
-name|sleepq_broadcast_queue
+name|sleepq_broadcast
 parameter_list|(
 name|void
 modifier|*

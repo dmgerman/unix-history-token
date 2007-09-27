@@ -357,6 +357,8 @@ operator|->
 name|cv_description
 argument_list|,
 name|SLEEPQ_CONDVAR
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|sleepq_wait
@@ -556,6 +558,8 @@ argument_list|,
 name|SLEEPQ_CONDVAR
 operator||
 name|SLEEPQ_INTERRUPTIBLE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|rval
@@ -754,6 +758,8 @@ operator|->
 name|cv_description
 argument_list|,
 name|SLEEPQ_CONDVAR
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|sleepq_set_timeout
@@ -972,6 +978,8 @@ argument_list|,
 name|SLEEPQ_CONDVAR
 operator||
 name|SLEEPQ_INTERRUPTIBLE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|sleepq_set_timeout
@@ -1076,6 +1084,8 @@ name|SLEEPQ_CONDVAR
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1132,6 +1142,8 @@ argument_list|,
 name|SLEEPQ_CONDVAR
 argument_list|,
 name|pri
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

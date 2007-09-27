@@ -124,7 +124,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sleepq_add_queue
+name|sleepq_add
 parameter_list|(
 name|void
 modifier|*
@@ -157,7 +157,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sleepq_broadcast_queue
+name|sleepq_broadcast
 parameter_list|(
 name|void
 modifier|*
@@ -230,7 +230,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sleepq_signal_queue
+name|sleepq_signal
 parameter_list|(
 name|void
 modifier|*
@@ -300,57 +300,6 @@ name|wchan
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Preserve source compat with 6.x */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sleepq_add
-parameter_list|(
-name|wchan
-parameter_list|,
-name|lock
-parameter_list|,
-name|wmesg
-parameter_list|,
-name|flags
-parameter_list|)
-define|\
-value|sleepq_add_queue(wchan, lock, wmesg, flags, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sleepq_broadcast
-parameter_list|(
-name|wchan
-parameter_list|,
-name|flags
-parameter_list|,
-name|pri
-parameter_list|)
-define|\
-value|sleepq_broadcast_queue(wchan, flags, pri, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sleepq_signal
-parameter_list|(
-name|wchan
-parameter_list|,
-name|flags
-parameter_list|,
-name|pri
-parameter_list|)
-define|\
-value|sleepq_signal_queue(wchan, flags, pri, 0)
-end_define
 
 begin_endif
 endif|#

@@ -657,6 +657,8 @@ argument_list|,
 name|wmesg
 argument_list|,
 name|flags
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -993,6 +995,8 @@ argument_list|,
 name|wmesg
 argument_list|,
 name|SLEEPQ_MSLEEP
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1167,6 +1171,8 @@ name|SLEEPQ_MSLEEP
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1201,6 +1207,8 @@ name|SLEEPQ_MSLEEP
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

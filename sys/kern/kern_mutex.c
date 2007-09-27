@@ -2891,6 +2891,8 @@ name|mtx_owner
 argument_list|(
 name|m
 argument_list|)
+argument_list|,
+name|TS_EXCLUSIVE_QUEUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -3348,6 +3350,8 @@ operator|=
 name|turnstile_head
 argument_list|(
 name|ts
+argument_list|,
+name|TS_EXCLUSIVE_QUEUE
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3358,6 +3362,8 @@ name|MUTEX_WAKE_ALL
 name|turnstile_broadcast
 argument_list|(
 name|ts
+argument_list|,
+name|TS_EXCLUSIVE_QUEUE
 argument_list|)
 expr_stmt|;
 name|_release_lock_quick
@@ -3372,6 +3378,8 @@ condition|(
 name|turnstile_signal
 argument_list|(
 name|ts
+argument_list|,
+name|TS_EXCLUSIVE_QUEUE
 argument_list|)
 condition|)
 block|{
@@ -3437,6 +3445,8 @@ directive|endif
 name|turnstile_unpend
 argument_list|(
 name|ts
+argument_list|,
+name|TS_EXCLUSIVE_LOCK
 argument_list|)
 expr_stmt|;
 ifndef|#

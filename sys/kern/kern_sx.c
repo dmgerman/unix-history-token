@@ -1661,7 +1661,7 @@ name|x
 operator|&
 name|SX_LOCK_SHARED_WAITERS
 condition|)
-name|sleepq_broadcast_queue
+name|sleepq_broadcast
 argument_list|(
 operator|&
 name|sx
@@ -2269,7 +2269,7 @@ operator|&
 name|waittime
 argument_list|)
 expr_stmt|;
-name|sleepq_add_queue
+name|sleepq_add
 argument_list|(
 operator|&
 name|sx
@@ -2638,7 +2638,7 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-name|sleepq_broadcast_queue
+name|sleepq_broadcast
 argument_list|(
 operator|&
 name|sx
@@ -3148,7 +3148,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|sleepq_add_queue
+name|sleepq_add
 argument_list|(
 operator|&
 name|sx
@@ -3543,7 +3543,7 @@ argument_list|,
 name|sx
 argument_list|)
 expr_stmt|;
-name|sleepq_broadcast_queue
+name|sleepq_broadcast
 argument_list|(
 operator|&
 name|sx
