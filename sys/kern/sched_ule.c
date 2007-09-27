@@ -193,16 +193,26 @@ directive|include
 file|<machine/smp.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PREEMPTION
-end_ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
 
 begin_error
 error|#
 directive|error
-literal|"SCHED_ULE requires options PREEMPTION"
+literal|"This architecture is not currently compatible with ULE"
 end_error
 
 begin_endif
@@ -513,6 +523,32 @@ name|sched_slice
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PREEMPTION
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FULL_PREEMPTION
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|preempt_thresh
+init|=
+name|PRI_MAX_IDLE
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -521,6 +557,30 @@ init|=
 name|PRI_MIN_KERN
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|preempt_thresh
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * tdq - per processor runqs and statistics.  All fields are protected by the  * tdq_lock.  The load and lowpri may be accessed without to avoid excess  * locking in sched_pickcpu();  */
