@@ -20,14 +20,15 @@ struct|struct
 name|ichwd_device
 block|{
 name|uint16_t
-name|vendor
-decl_stmt|;
-name|uint16_t
 name|device
 decl_stmt|;
 name|char
 modifier|*
 name|desc
+decl_stmt|;
+name|unsigned
+name|int
+name|version
 decl_stmt|;
 block|}
 struct|;
@@ -39,6 +40,12 @@ name|ichwd_softc
 block|{
 name|device_t
 name|device
+decl_stmt|;
+name|device_t
+name|ich
+decl_stmt|;
+name|int
+name|ich_version
 decl_stmt|;
 name|int
 name|active
@@ -74,6 +81,20 @@ name|tco_bst
 decl_stmt|;
 name|bus_space_handle_t
 name|tco_bsh
+decl_stmt|;
+name|int
+name|gcs_rid
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|gcs_res
+decl_stmt|;
+name|bus_space_tag_t
+name|gcs_bst
+decl_stmt|;
+name|bus_space_handle_t
+name|gcs_bsh
 decl_stmt|;
 name|eventhandler_tag
 name|ev_tag
@@ -176,12 +197,61 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEVICEID_ICH5
+name|DEVICEID_ICH6M
+value|0x2641
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_ICH6W
+value|0x2642
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_ICH7
 value|0x27b8
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEVICEID_ICH7M
+value|0x27b9
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_ICH7MDH
+value|0x27bd
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_ICH8
+value|0x2810
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_ICH8DH
+value|0x2812
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_ICH8DO
+value|0x2814
+end_define
+
 begin_comment
-comment|/* ICH LPC Interface Bridge Registers */
+comment|/* ICH LPC Interface Bridge Registers (ICH5 and older) */
 end_comment
 
 begin_define
@@ -219,6 +289,38 @@ end_define
 begin_comment
 comment|/* bits 7-15 */
 end_comment
+
+begin_comment
+comment|/* ICH Chipset Configuration Registers (ICH6 and newer) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICH_RCBA
+value|0xf0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICH_GCS_OFFSET
+value|0x3410
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICH_GCS_SIZE
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICH_GCS_NO_REBOOT
+value|0x20
+end_define
 
 begin_comment
 comment|/* register names and locations (relative to PMBASE) */
@@ -279,7 +381,7 @@ begin_define
 define|#
 directive|define
 name|TCO_LEN
-value|0x0a
+value|0x20
 end_define
 
 begin_define
@@ -296,12 +398,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCO_TMR
+name|TCO_TMR1
 value|0x01
 end_define
 
 begin_comment
-comment|/* TCO Timer Initial Value */
+comment|/* TCO Timer Initial Value 					(ICH5 and older, 8 bits) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCO_TMR2
+value|0x12
+end_define
+
+begin_comment
+comment|/* TCO Timer Initial Value 					(ICH6 and newer, 16 bits) */
 end_comment
 
 begin_define
@@ -357,6 +470,17 @@ end_define
 
 begin_comment
 comment|/* TCO Control 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCO2_CNT
+value|0x08
+end_define
+
+begin_comment
+comment|/* TCO Control 2 */
 end_comment
 
 begin_comment
@@ -478,32 +602,14 @@ comment|/* preserve these bits */
 end_comment
 
 begin_comment
-comment|/* approximate length in nanoseconds of one WDT tick */
+comment|/* approximate length in nanoseconds of one WDT tick (about 0.6 sec) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ICHWD_TICK
-value|1800000000
-end_define
-
-begin_comment
-comment|/* minimum / maximum timeout in WDT ticks */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ICHWD_MIN_TIMEOUT
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ICHWD_MAX_TIMEOUT
-value|63
+value|600000000
 end_define
 
 begin_endif
