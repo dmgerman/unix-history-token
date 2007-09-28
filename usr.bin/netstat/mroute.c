@@ -229,7 +229,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|live
 condition|)
 block|{
@@ -302,7 +301,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|live
 condition|)
 block|{
@@ -1226,7 +1224,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|live
 condition|)
 block|{
