@@ -3008,23 +3008,28 @@ literal|"\005DS_CPL"
 comment|/* CPL Qualified Debug Store */
 literal|"\006VMX"
 comment|/* Virtual Machine Extensions */
-literal|"\007<b6>"
+literal|"\007SMX"
+comment|/* Safer Mode Extensions */
 literal|"\010EST"
 comment|/* Enhanced SpeedStep */
 literal|"\011TM2"
 comment|/* Thermal Monitor 2 */
-literal|"\012<b9>"
-literal|"\013CNTX-ID"
+literal|"\012SSSE3"
+comment|/* SSSE3 */
+literal|"\013CNXT-ID"
 comment|/* L1 context ID available */
 literal|"\014<b11>"
 literal|"\015<b12>"
 literal|"\016CX16"
 comment|/* CMPXCHG16B Instruction */
-literal|"\017<b14>"
-literal|"\020<b15>"
+literal|"\017xTPR"
+comment|/* Send Task Priority Messages*/
+literal|"\020PDCM"
+comment|/* Perf/Debug Capability MSR */
 literal|"\021<b16>"
 literal|"\022<b17>"
-literal|"\023<b18>"
+literal|"\023DCA"
+comment|/* Direct Cache Access */
 literal|"\024<b19>"
 literal|"\025<b20>"
 literal|"\026<b21>"
@@ -3117,9 +3122,9 @@ literal|"\035<b28>"
 comment|/* Undefined */
 literal|"\036LM"
 comment|/* 64 bit long mode */
-literal|"\0373DNow+"
+literal|"\0373DNow!+"
 comment|/* AMD 3DNow! Extensions */
-literal|"\0403DNow"
+literal|"\0403DNow!"
 comment|/* AMD 3DNow! */
 argument_list|)
 expr_stmt|;
@@ -3142,14 +3147,17 @@ literal|"\001LAHF"
 comment|/* LAHF/SAHF in long mode */
 literal|"\002CMP"
 comment|/* CMP legacy */
-literal|"\003<b2>"
-literal|"\004<b3>"
+literal|"\003SVM"
+comment|/* Secure Virtual Mode */
+literal|"\004ExtAPIC"
+comment|/* Extended APIC register */
 literal|"\005CR8"
 comment|/* CR8 in legacy mode */
 literal|"\006<b5>"
 literal|"\007<b6>"
 literal|"\010<b7>"
-literal|"\011<b8>"
+literal|"\011Prefetch"
+comment|/* 3DNow! Prefetch/PrefetchW */
 literal|"\012<b9>"
 literal|"\013<b10>"
 literal|"\014<b11>"
@@ -3191,24 +3199,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|cpu_feature
 operator|&=
 operator|~
 name|CPUID_HTT
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"\n    HTT bit cleared - FreeBSD"
-literal|" does not have licensing issues"
-literal|" requiring it.\n"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 			 * If this CPU supports HTT or CMP then mention the 			 * number of physical/logical cores it contains. 			 */
 if|if
 condition|(
