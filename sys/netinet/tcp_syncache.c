@@ -6001,6 +6001,11 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+name|tcpstat
+operator|.
+name|tcps_sc_sendcookie
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|data
