@@ -720,9 +720,10 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|thread_lock
+name|mtx_lock_spin
 argument_list|(
-name|curthread
+operator|&
+name|sched_lock
 argument_list|)
 expr_stmt|;
 name|sched_bind
@@ -732,9 +733,10 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
-name|thread_unlock
+name|mtx_unlock_spin
 argument_list|(
-name|curthread
+operator|&
+name|sched_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The digital temperature reading is located at bit 16 	 * of MSR_THERM_STATUS. 	 * 	 * There is a bit on that MSR that indicates whether the 	 * temperature is valid or not. 	 * 	 * The temperature is computed by subtracting the temperature 	 * reading by Tj(max). 	 */
@@ -745,9 +747,10 @@ argument_list|(
 name|MSR_THERM_STATUS
 argument_list|)
 expr_stmt|;
-name|thread_lock
+name|mtx_lock_spin
 argument_list|(
-name|curthread
+operator|&
+name|sched_lock
 argument_list|)
 expr_stmt|;
 name|sched_unbind
@@ -755,9 +758,10 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-name|thread_unlock
+name|mtx_unlock_spin
 argument_list|(
-name|curthread
+operator|&
+name|sched_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check for Thermal Status and Thermal Status Log. 	 */
