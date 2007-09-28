@@ -38,7 +38,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* "Math" Present (NPX or NPX emulator) */
+comment|/* "Math" (fpu) Present */
 end_comment
 
 begin_define
@@ -49,7 +49,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* EMulate non-NPX coproc. (trap ESC only) */
+comment|/* EMulate FPU instructions. (trap ESC only) */
 end_comment
 
 begin_define
@@ -62,28 +62,6 @@ end_define
 begin_comment
 comment|/* Task Switched (if MP, trap ESC and WAIT) */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notused
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CR0_ET
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* Extension Type (387 (if set) vs 287) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -278,6 +256,21 @@ end_define
 
 begin_comment
 comment|/* enable SIMD/MMX2 to use except 16 */
+end_comment
+
+begin_comment
+comment|/*  * Bits in AMD64 special registers.  EFER is 64 bits wide.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EFER_NXE
+value|0x000000800
+end_define
+
+begin_comment
+comment|/* PTE No-Execute bit enable (R/W) */
 end_comment
 
 begin_comment
@@ -515,6 +508,97 @@ name|CPUID_PBE
 value|0x80000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPUID2_SSE3
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_MON
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_DS_CPL
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_VMX
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_SMX
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_EST
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_TM2
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_SSSE3
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_CNXTID
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_CX16
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_XTPR
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_PDCM
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_DCA
+value|0x00040000
+end_define
+
 begin_comment
 comment|/*  * Important bits in the AMD extended cpuid flags  */
 end_comment
@@ -599,8 +683,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|AMDID2_SVM
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID2_EXT_APIC
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
 name|AMDID2_CR8
 value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID2_PREFETCH
+value|0x00000100
 end_define
 
 begin_comment
@@ -772,6 +877,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSR_IA32_EXT_CONFIG
+value|0x0ee
+end_define
+
+begin_comment
+comment|/* Undocumented. Core Solo/Duo only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MSR_MTRRcap
 value|0x0fe
 end_define
@@ -893,6 +1009,13 @@ define|#
 directive|define
 name|MSR_THERM_STATUS
 value|0x19c
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_MISC_ENABLE
+value|0x1a0
 end_define
 
 begin_define
@@ -1066,56 +1189,56 @@ end_define
 begin_define
 define|#
 directive|define
-name|MSR_MC4_CTL
+name|MSR_MC3_CTL
 value|0x40c
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC4_STATUS
+name|MSR_MC3_STATUS
 value|0x40d
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC4_ADDR
+name|MSR_MC3_ADDR
 value|0x40e
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC4_MISC
+name|MSR_MC3_MISC
 value|0x40f
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_CTL
+name|MSR_MC4_CTL
 value|0x410
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_STATUS
+name|MSR_MC4_STATUS
 value|0x411
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_ADDR
+name|MSR_MC4_ADDR
 value|0x412
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSR_MC3_MISC
+name|MSR_MC4_MISC
 value|0x413
 end_define
 
@@ -2349,6 +2472,21 @@ comment|/* fixed (A0000-FFFFF) range enable */
 end_comment
 
 begin_comment
+comment|/* AMD64 MSR's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_EFER
+value|0xc0000080
+end_define
+
+begin_comment
+comment|/* extended features */
+end_comment
+
+begin_comment
 comment|/* VIA ACE crypto featureset: for via_feature_rng */
 end_comment
 
@@ -2364,7 +2502,7 @@ comment|/* cpu has RNG */
 end_comment
 
 begin_comment
-comment|/* VIA ACE crypto featureset: for via_has_xcrypt */
+comment|/* VIA ACE crypto featureset: for via_feature_xcrypt */
 end_comment
 
 begin_define

@@ -530,7 +530,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CPUID_B30
+name|CPUID_IA64
 value|0x40000000
 end_define
 
@@ -565,6 +565,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID2_VMX
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_SMX
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID2_EST
 value|0x00000080
 end_define
@@ -579,7 +593,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|CPUID2_CNTXID
+name|CPUID2_SSSE3
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_CNXTID
 value|0x00000400
 end_define
 
@@ -588,6 +609,27 @@ define|#
 directive|define
 name|CPUID2_CX16
 value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_XTPR
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_PDCM
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_DCA
+value|0x00040000
 end_define
 
 begin_comment
@@ -674,8 +716,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|AMDID2_SVM
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID2_EXT_APIC
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
 name|AMDID2_CR8
 value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID2_PREFETCH
+value|0x00000100
 end_define
 
 begin_comment
@@ -847,6 +910,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSR_IA32_EXT_CONFIG
+value|0x0ee
+end_define
+
+begin_comment
+comment|/* Undocumented. Core Solo/Duo only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MSR_MTRRcap
 value|0x0fe
 end_define
@@ -968,6 +1042,13 @@ define|#
 directive|define
 name|MSR_THERM_STATUS
 value|0x19c
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_MISC_ENABLE
+value|0x1a0
 end_define
 
 begin_define
@@ -1920,7 +2001,7 @@ comment|/* fixed (A0000-FFFFF) range enable */
 end_comment
 
 begin_comment
-comment|/* X86-64 MSR's */
+comment|/* AMD64 MSR's */
 end_comment
 
 begin_define
