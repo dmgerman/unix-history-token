@@ -7271,7 +7271,13 @@ name|LOG_SECURITY
 operator||
 name|LOG_DEBUG
 argument_list|,
-literal|"%s %s:%u -> %s:%u, %s\n"
+literal|"ipfw: %d %s %s:%u -> %s:%u, %s\n"
+argument_list|,
+name|parent
+operator|->
+name|rule
+operator|->
+name|rulenum
 argument_list|,
 literal|"drop session"
 argument_list|,
