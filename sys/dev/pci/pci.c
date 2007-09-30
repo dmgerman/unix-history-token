@@ -1595,13 +1595,51 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Find a device_t by bus/slot/function */
+comment|/* Find a device_t by bus/slot/function in domain 0 */
 end_comment
 
 begin_function
 name|device_t
 name|pci_find_bsf
 parameter_list|(
+name|uint8_t
+name|bus
+parameter_list|,
+name|uint8_t
+name|slot
+parameter_list|,
+name|uint8_t
+name|func
+parameter_list|)
+block|{
+return|return
+operator|(
+name|pci_find_dbsf
+argument_list|(
+literal|0
+argument_list|,
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Find a device_t by domain/bus/slot/function */
+end_comment
+
+begin_function
+name|device_t
+name|pci_find_dbsf
+parameter_list|(
+name|uint32_t
+name|domain
+parameter_list|,
 name|uint8_t
 name|bus
 parameter_list|,
@@ -1628,6 +1666,16 @@ argument_list|)
 block|{
 if|if
 condition|(
+operator|(
+name|dinfo
+operator|->
+name|cfg
+operator|.
+name|domain
+operator|==
+name|domain
+operator|)
+operator|&&
 operator|(
 name|dinfo
 operator|->
@@ -2149,6 +2197,9 @@ name|device_t
 name|pcib
 parameter_list|,
 name|int
+name|d
+parameter_list|,
+name|int
 name|b
 parameter_list|,
 name|int
@@ -2238,6 +2289,12 @@ operator|&
 name|devlist_entry
 operator|->
 name|cfg
+expr_stmt|;
+name|cfg
+operator|->
+name|domain
+operator|=
+name|d
 expr_stmt|;
 name|cfg
 operator|->
@@ -2487,6 +2544,18 @@ name|devlist_entry
 argument_list|,
 name|pci_links
 argument_list|)
+expr_stmt|;
+name|devlist_entry
+operator|->
+name|conf
+operator|.
+name|pc_sel
+operator|.
+name|pc_domain
+operator|=
+name|cfg
+operator|->
+name|domain
 expr_stmt|;
 name|devlist_entry
 operator|->
@@ -2944,7 +3013,11 @@ name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"HT Bridge at %d:%d:%d has non-default MSI window 0x%llx\n"
+literal|"HT Bridge at pci%d:%d:%d:%d has non-default MSI window 0x%llx\n"
+argument_list|,
+name|cfg
+operator|->
+name|domain
 argument_list|,
 name|cfg
 operator|->
@@ -3724,7 +3797,11 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"pci%d:%d:%d: invalid vpd data, remain %#x\n"
+literal|"pci%d:%d:%d:%d: invalid vpd data, remain %#x\n"
+argument_list|,
+name|cfg
+operator|->
+name|domain
 argument_list|,
 name|cfg
 operator|->
@@ -4068,7 +4145,11 @@ block|{
 comment|/* 				 * if this happens, we can't trust the rest 				 * of the VPD. 				 */
 name|printf
 argument_list|(
-literal|"pci%d:%d:%d: bad keyword length: %d\n"
+literal|"pci%d:%d:%d:%d: bad keyword length: %d\n"
+argument_list|,
+name|cfg
+operator|->
+name|domain
 argument_list|,
 name|cfg
 operator|->
@@ -4296,7 +4377,11 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"pci%d:%d:%d: bad VPD cksum, remain %hhu\n"
+literal|"pci%d:%d:%d:%d: bad VPD cksum, remain %hhu\n"
+argument_list|,
+name|cfg
+operator|->
+name|domain
 argument_list|,
 name|cfg
 operator|->
@@ -4755,7 +4840,11 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"pci%d:%d:%d: invalid state: %d\n"
+literal|"pci%d:%d:%d:%d: invalid state: %d\n"
+argument_list|,
+name|cfg
+operator|->
+name|domain
 argument_list|,
 name|cfg
 operator|->
@@ -9894,7 +9983,13 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"pci%d:%d:%d: Transition from D%d to D%d\n"
+literal|"pci%d:%d:%d:%d: Transition from D%d to D%d\n"
+argument_list|,
+name|dinfo
+operator|->
+name|cfg
+operator|.
+name|domain
 argument_list|,
 name|dinfo
 operator|->
@@ -10531,7 +10626,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tbus=%d, slot=%d, func=%d\n"
+literal|"\tdomain=%d, bus=%d, slot=%d, func=%d\n"
+argument_list|,
+name|cfg
+operator|->
+name|domain
 argument_list|,
 name|cfg
 operator|->
@@ -11340,7 +11439,12 @@ name|device_printf
 argument_list|(
 name|bus
 argument_list|,
-literal|"pci%d:%d:%d bar %#x too many address bits"
+literal|"pci%d:%d:%d:%d bar %#x too many address bits"
+argument_list|,
+name|pci_get_domain
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 name|b
 argument_list|,
@@ -11657,7 +11761,12 @@ name|device_printf
 argument_list|(
 name|bus
 argument_list|,
-literal|"pci%d.%d.%x bar %#x start %#jx, too many bits."
+literal|"pci%d:%d.%d.%x bar %#x start %#jx, too many bits."
+argument_list|,
+name|pci_get_domain
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 name|b
 argument_list|,
@@ -12262,7 +12371,11 @@ argument_list|(
 name|tunable_name
 argument_list|)
 argument_list|,
-literal|"hw.pci%d.%d.INT%c.irq"
+literal|"hw.pci%d.%d.%d.INT%c.irq"
+argument_list|,
+name|cfg
+operator|->
+name|domain
 argument_list|,
 name|cfg
 operator|->
@@ -12753,6 +12866,9 @@ name|device_t
 name|dev
 parameter_list|,
 name|int
+name|domain
+parameter_list|,
+name|int
 name|busno
 parameter_list|,
 name|size_t
@@ -12892,6 +13008,8 @@ operator|=
 name|pci_read_device
 argument_list|(
 name|pcib
+argument_list|,
+name|domain
 argument_list|,
 name|busno
 argument_list|,
@@ -13057,8 +13175,17 @@ parameter_list|)
 block|{
 name|int
 name|busno
+decl_stmt|,
+name|domain
 decl_stmt|;
-comment|/* 	 * Since there can be multiple independantly numbered PCI 	 * busses on systems with multiple PCI domains, we can't use 	 * the unit number to decide which bus we are probing. We ask 	 * the parent pcib what our bus number is. 	 */
+comment|/* 	 * Since there can be multiple independantly numbered PCI 	 * busses on systems with multiple PCI domains, we can't use 	 * the unit number to decide which bus we are probing. We ask 	 * the parent pcib what our domain and bus numbers are. 	 */
+name|domain
+operator|=
+name|pcib_get_domain
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|busno
 operator|=
 name|pcib_get_bus
@@ -13074,7 +13201,9 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"physical bus=%d\n"
+literal|"domain=%d, physical bus=%d\n"
+argument_list|,
+name|domain
 argument_list|,
 name|busno
 argument_list|)
@@ -13082,6 +13211,8 @@ expr_stmt|;
 name|pci_add_children
 argument_list|(
 name|dev
+argument_list|,
+name|domain
 argument_list|,
 name|busno
 argument_list|,
@@ -13662,7 +13793,13 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"pci%d:%d:%d: reprobing on driver added\n"
+literal|"pci%d:%d:%d:%d: reprobing on driver added\n"
+argument_list|,
+name|dinfo
+operator|->
+name|cfg
+operator|.
+name|domain
 argument_list|,
 name|dinfo
 operator|->
@@ -16274,6 +16411,17 @@ name|intline
 expr_stmt|;
 break|break;
 case|case
+name|PCI_IVAR_DOMAIN
+case|:
+operator|*
+name|result
+operator|=
+name|cfg
+operator|->
+name|domain
+expr_stmt|;
+break|break;
+case|case
 name|PCI_IVAR_BUS
 case|:
 operator|*
@@ -16458,6 +16606,9 @@ name|PCI_IVAR_REVID
 case|:
 case|case
 name|PCI_IVAR_IRQ
+case|:
+case|case
+name|PCI_IVAR_DOMAIN
 case|:
 case|case
 name|PCI_IVAR_BUS
@@ -16645,7 +16796,7 @@ name|conf
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%s%d@pci%d:%d:%d:\tclass=0x%06x card=0x%08x "
+literal|"%s%d@pci%d:%d:%d:%d:\tclass=0x%06x card=0x%08x "
 literal|"chip=0x%08x rev=0x%02x hdr=0x%02x\n"
 argument_list|,
 operator|(
@@ -16680,6 +16831,12 @@ argument_list|)
 else|:
 name|none_count
 operator|++
+argument_list|,
+name|p
+operator|->
+name|pc_sel
+operator|.
+name|pc_domain
 argument_list|,
 name|p
 operator|->

@@ -50,39 +50,43 @@ enum|enum
 block|{
 name|PCI_GETCONF_NO_MATCH
 init|=
-literal|0x00
+literal|0x0000
+block|,
+name|PCI_GETCONF_MATCH_DOMAIN
+init|=
+literal|0x0001
 block|,
 name|PCI_GETCONF_MATCH_BUS
 init|=
-literal|0x01
+literal|0x0002
 block|,
 name|PCI_GETCONF_MATCH_DEV
 init|=
-literal|0x02
+literal|0x0004
 block|,
 name|PCI_GETCONF_MATCH_FUNC
 init|=
-literal|0x04
+literal|0x0008
 block|,
 name|PCI_GETCONF_MATCH_NAME
 init|=
-literal|0x08
+literal|0x0010
 block|,
 name|PCI_GETCONF_MATCH_UNIT
 init|=
-literal|0x10
+literal|0x0020
 block|,
 name|PCI_GETCONF_MATCH_VENDOR
 init|=
-literal|0x20
+literal|0x0040
 block|,
 name|PCI_GETCONF_MATCH_DEVICE
 init|=
-literal|0x40
+literal|0x0080
 block|,
 name|PCI_GETCONF_MATCH_CLASS
 init|=
-literal|0x80
+literal|0x0100
 block|}
 name|pci_getconf_flags
 typedef|;
@@ -92,6 +96,10 @@ begin_struct
 struct|struct
 name|pcisel
 block|{
+name|u_int32_t
+name|pc_domain
+decl_stmt|;
+comment|/* domain number */
 name|u_int8_t
 name|pc_bus
 decl_stmt|;
@@ -116,7 +124,7 @@ name|struct
 name|pcisel
 name|pc_sel
 decl_stmt|;
-comment|/* bus+slot+function */
+comment|/* domain+bus+slot+function */
 name|u_int8_t
 name|pc_hdr
 decl_stmt|;
@@ -178,7 +186,7 @@ name|struct
 name|pcisel
 name|pc_sel
 decl_stmt|;
-comment|/* bus+slot+function */
+comment|/* domain+bus+slot+function */
 name|char
 name|pd_name
 index|[

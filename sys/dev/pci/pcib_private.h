@@ -46,6 +46,10 @@ name|uint16_t
 name|command
 decl_stmt|;
 comment|/* command register */
+name|uint32_t
+name|domain
+decl_stmt|;
+comment|/* domain number */
 name|uint8_t
 name|secbus
 decl_stmt|;

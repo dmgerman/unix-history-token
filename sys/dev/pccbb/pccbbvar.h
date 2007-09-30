@@ -114,6 +114,9 @@ decl_stmt|;
 name|bus_space_handle_t
 name|bsh
 decl_stmt|;
+name|uint32_t
+name|domain
+decl_stmt|;
 name|unsigned
 name|int
 name|pribus

@@ -836,7 +836,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d@pci%d:%d:%d:\tclass=0x%06x card=0x%08x "
+literal|"%s%d@pci%d:%d:%d:%d:\tclass=0x%06x card=0x%08x "
 literal|"chip=0x%08x rev=0x%02x hdr=0x%02x\n"
 argument_list|,
 operator|(
@@ -876,6 +876,12 @@ name|pd_unit
 else|:
 name|none_count
 operator|++
+argument_list|,
+name|p
+operator|->
+name|pc_sel
+operator|.
+name|pc_domain
 argument_list|,
 name|p
 operator|->
@@ -2602,6 +2608,40 @@ block|{
 name|ep
 operator|+=
 literal|3
+expr_stmt|;
+name|sel
+operator|.
+name|pc_domain
+operator|=
+name|strtoul
+argument_list|(
+name|ep
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ep
+operator|||
+operator|*
+name|ep
+operator|++
+operator|!=
+literal|':'
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"cannot parse selector %s"
+argument_list|,
+name|str
+argument_list|)
 expr_stmt|;
 name|sel
 operator|.

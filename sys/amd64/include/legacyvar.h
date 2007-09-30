@@ -19,6 +19,8 @@ begin_enum
 enum|enum
 name|legacy_device_ivars
 block|{
+name|LEGACY_IVAR_PCIDOMAIN
+block|,
 name|LEGACY_IVAR_PCIBUS
 block|}
 enum|;
@@ -38,6 +40,17 @@ parameter_list|)
 define|\
 value|__BUS_ACCESSOR(legacy, var, LEGACY, ivar, type)
 end_define
+
+begin_macro
+name|LEGACY_ACCESSOR
+argument_list|(
+argument|pcidomain
+argument_list|,
+argument|PCIDOMAIN
+argument_list|,
+argument|uint32_t
+argument_list|)
+end_macro
 
 begin_macro
 name|LEGACY_ACCESSOR

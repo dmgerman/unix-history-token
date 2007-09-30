@@ -1552,6 +1552,19 @@ name|which
 condition|)
 block|{
 case|case
+name|PCIB_IVAR_DOMAIN
+case|:
+operator|*
+name|result
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
 name|PCIB_IVAR_BUS
 case|:
 operator|*
@@ -1566,7 +1579,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 block|}
 return|return
 operator|(

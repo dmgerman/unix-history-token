@@ -630,15 +630,24 @@ decl_stmt|,
 name|child
 decl_stmt|;
 name|u_int
-name|slot
-decl_stmt|,
 name|busno
 decl_stmt|,
+name|domain
+decl_stmt|,
 name|func
+decl_stmt|,
+name|slot
 decl_stmt|;
 name|pcib
 operator|=
 name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|domain
+operator|=
+name|pcib_get_domain
 argument_list|(
 name|dev
 argument_list|)
@@ -659,7 +668,9 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"physical bus=%d\n"
+literal|"domain=%d, physical bus=%d\n"
+argument_list|,
+name|domain
 argument_list|,
 name|busno
 argument_list|)
@@ -731,10 +742,13 @@ operator|.
 name|phys_hi
 argument_list|)
 expr_stmt|;
+comment|/* Some OFW device trees contain dupes. */
 if|if
 condition|(
-name|pci_find_bsf
+name|pci_find_dbsf
 argument_list|(
+name|domain
+argument_list|,
 name|busno
 argument_list|,
 name|slot
@@ -766,6 +780,8 @@ operator|)
 name|pci_read_device
 argument_list|(
 name|pcib
+argument_list|,
+name|domain
 argument_list|,
 name|busno
 argument_list|,

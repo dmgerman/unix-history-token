@@ -851,7 +851,13 @@ name|PRINT
 case|:
 name|printf
 argument_list|(
-literal|"Bus %02Xh Device %02Xh Function %02Xh: "
+literal|"Domain %04Xh Bus %02Xh Device %02Xh Function %02Xh: "
+argument_list|,
+name|p
+operator|->
+name|pc_sel
+operator|.
+name|pc_domain
 argument_list|,
 name|p
 operator|->

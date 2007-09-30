@@ -692,6 +692,21 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
+literal|"  domain            %d\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_bsc
+operator|.
+name|ops_pcib_sc
+operator|.
+name|domain
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
 literal|"  secondary bus     %d\n"
 argument_list|,
 name|sc

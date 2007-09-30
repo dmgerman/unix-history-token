@@ -1311,8 +1311,17 @@ parameter_list|)
 block|{
 name|int
 name|busno
+decl_stmt|,
+name|domain
 decl_stmt|;
-comment|/* 	 * Since there can be multiple independantly numbered PCI 	 * busses on systems with multiple PCI domains, we can't use 	 * the unit number to decide which bus we are probing. We ask 	 * the parent pcib what our bus number is. 	 */
+comment|/* 	 * Since there can be multiple independantly numbered PCI 	 * busses on systems with multiple PCI domains, we can't use 	 * the unit number to decide which bus we are probing. We ask 	 * the parent pcib what our domain and bus numbers are. 	 */
+name|domain
+operator|=
+name|pcib_get_domain
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|busno
 operator|=
 name|pcib_get_bus
@@ -1328,7 +1337,9 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"physical bus=%d\n"
+literal|"domain=%d, physical bus=%d\n"
+argument_list|,
+name|domain
 argument_list|,
 name|busno
 argument_list|)
@@ -1337,6 +1348,8 @@ comment|/* 	 * First, PCI devices are added as in the normal PCI bus driver. 	 *
 name|pci_add_children
 argument_list|(
 name|dev
+argument_list|,
+name|domain
 argument_list|,
 name|busno
 argument_list|,

@@ -28,6 +28,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_DOMAINMAX
+value|65535
+end_define
+
+begin_comment
+comment|/* highest supported domain number */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_BUSMAX
 value|255
 end_define
@@ -460,6 +471,10 @@ name|uint8_t
 name|nummaps
 decl_stmt|;
 comment|/* actual number of PCI maps used */
+name|uint32_t
+name|domain
+decl_stmt|;
+comment|/* PCI domain */
 name|uint8_t
 name|bus
 decl_stmt|;
@@ -766,6 +781,8 @@ name|PCI_IVAR_INTPIN
 block|,
 name|PCI_IVAR_IRQ
 block|,
+name|PCI_IVAR_DOMAIN
+block|,
 name|PCI_IVAR_BUS
 block|,
 name|PCI_IVAR_SLOT
@@ -924,6 +941,17 @@ argument_list|,
 argument|IRQ
 argument_list|,
 argument|uint8_t
+argument_list|)
+end_macro
+
+begin_macro
+name|PCI_ACCESSOR
+argument_list|(
+argument|domain
+argument_list|,
+argument|DOMAIN
+argument_list|,
+argument|uint32_t
 argument_list|)
 end_macro
 
@@ -1120,6 +1148,8 @@ begin_enum
 enum|enum
 name|pcib_device_ivars
 block|{
+name|PCIB_IVAR_DOMAIN
+block|,
 name|PCIB_IVAR_BUS
 block|}
 enum|;
@@ -1139,6 +1169,17 @@ parameter_list|)
 define|\
 value|__BUS_ACCESSOR(pcib, var, PCIB, ivar, type)
 end_define
+
+begin_macro
+name|PCIB_ACCESSOR
+argument_list|(
+argument|domain
+argument_list|,
+argument|DOMAIN
+argument_list|,
+argument|uint32_t
+argument_list|)
+end_macro
 
 begin_macro
 name|PCIB_ACCESSOR
@@ -1764,6 +1805,21 @@ begin_function_decl
 name|device_t
 name|pci_find_bsf
 parameter_list|(
+name|uint8_t
+parameter_list|,
+name|uint8_t
+parameter_list|,
+name|uint8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|device_t
+name|pci_find_dbsf
+parameter_list|(
+name|uint32_t
+parameter_list|,
 name|uint8_t
 parameter_list|,
 name|uint8_t

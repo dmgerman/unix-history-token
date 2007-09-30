@@ -35,6 +35,9 @@ name|device_t
 name|dev
 parameter_list|,
 name|int
+name|domain
+parameter_list|,
+name|int
 name|busno
 parameter_list|,
 name|size_t
@@ -577,6 +580,9 @@ name|pci_read_device
 parameter_list|(
 name|device_t
 name|pcib
+parameter_list|,
+name|int
+name|d
 parameter_list|,
 name|int
 name|b
