@@ -1111,6 +1111,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_ULONG
+argument_list|(
+literal|"compat.ia32.maxdsiz"
+argument_list|,
+operator|&
+name|ia32_maxdsiz
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|u_long
@@ -1141,6 +1152,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_ULONG
+argument_list|(
+literal|"compat.ia32.maxssiz"
+argument_list|,
+operator|&
+name|ia32_maxssiz
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|u_long
@@ -1167,6 +1189,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_ULONG
+argument_list|(
+literal|"compat.ia32.maxvmem"
+argument_list|,
+operator|&
+name|ia32_maxvmem
 argument_list|)
 expr_stmt|;
 end_expr_stmt
