@@ -1147,6 +1147,19 @@ name|SCTP_FROM_SCTP_TIMER
 operator|+
 name|SCTP_LOC_1
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Aborting association threshold:%d overall error count:%d\n"
+argument_list|,
+name|threshold
+argument_list|,
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|overall_error_count
+argument_list|)
+expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
 name|inp

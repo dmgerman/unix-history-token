@@ -4583,6 +4583,20 @@ name|SCTP_SO_NOT_LOCKED
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_HOLDS_LOCK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_NOT_LOCKED
+value|0
+end_define
+
 begin_comment
 comment|/*-  * For address locks, do we hold the lock?  */
 end_comment

@@ -159,13 +159,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|sctp_maxspace
+parameter_list|(
+name|sb
+parameter_list|)
+value|(max((sb)->sb_hiwat,SCTP_MINIMAL_RWND))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sctp_sbspace
 parameter_list|(
 name|asoc
 parameter_list|,
 name|sb
 parameter_list|)
-value|((long) (((sb)->sb_hiwat> (asoc)->sb_cc) ? ((sb)->sb_hiwat - (asoc)->sb_cc) : 0))
+value|((long) (sctp_maxspace(sb)> (asoc)->sb_cc) ? (sctp_maxspace(sb) - (asoc)->sb_cc) : 0)
 end_define
 
 begin_define
@@ -175,7 +185,7 @@ name|sctp_sbspace_failedmsgs
 parameter_list|(
 name|sb
 parameter_list|)
-value|((long) (((sb)->sb_hiwat> (sb)->sb_cc) ? ((sb)->sb_hiwat - (sb)->sb_cc) : 0))
+value|((long) ((sctp_maxspace(sb)> (sb)->sb_cc) ? (sctp_maxspace(sb) - (sb)->sb_cc) : 0))
 end_define
 
 begin_define

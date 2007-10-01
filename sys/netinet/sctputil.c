@@ -20168,6 +20168,11 @@ name|chunk_type
 condition|)
 block|{
 case|case
+name|SCTP_COOKIE_ECHO
+case|:
+comment|/* We hit here only if the assoc is being freed */
+return|return;
+case|case
 name|SCTP_PACKET_DROPPED
 case|:
 comment|/* we don't respond to pkt-dropped */
@@ -26320,11 +26325,27 @@ if|if
 condition|(
 name|freecnt_applied
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|panic
 argument_list|(
 literal|"refcnt already incremented"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"refcnt already incremented?\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+else|else
+block|{
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -26341,6 +26362,7 @@ name|freecnt_applied
 operator|=
 literal|1
 expr_stmt|;
+block|}
 comment|/* 			 * Setup to remember how much we have not yet told 			 * the peer our rwnd has opened up. Note we grab the 			 * value from the tcb from last time. Note too that 			 * sack sending clears this when a sack is sent, 			 * which is fine. Once we hit the rwnd_req, we then 			 * will go to the sctp_user_rcvd() that will not 			 * lock until it KNOWs it MUST send a WUP-SACK. 			 */
 name|freed_so_far
 operator|=

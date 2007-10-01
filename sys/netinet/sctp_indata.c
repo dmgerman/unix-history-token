@@ -7711,16 +7711,10 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_INDATA1
 argument_list|,
-literal|"My rwnd overrun1:tsn:%lx rwnd %lu sbspace:%ld\n"
+literal|"My rwnd overrun1:tsn:%x rwnd %x sbspace:%x\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|tsn
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|asoc
 operator|->
 name|my_rwnd
@@ -11936,11 +11930,24 @@ operator|<
 name|slide_from
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|panic
 argument_list|(
 literal|"impossible slide"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"impossible slide?\n"
+argument_list|)
+expr_stmt|;
+return|return;
+endif|#
+directive|endif
 block|}
 name|distance
 operator|=
