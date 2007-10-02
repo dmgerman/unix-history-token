@@ -236,7 +236,7 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"example:\n"
-literal|"  wpa_supplicant -Dwext -iwlan0 -c/etc/wpa_supplicant.conf\n"
+literal|"  wpa_supplicant -Dbsd -iwlan0 -c/etc/wpa_supplicant.conf\n"
 argument_list|)
 expr_stmt|;
 endif|#
