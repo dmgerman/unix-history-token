@@ -420,7 +420,15 @@ name|daemon
 argument_list|(
 literal|0
 argument_list|,
+ifdef|#
+directive|ifdef
+name|DEBUG
 literal|1
+else|#
+directive|else
+literal|0
+endif|#
+directive|endif
 argument_list|)
 condition|)
 block|{
