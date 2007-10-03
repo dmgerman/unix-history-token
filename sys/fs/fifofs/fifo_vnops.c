@@ -764,7 +764,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ASSERT_VOP_LOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
 argument_list|,

@@ -817,8 +817,6 @@ else|:
 name|FOLLOW
 operator|)
 operator||
-name|LOCKSHARED
-operator||
 name|LOCKLEAF
 operator||
 name|MPSAFE
@@ -1087,7 +1085,7 @@ name|flagp
 operator|=
 name|fmode
 expr_stmt|;
-name|ASSERT_VOP_LOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
 argument_list|,

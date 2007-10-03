@@ -636,7 +636,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|ASSERT_VOP_LOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
 argument_list|,
@@ -756,7 +756,7 @@ operator|*
 operator|)
 name|handle
 expr_stmt|;
-name|ASSERT_VOP_LOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
 argument_list|,
@@ -1005,7 +1005,7 @@ name|object
 argument_list|)
 expr_stmt|;
 block|}
-name|ASSERT_VOP_LOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
 argument_list|,

@@ -999,6 +999,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* XXX: v_rdev should be protect by vnode lock */
 name|vp
 operator|->
 name|v_rdev
