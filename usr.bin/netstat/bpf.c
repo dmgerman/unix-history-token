@@ -440,7 +440,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"%5s %6s %6s %9s %9s %9s %5s %5s %s\n"
+literal|"%5s %6s %7s %9s %9s %9s %5s %5s %s\n"
 argument_list|,
 literal|"Pid"
 argument_list|,
@@ -523,7 +523,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%5d %6s %6s %9lu %9lu %9lu %5d %5d %s\n"
+literal|"%5d %6s %7s %9lu %9lu %9lu %5d %5d %s\n"
 argument_list|,
 name|d
 operator|->
