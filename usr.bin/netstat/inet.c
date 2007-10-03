@@ -1535,11 +1535,7 @@ name|tcp_done
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 else|else
 name|tcp_done
 operator|=
@@ -1564,11 +1560,7 @@ name|udp_done
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 else|else
 name|udp_done
 operator|=

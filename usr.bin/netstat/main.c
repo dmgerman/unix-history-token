@@ -202,6 +202,9 @@ directive|define
 name|N_IFNET
 value|0
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_ifnet"
 block|}
 block|,
@@ -210,6 +213,9 @@ directive|define
 name|N_RTSTAT
 value|1
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_rtstat"
 block|}
 block|,
@@ -218,6 +224,9 @@ directive|define
 name|N_RTREE
 value|2
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_rt_tables"
 block|}
 block|,
@@ -226,6 +235,9 @@ directive|define
 name|N_MRTSTAT
 value|3
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_mrtstat"
 block|}
 block|,
@@ -234,6 +246,9 @@ directive|define
 name|N_MFCTABLE
 value|4
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_mfctable"
 block|}
 block|,
@@ -242,6 +257,9 @@ directive|define
 name|N_VIFTABLE
 value|5
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_viftable"
 block|}
 block|,
@@ -250,6 +268,9 @@ directive|define
 name|N_IPX
 value|6
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_ipxpcb_list"
 block|}
 block|,
@@ -258,6 +279,9 @@ directive|define
 name|N_IPXSTAT
 value|7
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_ipxstat"
 block|}
 block|,
@@ -266,6 +290,9 @@ directive|define
 name|N_SPXSTAT
 value|8
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_spx_istat"
 block|}
 block|,
@@ -274,6 +301,9 @@ directive|define
 name|N_DDPSTAT
 value|9
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_ddpstat"
 block|}
 block|,
@@ -282,6 +312,9 @@ directive|define
 name|N_DDPCB
 value|10
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_ddpcb"
 block|}
 block|,
@@ -290,6 +323,9 @@ directive|define
 name|N_NGSOCKS
 value|11
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_ngsocklist"
 block|}
 block|,
@@ -298,6 +334,9 @@ directive|define
 name|N_IP6STAT
 value|12
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_ip6stat"
 block|}
 block|,
@@ -306,6 +345,9 @@ directive|define
 name|N_ICMP6STAT
 value|13
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_icmp6stat"
 block|}
 block|,
@@ -314,6 +356,9 @@ directive|define
 name|N_IPSECSTAT
 value|14
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_ipsecstat"
 block|}
 block|,
@@ -322,6 +367,9 @@ directive|define
 name|N_IPSEC6STAT
 value|15
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_ipsec6stat"
 block|}
 block|,
@@ -330,6 +378,9 @@ directive|define
 name|N_PIM6STAT
 value|16
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_pim6stat"
 block|}
 block|,
@@ -338,6 +389,9 @@ directive|define
 name|N_MRT6STAT
 value|17
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_mrt6stat"
 block|}
 block|,
@@ -346,6 +400,9 @@ directive|define
 name|N_MF6CTABLE
 value|18
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_mf6ctable"
 block|}
 block|,
@@ -354,6 +411,9 @@ directive|define
 name|N_MIF6TABLE
 value|19
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_mif6table"
 block|}
 block|,
@@ -362,6 +422,9 @@ directive|define
 name|N_PFKEYSTAT
 value|20
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_pfkeystat"
 block|}
 block|,
@@ -370,6 +433,9 @@ directive|define
 name|N_MBSTAT
 value|21
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_mbstat"
 block|}
 block|,
@@ -378,6 +444,9 @@ directive|define
 name|N_MBTYPES
 value|22
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_mbtypes"
 block|}
 block|,
@@ -386,6 +455,9 @@ directive|define
 name|N_NMBCLUSTERS
 value|23
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_nmbclusters"
 block|}
 block|,
@@ -394,6 +466,9 @@ directive|define
 name|N_NMBUFS
 value|24
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_nmbufs"
 block|}
 block|,
@@ -402,6 +477,9 @@ directive|define
 name|N_MBHI
 value|25
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_mbuf_hiwm"
 block|}
 block|,
@@ -410,6 +488,9 @@ directive|define
 name|N_CLHI
 value|26
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_clust_hiwm"
 block|}
 block|,
@@ -418,6 +499,9 @@ directive|define
 name|N_NCPUS
 value|27
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_smp_cpus"
 block|}
 block|,
@@ -426,6 +510,9 @@ directive|define
 name|N_PAGESZ
 value|28
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_pagesize"
 block|}
 block|,
@@ -434,6 +521,9 @@ directive|define
 name|N_MBPSTAT
 value|29
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_mb_statpcpu"
 block|}
 block|,
@@ -442,6 +532,9 @@ directive|define
 name|N_RTTRASH
 value|30
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_rttrash"
 block|}
 block|,
@@ -450,6 +543,9 @@ directive|define
 name|N_MBLO
 value|31
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_mbuf_lowm"
 block|}
 block|,
@@ -458,6 +554,9 @@ directive|define
 name|N_CLLO
 value|32
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_clust_lowm"
 block|}
 block|,
@@ -466,6 +565,9 @@ directive|define
 name|N_CARPSTAT
 value|33
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_carpstats"
 block|}
 block|,
@@ -474,6 +576,9 @@ directive|define
 name|N_PFSYNCSTAT
 value|34
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_pfsyncstats"
 block|}
 block|,
@@ -482,6 +587,9 @@ directive|define
 name|N_FAST_IPSECSTAT
 value|35
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_newipsecstat"
 block|}
 block|,
@@ -490,6 +598,9 @@ directive|define
 name|N_AHSTAT
 value|36
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_ahstat"
 block|}
 block|,
@@ -498,6 +609,9 @@ directive|define
 name|N_ESPSTAT
 value|37
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_espstat"
 block|}
 block|,
@@ -506,6 +620,9 @@ directive|define
 name|N_IPCOMPSTAT
 value|38
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_ipcompstat"
 block|}
 block|,
@@ -514,6 +631,9 @@ directive|define
 name|N_TCPSTAT
 value|39
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_tcpstat"
 block|}
 block|,
@@ -522,6 +642,9 @@ directive|define
 name|N_UDPSTAT
 value|40
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_udpstat"
 block|}
 block|,
@@ -530,6 +653,9 @@ directive|define
 name|N_IPSTAT
 value|41
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_ipstat"
 block|}
 block|,
@@ -538,6 +664,9 @@ directive|define
 name|N_ICMPSTAT
 value|42
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_icmpstat"
 block|}
 block|,
@@ -546,6 +675,9 @@ directive|define
 name|N_IGMPSTAT
 value|43
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_igmpstat"
 block|}
 block|,
@@ -554,6 +686,9 @@ directive|define
 name|N_PIMSTAT
 value|44
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_pimstat"
 block|}
 block|,
@@ -562,6 +697,9 @@ directive|define
 name|N_TCBINFO
 value|45
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_tcbinfo"
 block|}
 block|,
@@ -570,6 +708,9 @@ directive|define
 name|N_UDBINFO
 value|46
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_udbinfo"
 block|}
 block|,
@@ -578,6 +719,9 @@ directive|define
 name|N_DIVCBINFO
 value|47
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_divcbinfo"
 block|}
 block|,
@@ -586,6 +730,9 @@ directive|define
 name|N_RIPCBINFO
 value|48
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_ripcbinfo"
 block|}
 block|,
@@ -594,6 +741,9 @@ directive|define
 name|N_UNP_COUNT
 value|49
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_unp_count"
 block|}
 block|,
@@ -602,6 +752,9 @@ directive|define
 name|N_UNP_GENCNT
 value|50
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_unp_gencnt"
 block|}
 block|,
@@ -610,6 +763,9 @@ directive|define
 name|N_UNP_DHEAD
 value|51
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_unp_dhead"
 block|}
 block|,
@@ -618,6 +774,9 @@ directive|define
 name|N_UNP_SHEAD
 value|52
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_unp_shead"
 block|}
 block|,
@@ -626,6 +785,9 @@ directive|define
 name|N_RIP6STAT
 value|53
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_rip6stat"
 block|}
 block|,
@@ -634,11 +796,17 @@ directive|define
 name|N_BDG_STATS
 value|54
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_bdg_stats"
 block|}
 block|,
 block|{
-literal|""
+operator|.
+name|n_name
+operator|=
+name|NULL
 block|}
 block|, }
 decl_stmt|;
@@ -866,6 +1034,8 @@ block|,
 literal|"ipsec"
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 ifdef|#
@@ -888,6 +1058,8 @@ block|,
 literal|"fastipsec"
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -905,6 +1077,8 @@ block|,
 name|NULL
 block|,
 literal|"ah"
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -926,6 +1100,8 @@ block|,
 literal|"esp"
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -943,6 +1119,8 @@ block|,
 name|NULL
 block|,
 literal|"ipcomp"
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -968,6 +1146,8 @@ block|,
 literal|"bdg"
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1007,6 +1187,8 @@ block|,
 literal|"carp"
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1026,6 +1208,8 @@ block|,
 literal|"pfsync"
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1044,6 +1228,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -1164,6 +1350,8 @@ block|,
 literal|"ipsec6"
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 endif|#
@@ -1188,6 +1376,8 @@ block|,
 literal|"pim6"
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 endif|#
@@ -1209,6 +1399,8 @@ block|,
 literal|"rip6"
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1228,6 +1420,8 @@ block|,
 literal|"bdg"
 block|,
 literal|1
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1246,6 +1440,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -1292,6 +1488,8 @@ block|,
 literal|"pfkey"
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1310,6 +1508,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -1345,6 +1545,8 @@ block|,
 literal|"ddp"
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1363,6 +1565,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -1394,6 +1598,8 @@ block|,
 literal|"ctrl"
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1413,6 +1619,8 @@ block|,
 literal|"data"
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1431,6 +1639,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -1461,6 +1671,8 @@ block|,
 literal|"ipx"
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1479,6 +1691,8 @@ block|,
 literal|"spx"
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1495,6 +1709,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1581,6 +1797,7 @@ name|protox
 modifier|*
 name|name2protox
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1594,6 +1811,7 @@ name|protox
 modifier|*
 name|knownname
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -3515,6 +3733,9 @@ argument_list|,
 name|size
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|size
 condition|)
 block|{
@@ -3626,6 +3847,7 @@ name|protox
 modifier|*
 name|knownname
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3703,6 +3925,7 @@ name|protox
 modifier|*
 name|name2protox
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name

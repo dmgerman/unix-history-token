@@ -230,10 +230,16 @@ index|[]
 init|=
 block|{
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_ngsocklist"
 block|}
 block|,
 block|{
+operator|.
+name|n_name
+operator|=
 name|NULL
 block|}
 block|}
