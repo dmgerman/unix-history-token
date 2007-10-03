@@ -5646,6 +5646,14 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|rman_set_rid
+argument_list|(
+name|rv
+argument_list|,
+operator|*
+name|rid
+argument_list|)
+expr_stmt|;
 name|bh
 operator|+=
 name|rman_get_start
