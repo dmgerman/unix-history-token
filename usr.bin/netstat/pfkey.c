@@ -131,6 +131,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -369,20 +375,20 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (pfkeystat.f || sflag<= 1) \     printf(m, (unsigned long long)pfkeystat.f, plural(pfkeystat.f))
+value|if (pfkeystat.f || sflag<= 1) \     printf(m, (uintmax_t)pfkeystat.f, plural(pfkeystat.f))
 comment|/* userland -> kernel */
 name|p
 argument_list|(
 name|out_total
 argument_list|,
-literal|"\t%llu request%s sent from userland\n"
+literal|"\t%ju request%s sent from userland\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_bytes
 argument_list|,
-literal|"\t%llu byte%s sent from userland\n"
+literal|"\t%ju byte%s sent from userland\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -447,7 +453,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t\t%s: %llu\n"
+literal|"\t\t%s: %ju\n"
 argument_list|,
 name|pfkey_msgtype_names
 argument_list|(
@@ -455,9 +461,7 @@ name|type
 argument_list|)
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|pfkeystat
 operator|.
@@ -472,63 +476,63 @@ name|p
 argument_list|(
 name|out_invlen
 argument_list|,
-literal|"\t%llu message%s with invalid length field\n"
+literal|"\t%ju message%s with invalid length field\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invver
 argument_list|,
-literal|"\t%llu message%s with invalid version field\n"
+literal|"\t%ju message%s with invalid version field\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invmsgtype
 argument_list|,
-literal|"\t%llu message%s with invalid message type field\n"
+literal|"\t%ju message%s with invalid message type field\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_tooshort
 argument_list|,
-literal|"\t%llu message%s too short\n"
+literal|"\t%ju message%s too short\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_nomem
 argument_list|,
-literal|"\t%llu message%s with memory allocation failure\n"
+literal|"\t%ju message%s with memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_dupext
 argument_list|,
-literal|"\t%llu message%s with duplicate extension\n"
+literal|"\t%ju message%s with duplicate extension\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invexttype
 argument_list|,
-literal|"\t%llu message%s with invalid extension type\n"
+literal|"\t%ju message%s with invalid extension type\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invsatype
 argument_list|,
-literal|"\t%llu message%s with invalid sa type\n"
+literal|"\t%ju message%s with invalid sa type\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invaddr
 argument_list|,
-literal|"\t%llu message%s with invalid address extension\n"
+literal|"\t%ju message%s with invalid address extension\n"
 argument_list|)
 expr_stmt|;
 comment|/* kernel -> userland */
@@ -536,14 +540,14 @@ name|p
 argument_list|(
 name|in_total
 argument_list|,
-literal|"\t%llu request%s sent to userland\n"
+literal|"\t%ju request%s sent to userland\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_bytes
 argument_list|,
-literal|"\t%llu byte%s sent to userland\n"
+literal|"\t%ju byte%s sent to userland\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -608,7 +612,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t\t%s: %llu\n"
+literal|"\t\t%s: %ju\n"
 argument_list|,
 name|pfkey_msgtype_names
 argument_list|(
@@ -616,9 +620,7 @@ name|type
 argument_list|)
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|pfkeystat
 operator|.
@@ -636,7 +638,7 @@ index|[
 name|KEY_SENDUP_ONE
 index|]
 argument_list|,
-literal|"\t%llu message%s toward single socket\n"
+literal|"\t%ju message%s toward single socket\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -646,7 +648,7 @@ index|[
 name|KEY_SENDUP_ALL
 index|]
 argument_list|,
-literal|"\t%llu message%s toward all sockets\n"
+literal|"\t%ju message%s toward all sockets\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -656,14 +658,14 @@ index|[
 name|KEY_SENDUP_REGISTERED
 index|]
 argument_list|,
-literal|"\t%llu message%s toward registered sockets\n"
+literal|"\t%ju message%s toward registered sockets\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_nomem
 argument_list|,
-literal|"\t%llu message%s with memory allocation failure\n"
+literal|"\t%ju message%s with memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 undef|#

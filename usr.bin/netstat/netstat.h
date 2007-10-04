@@ -264,7 +264,7 @@ name|char
 modifier|*
 name|plural
 parameter_list|(
-name|int
+name|uintmax_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -275,7 +275,7 @@ name|char
 modifier|*
 name|plurales
 parameter_list|(
-name|int
+name|uintmax_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -286,7 +286,7 @@ name|char
 modifier|*
 name|pluralies
 parameter_list|(
-name|int
+name|uintmax_t
 parameter_list|)
 function_decl|;
 end_function_decl

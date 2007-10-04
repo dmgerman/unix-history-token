@@ -189,6 +189,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -231,17 +237,6 @@ parameter_list|(
 name|struct
 name|in6_addr
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|pluralies
-parameter_list|(
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -940,7 +935,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ip6stat.f || sflag<= 1) \     printf(m, (unsigned long long)ip6stat.f, plural(ip6stat.f))
+value|if (ip6stat.f || sflag<= 1) \     printf(m, (uintmax_t)ip6stat.f, plural(ip6stat.f))
 define|#
 directive|define
 name|p1a
@@ -949,166 +944,166 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ip6stat.f || sflag<= 1) \     printf(m, (unsigned long long)ip6stat.f)
+value|if (ip6stat.f || sflag<= 1) \     printf(m, (uintmax_t)ip6stat.f)
 name|p
 argument_list|(
 name|ip6s_total
 argument_list|,
-literal|"\t%llu total packet%s received\n"
+literal|"\t%ju total packet%s received\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ip6s_toosmall
 argument_list|,
-literal|"\t%llu with size smaller than minimum\n"
+literal|"\t%ju with size smaller than minimum\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ip6s_tooshort
 argument_list|,
-literal|"\t%llu with data size< data length\n"
+literal|"\t%ju with data size< data length\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ip6s_badoptions
 argument_list|,
-literal|"\t%llu with bad options\n"
+literal|"\t%ju with bad options\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ip6s_badvers
 argument_list|,
-literal|"\t%llu with incorrect version number\n"
+literal|"\t%ju with incorrect version number\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_fragments
 argument_list|,
-literal|"\t%llu fragment%s received\n"
+literal|"\t%ju fragment%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_fragdropped
 argument_list|,
-literal|"\t%llu fragment%s dropped (dup or out of space)\n"
+literal|"\t%ju fragment%s dropped (dup or out of space)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_fragtimeout
 argument_list|,
-literal|"\t%llu fragment%s dropped after timeout\n"
+literal|"\t%ju fragment%s dropped after timeout\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_fragoverflow
 argument_list|,
-literal|"\t%llu fragment%s that exceeded limit\n"
+literal|"\t%ju fragment%s that exceeded limit\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_reassembled
 argument_list|,
-literal|"\t%llu packet%s reassembled ok\n"
+literal|"\t%ju packet%s reassembled ok\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_delivered
 argument_list|,
-literal|"\t%llu packet%s for this host\n"
+literal|"\t%ju packet%s for this host\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_forward
 argument_list|,
-literal|"\t%llu packet%s forwarded\n"
+literal|"\t%ju packet%s forwarded\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_cantforward
 argument_list|,
-literal|"\t%llu packet%s not forwardable\n"
+literal|"\t%ju packet%s not forwardable\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_redirectsent
 argument_list|,
-literal|"\t%llu redirect%s sent\n"
+literal|"\t%ju redirect%s sent\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_localout
 argument_list|,
-literal|"\t%llu packet%s sent from this host\n"
+literal|"\t%ju packet%s sent from this host\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_rawout
 argument_list|,
-literal|"\t%llu packet%s sent with fabricated ip header\n"
+literal|"\t%ju packet%s sent with fabricated ip header\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_odropped
 argument_list|,
-literal|"\t%llu output packet%s dropped due to no bufs, etc.\n"
+literal|"\t%ju output packet%s dropped due to no bufs, etc.\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_noroute
 argument_list|,
-literal|"\t%llu output packet%s discarded due to no route\n"
+literal|"\t%ju output packet%s discarded due to no route\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_fragmented
 argument_list|,
-literal|"\t%llu output datagram%s fragmented\n"
+literal|"\t%ju output datagram%s fragmented\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_ofragments
 argument_list|,
-literal|"\t%llu fragment%s created\n"
+literal|"\t%ju fragment%s created\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_cantfrag
 argument_list|,
-literal|"\t%llu datagram%s that can't be fragmented\n"
+literal|"\t%ju datagram%s that can't be fragmented\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_badscope
 argument_list|,
-literal|"\t%llu packet%s that violated scope rules\n"
+literal|"\t%ju packet%s that violated scope rules\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_notmember
 argument_list|,
-literal|"\t%llu multicast packet%s which we don't join\n"
+literal|"\t%ju multicast packet%s which we don't join\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1157,7 +1152,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t\t%s: %llu\n"
+literal|"\t\t%s: %ju\n"
 argument_list|,
 name|ip6nh
 index|[
@@ -1165,9 +1160,7 @@ name|i
 index|]
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|ip6stat
 operator|.
@@ -1185,12 +1178,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\t%llu one mbuf\n"
+literal|"\t\t%ju one mbuf\n"
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|ip6stat
 operator|.
@@ -1250,7 +1241,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t\t\t%s= %llu\n"
+literal|"\t\t\t%s= %ju\n"
 argument_list|,
 name|if_indextoname
 argument_list|(
@@ -1260,9 +1251,7 @@ name|ifbuf
 argument_list|)
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|ip6stat
 operator|.
@@ -1276,12 +1265,10 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"\t\t%llu one ext mbuf\n"
+literal|"\t\t%ju one ext mbuf\n"
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|ip6stat
 operator|.
@@ -1290,12 +1277,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\t%llu two or more ext mbuf\n"
+literal|"\t\t%ju two or more ext mbuf\n"
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|ip6stat
 operator|.
@@ -1306,21 +1291,21 @@ name|p
 argument_list|(
 name|ip6s_exthdrtoolong
 argument_list|,
-literal|"\t%llu packet%s whose headers are not continuous\n"
+literal|"\t%ju packet%s whose headers are not continuous\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_nogif
 argument_list|,
-literal|"\t%llu tunneling packet%s that can't find gif\n"
+literal|"\t%ju tunneling packet%s that can't find gif\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ip6s_toomanyhdr
 argument_list|,
-literal|"\t%llu packet%s discarded because of too many headers\n"
+literal|"\t%ju packet%s discarded because of too many headers\n"
 argument_list|)
 expr_stmt|;
 comment|/* for debugging source address selection */
@@ -1334,12 +1319,12 @@ name|i
 parameter_list|)
 value|do {\ 		switch(i) {
 comment|/* XXX hardcoding in each case */
-value|\ 		case 1:\ 			p(s, "\t\t%llu node-local%s\n");\ 			break;\ 		case 2:\ 			p(s,"\t\t%llu link-local%s\n");\ 			break;\ 		case 5:\ 			p(s,"\t\t%llu site-local%s\n");\ 			break;\ 		case 14:\ 			p(s,"\t\t%llu global%s\n");\ 			break;\ 		default:\ 			printf("\t\t%llu addresses scope=%x\n",\ 			    (unsigned long long)ip6stat.s, i);\ 		}\ 	} while (0);
+value|\ 		case 1:\ 			p(s, "\t\t%ju node-local%s\n");\ 			break;\ 		case 2:\ 			p(s,"\t\t%ju link-local%s\n");\ 			break;\ 		case 5:\ 			p(s,"\t\t%ju site-local%s\n");\ 			break;\ 		case 14:\ 			p(s,"\t\t%ju global%s\n");\ 			break;\ 		default:\ 			printf("\t\t%ju addresses scope=%x\n",\ 			    (uintmax_t)ip6stat.s, i);\ 		}\ 	} while (0);
 name|p
 argument_list|(
 name|ip6s_sources_none
 argument_list|,
-literal|"\t%llu failure%s of source address selection\n"
+literal|"\t%ju failure%s of source address selection\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1621,14 +1606,14 @@ name|p1a
 argument_list|(
 name|ip6s_forward_cachehit
 argument_list|,
-literal|"\t%llu forward cache hit\n"
+literal|"\t%ju forward cache hit\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|ip6s_forward_cachemiss
 argument_list|,
-literal|"\t%llu forward cache miss\n"
+literal|"\t%ju forward cache miss\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1661,8 +1646,11 @@ index|]
 condition|)
 name|printf
 argument_list|(
-literal|"\t\t%llu %s\n"
+literal|"\t\t%ju %s\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ip6stat
 operator|.
 name|ip6s_sources_rule
@@ -1714,7 +1702,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ifr.ifr_ifru.ifru_stat.f || sflag<= 1) \     printf(m, (unsigned long long)ifr.ifr_ifru.ifru_stat.f, plural(ifr.ifr_ifru.ifru_stat.f))
+value|if (ifr.ifr_ifru.ifru_stat.f || sflag<= 1) \     printf(m, (uintmax_t)ifr.ifr_ifru.ifru_stat.f, plural(ifr.ifr_ifru.ifru_stat.f))
 define|#
 directive|define
 name|p_5
@@ -1723,7 +1711,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ifr.ifr_ifru.ifru_stat.f || sflag<= 1) \     printf(m, (unsigned long long)ip6stat.f)
+value|if (ifr.ifr_ifru.ifru_stat.f || sflag<= 1) \     printf(m, (uintmax_t)ip6stat.f)
 if|if
 condition|(
 operator|(
@@ -1799,140 +1787,140 @@ name|p
 argument_list|(
 name|ifs6_in_receive
 argument_list|,
-literal|"\t%llu total input datagram%s\n"
+literal|"\t%ju total input datagram%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_hdrerr
 argument_list|,
-literal|"\t%llu datagram%s with invalid header received\n"
+literal|"\t%ju datagram%s with invalid header received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_toobig
 argument_list|,
-literal|"\t%llu datagram%s exceeded MTU received\n"
+literal|"\t%ju datagram%s exceeded MTU received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_noroute
 argument_list|,
-literal|"\t%llu datagram%s with no route received\n"
+literal|"\t%ju datagram%s with no route received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_addrerr
 argument_list|,
-literal|"\t%llu datagram%s with invalid dst received\n"
+literal|"\t%ju datagram%s with invalid dst received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_protounknown
 argument_list|,
-literal|"\t%llu datagram%s with unknown proto received\n"
+literal|"\t%ju datagram%s with unknown proto received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_truncated
 argument_list|,
-literal|"\t%llu truncated datagram%s received\n"
+literal|"\t%ju truncated datagram%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_discard
 argument_list|,
-literal|"\t%llu input datagram%s discarded\n"
+literal|"\t%ju input datagram%s discarded\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_deliver
 argument_list|,
-literal|"\t%llu datagram%s delivered to an upper layer protocol\n"
+literal|"\t%ju datagram%s delivered to an upper layer protocol\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_forward
 argument_list|,
-literal|"\t%llu datagram%s forwarded to this interface\n"
+literal|"\t%ju datagram%s forwarded to this interface\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_request
 argument_list|,
-literal|"\t%llu datagram%s sent from an upper layer protocol\n"
+literal|"\t%ju datagram%s sent from an upper layer protocol\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_discard
 argument_list|,
-literal|"\t%llu total discarded output datagram%s\n"
+literal|"\t%ju total discarded output datagram%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_fragok
 argument_list|,
-literal|"\t%llu output datagram%s fragmented\n"
+literal|"\t%ju output datagram%s fragmented\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_fragfail
 argument_list|,
-literal|"\t%llu output datagram%s failed on fragment\n"
+literal|"\t%ju output datagram%s failed on fragment\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_fragcreat
 argument_list|,
-literal|"\t%llu output datagram%s succeeded on fragment\n"
+literal|"\t%ju output datagram%s succeeded on fragment\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_reass_reqd
 argument_list|,
-literal|"\t%llu incoming datagram%s fragmented\n"
+literal|"\t%ju incoming datagram%s fragmented\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_reass_ok
 argument_list|,
-literal|"\t%llu datagram%s reassembled\n"
+literal|"\t%ju datagram%s reassembled\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_reass_fail
 argument_list|,
-literal|"\t%llu datagram%s failed on reassembly\n"
+literal|"\t%ju datagram%s failed on reassembly\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_mcast
 argument_list|,
-literal|"\t%llu multicast datagram%s received\n"
+literal|"\t%ju multicast datagram%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_mcast
 argument_list|,
-literal|"\t%llu multicast datagram%s sent\n"
+literal|"\t%ju multicast datagram%s sent\n"
 argument_list|)
 expr_stmt|;
 name|end
@@ -2592,7 +2580,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (icmp6stat.f || sflag<= 1) \     printf(m, (unsigned long long)icmp6stat.f, plural(icmp6stat.f))
+value|if (icmp6stat.f || sflag<= 1) \     printf(m, (uintmax_t)icmp6stat.f, plural(icmp6stat.f))
 define|#
 directive|define
 name|p_5
@@ -2601,26 +2589,26 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|printf(m, (unsigned long long)icmp6stat.f)
+value|printf(m, (uintmax_t)icmp6stat.f)
 name|p
 argument_list|(
 name|icp6s_error
 argument_list|,
-literal|"\t%llu call%s to icmp6_error\n"
+literal|"\t%ju call%s to icmp6_error\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_canterror
 argument_list|,
-literal|"\t%llu error%s not generated in response to an icmp6 message\n"
+literal|"\t%ju error%s not generated in response to an icmp6 message\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_toofreq
 argument_list|,
-literal|"\t%llu error%s not generated because of rate limitation\n"
+literal|"\t%ju error%s not generated because of rate limitation\n"
 argument_list|)
 expr_stmt|;
 define|#
@@ -2673,7 +2661,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t\t%s: %llu\n"
+literal|"\t\t%s: %ju\n"
 argument_list|,
 name|icmp6names
 index|[
@@ -2681,9 +2669,7 @@ name|i
 index|]
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|icmp6stat
 operator|.
@@ -2701,28 +2687,28 @@ name|p
 argument_list|(
 name|icp6s_badcode
 argument_list|,
-literal|"\t%llu message%s with bad code fields\n"
+literal|"\t%ju message%s with bad code fields\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_tooshort
 argument_list|,
-literal|"\t%llu message%s< minimum length\n"
+literal|"\t%ju message%s< minimum length\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_checksum
 argument_list|,
-literal|"\t%llu bad checksum%s\n"
+literal|"\t%ju bad checksum%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badlen
 argument_list|,
-literal|"\t%llu message%s with bad length\n"
+literal|"\t%ju message%s with bad length\n"
 argument_list|)
 expr_stmt|;
 define|#
@@ -2775,7 +2761,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t\t%s: %llu\n"
+literal|"\t\t%s: %ju\n"
 argument_list|,
 name|icmp6names
 index|[
@@ -2783,9 +2769,7 @@ name|i
 index|]
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|icmp6stat
 operator|.
@@ -2808,154 +2792,154 @@ name|p_5
 argument_list|(
 name|icp6s_odst_unreach_noroute
 argument_list|,
-literal|"\t\t%llu no route\n"
+literal|"\t\t%ju no route\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_odst_unreach_admin
 argument_list|,
-literal|"\t\t%llu administratively prohibited\n"
+literal|"\t\t%ju administratively prohibited\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_odst_unreach_beyondscope
 argument_list|,
-literal|"\t\t%llu beyond scope\n"
+literal|"\t\t%ju beyond scope\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_odst_unreach_addr
 argument_list|,
-literal|"\t\t%llu address unreachable\n"
+literal|"\t\t%ju address unreachable\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_odst_unreach_noport
 argument_list|,
-literal|"\t\t%llu port unreachable\n"
+literal|"\t\t%ju port unreachable\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_opacket_too_big
 argument_list|,
-literal|"\t\t%llu packet too big\n"
+literal|"\t\t%ju packet too big\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_otime_exceed_transit
 argument_list|,
-literal|"\t\t%llu time exceed transit\n"
+literal|"\t\t%ju time exceed transit\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_otime_exceed_reassembly
 argument_list|,
-literal|"\t\t%llu time exceed reassembly\n"
+literal|"\t\t%ju time exceed reassembly\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_oparamprob_header
 argument_list|,
-literal|"\t\t%llu erroneous header field\n"
+literal|"\t\t%ju erroneous header field\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_oparamprob_nextheader
 argument_list|,
-literal|"\t\t%llu unrecognized next header\n"
+literal|"\t\t%ju unrecognized next header\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_oparamprob_option
 argument_list|,
-literal|"\t\t%llu unrecognized option\n"
+literal|"\t\t%ju unrecognized option\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_oredirect
 argument_list|,
-literal|"\t\t%llu redirect\n"
+literal|"\t\t%ju redirect\n"
 argument_list|)
 expr_stmt|;
 name|p_5
 argument_list|(
 name|icp6s_ounknown
 argument_list|,
-literal|"\t\t%llu unknown\n"
+literal|"\t\t%ju unknown\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_reflect
 argument_list|,
-literal|"\t%llu message response%s generated\n"
+literal|"\t%ju message response%s generated\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_nd_toomanyopt
 argument_list|,
-literal|"\t%llu message%s with too many ND options\n"
+literal|"\t%ju message%s with too many ND options\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_nd_badopt
 argument_list|,
-literal|"\t%llu message%s with bad ND options\n"
+literal|"\t%ju message%s with bad ND options\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badns
 argument_list|,
-literal|"\t%llu bad neighbor solicitation message%s\n"
+literal|"\t%ju bad neighbor solicitation message%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badna
 argument_list|,
-literal|"\t%llu bad neighbor advertisement message%s\n"
+literal|"\t%ju bad neighbor advertisement message%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badrs
 argument_list|,
-literal|"\t%llu bad router solicitation message%s\n"
+literal|"\t%ju bad router solicitation message%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badra
 argument_list|,
-literal|"\t%llu bad router advertisement message%s\n"
+literal|"\t%ju bad router advertisement message%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badredirect
 argument_list|,
-literal|"\t%llu bad redirect message%s\n"
+literal|"\t%ju bad redirect message%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_pmtuchg
 argument_list|,
-literal|"\t%llu path MTU change%s\n"
+literal|"\t%ju path MTU change%s\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -2995,7 +2979,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ifr.ifr_ifru.ifru_icmp6stat.f || sflag<= 1) \     printf(m, (unsigned long long)ifr.ifr_ifru.ifru_icmp6stat.f, plural(ifr.ifr_ifru.ifru_icmp6stat.f))
+value|if (ifr.ifr_ifru.ifru_icmp6stat.f || sflag<= 1) \     printf(m, (uintmax_t)ifr.ifr_ifru.ifru_icmp6stat.f, plural(ifr.ifr_ifru.ifru_icmp6stat.f))
 define|#
 directive|define
 name|p2
@@ -3004,7 +2988,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ifr.ifr_ifru.ifru_icmp6stat.f || sflag<= 1) \     printf(m, (unsigned long long)ifr.ifr_ifru.ifru_icmp6stat.f, pluralies(ifr.ifr_ifru.ifru_icmp6stat.f))
+value|if (ifr.ifr_ifru.ifru_icmp6stat.f || sflag<= 1) \     printf(m, (uintmax_t)ifr.ifr_ifru.ifru_icmp6stat.f, pluralies(ifr.ifr_ifru.ifru_icmp6stat.f))
 if|if
 condition|(
 operator|(
@@ -3080,238 +3064,238 @@ name|p
 argument_list|(
 name|ifs6_in_msg
 argument_list|,
-literal|"\t%llu total input message%s\n"
+literal|"\t%ju total input message%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_error
 argument_list|,
-literal|"\t%llu total input error message%s\n"
+literal|"\t%ju total input error message%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_dstunreach
 argument_list|,
-literal|"\t%llu input destination unreachable error%s\n"
+literal|"\t%ju input destination unreachable error%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_adminprohib
 argument_list|,
-literal|"\t%llu input administratively prohibited error%s\n"
+literal|"\t%ju input administratively prohibited error%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_timeexceed
 argument_list|,
-literal|"\t%llu input time exceeded error%s\n"
+literal|"\t%ju input time exceeded error%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_paramprob
 argument_list|,
-literal|"\t%llu input parameter problem error%s\n"
+literal|"\t%ju input parameter problem error%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_pkttoobig
 argument_list|,
-literal|"\t%llu input packet too big error%s\n"
+literal|"\t%ju input packet too big error%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_echo
 argument_list|,
-literal|"\t%llu input echo request%s\n"
+literal|"\t%ju input echo request%s\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|ifs6_in_echoreply
 argument_list|,
-literal|"\t%llu input echo repl%s\n"
+literal|"\t%ju input echo repl%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_routersolicit
 argument_list|,
-literal|"\t%llu input router solicitation%s\n"
+literal|"\t%ju input router solicitation%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_routeradvert
 argument_list|,
-literal|"\t%llu input router advertisement%s\n"
+literal|"\t%ju input router advertisement%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_neighborsolicit
 argument_list|,
-literal|"\t%llu input neighbor solicitation%s\n"
+literal|"\t%ju input neighbor solicitation%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_neighboradvert
 argument_list|,
-literal|"\t%llu input neighbor advertisement%s\n"
+literal|"\t%ju input neighbor advertisement%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_redirect
 argument_list|,
-literal|"\t%llu input redirect%s\n"
+literal|"\t%ju input redirect%s\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|ifs6_in_mldquery
 argument_list|,
-literal|"\t%llu input MLD quer%s\n"
+literal|"\t%ju input MLD quer%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_mldreport
 argument_list|,
-literal|"\t%llu input MLD report%s\n"
+literal|"\t%ju input MLD report%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_mlddone
 argument_list|,
-literal|"\t%llu input MLD done%s\n"
+literal|"\t%ju input MLD done%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_msg
 argument_list|,
-literal|"\t%llu total output message%s\n"
+literal|"\t%ju total output message%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_error
 argument_list|,
-literal|"\t%llu total output error message%s\n"
+literal|"\t%ju total output error message%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_dstunreach
 argument_list|,
-literal|"\t%llu output destination unreachable error%s\n"
+literal|"\t%ju output destination unreachable error%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_adminprohib
 argument_list|,
-literal|"\t%llu output administratively prohibited error%s\n"
+literal|"\t%ju output administratively prohibited error%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_timeexceed
 argument_list|,
-literal|"\t%llu output time exceeded error%s\n"
+literal|"\t%ju output time exceeded error%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_paramprob
 argument_list|,
-literal|"\t%llu output parameter problem error%s\n"
+literal|"\t%ju output parameter problem error%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_pkttoobig
 argument_list|,
-literal|"\t%llu output packet too big error%s\n"
+literal|"\t%ju output packet too big error%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_echo
 argument_list|,
-literal|"\t%llu output echo request%s\n"
+literal|"\t%ju output echo request%s\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|ifs6_out_echoreply
 argument_list|,
-literal|"\t%llu output echo repl%s\n"
+literal|"\t%ju output echo repl%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_routersolicit
 argument_list|,
-literal|"\t%llu output router solicitation%s\n"
+literal|"\t%ju output router solicitation%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_routeradvert
 argument_list|,
-literal|"\t%llu output router advertisement%s\n"
+literal|"\t%ju output router advertisement%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_neighborsolicit
 argument_list|,
-literal|"\t%llu output neighbor solicitation%s\n"
+literal|"\t%ju output neighbor solicitation%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_neighboradvert
 argument_list|,
-literal|"\t%llu output neighbor advertisement%s\n"
+literal|"\t%ju output neighbor advertisement%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_redirect
 argument_list|,
-literal|"\t%llu output redirect%s\n"
+literal|"\t%ju output redirect%s\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|ifs6_out_mldquery
 argument_list|,
-literal|"\t%llu output MLD quer%s\n"
+literal|"\t%ju output MLD quer%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_mldreport
 argument_list|,
-literal|"\t%llu output MLD report%s\n"
+literal|"\t%ju output MLD report%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_out_mlddone
 argument_list|,
-literal|"\t%llu output MLD done%s\n"
+literal|"\t%ju output MLD done%s\n"
 argument_list|)
 expr_stmt|;
 name|end
@@ -3391,54 +3375,54 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (pim6stat.f || sflag<= 1) \     printf(m, (unsigned long long)pim6stat.f, plural(pim6stat.f))
+value|if (pim6stat.f || sflag<= 1) \     printf(m, (uintmax_t)pim6stat.f, plural(pim6stat.f))
 name|p
 argument_list|(
 name|pim6s_rcv_total
 argument_list|,
-literal|"\t%llu message%s received\n"
+literal|"\t%ju message%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pim6s_rcv_tooshort
 argument_list|,
-literal|"\t%llu message%s received with too few bytes\n"
+literal|"\t%ju message%s received with too few bytes\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pim6s_rcv_badsum
 argument_list|,
-literal|"\t%llu message%s received with bad checksum\n"
+literal|"\t%ju message%s received with bad checksum\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pim6s_rcv_badversion
 argument_list|,
-literal|"\t%llu message%s received with bad version\n"
+literal|"\t%ju message%s received with bad version\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pim6s_rcv_registers
 argument_list|,
-literal|"\t%llu register%s received\n"
+literal|"\t%ju register%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pim6s_rcv_badregisters
 argument_list|,
-literal|"\t%llu bad register%s received\n"
+literal|"\t%ju bad register%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pim6s_snd_registers
 argument_list|,
-literal|"\t%llu register%s sent\n"
+literal|"\t%ju register%s sent\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -3554,47 +3538,47 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (rip6stat.f || sflag<= 1) \     printf(m, (unsigned long long)rip6stat.f, plural(rip6stat.f))
+value|if (rip6stat.f || sflag<= 1) \     printf(m, (uintmax_t)rip6stat.f, plural(rip6stat.f))
 name|p
 argument_list|(
 name|rip6s_ipackets
 argument_list|,
-literal|"\t%llu message%s received\n"
+literal|"\t%ju message%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rip6s_isum
 argument_list|,
-literal|"\t%llu checksum calcuration%s on inbound\n"
+literal|"\t%ju checksum calcuration%s on inbound\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rip6s_badsum
 argument_list|,
-literal|"\t%llu message%s with bad checksum\n"
+literal|"\t%ju message%s with bad checksum\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rip6s_nosock
 argument_list|,
-literal|"\t%llu message%s dropped due to no socket\n"
+literal|"\t%ju message%s dropped due to no socket\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rip6s_nosockmcast
 argument_list|,
-literal|"\t%llu multicast message%s dropped due to no socket\n"
+literal|"\t%ju multicast message%s dropped due to no socket\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rip6s_fullsock
 argument_list|,
-literal|"\t%llu message%s dropped due to full socket buffers\n"
+literal|"\t%ju message%s dropped due to full socket buffers\n"
 argument_list|)
 expr_stmt|;
 name|delivered
@@ -3629,12 +3613,10 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"\t%llu delivered\n"
+literal|"\t%ju delivered\n"
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|delivered
 argument_list|)
@@ -3643,7 +3625,7 @@ name|p
 argument_list|(
 name|rip6s_opackets
 argument_list|,
-literal|"\t%llu datagram%s output\n"
+literal|"\t%ju datagram%s output\n"
 argument_list|)
 expr_stmt|;
 undef|#

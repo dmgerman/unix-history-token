@@ -266,6 +266,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -3851,7 +3857,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (carpstat.f || sflag<= 1) \ 	printf(m, (unsigned long long)carpstat.f, plural((int)carpstat.f))
+value|if (carpstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)carpstat.f, plural(carpstat.f))
 define|#
 directive|define
 name|p2
@@ -3860,96 +3866,96 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (carpstat.f || sflag<= 1) \ 	printf(m, (unsigned long long)carpstat.f)
+value|if (carpstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)carpstat.f)
 name|p
 argument_list|(
 name|carps_ipackets
 argument_list|,
-literal|"\t%llu packet%s received (IPv4)\n"
+literal|"\t%ju packet%s received (IPv4)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|carps_ipackets6
 argument_list|,
-literal|"\t%llu packet%s received (IPv6)\n"
+literal|"\t%ju packet%s received (IPv6)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|carps_badttl
 argument_list|,
-literal|"\t\t%llu packet%s discarded for wrong TTL\n"
+literal|"\t\t%ju packet%s discarded for wrong TTL\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|carps_hdrops
 argument_list|,
-literal|"\t\t%llu packet%s shorter than header\n"
+literal|"\t\t%ju packet%s shorter than header\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|carps_badsum
 argument_list|,
-literal|"\t\t%llu discarded for bad checksum%s\n"
+literal|"\t\t%ju discarded for bad checksum%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|carps_badver
 argument_list|,
-literal|"\t\t%llu discarded packet%s with a bad version\n"
+literal|"\t\t%ju discarded packet%s with a bad version\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|carps_badlen
 argument_list|,
-literal|"\t\t%llu discarded because packet too short\n"
+literal|"\t\t%ju discarded because packet too short\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|carps_badauth
 argument_list|,
-literal|"\t\t%llu discarded for bad authentication\n"
+literal|"\t\t%ju discarded for bad authentication\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|carps_badvhid
 argument_list|,
-literal|"\t\t%llu discarded for bad vhid\n"
+literal|"\t\t%ju discarded for bad vhid\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|carps_badaddrs
 argument_list|,
-literal|"\t\t%llu discarded because of a bad address list\n"
+literal|"\t\t%ju discarded because of a bad address list\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|carps_opackets
 argument_list|,
-literal|"\t%llu packet%s sent (IPv4)\n"
+literal|"\t%ju packet%s sent (IPv4)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|carps_opackets6
 argument_list|,
-literal|"\t%llu packet%s sent (IPv6)\n"
+literal|"\t%ju packet%s sent (IPv6)\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|carps_onomem
 argument_list|,
-literal|"\t\t%llu send failed due to mbuf memory error\n"
+literal|"\t\t%ju send failed due to mbuf memory error\n"
 argument_list|)
 expr_stmt|;
 if|#
@@ -5236,7 +5242,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (pimstat.f || sflag<= 1) \     printf(m, pimstat.f, plural(pimstat.f))
+value|if (pimstat.f || sflag<= 1) \     printf(m, (uintmax_t)pimstat.f, plural(pimstat.f))
 define|#
 directive|define
 name|py
@@ -5245,82 +5251,82 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (pimstat.f || sflag<= 1) \     printf(m, pimstat.f, pimstat.f != 1 ? "ies" : "y")
+value|if (pimstat.f || sflag<= 1) \     printf(m, (uintmax_t)pimstat.f, pimstat.f != 1 ? "ies" : "y")
 name|p
 argument_list|(
 name|pims_rcv_total_msgs
 argument_list|,
-literal|"\t%llu message%s received\n"
+literal|"\t%ju message%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_total_bytes
 argument_list|,
-literal|"\t%llu byte%s received\n"
+literal|"\t%ju byte%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_tooshort
 argument_list|,
-literal|"\t%llu message%s received with too few bytes\n"
+literal|"\t%ju message%s received with too few bytes\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_badsum
 argument_list|,
-literal|"\t%llu message%s received with bad checksum\n"
+literal|"\t%ju message%s received with bad checksum\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_badversion
 argument_list|,
-literal|"\t%llu message%s received with bad version\n"
+literal|"\t%ju message%s received with bad version\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_registers_msgs
 argument_list|,
-literal|"\t%llu data register message%s received\n"
+literal|"\t%ju data register message%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_registers_bytes
 argument_list|,
-literal|"\t%llu data register byte%s received\n"
+literal|"\t%ju data register byte%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_registers_wrongiif
 argument_list|,
-literal|"\t%llu data register message%s received on wrong iif\n"
+literal|"\t%ju data register message%s received on wrong iif\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_rcv_badregisters
 argument_list|,
-literal|"\t%llu bad register%s received\n"
+literal|"\t%ju bad register%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_snd_registers_msgs
 argument_list|,
-literal|"\t%llu data register message%s sent\n"
+literal|"\t%ju data register message%s sent\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pims_snd_registers_bytes
 argument_list|,
-literal|"\t%llu data register byte%s sent\n"
+literal|"\t%ju data register byte%s sent\n"
 argument_list|)
 expr_stmt|;
 undef|#
