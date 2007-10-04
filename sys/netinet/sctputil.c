@@ -25278,9 +25278,10 @@ argument_list|,
 name|ENOTCONN
 argument_list|)
 expr_stmt|;
+comment|/* indicate EOF */
 name|error
 operator|=
-name|ENOTCONN
+literal|0
 expr_stmt|;
 block|}
 goto|goto
