@@ -260,6 +260,8 @@ literal|"gid"
 block|,
 literal|"mode"
 block|,
+literal|"export"
+block|,
 name|NULL
 block|}
 decl_stmt|;
