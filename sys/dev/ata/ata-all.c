@@ -4200,6 +4200,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|request
 operator|->
 name|u
@@ -4207,6 +4208,15 @@ operator|.
 name|ata
 operator|.
 name|lba
+operator|+
+name|request
+operator|->
+name|u
+operator|.
+name|ata
+operator|.
+name|count
+operator|)
 operator|>=
 name|ATA_MAX_28BIT_LBA
 operator|||
