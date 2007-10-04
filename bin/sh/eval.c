@@ -1598,6 +1598,10 @@ name|oexitstatus
 operator|=
 name|exitstatus
 expr_stmt|;
+name|exitstatus
+operator|=
+literal|0
+expr_stmt|;
 name|expandarg
 argument_list|(
 name|n
