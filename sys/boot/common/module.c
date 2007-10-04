@@ -347,6 +347,8 @@ literal|".ko"
 block|,
 literal|""
 block|,
+literal|".debug"
+block|,
 name|NULL
 block|}
 decl_stmt|;
