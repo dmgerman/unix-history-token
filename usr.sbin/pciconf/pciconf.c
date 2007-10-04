@@ -2644,10 +2644,17 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+operator|(
 operator|*
 name|ep
 operator|==
 literal|':'
+operator|||
+operator|*
+name|ep
+operator|==
+literal|'.'
+operator|)
 operator|&&
 operator|*
 operator|++
