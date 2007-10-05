@@ -131,28 +131,6 @@ directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|NIOAPICS
-value|32
-end_define
-
-begin_comment
-comment|/* Max number of I/O APICs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NLAPICS
-value|32
-end_define
-
-begin_comment
-comment|/* Max number of local APICs */
-end_comment
-
 begin_typedef
 typedef|typedef
 name|void
@@ -187,7 +165,9 @@ decl_stmt|;
 block|}
 name|ioapics
 index|[
-name|NIOAPICS
+name|MAX_APIC_ID
+operator|+
+literal|1
 index|]
 struct|;
 end_struct
@@ -209,7 +189,9 @@ decl_stmt|;
 block|}
 name|lapics
 index|[
-name|NLAPICS
+name|MAX_APIC_ID
+operator|+
+literal|1
 index|]
 struct|;
 end_struct
@@ -1786,8 +1768,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|NIOAPICS
+operator|<=
+name|MAX_APIC_ID
 condition|;
 name|i
 operator|++
@@ -2031,8 +2013,8 @@ condition|(
 name|proc
 operator|->
 name|LocalApicId
-operator|>=
-name|NLAPICS
+operator|>
+name|MAX_APIC_ID
 condition|)
 name|panic
 argument_list|(
@@ -2174,8 +2156,8 @@ condition|(
 name|apic
 operator|->
 name|IoApicId
-operator|>=
-name|NIOAPICS
+operator|>
+name|MAX_APIC_ID
 condition|)
 name|panic
 argument_list|(
@@ -2422,8 +2404,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|NLAPICS
+operator|<=
+name|MAX_APIC_ID
 condition|;
 name|i
 operator|++
@@ -2510,8 +2492,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|NIOAPICS
+operator|<=
+name|MAX_APIC_ID
 condition|;
 name|i
 operator|++

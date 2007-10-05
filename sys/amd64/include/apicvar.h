@@ -32,6 +32,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAX_APIC_ID
+value|0xfe
+end_define
+
+begin_define
+define|#
+directive|define
 name|APIC_ID_ALL
 value|0xff
 end_define
