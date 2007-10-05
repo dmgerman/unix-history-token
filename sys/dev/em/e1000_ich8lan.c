@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -102,7 +102,7 @@ end_function_decl
 
 begin_function_decl
 name|STATIC
-name|boolean_t
+name|bool
 name|e1000_check_mng_mode_ich8lan
 parameter_list|(
 name|struct
@@ -188,7 +188,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 function_decl|;
@@ -204,7 +204,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 function_decl|;
@@ -823,7 +823,7 @@ block|{
 name|u16
 name|value
 decl_stmt|;
-name|boolean_t
+name|bool
 name|modified
 decl_stmt|;
 block|}
@@ -834,7 +834,7 @@ begin_struct
 struct|struct
 name|e1000_dev_spec_ich8lan
 block|{
-name|boolean_t
+name|bool
 name|kmrn_lock_loss_workaround_enabled
 decl_stmt|;
 name|struct
@@ -1159,7 +1159,7 @@ argument_list|(
 literal|"e1000_init_nvm_params_ich8lan"
 argument_list|)
 expr_stmt|;
-comment|/* Can't read flash registers if the register set isn't mapped. 	 */
+comment|/* Can't read flash registers if the register set isn't mapped. */
 if|if
 condition|(
 operator|!
@@ -1197,7 +1197,7 @@ argument_list|,
 name|ICH_FLASH_GFPREG
 argument_list|)
 expr_stmt|;
-comment|/* sector_X_addr is a "sector"-aligned address (4096 bytes) 	 * Add 1 to sector_end_addr since this sector is included in 	 * the overall size. */
+comment|/* 	 * sector_X_addr is a "sector"-aligned address (4096 bytes) 	 * Add 1 to sector_end_addr since this sector is included in 	 * the overall size. 	 */
 name|sector_base_addr
 operator|=
 name|gfpreg
@@ -1227,7 +1227,7 @@ name|sector_base_addr
 operator|<<
 name|FLASH_SECTOR_ADDR_SHIFT
 expr_stmt|;
-comment|/* find total size of the NVM, then cut in half since the total 	 * size represents two separate NVM banks. */
+comment|/* 	 * find total size of the NVM, then cut in half since the total 	 * size represents two separate NVM banks. 	 */
 name|nvm
 operator|->
 name|flash_bank_size
@@ -1275,9 +1275,8 @@ name|dev_spec
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|dev_spec
-operator|==
-name|NULL
 condition|)
 block|{
 name|DEBUGOUT
@@ -1433,6 +1432,8 @@ expr_stmt|;
 comment|/* Set media type function pointer */
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_copper
@@ -1538,9 +1539,9 @@ expr_stmt|;
 comment|/* multicast address update */
 name|func
 operator|->
-name|mc_addr_list_update
+name|update_mc_addr_list
 operator|=
-name|e1000_mc_addr_list_update_generic
+name|e1000_update_mc_addr_list_generic
 expr_stmt|;
 comment|/* setting MTA */
 name|func
@@ -1791,6 +1792,20 @@ argument_list|(
 literal|"FW or HW has locked the resource for too long.\n"
 argument_list|)
 expr_stmt|;
+name|extcnf_ctrl
+operator|&=
+operator|~
+name|E1000_EXTCNF_CTRL_SWFLAG
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_EXTCNF_CTRL
+argument_list|,
+name|extcnf_ctrl
+argument_list|)
+expr_stmt|;
 name|ret_val
 operator|=
 operator|-
@@ -1864,7 +1879,7 @@ end_comment
 
 begin_function
 name|STATIC
-name|boolean_t
+name|bool
 name|e1000_check_mng_mode_ich8lan
 parameter_list|(
 name|struct
@@ -1985,7 +2000,7 @@ decl_stmt|;
 name|u16
 name|data
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 name|DEBUGFUNC
@@ -2122,7 +2137,7 @@ if|if
 condition|(
 name|phy
 operator|->
-name|wait_for_link
+name|autoneg_wait_to_complete
 condition|)
 block|{
 name|DEBUGOUT
@@ -2268,7 +2283,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Initialize the PHY from the NVM on ICH platforms.  This 	 * is needed due to an issue where the NVM configuration is 	 * not properly autoloaded after power transitions. 	 * Therefore, after each PHY reset, we will load the 	 * configuration data out of the NVM manually. 	 */
+comment|/* 	 * Initialize the PHY from the NVM on ICH platforms.  This 	 * is needed due to an issue where the NVM configuration is 	 * not properly autoloaded after power transitions. 	 * Therefore, after each PHY reset, we will load the 	 * configuration data out of the NVM manually. 	 */
 if|if
 condition|(
 name|hw
@@ -2368,7 +2383,7 @@ operator|--
 name|loop
 condition|)
 do|;
-comment|/* If basic configuration is incomplete before the above loop 		 * count reaches 0, loading the configuration from NVM will 		 * leave the PHY in a bad state possibly resulting in no link. 		 */
+comment|/* 		 * If basic configuration is incomplete before the above loop 		 * count reaches 0, loading the configuration from NVM will 		 * leave the PHY in a bad state possibly resulting in no link. 		 */
 if|if
 condition|(
 name|loop
@@ -2406,7 +2421,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-comment|/* Make sure HW does not configure LCD from PHY 		 * extended configuration before SW configuration */
+comment|/* 		 * Make sure HW does not configure LCD from PHY 		 * extended configuration before SW configuration 		 */
 name|data
 operator|=
 name|E1000_READ_REG
@@ -2460,7 +2475,7 @@ name|cnf_base_addr
 operator|>>=
 name|E1000_EXTCNF_CTRL_EXT_CNF_POINTER_SHIFT
 expr_stmt|;
-comment|/* Configure LCD from extended configuration 		 * region. */
+comment|/* 		 * Configure LCD from extended configuration 		 * region. 		 */
 comment|/* cnf_base_addr is in DWORD */
 name|word_addr
 operator|=
@@ -2689,7 +2704,7 @@ decl_stmt|;
 name|u16
 name|data
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 name|DEBUGFUNC
@@ -2911,7 +2926,7 @@ argument_list|(
 literal|"e1000_check_polarity_ife_ich8lan"
 argument_list|)
 expr_stmt|;
-comment|/* Polarity is determined based on the reversal feature 	 * being enabled. 	 */
+comment|/* 	 * Polarity is determined based on the reversal feature 	 * being enabled. 	 */
 if|if
 condition|(
 name|phy
@@ -2990,7 +3005,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 block|{
@@ -3025,8 +3040,8 @@ condition|(
 name|phy
 operator|->
 name|type
-operator|!=
-name|e1000_phy_igp_3
+operator|==
+name|e1000_phy_ife
 condition|)
 goto|goto
 name|out
@@ -3058,7 +3073,7 @@ argument_list|,
 name|phy_ctrl
 argument_list|)
 expr_stmt|;
-comment|/* Call gig speed drop workaround on LPLU before accessing 		 * any PHY registers */
+comment|/* 		 * Call gig speed drop workaround on LPLU before accessing 		 * any PHY registers 		 */
 if|if
 condition|(
 operator|(
@@ -3139,7 +3154,7 @@ argument_list|,
 name|phy_ctrl
 argument_list|)
 expr_stmt|;
-comment|/* LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. */
+comment|/* 		 * LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. 		 */
 if|if
 condition|(
 name|phy
@@ -3267,7 +3282,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 block|{
@@ -3326,7 +3341,7 @@ argument_list|,
 name|phy_ctrl
 argument_list|)
 expr_stmt|;
-comment|/* LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. */
+comment|/* 		 * LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. 		 */
 if|if
 condition|(
 name|phy
@@ -3473,7 +3488,7 @@ argument_list|,
 name|phy_ctrl
 argument_list|)
 expr_stmt|;
-comment|/* Call gig speed drop workaround on LPLU before accessing 		 * any PHY registers */
+comment|/* 		 * Call gig speed drop workaround on LPLU before accessing 		 * any PHY registers 		 */
 if|if
 condition|(
 operator|(
@@ -3617,9 +3632,8 @@ name|dev_spec
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|dev_spec
-operator|==
-name|NULL
 condition|)
 block|{
 name|DEBUGOUT
@@ -3735,8 +3749,6 @@ operator|(
 name|dev_spec
 operator|->
 name|shadow_ram
-operator|!=
-name|NULL
 operator|)
 operator|&&
 operator|(
@@ -3750,8 +3762,6 @@ name|i
 index|]
 operator|.
 name|modified
-operator|==
-name|TRUE
 operator|)
 condition|)
 block|{
@@ -3911,7 +3921,7 @@ operator|.
 name|regval
 argument_list|)
 expr_stmt|;
-comment|/* Either we should have a hardware SPI cycle in progress 	 * bit to check against, in order to start a new cycle or 	 * FDONE bit should be changed in the hardware so that it 	 * is 1 after harware reset, which can then be used as an 	 * indication whether a cycle is in progress or has been 	 * completed. 	 */
+comment|/* 	 * Either we should have a hardware SPI cycle in progress 	 * bit to check against, in order to start a new cycle or 	 * FDONE bit should be changed in the hardware so that it 	 * is 1 after harware reset, which can then be used as an 	 * indication whether a cycle is in progress or has been 	 * completed. 	 */
 if|if
 condition|(
 name|hsfsts
@@ -3923,8 +3933,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* There is no cycle running at present, 		 * so we can start a cycle */
-comment|/* Begin by setting Flash Cycle Done. */
+comment|/* 		 * There is no cycle running at present, 		 * so we can start a cycle. 		 * Begin by setting Flash Cycle Done. 		 */
 name|hsfsts
 operator|.
 name|hsf_status
@@ -3951,7 +3960,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* otherwise poll for sometime so the current 		 * cycle has a chance to end before giving up. */
+comment|/* 		 * Otherwise poll for sometime so the current 		 * cycle has a chance to end before giving up. 		 */
 for|for
 control|(
 name|i
@@ -4007,7 +4016,7 @@ operator|==
 name|E1000_SUCCESS
 condition|)
 block|{
-comment|/* Successful in waiting for previous cycle to timeout, 			 * now set the Flash Cycle Done. */
+comment|/* 			 * Successful in waiting for previous cycle to timeout, 			 * now set the Flash Cycle Done. 			 */
 name|hsfsts
 operator|.
 name|hsf_status
@@ -4217,9 +4226,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|data
-operator|==
-name|NULL
 condition|)
 block|{
 name|ret_val
@@ -4324,10 +4332,6 @@ name|size
 operator|>
 literal|2
 operator|||
-name|data
-operator|==
-literal|0x0
-operator|||
 name|offset
 operator|>
 name|ICH_FLASH_LINEAR_ADDR_MASK
@@ -4430,7 +4434,7 @@ argument_list|,
 name|ICH_FLASH_READ_COMMAND_TIMEOUT
 argument_list|)
 expr_stmt|;
-comment|/* Check if FCERR is set to 1, if set to 1, clear it 		 * and try the whole sequence a few more times, else 		 * read in (shift in) the Flash Data0, the order is 		 * least significant byte first msb to lsb */
+comment|/* 		 * Check if FCERR is set to 1, if set to 1, clear it 		 * and try the whole sequence a few more times, else 		 * read in (shift in) the Flash Data0, the order is 		 * least significant byte first msb to lsb 		 */
 if|if
 condition|(
 name|ret_val
@@ -4492,7 +4496,7 @@ break|break;
 block|}
 else|else
 block|{
-comment|/* If we've gotten here, then things are probably 			 * completely hosed, but if the error condition is 			 * detected, it won't hurt to give it another try... 			 * ICH_FLASH_CYCLE_REPEAT_COUNT times. 			 */
+comment|/* 			 * If we've gotten here, then things are probably 			 * completely hosed, but if the error condition is 			 * detected, it won't hurt to give it another try... 			 * ICH_FLASH_CYCLE_REPEAT_COUNT times. 			 */
 name|hsfsts
 operator|.
 name|regval
@@ -4622,9 +4626,8 @@ name|dev_spec
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|dev_spec
-operator|==
-name|NULL
 condition|)
 block|{
 name|DEBUGOUT
@@ -4853,7 +4856,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* We're writing to the opposite bank so if we're on bank 1, 	 * write to bank 0 etc.  We also need to erase the segment that 	 * is going to be written */
+comment|/* 	 * We're writing to the opposite bank so if we're on bank 1, 	 * write to bank 0 etc.  We also need to erase the segment that 	 * is going to be written 	 */
 if|if
 condition|(
 operator|!
@@ -4921,7 +4924,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Determine whether to write the value stored 		 * in the other NVM bank or a modified value stored 		 * in the shadow RAM */
+comment|/* 		 * Determine whether to write the value stored 		 * in the other NVM bank or a modified value stored 		 * in the shadow RAM 		 */
 if|if
 condition|(
 name|dev_spec
@@ -4932,8 +4935,6 @@ name|i
 index|]
 operator|.
 name|modified
-operator|==
-name|TRUE
 condition|)
 block|{
 name|data
@@ -4963,7 +4964,7 @@ name|data
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If the word is 0x13, then make sure the signature bits 		 * (15:14) are 11b until the commit has completed. 		 * This will allow us to write 10b which indicates the 		 * signature is valid.  We want to do this after the write 		 * has completed so that we don't mark the segment valid 		 * while the write is still in progress */
+comment|/* 		 * If the word is 0x13, then make sure the signature bits 		 * (15:14) are 11b until the commit has completed. 		 * This will allow us to write 10b which indicates the 		 * signature is valid.  We want to do this after the write 		 * has completed so that we don't mark the segment valid 		 * while the write is still in progress 		 */
 if|if
 condition|(
 name|i
@@ -5041,7 +5042,7 @@ name|ret_val
 condition|)
 break|break;
 block|}
-comment|/* Don't bother writing the segment valid bits if sector 	 * programming failed. */
+comment|/* 	 * Don't bother writing the segment valid bits if sector 	 * programming failed. 	 */
 if|if
 condition|(
 name|ret_val
@@ -5061,7 +5062,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Finally validate the new segment by setting bit 15:14 	 * to 10b in word 0x13 , this can be done without an 	 * erase as well since these bits are 11 to start with 	 * and we need to change bit 14 to 0b */
+comment|/* 	 * Finally validate the new segment by setting bit 15:14 	 * to 10b in word 0x13 , this can be done without an 	 * erase as well since these bits are 11 to start with 	 * and we need to change bit 14 to 0b 	 */
 name|act_offset
 operator|=
 name|new_bank_offset
@@ -5118,7 +5119,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* And invalidate the previously valid segment by setting 	 * its signature word (0x13) high_byte to 0b. This can be 	 * done without an erase because flash erase sets all bits 	 * to 1's. We can write 1's to 0's without an erase */
+comment|/* 	 * And invalidate the previously valid segment by setting 	 * its signature word (0x13) high_byte to 0b. This can be 	 * done without an erase because flash erase sets all bits 	 * to 1's. We can write 1's to 0's without an erase 	 */
 name|act_offset
 operator|=
 operator|(
@@ -5199,7 +5200,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Reload the EEPROM, or else modifications will not appear 	 * until after the next adapter reset. 	 */
+comment|/* 	 * Reload the EEPROM, or else modifications will not appear 	 * until after the next adapter reset. 	 */
 name|e1000_reload_nvm
 argument_list|(
 name|hw
@@ -5246,7 +5247,7 @@ argument_list|(
 literal|"e1000_validate_nvm_checksum_ich8lan"
 argument_list|)
 expr_stmt|;
-comment|/* Read 0x19 and check bit 6.  If this bit is 0, the checksum 	 * needs to be fixed.  This bit is an indication that the NVM 	 * was prepared by OEM software and did not calculate the 	 * checksum...a likely scenario. 	 */
+comment|/* 	 * Read 0x19 and check bit 6.  If this bit is 0, the checksum 	 * needs to be fixed.  This bit is an indication that the NVM 	 * was prepared by OEM software and did not calculate the 	 * checksum...a likely scenario. 	 */
 name|ret_val
 operator|=
 name|e1000_read_nvm
@@ -5531,7 +5532,7 @@ argument_list|,
 name|flash_data
 argument_list|)
 expr_stmt|;
-comment|/* check if FCERR is set to 1 , if set to 1, clear it 		 * and try the whole sequence a few more times else done */
+comment|/* 		 * check if FCERR is set to 1 , if set to 1, clear it 		 * and try the whole sequence a few more times else done 		 */
 name|ret_val
 operator|=
 name|e1000_flash_cycle_ich8lan
@@ -5552,7 +5553,7 @@ break|break;
 block|}
 else|else
 block|{
-comment|/* If we're here, then things are most likely 			 * completely hosed, but if the error condition 			 * is detected, it won't hurt to give it another 			 * try...ICH_FLASH_CYCLE_REPEAT_COUNT times. 			 */
+comment|/* 			 * If we're here, then things are most likely 			 * completely hosed, but if the error condition 			 * is detected, it won't hurt to give it another 			 * try...ICH_FLASH_CYCLE_REPEAT_COUNT times. 			 */
 name|hsfsts
 operator|.
 name|regval
@@ -5711,15 +5712,12 @@ expr_stmt|;
 if|if
 condition|(
 name|ret_val
+operator|==
+name|E1000_SUCCESS
 condition|)
 goto|goto
 name|out
 goto|;
-name|usec_delay
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|program_retries
@@ -5830,6 +5828,7 @@ decl_stmt|;
 name|u32
 name|flash_linear_addr
 decl_stmt|;
+comment|/* bank size is in 16bit words - adjust to bytes */
 name|u32
 name|flash_bank_size
 init|=
@@ -5839,7 +5838,6 @@ name|flash_bank_size
 operator|*
 literal|2
 decl_stmt|;
-comment|/* bank size is in 16bit words - adjust to bytes */
 name|s32
 name|ret_val
 init|=
@@ -5873,8 +5871,7 @@ argument_list|,
 name|ICH_FLASH_HSFSTS
 argument_list|)
 expr_stmt|;
-comment|/* Determine HW Sector size: Read BERASE bits of hw flash status 	 * register */
-comment|/* 00: The Hw sector is 256 bytes, hence we need to erase 16 	 *     consecutive sectors.  The start index for the nth Hw sector 	 *     can be calculated as = bank * 4096 + n * 256 	 * 01: The Hw sector is 4K bytes, hence we need to erase 1 sector. 	 *     The start index for the nth Hw sector can be calculated 	 *     as = bank * 4096 	 * 10: The Hw sector is 8K bytes, nth sector = bank * 8192 	 *     (ich9 only, otherwise error condition) 	 * 11: The Hw sector is 64K bytes, nth sector = bank * 65536 	 */
+comment|/* 	 * Determine HW Sector size: Read BERASE bits of hw flash status 	 * register 	 * 00: The Hw sector is 256 bytes, hence we need to erase 16 	 *     consecutive sectors.  The start index for the nth Hw sector 	 *     can be calculated as = bank * 4096 + n * 256 	 * 01: The Hw sector is 4K bytes, hence we need to erase 1 sector. 	 *     The start index for the nth Hw sector can be calculated 	 *     as = bank * 4096 	 * 10: The Hw sector is 8K bytes, nth sector = bank * 8192 	 *     (ich9 only, otherwise error condition) 	 * 11: The Hw sector is 64K bytes, nth sector = bank * 65536 	 */
 switch|switch
 condition|(
 name|hsfsts
@@ -6028,7 +6025,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Write a value 11 (block Erase) in Flash 			 * Cycle field in hw flash control */
+comment|/* 			 * Write a value 11 (block Erase) in Flash 			 * Cycle field in hw flash control 			 */
 name|hsflctl
 operator|.
 name|regval
@@ -6059,7 +6056,7 @@ operator|.
 name|regval
 argument_list|)
 expr_stmt|;
-comment|/* Write the last 24 bits of an index within the 			 * block into Flash Linear address field in Flash 			 * Address. 			 */
+comment|/* 			 * Write the last 24 bits of an index within the 			 * block into Flash Linear address field in Flash 			 * Address. 			 */
 name|flash_linear_addr
 operator|+=
 operator|(
@@ -6097,7 +6094,7 @@ break|break;
 block|}
 else|else
 block|{
-comment|/* Check if FCERR is set to 1.  If 1, 				 * clear it and try the whole sequence 				 * a few more times else Done */
+comment|/* 				 * Check if FCERR is set to 1.  If 1, 				 * clear it and try the whole sequence 				 * a few more times else Done 				 */
 name|hsfsts
 operator|.
 name|regval
@@ -6120,7 +6117,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* repeat for some time before 					 * giving up */
+comment|/* 					 * repeat for some time before 					 * giving up 					 */
 continue|continue;
 block|}
 elseif|else
@@ -6275,7 +6272,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* ICH devices are "PCI Express"-ish.  They have 	 * a configuration space, but do not contain 	 * PCI Express Capability registers, so bus width 	 * must be hardcoded. 	 */
+comment|/* 	 * ICH devices are "PCI Express"-ish.  They have 	 * a configuration space, but do not contain 	 * PCI Express Capability registers, so bus width 	 * must be hardcoded. 	 */
 if|if
 condition|(
 name|bus
@@ -6326,7 +6323,7 @@ argument_list|(
 literal|"e1000_reset_hw_ich8lan"
 argument_list|)
 expr_stmt|;
-comment|/* Prevent the PCI-E bus from sticking if there is no TLP connection 	 * on the last TLP read/write transaction when MAC is reset. 	 */
+comment|/* 	 * Prevent the PCI-E bus from sticking if there is no TLP connection 	 * on the last TLP read/write transaction when MAC is reset. 	 */
 name|ret_val
 operator|=
 name|e1000_disable_pcie_master_generic
@@ -6359,7 +6356,7 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-comment|/* Disable the Transmit and Receive units.  Then delay to allow 	 * any pending transactions to complete before we hit the MAC 	 * with the global reset. 	 */
+comment|/* 	 * Disable the Transmit and Receive units.  Then delay to allow 	 * any pending transactions to complete before we hit the MAC 	 * with the global reset. 	 */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -6446,7 +6443,7 @@ operator|.
 name|reset_disable
 condition|)
 block|{
-comment|/* PHY HW reset requires MAC CORE reset at the same 		 * time to make sure the interface between MAC and the 		 * external PHY is reset. 		 */
+comment|/* 		 * PHY HW reset requires MAC CORE reset at the same 		 * time to make sure the interface between MAC and the 		 * external PHY is reset. 		 */
 name|ctrl
 operator||=
 name|E1000_CTRL_PHY_RST
@@ -6613,9 +6610,7 @@ argument_list|(
 literal|"Error initializing identification LED\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+comment|/* This is not fatal and we should not stop init due to this */
 block|}
 comment|/* Setup the receive address. */
 name|e1000_init_rx_addrs_generic
@@ -6675,6 +6670,9 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|txdctl
@@ -6704,6 +6702,9 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|txdctl
 argument_list|)
@@ -6714,7 +6715,10 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TXDCTL1
+name|E1000_TXDCTL
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|txdctl
@@ -6743,12 +6747,15 @@ name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TXDCTL1
+name|E1000_TXDCTL
+argument_list|(
+literal|1
+argument_list|)
 argument_list|,
 name|txdctl
 argument_list|)
 expr_stmt|;
-comment|/* ICH8 has opposite polarity of no_snoop bits. 	 * By default, we should use snoop behavior. */
+comment|/* 	 * ICH8 has opposite polarity of no_snoop bits. 	 * By default, we should use snoop behavior. 	 */
 if|if
 condition|(
 name|mac
@@ -6801,14 +6808,12 @@ argument_list|,
 name|ctrl_ext
 argument_list|)
 expr_stmt|;
-comment|/* Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
+comment|/* 	 * Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
 name|e1000_clear_hw_cntrs_ich8lan
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -6884,6 +6889,9 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|reg
@@ -6899,6 +6907,9 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|reg
 argument_list|)
@@ -6910,7 +6921,10 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TXDCTL1
+name|E1000_TXDCTL
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|reg
@@ -6925,7 +6939,10 @@ name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TXDCTL1
+name|E1000_TXDCTL
+argument_list|(
+literal|1
+argument_list|)
 argument_list|,
 name|reg
 argument_list|)
@@ -6937,7 +6954,10 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TARC0
+name|E1000_TARC
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6994,7 +7014,10 @@ name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TARC0
+name|E1000_TARC
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|reg
 argument_list|)
@@ -7006,7 +7029,10 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TARC1
+name|E1000_TARC
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -7062,7 +7088,10 @@ name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TARC1
+name|E1000_TARC
+argument_list|(
+literal|1
+argument_list|)
 argument_list|,
 name|reg
 argument_list|)
@@ -7129,16 +7158,6 @@ name|hw
 parameter_list|)
 block|{
 name|struct
-name|e1000_mac_info
-modifier|*
-name|mac
-init|=
-operator|&
-name|hw
-operator|->
-name|mac
-decl_stmt|;
-name|struct
 name|e1000_functions
 modifier|*
 name|func
@@ -7168,36 +7187,46 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* ICH parts do not have a word in the NVM to determine 	 * the default flow control setting, so we explicitly 	 * set it to full. 	 */
+comment|/* 	 * ICH parts do not have a word in the NVM to determine 	 * the default flow control setting, so we explicitly 	 * set it to full. 	 */
 if|if
 condition|(
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|==
 name|e1000_fc_default
 condition|)
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|=
 name|e1000_fc_full
 expr_stmt|;
-name|mac
-operator|->
-name|original_fc
-operator|=
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|original_type
+operator|=
+name|hw
+operator|->
+name|fc
+operator|.
+name|type
 expr_stmt|;
 name|DEBUGOUT1
 argument_list|(
 literal|"After fix-ups FlowControl is now = %x\n"
 argument_list|,
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 argument_list|)
 expr_stmt|;
 comment|/* Continue to configure the copper link. */
@@ -7223,9 +7252,11 @@ name|hw
 argument_list|,
 name|E1000_FCTTV
 argument_list|,
-name|mac
+name|hw
 operator|->
-name|fc_pause_time
+name|fc
+operator|.
+name|pause_time
 argument_list|)
 expr_stmt|;
 name|ret_val
@@ -7303,7 +7334,7 @@ argument_list|,
 name|ctrl
 argument_list|)
 expr_stmt|;
-comment|/* Set the mac to wait the maximum time between each iteration 	 * and increase the max iterations when polling the phy; 	 * this fixes erroneous timeouts at 10Mbps. */
+comment|/* 	 * Set the mac to wait the maximum time between each iteration 	 * and increase the max iterations when polling the phy; 	 * this fixes erroneous timeouts at 10Mbps. 	 */
 name|ret_val
 operator|=
 name|e1000_write_kmrn_reg
@@ -7547,7 +7578,7 @@ name|i
 decl_stmt|,
 name|data
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 name|DEBUGFUNC
@@ -7568,9 +7599,8 @@ name|dev_spec
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|dev_spec
-operator|==
-name|NULL
 condition|)
 block|{
 name|DEBUGOUT
@@ -7589,16 +7619,17 @@ goto|;
 block|}
 if|if
 condition|(
+operator|!
+operator|(
 name|dev_spec
 operator|->
 name|kmrn_lock_loss_workaround_enabled
-operator|==
-name|FALSE
+operator|)
 condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Make sure link is up before proceeding.  If not just return. 	 * Attempting this while link is negotiating fouled up link 	 * stability */
+comment|/* 	 * Make sure link is up before proceeding.  If not just return. 	 * Attempting this while link is negotiating fouled up link 	 * stability 	 */
 name|ret_val
 operator|=
 name|e1000_phy_has_link_generic
@@ -7739,7 +7770,7 @@ argument_list|,
 name|phy_ctrl
 argument_list|)
 expr_stmt|;
-comment|/* Call gig speed drop workaround on Giga disable before accessing 	 * any PHY registers */
+comment|/* 	 * Call gig speed drop workaround on Giga disable before accessing 	 * any PHY registers 	 */
 name|e1000_gig_downshift_workaround_ich8lan
 argument_list|(
 name|hw
@@ -7772,7 +7803,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|state
 parameter_list|)
 block|{
@@ -7819,9 +7850,8 @@ name|dev_spec
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|dev_spec
-operator|==
-name|NULL
 condition|)
 block|{
 name|DEBUGOUT
@@ -7918,7 +7948,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* Call gig speed drop workaround on Giga disable before 		 * accessing any PHY registers */
+comment|/* 		 * Call gig speed drop workaround on Giga disable before 		 * accessing any PHY registers 		 */
 if|if
 condition|(
 name|hw

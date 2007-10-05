@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -375,7 +375,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 function_decl|;
@@ -486,7 +486,7 @@ parameter_list|,
 name|u32
 name|usec_interval
 parameter_list|,
-name|boolean_t
+name|bool
 modifier|*
 name|success
 parameter_list|)
@@ -617,7 +617,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IGP4_PHY_PAGE_SELECT
+name|BM_PHY_PAGE_SELECT
 value|22
 end_define
 
@@ -642,49 +642,49 @@ end_define
 begin_define
 define|#
 directive|define
-name|IGP4_WUC_PAGE
+name|BM_WUC_PAGE
 value|800
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGP4_WUC_ADDRESS_OPCODE
+name|BM_WUC_ADDRESS_OPCODE
 value|0x11
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGP4_WUC_DATA_OPCODE
+name|BM_WUC_DATA_OPCODE
 value|0x12
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGP4_WUC_ENABLE_PAGE
+name|BM_WUC_ENABLE_PAGE
 value|769
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGP4_WUC_ENABLE_REG
+name|BM_WUC_ENABLE_REG
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGP4_WUC_ENABLE_BIT
+name|BM_WUC_ENABLE_BIT
 value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGP4_WUC_HOST_WU_BIT
+name|BM_WUC_HOST_WU_BIT
 value|(1<< 4)
 end_define
 
@@ -727,16 +727,16 @@ name|IGP01E1000_PSCFR_SMART_SPEED
 value|0x0080
 end_define
 
+begin_comment
+comment|/* Enable flexible speed on link-up */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IGP01E1000_GMII_FLEX_SPD
 value|0x0010
 end_define
-
-begin_comment
-comment|/* Enable flexible speed                                                   * on link-up */
-end_comment
 
 begin_define
 define|#

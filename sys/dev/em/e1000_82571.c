@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -172,7 +172,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 function_decl|;
@@ -220,7 +220,7 @@ end_function_decl
 begin_function_decl
 name|STATIC
 name|void
-name|e1000_mc_addr_list_update_82571
+name|e1000_update_mc_addr_list_82571
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -400,11 +400,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|STATIC
+name|s32
+name|e1000_read_mac_addr_82571
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|e1000_dev_spec_82571
 block|{
-name|boolean_t
+name|bool
 name|laa_is_present
 decl_stmt|;
 block|}
@@ -460,6 +473,8 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|!=
 name|e1000_media_type_copper
@@ -592,6 +607,33 @@ name|write_phy_reg
 operator|=
 name|e1000_write_phy_reg_igp
 expr_stmt|;
+comment|/* This uses above function pointers */
+name|ret_val
+operator|=
+name|e1000_get_phy_id_82571
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+comment|/* Verify PHY ID */
+if|if
+condition|(
+name|phy
+operator|->
+name|id
+operator|!=
+name|IGP01E1000_I_PHY_ID
+condition|)
+block|{
+name|ret_val
+operator|=
+operator|-
+name|E1000_ERR_PHY
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 break|break;
 case|case
 name|e1000_82573
@@ -644,19 +686,7 @@ name|write_phy_reg
 operator|=
 name|e1000_write_phy_reg_m88
 expr_stmt|;
-break|break;
-default|default:
-name|ret_val
-operator|=
-operator|-
-name|E1000_ERR_PHY
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-break|break;
-block|}
-comment|/* This can only be done after all function pointers are setup. */
+comment|/* This uses above function pointers */
 name|ret_val
 operator|=
 name|e1000_get_phy_id_82571
@@ -664,44 +694,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Verify phy id */
-switch|switch
-condition|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-condition|)
-block|{
-case|case
-name|e1000_82571
-case|:
-case|case
-name|e1000_82572
-case|:
-if|if
-condition|(
-name|phy
-operator|->
-name|id
-operator|!=
-name|IGP01E1000_I_PHY_ID
-condition|)
-block|{
-name|ret_val
-operator|=
-operator|-
-name|E1000_ERR_PHY
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-break|break;
-case|case
-name|e1000_82573
-case|:
+comment|/* Verify PHY ID */
 if|if
 condition|(
 name|phy
@@ -910,7 +903,7 @@ name|word_size
 operator|=
 literal|2048
 expr_stmt|;
-comment|/* Autonomous Flash update bit must be cleared due 			 * to Flash update issue. 			 */
+comment|/* 			 * Autonomous Flash update bit must be cleared due 			 * to Flash update issue. 			 */
 name|eecd
 operator|&=
 operator|~
@@ -950,7 +943,7 @@ operator|>>
 name|E1000_EECD_SIZE_EX_SHIFT
 argument_list|)
 expr_stmt|;
-comment|/* Added to a constant, "size" becomes the left-shift value 		 * for setting word_size. 		 */
+comment|/* 		 * Added to a constant, "size" becomes the left-shift value 		 * for setting word_size. 		 */
 name|size
 operator|+=
 name|NVM_WORD_SIZE_BASE_SHIFT
@@ -1090,6 +1083,8 @@ name|E1000_DEV_ID_82571EB_QUAD_FIBER
 case|:
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_fiber
@@ -1109,6 +1104,8 @@ name|E1000_DEV_ID_82572EI_SERDES
 case|:
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_internal_serdes
@@ -1117,6 +1114,8 @@ break|break;
 default|default:
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_copper
@@ -1201,6 +1200,8 @@ operator|=
 operator|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper
@@ -1215,6 +1216,8 @@ switch|switch
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 condition|)
 block|{
@@ -1269,9 +1272,9 @@ expr_stmt|;
 comment|/* multicast address update */
 name|func
 operator|->
-name|mc_addr_list_update
+name|update_mc_addr_list
 operator|=
-name|e1000_mc_addr_list_update_82571
+name|e1000_update_mc_addr_list_82571
 expr_stmt|;
 comment|/* writing VFTA */
 name|func
@@ -1293,6 +1296,13 @@ operator|->
 name|mta_set
 operator|=
 name|e1000_mta_set_generic
+expr_stmt|;
+comment|/* read mac address */
+name|func
+operator|->
+name|read_mac_addr
+operator|=
+name|e1000_read_mac_addr_82571
 expr_stmt|;
 comment|/* blink LED */
 name|func
@@ -1350,6 +1360,8 @@ operator|=
 operator|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper
@@ -1485,7 +1497,7 @@ case|:
 case|case
 name|e1000_82572
 case|:
-comment|/* The 82571 firmware may still be configuring the PHY. 		 * In this case, we cannot access the PHY until the 		 * configuration is done.  So we explicitly set the 		 * PHY ID. */
+comment|/* 		 * The 82571 firmware may still be configuring the PHY. 		 * In this case, we cannot access the PHY until the 		 * configuration is done.  So we explicitly set the 		 * PHY ID. 		 */
 name|phy
 operator|->
 name|id
@@ -1940,7 +1952,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* If our nvm is an EEPROM, then we're done 	 * otherwise, commit the checksum to the flash NVM. */
+comment|/* 	 * If our nvm is an EEPROM, then we're done 	 * otherwise, commit the checksum to the flash NVM. 	 */
 if|if
 condition|(
 name|hw
@@ -2024,7 +2036,7 @@ operator|==
 name|E1000_STM_OPCODE
 condition|)
 block|{
-comment|/* The enabling of and the actual reset must be done 		 * in two write cycles. 		 */
+comment|/* 		 * The enabling of and the actual reset must be done 		 * in two write cycles. 		 */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -2226,7 +2238,7 @@ argument_list|(
 literal|"e1000_write_nvm_eewr_82571"
 argument_list|)
 expr_stmt|;
-comment|/* A check for invalid values:  offset too large, too many words, 	 * and not enough words. */
+comment|/* 	 * A check for invalid values:  offset too large, too many words, 	 * and not enough words. 	 */
 if|if
 condition|(
 operator|(
@@ -2451,7 +2463,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 block|{
@@ -2577,7 +2589,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-comment|/* LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. */
+comment|/* 		 * LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. 		 */
 if|if
 condition|(
 name|phy
@@ -2728,7 +2740,7 @@ argument_list|(
 literal|"e1000_reset_hw_82571"
 argument_list|)
 expr_stmt|;
-comment|/* Prevent the PCI-E bus from sticking if there is no TLP connection 	 * on the last TLP read/write transaction when MAC is reset. 	 */
+comment|/* 	 * Prevent the PCI-E bus from sticking if there is no TLP connection 	 * on the last TLP read/write transaction when MAC is reset. 	 */
 name|ret_val
 operator|=
 name|e1000_disable_pcie_master_generic
@@ -2789,7 +2801,7 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Must acquire the MDIO ownership before MAC reset. 	 * Ownership defaults to firmware after a reset. */
+comment|/* 	 * Must acquire the MDIO ownership before MAC reset. 	 * Ownership defaults to firmware after a reset. 	 */
 if|if
 condition|(
 name|hw
@@ -2946,7 +2958,7 @@ comment|/* We don't want to continue accessing MAC registers. */
 goto|goto
 name|out
 goto|;
-comment|/* Phy configuration from NVM just starts after EECD_AUTO_RD is set. 	 * Need to wait for Phy configuration completion before accessing 	 * NVM and Phy. 	 */
+comment|/* 	 * Phy configuration from NVM just starts after EECD_AUTO_RD is set. 	 * Need to wait for Phy configuration completion before accessing 	 * NVM and Phy. 	 */
 if|if
 condition|(
 name|hw
@@ -2979,6 +2991,11 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_ICR
+argument_list|)
+expr_stmt|;
+name|e1000_check_alt_mac_addr_generic
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 name|out
@@ -3057,9 +3074,7 @@ argument_list|(
 literal|"Error initializing identification LED\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+comment|/* This is not fatal and we should not stop init due to this */
 block|}
 comment|/* Disabling VLAN filtering */
 name|DEBUGOUT
@@ -3073,15 +3088,13 @@ name|hw
 argument_list|)
 expr_stmt|;
 comment|/* Setup the receive address. */
-comment|/* If, however, a locally administered address was assigned to the 	 * 82571, we must reserve a RAR for it to work around an issue where 	 * resetting one port will reload the MAC on the other port. 	 */
+comment|/* 	 * If, however, a locally administered address was assigned to the 	 * 82571, we must reserve a RAR for it to work around an issue where 	 * resetting one port will reload the MAC on the other port. 	 */
 if|if
 condition|(
 name|e1000_get_laa_state_82571
 argument_list|(
 name|hw
 argument_list|)
-operator|==
-name|TRUE
 condition|)
 name|rar_count
 operator|--
@@ -3141,6 +3154,9 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|reg_data
@@ -3161,6 +3177,9 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|reg_data
 argument_list|)
@@ -3181,7 +3200,10 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TXDCTL1
+name|E1000_TXDCTL
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|reg_data
@@ -3201,7 +3223,10 @@ name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TXDCTL1
+name|E1000_TXDCTL
+argument_list|(
+literal|1
+argument_list|)
 argument_list|,
 name|reg_data
 argument_list|)
@@ -3237,14 +3262,12 @@ name|reg_data
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
+comment|/* 	 * Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
 name|e1000_clear_hw_cntrs_82571
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -3293,6 +3316,9 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|reg
@@ -3308,6 +3334,9 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|reg
 argument_list|)
@@ -3319,7 +3348,10 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TXDCTL1
+name|E1000_TXDCTL
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|reg
@@ -3334,7 +3366,10 @@ name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TXDCTL1
+name|E1000_TXDCTL
+argument_list|(
+literal|1
+argument_list|)
 argument_list|,
 name|reg
 argument_list|)
@@ -3346,7 +3381,10 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TARC0
+name|E1000_TARC
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|reg
@@ -3408,7 +3446,10 @@ name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TARC0
+name|E1000_TARC
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|reg
 argument_list|)
@@ -3420,7 +3461,10 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TARC1
+name|E1000_TARC
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -3514,7 +3558,10 @@ name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TARC1
+name|E1000_TARC
+argument_list|(
+literal|1
+argument_list|)
 argument_list|,
 name|reg
 argument_list|)
@@ -3677,7 +3724,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* The VFTA is a 4096b bit-field, each identifying 			 * a single VLAN ID.  The following operations 			 * determine which 32b entry (i.e. offset) into the 			 * array we want to set the VLAN ID (i.e. bit) of 			 * the manageability unit. 			 */
+comment|/* 			 * The VFTA is a 4096b bit-field, each identifying 			 * a single VLAN ID.  The following operations 			 * determine which 32b entry (i.e. offset) into the 			 * array we want to set the VLAN ID (i.e. bit) of 			 * the manageability unit. 			 */
 name|vfta_offset
 operator|=
 operator|(
@@ -3722,7 +3769,7 @@ name|offset
 operator|++
 control|)
 block|{
-comment|/* If the offset we want to clear is the same offset of the 		 * manageability VLAN ID, then clear all bits except that of 		 * the manageability unit. 		 */
+comment|/* 		 * If the offset we want to clear is the same offset of the 		 * manageability VLAN ID, then clear all bits except that of 		 * the manageability unit. 		 */
 name|vfta_value
 operator|=
 operator|(
@@ -3756,13 +3803,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_mc_addr_list_update_82571 - Update Multicast addresses  *  @hw: pointer to the HW structure  *  @mc_addr_list: array of multicast addresses to program  *  @mc_addr_count: number of multicast addresses to program  *  @rar_used_count: the first RAR register free to program  *  @rar_count: total number of supported Receive Address Registers  *  *  Updates the Receive Address Registers and Multicast Table Array.  *  The caller must have a packed mc_addr_list of multicast addresses.  *  The parameter rar_count will usually be hw->mac.rar_entry_count  *  unless there are workarounds that change this.  **/
+comment|/**  *  e1000_update_mc_addr_list_82571 - Update Multicast addresses  *  @hw: pointer to the HW structure  *  @mc_addr_list: array of multicast addresses to program  *  @mc_addr_count: number of multicast addresses to program  *  @rar_used_count: the first RAR register free to program  *  @rar_count: total number of supported Receive Address Registers  *  *  Updates the Receive Address Registers and Multicast Table Array.  *  The caller must have a packed mc_addr_list of multicast addresses.  *  The parameter rar_count will usually be hw->mac.rar_entry_count  *  unless there are workarounds that change this.  **/
 end_comment
 
 begin_function
 name|STATIC
 name|void
-name|e1000_mc_addr_list_update_82571
+name|e1000_update_mc_addr_list_82571
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -3785,7 +3832,7 @@ parameter_list|)
 block|{
 name|DEBUGFUNC
 argument_list|(
-literal|"e1000_mc_addr_list_update_82571"
+literal|"e1000_update_mc_addr_list_82571"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3798,7 +3845,7 @@ condition|)
 name|rar_count
 operator|--
 expr_stmt|;
-name|e1000_mc_addr_list_update_generic
+name|e1000_update_mc_addr_list_generic
 argument_list|(
 name|hw
 argument_list|,
@@ -3834,7 +3881,7 @@ argument_list|(
 literal|"e1000_setup_link_82571"
 argument_list|)
 expr_stmt|;
-comment|/* 82573 does not have a word in the NVM to determine 	 * the default flow control setting, so we explicitly 	 * set it to full. 	 */
+comment|/* 	 * 82573 does not have a word in the NVM to determine 	 * the default flow control setting, so we explicitly 	 * set it to full. 	 */
 if|if
 condition|(
 name|hw
@@ -3847,9 +3894,9 @@ name|e1000_82573
 condition|)
 name|hw
 operator|->
-name|mac
-operator|.
 name|fc
+operator|.
+name|type
 operator|=
 name|e1000_fc_full
 expr_stmt|;
@@ -4048,7 +4095,7 @@ case|:
 case|case
 name|e1000_82572
 case|:
-comment|/* If SerDes loopback mode is entered, there is no form 		 * of reset to take the adapter out of that mode.  So we 		 * have to explicitly take the adapter out of loopback 		 * mode.  This prevents drivers from twidling their thumbs 		 * if another tool failed to take it out of loopback mode. 		 */
+comment|/* 		 * If SerDes loopback mode is entered, there is no form 		 * of reset to take the adapter out of that mode.  So we 		 * have to explicitly take the adapter out of loopback 		 * mode.  This prevents drivers from twidling their thumbs 		 * if another tool failed to take it out of loopback mode. 		 */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -4176,7 +4223,7 @@ comment|/**  *  e1000_get_laa_state_82571 - Get locally administered address sta
 end_comment
 
 begin_function
-name|boolean_t
+name|bool
 name|e1000_get_laa_state_82571
 parameter_list|(
 name|struct
@@ -4190,7 +4237,7 @@ name|e1000_dev_spec_82571
 modifier|*
 name|dev_spec
 decl_stmt|;
-name|boolean_t
+name|bool
 name|state
 init|=
 name|FALSE
@@ -4251,7 +4298,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|state
 parameter_list|)
 block|{
@@ -4299,11 +4346,9 @@ comment|/* If workaround is activated... */
 if|if
 condition|(
 name|state
-operator|==
-name|TRUE
 condition|)
 block|{
-comment|/* Hold a copy of the LAA in RAR[14] This is done so that 		 * between the time RAR[0] gets clobbered and the time it 		 * gets fixed, the actual LAA is in one of the RARs and no 		 * incoming packets directed to this port are dropped. 		 * Eventually the LAA will be in RAR[0] and RAR[14]. 		 */
+comment|/* 		 * Hold a copy of the LAA in RAR[14] This is done so that 		 * between the time RAR[0] gets clobbered and the time it 		 * gets fixed, the actual LAA is in one of the RARs and no 		 * incoming packets directed to this port are dropped. 		 * Eventually the LAA will be in RAR[0] and RAR[14]. 		 */
 name|e1000_rar_set_generic
 argument_list|(
 name|hw
@@ -4379,7 +4424,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Check bit 4 of word 10h.  If it is 0, firmware is done updating 	 * 10h-12h.  Checksum may need to be fixed. 	 */
+comment|/* 	 * Check bit 4 of word 10h.  If it is 0, firmware is done updating 	 * 10h-12h.  Checksum may need to be fixed. 	 */
 name|ret_val
 operator|=
 name|e1000_read_nvm
@@ -4411,7 +4456,7 @@ literal|0x10
 operator|)
 condition|)
 block|{
-comment|/* Read 0x23 and check bit 15.  This bit is a 1 		 * when the checksum has already been fixed.  If 		 * the checksum is still wrong and this bit is a 		 * 1, we need to return bad checksum.  Otherwise, 		 * we need to set this bit to a 1 and update the 		 * checksum. 		 */
+comment|/* 		 * Read 0x23 and check bit 15.  This bit is a 1 		 * when the checksum has already been fixed.  If 		 * the checksum is still wrong and this bit is a 		 * 1, we need to return bad checksum.  Otherwise, 		 * we need to set this bit to a 1 and update the 		 * checksum. 		 */
 name|ret_val
 operator|=
 name|e1000_read_nvm
@@ -4479,6 +4524,51 @@ block|}
 block|}
 name|out
 label|:
+return|return
+name|ret_val
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_read_mac_addr_82571 - Read device MAC address  *  @hw: pointer to the HW structure  **/
+end_comment
+
+begin_function
+name|STATIC
+name|s32
+name|e1000_read_mac_addr_82571
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|s32
+name|ret_val
+init|=
+name|E1000_SUCCESS
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_read_mac_addr_82571"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e1000_check_alt_mac_addr_generic
+argument_list|(
+name|hw
+argument_list|)
+condition|)
+name|ret_val
+operator|=
+name|e1000_read_mac_addr_generic
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
 return|return
 name|ret_val
 return|;

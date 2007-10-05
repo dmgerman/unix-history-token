@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include
@@ -244,7 +244,7 @@ comment|/**  *  e1000_check_mng_mode_generic - Generic check managament mode  * 
 end_comment
 
 begin_function
-name|boolean_t
+name|bool
 name|e1000_check_mng_mode_generic
 parameter_list|(
 name|struct
@@ -293,7 +293,7 @@ comment|/**  *  e1000_enable_tx_pkt_filtering_generic - Enable packet filtering 
 end_comment
 
 begin_function
-name|boolean_t
+name|bool
 name|e1000_enable_tx_pkt_filtering_generic
 parameter_list|(
 name|struct
@@ -340,7 +340,7 @@ name|i
 decl_stmt|,
 name|len
 decl_stmt|;
-name|boolean_t
+name|bool
 name|tx_filter
 init|=
 name|TRUE
@@ -368,7 +368,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* If we can't read from the host interface for whatever 	 * reason, disable filtering. 	 */
+comment|/* 	 * If we can't read from the host interface for whatever 	 * reason, disable filtering. 	 */
 name|ret_val
 operator|=
 name|e1000_mng_enable_host_if
@@ -462,7 +462,7 @@ argument_list|,
 name|E1000_MNG_DHCP_COOKIE_LENGTH
 argument_list|)
 expr_stmt|;
-comment|/* If either the checksums or signature don't match, then 	 * the cookie area isn't considered valid, in which case we 	 * take the safe route of assuming Tx filtering is enabled. 	 */
+comment|/* 	 * If either the checksums or signature don't match, then 	 * the cookie area isn't considered valid, in which case we 	 * take the safe route of assuming Tx filtering is enabled. 	 */
 if|if
 condition|(
 name|hdr_csum
@@ -971,7 +971,7 @@ name|length
 operator|>>=
 literal|2
 expr_stmt|;
-comment|/* The device driver writes the relevant command block into the 	 * ram area. */
+comment|/* 	 * The device driver writes the relevant command block into the 	 * ram area. 	 */
 for|for
 control|(
 name|i
@@ -1126,7 +1126,7 @@ comment|/**  *  e1000_enable_mng_pass_thru - Enable processing of ARP's  *  @hw:
 end_comment
 
 begin_function
-name|boolean_t
+name|bool
 name|e1000_enable_mng_pass_thru
 parameter_list|(
 name|struct
@@ -1143,7 +1143,7 @@ name|fwsm
 decl_stmt|,
 name|factps
 decl_stmt|;
-name|boolean_t
+name|bool
 name|ret_val
 init|=
 name|FALSE
@@ -1200,8 +1200,6 @@ operator|->
 name|mac
 operator|.
 name|arc_subsystem_valid
-operator|==
-name|TRUE
 condition|)
 block|{
 name|fwsm
@@ -1255,7 +1253,8 @@ name|out
 goto|;
 block|}
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -1279,6 +1278,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 block|}
 name|out
 label|:

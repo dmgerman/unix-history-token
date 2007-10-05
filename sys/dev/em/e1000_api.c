@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include
@@ -172,8 +172,6 @@ operator|->
 name|func
 operator|.
 name|init_mac_params
-operator|!=
-name|NULL
 condition|)
 block|{
 name|ret_val
@@ -249,8 +247,6 @@ operator|->
 name|func
 operator|.
 name|init_nvm_params
-operator|!=
-name|NULL
 condition|)
 block|{
 name|ret_val
@@ -326,8 +322,6 @@ operator|->
 name|func
 operator|.
 name|init_phy_params
-operator|!=
-name|NULL
 condition|)
 block|{
 name|ret_val
@@ -634,6 +628,9 @@ case|case
 name|E1000_DEV_ID_82571EB_QUAD_COPPER
 case|:
 case|case
+name|E1000_DEV_ID_82571PT_QUAD_COPPER
+case|:
+case|case
 name|E1000_DEV_ID_82571EB_QUAD_FIBER
 case|:
 case|case
@@ -757,12 +754,6 @@ case|case
 name|E1000_DEV_ID_82575EB_FIBER_SERDES
 case|:
 case|case
-name|E1000_DEV_ID_82575EM_COPPER
-case|:
-case|case
-name|E1000_DEV_ID_82575EM_FIBER_SERDES
-case|:
-case|case
 name|E1000_DEV_ID_82575GB_QUAD_COPPER
 case|:
 name|mac
@@ -800,14 +791,14 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|init_device
 parameter_list|)
 block|{
 name|s32
 name|ret_val
 decl_stmt|;
-comment|/* Can't do much good without knowing the MAC type. 	 */
+comment|/* Can't do much good without knowing the MAC type. */
 name|ret_val
 operator|=
 name|e1000_set_mac_type
@@ -851,7 +842,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Init some generic function pointers that are currently all pointing 	 * to generic implementations. We do this first allowing a driver 	 * module to override it afterwards. 	 */
+comment|/* 	 * Init some generic function pointers that are currently all pointing 	 * to generic implementations. We do this first allowing a driver 	 * module to override it afterwards. 	 */
 name|hw
 operator|->
 name|func
@@ -916,7 +907,7 @@ name|reload_nvm
 operator|=
 name|e1000_reload_nvm_generic
 expr_stmt|;
-comment|/* Set up the init function pointers. These are functions within the 	 * adapter family file that sets up function pointers for the rest of 	 * the functions in that family. 	 */
+comment|/* 	 * Set up the init function pointers. These are functions within the 	 * adapter family file that sets up function pointers for the rest of 	 * the functions in that family. 	 */
 switch|switch
 condition|(
 name|hw
@@ -1049,20 +1040,15 @@ name|E1000_ERR_CONFIG
 expr_stmt|;
 break|break;
 block|}
-comment|/* Initialize the rest of the function pointers. These require some 	 * register reads/writes in some cases. 	 */
+comment|/* 	 * Initialize the rest of the function pointers. These require some 	 * register reads/writes in some cases. 	 */
 if|if
 condition|(
+operator|!
 operator|(
 name|ret_val
-operator|==
-name|E1000_SUCCESS
 operator|)
 operator|&&
-operator|(
 name|init_device
-operator|==
-name|TRUE
-operator|)
 condition|)
 block|{
 name|ret_val
@@ -1137,8 +1123,6 @@ operator|->
 name|func
 operator|.
 name|remove_device
-operator|!=
-name|NULL
 condition|)
 name|hw
 operator|->
@@ -1173,8 +1157,6 @@ operator|->
 name|func
 operator|.
 name|get_bus_info
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -1186,7 +1168,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -1214,8 +1195,6 @@ operator|->
 name|func
 operator|.
 name|clear_vfta
-operator|!=
-name|NULL
 condition|)
 name|hw
 operator|->
@@ -1256,8 +1235,6 @@ operator|->
 name|func
 operator|.
 name|write_vfta
-operator|!=
-name|NULL
 condition|)
 name|hw
 operator|->
@@ -1276,12 +1253,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_mc_addr_list_update - Update Multicast addresses  *  @hw: pointer to the HW structure  *  @mc_addr_list: array of multicast addresses to program  *  @mc_addr_count: number of multicast addresses to program  *  @rar_used_count: the first RAR register free to program  *  @rar_count: total number of supported Receive Address Registers  *  *  Updates the Receive Address Registers and Multicast Table Array.  *  The caller must have a packed mc_addr_list of multicast addresses.  *  The parameter rar_count will usually be hw->mac.rar_entry_count  *  unless there are workarounds that change this.  Currently no func pointer  *  exists and all implementations are handled in the generic version of this  *  function.  **/
+comment|/**  *  e1000_update_mc_addr_list - Update Multicast addresses  *  @hw: pointer to the HW structure  *  @mc_addr_list: array of multicast addresses to program  *  @mc_addr_count: number of multicast addresses to program  *  @rar_used_count: the first RAR register free to program  *  @rar_count: total number of supported Receive Address Registers  *  *  Updates the Receive Address Registers and Multicast Table Array.  *  The caller must have a packed mc_addr_list of multicast addresses.  *  The parameter rar_count will usually be hw->mac.rar_entry_count  *  unless there are workarounds that change this.  Currently no func pointer  *  exists and all implementations are handled in the generic version of this  *  function.  **/
 end_comment
 
 begin_function
 name|void
-name|e1000_mc_addr_list_update
+name|e1000_update_mc_addr_list
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -1308,15 +1285,13 @@ name|hw
 operator|->
 name|func
 operator|.
-name|mc_addr_list_update
-operator|!=
-name|NULL
+name|update_mc_addr_list
 condition|)
 name|hw
 operator|->
 name|func
 operator|.
-name|mc_addr_list_update
+name|update_mc_addr_list
 argument_list|(
 name|hw
 argument_list|,
@@ -1376,8 +1351,6 @@ operator|->
 name|func
 operator|.
 name|check_for_link
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -1389,7 +1362,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 operator|-
 name|E1000_ERR_CONFIG
@@ -1402,7 +1374,7 @@ comment|/**  *  e1000_check_mng_mode - Check management mode  *  @hw: pointer to
 end_comment
 
 begin_function
-name|boolean_t
+name|bool
 name|e1000_check_mng_mode
 parameter_list|(
 name|struct
@@ -1418,8 +1390,6 @@ operator|->
 name|func
 operator|.
 name|check_mng_mode
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -1431,7 +1401,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|FALSE
 return|;
@@ -1493,8 +1462,6 @@ operator|->
 name|func
 operator|.
 name|reset_hw
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -1506,7 +1473,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 operator|-
 name|E1000_ERR_CONFIG
@@ -1535,8 +1501,6 @@ operator|->
 name|func
 operator|.
 name|init_hw
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -1548,7 +1512,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 operator|-
 name|E1000_ERR_CONFIG
@@ -1577,8 +1540,6 @@ operator|->
 name|func
 operator|.
 name|setup_link
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -1590,7 +1551,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 operator|-
 name|E1000_ERR_CONFIG
@@ -1627,8 +1587,6 @@ operator|->
 name|func
 operator|.
 name|get_link_up_info
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -1644,7 +1602,6 @@ argument_list|,
 name|duplex
 argument_list|)
 return|;
-else|else
 return|return
 operator|-
 name|E1000_ERR_CONFIG
@@ -1673,8 +1630,6 @@ operator|->
 name|func
 operator|.
 name|setup_led
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -1686,7 +1641,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -1714,8 +1668,6 @@ operator|->
 name|func
 operator|.
 name|cleanup_led
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -1727,7 +1679,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -1755,8 +1706,6 @@ operator|->
 name|func
 operator|.
 name|blink_led
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -1768,7 +1717,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -1796,8 +1744,6 @@ operator|->
 name|func
 operator|.
 name|led_on
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -1809,7 +1755,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -1837,8 +1782,6 @@ operator|->
 name|func
 operator|.
 name|led_off
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -1850,7 +1793,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -1945,8 +1887,6 @@ operator|->
 name|func
 operator|.
 name|config_collision_dist
-operator|!=
-name|NULL
 condition|)
 name|hw
 operator|->
@@ -1988,8 +1928,6 @@ operator|->
 name|func
 operator|.
 name|rar_set
-operator|!=
-name|NULL
 condition|)
 name|hw
 operator|->
@@ -2028,8 +1966,6 @@ operator|->
 name|func
 operator|.
 name|validate_mdi_setting
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2041,7 +1977,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -2072,8 +2007,6 @@ operator|->
 name|func
 operator|.
 name|mta_set
-operator|!=
-name|NULL
 condition|)
 name|hw
 operator|->
@@ -2123,7 +2056,7 @@ comment|/**  *  e1000_enable_tx_pkt_filtering - Enable packet filtering on TX  *
 end_comment
 
 begin_function
-name|boolean_t
+name|bool
 name|e1000_enable_tx_pkt_filtering
 parameter_list|(
 name|struct
@@ -2176,8 +2109,6 @@ operator|->
 name|func
 operator|.
 name|mng_host_if_write
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2197,7 +2128,6 @@ argument_list|,
 name|sum
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_NOT_IMPLEMENTED
 return|;
@@ -2230,8 +2160,6 @@ operator|->
 name|func
 operator|.
 name|mng_write_cmd_header
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2245,7 +2173,6 @@ argument_list|,
 name|hdr
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_NOT_IMPLEMENTED
 return|;
@@ -2273,8 +2200,6 @@ operator|->
 name|func
 operator|.
 name|mng_enable_host_if
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2286,7 +2211,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_NOT_IMPLEMENTED
 return|;
@@ -2314,8 +2238,6 @@ operator|->
 name|func
 operator|.
 name|wait_autoneg
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2327,7 +2249,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -2355,8 +2276,6 @@ operator|->
 name|func
 operator|.
 name|check_reset_block
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2368,7 +2287,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -2403,8 +2321,6 @@ operator|->
 name|func
 operator|.
 name|read_phy_reg
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2420,7 +2336,6 @@ argument_list|,
 name|data
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -2454,8 +2369,6 @@ operator|->
 name|func
 operator|.
 name|write_phy_reg
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2471,7 +2384,6 @@ argument_list|,
 name|data
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -2566,8 +2478,6 @@ operator|->
 name|func
 operator|.
 name|get_cable_length
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2579,7 +2489,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -2607,8 +2516,6 @@ operator|->
 name|func
 operator|.
 name|get_phy_info
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2620,7 +2527,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -2648,8 +2554,6 @@ operator|->
 name|func
 operator|.
 name|reset_phy
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2661,7 +2565,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -2689,8 +2592,6 @@ operator|->
 name|func
 operator|.
 name|commit_phy
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2702,7 +2603,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -2722,7 +2622,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 block|{
@@ -2733,8 +2633,6 @@ operator|->
 name|func
 operator|.
 name|set_d0_lplu_state
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2748,7 +2646,6 @@ argument_list|,
 name|active
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -2768,7 +2665,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 block|{
@@ -2779,8 +2676,6 @@ operator|->
 name|func
 operator|.
 name|set_d3_lplu_state
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2794,7 +2689,6 @@ argument_list|,
 name|active
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -2815,6 +2709,24 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
+if|if
+condition|(
+name|hw
+operator|->
+name|func
+operator|.
+name|read_mac_addr
+condition|)
+return|return
+name|hw
+operator|->
+name|func
+operator|.
+name|read_mac_addr
+argument_list|(
+name|hw
+argument_list|)
+return|;
 return|return
 name|e1000_read_mac_addr_generic
 argument_list|(
@@ -2874,8 +2786,6 @@ operator|->
 name|func
 operator|.
 name|validate_nvm
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2887,7 +2797,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 operator|-
 name|E1000_ERR_CONFIG
@@ -2916,8 +2825,6 @@ operator|->
 name|func
 operator|.
 name|update_nvm
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -2929,7 +2836,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 operator|-
 name|E1000_ERR_CONFIG
@@ -2958,8 +2864,6 @@ operator|->
 name|func
 operator|.
 name|reload_nvm
-operator|!=
-name|NULL
 condition|)
 name|hw
 operator|->
@@ -3004,8 +2908,6 @@ operator|->
 name|func
 operator|.
 name|read_nvm
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -3023,7 +2925,6 @@ argument_list|,
 name|data
 argument_list|)
 return|;
-else|else
 return|return
 operator|-
 name|E1000_ERR_CONFIG
@@ -3062,8 +2963,6 @@ operator|->
 name|func
 operator|.
 name|write_nvm
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -3081,7 +2980,6 @@ argument_list|,
 name|data
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;

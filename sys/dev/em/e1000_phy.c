@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include
@@ -33,7 +33,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+name|STATIC
 name|void
 name|e1000_release_phy
 parameter_list|(
@@ -46,7 +46,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+name|STATIC
 name|s32
 name|e1000_acquire_phy
 parameter_list|(
@@ -577,7 +577,7 @@ comment|/**  *  e1000_read_phy_reg_mdic - Read MDI control register  *  @hw: poi
 end_comment
 
 begin_function
-specifier|static
+name|STATIC
 name|s32
 name|e1000_read_phy_reg_mdic
 parameter_list|(
@@ -644,7 +644,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Set up Op-code, Phy Address, and register offset in the MDI 	 * Control register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
+comment|/* 	 * Set up Op-code, Phy Address, and register offset in the MDI 	 * Control register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
 name|mdic
 operator|=
 operator|(
@@ -676,7 +676,7 @@ argument_list|,
 name|mdic
 argument_list|)
 expr_stmt|;
-comment|/* Poll the ready bit to see if the MDI read completed */
+comment|/* 	 * Poll the ready bit to see if the MDI read completed 	 * Increasing the time out as testing showed failures with 	 * the lower time out 	 */
 for|for
 control|(
 name|i
@@ -685,7 +685,11 @@ literal|0
 init|;
 name|i
 operator|<
-literal|64
+operator|(
+name|E1000_GEN_POLL_TIMEOUT
+operator|*
+literal|3
+operator|)
 condition|;
 name|i
 operator|++
@@ -779,7 +783,7 @@ comment|/**  *  e1000_write_phy_reg_mdic - Write MDI control register  *  @hw: p
 end_comment
 
 begin_function
-specifier|static
+name|STATIC
 name|s32
 name|e1000_write_phy_reg_mdic
 parameter_list|(
@@ -845,7 +849,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Set up Op-code, Phy Address, and register offset in the MDI 	 * Control register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
+comment|/* 	 * Set up Op-code, Phy Address, and register offset in the MDI 	 * Control register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
 name|mdic
 operator|=
 operator|(
@@ -884,7 +888,7 @@ argument_list|,
 name|mdic
 argument_list|)
 expr_stmt|;
-comment|/* Poll the ready bit to see if the MDI read completed */
+comment|/* 	 * Poll the ready bit to see if the MDI read completed 	 * Increasing the time out as testing showed failures with 	 * the lower time out 	 */
 for|for
 control|(
 name|i
@@ -893,7 +897,11 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
 name|E1000_GEN_POLL_TIMEOUT
+operator|*
+literal|3
+operator|)
 condition|;
 name|i
 operator|++
@@ -901,7 +909,7 @@ control|)
 block|{
 name|usec_delay
 argument_list|(
-literal|5
+literal|50
 argument_list|)
 expr_stmt|;
 name|mdic
@@ -934,6 +942,27 @@ block|{
 name|DEBUGOUT
 argument_list|(
 literal|"MDI Write did not complete\n"
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+operator|-
+name|E1000_ERR_PHY
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|mdic
+operator|&
+name|E1000_MDIC_ERROR
+condition|)
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"MDI Error\n"
 argument_list|)
 expr_stmt|;
 name|ret_val
@@ -1563,7 +1592,7 @@ name|phy_data
 operator||=
 name|M88E1000_PSCR_ASSERT_CRS_ON_TX
 expr_stmt|;
-comment|/* Options: 	 *   MDI/MDI-X = 0 (default) 	 *   0 - Auto for all speeds 	 *   1 - MDI mode 	 *   2 - MDI-X mode 	 *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes) 	 */
+comment|/* 	 * Options: 	 *   MDI/MDI-X = 0 (default) 	 *   0 - Auto for all speeds 	 *   1 - MDI mode 	 *   2 - MDI-X mode 	 *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes) 	 */
 name|phy_data
 operator|&=
 operator|~
@@ -1610,7 +1639,7 @@ name|M88E1000_PSCR_AUTO_X_MODE
 expr_stmt|;
 break|break;
 block|}
-comment|/* Options: 	 *   disable_polarity_correction = 0 (default) 	 *       Automatic Correction for Reversed Cable Polarity 	 *   0 - Disabled 	 *   1 - Enabled 	 */
+comment|/* 	 * Options: 	 *   disable_polarity_correction = 0 (default) 	 *       Automatic Correction for Reversed Cable Polarity 	 *   0 - Disabled 	 *   1 - Enabled 	 */
 name|phy_data
 operator|&=
 operator|~
@@ -1655,7 +1684,7 @@ operator|<
 name|E1000_REVISION_4
 condition|)
 block|{
-comment|/* Force TX_CLK in the Extended PHY Specific Control Register 		 * to 25MHz clock. 		 */
+comment|/* 		 * Force TX_CLK in the Extended PHY Specific Control Register 		 * to 25MHz clock. 		 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -1856,7 +1885,7 @@ argument_list|(
 literal|15
 argument_list|)
 expr_stmt|;
-comment|/* The NVM settings will configure LPLU in D3 for 	 * non-IGP1 PHYs. */
+comment|/* 	 * The NVM settings will configure LPLU in D3 for 	 * non-IGP1 PHYs. 	 */
 if|if
 condition|(
 name|phy
@@ -2002,7 +2031,7 @@ operator|.
 name|autoneg
 condition|)
 block|{
-comment|/* when autonegotiation advertisement is only 1000Mbps then we 		 * should disable SmartSpeed and enable Auto MasterSlave 		 * resolution as hardware default. */
+comment|/* 		 * when autonegotiation advertisement is only 1000Mbps then we 		 * should disable SmartSpeed and enable Auto MasterSlave 		 * resolution as hardware default. 		 */
 if|if
 condition|(
 name|phy
@@ -2216,7 +2245,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_copper_link_autoneg - Setup/Enable autoneg for copper link  *  @hw: pointer to the HW structure  *  *  Performs initial bounds checking on autoneg advertisement parameter, then  *  configure to advertise the full capability.  Setup the PHY to autoneg  *  and restart the negotiation process between the link partner.  If  *  wait_for_link, then wait for autoneg to complete before exiting.  **/
+comment|/**  *  e1000_copper_link_autoneg - Setup/Enable autoneg for copper link  *  @hw: pointer to the HW structure  *  *  Performs initial bounds checking on autoneg advertisement parameter, then  *  configure to advertise the full capability.  Setup the PHY to autoneg  *  and restart the negotiation process between the link partner.  If  *  autoneg_wait_to_complete, then wait for autoneg to complete before exiting.  **/
 end_comment
 
 begin_function
@@ -2250,7 +2279,7 @@ argument_list|(
 literal|"e1000_copper_link_autoneg"
 argument_list|)
 expr_stmt|;
-comment|/* Perform some bounds checking on the autoneg advertisement 	 * parameter. 	 */
+comment|/* 	 * Perform some bounds checking on the autoneg advertisement 	 * parameter. 	 */
 name|phy
 operator|->
 name|autoneg_advertised
@@ -2259,7 +2288,7 @@ name|phy
 operator|->
 name|autoneg_mask
 expr_stmt|;
-comment|/* If autoneg_advertised is zero, we assume it was not defaulted 	 * by the calling code so we set to advertise full capability. 	 */
+comment|/* 	 * If autoneg_advertised is zero, we assume it was not defaulted 	 * by the calling code so we set to advertise full capability. 	 */
 if|if
 condition|(
 name|phy
@@ -2307,7 +2336,7 @@ argument_list|(
 literal|"Restarting Auto-Neg\n"
 argument_list|)
 expr_stmt|;
-comment|/* Restart auto-negotiation by setting the Auto Neg Enable bit and 	 * the Auto Neg Restart bit in the PHY control register. 	 */
+comment|/* 	 * Restart auto-negotiation by setting the Auto Neg Enable bit and 	 * the Auto Neg Restart bit in the PHY control register. 	 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -2353,12 +2382,12 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Does the user want to wait for Auto-Neg to complete here, or 	 * check at a later time (for example, callback routine). 	 */
+comment|/* 	 * Does the user want to wait for Auto-Neg to complete here, or 	 * check at a later time (for example, callback routine). 	 */
 if|if
 condition|(
 name|phy
 operator|->
-name|wait_for_link
+name|autoneg_wait_to_complete
 condition|)
 block|{
 name|ret_val
@@ -2498,8 +2527,8 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Need to parse both autoneg_advertised and fc and set up 	 * the appropriate PHY registers.  First we will parse for 	 * autoneg_advertised software override.  Since we can advertise 	 * a plethora of combinations, we need to check each bit 	 * individually. 	 */
-comment|/* First we clear all the 10/100 mb speed bits in the Auto-Neg 	 * Advertisement Register (Address 4) and the 1000 mb speed bits in 	 * the  1000Base-T Control Register (Address 9). 	 */
+comment|/* 	 * Need to parse both autoneg_advertised and fc and set up 	 * the appropriate PHY registers.  First we will parse for 	 * autoneg_advertised software override.  Since we can advertise 	 * a plethora of combinations, we need to check each bit 	 * individually. 	 */
+comment|/* 	 * First we clear all the 10/100 mb speed bits in the Auto-Neg 	 * Advertisement Register (Address 4) and the 1000 mb speed bits in 	 * the  1000Base-T Control Register (Address 9). 	 */
 name|mii_autoneg_adv_reg
 operator|&=
 operator|~
@@ -2647,20 +2676,20 @@ operator||=
 name|CR_1000T_FD_CAPS
 expr_stmt|;
 block|}
-comment|/* Check for a software override of the flow control settings, and 	 * setup the PHY advertisement registers accordingly.  If 	 * auto-negotiation is enabled, then software will have to set the 	 * "PAUSE" bits to the correct value in the Auto-Negotiation 	 * Advertisement Register (PHY_AUTONEG_ADV) and re-start auto- 	 * negotiation. 	 * 	 * The possible values of the "fc" parameter are: 	 *      0:  Flow control is completely disabled 	 *      1:  Rx flow control is enabled (we can receive pause frames 	 *          but not send pause frames). 	 *      2:  Tx flow control is enabled (we can send pause frames 	 *          but we do not support receiving pause frames). 	 *      3:  Both Rx and TX flow control (symmetric) are enabled. 	 *  other:  No software override.  The flow control configuration 	 *          in the EEPROM is used. 	 */
+comment|/* 	 * Check for a software override of the flow control settings, and 	 * setup the PHY advertisement registers accordingly.  If 	 * auto-negotiation is enabled, then software will have to set the 	 * "PAUSE" bits to the correct value in the Auto-Negotiation 	 * Advertisement Register (PHY_AUTONEG_ADV) and re-start auto- 	 * negotiation. 	 * 	 * The possible values of the "fc" parameter are: 	 *      0:  Flow control is completely disabled 	 *      1:  Rx flow control is enabled (we can receive pause frames 	 *          but not send pause frames). 	 *      2:  Tx flow control is enabled (we can send pause frames 	 *          but we do not support receiving pause frames). 	 *      3:  Both Rx and TX flow control (symmetric) are enabled. 	 *  other:  No software override.  The flow control configuration 	 *          in the EEPROM is used. 	 */
 switch|switch
 condition|(
 name|hw
 operator|->
-name|mac
-operator|.
 name|fc
+operator|.
+name|type
 condition|)
 block|{
 case|case
 name|e1000_fc_none
 case|:
-comment|/* Flow control (RX& TX) is completely disabled by a 		 * software over-ride. 		 */
+comment|/* 		 * Flow control (RX& TX) is completely disabled by a 		 * software over-ride. 		 */
 name|mii_autoneg_adv_reg
 operator|&=
 operator|~
@@ -2674,8 +2703,7 @@ break|break;
 case|case
 name|e1000_fc_rx_pause
 case|:
-comment|/* RX Flow control is enabled, and TX Flow control is 		 * disabled, by a software over-ride. 		 */
-comment|/* Since there really isn't a way to advertise that we are 		 * capable of RX Pause ONLY, we will advertise that we 		 * support both symmetric and asymmetric RX PAUSE.  Later 		 * (in e1000_config_fc_after_link_up) we will disable the 		 * hw's ability to send PAUSE frames. 		 */
+comment|/* 		 * RX Flow control is enabled, and TX Flow control is 		 * disabled, by a software over-ride. 		 * 		 * Since there really isn't a way to advertise that we are 		 * capable of RX Pause ONLY, we will advertise that we 		 * support both symmetric and asymmetric RX PAUSE.  Later 		 * (in e1000_config_fc_after_link_up) we will disable the 		 * hw's ability to send PAUSE frames. 		 */
 name|mii_autoneg_adv_reg
 operator||=
 operator|(
@@ -2688,7 +2716,7 @@ break|break;
 case|case
 name|e1000_fc_tx_pause
 case|:
-comment|/* TX Flow control is enabled, and RX Flow control is 		 * disabled, by a software over-ride. 		 */
+comment|/* 		 * TX Flow control is enabled, and RX Flow control is 		 * disabled, by a software over-ride. 		 */
 name|mii_autoneg_adv_reg
 operator||=
 name|NWAY_AR_ASM_DIR
@@ -2702,7 +2730,7 @@ break|break;
 case|case
 name|e1000_fc_full
 case|:
-comment|/* Flow control (both RX and TX) is enabled by a software 		 * over-ride. 		 */
+comment|/* 		 * Flow control (both RX and TX) is enabled by a software 		 * over-ride. 		 */
 name|mii_autoneg_adv_reg
 operator||=
 operator|(
@@ -2805,7 +2833,7 @@ block|{
 name|s32
 name|ret_val
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 name|DEBUGFUNC
@@ -2822,7 +2850,7 @@ operator|.
 name|autoneg
 condition|)
 block|{
-comment|/* Setup autoneg and flow control advertisement and perform 		 * autonegotiation. */
+comment|/* 		 * Setup autoneg and flow control advertisement and perform 		 * autonegotiation. 		 */
 name|ret_val
 operator|=
 name|e1000_copper_link_autoneg
@@ -2840,7 +2868,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* PHY will be set to 10H, 10F, 100H or 100F 		 * depending on user settings. */
+comment|/* 		 * PHY will be set to 10H, 10F, 100H or 100F 		 * depending on user settings. 		 */
 name|DEBUGOUT
 argument_list|(
 literal|"Forcing Speed and Duplex\n"
@@ -2868,7 +2896,7 @@ name|out
 goto|;
 block|}
 block|}
-comment|/* Check link status. Wait up to 100 microseconds for link to become 	 * valid. 	 */
+comment|/* 	 * Check link status. Wait up to 100 microseconds for link to become 	 * valid. 	 */
 name|ret_val
 operator|=
 name|e1000_phy_has_link_generic
@@ -2959,7 +2987,7 @@ decl_stmt|;
 name|u16
 name|phy_data
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 name|DEBUGFUNC
@@ -3012,7 +3040,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Clear Auto-Crossover to force MDI manually.  IGP requires MDI 	 * forced whenever speed and duplex are forced. 	 */
+comment|/* 	 * Clear Auto-Crossover to force MDI manually.  IGP requires MDI 	 * forced whenever speed and duplex are forced. 	 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -3076,7 +3104,7 @@ if|if
 condition|(
 name|phy
 operator|->
-name|wait_for_link
+name|autoneg_wait_to_complete
 condition|)
 block|{
 name|DEBUGOUT
@@ -3178,7 +3206,7 @@ decl_stmt|;
 name|u16
 name|phy_data
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 name|DEBUGFUNC
@@ -3186,7 +3214,7 @@ argument_list|(
 literal|"e1000_phy_force_speed_duplex_m88"
 argument_list|)
 expr_stmt|;
-comment|/* Clear Auto-Crossover to force MDI manually.  M88E1000 requires MDI 	 * forced whenever speed and duplex are forced. 	 */
+comment|/* 	 * Clear Auto-Crossover to force MDI manually.  M88E1000 requires MDI 	 * forced whenever speed and duplex are forced. 	 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -3295,7 +3323,7 @@ if|if
 condition|(
 name|phy
 operator|->
-name|wait_for_link
+name|autoneg_wait_to_complete
 condition|)
 block|{
 name|DEBUGOUT
@@ -3330,7 +3358,7 @@ operator|!
 name|link
 condition|)
 block|{
-comment|/* We didn't get link. 			 * Reset the DSP and cross our fingers. 			 */
+comment|/* 			 * We didn't get link. 			 * Reset the DSP and cross our fingers. 			 */
 name|ret_val
 operator|=
 name|e1000_write_phy_reg
@@ -3406,7 +3434,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Resetting the phy means we need to re-force TX_CLK in the 	 * Extended PHY Specific Control Register to 25MHz clock from 	 * the reset value of 2.5MHz. 	 */
+comment|/* 	 * Resetting the phy means we need to re-force TX_CLK in the 	 * Extended PHY Specific Control Register to 25MHz clock from 	 * the reset value of 2.5MHz. 	 */
 name|phy_data
 operator||=
 name|M88E1000_EPSCR_TX_CLK_25
@@ -3429,7 +3457,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* In addition, we must re-enable CRS on Tx for both half and full 	 * duplex. 	 */
+comment|/* 	 * In addition, we must re-enable CRS on Tx for both half and full 	 * duplex. 	 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -3509,9 +3537,11 @@ literal|"e1000_phy_force_speed_duplex_setup"
 argument_list|)
 expr_stmt|;
 comment|/* Turn off flow control when forcing speed/duplex */
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|=
 name|e1000_fc_none
 expr_stmt|;
@@ -3692,7 +3722,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 block|{
@@ -3765,7 +3795,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. */
+comment|/* 		 * LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. 		 */
 if|if
 condition|(
 name|phy
@@ -4211,7 +4241,7 @@ argument_list|(
 literal|"e1000_check_polarity_igp"
 argument_list|)
 expr_stmt|;
-comment|/* Polarity is determined based on the speed of 	 * our connection. */
+comment|/* 	 * Polarity is determined based on the speed of 	 * our connection. 	 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -4253,7 +4283,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* This really only applies to 10Mbps since 		 * there is no polarity for 100Mbps (always 0). 		 */
+comment|/* 		 * This really only applies to 10Mbps since 		 * there is no polarity for 100Mbps (always 0). 		 */
 name|offset
 operator|=
 name|IGP01E1000_PHY_PORT_STATUS
@@ -4393,7 +4423,7 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* PHY_AUTO_NEG_TIME expiration doesn't guarantee auto-negotiation 	 * has completed. 	 */
+comment|/* 	 * PHY_AUTO_NEG_TIME expiration doesn't guarantee auto-negotiation 	 * has completed. 	 */
 return|return
 name|ret_val
 return|;
@@ -4419,7 +4449,7 @@ parameter_list|,
 name|u32
 name|usec_interval
 parameter_list|,
-name|boolean_t
+name|bool
 modifier|*
 name|success
 parameter_list|)
@@ -4453,7 +4483,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Some PHYs require the PHY_STATUS register to be read 		 * twice due to the link bit being sticky.  No harm doing 		 * it across the board. 		 */
+comment|/* 		 * Some PHYs require the PHY_STATUS register to be read 		 * twice due to the link bit being sticky.  No harm doing 		 * it across the board. 		 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -4670,6 +4700,8 @@ name|phy
 decl_stmt|;
 name|s32
 name|ret_val
+init|=
+name|E1000_SUCCESS
 decl_stmt|;
 name|u16
 name|phy_data
@@ -4752,7 +4784,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Getting bits 15:9, which represent the combination of 		 * course and fine gain values.  The result is a number 		 * that can be put into the lookup table to obtain the 		 * approximate cable length. */
+comment|/* 		 * Getting bits 15:9, which represent the combination of 		 * course and fine gain values.  The result is a number 		 * that can be put into the lookup table to obtain the 		 * approximate cable length. 		 */
 name|cur_agc_index
 operator|=
 operator|(
@@ -4936,7 +4968,7 @@ decl_stmt|;
 name|u16
 name|phy_data
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 name|DEBUGFUNC
@@ -4948,6 +4980,8 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|!=
 name|e1000_media_type_copper
@@ -5221,7 +5255,7 @@ decl_stmt|;
 name|u16
 name|data
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 name|DEBUGFUNC
@@ -5663,6 +5697,11 @@ argument_list|(
 literal|"e1000_get_cfg_done_generic"
 argument_list|)
 expr_stmt|;
+name|UNREFERENCED_PARAMETER
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
 name|msec_delay_irq
 argument_list|(
 literal|10
@@ -5699,8 +5738,6 @@ operator|->
 name|func
 operator|.
 name|get_cfg_done
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -5712,7 +5749,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -5740,8 +5776,6 @@ operator|->
 name|func
 operator|.
 name|release_phy
-operator|!=
-name|NULL
 condition|)
 name|hw
 operator|->
@@ -5776,8 +5810,6 @@ operator|->
 name|func
 operator|.
 name|acquire_phy
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -5789,7 +5821,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -5817,8 +5848,6 @@ operator|->
 name|func
 operator|.
 name|force_speed_duplex
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -5830,7 +5859,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -6117,7 +6145,7 @@ argument_list|,
 literal|0xD008
 argument_list|)
 expr_stmt|;
-comment|/* Change cg_icount + enable integbp + change prop_factor_master 	 * to 8 for channel A 	 */
+comment|/* 	 * Change cg_icount + enable integbp + change prop_factor_master 	 * to 8 for channel A 	 */
 name|e1000_write_phy_reg
 argument_list|(
 name|hw
@@ -6137,7 +6165,7 @@ argument_list|,
 literal|0x0800
 argument_list|)
 expr_stmt|;
-comment|/* Enable LPLU and disable AN to 1000 in non-D0a states, 	 * Enable SPD+B2B 	 */
+comment|/* 	 * Enable LPLU and disable AN to 1000 in non-D0a states, 	 * Enable SPD+B2B 	 */
 name|e1000_write_phy_reg
 argument_list|(
 name|hw

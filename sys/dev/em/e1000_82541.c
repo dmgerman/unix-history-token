@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -183,7 +183,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 function_decl|;
@@ -238,7 +238,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|link_up
 parameter_list|)
 function_decl|;
@@ -545,7 +545,7 @@ decl_stmt|;
 name|u16
 name|spd_default
 decl_stmt|;
-name|boolean_t
+name|bool
 name|phy_init_script
 decl_stmt|;
 block|}
@@ -947,7 +947,7 @@ name|write_nvm
 operator|=
 name|e1000_write_nvm_spi
 expr_stmt|;
-comment|/* nvm->word_size must be discovered after the pointers 		 * are set so we can verify the size from the nvm image 		 * itself.  Temporarily set it to a dummy value so the 		 * read will work. 		 */
+comment|/* 		 * nvm->word_size must be discovered after the pointers 		 * are set so we can verify the size from the nvm image 		 * itself.  Temporarily set it to a dummy value so the 		 * read will work. 		 */
 name|nvm
 operator|->
 name|word_size
@@ -985,7 +985,7 @@ operator|)
 operator|>>
 name|NVM_SIZE_SHIFT
 expr_stmt|;
-comment|/* if size != 0, it can be added to a constant and become 		 * the left-shift value to set the word_size.  Otherwise, 		 * word_size stays at 64. 		 */
+comment|/* 		 * if size != 0, it can be added to a constant and become 		 * the left-shift value to set the word_size.  Otherwise, 		 * word_size stays at 64. 		 */
 if|if
 condition|(
 name|size
@@ -1145,6 +1145,8 @@ expr_stmt|;
 comment|/* Set media type */
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_copper
@@ -1223,9 +1225,9 @@ expr_stmt|;
 comment|/* multicast address update */
 name|func
 operator|->
-name|mc_addr_list_update
+name|update_mc_addr_list
 operator|=
-name|e1000_mc_addr_list_update_generic
+name|e1000_update_mc_addr_list_generic
 expr_stmt|;
 comment|/* writing VFTA */
 name|func
@@ -1429,7 +1431,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Delay to allow any outstanding PCI transactions to complete 	 * before resetting the device. 	 */
+comment|/* 	 * Delay to allow any outstanding PCI transactions to complete 	 * before resetting the device. 	 */
 name|msec_delay
 argument_list|(
 literal|10
@@ -1507,7 +1509,7 @@ case|:
 case|case
 name|e1000_82541_rev_2
 case|:
-comment|/* These controllers can't ack the 64-bit write when 		 * issuing the reset, so we use IO-mapping as a 		 * workaround to issue the reset. 		 */
+comment|/* 		 * These controllers can't ack the 64-bit write when 		 * issuing the reset, so we use IO-mapping as a 		 * workaround to issue the reset. 		 */
 name|E1000_WRITE_REG_IO
 argument_list|(
 name|hw
@@ -1711,9 +1713,7 @@ argument_list|(
 literal|"Error initializing identification LED\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+comment|/* This is not fatal and we should not stop init due to this */
 block|}
 comment|/* Disabling VLAN filtering */
 name|DEBUGOUT
@@ -1769,7 +1769,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Avoid back to back register writes by adding the register 		 * read (flush).  This is to protect against some strange 		 * bridge configurations that may issue Memory Write Block 		 * (MWB) to our register space. 		 */
+comment|/* 		 * Avoid back to back register writes by adding the register 		 * read (flush).  This is to protect against some strange 		 * bridge configurations that may issue Memory Write Block 		 * (MWB) to our register space. 		 */
 name|E1000_WRITE_FLUSH
 argument_list|(
 name|hw
@@ -1791,6 +1791,9 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|txdctl
@@ -1809,18 +1812,19 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|txdctl
 argument_list|)
 expr_stmt|;
-comment|/* Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
+comment|/* 	 * Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
 name|e1000_clear_hw_cntrs_82541
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -1899,7 +1903,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* IGP01 PHY may advertise full duplex operation after speed 	 * downgrade even if it is operating at half duplex. 	 * Here we set the duplex settings to match the duplex in the 	 * link partner's capabilities. 	 */
+comment|/* 	 * IGP01 PHY may advertise full duplex operation after speed 	 * downgrade even if it is operating at half duplex. 	 * Here we set the duplex settings to match the duplex in the 	 * link partner's capabilities. 	 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -1928,11 +1932,13 @@ operator|&
 name|NWAY_ER_LP_NWAY_CAPS
 operator|)
 condition|)
+block|{
 operator|*
 name|duplex
 operator|=
 name|HALF_DUPLEX
 expr_stmt|;
+block|}
 else|else
 block|{
 name|ret_val
@@ -2245,12 +2251,14 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+block|{
 name|dev_spec
 operator|->
 name|dsp_config
 operator|=
 name|e1000_dsp_config_enabled
 expr_stmt|;
+block|}
 name|ret_val
 operator|=
 name|e1000_copper_link_setup_igp
@@ -2363,7 +2371,7 @@ decl_stmt|;
 name|s32
 name|ret_val
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 name|DEBUGFUNC
@@ -2371,7 +2379,7 @@ argument_list|(
 literal|"e1000_check_for_link_82541"
 argument_list|)
 expr_stmt|;
-comment|/* We only want to go out to the PHY registers to see if Auto-Neg 	 * has completed and/or if our link status has changed.  The 	 * get_link_status flag is set upon receiving a Link Status 	 * Change or Rx Sequence Error interrupt. 	 */
+comment|/* 	 * We only want to go out to the PHY registers to see if Auto-Neg 	 * has completed and/or if our link status has changed.  The 	 * get_link_status flag is set upon receiving a Link Status 	 * Change or Rx Sequence Error interrupt. 	 */
 if|if
 condition|(
 operator|!
@@ -2388,7 +2396,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* First we want to see if the MII Status Register reports 	 * link.  If so, then we want to get the current speed/duplex 	 * of the PHY. 	 */
+comment|/* 	 * First we want to see if the MII Status Register reports 	 * link.  If so, then we want to get the current speed/duplex 	 * of the PHY. 	 */
 name|ret_val
 operator|=
 name|e1000_phy_has_link_generic
@@ -2436,13 +2444,13 @@ name|get_link_status
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* Check if there was DownShift, must be checked 	 * immediately after link-up */
+comment|/* 	 * Check if there was DownShift, must be checked 	 * immediately after link-up 	 */
 name|e1000_check_downshift_generic
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* If we are forcing speed/duplex, then we simply return since 	 * we have already determined whether we have link or not. 	 */
+comment|/* 	 * If we are forcing speed/duplex, then we simply return since 	 * we have already determined whether we have link or not. 	 */
 if|if
 condition|(
 operator|!
@@ -2469,13 +2477,13 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-comment|/* Auto-Neg is enabled.  Auto Speed Detection takes care 	 * of MAC speed/duplex configuration.  So we only need to 	 * configure Collision Distance in the MAC. 	 */
+comment|/* 	 * Auto-Neg is enabled.  Auto Speed Detection takes care 	 * of MAC speed/duplex configuration.  So we only need to 	 * configure Collision Distance in the MAC. 	 */
 name|e1000_config_collision_dist_generic
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Configure Flow Control now that Auto-Neg has completed. 	 * First, we need to restore the desired flow control 	 * settings because we may have had to re-autoneg with a 	 * different link partner. 	 */
+comment|/* 	 * Configure Flow Control now that Auto-Neg has completed. 	 * First, we need to restore the desired flow control 	 * settings because we may have had to re-autoneg with a 	 * different link partner. 	 */
 name|ret_val
 operator|=
 name|e1000_config_fc_after_link_up_generic
@@ -2516,7 +2524,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|link_up
 parameter_list|)
 block|{
@@ -2886,7 +2894,7 @@ operator|==
 name|e1000_dsp_config_activated
 condition|)
 block|{
-comment|/* Save off the current value of register 0x2F5B 			 * to be restored at the end of the routines. */
+comment|/* 			 * Save off the current value of register 0x2F5B 			 * to be restored at the end of the routines. 			 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -3081,7 +3089,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Save off the current value of register 0x2F5B 		 * to be restored at the end of the routines. */
+comment|/* 		 * Save off the current value of register 0x2F5B 		 * to be restored at the end of the routines. 		 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -3476,7 +3484,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 block|{
@@ -3580,7 +3588,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. */
+comment|/* 		 * LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. 		 */
 if|if
 condition|(
 name|phy
@@ -4034,7 +4042,7 @@ argument_list|(
 literal|20
 argument_list|)
 expr_stmt|;
-comment|/* Save off the current value of register 0x2F5B to be restored at 	 * the end of this routine. */
+comment|/* 	 * Save off the current value of register 0x2F5B to be restored at 	 * the end of this routine. 	 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -4365,7 +4373,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|state
 parameter_list|)
 block|{
@@ -4412,9 +4420,8 @@ name|dev_spec
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|dev_spec
-operator|==
-name|NULL
 condition|)
 block|{
 name|DEBUGOUT

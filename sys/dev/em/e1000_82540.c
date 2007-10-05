@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -609,6 +609,8 @@ name|E1000_DEV_ID_82546GB_FIBER
 case|:
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_fiber
@@ -622,6 +624,8 @@ name|E1000_DEV_ID_82546GB_SERDES
 case|:
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_internal_serdes
@@ -630,6 +634,8 @@ break|break;
 default|default:
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_copper
@@ -687,6 +693,8 @@ operator|=
 operator|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper
@@ -701,6 +709,8 @@ switch|switch
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 condition|)
 block|{
@@ -753,6 +763,8 @@ operator|=
 operator|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper
@@ -765,9 +777,9 @@ expr_stmt|;
 comment|/* multicast address update */
 name|func
 operator|->
-name|mc_addr_list_update
+name|update_mc_addr_list
 operator|=
-name|e1000_mc_addr_list_update_generic
+name|e1000_update_mc_addr_list_generic
 expr_stmt|;
 comment|/* writing VFTA */
 name|func
@@ -947,7 +959,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Delay to allow any outstanding PCI transactions to complete 	 * before resetting the device. 	 */
+comment|/* 	 * Delay to allow any outstanding PCI transactions to complete 	 * before resetting the device. 	 */
 name|msec_delay
 argument_list|(
 literal|10
@@ -995,7 +1007,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* These controllers can't ack the 64-bit write when 		 * issuing the reset, so we use IO-mapping as a 		 * workaround to issue the reset. 		 */
+comment|/* 		 * These controllers can't ack the 64-bit write when 		 * issuing the reset, so we use IO-mapping as a 		 * workaround to issue the reset. 		 */
 name|E1000_WRITE_REG_IO
 argument_list|(
 name|hw
@@ -1124,9 +1136,7 @@ argument_list|(
 literal|"Error initializing identification LED\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+comment|/* This is not fatal and we should not stop init due to this */
 block|}
 comment|/* Disabling VLAN filtering */
 name|DEBUGOUT
@@ -1142,7 +1152,6 @@ name|type
 operator|<
 name|e1000_82545_rev_3
 condition|)
-block|{
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -1152,7 +1161,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|e1000_clear_vfta
 argument_list|(
 name|hw
@@ -1201,7 +1209,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Avoid back to back register writes by adding the register 		 * read (flush).  This is to protect against some strange 		 * bridge configurations that may issue Memory Write Block 		 * (MWB) to our register space.  The *_rev_3 hardware at 		 * least doesn't respond correctly to every other dword in an 		 * MWB to our register space. 		 */
+comment|/* 		 * Avoid back to back register writes by adding the register 		 * read (flush).  This is to protect against some strange 		 * bridge configurations that may issue Memory Write Block 		 * (MWB) to our register space.  The *_rev_3 hardware at 		 * least doesn't respond correctly to every other dword in an 		 * MWB to our register space. 		 */
 name|E1000_WRITE_FLUSH
 argument_list|(
 name|hw
@@ -1236,6 +1244,9 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|txdctl
@@ -1254,11 +1265,14 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|txdctl
 argument_list|)
 expr_stmt|;
-comment|/* Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
+comment|/* 	 * Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
 name|e1000_clear_hw_cntrs_82540
 argument_list|(
 name|hw
@@ -1292,7 +1306,7 @@ argument_list|,
 name|E1000_CTRL_EXT
 argument_list|)
 expr_stmt|;
-comment|/* Relaxed ordering must be disabled to avoid a parity 		 * error crash in a PCI slot. */
+comment|/* 		 * Relaxed ordering must be disabled to avoid a parity 		 * error crash in a PCI slot. 		 */
 name|ctrl_ext
 operator||=
 name|E1000_CTRL_EXT_RO_DIS
@@ -1307,8 +1321,6 @@ name|ctrl_ext
 argument_list|)
 expr_stmt|;
 block|}
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -1533,12 +1545,14 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_internal_serdes
 condition|)
 block|{
-comment|/* If we're on serdes media, adjust the output 			 * amplitude to value set in the EEPROM. 			 */
+comment|/* 			 * If we're on serdes media, adjust the output 			 * amplitude to value set in the EEPROM. 			 */
 name|ret_val
 operator|=
 name|e1000_adjust_serdes_amplitude_82540
@@ -1633,11 +1647,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-block|{
 goto|goto
 name|out
 goto|;
-block|}
 if|if
 condition|(
 name|nvm_data

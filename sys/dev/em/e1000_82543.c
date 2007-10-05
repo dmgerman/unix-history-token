@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -319,7 +319,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|bool
 name|e1000_init_phy_disabled_82543
 parameter_list|(
 name|struct
@@ -411,7 +411,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|bool
 name|e1000_tbi_compatibility_enabled_82543
 parameter_list|(
 name|struct
@@ -432,7 +432,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|state
 parameter_list|)
 function_decl|;
@@ -445,10 +445,10 @@ block|{
 name|u32
 name|tbi_compatibility
 decl_stmt|;
-name|boolean_t
+name|bool
 name|dma_fairness
 decl_stmt|;
-name|boolean_t
+name|bool
 name|init_phy_disabled
 decl_stmt|;
 block|}
@@ -504,6 +504,8 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|!=
 name|e1000_media_type_copper
@@ -634,7 +636,7 @@ name|get_phy_info
 operator|=
 name|e1000_get_phy_info_m88
 expr_stmt|;
-comment|/* The external PHY of the 82543 can be in a funky state. 	 * Resetting helps us read the PHY registers for acquiring 	 * the PHY ID. 	 */
+comment|/* 	 * The external PHY of the 82543 can be in a funky state. 	 * Resetting helps us read the PHY registers for acquiring 	 * the PHY ID. 	 */
 if|if
 condition|(
 operator|!
@@ -924,6 +926,8 @@ name|E1000_DEV_ID_82544EI_FIBER
 case|:
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_fiber
@@ -932,6 +936,8 @@ break|break;
 default|default:
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_copper
@@ -989,6 +995,8 @@ operator|=
 operator|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper
@@ -1006,6 +1014,8 @@ operator|=
 operator|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper
@@ -1023,6 +1033,8 @@ operator|=
 operator|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper
@@ -1035,9 +1047,9 @@ expr_stmt|;
 comment|/* multicast address update */
 name|func
 operator|->
-name|mc_addr_list_update
+name|update_mc_addr_list
 operator|=
-name|e1000_mc_addr_list_update_generic
+name|e1000_update_mc_addr_list_generic
 expr_stmt|;
 comment|/* writing VFTA */
 name|func
@@ -1132,6 +1144,8 @@ operator|||
 operator|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_fiber
@@ -1204,7 +1218,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|e1000_tbi_compatibility_enabled_82543
 parameter_list|(
 name|struct
@@ -1218,7 +1232,7 @@ name|e1000_dev_spec_82543
 modifier|*
 name|dev_spec
 decl_stmt|;
-name|boolean_t
+name|bool
 name|state
 init|=
 name|FALSE
@@ -1261,9 +1275,8 @@ name|dev_spec
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|dev_spec
-operator|==
-name|NULL
 condition|)
 block|{
 name|DEBUGOUT
@@ -1310,7 +1323,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|state
 parameter_list|)
 block|{
@@ -1357,9 +1370,8 @@ name|dev_spec
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|dev_spec
-operator|==
-name|NULL
 condition|)
 block|{
 name|DEBUGOUT
@@ -1400,7 +1412,7 @@ comment|/**  *  e1000_tbi_sbp_enabled_82543 - Returns TBI SBP status  *  @hw: po
 end_comment
 
 begin_function
-name|boolean_t
+name|bool
 name|e1000_tbi_sbp_enabled_82543
 parameter_list|(
 name|struct
@@ -1414,7 +1426,7 @@ name|e1000_dev_spec_82543
 modifier|*
 name|dev_spec
 decl_stmt|;
-name|boolean_t
+name|bool
 name|state
 init|=
 name|FALSE
@@ -1457,9 +1469,8 @@ name|dev_spec
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|dev_spec
-operator|==
-name|NULL
 condition|)
 block|{
 name|DEBUGOUT
@@ -1507,7 +1518,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|state
 parameter_list|)
 block|{
@@ -1565,7 +1576,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|e1000_init_phy_disabled_82543
 parameter_list|(
 name|struct
@@ -1579,7 +1590,7 @@ name|e1000_dev_spec_82543
 modifier|*
 name|dev_spec
 decl_stmt|;
-name|boolean_t
+name|bool
 name|ret_val
 decl_stmt|;
 name|DEBUGFUNC
@@ -1619,9 +1630,8 @@ name|dev_spec
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|dev_spec
-operator|==
-name|NULL
 condition|)
 block|{
 name|DEBUGOUT
@@ -1652,7 +1662,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_tbi_adjust_stats_82543 - Adjust stats when TBI enabled  *  @hw: pointer to the HW structure  *  @stats: Struct containing statistic register values  *  @frame_len: The length of the frame in question  *  @mac_addr: The Ethernet destination address of the frame in question  *  *  Adjusts the statistic counters when a frame is accepted by TBI_ACCEPT  **/
+comment|/**  *  e1000_tbi_adjust_stats_82543 - Adjust stats when TBI enabled  *  @hw: pointer to the HW structure  *  @stats: Struct containing statistic register values  *  @frame_len: The length of the frame in question  *  @mac_addr: The Ethernet destination address of the frame in question  *  @max_frame_size: The maximum frame size  *  *  Adjusts the statistic counters when a frame is accepted by TBI_ACCEPT  **/
 end_comment
 
 begin_function
@@ -1675,19 +1685,20 @@ parameter_list|,
 name|u8
 modifier|*
 name|mac_addr
+parameter_list|,
+name|u32
+name|max_frame_size
 parameter_list|)
 block|{
-name|u64
-name|carry_bit
-decl_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|e1000_tbi_sbp_enabled_82543
 argument_list|(
 name|hw
 argument_list|)
-operator|==
-name|FALSE
+operator|)
 condition|)
 goto|goto
 name|out
@@ -1696,7 +1707,7 @@ comment|/* First adjust the frame length. */
 name|frame_len
 operator|--
 expr_stmt|;
-comment|/* We need to adjust the statistics counters, since the hardware 	 * counters overcount this packet as a CRC error and undercount 	 * the packet as a good packet 	 */
+comment|/* 	 * We need to adjust the statistics counters, since the hardware 	 * counters overcount this packet as a CRC error and undercount 	 * the packet as a good packet 	 */
 comment|/* This packet should not be counted as a CRC error.    */
 name|stats
 operator|->
@@ -1710,43 +1721,13 @@ name|gprc
 operator|++
 expr_stmt|;
 comment|/* Adjust the Good Octets received counters             */
-name|carry_bit
-operator|=
-literal|0x80000000
-operator|&
 name|stats
 operator|->
-name|gorcl
-expr_stmt|;
-name|stats
-operator|->
-name|gorcl
+name|gorc
 operator|+=
 name|frame_len
 expr_stmt|;
-comment|/* If the high bit of Gorcl (the low 32 bits of the Good Octets 	 * Received Count) was one before the addition, 	 * AND it is zero after, then we lost the carry out, 	 * need to add one to Gorch (Good Octets Received Count High). 	 * This could be simplified if all environments supported 	 * 64-bit integers. 	 */
-if|if
-condition|(
-name|carry_bit
-operator|&&
-operator|(
-operator|(
-name|stats
-operator|->
-name|gorcl
-operator|&
-literal|0x80000000
-operator|)
-operator|==
-literal|0
-operator|)
-condition|)
-name|stats
-operator|->
-name|gorch
-operator|++
-expr_stmt|;
-comment|/* Is this a broadcast or multicast?  Check broadcast first, 	 * since the test for a multicast frame will test positive on 	 * a broadcast frame. 	 */
+comment|/* 	 * Is this a broadcast or multicast?  Check broadcast first, 	 * since the test for a multicast frame will test positive on 	 * a broadcast frame. 	 */
 if|if
 condition|(
 operator|(
@@ -1787,16 +1768,12 @@ operator|->
 name|mprc
 operator|++
 expr_stmt|;
-comment|/* In this case, the hardware has overcounted the number of 	 * oversize frames. 	 */
+comment|/* 	 * In this case, the hardware has overcounted the number of 	 * oversize frames. 	 */
 if|if
 condition|(
 operator|(
 name|frame_len
 operator|==
-name|hw
-operator|->
-name|mac
-operator|.
 name|max_frame_size
 operator|)
 operator|&&
@@ -1813,7 +1790,7 @@ operator|->
 name|roc
 operator|--
 expr_stmt|;
-comment|/* Adjust the bin counters when the extra byte put the frame in the 	 * wrong bin. Remember that the frame_len was adjusted above. 	 */
+comment|/* 	 * Adjust the bin counters when the extra byte put the frame in the 	 * wrong bin. Remember that the frame_len was adjusted above. 	 */
 if|if
 condition|(
 name|frame_len
@@ -1986,7 +1963,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* We must first send a preamble through the MDIO pin to signal the 	 * beginning of an MII instruction.  This is done by sending 32 	 * consecutive "1" bits. 	 */
+comment|/* 	 * We must first send a preamble through the MDIO pin to signal the 	 * beginning of an MII instruction.  This is done by sending 32 	 * consecutive "1" bits. 	 */
 name|e1000_shift_out_mdi_bits_82543
 argument_list|(
 name|hw
@@ -1996,7 +1973,7 @@ argument_list|,
 name|PHY_PREAMBLE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* Now combine the next few fields that are required for a read 	 * operation.  We use this method instead of calling the 	 * e1000_shift_out_mdi_bits routine five different times.  The format 	 * of an MII read instruction consists of a shift out of 14 bits and 	 * is defined as follows: 	 *<Preamble><SOF><Op Code><Phy Addr><Offset> 	 * followed by a shift in of 18 bits.  This first two bits shifted in 	 * are TurnAround bits used to avoid contention on the MDIO pin when a 	 * READ operation is performed.  These two bits are thrown away 	 * followed by a shift in of 16 bits which contains the desired data. 	 */
+comment|/* 	 * Now combine the next few fields that are required for a read 	 * operation.  We use this method instead of calling the 	 * e1000_shift_out_mdi_bits routine five different times.  The format 	 * of an MII read instruction consists of a shift out of 14 bits and 	 * is defined as follows: 	 *<Preamble><SOF><Op Code><Phy Addr><Offset> 	 * followed by a shift in of 18 bits.  This first two bits shifted in 	 * are TurnAround bits used to avoid contention on the MDIO pin when a 	 * READ operation is performed.  These two bits are thrown away 	 * followed by a shift in of 16 bits which contains the desired data. 	 */
 name|mdic
 operator|=
 operator|(
@@ -2034,7 +2011,7 @@ argument_list|,
 literal|14
 argument_list|)
 expr_stmt|;
-comment|/* Now that we've shifted out the read command to the MII, we need to 	 * "shift in" the 16-bit value (18 total bits) of the requested PHY 	 * register address. 	 */
+comment|/* 	 * Now that we've shifted out the read command to the MII, we need to 	 * "shift in" the 16-bit value (18 total bits) of the requested PHY 	 * register address. 	 */
 operator|*
 name|data
 operator|=
@@ -2108,7 +2085,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* We'll need to use the SW defined pins to shift the write command 	 * out to the PHY. We first send a preamble to the PHY to signal the 	 * beginning of the MII instruction.  This is done by sending 32 	 * consecutive "1" bits. 	 */
+comment|/* 	 * We'll need to use the SW defined pins to shift the write command 	 * out to the PHY. We first send a preamble to the PHY to signal the 	 * beginning of the MII instruction.  This is done by sending 32 	 * consecutive "1" bits. 	 */
 name|e1000_shift_out_mdi_bits_82543
 argument_list|(
 name|hw
@@ -2118,7 +2095,7 @@ argument_list|,
 name|PHY_PREAMBLE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* Now combine the remaining required fields that will indicate a 	 * write operation. We use this method instead of calling the 	 * e1000_shift_out_mdi_bits routine for each field in the command. The 	 * format of a MII write instruction is as follows: 	 *<Preamble><SOF><Op Code><Phy Addr><Reg Addr><Turnaround><Data>. 	 */
+comment|/* 	 * Now combine the remaining required fields that will indicate a 	 * write operation. We use this method instead of calling the 	 * e1000_shift_out_mdi_bits routine for each field in the command. The 	 * format of a MII write instruction is as follows: 	 *<Preamble><SOF><Op Code><Phy Addr><Reg Addr><Turnaround><Data>. 	 */
 name|mdic
 operator|=
 operator|(
@@ -2202,7 +2179,7 @@ modifier|*
 name|ctrl
 parameter_list|)
 block|{
-comment|/* Raise the clock input to the Management Data Clock (by setting the 	 * MDC bit), and then delay a sufficient amount of time. 	 */
+comment|/* 	 * Raise the clock input to the Management Data Clock (by setting the 	 * MDC bit), and then delay a sufficient amount of time. 	 */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -2249,7 +2226,7 @@ modifier|*
 name|ctrl
 parameter_list|)
 block|{
-comment|/* Lower the clock input to the Management Data Clock (by clearing the 	 * MDC bit), and then delay a sufficient amount of time. 	 */
+comment|/* 	 * Lower the clock input to the Management Data Clock (by clearing the 	 * MDC bit), and then delay a sufficient amount of time. 	 */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -2304,7 +2281,7 @@ name|ctrl
 decl_stmt|,
 name|mask
 decl_stmt|;
-comment|/* We need to shift "count" number of bits out to the PHY.  So, the 	 * value in the "data" parameter will be shifted out to the PHY one 	 * bit at a time.  In order to do this, "data" must be broken down 	 * into bits. 	 */
+comment|/* 	 * We need to shift "count" number of bits out to the PHY.  So, the 	 * value in the "data" parameter will be shifted out to the PHY one 	 * bit at a time.  In order to do this, "data" must be broken down 	 * into bits. 	 */
 name|mask
 operator|=
 literal|0x01
@@ -2340,7 +2317,7 @@ condition|(
 name|mask
 condition|)
 block|{
-comment|/* A "1" is shifted out to the PHY by setting the MDIO bit to 		 * "1" and then raising and lowering the Management Data Clock. 		 * A "0" is shifted out to the PHY by setting the MDIO bit to 		 * "0" and then raising and lowering the clock. 		 */
+comment|/* 		 * A "1" is shifted out to the PHY by setting the MDIO bit to 		 * "1" and then raising and lowering the Management Data Clock. 		 * A "0" is shifted out to the PHY by setting the MDIO bit to 		 * "0" and then raising and lowering the clock. 		 */
 if|if
 condition|(
 name|data
@@ -2426,7 +2403,7 @@ decl_stmt|;
 name|u8
 name|i
 decl_stmt|;
-comment|/* In order to read a register from the PHY, we need to shift in a 	 * total of 18 bits from the PHY.  The first two bit (turnaround) 	 * times are used to avoid contention on the MDIO pin when a read 	 * operation is performed.  These two bits are ignored by us and 	 * thrown away.  Bits are "shifted in" by raising the input to the 	 * Management Data Clock (setting the MDC bit) and then reading the 	 * value of the MDIO bit. 	 */
+comment|/* 	 * In order to read a register from the PHY, we need to shift in a 	 * total of 18 bits from the PHY.  The first two bit (turnaround) 	 * times are used to avoid contention on the MDIO pin when a read 	 * operation is performed.  These two bits are ignored by us and 	 * thrown away.  Bits are "shifted in" by raising the input to the 	 * Management Data Clock (setting the MDC bit) and then reading the 	 * value of the MDIO bit. 	 */
 name|ctrl
 operator|=
 name|E1000_READ_REG
@@ -2436,7 +2413,7 @@ argument_list|,
 name|E1000_CTRL
 argument_list|)
 expr_stmt|;
-comment|/* Clear MDIO_DIR (SWDPIO1) to indicate this bit is to be used as 	 * input. 	 */
+comment|/* 	 * Clear MDIO_DIR (SWDPIO1) to indicate this bit is to be used as 	 * input. 	 */
 name|ctrl
 operator|&=
 operator|~
@@ -2461,7 +2438,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Raise and lower the clock before reading in the data.  This accounts 	 * for the turnaround bits.  The first clock occurred when we clocked 	 * out the last bit of the Register Address. 	 */
+comment|/* 	 * Raise and lower the clock before reading in the data.  This accounts 	 * for the turnaround bits.  The first clock occurred when we clocked 	 * out the last bit of the Register Address. 	 */
 name|e1000_raise_mdi_clk_82543
 argument_list|(
 name|hw
@@ -2654,7 +2631,7 @@ decl_stmt|;
 name|u16
 name|i
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 comment|/* Polarity reversal workaround for forced 10F/10H links. */
@@ -2713,7 +2690,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* This loop will early-out if the NO link condition has been met. 	 * In other words, DO NOT use e1000_phy_has_link_generic() here. 	 */
+comment|/* 	 * This loop will early-out if the NO link condition has been met. 	 * In other words, DO NOT use e1000_phy_has_link_generic() here. 	 */
 for|for
 control|(
 name|i
@@ -2728,7 +2705,7 @@ name|i
 operator|--
 control|)
 block|{
-comment|/* Read the MII Status Register and wait for Link Status bit 		 * to be clear. 		 */
+comment|/* 		 * Read the MII Status Register and wait for Link Status bit 		 * to be clear. 		 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -2897,7 +2874,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Read the MII Status Register and wait for Link Status bit 	 * to be set. 	 */
+comment|/* 	 * Read the MII Status Register and wait for Link Status bit 	 * to be set. 	 */
 name|ret_val
 operator|=
 name|e1000_phy_has_link_generic
@@ -2963,7 +2940,7 @@ argument_list|(
 literal|"e1000_phy_hw_reset_82543"
 argument_list|)
 expr_stmt|;
-comment|/* Read the Extended Device Control Register, assert the PHY_RESET_DIR 	 * bit to put the PHY into reset... 	 */
+comment|/* 	 * Read the Extended Device Control Register, assert the PHY_RESET_DIR 	 * bit to put the PHY into reset... 	 */
 name|ctrl_ext
 operator|=
 name|E1000_READ_REG
@@ -3114,7 +3091,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* Delay to allow any outstanding PCI transactions to complete before 	 * resetting the device 	 */
+comment|/* 	 * Delay to allow any outstanding PCI transactions to complete before 	 * resetting the device 	 */
 name|msec_delay
 argument_list|(
 literal|10
@@ -3159,7 +3136,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* The 82544 can't ACK the 64-bit write when issuing the 		 * reset, so use IO-mapping as a workaround. 		 */
+comment|/* 		 * The 82544 can't ACK the 64-bit write when issuing the 		 * reset, so use IO-mapping as a workaround. 		 */
 name|E1000_WRITE_REG_IO
 argument_list|(
 name|hw
@@ -3172,7 +3149,7 @@ name|E1000_CTRL_RST
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* After MAC reset, force reload of NVM to restore power-on 	 * settings to device. 	 */
+comment|/* 	 * After MAC reset, force reload of NVM to restore power-on 	 * settings to device. 	 */
 name|e1000_reload_nvm
 argument_list|(
 name|hw
@@ -3265,9 +3242,8 @@ name|dev_spec
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|dev_spec
-operator|==
-name|NULL
 condition|)
 block|{
 name|DEBUGOUT
@@ -3348,7 +3324,7 @@ name|hw
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Set the PCI priority bit correctly in the CTRL register.  This 	 * determines if the adapter gives priority to receives, or if it 	 * gives equal priority to transmits and receives. 	 */
+comment|/* 	 * Set the PCI priority bit correctly in the CTRL register.  This 	 * determines if the adapter gives priority to receives, or if it 	 * gives equal priority to transmits and receives. 	 */
 if|if
 condition|(
 name|hw
@@ -3398,7 +3374,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
+comment|/* 	 * Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
 name|e1000_clear_hw_cntrs_82543
 argument_list|(
 name|hw
@@ -3441,7 +3417,7 @@ argument_list|(
 literal|"e1000_setup_link_82543"
 argument_list|)
 expr_stmt|;
-comment|/* Take the 4 bits from NVM word 0xF that determine the initial 	 * polarity value for the SW controlled pins, and setup the 	 * Extended Device Control reg with that info. 	 * This is needed because one of the SW controlled pins is used for 	 * signal detection.  So this should be done before phy setup. 	 */
+comment|/* 	 * Take the 4 bits from NVM word 0xF that determine the initial 	 * polarity value for the SW controlled pins, and setup the 	 * Extended Device Control reg with that info. 	 * This is needed because one of the SW controlled pins is used for 	 * signal detection.  So this should be done before phy setup. 	 */
 if|if
 condition|(
 name|hw
@@ -3544,7 +3520,7 @@ decl_stmt|;
 name|s32
 name|ret_val
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 name|DEBUGFUNC
@@ -3563,7 +3539,7 @@ argument_list|)
 operator||
 name|E1000_CTRL_SLU
 expr_stmt|;
-comment|/* With 82543, we need to force speed and duplex on the MAC 	 * equal to what the PHY speed and duplex configuration is. 	 * In addition, we need to perform a hardware reset on the 	 * PHY to take it out of reset. 	 */
+comment|/* 	 * With 82543, we need to force speed and duplex on the MAC 	 * equal to what the PHY speed and duplex configuration is. 	 * In addition, we need to perform a hardware reset on the 	 * PHY to take it out of reset. 	 */
 if|if
 condition|(
 name|hw
@@ -3660,7 +3636,7 @@ operator|.
 name|autoneg
 condition|)
 block|{
-comment|/* Setup autoneg and flow control advertisement and perform 		 * autonegotiation. */
+comment|/* 		 * Setup autoneg and flow control advertisement and perform 		 * autonegotiation. 		 */
 name|ret_val
 operator|=
 name|e1000_copper_link_autoneg
@@ -3678,7 +3654,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* PHY will be set to 10H, 10F, 100H or 100F 		 * depending on user settings. */
+comment|/* 		 * PHY will be set to 10H, 10F, 100H or 100F 		 * depending on user settings. 		 */
 name|DEBUGOUT
 argument_list|(
 literal|"Forcing Speed and Duplex\n"
@@ -3706,7 +3682,7 @@ name|out
 goto|;
 block|}
 block|}
-comment|/* Check link status. Wait up to 100 microseconds for link to become 	 * valid. 	 */
+comment|/* 	 * Check link status. Wait up to 100 microseconds for link to become 	 * valid. 	 */
 name|ret_val
 operator|=
 name|e1000_phy_has_link_generic
@@ -3749,11 +3725,13 @@ name|type
 operator|==
 name|e1000_82544
 condition|)
+block|{
 name|e1000_config_collision_dist_generic
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|ret_val
@@ -3879,7 +3857,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* For these adapters, the SW defineable pin 1 is cleared when the 	 * optics detect a signal.  If we have a signal, then poll for a 	 * "Link-Up" indication. 	 */
+comment|/* 	 * For these adapters, the SW defineable pin 1 is cleared when the 	 * optics detect a signal.  If we have a signal, then poll for a 	 * "Link-Up" indication. 	 */
 if|if
 condition|(
 operator|!
@@ -3957,7 +3935,7 @@ name|speed
 decl_stmt|,
 name|duplex
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 name|DEBUGFUNC
@@ -4022,7 +4000,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* If we are forcing speed/duplex, then we can return since 	 * we have already determined whether we have link or not. 	 */
+comment|/* 	 * If we are forcing speed/duplex, then we can return since 	 * we have already determined whether we have link or not. 	 */
 if|if
 condition|(
 operator|!
@@ -4031,7 +4009,7 @@ operator|->
 name|autoneg
 condition|)
 block|{
-comment|/* If speed and duplex are forced to 10H or 10F, then we will 		 * implement the polarity reversal workaround.  We disable 		 * interrupts first, and upon returning, place the devices 		 * interrupt state to its previous value except for the link 		 * status change interrupt which will happened due to the 		 * execution of this workaround. 		 */
+comment|/* 		 * If speed and duplex are forced to 10H or 10F, then we will 		 * implement the polarity reversal workaround.  We disable 		 * interrupts first, and upon returning, place the devices 		 * interrupt state to its previous value except for the link 		 * status change interrupt which will happened due to the 		 * execution of this workaround. 		 */
 if|if
 condition|(
 name|mac
@@ -4099,7 +4077,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* We have a M88E1000 PHY and Auto-Neg is enabled.  If we 	 * have Si on board that is 82544 or newer, Auto 	 * Speed Detection takes care of MAC speed/duplex 	 * configuration.  So we only need to configure Collision 	 * Distance in the MAC.  Otherwise, we need to force 	 * speed/duplex on the MAC to the current PHY speed/duplex 	 * settings. 	 */
+comment|/* 	 * We have a M88E1000 PHY and Auto-Neg is enabled.  If we 	 * have Si on board that is 82544 or newer, Auto 	 * Speed Detection takes care of MAC speed/duplex 	 * configuration.  So we only need to configure Collision 	 * Distance in the MAC.  Otherwise, we need to force 	 * speed/duplex on the MAC to the current PHY speed/duplex 	 * settings. 	 */
 if|if
 condition|(
 name|mac
@@ -4137,7 +4115,7 @@ name|out
 goto|;
 block|}
 block|}
-comment|/* Configure Flow Control now that Auto-Neg has completed. 	 * First, we need to restore the desired flow control 	 * settings because we may have had to re-autoneg with a 	 * different link partner. 	 */
+comment|/* 	 * Configure Flow Control now that Auto-Neg has completed. 	 * First, we need to restore the desired flow control 	 * settings because we may have had to re-autoneg with a 	 * different link partner. 	 */
 name|ret_val
 operator|=
 name|e1000_config_fc_after_link_up_generic
@@ -4156,7 +4134,7 @@ literal|"Error configuring flow control\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* At this point we know that we are on copper and we have 	 * auto-negotiated link.  These are conditions for checking the link 	 * partner capability register.  We use the link speed to determine if 	 * TBI compatibility needs to be turned on or off.  If the link is not 	 * at gigabit speed, then TBI compatibility is not needed.  If we are 	 * at gigabit speed, we turn on TBI compatibility. 	 */
+comment|/* 	 * At this point we know that we are on copper and we have 	 * auto-negotiated link.  These are conditions for checking the link 	 * partner capability register.  We use the link speed to determine if 	 * TBI compatibility needs to be turned on or off.  If the link is not 	 * at gigabit speed, then TBI compatibility is not needed.  If we are 	 * at gigabit speed, we turn on TBI compatibility. 	 */
 if|if
 condition|(
 name|e1000_tbi_compatibility_enabled_82543
@@ -4199,7 +4177,7 @@ operator|!=
 name|SPEED_1000
 condition|)
 block|{
-comment|/* If link speed is not set to gigabit speed, 			 * we do not need to enable TBI compatibility. 			 */
+comment|/* 			 * If link speed is not set to gigabit speed, 			 * we do not need to enable TBI compatibility. 			 */
 if|if
 condition|(
 name|e1000_tbi_sbp_enabled_82543
@@ -4208,7 +4186,7 @@ name|hw
 argument_list|)
 condition|)
 block|{
-comment|/* If we previously were in the mode, 				 * turn it off. 				 */
+comment|/* 				 * If we previously were in the mode, 				 * turn it off. 				 */
 name|e1000_set_tbi_sbp_82543
 argument_list|(
 name|hw
@@ -4243,7 +4221,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* If TBI compatibility is was previously off, 			 * turn it on. For compatibility with a TBI link 			 * partner, we will store bad packets. Some 			 * frames have an additional byte on the end and 			 * will look like CRC errors to to the hardware. 			 */
+comment|/* 			 * If TBI compatibility is was previously off, 			 * turn it on. For compatibility with a TBI link 			 * partner, we will store bad packets. Some 			 * frames have an additional byte on the end and 			 * will look like CRC errors to to the hardware. 			 */
 if|if
 condition|(
 operator|!
@@ -4350,7 +4328,7 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_CTRL
+name|E1000_STATUS
 argument_list|)
 expr_stmt|;
 name|rxcw
@@ -4359,10 +4337,10 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_CTRL
+name|E1000_RXCW
 argument_list|)
 expr_stmt|;
-comment|/* If we don't have link (auto-negotiation failed or link partner 	 * cannot auto-negotiate), the cable is plugged in (we have signal), 	 * and our link partner is not trying to auto-negotiate with us (we 	 * are receiving idles or data), we need to force link up. We also 	 * need to give auto-negotiation time to complete, in case the cable 	 * was just plugged in. The autoneg_failed flag does this. 	 */
+comment|/* 	 * If we don't have link (auto-negotiation failed or link partner 	 * cannot auto-negotiate), the cable is plugged in (we have signal), 	 * and our link partner is not trying to auto-negotiate with us (we 	 * are receiving idles or data), we need to force link up. We also 	 * need to give auto-negotiation time to complete, in case the cable 	 * was just plugged in. The autoneg_failed flag does this. 	 */
 comment|/* (ctrl& E1000_CTRL_SWDPIN1) == 0 == have signal */
 if|if
 condition|(
@@ -4505,7 +4483,7 @@ name|E1000_RXCW_C
 operator|)
 condition|)
 block|{
-comment|/* If we are forcing link and we are receiving /C/ ordered 		 * sets, re-enable auto-negotiation in the TXCW register 		 * and disable forced link in the Device Control register 		 * in an attempt to auto-negotiate with our link partner. 		 */
+comment|/* 		 * If we are forcing link and we are receiving /C/ ordered 		 * sets, re-enable auto-negotiation in the TXCW register 		 * and disable forced link in the Device Control register 		 * in an attempt to auto-negotiate with our link partner. 		 */
 name|DEBUGOUT
 argument_list|(
 literal|"RXing /C/, enable AutoNeg and stop forcing link.\n"
@@ -4607,7 +4585,7 @@ operator||
 name|E1000_CTRL_ILOS
 operator|)
 expr_stmt|;
-comment|/* Set up duplex in the Device Control and Transmit Control 	 * registers depending on negotiated values. 	 */
+comment|/* 	 * Set up duplex in the Device Control and Transmit Control 	 * registers depending on negotiated values. 	 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -4647,7 +4625,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Set up speed in the Device Control register depending on 	 * negotiated values. 	 */
+comment|/* 	 * Set up speed in the Device Control register depending on 	 * negotiated values. 	 */
 if|if
 condition|(
 operator|(
@@ -4791,6 +4769,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|e1000_write_vfta_generic
 argument_list|(
 name|hw
@@ -4800,6 +4779,7 @@ argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4843,7 +4823,7 @@ operator|>>
 literal|5
 operator|)
 expr_stmt|;
-comment|/* If we are on an 82544 and we are trying to write an odd offset 	 * in the MTA, save off the previous entry before writing and 	 * restore the old value after writing. 	 */
+comment|/* 	 * If we are on an 82544 and we are trying to write an odd offset 	 * in the MTA, save off the previous entry before writing and 	 * restore the old value after writing. 	 */
 if|if
 condition|(
 operator|(
@@ -4949,6 +4929,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|e1000_mta_set_generic
 argument_list|(
 name|hw
@@ -4956,6 +4937,7 @@ argument_list|,
 name|hash_value
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5001,6 +4983,8 @@ name|e1000_82544
 operator|&&
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper
@@ -5086,6 +5070,8 @@ name|e1000_82544
 operator|&&
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper

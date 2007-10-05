@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -264,72 +264,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_RDTR1
-value|0x02820
-end_define
-
-begin_comment
-comment|/* RX Delay Timer (1) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDBAL1
-value|0x02900
-end_define
-
-begin_comment
-comment|/* RX Descriptor Base Address Low (1) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDBAH1
-value|0x02904
-end_define
-
-begin_comment
-comment|/* RX Descriptor Base Address High (1) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDLEN1
-value|0x02908
-end_define
-
-begin_comment
-comment|/* RX Descriptor Length (1) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDH1
-value|0x02910
-end_define
-
-begin_comment
-comment|/* RX Descriptor Head (1) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDT1
-value|0x02918
-end_define
-
-begin_comment
-comment|/* RX Descriptor Tail (1) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_FCTTV
 value|0x00170
 end_define
@@ -374,112 +308,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_EITR0
-value|0x01680
+name|E1000_EITR
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x01680 + (0x4 * (_n)))
 end_define
-
-begin_comment
-comment|/* Ext. Int. Throttling Rate Vector 0 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_EITR1
-value|0x01684
-end_define
-
-begin_comment
-comment|/* Ext. Int. Throttling Rate Vector 1 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_EITR2
-value|0x01688
-end_define
-
-begin_comment
-comment|/* Ext. Int. Throttling Rate Vector 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_EITR3
-value|0x0168C
-end_define
-
-begin_comment
-comment|/* Ext. Int. Throttling Rate Vector 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_EITR4
-value|0x01690
-end_define
-
-begin_comment
-comment|/* Ext. Int. Throttling Rate Vector 4 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_EITR5
-value|0x01694
-end_define
-
-begin_comment
-comment|/* Ext. Int. Throttling Rate Vector 5 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_EITR6
-value|0x01698
-end_define
-
-begin_comment
-comment|/* Ext. Int. Throttling Rate Vector 6 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_EITR7
-value|0x0169C
-end_define
-
-begin_comment
-comment|/* Ext. Int. Throttling Rate Vector 7 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_EITR8
-value|0x016A0
-end_define
-
-begin_comment
-comment|/* Ext. Int. Throttling Rate Vector 8 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_EITR9
-value|0x016A4
-end_define
-
-begin_comment
-comment|/* Ext. Int. Throttling Rate Vector 9 - RW */
-end_comment
 
 begin_define
 define|#
@@ -858,29 +692,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_RDFPCQ0
-value|0x02430
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RDFPCQ1
-value|0x02434
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RDFPCQ2
-value|0x02438
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RDFPCQ3
-value|0x0243C
+name|E1000_RDFPCQ
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x02430 + (0x4 * (_n)))
 end_define
 
 begin_define
@@ -905,25 +721,8 @@ begin_comment
 comment|/* Flow Control Refresh Timer Value - RW */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|E1000_SRRCTL0
-value|0x0280C
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_SRRCTL
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x280C + (_n<< 8))
-end_define
-
 begin_comment
-comment|/* Split and Replication                                                * RX Control - RW */
+comment|/* Split and Replication RX Control - RW */
 end_comment
 
 begin_define
@@ -984,155 +783,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_RDBAL
-value|0x02800
-end_define
-
-begin_comment
-comment|/* RX Descriptor Base Address Low - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDBAH
-value|0x02804
-end_define
-
-begin_comment
-comment|/* RX Descriptor Base Address High - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDLEN
-value|0x02808
-end_define
-
-begin_comment
-comment|/* RX Descriptor Length - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDH
-value|0x02810
-end_define
-
-begin_comment
-comment|/* RX Descriptor Head - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDT
-value|0x02818
-end_define
-
-begin_comment
-comment|/* RX Descriptor Tail - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_RDTR
 value|0x02820
 end_define
 
 begin_comment
 comment|/* RX Delay Timer - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDBAL0
-value|E1000_RDBAL
-end_define
-
-begin_comment
-comment|/* RX Desc Base Address Low (0) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDBAH0
-value|E1000_RDBAH
-end_define
-
-begin_comment
-comment|/* RX Desc Base Address High (0) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDLEN0
-value|E1000_RDLEN
-end_define
-
-begin_comment
-comment|/* RX Desc Length (0) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDH0
-value|E1000_RDH
-end_define
-
-begin_comment
-comment|/* RX Desc Head (0) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDT0
-value|E1000_RDT
-end_define
-
-begin_comment
-comment|/* RX Desc Tail (0) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDTR0
-value|E1000_RDTR
-end_define
-
-begin_comment
-comment|/* RX Delay Timer (0) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDCTL
-value|0x02828
-end_define
-
-begin_comment
-comment|/* RX Descriptor Control queue 0 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDCTL1
-value|0x02928
-end_define
-
-begin_comment
-comment|/* RX Descriptor Control queue 1 - RW */
 end_comment
 
 begin_define
@@ -1147,137 +803,157 @@ comment|/* RX Interrupt Absolute Delay Timer - RW */
 end_comment
 
 begin_comment
-comment|/* Convenience macros  *  * Note: "_n" is the queue number of the register to be written to.  *  * Example usage:  * E1000_RDBAL_REG(current_rx_queue)  *  */
+comment|/*  * Convenience macros  *  * Note: "_n" is the queue number of the register to be written to.  *  * Example usage:  * E1000_RDBAL_REG(current_rx_queue)  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|E1000_RDBAL_REG
+name|E1000_RDBAL
 parameter_list|(
 name|_n
 parameter_list|)
-value|(E1000_RDBAL + (_n<< 8))
+value|((_n)< 4 ? (0x02800 + ((_n) * 0x100)) : (0x0C000 + ((_n) * 0x40)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_RDBAH_REG
+name|E1000_RDBAH
 parameter_list|(
 name|_n
 parameter_list|)
-value|(E1000_RDBAH + (_n<< 8))
+value|((_n)< 4 ? (0x02804 + ((_n) * 0x100)) : (0x0C004 + ((_n) * 0x40)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_RDLEN_REG
+name|E1000_RDLEN
 parameter_list|(
 name|_n
 parameter_list|)
-value|(E1000_RDLEN + (_n<< 8))
+value|((_n)< 4 ? (0x02808 + ((_n) * 0x100)) : (0x0C008 + ((_n) * 0x40)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_RDH_REG
+name|E1000_SRRCTL
 parameter_list|(
 name|_n
 parameter_list|)
-value|(E1000_RDH + (_n<< 8))
+value|((_n)< 4 ? (0x0280C + ((_n) * 0x100)) : (0x0C00C + ((_n) * 0x40)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_RDT_REG
+name|E1000_RDH
 parameter_list|(
 name|_n
 parameter_list|)
-value|(E1000_RDT + (_n<< 8))
+value|((_n)< 4 ? (0x02810 + ((_n) * 0x100)) : (0x0C010 + ((_n) * 0x40)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_RXDCTL_REG
+name|E1000_RDT
 parameter_list|(
 name|_n
 parameter_list|)
-value|(E1000_RXDCTL + (_n<< 8))
+value|((_n)< 4 ? (0x02818 + ((_n) * 0x100)) : (0x0C018 + ((_n) * 0x40)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_TDBAL_REG
+name|E1000_RXDCTL
 parameter_list|(
 name|_n
 parameter_list|)
-value|(E1000_TDBAL + (_n<< 8))
+value|((_n)< 4 ? (0x02828 + ((_n) * 0x100)) : (0x0C028 + ((_n) * 0x40)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_TDBAH_REG
+name|E1000_TDBAL
 parameter_list|(
 name|_n
 parameter_list|)
-value|(E1000_TDBAH + (_n<< 8))
+value|((_n)< 4 ? (0x03800 + ((_n) * 0x100)) : (0x0E000 + ((_n) * 0x40)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_TDLEN_REG
+name|E1000_TDBAH
 parameter_list|(
 name|_n
 parameter_list|)
-value|(E1000_TDLEN + (_n<< 8))
+value|((_n)< 4 ? (0x03804 + ((_n) * 0x100)) : (0x0E004 + ((_n) * 0x40)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_TDH_REG
+name|E1000_TDLEN
 parameter_list|(
 name|_n
 parameter_list|)
-value|(E1000_TDH + (_n<< 8))
+value|((_n)< 4 ? (0x03808 + ((_n) * 0x100)) : (0x0E008 + ((_n) * 0x40)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_TDT_REG
+name|E1000_TDH
 parameter_list|(
 name|_n
 parameter_list|)
-value|(E1000_TDT + (_n<< 8))
+value|((_n)< 4 ? (0x03810 + ((_n) * 0x100)) : (0x0E010 + ((_n) * 0x40)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_TXDCTL_REG
+name|E1000_TDT
 parameter_list|(
 name|_n
 parameter_list|)
-value|(E1000_TXDCTL + (_n<< 8))
+value|((_n)< 4 ? (0x03818 + ((_n) * 0x100)) : (0x0E018 + ((_n) * 0x40)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_TARC_REG
+name|E1000_TXDCTL
 parameter_list|(
 name|_n
 parameter_list|)
-value|(E1000_TARC0 + (_n<< 8))
+value|((_n)< 4 ? (0x03828 + ((_n) * 0x100)) : (0x0E028 + ((_n) * 0x40)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TARC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x03840 + (_n<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DCA_TXCTRL
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x03814 + (_n<< 8))
 end_define
 
 begin_define
@@ -1293,178 +969,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_DCA_RXCTRL0
-value|0x02814
+name|E1000_TDWBAL
+parameter_list|(
+name|_n
+parameter_list|)
+value|((_n)< 4 ? (0x03838 + ((_n) * 0x100)) : (0x0E038 + ((_n) * 0x40)))
 end_define
-
-begin_comment
-comment|/* RX Queue 0 DCA CTRL - RW */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|E1000_DCA_RXCTRL1
-value|0x02914
+name|E1000_TDWBAH
+parameter_list|(
+name|_n
+parameter_list|)
+value|((_n)< 4 ? (0x0383C + ((_n) * 0x100)) : (0x0E03C + ((_n) * 0x40)))
 end_define
-
-begin_comment
-comment|/* RX Queue 1 DCA CTRL - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDBAL2
-value|0x02A00
-end_define
-
-begin_comment
-comment|/* RX Descriptor Base Low Queue 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDBAH2
-value|0x02A04
-end_define
-
-begin_comment
-comment|/* RX Descriptor Base High Queue 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDLEN2
-value|0x02A08
-end_define
-
-begin_comment
-comment|/* RX Descriptor Length Queue 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDH2
-value|0x02A10
-end_define
-
-begin_comment
-comment|/* RX Descriptor Head Queue 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_DCA_RXCTRL2
-value|0x02A14
-end_define
-
-begin_comment
-comment|/* RX Queue 2 DCA CTRL - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDT2
-value|0x02A18
-end_define
-
-begin_comment
-comment|/* RX Descriptor Tail Queue 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDCTL2
-value|0x02A28
-end_define
-
-begin_comment
-comment|/* RX Descriptor Control queue 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDBAL3
-value|0x02B00
-end_define
-
-begin_comment
-comment|/* RX Descriptor Base Low Queue 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDBAH3
-value|0x02B04
-end_define
-
-begin_comment
-comment|/* RX Descriptor Base High Queue 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDLEN3
-value|0x02B08
-end_define
-
-begin_comment
-comment|/* RX Descriptor Length Queue 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDH3
-value|0x02B10
-end_define
-
-begin_comment
-comment|/* RX Descriptor Head Queue 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_DCA_RXCTRL3
-value|0x02B14
-end_define
-
-begin_comment
-comment|/* RX Queue 3 DCA Control - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RDT3
-value|0x02B18
-end_define
-
-begin_comment
-comment|/* RX Descriptor Tail Queue 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDCTL3
-value|0x02B28
-end_define
-
-begin_comment
-comment|/* RX Descriptor Control Queue 3 - RW */
-end_comment
 
 begin_define
 define|#
@@ -1634,133 +1154,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_TDBAL
-value|0x03800
-end_define
-
-begin_comment
-comment|/* TX Descriptor Base Address Low - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDBAH
-value|0x03804
-end_define
-
-begin_comment
-comment|/* TX Descriptor Base Address High - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDLEN
-value|0x03808
-end_define
-
-begin_comment
-comment|/* TX Descriptor Length - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDH
-value|0x03810
-end_define
-
-begin_comment
-comment|/* TX Descriptor Head - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDT
-value|0x03818
-end_define
-
-begin_comment
-comment|/* TX Descriptor Tail - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDBAL0
-value|E1000_TDBAL
-end_define
-
-begin_comment
-comment|/* TX Descriptor Base Address Low - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDBAH0
-value|E1000_TDBAH
-end_define
-
-begin_comment
-comment|/* TX Descriptor Base Address High - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDLEN0
-value|E1000_TDLEN
-end_define
-
-begin_comment
-comment|/* TX Descriptor Length - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDH0
-value|E1000_TDH
-end_define
-
-begin_comment
-comment|/* TX Descriptor Head - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDT0
-value|E1000_TDT
-end_define
-
-begin_comment
-comment|/* TX Descriptor Tail - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_TIDV
 value|0x03820
 end_define
 
 begin_comment
 comment|/* TX Interrupt Delay Value - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXDCTL
-value|0x03828
-end_define
-
-begin_comment
-comment|/* TX Descriptor Control - RW */
 end_comment
 
 begin_define
@@ -1783,388 +1182,6 @@ end_define
 
 begin_comment
 comment|/* TCP Segmentation PAD& Min Threshold - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TARC0
-value|0x03840
-end_define
-
-begin_comment
-comment|/* TX Arbitration Count (0) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_DCA_TXCTRL0
-value|0x03814
-end_define
-
-begin_comment
-comment|/* TX Queue 0 DCA CTRL - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDWBAL0
-value|0x03838
-end_define
-
-begin_comment
-comment|/* TX Desc. WB Addr Low Queue 0 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDWBAH0
-value|0x0383C
-end_define
-
-begin_comment
-comment|/* TX Desc. WB Addr High Queue 0 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_DCA_TXCTRL
-parameter_list|(
-name|_n
-parameter_list|)
-value|(E1000_DCA_TXCTRL0 + (_n<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_TDWBAL_REG
-parameter_list|(
-name|_n
-parameter_list|)
-value|(E1000_TDWBAL0 + (_n<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_TDWBAH_REG
-parameter_list|(
-name|_n
-parameter_list|)
-value|(E1000_TDWBAH0 + (_n<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_TDBAL1
-value|0x03900
-end_define
-
-begin_comment
-comment|/* TX Desc Base Address Low (1) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDBAH1
-value|0x03904
-end_define
-
-begin_comment
-comment|/* TX Desc Base Address High (1) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDLEN1
-value|0x03908
-end_define
-
-begin_comment
-comment|/* TX Desc Length (1) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDH1
-value|0x03910
-end_define
-
-begin_comment
-comment|/* TX Desc Head (1) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDT1
-value|0x03918
-end_define
-
-begin_comment
-comment|/* TX Desc Tail (1) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXDCTL1
-value|0x03928
-end_define
-
-begin_comment
-comment|/* TX Descriptor Control (1) - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TARC1
-value|0x03940
-end_define
-
-begin_comment
-comment|/* TX Arbitration Count (1) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_DCA_TXCTRL1
-value|0x03914
-end_define
-
-begin_comment
-comment|/* TX Queue 0 DCA CTRL - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDWBAL1
-value|0x03938
-end_define
-
-begin_comment
-comment|/* TX Descriptor WB Addr Low Queue 1 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDWBAH1
-value|0x0393C
-end_define
-
-begin_comment
-comment|/* TX Descriptor WB Addr High Queue 1 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDBAL2
-value|0x03A00
-end_define
-
-begin_comment
-comment|/* TX Descriptor Base Low Queue 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDBAH2
-value|0x03A04
-end_define
-
-begin_comment
-comment|/* TX Descriptor Base High Queue 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDLEN2
-value|0x03A08
-end_define
-
-begin_comment
-comment|/* TX Descriptor Length Queue 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDH2
-value|0x03A10
-end_define
-
-begin_comment
-comment|/* TX Descriptor Head Queue 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_DCA_TXCTRL2
-value|0x03A14
-end_define
-
-begin_comment
-comment|/* TX Queue 2 DCA Control - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDT2
-value|0x03A18
-end_define
-
-begin_comment
-comment|/* TX Descriptor Tail Queue 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXDCTL2
-value|0x03A28
-end_define
-
-begin_comment
-comment|/* TX Descriptor Control 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDWBAL2
-value|0x03A38
-end_define
-
-begin_comment
-comment|/* TX Descriptor WB Addr Low Queue 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDWBAH2
-value|0x03A3C
-end_define
-
-begin_comment
-comment|/* TX Descriptor WB Addr High Queue 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDBAL3
-value|0x03B00
-end_define
-
-begin_comment
-comment|/* TX Descriptor Base Low Queue 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDBAH3
-value|0x03B04
-end_define
-
-begin_comment
-comment|/* TX Descriptor Base High Queue 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDLEN3
-value|0x03B08
-end_define
-
-begin_comment
-comment|/* TX Descriptor Length Queue 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDH3
-value|0x03B10
-end_define
-
-begin_comment
-comment|/* TX Descriptor Head Queue 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_DCA_TXCTRL3
-value|0x03B14
-end_define
-
-begin_comment
-comment|/* TX Queue 3 DCA Control - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDT3
-value|0x03B18
-end_define
-
-begin_comment
-comment|/* TX Descriptor Tail Queue 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXDCTL3
-value|0x03B28
-end_define
-
-begin_comment
-comment|/* TX Descriptor Control 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDWBAL3
-value|0x03B38
-end_define
-
-begin_comment
-comment|/* TX Descriptor WB Addr Low Queue 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TDWBAH3
-value|0x03B3C
-end_define
-
-begin_comment
-comment|/* TX Descriptor WB Addr High Queue 3 - RW */
 end_comment
 
 begin_define
@@ -3358,6 +2375,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_PBACL
+value|0x05B68
+end_define
+
+begin_comment
+comment|/* MSIx PBA Clear - Read/Write 1's to clear */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_FFLT
 value|0x05F00
 end_define
@@ -3676,118 +2704,25 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_MSIXBM0
-value|0x01600
+name|E1000_MSIXBM
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x01600 + ((_i) * 4))
 end_define
 
 begin_comment
-comment|/* MSI-X Allocation Register 0 - RW */
+comment|/* MSI-X Allocation Register (_i) - RW */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|E1000_MSIXBM1
-value|0x01604
-end_define
-
-begin_comment
-comment|/* MSI-X Allocation Register 1 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXBM2
-value|0x01608
-end_define
-
-begin_comment
-comment|/* MSI-X Allocation Register 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXBM3
-value|0x0160C
-end_define
-
-begin_comment
-comment|/* MSI-X Allocation Register 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXBM4
-value|0x01610
-end_define
-
-begin_comment
-comment|/* MSI-X Allocation Register 4 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXBM5
-value|0x01614
-end_define
-
-begin_comment
-comment|/* MSI-X Allocation Register 5 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXBM6
-value|0x01618
-end_define
-
-begin_comment
-comment|/* MSI-X Allocation Register 6 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXBM7
-value|0x0161C
-end_define
-
-begin_comment
-comment|/* MSI-X Allocation Register 7 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXBM8
-value|0x01620
-end_define
-
-begin_comment
-comment|/* MSI-X Allocation Register 8 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXBM9
-value|0x01624
-end_define
-
-begin_comment
-comment|/* MSI-X Allocation Register 9 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTADD0
-value|0x0C000
+name|E1000_MSIXTADD
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x0C000 + ((_i) * 0x10))
 end_define
 
 begin_comment
@@ -3797,107 +2732,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_MSIXTADD1
-value|0x0C010
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr low reg 1 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTADD2
-value|0x0C020
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr low reg 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTADD3
-value|0x0C030
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr low reg 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTADD4
-value|0x0C040
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr low reg 4 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTADD5
-value|0x0C050
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr low reg 5 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTADD6
-value|0x0C060
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr low reg 6 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTADD7
-value|0x0C070
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr low reg 7 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTADD8
-value|0x0C080
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr low reg 8 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTADD9
-value|0x0C090
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr low reg 9 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTUADD0
-value|0x0C004
+name|E1000_MSIXTUADD
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x0C004 + ((_i) * 0x10))
 end_define
 
 begin_comment
@@ -3907,107 +2746,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_MSIXTUADD1
-value|0x0C014
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr upper reg 1 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTUADD2
-value|0x0C024
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr upper reg 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTUADD3
-value|0x0C034
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr upper reg 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTUADD4
-value|0x0C044
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr upper reg 4 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTUADD5
-value|0x0C054
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr upper reg 5 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTUADD6
-value|0x0C064
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr upper reg 6 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTUADD7
-value|0x0C074
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr upper reg 7 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTUADD8
-value|0x0C084
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr upper reg 8 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTUADD9
-value|0x0C094
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry addr upper reg 9 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTMSG0
-value|0x0C008
+name|E1000_MSIXTMSG
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x0C008 + ((_i) * 0x10))
 end_define
 
 begin_comment
@@ -4017,210 +2760,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_MSIXTMSG1
-value|0x0C018
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry message reg 1 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTMSG2
-value|0x0C028
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry message reg 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTMSG3
-value|0x0C038
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry message reg 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTMSG4
-value|0x0C048
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry message reg 4 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTMSG5
-value|0x0C058
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry message reg 5 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTMSG6
-value|0x0C068
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry message reg 6 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTMSG7
-value|0x0C078
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry message reg 7 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTMSG8
-value|0x0C088
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry message reg 8 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXTMSG9
-value|0x0C098
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry message reg 9 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXVCTRL0
-value|0x0C00C
+name|E1000_MSIXVCTRL
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x0C00C + ((_i) * 0x10))
 end_define
 
 begin_comment
 comment|/* MSI-X Table entry vector ctrl reg 0 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXVCTRL1
-value|0x0C01C
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry vector ctrl reg 1 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXVCTRL2
-value|0x0C02C
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry vector ctrl reg 2 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXVCTRL3
-value|0x0C03C
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry vector ctrl reg 3 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXVCTRL4
-value|0x0C04C
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry vector ctrl reg 4 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXVCTRL5
-value|0x0C05C
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry vector ctrl reg 5 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXVCTRL6
-value|0x0C06C
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry vector ctrl reg 6 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXVCTRL7
-value|0x0C07C
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry vector ctrl reg 7 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXVCTRL8
-value|0x0C08C
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry vector ctrl reg 8 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_MSIXVCTRL9
-value|0x0C09C
-end_define
-
-begin_comment
-comment|/* MSI-X Table entry vector ctrl reg 9 - RW */
 end_comment
 
 begin_define
@@ -4238,7 +2786,10 @@ begin_define
 define|#
 directive|define
 name|E1000_RETA
-value|0x05C00
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x05C00 + ((_i) * 4))
 end_define
 
 begin_comment
@@ -4249,7 +2800,10 @@ begin_define
 define|#
 directive|define
 name|E1000_RSSRK
-value|0x05C80
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x05C80 + ((_i) * 4))
 end_define
 
 begin_comment

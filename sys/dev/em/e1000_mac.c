@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include
@@ -372,12 +372,14 @@ name|E1000_STATUS_FUNC_SHIFT
 expr_stmt|;
 block|}
 else|else
+block|{
 name|bus
 operator|->
 name|func
 operator|=
 literal|0
 expr_stmt|;
+block|}
 return|return
 name|E1000_SUCCESS
 return|;
@@ -601,6 +603,274 @@ block|}
 end_function
 
 begin_comment
+comment|/**  *  e1000_check_alt_mac_addr_generic - Check for alternate MAC addr  *  @hw: pointer to the HW structure  *  *  Checks the nvm for an alternate MAC address.  An alternate MAC address  *  can be setup by pre-boot software and must be treated like a permanent  *  address and must override the actual permanent MAC address.  If an  *  alternate MAC address is fopund it is saved in the hw struct and  *  prgrammed into RAR0 and the cuntion returns success, otherwise the  *  fucntion returns an error.  **/
+end_comment
+
+begin_function
+name|s32
+name|e1000_check_alt_mac_addr_generic
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|u32
+name|i
+decl_stmt|;
+name|s32
+name|ret_val
+init|=
+name|E1000_SUCCESS
+decl_stmt|;
+name|u16
+name|offset
+decl_stmt|,
+name|nvm_alt_mac_addr_offset
+decl_stmt|,
+name|nvm_data
+decl_stmt|;
+name|u8
+name|alt_mac_addr
+index|[
+name|ETH_ADDR_LEN
+index|]
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_check_alt_mac_addr_generic"
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+name|e1000_read_nvm
+argument_list|(
+name|hw
+argument_list|,
+name|NVM_ALT_MAC_ADDR_PTR
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|nvm_alt_mac_addr_offset
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"NVM Read Error\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|nvm_alt_mac_addr_offset
+operator|==
+literal|0xFFFF
+condition|)
+block|{
+name|ret_val
+operator|=
+operator|-
+operator|(
+name|E1000_NOT_IMPLEMENTED
+operator|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|hw
+operator|->
+name|bus
+operator|.
+name|func
+operator|==
+name|E1000_FUNC_1
+condition|)
+name|nvm_alt_mac_addr_offset
+operator|+=
+name|ETH_ADDR_LEN
+operator|/
+sizeof|sizeof
+argument_list|(
+name|u16
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ETH_ADDR_LEN
+condition|;
+name|i
+operator|+=
+literal|2
+control|)
+block|{
+name|offset
+operator|=
+name|nvm_alt_mac_addr_offset
+operator|+
+operator|(
+name|i
+operator|>>
+literal|1
+operator|)
+expr_stmt|;
+name|ret_val
+operator|=
+name|e1000_read_nvm
+argument_list|(
+name|hw
+argument_list|,
+name|offset
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|nvm_data
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"NVM Read Error\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+name|alt_mac_addr
+index|[
+name|i
+index|]
+operator|=
+call|(
+name|u8
+call|)
+argument_list|(
+name|nvm_data
+operator|&
+literal|0xFF
+argument_list|)
+expr_stmt|;
+name|alt_mac_addr
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|=
+call|(
+name|u8
+call|)
+argument_list|(
+name|nvm_data
+operator|>>
+literal|8
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* if multicast bit is set, the alternate address will not be used */
+if|if
+condition|(
+name|alt_mac_addr
+index|[
+literal|0
+index|]
+operator|&
+literal|0x01
+condition|)
+block|{
+name|ret_val
+operator|=
+operator|-
+operator|(
+name|E1000_NOT_IMPLEMENTED
+operator|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ETH_ADDR_LEN
+condition|;
+name|i
+operator|++
+control|)
+name|hw
+operator|->
+name|mac
+operator|.
+name|addr
+index|[
+name|i
+index|]
+operator|=
+name|hw
+operator|->
+name|mac
+operator|.
+name|perm_addr
+index|[
+name|i
+index|]
+operator|=
+name|alt_mac_addr
+index|[
+name|i
+index|]
+expr_stmt|;
+name|e1000_rar_set
+argument_list|(
+name|hw
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|perm_addr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|out
+label|:
+return|return
+name|ret_val
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  *  e1000_rar_set_generic - Set receive address register  *  @hw: pointer to the HW structure  *  @addr: pointer to the receive address  *  @index: receive address array register  *  *  Sets the receive address array register at index to the address passed  *  in by addr.  **/
 end_comment
 
@@ -631,7 +901,7 @@ argument_list|(
 literal|"e1000_rar_set_generic"
 argument_list|)
 expr_stmt|;
-comment|/* HW expects these in little endian so we reverse the byte order 	 * from network order (big endian) to little endian 	 */
+comment|/* 	 * HW expects these in little endian so we reverse the byte order 	 * from network order (big endian) to little endian 	 */
 name|rar_low
 operator|=
 operator|(
@@ -783,7 +1053,7 @@ argument_list|(
 literal|"e1000_mta_set_generic"
 argument_list|)
 expr_stmt|;
-comment|/* The MTA is a register array of 32-bit registers. It is 	 * treated like an array of (32*mta_reg_count) bits.  We want to 	 * set bit BitArray[hash_value]. So we figure out what register 	 * the bit is in, read it, OR in the new bit, then write 	 * back the new value.  The (hw->mac.mta_reg_count - 1) serves as a 	 * mask to bits 31:5 of the hash value which gives us the 	 * register we're modifying.  The hash bit within that register 	 * is determined by the lower 5 bits of the hash value. 	 */
+comment|/* 	 * The MTA is a register array of 32-bit registers. It is 	 * treated like an array of (32*mta_reg_count) bits.  We want to 	 * set bit BitArray[hash_value]. So we figure out what register 	 * the bit is in, read it, OR in the new bit, then write 	 * back the new value.  The (hw->mac.mta_reg_count - 1) serves as a 	 * mask to bits 31:5 of the hash value which gives us the 	 * register we're modifying.  The hash bit within that register 	 * is determined by the lower 5 bits of the hash value. 	 */
 name|hash_reg
 operator|=
 operator|(
@@ -847,12 +1117,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_mc_addr_list_update_generic - Update Multicast addresses  *  @hw: pointer to the HW structure  *  @mc_addr_list: array of multicast addresses to program  *  @mc_addr_count: number of multicast addresses to program  *  @rar_used_count: the first RAR register free to program  *  @rar_count: total number of supported Receive Address Registers  *  *  Updates the Receive Address Registers and Multicast Table Array.  *  The caller must have a packed mc_addr_list of multicast addresses.  *  The parameter rar_count will usually be hw->mac.rar_entry_count  *  unless there are workarounds that change this.  **/
+comment|/**  *  e1000_update_mc_addr_list_generic - Update Multicast addresses  *  @hw: pointer to the HW structure  *  @mc_addr_list: array of multicast addresses to program  *  @mc_addr_count: number of multicast addresses to program  *  @rar_used_count: the first RAR register free to program  *  @rar_count: total number of supported Receive Address Registers  *  *  Updates the Receive Address Registers and Multicast Table Array.  *  The caller must have a packed mc_addr_list of multicast addresses.  *  The parameter rar_count will usually be hw->mac.rar_entry_count  *  unless there are workarounds that change this.  **/
 end_comment
 
 begin_function
 name|void
-name|e1000_mc_addr_list_update_generic
+name|e1000_update_mc_addr_list_generic
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -881,10 +1151,10 @@ name|i
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
-literal|"e1000_mc_addr_list_update_generic"
+literal|"e1000_update_mc_addr_list_generic"
 argument_list|)
 expr_stmt|;
-comment|/* Load the first set of multicast addresses into the exact 	 * filters (RAR).  If there are not enough to fill the RAR 	 * array, clear the filters. 	 */
+comment|/* 	 * Load the first set of multicast addresses into the exact 	 * filters (RAR).  If there are not enough to fill the RAR 	 * array, clear the filters. 	 */
 for|for
 control|(
 name|i
@@ -1097,7 +1367,7 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-comment|/* For a mc_filter_type of 0, bit_shift is the number of left-shifts 	 * where 0xFF would still fall within the hash mask. */
+comment|/* 	 * For a mc_filter_type of 0, bit_shift is the number of left-shifts 	 * where 0xFF would still fall within the hash mask. 	 */
 while|while
 condition|(
 name|hash_mask
@@ -1109,8 +1379,7 @@ condition|)
 name|bit_shift
 operator|++
 expr_stmt|;
-comment|/* The portion of the address that is used for the hash table 	 * is determined by the mc_filter_type setting. 	 * The algorithm is such that there is a total of 8 bits of shifting. 	 * The bit_shift for a mc_filter_type of 0 represents the number of 	 * left-shifts where the MSB of mc_addr[5] would still fall within 	 * the hash_mask.  Case 0 does this exactly.  Since there are a total 	 * of 8 bits of shifting, then mc_addr[4] will shift right the 	 * remaining number of bits. Thus 8 - bit_shift.  The rest of the 	 * cases are a variation of this algorithm...essentially raising the 	 * number of bits to shift mc_addr[5] left, while still keeping the 	 * 8-bit shifting total. 	 */
-comment|/* For example, given the following Destination MAC Address and an 	 * mta register count of 128 (thus a 4096-bit vector and 0xFFF mask), 	 * we can see that the bit_shift for case 0 is 4.  These are the hash 	 * values resulting from each mc_filter_type... 	 * [0] [1] [2] [3] [4] [5] 	 * 01  AA  00  12  34  56 	 * LSB                 MSB 	 * 	 * case 0: hash_value = ((0x34>> 4) | (0x56<< 4))& 0xFFF = 0x563 	 * case 1: hash_value = ((0x34>> 3) | (0x56<< 5))& 0xFFF = 0xAC6 	 * case 2: hash_value = ((0x34>> 2) | (0x56<< 6))& 0xFFF = 0x163 	 * case 3: hash_value = ((0x34>> 0) | (0x56<< 8))& 0xFFF = 0x634 	 */
+comment|/* 	 * The portion of the address that is used for the hash table 	 * is determined by the mc_filter_type setting. 	 * The algorithm is such that there is a total of 8 bits of shifting. 	 * The bit_shift for a mc_filter_type of 0 represents the number of 	 * left-shifts where the MSB of mc_addr[5] would still fall within 	 * the hash_mask.  Case 0 does this exactly.  Since there are a total 	 * of 8 bits of shifting, then mc_addr[4] will shift right the 	 * remaining number of bits. Thus 8 - bit_shift.  The rest of the 	 * cases are a variation of this algorithm...essentially raising the 	 * number of bits to shift mc_addr[5] left, while still keeping the 	 * 8-bit shifting total. 	 * 	 * For example, given the following Destination MAC Address and an 	 * mta register count of 128 (thus a 4096-bit vector and 0xFFF mask), 	 * we can see that the bit_shift for case 0 is 4.  These are the hash 	 * values resulting from each mc_filter_type... 	 * [0] [1] [2] [3] [4] [5] 	 * 01  AA  00  12  34  56 	 * LSB                 MSB 	 * 	 * case 0: hash_value = ((0x34>> 4) | (0x56<< 4))& 0xFFF = 0x563 	 * case 1: hash_value = ((0x34>> 3) | (0x56<< 5))& 0xFFF = 0xAC6 	 * case 2: hash_value = ((0x34>> 2) | (0x56<< 6))& 0xFFF = 0x163 	 * case 3: hash_value = ((0x34>> 0) | (0x56<< 8))& 0xFFF = 0x634 	 */
 switch|switch
 condition|(
 name|hw
@@ -1702,7 +1971,7 @@ decl_stmt|;
 name|s32
 name|ret_val
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 name|DEBUGFUNC
@@ -1710,7 +1979,7 @@ argument_list|(
 literal|"e1000_check_for_copper_link"
 argument_list|)
 expr_stmt|;
-comment|/* We only want to go out to the PHY registers to see if Auto-Neg 	 * has completed and/or if our link status has changed.  The 	 * get_link_status flag is set upon receiving a Link Status 	 * Change or Rx Sequence Error interrupt. 	 */
+comment|/* 	 * We only want to go out to the PHY registers to see if Auto-Neg 	 * has completed and/or if our link status has changed.  The 	 * get_link_status flag is set upon receiving a Link Status 	 * Change or Rx Sequence Error interrupt. 	 */
 if|if
 condition|(
 operator|!
@@ -1727,7 +1996,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* First we want to see if the MII Status Register reports 	 * link.  If so, then we want to get the current speed/duplex 	 * of the PHY. 	 */
+comment|/* 	 * First we want to see if the MII Status Register reports 	 * link.  If so, then we want to get the current speed/duplex 	 * of the PHY. 	 */
 name|ret_val
 operator|=
 name|e1000_phy_has_link_generic
@@ -1764,13 +2033,13 @@ name|get_link_status
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* Check if there was DownShift, must be checked 	 * immediately after link-up */
+comment|/* 	 * Check if there was DownShift, must be checked 	 * immediately after link-up 	 */
 name|e1000_check_downshift_generic
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* If we are forcing speed/duplex, then we simply return since 	 * we have already determined whether we have link or not. 	 */
+comment|/* 	 * If we are forcing speed/duplex, then we simply return since 	 * we have already determined whether we have link or not. 	 */
 if|if
 condition|(
 operator|!
@@ -1788,13 +2057,13 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Auto-Neg is enabled.  Auto Speed Detection takes care 	 * of MAC speed/duplex configuration.  So we only need to 	 * configure Collision Distance in the MAC. 	 */
+comment|/* 	 * Auto-Neg is enabled.  Auto Speed Detection takes care 	 * of MAC speed/duplex configuration.  So we only need to 	 * configure Collision Distance in the MAC. 	 */
 name|e1000_config_collision_dist_generic
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Configure Flow Control now that Auto-Neg has completed. 	 * First, we need to restore the desired flow control 	 * settings because we may have had to re-autoneg with a 	 * different link partner. 	 */
+comment|/* 	 * Configure Flow Control now that Auto-Neg has completed. 	 * First, we need to restore the desired flow control 	 * settings because we may have had to re-autoneg with a 	 * different link partner. 	 */
 name|ret_val
 operator|=
 name|e1000_config_fc_after_link_up_generic
@@ -1891,7 +2160,7 @@ argument_list|,
 name|E1000_RXCW
 argument_list|)
 expr_stmt|;
-comment|/* If we don't have link (auto-negotiation failed or link partner 	 * cannot auto-negotiate), the cable is plugged in (we have signal), 	 * and our link partner is not trying to auto-negotiate with us (we 	 * are receiving idles or data), we need to force link up. We also 	 * need to give auto-negotiation time to complete, in case the cable 	 * was just plugged in. The autoneg_failed flag does this. 	 */
+comment|/* 	 * If we don't have link (auto-negotiation failed or link partner 	 * cannot auto-negotiate), the cable is plugged in (we have signal), 	 * and our link partner is not trying to auto-negotiate with us (we 	 * are receiving idles or data), we need to force link up. We also 	 * need to give auto-negotiation time to complete, in case the cable 	 * was just plugged in. The autoneg_failed flag does this. 	 */
 comment|/* (ctrl& E1000_CTRL_SWDPIN1) == 1 == have signal */
 if|if
 condition|(
@@ -2027,7 +2296,7 @@ name|E1000_RXCW_C
 operator|)
 condition|)
 block|{
-comment|/* If we are forcing link and we are receiving /C/ ordered 		 * sets, re-enable auto-negotiation in the TXCW register 		 * and disable forced link in the Device Control register 		 * in an attempt to auto-negotiate with our link partner. 		 */
+comment|/* 		 * If we are forcing link and we are receiving /C/ ordered 		 * sets, re-enable auto-negotiation in the TXCW register 		 * and disable forced link in the Device Control register 		 * in an attempt to auto-negotiate with our link partner. 		 */
 name|DEBUGOUT
 argument_list|(
 literal|"RXing /C/, enable AutoNeg and stop forcing link.\n"
@@ -2143,7 +2412,7 @@ argument_list|,
 name|E1000_RXCW
 argument_list|)
 expr_stmt|;
-comment|/* If we don't have link (auto-negotiation failed or link partner 	 * cannot auto-negotiate), and our link partner is not trying to 	 * auto-negotiate with us (we are receiving idles or data), 	 * we need to force link up. We also need to give auto-negotiation 	 * time to complete. 	 */
+comment|/* 	 * If we don't have link (auto-negotiation failed or link partner 	 * cannot auto-negotiate), and our link partner is not trying to 	 * auto-negotiate with us (we are receiving idles or data), 	 * we need to force link up. We also need to give auto-negotiation 	 * time to complete. 	 */
 comment|/* (ctrl& E1000_CTRL_SWDPIN1) == 1 == have signal */
 if|if
 condition|(
@@ -2273,7 +2542,7 @@ name|E1000_RXCW_C
 operator|)
 condition|)
 block|{
-comment|/* If we are forcing link and we are receiving /C/ ordered 		 * sets, re-enable auto-negotiation in the TXCW register 		 * and disable forced link in the Device Control register 		 * in an attempt to auto-negotiate with our link partner. 		 */
+comment|/* 		 * If we are forcing link and we are receiving /C/ ordered 		 * sets, re-enable auto-negotiation in the TXCW register 		 * and disable forced link in the Device Control register 		 * in an attempt to auto-negotiate with our link partner. 		 */
 name|DEBUGOUT
 argument_list|(
 literal|"RXing /C/, enable AutoNeg and stop forcing link.\n"
@@ -2327,7 +2596,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* If we force link for non-auto-negotiation switch, check 		 * link status based on MAC synchronization for internal 		 * serdes media type. 		 */
+comment|/* 		 * If we force link for non-auto-negotiation switch, check 		 * link status based on MAC synchronization for internal 		 * serdes media type. 		 */
 comment|/* SYNCH bit and IV bit are sticky. */
 name|usec_delay
 argument_list|(
@@ -2443,16 +2712,6 @@ name|hw
 parameter_list|)
 block|{
 name|struct
-name|e1000_mac_info
-modifier|*
-name|mac
-init|=
-operator|&
-name|hw
-operator|->
-name|mac
-decl_stmt|;
-name|struct
 name|e1000_functions
 modifier|*
 name|func
@@ -2472,7 +2731,7 @@ argument_list|(
 literal|"e1000_setup_link_generic"
 argument_list|)
 expr_stmt|;
-comment|/* In the case of the phy reset being blocked, we already have a link. 	 * We do not need to set it up again. 	 */
+comment|/* 	 * In the case of the phy reset being blocked, we already have a link. 	 * We do not need to set it up again. 	 */
 if|if
 condition|(
 name|e1000_check_reset_block
@@ -2497,22 +2756,28 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* We want to save off the original Flow Control configuration just 	 * in case we get disconnected and then reconnected into a different 	 * hub or switch with different Flow Control capabilities. 	 */
-name|mac
-operator|->
-name|original_fc
-operator|=
-name|mac
+comment|/* 	 * We want to save off the original Flow Control configuration just 	 * in case we get disconnected and then reconnected into a different 	 * hub or switch with different Flow Control capabilities. 	 */
+name|hw
 operator|->
 name|fc
+operator|.
+name|original_type
+operator|=
+name|hw
+operator|->
+name|fc
+operator|.
+name|type
 expr_stmt|;
 name|DEBUGOUT1
 argument_list|(
 literal|"After fix-ups FlowControl is now = %x\n"
 argument_list|,
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 argument_list|)
 expr_stmt|;
 comment|/* Call the necessary media_type subroutine to configure the link. */
@@ -2532,7 +2797,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Initialize the flow control address, type, and PAUSE timer 	 * registers to their default values.  This is done even if flow 	 * control is disabled, because it does not hurt anything to 	 * initialize these registers. 	 */
+comment|/* 	 * Initialize the flow control address, type, and PAUSE timer 	 * registers to their default values.  This is done even if flow 	 * control is disabled, because it does not hurt anything to 	 * initialize these registers. 	 */
 name|DEBUGOUT
 argument_list|(
 literal|"Initializing the Flow Control address, type and timer regs\n"
@@ -2571,9 +2836,11 @@ name|hw
 argument_list|,
 name|E1000_FCTTV
 argument_list|,
-name|mac
+name|hw
 operator|->
-name|fc_pause_time
+name|fc
+operator|.
+name|pause_time
 argument_list|)
 expr_stmt|;
 name|ret_val
@@ -2652,7 +2919,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Since auto-negotiation is enabled, take the link out of reset (the 	 * link will be in reset, because we previously reset the chip). This 	 * will restart auto-negotiation.  If auto-negotiation is successful 	 * then the link-up status bit will be set and the flow control enable 	 * bits (RFCE and TFCE) will be set according to their negotiated value. 	 */
+comment|/* 	 * Since auto-negotiation is enabled, take the link out of reset (the 	 * link will be in reset, because we previously reset the chip). This 	 * will restart auto-negotiation.  If auto-negotiation is successful 	 * then the link-up status bit will be set and the flow control enable 	 * bits (RFCE and TFCE) will be set according to their negotiated value. 	 */
 name|DEBUGOUT
 argument_list|(
 literal|"Auto-negotiation enabled\n"
@@ -2677,11 +2944,13 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* For these adapters, the SW defineable pin 1 is set when the optics 	 * detect a signal.  If we have a signal, then poll for a "Link-Up" 	 * indication. 	 */
+comment|/* 	 * For these adapters, the SW defineable pin 1 is set when the optics 	 * detect a signal.  If we have a signal, then poll for a "Link-Up" 	 * indication. 	 */
 if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_internal_serdes
@@ -2820,7 +3089,7 @@ argument_list|(
 literal|"e1000_poll_fiber_serdes_link_generic"
 argument_list|)
 expr_stmt|;
-comment|/* If we have a signal (the cable is plugged in, or assumed true for 	 * serdes media) then poll for a "Link-Up" indication in the Device 	 * Status Register.  Time-out if a link isn't seen in 500 milliseconds 	 * seconds (Auto-negotiation should complete in less than 500 	 * milliseconds even if the other end is doing it in SW). 	 */
+comment|/* 	 * If we have a signal (the cable is plugged in, or assumed true for 	 * serdes media) then poll for a "Link-Up" indication in the Device 	 * Status Register.  Time-out if a link isn't seen in 500 milliseconds 	 * seconds (Auto-negotiation should complete in less than 500 	 * milliseconds even if the other end is doing it in SW). 	 */
 for|for
 control|(
 name|i
@@ -2875,7 +3144,7 @@ name|autoneg_failed
 operator|=
 literal|1
 expr_stmt|;
-comment|/* AutoNeg failed to achieve a link, so we'll call 		 * mac->check_for_link. This routine will force the 		 * link up if we detect a signal. This will allow us to 		 * communicate with non-autonegotiating link partners. 		 */
+comment|/* 		 * AutoNeg failed to achieve a link, so we'll call 		 * mac->check_for_link. This routine will force the 		 * link up if we detect a signal. This will allow us to 		 * communicate with non-autonegotiating link partners. 		 */
 name|ret_val
 operator|=
 name|e1000_check_for_link
@@ -2963,12 +3232,14 @@ argument_list|(
 literal|"e1000_commit_fc_settings_generic"
 argument_list|)
 expr_stmt|;
-comment|/* Check for a software override of the flow control settings, and 	 * setup the device accordingly.  If auto-negotiation is enabled, then 	 * software will have to set the "PAUSE" bits to the correct value in 	 * the Transmit Config Word Register (TXCW) and re-start auto- 	 * negotiation.  However, if auto-negotiation is disabled, then 	 * software will have to manually configure the two flow control enable 	 * bits in the CTRL register. 	 * 	 * The possible values of the "fc" parameter are: 	 *      0:  Flow control is completely disabled 	 *      1:  Rx flow control is enabled (we can receive pause frames, 	 *          but not send pause frames). 	 *      2:  Tx flow control is enabled (we can send pause frames but we 	 *          do not support receiving pause frames). 	 *      3:  Both Rx and TX flow control (symmetric) are enabled. 	 */
+comment|/* 	 * Check for a software override of the flow control settings, and 	 * setup the device accordingly.  If auto-negotiation is enabled, then 	 * software will have to set the "PAUSE" bits to the correct value in 	 * the Transmit Config Word Register (TXCW) and re-start auto- 	 * negotiation.  However, if auto-negotiation is disabled, then 	 * software will have to manually configure the two flow control enable 	 * bits in the CTRL register. 	 * 	 * The possible values of the "fc" parameter are: 	 *      0:  Flow control is completely disabled 	 *      1:  Rx flow control is enabled (we can receive pause frames, 	 *          but not send pause frames). 	 *      2:  Tx flow control is enabled (we can send pause frames but we 	 *          do not support receiving pause frames). 	 *      3:  Both Rx and TX flow control (symmetric) are enabled. 	 */
 switch|switch
 condition|(
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 condition|)
 block|{
 case|case
@@ -2987,7 +3258,7 @@ break|break;
 case|case
 name|e1000_fc_rx_pause
 case|:
-comment|/* RX Flow control is enabled and TX Flow control is disabled 		 * by a software over-ride. Since there really isn't a way to 		 * advertise that we are capable of RX Pause ONLY, we will 		 * advertise that we support both symmetric and asymmetric RX 		 * PAUSE.  Later, we will disable the adapter's ability to send 		 * PAUSE frames. 		 */
+comment|/* 		 * RX Flow control is enabled and TX Flow control is disabled 		 * by a software over-ride. Since there really isn't a way to 		 * advertise that we are capable of RX Pause ONLY, we will 		 * advertise that we support both symmetric and asymmetric RX 		 * PAUSE.  Later, we will disable the adapter's ability to send 		 * PAUSE frames. 		 */
 name|txcw
 operator|=
 operator|(
@@ -3002,7 +3273,7 @@ break|break;
 case|case
 name|e1000_fc_tx_pause
 case|:
-comment|/* TX Flow control is enabled, and RX Flow control is disabled, 		 * by a software over-ride. 		 */
+comment|/* 		 * TX Flow control is enabled, and RX Flow control is disabled, 		 * by a software over-ride. 		 */
 name|txcw
 operator|=
 operator|(
@@ -3017,7 +3288,7 @@ break|break;
 case|case
 name|e1000_fc_full
 case|:
-comment|/* Flow control (both RX and TX) is enabled by a software 		 * over-ride. 		 */
+comment|/* 		 * Flow control (both RX and TX) is enabled by a software 		 * over-ride. 		 */
 name|txcw
 operator|=
 operator|(
@@ -3082,16 +3353,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-name|struct
-name|e1000_mac_info
-modifier|*
-name|mac
-init|=
-operator|&
-name|hw
-operator|->
-name|mac
-decl_stmt|;
 name|s32
 name|ret_val
 init|=
@@ -3111,28 +3372,34 @@ argument_list|(
 literal|"e1000_set_fc_watermarks_generic"
 argument_list|)
 expr_stmt|;
-comment|/* Set the flow control receive threshold registers.  Normally, 	 * these registers will be set to a default threshold that may be 	 * adjusted later by the driver's runtime code.  However, if the 	 * ability to transmit pause frames is not enabled, then these 	 * registers will be set to 0. 	 */
+comment|/* 	 * Set the flow control receive threshold registers.  Normally, 	 * these registers will be set to a default threshold that may be 	 * adjusted later by the driver's runtime code.  However, if the 	 * ability to transmit pause frames is not enabled, then these 	 * registers will be set to 0. 	 */
 if|if
 condition|(
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|&
 name|e1000_fc_tx_pause
 condition|)
 block|{
-comment|/* We need to set up the Receive Threshold high and low water 		 * marks as well as (optionally) enabling the transmission of 		 * XON frames. 		 */
+comment|/* 		 * We need to set up the Receive Threshold high and low water 		 * marks as well as (optionally) enabling the transmission of 		 * XON frames. 		 */
 name|fcrtl
 operator|=
-name|mac
+name|hw
 operator|->
-name|fc_low_water
+name|fc
+operator|.
+name|low_water
 expr_stmt|;
 if|if
 condition|(
-name|mac
+name|hw
 operator|->
-name|fc_send_xon
+name|fc
+operator|.
+name|send_xon
 condition|)
 name|fcrtl
 operator||=
@@ -3140,9 +3407,11 @@ name|E1000_FCRTL_XONE
 expr_stmt|;
 name|fcrth
 operator|=
-name|mac
+name|hw
 operator|->
-name|fc_high_water
+name|fc
+operator|.
+name|high_water
 expr_stmt|;
 block|}
 name|E1000_WRITE_REG
@@ -3183,16 +3452,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-name|struct
-name|e1000_mac_info
-modifier|*
-name|mac
-init|=
-operator|&
-name|hw
-operator|->
-name|mac
-decl_stmt|;
 name|s32
 name|ret_val
 init|=
@@ -3206,18 +3465,7 @@ argument_list|(
 literal|"e1000_set_default_fc_generic"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mac
-operator|->
-name|fc
-operator|!=
-name|e1000_fc_default
-condition|)
-goto|goto
-name|out
-goto|;
-comment|/* Read and store word 0x0F of the EEPROM. This word contains bits 	 * that determine the hardware's default PAUSE (flow control) mode, 	 * a bit that determines whether the HW defaults to enabling or 	 * disabling auto-negotiation, and the direction of the 	 * SW defined pins. If there is no SW over-ride of the flow 	 * control setting, then the variable hw->fc will 	 * be initialized based on a value in the EEPROM. 	 */
+comment|/* 	 * Read and store word 0x0F of the EEPROM. This word contains bits 	 * that determine the hardware's default PAUSE (flow control) mode, 	 * a bit that determines whether the HW defaults to enabling or 	 * disabling auto-negotiation, and the direction of the 	 * SW defined pins. If there is no SW over-ride of the flow 	 * control setting, then the variable hw->fc will 	 * be initialized based on a value in the EEPROM. 	 */
 name|ret_val
 operator|=
 name|e1000_read_nvm
@@ -3256,9 +3504,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|=
 name|e1000_fc_none
 expr_stmt|;
@@ -3273,16 +3523,20 @@ operator|)
 operator|==
 name|NVM_WORD0F_ASM_DIR
 condition|)
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|=
 name|e1000_fc_tx_pause
 expr_stmt|;
 else|else
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|=
 name|e1000_fc_full
 expr_stmt|;
@@ -3308,16 +3562,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-name|struct
-name|e1000_mac_info
-modifier|*
-name|mac
-init|=
-operator|&
-name|hw
-operator|->
-name|mac
-decl_stmt|;
 name|u32
 name|ctrl
 decl_stmt|;
@@ -3340,21 +3584,25 @@ argument_list|,
 name|E1000_CTRL
 argument_list|)
 expr_stmt|;
-comment|/* Because we didn't get link via the internal auto-negotiation 	 * mechanism (we either forced link or we got link via PHY 	 * auto-neg), we have to manually enable/disable transmit an 	 * receive flow control. 	 * 	 * The "Case" statement below enables/disable flow control 	 * according to the "mac->fc" parameter. 	 * 	 * The possible values of the "fc" parameter are: 	 *      0:  Flow control is completely disabled 	 *      1:  Rx flow control is enabled (we can receive pause 	 *          frames but not send pause frames). 	 *      2:  Tx flow control is enabled (we can send pause frames 	 *          frames but we do not receive pause frames). 	 *      3:  Both Rx and TX flow control (symmetric) is enabled. 	 *  other:  No other values should be possible at this point. 	 */
+comment|/* 	 * Because we didn't get link via the internal auto-negotiation 	 * mechanism (we either forced link or we got link via PHY 	 * auto-neg), we have to manually enable/disable transmit an 	 * receive flow control. 	 * 	 * The "Case" statement below enables/disable flow control 	 * according to the "hw->fc.type" parameter. 	 * 	 * The possible values of the "fc" parameter are: 	 *      0:  Flow control is completely disabled 	 *      1:  Rx flow control is enabled (we can receive pause 	 *          frames but not send pause frames). 	 *      2:  Tx flow control is enabled (we can send pause frames 	 *          frames but we do not receive pause frames). 	 *      3:  Both Rx and TX flow control (symmetric) is enabled. 	 *  other:  No other values should be possible at this point. 	 */
 name|DEBUGOUT1
 argument_list|(
-literal|"mac->fc = %u\n"
+literal|"hw->fc.type = %u\n"
 argument_list|,
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 condition|)
 block|{
 case|case
@@ -3492,7 +3740,7 @@ argument_list|(
 literal|"e1000_config_fc_after_link_up_generic"
 argument_list|)
 expr_stmt|;
-comment|/* Check for the case where we have fiber media and auto-neg failed 	 * so we had to force link.  In this case, we need to force the 	 * configuration of the MAC to match the "fc" parameter. 	 */
+comment|/* 	 * Check for the case where we have fiber media and auto-neg failed 	 * so we had to force link.  In this case, we need to force the 	 * configuration of the MAC to match the "fc" parameter. 	 */
 if|if
 condition|(
 name|mac
@@ -3504,12 +3752,16 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_fiber
 operator|||
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_internal_serdes
@@ -3528,6 +3780,8 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper
@@ -3554,12 +3808,14 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Check for the case where we have copper media and auto-neg is 	 * enabled.  In this case, we need to check and see if Auto-Neg 	 * has completed, and if so, how the PHY and link partner has 	 * flow control configured. 	 */
+comment|/* 	 * Check for the case where we have copper media and auto-neg is 	 * enabled.  In this case, we need to check and see if Auto-Neg 	 * has completed, and if so, how the PHY and link partner has 	 * flow control configured. 	 */
 if|if
 condition|(
 operator|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper
@@ -3570,7 +3826,7 @@ operator|->
 name|autoneg
 condition|)
 block|{
-comment|/* Read the MII Status Register and check to see if AutoNeg 		 * has completed.  We read this twice because this reg has 		 * some "sticky" (latched) bits. 		 */
+comment|/* 		 * Read the MII Status Register and check to see if AutoNeg 		 * has completed.  We read this twice because this reg has 		 * some "sticky" (latched) bits. 		 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -3629,7 +3885,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* The AutoNeg process has completed, so we now need to 		 * read both the Auto Negotiation Advertisement 		 * Register (Address 4) and the Auto_Negotiation Base 		 * Page Ability Register (Address 5) to determine how 		 * flow control was negotiated. 		 */
+comment|/* 		 * The AutoNeg process has completed, so we now need to 		 * read both the Auto Negotiation Advertisement 		 * Register (Address 4) and the Auto_Negotiation Base 		 * Page Ability Register (Address 5) to determine how 		 * flow control was negotiated. 		 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -3668,8 +3924,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Two bits in the Auto Negotiation Advertisement Register 		 * (Address 4) and two bits in the Auto Negotiation Base 		 * Page Ability Register (Address 5) determine flow control 		 * for both the PHY and the link partner.  The following 		 * table, taken out of the IEEE 802.3ab/D6.0 dated March 25, 		 * 1999, describes these PAUSE resolution bits and how flow 		 * control is determined based upon these settings. 		 * NOTE:  DC = Don't Care 		 * 		 *   LOCAL DEVICE  |   LINK PARTNER 		 * PAUSE | ASM_DIR | PAUSE | ASM_DIR | NIC Resolution 		 *-------|---------|-------|---------|-------------------- 		 *   0   |    0    |  DC   |   DC    | e1000_fc_none 		 *   0   |    1    |   0   |   DC    | e1000_fc_none 		 *   0   |    1    |   1   |    0    | e1000_fc_none 		 *   0   |    1    |   1   |    1    | e1000_fc_tx_pause 		 *   1   |    0    |   0   |   DC    | e1000_fc_none 		 *   1   |   DC    |   1   |   DC    | e1000_fc_full 		 *   1   |    1    |   0   |    0    | e1000_fc_none 		 *   1   |    1    |   0   |    1    | e1000_fc_rx_pause 		 * 		 */
-comment|/* Are both PAUSE bits set to 1?  If so, this implies 		 * Symmetric Flow Control is enabled at both ends.  The 		 * ASM_DIR bits are irrelevant per the spec. 		 * 		 * For Symmetric Flow Control: 		 * 		 *   LOCAL DEVICE  |   LINK PARTNER 		 * PAUSE | ASM_DIR | PAUSE | ASM_DIR | Result 		 *-------|---------|-------|---------|-------------------- 		 *   1   |   DC    |   1   |   DC    | E1000_fc_full 		 * 		 */
+comment|/* 		 * Two bits in the Auto Negotiation Advertisement Register 		 * (Address 4) and two bits in the Auto Negotiation Base 		 * Page Ability Register (Address 5) determine flow control 		 * for both the PHY and the link partner.  The following 		 * table, taken out of the IEEE 802.3ab/D6.0 dated March 25, 		 * 1999, describes these PAUSE resolution bits and how flow 		 * control is determined based upon these settings. 		 * NOTE:  DC = Don't Care 		 * 		 *   LOCAL DEVICE  |   LINK PARTNER 		 * PAUSE | ASM_DIR | PAUSE | ASM_DIR | NIC Resolution 		 *-------|---------|-------|---------|-------------------- 		 *   0   |    0    |  DC   |   DC    | e1000_fc_none 		 *   0   |    1    |   0   |   DC    | e1000_fc_none 		 *   0   |    1    |   1   |    0    | e1000_fc_none 		 *   0   |    1    |   1   |    1    | e1000_fc_tx_pause 		 *   1   |    0    |   0   |   DC    | e1000_fc_none 		 *   1   |   DC    |   1   |   DC    | e1000_fc_full 		 *   1   |    1    |   0   |    0    | e1000_fc_none 		 *   1   |    1    |   0   |    1    | e1000_fc_rx_pause 		 * 		 * Are both PAUSE bits set to 1?  If so, this implies 		 * Symmetric Flow Control is enabled at both ends.  The 		 * ASM_DIR bits are irrelevant per the spec. 		 * 		 * For Symmetric Flow Control: 		 * 		 *   LOCAL DEVICE  |   LINK PARTNER 		 * PAUSE | ASM_DIR | PAUSE | ASM_DIR | Result 		 *-------|---------|-------|---------|-------------------- 		 *   1   |   DC    |   1   |   DC    | E1000_fc_full 		 * 		 */
 if|if
 condition|(
 operator|(
@@ -3685,19 +3940,23 @@ name|NWAY_LPAR_PAUSE
 operator|)
 condition|)
 block|{
-comment|/* Now we need to check if the user selected RX ONLY 			 * of pause frames.  In this case, we had to advertise 			 * FULL flow control because we could not advertise RX 			 * ONLY. Hence, we must now check to see if we need to 			 * turn OFF  the TRANSMISSION of PAUSE frames. 			 */
+comment|/* 			 * Now we need to check if the user selected RX ONLY 			 * of pause frames.  In this case, we had to advertise 			 * FULL flow control because we could not advertise RX 			 * ONLY. Hence, we must now check to see if we need to 			 * turn OFF  the TRANSMISSION of PAUSE frames. 			 */
 if|if
 condition|(
-name|mac
+name|hw
 operator|->
-name|original_fc
+name|fc
+operator|.
+name|original_type
 operator|==
 name|e1000_fc_full
 condition|)
 block|{
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|=
 name|e1000_fc_full
 expr_stmt|;
@@ -3709,9 +3968,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|=
 name|e1000_fc_rx_pause
 expr_stmt|;
@@ -3723,7 +3984,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* For receiving PAUSE frames ONLY. 		 * 		 *   LOCAL DEVICE  |   LINK PARTNER 		 * PAUSE | ASM_DIR | PAUSE | ASM_DIR | Result 		 *-------|---------|-------|---------|-------------------- 		 *   0   |    1    |   1   |    1    | e1000_fc_tx_pause 		 * 		 */
+comment|/* 		 * For receiving PAUSE frames ONLY. 		 * 		 *   LOCAL DEVICE  |   LINK PARTNER 		 * PAUSE | ASM_DIR | PAUSE | ASM_DIR | Result 		 *-------|---------|-------|---------|-------------------- 		 *   0   |    1    |   1   |    1    | e1000_fc_tx_pause 		 */
 elseif|else
 if|if
 condition|(
@@ -3753,9 +4014,11 @@ name|NWAY_LPAR_ASM_DIR
 operator|)
 condition|)
 block|{
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|=
 name|e1000_fc_tx_pause
 expr_stmt|;
@@ -3765,7 +4028,7 @@ literal|"Flow Control = TX PAUSE frames only.\r\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* For transmitting PAUSE frames ONLY. 		 * 		 *   LOCAL DEVICE  |   LINK PARTNER 		 * PAUSE | ASM_DIR | PAUSE | ASM_DIR | Result 		 *-------|---------|-------|---------|-------------------- 		 *   1   |    1    |   0   |    1    | e1000_fc_rx_pause 		 * 		 */
+comment|/* 		 * For transmitting PAUSE frames ONLY. 		 * 		 *   LOCAL DEVICE  |   LINK PARTNER 		 * PAUSE | ASM_DIR | PAUSE | ASM_DIR | Result 		 *-------|---------|-------|---------|-------------------- 		 *   1   |    1    |   0   |    1    | e1000_fc_rx_pause 		 */
 elseif|else
 if|if
 condition|(
@@ -3795,9 +4058,11 @@ name|NWAY_LPAR_ASM_DIR
 operator|)
 condition|)
 block|{
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|=
 name|e1000_fc_rx_pause
 expr_stmt|;
@@ -3807,32 +4072,40 @@ literal|"Flow Control = RX PAUSE frames only.\r\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Per the IEEE spec, at this point flow control should be 		 * disabled.  However, we want to consider that we could 		 * be connected to a legacy switch that doesn't advertise 		 * desired flow control, but can be forced on the link 		 * partner.  So if we advertised no flow control, that is 		 * what we will resolve to.  If we advertised some kind of 		 * receive capability (Rx Pause Only or Full Flow Control) 		 * and the link partner advertised none, we will configure 		 * ourselves to enable Rx Flow Control only.  We can do 		 * this safely for two reasons:  If the link partner really 		 * didn't want flow control enabled, and we enable Rx, no 		 * harm done since we won't be receiving any PAUSE frames 		 * anyway.  If the intent on the link partner was to have 		 * flow control enabled, then by us enabling RX only, we 		 * can at least receive pause frames and process them. 		 * This is a good idea because in most cases, since we are 		 * predominantly a server NIC, more times than not we will 		 * be asked to delay transmission of packets than asking 		 * our link partner to pause transmission of frames. 		 */
+comment|/* 		 * Per the IEEE spec, at this point flow control should be 		 * disabled.  However, we want to consider that we could 		 * be connected to a legacy switch that doesn't advertise 		 * desired flow control, but can be forced on the link 		 * partner.  So if we advertised no flow control, that is 		 * what we will resolve to.  If we advertised some kind of 		 * receive capability (Rx Pause Only or Full Flow Control) 		 * and the link partner advertised none, we will configure 		 * ourselves to enable Rx Flow Control only.  We can do 		 * this safely for two reasons:  If the link partner really 		 * didn't want flow control enabled, and we enable Rx, no 		 * harm done since we won't be receiving any PAUSE frames 		 * anyway.  If the intent on the link partner was to have 		 * flow control enabled, then by us enabling RX only, we 		 * can at least receive pause frames and process them. 		 * This is a good idea because in most cases, since we are 		 * predominantly a server NIC, more times than not we will 		 * be asked to delay transmission of packets than asking 		 * our link partner to pause transmission of frames. 		 */
 elseif|else
 if|if
 condition|(
 operator|(
-name|mac
+name|hw
 operator|->
-name|original_fc
+name|fc
+operator|.
+name|original_type
 operator|==
 name|e1000_fc_none
 operator|||
-name|mac
+name|hw
 operator|->
-name|original_fc
+name|fc
+operator|.
+name|original_type
 operator|==
 name|e1000_fc_tx_pause
 operator|)
 operator|||
-name|mac
-operator|->
-name|fc_strict_ieee
-condition|)
-block|{
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|strict_ieee
+condition|)
+block|{
+name|hw
+operator|->
+name|fc
+operator|.
+name|type
 operator|=
 name|e1000_fc_none
 expr_stmt|;
@@ -3844,9 +4117,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|=
 name|e1000_fc_rx_pause
 expr_stmt|;
@@ -3856,7 +4131,7 @@ literal|"Flow Control = RX PAUSE frames only.\r\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Now we need to do one last check...  If we auto- 		 * negotiated to HALF DUPLEX, flow control should not be 		 * enabled per IEEE 802.3 spec. 		 */
+comment|/* 		 * Now we need to do one last check...  If we auto- 		 * negotiated to HALF DUPLEX, flow control should not be 		 * enabled per IEEE 802.3 spec. 		 */
 name|ret_val
 operator|=
 name|e1000_get_speed_and_duplex
@@ -3890,13 +4165,15 @@ name|duplex
 operator|==
 name|HALF_DUPLEX
 condition|)
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|=
 name|e1000_fc_none
 expr_stmt|;
-comment|/* Now we call a subroutine to actually force the MAC 		 * controller to use the correct flow control settings. 		 */
+comment|/* 		 * Now we call a subroutine to actually force the MAC 		 * controller to use the correct flow control settings. 		 */
 name|ret_val
 operator|=
 name|e1000_force_mac_fc_generic
@@ -4078,6 +4355,11 @@ block|{
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_get_speed_and_duplex_fiber_serdes_generic"
+argument_list|)
+expr_stmt|;
+name|UNREFERENCED_PARAMETER
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4866,6 +5148,8 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_fiber
@@ -4923,6 +5207,8 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper
@@ -5046,6 +5332,8 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_fiber
@@ -5065,7 +5353,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* set the blink bit for each LED that's "on" (0x0E) 		 * in ledctl_mode2 */
+comment|/* 		 * set the blink bit for each LED that's "on" (0x0E) 		 * in ledctl_mode2 		 */
 name|ledctl_blink
 operator|=
 name|hw
@@ -5163,6 +5451,8 @@ switch|switch
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 condition|)
 block|{
@@ -5249,6 +5539,8 @@ switch|switch
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 condition|)
 block|{
