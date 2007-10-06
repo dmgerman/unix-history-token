@@ -6195,7 +6195,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * With 82571 controllers, LAA may be overwritten 	 * due to controller reset from the other port. 	 */
+comment|/* 	 * With the 82571 adapter, RAR[0] may be overwritten 	 * when the other port is reset, we make a duplicate 	 * in RAR[14] for that eventuality, this assures 	 * the interface continues to function. 	 */
 if|if
 condition|(
 name|adapter
@@ -6208,16 +6208,36 @@ name|type
 operator|==
 name|e1000_82571
 condition|)
-name|e1000_set_laa_state_82571
+block|{
+name|adapter
+operator|->
+name|hw
+operator|.
+name|laa_is_present
+operator|=
+literal|1
+expr_stmt|;
+name|e1000_rar_set
 argument_list|(
 operator|&
 name|adapter
 operator|->
 name|hw
 argument_list|,
-name|TRUE
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|addr
+argument_list|,
+name|E1000_RAR_ENTRIES
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Initialize the hardware */
 if|if
 condition|(
@@ -6830,6 +6850,12 @@ name|hw
 argument_list|)
 expr_stmt|;
 name|em_update_link_status
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+comment|/* Deal with TX cruft when link lost */
+name|em_tx_purge
 argument_list|(
 name|adapter
 argument_list|)
@@ -10911,18 +10937,24 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-comment|/* Check for 82571 LAA reset by other port */
+comment|/* Reset LAA into RAR[0] on 82571 */
 if|if
 condition|(
-name|e1000_get_laa_state_82571
-argument_list|(
-operator|&
+operator|(
 name|adapter
 operator|->
 name|hw
-argument_list|)
+operator|.
+name|mac_type
 operator|==
-name|TRUE
+name|e1000_82571
+operator|)
+operator|&&
+name|adapter
+operator|->
+name|hw
+operator|.
+name|laa_is_present
 condition|)
 name|e1000_rar_set
 argument_list|(
@@ -12133,8 +12165,6 @@ argument_list|,
 name|INTR_TYPE_NET
 operator||
 name|INTR_MPSAFE
-argument_list|,
-name|NULL
 argument_list|,
 name|em_intr
 argument_list|,
