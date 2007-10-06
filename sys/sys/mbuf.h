@@ -1118,6 +1118,17 @@ begin_comment
 comment|/* Not a type but a flag to allocate 				   a non-initialized mbuf */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MB_NOTAGS
+value|0x1UL
+end_define
+
+begin_comment
+comment|/* no tags attached to mbuf */
+end_comment
+
 begin_comment
 comment|/*  * General mbuf allocator statistics structure.  *  * Many of these statistics are no longer used; we instead track many  * allocator statistics through UMA's built in statistics mechanism.  */
 end_comment
@@ -2080,10 +2091,8 @@ end_return
 begin_function
 unit|}  static
 name|__inline
-name|struct
-name|mbuf
-modifier|*
-name|m_free
+name|void
+name|m_free_fast
 parameter_list|(
 name|struct
 name|mbuf
@@ -2091,15 +2100,58 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|struct
+name|KASSERT
+argument_list|(
+name|SLIST_EMPTY
+argument_list|(
+operator|&
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|tags
+argument_list|)
+argument_list|,
+operator|(
+literal|"doing fast free of mbuf with tags"
+operator|)
+argument_list|)
+expr_stmt|;
+name|uma_zfree_arg
+argument_list|(
+name|zone_mbuf
+argument_list|,
+name|m
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|MB_NOTAGS
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
 name|mbuf
-modifier|*
+operator|*
+name|m_free
+argument_list|(
+argument|struct mbuf *m
+argument_list|)
+block|{ 	struct
+name|mbuf
+operator|*
 name|n
-init|=
+operator|=
 name|m
 operator|->
 name|m_next
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|m
@@ -2121,16 +2173,18 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|n
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
+unit|}  static
 name|__inline
 name|void
 name|m_clget
