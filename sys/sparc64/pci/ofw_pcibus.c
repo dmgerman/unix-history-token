@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * Copyright (c) 2000, Michael Smith<msmith@freebsd.org>  * Copyright (c) 2000, BSDi  * Copyright (c) 2003, Thomas Moestl<tmm@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * Copyright (c) 2000, Michael Smith<msmith@freebsd.org>  * Copyright (c) 2000, BSDi  * Copyright (c) 2003, Thomas Moestl<tmm@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -658,11 +672,6 @@ parameter_list|)
 block|{
 name|device_t
 name|pcib
-init|=
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|struct
 name|ofw_pci_register
@@ -689,6 +698,13 @@ name|busno
 decl_stmt|,
 name|func
 decl_stmt|;
+name|pcib
+operator|=
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Ask the bridge for the bus number - in some cases, we need to 	 * renumber buses, so the firmware information cannot be trusted. 	 */
 name|busno
 operator|=
@@ -990,27 +1006,6 @@ name|device_t
 name|child
 parameter_list|)
 block|{
-name|struct
-name|ofw_pcibus_devinfo
-modifier|*
-name|dinfo
-init|=
-name|device_get_ivars
-argument_list|(
-name|child
-argument_list|)
-decl_stmt|;
-name|pcicfgregs
-modifier|*
-name|cfg
-init|=
-operator|&
-name|dinfo
-operator|->
-name|opd_dinfo
-operator|.
-name|cfg
-decl_stmt|;
 name|ofw_pci_intr_t
 name|intr
 decl_stmt|;
@@ -1021,9 +1016,10 @@ name|isz
 operator|=
 name|OF_getprop
 argument_list|(
-name|dinfo
-operator|->
-name|opd_node
+name|ofw_bus_get_node
+argument_list|(
+name|child
+argument_list|)
 argument_list|,
 literal|"interrupts"
 argument_list|,
@@ -1049,9 +1045,10 @@ block|{
 comment|/* No property; our best guess is the intpin. */
 name|intr
 operator|=
-name|cfg
-operator|->
-name|intpin
+name|pci_get_intpin
+argument_list|(
+name|child
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
