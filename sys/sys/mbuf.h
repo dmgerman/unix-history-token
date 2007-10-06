@@ -747,6 +747,17 @@ begin_comment
 comment|/* packet was not for us */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_NOFREE
+value|0x40000
+end_define
+
+begin_comment
+comment|/* do not free mbuf - it is embedded in the cluster */
+end_comment
+
 begin_comment
 comment|/*  * External buffer types: identify ext_buf type.  */
 end_comment
@@ -2165,7 +2176,19 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_NOFREE
+operator|)
+operator|==
+literal|0
+condition|)
 name|uma_zfree
 argument_list|(
 name|zone_mbuf

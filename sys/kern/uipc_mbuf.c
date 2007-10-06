@@ -898,6 +898,9 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|int
+name|skipmbuf
+decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -933,6 +936,17 @@ operator|,
 name|__func__
 operator|)
 argument_list|)
+expr_stmt|;
+comment|/* 	 * check if the header is embedded in the cluster 	 */
+name|skipmbuf
+operator|=
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_NOFREE
+operator|)
 expr_stmt|;
 comment|/* Free attached storage if this mbuf is the only reference to it. */
 if|if
@@ -1175,6 +1189,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|skipmbuf
+condition|)
+return|return;
 comment|/* 	 * Free this mbuf back to the mbuf zone with all m_ext 	 * information purged. 	 */
 name|m
 operator|->
