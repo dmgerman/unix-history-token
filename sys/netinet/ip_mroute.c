@@ -4,8 +4,22 @@ comment|/*-  * Copyright (c) 1989 Stephen Deering  * Copyright (c) 1992, 1993  *
 end_comment
 
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  * Modified by Ahmed Helmy, SGI, June 1996  * Modified by George Edmond Eddy (Rusty), ISI, February 1998  * Modified by Pavlin Radoslavov, USC/ISI, May 1998, August 1999, October 2000  * Modified by Hitoshi Asaeda, WIDE, August 2000  * Modified by Pavlin Radoslavov, ICSI, October 2002  *  * MROUTING Revision: 3.5  * and PIM-SMv2 and PIM-DM support, advanced API support,  * bandwidth metering and signaling  *  * $FreeBSD$  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  * Modified by Ahmed Helmy, SGI, June 1996  * Modified by George Edmond Eddy (Rusty), ISI, February 1998  * Modified by Pavlin Radoslavov, USC/ISI, May 1998, August 1999, October 2000  * Modified by Hitoshi Asaeda, WIDE, August 2000  * Modified by Pavlin Radoslavov, ICSI, October 2002  *  * MROUTING Revision: 3.5  * and PIM-SMv2 and PIM-DM support, advanced API support,  * bandwidth metering and signaling  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
