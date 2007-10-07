@@ -6140,7 +6140,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s; %s: %s: Received data after socket "
+literal|"%s; %s: %s: Received %d bytes of data after socket "
 literal|"was closed, sending RST and removing tcpcb\n"
 argument_list|,
 name|s
@@ -6153,6 +6153,8 @@ name|tp
 operator|->
 name|t_state
 index|]
+argument_list|,
+name|tlen
 argument_list|)
 expr_stmt|;
 name|free
