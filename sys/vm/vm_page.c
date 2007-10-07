@@ -3778,9 +3778,9 @@ block|}
 if|if
 condition|(
 name|object
-operator|!=
+operator|==
 name|NULL
-operator|&&
+operator|||
 name|object
 operator|->
 name|type
