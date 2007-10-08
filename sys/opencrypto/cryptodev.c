@@ -2887,6 +2887,8 @@ argument_list|,
 name|M_XDATA
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2899,15 +2901,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|krp
-argument_list|,
-sizeof|sizeof
-expr|*
-name|krp
-argument_list|)
-expr_stmt|;
 name|krp
 operator|->
 name|krp_op
@@ -2984,6 +2977,24 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|kop
+operator|->
+name|crk_param
+index|[
+name|i
+index|]
+operator|.
+name|crp_nbits
+operator|>
+literal|65536
+condition|)
+comment|/* Limit is the same as in OpenBSD */
+goto|goto
+name|fail
+goto|;
 name|krp
 operator|->
 name|krp_param
@@ -3002,6 +3013,7 @@ index|]
 operator|.
 name|crp_nbits
 expr_stmt|;
+block|}
 for|for
 control|(
 name|i
