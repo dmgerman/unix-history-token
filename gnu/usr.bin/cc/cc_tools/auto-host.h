@@ -914,12 +914,33 @@ directive|ifndef
 name|USED_FOR_TARGET
 end_ifndef
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|HAVE_AS_TLS
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
