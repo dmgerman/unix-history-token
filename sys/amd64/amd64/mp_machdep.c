@@ -3729,7 +3729,11 @@ if|if
 condition|(
 name|ipi_bitmap
 operator|&
+operator|(
+literal|1
+operator|<<
 name|IPI_PREEMPT
+operator|)
 condition|)
 block|{
 name|mtx_lock_spin
@@ -3742,10 +3746,11 @@ comment|/* Don't preempt the idle thread */
 if|if
 condition|(
 name|curthread
-operator|->
-name|td_priority
-operator|<
-name|PRI_MIN_IDLE
+operator|!=
+name|PCPU_GET
+argument_list|(
+name|idlethread
+argument_list|)
 condition|)
 block|{
 name|struct
