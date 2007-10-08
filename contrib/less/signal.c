@@ -243,6 +243,13 @@ name|sigs
 operator||=
 name|S_WINCH
 expr_stmt|;
+if|if
+condition|(
+name|reading
+condition|)
+name|intread
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

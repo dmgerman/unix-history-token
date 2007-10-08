@@ -1813,9 +1813,10 @@ name|ctldisp
 operator|==
 name|OPT_ONPLUS
 operator|&&
+name|IS_CSI_START
+argument_list|(
 name|c
-operator|==
-name|ESC
+argument_list|)
 condition|)
 block|{
 while|while
