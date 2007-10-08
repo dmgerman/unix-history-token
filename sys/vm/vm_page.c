@@ -5178,6 +5178,26 @@ literal|"vm_page_cache: attempting to cache busy page"
 argument_list|)
 expr_stmt|;
 block|}
+name|pmap_remove_all
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|dirty
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"vm_page_cache: page %p is dirty"
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -5225,34 +5245,6 @@ operator|.
 name|v_tcached
 operator|++
 expr_stmt|;
-comment|/* 	 * Remove all pmaps and indicate that the page is not 	 * writeable or mapped. 	 */
-name|pmap_remove_all
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|dirty
-operator|!=
-literal|0
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"vm_page_cache: caching a dirty page, pindex: %ld"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|m
-operator|->
-name|pindex
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Remove the page from the paging queues. 	 */
 name|vm_pageq_remove
 argument_list|(
