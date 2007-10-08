@@ -709,6 +709,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|IS_CSI_START
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == ESC || ((unsigned char)(c)) == CSI)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1889,6 +1899,13 @@ define|#
 directive|define
 name|ESC
 value|CONTROL('[')
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSI
+value|((unsigned char)'\233')
 end_define
 
 begin_if
