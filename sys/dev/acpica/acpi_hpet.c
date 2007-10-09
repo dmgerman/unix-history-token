@@ -309,9 +309,14 @@ comment|/* Discover the HPET via the ACPI table of the same name. */
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|acpi_hpet_table_probe
+name|acpi_hpet_identify
 parameter_list|(
+name|driver_t
+modifier|*
+name|driver
+parameter_list|,
 name|device_t
 name|parent
 parameter_list|)
@@ -330,6 +335,17 @@ decl_stmt|;
 name|device_t
 name|child
 decl_stmt|;
+comment|/* Only one HPET device can be added. */
+if|if
+condition|(
+name|devclass_get_device
+argument_list|(
+name|acpi_hpet_devclass
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+return|return;
 comment|/* Currently, ID and minimum clock tick info is unused. */
 name|status
 operator|=
@@ -388,7 +404,7 @@ name|BUS_ADD_CHILD
 argument_list|(
 name|parent
 argument_list|,
-literal|0
+name|ACPI_DEV_BASE_ORDER
 argument_list|,
 literal|"acpi_hpet"
 argument_list|,
@@ -438,22 +454,6 @@ operator|.
 name|Address
 argument_list|,
 name|HPET_MEM_WIDTH
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|device_probe_and_attach
-argument_list|(
-name|child
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|device_delete_child
-argument_list|(
-name|parent
-argument_list|,
-name|child
 argument_list|)
 expr_stmt|;
 block|}
@@ -1159,6 +1159,13 @@ index|[]
 init|=
 block|{
 comment|/* Device interface */
+name|DEVMETHOD
+argument_list|(
+name|device_identify
+argument_list|,
+name|acpi_hpet_identify
+argument_list|)
+block|,
 name|DEVMETHOD
 argument_list|(
 name|device_probe

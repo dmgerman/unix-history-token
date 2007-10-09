@@ -2143,19 +2143,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* HPET table probe*/
-end_comment
-
-begin_function_decl
-name|void
-name|acpi_hpet_table_probe
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* AC adapter interface. */
 end_comment
 
@@ -2290,6 +2277,17 @@ name|obj
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Base level for BUS_ADD_CHILD.  Special devices are added at orders less  * than this, and normal devices at or above this level.  This keeps the  * probe order sorted so that things like sysresource are available before  * their children need them.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEV_BASE_ORDER
+value|10
+end_define
 
 begin_comment
 comment|/* Default number of task queue threads to start. */
