@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004-07 Applied Micro Circuits Corporation.  * Copyr
 end_comment
 
 begin_comment
-comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  * Modifications by: Adam Radford  */
+comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  * Modifications by: Adam Radford  * Modifications by: Manjunath Ranganathaiah  */
 end_comment
 
 begin_ifndef
@@ -51,9 +51,11 @@ name|TW_OSLI_MAX_NUM_AENS
 value|0x100
 end_define
 
-begin_comment
-comment|//#define TW_OSLI_DEFERRED_INTR_USED
-end_comment
+begin_define
+define|#
+directive|define
+name|TW_OSLI_DEFERRED_INTR_USED
+end_define
 
 begin_comment
 comment|/* Possible values of req->state. */
@@ -428,6 +430,17 @@ modifier|*
 name|q_lock
 decl_stmt|;
 comment|/* ptr to queue manipulation lock */
+name|struct
+name|mtx
+name|sim_lock_handle
+decl_stmt|;
+comment|/* sim lock shared with cam */
+name|struct
+name|mtx
+modifier|*
+name|sim_lock
+decl_stmt|;
+comment|/* ptr to sim lock */
 ifdef|#
 directive|ifdef
 name|TW_OSL_DEBUG

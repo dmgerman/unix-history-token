@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004-07 Applied Micro Circuits Corporation.  * Copyr
 end_comment
 
 begin_comment
-comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  * Modifications by: Adam Radford  */
+comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  * Modifications by: Adam Radford  * Modifications by: Manjunath Ranganathaiah  */
 end_comment
 
 begin_comment
@@ -583,11 +583,21 @@ expr_stmt|;
 comment|/* For 9650SE first write low 4 bytes */
 if|if
 condition|(
+operator|(
 name|ctlr
 operator|->
 name|device_id
 operator|==
 name|TW_CL_DEVICE_ID_9K_E
+operator|)
+operator|||
+operator|(
+name|ctlr
+operator|->
+name|device_id
+operator|==
+name|TW_CL_DEVICE_ID_9K_SA
+operator|)
 condition|)
 name|tw_osl_write_reg
 argument_list|(
@@ -784,11 +794,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ctlr
 operator|->
 name|device_id
 operator|==
 name|TW_CL_DEVICE_ID_9K_E
+operator|)
+operator|||
+operator|(
+name|ctlr
+operator|->
+name|device_id
+operator|==
+name|TW_CL_DEVICE_ID_9K_SA
+operator|)
 condition|)
 block|{
 comment|/* Now write the high 4 bytes */
@@ -1433,6 +1453,33 @@ argument_list|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|ctlr
+operator|->
+name|device_id
+operator|==
+name|TW_CL_DEVICE_ID_9K_SA
+condition|)
+name|sgl
+operator|=
+operator|(
+operator|(
+operator|(
+name|TW_UINT32
+operator|*
+operator|)
+name|cmd_7k
+operator|)
+operator|+
+name|cmd_7k
+operator|->
+name|generic
+operator|.
+name|size
+operator|)
+expr_stmt|;
+else|else
 name|sgl
 operator|=
 operator|(
@@ -4713,6 +4760,14 @@ operator|->
 name|device_id
 operator|==
 name|TW_CL_DEVICE_ID_9K_E
+operator|)
+operator|||
+operator|(
+name|ctlr
+operator|->
+name|device_id
+operator|==
+name|TW_CL_DEVICE_ID_9K_SA
 operator|)
 condition|)
 block|{

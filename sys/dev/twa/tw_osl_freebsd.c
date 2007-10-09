@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004-07 Applied Micro Circuits Corporation.  * Copyr
 end_comment
 
 begin_comment
-comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  * Modifications by: Adam Radford  */
+comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  * Modifications by: Adam Radford  * Modifications by: Manjunath Ranganathaiah  */
 end_comment
 
 begin_comment
@@ -940,6 +940,32 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sim_lock
+operator|=
+operator|&
+operator|(
+name|sc
+operator|->
+name|sim_lock_handle
+operator|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+name|sc
+operator|->
+name|sim_lock
+argument_list|,
+literal|"tw_osl_sim_lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+operator||
+name|MTX_RECURSE
+argument_list|)
+expr_stmt|;
 name|sysctl_ctx_init
 argument_list|(
 operator|&
@@ -1338,17 +1364,23 @@ name|sc
 operator|->
 name|irq_res
 argument_list|,
-name|INTR_TYPE_CAM
-argument_list|,
 ifdef|#
 directive|ifdef
 name|TW_OSLI_DEFERRED_INTR_USED
+name|INTR_TYPE_CAM
+operator||
+name|INTR_FAST
+argument_list|,
 name|twa_pci_intr_fast
 argument_list|,
 name|NULL
 argument_list|,
 else|#
 directive|else
+name|INTR_TYPE_CAM
+operator||
+name|INTR_MPSAFE
+argument_list|,
 name|NULL
 argument_list|,
 name|twa_pci_intr
@@ -3254,13 +3286,15 @@ operator|)
 argument_list|)
 condition|)
 block|{
-name|tw_cl_deferred_interrupt
+name|taskqueue_enqueue_fast
 argument_list|(
+name|taskqueue_fast
+argument_list|,
 operator|&
 operator|(
 name|sc
 operator|->
-name|ctlr_handle
+name|deferred_intr_callback
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3922,7 +3956,7 @@ operator|->
 name|ctlr_handle
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Don't touch req after a reset.  It (and any 			 * associated data) will already have been 			 * freed by the callback.  Just return. 			 */
+comment|/* 			 * Don't touch req after a reset.  It (and any 			 * associated data) will already have been 			 * unmapped by the callback. 			 */
 name|user_buf
 operator|->
 name|driver_pkt
@@ -3931,11 +3965,13 @@ name|os_status
 operator|=
 name|error
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|ETIMEDOUT
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|fw_passthru_err
+goto|;
 block|}
 comment|/*  		 * Either the request got completed, or we were woken up by a 		 * signal.  Calculate the new timeout, in case it was the latter. 		 */
 name|timeout

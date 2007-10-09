@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004-07 Applied Micro Circuits Corporation.  * Copyr
 end_comment
 
 begin_comment
-comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  * Modifications by: Adam Radford  */
+comment|/*  * AMCC'S 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  * Modifications by: Adam Radford  * Modifications by: Manjunath Ranganathaiah  */
 end_comment
 
 begin_comment
@@ -93,6 +93,12 @@ operator|(
 name|device_id
 operator|==
 name|TW_CL_DEVICE_ID_9K_E
+operator|)
+operator|||
+operator|(
+name|device_id
+operator|==
+name|TW_CL_DEVICE_ID_9K_SA
 operator|)
 operator|)
 condition|)
@@ -218,6 +224,9 @@ name|TW_CL_DEVICE_ID_9K_X
 case|:
 case|case
 name|TW_CL_DEVICE_ID_9K_E
+case|:
+case|case
+name|TW_CL_DEVICE_ID_9K_SA
 case|:
 switch|switch
 condition|(
@@ -891,6 +900,14 @@ operator|->
 name|device_id
 operator|==
 name|TW_CL_DEVICE_ID_9K_E
+operator|)
+operator|||
+operator|(
+name|ctlr
+operator|->
+name|device_id
+operator|==
+name|TW_CL_DEVICE_ID_9K_SA
 operator|)
 operator|)
 condition|)
