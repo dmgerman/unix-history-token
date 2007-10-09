@@ -285,6 +285,8 @@ operator|)
 name|malloc
 argument_list|(
 name|n
+operator|+
+literal|1
 argument_list|)
 operator|)
 operator|==

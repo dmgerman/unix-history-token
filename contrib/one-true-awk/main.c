@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"version 20050424"
+literal|"version 20050424 (FreeBSD)"
 decl_stmt|;
 end_decl_stmt
 
@@ -242,6 +242,13 @@ argument_list|)
 expr_stmt|;
 name|setlocale
 argument_list|(
+name|LC_COLLATE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|setlocale
+argument_list|(
 name|LC_NUMERIC
 argument_list|,
 literal|"C"
@@ -383,6 +390,52 @@ case|case
 literal|'f'
 case|:
 comment|/* next argument is program filename */
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|2
+index|]
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* arg is -fsomething */
+if|if
+condition|(
+name|npfile
+operator|>=
+name|MAX_PFILE
+operator|-
+literal|1
+condition|)
+name|FATAL
+argument_list|(
+literal|"too many -f options"
+argument_list|)
+expr_stmt|;
+name|pfile
+index|[
+name|npfile
+operator|++
+index|]
+operator|=
+operator|&
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|2
+index|]
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* arg is -f something */
 name|argc
 operator|--
 expr_stmt|;
@@ -424,6 +477,7 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'F'
@@ -594,20 +648,54 @@ index|]
 index|[
 literal|2
 index|]
-operator|==
-literal|'\0'
-operator|&&
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* arg is -vsomething */
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|2
+index|]
+operator|!=
+literal|0
+condition|)
+name|setclvar
+argument_list|(
+operator|&
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* arg is -v something */
+name|argc
 operator|--
+expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
+if|if
+condition|(
 name|argc
 operator|>
 literal|1
 operator|&&
 name|isclvar
 argument_list|(
-operator|(
-operator|++
 name|argv
-operator|)
 index|[
 literal|1
 index|]
@@ -621,6 +709,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'m'
