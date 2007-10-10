@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"version 20050424 (FreeBSD)"
+literal|"version 20070501 (FreeBSD)"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,7 +273,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-f programfile | 'program'] [-Ffieldsep] [-v var=value] [files]\n"
+literal|"usage: %s [-F fs] [-v var=value] [-f progfile | 'prog'] [file ...]\n"
 argument_list|,
 name|cmdname
 argument_list|)
@@ -299,6 +299,8 @@ name|symtab
 operator|=
 name|makesymtab
 argument_list|(
+name|NSYMTAB
+operator|/
 name|NSYMTAB
 argument_list|)
 expr_stmt|;
@@ -338,7 +340,50 @@ index|[
 literal|1
 index|]
 argument_list|,
+literal|"-version"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"--version"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"awk %s\n"
+argument_list|,
+name|version
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
 literal|"--"
+argument_list|,
+literal|2
 argument_list|)
 operator|==
 literal|0
@@ -712,22 +757,6 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-literal|'m'
-case|:
-comment|/* more memory: -mr=record, -mf=fields */
-comment|/* no longer supported */
-name|WARNING
-argument_list|(
-literal|"obsolete option %s ignored"
-argument_list|,
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'d'
 case|:
 name|dbg
@@ -759,23 +788,6 @@ argument_list|(
 literal|"awk %s\n"
 argument_list|,
 name|version
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'V'
-case|:
-comment|/* added for exptools "standard" */
-name|printf
-argument_list|(
-literal|"awk %s\n"
-argument_list|,
-name|version
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;

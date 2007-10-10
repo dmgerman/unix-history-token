@@ -83,78 +83,69 @@ begin_comment
 comment|/* #undef tempfree  void tempfree(Cell *p) { 	if (p->ctype == OCELL&& (p->csub< CUNK || p->csub> CFREE)) { 		WARNING("bad csub %d in Cell %d %s", 			p->csub, p->ctype, p->sval); 	} 	if (istemp(p)) 		tfree(p); } */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_NFILE
-end_ifdef
+begin_comment
+comment|/* do we really need these? */
+end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FOPEN_MAX
-end_ifndef
+begin_comment
+comment|/* #ifdef _NFILE */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|FOPEN_MAX
-value|_NFILE
-end_define
+begin_comment
+comment|/* #ifndef FOPEN_MAX */
+end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #define FOPEN_MAX _NFILE */
+end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #endif */
+end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FOPEN_MAX
-end_ifndef
+begin_comment
+comment|/* #endif */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|FOPEN_MAX
-value|40
-end_define
+begin_comment
+comment|/*  */
+end_comment
+
+begin_comment
+comment|/* #ifndef	FOPEN_MAX */
+end_comment
+
+begin_comment
+comment|/* #define	FOPEN_MAX	40 */
+end_comment
 
 begin_comment
 comment|/* max number of open files */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #endif */
+end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RAND_MAX
-end_ifndef
+begin_comment
+comment|/*  */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|RAND_MAX
-value|32767
-end_define
+begin_comment
+comment|/* #ifndef RAND_MAX */
+end_comment
+
+begin_comment
+comment|/* #define RAND_MAX	32767 */
+end_comment
 
 begin_comment
 comment|/* all that ansi guarantees */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #endif */
+end_comment
 
 begin_decl_stmt
 name|jmp_buf
@@ -574,6 +565,25 @@ operator|*
 name|pbuf
 argument_list|,
 name|minlen
+argument_list|)
+expr_stmt|;
+name|dprintf
+argument_list|(
+operator|(
+literal|"adjbuf %s: %d %d (pbuf=%p, tbuf=%p)\n"
+operator|,
+name|whatrtn
+operator|,
+operator|*
+name|psiz
+operator|,
+name|minlen
+operator|,
+operator|*
+name|pbuf
+operator|,
+name|tbuf
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2960,7 +2970,7 @@ name|recsize
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+literal|"array"
 argument_list|)
 condition|)
 name|FATAL
@@ -3330,7 +3340,7 @@ name|recsize
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+literal|"awkdelete"
 argument_list|)
 condition|)
 name|FATAL
@@ -3617,7 +3627,7 @@ name|recsize
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+literal|"intest"
 argument_list|)
 condition|)
 name|FATAL
@@ -5380,7 +5390,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-literal|"format"
+literal|"format1"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5467,7 +5477,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-literal|"format"
+literal|"format2"
 argument_list|)
 expr_stmt|;
 for|for
@@ -5515,7 +5525,7 @@ argument_list|,
 operator|&
 name|t
 argument_list|,
-literal|0
+literal|"format3"
 argument_list|)
 condition|)
 name|FATAL
@@ -5681,7 +5691,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-literal|"format"
+literal|"format4"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -5872,7 +5882,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-literal|"format"
+literal|"format5"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -5943,7 +5953,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-literal|"format"
+literal|"format6"
 argument_list|)
 expr_stmt|;
 name|p
@@ -6068,7 +6078,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-literal|0
+literal|"format7"
 argument_list|)
 condition|)
 name|FATAL

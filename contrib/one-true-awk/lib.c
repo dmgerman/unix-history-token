@@ -132,7 +132,7 @@ begin_define
 define|#
 directive|define
 name|MAXFLD
-value|200
+value|2
 end_define
 
 begin_decl_stmt
@@ -1017,6 +1017,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|infile
+operator|!=
+name|NULL
+operator|&&
 name|infile
 operator|!=
 name|stdin

@@ -4,7 +4,7 @@ comment|/**************************************************************** Copyri
 end_comment
 
 begin_comment
-comment|/* lasciate ogne speranza, voi ch'entrate. */
+comment|/* lasciate ogne speranza, voi ch'intrate. */
 end_comment
 
 begin_define
@@ -139,12 +139,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|ELEAF
+value|case EMPTYRE:
+end_define
+
+begin_comment
+comment|/* empty string in regexp */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UNARY
 value|case STAR: case PLUS: case QUEST:
 end_define
 
 begin_comment
-comment|/* encoding in tree Nodes: 	leaf (CCL, NCCL, CHAR, DOT, FINAL, ALL): 		left is index, right contains value or pointer to value 	unary (STAR, PLUS, QUEST): left is child, right is null 	binary (CAT, OR): left and right are children 	parent contains pointer to parent */
+comment|/* encoding in tree Nodes: 	leaf (CCL, NCCL, CHAR, DOT, FINAL, ALL, EMPTYRE): 		left is index, right contains value or pointer to value 	unary (STAR, PLUS, QUEST): left is child, right is null 	binary (CAT, OR): left and right are children 	parent contains pointer to parent */
 end_comment
 
 begin_decl_stmt
@@ -1158,6 +1169,7 @@ name|p
 argument_list|)
 condition|)
 block|{
+name|ELEAF
 name|LEAF
 name|info
 parameter_list|(
@@ -1268,6 +1280,7 @@ name|p
 argument_list|)
 condition|)
 block|{
+name|ELEAF
 name|LEAF
 name|xfree
 argument_list|(
@@ -2042,7 +2055,7 @@ operator|)
 operator|&
 name|bp
 argument_list|,
-literal|0
+literal|"cclenter1"
 argument_list|)
 condition|)
 name|FATAL
@@ -2097,7 +2110,7 @@ operator|)
 operator|&
 name|bp
 argument_list|,
-literal|0
+literal|"cclenter2"
 argument_list|)
 condition|)
 name|FATAL
@@ -2204,6 +2217,7 @@ name|v
 argument_list|)
 condition|)
 block|{
+name|ELEAF
 name|LEAF
 name|f
 operator|->
@@ -2486,7 +2500,7 @@ modifier|*
 name|p
 parameter_list|)
 comment|/* collects initially active leaves of p into setvec */
-comment|/* returns 1 if p matches empty string */
+comment|/* returns 0 if p matches empty string */
 block|{
 name|int
 name|b
@@ -2501,6 +2515,7 @@ name|p
 argument_list|)
 condition|)
 block|{
+name|ELEAF
 name|LEAF
 name|lp
 init|=
@@ -2577,6 +2592,29 @@ argument_list|(
 literal|"out of space in first()"
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|type
+argument_list|(
+name|p
+argument_list|)
+operator|==
+name|EMPTYRE
+condition|)
+block|{
+name|setvec
+index|[
+name|lp
+index|]
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -3001,14 +3039,7 @@ operator|)
 return|;
 do|do
 block|{
-name|assert
-argument_list|(
-operator|*
-name|p
-operator|<
-name|NCHARS
-argument_list|)
-expr_stmt|;
+comment|/* assert(*p< NCHARS); */
 if|if
 condition|(
 operator|(
@@ -3184,14 +3215,7 @@ name|q
 operator|-
 name|p
 expr_stmt|;
-name|assert
-argument_list|(
-operator|*
-name|q
-operator|<
-name|NCHARS
-argument_list|)
-expr_stmt|;
+comment|/* assert(*q< NCHARS); */
 if|if
 condition|(
 operator|(
@@ -3606,14 +3630,7 @@ name|q
 operator|-
 name|p
 expr_stmt|;
-name|assert
-argument_list|(
-operator|*
-name|q
-operator|<
-name|NCHARS
-argument_list|)
-expr_stmt|;
+comment|/* assert(*q< NCHARS); */
 if|if
 condition|(
 operator|(
@@ -3968,12 +3985,13 @@ name|rtok
 operator|==
 literal|'\0'
 condition|)
+block|{
 comment|/* FATAL("empty regular expression"); previous */
 return|return
 operator|(
 name|op2
 argument_list|(
-name|ALL
+name|EMPTYRE
 argument_list|,
 name|NIL
 argument_list|,
@@ -3981,6 +3999,7 @@ name|NIL
 argument_list|)
 operator|)
 return|;
+block|}
 name|np
 operator|=
 name|regexp
@@ -4082,6 +4101,29 @@ operator|)
 return|;
 case|case
 name|ALL
+case|:
+name|rtok
+operator|=
+name|relex
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|unary
+argument_list|(
+name|op2
+argument_list|(
+name|ALL
+argument_list|,
+name|NIL
+argument_list|,
+name|NIL
+argument_list|)
+argument_list|)
+operator|)
+return|;
+case|case
+name|EMPTYRE
 case|:
 name|rtok
 operator|=
@@ -4370,6 +4412,9 @@ name|DOT
 case|:
 case|case
 name|ALL
+case|:
+case|case
+name|EMPTYRE
 case|:
 case|case
 name|CCL
@@ -4957,7 +5002,7 @@ operator|)
 operator|&
 name|bp
 argument_list|,
-literal|0
+literal|"relex1"
 argument_list|)
 condition|)
 name|FATAL
@@ -5162,7 +5207,7 @@ operator|)
 operator|&
 name|bp
 argument_list|,
-literal|0
+literal|"relex2"
 argument_list|)
 condition|)
 name|FATAL
@@ -5512,6 +5557,16 @@ operator|(
 name|k
 operator|==
 name|ALL
+operator|&&
+name|c
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
+name|k
+operator|==
+name|EMPTYRE
 operator|&&
 name|c
 operator|!=
