@@ -11896,6 +11896,12 @@ name|rid
 operator|=
 literal|0x0
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|602111
+comment|/* MSI support is present */
 if|if
 condition|(
 name|adapter
@@ -12038,6 +12044,9 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* FreeBSD_version */
 name|adapter
 operator|->
 name|res_interrupt
@@ -12474,6 +12483,12 @@ operator|->
 name|res_interrupt
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|602111
+comment|/* MSI support is present */
 if|if
 condition|(
 name|adapter
@@ -12509,6 +12524,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* FreeBSD_version */
 if|if
 condition|(
 name|adapter
