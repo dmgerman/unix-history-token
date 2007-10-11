@@ -470,6 +470,14 @@ end_function_decl
 
 begin_function_decl
 name|public
+name|void
+name|put_wchar
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|public
 name|LWCHAR
 name|step_char
 parameter_list|()

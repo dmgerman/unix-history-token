@@ -83,6 +83,9 @@ block|{
 name|POSITION
 name|pos
 decl_stmt|;
+name|POSITION
+name|end_pos
+decl_stmt|;
 if|if
 condition|(
 name|ch_end_seek
@@ -99,12 +102,19 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Position the last line in the file at the last screen line. 	 * Go back one line from the end of the file 	 * to get to the beginning of the last line. 	 */
+name|pos_clear
+argument_list|()
+expr_stmt|;
+name|end_pos
+operator|=
+name|ch_tell
+argument_list|()
+expr_stmt|;
 name|pos
 operator|=
 name|back_line
 argument_list|(
-name|ch_tell
-argument_list|()
+name|end_pos
 argument_list|)
 expr_stmt|;
 if|if
@@ -126,6 +136,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|jump_loc
 argument_list|(
 name|pos
@@ -135,6 +146,21 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|position
+argument_list|(
+name|sc_height
+operator|-
+literal|1
+argument_list|)
+operator|!=
+name|end_pos
+condition|)
+name|repaint
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 
