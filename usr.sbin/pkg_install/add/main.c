@@ -445,7 +445,15 @@ literal|700000
 block|,
 literal|799000
 block|,
-literal|"/packages-7-current"
+literal|"/packages-7-stable"
+block|}
+block|,
+block|{
+literal|800000
+block|,
+literal|899000
+block|,
+literal|"/packages-8-current"
 block|}
 block|,
 block|{
