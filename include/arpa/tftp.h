@@ -129,6 +129,7 @@ index|]
 decl_stmt|;
 comment|/* request packet stuff */
 block|}
+name|__packed
 name|th_u
 union|;
 name|char
@@ -139,6 +140,7 @@ index|]
 decl_stmt|;
 comment|/* data or error string */
 block|}
+name|__packed
 struct|;
 end_struct
 
