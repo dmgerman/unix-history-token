@@ -179,6 +179,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -2360,6 +2366,9 @@ name|vr_type
 modifier|*
 name|t
 decl_stmt|;
+name|int
+name|pmc
+decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -2760,6 +2769,20 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Windows may put the chip in suspend mode when it 	 * shuts down. Be sure to kick it in the head to wake it 	 * up again. 	 */
+if|if
+condition|(
+name|pci_find_extcap
+argument_list|(
+name|dev
+argument_list|,
+name|PCIY_PMG
+argument_list|,
+operator|&
+name|pmc
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|VR_CLRBIT
 argument_list|(
 name|sc
