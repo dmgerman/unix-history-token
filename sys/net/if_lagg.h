@@ -678,6 +678,10 @@ name|caddr_t
 name|sc_psc
 decl_stmt|;
 comment|/* protocol data */
+name|uint32_t
+name|sc_seq
+decl_stmt|;
+comment|/* sequence counter */
 name|SLIST_HEAD
 argument_list|(
 argument|__tplhd
