@@ -8957,16 +8957,9 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"sending fragment (%d, %d)\n"
+literal|"sending fragment (%d)\n"
 operator|,
 name|i
-operator|,
-name|segs
-index|[
-name|i
-index|]
-operator|.
-name|ds_len
 operator|)
 argument_list|)
 expr_stmt|;
