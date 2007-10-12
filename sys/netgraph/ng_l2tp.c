@@ -405,14 +405,6 @@ name|u_int16_t
 name|rexmits
 decl_stmt|;
 comment|/* # retransmits sent */
-name|u_int16_t
-name|max_rexmits
-decl_stmt|;
-comment|/* max # retransmits sent */
-name|u_int16_t
-name|max_rexmit_to
-decl_stmt|;
-comment|/* max retransmit timeout */
 name|struct
 name|callout
 name|rack_timer
@@ -5345,26 +5337,6 @@ name|seq
 operator|->
 name|wmax
 expr_stmt|;
-name|seq
-operator|->
-name|max_rexmits
-operator|=
-name|priv
-operator|->
-name|conf
-operator|.
-name|rexmit_max
-expr_stmt|;
-name|seq
-operator|->
-name|max_rexmit_to
-operator|=
-name|priv
-operator|->
-name|conf
-operator|.
-name|rexmit_max_to
-expr_stmt|;
 name|ng_callout_init
 argument_list|(
 operator|&
@@ -5597,23 +5569,6 @@ operator|->
 name|wmax
 operator|=
 name|new_wmax
-expr_stmt|;
-comment|/* Update retransmit parameters */
-name|seq
-operator|->
-name|max_rexmits
-operator|=
-name|conf
-operator|->
-name|rexmit_max
-expr_stmt|;
-name|seq
-operator|->
-name|max_rexmit_to
-operator|=
-name|conf
-operator|->
-name|rexmit_max_to
 expr_stmt|;
 comment|/* Done */
 return|return
@@ -6549,9 +6504,11 @@ operator|->
 name|rexmits
 operator|++
 operator|>=
-name|seq
+name|priv
 operator|->
-name|max_rexmits
+name|conf
+operator|.
+name|rexmit_max
 condition|)
 name|ng_l2tp_seq_failure
 argument_list|(
@@ -6587,15 +6544,19 @@ if|if
 condition|(
 name|delay
 operator|>
-name|seq
+name|priv
 operator|->
-name|max_rexmit_to
+name|conf
+operator|.
+name|rexmit_max_to
 condition|)
 name|delay
 operator|=
-name|seq
+name|priv
 operator|->
-name|max_rexmit_to
+name|conf
+operator|.
+name|rexmit_max_to
 expr_stmt|;
 name|ng_callout
 argument_list|(
