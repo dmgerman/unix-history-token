@@ -146,7 +146,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|u_long
 name|sb_max_adj
 init|=
