@@ -1921,9 +1921,7 @@ name|curthread
 argument_list|,
 name|pn
 argument_list|,
-name|pvd
-operator|->
-name|pvd_pid
+name|pid
 argument_list|,
 name|NULL
 argument_list|)
