@@ -1479,7 +1479,7 @@ operator|)
 return|;
 break|break;
 block|}
-comment|/* register interupt routine */
+comment|/* register interrupt routine */
 name|bus_setup_intr
 argument_list|(
 name|dev

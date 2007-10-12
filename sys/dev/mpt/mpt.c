@@ -5292,7 +5292,7 @@ name|data32
 operator|=
 name|cmd
 expr_stmt|;
-comment|/* Clear any left over pending doorbell interupts */
+comment|/* Clear any left over pending doorbell interrupts */
 if|if
 condition|(
 name|MPT_DB_INTR
@@ -9029,7 +9029,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Un-mask the interupts on the chip.  */
+comment|/*  * Un-mask the interrupts on the chip.  */
 end_comment
 
 begin_function
@@ -9056,7 +9056,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mask the interupts on the chip.  */
+comment|/*  * Mask the interrupts on the chip.  */
 end_comment
 
 begin_function

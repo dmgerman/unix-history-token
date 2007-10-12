@@ -11595,7 +11595,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * Place the request for the upload interrupt 	 * in the last descriptor in the chain. This way, if 	 * we're chaining several packets at once, we'll only 	 * get an interupt once for the whole chain rather than 	 * once for each packet. 	 */
+comment|/* 	 * Place the request for the upload interrupt 	 * in the last descriptor in the chain. This way, if 	 * we're chaining several packets at once, we'll only 	 * get an interrupt once for the whole chain rather than 	 * once for each packet. 	 */
 name|cur_tx
 operator|->
 name|xl_ptr
@@ -12041,7 +12041,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * Place the request for the upload interrupt 	 * in the last descriptor in the chain. This way, if 	 * we're chaining several packets at once, we'll only 	 * get an interupt once for the whole chain rather than 	 * once for each packet. 	 */
+comment|/* 	 * Place the request for the upload interrupt 	 * in the last descriptor in the chain. This way, if 	 * we're chaining several packets at once, we'll only 	 * get an interrupt once for the whole chain rather than 	 * once for each packet. 	 */
 name|cur_tx
 operator|->
 name|xl_ptr

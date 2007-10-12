@@ -4016,7 +4016,7 @@ name|codec_not_ready_bits
 operator||=
 name|detected_codecs
 expr_stmt|;
-comment|/* disable detected interupt sources */
+comment|/* disable detected interrupt sources */
 name|enable
 operator|=
 name|atiixp_rd

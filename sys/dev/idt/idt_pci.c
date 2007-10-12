@@ -882,7 +882,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Stop the device */
-comment|/* 	 * Lock out all device interupts. 	 */
+comment|/* 	 * Lock out all device interrupts. 	 */
 name|DEVICE_LOCK
 argument_list|(
 operator|&

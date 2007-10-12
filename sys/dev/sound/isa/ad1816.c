@@ -417,7 +417,7 @@ argument_list|(
 name|ad1816
 argument_list|)
 expr_stmt|;
-comment|/* get interupt status */
+comment|/* get interrupt status */
 name|c
 operator|=
 name|io_rd
@@ -427,7 +427,7 @@ argument_list|,
 name|AD1816_INT
 argument_list|)
 expr_stmt|;
-comment|/* check for stray interupts */
+comment|/* check for stray interrupts */
 if|if
 condition|(
 name|c
@@ -454,7 +454,7 @@ operator||
 name|AD1816_INTRPI
 expr_stmt|;
 block|}
-comment|/* check for capture interupt */
+comment|/* check for capture interrupt */
 if|if
 condition|(
 name|sndbuf_runsz
@@ -498,7 +498,7 @@ name|AD1816_INTRCI
 expr_stmt|;
 comment|/* cp served */
 block|}
-comment|/* check for playback interupt */
+comment|/* check for playback interrupt */
 if|if
 condition|(
 name|sndbuf_runsz

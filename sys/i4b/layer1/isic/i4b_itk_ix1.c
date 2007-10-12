@@ -1137,7 +1137,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* register interupt routine */
+comment|/* register interrupt routine */
 if|#
 directive|if
 name|defined
@@ -1146,7 +1146,7 @@ name|ITK_PROBE_DEBUG
 argument_list|)
 name|printf
 argument_list|(
-literal|"Setting up access interupt..."
+literal|"Setting up access interrupt..."
 argument_list|)
 expr_stmt|;
 endif|#

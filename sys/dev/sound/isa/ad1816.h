@@ -30,7 +30,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* interupt status     		*/
+comment|/* interrupt status		*/
 end_comment
 
 begin_define

@@ -57725,7 +57725,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * Just got locked to this guy in case of an 				 * interupt. 				 */
+comment|/* 				 * Just got locked to this guy in case of an 				 * interrupt. 				 */
 name|strm
 operator|->
 name|last_msg_incomplete
