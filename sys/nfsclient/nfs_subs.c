@@ -324,6 +324,13 @@ name|nfs_bufq
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|nfs_xid_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * and the reverse mapping from generic to Version 2 procedure numbers  */
 end_comment
@@ -640,7 +647,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|nfs_reqq_mtx
+name|nfs_xid_mtx
 argument_list|)
 expr_stmt|;
 comment|/* Get a pretty random xid to start with */
@@ -682,7 +689,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|nfs_reqq_mtx
+name|nfs_xid_mtx
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1986,6 +1993,18 @@ operator|&
 name|nfs_iod_mtx
 argument_list|,
 literal|"NFS iod lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|nfs_xid_mtx
+argument_list|,
+literal|"NFS xid lock"
 argument_list|,
 name|NULL
 argument_list|,

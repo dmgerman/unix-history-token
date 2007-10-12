@@ -1335,7 +1335,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|nfs_sndlock
+name|nfs_connect_lock
 parameter_list|(
 name|struct
 name|nfsreq
@@ -1346,7 +1346,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|nfs_sndunlock
+name|nfs_connect_unlock
 parameter_list|(
 name|struct
 name|nfsreq

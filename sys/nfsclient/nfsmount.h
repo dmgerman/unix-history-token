@@ -32,8 +32,16 @@ directive|define
 name|NFS_TCP_FORCE_RECONNECT
 value|0x0002
 comment|/* Force a TCP reconnect */
+define|#
+directive|define
+name|NFS_TCP_WAIT_WRITE_DRAIN
+value|0x0004
+comment|/* Waiting for socket writers to finish */
 name|int
 name|flags
+decl_stmt|;
+name|int
+name|sock_send_inprog
 decl_stmt|;
 block|}
 struct|;
