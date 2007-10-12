@@ -473,6 +473,13 @@ argument_list|,
 name|quit
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|quit
+argument_list|)
+expr_stmt|;
 name|n
 operator|=
 name|write
