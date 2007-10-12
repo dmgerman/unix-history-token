@@ -1631,12 +1631,17 @@ operator|(
 literal|0
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|LOADER_NFS_SUPPORT
 comment|/* get an NFS filehandle for our root filesystem */
 name|pxe_setnfshandle
 argument_list|(
 name|rootpath
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pxe_sock
