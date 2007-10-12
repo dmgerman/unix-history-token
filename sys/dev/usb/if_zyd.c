@@ -437,6 +437,13 @@ name|ZYD_ZD1211_DEV
 argument_list|(
 name|PLANEX2
 argument_list|,
+name|GWUS54GD
+argument_list|)
+block|,
+name|ZYD_ZD1211_DEV
+argument_list|(
+name|PLANEX2
+argument_list|,
 name|GWUS54GZL
 argument_list|)
 block|,
