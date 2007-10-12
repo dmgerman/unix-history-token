@@ -791,6 +791,23 @@ name|c_namesize
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Non-regular files don't store bodies. */
+if|if
+condition|(
+name|archive_entry_filetype
+argument_list|(
+name|entry
+argument_list|)
+operator|!=
+name|AE_IFREG
+condition|)
+name|archive_entry_set_size
+argument_list|(
+name|entry
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Symlinks get the link written as the body of the entry. */
 name|p
 operator|=
