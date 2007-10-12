@@ -534,6 +534,78 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
+name|pccard_function
+name|pccard_sierra_a555_func1
+init|=
+block|{
+literal|1
+block|,
+comment|/* function number */
+name|PCCARD_FUNCTION_SERIAL
+block|,
+literal|0x24
+block|,
+comment|/* last cfe number */
+literal|0x700
+block|,
+comment|/* ccr_base */
+literal|0x73
+block|,
+comment|/* ccr_mask */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pccard_config_entry
+name|pccard_sierra_a555_func1_cfe0
+init|=
+block|{
+literal|0x22
+block|,
+comment|/* cfe number */
+name|PCCARD_CFE_IO8
+operator||
+name|PCCARD_CFE_IRQLEVEL
+block|,
+name|PCCARD_IFTYPE_IO
+block|,
+literal|1
+block|,
+comment|/* num_iospace */
+literal|0
+block|,
+comment|/* iomask */
+block|{
+block|{
+literal|0x0008
+block|,
+literal|0x3e8
+block|}
+block|}
+block|,
+comment|/* iospace */
+literal|0x3fbc
+block|,
+comment|/* irqmask */
+literal|0
+block|,
+comment|/* num_memspace */
+block|{ }
+block|,
+comment|/* memspace */
+literal|0
+block|,
+comment|/* maxtwins */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
 name|pccard_cis_quirk
 name|pccard_cis_quirks
 index|[]
@@ -621,6 +693,62 @@ name|pccard_3ccfem556bi_func1
 block|,
 operator|&
 name|pccard_3ccfem556bi_func1_cfe0
+block|}
+block|,
+block|{
+name|PCMCIA_VENDOR_SIERRA
+block|,
+name|PCMCIA_PRODUCT_SIERRA_A550
+block|,
+name|PCMCIA_CIS_INVALID
+block|,
+operator|&
+name|pccard_sierra_a555_func1
+block|,
+operator|&
+name|pccard_sierra_a555_func1_cfe0
+block|}
+block|,
+block|{
+name|PCMCIA_VENDOR_SIERRA
+block|,
+name|PCMCIA_PRODUCT_SIERRA_A555
+block|,
+name|PCMCIA_CIS_INVALID
+block|,
+operator|&
+name|pccard_sierra_a555_func1
+block|,
+operator|&
+name|pccard_sierra_a555_func1_cfe0
+block|}
+block|,
+block|{
+name|PCMCIA_VENDOR_SIERRA
+block|,
+name|PCMCIA_PRODUCT_SIERRA_A710
+block|,
+name|PCMCIA_CIS_INVALID
+block|,
+operator|&
+name|pccard_sierra_a555_func1
+block|,
+operator|&
+name|pccard_sierra_a555_func1_cfe0
+block|}
+block|,
+block|{
+name|PCMCIA_VENDOR_SIERRA
+block|,
+name|PCMCIA_PRODUCT_SIERRA_AC710
+block|,
+name|PCMCIA_CIS_INVALID
+block|,
+operator|&
+name|pccard_sierra_a555_func1
+block|,
+operator|&
+name|pccard_sierra_a555_func1_cfe0
 block|}
 block|,
 block|{
