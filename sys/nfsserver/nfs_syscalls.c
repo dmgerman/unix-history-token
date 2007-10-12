@@ -427,6 +427,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|sb_max_adj
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * NFS server system calls  */
 end_comment
@@ -826,27 +833,9 @@ comment|/* 	 * Add it to the list, as required. 	 */
 block|if (so->so_proto->pr_protocol == IPPROTO_UDP) { 		tslp = nfs_udpsock; 		if (tslp->ns_flag& SLP_VALID) { 			if (mynam != NULL) 				FREE(mynam, M_SONAME); 			return (EPERM); 		} 	}
 endif|#
 directive|endif
-if|if
-condition|(
-name|so
-operator|->
-name|so_type
-operator|==
-name|SOCK_STREAM
-condition|)
 name|siz
 operator|=
-name|NFS_MAXPACKET
-operator|+
-sizeof|sizeof
-argument_list|(
-name|u_long
-argument_list|)
-expr_stmt|;
-else|else
-name|siz
-operator|=
-name|NFS_MAXPACKET
+name|sb_max_adj
 expr_stmt|;
 name|error
 operator|=
