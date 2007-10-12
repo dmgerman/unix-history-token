@@ -4619,44 +4619,6 @@ index|]
 operator|=
 name|m
 expr_stmt|;
-comment|/* Sanity check receive ack timer state */
-name|KASSERT
-argument_list|(
-operator|(
-name|i
-operator|==
-literal|0
-operator|)
-operator|^
-name|callout_active
-argument_list|(
-operator|&
-name|seq
-operator|->
-name|rack_timer
-argument_list|)
-argument_list|,
-operator|(
-literal|"%s: xwin %d full but rack timer %s running"
-operator|,
-name|__func__
-operator|,
-name|i
-operator|,
-name|callout_active
-argument_list|(
-operator|&
-name|seq
-operator|->
-name|rack_timer
-argument_list|)
-condition|?
-literal|""
-else|:
-literal|"not "
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* If peer's receive window is already full, nothing else to do */
 if|if
 condition|(
