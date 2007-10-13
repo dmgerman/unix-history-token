@@ -549,7 +549,7 @@ name|iswascii
 parameter_list|(
 name|wc
 parameter_list|)
-value|(((wc)& ~0x7F) == 0)
+value|((wc)< 0x80)
 end_define
 
 begin_define

@@ -101,14 +101,9 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-operator|(
 name|wc
-operator|&
-operator|~
-literal|0x7F
-operator|)
-operator|==
-literal|0
+operator|<
+literal|0x80
 operator|)
 return|;
 block|}
