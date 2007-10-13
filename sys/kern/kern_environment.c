@@ -1978,11 +1978,67 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Return an unsigned integer value from an environment variable.  */
+end_comment
+
+begin_function
+name|int
+name|getenv_uint
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|quad_t
+name|tmp
+decl_stmt|;
+name|int
+name|rval
+decl_stmt|;
+name|rval
+operator|=
+name|getenv_quad
+argument_list|(
+name|name
+argument_list|,
+operator|&
+name|tmp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rval
+condition|)
+operator|*
+name|data
+operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
+name|tmp
+expr_stmt|;
+return|return
+operator|(
+name|rval
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Return a long value from an environment variable.  */
 end_comment
 
 begin_function
-name|long
+name|int
 name|getenv_long
 parameter_list|(
 specifier|const
@@ -1998,7 +2054,7 @@ block|{
 name|quad_t
 name|tmp
 decl_stmt|;
-name|long
+name|int
 name|rval
 decl_stmt|;
 name|rval
@@ -2036,8 +2092,7 @@ comment|/*  * Return an unsigned long value from an environment variable.  */
 end_comment
 
 begin_function
-name|unsigned
-name|long
+name|int
 name|getenv_ulong
 parameter_list|(
 specifier|const
@@ -2054,7 +2109,7 @@ block|{
 name|quad_t
 name|tmp
 decl_stmt|;
-name|long
+name|int
 name|rval
 decl_stmt|;
 name|rval

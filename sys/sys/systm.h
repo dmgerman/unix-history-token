@@ -1959,7 +1959,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|long
+name|int
+name|getenv_uint
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|getenv_long
 parameter_list|(
 specifier|const
@@ -1975,8 +1992,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|long
+name|int
 name|getenv_ulong
 parameter_list|(
 specifier|const
