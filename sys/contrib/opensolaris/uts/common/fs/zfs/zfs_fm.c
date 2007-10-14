@@ -727,7 +727,7 @@ name|ZFS_LOG
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|sbuf_data
 argument_list|(
