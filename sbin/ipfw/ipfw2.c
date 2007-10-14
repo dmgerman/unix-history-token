@@ -2477,21 +2477,6 @@ name|sep
 decl_stmt|;
 if|if
 condition|(
-name|cmd
-operator|->
-name|o
-operator|.
-name|len
-operator|&
-name|F_NOT
-condition|)
-name|printf
-argument_list|(
-literal|" not"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|opcode
 operator|!=
 literal|0
@@ -8020,6 +8005,19 @@ condition|)
 name|printf
 argument_list|(
 literal|" {"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cmd
+operator|->
+name|len
+operator|&
+name|F_NOT
+condition|)
+name|printf
+argument_list|(
+literal|" not"
 argument_list|)
 expr_stmt|;
 name|print_newports
