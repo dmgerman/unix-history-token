@@ -226,6 +226,7 @@ name|__mb_cur_max
 operator|=
 literal|6
 expr_stmt|;
+comment|/* 	 * UCS-4 encoding used as the internal representation, so 	 * slots 0x0080-0x00FF are occuped and must be excluded 	 * from the single byte ctype by setting the limit. 	 */
 name|__mb_sb_limit
 operator|=
 literal|128
