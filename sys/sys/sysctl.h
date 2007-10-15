@@ -2432,19 +2432,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HW_SENSORS
-value|13
-end_define
-
-begin_comment
-comment|/* node: hardware monitors */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HW_MAXID
-value|14
+value|13
 end_define
 
 begin_comment
@@ -2455,7 +2444,7 @@ begin_define
 define|#
 directive|define
 name|CTL_HW_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "machine", CTLTYPE_STRING }, \ 	{ "model", CTLTYPE_STRING }, \ 	{ "ncpu", CTLTYPE_INT }, \ 	{ "byteorder", CTLTYPE_INT }, \ 	{ "physmem", CTLTYPE_ULONG }, \ 	{ "usermem", CTLTYPE_ULONG }, \ 	{ "pagesize", CTLTYPE_INT }, \ 	{ "disknames", CTLTYPE_STRUCT }, \ 	{ "diskstats", CTLTYPE_STRUCT }, \ 	{ "floatingpoint", CTLTYPE_INT }, \ 	{ "machine_arch", CTLTYPE_STRING }, \ 	{ "realmem", CTLTYPE_ULONG }, \ 	{ "sensors", CTLTYPE_NODE}, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "machine", CTLTYPE_STRING }, \ 	{ "model", CTLTYPE_STRING }, \ 	{ "ncpu", CTLTYPE_INT }, \ 	{ "byteorder", CTLTYPE_INT }, \ 	{ "physmem", CTLTYPE_ULONG }, \ 	{ "usermem", CTLTYPE_ULONG }, \ 	{ "pagesize", CTLTYPE_INT }, \ 	{ "disknames", CTLTYPE_STRUCT }, \ 	{ "diskstats", CTLTYPE_STRUCT }, \ 	{ "floatingpoint", CTLTYPE_INT }, \ 	{ "realmem", CTLTYPE_ULONG }, \ }
 end_define
 
 begin_comment

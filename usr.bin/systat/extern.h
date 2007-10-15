@@ -375,16 +375,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|closesensors
-parameter_list|(
-name|WINDOW
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|closeswap
 parameter_list|(
 name|WINDOW
@@ -642,15 +632,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|fetchsensors
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|fetchswap
 parameter_list|(
 name|void
@@ -792,15 +773,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|initsensors
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|initswap
 parameter_list|(
 name|void
@@ -934,15 +906,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|labels
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|labelsensors
 parameter_list|(
 name|void
 parameter_list|)
@@ -1096,16 +1059,6 @@ begin_function_decl
 name|WINDOW
 modifier|*
 name|openpigs
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|WINDOW
-modifier|*
-name|opensensors
 parameter_list|(
 name|void
 parameter_list|)
@@ -1276,15 +1229,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|showpigs
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|showsensors
 parameter_list|(
 name|void
 parameter_list|)
