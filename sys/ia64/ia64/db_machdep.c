@@ -3079,6 +3079,20 @@ name|n
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|tmpl
+index|[
+literal|1
+index|]
+operator|==
+literal|';'
+condition|)
+name|db_printf
+argument_list|(
+literal|" ;;"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
