@@ -1380,9 +1380,6 @@ name|mp
 operator|->
 name|mnt_data
 operator|=
-operator|(
-name|qaddr_t
-operator|)
 name|pi
 expr_stmt|;
 name|vfs_getnewfsid

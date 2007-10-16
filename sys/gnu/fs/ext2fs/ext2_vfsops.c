@@ -3390,9 +3390,6 @@ name|mp
 operator|->
 name|mnt_data
 operator|=
-operator|(
-name|qaddr_t
-operator|)
 name|ump
 expr_stmt|;
 name|mp
@@ -3606,10 +3603,7 @@ name|mp
 operator|->
 name|mnt_data
 operator|=
-operator|(
-name|qaddr_t
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 return|return
@@ -3904,10 +3898,7 @@ name|mp
 operator|->
 name|mnt_data
 operator|=
-operator|(
-name|qaddr_t
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 name|MNT_ILOCK
 argument_list|(

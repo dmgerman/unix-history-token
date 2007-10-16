@@ -969,9 +969,6 @@ name|mp
 operator|->
 name|mnt_data
 operator|=
-operator|(
-name|qaddr_t
-operator|)
 name|nmp
 expr_stmt|;
 name|nmp
@@ -1446,10 +1443,7 @@ name|mp
 operator|->
 name|mnt_data
 operator|=
-operator|(
-name|qaddr_t
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(

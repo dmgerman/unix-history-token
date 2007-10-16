@@ -1488,9 +1488,6 @@ name|mp
 operator|->
 name|mnt_data
 operator|=
-operator|(
-name|qaddr_t
-operator|)
 name|ump
 expr_stmt|;
 comment|/* 	 * Copy upper layer's RDONLY flag. 	 */

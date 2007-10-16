@@ -1219,9 +1219,6 @@ name|mp
 operator|->
 name|mnt_data
 operator|=
-operator|(
-name|qaddr_t
-operator|)
 literal|0
 expr_stmt|;
 name|MNT_ILOCK
@@ -2781,9 +2778,6 @@ name|mp
 operator|->
 name|mnt_data
 operator|=
-operator|(
-name|qaddr_t
-operator|)
 name|rmp
 expr_stmt|;
 name|mp
