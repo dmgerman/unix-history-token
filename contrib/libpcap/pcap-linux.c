@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-linux.c,v 1.110.2.6 2005/08/16 04:25:26 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-linux.c,v 1.110.2.14 2006/10/12 17:26:58 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1180,7 +1180,35 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * This is a 2.2[.x] or later kernel (we know that 		 * either because we're not using a SOCK_PACKET 		 * socket - PF_PACKET is supported only in 2.2 		 * and later kernels - or because we checked the 		 * kernel version). 		 * 		 * We can safely pass "recvfrom()" a byte count 		 * based on the snapshot length. 		 */
+comment|/* 		 * This is a 2.2[.x] or later kernel (we know that 		 * either because we're not using a SOCK_PACKET 		 * socket - PF_PACKET is supported only in 2.2 		 * and later kernels - or because we checked the 		 * kernel version). 		 * 		 * We can safely pass "recvfrom()" a byte count 		 * based on the snapshot length. 		 * 		 * If we're in cooked mode, make the snapshot length 		 * large enough to hold a "cooked mode" header plus 		 * 1 byte of packet data (so we don't pass a byte 		 * count of 0 to "recvfrom()"). 		 */
+if|if
+condition|(
+name|handle
+operator|->
+name|md
+operator|.
+name|cooked
+condition|)
+block|{
+if|if
+condition|(
+name|handle
+operator|->
+name|snapshot
+operator|<
+name|SLL_HDR_LEN
+operator|+
+literal|1
+condition|)
+name|handle
+operator|->
+name|snapshot
+operator|=
+name|SLL_HDR_LEN
+operator|+
+literal|1
+expr_stmt|;
+block|}
 name|handle
 operator|->
 name|bufsize
@@ -1586,6 +1614,31 @@ operator|.
 name|sock_packet
 condition|)
 block|{
+comment|/* 		 * Unfortunately, there is a window between socket() and 		 * bind() where the kernel may queue packets from any 		 * interface.  If we're bound to a particular interface, 		 * discard packets not from that interface. 		 * 		 * (If socket filters are supported, we could do the 		 * same thing we do when changing the filter; however, 		 * that won't handle packet sockets without socket 		 * filter support, and it's a bit more complicated. 		 * It would save some instructions per packet, however.) 		 */
+if|if
+condition|(
+name|handle
+operator|->
+name|md
+operator|.
+name|ifindex
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|from
+operator|.
+name|sll_ifindex
+operator|!=
+name|handle
+operator|->
+name|md
+operator|.
+name|ifindex
+condition|)
+return|return
+literal|0
+return|;
 comment|/* 		 * Do checks based on packet direction. 		 * We can only do this if we're using PF_PACKET; the 		 * address returned for SOCK_PACKET is a "sockaddr_pkt" 		 * which lacks the relevant packet type information. 		 */
 if|if
 condition|(
@@ -1907,7 +1960,7 @@ operator|->
 name|errbuf
 argument_list|)
 argument_list|,
-literal|"ioctl: %s"
+literal|"SIOCGSTAMP: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -1932,14 +1985,12 @@ name|len
 operator|=
 name|packet_len
 expr_stmt|;
-comment|/* 	 * Count the packet. 	 * 	 * Arguably, we should count them before we check the filter, 	 * as on many other platforms "ps_recv" counts packets 	 * handed to the filter rather than packets that passed 	 * the filter, but if filtering is done in the kernel, we 	 * can't get a count of packets that passed the filter, 	 * and that would mean the meaning of "ps_recv" wouldn't 	 * be the same on all Linux systems. 	 * 	 * XXX - it's not the same on all systems in any case; 	 * ideally, we should have a "get the statistics" call 	 * that supplies more counts and indicates which of them 	 * it supplies, so that we supply a count of packets 	 * handed to the filter only on platforms where that 	 * information is available. 	 * 	 * We count them here even if we can get the packet count 	 * from the kernel, as we can only determine at run time 	 * whether we'll be able to get it from the kernel (if 	 * HAVE_TPACKET_STATS isn't defined, we can't get it from 	 * the kernel, but if it is defined, the library might 	 * have been built with a 2.4 or later kernel, but we 	 * might be running on a 2.2[.x] kernel without Alexey 	 * Kuznetzov's turbopacket patches, and thus the kernel 	 * might not be able to supply those statistics).  We 	 * could, I guess, try, when opening the socket, to get 	 * the statistics, and if we can not increment the count 	 * here, but it's not clear that always incrementing 	 * the count is more expensive than always testing a flag 	 * in memory. 	 */
+comment|/* 	 * Count the packet. 	 * 	 * Arguably, we should count them before we check the filter, 	 * as on many other platforms "ps_recv" counts packets 	 * handed to the filter rather than packets that passed 	 * the filter, but if filtering is done in the kernel, we 	 * can't get a count of packets that passed the filter, 	 * and that would mean the meaning of "ps_recv" wouldn't 	 * be the same on all Linux systems. 	 * 	 * XXX - it's not the same on all systems in any case; 	 * ideally, we should have a "get the statistics" call 	 * that supplies more counts and indicates which of them 	 * it supplies, so that we supply a count of packets 	 * handed to the filter only on platforms where that 	 * information is available. 	 * 	 * We count them here even if we can get the packet count 	 * from the kernel, as we can only determine at run time 	 * whether we'll be able to get it from the kernel (if 	 * HAVE_TPACKET_STATS isn't defined, we can't get it from 	 * the kernel, but if it is defined, the library might 	 * have been built with a 2.4 or later kernel, but we 	 * might be running on a 2.2[.x] kernel without Alexey 	 * Kuznetzov's turbopacket patches, and thus the kernel 	 * might not be able to supply those statistics).  We 	 * could, I guess, try, when opening the socket, to get 	 * the statistics, and if we can not increment the count 	 * here, but it's not clear that always incrementing 	 * the count is more expensive than always testing a flag 	 * in memory. 	 * 	 * We keep the count in "md.packets_read", and use that for 	 * "ps_recv" if we can't get the statistics from the kernel. 	 * We do that because, if we *can* get the statistics from 	 * the kernel, we use "md.stat.ps_recv" and "md.stat.ps_drop" 	 * as running counts, as reading the statistics from the 	 * kernel resets the kernel statistics, and if we directly 	 * increment "md.stat.ps_recv" here, that means it will 	 * count packets *twice* on systems where we can get kernel 	 * statistics - once here, and once in pcap_stats_linux(). 	 */
 name|handle
 operator|->
 name|md
 operator|.
-name|stat
-operator|.
-name|ps_recv
+name|packets_read
 operator|++
 expr_stmt|;
 comment|/* Call the user supplied callback function */
@@ -2174,7 +2225,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 		 * In "linux/net/packet/af_packet.c", at least in the 		 * 2.4.9 kernel, "tp_packets" is incremented for every 		 * packet that passes the packet filter *and* is 		 * successfully queued on the socket; "tp_drops" is 		 * incremented for every packet dropped because there's 		 * not enough free space in the socket buffer. 		 * 		 * When the statistics are returned for a PACKET_STATISTICS 		 * "getsockopt()" call, "tp_drops" is added to "tp_packets", 		 * so that "tp_packets" counts all packets handed to 		 * the PF_PACKET socket, including packets dropped because 		 * there wasn't room on the socket buffer - but not 		 * including packets that didn't pass the filter. 		 * 		 * In the BSD BPF, the count of received packets is 		 * incremented for every packet handed to BPF, regardless 		 * of whether it passed the filter. 		 * 		 * We can't make "pcap_stats()" work the same on both 		 * platforms, but the best approximation is to return 		 * "tp_packets" as the count of packets and "tp_drops" 		 * as the count of drops. 		 * 		 * Keep a running total because each call to  		 *    getsockopt(handle->fd, SOL_PACKET, PACKET_STATISTICS, .... 		 * resets the counters to zero. 		 */
+comment|/* 		 * On systems where the PACKET_STATISTICS "getsockopt()" 		 * argument is supported on PF_PACKET sockets: 		 * 		 *	"ps_recv" counts only packets that *passed* the 		 *	filter, not packets that didn't pass the filter. 		 *	This includes packets later dropped because we 		 *	ran out of buffer space. 		 * 		 *	"ps_drop" counts packets dropped because we ran 		 *	out of buffer space.  It doesn't count packets 		 *	dropped by the interface driver.  It counts only 		 *	packets that passed the filter. 		 * 		 *	Both statistics include packets not yet read from 		 *	the kernel by libpcap, and thus not yet seen by 		 *	the application. 		 * 		 * In "linux/net/packet/af_packet.c", at least in the 		 * 2.4.9 kernel, "tp_packets" is incremented for every 		 * packet that passes the packet filter *and* is 		 * successfully queued on the socket; "tp_drops" is 		 * incremented for every packet dropped because there's 		 * not enough free space in the socket buffer. 		 * 		 * When the statistics are returned for a PACKET_STATISTICS 		 * "getsockopt()" call, "tp_drops" is added to "tp_packets", 		 * so that "tp_packets" counts all packets handed to 		 * the PF_PACKET socket, including packets dropped because 		 * there wasn't room on the socket buffer - but not 		 * including packets that didn't pass the filter. 		 * 		 * In the BSD BPF, the count of received packets is 		 * incremented for every packet handed to BPF, regardless 		 * of whether it passed the filter. 		 * 		 * We can't make "pcap_stats()" work the same on both 		 * platforms, but the best approximation is to return 		 * "tp_packets" as the count of packets and "tp_drops" 		 * as the count of drops. 		 * 		 * Keep a running total because each call to  		 *    getsockopt(handle->fd, SOL_PACKET, PACKET_STATISTICS, .... 		 * resets the counters to zero. 		 */
 name|handle
 operator|->
 name|md
@@ -2199,6 +2250,18 @@ name|kstats
 operator|.
 name|tp_drops
 expr_stmt|;
+operator|*
+name|stats
+operator|=
+name|handle
+operator|->
+name|md
+operator|.
+name|stat
+expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 else|else
 block|{
@@ -2234,15 +2297,22 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 	 * On systems where the PACKET_STATISTICS "getsockopt()" argument 	 * is supported on PF_PACKET sockets: 	 * 	 *	"ps_recv" counts only packets that *passed* the filter, 	 *	not packets that didn't pass the filter.  This includes 	 *	packets later dropped because we ran out of buffer space. 	 * 	 *	"ps_drop" counts packets dropped because we ran out of 	 *	buffer space.  It doesn't count packets dropped by the 	 *	interface driver.  It counts only packets that passed 	 *	the filter. 	 * 	 *	Both statistics include packets not yet read from the 	 *	kernel by libpcap, and thus not yet seen by the application. 	 * 	 * On systems where the PACKET_STATISTICS "getsockopt()" argument 	 * is not supported on PF_PACKET sockets: 	 * 	 *	"ps_recv" counts only packets that *passed* the filter, 	 *	not packets that didn't pass the filter.  It does not 	 *	count packets dropped because we ran out of buffer 	 *	space. 	 * 	 *	"ps_drop" is not supported. 	 * 	 *	"ps_recv" doesn't include packets not yet read from 	 *	the kernel by libpcap. 	 */
-operator|*
+comment|/* 	 * On systems where the PACKET_STATISTICS "getsockopt()" argument 	 * is not supported on PF_PACKET sockets: 	 * 	 *	"ps_recv" counts only packets that *passed* the filter, 	 *	not packets that didn't pass the filter.  It does not 	 *	count packets dropped because we ran out of buffer 	 *	space. 	 * 	 *	"ps_drop" is not supported. 	 * 	 *	"ps_recv" doesn't include packets not yet read from 	 *	the kernel by libpcap. 	 * 	 * We maintain the count of packets processed by libpcap in 	 * "md.packets_read", for reasons described in the comment 	 * at the end of pcap_read_packet().  We have no idea how many 	 * packets were dropped. 	 */
 name|stats
+operator|->
+name|ps_recv
 operator|=
 name|handle
 operator|->
 name|md
 operator|.
-name|stat
+name|packets_read
+expr_stmt|;
+name|stats
+operator|->
+name|ps_drop
+operator|=
+literal|0
 expr_stmt|;
 return|return
 literal|0
@@ -2479,6 +2549,12 @@ name|stderr
 argument_list|,
 literal|"Warning: Filter too complex for kernel\n"
 argument_list|)
+expr_stmt|;
+name|fcode
+operator|.
+name|len
+operator|=
+literal|0
 expr_stmt|;
 name|fcode
 operator|.
@@ -3241,6 +3317,27 @@ expr_stmt|;
 comment|/* We need to save packet direction for IrDA decoding, 		 * so let's use "Linux-cooked" mode. Jean II */
 comment|//handle->md.cooked = 1;
 break|break;
+comment|/* ARPHRD_LAPD is unofficial and randomly allocated, if reallocation 	 * is needed, please report it to<daniele@orlandi.com> */
+ifndef|#
+directive|ifndef
+name|ARPHRD_LAPD
+define|#
+directive|define
+name|ARPHRD_LAPD
+value|8445
+endif|#
+directive|endif
+case|case
+name|ARPHRD_LAPD
+case|:
+comment|/* Don't expect IP packet out of this interfaces... */
+name|handle
+operator|->
+name|linktype
+operator|=
+name|DLT_LINUX_LAPD
+expr_stmt|;
+break|break;
 default|default:
 name|handle
 operator|->
@@ -3468,6 +3565,12 @@ name|linktype
 operator|==
 name|DLT_LINUX_IRDA
 operator|||
+name|handle
+operator|->
+name|linktype
+operator|==
+name|DLT_LINUX_LAPD
+operator|||
 operator|(
 name|handle
 operator|->
@@ -3639,6 +3742,12 @@ operator|->
 name|linktype
 operator|!=
 name|DLT_LINUX_IRDA
+operator|&&
+name|handle
+operator|->
+name|linktype
+operator|!=
+name|DLT_LINUX_LAPD
 condition|)
 name|handle
 operator|->
@@ -3977,7 +4086,7 @@ name|ebuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"ioctl: %s"
+literal|"SIOCGIFINDEX: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -4759,7 +4868,7 @@ name|ebuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"ioctl: %s"
+literal|"SIOCGIFFLAGS: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -4848,7 +4957,7 @@ name|ebuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"ioctl: %s"
+literal|"SIOCSIFFLAGS: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -5174,7 +5283,7 @@ name|ebuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"ioctl: %s"
+literal|"SIOCGIFMTU: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -5272,7 +5381,7 @@ name|ebuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"ioctl: %s"
+literal|"SIOCGIFHWADDR: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -5875,9 +5984,11 @@ modifier|*
 name|handle
 parameter_list|)
 block|{
-comment|/* setsockopt() barfs unless it get a dummy parameter */
+comment|/* 	 * setsockopt() barfs unless it get a dummy parameter. 	 * valgrind whines unless the value is initialized, 	 * as it has no idea that setsockopt() ignores its 	 * parameter. 	 */
 name|int
 name|dummy
+init|=
+literal|0
 decl_stmt|;
 return|return
 name|setsockopt

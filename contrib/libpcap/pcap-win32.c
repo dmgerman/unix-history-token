@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999 - 2003  * NetGroup, Politecnico di Torino (Italy)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  * notice, this list of conditions and the following disclaimer in the  * documentation and/or other materials provided with the distribution.  * 3. Neither the name of the Politecnico di Torino nor the names of its  * contributors may be used to endorse or promote products derived from  * this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1999 - 2005 NetGroup, Politecnico di Torino (Italy)  * Copyright (c) 2005 - 2007 CACE Technologies, Davis (California)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  * notice, this list of conditions and the following disclaimer in the  * documentation and/or other materials provided with the distribution.  * 3. Neither the name of the Politecnico di Torino, CACE Technologies   * nor the names of its contributors may be used to endorse or promote   * products derived from this software without specific prior written   * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-win32.c,v 1.25.2.3 2005/07/10 17:52:54 risso Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-win32.c,v 1.25.2.7 2007/06/14 22:07:14 gianluca Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<packet32.h>
+file|<Packet32.h>
 end_include
 
 begin_include
@@ -1820,6 +1820,36 @@ operator|=
 name|DLT_NULL
 expr_stmt|;
 break|break;
+case|case
+name|NdisMediumBare80211
+case|:
+name|p
+operator|->
+name|linktype
+operator|=
+name|DLT_IEEE802_11
+expr_stmt|;
+break|break;
+case|case
+name|NdisMediumRadio80211
+case|:
+name|p
+operator|->
+name|linktype
+operator|=
+name|DLT_IEEE802_11_RADIO
+expr_stmt|;
+break|break;
+case|case
+name|NdisMediumPpi
+case|:
+name|p
+operator|->
+name|linktype
+operator|=
+name|DLT_PPI
+expr_stmt|;
+break|break;
 default|default:
 name|p
 operator|->
@@ -1830,11 +1860,14 @@ expr_stmt|;
 comment|/*an unknown adapter is assumed to be ethernet*/
 break|break;
 block|}
-comment|/* Set promisquous mode */
+comment|/* Set promiscuous mode */
 if|if
 condition|(
 name|promisc
 condition|)
+block|{
+if|if
+condition|(
 name|PacketSetHwFilter
 argument_list|(
 name|p
@@ -1843,8 +1876,28 @@ name|adapter
 argument_list|,
 name|NDIS_PACKET_TYPE_PROMISCUOUS
 argument_list|)
+operator|==
+name|FALSE
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"failed to set hardware filter to promiscuous mode"
+argument_list|)
 expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+block|}
 else|else
+block|{
+if|if
+condition|(
 name|PacketSetHwFilter
 argument_list|(
 name|p
@@ -1853,7 +1906,24 @@ name|adapter
 argument_list|,
 name|NDIS_PACKET_TYPE_ALL_LOCAL
 argument_list|)
+operator|==
+name|FALSE
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"failed to set hardware filter to non-promiscuous mode"
+argument_list|)
 expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+block|}
 comment|/* Set the buffer size */
 name|p
 operator|->
