@@ -511,13 +511,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"CTOR %p\n"
-argument_list|,
-name|mem
-argument_list|)
-expr_stmt|;
 name|td
 operator|=
 operator|(
