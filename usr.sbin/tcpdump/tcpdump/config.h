@@ -32,6 +32,10 @@ comment|/* Define if you enable IPv6 support */
 end_comment
 
 begin_comment
+comment|/* See Makefile */
+end_comment
+
+begin_comment
 comment|/* #undef INET6 */
 end_comment
 
@@ -66,17 +70,6 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_NEW_RES_STATE */
 end_comment
-
-begin_comment
-comment|/* define if<inttypes.h> defines PRI[doxu]64 macros */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTTYPES_H_DEFINES_FORMATS
-value|1
-end_define
 
 begin_comment
 comment|/*  * define if struct ether_header.ether_dhost is a struct with ether_addr_octet  */
@@ -347,46 +340,6 @@ comment|/* #undef _SUN */
 end_comment
 
 begin_comment
-comment|/* Workaround for missing sized types */
-end_comment
-
-begin_comment
-comment|/* XXX this should move to the more standard uint*_t */
-end_comment
-
-begin_comment
-comment|/* #undef int8_t */
-end_comment
-
-begin_comment
-comment|/* #undef int16_t */
-end_comment
-
-begin_comment
-comment|/* #undef int32_t */
-end_comment
-
-begin_comment
-comment|/* #undef int64_t */
-end_comment
-
-begin_comment
-comment|/* #undef u_int8_t */
-end_comment
-
-begin_comment
-comment|/* #undef u_int16_t */
-end_comment
-
-begin_comment
-comment|/* #undef u_int32_t */
-end_comment
-
-begin_comment
-comment|/* #undef u_int64_t */
-end_comment
-
-begin_comment
 comment|/* Workaround for missing 64-bit formats */
 end_comment
 
@@ -550,6 +503,10 @@ comment|/* Define to 1 if you have the `crypto' library (-lcrypto). */
 end_comment
 
 begin_comment
+comment|/* See Makefile */
+end_comment
+
+begin_comment
 comment|/* #undef HAVE_LIBCRYPTO */
 end_comment
 
@@ -608,7 +565,23 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<net/pfvar.h> header file. */
+end_comment
+
+begin_comment
+comment|/* See Makefile */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NET_PFVAR_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<openssl/evp.h> header file. */
+end_comment
+
+begin_comment
+comment|/* See Makefile */
 end_comment
 
 begin_comment
@@ -849,6 +822,22 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if the system has the type `struct ether_addr'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_ETHER_ADDR */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/bitypes.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_BITYPES_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/stat.h> header file. */
 end_comment
 
@@ -999,7 +988,7 @@ value|void
 end_define
 
 begin_comment
-comment|/* The size of a `char', as computed by sizeof. */
+comment|/* The size of `char', as computed by sizeof. */
 end_comment
 
 begin_define
@@ -1010,7 +999,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* The size of a `int', as computed by sizeof. */
+comment|/* The size of `int', as computed by sizeof. */
 end_comment
 
 begin_define
@@ -1021,7 +1010,11 @@ value|4
 end_define
 
 begin_comment
-comment|/* The size of a `long', as computed by sizeof. */
+comment|/* The size of `long', as computed by sizeof. */
+end_comment
+
+begin_comment
+comment|/* XXX: This is wrong, but possibly unused */
 end_comment
 
 begin_define
@@ -1032,7 +1025,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* The size of a `long long', as computed by sizeof. */
+comment|/* The size of `long long', as computed by sizeof. */
 end_comment
 
 begin_define
@@ -1043,7 +1036,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* The size of a `short', as computed by sizeof. */
+comment|/* The size of `short', as computed by sizeof. */
 end_comment
 
 begin_define
@@ -1085,6 +1078,70 @@ directive|define
 name|inline
 value|inline
 end_define
+
+begin_comment
+comment|/* Define to `short' if int16_t not defined. */
+end_comment
+
+begin_comment
+comment|/* #undef int16_t */
+end_comment
+
+begin_comment
+comment|/* Define to `int' if int32_t not defined. */
+end_comment
+
+begin_comment
+comment|/* #undef int32_t */
+end_comment
+
+begin_comment
+comment|/* Define to `long long' if int64_t not defined. */
+end_comment
+
+begin_comment
+comment|/* #undef int64_t */
+end_comment
+
+begin_comment
+comment|/* Define to `signed char' if int8_t not defined. */
+end_comment
+
+begin_comment
+comment|/* #undef int8_t */
+end_comment
+
+begin_comment
+comment|/* Define to `unsigned short' if u_int16_t not defined. */
+end_comment
+
+begin_comment
+comment|/* #undef u_int16_t */
+end_comment
+
+begin_comment
+comment|/* Define to `unsigned int' if u_int32_t not defined. */
+end_comment
+
+begin_comment
+comment|/* #undef u_int32_t */
+end_comment
+
+begin_comment
+comment|/* Define to `unsigned long long' if u_int64_t not defined. */
+end_comment
+
+begin_comment
+comment|/* #undef u_int64_t */
+end_comment
+
+begin_comment
+comment|/* Define to `unsigned char' if u_int8_t not defined. */
+end_comment
+
+begin_comment
+comment|/* #undef u_int8_t */
+end_comment
 
 end_unit
 
