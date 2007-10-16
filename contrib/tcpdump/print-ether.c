@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ether.c,v 1.95.2.4 2005/07/10 14:47:57 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ether.c,v 1.95.2.6 2006/02/20 18:15:03 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -560,10 +560,6 @@ name|ether_type
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Is it (gag) an 802.3 encapsulation? 	 */
-name|extracted_ether_type
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|ether_type
@@ -1056,12 +1052,12 @@ operator|+
 literal|4
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
 name|suppress_default_print
 condition|)
+block|{
 name|default_print
 argument_list|(
 name|p
@@ -1073,6 +1069,8 @@ operator|+
 literal|4
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 return|return
 operator|(
 literal|1
@@ -1176,12 +1174,12 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
 name|suppress_default_print
 condition|)
+block|{
 name|default_print
 argument_list|(
 name|p
@@ -1193,6 +1191,8 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 return|return
 operator|(
 literal|1
