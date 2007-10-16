@@ -2197,8 +2197,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|vm_offset_t
+name|arm_ptovirt
+parameter_list|(
+name|vm_paddr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
-name|arm_busy_pages
+name|arm_init_smallalloc
 parameter_list|(
 name|void
 parameter_list|)
@@ -2266,6 +2275,14 @@ name|vm_size_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|vm_paddr_t
+name|dump_avail
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

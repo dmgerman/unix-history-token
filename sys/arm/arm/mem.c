@@ -132,33 +132,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_global.h"
+file|<machine/vmparam.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ARM_USE_SMALL_ALLOC
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|alloc_curaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|alloc_firstaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"opt_global.h"
+end_include
 
 begin_comment
 comment|/*  * Used in /dev/mem drivers and elsewhere  */
@@ -569,12 +550,12 @@ name|ARM_USE_SMALL_ALLOC
 if|if
 condition|(
 name|addr
-operator|<
-name|alloc_firstaddr
+operator|<=
+name|VM_MAXUSER_ADDRESS
 operator|||
 name|addr
-operator|>
-name|alloc_curaddr
+operator|>=
+name|KERNBASE
 condition|)
 endif|#
 directive|endif
