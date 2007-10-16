@@ -1387,6 +1387,37 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
+literal|" stack: %p-%p\n"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|td
+operator|->
+name|td_kstack
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|td
+operator|->
+name|td_kstack
+operator|+
+name|td
+operator|->
+name|td_kstack_pages
+operator|*
+name|PAGE_SIZE
+operator|-
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
 literal|" flags: %#x "
 argument_list|,
 name|td
