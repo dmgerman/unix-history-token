@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  * @(#) $Header: /tcpdump/master/libpcap/pcap-int.h,v 1.68.2.6 2005/07/07 06:56:04 guy Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  * @(#) $Header: /tcpdump/master/libpcap/pcap-int.h,v 1.68.2.11 2007/06/22 06:43:58 guy Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -35,7 +35,7 @@ directive|ifdef
 name|WIN32
 include|#
 directive|include
-file|<packet32.h>
+file|<Packet32.h>
 endif|#
 directive|endif
 comment|/* WIN32 */
@@ -50,6 +50,14 @@ directive|include
 file|<io.h>
 endif|#
 directive|endif
+comment|/*  * Swap byte ordering of unsigned long long timestamp on a big endian  * machine.  */
+define|#
+directive|define
+name|SWAPLL
+parameter_list|(
+name|ull
+parameter_list|)
+value|((ull& 0xff00000000000000LL)>> 56) | \                       ((ull& 0x00ff000000000000LL)>> 40) | \                       ((ull& 0x0000ff0000000000LL)>> 24) | \                       ((ull& 0x000000ff00000000LL)>> 8)  | \                       ((ull& 0x00000000ff000000LL)<< 8)  | \                       ((ull& 0x0000000000ff0000LL)<< 24) | \                       ((ull& 0x000000000000ff00LL)<< 40) | \                       ((ull& 0x00000000000000ffLL)<< 56)
 comment|/*  * Savefile  */
 typedef|typedef
 enum|enum
@@ -160,6 +168,10 @@ modifier|*
 name|next
 decl_stmt|;
 comment|/* list of open promiscuous sock_packet pcaps */
+name|u_int
+name|packets_read
+decl_stmt|;
+comment|/* count of packets read with recvfrom() */
 endif|#
 directive|endif
 ifdef|#
@@ -217,7 +229,16 @@ directive|endif
 comment|/* HAVE_DAG_API */
 block|}
 struct|;
-comment|/*  * Ultrix, DEC OSF/1^H^H^H^H^H^H^H^H^HDigital UNIX^H^H^H^H^H^H^H^H^H^H^H^H  * Tru64 UNIX, and NetBSD pad to make everything line up on a nice boundary.  */
+comment|/*  * Ultrix, DEC OSF/1^H^H^H^H^H^H^H^H^HDigital UNIX^H^H^H^H^H^H^H^H^H^H^H^H  * Tru64 UNIX, and some versions of NetBSD pad FDDI packets to make everything  * line up on a nice boundary.  */
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+include|#
+directive|include
+file|<sys/param.h>
+comment|/* needed to declare __NetBSD_Version__ */
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -508,7 +529,7 @@ decl_stmt|;
 comment|/* This is needed for the pcap_next_ex() to work */
 block|}
 struct|;
-comment|/*  * This is a timeval as stored in disk in a dumpfile.  * It has to use the same types everywhere, independent of the actual  * `struct timeval'  */
+comment|/*  * This is a timeval as stored in a savefile.  * It has to use the same types everywhere, independent of the actual  * `struct timeval'; `struct timeval' has 32-bit tv_sec values on some  * platforms and 64-bit tv_sec values on other platforms, and writing  * out native `struct timeval' values would mean files could only be  * read on systems with the same tv_sec size as the system on which  * the file was written.  */
 struct|struct
 name|pcap_timeval
 block|{
@@ -522,7 +543,7 @@ decl_stmt|;
 comment|/* microseconds */
 block|}
 struct|;
-comment|/*  * How a `pcap_pkthdr' is actually stored in the dumpfile.  *  * Do not change the format of this structure, in any way (this includes  * changes that only affect the length of fields in this structure),  * and do not make the time stamp anything other than seconds and  * microseconds (e.g., seconds and nanoseconds).  Instead:  *  *	introduce a new structure for the new format;  *  *	send mail to "tcpdump-workers@tcpdump.org", requesting a new  *	magic number for your new capture file format, and, when  *	you get the new magic number, put it in "savefile.c";  *  *	use that magic number for save files with the changed record  *	header;  *  *	make the code in "savefile.c" capable of reading files with  *	the old record header as well as files with the new record header  *	(using the magic number to determine the header format).  *  * Then supply the changes to "patches@tcpdump.org", so that future  * versions of libpcap and programs that use it (such as tcpdump) will  * be able to read your new capture file format.  */
+comment|/*  * This is a `pcap_pkthdr' as actually stored in a savefile.  *  * Do not change the format of this structure, in any way (this includes  * changes that only affect the length of fields in this structure),  * and do not make the time stamp anything other than seconds and  * microseconds (e.g., seconds and nanoseconds).  Instead:  *  *	introduce a new structure for the new format;  *  *	send mail to "tcpdump-workers@tcpdump.org", requesting a new  *	magic number for your new capture file format, and, when  *	you get the new magic number, put it in "savefile.c";  *  *	use that magic number for save files with the changed record  *	header;  *  *	make the code in "savefile.c" capable of reading files with  *	the old record header as well as files with the new record header  *	(using the magic number to determine the header format).  *  * Then supply the changes to "patches@tcpdump.org", so that future  * versions of libpcap and programs that use it (such as tcpdump) will  * be able to read your new capture file format.  */
 struct|struct
 name|pcap_sf_pkthdr
 block|{
@@ -541,7 +562,7 @@ decl_stmt|;
 comment|/* length this packet (off wire) */
 block|}
 struct|;
-comment|/*  * How a `pcap_pkthdr' is actually stored in dumpfiles written  * by some patched versions of libpcap (e.g. the ones in Red  * Hat Linux 6.1 and 6.2).  *  * Do not change the format of this structure, in any way (this includes  * changes that only affect the length of fields in this structure).  * Instead, introduce a new structure, as per the above.  */
+comment|/*  * How a `pcap_pkthdr' is actually stored in savefiles written  * by some patched versions of libpcap (e.g. the ones in Red  * Hat Linux 6.1 and 6.2).  *  * Do not change the format of this structure, in any way (this includes  * changes that only affect the length of fields in this structure).  * Instead, introduce a new structure, as per the above.  */
 struct|struct
 name|pcap_sf_patched_pkthdr
 block|{
