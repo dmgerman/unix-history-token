@@ -538,6 +538,7 @@ name|u_char
 name|td_tsqueue
 decl_stmt|;
 comment|/* (j) Turnstile queue blocked on. */
+name|signed
 name|char
 name|td_sqqueue
 decl_stmt|;
