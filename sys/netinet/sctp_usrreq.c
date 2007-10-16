@@ -3816,6 +3816,13 @@ argument_list|,
 name|SCTP_STATE_SHUTDOWN_SENT
 argument_list|)
 expr_stmt|;
+name|SCTP_CLEAR_SUBSTATE
+argument_list|(
+name|asoc
+argument_list|,
+name|SCTP_STATE_SHUTDOWN_PENDING
+argument_list|)
+expr_stmt|;
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_SHUTDOWN
@@ -4522,6 +4529,13 @@ argument_list|(
 name|asoc
 argument_list|,
 name|SCTP_STATE_SHUTDOWN_SENT
+argument_list|)
+expr_stmt|;
+name|SCTP_CLEAR_SUBSTATE
+argument_list|(
+name|asoc
+argument_list|,
+name|SCTP_STATE_SHUTDOWN_PENDING
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start

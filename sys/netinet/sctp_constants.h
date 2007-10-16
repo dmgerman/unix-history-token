@@ -2301,6 +2301,30 @@ parameter_list|)
 value|((asoc)->state = ((asoc)->state& ~SCTP_STATE_MASK) |  newstate)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_CLEAR_SUBSTATE
+parameter_list|(
+name|asoc
+parameter_list|,
+name|substate
+parameter_list|)
+value|((asoc)->state&= ~substate)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ADD_SUBSTATE
+parameter_list|(
+name|asoc
+parameter_list|,
+name|substate
+parameter_list|)
+value|((asoc)->state |= substate)
+end_define
+
 begin_comment
 comment|/* SCTP reachability state for each address */
 end_comment
