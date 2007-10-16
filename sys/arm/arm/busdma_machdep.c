@@ -3067,16 +3067,13 @@ operator|->
 name|alignment
 argument_list|)
 expr_stmt|;
-name|CTR3
+name|CTR2
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"map= %p, nobouncemap= %p, pagesneeded= %d"
+literal|"map= %p,  pagesneeded= %d"
 argument_list|,
 name|map
-argument_list|,
-operator|&
-name|nobounce_dmamap
 argument_list|,
 name|map
 operator|->
@@ -6965,11 +6962,6 @@ argument_list|(
 name|map
 operator|!=
 name|NULL
-operator|&&
-name|map
-operator|!=
-operator|&
-name|nobounce_dmamap
 argument_list|,
 operator|(
 literal|"add_bounce_page: bad map %p"
