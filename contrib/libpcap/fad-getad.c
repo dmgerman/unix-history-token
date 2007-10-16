@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/fad-getad.c,v 1.10.2.1 2005/04/10 18:04:49 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/fad-getad.c,v 1.10.2.2 2007/09/14 00:45:17 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,11 +136,41 @@ directive|ifdef
 name|AF_PACKET
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__Lynx__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netpacket/if_packet.h>
+end_include
+
+begin_comment
+comment|/* LynxOS */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<linux/if_packet.h>
 end_include
+
+begin_comment
+comment|/* Linux */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

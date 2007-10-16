@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap.c,v 1.88.2.8 2005/08/13 22:29:46 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap.c,v 1.88.2.19 2007/09/19 02:50:52 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -867,7 +867,7 @@ operator|(
 name|int
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -875,7 +875,7 @@ operator|*
 operator|*
 name|dlt_buffer
 argument_list|)
-operator|*
+argument_list|,
 name|p
 operator|->
 name|dlt_count
@@ -1444,6 +1444,13 @@ argument_list|)
 block|,
 name|DLT_CHOICE
 argument_list|(
+name|DLT_LINUX_LAPD
+argument_list|,
+literal|"Linux vISDN LAPD"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
 name|DLT_IEEE802_11_RADIO_AVS
 argument_list|,
 literal|"802.11 plus AVS radio information header"
@@ -1608,6 +1615,69 @@ argument_list|(
 name|DLT_JUNIPER_CHDLC
 argument_list|,
 literal|"Juniper C-HDLC"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_MFR
+argument_list|,
+literal|"FRF.16 Frame Relay"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_JUNIPER_VP
+argument_list|,
+literal|"Juniper Voice PIC"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_MTP2
+argument_list|,
+literal|"SS7 MTP2"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_A429
+argument_list|,
+literal|"Arinc 429"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_A653_ICM
+argument_list|,
+literal|"Arinc 653 Interpartition Communication"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_USB
+argument_list|,
+literal|"USB"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_BLUETOOTH_HCI_H4
+argument_list|,
+literal|"Bluetooth HCI UART transport layer"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_CAN20B
+argument_list|,
+literal|"Controller Area Network (CAN) v. 2.0B"
+argument_list|)
+block|,
+name|DLT_CHOICE
+argument_list|(
+name|DLT_MTP2_WITH_PHDR
+argument_list|,
+literal|"SS7 MTP2 with Pseudo-header"
 argument_list|)
 block|,
 name|DLT_CHOICE_SENTINEL
@@ -2937,6 +3007,7 @@ modifier|*
 name|us1
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2946,6 +3017,7 @@ modifier|*
 name|us2
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3905,6 +3977,7 @@ comment|/*  * Not all systems have strerror().  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|pcap_strerror
@@ -4452,7 +4525,7 @@ name|char
 name|pcap_version_string
 index|[]
 init|=
-literal|"libpcap version 0.9[.x]"
+literal|"libpcap version 0.9.8"
 decl_stmt|;
 end_decl_stmt
 
@@ -4478,7 +4551,7 @@ name|char
 name|wpcap_version_string
 index|[]
 init|=
-literal|"3.1"
+literal|"4.0"
 decl_stmt|;
 end_decl_stmt
 
