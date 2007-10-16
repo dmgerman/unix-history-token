@@ -1300,13 +1300,13 @@ name|ASM_OP_FXOR
 block|,
 name|ASM_OP_GETF
 block|,
+name|ASM_OP_HINT
+block|,
 name|ASM_OP_INVALA
 block|,
 name|ASM_OP_ITC
 block|,
 name|ASM_OP_ITR
-block|,
-name|ASM_OP_HINT
 block|,
 name|ASM_OP_LD1
 block|,
