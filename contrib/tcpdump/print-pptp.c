@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pptp.c,v 1.11 2003/11/16 09:36:33 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pptp.c,v 1.11.2.1 2006/06/23 02:07:27 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,42 +76,6 @@ init|=
 literal|" [|pptp]"
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TRUE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FALSE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

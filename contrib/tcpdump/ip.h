@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ip.h,v 1.11 2004/09/27 21:13:10 hannes Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ip.h,v 1.11.2.1 2007/09/14 01:30:02 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -298,6 +298,17 @@ end_define
 
 begin_comment
 comment|/* timestamp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPOPT_RFC1393
+value|82
+end_define
+
+begin_comment
+comment|/* traceroute RFC 1393 */
 end_comment
 
 begin_define

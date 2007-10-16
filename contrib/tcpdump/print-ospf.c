@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf.c,v 1.56.2.3 2005/08/23 11:16:29 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf.c,v 1.56.2.4 2006/12/13 08:24:27 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,7 +171,7 @@ literal|"none"
 block|}
 block|,
 block|{
-name|OSPF_AUTH_NONE
+name|OSPF_AUTH_SIMPLE
 block|,
 literal|"simple"
 block|}
@@ -4574,37 +4574,18 @@ break|break;
 case|case
 name|OSPF_AUTH_SIMPLE
 case|:
-if|if
-condition|(
-name|fn_printn
-argument_list|(
-name|op
-operator|->
-name|ospf_authdata
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|op
-operator|->
-name|ospf_authdata
-argument_list|)
-argument_list|,
-name|snapend
-argument_list|)
-condition|)
-block|{
 name|printf
 argument_list|(
-literal|"\""
+literal|"\n\tSimple text password: "
 argument_list|)
 expr_stmt|;
-goto|goto
-name|trunc
-goto|;
-block|}
-name|printf
+name|safeputs
 argument_list|(
-literal|"\""
+name|op
+operator|->
+name|ospf_authdata
+argument_list|,
+name|OSPF_AUTH_SIMPLE_LEN
 argument_list|)
 expr_stmt|;
 break|break;

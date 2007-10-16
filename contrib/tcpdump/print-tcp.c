@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-tcp.c,v 1.120.2.2 2005/04/21 06:36:05 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-tcp.c,v 1.120.2.3 2005/10/16 06:05:46 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4356,8 +4356,10 @@ name|rcvsig
 argument_list|,
 name|sig
 argument_list|,
-literal|16
+name|TCP_SIGLEN
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(

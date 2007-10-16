@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ospf.h,v 1.16.2.1 2005/08/23 11:16:30 hannes Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ospf.h,v 1.16.2.2 2006/12/13 08:24:27 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -189,6 +189,17 @@ end_define
 
 begin_comment
 comment|/* Simple password */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSPF_AUTH_SIMPLE_LEN
+value|8
+end_define
+
+begin_comment
+comment|/* max length of simple authentication */
 end_comment
 
 begin_define

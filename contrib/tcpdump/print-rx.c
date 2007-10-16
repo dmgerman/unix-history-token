@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rx.c,v 1.37 2003/11/16 09:36:36 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rx.c,v 1.37.2.2 2007/06/15 19:43:15 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4254,6 +4254,12 @@ name|char
 modifier|*
 name|user
 decl_stmt|;
+name|char
+name|fmt
+index|[
+literal|1024
+index|]
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -4335,6 +4341,22 @@ name|i
 operator|++
 control|)
 block|{
+name|snprintf
+argument_list|(
+name|fmt
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fmt
+argument_list|)
+argument_list|,
+literal|"%%%ds %%d\n%%n"
+argument_list|,
+name|maxsize
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sscanf
@@ -4345,7 +4367,7 @@ operator|*
 operator|)
 name|s
 argument_list|,
-literal|"%s %d\n%n"
+name|fmt
 argument_list|,
 name|user
 argument_list|,
@@ -4420,6 +4442,22 @@ name|i
 operator|++
 control|)
 block|{
+name|snprintf
+argument_list|(
+name|fmt
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fmt
+argument_list|)
+argument_list|,
+literal|"%%%ds %%d\n%%n"
+argument_list|,
+name|maxsize
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sscanf
@@ -4430,7 +4468,7 @@ operator|*
 operator|)
 name|s
 argument_list|,
-literal|"%s %d\n%n"
+name|fmt
 argument_list|,
 name|user
 argument_list|,
@@ -8851,6 +8889,9 @@ name|start
 decl_stmt|,
 name|last
 decl_stmt|;
+name|u_int32_t
+name|firstPacket
+decl_stmt|;
 if|if
 condition|(
 name|length
@@ -8945,10 +8986,8 @@ name|maxSkew
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" first %d serial %d reason %s"
-argument_list|,
+name|firstPacket
+operator|=
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -8956,6 +8995,12 @@ name|rxa
 operator|->
 name|firstPacket
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" first %d serial %d reason %s"
+argument_list|,
+name|firstPacket
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -9050,8 +9095,6 @@ name|printf
 argument_list|(
 literal|" acked %d"
 argument_list|,
-name|rxa
-operator|->
 name|firstPacket
 operator|+
 name|i
@@ -9077,8 +9120,6 @@ name|printf
 argument_list|(
 literal|",%d"
 argument_list|,
-name|rxa
-operator|->
 name|firstPacket
 operator|+
 name|i
@@ -9113,8 +9154,6 @@ name|printf
 argument_list|(
 literal|"-%d"
 argument_list|,
-name|rxa
-operator|->
 name|firstPacket
 operator|+
 name|i
@@ -9139,8 +9178,6 @@ name|printf
 argument_list|(
 literal|"-%d"
 argument_list|,
-name|rxa
-operator|->
 name|firstPacket
 operator|+
 name|i
@@ -9195,8 +9232,6 @@ name|printf
 argument_list|(
 literal|" nacked %d"
 argument_list|,
-name|rxa
-operator|->
 name|firstPacket
 operator|+
 name|i
@@ -9221,8 +9256,6 @@ name|printf
 argument_list|(
 literal|",%d"
 argument_list|,
-name|rxa
-operator|->
 name|firstPacket
 operator|+
 name|i
@@ -9255,8 +9288,6 @@ name|printf
 argument_list|(
 literal|"-%d"
 argument_list|,
-name|rxa
-operator|->
 name|firstPacket
 operator|+
 name|i
@@ -9280,8 +9311,6 @@ name|printf
 argument_list|(
 literal|"-%d"
 argument_list|,
-name|rxa
-operator|->
 name|firstPacket
 operator|+
 name|i

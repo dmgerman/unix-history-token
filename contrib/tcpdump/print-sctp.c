@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sctp.c,v 1.16.2.4 2005/07/07 01:24:38 guy Exp $ (NETLAB/PEL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sctp.c,v 1.16.2.5 2007/09/13 18:04:58 guy Exp $ (NETLAB/PEL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -876,6 +876,7 @@ operator|+
 literal|1
 condition|)
 block|{
+comment|/* Less than 1 byte of chunk payload */
 name|printf
 argument_list|(
 literal|"bogus chunk length %u]"
@@ -913,8 +914,6 @@ argument_list|(
 expr|struct
 name|sctpChunkDesc
 argument_list|)
-operator|+
-literal|1
 operator|)
 argument_list|)
 expr_stmt|;
