@@ -32,11 +32,35 @@ comment|/* #undef BDEBUG */
 end_comment
 
 begin_comment
+comment|/* define if you have a cloning BPF device */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CLONING_BPF */
+end_comment
+
+begin_comment
 comment|/* define if you have the DAG API */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_DAG_API */
+end_comment
+
+begin_comment
+comment|/* define if you have dag_get_erf_types() */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DAG_GET_ERF_TYPES */
+end_comment
+
+begin_comment
+comment|/* define if you have streams capable DAG API */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DAG_STREAMS_API */
 end_comment
 
 begin_comment
@@ -70,11 +94,11 @@ value|1
 end_define
 
 begin_comment
-comment|/* on HP-UX 10.20 */
+comment|/* on HP-UX 10.20 or later */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_HPUX10_20 */
+comment|/* #undef HAVE_HPUX10_20_OR_LATER */
 end_comment
 
 begin_comment
@@ -146,6 +170,18 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<net/pfvar.h> header file. */
+end_comment
+
+begin_comment
+comment|/* See Makefile */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NET_PFVAR_H */
+end_comment
+
+begin_comment
 comment|/* if there's an os_proto.h */
 end_comment
 
@@ -154,11 +190,30 @@ comment|/* #undef HAVE_OS_PROTO_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<paths.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PATHS_H
+value|1
+end_define
+
+begin_comment
 comment|/* define if you have a /proc/net/dev */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_PROC_NET_DEV */
+end_comment
+
+begin_comment
+comment|/* define if you have a Septel API */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SEPTEL_API */
 end_comment
 
 begin_comment
@@ -267,6 +322,14 @@ directive|define
 name|HAVE_STRLCPY
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `struct ether_addr'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_ETHER_ADDR */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/bufmod.h> header file. */
