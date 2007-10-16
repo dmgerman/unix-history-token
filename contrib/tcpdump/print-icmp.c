@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp.c,v 1.81.2.2 2005/07/01 16:13:37 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp.c,v 1.81.2.6 2007/09/13 17:40:18 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,19 +157,6 @@ struct|;
 name|u_int32_t
 name|ih_void
 decl_stmt|;
-comment|/* ICMP_UNREACH_NEEDFRAG -- Path MTU Discovery (RFC1191) */
-struct|struct
-name|ih_pmtu
-block|{
-name|u_int16_t
-name|ipm_void
-decl_stmt|;
-name|u_int16_t
-name|ipm_nextmtu
-decl_stmt|;
-block|}
-name|ih_pmtu
-struct|;
 block|}
 name|icmp_hun
 union|;
@@ -193,14 +180,6 @@ define|#
 directive|define
 name|icmp_void
 value|icmp_hun.ih_void
-define|#
-directive|define
-name|icmp_pmvoid
-value|icmp_hun.ih_pmtu.ipm_void
-define|#
-directive|define
-name|icmp_nextmtu
-value|icmp_hun.ih_pmtu.ipm_nextmtu
 union|union
 block|{
 struct|struct
@@ -228,37 +207,6 @@ decl_stmt|;
 comment|/* options and then 64 bits of data */
 block|}
 name|id_ip
-struct|;
-struct|struct
-name|mpls_ext
-block|{
-name|u_int8_t
-name|legacy_header
-index|[
-literal|128
-index|]
-decl_stmt|;
-comment|/* extension header starts 128 bytes after ICMP header */
-name|u_int8_t
-name|version_res
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|u_int8_t
-name|checksum
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|u_int8_t
-name|data
-index|[
-literal|1
-index|]
-decl_stmt|;
-block|}
-name|mpls_ext
 struct|;
 name|u_int32_t
 name|id_mask
@@ -296,18 +244,6 @@ define|#
 directive|define
 name|icmp_data
 value|icmp_dun.id_data
-define|#
-directive|define
-name|icmp_mpls_ext_version
-value|icmp_dun.mpls_ext.version_res
-define|#
-directive|define
-name|icmp_mpls_ext_checksum
-value|icmp_dun.mpls_ext.checksum
-define|#
-directive|define
-name|icmp_mpls_ext_data
-value|icmp_dun.mpls_ext.data
 block|}
 struct|;
 end_struct
@@ -352,7 +288,7 @@ value|(156 - sizeof (struct ip))
 end_define
 
 begin_comment
-comment|/* draft-bonica-icmp-mpls-02 */
+comment|/* draft-bonica-internet-icmp-08 */
 end_comment
 
 begin_define
@@ -817,7 +753,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|((type) == ICMP_UNREACH || (type) == ICMP_TIMXCEED)
+value|((type) == ICMP_UNREACH || \          (type) == ICMP_TIMXCEED || \          (type) == ICMP_PARAMPROB)
 end_define
 
 begin_comment
@@ -1321,8 +1257,65 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* draft-bonica-icmp-mpls-02 */
+comment|/*  * draft-bonica-internet-icmp-08  *  * The Destination Unreachable, Time Exceeded  * and Parameter Problem messages are slighly changed as per  * the above draft. A new Length field gets added to give  * the caller an idea about the length of the piggypacked  * IP packet before the MPLS extension header starts.  *  * The Length field represents length of the padded "original datagram"  * field  measured in 32-bit words.  *  * 0                   1                   2                   3  * 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |     Type      |     Code      |          Checksum             |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |     unused    |    Length     |          unused               |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |      Internet Header + leading octets of original datagram    |  * |                                                               |  * |                           //                                  |  * |                                                               |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  */
 end_comment
+
+begin_struct
+struct|struct
+name|icmp_ext_t
+block|{
+name|u_int8_t
+name|icmp_type
+decl_stmt|;
+name|u_int8_t
+name|icmp_code
+decl_stmt|;
+name|u_int8_t
+name|icmp_checksum
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|icmp_reserved
+decl_stmt|;
+name|u_int8_t
+name|icmp_length
+decl_stmt|;
+name|u_int8_t
+name|icmp_reserved2
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|icmp_ext_legacy_header
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* extension header starts 128 bytes after ICMP header */
+name|u_int8_t
+name|icmp_ext_version_res
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|icmp_ext_checksum
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|icmp_ext_data
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -1514,6 +1507,12 @@ name|dp
 decl_stmt|;
 specifier|const
 name|struct
+name|icmp_ext_t
+modifier|*
+name|ext_dp
+decl_stmt|;
+specifier|const
+name|struct
 name|ip
 modifier|*
 name|ip
@@ -1547,6 +1546,11 @@ name|u_int32_t
 name|raw_label
 decl_stmt|;
 specifier|const
+name|u_char
+modifier|*
+name|snapend_save
+decl_stmt|;
+specifier|const
 name|struct
 name|icmp_mpls_ext_object_header_t
 modifier|*
@@ -1578,6 +1582,15 @@ operator|=
 operator|(
 expr|struct
 name|icmp
+operator|*
+operator|)
+name|bp
+expr_stmt|;
+name|ext_dp
+operator|=
+operator|(
+expr|struct
+name|icmp_ext_t
 operator|*
 operator|)
 name|bp
@@ -2895,6 +2908,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/*          * print the remnants of the IP packet.          * save the snaplength as this may get overidden in the IP printer.          */
 if|if
 condition|(
 name|vflag
@@ -2937,6 +2951,10 @@ name|snapend
 operator|-
 name|bp
 expr_stmt|;
+name|snapend_save
+operator|=
+name|snapend
+expr_stmt|;
 name|ip_print
 argument_list|(
 name|gndo
@@ -2952,7 +2970,12 @@ name|ip_len
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|snapend
+operator|=
+name|snapend_save
+expr_stmt|;
 block|}
+comment|/*          * Attempt to decode the MPLS extensions only for some ICMP types.          */
 if|if
 condition|(
 name|vflag
@@ -2974,13 +2997,39 @@ block|{
 name|TCHECK
 argument_list|(
 operator|*
-operator|(
-name|dp
-operator|->
-name|icmp_mpls_ext_version
-operator|)
+name|ext_dp
 argument_list|)
 expr_stmt|;
+comment|/*              * Check first if the mpls extension header shows a non-zero length.              * If the length field is not set then silently verify the checksum              * to check if an extension header is present. This is expedient,              * however not all implementations set the length field proper.              */
+if|if
+condition|(
+operator|!
+name|ext_dp
+operator|->
+name|icmp_length
+operator|&&
+name|in_cksum
+argument_list|(
+operator|(
+specifier|const
+name|u_short
+operator|*
+operator|)
+operator|&
+name|ext_dp
+operator|->
+name|icmp_ext_version_res
+argument_list|,
+name|plen
+operator|-
+name|ICMP_EXTD_MINLEN
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
 name|printf
 argument_list|(
 literal|"\n\tMPLS extension v%u"
@@ -2989,9 +3038,9 @@ name|ICMP_MPLS_EXT_EXTRACT_VERSION
 argument_list|(
 operator|*
 operator|(
-name|dp
+name|ext_dp
 operator|->
-name|icmp_mpls_ext_version
+name|icmp_ext_version_res
 operator|)
 argument_list|)
 argument_list|)
@@ -3003,9 +3052,9 @@ name|ICMP_MPLS_EXT_EXTRACT_VERSION
 argument_list|(
 operator|*
 operator|(
-name|dp
+name|ext_dp
 operator|->
-name|icmp_mpls_ext_version
+name|icmp_ext_version_res
 operator|)
 argument_list|)
 operator|!=
@@ -3025,29 +3074,39 @@ name|plen
 operator|-
 name|ICMP_EXTD_MINLEN
 expr_stmt|;
-name|TCHECK2
-argument_list|(
-operator|*
-operator|(
-name|dp
-operator|->
-name|icmp_mpls_ext_checksum
-operator|)
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|", checksum 0x%04x (unverified), length %u"
+literal|", checksum 0x%04x (%scorrect), length %u"
 argument_list|,
-comment|/* FIXME */
 name|EXTRACT_16BITS
 argument_list|(
-name|dp
+name|ext_dp
 operator|->
-name|icmp_mpls_ext_checksum
+name|icmp_ext_checksum
 argument_list|)
+argument_list|,
+name|in_cksum
+argument_list|(
+operator|(
+specifier|const
+name|u_short
+operator|*
+operator|)
+operator|&
+name|ext_dp
+operator|->
+name|icmp_ext_version_res
+argument_list|,
+name|plen
+operator|-
+name|ICMP_EXTD_MINLEN
+argument_list|,
+literal|0
+argument_list|)
+condition|?
+literal|"in"
+else|:
+literal|""
 argument_list|,
 name|hlen
 argument_list|)
@@ -3063,9 +3122,9 @@ operator|(
 name|u_int8_t
 operator|*
 operator|)
-name|dp
+name|ext_dp
 operator|->
-name|icmp_mpls_ext_data
+name|icmp_ext_data
 expr_stmt|;
 while|while
 condition|(
@@ -3151,8 +3210,16 @@ name|icmp_mpls_ext_object_header_t
 argument_list|)
 expr_stmt|;
 comment|/* length field includes tlv header */
+comment|/* infinite loop protection */
 if|if
 condition|(
+operator|(
+name|obj_class_num
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
 name|obj_tlen
 operator|<
 sizeof|sizeof
@@ -3160,8 +3227,11 @@ argument_list|(
 expr|struct
 name|icmp_mpls_ext_object_header_t
 argument_list|)
+operator|)
 condition|)
-break|break;
+block|{
+return|return;
+block|}
 name|obj_tlen
 operator|-=
 sizeof|sizeof

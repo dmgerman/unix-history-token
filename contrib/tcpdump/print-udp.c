@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-udp.c,v 1.138 2005/04/07 00:28:17 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-udp.c,v 1.138.2.1 2007/03/28 07:45:46 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4136,6 +4136,30 @@ name|LDP_PORT
 argument_list|)
 condition|)
 name|ldp_print
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+operator|(
+name|up
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ISPORT
+argument_list|(
+name|OLSR_PORT
+argument_list|)
+condition|)
+name|olsr_print
 argument_list|(
 operator|(
 specifier|const

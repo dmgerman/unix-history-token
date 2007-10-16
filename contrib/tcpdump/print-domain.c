@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-domain.c,v 1.89.2.1 2005/04/20 20:59:00 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-domain.c,v 1.89.2.8 2007/02/13 19:19:27 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1507,6 +1507,20 @@ block|}
 block|,
 comment|/* RFC 2168, RFC 2915 */
 block|{
+name|T_KX
+block|,
+literal|"KX"
+block|}
+block|,
+comment|/* RFC 2230 */
+block|{
+name|T_CERT
+block|,
+literal|"CERT"
+block|}
+block|,
+comment|/* RFC 2538 */
+block|{
 name|T_A6
 block|,
 literal|"A6"
@@ -1521,12 +1535,74 @@ block|}
 block|,
 comment|/* RFC 2672 */
 block|{
+name|T_SINK
+block|,
+literal|"SINK"
+block|}
+block|,
+block|{
 name|T_OPT
 block|,
 literal|"OPT"
 block|}
 block|,
 comment|/* RFC 2671 */
+block|{
+name|T_APL
+block|,
+literal|"APL"
+block|}
+block|,
+comment|/* RFC 3123 */
+block|{
+name|T_DS
+block|,
+literal|"DS"
+block|}
+block|,
+comment|/* RFC 4034 */
+block|{
+name|T_SSHFP
+block|,
+literal|"SSHFP"
+block|}
+block|,
+comment|/* RFC 4255 */
+block|{
+name|T_IPSECKEY
+block|,
+literal|"IPSECKEY"
+block|}
+block|,
+comment|/* RFC 4025 */
+block|{
+name|T_RRSIG
+block|,
+literal|"RRSIG"
+block|}
+block|,
+comment|/* RFC 4034 */
+block|{
+name|T_NSEC
+block|,
+literal|"NSEC"
+block|}
+block|,
+comment|/* RFC 4034 */
+block|{
+name|T_DNSKEY
+block|,
+literal|"DNSKEY"
+block|}
+block|,
+comment|/* RFC 4034 */
+block|{
+name|T_SPF
+block|,
+literal|"SPF"
+block|}
+block|,
+comment|/* RFC-schlitt-spf-classic-02.txt */
 block|{
 name|T_UINFO
 block|,
@@ -1693,6 +1769,8 @@ decl_stmt|;
 specifier|register
 name|u_int
 name|i
+decl_stmt|,
+name|class
 decl_stmt|;
 name|cp
 operator|=
@@ -1721,7 +1799,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* print the qtype and qclass (if it's not IN) */
+comment|/* print the qtype */
 name|i
 operator|=
 name|EXTRACT_16BITS
@@ -1747,6 +1825,7 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* print the qclass (if it's not IN) */
 name|i
 operator|=
 name|EXTRACT_16BITS
@@ -1761,24 +1840,24 @@ expr_stmt|;
 if|if
 condition|(
 name|is_mdns
-operator|&&
-name|i
-operator|==
-operator|(
-name|C_IN
-operator||
-name|C_CACHE_FLUSH
-operator|)
 condition|)
-name|printf
-argument_list|(
-literal|" (Cache flush)"
-argument_list|)
+name|class
+operator|=
+operator|(
+name|i
+operator|&
+operator|~
+name|C_QU
+operator|)
 expr_stmt|;
-elseif|else
+else|else
+name|class
+operator|=
+name|i
+expr_stmt|;
 if|if
 condition|(
-name|i
+name|class
 operator|!=
 name|C_IN
 condition|)
@@ -1792,10 +1871,33 @@ name|ns_class2str
 argument_list|,
 literal|"(Class %d)"
 argument_list|,
-name|i
+name|class
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|is_mdns
+condition|)
+block|{
+if|if
+condition|(
+name|i
+operator|&
+name|C_QU
+condition|)
+name|printf
+argument_list|(
+literal|" (QU)"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" (QM)"
+argument_list|)
+expr_stmt|;
+block|}
 name|fputs
 argument_list|(
 literal|"? "
@@ -1855,7 +1957,13 @@ parameter_list|)
 block|{
 specifier|register
 name|u_int
+name|i
+decl_stmt|,
 name|class
+decl_stmt|,
+name|opt_flags
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|u_short
@@ -1926,7 +2034,7 @@ operator|(
 name|snapend
 operator|)
 return|;
-comment|/* print the type/qtype and class (if it's not IN) */
+comment|/* print the type/qtype */
 name|typ
 operator|=
 name|EXTRACT_16BITS
@@ -1938,7 +2046,8 @@ name|cp
 operator|+=
 literal|2
 expr_stmt|;
-name|class
+comment|/* print the class (if it's not IN and the type isn't OPT) */
+name|i
 operator|=
 name|EXTRACT_16BITS
 argument_list|(
@@ -1952,21 +2061,21 @@ expr_stmt|;
 if|if
 condition|(
 name|is_mdns
-operator|&&
+condition|)
 name|class
-operator|==
+operator|=
 operator|(
-name|C_IN
-operator||
+name|i
+operator|&
+operator|~
 name|C_CACHE_FLUSH
 operator|)
-condition|)
-name|printf
-argument_list|(
-literal|" (Cache flush)"
-argument_list|)
 expr_stmt|;
-elseif|else
+else|else
+name|class
+operator|=
+name|i
+expr_stmt|;
 if|if
 condition|(
 name|class
@@ -1991,10 +2100,46 @@ name|class
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|is_mdns
+condition|)
+block|{
+if|if
+condition|(
+name|i
+operator|&
+name|C_CACHE_FLUSH
+condition|)
+name|printf
+argument_list|(
+literal|" (Cache flush)"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* ignore ttl */
 name|cp
 operator|+=
-literal|4
+literal|2
+expr_stmt|;
+comment|/* if T_OPT, save opt_flags */
+if|if
+condition|(
+name|typ
+operator|==
+name|T_OPT
+condition|)
+name|opt_flags
+operator|=
+name|EXTRACT_16BITS
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+comment|/* ignore rest of ttl */
+name|cp
+operator|+=
+literal|2
 expr_stmt|;
 name|len
 operator|=
@@ -2657,6 +2802,17 @@ argument_list|,
 name|class
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|opt_flags
+operator|&
+literal|0x8000
+condition|)
+name|printf
+argument_list|(
+literal|" OK"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|T_UNSPECA
@@ -3022,7 +3178,7 @@ block|{
 comment|/* this is a response */
 name|printf
 argument_list|(
-literal|" %d%s%s%s%s%s%s"
+literal|"%d%s%s%s%s%s%s"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -3461,7 +3617,7 @@ block|{
 comment|/* this is a request */
 name|printf
 argument_list|(
-literal|" %d%s%s%s"
+literal|"%d%s%s%s"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(

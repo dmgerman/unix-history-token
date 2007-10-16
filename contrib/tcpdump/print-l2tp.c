@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-l2tp.c,v 1.17.2.2 2005/04/20 21:50:16 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-l2tp.c,v 1.17.2.3 2006/06/23 02:07:27 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,42 +82,6 @@ init|=
 literal|" [|l2tp]"
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TRUE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FALSE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

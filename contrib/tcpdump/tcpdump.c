@@ -29,7 +29,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/tcpdump.c,v 1.253.2.11 2005/08/23 10:29:41 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/tcpdump.c,v 1.253.2.13 2007/09/12 19:48:51 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -883,9 +883,17 @@ block|}
 block|,
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|DLT_PFLOG
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_NET_PFVAR_H
+argument_list|)
 block|{
 name|pflog_if_print
 block|,
@@ -1154,6 +1162,17 @@ block|{
 name|juniper_chdlc_print
 block|,
 name|DLT_JUNIPER_CHDLC
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DLT_MFR
+block|{
+name|mfr_if_print
+block|,
+name|DLT_MFR
 block|}
 block|,
 endif|#

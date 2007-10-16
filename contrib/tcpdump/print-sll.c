@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sll.c,v 1.16.2.2 2005/07/07 01:24:39 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sll.c,v 1.16.2.3 2005/11/13 12:13:00 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -434,10 +434,6 @@ name|sll_protocol
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Is it (gag) an 802.3 encapsulation, or some non-Ethernet 	 * packet type? 	 */
-name|extracted_ethertype
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|ether_type
@@ -493,6 +489,11 @@ goto|;
 comment|/* unknown LLC type */
 break|break;
 default|default:
+name|extracted_ethertype
+operator|=
+literal|0
+expr_stmt|;
+comment|/*FALLTHROUGH*/
 name|unknown
 label|:
 comment|/* ether_type not known, print raw packet */

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip.c,v 1.149.2.2 2005/09/20 06:05:38 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip.c,v 1.149.2.9 2007/09/14 01:30:02 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,6 +157,12 @@ literal|"RA"
 block|}
 block|,
 block|{
+name|IPOPT_RFC1393
+block|,
+literal|"traceroute"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
@@ -283,7 +289,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%s"
+literal|" %s"
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -303,7 +309,7 @@ name|len
 condition|)
 name|printf
 argument_list|(
-literal|", "
+literal|","
 argument_list|)
 expr_stmt|;
 block|}
@@ -553,7 +559,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[bad length %d]"
+literal|"[bad length %u]"
 argument_list|,
 name|length
 argument_list|)
@@ -600,7 +606,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"[bad length %d]"
+literal|"[bad length %u]"
 argument_list|,
 name|length
 argument_list|)
@@ -646,7 +652,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"[bad ptr %d]"
+literal|"[bad ptr %u]"
 argument_list|,
 name|cp
 index|[
@@ -856,6 +862,13 @@ specifier|register
 name|u_int
 name|option_len
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|sep
+init|=
+literal|""
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -875,6 +888,17 @@ block|{
 name|u_int
 name|option_code
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|sep
+argument_list|)
+expr_stmt|;
+name|sep
+operator|=
+literal|","
+expr_stmt|;
 name|TCHECK
 argument_list|(
 operator|*
@@ -885,6 +909,20 @@ name|option_code
 operator|=
 operator|*
 name|cp
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|tok2str
+argument_list|(
+name|ip_option_values
+argument_list|,
+literal|"unknown %u"
+argument_list|,
+name|option_code
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -917,32 +955,39 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"%s (%u) len %u"
-argument_list|,
-name|tok2str
-argument_list|(
-name|ip_option_values
-argument_list|,
-literal|"unknown"
-argument_list|,
-name|option_code
-argument_list|)
-argument_list|,
-name|option_code
-argument_list|,
-name|option_len
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|option_len
 operator|<
 literal|2
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|" [bad length %u]"
+argument_list|,
+name|option_len
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
+block|}
+if|if
+condition|(
+name|option_len
+operator|>
+name|length
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" [bad length %u]"
+argument_list|,
+name|option_len
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|TCHECK2
 argument_list|(
 operator|*
@@ -992,6 +1037,22 @@ break|break;
 case|case
 name|IPOPT_RA
 case|:
+if|if
+condition|(
+name|option_len
+operator|<
+literal|4
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" [bad length %u]"
+argument_list|,
+name|option_len
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|TCHECK
 argument_list|(
 name|cp
@@ -1015,7 +1076,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"value %u"
+literal|" value %u"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -1232,50 +1293,6 @@ name|shouldbe
 return|;
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IP_MF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IP_MF
-value|0x2000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IP_MF */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IP_DF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IP_DF
-value|0x4000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IP_DF */
-end_comment
 
 begin_define
 define|#
@@ -1619,6 +1636,7 @@ break|break;
 case|case
 name|IPPROTO_TCP
 case|:
+comment|/* pass on the MF bit plus the offset to detect fragments */
 name|tcp_print
 argument_list|(
 name|ipds
@@ -1638,13 +1656,14 @@ name|ipds
 operator|->
 name|ip
 argument_list|,
-operator|(
 name|ipds
 operator|->
 name|off
 operator|&
-operator|~
-literal|0x6000
+operator|(
+name|IP_MF
+operator||
+name|IP_OFFMASK
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1652,6 +1671,7 @@ break|break;
 case|case
 name|IPPROTO_UDP
 case|:
+comment|/* pass on the MF bit plus the offset to detect fragments */
 name|udp_print
 argument_list|(
 name|ipds
@@ -1671,13 +1691,14 @@ name|ipds
 operator|->
 name|ip
 argument_list|,
-operator|(
 name|ipds
 operator|->
 name|off
 operator|&
-operator|~
-literal|0x6000
+operator|(
+name|IP_MF
+operator||
+name|IP_OFFMASK
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1705,12 +1726,14 @@ name|ipds
 operator|->
 name|ip
 argument_list|,
-operator|(
 name|ipds
 operator|->
 name|off
 operator|&
-literal|0x3fff
+operator|(
+name|IP_MF
+operator||
+name|IP_OFFMASK
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2563,7 +2586,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", ttl %3u"
+literal|", ttl %u"
 argument_list|,
 name|ipds
 operator|->
@@ -2578,7 +2601,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", id %u, offset %u, flags [%s], proto: %s (%u)"
+literal|", id %u, offset %u, flags [%s], proto %s (%u)"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -2638,7 +2661,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", length: %u"
+literal|", length %u"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -2668,7 +2691,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|", options ( "
+literal|", options ("
 argument_list|)
 expr_stmt|;
 name|ip_optprint
@@ -2696,7 +2719,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" )"
+literal|")"
 argument_list|)
 expr_stmt|;
 block|}

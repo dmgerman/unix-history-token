@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/util.c,v 1.95.2.5 2005/06/16 01:19:57 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/util.c,v 1.95.2.6 2006/02/08 01:40:09 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2283,12 +2283,24 @@ specifier|const
 name|char
 modifier|*
 name|s
+parameter_list|,
+name|int
+name|maxlen
 parameter_list|)
 block|{
+name|int
+name|idx
+init|=
+literal|0
+decl_stmt|;
 while|while
 condition|(
 operator|*
 name|s
+operator|&&
+name|idx
+operator|<
+name|maxlen
 condition|)
 block|{
 name|safeputchar
@@ -2296,6 +2308,9 @@ argument_list|(
 operator|*
 name|s
 argument_list|)
+expr_stmt|;
+name|idx
+operator|++
 expr_stmt|;
 name|s
 operator|++

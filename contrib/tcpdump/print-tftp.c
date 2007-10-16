@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-tftp.c,v 1.37 2003/11/16 09:36:40 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-tftp.c,v 1.37.2.1 2007/09/14 01:03:12 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,12 +73,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<arpa/tftp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -104,6 +98,12 @@ begin_include
 include|#
 directive|include
 file|"extract.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tftp.h"
 end_include
 
 begin_comment
@@ -153,6 +153,13 @@ literal|"ERROR"
 block|}
 block|,
 comment|/* error code */
+block|{
+name|OACK
+block|,
+literal|"OACK"
+block|}
+block|,
+comment|/* option acknowledgement */
 block|{
 literal|0
 block|,
@@ -363,6 +370,9 @@ case|:
 case|case
 name|WRQ
 case|:
+case|case
+name|OACK
+case|:
 comment|/* 		 * XXX Not all arpa/tftp.h's specify th_stuff as any 		 * array; use address of th_block instead 		 */
 ifdef|#
 directive|ifdef
@@ -392,11 +402,21 @@ name|th_block
 expr_stmt|;
 endif|#
 directive|endif
-name|fputs
+name|putchar
 argument_list|(
-literal|" \""
-argument_list|,
-name|stdout
+literal|' '
+argument_list|)
+expr_stmt|;
+comment|/* Print filename or first option */
+if|if
+condition|(
+name|opcode
+operator|!=
+name|OACK
+condition|)
+name|putchar
+argument_list|(
+literal|'"'
 argument_list|)
 expr_stmt|;
 name|i
@@ -408,12 +428,18 @@ argument_list|,
 name|snapend
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|opcode
+operator|!=
+name|OACK
+condition|)
 name|putchar
 argument_list|(
 literal|'"'
 argument_list|)
 expr_stmt|;
-comment|/* Print the mode and any options */
+comment|/* Print the mode (RRQ and WRQ only) and any options */
 while|while
 condition|(
 operator|(
@@ -535,7 +561,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %s "
+literal|" %s \""
 argument_list|,
 name|tok2str
 argument_list|(

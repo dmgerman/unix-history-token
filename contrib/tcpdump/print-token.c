@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-token.c,v 1.25.2.1 2005/07/07 01:24:40 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-token.c,v 1.25.2.2 2005/11/13 12:13:01 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -639,10 +639,6 @@ operator|-=
 name|hdr_len
 expr_stmt|;
 comment|/* Frame Control field determines interpretation of packet */
-name|extracted_ethertype
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|FRAME_TYPE

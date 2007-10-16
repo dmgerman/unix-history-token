@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-llc.c,v 1.61.2.5 2005/09/29 07:40:13 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-llc.c,v 1.61.2.10 2007/02/08 07:07:51 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -309,11 +309,47 @@ literal|"Final"
 block|}
 block|,
 block|{
+name|LLC_IS_POLL
+block|,
+literal|"Poll"
+block|}
+block|,
+block|{
 name|LLC_GSAP
 operator||
 name|LLC_IS_POLL
 block|,
 literal|"Final"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|tok
+name|llc_ig_flag_values
+index|[]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|"Individual"
+block|}
+block|,
+block|{
+name|LLC_IG
+block|,
+literal|"Group"
 block|}
 block|,
 block|{
@@ -343,13 +379,13 @@ block|,
 block|{
 literal|1
 block|,
-literal|"Reject"
+literal|"Receiver not Ready"
 block|}
 block|,
 block|{
 literal|2
 block|,
-literal|"Receiver not Ready"
+literal|"Reject"
 block|}
 block|,
 block|{
@@ -374,6 +410,18 @@ block|{
 name|PID_CISCO_CDP
 block|,
 literal|"CDP"
+block|}
+block|,
+block|{
+name|PID_CISCO_VTP
+block|,
+literal|"VTP"
+block|}
+block|,
+block|{
+name|PID_CISCO_DTP
+block|,
+literal|"DTP"
 block|}
 block|,
 block|{
@@ -466,6 +514,24 @@ block|,
 name|NULL
 block|}
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|tok
+name|null_values
+index|[]
+init|=
+block|{
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -590,6 +656,11 @@ specifier|register
 name|int
 name|ret
 decl_stmt|;
+operator|*
+name|extracted_ethertype
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|caplen
@@ -627,13 +698,6 @@ operator|=
 operator|*
 name|p
 expr_stmt|;
-name|dsap
-operator|=
-name|dsap_field
-operator|&
-operator|~
-name|LLC_IG
-expr_stmt|;
 name|ssap_field
 operator|=
 operator|*
@@ -642,13 +706,6 @@ name|p
 operator|+
 literal|1
 operator|)
-expr_stmt|;
-name|ssap
-operator|=
-name|ssap_field
-operator|&
-operator|~
-name|LLC_GSAP
 expr_stmt|;
 comment|/* 	 * OK, what type of LLC frame is this?  The length 	 * of the control field depends on that - I frames 	 * have a two-byte control field, and U frames have 	 * a one-byte control field. 	 */
 name|control
@@ -729,11 +786,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ssap
+name|ssap_field
 operator|==
 name|LLCSAP_GLOBAL
 operator|&&
-name|dsap
+name|dsap_field
 operator|==
 name|LLCSAP_GLOBAL
 condition|)
@@ -761,6 +818,20 @@ literal|1
 operator|)
 return|;
 block|}
+name|dsap
+operator|=
+name|dsap_field
+operator|&
+operator|~
+name|LLC_IG
+expr_stmt|;
+name|ssap
+operator|=
+name|ssap_field
+operator|&
+operator|~
+name|LLC_GSAP
+expr_stmt|;
 if|if
 condition|(
 name|eflag
@@ -768,7 +839,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"LLC, dsap %s (0x%02x), ssap %s (0x%02x)"
+literal|"LLC, dsap %s (0x%02x) %s, ssap %s (0x%02x) %s"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -783,6 +854,17 @@ name|dsap
 argument_list|,
 name|tok2str
 argument_list|(
+name|llc_ig_flag_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|dsap_field
+operator|&
+name|LLC_IG
+argument_list|)
+argument_list|,
+name|tok2str
+argument_list|(
 name|llc_values
 argument_list|,
 literal|"Unknown"
@@ -791,6 +873,17 @@ name|ssap
 argument_list|)
 argument_list|,
 name|ssap
+argument_list|,
+name|tok2str
+argument_list|(
+name|llc_flag_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|ssap_field
+operator|&
+name|LLC_GSAP
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -800,7 +893,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|", cmd 0x%02x: "
+literal|", ctrl 0x%02x: "
 argument_list|,
 name|control
 argument_list|)
@@ -810,7 +903,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|", cmd 0x%04x: "
+literal|", ctrl 0x%04x: "
 argument_list|,
 name|control
 argument_list|)
@@ -1254,14 +1347,16 @@ name|control
 argument_list|)
 argument_list|)
 argument_list|,
-name|bittok2str
+name|tok2str
 argument_list|(
 name|llc_flag_values
 argument_list|,
 literal|"?"
 argument_list|,
 operator|(
-name|ssap
+name|ssap_field
+operator|&
+name|LLC_GSAP
 operator|)
 operator||
 operator|(
@@ -1373,14 +1468,16 @@ argument_list|(
 name|control
 argument_list|)
 argument_list|,
-name|bittok2str
+name|tok2str
 argument_list|(
 name|llc_flag_values
 argument_list|,
 literal|"?"
 argument_list|,
 operator|(
-name|ssap
+name|ssap_field
+operator|&
+name|LLC_GSAP
 operator|)
 operator||
 operator|(
@@ -1413,14 +1510,16 @@ argument_list|(
 name|control
 argument_list|)
 argument_list|,
-name|bittok2str
+name|tok2str
 argument_list|(
 name|llc_flag_values
 argument_list|,
 literal|"?"
 argument_list|,
 operator|(
-name|ssap
+name|ssap_field
+operator|&
+name|LLC_GSAP
 operator|)
 operator||
 operator|(
@@ -1524,7 +1623,7 @@ name|tok
 modifier|*
 name|tok
 init|=
-name|NULL
+name|null_values
 decl_stmt|;
 specifier|const
 name|struct

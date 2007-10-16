@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lane.c,v 1.23.2.1 2005/07/07 01:24:37 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lane.c,v 1.23.2.2 2005/11/13 12:12:59 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -498,10 +498,6 @@ name|h_type
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Is it (gag) an 802.3 encapsulation? 	 */
-name|extracted_ethertype
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|ether_type

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/nameser.h,v 1.14 2003/11/05 06:02:59 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/nameser.h,v 1.14.4.2 2006/11/10 03:15:35 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -105,6 +105,10 @@ directive|define
 name|NAMESERVER_PORT
 value|53
 end_define
+
+begin_comment
+comment|/*  * Port for multicast DNS; see  *  *	http://files.multicastdns.org/draft-cheshire-dnsext-multicastdns.txt  *  * for the current mDNS spec.  */
+end_comment
 
 begin_define
 define|#
@@ -802,6 +806,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|T_KX
+value|36
+end_define
+
+begin_comment
+comment|/* Key Exchanger */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_CERT
+value|37
+end_define
+
+begin_comment
+comment|/* Certificates in the DNS */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|T_A6
 value|38
 end_define
@@ -824,6 +850,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|T_SINK
+value|40
+end_define
+
+begin_comment
+comment|/* unknown */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|T_OPT
 value|41
 end_define
@@ -832,8 +869,96 @@ begin_comment
 comment|/* EDNS0 option (meta-RR) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|T_APL
+value|42
+end_define
+
+begin_comment
+comment|/* lists of address prefixes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_DS
+value|43
+end_define
+
+begin_comment
+comment|/* Delegation Signer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_SSHFP
+value|44
+end_define
+
+begin_comment
+comment|/* SSH Fingerprint */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_IPSECKEY
+value|45
+end_define
+
+begin_comment
+comment|/* IPsec keying material */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_RRSIG
+value|46
+end_define
+
+begin_comment
+comment|/* new security signature */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_NSEC
+value|47
+end_define
+
+begin_comment
+comment|/* provable insecure information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_DNSKEY
+value|48
+end_define
+
+begin_comment
+comment|/* new security key */
+end_comment
+
 begin_comment
 comment|/* non standard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_SPF
+value|99
+end_define
+
+begin_comment
+comment|/* sender policy framework */
 end_comment
 
 begin_define
@@ -1027,12 +1152,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|C_QU
+value|0x8000
+end_define
+
+begin_comment
+comment|/* mDNS QU flag in queries */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|C_CACHE_FLUSH
 value|0x8000
 end_define
 
 begin_comment
-comment|/* mDNS cache flush flag */
+comment|/* mDNS cache flush flag in replies */
 end_comment
 
 begin_comment

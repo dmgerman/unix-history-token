@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-fddi.c,v 1.64.2.1 2005/07/07 01:24:35 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-fddi.c,v 1.64.2.2 2005/11/13 12:12:59 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1264,10 +1264,6 @@ operator|-=
 name|FDDI_HDRLEN
 expr_stmt|;
 comment|/* Frame Control field determines interpretation of packet */
-name|extracted_ethertype
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|(
