@@ -121,6 +121,12 @@ directive|include
 file|<arm/xscale/xscalevar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_timer.h"
+end_include
+
 begin_function_decl
 name|void
 function_decl|(
@@ -195,6 +201,12 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COUNTS_PER_SEC
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -205,6 +217,11 @@ end_define
 begin_comment
 comment|/* 200MHz */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
