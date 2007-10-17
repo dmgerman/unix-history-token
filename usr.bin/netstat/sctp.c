@@ -2613,7 +2613,7 @@ name|p
 argument_list|(
 name|sctps_recvivalkeyid
 argument_list|,
-literal|"\t\t%ju invalid %secret ids received\n"
+literal|"\t\t%ju invalid secret id%s received\n"
 argument_list|)
 expr_stmt|;
 name|p1a
@@ -2623,18 +2623,18 @@ argument_list|,
 literal|"\t\t%ju auth failed\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_recvexpress
 argument_list|,
-literal|"\t\t%ju fa%st path receives all one chunk\n"
+literal|"\t\t%ju fast path receives all one chunk\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_recvexpressm
 argument_list|,
-literal|"\t\t%ju fa%st path multi-part data\n"
+literal|"\t\t%ju fast path multi-part data\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * output statistics 	 */
@@ -2663,14 +2663,14 @@ name|p
 argument_list|(
 name|sctps_sendretransdata
 argument_list|,
-literal|"\t\t%ju retran%smitted DATA chunks\n"
+literal|"\t\t%ju retransmitted DATA chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sendfastretrans
 argument_list|,
-literal|"\t\t%ju fa%st retransmitted DATA chunks\n"
+literal|"\t\t%ju fast retransmitted DATA chunk%s\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -2722,11 +2722,11 @@ argument_list|,
 literal|"\t\t%ju from middle box\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_pdrpfehos
 argument_list|,
-literal|"\t\t%ju from end ho%st\n"
+literal|"\t\t%ju from end host\n"
 argument_list|)
 expr_stmt|;
 name|p1a
@@ -2743,11 +2743,11 @@ argument_list|,
 literal|"\t\t%ju non-data, non-endhost\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_pdrpbwrpt
 argument_list|,
-literal|"\t\t%ju non-endho%st, bandwidth rep only\n"
+literal|"\t\t%ju non-endhost, bandwidth rep only\n"
 argument_list|)
 expr_stmt|;
 name|p1a
@@ -2764,11 +2764,11 @@ argument_list|,
 literal|"\t\t%ju not enough data to confirm\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_pdrppdbrk
 argument_list|,
-literal|"\t\t%ju where proce%ss_chunk_drop said break\n"
+literal|"\t\t%ju where process_chunk_drop said break\n"
 argument_list|)
 expr_stmt|;
 name|p1a
@@ -2778,25 +2778,25 @@ argument_list|,
 literal|"\t\t%ju failed to find TSN\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_pdrpdnfnd
 argument_list|,
-literal|"\t\t%ju attempt rever%se TSN lookup\n"
+literal|"\t\t%ju attempt reverse TSN lookup\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_pdrpdiwnp
 argument_list|,
-literal|"\t\t%ju e-ho%st confirms zero-rwnd\n"
+literal|"\t\t%ju e-host confirms zero-rwnd\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_pdrpdizrw
 argument_list|,
-literal|"\t\t%ju midbox confirm%s no space\n"
+literal|"\t\t%ju midbox confirms no space\n"
 argument_list|)
 expr_stmt|;
 name|p1a
@@ -2851,14 +2851,14 @@ name|p
 argument_list|(
 name|sctps_timosack
 argument_list|,
-literal|"\t\t%ju %sack timers fired\n"
+literal|"\t\t%ju sack timer%s fired\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timoshutdown
 argument_list|,
-literal|"\t\t%ju %shutdown timers fired\n"
+literal|"\t\t%ju shutdown timer%s fired\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -2894,21 +2894,21 @@ name|p
 argument_list|(
 name|sctps_timoshutdownack
 argument_list|,
-literal|"\t\t%ju %shutdown ack timers fired\n"
+literal|"\t\t%ju shutdown ack timer%s fired\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timoshutdownguard
 argument_list|,
-literal|"\t\t%ju %shutdown guard timers fired\n"
+literal|"\t\t%ju shutdown guard timer%s fired\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_timostrmrst
 argument_list|,
-literal|"\t\t%ju %stream reset timers fired\n"
+literal|"\t\t%ju stream reset timer%s fired\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -2936,7 +2936,7 @@ name|p
 argument_list|(
 name|sctps_timoassockill
 argument_list|,
-literal|"\t\t%ju a%soc free timers expired\n"
+literal|"\t\t%ju asoc free timer%s expired\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -2950,22 +2950,22 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Early fast retransmission counters 	 */
-block|p(sctps_earlyfrstart, "\t%ju TODO:%sctps_earlyfrstart\n"); 	p(sctps_earlyfrstop, "\t%ju TODO:sctp%s_earlyfrstop\n"); 	p(sctps_earlyfrmrkretrans, "\t%ju TODO:%sctps_earlyfrmrkretrans\n"); 	p(sctps_earlyfrstpout, "\t%ju TODO:%sctps_earlyfrstpout\n"); 	p(sctps_earlyfrstpidsck1, "\t%ju TODO:%sctps_earlyfrstpidsck1\n"); 	p(sctps_earlyfrstpidsck2, "\t%ju TODO:%sctps_earlyfrstpidsck2\n"); 	p(sctps_earlyfrstpidsck3, "\t%ju TODO:%sctps_earlyfrstpidsck3\n"); 	p(sctps_earlyfrstpidsck4, "\t%ju TODO:%sctps_earlyfrstpidsck4\n"); 	p(sctps_earlyfrstrid, "\t%ju TODO:%sctps_earlyfrstrid\n"); 	p(sctps_earlyfrstrout, "\t%ju TODO:%sctps_earlyfrstrout\n"); 	p(sctps_earlyfrstrtmr, "\t%ju TODO:%sctps_earlyfrstrtmr\n");
+block|p(sctps_earlyfrstart, "\t%ju TODO:sctps_earlyfrstart\n"); 	p(sctps_earlyfrstop, "\t%ju TODO:sctps_earlyfrstop\n"); 	p(sctps_earlyfrmrkretrans, "\t%ju TODO:sctps_earlyfrmrkretrans\n"); 	p(sctps_earlyfrstpout, "\t%ju TODO:sctps_earlyfrstpout\n"); 	p(sctps_earlyfrstpidsck1, "\t%ju TODO:sctps_earlyfrstpidsck1\n"); 	p(sctps_earlyfrstpidsck2, "\t%ju TODO:sctps_earlyfrstpidsck2\n"); 	p(sctps_earlyfrstpidsck3, "\t%ju TODO:sctps_earlyfrstpidsck3\n"); 	p(sctps_earlyfrstpidsck4, "\t%ju TODO:sctps_earlyfrstpidsck4\n"); 	p(sctps_earlyfrstrid, "\t%ju TODO:sctps_earlyfrstrid\n"); 	p(sctps_earlyfrstrout, "\t%ju TODO:sctps_earlyfrstrout\n"); 	p(sctps_earlyfrstrtmr, "\t%ju TODO:sctps_earlyfrstrtmr\n");
 endif|#
 directive|endif
 comment|/* 	 * Others 	 */
-name|p
+name|p1a
 argument_list|(
 name|sctps_hdrops
 argument_list|,
-literal|"\t%ju packet %shorter than header\n"
+literal|"\t%ju packet shorter than header\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_badsum
 argument_list|,
-literal|"\t%ju check%sum error\n"
+literal|"\t%ju checksum error\n"
 argument_list|)
 expr_stmt|;
 name|p1a
@@ -3007,35 +3007,35 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|p(sctps_markedretrans, "\t%ju TODO:%sctps_markedretrans\n");
+block|p(sctps_markedretrans, "\t%ju TODO:sctps_markedretrans\n");
 endif|#
 directive|endif
-name|p
+name|p1a
 argument_list|(
 name|sctps_naglesent
 argument_list|,
-literal|"\t%ju RFC813 allowed %sending\n"
+literal|"\t%ju RFC813 allowed sending\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_naglequeued
 argument_list|,
-literal|"\t%ju RFC813 doe%s not allow sending\n"
+literal|"\t%ju RFC813 does not allow sending\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_maxburstqueued
 argument_list|,
-literal|"\t%ju max bur%st dosn't allow sending\n"
+literal|"\t%ju max burst dosn't allow sending\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_ifnomemqueued
 argument_list|,
-literal|"\t%ju look ahead tell%s us no memory in "
+literal|"\t%ju look ahead tells us no memory in "
 literal|"interface\n"
 argument_list|)
 expr_stmt|;
@@ -3043,7 +3043,7 @@ name|p
 argument_list|(
 name|sctps_windowprobed
 argument_list|,
-literal|"\t%ju numbers of window probe%s sent\n"
+literal|"\t%ju number%s of window probes sent\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -3086,18 +3086,18 @@ literal|"\t%ju time%s a ECN reduced "
 literal|"the cwnd\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_vtagexpress
 argument_list|,
-literal|"\t%ju u%sed express lookup via vtag\n"
+literal|"\t%ju used express lookup via vtag\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_vtagbogus
 argument_list|,
-literal|"\t%ju colli%sion in express lookup.\n"
+literal|"\t%ju collision in express lookup.\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -3126,35 +3126,35 @@ name|p
 argument_list|(
 name|sctps_wu_sacks_sent
 argument_list|,
-literal|"\t%ju window update only %sacks sent\n"
+literal|"\t%ju window update only sack%s sent\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sends_with_flags
 argument_list|,
-literal|"\t%ju %sends with sinfo_flags !=0\n"
+literal|"\t%ju send%s with sinfo_flags !=0\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sends_with_unord
 argument_list|,
-literal|"\t%ju unordered %sends\n"
+literal|"\t%ju unordered send%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sends_with_eof
 argument_list|,
-literal|"\t%ju %sends with EOF flag set\n"
+literal|"\t%ju send%s with EOF flag set\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_sends_with_abort
 argument_list|,
-literal|"\t%ju %sends with ABORT flag set\n"
+literal|"\t%ju send%s with ABORT flag set\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -3186,34 +3186,34 @@ argument_list|,
 literal|"\t%ju cached chunk%s used\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_cached_strmoq
 argument_list|,
-literal|"\t%ju cached %stream oq's used\n"
+literal|"\t%ju cached stream oq's used\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|sctps_left_abandon
 argument_list|,
-literal|"\t%ju unread me%ssage abandonded by close\n"
+literal|"\t%ju unread message%s abandonded by close\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_send_burst_avoid
 argument_list|,
-literal|"\t%ju send bur%st avoidance, already "
+literal|"\t%ju send burst avoidance, already "
 literal|"max burst inflight to net\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|sctps_send_cwnd_avoid
 argument_list|,
 literal|"\t%ju send cwnd full avoidance, already "
-literal|"max bur%st inflight to net\n"
+literal|"max burst inflight to net\n"
 argument_list|)
 expr_stmt|;
 name|p
