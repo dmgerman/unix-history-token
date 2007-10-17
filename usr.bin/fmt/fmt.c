@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<locale.h>
 end_include
 
@@ -1141,6 +1147,24 @@ operator|=
 name|goal_length
 operator|+
 literal|10
+expr_stmt|;
+if|if
+condition|(
+name|max_length
+operator|>=
+name|SIZE_T_MAX
+operator|/
+sizeof|sizeof
+argument_list|(
+name|wchar_t
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"max length too large"
+argument_list|)
 expr_stmt|;
 comment|/* really needn't be longer */
 name|output_buffer
