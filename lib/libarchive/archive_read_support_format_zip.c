@@ -1809,6 +1809,21 @@ name|entry_offset
 operator|=
 literal|0
 expr_stmt|;
+comment|/* If there's no body, force read_data() to return EOF immediately. */
+if|if
+condition|(
+name|zip
+operator|->
+name|entry_bytes_remaining
+operator|<
+literal|1
+condition|)
+name|zip
+operator|->
+name|end_of_entry
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Set up a more descriptive format name. */
 name|sprintf
 argument_list|(
@@ -2305,6 +2320,23 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+operator|*
+name|offset
+operator|=
+name|zip
+operator|->
+name|entry_uncompressed_bytes_read
+expr_stmt|;
+operator|*
+name|size
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|buff
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|ARCHIVE_EOF
