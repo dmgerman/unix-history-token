@@ -1750,7 +1750,7 @@ name|void
 modifier|*
 name|addr
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|int
