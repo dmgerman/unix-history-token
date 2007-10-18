@@ -2477,6 +2477,11 @@ name|cflags
 parameter_list|)
 block|{
 name|struct
+name|mbuf
+modifier|*
+name|m0
+decl_stmt|;
+name|struct
 name|ip
 modifier|*
 name|ip
@@ -2490,6 +2495,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|m0
+operator|=
+name|m
+expr_stmt|;
 name|offset
 operator|=
 sizeof|sizeof
@@ -2543,6 +2552,10 @@ name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* checksum will be corrupted */
+name|m
+operator|=
+name|m0
+expr_stmt|;
 goto|goto
 name|sendit
 goto|;
@@ -2582,6 +2595,10 @@ name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* checksum will be corrupted */
+name|m
+operator|=
+name|m0
+expr_stmt|;
 goto|goto
 name|sendit
 goto|;
@@ -2617,6 +2634,10 @@ name|NULL
 condition|)
 block|{
 comment|/* checksum will be corrupted */
+name|m
+operator|=
+name|m0
+expr_stmt|;
 goto|goto
 name|sendit
 goto|;
