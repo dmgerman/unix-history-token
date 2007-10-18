@@ -490,7 +490,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipfstat.c,v 1.44.2.23 2007/05/31 13:13:02 darrenr Exp $"
+literal|"@(#)$Id: ipfstat.c,v 1.44.2.25 2007/06/30 09:48:50 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6943,7 +6943,7 @@ name|minlen
 operator|=
 name|ipsp
 operator|->
-name|iss_max
+name|iss_inuse
 expr_stmt|;
 name|totallen
 operator|=

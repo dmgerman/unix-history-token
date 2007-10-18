@@ -314,6 +314,23 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOLARIS2
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_RADIX_H_
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -325,6 +342,23 @@ include|#
 directive|include
 file|"netinet/ip_fil.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOLARIS2
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|_RADIX_H_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* END OF INCLUDES */
