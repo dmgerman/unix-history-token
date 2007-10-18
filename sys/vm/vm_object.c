@@ -6224,7 +6224,9 @@ name|resident_page_count
 operator|==
 literal|0
 condition|)
-return|return;
+goto|goto
+name|skipmemq
+goto|;
 comment|/* 	 * Since physically-backed objects do not use managed pages, we can't 	 * remove pages from the object (we must instead remove the page 	 * references, and then destroy the object). 	 */
 name|KASSERT
 argument_list|(
@@ -6441,6 +6443,8 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+name|skipmemq
+label|:
 if|if
 condition|(
 name|__predict_false
