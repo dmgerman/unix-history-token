@@ -168,6 +168,10 @@ init|=
 block|{
 literal|"noatime"
 block|,
+literal|"noclusterr"
+block|,
+literal|"noclusterw"
+block|,
 literal|"export"
 block|,
 literal|"force"
