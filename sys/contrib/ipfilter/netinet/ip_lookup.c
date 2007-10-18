@@ -385,7 +385,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_lookup.c,v 2.35.2.15 2007/05/26 13:05:13 darrenr Exp $"
+literal|"@(#)$Id: ip_lookup.c,v 2.35.2.19 2007/10/11 09:05:51 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -482,6 +482,44 @@ name|__P
 argument_list|(
 operator|(
 name|caddr_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|iplookup_iterate
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|iplookup_deltok
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -871,7 +909,22 @@ name|SIOCLOOKUPITER
 case|:
 name|err
 operator|=
-name|ip_lookup_iterate
+name|iplookup_iterate
+argument_list|(
+name|data
+argument_list|,
+name|uid
+argument_list|,
+name|ctx
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SIOCIPFDELTOK
+case|:
+name|err
+operator|=
+name|iplookup_deltok
 argument_list|(
 name|data
 argument_list|,
@@ -1306,8 +1359,6 @@ name|err
 decl_stmt|;
 name|err
 operator|=
-literal|0
-expr_stmt|;
 name|BCOPYIN
 argument_list|(
 name|data
@@ -1321,6 +1372,15 @@ name|op
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
+return|return
+name|EFAULT
+return|;
 if|if
 condition|(
 name|op
@@ -2411,7 +2471,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* Function:    ip_lookup_iterate                                           */
+comment|/* Function:    iplookup_iterate                                            */
 end_comment
 
 begin_comment
@@ -2420,6 +2480,14 @@ end_comment
 
 begin_comment
 comment|/* Parameters:  data(I) - pointer to data from ioctl call                   */
+end_comment
+
+begin_comment
+comment|/*              uid(I)  - uid of caller                                     */
+end_comment
+
+begin_comment
+comment|/*              ctx(I)  - pointer to give the uid context                   */
 end_comment
 
 begin_comment
@@ -2435,8 +2503,9 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
-name|ip_lookup_iterate
+name|iplookup_iterate
 parameter_list|(
 name|data
 parameter_list|,
@@ -2494,12 +2563,6 @@ name|err
 return|;
 if|if
 condition|(
-name|iter
-operator|.
-name|ili_unit
-operator|<
-literal|0
-operator|||
 name|iter
 operator|.
 name|ili_unit
@@ -2751,6 +2814,131 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* ------------------------------------------------------------------------ */
+end_comment
+
+begin_comment
+comment|/* Function:    iplookup_deltok                                             */
+end_comment
+
+begin_comment
+comment|/* Returns:     int     - 0 = success, else error                           */
+end_comment
+
+begin_comment
+comment|/* Parameters:  data(I) - pointer to data from ioctl call                   */
+end_comment
+
+begin_comment
+comment|/*              uid(I)  - uid of caller                                     */
+end_comment
+
+begin_comment
+comment|/*              ctx(I)  - pointer to give the uid context                   */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Deletes the token identified by the combination of (type,uid,ctx)        */
+end_comment
+
+begin_comment
+comment|/* "key" is a combination of the table type, iterator type and the unit for */
+end_comment
+
+begin_comment
+comment|/* which the token was being used.                                          */
+end_comment
+
+begin_comment
+comment|/* ------------------------------------------------------------------------ */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|iplookup_deltok
+parameter_list|(
+name|data
+parameter_list|,
+name|uid
+parameter_list|,
+name|ctx
+parameter_list|)
+name|void
+modifier|*
+name|data
+decl_stmt|;
+name|int
+name|uid
+decl_stmt|;
+name|void
+modifier|*
+name|ctx
+decl_stmt|;
+block|{
+name|int
+name|error
+decl_stmt|,
+name|key
+decl_stmt|;
+name|SPL_INT
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|SPL_SCHED
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|BCOPYIN
+argument_list|(
+name|data
+argument_list|,
+operator|&
+name|key
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|key
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|ipf_deltoken
+argument_list|(
+name|key
+argument_list|,
+name|uid
+argument_list|,
+name|ctx
+argument_list|)
+expr_stmt|;
+name|SPL_X
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+name|error
+return|;
 block|}
 end_function
 

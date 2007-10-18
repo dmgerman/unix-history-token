@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.68.2.8 2007/05/11 10:44:14 darrenr Exp $  */
+comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.68.2.10 2007/10/16 09:33:24 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -107,33 +107,25 @@ end_endif
 begin_define
 define|#
 directive|define
-name|PAIRS
+name|SEQ_GE
 parameter_list|(
-name|s1
+name|a
 parameter_list|,
-name|d1
-parameter_list|,
-name|s2
-parameter_list|,
-name|d2
+name|b
 parameter_list|)
-value|((((s1) == (s2))&& ((d1) == (d2))) ||\ 				 (((s1) == (d2))&& ((d1) == (s2))))
+value|((int)((a) - (b))>= 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IPPAIR
+name|SEQ_GT
 parameter_list|(
-name|s1
+name|a
 parameter_list|,
-name|d1
-parameter_list|,
-name|s2
-parameter_list|,
-name|d2
+name|b
 parameter_list|)
-value|PAIRS((s1).s_addr, (d1).s_addr, \ 				      (s2).s_addr, (d2).s_addr)
+value|((int)((a) - (b))> 0)
 end_define
 
 begin_typedef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.90.2.17 2007/05/11 10:19:11 darrenr Exp $  */
+comment|/*  * Copyright (C) 1995-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.90.2.20 2007/09/25 08:27:32 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -570,6 +570,12 @@ name|int
 name|nat_redir
 decl_stmt|;
 comment|/* copy of in_redir */
+name|u_32_t
+name|nat_seqnext
+index|[
+literal|2
+index|]
+decl_stmt|;
 block|}
 name|nat_t
 typedef|;
@@ -1649,6 +1655,9 @@ decl_stmt|;
 name|u_long
 name|ns_ticks
 decl_stmt|;
+name|u_int
+name|ns_orphans
+decl_stmt|;
 block|}
 name|natstat_t
 typedef|;
@@ -1732,6 +1741,13 @@ define|#
 directive|define
 name|NL_NEWBLOCK
 value|NAT_MAPBLK
+end_define
+
+begin_define
+define|#
+directive|define
+name|NL_DESTROY
+value|0xfffc
 end_define
 
 begin_define
@@ -2217,6 +2233,23 @@ name|fr_info_t
 operator|*
 operator|,
 name|u_int
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|nat_delete
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nat
 operator|*
 operator|,
 name|int

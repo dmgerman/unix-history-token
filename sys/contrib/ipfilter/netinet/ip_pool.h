@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_pool.h,v 2.26.2.5 2007/01/14 14:06:12 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_pool.h,v 2.26.2.6 2007/10/10 09:51:43 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -111,6 +111,11 @@ operator|||
 name|defined
 argument_list|(
 name|__hpux
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|sun
 argument_list|)
 end_if
 

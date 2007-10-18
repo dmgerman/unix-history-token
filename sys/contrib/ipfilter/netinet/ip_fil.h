@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.170.2.45 2007/05/28 11:56:22 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.170.2.51 2007/10/10 09:48:03 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -885,7 +885,7 @@ name|I60
 parameter_list|(
 name|x
 parameter_list|)
-value|(((i6addr_t *)(x))->i6[0])
+value|(((u_32_t *)(x))[0])
 end_define
 
 begin_define
@@ -895,7 +895,7 @@ name|I61
 parameter_list|(
 name|x
 parameter_list|)
-value|(((i6addr_t *)(x))->i6[1])
+value|(((u_32_t *)(x))[1])
 end_define
 
 begin_define
@@ -905,7 +905,7 @@ name|I62
 parameter_list|(
 name|x
 parameter_list|)
-value|(((i6addr_t *)(x))->i6[2])
+value|(((u_32_t *)(x))[2])
 end_define
 
 begin_define
@@ -915,7 +915,7 @@ name|I63
 parameter_list|(
 name|x
 parameter_list|)
-value|(((i6addr_t *)(x))->i6[3])
+value|(((u_32_t *)(x))[3])
 end_define
 
 begin_define
@@ -925,7 +925,7 @@ name|HI60
 parameter_list|(
 name|x
 parameter_list|)
-value|ntohl(((i6addr_t *)(x))->i6[0])
+value|ntohl(((u_32_t *)(x))[0])
 end_define
 
 begin_define
@@ -935,7 +935,7 @@ name|HI61
 parameter_list|(
 name|x
 parameter_list|)
-value|ntohl(((i6addr_t *)(x))->i6[1])
+value|ntohl(((u_32_t *)(x))[1])
 end_define
 
 begin_define
@@ -945,7 +945,7 @@ name|HI62
 parameter_list|(
 name|x
 parameter_list|)
-value|ntohl(((i6addr_t *)(x))->i6[2])
+value|ntohl(((u_32_t *)(x))[2])
 end_define
 
 begin_define
@@ -955,7 +955,7 @@ name|HI63
 parameter_list|(
 name|x
 parameter_list|)
-value|ntohl(((i6addr_t *)(x))->i6[3])
+value|ntohl(((u_32_t *)(x))[3])
 end_define
 
 begin_define
@@ -1046,7 +1046,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|{ i6addr_t *_i6 = (i6addr_t *)(a); \ 		  _i6->i6[0] = NLADD(_i6->i6[0], 1); \ 		  if (_i6->i6[0] == 0) { \ 			_i6->i6[0] = NLADD(_i6->i6[1], 1); \ 			if (_i6->i6[1] == 0) { \ 				_i6->i6[0] = NLADD(_i6->i6[2], 1); \ 				if (_i6->i6[2] == 0) { \ 					_i6->i6[0] = NLADD(_i6->i6[3], 1); \ 				} \ 			} \ 		  } \ 		}
+value|{ u_32_t *_i6 = (u_32_t *)(a); \ 		  _i6[3] = NLADD(_i6[3], 1); \ 		  if (_i6[3] == 0) { \ 			_i6[2] = NLADD(_i6[2], 1); \ 			if (_i6[2] == 0) { \ 				_i6[1] = NLADD(_i6[1], 1); \ 				if (_i6[1] == 0) { \ 					_i6[0] = NLADD(_i6[0], 1); \ 				} \ 			} \ 		  } \ 		}
 end_define
 
 begin_define
@@ -1293,11 +1293,11 @@ begin_define
 define|#
 directive|define
 name|FI_CMP
-value|0xcfe3
+value|0xcf03
 end_define
 
 begin_comment
-comment|/* Not FI_FRAG,FI_NATED,FI_FRAGTAIL */
+comment|/* Not FI_FRAG,FI_NATED,FI_FRAGTAIL,broadcast */
 end_comment
 
 begin_define
@@ -1334,6 +1334,13 @@ define|#
 directive|define
 name|FI_COALESCE
 value|0x20000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FI_NEWNAT
+value|0x40000
 end_define
 
 begin_define
@@ -1627,6 +1634,10 @@ name|int
 name|fin_error
 decl_stmt|;
 comment|/* Error code to return */
+name|int
+name|fin_cksum
+decl_stmt|;
+comment|/* -1 bad, 1 good, 0 not done */
 name|void
 modifier|*
 name|fin_nat
@@ -5839,6 +5850,20 @@ name|IPFTABLE_BUCKETS
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPFTABLE_BUCKETS_NATIN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFTABLE_BUCKETS_NATOUT
+value|3
+end_define
+
 begin_comment
 comment|/*  *  */
 end_comment
@@ -7956,6 +7981,72 @@ begin_comment
 comment|/* MENTAT */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipf_pfil_hook
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipf_pfil_unhook
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ipf_event_reg
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ipf_event_dereg
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -9212,7 +9303,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|fr_lock
 name|__P
 argument_list|(
@@ -9420,7 +9511,7 @@ name|fr_zerostats
 name|__P
 argument_list|(
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 argument_list|)

@@ -637,7 +637,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_sync.c,v 2.40.2.8 2006/07/14 06:12:20 darrenr Exp $"
+literal|"@(#)$Id: ip_sync.c,v 2.40.2.9 2007/06/02 21:22:28 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2020,9 +2020,6 @@ name|err
 operator|=
 name|UIOMOVE
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sh
 argument_list|,
@@ -2307,9 +2304,6 @@ name|err
 operator|=
 name|UIOMOVE
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|data
 argument_list|,
 name|sh
@@ -2778,9 +2772,6 @@ name|err
 operator|=
 name|UIOMOVE
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sl
 argument_list|,
 sizeof|sizeof
@@ -2836,9 +2827,6 @@ name|err
 operator|=
 name|UIOMOVE
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|su
 argument_list|,
 sizeof|sizeof

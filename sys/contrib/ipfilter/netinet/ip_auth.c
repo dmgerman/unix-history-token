@@ -837,7 +837,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 2.73.2.20 2007/05/29 13:48:54 darrenr Exp $"
+literal|"@(#)$Id: ip_auth.c,v 2.73.2.24 2007/09/09 11:32:04 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1908,33 +1908,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fr_authstart
-operator|>
+operator|(
+operator|(
 name|fr_authend
-condition|)
-block|{
-name|fr_authstats
-operator|.
-name|fas_nospace
-operator|++
-expr_stmt|;
-name|RWLOCK_EXIT
-argument_list|(
-operator|&
-name|ipf_auth
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|fr_authused
-operator|==
+operator|+
+literal|1
+operator|)
+operator|%
 name|fr_authsize
+operator|)
+operator|==
+name|fr_authstart
 condition|)
 block|{
 name|fr_authstats
@@ -1951,7 +1935,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
 block|}
 name|fr_authstats
 operator|.
@@ -2154,6 +2137,10 @@ name|COPYIFNAME
 argument_list|(
 name|fin
 operator|->
+name|fin_v
+argument_list|,
+name|fin
+operator|->
 name|fin_ifp
 argument_list|,
 name|fra
@@ -2186,6 +2173,13 @@ name|fin
 operator|->
 name|fin_mp
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_INET_IP_STACK_H
+argument_list|)
 name|fra
 operator|->
 name|fra_q
@@ -2195,6 +2189,8 @@ operator|->
 name|qpi_q
 expr_stmt|;
 comment|/* The queue can disappear! */
+endif|#
+directive|endif
 name|fra
 operator|->
 name|fra_m
@@ -2489,6 +2485,8 @@ name|EPERM
 expr_stmt|;
 break|break;
 block|}
+name|error
+operator|=
 name|fr_lock
 argument_list|(
 name|data
@@ -3740,7 +3738,7 @@ comment|/* Function:    fr_auth_waiting                                         
 end_comment
 
 begin_comment
-comment|/* Returns:     int - number of packets in the auth queue                   */
+comment|/* Returns:     int - 0 = no pakcets wiating, 1 = packets waiting.          */
 end_comment
 
 begin_comment
@@ -3752,11 +3750,11 @@ comment|/*                                                                      
 end_comment
 
 begin_comment
-comment|/* Returns the numbers of packets queued up, waiting to be processed with   */
+comment|/* Simple truth check to see if there are any packets waiting in the auth   */
 end_comment
 
 begin_comment
-comment|/* a pair of SIOCAUTHW and SIOCAUTHR calls.                                 */
+comment|/* queue.                                                                   */
 end_comment
 
 begin_comment
@@ -3770,15 +3768,10 @@ parameter_list|()
 block|{
 return|return
 operator|(
-name|fr_authnext
+name|fr_authused
 operator|!=
-name|fr_authend
+literal|0
 operator|)
-operator|&&
-name|fr_authpkts
-index|[
-name|fr_authnext
-index|]
 return|;
 block|}
 end_function
@@ -4265,18 +4258,35 @@ expr_stmt|;
 comment|/* 	 * If fr_authnext is not equal to fr_authend it will be because there 	 * is a packet waiting to be delt with in the fr_authpkts array.  We 	 * copy as much of that out to user space as requested. 	 */
 if|if
 condition|(
-operator|(
-name|fr_authnext
-operator|!=
-name|fr_authend
-operator|)
-operator|&&
+name|fr_authused
+operator|>
+literal|0
+condition|)
+block|{
+while|while
+condition|(
 name|fr_authpkts
 index|[
 name|fr_authnext
 index|]
+operator|==
+name|NULL
 condition|)
 block|{
+name|fr_authnext
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|fr_authnext
+operator|==
+name|fr_authsize
+condition|)
+name|fr_authnext
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|fr_outobj
@@ -4430,15 +4440,6 @@ operator|&
 name|ipf_auth
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-return|return
-name|error
-return|;
 name|SPL_NET
 argument_list|(
 name|s
