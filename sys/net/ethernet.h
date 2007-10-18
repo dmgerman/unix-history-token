@@ -2816,7 +2816,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-name|int
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl

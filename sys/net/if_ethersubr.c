@@ -5526,7 +5526,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|int
+name|uint16_t
 name|tag
 parameter_list|)
 block|{
