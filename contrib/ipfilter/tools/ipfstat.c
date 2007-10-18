@@ -486,7 +486,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipfstat.c,v 1.44.2.23 2007/05/31 13:13:02 darrenr Exp $"
+literal|"@(#)$Id: ipfstat.c,v 1.44.2.25 2007/06/30 09:48:50 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6939,7 +6939,7 @@ name|minlen
 operator|=
 name|ipsp
 operator|->
-name|iss_max
+name|iss_inuse
 expr_stmt|;
 name|totallen
 operator|=
@@ -10495,7 +10495,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Invalid port specfication in %s\n"
+literal|"Invalid port specification in %s\n"
 argument_list|,
 name|argument
 argument_list|)
@@ -10537,6 +10537,10 @@ operator|.
 name|s_addr
 operator|=
 name|INADDR_ANY
+expr_stmt|;
+name|ok
+operator|=
+literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef

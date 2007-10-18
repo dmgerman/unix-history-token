@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printpacket.c,v 1.12.4.4 2006/09/30 21:44:43 darrenr Exp $  */
+comment|/*  * Copyright (C) 2000-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printpacket.c,v 1.12.4.5 2007/09/09 22:15:30 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -278,7 +278,11 @@ name|printf
 argument_list|(
 literal|" @%d"
 argument_list|,
+operator|(
 name|off
+operator|&
+name|IP_OFFMASK
+operator|)
 operator|<<
 literal|3
 argument_list|)

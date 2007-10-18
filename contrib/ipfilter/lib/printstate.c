@@ -215,7 +215,7 @@ argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|"\tcmsk %04x smsk %04x isc %p s0 %08x/%08x\n"
+literal|"\tcmsk %04x smsk %04x s0 %08x/%08x\n"
 argument_list|,
 name|sp
 operator|->
@@ -230,10 +230,6 @@ name|is_smsk
 index|[
 literal|1
 index|]
-argument_list|,
-name|sp
-operator|->
-name|is_isc
 argument_list|,
 name|sp
 operator|->
