@@ -91,7 +91,7 @@ begin_define
 define|#
 directive|define
 name|CACHED_SOCKET_PATH
-value|"/var/run/cached"
+value|"/var/run/nscd"
 end_define
 
 begin_function
