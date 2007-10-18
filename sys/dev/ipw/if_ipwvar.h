@@ -199,6 +199,27 @@ name|struct
 name|task
 name|sc_init_task
 decl_stmt|;
+name|struct
+name|task
+name|sc_scan_task
+decl_stmt|;
+name|struct
+name|task
+name|sc_chan_task
+decl_stmt|;
+name|struct
+name|task
+name|sc_assoc_task
+decl_stmt|;
+name|struct
+name|task
+name|sc_disassoc_task
+decl_stmt|;
+name|struct
+name|callout
+name|sc_wdtimer
+decl_stmt|;
+comment|/* watchdog timer */
 name|uint32_t
 name|flags
 decl_stmt|;
@@ -216,8 +237,24 @@ name|IPW_FLAG_HAS_RADIO_SWITCH
 value|(1<< 2)
 define|#
 directive|define
-name|IPW_FLAG_FW_WARNED
+name|IPW_FLAG_HACK
 value|(1<< 3)
+define|#
+directive|define
+name|IPW_FLAG_SCANNING
+value|(1<< 4)
+define|#
+directive|define
+name|IPW_FLAG_ENABLED
+value|(1<< 5)
+define|#
+directive|define
+name|IPW_FLAG_BUSY
+value|(1<< 6)
+define|#
+directive|define
+name|IPW_FLAG_ASSOCIATED
+value|(1<< 7)
 name|int
 name|irq_rid
 decl_stmt|;
@@ -252,6 +289,9 @@ name|sc_firmware
 decl_stmt|;
 name|int
 name|sc_tx_timer
+decl_stmt|;
+name|int
+name|sc_scan_timer
 decl_stmt|;
 name|bus_dma_tag_t
 name|tbd_dmat
@@ -436,6 +476,47 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * NB.: This models the only instance of async locking in ipw_init_locked  *	and must be kept in sync.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPW_LOCK_DECL
+value|int	__waslocked = 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPW_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|do {				\ 	if (!(__waslocked = mtx_owned(&(sc)->sc_mtx)))	\ 		mtx_lock(&sc->sc_mtx);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPW_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|do {				\ 	if (!__waslocked)				\ 		mtx_unlock(&sc->sc_mtx);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPW_LOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->sc_mtx, MA_OWNED)
+end_define
 
 end_unit
 

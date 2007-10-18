@@ -346,6 +346,28 @@ name|IPW_IO_RADIO_DISABLED
 value|0x00010000
 end_define
 
+begin_comment
+comment|/* state codes sent by fw on IPW_STATUS_CODE_NEWSTATE interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPW_STATE_INITIALIZED
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPW_STATE_CC_FOUND
+value|0x0002
+end_define
+
+begin_comment
+comment|/* 802.11d cc received */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -363,9 +385,42 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPW_STATE_ASSOCIATION_CHANGED
+value|0x0010
+end_define
+
+begin_comment
+comment|/* assoc params changed? */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPW_STATE_SCAN_COMPLETE
 value|0x0020
 end_define
+
+begin_define
+define|#
+directive|define
+name|IPW_STATE_PS_ENTER
+value|0x0040
+end_define
+
+begin_comment
+comment|/* entered power-save mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPW_STATE_PS_EXIT
+value|0x0080
+end_define
+
+begin_comment
+comment|/* exited power-save mode */
+end_comment
 
 begin_define
 define|#
@@ -380,6 +435,17 @@ directive|define
 name|IPW_STATE_DISABLED
 value|0x0200
 end_define
+
+begin_define
+define|#
+directive|define
+name|IPW_STATE_POWER_DOWN
+value|0x0400
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
 
 begin_define
 define|#
@@ -603,10 +669,19 @@ define|#
 directive|define
 name|IPW_STATUS_FLAG_WEP_ENCRYPTED
 value|0x02
+define|#
+directive|define
+name|IPW_STATUS_FLAG_CRC_ERROR
+value|0x04
 name|uint8_t
 name|rssi
 decl_stmt|;
 comment|/* received signal strength indicator */
+define|#
+directive|define
+name|IPW_RSSI_TO_DBM
+value|(-98)
+comment|/* XXX fixed nf to convert dBm */
 block|}
 name|__packed
 struct|;
@@ -775,6 +850,18 @@ name|IPW_CMD_SET_SCAN_OPTIONS
 value|46
 define|#
 directive|define
+name|IPW_CMD_SET_SCAN_DWELL_TIME
+value|47
+define|#
+directive|define
+name|IPW_CMD_SET_SHORT_RETRY
+value|51
+define|#
+directive|define
+name|IPW_CMD_SET_LONG_RETRY
+value|52
+define|#
+directive|define
 name|IPW_CMD_PREPARE_POWER_DOWN
 value|58
 define|#
@@ -783,8 +870,16 @@ name|IPW_CMD_DISABLE_PHY
 value|61
 define|#
 directive|define
-name|IPW_CMD_SET_SECURITY_INFORMATION
+name|IPW_CMD_SET_MSDU_TX_RATES
+value|62
+define|#
+directive|define
+name|IPW_CMD_SET_SECURITY_INFO
 value|67
+define|#
+directive|define
+name|IPW_CMD_DISASSOCIATE
+value|68
 define|#
 directive|define
 name|IPW_CMD_SET_WPA_IE
@@ -832,7 +927,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPW_POWER_AUTOMATIC
+name|IPW_POWER_MODE_AUTO
 value|6
 end_define
 
@@ -969,6 +1064,10 @@ define|#
 directive|define
 name|IPW_SCAN_DO_NOT_ASSOCIATE
 value|0x00000001
+define|#
+directive|define
+name|IPW_SCAN_MIXED_CELL
+value|0x00000002
 define|#
 directive|define
 name|IPW_SCAN_PASSIVE
