@@ -369,7 +369,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_scan.c,v 2.40.2.9 2007/03/13 09:42:05 darrenr Exp $"
+literal|"@(#)$Id: ip_scan.c,v 2.40.2.10 2007/06/02 21:22:28 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2858,6 +2858,8 @@ name|iscs_list
 operator|=
 name|ipsc_list
 expr_stmt|;
+name|err
+operator|=
 name|BCOPYOUT
 argument_list|(
 operator|&
@@ -2870,6 +2872,16 @@ argument_list|(
 name|ipscs
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
+name|err
+operator|=
+name|EFAULT
 expr_stmt|;
 break|break;
 default|default :

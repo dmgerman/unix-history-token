@@ -8,7 +8,7 @@ comment|/*  * Overview:  *   This is an in-kernel application proxy for Sun's RP
 end_comment
 
 begin_comment
-comment|/*  * TODO / NOTES  *  *   o Must implement locking to protect proxy session data.  *   o Fragmentation isn't supported.  *   o Only supports UDP.  *   o Doesn't support multiple RPC records in a single request.  *   o Errors should be more fine-grained.  (e.g., malloc failure vs.  *     illegal RPCB request / reply)  *   o Even with the limit on the total amount of recorded transactions,  *     should there be a timeout on transaction removal?  *   o There is a potential collision between cloning, wildcard NAT and  *     state entries.  There should be an appr_getport routine for  *     to avoid this.  *   o The enclosed hack of STREAMS support is pretty sick and most likely  *     broken.  *  *	$Id: ip_rpcb_pxy.c,v 2.25.2.6 2007/01/17 11:34:54 darrenr Exp $  */
+comment|/*  * TODO / NOTES  *  *   o Must implement locking to protect proxy session data.  *   o Fragmentation isn't supported.  *   o Only supports UDP.  *   o Doesn't support multiple RPC records in a single request.  *   o Errors should be more fine-grained.  (e.g., malloc failure vs.  *     illegal RPCB request / reply)  *   o Even with the limit on the total amount of recorded transactions,  *     should there be a timeout on transaction removal?  *   o There is a potential collision between cloning, wildcard NAT and  *     state entries.  There should be an appr_getport routine for  *     to avoid this.  *   o The enclosed hack of STREAMS support is pretty sick and most likely  *     broken.  *  *	$Id: ip_rpcb_pxy.c,v 2.25.2.7 2007/06/04 09:16:31 darrenr Exp $  */
 end_comment
 
 begin_define
