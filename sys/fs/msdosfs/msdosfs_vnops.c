@@ -2389,7 +2389,7 @@ name|deupdat
 argument_list|(
 name|dep
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 operator|)
 return|;
