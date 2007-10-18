@@ -222,6 +222,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_DTLS1_PREPROCESS_FRAGMENT
+argument_list|)
+block|,
+literal|"DTLS1_PREPROCESS_FRAGMENT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_DTLS1_PROCESS_OUT_OF_SEQ_MESSAGE
 argument_list|)
 block|,

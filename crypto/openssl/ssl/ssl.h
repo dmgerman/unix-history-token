@@ -6643,6 +6643,10 @@ name|SSL_F_DTLS1_OUTPUT_CERT_CHAIN
 value|255
 define|#
 directive|define
+name|SSL_F_DTLS1_PREPROCESS_FRAGMENT
+value|277
+define|#
+directive|define
 name|SSL_F_DTLS1_PROCESS_OUT_OF_SEQ_MESSAGE
 value|256
 define|#
