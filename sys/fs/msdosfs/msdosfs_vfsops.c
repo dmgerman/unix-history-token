@@ -166,6 +166,8 @@ name|msdosfs_opts
 index|[]
 init|=
 block|{
+literal|"async"
+block|,
 literal|"noatime"
 block|,
 literal|"noclusterr"
