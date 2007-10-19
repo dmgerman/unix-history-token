@@ -3615,13 +3615,6 @@ name|sas_portinfo
 operator|=
 name|portinfo
 expr_stmt|;
-name|free
-argument_list|(
-name|portinfo
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
