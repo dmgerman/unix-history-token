@@ -8897,7 +8897,7 @@ name|zyd_write32
 argument_list|(
 name|sc
 argument_list|,
-name|ZYD_MAC_RETRY
+name|ZYD_MACB_MAX_RETRY
 argument_list|,
 literal|0x02020202
 argument_list|)
