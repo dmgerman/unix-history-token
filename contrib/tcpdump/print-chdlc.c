@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-chdlc.c,v 1.32.2.8 2005/08/23 10:29:42 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-chdlc.c,v 1.32.2.11 2005/11/29 08:57:10 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,6 +111,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|const
+name|struct
+name|tok
+name|chdlc_cast_values
+index|[]
+init|=
+block|{
+block|{
+name|CHDLC_UNICAST
+block|,
+literal|"unicast"
+block|}
+block|,
+block|{
+name|CHDLC_BCAST
+block|,
+literal|"bcast"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Standard CHDLC printer */
 end_comment
@@ -196,12 +225,6 @@ block|{
 name|u_int
 name|proto
 decl_stmt|;
-specifier|const
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
 name|proto
 operator|=
 name|EXTRACT_16BITS
@@ -218,52 +241,34 @@ condition|(
 name|eflag
 condition|)
 block|{
-switch|switch
-condition|(
-name|p
-index|[
-literal|0
-index|]
-condition|)
-block|{
-case|case
-name|CHDLC_UNICAST
-case|:
 name|printf
 argument_list|(
-literal|"unicast "
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CHDLC_BCAST
-case|:
-name|printf
+literal|"%s, ethertype %s (0x%04x), length %u: "
+argument_list|,
+name|tok2str
 argument_list|(
-literal|"bcast "
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|"0x%02x "
+name|chdlc_cast_values
+argument_list|,
+literal|"0x%02x"
 argument_list|,
 name|p
 index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
-break|break;
-block|}
-name|printf
-argument_list|(
-literal|"%d %04x: "
 argument_list|,
-name|length
+name|tok2str
+argument_list|(
+name|ethertype_values
+argument_list|,
+literal|"Unknown"
 argument_list|,
 name|proto
+argument_list|)
+argument_list|,
+name|proto
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 block|}
@@ -271,19 +276,9 @@ name|length
 operator|-=
 name|CHDLC_HDRLEN
 expr_stmt|;
-name|ip
-operator|=
-operator|(
-specifier|const
-expr|struct
-name|ip
-operator|*
-operator|)
-operator|(
 name|p
-operator|+
+operator|+=
 name|CHDLC_HDRLEN
-operator|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -297,12 +292,7 @@ name|ip_print
 argument_list|(
 name|gndo
 argument_list|,
-operator|(
-specifier|const
-name|u_char
-operator|*
-operator|)
-name|ip
+name|p
 argument_list|,
 name|length
 argument_list|)
@@ -316,12 +306,7 @@ name|ETHERTYPE_IPV6
 case|:
 name|ip6_print
 argument_list|(
-operator|(
-specifier|const
-name|u_char
-operator|*
-operator|)
-name|ip
+name|p
 argument_list|,
 name|length
 argument_list|)
@@ -334,12 +319,7 @@ name|CHDLC_TYPE_SLARP
 case|:
 name|chdlc_slarp_print
 argument_list|(
-operator|(
-specifier|const
-name|u_char
-operator|*
-operator|)
-name|ip
+name|p
 argument_list|,
 name|length
 argument_list|)
@@ -348,7 +328,7 @@ break|break;
 if|#
 directive|if
 literal|0
-block|case CHDLC_TYPE_CDP: 		chdlc_cdp_print((const u_char *)ip, length); 		break;
+block|case CHDLC_TYPE_CDP: 		chdlc_cdp_print(p, length); 		break;
 endif|#
 directive|endif
 case|case
@@ -359,14 +339,7 @@ name|ETHERTYPE_MPLS_MULTI
 case|:
 name|mpls_print
 argument_list|(
-operator|(
-specifier|const
-name|u_char
-operator|*
-operator|)
-operator|(
-name|ip
-operator|)
+name|p
 argument_list|,
 name|length
 argument_list|)
@@ -382,8 +355,6 @@ operator|*
 operator|(
 name|p
 operator|+
-name|CHDLC_HDRLEN
-operator|+
 literal|1
 operator|)
 operator|==
@@ -392,8 +363,6 @@ operator|||
 operator|*
 operator|(
 name|p
-operator|+
-name|CHDLC_HDRLEN
 operator|+
 literal|1
 operator|)
@@ -404,8 +373,6 @@ operator|*
 operator|(
 name|p
 operator|+
-name|CHDLC_HDRLEN
-operator|+
 literal|1
 operator|)
 operator|==
@@ -414,8 +381,6 @@ condition|)
 name|isoclns_print
 argument_list|(
 name|p
-operator|+
-name|CHDLC_HDRLEN
 operator|+
 literal|1
 argument_list|,
@@ -432,8 +397,6 @@ else|else
 name|isoclns_print
 argument_list|(
 name|p
-operator|+
-name|CHDLC_HDRLEN
 argument_list|,
 name|length
 argument_list|,
@@ -442,6 +405,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+operator|!
+name|eflag
+condition|)
 name|printf
 argument_list|(
 literal|"unknown CHDLC protocol (0x%04x)"

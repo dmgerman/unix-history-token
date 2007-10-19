@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/dccp.h,v 1.1.2.2 2005/09/20 06:25:45 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/dccp.h,v 1.1.2.4 2006/05/12 01:46:17 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -183,62 +183,17 @@ block|}
 struct|;
 end_struct
 
-begin_function
-specifier|static
-specifier|inline
-name|struct
-name|dccp_hdr_data
-modifier|*
-name|dccp_hdr_data
-parameter_list|(
-name|struct
-name|dccp_hdr
-modifier|*
-name|hdrg
-parameter_list|)
-block|{
-specifier|const
-name|int
-name|ext
-init|=
-name|DCCPH_X
-argument_list|(
-name|hdrg
-argument_list|)
-condition|?
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dccp_hdr_ext
-argument_list|)
-else|:
+begin_if
+if|#
+directive|if
 literal|0
-decl_stmt|;
-return|return
-operator|(
-expr|struct
-name|dccp_hdr_data
-operator|*
-operator|)
-operator|(
-operator|(
-operator|(
-name|u_char
-operator|*
-operator|)
-name|hdrg
-operator|)
-operator|+
-sizeof|sizeof
-argument_list|(
-name|hdrg
-argument_list|)
-operator|+
-name|ext
-operator|)
-return|;
-block|}
-end_function
+end_if
+
+begin_endif
+unit|static inline struct dccp_hdr_data *dccp_hdr_data(struct dccp_hdr *hdrg) { 	const int ext = DCCPH_X(hdrg) ? sizeof(struct dccp_hdr_ext) : 0;  	return (struct dccp_hdr_data *)(((u_char *)hdrg) + sizeof(hdrg) + ext); }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * struct dccp_hdr_reset - Unconditionally shut down a connection  *  * @dccph_reset_service - Echoes the Service Code on a received DCCP-Request  */
@@ -291,7 +246,7 @@ block|,
 name|DCCP_PKT_SYNCACK
 block|,
 name|DCCP_PKT_INVALID
-block|, }
+block|}
 enum|;
 end_enum
 
@@ -326,7 +281,7 @@ block|,
 name|DCCP_RESET_CODE_AGGRESSION_PENALTY
 block|,
 name|__DCCP_RESET_CODE_LAST
-block|, }
+block|}
 enum|;
 end_enum
 

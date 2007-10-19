@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/optimize.c,v 1.85 2005/04/04 08:42:18 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/optimize.c,v 1.85.2.3 2007/09/12 21:29:45 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2921,7 +2921,7 @@ decl_stmt|,
 name|v1
 decl_stmt|;
 block|{
-name|bpf_int32
+name|bpf_u_int32
 name|a
 decl_stmt|,
 name|b
@@ -8194,11 +8194,12 @@ decl_stmt|,
 name|j
 decl_stmt|;
 name|int
-name|done
+name|done1
 decl_stmt|;
+comment|/* don't shadow global */
 name|top
 label|:
-name|done
+name|done1
 operator|=
 literal|1
 expr_stmt|;
@@ -8371,7 +8372,7 @@ operator|->
 name|link
 condition|)
 block|{
-name|done
+name|done1
 operator|=
 literal|0
 expr_stmt|;
@@ -8398,7 +8399,7 @@ operator|->
 name|link
 condition|)
 block|{
-name|done
+name|done1
 operator|=
 literal|0
 expr_stmt|;
@@ -8419,7 +8420,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|done
+name|done1
 condition|)
 goto|goto
 name|top
@@ -8801,10 +8802,10 @@ name|block
 operator|*
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
 name|n
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -8849,10 +8850,10 @@ name|edge
 operator|*
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
 name|n_edges
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -8880,10 +8881,10 @@ name|block
 operator|*
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
 name|n_blocks
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -9198,10 +9199,10 @@ expr|struct
 name|vmapinfo
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
 name|maxval
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -9216,10 +9217,10 @@ expr|struct
 name|valnode
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
 name|maxval
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -9620,6 +9621,7 @@ name|jt
 decl_stmt|,
 name|jf
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ljerr
@@ -10048,7 +10050,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert flowgraph intermediate representation to the  * BPF array representation.  Set *lenp to the number of instructions.  */
+comment|/*  * Convert flowgraph intermediate representation to the  * BPF array representation.  Set *lenp to the number of instructions.  *  * This routine does *NOT* leak the memory pointed to by fp.  It *must  * not* do free(fp) before returning fp; doing so would make no sense,  * as the BPF array pointed to by the return value of icode_to_fcode()  * must be valid - it's being returned for use in a bpf_program structure.  *  * If it appears that icode_to_fcode() is leaking, the problem is that  * the program using pcap_compile() is failing to free the memory in  * the BPF program when it's done - the leak is in the program, not in  * the routine that happens to be allocating the memory.  (By analogy, if  * a program calls fopen() without ever calling fclose() on the FILE *,  * it will leak the FILE structure; the leak is not in fopen(), it's in  * the program.)  Change the program to use pcap_freecode() when it's  * done with the filter program.  See the pcap man page.  */
 end_comment
 
 begin_function

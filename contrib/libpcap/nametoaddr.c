@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.77.2.3 2005/04/20 11:13:51 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.77.2.4 2007/06/11 09:52:05 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1088,6 +1088,7 @@ begin_struct
 struct|struct
 name|eproto
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
@@ -1598,10 +1599,6 @@ if|if
 condition|(
 name|sscanf
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|s
 argument_list|,
 literal|"%d.%d"
@@ -2024,10 +2021,6 @@ if|if
 condition|(
 name|ether_hostton
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|name
 argument_list|,
 operator|(

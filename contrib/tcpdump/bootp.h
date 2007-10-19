@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/bootp.h,v 1.15 2003/07/01 19:16:06 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/bootp.h,v 1.15.4.3 2007/08/21 22:02:08 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -802,6 +802,24 @@ value|((u_int8_t) 118)
 end_define
 
 begin_comment
+comment|/* RFC 3442 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAG_CLASSLESS_STATIC_RT
+value|((u_int8_t) 121)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_CLASSLESS_STA_RT_MS
+value|((u_int8_t) 249)
+end_define
+
+begin_comment
 comment|/* ftp://ftp.isi.edu/.../assignments/bootp-dhcp-extensions */
 end_comment
 
@@ -1115,6 +1133,38 @@ end_define
 begin_comment
 comment|/* Subnet mask field contains valid data */
 end_comment
+
+begin_comment
+comment|/* RFC 4702 DHCP Client FQDN Option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLIENT_FQDN_FLAGS_S
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLIENT_FQDN_FLAGS_O
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLIENT_FQDN_FLAGS_E
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLIENT_FQDN_FLAGS_N
+value|0x08
+end_define
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/udp.h,v 1.8 2005/04/06 21:33:28 mcr Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/udp.h,v 1.8.2.2 2007/03/28 07:45:46 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -166,6 +166,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OLSR_PORT
+value|698
+end_define
+
+begin_comment
+comment|/* rfc3626 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KERBEROS_SEC_PORT
 value|750
 end_define
@@ -314,6 +325,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LMP_PORT
+value|701
+end_define
+
+begin_comment
+comment|/* rfc4204 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LWRES_PORT
 value|921
 end_define
@@ -363,17 +385,6 @@ end_define
 
 begin_comment
 comment|/* draft-katz-ward-bfd-v4v6-1hop-00.txt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LMP_PORT
-value|49998
-end_define
-
-begin_comment
-comment|/* unofficial - no IANA assignment yet */
 end_comment
 
 begin_ifdef

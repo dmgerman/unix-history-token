@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/savefile.c,v 1.126.2.13 2005/08/29 21:05:45 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/savefile.c,v 1.126.2.30 2007/08/14 20:57:49 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1213,6 +1213,204 @@ name|LINKTYPE_JUNIPER_CHDLC
 value|181
 end_define
 
+begin_comment
+comment|/*  * Multi Link Frame Relay (FRF.16)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_MFR
+value|182
+end_define
+
+begin_comment
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   * The DLT_ is used for internal communication with a  * voice Adapter Card (PIC)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_JUNIPER_VP
+value|183
+end_define
+
+begin_comment
+comment|/*  * Arinc 429 frames.  * DLT_ requested by Gianluca Varenni<gianluca.varenni@cacetech.com>.  * Every frame contains a 32bit A429 label.  * More documentation on Arinc 429 can be found at  * http://www.condoreng.com/support/downloads/tutorials/ARINCTutorial.pdf  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_A429
+value|184
+end_define
+
+begin_comment
+comment|/*  * Arinc 653 Interpartition Communication messages.  * DLT_ requested by Gianluca Varenni<gianluca.varenni@cacetech.com>.  * Please refer to the A653-1 standard for more information.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_A653_ICM
+value|185
+end_define
+
+begin_comment
+comment|/*  * USB packets, beginning with a USB setup header; requested by  * Paolo Abeni<paolo.abeni@email.it>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_USB
+value|186
+end_define
+
+begin_comment
+comment|/*  * Bluetooth HCI UART transport layer (part H:4); requested by  * Paolo Abeni.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_BLUETOOTH_HCI_H4
+value|187
+end_define
+
+begin_comment
+comment|/*  * IEEE 802.16 MAC Common Part Sublayer; requested by Maria Cruz  *<cruz_petagay@bah.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_IEEE802_16_MAC_CPS
+value|188
+end_define
+
+begin_comment
+comment|/*  * USB packets, beginning with a Linux USB header; requested by  * Paolo Abeni<paolo.abeni@email.it>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_USB_LINUX
+value|189
+end_define
+
+begin_comment
+comment|/*  * Controller Area Network (CAN) v. 2.0B packets.  * DLT_ requested by Gianluca Varenni<gianluca.varenni@cacetech.com>.  * Used to dump CAN packets coming from a CAN Vector board.  * More documentation on the CAN v2.0B frames can be found at  * http://www.can-cia.org/downloads/?269  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_CAN20B
+value|190
+end_define
+
+begin_comment
+comment|/*  * IEEE 802.15.4, with address fields padded, as is done by Linux  * drivers; requested by Juergen Schimmer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_IEEE802_15_4_LINUX
+value|191
+end_define
+
+begin_comment
+comment|/*  * Per Packet Information encapsulated packets.  * LINKTYPE_ requested by Gianluca Varenni<gianluca.varenni@cacetech.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_PPI
+value|192
+end_define
+
+begin_comment
+comment|/*  * Header for 802.16 MAC Common Part Sublayer plus a radiotap radio header;  * requested by Charles Clancy.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_IEEE802_16_MAC_CPS_RADIO
+value|193
+end_define
+
+begin_comment
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   * The DLT_ is used for internal communication with a  * integrated service module (ISM).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_JUNIPER_ISM
+value|194
+end_define
+
+begin_comment
+comment|/*  * IEEE 802.15.4, exactly as it appears in the spec (no padding, no  * nothing); requested by Mikko Saarnivala<mikko.saarnivala@sensinode.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_IEEE802_15_4
+value|195
+end_define
+
+begin_comment
+comment|/*  * Various link-layer types, with a pseudo-header, for SITA  * (http://www.sita.aero/); requested by Fulko Hew (fulko.hew@gmail.com).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_SITA
+value|196
+end_define
+
+begin_comment
+comment|/*  * Various link-layer types, with a pseudo-header, for Endace DAG cards;  * encapsulates Endace ERF records.  Requested by Stephen Donnelly  *<stephen@endace.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_ERF
+value|197
+end_define
+
+begin_comment
+comment|/*  * Special header prepended to Ethernet packets when capturing from a  * u10 Networks board.  Requested by Phil Mulholland  *<phil@u10networks.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_RAIF1
+value|198
+end_define
+
+begin_comment
+comment|/*  * IPMB packet for IPMI, beginning with the I2C slave address, followed  * by the netFn and LUN, etc..  Requested by Chanthy Toeung  *<chanthy.toeung@ca.kontron.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_IPMB
+value|199
+end_define
+
 begin_struct
 specifier|static
 struct|struct
@@ -1734,6 +1932,132 @@ block|{
 name|DLT_JUNIPER_CHDLC
 block|,
 name|LINKTYPE_JUNIPER_CHDLC
+block|}
+block|,
+comment|/* Multi Link Frame Relay (FRF.16) */
+block|{
+name|DLT_MFR
+block|,
+name|LINKTYPE_MFR
+block|}
+block|,
+comment|/* Juniper Voice PIC */
+block|{
+name|DLT_JUNIPER_VP
+block|,
+name|LINKTYPE_JUNIPER_VP
+block|}
+block|,
+comment|/* Controller Area Network (CAN) v2.0B */
+block|{
+name|DLT_A429
+block|,
+name|LINKTYPE_A429
+block|}
+block|,
+comment|/* Arinc 653 Interpartition Communication messages */
+block|{
+name|DLT_A653_ICM
+block|,
+name|LINKTYPE_A653_ICM
+block|}
+block|,
+comment|/* USB */
+block|{
+name|DLT_USB
+block|,
+name|LINKTYPE_USB
+block|}
+block|,
+comment|/* Bluetooth HCI UART transport layer */
+block|{
+name|DLT_BLUETOOTH_HCI_H4
+block|,
+name|LINKTYPE_BLUETOOTH_HCI_H4
+block|}
+block|,
+comment|/* IEEE 802.16 MAC Common Part Sublayer */
+block|{
+name|DLT_IEEE802_16_MAC_CPS
+block|,
+name|LINKTYPE_IEEE802_16_MAC_CPS
+block|}
+block|,
+comment|/* USB with Linux header */
+block|{
+name|DLT_USB_LINUX
+block|,
+name|LINKTYPE_USB_LINUX
+block|}
+block|,
+comment|/* Controller Area Network (CAN) v2.0B */
+block|{
+name|DLT_CAN20B
+block|,
+name|LINKTYPE_CAN20B
+block|}
+block|,
+comment|/* IEEE 802.15.4 with address fields padded */
+block|{
+name|DLT_IEEE802_15_4_LINUX
+block|,
+name|LINKTYPE_IEEE802_15_4_LINUX
+block|}
+block|,
+comment|/* Per Packet Information encapsulated packets */
+block|{
+name|DLT_PPI
+block|,
+name|LINKTYPE_PPI
+block|}
+block|,
+comment|/* IEEE 802.16 MAC Common Part Sublayer plus radiotap header */
+block|{
+name|DLT_IEEE802_16_MAC_CPS_RADIO
+block|,
+name|LINKTYPE_IEEE802_16_MAC_CPS_RADIO
+block|}
+block|,
+comment|/* Juniper Voice ISM */
+block|{
+name|DLT_JUNIPER_ISM
+block|,
+name|LINKTYPE_JUNIPER_ISM
+block|}
+block|,
+comment|/* IEEE 802.15.4 exactly as it appears in the spec */
+block|{
+name|DLT_IEEE802_15_4
+block|,
+name|LINKTYPE_IEEE802_15_4
+block|}
+block|,
+comment|/* Various link-layer types for SITA */
+block|{
+name|DLT_SITA
+block|,
+name|LINKTYPE_SITA
+block|}
+block|,
+comment|/* Various link-layer types for Endace */
+block|{
+name|DLT_ERF
+block|,
+name|LINKTYPE_ERF
+block|}
+block|,
+comment|/* Special header for u10 Networks boards */
+block|{
+name|DLT_RAIF1
+block|,
+name|LINKTYPE_RAIF1
+block|}
+block|,
+comment|/* IPMB */
+block|{
+name|DLT_IPMB
+block|,
+name|LINKTYPE_IPMB
 block|}
 block|,
 block|{
@@ -2758,6 +3082,27 @@ operator|.
 name|linktype
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|magic
+operator|==
+name|KUZNETZOV_TCPDUMP_MAGIC
+operator|&&
+name|p
+operator|->
+name|linktype
+operator|==
+name|DLT_EN10MB
+condition|)
+block|{
+comment|/* 		 * This capture might have been done in raw mode or cooked 		 * mode. 		 * 		 * If it was done in cooked mode, p->snapshot was passed 		 * to recvfrom() as the buffer size, meaning that the 		 * most packet data that would be copied would be 		 * p->snapshot.  However, a faked Ethernet header would 		 * then have been added to it, so the most data that would 		 * be in a packet in the file would be p->snapshot + 14. 		 * 		 * We can't easily tell whether the capture was done in 		 * raw mode or cooked mode, so we'll assume it was 		 * cooked mode, and add 14 to the snapshot length.  That 		 * means that, for a raw capture, the snapshot length will 		 * be misleading if you use it to figure out why a capture 		 * doesn't have all the packet data, but there's not much 		 * we can do to avoid that. 		 */
+name|p
+operator|->
+name|snapshot
+operator|+=
+literal|14
+expr_stmt|;
+block|}
 name|p
 operator|->
 name|sf
@@ -4070,10 +4415,6 @@ name|void
 operator|)
 name|fwrite
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|sp
 argument_list|,
 name|h

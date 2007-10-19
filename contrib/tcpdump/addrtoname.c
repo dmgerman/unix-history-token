@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/addrtoname.c,v 1.108.2.7 2005/09/29 07:46:45 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/addrtoname.c,v 1.108.2.9 2007/09/14 00:26:18 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -267,6 +267,24 @@ include|#
 directive|include
 file|"oui.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHER_ADDR_LEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHER_ADDR_LEN
+value|6
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * hash tables for whatever-to-name translations  *  * XXX there has to be error checks against strdup(3) failure  */
@@ -2639,7 +2657,7 @@ if|if
 condition|(
 name|len
 operator|==
-literal|6
+name|ETHER_ADDR_LEN
 condition|)
 comment|/* XXX not totally correct... */
 return|return

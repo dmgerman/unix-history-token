@@ -34,7 +34,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-smb.c,v 1.41.2.2 2005/05/08 20:01:09 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-smb.c,v 1.41.2.4 2007/07/14 22:29:05 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4796,13 +4796,13 @@ expr_stmt|;
 if|if
 condition|(
 name|newsmboffset
-operator|<
+operator|<=
 name|smboffset
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Bad andX offset: %u< %u\n"
+literal|"Bad andX offset: %u<= %u\n"
 argument_list|,
 name|newsmboffset
 argument_list|,

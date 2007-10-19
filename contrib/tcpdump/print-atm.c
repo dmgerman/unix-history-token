@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-atm.c,v 1.38.2.3 2005/07/07 01:24:34 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-atm.c,v 1.38.2.6 2006/01/25 13:27:24 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,34 @@ include|#
 directive|include
 file|"ether.h"
 end_include
+
+begin_decl_stmt
+name|struct
+name|tok
+name|oam_f_values
+index|[]
+init|=
+block|{
+block|{
+name|OAMF4SC
+block|,
+literal|"OAM F4 (segment)"
+block|}
+block|,
+block|{
+name|OAMF4EC
+block|,
+literal|"OAM F4 (end)"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -459,6 +487,43 @@ return|return
 operator|(
 name|caplen
 operator|)
+return|;
+block|}
+comment|/* Cisco Style NLPID ? */
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+name|LLC_UI
+condition|)
+block|{
+if|if
+condition|(
+name|eflag
+condition|)
+name|printf
+argument_list|(
+literal|"CNLPID "
+argument_list|)
+expr_stmt|;
+name|isoclns_print
+argument_list|(
+name|p
+operator|+
+literal|1
+argument_list|,
+name|length
+operator|-
+literal|1
+argument_list|,
+name|caplen
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+return|return
+name|hdrlen
 return|;
 block|}
 comment|/* 	 * Extract the presumed LLC header into a variable, for quick 	 * testing. 	 * Then check for a header that's neither a header for a SNAP 	 * packet nor an RFC 2684 routed NLPID-formatted PDU nor 	 * an 802.2-but-no-SNAP IP packet. 	 */
@@ -975,9 +1040,10 @@ name|u_int
 name|hec
 parameter_list|)
 block|{
-name|u_int16_t
+name|u_int32_t
 name|cell_header
-decl_stmt|,
+decl_stmt|;
+name|u_int16_t
 name|cell_type
 decl_stmt|,
 name|func_type
@@ -995,6 +1061,8 @@ operator|=
 name|EXTRACT_32BITS
 argument_list|(
 name|p
+operator|+
+name|hec
 argument_list|)
 expr_stmt|;
 name|cell_type
@@ -1065,44 +1133,18 @@ name|cell_header
 operator|&
 literal|0x1
 expr_stmt|;
-switch|switch
-condition|(
+name|printf
+argument_list|(
+literal|"%s, vpi %u, vci %u, payload %u, clp %u, "
+argument_list|,
+name|tok2str
+argument_list|(
+name|oam_f_values
+argument_list|,
+literal|"OAM F5"
+argument_list|,
 name|vci
-condition|)
-block|{
-case|case
-name|OAMF4SC
-case|:
-name|printf
-argument_list|(
-literal|"OAM F4 (segment), "
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|OAMF4EC
-case|:
-name|printf
-argument_list|(
-literal|"OAM F4 (end), "
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|"OAM F5, "
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-name|eflag
-condition|)
-name|printf
-argument_list|(
-literal|"vpi %u, vci %u, payload %u, clp %u, "
 argument_list|,
 name|vpi
 argument_list|,

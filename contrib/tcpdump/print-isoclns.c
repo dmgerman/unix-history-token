@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isoclns.c,v 1.133.2.19 2005/09/20 10:15:22 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isoclns.c,v 1.133.2.25 2007/03/02 09:20:27 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2708,7 +2708,7 @@ block|,
 block|{
 name|ISIS_LSP_TYPE_LEVEL_2
 block|,
-literal|"L1L2 IS"
+literal|"L2 IS"
 block|}
 block|,
 block|{
@@ -7743,6 +7743,9 @@ index|[
 literal|20
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|u_int8_t
 name|prefix
 index|[
@@ -7754,6 +7757,21 @@ argument_list|)
 index|]
 decl_stmt|;
 comment|/* shared copy buffer for IPv4 and IPv6 prefixes */
+else|#
+directive|else
+name|u_int8_t
+name|prefix
+index|[
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
+index|]
+decl_stmt|;
+comment|/* shared copy buffer for IPv4 prefixes */
+endif|#
+directive|endif
 name|u_int
 name|metric
 decl_stmt|,
@@ -7840,6 +7858,28 @@ name|status_byte
 operator|&
 literal|0x3f
 expr_stmt|;
+if|if
+condition|(
+name|bit_length
+operator|>
+literal|32
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sIPv4 prefix: bad bit length %u"
+argument_list|,
+name|ident
+argument_list|,
+name|bit_length
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|processed
 operator|++
 expr_stmt|;
@@ -7888,6 +7928,28 @@ name|tptr
 operator|++
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|bit_length
+operator|>
+literal|128
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sIPv6 prefix: bad bit length %u"
+argument_list|,
+name|ident
+argument_list|,
+name|bit_length
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|processed
 operator|+=
 literal|2
@@ -7936,10 +7998,7 @@ argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
-argument_list|(
-expr|struct
-name|in6_addr
-argument_list|)
+name|prefix
 argument_list|)
 expr_stmt|;
 comment|/* clear the copy buffer */
@@ -10013,7 +10072,7 @@ operator|==
 literal|0
 condition|)
 comment|/* something is malformed */
-break|break;
+continue|continue;
 comment|/* now check if we have a decoder otherwise do a hexdump at the end*/
 switch|switch
 condition|(
@@ -10658,13 +10717,6 @@ break|break;
 case|case
 name|ISIS_TLV_MT_IP_REACH
 case|:
-while|while
-condition|(
-name|tmp
-operator|>
-literal|0
-condition|)
-block|{
 name|mt_len
 operator|=
 name|isis_print_mtid
@@ -10680,10 +10732,12 @@ name|mt_len
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* did something go wrong ? */
 goto|goto
 name|trunctlv
 goto|;
+block|}
 name|tptr
 operator|+=
 name|mt_len
@@ -10692,6 +10746,13 @@ name|tmp
 operator|-=
 name|mt_len
 expr_stmt|;
+while|while
+condition|(
+name|tmp
+operator|>
+literal|0
+condition|)
+block|{
 name|ext_ip_len
 operator|=
 name|isis_print_extd_ip_reach
@@ -10770,13 +10831,6 @@ break|break;
 case|case
 name|ISIS_TLV_MT_IP6_REACH
 case|:
-while|while
-condition|(
-name|tmp
-operator|>
-literal|0
-condition|)
-block|{
 name|mt_len
 operator|=
 name|isis_print_mtid
@@ -10792,10 +10846,12 @@ name|mt_len
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* did something go wrong ? */
 goto|goto
 name|trunctlv
 goto|;
+block|}
 name|tptr
 operator|+=
 name|mt_len
@@ -10804,6 +10860,13 @@ name|tmp
 operator|-=
 name|mt_len
 expr_stmt|;
+while|while
+condition|(
+name|tmp
+operator|>
+literal|0
+condition|)
+block|{
 name|ext_ip_len
 operator|=
 name|isis_print_extd_ip_reach
@@ -12081,8 +12144,6 @@ argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
-operator|+
-literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;

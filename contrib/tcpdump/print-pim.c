@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.45.2.3 2005/07/11 20:24:34 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.45.2.4 2006/02/13 01:32:34 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -325,6 +325,56 @@ block|{
 name|PIMV2_HELLO_OPTION_ADDRESS_LIST_OLD
 block|,
 literal|"Address List (Old)"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PIMV2_REGISTER_FLAG_LEN
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_REGISTER_FLAG_BORDER
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIMV2_REGISTER_FLAG_NULL
+value|0x40000000
+end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|tok
+name|pimv2_register_flag_values
+index|[]
+init|=
+block|{
+block|{
+name|PIMV2_REGISTER_FLAG_BORDER
+block|,
+literal|"Border"
+block|}
+block|,
+block|{
+name|PIMV2_REGISTER_FLAG_NULL
+block|,
+literal|"Null"
 block|}
 block|,
 block|{
@@ -2267,7 +2317,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"PIMv%u, %s, length: %u"
+literal|"PIMv%u, %s, length %u"
 argument_list|,
 name|PIM_VER
 argument_list|(
@@ -2299,7 +2349,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"PIMv%u, length: %u\n\t%s"
+literal|"PIMv%u, length %u\n\t%s"
 argument_list|,
 name|PIM_VER
 argument_list|(
@@ -2337,7 +2387,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"PIMv%u, length: %u"
+literal|"PIMv%u, length %u"
 argument_list|,
 name|PIM_VER
 argument_list|(
@@ -2994,6 +3044,74 @@ argument_list|(
 literal|", RFC2117-encoding"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|", cksum 0x%04x "
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+operator|&
+name|pim
+operator|->
+name|pim_cksum
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|EXTRACT_16BITS
+argument_list|(
+operator|&
+name|pim
+operator|->
+name|pim_cksum
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"(unverified)"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"(%scorrect)"
+argument_list|,
+name|TTEST2
+argument_list|(
+name|bp
+index|[
+literal|0
+index|]
+argument_list|,
+name|len
+argument_list|)
+operator|&&
+name|in_cksum
+argument_list|(
+operator|(
+specifier|const
+name|u_short
+operator|*
+operator|)
+name|bp
+argument_list|,
+name|len
+argument_list|,
+literal|0
+argument_list|)
+condition|?
+literal|"in"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|PIM_TYPE
@@ -3070,7 +3188,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t  %s Option (%u), length: %u, Value: "
+literal|"\n\t  %s Option (%u), length %u, Value: "
 argument_list|,
 name|tok2str
 argument_list|(
@@ -3450,46 +3568,41 @@ name|ip
 decl_stmt|;
 if|if
 condition|(
-name|vflag
-operator|&&
+operator|!
+name|TTEST2
+argument_list|(
+operator|*
+operator|(
 name|bp
 operator|+
-literal|8
-operator|<=
-name|ep
-condition|)
-block|{
-operator|(
-name|void
+literal|4
 operator|)
+argument_list|,
+name|PIMV2_REGISTER_FLAG_LEN
+argument_list|)
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|printf
 argument_list|(
-literal|" %s%s"
+literal|", Flags [ %s ]\n\t"
 argument_list|,
-name|bp
-index|[
-literal|4
-index|]
-operator|&
-literal|0x80
-condition|?
-literal|"B"
-else|:
-literal|""
+name|tok2str
+argument_list|(
+name|pimv2_register_flag_values
 argument_list|,
+literal|"none"
+argument_list|,
+name|EXTRACT_32BITS
+argument_list|(
 name|bp
-index|[
+operator|+
 literal|4
-index|]
-operator|&
-literal|0x40
-condition|?
-literal|"N"
-else|:
-literal|""
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|bp
 operator|+=
 literal|8
@@ -3499,13 +3612,6 @@ operator|-=
 literal|8
 expr_stmt|;
 comment|/* encapsulated multicast packet */
-if|if
-condition|(
-name|bp
-operator|>=
-name|ep
-condition|)
-break|break;
 name|ip
 operator|=
 operator|(
@@ -3524,14 +3630,38 @@ argument_list|)
 condition|)
 block|{
 case|case
+literal|0
+case|:
+comment|/* Null header */
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"IP-Null-header %s> %s"
+argument_list|,
+name|ipaddr_string
+argument_list|(
+operator|&
+name|ip
+operator|->
+name|ip_src
+argument_list|)
+argument_list|,
+name|ipaddr_string
+argument_list|(
+operator|&
+name|ip
+operator|->
+name|ip_dst
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|4
 case|:
 comment|/* IPv4 */
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 name|ip_print
 argument_list|(
 name|gndo
@@ -3549,11 +3679,6 @@ case|case
 literal|6
 case|:
 comment|/* IPv6 */
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 name|ip6_print
 argument_list|(
 name|bp
@@ -3570,7 +3695,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" IP ver %d"
+literal|"IP ver %d"
 argument_list|,
 name|IP_V
 argument_list|(

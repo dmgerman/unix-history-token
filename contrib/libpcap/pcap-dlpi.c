@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-dlpi.c,v 1.108.2.6 2005/08/13 23:15:58 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-dlpi.c,v 1.108.2.7 2006/04/04 05:33:02 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1631,6 +1631,11 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* 	 * putmsg() returns either 0 or -1; it doesn't indicate how 	 * many bytes were written (presumably they were all written 	 * or none of them were written).  OpenBSD's pcap_inject() 	 * returns the number of bytes written, so, for API compatibility, 	 * we return the number of bytes we were told to write. 	 */
+name|ret
+operator|=
+name|size
+expr_stmt|;
 else|#
 directive|else
 comment|/* no raw mode */

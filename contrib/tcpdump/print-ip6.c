@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip6.c,v 1.47.2.3 2005/09/20 06:05:38 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip6.c,v 1.47.2.5 2007/09/21 07:07:52 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,7 +324,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"hlim %u, next-header: %s (%u), length: %u) "
+literal|"hlim %u, next-header %s (%u) payload length: %u) "
 argument_list|,
 name|ip6
 operator|->
@@ -876,9 +876,7 @@ name|printf
 argument_list|(
 literal|"ip-proto-%d %d"
 argument_list|,
-name|ip6
-operator|->
-name|ip6_nxt
+name|nh
 argument_list|,
 name|len
 argument_list|)

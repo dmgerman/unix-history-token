@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lmp.c,v 1.5.2.1 2005/05/19 06:44:03 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lmp.c,v 1.5.2.4 2006/06/23 02:07:27 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,7 +154,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|0x00
+literal|0x01
 block|,
 literal|"Control Channel Down"
 block|}
@@ -1407,20 +1407,6 @@ end_define
 begin_comment
 comment|/* UNI 1.0 Sec 9.4.2 */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|1
-end_define
 
 begin_comment
 comment|/*  * the ctypes are not globally unique so for  * translating it to strings we build a table based  * on objects offsetted by the ctype  */
@@ -2757,7 +2743,7 @@ name|INT_SWITCHING_TYPE_SUBOBJ
 case|:
 name|printf
 argument_list|(
-literal|"\n\t\t    Switching Type: %s (%u)"
+literal|"\n\t      Switching Type: %s (%u)"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -2791,7 +2777,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t\t    Encoding Type: %s (%u)"
+literal|"\n\t      Encoding Type: %s (%u)"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -2838,11 +2824,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t\t    Min Reservable Bandwidth: %.3f Mbps"
+literal|"\n\t      Min Reservable Bandwidth: %.3f Mbps"
 argument_list|,
 name|bw
 operator|.
 name|f
+operator|*
+literal|8
+operator|/
+literal|1000000
 argument_list|)
 expr_stmt|;
 name|bw
@@ -2860,11 +2850,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t\t    Max Reservable Bandwidth: %.3f Mbps"
+literal|"\n\t      Max Reservable Bandwidth: %.3f Mbps"
 argument_list|,
 name|bw
 operator|.
 name|f
+operator|*
+literal|8
+operator|/
+literal|1000000
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2873,7 +2867,7 @@ name|WAVELENGTH_SUBOBJ
 case|:
 name|printf
 argument_list|(
-literal|"\n\t\t    Wavelength: %u"
+literal|"\n\t      Wavelength: %u"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -3040,6 +3034,10 @@ argument_list|,
 name|bw
 operator|.
 name|f
+operator|*
+literal|8
+operator|/
+literal|1000000
 argument_list|)
 expr_stmt|;
 name|printf

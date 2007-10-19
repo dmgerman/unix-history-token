@@ -34,7 +34,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/smbutil.c,v 1.36.2.1 2005/04/21 04:09:58 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/smbutil.c,v 1.36.2.3 2007/07/15 19:08:25 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1318,6 +1318,14 @@ condition|;
 comment|/*nothing*/
 control|)
 block|{
+name|TCHECK
+argument_list|(
+name|buf
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%02X "
@@ -1520,6 +1528,19 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
+name|trunc
+label|:
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"WARNING: Short packet. Try increasing the snap length\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3538,6 +3559,12 @@ expr_stmt|;
 name|buf
 operator|+=
 literal|8
+expr_stmt|;
+break|break;
+default|default:
+name|t
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 block|}

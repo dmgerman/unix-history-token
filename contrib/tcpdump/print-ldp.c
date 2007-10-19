@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ldp.c,v 1.8.2.6 2005/07/11 20:24:34 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ldp.c,v 1.8.2.10 2007/02/26 13:31:33 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"addrtoname.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"af.h"
 end_include
 
 begin_include
@@ -337,7 +343,7 @@ block|,
 block|{
 name|LDP_MSG_ADDRESS_WITHDRAW
 block|,
-literal|"Address Widthdraw"
+literal|"Address Withdraw"
 block|}
 block|,
 block|{
@@ -888,36 +894,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* RFC1700 address family numbers, same definition in print-bgp.c */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|AFNUM_INET
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|AFNUM_INET6
+name|AFNUM_LEN
 value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|1
 end_define
 
 begin_function_decl
@@ -1216,11 +1197,15 @@ argument_list|)
 expr_stmt|;
 name|tptr
 operator|+=
-literal|2
+name|AFNUM_LEN
+expr_stmt|;
+name|tlv_tlen
+operator|-=
+name|AFNUM_LEN
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t      Adress Family: "
+literal|"\n\t      Address Family: "
 argument_list|)
 expr_stmt|;
 if|if
@@ -1235,25 +1220,16 @@ argument_list|(
 literal|"IPv4, addresses:"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-operator|(
+while|while
+condition|(
 name|tlv_tlen
-operator|-
-literal|2
-operator|)
-operator|/
-literal|4
-condition|;
-name|i
-operator|++
-control|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
+condition|)
 block|{
 name|printf
 argument_list|(
@@ -1263,6 +1239,14 @@ name|ipaddr_string
 argument_list|(
 name|tptr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|tlv_tlen
+operator|-=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -1291,25 +1275,16 @@ argument_list|(
 literal|"IPv6, addresses:"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-operator|(
+while|while
+condition|(
 name|tlv_tlen
-operator|-
-literal|2
-operator|)
-operator|/
-literal|16
-condition|;
-name|i
-operator|++
-control|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
+condition|)
 block|{
 name|printf
 argument_list|(
@@ -1319,6 +1294,14 @@ name|ip6addr_string
 argument_list|(
 name|tptr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|tlv_tlen
+operator|-=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -2467,6 +2450,12 @@ case|:
 case|case
 name|LDP_MSG_LABEL_MAPPING
 case|:
+case|case
+name|LDP_MSG_ADDRESS_WITHDRAW
+case|:
+case|case
+name|LDP_MSG_LABEL_WITHDRAW
+case|:
 while|while
 condition|(
 name|msg_tlen
@@ -2500,13 +2489,7 @@ block|}
 break|break;
 comment|/*          *  FIXME those are the defined messages that lack a decoder          *  you are welcome to contribute code ;-)          */
 case|case
-name|LDP_MSG_ADDRESS_WITHDRAW
-case|:
-case|case
 name|LDP_MSG_LABEL_REQUEST
-case|:
-case|case
-name|LDP_MSG_LABEL_WITHDRAW
 case|:
 case|case
 name|LDP_MSG_LABEL_RELEASE

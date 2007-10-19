@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bfd.c,v 1.5.2.4 2005/04/28 09:28:47 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bfd.c,v 1.5.2.5 2006/02/02 06:36:37 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -804,11 +804,15 @@ name|bfd_v1_state_values
 argument_list|,
 literal|"unknown (%u)"
 argument_list|,
+operator|(
 name|bfd_header
 operator|->
 name|flags
 operator|&
 literal|0xc0
+operator|)
+operator|>>
+literal|6
 argument_list|)
 argument_list|,
 name|bittok2str

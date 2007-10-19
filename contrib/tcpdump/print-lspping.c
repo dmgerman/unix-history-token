@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lspping.c,v 1.12.2.3 2005/05/03 08:12:31 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lspping.c,v 1.12.2.6 2006/06/23 02:07:27 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,20 +173,6 @@ begin_define
 define|#
 directive|define
 name|LSPPING_VERSION
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUE
 value|1
 end_define
 
@@ -407,6 +393,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|LSPPING_TLV_BFD_DISCRIMINATOR
+value|15
+end_define
+
+begin_comment
+comment|/* draft-ietf-bfd-mpls-02 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSPPING_TLV_BFD_DISCRIMINATOR_LEN
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|LSPPING_TLV_VENDOR_PRIVATE
 value|0xfc00
 end_define
@@ -442,6 +446,12 @@ block|{
 name|LSPPING_TLV_ERROR_CODE
 block|,
 literal|"Error Code"
+block|}
+block|,
+block|{
+name|LSPPING_TLV_BFD_DISCRIMINATOR
+block|,
+literal|"BFD Discriminator"
 block|}
 block|,
 block|{
@@ -2859,6 +2869,42 @@ operator|=
 name|TRUE
 expr_stmt|;
 comment|/* dump the TLV until code complete */
+break|break;
+case|case
+name|LSPPING_TLV_BFD_DISCRIMINATOR
+case|:
+name|tptr
+operator|+=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|lspping_tlv_header
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TTEST2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+name|LSPPING_TLV_BFD_DISCRIMINATOR_LEN
+argument_list|)
+condition|)
+goto|goto
+name|trunc
+goto|;
+name|printf
+argument_list|(
+literal|"\n\t    BFD Discriminator 0x%08x"
+argument_list|,
+name|EXTRACT_32BITS
+argument_list|(
+name|tptr
+argument_list|)
+argument_list|)
+expr_stmt|;
 break|break;
 comment|/*              *  FIXME those are the defined TLVs that lack a decoder              *  you are welcome to contribute code ;-)              */
 case|case
