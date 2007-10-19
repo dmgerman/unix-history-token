@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20070710_0047"
+value|"20071020_0048"
 end_define
 
 begin_define
@@ -534,6 +534,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HP_DC7700_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(HP, 0x2802)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HP_ALL_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(HP, 0xffff)
 end_define
@@ -814,6 +821,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LENOVO_TCA55_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x1015)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LENOVO_ALL_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(LENOVO, 0xffff)
 end_define
@@ -925,8 +939,40 @@ end_define
 begin_define
 define|#
 directive|define
+name|FS_SI1848_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(FS, 0x10cd)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FS_ALL_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(FS, 0xffff)
+end_define
+
+begin_comment
+comment|/* Fujitsu Limited */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FL_VENDORID
+value|0x10cf
+end_define
+
+begin_define
+define|#
+directive|define
+name|FL_S7020D_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(FL, 0x1326)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FL_ALL_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(FL, 0xffff)
 end_define
 
 begin_comment
@@ -975,8 +1021,40 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSI_MS034A_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(MSI, 0x034a)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSI_ALL_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(MSI, 0xffff)
+end_define
+
+begin_comment
+comment|/* Giga-Byte Technology */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GB_VENDORID
+value|0x1458
+end_define
+
+begin_define
+define|#
+directive|define
+name|GB_G33S2H_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(GB, 0xa022)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GP_ALL_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(GB, 0xffff)
 end_define
 
 begin_comment
@@ -3087,7 +3165,7 @@ literal|16
 block|}
 block|,
 comment|/* { HP_XW4300_SUBVENDOR, HDA_CODEC_ALC260, HDAC_HP_SWITCH_CTL, 	    0, 0, -1, 21, { 16, 17, -1 }, -1 } */
-comment|/*{ HP_3010_SUBVENDOR,  HDA_CODEC_ALC260, HDAC_HP_SWITCH_DEBUG, 	    0, 1, 0, 16, { 15, 18, 19, 20, 21, -1 }, -1 },*/
+comment|/* { HP_3010_SUBVENDOR,  HDA_CODEC_ALC260, HDAC_HP_SWITCH_DEBUG, 	    0, 1, 0, 16, { 15, 18, 19, 20, 21, -1 }, -1 }, */
 block|{
 name|HP_NX7400_SUBVENDOR
 block|,
@@ -3166,6 +3244,7 @@ block|,
 literal|5
 block|}
 block|,
+comment|/* { HP_DC7700_SUBVENDOR, HDA_CODEC_ALC262, HDAC_HP_SWITCH_CTL, 	    0, 0, -1, 21, { 22, 27, -1 }, -1 }, */
 block|{
 name|TOSHIBA_U200_SUBVENDOR
 block|,
@@ -3330,6 +3409,7 @@ operator|-
 literal|1
 block|}
 block|,
+comment|/* { LENOVO_TCA55_SUBVENDOR, HDA_CODEC_AD1986A, HDAC_HP_SWITCH_CTL, 	    0, 0, -1, 26, { 27, 28, 29, 30, -1 }, -1 }, */
 block|{
 name|LG_LW20_SUBVENDOR
 block|,
@@ -3465,6 +3545,87 @@ operator|-
 literal|1
 block|}
 block|,
+block|{
+name|MSI_MS034A_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC883
+block|,
+name|HDAC_HP_SWITCH_CTL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+literal|20
+block|,
+block|{
+literal|27
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
+name|FS_SI1848_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC883
+block|,
+name|HDAC_HP_SWITCH_CTL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+literal|20
+block|,
+block|{
+literal|21
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
+name|FL_S7020D_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC260
+block|,
+name|HDAC_HP_SWITCH_CTL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+literal|20
+block|,
+block|{
+literal|16
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
+block|}
+block|,
 comment|/* 	 * All models that at least come from the same vendor with 	 * simmilar codec. 	 */
 block|{
 name|HP_ALL_SUBVENDOR
@@ -3572,37 +3733,10 @@ operator|-
 literal|1
 block|}
 block|,
-block|{
-name|LENOVO_ALL_SUBVENDOR
-block|,
-name|HDA_CODEC_AD1986A
-block|,
-name|HDAC_HP_SWITCH_CTL
-block|,
-literal|1
-block|,
-literal|0
-block|,
-operator|-
-literal|1
-block|,
-literal|26
-block|,
-block|{
-literal|27
-block|,
-operator|-
-literal|1
-block|}
-block|,
-operator|-
-literal|1
-block|}
-block|,
 if|#
 directive|if
 literal|0
-block|{ ACER_ALL_SUBVENDOR, HDA_CODEC_ALC883, HDAC_HP_SWITCH_CTL, 	    0, 0, -1, 20, { 21, -1 }, -1 },
+block|{ LENOVO_ALL_SUBVENDOR, HDA_CODEC_AD1986A, HDAC_HP_SWITCH_CTL, 	    1, 0, -1, 26, { 27, -1 }, -1 }, 	{ ACER_ALL_SUBVENDOR, HDA_CODEC_ALC883, HDAC_HP_SWITCH_CTL, 	    0, 0, -1, 20, { 21, -1 }, -1 },
 endif|#
 directive|endif
 block|}
@@ -3875,6 +4009,8 @@ parameter_list|(
 name|struct
 name|hdac_softc
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8678,7 +8814,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  * void hdac_scan_codecs(struct hdac_softc *)  *  * Scan the bus for available codecs.  ****************************************************************************/
+comment|/****************************************************************************  * void hdac_scan_codecs(struct hdac_softc *, int)  *  * Scan the bus for available codecs, starting with num.  ****************************************************************************/
 end_comment
 
 begin_function
@@ -8690,6 +8826,9 @@ name|struct
 name|hdac_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|num
 parameter_list|)
 block|{
 name|struct
@@ -8703,6 +8842,28 @@ decl_stmt|;
 name|uint16_t
 name|statests
 decl_stmt|;
+if|if
+condition|(
+name|num
+operator|<
+literal|0
+condition|)
+name|num
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|num
+operator|>=
+name|HDAC_CODEC_MAX
+condition|)
+name|num
+operator|=
+name|HDAC_CODEC_MAX
+operator|-
+literal|1
+expr_stmt|;
 name|statests
 operator|=
 name|HDAC_READ_2
@@ -8719,7 +8880,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|num
 init|;
 name|i
 operator|<
@@ -9997,6 +10158,13 @@ name|id
 operator|==
 name|HDA_CODEC_ALC883
 operator|&&
+operator|(
+name|sc
+operator|->
+name|pci_subvendor
+operator|==
+name|MSI_MS034A_SUBVENDOR
+operator|||
 name|HDA_DEV_MATCH
 argument_list|(
 name|ACER_ALL_SUBVENDOR
@@ -10005,6 +10173,7 @@ name|sc
 operator|->
 name|pci_subvendor
 argument_list|)
+operator|)
 condition|)
 block|{
 switch|switch
@@ -21447,6 +21616,100 @@ block|}
 block|}
 break|break;
 case|case
+name|HDA_CODEC_ALC262
+case|:
+if|if
+condition|(
+name|subvendor
+operator|==
+name|HP_DC7700_SUBVENDOR
+condition|)
+block|{
+name|ctl
+operator|=
+name|hdac_audio_ctl_amp_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|22
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ctl
+operator|!=
+name|NULL
+operator|&&
+name|ctl
+operator|->
+name|widget
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ctl
+operator|->
+name|ossmask
+operator|=
+name|SOUND_MASK_SPEAKER
+expr_stmt|;
+name|ctl
+operator|->
+name|widget
+operator|->
+name|ctlflags
+operator||=
+name|SOUND_MASK_SPEAKER
+expr_stmt|;
+block|}
+name|ctl
+operator|=
+name|hdac_audio_ctl_amp_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|27
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ctl
+operator|!=
+name|NULL
+operator|&&
+name|ctl
+operator|->
+name|widget
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ctl
+operator|->
+name|ossmask
+operator|=
+name|SOUND_MASK_SPEAKER
+expr_stmt|;
+name|ctl
+operator|->
+name|widget
+operator|->
+name|ctlflags
+operator||=
+name|SOUND_MASK_SPEAKER
+expr_stmt|;
+block|}
+block|}
+break|break;
+case|case
 name|HDA_CODEC_ALC861
 case|:
 name|ctl
@@ -31912,6 +32175,8 @@ name|int
 name|pcnt
 decl_stmt|,
 name|rcnt
+decl_stmt|,
+name|codec_index
 decl_stmt|;
 name|int
 name|i
@@ -31965,6 +32230,56 @@ literal|"HDA_DEBUG: HDA Config: on=0x%08x off=0x%08x\n"
 argument|, 		    quirks_on, quirks_off);
 argument_list|)
 empty_stmt|;
+if|if
+condition|(
+name|resource_int_value
+argument_list|(
+name|device_get_name
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+literal|"codec_index"
+argument_list|,
+operator|&
+name|codec_index
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+switch|switch
+condition|(
+name|sc
+operator|->
+name|pci_subvendor
+condition|)
+block|{
+case|case
+name|GB_G33S2H_SUBVENDOR
+case|:
+name|codec_index
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+default|default:
+name|codec_index
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+block|}
 name|hdac_lock
 argument_list|(
 name|sc
@@ -32083,13 +32398,15 @@ expr_stmt|;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
-literal|"HDA_DEBUG: Scanning HDA codecs...\n"
-argument|);
+literal|"HDA_DEBUG: Scanning HDA codecs [start index=%d] ...\n"
+argument|, 		    codec_index);
 argument_list|)
 empty_stmt|;
 name|hdac_scan_codecs
 argument_list|(
 name|sc
+argument_list|,
+name|codec_index
 argument_list|)
 expr_stmt|;
 name|device_get_children
