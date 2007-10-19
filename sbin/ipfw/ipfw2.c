@@ -580,13 +580,13 @@ block|,
 block|{
 literal|"congestion"
 block|,
-name|IPTOS_CE
+name|IPTOS_ECN_CE
 block|}
 block|,
 block|{
 literal|"ecntransport"
 block|,
-name|IPTOS_ECT
+name|IPTOS_ECN_ECT0
 block|}
 block|,
 block|{
