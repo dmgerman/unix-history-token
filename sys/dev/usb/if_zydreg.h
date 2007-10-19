@@ -3828,7 +3828,7 @@ define|#
 directive|define
 name|ZYX_MAX_RXBUFSZ
 define|\
-value|(sizeof(struct zyd_plcphdr) + MCLBYTES + sizeof(struct zyd_rx_desc))
+value|((sizeof(struct zyd_plcphdr) + MCLBYTES +			\ 	  sizeof(struct zyd_rx_desc)) * 3)
 end_define
 
 begin_define
