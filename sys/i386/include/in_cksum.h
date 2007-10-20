@@ -284,18 +284,33 @@ name|b
 parameter_list|)
 block|{
 comment|/* __volatile is necessary because the condition codes are used. */
-asm|__asm __volatile ("addw %1, %0" : "+r" (sum) : "r" (b));
-asm|__asm __volatile ("adcw $0, %0" : "+r" (sum));
+asm|__asm __volatile (
+literal|"addw %1, %0\n"
+literal|"adcw $0, %0"
+operator|:
+literal|"+r"
+operator|(
+name|sum
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|b
+operator|)
+block|)
+function|;
+end_function
+
+begin_return
 return|return
 operator|(
 name|sum
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
+unit|}  static
 name|__inline
 name|u_short
 name|in_pseudo
@@ -311,9 +326,30 @@ name|c
 parameter_list|)
 block|{
 comment|/* __volatile is necessary because the condition codes are used. */
-asm|__asm __volatile ("addl %1, %0" : "+r" (sum) : "g" (b));
-asm|__asm __volatile ("adcl %1, %0" : "+r" (sum) : "g" (c));
-asm|__asm __volatile ("adcl $0, %0" : "+r" (sum));
+asm|__asm __volatile (
+literal|"addl %1, %0\n"
+literal|"adcl %2, %0\n"
+literal|"adcl $0, %0"
+operator|:
+literal|"+r"
+operator|(
+name|sum
+operator|)
+operator|:
+literal|"g"
+operator|(
+name|b
+operator|)
+operator|,
+literal|"g"
+operator|(
+name|c
+operator|)
+block|)
+function|;
+end_function
+
+begin_expr_stmt
 name|sum
 operator|=
 operator|(
@@ -328,6 +364,9 @@ operator|>>
 literal|16
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|sum
@@ -338,15 +377,18 @@ name|sum
 operator|-=
 literal|0xffff
 expr_stmt|;
+end_if
+
+begin_return
 return|return
 operator|(
 name|sum
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_else
+unit|}
 else|#
 directive|else
 end_else
@@ -388,18 +430,18 @@ name|__INTEL_COMPILER
 argument_list|)
 end_if
 
-begin_function_decl
-name|u_int
+begin_expr_stmt
+unit|u_int
 name|in_cksum_hdr
-parameter_list|(
+argument_list|(
 specifier|const
-name|struct
+expr|struct
 name|ip
-modifier|*
+operator|*
 name|ip
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|u_short
