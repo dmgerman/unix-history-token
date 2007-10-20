@@ -5352,7 +5352,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -5409,7 +5409,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|aio_daemon
 argument_list|,

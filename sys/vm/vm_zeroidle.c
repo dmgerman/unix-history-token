@@ -472,7 +472,7 @@ name|td
 decl_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|vm_pagezero
 argument_list|,

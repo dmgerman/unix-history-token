@@ -2959,7 +2959,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Like kthread_create(), but runs in it's own address space.  * We do this early to reserve pid 1.  *  * Note special case - do not make it runnable yet.  Other work  * in progress will change this more.  */
+comment|/*  * Like kproc_create(), but runs in it's own address space.  * We do this early to reserve pid 1.  *  * Note special case - do not make it runnable yet.  Other work  * in progress will change this more.  */
 end_comment
 
 begin_function

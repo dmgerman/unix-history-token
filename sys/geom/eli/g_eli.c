@@ -1600,7 +1600,7 @@ operator|->
 name|sc_queue_mtx
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -3205,7 +3205,7 @@ goto|;
 block|}
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|g_eli_worker
 argument_list|,

@@ -2862,7 +2862,7 @@ expr_stmt|;
 name|UTP_RUNLOCK_LIST
 argument_list|()
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -2920,7 +2920,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|utopia_daemon
 argument_list|,

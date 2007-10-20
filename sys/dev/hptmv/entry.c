@@ -11627,7 +11627,7 @@ name|__FreeBSD_version
 operator|>=
 literal|500043
 operator|)
-name|kthread_suspend_check
+name|kproc_suspend_check
 argument_list|(
 name|curproc
 argument_list|)

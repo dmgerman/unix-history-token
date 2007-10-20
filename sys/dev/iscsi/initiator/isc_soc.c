@@ -2504,7 +2504,7 @@ operator|->
 name|io_mtx
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -2684,7 +2684,7 @@ name|flags
 operator||=
 name|ISC_CON_RUN
 expr_stmt|;
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|isc_soc
 argument_list|,

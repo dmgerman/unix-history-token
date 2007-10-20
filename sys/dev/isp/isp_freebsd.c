@@ -1254,7 +1254,7 @@ operator|>=
 literal|500000
 if|if
 condition|(
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|isp_kthread
 argument_list|,
@@ -1285,7 +1285,7 @@ else|#
 directive|else
 if|if
 condition|(
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|isp_kthread
 argument_list|,

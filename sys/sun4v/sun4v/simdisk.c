@@ -792,7 +792,7 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|hvd_kthread
 argument_list|,

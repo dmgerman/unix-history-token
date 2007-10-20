@@ -2273,7 +2273,7 @@ literal|"seq_eventthread finished\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -2955,7 +2955,7 @@ goto|;
 comment|/* 	 * TODO: Add to list of sequencers this module provides 	 */
 name|ret
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|seq_eventthread
 argument_list|,

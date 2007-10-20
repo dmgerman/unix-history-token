@@ -1580,7 +1580,7 @@ argument_list|(
 name|ownercred
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -2483,7 +2483,7 @@ name|PMC_PO_OWNS_LOGFILE
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|pmclog_loop
 argument_list|,

@@ -1526,7 +1526,7 @@ literal|1
 condition|)
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|taskqueue_thread_loop
 argument_list|,
@@ -1550,7 +1550,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|taskqueue_thread_loop
 argument_list|,
@@ -1583,7 +1583,7 @@ block|{
 comment|/* should be ok to continue, taskqueue_free will dtrt */
 name|printf
 argument_list|(
-literal|"%s: kthread_create(%s): error %d"
+literal|"%s: kproc_create(%s): error %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1770,7 +1770,7 @@ argument_list|(
 name|tq
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)

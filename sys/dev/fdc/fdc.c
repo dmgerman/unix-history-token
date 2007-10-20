@@ -5896,7 +5896,7 @@ operator|->
 name|fdc_mtx
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -8732,7 +8732,7 @@ operator|->
 name|head
 argument_list|)
 expr_stmt|;
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|fdc_thread
 argument_list|,

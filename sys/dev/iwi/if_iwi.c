@@ -1885,7 +1885,7 @@ operator|->
 name|sc_tqproc
 argument_list|)
 expr_stmt|;
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|taskqueue_thread_loop
 argument_list|,
@@ -1936,7 +1936,7 @@ operator|->
 name|sc_tqproc
 argument_list|)
 expr_stmt|;
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|taskqueue_thread_loop
 argument_list|,

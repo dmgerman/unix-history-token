@@ -2989,7 +2989,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*	mtx_lock(&Giant, MTX_DEF);*/
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -3117,7 +3117,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|smb_iod_thread
 argument_list|,

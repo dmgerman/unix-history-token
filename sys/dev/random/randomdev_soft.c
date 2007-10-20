@@ -827,7 +827,7 @@ expr_stmt|;
 comment|/* Start the hash/reseed thread */
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|random_kthread
 argument_list|,

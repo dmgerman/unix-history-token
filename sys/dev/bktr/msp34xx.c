@@ -4604,7 +4604,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -5898,7 +5898,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -6327,7 +6327,7 @@ block|}
 comment|/* startup control thread */
 name|err
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|msp
 operator|->
@@ -6364,7 +6364,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: Error returned by kthread_create: %d"
+literal|"%s: Error returned by kproc_create: %d"
 argument_list|,
 name|bktr_name
 argument_list|(

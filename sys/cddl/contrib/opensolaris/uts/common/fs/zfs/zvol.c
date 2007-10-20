@@ -1464,7 +1464,7 @@ operator|->
 name|zv_queue_mtx
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -2388,7 +2388,7 @@ name|zv_state
 operator|=
 literal|0
 expr_stmt|;
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|zvol_worker
 argument_list|,

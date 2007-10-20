@@ -1500,7 +1500,7 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|usb_event_thread
 argument_list|,
@@ -1598,7 +1598,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|usb_task_thread
 argument_list|,
@@ -2007,7 +2007,7 @@ literal|"usb_event_thread: exit\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -2196,7 +2196,7 @@ literal|"usb_event_thread: exit\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)

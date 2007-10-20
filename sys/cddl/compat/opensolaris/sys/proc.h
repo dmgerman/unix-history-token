@@ -270,7 +270,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|proc
 argument_list|,
@@ -310,7 +310,7 @@ define|#
 directive|define
 name|thread_exit
 parameter_list|()
-value|kthread_exit(0)
+value|kproc_exit(0)
 end_define
 
 begin_endif

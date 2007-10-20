@@ -1684,7 +1684,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|audit_worker
 argument_list|,
@@ -1706,7 +1706,7 @@ name|error
 condition|)
 name|panic
 argument_list|(
-literal|"audit_worker_init: kthread_create returned %d"
+literal|"audit_worker_init: kproc_create returned %d"
 argument_list|,
 name|error
 argument_list|)

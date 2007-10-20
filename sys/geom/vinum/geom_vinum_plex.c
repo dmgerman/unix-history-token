@@ -1376,7 +1376,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 name|ENXIO
 argument_list|)
@@ -3555,7 +3555,7 @@ name|GV_PLEX_THREAD_ACTIVE
 operator|)
 condition|)
 block|{
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|gv_plex_worker
 argument_list|,
@@ -3703,7 +3703,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|gv_plex_worker
 argument_list|,

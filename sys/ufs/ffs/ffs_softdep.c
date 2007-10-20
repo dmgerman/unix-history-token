@@ -3686,7 +3686,7 @@ init|;
 condition|;
 control|)
 block|{
-name|kthread_suspend_check
+name|kproc_suspend_check
 argument_list|(
 name|softdepproc
 argument_list|)

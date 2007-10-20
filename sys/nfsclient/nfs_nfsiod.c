@@ -739,7 +739,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|nfssvc_iod
 argument_list|,
@@ -1402,13 +1402,13 @@ operator|==
 name|EWOULDBLOCK
 operator|)
 condition|)
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Abnormal termination */
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|1
 argument_list|)

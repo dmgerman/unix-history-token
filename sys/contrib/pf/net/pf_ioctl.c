@@ -2189,7 +2189,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|pf_purge_thread
 argument_list|,
@@ -2675,7 +2675,7 @@ name|arc4random
 argument_list|()
 expr_stmt|;
 comment|/* require process context to purge states, so perform in a thread */
-name|kthread_create_deferred
+name|kproc_create_deferred
 argument_list|(
 name|pf_thread_create
 argument_list|,
@@ -2696,7 +2696,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|pf_purge_thread
 argument_list|,

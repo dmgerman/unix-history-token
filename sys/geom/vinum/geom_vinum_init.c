@@ -1573,7 +1573,7 @@ name|syncsize
 operator|=
 name|GV_DFLT_SYNCSIZE
 expr_stmt|;
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|gv_sync_td
 argument_list|,
@@ -1677,7 +1677,7 @@ name|syncsize
 operator|=
 name|GV_DFLT_SYNCSIZE
 expr_stmt|;
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|gv_rebuild_td
 argument_list|,
@@ -1768,7 +1768,7 @@ name|init_size
 operator|=
 name|GV_DFLT_SYNCSIZE
 expr_stmt|;
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|gv_init_td
 argument_list|,
@@ -1905,7 +1905,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 name|error
 argument_list|)
@@ -2160,7 +2160,7 @@ argument_list|(
 name|sync
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 name|error
 argument_list|)
@@ -2289,7 +2289,7 @@ argument_list|(
 name|sync
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 name|error
 argument_list|)
@@ -2345,7 +2345,7 @@ argument_list|(
 name|sync
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 name|error
 argument_list|)
@@ -2640,7 +2640,7 @@ argument_list|(
 name|sync
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 name|error
 argument_list|)
@@ -2854,7 +2854,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 name|error
 argument_list|)
@@ -3016,7 +3016,7 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 name|error
 argument_list|)

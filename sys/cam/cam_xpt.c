@@ -6273,7 +6273,7 @@ block|}
 comment|/* fire up rescan thread */
 if|if
 condition|(
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|xpt_scanner_thread
 argument_list|,

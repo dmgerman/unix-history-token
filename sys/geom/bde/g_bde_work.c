@@ -3187,7 +3187,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)

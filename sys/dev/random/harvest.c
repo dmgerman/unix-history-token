@@ -439,7 +439,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Helper routine to enable kthread_exit() to work while the module is  * being (or has been) unloaded.  * This routine is in this file because it is always linked into the kernel,  * and will thus never be unloaded. This is critical for unloadable modules  * that have threads.  */
+comment|/* Helper routine to enable kproc_exit() to work while the module is  * being (or has been) unloaded.  * This routine is in this file because it is always linked into the kernel,  * and will thus never be unloaded. This is critical for unloadable modules  * that have threads.  */
 end_comment
 
 begin_function
@@ -456,7 +456,7 @@ argument_list|(
 name|control
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)

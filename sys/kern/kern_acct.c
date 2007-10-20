@@ -976,7 +976,7 @@ block|{
 comment|/* 		 * Try to start up an accounting kthread.  We may start more 		 * than one, but if so the extras will commit suicide as 		 * soon as they start up. 		 */
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|acct_thread
 argument_list|,
@@ -2422,7 +2422,7 @@ operator|&
 name|acct_sx
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -2488,7 +2488,7 @@ operator|&
 name|acct_sx
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)

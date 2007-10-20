@@ -80,7 +80,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kthread_create
+name|kproc_create
 parameter_list|(
 name|void
 function_decl|(
@@ -125,7 +125,7 @@ end_empty_stmt
 
 begin_decl_stmt
 name|void
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 name|int
 argument_list|)
@@ -135,7 +135,7 @@ end_decl_stmt
 
 begin_function_decl
 name|int
-name|kthread_resume
+name|kproc_resume
 parameter_list|(
 name|struct
 name|proc
@@ -150,7 +150,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|kthread_suspend
+name|kproc_suspend
 parameter_list|(
 name|struct
 name|proc
@@ -167,7 +167,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|kthread_suspend_check
+name|kproc_suspend_check
 parameter_list|(
 name|struct
 name|proc

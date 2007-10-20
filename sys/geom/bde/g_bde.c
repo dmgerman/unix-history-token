@@ -816,7 +816,7 @@ name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* XXX: error check */
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|g_bde_worker
 argument_list|,

@@ -1517,7 +1517,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|acpi_tz_thread
 argument_list|,
@@ -5196,7 +5196,7 @@ argument_list|(
 name|thermal
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -5357,7 +5357,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|acpi_tz_cooling_thread
 argument_list|,

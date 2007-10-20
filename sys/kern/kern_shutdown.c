@@ -2291,7 +2291,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kthread_suspend
+name|kproc_suspend
 argument_list|(
 name|p
 argument_list|,

@@ -2056,7 +2056,7 @@ expr_stmt|;
 comment|/* Start the thread */
 if|if
 condition|(
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|cbb_event_thread
 argument_list|,

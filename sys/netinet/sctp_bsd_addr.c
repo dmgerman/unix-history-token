@@ -430,7 +430,7 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|sctp_iterator_thread
 argument_list|,

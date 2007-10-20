@@ -466,7 +466,7 @@ name|running
 operator|=
 literal|1
 expr_stmt|;
-name|kthread_create
+name|kproc_create
 argument_list|(
 operator|&
 name|mmcsd_task
@@ -1208,7 +1208,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)

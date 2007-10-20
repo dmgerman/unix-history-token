@@ -172,7 +172,7 @@ argument_list|)
 block|{
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|sched_idletd
 argument_list|,
@@ -207,7 +207,7 @@ else|#
 directive|else
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|sched_idletd
 argument_list|,
@@ -243,7 +243,7 @@ name|error
 condition|)
 name|panic
 argument_list|(
-literal|"idle_setup: kthread_create error %d\n"
+literal|"idle_setup: kproc_create error %d\n"
 argument_list|,
 name|error
 argument_list|)

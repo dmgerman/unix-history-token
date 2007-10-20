@@ -645,7 +645,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|kthread_create(func, farg, proc_ptr, flags, stackpgs, fmtstr, arg)
+value|kproc_create(func, farg, proc_ptr, flags, stackpgs, fmtstr, arg)
 end_define
 
 begin_else
@@ -673,7 +673,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|kthread_create(func, farg, proc_ptr, fmtstr, arg)
+value|kproc_create(func, farg, proc_ptr, fmtstr, arg)
 end_define
 
 begin_endif

@@ -124,7 +124,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 operator|(
 name|void
@@ -181,7 +181,7 @@ end_comment
 
 begin_function
 name|int
-name|kthread_create
+name|kproc_create
 parameter_list|(
 name|void
 function_decl|(
@@ -242,7 +242,7 @@ name|p_stats
 condition|)
 name|panic
 argument_list|(
-literal|"kthread_create called too soon"
+literal|"kproc_create called too soon"
 argument_list|)
 expr_stmt|;
 name|error
@@ -424,7 +424,7 @@ end_function
 
 begin_function
 name|void
-name|kthread_exit
+name|kproc_exit
 parameter_list|(
 name|int
 name|ecode
@@ -508,7 +508,7 @@ end_comment
 
 begin_function
 name|int
-name|kthread_suspend
+name|kproc_suspend
 parameter_list|(
 name|struct
 name|proc
@@ -590,7 +590,7 @@ end_function
 
 begin_function
 name|int
-name|kthread_resume
+name|kproc_resume
 parameter_list|(
 name|struct
 name|proc
@@ -660,7 +660,7 @@ end_function
 
 begin_function
 name|void
-name|kthread_suspend_check
+name|kproc_suspend_check
 parameter_list|(
 name|struct
 name|proc

@@ -2031,7 +2031,7 @@ expr_stmt|;
 comment|/* Create the AIF thread */
 if|if
 condition|(
-name|kthread_create
+name|kproc_create
 argument_list|(
 operator|(
 name|void
@@ -4518,7 +4518,7 @@ operator|->
 name|aac_dev
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)

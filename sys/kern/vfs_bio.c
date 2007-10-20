@@ -7977,7 +7977,7 @@ operator|&
 name|bdlock
 argument_list|)
 expr_stmt|;
-name|kthread_suspend_check
+name|kproc_suspend_check
 argument_list|(
 name|bufdaemonproc
 argument_list|)

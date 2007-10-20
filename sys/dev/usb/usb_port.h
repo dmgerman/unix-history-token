@@ -171,7 +171,7 @@ parameter_list|,
 name|a1
 parameter_list|)
 define|\
-value|kthread_create((f), (s), (p), RFHIGHPID, 0, (a0), (a1))
+value|kproc_create((f), (s), (p), RFHIGHPID, 0, (a0), (a1))
 end_define
 
 begin_define
@@ -188,14 +188,14 @@ parameter_list|,
 name|a0
 parameter_list|)
 define|\
-value|kthread_create((f), (s), (p), RFHIGHPID, 0, (a0))
+value|kproc_create((f), (s), (p), RFHIGHPID, 0, (a0))
 end_define
 
 begin_define
 define|#
 directive|define
 name|usb_kthread_create
-value|kthread_create
+value|kproc_create
 end_define
 
 begin_define

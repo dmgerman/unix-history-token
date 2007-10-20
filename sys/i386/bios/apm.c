@@ -3747,7 +3747,7 @@ name|running
 operator|=
 literal|0
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -3802,7 +3802,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|apm_event_thread
 argument_list|,

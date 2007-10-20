@@ -16894,7 +16894,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -16924,7 +16924,7 @@ operator|>
 literal|500005
 if|if
 condition|(
-name|kthread_create
+name|kproc_create
 argument_list|(
 operator|(
 name|void
@@ -16963,7 +16963,7 @@ else|#
 directive|else
 if|if
 condition|(
-name|kthread_create
+name|kproc_create
 argument_list|(
 operator|(
 name|void

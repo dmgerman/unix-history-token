@@ -1697,7 +1697,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|ithread_loop
 argument_list|,
@@ -1723,7 +1723,7 @@ name|error
 condition|)
 name|panic
 argument_list|(
-literal|"kthread_create() failed with %d"
+literal|"kproc_create() failed with %d"
 argument_list|,
 name|error
 argument_list|)
@@ -1849,7 +1849,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|ithread_loop
 argument_list|,
@@ -1875,7 +1875,7 @@ name|error
 condition|)
 name|panic
 argument_list|(
-literal|"kthread_create() failed with %d"
+literal|"kproc_create() failed with %d"
 argument_list|,
 name|error
 argument_list|)
@@ -5274,7 +5274,7 @@ argument_list|,
 name|M_ITHREAD
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -5539,7 +5539,7 @@ argument_list|,
 name|M_ITHREAD
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)

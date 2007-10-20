@@ -2212,7 +2212,7 @@ name|fc
 argument_list|)
 expr_stmt|;
 comment|/* create thread */
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|fw_bus_probe_thread
 argument_list|,
@@ -8892,7 +8892,7 @@ operator|->
 name|wait_lock
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)

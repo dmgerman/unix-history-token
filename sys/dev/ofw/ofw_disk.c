@@ -698,7 +698,7 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|ofwd_kthread
 argument_list|,

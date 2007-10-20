@@ -868,7 +868,7 @@ operator|->
 name|bio_queue
 argument_list|)
 expr_stmt|;
-name|kthread_create
+name|kproc_create
 argument_list|(
 operator|&
 name|at45d_task

@@ -2496,7 +2496,7 @@ name|Giant
 argument_list|)
 expr_stmt|;
 comment|/*printf("nfsv4 renewd exiting\n");*/
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -3155,7 +3155,7 @@ name|nfs4_daemonproc
 operator|==
 name|NULL
 condition|)
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|nfs4_daemon
 argument_list|,

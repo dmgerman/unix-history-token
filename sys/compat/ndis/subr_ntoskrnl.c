@@ -2263,7 +2263,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|ntoskrnl_dpc_thread
 argument_list|,
@@ -2321,7 +2321,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|ntoskrnl_workitem_thread
 argument_list|,
@@ -11991,7 +11991,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -14536,7 +14536,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|ntoskrnl_thrfunc
 argument_list|,
@@ -14668,7 +14668,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -15713,7 +15713,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)

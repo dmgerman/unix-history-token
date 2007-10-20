@@ -2613,7 +2613,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -3621,7 +3621,7 @@ operator||=
 name|ISC_SM_RUN
 expr_stmt|;
 return|return
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|ism_proc
 argument_list|,

@@ -10503,7 +10503,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -11651,7 +11651,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|g_journal_worker
 argument_list|,
@@ -13579,7 +13579,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kthread_create
+name|kproc_create
 argument_list|(
 name|g_journal_switcher
 argument_list|,
@@ -14838,7 +14838,7 @@ operator|&
 name|g_journal_switcher_state
 argument_list|)
 expr_stmt|;
-name|kthread_exit
+name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
