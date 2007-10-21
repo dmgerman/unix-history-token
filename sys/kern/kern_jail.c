@@ -2958,6 +2958,9 @@ case|case
 name|PRIV_VFS_SETGID
 case|:
 case|case
+name|PRIV_VFS_STAT
+case|:
+case|case
 name|PRIV_VFS_STICKYFILE
 case|:
 return|return
