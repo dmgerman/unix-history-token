@@ -421,9 +421,9 @@ name|gpart_show
 block|,
 name|G_NULL_OPTS
 block|,
-literal|"[geom ...]"
-block|,
 name|NULL
+block|,
+literal|"[geom ...]"
 block|}
 block|,
 block|{
