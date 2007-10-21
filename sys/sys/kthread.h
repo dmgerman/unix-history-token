@@ -144,10 +144,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* XXXKSE */
-end_comment
-
 begin_function_decl
 name|int
 name|kproc_suspend
@@ -161,10 +157,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* XXXKSE */
-end_comment
-
 begin_function_decl
 name|void
 name|kproc_suspend_check
@@ -175,10 +167,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* XXXKSE */
-end_comment
 
 begin_endif
 endif|#
