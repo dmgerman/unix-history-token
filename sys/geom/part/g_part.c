@@ -231,6 +231,12 @@ name|G_PART_ALIAS_FREEBSD_VINUM
 block|}
 block|,
 block|{
+literal|"freebsd-zfs"
+block|,
+name|G_PART_ALIAS_FREEBSD_ZFS
+block|}
+block|,
+block|{
 literal|"mbr"
 block|,
 name|G_PART_ALIAS_MBR
