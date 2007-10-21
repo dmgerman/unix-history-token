@@ -1418,6 +1418,226 @@ value|181
 end_define
 
 begin_comment
+comment|/*  * Multi Link Frame Relay (FRF.16)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_MFR
+value|182
+end_define
+
+begin_comment
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   * The DLT_ is used for internal communication with a  * voice Adapter Card (PIC)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_VP
+value|183
+end_define
+
+begin_comment
+comment|/*  * Arinc 429 frames.  * DLT_ requested by Gianluca Varenni<gianluca.varenni@cacetech.com>.  * Every frame contains a 32bit A429 label.  * More documentation on Arinc 429 can be found at  * http://www.condoreng.com/support/downloads/tutorials/ARINCTutorial.pdf  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_A429
+value|184
+end_define
+
+begin_comment
+comment|/*  * Arinc 653 Interpartition Communication messages.  * DLT_ requested by Gianluca Varenni<gianluca.varenni@cacetech.com>.  * Please refer to the A653-1 standard for more information.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_A653_ICM
+value|185
+end_define
+
+begin_comment
+comment|/*  * USB packets, beginning with a USB setup header; requested by  * Paolo Abeni<paolo.abeni@email.it>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_USB
+value|186
+end_define
+
+begin_comment
+comment|/*  * Bluetooth HCI UART transport layer (part H:4); requested by  * Paolo Abeni.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_BLUETOOTH_HCI_H4
+value|187
+end_define
+
+begin_comment
+comment|/*  * IEEE 802.16 MAC Common Part Sublayer; requested by Maria Cruz  *<cruz_petagay@bah.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IEEE802_16_MAC_CPS
+value|188
+end_define
+
+begin_comment
+comment|/*  * USB packets, beginning with a Linux USB header; requested by  * Paolo Abeni<paolo.abeni@email.it>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_USB_LINUX
+value|189
+end_define
+
+begin_comment
+comment|/*  * Controller Area Network (CAN) v. 2.0B packets.  * DLT_ requested by Gianluca Varenni<gianluca.varenni@cacetech.com>.  * Used to dump CAN packets coming from a CAN Vector board.  * More documentation on the CAN v2.0B frames can be found at  * http://www.can-cia.org/downloads/?269  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_CAN20B
+value|190
+end_define
+
+begin_comment
+comment|/*  * IEEE 802.15.4, with address fields padded, as is done by Linux  * drivers; requested by Juergen Schimmer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IEEE802_15_4_LINUX
+value|191
+end_define
+
+begin_comment
+comment|/*  * Per Packet Information encapsulated packets.  * DLT_ requested by Gianluca Varenni<gianluca.varenni@cacetech.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_PPI
+value|192
+end_define
+
+begin_comment
+comment|/*  * Header for 802.16 MAC Common Part Sublayer plus a radiotap radio header;  * requested by Charles Clancy.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IEEE802_16_MAC_CPS_RADIO
+value|193
+end_define
+
+begin_comment
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   * The DLT_ is used for internal communication with a  * integrated service module (ISM).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_ISM
+value|194
+end_define
+
+begin_comment
+comment|/*  * IEEE 802.15.4, exactly as it appears in the spec (no padding, no  * nothing); requested by Mikko Saarnivala<mikko.saarnivala@sensinode.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IEEE802_15_4
+value|195
+end_define
+
+begin_comment
+comment|/*  * Various link-layer types, with a pseudo-header, for SITA  * (http://www.sita.aero/); requested by Fulko Hew (fulko.hew@gmail.com).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_SITA
+value|196
+end_define
+
+begin_comment
+comment|/*  * Various link-layer types, with a pseudo-header, for Endace DAG cards;  * encapsulates Endace ERF records.  Requested by Stephen Donnelly  *<stephen@endace.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_ERF
+value|197
+end_define
+
+begin_comment
+comment|/*  * Special header prepended to Ethernet packets when capturing from a  * u10 Networks board.  Requested by Phil Mulholland  *<phil@u10networks.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_RAIF1
+value|198
+end_define
+
+begin_comment
+comment|/*  * IPMB packet for IPMI, beginning with the I2C slave address, followed  * by the netFn and LUN, etc..  Requested by Chanthy Toeung  *<chanthy.toeung@ca.kontron.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IPMB
+value|199
+end_define
+
+begin_comment
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   * The DLT_ is used for capturing data on a secure tunnel interface.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_ST
+value|200
+end_define
+
+begin_comment
+comment|/*  * Bluetooth HCI UART transport layer (part H:4), with pseudo-header  * that includes direction information; requested by Paolo Abeni.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_BLUETOOTH_HCI_H4_WITH_PHDR
+value|201
+end_define
+
+begin_comment
 comment|/*  * The instruction encodings.  */
 end_comment
 
