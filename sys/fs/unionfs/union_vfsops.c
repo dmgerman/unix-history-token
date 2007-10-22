@@ -425,7 +425,7 @@ literal|0
 expr_stmt|;
 name|copymode
 operator|=
-name|UNIONFS_TRADITIONAL
+name|UNIONFS_TRANSPARENT
 expr_stmt|;
 comment|/* default */
 name|ndp
