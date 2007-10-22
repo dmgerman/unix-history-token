@@ -188,7 +188,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%2d %4d %p %-8jx %s\n"
+literal|"%2d %4d %p %-8jx %s (%s)\n"
 argument_list|,
 name|stat
 operator|.
@@ -212,6 +212,10 @@ argument_list|,
 name|stat
 operator|.
 name|name
+argument_list|,
+name|stat
+operator|.
+name|pathname
 argument_list|)
 expr_stmt|;
 if|if
