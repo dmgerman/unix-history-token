@@ -30,6 +30,25 @@ name|unionfs_copymode
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* whiteout policy of upper layer */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|_unionfs_whitemode
+block|{
+name|UNIONFS_WHITE_ALWAYS
+init|=
+literal|0
+block|,
+name|UNIONFS_WHITE_WHENNEEDED
+block|}
+name|unionfs_whitemode
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|unionfs_mount
@@ -54,6 +73,9 @@ decl_stmt|;
 comment|/* ROOT vnode */
 name|unionfs_copymode
 name|um_copymode
+decl_stmt|;
+name|unionfs_whitemode
+name|um_whitemode
 decl_stmt|;
 name|uid_t
 name|um_uid
