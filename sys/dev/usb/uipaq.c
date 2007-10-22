@@ -390,6 +390,16 @@ block|}
 block|,
 block|{
 block|{
+name|USB_VENDOR_HTC
+block|,
+name|USB_PRODUCT_HTC_SMARTPHONE
+block|}
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
 name|USB_VENDOR_COMPAQ
 block|,
 name|USB_PRODUCT_COMPAQ_IPAQPOCKETPC
