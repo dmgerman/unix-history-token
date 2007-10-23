@@ -7132,6 +7132,28 @@ name|unionfs_readdir_exit
 goto|;
 block|}
 comment|/* 	 * readdir upper and lower 	 */
+name|KASSERT
+argument_list|(
+name|uvp
+operator|!=
+name|NULLVP
+argument_list|,
+operator|(
+literal|"unionfs_readdir: null upper vp"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|lvp
+operator|!=
+name|NULLVP
+argument_list|,
+operator|(
+literal|"unionfs_readdir: null lower vp"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uio
