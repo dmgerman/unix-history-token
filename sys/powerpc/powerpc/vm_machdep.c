@@ -638,7 +638,9 @@ name|old
 argument_list|,
 name|new
 argument_list|,
-name|NULL
+name|old
+operator|->
+name|td_lock
 argument_list|)
 expr_stmt|;
 name|panic
