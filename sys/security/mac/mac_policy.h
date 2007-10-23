@@ -6912,14 +6912,14 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/*-  * The TrustedBSD MAC Framework has a major version number, MAC_VERSION,  * which defines the ABI of the Framework present in the kernel (and depended  * on by policy modules compiled against that kernel).  Currently,  * MAC_POLICY_SET() requires that the kernel and module ABI version numbers  * exactly match.  The following major versions have been defined to date:  *  *   MAC version             FreeBSD versions  *   1                       5.x  *   2                       6.x  *   3                       7.x  */
+comment|/*-  * The TrustedBSD MAC Framework has a major version number, MAC_VERSION,  * which defines the ABI of the Framework present in the kernel (and depended  * on by policy modules compiled against that kernel).  Currently,  * MAC_POLICY_SET() requires that the kernel and module ABI version numbers  * exactly match.  The following major versions have been defined to date:  *  *   MAC version             FreeBSD versions  *   1                       5.x  *   2                       6.x  *   3                       7.x  *   4                       8.x  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAC_VERSION
-value|3
+value|4
 end_define
 
 begin_define
