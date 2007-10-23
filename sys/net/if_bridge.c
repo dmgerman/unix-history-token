@@ -8756,7 +8756,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
@@ -9213,7 +9213,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
@@ -9586,7 +9586,7 @@ name|rcvif
 operator|=
 name|bifp
 expr_stmt|;
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|bifp
 argument_list|,
@@ -9778,7 +9778,7 @@ name|rcvif
 operator|=
 name|bifp
 expr_stmt|;
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|bifp
 argument_list|,
