@@ -5715,7 +5715,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
@@ -5865,7 +5865,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|scifp
 argument_list|,
