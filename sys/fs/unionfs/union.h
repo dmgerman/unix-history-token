@@ -141,13 +141,6 @@ begin_struct
 struct|struct
 name|unionfs_node
 block|{
-name|LIST_ENTRY
-argument_list|(
-argument|unionfs_node
-argument_list|)
-name|un_hash
-expr_stmt|;
-comment|/* Hash list */
 name|struct
 name|vnode
 modifier|*
@@ -194,25 +187,14 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* unionfs node flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UNIONFS_CACHED
-value|0x01
-end_define
-
-begin_comment
-comment|/* is cached */
+comment|/*  * unionfs node flags  * It needs the vnode with exclusive lock, when changing the un_flag variable.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UNIONFS_OPENEXTL
-value|0x02
+value|0x01
 end_define
 
 begin_comment
@@ -223,7 +205,7 @@ begin_define
 define|#
 directive|define
 name|UNIONFS_OPENEXTU
-value|0x04
+value|0x02
 end_define
 
 begin_comment
@@ -329,7 +311,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|unionfs_hashrem
+name|unionfs_noderem
 parameter_list|(
 name|struct
 name|vnode
