@@ -841,16 +841,7 @@ name|biosdisk
 operator|.
 name|slice
 operator|=
-operator|(
-name|B_ADAPTOR
-argument_list|(
-name|initial_bootdev
-argument_list|)
-operator|<<
-literal|4
-operator|)
-operator|+
-name|B_CONTROLLER
+name|B_SLICE
 argument_list|(
 name|initial_bootdev
 argument_list|)
