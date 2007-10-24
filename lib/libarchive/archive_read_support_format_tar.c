@@ -689,6 +689,9 @@ decl_stmt|;
 name|int64_t
 name|sparse_numbytes
 decl_stmt|;
+name|int64_t
+name|sparse_realsize
+decl_stmt|;
 name|int
 name|sparse_gnu_major
 decl_stmt|;
@@ -2363,6 +2366,14 @@ name|sparse_last
 operator|=
 name|NULL
 expr_stmt|;
+name|tar
+operator|->
+name|sparse_realsize
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Mark this as "unset" */
 name|r
 operator|=
 name|tar_read_header
@@ -6922,10 +6933,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|archive_entry_set_size
-argument_list|(
-name|entry
-argument_list|,
+block|{
+name|tar
+operator|->
+name|sparse_realsize
+operator|=
 name|tar_atol10
 argument_list|(
 name|value
@@ -6935,8 +6947,17 @@ argument_list|(
 name|value
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|archive_entry_set_size
+argument_list|(
+name|entry
+argument_list|,
+name|tar
+operator|->
+name|sparse_realsize
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'L'
@@ -7441,6 +7462,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* "size" is the size of the data in the entry. */
 name|tar
 operator|->
 name|entry_bytes_remaining
@@ -7455,6 +7477,16 @@ name|value
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 			 * But, "size" is not necessarily the size of 			 * the file on disk; if this is a sparse file, 			 * the disk size may have already been set from 			 * GNU.sparse.realsize. 			 */
+if|if
+condition|(
+name|tar
+operator|->
+name|sparse_realsize
+operator|<
+literal|0
+condition|)
+block|{
 name|archive_entry_set_size
 argument_list|(
 name|entry
@@ -7464,13 +7496,16 @@ operator|->
 name|entry_bytes_remaining
 argument_list|)
 expr_stmt|;
-block|}
+name|tar
+operator|->
+name|sparse_realsize
+operator|=
 name|tar
 operator|->
 name|entry_bytes_remaining
-operator|=
-literal|0
 expr_stmt|;
+block|}
+block|}
 break|break;
 case|case
 literal|'u'
