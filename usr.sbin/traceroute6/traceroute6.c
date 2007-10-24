@@ -3676,6 +3676,19 @@ name|lastaddr
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|probe
+operator|>
+literal|0
+condition|)
+name|fputs
+argument_list|(
+literal|"\n   "
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
 name|print
 argument_list|(
 operator|&
