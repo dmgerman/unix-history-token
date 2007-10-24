@@ -626,8 +626,13 @@ condition|)
 return|return
 name|NULL
 return|;
+comment|/* NB: avoid monitor mode; there is no scan support */
 if|if
 condition|(
+name|mode
+operator|!=
+name|IEEE80211_M_MONITOR
+operator|&&
 name|scanners
 index|[
 name|mode
