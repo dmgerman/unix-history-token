@@ -191,7 +191,7 @@ operator|=
 operator|&
 name|at91_bs_tag
 expr_stmt|;
-comment|/*  	 * XXX: Not pretty, but will work because we map VA == PA early 	 * for the last 1MB of memory. 	 */
+comment|/*  	 * XXX: Not pretty, but will work because we map the needed addresses 	 * early. 	 */
 ifdef|#
 directive|ifdef
 name|SKYEYE_WORKAROUNDS
