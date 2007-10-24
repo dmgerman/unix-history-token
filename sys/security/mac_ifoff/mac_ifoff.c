@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002, 2007 Robert N. M. Watson  * Copyright (c) 2001-2002 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999-2002, 2007 Robert N. M. Watson  * Copyright (c) 2001-2002 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -249,7 +249,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|int
-name|check_ifnet_outgoing
+name|ifnet_check_outgoing
 parameter_list|(
 name|struct
 name|ifnet
@@ -308,7 +308,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|check_ifnet_incoming
+name|ifnet_check_incoming
 parameter_list|(
 name|struct
 name|ifnet
@@ -381,7 +381,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_ifoff_check_bpfdesc_receive
+name|mac_ifoff_bpfdesc_check_receive
 parameter_list|(
 name|struct
 name|bpf_d
@@ -406,7 +406,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|check_ifnet_incoming
+name|ifnet_check_incoming
 argument_list|(
 name|ifp
 argument_list|,
@@ -420,7 +420,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_ifoff_check_ifnet_transmit
+name|mac_ifoff_ifnet_check_transmit
 parameter_list|(
 name|struct
 name|ifnet
@@ -445,7 +445,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|check_ifnet_outgoing
+name|ifnet_check_outgoing
 argument_list|(
 name|ifp
 argument_list|)
@@ -457,7 +457,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_ifoff_check_inpcb_deliver
+name|mac_ifoff_inpcb_check_deliver
 parameter_list|(
 name|struct
 name|inpcb
@@ -497,7 +497,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|check_ifnet_incoming
+name|ifnet_check_incoming
 argument_list|(
 name|m
 operator|->
@@ -520,7 +520,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_ifoff_check_socket_deliver
+name|mac_ifoff_socket_check_deliver
 parameter_list|(
 name|struct
 name|socket
@@ -560,7 +560,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|check_ifnet_incoming
+name|ifnet_check_incoming
 argument_list|(
 name|m
 operator|->
@@ -588,24 +588,24 @@ name|mac_ifoff_ops
 init|=
 block|{
 operator|.
-name|mpo_check_bpfdesc_receive
+name|mpo_bpfdesc_check_receive
 operator|=
-name|mac_ifoff_check_bpfdesc_receive
+name|mac_ifoff_bpfdesc_check_receive
 block|,
 operator|.
-name|mpo_check_ifnet_transmit
+name|mpo_ifnet_check_transmit
 operator|=
-name|mac_ifoff_check_ifnet_transmit
+name|mac_ifoff_ifnet_check_transmit
 block|,
 operator|.
-name|mpo_check_inpcb_deliver
+name|mpo_inpcb_check_deliver
 operator|=
-name|mac_ifoff_check_inpcb_deliver
+name|mac_ifoff_inpcb_check_deliver
 block|,
 operator|.
-name|mpo_check_socket_deliver
+name|mpo_socket_check_deliver
 operator|=
-name|mac_ifoff_check_socket_deliver
+name|mac_ifoff_socket_check_deliver
 block|, }
 decl_stmt|;
 end_decl_stmt

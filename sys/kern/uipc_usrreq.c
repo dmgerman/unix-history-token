@@ -1924,7 +1924,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_create
+name|mac_vnode_check_create
 argument_list|(
 name|td
 operator|->
@@ -5144,7 +5144,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_open
+name|mac_vnode_check_open
 argument_list|(
 name|td
 operator|->
@@ -5478,14 +5478,14 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|mac_set_socket_peer_from_socket
+name|mac_socketpeer_set_from_socket
 argument_list|(
 name|so
 argument_list|,
 name|so3
 argument_list|)
 expr_stmt|;
-name|mac_set_socket_peer_from_socket
+name|mac_socketpeer_set_from_socket
 argument_list|(
 name|so3
 argument_list|,

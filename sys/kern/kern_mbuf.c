@@ -1253,7 +1253,7 @@ name|MAC
 comment|/* If the label init fails, fail the alloc */
 name|error
 operator|=
-name|mac_init_mbuf
+name|mac_mbuf_init
 argument_list|(
 name|m
 argument_list|,
@@ -2331,7 +2331,7 @@ name|MAC
 comment|/* If the label init fails, fail the alloc */
 name|error
 operator|=
-name|mac_init_mbuf
+name|mac_mbuf_init
 argument_list|(
 name|m
 argument_list|,

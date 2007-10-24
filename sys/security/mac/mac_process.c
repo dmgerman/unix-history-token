@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2003 Networks Associates Technology, Inc.  * Copyright (c) 2005 Samy Al Bahra  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2003 Networks Associates Technology, Inc.  * Copyright (c) 2005 Samy Al Bahra  * Copyright (c) 2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -269,7 +269,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|init_cred_label
+name|cred_init_label
 argument_list|,
 name|label
 argument_list|)
@@ -284,7 +284,7 @@ end_function
 
 begin_function
 name|void
-name|mac_init_cred
+name|mac_cred_init
 parameter_list|(
 name|struct
 name|ucred
@@ -326,7 +326,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|init_proc_label
+name|proc_init_label
 argument_list|,
 name|label
 argument_list|)
@@ -341,7 +341,7 @@ end_function
 
 begin_function
 name|void
-name|mac_init_proc
+name|mac_proc_init
 parameter_list|(
 name|struct
 name|proc
@@ -371,7 +371,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_cred_label
+name|cred_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -386,7 +386,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_cred
+name|mac_cred_destroy
 parameter_list|(
 name|struct
 name|ucred
@@ -423,7 +423,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_proc_label
+name|proc_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -438,7 +438,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_proc
+name|mac_proc_destroy
 parameter_list|(
 name|struct
 name|proc
@@ -464,7 +464,7 @@ end_function
 
 begin_function
 name|int
-name|mac_externalize_cred_label
+name|mac_cred_externalize_label
 parameter_list|(
 name|struct
 name|label
@@ -509,7 +509,7 @@ end_function
 
 begin_function
 name|int
-name|mac_internalize_cred_label
+name|mac_cred_internalize_label
 parameter_list|(
 name|struct
 name|label
@@ -547,7 +547,7 @@ end_comment
 
 begin_function
 name|void
-name|mac_create_proc0
+name|mac_proc_create_swapper
 parameter_list|(
 name|struct
 name|ucred
@@ -557,7 +557,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|create_proc0
+name|proc_create_swapper
 argument_list|,
 name|cred
 argument_list|)
@@ -571,7 +571,7 @@ end_comment
 
 begin_function
 name|void
-name|mac_create_proc1
+name|mac_proc_create_init
 parameter_list|(
 name|struct
 name|ucred
@@ -581,7 +581,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|create_proc1
+name|proc_create_init
 argument_list|,
 name|cred
 argument_list|)
@@ -615,7 +615,7 @@ end_comment
 
 begin_function
 name|void
-name|mac_copy_cred
+name|mac_cred_copy
 parameter_list|(
 name|struct
 name|ucred
@@ -630,7 +630,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|copy_cred_label
+name|cred_copy_label
 argument_list|,
 name|src
 operator|->
@@ -782,7 +782,7 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|mac_internalize_cred_label
+name|mac_cred_internalize_label
 argument_list|(
 name|label
 argument_list|,
@@ -1240,7 +1240,7 @@ name|vme
 operator|->
 name|max_protection
 expr_stmt|;
-name|mac_check_vnode_mmap_downgrade
+name|mac_vnode_check_mmap_downgrade
 argument_list|(
 name|cred
 argument_list|,
@@ -1595,7 +1595,7 @@ end_comment
 
 begin_function
 name|void
-name|mac_relabel_cred
+name|mac_cred_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -1610,7 +1610,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|relabel_cred
+name|cred_relabel
 argument_list|,
 name|cred
 argument_list|,
@@ -1622,7 +1622,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_cred_relabel
+name|mac_cred_check_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -1640,7 +1640,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_cred_relabel
+name|cred_check_relabel
 argument_list|,
 name|cred
 argument_list|,
@@ -1657,7 +1657,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_cred_visible
+name|mac_cred_check_visible
 parameter_list|(
 name|struct
 name|ucred
@@ -1675,7 +1675,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_cred_visible
+name|cred_check_visible
 argument_list|,
 name|cr1
 argument_list|,
@@ -1692,7 +1692,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_debug
+name|mac_proc_check_debug
 parameter_list|(
 name|struct
 name|ucred
@@ -1717,7 +1717,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_debug
+name|proc_check_debug
 argument_list|,
 name|cred
 argument_list|,
@@ -1734,7 +1734,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_sched
+name|mac_proc_check_sched
 parameter_list|(
 name|struct
 name|ucred
@@ -1759,7 +1759,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_sched
+name|proc_check_sched
 argument_list|,
 name|cred
 argument_list|,
@@ -1776,7 +1776,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_signal
+name|mac_proc_check_signal
 parameter_list|(
 name|struct
 name|ucred
@@ -1804,7 +1804,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_signal
+name|proc_check_signal
 argument_list|,
 name|cred
 argument_list|,
@@ -1823,7 +1823,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_setuid
+name|mac_proc_check_setuid
 parameter_list|(
 name|struct
 name|proc
@@ -1851,7 +1851,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_setuid
+name|proc_check_setuid
 argument_list|,
 name|cred
 argument_list|,
@@ -1868,7 +1868,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_seteuid
+name|mac_proc_check_seteuid
 parameter_list|(
 name|struct
 name|proc
@@ -1896,7 +1896,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_seteuid
+name|proc_check_seteuid
 argument_list|,
 name|cred
 argument_list|,
@@ -1913,7 +1913,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_setgid
+name|mac_proc_check_setgid
 parameter_list|(
 name|struct
 name|proc
@@ -1941,7 +1941,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_setgid
+name|proc_check_setgid
 argument_list|,
 name|cred
 argument_list|,
@@ -1958,7 +1958,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_setegid
+name|mac_proc_check_setegid
 parameter_list|(
 name|struct
 name|proc
@@ -1986,7 +1986,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_setegid
+name|proc_check_setegid
 argument_list|,
 name|cred
 argument_list|,
@@ -2003,7 +2003,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_setgroups
+name|mac_proc_check_setgroups
 parameter_list|(
 name|struct
 name|proc
@@ -2035,7 +2035,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_setgroups
+name|proc_check_setgroups
 argument_list|,
 name|cred
 argument_list|,
@@ -2054,7 +2054,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_setreuid
+name|mac_proc_check_setreuid
 parameter_list|(
 name|struct
 name|proc
@@ -2085,7 +2085,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_setreuid
+name|proc_check_setreuid
 argument_list|,
 name|cred
 argument_list|,
@@ -2104,7 +2104,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_setregid
+name|mac_proc_check_setregid
 parameter_list|(
 name|struct
 name|proc
@@ -2135,7 +2135,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_setregid
+name|proc_check_setregid
 argument_list|,
 name|cred
 argument_list|,
@@ -2154,7 +2154,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_setresuid
+name|mac_proc_check_setresuid
 parameter_list|(
 name|struct
 name|proc
@@ -2188,7 +2188,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_setresuid
+name|proc_check_setresuid
 argument_list|,
 name|cred
 argument_list|,
@@ -2209,7 +2209,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_setresgid
+name|mac_proc_check_setresgid
 parameter_list|(
 name|struct
 name|proc
@@ -2243,7 +2243,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_setresgid
+name|proc_check_setresgid
 argument_list|,
 name|cred
 argument_list|,
@@ -2264,7 +2264,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_wait
+name|mac_proc_check_wait
 parameter_list|(
 name|struct
 name|ucred
@@ -2289,7 +2289,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_wait
+name|proc_check_wait
 argument_list|,
 name|cred
 argument_list|,

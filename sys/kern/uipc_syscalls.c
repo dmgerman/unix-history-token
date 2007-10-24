@@ -697,7 +697,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_socket_create
+name|mac_socket_check_create
 argument_list|(
 name|td
 operator|->
@@ -1033,7 +1033,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_bind
+name|mac_socket_check_bind
 argument_list|(
 name|td
 operator|->
@@ -1171,7 +1171,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_listen
+name|mac_socket_check_listen
 argument_list|(
 name|td
 operator|->
@@ -1665,7 +1665,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_accept
+name|mac_socket_check_accept
 argument_list|(
 name|td
 operator|->
@@ -2525,7 +2525,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_connect
+name|mac_socket_check_connect
 argument_list|(
 name|td
 operator|->
@@ -2791,7 +2791,7 @@ name|MAC
 comment|/* We might want to have a separate check for socket pairs. */
 name|error
 operator|=
-name|mac_check_socket_create
+name|mac_socket_check_create
 argument_list|(
 name|td
 operator|->
@@ -3615,7 +3615,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_send
+name|mac_socket_check_send
 argument_list|(
 name|td
 operator|->
@@ -4593,7 +4593,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_receive
+name|mac_socket_check_receive
 argument_list|(
 name|td
 operator|->
@@ -8863,7 +8863,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_send
+name|mac_socket_check_send
 argument_list|(
 name|td
 operator|->
@@ -10790,7 +10790,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_send
+name|mac_socket_check_send
 argument_list|(
 name|td
 operator|->
@@ -11325,7 +11325,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_send
+name|mac_socket_check_send
 argument_list|(
 name|td
 operator|->
@@ -11839,7 +11839,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_receive
+name|mac_socket_check_receive
 argument_list|(
 name|td
 operator|->

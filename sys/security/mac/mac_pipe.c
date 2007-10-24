@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -130,7 +130,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|init_pipe_label
+name|pipe_init_label
 argument_list|,
 name|label
 argument_list|)
@@ -145,7 +145,7 @@ end_function
 
 begin_function
 name|void
-name|mac_init_pipe
+name|mac_pipe_init
 parameter_list|(
 name|struct
 name|pipepair
@@ -175,7 +175,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_pipe_label
+name|pipe_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -190,7 +190,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_pipe
+name|mac_pipe_destroy
 parameter_list|(
 name|struct
 name|pipepair
@@ -216,7 +216,7 @@ end_function
 
 begin_function
 name|void
-name|mac_copy_pipe_label
+name|mac_pipe_copy_label
 parameter_list|(
 name|struct
 name|label
@@ -231,7 +231,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|copy_pipe_label
+name|pipe_copy_label
 argument_list|,
 name|src
 argument_list|,
@@ -243,7 +243,7 @@ end_function
 
 begin_function
 name|int
-name|mac_externalize_pipe_label
+name|mac_pipe_externalize_label
 parameter_list|(
 name|struct
 name|label
@@ -288,7 +288,7 @@ end_function
 
 begin_function
 name|int
-name|mac_internalize_pipe_label
+name|mac_pipe_internalize_label
 parameter_list|(
 name|struct
 name|label
@@ -322,7 +322,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_pipe
+name|mac_pipe_create
 parameter_list|(
 name|struct
 name|ucred
@@ -337,7 +337,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|create_pipe
+name|pipe_create
 argument_list|,
 name|cred
 argument_list|,
@@ -354,7 +354,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_relabel_pipe
+name|mac_pipe_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -374,7 +374,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|relabel_pipe
+name|pipe_relabel
 argument_list|,
 name|cred
 argument_list|,
@@ -392,7 +392,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_pipe_ioctl
+name|mac_pipe_check_ioctl
 parameter_list|(
 name|struct
 name|ucred
@@ -428,7 +428,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_pipe_ioctl
+name|pipe_check_ioctl
 argument_list|,
 name|cred
 argument_list|,
@@ -453,7 +453,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_pipe_poll
+name|mac_pipe_check_poll
 parameter_list|(
 name|struct
 name|ucred
@@ -481,7 +481,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_pipe_poll
+name|pipe_check_poll
 argument_list|,
 name|cred
 argument_list|,
@@ -502,7 +502,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_pipe_read
+name|mac_pipe_check_read
 parameter_list|(
 name|struct
 name|ucred
@@ -530,7 +530,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_pipe_read
+name|pipe_check_read
 argument_list|,
 name|cred
 argument_list|,
@@ -552,7 +552,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_check_pipe_relabel
+name|mac_pipe_check_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -585,7 +585,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_pipe_relabel
+name|pipe_check_relabel
 argument_list|,
 name|cred
 argument_list|,
@@ -608,7 +608,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_pipe_stat
+name|mac_pipe_check_stat
 parameter_list|(
 name|struct
 name|ucred
@@ -636,7 +636,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_pipe_stat
+name|pipe_check_stat
 argument_list|,
 name|cred
 argument_list|,
@@ -657,7 +657,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_pipe_write
+name|mac_pipe_check_write
 parameter_list|(
 name|struct
 name|ucred
@@ -685,7 +685,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_pipe_write
+name|pipe_check_write
 argument_list|,
 name|cred
 argument_list|,
@@ -739,7 +739,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_pipe_relabel
+name|mac_pipe_check_relabel
 argument_list|(
 name|cred
 argument_list|,
@@ -757,7 +757,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|mac_relabel_pipe
+name|mac_pipe_relabel
 argument_list|(
 name|cred
 argument_list|,

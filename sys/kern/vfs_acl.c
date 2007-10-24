@@ -336,7 +336,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_setacl
+name|mac_vnode_check_setacl
 argument_list|(
 name|td
 operator|->
@@ -472,7 +472,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_getacl
+name|mac_vnode_check_getacl
 argument_list|(
 name|td
 operator|->
@@ -641,7 +641,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_deleteacl
+name|mac_vnode_check_deleteacl
 argument_list|(
 name|td
 operator|->

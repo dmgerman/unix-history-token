@@ -1314,13 +1314,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-comment|/* 	 * The MAC label is shared between the connected endpoints.  As a 	 * result mac_init_pipe() and mac_create_pipe() are called once 	 * for the pair, and not on the endpoints. 	 */
-name|mac_init_pipe
+comment|/* 	 * The MAC label is shared between the connected endpoints.  As a 	 * result mac_pipe_init() and mac_pipe_create() are called once 	 * for the pair, and not on the endpoints. 	 */
+name|mac_pipe_init
 argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
-name|mac_create_pipe
+name|mac_pipe_create
 argument_list|(
 name|td
 operator|->
@@ -2526,7 +2526,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_pipe_read
+name|mac_pipe_check_read
 argument_list|(
 name|active_cred
 argument_list|,
@@ -4368,7 +4368,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_pipe_write
+name|mac_pipe_check_write
 argument_list|(
 name|active_cred
 argument_list|,
@@ -5383,7 +5383,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_pipe_ioctl
+name|mac_pipe_check_ioctl
 argument_list|(
 name|active_cred
 argument_list|,
@@ -5694,7 +5694,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_pipe_poll
+name|mac_pipe_check_poll
 argument_list|(
 name|active_cred
 argument_list|,
@@ -5998,7 +5998,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_pipe_stat
+name|mac_pipe_check_stat
 argument_list|(
 name|active_cred
 argument_list|,
@@ -6566,7 +6566,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_destroy_pipe
+name|mac_pipe_destroy
 argument_list|(
 name|pp
 argument_list|)

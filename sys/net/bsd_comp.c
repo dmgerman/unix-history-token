@@ -3694,7 +3694,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_copy_mbuf
+name|mac_mbuf_copy
 argument_list|(
 name|cmp
 argument_list|,

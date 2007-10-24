@@ -4383,7 +4383,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_kld_stat
+name|mac_kld_check_stat
 argument_list|(
 name|td
 operator|->
@@ -4531,7 +4531,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_kld_stat
+name|mac_kld_check_stat
 argument_list|(
 name|td
 operator|->
@@ -4770,7 +4770,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_kld_stat
+name|mac_kld_check_stat
 argument_list|(
 name|td
 operator|->
@@ -4995,7 +4995,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_kld_stat
+name|mac_kld_check_stat
 argument_list|(
 name|td
 operator|->
@@ -5133,7 +5133,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_kld_stat
+name|mac_kld_check_stat
 argument_list|(
 name|td
 operator|->
@@ -9304,7 +9304,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_kld_stat
+name|mac_kld_check_stat
 argument_list|(
 name|req
 operator|->

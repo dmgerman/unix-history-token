@@ -5845,7 +5845,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_system_sysctl
+name|mac_system_check_sysctl
 argument_list|(
 name|req
 operator|->

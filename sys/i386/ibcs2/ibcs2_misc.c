@@ -1786,7 +1786,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_readdir
+name|mac_vnode_check_readdir
 argument_list|(
 name|td
 operator|->
@@ -2609,7 +2609,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_readdir
+name|mac_vnode_check_readdir
 argument_list|(
 name|td
 operator|->

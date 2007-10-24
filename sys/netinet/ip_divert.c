@@ -1410,7 +1410,7 @@ comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_mbuf_from_inpcb
+name|mac_inpcb_create_mbuf
 argument_list|(
 name|inp
 argument_list|,
@@ -1635,7 +1635,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|mac_create_mbuf_from_socket
+name|mac_socket_create_mbuf
 argument_list|(
 name|so
 argument_list|,

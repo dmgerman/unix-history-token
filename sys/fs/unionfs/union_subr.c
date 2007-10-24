@@ -4482,7 +4482,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|mac_check_vnode_open
+name|mac_vnode_check_open
 argument_list|(
 name|cred
 argument_list|,
@@ -4584,7 +4584,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_readdir
+name|mac_vnode_check_readdir
 argument_list|(
 name|td
 operator|->

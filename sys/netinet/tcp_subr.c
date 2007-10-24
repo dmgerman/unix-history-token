@@ -2561,7 +2561,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|mac_create_mbuf_from_inpcb
+name|mac_inpcb_create_mbuf
 argument_list|(
 name|inp
 argument_list|,
@@ -2572,7 +2572,7 @@ block|}
 else|else
 block|{
 comment|/* 		 * Packet is not associated with a socket, so possibly 		 * update the label in place. 		 */
-name|mac_reflect_mbuf_tcp
+name|mac_netinet_tcp_reply
 argument_list|(
 name|m
 argument_list|)

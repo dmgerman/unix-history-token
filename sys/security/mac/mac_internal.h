@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002, 2006 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2004 Networks Associates Technology, Inc.  * Copyright (c) 2006 nCircle Network Security, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was developed by Robert N. M. Watson for the TrustedBSD  * Project under contract to nCircle Network Security, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999-2002, 2006 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2004 Networks Associates Technology, Inc.  * Copyright (c) 2006 nCircle Network Security, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was developed by Robert N. M. Watson for the TrustedBSD  * Project under contract to nCircle Network Security, Inc.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -371,7 +371,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_cred_relabel
+name|mac_cred_check_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -388,7 +388,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_externalize_cred_label
+name|mac_cred_externalize_label
 parameter_list|(
 name|struct
 name|label
@@ -411,7 +411,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_internalize_cred_label
+name|mac_cred_internalize_label
 parameter_list|(
 name|struct
 name|label
@@ -427,7 +427,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_relabel_cred
+name|mac_cred_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -458,7 +458,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_copy_pipe_label
+name|mac_pipe_copy_label
 parameter_list|(
 name|struct
 name|label
@@ -475,7 +475,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_externalize_pipe_label
+name|mac_pipe_externalize_label
 parameter_list|(
 name|struct
 name|label
@@ -498,7 +498,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_internalize_pipe_label
+name|mac_pipe_internalize_label
 parameter_list|(
 name|struct
 name|label
@@ -536,7 +536,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_copy_socket_label
+name|mac_socket_copy_label
 parameter_list|(
 name|struct
 name|label
@@ -553,7 +553,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_externalize_socket_label
+name|mac_socket_externalize_label
 parameter_list|(
 name|struct
 name|label
@@ -576,7 +576,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_internalize_socket_label
+name|mac_socket_internalize_label
 parameter_list|(
 name|struct
 name|label
@@ -592,7 +592,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_externalize_vnode_label
+name|mac_vnode_externalize_label
 parameter_list|(
 name|struct
 name|label
@@ -615,7 +615,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_internalize_vnode_label
+name|mac_vnode_internalize_label
 parameter_list|(
 name|struct
 name|label
@@ -631,7 +631,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_check_vnode_mmap_downgrade
+name|mac_vnode_check_mmap_downgrade
 parameter_list|(
 name|struct
 name|ucred
@@ -746,7 +746,7 @@ name|outbuflen
 parameter_list|)
 value|do {							\ 	int claimed, first, ignorenotfound, savedlen;			\ 	char *element_name, *element_temp;				\ 	struct sbuf sb;							\ 									\ 	error = 0;							\ 	first = 1;							\ 	sbuf_new(&sb, outbuf, outbuflen, SBUF_FIXEDLEN);		\ 	element_temp = elementlist;					\ 	while ((element_name = strsep(&element_temp, ",")) != NULL) {	\ 		if (element_name[0] == '?') {				\ 			element_name++;					\ 			ignorenotfound = 1;				\ 		 } else							\ 			ignorenotfound = 0;				\ 		savedlen = sbuf_len(&sb);				\ 		if (first)						\ 			error = sbuf_printf(&sb, "%s/", element_name);	\ 		else							\ 			error = sbuf_printf(&sb, ",%s/", element_name);	\ 		if (error == -1) {					\ 			error = EINVAL;
 comment|/* XXX: E2BIG? */
-value|\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_CHECK(externalize_ ## type ## _label, label,	\ 		    element_name,&sb,&claimed);			\ 		if (error)						\ 			break;						\ 		if (claimed == 0&& ignorenotfound) {			\
+value|\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_CHECK(type ## _externalize_label, label,		\ 		    element_name,&sb,&claimed);			\ 		if (error)						\ 			break;						\ 		if (claimed == 0&& ignorenotfound) {			\
 comment|/* Revert last label name. */
 value|\ 			sbuf_setpos(&sb, savedlen);			\ 		} else if (claimed != 1) {				\ 			error = EINVAL;
 comment|/* XXX: ENOLABEL? */
@@ -768,7 +768,7 @@ name|label
 parameter_list|,
 name|instring
 parameter_list|)
-value|do {			\ 	char *element, *element_name, *element_data;			\ 	int claimed;							\ 									\ 	error = 0;							\ 	element = instring;						\ 	while ((element_name = strsep(&element, ",")) != NULL) {	\ 		element_data = element_name;				\ 		element_name = strsep(&element_data, "/");		\ 		if (element_data == NULL) {				\ 			error = EINVAL;					\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_CHECK(internalize_ ## type ## _label, label,	\ 		    element_name, element_data,&claimed);		\ 		if (error)						\ 			break;						\ 		if (claimed != 1) {					\
+value|do {			\ 	char *element, *element_name, *element_data;			\ 	int claimed;							\ 									\ 	error = 0;							\ 	element = instring;						\ 	while ((element_name = strsep(&element, ",")) != NULL) {	\ 		element_data = element_name;				\ 		element_name = strsep(&element_data, "/");		\ 		if (element_data == NULL) {				\ 			error = EINVAL;					\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_CHECK(type ## _internalize_label, label,		\ 		    element_name, element_data,&claimed);		\ 		if (error)						\ 			break;						\ 		if (claimed != 1) {					\
 comment|/* XXXMAC: Another error here? */
 value|\ 			error = EINVAL;					\ 			break;						\ 		}							\ 	}								\ } while (0)
 end_define

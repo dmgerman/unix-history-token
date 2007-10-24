@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2005 SPARTA, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003-2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -94,7 +94,7 @@ specifier|static
 name|struct
 name|label
 modifier|*
-name|mac_posix_sem_label_alloc
+name|mac_posixsem_label_alloc
 parameter_list|(
 name|void
 parameter_list|)
@@ -113,7 +113,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|init_posix_sem_label
+name|posixsem_init_label
 argument_list|,
 name|label
 argument_list|)
@@ -128,7 +128,7 @@ end_function
 
 begin_function
 name|void
-name|mac_init_posix_sem
+name|mac_posixsem_init
 parameter_list|(
 name|struct
 name|ksem
@@ -140,7 +140,7 @@ name|ks
 operator|->
 name|ks_label
 operator|=
-name|mac_posix_sem_label_alloc
+name|mac_posixsem_label_alloc
 argument_list|()
 expr_stmt|;
 block|}
@@ -149,7 +149,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_posix_sem_label_free
+name|mac_posixsem_label_free
 parameter_list|(
 name|struct
 name|label
@@ -159,7 +159,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_posix_sem_label
+name|posixsem_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -169,7 +169,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_posix_sem
+name|mac_posixsem_destroy
 parameter_list|(
 name|struct
 name|ksem
@@ -177,7 +177,7 @@ modifier|*
 name|ks
 parameter_list|)
 block|{
-name|mac_posix_sem_label_free
+name|mac_posixsem_label_free
 argument_list|(
 name|ks
 operator|->
@@ -195,7 +195,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_posix_sem
+name|mac_posixsem_create
 parameter_list|(
 name|struct
 name|ucred
@@ -210,7 +210,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|create_posix_sem
+name|posixsem_create
 argument_list|,
 name|cred
 argument_list|,
@@ -226,7 +226,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_posix_sem_destroy
+name|mac_posixsem_check_destroy
 parameter_list|(
 name|struct
 name|ucred
@@ -244,46 +244,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_posix_sem_destroy
-argument_list|,
-name|cred
-argument_list|,
-name|ks
-argument_list|,
-name|ks
-operator|->
-name|ks_label
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|mac_check_posix_sem_open
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|,
-name|struct
-name|ksem
-modifier|*
-name|ks
-parameter_list|)
-block|{
-name|int
-name|error
-decl_stmt|;
-name|MAC_CHECK
-argument_list|(
-name|check_posix_sem_open
+name|posixsem_check_destroy
 argument_list|,
 name|cred
 argument_list|,
@@ -304,7 +265,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_posix_sem_getvalue
+name|mac_posixsem_check_open
 parameter_list|(
 name|struct
 name|ucred
@@ -322,7 +283,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_posix_sem_getvalue
+name|posixsem_check_open
 argument_list|,
 name|cred
 argument_list|,
@@ -343,7 +304,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_posix_sem_post
+name|mac_posixsem_check_getvalue
 parameter_list|(
 name|struct
 name|ucred
@@ -361,7 +322,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_posix_sem_post
+name|posixsem_check_getvalue
 argument_list|,
 name|cred
 argument_list|,
@@ -382,7 +343,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_posix_sem_unlink
+name|mac_posixsem_check_post
 parameter_list|(
 name|struct
 name|ucred
@@ -400,7 +361,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_posix_sem_unlink
+name|posixsem_check_post
 argument_list|,
 name|cred
 argument_list|,
@@ -421,7 +382,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_posix_sem_wait
+name|mac_posixsem_check_unlink
 parameter_list|(
 name|struct
 name|ucred
@@ -439,7 +400,46 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_posix_sem_wait
+name|posixsem_check_unlink
+argument_list|,
+name|cred
+argument_list|,
+name|ks
+argument_list|,
+name|ks
+operator|->
+name|ks_label
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|mac_posixsem_check_wait
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|ksem
+modifier|*
+name|ks
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|MAC_CHECK
+argument_list|(
+name|posixsem_check_wait
 argument_list|,
 name|cred
 argument_list|,

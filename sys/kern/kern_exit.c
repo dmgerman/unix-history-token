@@ -3008,7 +3008,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_destroy_proc
+name|mac_proc_destroy
 argument_list|(
 name|p
 argument_list|)

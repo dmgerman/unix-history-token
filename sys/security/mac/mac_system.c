@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2007 Robert N. M. Watson  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Portions of this software were developed by Robert Watson for the  * TrustedBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * Copyright (c) 2007 Robert N. M. Watson  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Portions of this software were developed by Robert Watson for the  * TrustedBSD Project.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -101,7 +101,7 @@ end_include
 
 begin_function
 name|int
-name|mac_check_kenv_dump
+name|mac_kenv_check_dump
 parameter_list|(
 name|struct
 name|ucred
@@ -114,7 +114,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_kenv_dump
+name|kenv_check_dump
 argument_list|,
 name|cred
 argument_list|)
@@ -129,7 +129,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_kenv_get
+name|mac_kenv_check_get
 parameter_list|(
 name|struct
 name|ucred
@@ -146,7 +146,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_kenv_get
+name|kenv_check_get
 argument_list|,
 name|cred
 argument_list|,
@@ -163,7 +163,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_kenv_set
+name|mac_kenv_check_set
 parameter_list|(
 name|struct
 name|ucred
@@ -184,7 +184,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_kenv_set
+name|kenv_check_set
 argument_list|,
 name|cred
 argument_list|,
@@ -203,7 +203,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_kenv_unset
+name|mac_kenv_check_unset
 parameter_list|(
 name|struct
 name|ucred
@@ -220,7 +220,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_kenv_unset
+name|kenv_check_unset
 argument_list|,
 name|cred
 argument_list|,
@@ -237,7 +237,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_kld_load
+name|mac_kld_check_load
 parameter_list|(
 name|struct
 name|ucred
@@ -257,12 +257,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_kld_load"
+literal|"mac_kld_check_load"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_kld_load
+name|kld_check_load
 argument_list|,
 name|cred
 argument_list|,
@@ -283,7 +283,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_kld_stat
+name|mac_kld_check_stat
 parameter_list|(
 name|struct
 name|ucred
@@ -296,7 +296,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_kld_stat
+name|kld_check_stat
 argument_list|,
 name|cred
 argument_list|)
@@ -311,7 +311,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_system_acct
+name|mac_system_check_acct
 parameter_list|(
 name|struct
 name|ucred
@@ -338,13 +338,13 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_system_acct"
+literal|"mac_system_check_acct"
 argument_list|)
 expr_stmt|;
 block|}
 name|MAC_CHECK
 argument_list|(
-name|check_system_acct
+name|system_check_acct
 argument_list|,
 name|cred
 argument_list|,
@@ -371,7 +371,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_system_reboot
+name|mac_system_check_reboot
 parameter_list|(
 name|struct
 name|ucred
@@ -387,7 +387,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_system_reboot
+name|system_check_reboot
 argument_list|,
 name|cred
 argument_list|,
@@ -404,7 +404,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_system_swapon
+name|mac_system_check_swapon
 parameter_list|(
 name|struct
 name|ucred
@@ -424,12 +424,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_system_swapon"
+literal|"mac_system_check_swapon"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_system_swapon
+name|system_check_swapon
 argument_list|,
 name|cred
 argument_list|,
@@ -450,7 +450,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_system_swapoff
+name|mac_system_check_swapoff
 parameter_list|(
 name|struct
 name|ucred
@@ -470,12 +470,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_system_swapoff"
+literal|"mac_system_check_swapoff"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_system_swapoff
+name|system_check_swapoff
 argument_list|,
 name|cred
 argument_list|,
@@ -496,7 +496,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_system_sysctl
+name|mac_system_check_sysctl
 parameter_list|(
 name|struct
 name|ucred
@@ -527,7 +527,7 @@ decl_stmt|;
 comment|/* 	 * XXXMAC: We would very much like to assert the SYSCTL_LOCK here, 	 * but since it's not exported from kern_sysctl.c, we can't. 	 */
 name|MAC_CHECK
 argument_list|(
-name|check_system_sysctl
+name|system_check_sysctl
 argument_list|,
 name|cred
 argument_list|,

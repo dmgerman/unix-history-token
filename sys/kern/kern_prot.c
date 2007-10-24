@@ -2121,7 +2121,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_proc_setuid
+name|mac_proc_check_setuid
 argument_list|(
 name|p
 argument_list|,
@@ -2464,7 +2464,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_proc_seteuid
+name|mac_proc_check_seteuid
 argument_list|(
 name|p
 argument_list|,
@@ -2695,7 +2695,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_proc_setgid
+name|mac_proc_check_setgid
 argument_list|(
 name|p
 argument_list|,
@@ -3024,7 +3024,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_proc_setegid
+name|mac_proc_check_setegid
 argument_list|(
 name|p
 argument_list|,
@@ -3340,7 +3340,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_proc_setgroups
+name|mac_proc_check_setgroups
 argument_list|(
 name|p
 argument_list|,
@@ -3611,7 +3611,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_proc_setreuid
+name|mac_proc_check_setreuid
 argument_list|(
 name|p
 argument_list|,
@@ -3992,7 +3992,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_proc_setregid
+name|mac_proc_check_setregid
 argument_list|(
 name|p
 argument_list|,
@@ -4412,7 +4412,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_proc_setresuid
+name|mac_proc_check_setresuid
 argument_list|(
 name|p
 argument_list|,
@@ -4837,7 +4837,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_proc_setresgid
+name|mac_proc_check_setresgid
 argument_list|(
 name|p
 argument_list|,
@@ -6157,7 +6157,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|mac_check_cred_visible
+name|mac_cred_check_visible
 argument_list|(
 name|u1
 argument_list|,
@@ -6369,7 +6369,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|mac_check_proc_signal
+name|mac_proc_check_signal
 argument_list|(
 name|cred
 argument_list|,
@@ -6796,7 +6796,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|mac_check_proc_sched
+name|mac_proc_check_sched
 argument_list|(
 name|td
 operator|->
@@ -7063,7 +7063,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|mac_check_proc_debug
+name|mac_proc_check_debug
 argument_list|(
 name|td
 operator|->
@@ -7416,7 +7416,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_visible
+name|mac_socket_check_visible
 argument_list|(
 name|cred
 argument_list|,
@@ -7551,7 +7551,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|mac_check_proc_wait
+name|mac_proc_check_wait
 argument_list|(
 name|td
 operator|->
@@ -7646,7 +7646,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_cred
+name|mac_cred_init
 argument_list|(
 name|cr
 argument_list|)
@@ -7807,7 +7807,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_destroy_cred
+name|mac_cred_destroy
 argument_list|(
 name|cr
 argument_list|)
@@ -7961,7 +7961,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_copy_cred
+name|mac_cred_copy
 argument_list|(
 name|src
 argument_list|,

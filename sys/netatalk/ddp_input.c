@@ -1589,7 +1589,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mac_check_socket_deliver
+name|mac_socket_check_deliver
 argument_list|(
 name|ddp
 operator|->

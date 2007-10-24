@@ -3127,7 +3127,7 @@ operator|&&
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_fragment_match
+name|mac_ipq_match
 argument_list|(
 name|m
 argument_list|,
@@ -3393,7 +3393,7 @@ directive|ifdef
 name|MAC
 if|if
 condition|(
-name|mac_init_ipq
+name|mac_ipq_init
 argument_list|(
 name|fp
 argument_list|,
@@ -3418,7 +3418,7 @@ goto|goto
 name|dropfrag
 goto|;
 block|}
-name|mac_create_ipq
+name|mac_ipq_create
 argument_list|(
 name|m
 argument_list|,
@@ -3509,7 +3509,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_update_ipq
+name|mac_ipq_update
 argument_list|(
 name|m
 argument_list|,
@@ -4158,14 +4158,14 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_datagram_from_ipq
+name|mac_ipq_reassemble
 argument_list|(
 name|fp
 argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|mac_destroy_ipq
+name|mac_ipq_destroy
 argument_list|(
 name|fp
 argument_list|)

@@ -974,7 +974,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_sysv_msgmsg
+name|mac_sysvmsg_init
 argument_list|(
 operator|&
 name|msghdrs
@@ -1063,7 +1063,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_sysv_msgqueue
+name|mac_sysvmsq_init
 argument_list|(
 operator|&
 name|msqids
@@ -1194,7 +1194,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|mac_destroy_sysv_msgmsg
+name|mac_sysvmsg_destroy
 argument_list|(
 operator|&
 name|msghdrs
@@ -1218,7 +1218,7 @@ condition|;
 name|msqid
 operator|++
 control|)
-name|mac_destroy_sysv_msgqueue
+name|mac_sysvmsq_destroy
 argument_list|(
 operator|&
 name|msqids
@@ -1653,7 +1653,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_cleanup_sysv_msgmsg
+name|mac_sysvmsg_cleanup
 argument_list|(
 name|msghdr
 argument_list|)
@@ -2005,7 +2005,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_sysv_msqctl
+name|mac_sysvmsq_check_msqctl
 argument_list|(
 name|td
 operator|->
@@ -2099,7 +2099,7 @@ control|)
 block|{
 name|error
 operator|=
-name|mac_check_sysv_msgrmid
+name|mac_sysvmsq_check_msgrmid
 argument_list|(
 name|td
 operator|->
@@ -2217,7 +2217,7 @@ comment|/* Mark it as free */
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_cleanup_sysv_msgqueue
+name|mac_sysvmsq_cleanup
 argument_list|(
 name|msqkptr
 argument_list|)
@@ -2776,7 +2776,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_sysv_msqget
+name|mac_sysvmsq_check_msqget
 argument_list|(
 name|cred
 argument_list|,
@@ -3083,7 +3083,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_sysv_msgqueue
+name|mac_sysvmsq_create
 argument_list|(
 name|cred
 argument_list|,
@@ -3410,7 +3410,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_sysv_msqsnd
+name|mac_sysvmsq_check_msqsnd
 argument_list|(
 name|td
 operator|->
@@ -3937,8 +3937,8 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-comment|/* 	 * XXXMAC: Should the mac_check_sysv_msgmsq check follow here 	 * immediately?  Or, should it be checked just before the msg is 	 * enqueued in the msgq (as it is done now)? 	 */
-name|mac_create_sysv_msgmsg
+comment|/* 	 * XXXMAC: Should the mac_sysvmsq_check_msgmsq check follow here 	 * immediately?  Or, should it be checked just before the msg is 	 * enqueued in the msgq (as it is done now)? 	 */
+name|mac_sysvmsg_create
 argument_list|(
 name|td
 operator|->
@@ -4324,10 +4324,10 @@ block|}
 ifdef|#
 directive|ifdef
 name|MAC
-comment|/* 	 * Note: Since the task/thread allocates the msghdr and usually 	 * primes it with its own MAC label, for a majority of policies, it 	 * won't be necessary to check whether the msghdr has access 	 * permissions to the msgq.  The mac_check_sysv_msqsnd check would 	 * suffice in that case.  However, this hook may be required where 	 * individual policies derive a non-identical label for the msghdr 	 * from the current thread label and may want to check the msghdr 	 * enqueue permissions, along with read/write permissions to the 	 * msgq. 	 */
+comment|/* 	 * Note: Since the task/thread allocates the msghdr and usually 	 * primes it with its own MAC label, for a majority of policies, it 	 * won't be necessary to check whether the msghdr has access 	 * permissions to the msgq.  The mac_sysvmsq_check_msqsnd check would 	 * suffice in that case.  However, this hook may be required where 	 * individual policies derive a non-identical label for the msghdr 	 * from the current thread label and may want to check the msghdr 	 * enqueue permissions, along with read/write permissions to the 	 * msgq. 	 */
 name|error
 operator|=
-name|mac_check_sysv_msgmsq
+name|mac_sysvmsq_check_msgmsq
 argument_list|(
 name|td
 operator|->
@@ -4884,7 +4884,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_sysv_msqrcv
+name|mac_sysvmsq_check_msqrcv
 argument_list|(
 name|td
 operator|->
@@ -4981,7 +4981,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_sysv_msgrcv
+name|mac_sysvmsq_check_msgrcv
 argument_list|(
 name|td
 operator|->
@@ -5179,7 +5179,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_sysv_msgrcv
+name|mac_sysvmsq_check_msgrcv
 argument_list|(
 name|td
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2004 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2004 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -306,7 +306,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|init_bpfdesc_label
+name|bpfdesc_init_label
 argument_list|,
 name|label
 argument_list|)
@@ -321,7 +321,7 @@ end_function
 
 begin_function
 name|void
-name|mac_init_bpfdesc
+name|mac_bpfdesc_init
 parameter_list|(
 name|struct
 name|bpf_d
@@ -363,7 +363,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|init_ifnet_label
+name|ifnet_init_label
 argument_list|,
 name|label
 argument_list|)
@@ -378,7 +378,7 @@ end_function
 
 begin_function
 name|void
-name|mac_init_ifnet
+name|mac_ifnet_init
 parameter_list|(
 name|struct
 name|ifnet
@@ -398,7 +398,7 @@ end_function
 
 begin_function
 name|int
-name|mac_init_mbuf_tag
+name|mac_mbuf_tag_init
 parameter_list|(
 name|struct
 name|m_tag
@@ -437,7 +437,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|init_mbuf_label
+name|mbuf_init_label
 argument_list|,
 name|label
 argument_list|,
@@ -451,7 +451,7 @@ condition|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_mbuf_label
+name|mbuf_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -472,7 +472,7 @@ end_function
 
 begin_function
 name|int
-name|mac_init_mbuf
+name|mac_mbuf_init
 parameter_list|(
 name|struct
 name|mbuf
@@ -540,7 +540,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|mac_init_mbuf_tag
+name|mac_mbuf_tag_init
 argument_list|(
 name|tag
 argument_list|,
@@ -591,7 +591,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_bpfdesc_label
+name|bpfdesc_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -606,7 +606,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_bpfdesc
+name|mac_bpfdesc_destroy
 parameter_list|(
 name|struct
 name|bpf_d
@@ -643,7 +643,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_ifnet_label
+name|ifnet_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -658,7 +658,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_ifnet
+name|mac_ifnet_destroy
 parameter_list|(
 name|struct
 name|ifnet
@@ -684,7 +684,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_mbuf_tag
+name|mac_mbuf_tag_destroy
 parameter_list|(
 name|struct
 name|m_tag
@@ -712,7 +712,7 @@ operator|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|destroy_mbuf_label
+name|mbuf_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -726,12 +726,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mac_copy_mbuf_tag is called when an mbuf header is duplicated, in which  * case the labels must also be duplicated.  */
+comment|/*  * mac_mbuf_tag_copy is called when an mbuf header is duplicated, in which  * case the labels must also be duplicated.  */
 end_comment
 
 begin_function
 name|void
-name|mac_copy_mbuf_tag
+name|mac_mbuf_tag_copy
 parameter_list|(
 name|struct
 name|m_tag
@@ -778,10 +778,10 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-comment|/* 	 * mac_init_mbuf_tag() is called on the target tag in m_tag_copy(), 	 * so we don't need to call it here. 	 */
+comment|/* 	 * mac_mbuf_tag_init() is called on the target tag in m_tag_copy(), 	 * so we don't need to call it here. 	 */
 name|MAC_PERFORM
 argument_list|(
-name|copy_mbuf_label
+name|mbuf_copy_label
 argument_list|,
 name|src_label
 argument_list|,
@@ -793,7 +793,7 @@ end_function
 
 begin_function
 name|void
-name|mac_copy_mbuf
+name|mac_mbuf_copy
 parameter_list|(
 name|struct
 name|mbuf
@@ -830,7 +830,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|copy_mbuf_label
+name|mbuf_copy_label
 argument_list|,
 name|src_label
 argument_list|,
@@ -843,7 +843,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_copy_ifnet_label
+name|mac_ifnet_copy_label
 parameter_list|(
 name|struct
 name|label
@@ -858,7 +858,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|copy_ifnet_label
+name|ifnet_copy_label
 argument_list|,
 name|src
 argument_list|,
@@ -871,7 +871,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_externalize_ifnet_label
+name|mac_ifnet_externalize_label
 parameter_list|(
 name|struct
 name|label
@@ -917,7 +917,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_internalize_ifnet_label
+name|mac_ifnet_internalize_label
 parameter_list|(
 name|struct
 name|label
@@ -951,7 +951,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_ifnet
+name|mac_ifnet_create
 parameter_list|(
 name|struct
 name|ifnet
@@ -966,7 +966,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|create_ifnet
+name|ifnet_create
 argument_list|,
 name|ifp
 argument_list|,
@@ -985,7 +985,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_bpfdesc
+name|mac_bpfdesc_create
 parameter_list|(
 name|struct
 name|ucred
@@ -1000,7 +1000,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|create_bpfdesc
+name|bpfdesc_create
 argument_list|,
 name|cred
 argument_list|,
@@ -1016,7 +1016,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_mbuf_from_bpfdesc
+name|mac_bpfdesc_create_mbuf
 parameter_list|(
 name|struct
 name|bpf_d
@@ -1048,7 +1048,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|create_mbuf_from_bpfdesc
+name|bpfdesc_create_mbuf
 argument_list|,
 name|d
 argument_list|,
@@ -1121,7 +1121,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_mbuf_from_ifnet
+name|mac_ifnet_create_mbuf
 parameter_list|(
 name|struct
 name|ifnet
@@ -1153,7 +1153,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|create_mbuf_from_ifnet
+name|ifnet_create_mbuf
 argument_list|,
 name|ifp
 argument_list|,
@@ -1176,7 +1176,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_mbuf_multicast_encap
+name|mac_mbuf_create_multicast_encap
 parameter_list|(
 name|struct
 name|mbuf
@@ -1223,7 +1223,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|create_mbuf_multicast_encap
+name|mbuf_create_multicast_encap
 argument_list|,
 name|m
 argument_list|,
@@ -1250,7 +1250,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_mbuf_netlayer
+name|mac_mbuf_create_netlayer
 parameter_list|(
 name|struct
 name|mbuf
@@ -1287,7 +1287,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|create_mbuf_netlayer
+name|mbuf_create_netlayer
 argument_list|,
 name|m
 argument_list|,
@@ -1303,7 +1303,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_bpfdesc_receive
+name|mac_bpfdesc_check_receive
 parameter_list|(
 name|struct
 name|bpf_d
@@ -1331,7 +1331,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_bpfdesc_receive
+name|bpfdesc_check_receive
 argument_list|,
 name|d
 argument_list|,
@@ -1361,7 +1361,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_ifnet_transmit
+name|mac_ifnet_check_transmit
 parameter_list|(
 name|struct
 name|ifnet
@@ -1401,7 +1401,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_ifnet_transmit
+name|ifnet_check_transmit
 argument_list|,
 name|ifp
 argument_list|,
@@ -1429,7 +1429,7 @@ end_function
 
 begin_function
 name|int
-name|mac_ioctl_ifnet_get
+name|mac_ifnet_ioctl_get
 parameter_list|(
 name|struct
 name|ucred
@@ -1584,7 +1584,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|mac_copy_ifnet_label
+name|mac_ifnet_copy_label
 argument_list|(
 name|ifp
 operator|->
@@ -1600,7 +1600,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_externalize_ifnet_label
+name|mac_ifnet_externalize_label
 argument_list|(
 name|intlabel
 argument_list|,
@@ -1666,7 +1666,7 @@ end_function
 
 begin_function
 name|int
-name|mac_ioctl_ifnet_set
+name|mac_ifnet_ioctl_set
 parameter_list|(
 name|struct
 name|ucred
@@ -1800,7 +1800,7 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|mac_internalize_ifnet_label
+name|mac_ifnet_internalize_label
 argument_list|(
 name|intlabel
 argument_list|,
@@ -1865,7 +1865,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_ifnet_relabel
+name|ifnet_check_relabel
 argument_list|,
 name|cred
 argument_list|,
@@ -1901,7 +1901,7 @@ return|;
 block|}
 name|MAC_PERFORM
 argument_list|(
-name|relabel_ifnet
+name|ifnet_relabel
 argument_list|,
 name|cred
 argument_list|,

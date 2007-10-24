@@ -1260,7 +1260,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_cleanup_sysv_shm
+name|mac_sysvshm_cleanup
 argument_list|(
 name|shmseg
 argument_list|)
@@ -1618,7 +1618,7 @@ index|]
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_sysv_shmdt
+name|mac_sysvshm_check_shmdt
 argument_list|(
 name|td
 operator|->
@@ -1922,7 +1922,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_sysv_shmat
+name|mac_sysvshm_check_shmat
 argument_list|(
 name|td
 operator|->
@@ -2545,7 +2545,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_sysv_shmctl
+name|mac_sysvshm_check_shmctl
 argument_list|(
 name|td
 operator|->
@@ -3002,7 +3002,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_sysv_shmctl
+name|mac_sysvshm_check_shmctl
 argument_list|(
 name|td
 operator|->
@@ -3642,7 +3642,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_sysv_shmget
+name|mac_sysvshm_check_shmget
 argument_list|(
 name|td
 operator|->
@@ -4161,7 +4161,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_sysv_shm
+name|mac_sysvshm_create
 argument_list|(
 name|cred
 argument_list|,
@@ -4905,7 +4905,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_sysv_shm
+name|mac_sysvshm_init
 argument_list|(
 operator|&
 name|shmsegs
@@ -5109,7 +5109,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_sysv_shm
+name|mac_sysvshm_init
 argument_list|(
 operator|&
 name|shmsegs
@@ -5187,7 +5187,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|mac_destroy_sysv_shm
+name|mac_sysvshm_destroy
 argument_list|(
 operator|&
 name|shmsegs

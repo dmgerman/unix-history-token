@@ -980,7 +980,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_proc
+name|mac_proc_init
 argument_list|(
 name|newproc
 argument_list|)
@@ -2807,7 +2807,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_destroy_proc
+name|mac_proc_destroy
 argument_list|(
 name|newproc
 argument_list|)

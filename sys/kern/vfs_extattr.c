@@ -671,7 +671,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_setextattr
+name|mac_vnode_check_setextattr
 argument_list|(
 name|td
 operator|->
@@ -1473,7 +1473,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_getextattr
+name|mac_vnode_check_getextattr
 argument_list|(
 name|td
 operator|->
@@ -2184,7 +2184,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_deleteextattr
+name|mac_vnode_check_deleteextattr
 argument_list|(
 name|td
 operator|->
@@ -2965,7 +2965,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_listextattr
+name|mac_vnode_check_listextattr
 argument_list|(
 name|td
 operator|->

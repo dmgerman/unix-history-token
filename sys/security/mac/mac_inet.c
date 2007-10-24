@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2004 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2004 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -194,7 +194,7 @@ operator|)
 return|;
 name|MAC_CHECK
 argument_list|(
-name|init_inpcb_label
+name|inpcb_init_label
 argument_list|,
 name|label
 argument_list|,
@@ -208,7 +208,7 @@ condition|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_inpcb_label
+name|inpcb_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -234,7 +234,7 @@ end_function
 
 begin_function
 name|int
-name|mac_init_inpcb
+name|mac_inpcb_init
 parameter_list|(
 name|struct
 name|inpcb
@@ -314,7 +314,7 @@ operator|)
 return|;
 name|MAC_CHECK
 argument_list|(
-name|init_ipq_label
+name|ipq_init_label
 argument_list|,
 name|label
 argument_list|,
@@ -328,7 +328,7 @@ condition|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_ipq_label
+name|ipq_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -354,7 +354,7 @@ end_function
 
 begin_function
 name|int
-name|mac_init_ipq
+name|mac_ipq_init
 parameter_list|(
 name|struct
 name|ipq
@@ -408,7 +408,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_inpcb_label
+name|inpcb_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -423,7 +423,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_inpcb
+name|mac_inpcb_destroy
 parameter_list|(
 name|struct
 name|inpcb
@@ -460,7 +460,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_ipq_label
+name|ipq_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -475,7 +475,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_ipq
+name|mac_ipq_destroy
 parameter_list|(
 name|struct
 name|ipq
@@ -501,7 +501,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_inpcb_from_socket
+name|mac_inpcb_create
 parameter_list|(
 name|struct
 name|socket
@@ -516,7 +516,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|create_inpcb_from_socket
+name|inpcb_create
 argument_list|,
 name|so
 argument_list|,
@@ -536,7 +536,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_datagram_from_ipq
+name|mac_ipq_reassemble
 parameter_list|(
 name|struct
 name|ipq
@@ -563,7 +563,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|create_datagram_from_ipq
+name|ipq_reassemble
 argument_list|,
 name|ipq
 argument_list|,
@@ -581,7 +581,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_fragment
+name|mac_netinet_fragment
 parameter_list|(
 name|struct
 name|mbuf
@@ -618,7 +618,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|create_fragment
+name|netinet_fragment
 argument_list|,
 name|m
 argument_list|,
@@ -634,7 +634,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_ipq
+name|mac_ipq_create
 parameter_list|(
 name|struct
 name|mbuf
@@ -661,7 +661,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|create_ipq
+name|ipq_create
 argument_list|,
 name|m
 argument_list|,
@@ -679,7 +679,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_mbuf_from_inpcb
+name|mac_inpcb_create_mbuf
 parameter_list|(
 name|struct
 name|inpcb
@@ -711,7 +711,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|create_mbuf_from_inpcb
+name|inpcb_create_mbuf
 argument_list|,
 name|inp
 argument_list|,
@@ -729,7 +729,7 @@ end_function
 
 begin_function
 name|int
-name|mac_fragment_match
+name|mac_ipq_match
 parameter_list|(
 name|struct
 name|mbuf
@@ -763,7 +763,7 @@ literal|1
 expr_stmt|;
 name|MAC_BOOLEAN
 argument_list|(
-name|fragment_match
+name|ipq_match
 argument_list|,
 operator|&&
 argument_list|,
@@ -788,7 +788,7 @@ end_function
 
 begin_function
 name|void
-name|mac_reflect_mbuf_icmp
+name|mac_netinet_icmp_reply
 parameter_list|(
 name|struct
 name|mbuf
@@ -810,7 +810,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|reflect_mbuf_icmp
+name|netinet_icmp_reply
 argument_list|,
 name|m
 argument_list|,
@@ -822,7 +822,7 @@ end_function
 
 begin_function
 name|void
-name|mac_reflect_mbuf_tcp
+name|mac_netinet_tcp_reply
 parameter_list|(
 name|struct
 name|mbuf
@@ -844,7 +844,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|reflect_mbuf_tcp
+name|netinet_tcp_reply
 argument_list|,
 name|m
 argument_list|,
@@ -856,7 +856,7 @@ end_function
 
 begin_function
 name|void
-name|mac_update_ipq
+name|mac_ipq_update
 parameter_list|(
 name|struct
 name|mbuf
@@ -883,7 +883,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|update_ipq
+name|ipq_update
 argument_list|,
 name|m
 argument_list|,
@@ -901,7 +901,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_inpcb_deliver
+name|mac_inpcb_check_deliver
 parameter_list|(
 name|struct
 name|inpcb
@@ -936,7 +936,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_inpcb_deliver
+name|inpcb_check_deliver
 argument_list|,
 name|inp
 argument_list|,
@@ -1004,7 +1004,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_mbuf_from_firewall
+name|mac_mbuf_create_from_firewall
 parameter_list|(
 name|struct
 name|mbuf
@@ -1031,7 +1031,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|create_mbuf_from_firewall
+name|mbuf_create_from_firewall
 argument_list|,
 name|m
 argument_list|,

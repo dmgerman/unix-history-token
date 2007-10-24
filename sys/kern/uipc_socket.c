@@ -939,7 +939,7 @@ directive|ifdef
 name|MAC
 if|if
 condition|(
-name|mac_init_socket
+name|mac_socket_init
 argument_list|(
 name|so
 argument_list|,
@@ -1200,7 +1200,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_destroy_socket
+name|mac_socket_destroy
 argument_list|(
 name|so
 argument_list|)
@@ -1468,7 +1468,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_socket
+name|mac_socket_create
 argument_list|(
 name|cred
 argument_list|,
@@ -1820,7 +1820,7 @@ argument_list|(
 name|head
 argument_list|)
 expr_stmt|;
-name|mac_create_socket_from_socket
+name|mac_socket_newconn
 argument_list|(
 name|head
 argument_list|,

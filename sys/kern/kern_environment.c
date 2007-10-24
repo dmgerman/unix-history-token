@@ -273,7 +273,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_kenv_dump
+name|mac_kenv_check_dump
 argument_list|(
 name|td
 operator|->
@@ -575,7 +575,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_kenv_get
+name|mac_kenv_check_get
 argument_list|(
 name|td
 operator|->
@@ -754,7 +754,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_kenv_set
+name|mac_kenv_check_set
 argument_list|(
 name|td
 operator|->
@@ -796,7 +796,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_kenv_unset
+name|mac_kenv_check_unset
 argument_list|(
 name|td
 operator|->

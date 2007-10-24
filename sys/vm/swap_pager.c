@@ -6790,7 +6790,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_system_swapoff
+name|mac_system_check_swapoff
 argument_list|(
 name|td
 operator|->
@@ -8613,7 +8613,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_system_swapon
+name|mac_system_check_swapon
 argument_list|(
 name|td
 operator|->

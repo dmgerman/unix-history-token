@@ -635,7 +635,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_create
+name|mac_vnode_check_create
 argument_list|(
 name|cred
 argument_list|,
@@ -986,7 +986,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_open
+name|mac_vnode_check_open
 argument_list|(
 name|cred
 argument_list|,
@@ -1731,7 +1731,7 @@ name|UIO_READ
 condition|)
 name|error
 operator|=
-name|mac_check_vnode_read
+name|mac_vnode_check_read
 argument_list|(
 name|active_cred
 argument_list|,
@@ -1743,7 +1743,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-name|mac_check_vnode_write
+name|mac_vnode_check_write
 argument_list|(
 name|active_cred
 argument_list|,
@@ -2341,7 +2341,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_read
+name|mac_vnode_check_read
 argument_list|(
 name|active_cred
 argument_list|,
@@ -2730,7 +2730,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_write
+name|mac_vnode_check_write
 argument_list|(
 name|active_cred
 argument_list|,
@@ -3005,7 +3005,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_stat
+name|mac_vnode_check_stat
 argument_list|(
 name|active_cred
 argument_list|,
@@ -3636,7 +3636,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_vnode_poll
+name|mac_vnode_check_poll
 argument_list|(
 name|active_cred
 argument_list|,

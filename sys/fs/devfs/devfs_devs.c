@@ -846,7 +846,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_devfs
+name|mac_devfs_init
 argument_list|(
 name|de
 argument_list|)
@@ -1085,7 +1085,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_devfs_directory
+name|mac_devfs_create_directory
 argument_list|(
 name|dmp
 operator|->
@@ -1320,7 +1320,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_destroy_devfs
+name|mac_devfs_destroy
 argument_list|(
 name|de
 argument_list|)
@@ -2269,7 +2269,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_devfs_device
+name|mac_devfs_create_device
 argument_list|(
 name|cdp
 operator|->

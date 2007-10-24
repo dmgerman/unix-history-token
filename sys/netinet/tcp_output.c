@@ -3235,7 +3235,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_mbuf_from_inpcb
+name|mac_inpcb_create_mbuf
 argument_list|(
 name|tp
 operator|->

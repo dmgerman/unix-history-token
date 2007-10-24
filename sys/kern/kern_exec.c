@@ -1813,7 +1813,7 @@ operator|=
 name|mac_vnode_label_alloc
 argument_list|()
 expr_stmt|;
-name|mac_copy_vnode_label
+name|mac_vnode_copy_label
 argument_list|(
 name|ndp
 operator|->
@@ -2260,7 +2260,7 @@ directive|ifdef
 name|MAC
 name|will_transition
 operator|=
-name|mac_execve_will_transition
+name|mac_vnode_execve_will_transition
 argument_list|(
 name|oldcred
 argument_list|,
@@ -2484,7 +2484,7 @@ condition|(
 name|will_transition
 condition|)
 block|{
-name|mac_execve_transition
+name|mac_vnode_execve_transition
 argument_list|(
 name|oldcred
 argument_list|,
@@ -4893,7 +4893,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_exec
+name|mac_vnode_check_exec
 argument_list|(
 name|td
 operator|->

@@ -2805,7 +2805,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|mac_set_socket_peer_from_mbuf
+name|mac_socketpeer_set_from_mbuf
 argument_list|(
 name|m
 argument_list|,

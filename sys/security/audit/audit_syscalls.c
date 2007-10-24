@@ -308,7 +308,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_system_audit
+name|mac_system_check_audit
 argument_list|(
 name|td
 operator|->
@@ -456,7 +456,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_system_auditon
+name|mac_system_check_auditon
 argument_list|(
 name|td
 operator|->
@@ -1903,7 +1903,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_proc_setauid
+name|mac_proc_check_setauid
 argument_list|(
 name|oldcred
 argument_list|,
@@ -2288,7 +2288,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_proc_setaudit
+name|mac_proc_check_setaudit
 argument_list|(
 name|oldcred
 argument_list|,
@@ -2692,7 +2692,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_proc_setaudit_addr
+name|mac_proc_check_setaudit_addr
 argument_list|(
 name|oldcred
 argument_list|,
@@ -2952,7 +2952,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_system_auditctl
+name|mac_system_check_auditctl
 argument_list|(
 name|td
 operator|->

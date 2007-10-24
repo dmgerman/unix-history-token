@@ -7370,7 +7370,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_create_vnode_extattr
+name|mac_vnode_create_extattr
 argument_list|(
 name|cnp
 operator|->
@@ -11125,7 +11125,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_create_vnode_extattr
+name|mac_vnode_create_extattr
 argument_list|(
 name|cnp
 operator|->

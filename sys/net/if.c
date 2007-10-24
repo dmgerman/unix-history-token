@@ -2335,12 +2335,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_ifnet
+name|mac_ifnet_init
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|mac_create_ifnet
+name|mac_ifnet_create
 argument_list|(
 name|ifp
 argument_list|)
@@ -3619,7 +3619,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_destroy_ifnet
+name|mac_ifnet_destroy
 argument_list|(
 name|ifp
 argument_list|)
@@ -7031,7 +7031,7 @@ name|SIOCGIFMAC
 case|:
 name|error
 operator|=
-name|mac_ioctl_ifnet_get
+name|mac_ifnet_ioctl_get
 argument_list|(
 name|td
 operator|->
@@ -7428,7 +7428,7 @@ name|SIOCSIFMAC
 case|:
 name|error
 operator|=
-name|mac_ioctl_ifnet_set
+name|mac_ifnet_ioctl_set
 argument_list|(
 name|td
 operator|->

@@ -7489,7 +7489,7 @@ block|{
 comment|/* 		 * If this vnode is already allocated, and we're running 		 * multi-label, attempt to perform a label association 		 * from the extended attributes on the inode. 		 */
 name|error
 operator|=
-name|mac_associate_vnode_extattr
+name|mac_vnode_associate_extattr
 argument_list|(
 name|mp
 argument_list|,

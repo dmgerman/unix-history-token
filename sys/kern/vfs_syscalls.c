@@ -1347,7 +1347,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_mount_stat
+name|mac_mount_check_stat
 argument_list|(
 name|td
 operator|->
@@ -1794,7 +1794,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_mount_stat
+name|mac_mount_check_stat
 argument_list|(
 name|td
 operator|->
@@ -2245,7 +2245,7 @@ directive|ifdef
 name|MAC
 if|if
 condition|(
-name|mac_check_mount_stat
+name|mac_mount_check_stat
 argument_list|(
 name|td
 operator|->
@@ -4384,7 +4384,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|mac_check_vnode_chroot
+name|mac_vnode_check_chroot
 argument_list|(
 name|td
 operator|->
@@ -4531,7 +4531,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_chdir
+name|mac_vnode_check_chdir
 argument_list|(
 name|td
 operator|->
@@ -4575,7 +4575,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common routine for kern_chroot() and jail_attach().  The caller is  * responsible for invoking priv_check() and mac_check_chroot() to authorize  * this operation.  */
+comment|/*  * Common routine for kern_chroot() and jail_attach().  The caller is  * responsible for invoking priv_check() and mac_vnode_check_chroot() to  * authorize this operation.  */
 end_comment
 
 begin_function
@@ -5465,7 +5465,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_write
+name|mac_vnode_check_write
 argument_list|(
 name|td
 operator|->
@@ -6191,7 +6191,7 @@ name|whiteout
 condition|)
 name|error
 operator|=
-name|mac_check_vnode_create
+name|mac_vnode_check_create
 argument_list|(
 name|td
 operator|->
@@ -6678,7 +6678,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_create
+name|mac_vnode_check_create
 argument_list|(
 name|td
 operator|->
@@ -7418,7 +7418,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_link
+name|mac_vnode_check_link
 argument_list|(
 name|td
 operator|->
@@ -7911,7 +7911,7 @@ name|VLNK
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_vnode_create
+name|mac_vnode_check_create
 argument_list|(
 name|td
 operator|->
@@ -8648,7 +8648,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_unlink
+name|mac_vnode_check_unlink
 argument_list|(
 name|td
 operator|->
@@ -9459,7 +9459,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_access
+name|mac_vnode_check_access
 argument_list|(
 name|cred
 argument_list|,
@@ -11773,7 +11773,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_readlink
+name|mac_vnode_check_readlink
 argument_list|(
 name|td
 operator|->
@@ -12062,7 +12062,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_setflags
+name|mac_vnode_check_setflags
 argument_list|(
 name|td
 operator|->
@@ -12722,7 +12722,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_setmode
+name|mac_vnode_check_setmode
 argument_list|(
 name|td
 operator|->
@@ -13456,7 +13456,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_setowner
+name|mac_vnode_check_setowner
 argument_list|(
 name|td
 operator|->
@@ -14583,7 +14583,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_setutimes
+name|mac_vnode_check_setutimes
 argument_list|(
 name|td
 operator|->
@@ -15651,7 +15651,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|mac_check_vnode_write
+name|mac_vnode_check_write
 argument_list|(
 name|td
 operator|->
@@ -15999,7 +15999,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|mac_check_vnode_write
+name|mac_vnode_check_write
 argument_list|(
 name|td
 operator|->
@@ -16856,7 +16856,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_rename_from
+name|mac_vnode_check_rename_from
 argument_list|(
 name|td
 operator|->
@@ -17175,7 +17175,7 @@ name|MAC
 else|else
 name|error
 operator|=
-name|mac_check_vnode_rename_to
+name|mac_vnode_check_rename_to
 argument_list|(
 name|td
 operator|->
@@ -17795,7 +17795,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_create
+name|mac_vnode_check_create
 argument_list|(
 name|td
 operator|->
@@ -18132,7 +18132,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_unlink
+name|mac_vnode_check_unlink
 argument_list|(
 name|td
 operator|->
@@ -18653,7 +18653,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_readdir
+name|mac_vnode_check_readdir
 argument_list|(
 name|td
 operator|->
@@ -19432,7 +19432,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_readdir
+name|mac_vnode_check_readdir
 argument_list|(
 name|td
 operator|->
@@ -20014,7 +20014,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_revoke
+name|mac_vnode_check_revoke
 argument_list|(
 name|td
 operator|->
@@ -21084,7 +21084,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_open
+name|mac_vnode_check_open
 argument_list|(
 name|td
 operator|->
@@ -21210,7 +21210,7 @@ name|MAC
 comment|/* 		 * We don't yet have fp->f_cred, so use td->td_ucred, which 		 * should be right. 		 */
 name|error
 operator|=
-name|mac_check_vnode_write
+name|mac_vnode_check_write
 argument_list|(
 name|td
 operator|->
@@ -22138,7 +22138,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_mount_stat
+name|mac_mount_check_stat
 argument_list|(
 name|td
 operator|->

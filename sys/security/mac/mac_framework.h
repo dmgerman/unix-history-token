@@ -256,7 +256,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|mac_init_bpfdesc
+name|mac_bpfdesc_init
 parameter_list|(
 name|struct
 name|bpf_d
@@ -267,7 +267,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_cred
+name|mac_cred_init
 parameter_list|(
 name|struct
 name|ucred
@@ -278,7 +278,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_devfs
+name|mac_devfs_init
 parameter_list|(
 name|struct
 name|devfs_dirent
@@ -289,7 +289,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_ifnet
+name|mac_ifnet_init
 parameter_list|(
 name|struct
 name|ifnet
@@ -300,7 +300,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_init_inpcb
+name|mac_inpcb_init
 parameter_list|(
 name|struct
 name|inpcb
@@ -313,7 +313,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_sysv_msgmsg
+name|mac_sysvmsg_init
 parameter_list|(
 name|struct
 name|msg
@@ -324,7 +324,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_sysv_msgqueue
+name|mac_sysvmsq_init
 parameter_list|(
 name|struct
 name|msqid_kernel
@@ -335,7 +335,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_sysv_sem
+name|mac_sysvsem_init
 parameter_list|(
 name|struct
 name|semid_kernel
@@ -346,7 +346,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_sysv_shm
+name|mac_sysvshm_init
 parameter_list|(
 name|struct
 name|shmid_kernel
@@ -357,7 +357,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_init_ipq
+name|mac_ipq_init
 parameter_list|(
 name|struct
 name|ipq
@@ -370,7 +370,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_init_socket
+name|mac_socket_init
 parameter_list|(
 name|struct
 name|socket
@@ -383,7 +383,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_pipe
+name|mac_pipe_init
 parameter_list|(
 name|struct
 name|pipepair
@@ -394,7 +394,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_posix_sem
+name|mac_posixsem_init
 parameter_list|(
 name|struct
 name|ksem
@@ -405,7 +405,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_init_mbuf
+name|mac_mbuf_init
 parameter_list|(
 name|struct
 name|mbuf
@@ -418,7 +418,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_init_mbuf_tag
+name|mac_mbuf_tag_init
 parameter_list|(
 name|struct
 name|m_tag
@@ -431,7 +431,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_mount
+name|mac_mount_init
 parameter_list|(
 name|struct
 name|mount
@@ -442,7 +442,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_proc
+name|mac_proc_init
 parameter_list|(
 name|struct
 name|proc
@@ -453,7 +453,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_vnode
+name|mac_vnode_init
 parameter_list|(
 name|struct
 name|vnode
@@ -464,7 +464,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_copy_mbuf
+name|mac_mbuf_copy
 parameter_list|(
 name|struct
 name|mbuf
@@ -479,7 +479,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_copy_mbuf_tag
+name|mac_mbuf_tag_copy
 parameter_list|(
 name|struct
 name|m_tag
@@ -494,7 +494,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_copy_vnode_label
+name|mac_vnode_copy_label
 parameter_list|(
 name|struct
 name|label
@@ -509,7 +509,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_bpfdesc
+name|mac_bpfdesc_destroy
 parameter_list|(
 name|struct
 name|bpf_d
@@ -520,7 +520,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_cred
+name|mac_cred_destroy
 parameter_list|(
 name|struct
 name|ucred
@@ -531,7 +531,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_devfs
+name|mac_devfs_destroy
 parameter_list|(
 name|struct
 name|devfs_dirent
@@ -542,7 +542,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_ifnet
+name|mac_ifnet_destroy
 parameter_list|(
 name|struct
 name|ifnet
@@ -553,7 +553,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_inpcb
+name|mac_inpcb_destroy
 parameter_list|(
 name|struct
 name|inpcb
@@ -564,7 +564,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_sysv_msgmsg
+name|mac_sysvmsg_destroy
 parameter_list|(
 name|struct
 name|msg
@@ -575,7 +575,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_sysv_msgqueue
+name|mac_sysvmsq_destroy
 parameter_list|(
 name|struct
 name|msqid_kernel
@@ -586,7 +586,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_sysv_sem
+name|mac_sysvsem_destroy
 parameter_list|(
 name|struct
 name|semid_kernel
@@ -597,7 +597,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_sysv_shm
+name|mac_sysvshm_destroy
 parameter_list|(
 name|struct
 name|shmid_kernel
@@ -608,7 +608,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_ipq
+name|mac_ipq_destroy
 parameter_list|(
 name|struct
 name|ipq
@@ -619,7 +619,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_socket
+name|mac_socket_destroy
 parameter_list|(
 name|struct
 name|socket
@@ -630,7 +630,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_pipe
+name|mac_pipe_destroy
 parameter_list|(
 name|struct
 name|pipepair
@@ -641,7 +641,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_posix_sem
+name|mac_posixsem_destroy
 parameter_list|(
 name|struct
 name|ksem
@@ -652,7 +652,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_proc
+name|mac_proc_destroy
 parameter_list|(
 name|struct
 name|proc
@@ -663,7 +663,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_mbuf_tag
+name|mac_mbuf_tag_destroy
 parameter_list|(
 name|struct
 name|m_tag
@@ -674,7 +674,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_mount
+name|mac_mount_destroy
 parameter_list|(
 name|struct
 name|mount
@@ -685,7 +685,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_vnode
+name|mac_vnode_destroy
 parameter_list|(
 name|struct
 name|vnode
@@ -744,7 +744,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|mac_associate_vnode_devfs
+name|mac_devfs_vnode_associate
 parameter_list|(
 name|struct
 name|mount
@@ -766,7 +766,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_associate_vnode_extattr
+name|mac_vnode_associate_extattr
 parameter_list|(
 name|struct
 name|mount
@@ -783,7 +783,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_associate_vnode_singlelabel
+name|mac_vnode_associate_singlelabel
 parameter_list|(
 name|struct
 name|mount
@@ -800,7 +800,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_devfs_device
+name|mac_devfs_create_device
 parameter_list|(
 name|struct
 name|ucred
@@ -827,7 +827,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_devfs_directory
+name|mac_devfs_create_directory
 parameter_list|(
 name|struct
 name|mount
@@ -851,7 +851,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_devfs_symlink
+name|mac_devfs_create_symlink
 parameter_list|(
 name|struct
 name|ucred
@@ -878,7 +878,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_create_vnode_extattr
+name|mac_vnode_create_extattr
 parameter_list|(
 name|struct
 name|ucred
@@ -910,7 +910,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_mount
+name|mac_mount_create
 parameter_list|(
 name|struct
 name|ucred
@@ -927,7 +927,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_relabel_vnode
+name|mac_vnode_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -949,7 +949,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_update_devfs
+name|mac_devfs_update
 parameter_list|(
 name|struct
 name|mount
@@ -975,7 +975,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|mac_create_mbuf_from_socket
+name|mac_socket_create_mbuf
 parameter_list|(
 name|struct
 name|socket
@@ -992,7 +992,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_socket
+name|mac_socket_create
 parameter_list|(
 name|struct
 name|ucred
@@ -1009,7 +1009,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_socket_from_socket
+name|mac_socket_newconn
 parameter_list|(
 name|struct
 name|socket
@@ -1026,7 +1026,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_set_socket_peer_from_mbuf
+name|mac_socketpeer_set_from_mbuf
 parameter_list|(
 name|struct
 name|mbuf
@@ -1043,7 +1043,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_set_socket_peer_from_socket
+name|mac_socketpeer_set_from_socket
 parameter_list|(
 name|struct
 name|socket
@@ -1060,7 +1060,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_pipe
+name|mac_pipe_create
 parameter_list|(
 name|struct
 name|ucred
@@ -1081,7 +1081,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|mac_create_sysv_msgmsg
+name|mac_sysvmsg_create
 parameter_list|(
 name|struct
 name|ucred
@@ -1103,7 +1103,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_sysv_msgqueue
+name|mac_sysvmsq_create
 parameter_list|(
 name|struct
 name|ucred
@@ -1120,7 +1120,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_sysv_sem
+name|mac_sysvsem_create
 parameter_list|(
 name|struct
 name|ucred
@@ -1137,7 +1137,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_sysv_shm
+name|mac_sysvshm_create
 parameter_list|(
 name|struct
 name|ucred
@@ -1158,7 +1158,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|mac_create_posix_sem
+name|mac_posixsem_create
 parameter_list|(
 name|struct
 name|ucred
@@ -1179,7 +1179,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|mac_create_bpfdesc
+name|mac_bpfdesc_create
 parameter_list|(
 name|struct
 name|ucred
@@ -1196,7 +1196,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_ifnet
+name|mac_ifnet_create
 parameter_list|(
 name|struct
 name|ifnet
@@ -1208,7 +1208,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_inpcb_from_socket
+name|mac_inpcb_create
 parameter_list|(
 name|struct
 name|socket
@@ -1225,7 +1225,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_ipq
+name|mac_ipq_create
 parameter_list|(
 name|struct
 name|mbuf
@@ -1242,7 +1242,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_datagram_from_ipq
+name|mac_ipq_reassemble
 parameter_list|(
 name|struct
 name|ipq
@@ -1259,7 +1259,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_fragment
+name|mac_netinet_fragment
 parameter_list|(
 name|struct
 name|mbuf
@@ -1276,7 +1276,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_mbuf_from_inpcb
+name|mac_inpcb_create_mbuf
 parameter_list|(
 name|struct
 name|inpcb
@@ -1310,7 +1310,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_mbuf_from_bpfdesc
+name|mac_bpfdesc_create_mbuf
 parameter_list|(
 name|struct
 name|bpf_d
@@ -1327,7 +1327,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_mbuf_from_ifnet
+name|mac_ifnet_create_mbuf
 parameter_list|(
 name|struct
 name|ifnet
@@ -1344,7 +1344,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_mbuf_multicast_encap
+name|mac_mbuf_create_multicast_encap
 parameter_list|(
 name|struct
 name|mbuf
@@ -1366,7 +1366,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_mbuf_netlayer
+name|mac_mbuf_create_netlayer
 parameter_list|(
 name|struct
 name|mbuf
@@ -1383,7 +1383,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_fragment_match
+name|mac_ipq_match
 parameter_list|(
 name|struct
 name|mbuf
@@ -1400,7 +1400,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_reflect_mbuf_icmp
+name|mac_netinet_icmp_reply
 parameter_list|(
 name|struct
 name|mbuf
@@ -1412,7 +1412,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_reflect_mbuf_tcp
+name|mac_netinet_tcp_reply
 parameter_list|(
 name|struct
 name|mbuf
@@ -1424,7 +1424,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_update_ipq
+name|mac_ipq_update
 parameter_list|(
 name|struct
 name|mbuf
@@ -1458,7 +1458,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_mbuf_from_firewall
+name|mac_mbuf_create_from_firewall
 parameter_list|(
 name|struct
 name|mbuf
@@ -1534,7 +1534,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|mac_copy_cred
+name|mac_cred_copy
 parameter_list|(
 name|struct
 name|ucred
@@ -1580,7 +1580,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_execve_transition
+name|mac_vnode_execve_transition
 parameter_list|(
 name|struct
 name|ucred
@@ -1612,7 +1612,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_execve_will_transition
+name|mac_vnode_execve_will_transition
 parameter_list|(
 name|struct
 name|ucred
@@ -1639,7 +1639,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_proc0
+name|mac_proc_create_swapper
 parameter_list|(
 name|struct
 name|ucred
@@ -1651,7 +1651,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_proc1
+name|mac_proc_create_init
 parameter_list|(
 name|struct
 name|ucred
@@ -1679,7 +1679,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|mac_cleanup_sysv_msgmsg
+name|mac_sysvmsg_cleanup
 parameter_list|(
 name|struct
 name|msg
@@ -1691,7 +1691,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_cleanup_sysv_msgqueue
+name|mac_sysvmsq_cleanup
 parameter_list|(
 name|struct
 name|msqid_kernel
@@ -1703,7 +1703,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_cleanup_sysv_sem
+name|mac_sysvsem_cleanup
 parameter_list|(
 name|struct
 name|semid_kernel
@@ -1715,7 +1715,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_cleanup_sysv_shm
+name|mac_sysvshm_cleanup
 parameter_list|(
 name|struct
 name|shmid_kernel
@@ -1731,7 +1731,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|mac_check_bpfdesc_receive
+name|mac_bpfdesc_check_receive
 parameter_list|(
 name|struct
 name|bpf_d
@@ -1748,7 +1748,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_cred_visible
+name|mac_cred_check_visible
 parameter_list|(
 name|struct
 name|ucred
@@ -1765,7 +1765,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_ifnet_transmit
+name|mac_ifnet_check_transmit
 parameter_list|(
 name|struct
 name|ifnet
@@ -1782,7 +1782,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_inpcb_deliver
+name|mac_inpcb_check_deliver
 parameter_list|(
 name|struct
 name|inpcb
@@ -1799,7 +1799,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysv_msgmsq
+name|mac_sysvmsq_check_msgmsq
 parameter_list|(
 name|struct
 name|ucred
@@ -1821,7 +1821,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysv_msgrcv
+name|mac_sysvmsq_check_msgrcv
 parameter_list|(
 name|struct
 name|ucred
@@ -1838,7 +1838,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysv_msgrmid
+name|mac_sysvmsq_check_msgrmid
 parameter_list|(
 name|struct
 name|ucred
@@ -1855,7 +1855,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysv_msqget
+name|mac_sysvmsq_check_msqget
 parameter_list|(
 name|struct
 name|ucred
@@ -1872,7 +1872,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysv_msqsnd
+name|mac_sysvmsq_check_msqsnd
 parameter_list|(
 name|struct
 name|ucred
@@ -1889,7 +1889,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysv_msqrcv
+name|mac_sysvmsq_check_msqrcv
 parameter_list|(
 name|struct
 name|ucred
@@ -1906,7 +1906,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysv_msqctl
+name|mac_sysvmsq_check_msqctl
 parameter_list|(
 name|struct
 name|ucred
@@ -1926,7 +1926,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysv_semctl
+name|mac_sysvsem_check_semctl
 parameter_list|(
 name|struct
 name|ucred
@@ -1946,7 +1946,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysv_semget
+name|mac_sysvsem_check_semget
 parameter_list|(
 name|struct
 name|ucred
@@ -1963,7 +1963,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysv_semop
+name|mac_sysvsem_check_semop
 parameter_list|(
 name|struct
 name|ucred
@@ -1983,7 +1983,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysv_shmat
+name|mac_sysvshm_check_shmat
 parameter_list|(
 name|struct
 name|ucred
@@ -2003,7 +2003,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysv_shmctl
+name|mac_sysvshm_check_shmctl
 parameter_list|(
 name|struct
 name|ucred
@@ -2023,7 +2023,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysv_shmdt
+name|mac_sysvshm_check_shmdt
 parameter_list|(
 name|struct
 name|ucred
@@ -2040,7 +2040,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_sysv_shmget
+name|mac_sysvshm_check_shmget
 parameter_list|(
 name|struct
 name|ucred
@@ -2060,7 +2060,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_kenv_dump
+name|mac_kenv_check_dump
 parameter_list|(
 name|struct
 name|ucred
@@ -2072,7 +2072,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_kenv_get
+name|mac_kenv_check_get
 parameter_list|(
 name|struct
 name|ucred
@@ -2088,7 +2088,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_kenv_set
+name|mac_kenv_check_set
 parameter_list|(
 name|struct
 name|ucred
@@ -2108,7 +2108,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_kenv_unset
+name|mac_kenv_check_unset
 parameter_list|(
 name|struct
 name|ucred
@@ -2124,7 +2124,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_kld_load
+name|mac_kld_check_load
 parameter_list|(
 name|struct
 name|ucred
@@ -2141,7 +2141,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_kld_stat
+name|mac_kld_check_stat
 parameter_list|(
 name|struct
 name|ucred
@@ -2153,7 +2153,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_mount_stat
+name|mac_mount_check_stat
 parameter_list|(
 name|struct
 name|ucred
@@ -2170,7 +2170,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_pipe_ioctl
+name|mac_pipe_check_ioctl
 parameter_list|(
 name|struct
 name|ucred
@@ -2195,7 +2195,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_pipe_poll
+name|mac_pipe_check_poll
 parameter_list|(
 name|struct
 name|ucred
@@ -2212,7 +2212,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_pipe_read
+name|mac_pipe_check_read
 parameter_list|(
 name|struct
 name|ucred
@@ -2229,7 +2229,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_pipe_stat
+name|mac_pipe_check_stat
 parameter_list|(
 name|struct
 name|ucred
@@ -2246,7 +2246,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_pipe_write
+name|mac_pipe_check_write
 parameter_list|(
 name|struct
 name|ucred
@@ -2263,7 +2263,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_posix_sem_destroy
+name|mac_posixsem_check_destroy
 parameter_list|(
 name|struct
 name|ucred
@@ -2280,7 +2280,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_posix_sem_getvalue
+name|mac_posixsem_check_getvalue
 parameter_list|(
 name|struct
 name|ucred
@@ -2297,7 +2297,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_posix_sem_open
+name|mac_posixsem_check_open
 parameter_list|(
 name|struct
 name|ucred
@@ -2314,7 +2314,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_posix_sem_post
+name|mac_posixsem_check_post
 parameter_list|(
 name|struct
 name|ucred
@@ -2331,7 +2331,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_posix_sem_unlink
+name|mac_posixsem_check_unlink
 parameter_list|(
 name|struct
 name|ucred
@@ -2348,7 +2348,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_posix_sem_wait
+name|mac_posixsem_check_wait
 parameter_list|(
 name|struct
 name|ucred
@@ -2365,7 +2365,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_debug
+name|mac_proc_check_debug
 parameter_list|(
 name|struct
 name|ucred
@@ -2382,7 +2382,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_sched
+name|mac_proc_check_sched
 parameter_list|(
 name|struct
 name|ucred
@@ -2399,7 +2399,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_setaudit
+name|mac_proc_check_setaudit
 parameter_list|(
 name|struct
 name|ucred
@@ -2416,7 +2416,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_setaudit_addr
+name|mac_proc_check_setaudit_addr
 parameter_list|(
 name|struct
 name|ucred
@@ -2433,7 +2433,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_setauid
+name|mac_proc_check_setauid
 parameter_list|(
 name|struct
 name|ucred
@@ -2448,7 +2448,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_setuid
+name|mac_proc_check_setuid
 parameter_list|(
 name|struct
 name|proc
@@ -2468,7 +2468,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_seteuid
+name|mac_proc_check_seteuid
 parameter_list|(
 name|struct
 name|proc
@@ -2488,7 +2488,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_setgid
+name|mac_proc_check_setgid
 parameter_list|(
 name|struct
 name|proc
@@ -2508,7 +2508,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_setegid
+name|mac_proc_check_setegid
 parameter_list|(
 name|struct
 name|proc
@@ -2528,7 +2528,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_setgroups
+name|mac_proc_check_setgroups
 parameter_list|(
 name|struct
 name|proc
@@ -2552,7 +2552,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_setreuid
+name|mac_proc_check_setreuid
 parameter_list|(
 name|struct
 name|proc
@@ -2575,7 +2575,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_setregid
+name|mac_proc_check_setregid
 parameter_list|(
 name|struct
 name|proc
@@ -2598,7 +2598,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_setresuid
+name|mac_proc_check_setresuid
 parameter_list|(
 name|struct
 name|proc
@@ -2624,7 +2624,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_setresgid
+name|mac_proc_check_setresgid
 parameter_list|(
 name|struct
 name|proc
@@ -2650,7 +2650,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_signal
+name|mac_proc_check_signal
 parameter_list|(
 name|struct
 name|ucred
@@ -2670,7 +2670,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_proc_wait
+name|mac_proc_check_wait
 parameter_list|(
 name|struct
 name|ucred
@@ -2687,7 +2687,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_socket_accept
+name|mac_socket_check_accept
 parameter_list|(
 name|struct
 name|ucred
@@ -2704,29 +2704,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_socket_bind
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|,
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-name|sa
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|mac_check_socket_connect
+name|mac_socket_check_bind
 parameter_list|(
 name|struct
 name|ucred
@@ -2748,7 +2726,29 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_socket_create
+name|mac_socket_check_connect
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mac_socket_check_create
 parameter_list|(
 name|struct
 name|ucred
@@ -2769,7 +2769,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_socket_deliver
+name|mac_socket_check_deliver
 parameter_list|(
 name|struct
 name|socket
@@ -2786,7 +2786,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_socket_listen
+name|mac_socket_check_listen
 parameter_list|(
 name|struct
 name|ucred
@@ -2803,7 +2803,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_socket_poll
+name|mac_socket_check_poll
 parameter_list|(
 name|struct
 name|ucred
@@ -2820,7 +2820,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_socket_receive
+name|mac_socket_check_receive
 parameter_list|(
 name|struct
 name|ucred
@@ -2837,7 +2837,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_socket_send
+name|mac_socket_check_send
 parameter_list|(
 name|struct
 name|ucred
@@ -2854,7 +2854,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_socket_stat
+name|mac_socket_check_stat
 parameter_list|(
 name|struct
 name|ucred
@@ -2871,7 +2871,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_socket_visible
+name|mac_socket_check_visible
 parameter_list|(
 name|struct
 name|ucred
@@ -2888,7 +2888,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_system_acct
+name|mac_system_check_acct
 parameter_list|(
 name|struct
 name|ucred
@@ -2905,7 +2905,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_system_audit
+name|mac_system_check_audit
 parameter_list|(
 name|struct
 name|ucred
@@ -2924,7 +2924,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_system_auditctl
+name|mac_system_check_auditctl
 parameter_list|(
 name|struct
 name|ucred
@@ -2941,7 +2941,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_system_auditon
+name|mac_system_check_auditon
 parameter_list|(
 name|struct
 name|ucred
@@ -2956,7 +2956,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_system_reboot
+name|mac_system_check_reboot
 parameter_list|(
 name|struct
 name|ucred
@@ -2971,7 +2971,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_system_swapon
+name|mac_system_check_swapon
 parameter_list|(
 name|struct
 name|ucred
@@ -2988,7 +2988,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_system_swapoff
+name|mac_system_check_swapoff
 parameter_list|(
 name|struct
 name|ucred
@@ -3005,7 +3005,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_system_sysctl
+name|mac_system_check_sysctl
 parameter_list|(
 name|struct
 name|ucred
@@ -3034,7 +3034,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_access
+name|mac_vnode_check_access
 parameter_list|(
 name|struct
 name|ucred
@@ -3054,7 +3054,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_chdir
+name|mac_vnode_check_chdir
 parameter_list|(
 name|struct
 name|ucred
@@ -3071,7 +3071,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_chroot
+name|mac_vnode_check_chroot
 parameter_list|(
 name|struct
 name|ucred
@@ -3088,7 +3088,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_create
+name|mac_vnode_check_create
 parameter_list|(
 name|struct
 name|ucred
@@ -3115,7 +3115,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_deleteacl
+name|mac_vnode_check_deleteacl
 parameter_list|(
 name|struct
 name|ucred
@@ -3135,7 +3135,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_deleteextattr
+name|mac_vnode_check_deleteextattr
 parameter_list|(
 name|struct
 name|ucred
@@ -3160,7 +3160,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_exec
+name|mac_vnode_check_exec
 parameter_list|(
 name|struct
 name|ucred
@@ -3182,7 +3182,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_getacl
+name|mac_vnode_check_getacl
 parameter_list|(
 name|struct
 name|ucred
@@ -3202,7 +3202,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_getextattr
+name|mac_vnode_check_getextattr
 parameter_list|(
 name|struct
 name|ucred
@@ -3232,7 +3232,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_link
+name|mac_vnode_check_link
 parameter_list|(
 name|struct
 name|ucred
@@ -3259,7 +3259,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_listextattr
+name|mac_vnode_check_listextattr
 parameter_list|(
 name|struct
 name|ucred
@@ -3279,7 +3279,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_lookup
+name|mac_vnode_check_lookup
 parameter_list|(
 name|struct
 name|ucred
@@ -3301,7 +3301,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_mmap
+name|mac_vnode_check_mmap
 parameter_list|(
 name|struct
 name|ucred
@@ -3324,7 +3324,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_mprotect
+name|mac_vnode_check_mprotect
 parameter_list|(
 name|struct
 name|ucred
@@ -3344,7 +3344,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_open
+name|mac_vnode_check_open
 parameter_list|(
 name|struct
 name|ucred
@@ -3364,7 +3364,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_poll
+name|mac_vnode_check_poll
 parameter_list|(
 name|struct
 name|ucred
@@ -3386,7 +3386,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_read
+name|mac_vnode_check_read
 parameter_list|(
 name|struct
 name|ucred
@@ -3408,7 +3408,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_readdir
+name|mac_vnode_check_readdir
 parameter_list|(
 name|struct
 name|ucred
@@ -3425,7 +3425,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_readlink
+name|mac_vnode_check_readlink
 parameter_list|(
 name|struct
 name|ucred
@@ -3442,7 +3442,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_rename_from
+name|mac_vnode_check_rename_from
 parameter_list|(
 name|struct
 name|ucred
@@ -3469,7 +3469,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_rename_to
+name|mac_vnode_check_rename_to
 parameter_list|(
 name|struct
 name|ucred
@@ -3499,7 +3499,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_revoke
+name|mac_vnode_check_revoke
 parameter_list|(
 name|struct
 name|ucred
@@ -3516,7 +3516,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_setacl
+name|mac_vnode_check_setacl
 parameter_list|(
 name|struct
 name|ucred
@@ -3541,7 +3541,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_setextattr
+name|mac_vnode_check_setextattr
 parameter_list|(
 name|struct
 name|ucred
@@ -3571,7 +3571,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_setflags
+name|mac_vnode_check_setflags
 parameter_list|(
 name|struct
 name|ucred
@@ -3591,7 +3591,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_setmode
+name|mac_vnode_check_setmode
 parameter_list|(
 name|struct
 name|ucred
@@ -3611,7 +3611,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_setowner
+name|mac_vnode_check_setowner
 parameter_list|(
 name|struct
 name|ucred
@@ -3634,7 +3634,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_setutimes
+name|mac_vnode_check_setutimes
 parameter_list|(
 name|struct
 name|ucred
@@ -3659,7 +3659,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_stat
+name|mac_vnode_check_stat
 parameter_list|(
 name|struct
 name|ucred
@@ -3681,7 +3681,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_unlink
+name|mac_vnode_check_unlink
 parameter_list|(
 name|struct
 name|ucred
@@ -3708,7 +3708,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_check_vnode_write
+name|mac_vnode_check_write
 parameter_list|(
 name|struct
 name|ucred
@@ -3774,7 +3774,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_ioctl_ifnet_get
+name|mac_ifnet_ioctl_get
 parameter_list|(
 name|struct
 name|ucred
@@ -3796,7 +3796,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_ioctl_ifnet_set
+name|mac_ifnet_ioctl_set
 parameter_list|(
 name|struct
 name|ucred

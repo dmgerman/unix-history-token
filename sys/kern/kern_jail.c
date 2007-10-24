@@ -1359,7 +1359,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|mac_check_vnode_chroot
+name|mac_vnode_check_chroot
 argument_list|(
 name|td
 operator|->

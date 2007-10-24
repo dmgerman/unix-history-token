@@ -723,7 +723,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_system_acct
+name|mac_system_check_acct
 argument_list|(
 name|td
 operator|->
@@ -839,7 +839,7 @@ else|else
 block|{
 name|error
 operator|=
-name|mac_check_system_acct
+name|mac_system_check_acct
 argument_list|(
 name|td
 operator|->

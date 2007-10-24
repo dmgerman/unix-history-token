@@ -1241,12 +1241,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_posix_sem
+name|mac_posixsem_init
 argument_list|(
 name|ret
 argument_list|)
 expr_stmt|;
-name|mac_create_posix_sem
+name|mac_posixsem_create
 argument_list|(
 name|uc
 argument_list|,
@@ -2106,7 +2106,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_posix_sem_open
+name|mac_posixsem_check_open
 argument_list|(
 name|td
 operator|->
@@ -2948,7 +2948,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_posix_sem_unlink
+name|mac_posixsem_check_unlink
 argument_list|(
 name|td
 operator|->
@@ -3326,7 +3326,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_posix_sem_post
+name|mac_posixsem_check_post
 argument_list|(
 name|td
 operator|->
@@ -3825,7 +3825,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_posix_sem_wait
+name|mac_posixsem_check_wait
 argument_list|(
 name|td
 operator|->
@@ -4162,7 +4162,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_posix_sem_getvalue
+name|mac_posixsem_check_getvalue
 argument_list|(
 name|td
 operator|->
@@ -4338,7 +4338,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_posix_sem_destroy
+name|mac_posixsem_check_destroy
 argument_list|(
 name|td
 operator|->

@@ -1264,7 +1264,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_vnode_revoke
+name|mac_vnode_check_revoke
 argument_list|(
 name|td
 operator|->

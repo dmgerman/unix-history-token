@@ -1098,7 +1098,7 @@ name|m_tag_id
 operator|==
 name|PACKET_TAG_MACLABEL
 condition|)
-name|mac_destroy_mbuf_tag
+name|mac_mbuf_tag_destroy
 argument_list|(
 name|t
 argument_list|)
@@ -1599,7 +1599,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|mac_init_mbuf_tag
+name|mac_mbuf_tag_init
 argument_list|(
 name|p
 argument_list|,
@@ -1620,7 +1620,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|mac_copy_mbuf_tag
+name|mac_mbuf_tag_copy
 argument_list|(
 name|t
 argument_list|,

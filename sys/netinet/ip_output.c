@@ -3137,7 +3137,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_fragment
+name|mac_netinet_fragment
 argument_list|(
 name|m0
 argument_list|,

@@ -688,7 +688,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_system_reboot
+name|mac_system_check_reboot
 argument_list|(
 name|td
 operator|->

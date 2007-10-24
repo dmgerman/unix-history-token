@@ -143,7 +143,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|mac_create_mbuf_from_socket
+name|mac_socket_create_mbuf
 argument_list|(
 name|so
 argument_list|,
@@ -903,7 +903,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_copy_mbuf
+name|mac_mbuf_copy
 argument_list|(
 name|m
 argument_list|,

@@ -1374,7 +1374,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_open
+name|mac_vnode_check_open
 argument_list|(
 name|td
 operator|->

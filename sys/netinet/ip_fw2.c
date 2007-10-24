@@ -7483,7 +7483,7 @@ name|replyto
 operator|!=
 name|NULL
 condition|)
-name|mac_create_mbuf_netlayer
+name|mac_mbuf_create_netlayer
 argument_list|(
 name|replyto
 argument_list|,
@@ -7491,7 +7491,7 @@ name|m
 argument_list|)
 expr_stmt|;
 else|else
-name|mac_create_mbuf_from_firewall
+name|mac_mbuf_create_from_firewall
 argument_list|(
 name|m
 argument_list|)

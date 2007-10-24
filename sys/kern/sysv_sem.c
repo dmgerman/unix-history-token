@@ -1407,7 +1407,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_sysv_sem
+name|mac_sysvsem_init
 argument_list|(
 operator|&
 name|sema
@@ -1563,7 +1563,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|mac_destroy_sysv_sem
+name|mac_sysvsem_destroy
 argument_list|(
 operator|&
 name|sema
@@ -3146,7 +3146,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_sysv_semctl
+name|mac_sysvsem_check_semctl
 argument_list|(
 name|cred
 argument_list|,
@@ -3259,7 +3259,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_sysv_semctl
+name|mac_sysvsem_check_semctl
 argument_list|(
 name|cred
 argument_list|,
@@ -3481,7 +3481,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_cleanup_sysv_sem
+name|mac_sysvsem_cleanup
 argument_list|(
 name|semakptr
 argument_list|)
@@ -4818,7 +4818,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_sysv_semget
+name|mac_sysvsem_check_semget
 argument_list|(
 name|cred
 argument_list|,
@@ -5207,7 +5207,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_sysv_sem
+name|mac_sysvsem_create
 argument_list|(
 name|cred
 argument_list|,
@@ -5813,7 +5813,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_sysv_semop
+name|mac_sysvsem_check_semop
 argument_list|(
 name|td
 operator|->

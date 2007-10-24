@@ -1080,7 +1080,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_check_vnode_readlink
+name|mac_vnode_check_readlink
 argument_list|(
 name|td
 operator|->
@@ -2375,7 +2375,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_check_vnode_lookup
+name|mac_vnode_check_lookup
 argument_list|(
 name|td
 operator|->

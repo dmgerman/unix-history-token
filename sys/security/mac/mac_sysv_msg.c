@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2004 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003-2004 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -143,7 +143,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|init_sysv_msgmsg_label
+name|sysvmsg_init_label
 argument_list|,
 name|label
 argument_list|)
@@ -158,7 +158,7 @@ end_function
 
 begin_function
 name|void
-name|mac_init_sysv_msgmsg
+name|mac_sysvmsg_init
 parameter_list|(
 name|struct
 name|msg
@@ -200,7 +200,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|init_sysv_msgqueue_label
+name|sysvmsq_init_label
 argument_list|,
 name|label
 argument_list|)
@@ -215,7 +215,7 @@ end_function
 
 begin_function
 name|void
-name|mac_init_sysv_msgqueue
+name|mac_sysvmsq_init
 parameter_list|(
 name|struct
 name|msqid_kernel
@@ -246,7 +246,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_sysv_msgmsg_label
+name|sysvmsg_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -261,7 +261,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_sysv_msgmsg
+name|mac_sysvmsg_destroy
 parameter_list|(
 name|struct
 name|msg
@@ -298,7 +298,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_sysv_msgqueue_label
+name|sysvmsq_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -313,7 +313,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_sysv_msgqueue
+name|mac_sysvmsq_destroy
 parameter_list|(
 name|struct
 name|msqid_kernel
@@ -339,7 +339,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_sysv_msgmsg
+name|mac_sysvmsg_create
 parameter_list|(
 name|struct
 name|ucred
@@ -359,7 +359,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|create_sysv_msgmsg
+name|sysvmsg_create
 argument_list|,
 name|cred
 argument_list|,
@@ -381,7 +381,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_sysv_msgqueue
+name|mac_sysvmsq_create
 parameter_list|(
 name|struct
 name|ucred
@@ -396,7 +396,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|create_sysv_msgqueue
+name|sysvmsq_create
 argument_list|,
 name|cred
 argument_list|,
@@ -412,7 +412,7 @@ end_function
 
 begin_function
 name|void
-name|mac_cleanup_sysv_msgmsg
+name|mac_sysvmsg_cleanup
 parameter_list|(
 name|struct
 name|msg
@@ -422,7 +422,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|cleanup_sysv_msgmsg
+name|sysvmsg_cleanup
 argument_list|,
 name|msgptr
 operator|->
@@ -434,7 +434,7 @@ end_function
 
 begin_function
 name|void
-name|mac_cleanup_sysv_msgqueue
+name|mac_sysvmsq_cleanup
 parameter_list|(
 name|struct
 name|msqid_kernel
@@ -444,7 +444,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|cleanup_sysv_msgqueue
+name|sysvmsq_cleanup
 argument_list|,
 name|msqkptr
 operator|->
@@ -456,7 +456,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_sysv_msgmsq
+name|mac_sysvmsq_check_msgmsq
 parameter_list|(
 name|struct
 name|ucred
@@ -479,7 +479,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_sysv_msgmsq
+name|sysvmsq_check_msgmsq
 argument_list|,
 name|cred
 argument_list|,
@@ -506,7 +506,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_sysv_msgrcv
+name|mac_sysvmsq_check_msgrcv
 parameter_list|(
 name|struct
 name|ucred
@@ -524,7 +524,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_sysv_msgrcv
+name|sysvmsq_check_msgrcv
 argument_list|,
 name|cred
 argument_list|,
@@ -545,7 +545,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_sysv_msgrmid
+name|mac_sysvmsq_check_msgrmid
 parameter_list|(
 name|struct
 name|ucred
@@ -563,7 +563,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_sysv_msgrmid
+name|sysvmsq_check_msgrmid
 argument_list|,
 name|cred
 argument_list|,
@@ -584,7 +584,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_sysv_msqget
+name|mac_sysvmsq_check_msqget
 parameter_list|(
 name|struct
 name|ucred
@@ -602,7 +602,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_sysv_msqget
+name|sysvmsq_check_msqget
 argument_list|,
 name|cred
 argument_list|,
@@ -623,7 +623,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_sysv_msqsnd
+name|mac_sysvmsq_check_msqsnd
 parameter_list|(
 name|struct
 name|ucred
@@ -641,7 +641,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_sysv_msqsnd
+name|sysvmsq_check_msqsnd
 argument_list|,
 name|cred
 argument_list|,
@@ -662,7 +662,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_sysv_msqrcv
+name|mac_sysvmsq_check_msqrcv
 parameter_list|(
 name|struct
 name|ucred
@@ -680,7 +680,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_sysv_msqrcv
+name|sysvmsq_check_msqrcv
 argument_list|,
 name|cred
 argument_list|,
@@ -701,7 +701,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_sysv_msqctl
+name|mac_sysvmsq_check_msqctl
 parameter_list|(
 name|struct
 name|ucred
@@ -722,7 +722,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_sysv_msqctl
+name|sysvmsq_check_msqctl
 argument_list|,
 name|cred
 argument_list|,

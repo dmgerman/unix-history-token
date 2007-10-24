@@ -936,7 +936,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_init_inpcb
+name|mac_inpcb_init
 argument_list|(
 name|inp
 argument_list|,
@@ -957,7 +957,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|mac_create_inpcb_from_socket
+name|mac_inpcb_create
 argument_list|(
 name|so
 argument_list|,
@@ -3519,7 +3519,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_destroy_inpcb
+name|mac_inpcb_destroy
 argument_list|(
 name|inp
 argument_list|)

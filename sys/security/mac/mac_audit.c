@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2004 Networks Associates Technology, Inc.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2004 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -47,7 +47,7 @@ end_include
 
 begin_function
 name|int
-name|mac_check_proc_setaudit
+name|mac_proc_check_setaudit
 parameter_list|(
 name|struct
 name|ucred
@@ -65,7 +65,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_setaudit
+name|proc_check_setaudit
 argument_list|,
 name|cred
 argument_list|,
@@ -82,7 +82,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_setaudit_addr
+name|mac_proc_check_setaudit_addr
 parameter_list|(
 name|struct
 name|ucred
@@ -100,7 +100,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_setaudit_addr
+name|proc_check_setaudit_addr
 argument_list|,
 name|cred
 argument_list|,
@@ -117,7 +117,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_proc_setauid
+name|mac_proc_check_setauid
 parameter_list|(
 name|struct
 name|ucred
@@ -133,7 +133,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_proc_setauid
+name|proc_check_setauid
 argument_list|,
 name|cred
 argument_list|,
@@ -150,7 +150,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_system_audit
+name|mac_system_check_audit
 parameter_list|(
 name|struct
 name|ucred
@@ -170,7 +170,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_system_audit
+name|system_check_audit
 argument_list|,
 name|cred
 argument_list|,
@@ -189,7 +189,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_system_auditctl
+name|mac_system_check_auditctl
 parameter_list|(
 name|struct
 name|ucred
@@ -214,7 +214,7 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_system_auditctl"
+literal|"mac_system_check_auditctl"
 argument_list|)
 expr_stmt|;
 name|vl
@@ -233,7 +233,7 @@ name|NULL
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_system_auditctl
+name|system_check_auditctl
 argument_list|,
 name|cred
 argument_list|,
@@ -252,7 +252,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_system_auditon
+name|mac_system_check_auditon
 parameter_list|(
 name|struct
 name|ucred
@@ -268,7 +268,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_system_auditon
+name|system_check_auditon
 argument_list|,
 name|cred
 argument_list|,

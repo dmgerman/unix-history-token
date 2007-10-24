@@ -4744,7 +4744,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_mmap
+name|mac_vnode_check_mmap
 argument_list|(
 name|td
 operator|->

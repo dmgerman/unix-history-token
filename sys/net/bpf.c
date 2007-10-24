@@ -1778,12 +1778,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_bpfdesc
+name|mac_bpfdesc_init
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|mac_create_bpfdesc
+name|mac_bpfdesc_create
 argument_list|(
 name|td
 operator|->
@@ -1965,7 +1965,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_destroy_bpfdesc
+name|mac_bpfdesc_destroy
 argument_list|(
 name|d
 argument_list|)
@@ -2776,7 +2776,7 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|mac_create_mbuf_from_bpfdesc
+name|mac_bpfdesc_create_mbuf
 argument_list|(
 name|d
 argument_list|,
@@ -2789,7 +2789,7 @@ name|mc
 operator|!=
 name|NULL
 condition|)
-name|mac_create_mbuf_from_bpfdesc
+name|mac_bpfdesc_create_mbuf
 argument_list|(
 name|d
 argument_list|,
@@ -5131,7 +5131,7 @@ directive|ifdef
 name|MAC
 if|if
 condition|(
-name|mac_check_bpfdesc_receive
+name|mac_bpfdesc_check_receive
 argument_list|(
 name|d
 argument_list|,
@@ -5495,7 +5495,7 @@ directive|ifdef
 name|MAC
 if|if
 condition|(
-name|mac_check_bpfdesc_receive
+name|mac_bpfdesc_check_receive
 argument_list|(
 name|d
 argument_list|,
@@ -5729,7 +5729,7 @@ directive|ifdef
 name|MAC
 if|if
 condition|(
-name|mac_check_bpfdesc_receive
+name|mac_bpfdesc_check_receive
 argument_list|(
 name|d
 argument_list|,

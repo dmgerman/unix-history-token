@@ -244,7 +244,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_receive
+name|mac_socket_check_receive
 argument_list|(
 name|active_cred
 argument_list|,
@@ -342,7 +342,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_send
+name|mac_socket_check_send
 argument_list|(
 name|active_cred
 argument_list|,
@@ -925,7 +925,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_poll
+name|mac_socket_check_poll
 argument_list|(
 name|active_cred
 argument_list|,
@@ -1039,7 +1039,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_stat
+name|mac_socket_check_stat
 argument_list|(
 name|active_cred
 argument_list|,

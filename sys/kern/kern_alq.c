@@ -1282,7 +1282,7 @@ directive|ifdef
 name|MAC
 if|if
 condition|(
-name|mac_check_vnode_write
+name|mac_vnode_check_write
 argument_list|(
 name|alq
 operator|->

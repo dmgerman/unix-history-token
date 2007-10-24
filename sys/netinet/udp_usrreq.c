@@ -861,7 +861,7 @@ directive|ifdef
 name|MAC
 if|if
 condition|(
-name|mac_check_inpcb_deliver
+name|mac_inpcb_check_deliver
 argument_list|(
 name|inp
 argument_list|,
@@ -3886,7 +3886,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_mbuf_from_inpcb
+name|mac_inpcb_create_mbuf
 argument_list|(
 name|inp
 argument_list|,

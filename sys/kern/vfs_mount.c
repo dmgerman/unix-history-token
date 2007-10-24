@@ -2213,12 +2213,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_mount
+name|mac_mount_init
 argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|mac_create_mount
+name|mac_mount_create
 argument_list|(
 name|td
 operator|->
@@ -2641,7 +2641,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_destroy_mount
+name|mac_mount_destroy
 argument_list|(
 name|mp
 argument_list|)

@@ -830,7 +830,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_ifnet_transmit
+name|mac_ifnet_check_transmit
 argument_list|(
 name|ifp
 argument_list|,
@@ -2709,7 +2709,7 @@ ifdef|#
 directive|ifdef
 name|MAC
 comment|/* 	 * Tag the mbuf with an appropriate MAC label before any other 	 * consumers can get to it. 	 */
-name|mac_create_mbuf_from_ifnet
+name|mac_ifnet_create_mbuf
 argument_list|(
 name|ifp
 argument_list|,

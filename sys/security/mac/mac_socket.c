@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2005 Networks Associates Technology, Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by McAfee  * Research, the Technology Research Division of Network Associates, Inc.  * under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the  * DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999-2002 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2005 Networks Associates Technology, Inc.  * Copyright (c) 2005-2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by McAfee  * Research, the Technology Research Division of Network Associates, Inc.  * under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the  * DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -209,7 +209,7 @@ operator|)
 return|;
 name|MAC_CHECK
 argument_list|(
-name|init_socket_label
+name|socket_init_label
 argument_list|,
 name|label
 argument_list|,
@@ -223,7 +223,7 @@ condition|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_socket_label
+name|socket_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -252,7 +252,7 @@ specifier|static
 name|struct
 name|label
 modifier|*
-name|mac_socket_peer_label_alloc
+name|mac_socketpeer_label_alloc
 parameter_list|(
 name|int
 name|flag
@@ -286,7 +286,7 @@ operator|)
 return|;
 name|MAC_CHECK
 argument_list|(
-name|init_socket_peer_label
+name|socketpeer_init_label
 argument_list|,
 name|label
 argument_list|,
@@ -300,7 +300,7 @@ condition|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_socket_peer_label
+name|socketpeer_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -326,7 +326,7 @@ end_function
 
 begin_function
 name|int
-name|mac_init_socket
+name|mac_socket_init
 parameter_list|(
 name|struct
 name|socket
@@ -363,7 +363,7 @@ name|so
 operator|->
 name|so_peerlabel
 operator|=
-name|mac_socket_peer_label_alloc
+name|mac_socketpeer_label_alloc
 argument_list|(
 name|flag
 argument_list|)
@@ -416,7 +416,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_socket_label
+name|socket_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -432,7 +432,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_socket_peer_label_free
+name|mac_socketpeer_label_free
 parameter_list|(
 name|struct
 name|label
@@ -442,7 +442,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_socket_peer_label
+name|socketpeer_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -457,7 +457,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_socket
+name|mac_socket_destroy
 parameter_list|(
 name|struct
 name|socket
@@ -478,7 +478,7 @@ name|so_label
 operator|=
 name|NULL
 expr_stmt|;
-name|mac_socket_peer_label_free
+name|mac_socketpeer_label_free
 argument_list|(
 name|so
 operator|->
@@ -496,7 +496,7 @@ end_function
 
 begin_function
 name|void
-name|mac_copy_socket_label
+name|mac_socket_copy_label
 parameter_list|(
 name|struct
 name|label
@@ -511,7 +511,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|copy_socket_label
+name|socket_copy_label
 argument_list|,
 name|src
 argument_list|,
@@ -523,7 +523,7 @@ end_function
 
 begin_function
 name|int
-name|mac_externalize_socket_label
+name|mac_socket_externalize_label
 parameter_list|(
 name|struct
 name|label
@@ -569,7 +569,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_externalize_socket_peer_label
+name|mac_socketpeer_externalize_label
 parameter_list|(
 name|struct
 name|label
@@ -593,7 +593,7 @@ name|error
 decl_stmt|;
 name|MAC_EXTERNALIZE
 argument_list|(
-name|socket_peer
+name|socketpeer
 argument_list|,
 name|label
 argument_list|,
@@ -614,7 +614,7 @@ end_function
 
 begin_function
 name|int
-name|mac_internalize_socket_label
+name|mac_socket_internalize_label
 parameter_list|(
 name|struct
 name|label
@@ -648,7 +648,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_socket
+name|mac_socket_create
 parameter_list|(
 name|struct
 name|ucred
@@ -663,7 +663,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|create_socket
+name|socket_create
 argument_list|,
 name|cred
 argument_list|,
@@ -679,7 +679,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_socket_from_socket
+name|mac_socket_newconn
 parameter_list|(
 name|struct
 name|socket
@@ -699,7 +699,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|create_socket_from_socket
+name|socket_newconn
 argument_list|,
 name|oldso
 argument_list|,
@@ -720,7 +720,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_relabel_socket
+name|mac_socket_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -745,7 +745,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|relabel_socket
+name|socket_relabel
 argument_list|,
 name|cred
 argument_list|,
@@ -763,7 +763,7 @@ end_function
 
 begin_function
 name|void
-name|mac_set_socket_peer_from_mbuf
+name|mac_socketpeer_set_from_mbuf
 parameter_list|(
 name|struct
 name|mbuf
@@ -795,7 +795,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|set_socket_peer_from_mbuf
+name|socketpeer_set_from_mbuf
 argument_list|,
 name|m
 argument_list|,
@@ -813,7 +813,7 @@ end_function
 
 begin_function
 name|void
-name|mac_set_socket_peer_from_socket
+name|mac_socketpeer_set_from_socket
 parameter_list|(
 name|struct
 name|socket
@@ -829,7 +829,7 @@ block|{
 comment|/* 	 * XXXRW: only hold the socket lock on one at a time, as one socket 	 * is the original, and one is the new.  However, it's called in both 	 * directions, so we can't assert the lock here currently. 	 */
 name|MAC_PERFORM
 argument_list|(
-name|set_socket_peer_from_socket
+name|socketpeer_set_from_socket
 argument_list|,
 name|oldso
 argument_list|,
@@ -849,7 +849,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_mbuf_from_socket
+name|mac_socket_create_mbuf
 parameter_list|(
 name|struct
 name|socket
@@ -881,7 +881,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|create_mbuf_from_socket
+name|socket_create_mbuf
 argument_list|,
 name|so
 argument_list|,
@@ -899,7 +899,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_socket_accept
+name|mac_socket_check_accept
 parameter_list|(
 name|struct
 name|ucred
@@ -922,7 +922,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_socket_accept
+name|socket_check_accept
 argument_list|,
 name|cred
 argument_list|,
@@ -943,63 +943,12 @@ end_function
 
 begin_function
 name|int
-name|mac_check_socket_bind
+name|mac_socket_check_bind
 parameter_list|(
 name|struct
 name|ucred
 modifier|*
 name|ucred
-parameter_list|,
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-name|sa
-parameter_list|)
-block|{
-name|int
-name|error
-decl_stmt|;
-name|SOCK_LOCK_ASSERT
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|MAC_CHECK
-argument_list|(
-name|check_socket_bind
-argument_list|,
-name|ucred
-argument_list|,
-name|so
-argument_list|,
-name|so
-operator|->
-name|so_label
-argument_list|,
-name|sa
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|mac_check_socket_connect
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
 parameter_list|,
 name|struct
 name|socket
@@ -1022,7 +971,58 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_socket_connect
+name|socket_check_bind
+argument_list|,
+name|ucred
+argument_list|,
+name|so
+argument_list|,
+name|so
+operator|->
+name|so_label
+argument_list|,
+name|sa
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|mac_socket_check_connect
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|SOCK_LOCK_ASSERT
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+name|MAC_CHECK
+argument_list|(
+name|socket_check_connect
 argument_list|,
 name|cred
 argument_list|,
@@ -1045,7 +1045,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_socket_create
+name|mac_socket_check_create
 parameter_list|(
 name|struct
 name|ucred
@@ -1067,7 +1067,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_socket_create
+name|socket_check_create
 argument_list|,
 name|cred
 argument_list|,
@@ -1088,7 +1088,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_socket_deliver
+name|mac_socket_check_deliver
 parameter_list|(
 name|struct
 name|socket
@@ -1123,7 +1123,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_socket_deliver
+name|socket_check_deliver
 argument_list|,
 name|so
 argument_list|,
@@ -1146,7 +1146,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_socket_listen
+name|mac_socket_check_listen
 parameter_list|(
 name|struct
 name|ucred
@@ -1169,7 +1169,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_socket_listen
+name|socket_check_listen
 argument_list|,
 name|cred
 argument_list|,
@@ -1190,7 +1190,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_socket_poll
+name|mac_socket_check_poll
 parameter_list|(
 name|struct
 name|ucred
@@ -1213,7 +1213,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_socket_poll
+name|socket_check_poll
 argument_list|,
 name|cred
 argument_list|,
@@ -1234,7 +1234,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_socket_receive
+name|mac_socket_check_receive
 parameter_list|(
 name|struct
 name|ucred
@@ -1257,7 +1257,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_socket_receive
+name|socket_check_receive
 argument_list|,
 name|cred
 argument_list|,
@@ -1279,7 +1279,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_check_socket_relabel
+name|mac_socket_check_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -1307,7 +1307,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_socket_relabel
+name|socket_check_relabel
 argument_list|,
 name|cred
 argument_list|,
@@ -1330,7 +1330,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_socket_send
+name|mac_socket_check_send
 parameter_list|(
 name|struct
 name|ucred
@@ -1353,7 +1353,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_socket_send
+name|socket_check_send
 argument_list|,
 name|cred
 argument_list|,
@@ -1374,7 +1374,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_socket_stat
+name|mac_socket_check_stat
 parameter_list|(
 name|struct
 name|ucred
@@ -1397,7 +1397,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_socket_stat
+name|socket_check_stat
 argument_list|,
 name|cred
 argument_list|,
@@ -1418,7 +1418,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_socket_visible
+name|mac_socket_check_visible
 parameter_list|(
 name|struct
 name|ucred
@@ -1441,7 +1441,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_socket_visible
+name|socket_check_visible
 argument_list|,
 name|cred
 argument_list|,
@@ -1491,7 +1491,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_socket_relabel
+name|mac_socket_check_relabel
 argument_list|(
 name|cred
 argument_list|,
@@ -1516,7 +1516,7 @@ name|error
 operator|)
 return|;
 block|}
-name|mac_relabel_socket
+name|mac_socket_relabel
 argument_list|(
 name|cred
 argument_list|,
@@ -1669,7 +1669,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_internalize_socket_label
+name|mac_socket_internalize_label
 argument_list|(
 name|intlabel
 argument_list|,
@@ -1842,7 +1842,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|mac_copy_socket_label
+name|mac_socket_copy_label
 argument_list|(
 name|so
 operator|->
@@ -1858,7 +1858,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_externalize_socket_label
+name|mac_socket_externalize_label
 argument_list|(
 name|intlabel
 argument_list|,
@@ -2048,7 +2048,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|mac_copy_socket_label
+name|mac_socket_copy_label
 argument_list|(
 name|so
 operator|->
@@ -2064,7 +2064,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_externalize_socket_peer_label
+name|mac_socketpeer_externalize_label
 argument_list|(
 name|intlabel
 argument_list|,

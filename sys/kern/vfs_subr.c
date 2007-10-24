@@ -3621,7 +3621,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_destroy_vnode
+name|mac_vnode_destroy
 argument_list|(
 name|vp
 argument_list|)
@@ -4205,7 +4205,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_init_vnode
+name|mac_vnode_init
 argument_list|(
 name|vp
 argument_list|)
@@ -4226,7 +4226,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|mac_associate_vnode_singlelabel
+name|mac_vnode_associate_singlelabel
 argument_list|(
 name|mp
 argument_list|,

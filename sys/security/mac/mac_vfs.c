@@ -183,7 +183,7 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|int
-name|mac_setlabel_vnode_extattr
+name|mac_vnode_setlabel_extattr
 parameter_list|(
 name|struct
 name|ucred
@@ -227,7 +227,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|init_devfs_label
+name|devfs_init_label
 argument_list|,
 name|label
 argument_list|)
@@ -242,7 +242,7 @@ end_function
 
 begin_function
 name|void
-name|mac_init_devfs
+name|mac_devfs_init
 parameter_list|(
 name|struct
 name|devfs_dirent
@@ -284,7 +284,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|init_mount_label
+name|mount_init_label
 argument_list|,
 name|label
 argument_list|)
@@ -299,7 +299,7 @@ end_function
 
 begin_function
 name|void
-name|mac_init_mount
+name|mac_mount_init
 parameter_list|(
 name|struct
 name|mount
@@ -340,7 +340,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|init_vnode_label
+name|vnode_init_label
 argument_list|,
 name|label
 argument_list|)
@@ -355,7 +355,7 @@ end_function
 
 begin_function
 name|void
-name|mac_init_vnode
+name|mac_vnode_init
 parameter_list|(
 name|struct
 name|vnode
@@ -386,7 +386,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_devfs_label
+name|devfs_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -401,7 +401,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_devfs
+name|mac_devfs_destroy
 parameter_list|(
 name|struct
 name|devfs_dirent
@@ -438,7 +438,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_mount_label
+name|mount_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -453,7 +453,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_mount
+name|mac_mount_destroy
 parameter_list|(
 name|struct
 name|mount
@@ -489,7 +489,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_vnode_label
+name|vnode_destroy_label
 argument_list|,
 name|label
 argument_list|)
@@ -504,7 +504,7 @@ end_function
 
 begin_function
 name|void
-name|mac_destroy_vnode
+name|mac_vnode_destroy
 parameter_list|(
 name|struct
 name|vnode
@@ -530,7 +530,7 @@ end_function
 
 begin_function
 name|void
-name|mac_copy_vnode_label
+name|mac_vnode_copy_label
 parameter_list|(
 name|struct
 name|label
@@ -545,7 +545,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|copy_vnode_label
+name|vnode_copy_label
 argument_list|,
 name|src
 argument_list|,
@@ -557,7 +557,7 @@ end_function
 
 begin_function
 name|int
-name|mac_externalize_vnode_label
+name|mac_vnode_externalize_label
 parameter_list|(
 name|struct
 name|label
@@ -602,7 +602,7 @@ end_function
 
 begin_function
 name|int
-name|mac_internalize_vnode_label
+name|mac_vnode_internalize_label
 parameter_list|(
 name|struct
 name|label
@@ -636,7 +636,7 @@ end_function
 
 begin_function
 name|void
-name|mac_update_devfs
+name|mac_devfs_update
 parameter_list|(
 name|struct
 name|mount
@@ -656,7 +656,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|update_devfs
+name|devfs_update
 argument_list|,
 name|mp
 argument_list|,
@@ -678,7 +678,7 @@ end_function
 
 begin_function
 name|void
-name|mac_associate_vnode_devfs
+name|mac_devfs_vnode_associate
 parameter_list|(
 name|struct
 name|mount
@@ -698,7 +698,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|associate_vnode_devfs
+name|devfs_vnode_associate
 argument_list|,
 name|mp
 argument_list|,
@@ -724,7 +724,7 @@ end_function
 
 begin_function
 name|int
-name|mac_associate_vnode_extattr
+name|mac_vnode_associate_extattr
 parameter_list|(
 name|struct
 name|mount
@@ -744,12 +744,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_associate_vnode_extattr"
+literal|"mac_vnode_associate_extattr"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|associate_vnode_extattr
+name|vnode_associate_extattr
 argument_list|,
 name|mp
 argument_list|,
@@ -774,7 +774,7 @@ end_function
 
 begin_function
 name|void
-name|mac_associate_vnode_singlelabel
+name|mac_vnode_associate_singlelabel
 parameter_list|(
 name|struct
 name|mount
@@ -789,7 +789,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|associate_vnode_singlelabel
+name|vnode_associate_singlelabel
 argument_list|,
 name|mp
 argument_list|,
@@ -813,7 +813,7 @@ end_comment
 
 begin_function
 name|int
-name|mac_create_vnode_extattr
+name|mac_vnode_create_extattr
 parameter_list|(
 name|struct
 name|ucred
@@ -848,14 +848,14 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|dvp
 argument_list|,
-literal|"mac_create_vnode_extattr"
+literal|"mac_vnode_create_extattr"
 argument_list|)
 expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_create_vnode_extattr"
+literal|"mac_vnode_create_extattr"
 argument_list|)
 expr_stmt|;
 name|error
@@ -907,7 +907,7 @@ operator|)
 return|;
 name|MAC_CHECK
 argument_list|(
-name|create_vnode_extattr
+name|vnode_create_extattr
 argument_list|,
 name|cred
 argument_list|,
@@ -988,7 +988,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_setlabel_vnode_extattr
+name|mac_vnode_setlabel_extattr
 parameter_list|(
 name|struct
 name|ucred
@@ -1013,7 +1013,7 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_setlabel_vnode_extattr"
+literal|"mac_vnode_setlabel_extattr"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1065,7 +1065,7 @@ operator|)
 return|;
 name|MAC_CHECK
 argument_list|(
-name|setlabel_vnode_extattr
+name|vnode_setlabel_extattr
 argument_list|,
 name|cred
 argument_list|,
@@ -1133,7 +1133,7 @@ end_function
 
 begin_function
 name|void
-name|mac_execve_transition
+name|mac_vnode_execve_transition
 parameter_list|(
 name|struct
 name|ucred
@@ -1165,12 +1165,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_execve_transition"
+literal|"mac_vnode_execve_transition"
 argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|execve_transition
+name|vnode_execve_transition
 argument_list|,
 name|old
 argument_list|,
@@ -1196,7 +1196,7 @@ end_function
 
 begin_function
 name|int
-name|mac_execve_will_transition
+name|mac_vnode_execve_will_transition
 parameter_list|(
 name|struct
 name|ucred
@@ -1226,7 +1226,7 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_execve_will_transition"
+literal|"mac_vnode_execve_will_transition"
 argument_list|)
 expr_stmt|;
 name|result
@@ -1235,7 +1235,7 @@ literal|0
 expr_stmt|;
 name|MAC_BOOLEAN
 argument_list|(
-name|execve_will_transition
+name|vnode_execve_will_transition
 argument_list|,
 operator|||
 argument_list|,
@@ -1266,7 +1266,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_access
+name|mac_vnode_check_access
 parameter_list|(
 name|struct
 name|ucred
@@ -1289,12 +1289,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_access"
+literal|"mac_vnode_check_access"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_access
+name|vnode_check_access
 argument_list|,
 name|cred
 argument_list|,
@@ -1317,7 +1317,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_chdir
+name|mac_vnode_check_chdir
 parameter_list|(
 name|struct
 name|ucred
@@ -1337,12 +1337,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|dvp
 argument_list|,
-literal|"mac_check_vnode_chdir"
+literal|"mac_vnode_check_chdir"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_chdir
+name|vnode_check_chdir
 argument_list|,
 name|cred
 argument_list|,
@@ -1363,7 +1363,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_chroot
+name|mac_vnode_check_chroot
 parameter_list|(
 name|struct
 name|ucred
@@ -1383,12 +1383,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|dvp
 argument_list|,
-literal|"mac_check_vnode_chroot"
+literal|"mac_vnode_check_chroot"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_chroot
+name|vnode_check_chroot
 argument_list|,
 name|cred
 argument_list|,
@@ -1409,7 +1409,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_create
+name|mac_vnode_check_create
 parameter_list|(
 name|struct
 name|ucred
@@ -1439,12 +1439,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|dvp
 argument_list|,
-literal|"mac_check_vnode_create"
+literal|"mac_vnode_check_create"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_create
+name|vnode_check_create
 argument_list|,
 name|cred
 argument_list|,
@@ -1469,7 +1469,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_deleteacl
+name|mac_vnode_check_deleteacl
 parameter_list|(
 name|struct
 name|ucred
@@ -1492,12 +1492,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_deleteacl"
+literal|"mac_vnode_check_deleteacl"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_deleteacl
+name|vnode_check_deleteacl
 argument_list|,
 name|cred
 argument_list|,
@@ -1520,7 +1520,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_deleteextattr
+name|mac_vnode_check_deleteextattr
 parameter_list|(
 name|struct
 name|ucred
@@ -1548,12 +1548,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_deleteextattr"
+literal|"mac_vnode_check_deleteextattr"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_deleteextattr
+name|vnode_check_deleteextattr
 argument_list|,
 name|cred
 argument_list|,
@@ -1578,7 +1578,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_exec
+name|mac_vnode_check_exec
 parameter_list|(
 name|struct
 name|ucred
@@ -1603,12 +1603,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_exec"
+literal|"mac_vnode_check_exec"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_exec
+name|vnode_check_exec
 argument_list|,
 name|cred
 argument_list|,
@@ -1635,7 +1635,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_getacl
+name|mac_vnode_check_getacl
 parameter_list|(
 name|struct
 name|ucred
@@ -1658,12 +1658,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_getacl"
+literal|"mac_vnode_check_getacl"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_getacl
+name|vnode_check_getacl
 argument_list|,
 name|cred
 argument_list|,
@@ -1686,7 +1686,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_getextattr
+name|mac_vnode_check_getextattr
 parameter_list|(
 name|struct
 name|ucred
@@ -1719,12 +1719,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_getextattr"
+literal|"mac_vnode_check_getextattr"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_getextattr
+name|vnode_check_getextattr
 argument_list|,
 name|cred
 argument_list|,
@@ -1751,7 +1751,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_link
+name|mac_vnode_check_link
 parameter_list|(
 name|struct
 name|ucred
@@ -1781,19 +1781,19 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|dvp
 argument_list|,
-literal|"mac_check_vnode_link"
+literal|"mac_vnode_check_link"
 argument_list|)
 expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_link"
+literal|"mac_vnode_check_link"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_link
+name|vnode_check_link
 argument_list|,
 name|cred
 argument_list|,
@@ -1822,7 +1822,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_listextattr
+name|mac_vnode_check_listextattr
 parameter_list|(
 name|struct
 name|ucred
@@ -1845,12 +1845,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_listextattr"
+literal|"mac_vnode_check_listextattr"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_listextattr
+name|vnode_check_listextattr
 argument_list|,
 name|cred
 argument_list|,
@@ -1873,7 +1873,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_lookup
+name|mac_vnode_check_lookup
 parameter_list|(
 name|struct
 name|ucred
@@ -1898,12 +1898,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|dvp
 argument_list|,
-literal|"mac_check_vnode_lookup"
+literal|"mac_vnode_check_lookup"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_lookup
+name|vnode_check_lookup
 argument_list|,
 name|cred
 argument_list|,
@@ -1926,7 +1926,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_mmap
+name|mac_vnode_check_mmap
 parameter_list|(
 name|struct
 name|ucred
@@ -1952,12 +1952,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_mmap"
+literal|"mac_vnode_check_mmap"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_mmap
+name|vnode_check_mmap
 argument_list|,
 name|cred
 argument_list|,
@@ -1982,7 +1982,7 @@ end_function
 
 begin_function
 name|void
-name|mac_check_vnode_mmap_downgrade
+name|mac_vnode_check_mmap_downgrade
 parameter_list|(
 name|struct
 name|ucred
@@ -2009,12 +2009,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_mmap_downgrade"
+literal|"mac_vnode_check_mmap_downgrade"
 argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|check_vnode_mmap_downgrade
+name|vnode_check_mmap_downgrade
 argument_list|,
 name|cred
 argument_list|,
@@ -2038,7 +2038,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_mprotect
+name|mac_vnode_check_mprotect
 parameter_list|(
 name|struct
 name|ucred
@@ -2061,12 +2061,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_mprotect"
+literal|"mac_vnode_check_mprotect"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_mprotect
+name|vnode_check_mprotect
 argument_list|,
 name|cred
 argument_list|,
@@ -2089,7 +2089,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_open
+name|mac_vnode_check_open
 parameter_list|(
 name|struct
 name|ucred
@@ -2112,12 +2112,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_open"
+literal|"mac_vnode_check_open"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_open
+name|vnode_check_open
 argument_list|,
 name|cred
 argument_list|,
@@ -2140,7 +2140,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_poll
+name|mac_vnode_check_poll
 parameter_list|(
 name|struct
 name|ucred
@@ -2165,65 +2165,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_poll"
+literal|"mac_vnode_check_poll"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_poll
-argument_list|,
-name|active_cred
-argument_list|,
-name|file_cred
-argument_list|,
-name|vp
-argument_list|,
-name|vp
-operator|->
-name|v_label
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|mac_check_vnode_read
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|active_cred
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-name|file_cred
-parameter_list|,
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|)
-block|{
-name|int
-name|error
-decl_stmt|;
-name|ASSERT_VOP_LOCKED
-argument_list|(
-name|vp
-argument_list|,
-literal|"mac_check_vnode_read"
-argument_list|)
-expr_stmt|;
-name|MAC_CHECK
-argument_list|(
-name|check_vnode_read
+name|vnode_check_poll
 argument_list|,
 name|active_cred
 argument_list|,
@@ -2246,7 +2193,60 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_readdir
+name|mac_vnode_check_read
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|active_cred
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|file_cred
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"mac_vnode_check_read"
+argument_list|)
+expr_stmt|;
+name|MAC_CHECK
+argument_list|(
+name|vnode_check_read
+argument_list|,
+name|active_cred
+argument_list|,
+name|file_cred
+argument_list|,
+name|vp
+argument_list|,
+name|vp
+operator|->
+name|v_label
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|mac_vnode_check_readdir
 parameter_list|(
 name|struct
 name|ucred
@@ -2266,12 +2266,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|dvp
 argument_list|,
-literal|"mac_check_vnode_readdir"
+literal|"mac_vnode_check_readdir"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_readdir
+name|vnode_check_readdir
 argument_list|,
 name|cred
 argument_list|,
@@ -2292,7 +2292,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_readlink
+name|mac_vnode_check_readlink
 parameter_list|(
 name|struct
 name|ucred
@@ -2312,12 +2312,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_readlink"
+literal|"mac_vnode_check_readlink"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_readlink
+name|vnode_check_readlink
 argument_list|,
 name|cred
 argument_list|,
@@ -2339,7 +2339,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_check_vnode_relabel
+name|mac_vnode_check_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -2364,12 +2364,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_relabel"
+literal|"mac_vnode_check_relabel"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_relabel
+name|vnode_check_relabel
 argument_list|,
 name|cred
 argument_list|,
@@ -2392,7 +2392,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_rename_from
+name|mac_vnode_check_rename_from
 parameter_list|(
 name|struct
 name|ucred
@@ -2422,19 +2422,19 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|dvp
 argument_list|,
-literal|"mac_check_vnode_rename_from"
+literal|"mac_vnode_check_rename_from"
 argument_list|)
 expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_rename_from"
+literal|"mac_vnode_check_rename_from"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_rename_from
+name|vnode_check_rename_from
 argument_list|,
 name|cred
 argument_list|,
@@ -2463,7 +2463,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_rename_to
+name|mac_vnode_check_rename_to
 parameter_list|(
 name|struct
 name|ucred
@@ -2496,19 +2496,19 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|dvp
 argument_list|,
-literal|"mac_check_vnode_rename_to"
+literal|"mac_vnode_check_rename_to"
 argument_list|)
 expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_rename_to"
+literal|"mac_vnode_check_rename_to"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_rename_to
+name|vnode_check_rename_to
 argument_list|,
 name|cred
 argument_list|,
@@ -2545,7 +2545,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_revoke
+name|mac_vnode_check_revoke
 parameter_list|(
 name|struct
 name|ucred
@@ -2565,12 +2565,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_revoke"
+literal|"mac_vnode_check_revoke"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_revoke
+name|vnode_check_revoke
 argument_list|,
 name|cred
 argument_list|,
@@ -2591,7 +2591,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_setacl
+name|mac_vnode_check_setacl
 parameter_list|(
 name|struct
 name|ucred
@@ -2619,12 +2619,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_setacl"
+literal|"mac_vnode_check_setacl"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_setacl
+name|vnode_check_setacl
 argument_list|,
 name|cred
 argument_list|,
@@ -2649,7 +2649,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_setextattr
+name|mac_vnode_check_setextattr
 parameter_list|(
 name|struct
 name|ucred
@@ -2682,12 +2682,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_setextattr"
+literal|"mac_vnode_check_setextattr"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_setextattr
+name|vnode_check_setextattr
 argument_list|,
 name|cred
 argument_list|,
@@ -2714,7 +2714,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_setflags
+name|mac_vnode_check_setflags
 parameter_list|(
 name|struct
 name|ucred
@@ -2737,12 +2737,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_setflags"
+literal|"mac_vnode_check_setflags"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_setflags
+name|vnode_check_setflags
 argument_list|,
 name|cred
 argument_list|,
@@ -2765,7 +2765,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_setmode
+name|mac_vnode_check_setmode
 parameter_list|(
 name|struct
 name|ucred
@@ -2788,12 +2788,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_setmode"
+literal|"mac_vnode_check_setmode"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_setmode
+name|vnode_check_setmode
 argument_list|,
 name|cred
 argument_list|,
@@ -2816,7 +2816,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_setowner
+name|mac_vnode_check_setowner
 parameter_list|(
 name|struct
 name|ucred
@@ -2842,12 +2842,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_setowner"
+literal|"mac_vnode_check_setowner"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_setowner
+name|vnode_check_setowner
 argument_list|,
 name|cred
 argument_list|,
@@ -2872,7 +2872,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_setutimes
+name|mac_vnode_check_setutimes
 parameter_list|(
 name|struct
 name|ucred
@@ -2900,12 +2900,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_setutimes"
+literal|"mac_vnode_check_setutimes"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_setutimes
+name|vnode_check_setutimes
 argument_list|,
 name|cred
 argument_list|,
@@ -2930,7 +2930,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_stat
+name|mac_vnode_check_stat
 parameter_list|(
 name|struct
 name|ucred
@@ -2955,12 +2955,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_stat"
+literal|"mac_vnode_check_stat"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_stat
+name|vnode_check_stat
 argument_list|,
 name|active_cred
 argument_list|,
@@ -2983,7 +2983,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_unlink
+name|mac_vnode_check_unlink
 parameter_list|(
 name|struct
 name|ucred
@@ -3013,19 +3013,19 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|dvp
 argument_list|,
-literal|"mac_check_vnode_unlink"
+literal|"mac_vnode_check_unlink"
 argument_list|)
 expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_unlink"
+literal|"mac_vnode_check_unlink"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_unlink
+name|vnode_check_unlink
 argument_list|,
 name|cred
 argument_list|,
@@ -3054,7 +3054,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_vnode_write
+name|mac_vnode_check_write
 parameter_list|(
 name|struct
 name|ucred
@@ -3079,12 +3079,12 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-literal|"mac_check_vnode_write"
+literal|"mac_vnode_check_write"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_vnode_write
+name|vnode_check_write
 argument_list|,
 name|active_cred
 argument_list|,
@@ -3107,7 +3107,7 @@ end_function
 
 begin_function
 name|void
-name|mac_relabel_vnode
+name|mac_vnode_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -3127,7 +3127,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|relabel_vnode
+name|vnode_relabel
 argument_list|,
 name|cred
 argument_list|,
@@ -3145,7 +3145,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_mount
+name|mac_mount_create
 parameter_list|(
 name|struct
 name|ucred
@@ -3160,7 +3160,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|create_mount
+name|mount_create
 argument_list|,
 name|cred
 argument_list|,
@@ -3176,7 +3176,7 @@ end_function
 
 begin_function
 name|int
-name|mac_check_mount_stat
+name|mac_mount_check_stat
 parameter_list|(
 name|struct
 name|ucred
@@ -3194,7 +3194,7 @@ name|error
 decl_stmt|;
 name|MAC_CHECK
 argument_list|(
-name|check_mount_stat
+name|mount_check_stat
 argument_list|,
 name|cred
 argument_list|,
@@ -3215,7 +3215,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_devfs_device
+name|mac_devfs_create_device
 parameter_list|(
 name|struct
 name|ucred
@@ -3240,7 +3240,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|create_devfs_device
+name|devfs_create_device
 argument_list|,
 name|cred
 argument_list|,
@@ -3260,7 +3260,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_devfs_symlink
+name|mac_devfs_create_symlink
 parameter_list|(
 name|struct
 name|ucred
@@ -3285,7 +3285,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|create_devfs_symlink
+name|devfs_create_symlink
 argument_list|,
 name|cred
 argument_list|,
@@ -3309,7 +3309,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_devfs_directory
+name|mac_devfs_create_directory
 parameter_list|(
 name|struct
 name|mount
@@ -3331,7 +3331,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|create_devfs_directory
+name|devfs_create_directory
 argument_list|,
 name|mp
 argument_list|,
@@ -3412,7 +3412,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|mac_setlabel_vnode_extattr
+name|mac_vnode_setlabel_extattr
 argument_list|(
 name|ap
 operator|->
@@ -3432,7 +3432,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|mac_relabel_vnode
+name|mac_vnode_relabel
 argument_list|(
 name|ap
 operator|->
@@ -3525,7 +3525,7 @@ return|;
 comment|/* 	 * Multi-phase commit.  First check the policies to confirm the 	 * change is OK.  Then commit via the filesystem.  Finally, update 	 * the actual vnode label. 	 * 	 * Question: maybe the filesystem should update the vnode at the end 	 * as part of VOP_SETLABEL()? 	 */
 name|error
 operator|=
-name|mac_check_vnode_relabel
+name|mac_vnode_check_relabel
 argument_list|(
 name|cred
 argument_list|,

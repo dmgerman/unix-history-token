@@ -2433,7 +2433,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mac_check_inpcb_deliver
+name|mac_inpcb_check_deliver
 argument_list|(
 name|inp
 argument_list|,
@@ -5313,7 +5313,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|mac_set_socket_peer_from_mbuf
+name|mac_socketpeer_set_from_mbuf
 argument_list|(
 name|m
 argument_list|,

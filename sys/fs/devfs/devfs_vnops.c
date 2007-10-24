@@ -1283,7 +1283,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_associate_vnode_devfs
+name|mac_devfs_vnode_associate
 argument_list|(
 name|mp
 argument_list|,
@@ -6297,7 +6297,7 @@ name|vp
 operator|->
 name|v_data
 expr_stmt|;
-name|mac_relabel_vnode
+name|mac_vnode_relabel
 argument_list|(
 name|ap
 operator|->
@@ -6310,7 +6310,7 @@ operator|->
 name|a_label
 argument_list|)
 expr_stmt|;
-name|mac_update_devfs
+name|mac_devfs_update
 argument_list|(
 name|vp
 operator|->
@@ -6571,7 +6571,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_devfs_symlink
+name|mac_devfs_create_symlink
 argument_list|(
 name|ap
 operator|->

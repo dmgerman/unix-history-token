@@ -364,7 +364,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_externalize_cred_label
+name|mac_cred_externalize_label
 argument_list|(
 name|tcred
 operator|->
@@ -567,7 +567,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_externalize_cred_label
+name|mac_cred_externalize_label
 argument_list|(
 name|td
 operator|->
@@ -772,7 +772,7 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|mac_internalize_cred_label
+name|mac_cred_internalize_label
 argument_list|(
 name|intlabel
 argument_list|,
@@ -817,7 +817,7 @@ name|p_ucred
 expr_stmt|;
 name|error
 operator|=
-name|mac_check_cred_relabel
+name|mac_cred_check_relabel
 argument_list|(
 name|oldcred
 argument_list|,
@@ -855,7 +855,7 @@ argument_list|,
 name|oldcred
 argument_list|)
 expr_stmt|;
-name|mac_relabel_cred
+name|mac_cred_relabel
 argument_list|(
 name|newcred
 argument_list|,
@@ -1148,7 +1148,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|mac_copy_vnode_label
+name|mac_vnode_copy_label
 argument_list|(
 name|vp
 operator|->
@@ -1173,7 +1173,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_externalize_vnode_label
+name|mac_vnode_externalize_label
 argument_list|(
 name|intlabel
 argument_list|,
@@ -1211,7 +1211,7 @@ argument_list|(
 name|pipe
 argument_list|)
 expr_stmt|;
-name|mac_copy_pipe_label
+name|mac_pipe_copy_label
 argument_list|(
 name|pipe
 operator|->
@@ -1229,7 +1229,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_externalize_pipe_label
+name|mac_pipe_externalize_label
 argument_list|(
 name|intlabel
 argument_list|,
@@ -1269,7 +1269,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|mac_copy_socket_label
+name|mac_socket_copy_label
 argument_list|(
 name|so
 operator|->
@@ -1285,7 +1285,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_externalize_socket_label
+name|mac_socket_externalize_label
 argument_list|(
 name|intlabel
 argument_list|,
@@ -1561,7 +1561,7 @@ operator|&
 name|nd
 argument_list|)
 expr_stmt|;
-name|mac_copy_vnode_label
+name|mac_vnode_copy_label
 argument_list|(
 name|nd
 operator|.
@@ -1574,7 +1574,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_externalize_vnode_label
+name|mac_vnode_externalize_label
 argument_list|(
 name|intlabel
 argument_list|,
@@ -1849,7 +1849,7 @@ operator|&
 name|nd
 argument_list|)
 expr_stmt|;
-name|mac_copy_vnode_label
+name|mac_vnode_copy_label
 argument_list|(
 name|nd
 operator|.
@@ -1862,7 +1862,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_externalize_vnode_label
+name|mac_vnode_externalize_label
 argument_list|(
 name|intlabel
 argument_list|,
@@ -2131,7 +2131,7 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|mac_internalize_vnode_label
+name|mac_vnode_internalize_label
 argument_list|(
 name|intlabel
 argument_list|,
@@ -2257,7 +2257,7 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|mac_internalize_pipe_label
+name|mac_pipe_internalize_label
 argument_list|(
 name|intlabel
 argument_list|,
@@ -2321,7 +2321,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_internalize_socket_label
+name|mac_socket_internalize_label
 argument_list|(
 name|intlabel
 argument_list|,
@@ -2531,7 +2531,7 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|mac_internalize_vnode_label
+name|mac_vnode_internalize_label
 argument_list|(
 name|intlabel
 argument_list|,
@@ -2810,7 +2810,7 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|mac_internalize_vnode_label
+name|mac_vnode_internalize_label
 argument_list|(
 name|intlabel
 argument_list|,
