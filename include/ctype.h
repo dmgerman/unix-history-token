@@ -305,7 +305,7 @@ name|isalnum
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_A|_CTYPE_D)
+value|__sbistype((c), _CTYPE_A|_CTYPE_D)
 end_define
 
 begin_define
@@ -315,7 +315,7 @@ name|isalpha
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_A)
+value|__sbistype((c), _CTYPE_A)
 end_define
 
 begin_define
@@ -325,7 +325,7 @@ name|iscntrl
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_C)
+value|__sbistype((c), _CTYPE_C)
 end_define
 
 begin_define
@@ -349,7 +349,7 @@ name|isgraph
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_G)
+value|__sbistype((c), _CTYPE_G)
 end_define
 
 begin_define
@@ -359,7 +359,7 @@ name|islower
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_L)
+value|__sbistype((c), _CTYPE_L)
 end_define
 
 begin_define
@@ -369,7 +369,7 @@ name|isprint
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_R)
+value|__sbistype((c), _CTYPE_R)
 end_define
 
 begin_define
@@ -379,7 +379,7 @@ name|ispunct
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_P)
+value|__sbistype((c), _CTYPE_P)
 end_define
 
 begin_define
@@ -389,7 +389,7 @@ name|isspace
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_S)
+value|__sbistype((c), _CTYPE_S)
 end_define
 
 begin_define
@@ -399,7 +399,7 @@ name|isupper
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_U)
+value|__sbistype((c), _CTYPE_U)
 end_define
 
 begin_define
@@ -423,7 +423,7 @@ name|tolower
 parameter_list|(
 name|c
 parameter_list|)
-value|__tolower(c)
+value|__sbtolower(c)
 end_define
 
 begin_define
@@ -433,7 +433,7 @@ name|toupper
 parameter_list|(
 name|c
 parameter_list|)
-value|__toupper(c)
+value|__sbtoupper(c)
 end_define
 
 begin_if
@@ -453,7 +453,7 @@ name|_tolower
 parameter_list|(
 name|c
 parameter_list|)
-value|__tolower(c)
+value|__sbtolower(c)
 end_define
 
 begin_define
@@ -463,7 +463,7 @@ name|_toupper
 parameter_list|(
 name|c
 parameter_list|)
-value|__toupper(c)
+value|__sbtoupper(c)
 end_define
 
 begin_define
@@ -506,7 +506,7 @@ name|isblank
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_B)
+value|__sbistype((c), _CTYPE_B)
 end_define
 
 begin_endif
@@ -527,7 +527,7 @@ name|digittoint
 parameter_list|(
 name|c
 parameter_list|)
-value|__maskrune((c), 0xFF)
+value|__sbmaskrune((c), 0xFF)
 end_define
 
 begin_define
@@ -537,7 +537,7 @@ name|ishexnumber
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_X)
+value|__sbistype((c), _CTYPE_X)
 end_define
 
 begin_define
@@ -547,7 +547,7 @@ name|isideogram
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_I)
+value|__sbistype((c), _CTYPE_I)
 end_define
 
 begin_define
@@ -557,7 +557,7 @@ name|isnumber
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_D)
+value|__sbistype((c), _CTYPE_D)
 end_define
 
 begin_define
@@ -567,7 +567,7 @@ name|isphonogram
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_Q)
+value|__sbistype((c), _CTYPE_Q)
 end_define
 
 begin_define
@@ -577,7 +577,7 @@ name|isrune
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), 0xFFFFFF00L)
+value|__sbistype((c), 0xFFFFFF00L)
 end_define
 
 begin_define
@@ -587,7 +587,7 @@ name|isspecial
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _CTYPE_T)
+value|__sbistype((c), _CTYPE_T)
 end_define
 
 begin_endif

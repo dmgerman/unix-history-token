@@ -216,6 +216,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* setup defaults */
+end_comment
+
+begin_decl_stmt
+name|int
+name|__mb_cur_max
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__mb_sb_limit
+init|=
+literal|256
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Expected to be<= _CACHED_RUNES */
+end_comment
+
 begin_function
 name|int
 name|_none_init
@@ -252,6 +276,10 @@ expr_stmt|;
 name|__mb_cur_max
 operator|=
 literal|1
+expr_stmt|;
+name|__mb_sb_limit
+operator|=
+literal|256
 expr_stmt|;
 return|return
 operator|(
@@ -784,14 +812,6 @@ end_function
 begin_comment
 comment|/* setup defaults */
 end_comment
-
-begin_decl_stmt
-name|int
-name|__mb_cur_max
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|size_t

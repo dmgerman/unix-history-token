@@ -93,6 +93,13 @@ directive|include
 file|"mblocal.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|__mb_sb_limit
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|size_t
@@ -513,6 +520,10 @@ expr_stmt|;
 name|__mbsinit
 operator|=
 name|_EUC_mbsinit
+expr_stmt|;
+name|__mb_sb_limit
+operator|=
+literal|256
 expr_stmt|;
 return|return
 operator|(
