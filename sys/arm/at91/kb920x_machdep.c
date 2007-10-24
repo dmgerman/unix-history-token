@@ -1039,7 +1039,7 @@ name|i
 operator|++
 index|]
 operator|=
-name|KERNBASE
+name|KERNVIRTADDR
 expr_stmt|;
 name|fake_preload
 index|[
@@ -1072,7 +1072,7 @@ operator|)
 operator|&
 name|end
 operator|-
-name|KERNBASE
+name|KERNVIRTADDR
 expr_stmt|;
 ifdef|#
 directive|ifdef
