@@ -56,6 +56,9 @@ comment|/* A EFI system partition entry. */
 name|G_PART_ALIAS_FREEBSD
 block|,
 comment|/* A BSD labeled partition entry. */
+name|G_PART_ALIAS_FREEBSD_BOOT
+block|,
+comment|/* A FreeBSD boot partition entry. */
 name|G_PART_ALIAS_FREEBSD_SWAP
 block|,
 comment|/* A swap partition entry. */
