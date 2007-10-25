@@ -3562,7 +3562,7 @@ operator|=
 name|AE_NO_HARDWARE_RESPONSE
 expr_stmt|;
 name|int
-name|need_suspend
+name|need_poll
 init|=
 name|cold
 operator|||
@@ -3577,7 +3577,7 @@ decl_stmt|;
 comment|/*      * The main CPU should be much faster than the EC.  So the status should      * be "not ready" when we start waiting.  But if the main CPU is really      * slow, it's possible we see the current "ready" response.  Since that      * can't be distinguished from the previous response in polled mode,      * this is a potential issue.  We really should have interrupts enabled      * during boot so there is no ambiguity in polled mode.      *      * If this occurs, we add an additional delay before actually entering      * the status checking loop, hopefully to allow the EC to go to work      * and produce a non-stale status.      */
 if|if
 condition|(
-name|need_suspend
+name|need_poll
 condition|)
 block|{
 specifier|static
@@ -3628,7 +3628,7 @@ block|}
 comment|/* Wait for event by polling or GPE (interrupt). */
 if|if
 condition|(
-name|need_suspend
+name|need_poll
 condition|)
 block|{
 name|count
