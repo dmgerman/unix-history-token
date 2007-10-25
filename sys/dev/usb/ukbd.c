@@ -3199,9 +3199,18 @@ operator|->
 name|kb_flags
 argument_list|)
 condition|)
+block|{
+name|kbd
+operator|->
+name|kb_flags
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX: Missing free()'s */
 return|return
 name|ENXIO
 return|;
+block|}
 name|ukbd_ioctl
 argument_list|(
 name|kbd
@@ -3243,9 +3252,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|kbd
+operator|->
+name|kb_flags
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX: Missing free()'s */
 return|return
 name|ENXIO
 return|;
+block|}
 if|if
 condition|(
 name|ukbd_enable_intr
