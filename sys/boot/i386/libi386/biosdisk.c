@@ -6561,6 +6561,13 @@ argument_list|,
 name|write
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+literal|0
+condition|)
+break|break;
 block|}
 if|if
 condition|(
