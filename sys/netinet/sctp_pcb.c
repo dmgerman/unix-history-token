@@ -2098,7 +2098,7 @@ name|sctp_ifnp
 operator|->
 name|refcount
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|sctp_ifnp
 operator|->
@@ -13401,6 +13401,16 @@ argument_list|,
 name|SCTP_STATE_SHUTDOWN_SENT
 argument_list|)
 expr_stmt|;
+name|SCTP_CLEAR_SUBSTATE
+argument_list|(
+operator|&
+name|asoc
+operator|->
+name|asoc
+argument_list|,
+name|SCTP_STATE_SHUTDOWN_PENDING
+argument_list|)
+expr_stmt|;
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_SHUTDOWN
@@ -14129,6 +14139,19 @@ name|SCTP_FROM_SCTP_PCB
 operator|+
 name|SCTP_LOC_7
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCTP_PANIC_ON_ABORT
+argument_list|)
+name|panic
+argument_list|(
+literal|"inpcb_free does an abort"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sctp_send_abort_tcb
 argument_list|(
 name|asoc
@@ -17833,6 +17856,15 @@ expr_stmt|;
 comment|/* 		 * Mobility adaptation Ideally, if deleted destination is 		 * the primary, it becomes a fast retransmission trigger by 		 * the subsequent SET PRIMARY. (by micchie) 		 */
 if|if
 condition|(
+name|sctp_is_mobility_feature_on
+argument_list|(
+name|stcb
+operator|->
+name|sctp_ep
+argument_list|,
+name|SCTP_MOBILITY_BASE
+argument_list|)
+operator|||
 name|sctp_is_mobility_feature_on
 argument_list|(
 name|stcb

@@ -175,7 +175,7 @@ name|asoc
 parameter_list|,
 name|sb
 parameter_list|)
-value|((long) (sctp_maxspace(sb)> (asoc)->sb_cc) ? (sctp_maxspace(sb) - (asoc)->sb_cc) : 0)
+value|((long) ((sctp_maxspace(sb)> (asoc)->sb_cc) ? (sctp_maxspace(sb) - (asoc)->sb_cc) : 0))
 end_define
 
 begin_define

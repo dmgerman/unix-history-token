@@ -1950,6 +1950,12 @@ index|[
 name|SCTP_TSN_LOG_SIZE
 index|]
 decl_stmt|;
+name|uint32_t
+name|cumack_logsnt
+index|[
+name|SCTP_TSN_LOG_SIZE
+index|]
+decl_stmt|;
 name|uint16_t
 name|tsn_in_at
 decl_stmt|;
@@ -1964,6 +1970,9 @@ name|tsn_out_wrapped
 decl_stmt|;
 name|uint16_t
 name|cumack_log_at
+decl_stmt|;
+name|uint16_t
+name|cumack_log_atsnt
 decl_stmt|;
 endif|#
 directive|endif

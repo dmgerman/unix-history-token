@@ -5189,6 +5189,12 @@ name|cumack_log_at
 operator|=
 literal|0
 expr_stmt|;
+name|asoc
+operator|->
+name|cumack_log_atsnt
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 ifdef|#
@@ -19850,6 +19856,19 @@ name|so_locked
 argument_list|)
 expr_stmt|;
 comment|/* notify the peer */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCTP_PANIC_ON_ABORT
+argument_list|)
+name|panic
+argument_list|(
+literal|"aborting an association"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sctp_send_abort_tcb
 argument_list|(
 name|stcb
