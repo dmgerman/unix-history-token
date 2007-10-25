@@ -6013,7 +6013,7 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|mpo_associate_nfsd_label_t
+name|mpo_proc_associate_nfsd_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -6411,6 +6411,9 @@ decl_stmt|;
 name|mpo_proc_create_init_t
 name|mpo_proc_create_init
 decl_stmt|;
+name|mpo_proc_associate_nfsd_t
+name|mpo_proc_associate_nfsd
+decl_stmt|;
 name|mpo_cred_relabel_t
 name|mpo_cred_relabel
 decl_stmt|;
@@ -6798,9 +6801,6 @@ name|mpo_vnode_check_unlink
 decl_stmt|;
 name|mpo_vnode_check_write_t
 name|mpo_vnode_check_write
-decl_stmt|;
-name|mpo_associate_nfsd_label_t
-name|mpo_associate_nfsd_label
 decl_stmt|;
 name|mpo_mbuf_create_from_firewall_t
 name|mpo_mbuf_create_from_firewall

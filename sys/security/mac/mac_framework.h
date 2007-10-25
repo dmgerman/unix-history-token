@@ -1663,6 +1663,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|mac_proc_associate_nfsd
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|mac_thread_userret
 parameter_list|(
 name|struct
@@ -3869,18 +3881,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mac_associate_nfsd_label
-parameter_list|(
 name|struct
 name|ucred
 modifier|*

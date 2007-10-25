@@ -589,6 +589,30 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * When a thread becomes an NFS server daemon, its credential may need to be  * updated to reflect this so that policies can recognize when file system  * operations originate from the network.  *  * At some point, it would be desirable if the credential used for each NFS  * RPC could be set based on the RPC context (i.e., source system, etc) to  * provide more fine-grained access control.  */
+end_comment
+
+begin_function
+name|void
+name|mac_proc_associate_nfsd
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|)
+block|{
+name|MAC_PERFORM
+argument_list|(
+name|proc_associate_nfsd
+argument_list|,
+name|cred
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|void
 name|mac_thread_userret

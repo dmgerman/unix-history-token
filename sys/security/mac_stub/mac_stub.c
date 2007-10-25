@@ -551,19 +551,6 @@ end_function
 begin_function
 specifier|static
 name|void
-name|stub_associate_nfsd_label
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-specifier|static
-name|void
 name|stub_devfs_create_device
 parameter_list|(
 name|struct
@@ -1833,6 +1820,19 @@ begin_function
 specifier|static
 name|void
 name|stub_proc_create_init
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|stub_proc_associate_nfsd
 parameter_list|(
 name|struct
 name|ucred
@@ -5546,11 +5546,6 @@ operator|=
 name|stub_vnode_associate_extattr
 block|,
 operator|.
-name|mpo_associate_nfsd_label
-operator|=
-name|stub_associate_nfsd_label
-block|,
-operator|.
 name|mpo_vnode_associate_singlelabel
 operator|=
 name|stub_vnode_associate_singlelabel
@@ -5774,6 +5769,11 @@ operator|.
 name|mpo_proc_create_init
 operator|=
 name|stub_proc_create_init
+block|,
+operator|.
+name|mpo_proc_associate_nfsd
+operator|=
+name|stub_proc_associate_nfsd
 block|,
 operator|.
 name|mpo_cred_relabel
