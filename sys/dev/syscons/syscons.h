@@ -15,6 +15,18 @@ directive|define
 name|_DEV_SYSCONS_SYSCONS_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
 begin_comment
 comment|/* machine-dependent part of the header */
 end_comment
@@ -1201,6 +1213,11 @@ name|int
 name|splash_save_status
 decl_stmt|;
 comment|/* saved status for splash screen */
+name|struct
+name|mtx
+name|scr_lock
+decl_stmt|;
+comment|/* mutex for sc_puts() */
 ifdef|#
 directive|ifdef
 name|_SCR_MD_STAT_DECLARED_
