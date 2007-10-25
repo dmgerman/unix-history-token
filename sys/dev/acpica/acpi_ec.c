@@ -1982,7 +1982,7 @@ name|sc
 operator|->
 name|ec_suspending
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 name|free
 argument_list|(
@@ -2437,7 +2437,6 @@ name|acpi_ec_softc
 modifier|*
 name|sc
 decl_stmt|;
-comment|/* Disable the GPE so we don't get EC events during shutdown. */
 name|sc
 operator|=
 name|device_get_softc
@@ -2449,7 +2448,7 @@ name|sc
 operator|->
 name|ec_suspending
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 return|return
 operator|(
@@ -2473,7 +2472,6 @@ name|acpi_ec_softc
 modifier|*
 name|sc
 decl_stmt|;
-comment|/* Disable the GPE so we don't get EC events during shutdown. */
 name|sc
 operator|=
 name|device_get_softc
@@ -2485,7 +2483,7 @@ name|sc
 operator|->
 name|ec_suspending
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 return|return
 operator|(
