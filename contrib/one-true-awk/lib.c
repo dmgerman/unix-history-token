@@ -121,7 +121,7 @@ begin_decl_stmt
 name|char
 name|inputFS
 index|[
-literal|10
+literal|100
 index|]
 init|=
 literal|" "
@@ -285,6 +285,8 @@ operator|)
 name|malloc
 argument_list|(
 name|n
+operator|+
+literal|1
 argument_list|)
 operator|)
 operator|==
