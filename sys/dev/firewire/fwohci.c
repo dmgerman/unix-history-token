@@ -12728,7 +12728,9 @@ name|sc
 argument_list|,
 name|stat
 argument_list|,
-name|count
+operator|-
+literal|1
+comment|/* XXX count */
 argument_list|)
 expr_stmt|;
 name|splx
