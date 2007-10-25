@@ -130,16 +130,6 @@ define|\
 value|(dep)->de_fc[(slot)].fc_frcn = (frcn); \ 	(dep)->de_fc[(slot)].fc_fsrcn = (fsrcn);
 end_define
 
-begin_define
-define|#
-directive|define
-name|fc_last_to_nexttolast
-parameter_list|(
-name|dep
-parameter_list|)
-value|do {		 \ 	(dep)->de_fc[FC_NEXTTOLASTFC].fc_frcn =  \ 	(dep)->de_fc[FC_LASTFC].fc_frcn;	 \ 	(dep)->de_fc[FC_NEXTTOLASTFC].fc_fsrcn = \ 	(dep)->de_fc[FC_LASTFC].fc_fsrcn;	 \ } while (0)
-end_define
-
 begin_comment
 comment|/*  * This is the in memory variant of a dos directory entry.  It is usually  * contained within a vnode.  */
 end_comment
