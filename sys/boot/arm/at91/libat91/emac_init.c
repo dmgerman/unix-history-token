@@ -117,7 +117,7 @@ operator|=
 operator|(
 name|mac
 index|[
-literal|2
+literal|3
 index|]
 operator|<<
 literal|24
@@ -126,7 +126,7 @@ operator||
 operator|(
 name|mac
 index|[
-literal|3
+literal|2
 index|]
 operator|<<
 literal|16
@@ -135,7 +135,7 @@ operator||
 operator|(
 name|mac
 index|[
-literal|4
+literal|1
 index|]
 operator|<<
 literal|8
@@ -143,7 +143,7 @@ operator|)
 operator||
 name|mac
 index|[
-literal|5
+literal|0
 index|]
 expr_stmt|;
 name|localMAChigh
@@ -151,7 +151,7 @@ operator|=
 operator|(
 name|mac
 index|[
-literal|0
+literal|5
 index|]
 operator|<<
 literal|8
@@ -159,7 +159,7 @@ operator|)
 operator||
 name|mac
 index|[
-literal|1
+literal|4
 index|]
 expr_stmt|;
 name|localMACSet
