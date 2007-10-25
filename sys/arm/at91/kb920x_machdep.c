@@ -2122,7 +2122,7 @@ name|i
 operator|++
 index|]
 operator|=
-name|KERNPHYSADDR
+name|PHYSADDR
 operator|+
 name|memsize
 expr_stmt|;
