@@ -1143,7 +1143,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_destroy_syncache
+name|mac_syncache_destroy
 argument_list|(
 operator|&
 name|sc
@@ -4505,7 +4505,7 @@ directive|ifdef
 name|MAC
 if|if
 condition|(
-name|mac_init_syncache
+name|mac_syncache_init
 argument_list|(
 operator|&
 name|maclabel
@@ -4530,7 +4530,7 @@ name|done
 goto|;
 block|}
 else|else
-name|mac_init_syncache_from_inpcb
+name|mac_syncache_create
 argument_list|(
 name|maclabel
 argument_list|,
@@ -4667,7 +4667,7 @@ ifdef|#
 directive|ifdef
 name|MAC
 comment|/* 		 * Since we have already unconditionally allocated label 		 * storage, free it up.  The syncache entry will already 		 * have an initialized label we can use. 		 */
-name|mac_destroy_syncache
+name|mac_syncache_destroy
 argument_list|(
 operator|&
 name|maclabel
@@ -5306,7 +5306,7 @@ operator|==
 operator|&
 name|scs
 condition|)
-name|mac_destroy_syncache
+name|mac_syncache_destroy
 argument_list|(
 operator|&
 name|maclabel
@@ -5494,7 +5494,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_mbuf_from_syncache
+name|mac_syncache_create_mbuf
 argument_list|(
 name|sc
 operator|->

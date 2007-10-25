@@ -1470,7 +1470,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_destroy_syncache
+name|mac_syncache_destroy
 parameter_list|(
 name|struct
 name|label
@@ -1483,7 +1483,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_init_syncache
+name|mac_syncache_init
 parameter_list|(
 name|struct
 name|label
@@ -1496,7 +1496,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_init_syncache_from_inpcb
+name|mac_syncache_create
 parameter_list|(
 name|struct
 name|label
@@ -1513,7 +1513,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mac_create_mbuf_from_syncache
+name|mac_syncache_create_mbuf
 parameter_list|(
 name|struct
 name|label

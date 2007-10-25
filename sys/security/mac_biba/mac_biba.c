@@ -13792,7 +13792,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|biba_init_syncache_from_inpcb
+name|biba_syncache_create
 parameter_list|(
 name|struct
 name|label
@@ -13842,7 +13842,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|biba_create_mbuf_from_syncache
+name|biba_syncache_create_mbuf
 parameter_list|(
 name|struct
 name|label
@@ -13930,7 +13930,7 @@ operator|=
 name|biba_init_label_waitcheck
 block|,
 operator|.
-name|mpo_init_syncache_label
+name|mpo_syncache_init_label
 operator|=
 name|biba_init_label_waitcheck
 block|,
@@ -13990,9 +13990,9 @@ operator|=
 name|biba_init_label_waitcheck
 block|,
 operator|.
-name|mpo_init_syncache_from_inpcb
+name|mpo_syncache_create
 operator|=
-name|biba_init_syncache_from_inpcb
+name|biba_syncache_create
 block|,
 operator|.
 name|mpo_vnode_init_label
@@ -14025,7 +14025,7 @@ operator|=
 name|biba_destroy_label
 block|,
 operator|.
-name|mpo_destroy_syncache_label
+name|mpo_syncache_destroy_label
 operator|=
 name|biba_destroy_label
 block|,
@@ -14235,9 +14235,9 @@ operator|=
 name|biba_socket_create_mbuf
 block|,
 operator|.
-name|mpo_create_mbuf_from_syncache
+name|mpo_syncache_create_mbuf
 operator|=
-name|biba_create_mbuf_from_syncache
+name|biba_syncache_create_mbuf
 block|,
 operator|.
 name|mpo_pipe_create

@@ -1047,7 +1047,7 @@ end_comment
 
 begin_function
 name|void
-name|mac_destroy_syncache
+name|mac_syncache_destroy
 parameter_list|(
 name|struct
 name|label
@@ -1058,7 +1058,7 @@ parameter_list|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_syncache_label
+name|syncache_destroy_label
 argument_list|,
 operator|*
 name|label
@@ -1080,7 +1080,7 @@ end_function
 
 begin_function
 name|int
-name|mac_init_syncache
+name|mac_syncache_init
 parameter_list|(
 name|struct
 name|label
@@ -1115,7 +1115,7 @@ return|;
 comment|/* 	 * Since we are holding the inpcb locks the policy can not allocate 	 * policy specific label storage using M_WAITOK.  So we need to do a 	 * MAC_CHECK instead of the typical MAC_PERFORM so we can propagate 	 * allocation failures back to the syncache code. 	 */
 name|MAC_CHECK
 argument_list|(
-name|init_syncache_label
+name|syncache_init_label
 argument_list|,
 operator|*
 name|label
@@ -1133,7 +1133,7 @@ end_function
 
 begin_function
 name|void
-name|mac_init_syncache_from_inpcb
+name|mac_syncache_create
 parameter_list|(
 name|struct
 name|label
@@ -1153,7 +1153,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|init_syncache_from_inpcb
+name|syncache_create
 argument_list|,
 name|label
 argument_list|,
@@ -1165,7 +1165,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_mbuf_from_syncache
+name|mac_syncache_create_mbuf
 parameter_list|(
 name|struct
 name|label
@@ -1197,7 +1197,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|create_mbuf_from_syncache
+name|syncache_create_mbuf
 argument_list|,
 name|sc_label
 argument_list|,

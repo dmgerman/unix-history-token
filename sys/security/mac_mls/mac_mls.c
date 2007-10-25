@@ -6111,7 +6111,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mls_init_syncache_from_inpcb
+name|mls_syncache_create
 parameter_list|(
 name|struct
 name|label
@@ -6161,7 +6161,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mls_create_mbuf_from_syncache
+name|mls_syncache_create_mbuf
 parameter_list|(
 name|struct
 name|label
@@ -12768,7 +12768,7 @@ operator|=
 name|mls_init_label_waitcheck
 block|,
 operator|.
-name|mpo_init_syncache_label
+name|mpo_syncache_init_label
 operator|=
 name|mls_init_label_waitcheck
 block|,
@@ -12858,7 +12858,7 @@ operator|=
 name|mls_destroy_label
 block|,
 operator|.
-name|mpo_destroy_syncache_label
+name|mpo_syncache_destroy_label
 operator|=
 name|mls_destroy_label
 block|,
@@ -13068,9 +13068,9 @@ operator|=
 name|mls_socket_create_mbuf
 block|,
 operator|.
-name|mpo_create_mbuf_from_syncache
+name|mpo_syncache_create_mbuf
 operator|=
-name|mls_create_mbuf_from_syncache
+name|mls_syncache_create_mbuf
 block|,
 operator|.
 name|mpo_pipe_create
@@ -13138,9 +13138,9 @@ operator|=
 name|mls_inpcb_create
 block|,
 operator|.
-name|mpo_init_syncache_from_inpcb
+name|mpo_syncache_create
 operator|=
-name|mls_init_syncache_from_inpcb
+name|mls_syncache_create
 block|,
 operator|.
 name|mpo_ipq_create

@@ -6928,7 +6928,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|lomac_init_syncache_from_inpcb
+name|lomac_syncache_create
 parameter_list|(
 name|struct
 name|label
@@ -6978,7 +6978,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|lomac_create_mbuf_from_syncache
+name|lomac_syncache_create_mbuf
 parameter_list|(
 name|struct
 name|label
@@ -12272,7 +12272,7 @@ operator|=
 name|lomac_init_label
 block|,
 operator|.
-name|mpo_init_syncache_label
+name|mpo_syncache_init_label
 operator|=
 name|lomac_init_label_waitcheck
 block|,
@@ -12322,9 +12322,9 @@ operator|=
 name|lomac_init_label
 block|,
 operator|.
-name|mpo_init_syncache_from_inpcb
+name|mpo_syncache_create
 operator|=
-name|lomac_init_syncache_from_inpcb
+name|lomac_syncache_create
 block|,
 operator|.
 name|mpo_bpfdesc_destroy_label
@@ -12377,7 +12377,7 @@ operator|=
 name|lomac_proc_destroy_label
 block|,
 operator|.
-name|mpo_destroy_syncache_label
+name|mpo_syncache_destroy_label
 operator|=
 name|lomac_destroy_label
 block|,
@@ -12542,9 +12542,9 @@ operator|=
 name|lomac_socket_create_mbuf
 block|,
 operator|.
-name|mpo_create_mbuf_from_syncache
+name|mpo_syncache_create_mbuf
 operator|=
-name|lomac_create_mbuf_from_syncache
+name|lomac_syncache_create_mbuf
 block|,
 operator|.
 name|mpo_pipe_create
