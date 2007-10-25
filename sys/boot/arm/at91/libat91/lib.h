@@ -71,6 +71,7 @@ parameter_list|(
 name|unsigned
 name|eeoff
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|data_addr

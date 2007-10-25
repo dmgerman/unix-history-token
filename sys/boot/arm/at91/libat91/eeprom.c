@@ -177,6 +177,7 @@ parameter_list|(
 name|unsigned
 name|ee_off
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|data_addr
@@ -365,6 +366,7 @@ decl_stmt|;
 name|unsigned
 name|status
 decl_stmt|;
+name|unsigned
 name|char
 name|test_data
 decl_stmt|;
