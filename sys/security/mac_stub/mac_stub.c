@@ -1411,12 +1411,12 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
+name|ifp
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ifnetlabel
+name|iflpabel
 parameter_list|,
 name|struct
 name|mbuf
@@ -1757,7 +1757,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|interpvnodelabel
+name|interpvplabel
 parameter_list|,
 name|struct
 name|image_params
@@ -1795,7 +1795,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|interpvnodelabel
+name|interpvplabel
 parameter_list|,
 name|struct
 name|image_params

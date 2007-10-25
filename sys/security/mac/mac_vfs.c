@@ -1153,7 +1153,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|interpvnodelabel
+name|interpvplabel
 parameter_list|,
 name|struct
 name|image_params
@@ -1182,7 +1182,7 @@ name|vp
 operator|->
 name|v_label
 argument_list|,
-name|interpvnodelabel
+name|interpvplabel
 argument_list|,
 name|imgp
 argument_list|,
@@ -1211,7 +1211,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|interpvnodelabel
+name|interpvplabel
 parameter_list|,
 name|struct
 name|image_params
@@ -1247,7 +1247,7 @@ name|vp
 operator|->
 name|v_label
 argument_list|,
-name|interpvnodelabel
+name|interpvplabel
 argument_list|,
 name|imgp
 argument_list|,
@@ -3350,7 +3350,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implementation of VOP_SETLABEL() that relies on extended attributes  * to store label data.  Can be referenced by filesystems supporting  * extended attributes.  */
+comment|/*  * Implementation of VOP_SETLABEL() that relies on extended attributes to  * store label data.  Can be referenced by filesystems supporting extended  * attributes.  */
 end_comment
 
 begin_function
@@ -3543,7 +3543,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * VADMIN provides the opportunity for the filesystem to make 	 * decisions about who is and is not able to modify labels and 	 * protections on files.  This might not be right.  We can't assume 	 * VOP_SETLABEL() will do it, because we might implement that as 	 * part of vop_stdsetlabel_ea(). 	 */
+comment|/* 	 * VADMIN provides the opportunity for the filesystem to make 	 * decisions about who is and is not able to modify labels and 	 * protections on files.  This might not be right.  We can't assume 	 * VOP_SETLABEL() will do it, because we might implement that as part 	 * of vop_stdsetlabel_ea(). 	 */
 name|error
 operator|=
 name|VOP_ACCESS

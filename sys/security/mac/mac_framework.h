@@ -1600,7 +1600,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|interpvnodelabel
+name|interpvplabel
 parameter_list|,
 name|struct
 name|image_params
@@ -1627,7 +1627,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|interpvnodelabel
+name|interpvplabel
 parameter_list|,
 name|struct
 name|image_params
