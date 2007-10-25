@@ -90,7 +90,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_seeotheruids_enabled
+name|seeotheruids_enabled
 init|=
 literal|1
 decl_stmt|;
@@ -108,7 +108,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|mac_seeotheruids_enabled
+name|seeotheruids_enabled
 argument_list|,
 literal|0
 argument_list|,
@@ -254,7 +254,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|int
-name|mac_seeotheruids_check
+name|seeotheruids_check
 parameter_list|(
 name|struct
 name|ucred
@@ -270,7 +270,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_seeotheruids_enabled
+name|seeotheruids_enabled
 condition|)
 return|return
 operator|(
@@ -374,7 +374,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_seeotheruids_cred_check_visible
+name|seeotheruids_cred_check_visible
 parameter_list|(
 name|struct
 name|ucred
@@ -389,7 +389,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|mac_seeotheruids_check
+name|seeotheruids_check
 argument_list|(
 name|cr1
 argument_list|,
@@ -403,7 +403,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_seeotheruids_proc_check_signal
+name|seeotheruids_proc_check_signal
 parameter_list|(
 name|struct
 name|ucred
@@ -421,7 +421,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|mac_seeotheruids_check
+name|seeotheruids_check
 argument_list|(
 name|cred
 argument_list|,
@@ -437,7 +437,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_seeotheruids_proc_check_sched
+name|seeotheruids_proc_check_sched
 parameter_list|(
 name|struct
 name|ucred
@@ -452,7 +452,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|mac_seeotheruids_check
+name|seeotheruids_check
 argument_list|(
 name|cred
 argument_list|,
@@ -468,7 +468,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_seeotheruids_proc_check_debug
+name|seeotheruids_proc_check_debug
 parameter_list|(
 name|struct
 name|ucred
@@ -483,7 +483,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|mac_seeotheruids_check
+name|seeotheruids_check
 argument_list|(
 name|cred
 argument_list|,
@@ -499,7 +499,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_seeotheruids_socket_check_visible
+name|seeotheruids_socket_check_visible
 parameter_list|(
 name|struct
 name|ucred
@@ -519,7 +519,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|mac_seeotheruids_check
+name|seeotheruids_check
 argument_list|(
 name|cred
 argument_list|,
@@ -536,33 +536,33 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mac_policy_ops
-name|mac_seeotheruids_ops
+name|seeotheruids_ops
 init|=
 block|{
 operator|.
 name|mpo_cred_check_visible
 operator|=
-name|mac_seeotheruids_cred_check_visible
+name|seeotheruids_cred_check_visible
 block|,
 operator|.
 name|mpo_proc_check_debug
 operator|=
-name|mac_seeotheruids_proc_check_debug
+name|seeotheruids_proc_check_debug
 block|,
 operator|.
 name|mpo_proc_check_sched
 operator|=
-name|mac_seeotheruids_proc_check_sched
+name|seeotheruids_proc_check_sched
 block|,
 operator|.
 name|mpo_proc_check_signal
 operator|=
-name|mac_seeotheruids_proc_check_signal
+name|seeotheruids_proc_check_signal
 block|,
 operator|.
 name|mpo_socket_check_visible
 operator|=
-name|mac_seeotheruids_socket_check_visible
+name|seeotheruids_socket_check_visible
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -571,7 +571,7 @@ begin_expr_stmt
 name|MAC_POLICY_SET
 argument_list|(
 operator|&
-name|mac_seeotheruids_ops
+name|seeotheruids_ops
 argument_list|,
 name|mac_seeotheruids
 argument_list|,

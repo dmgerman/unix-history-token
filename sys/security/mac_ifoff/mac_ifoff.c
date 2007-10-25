@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1999-2002, 2007 Robert N. M. Watson  * Copyright (c
 end_comment
 
 begin_comment
-comment|/*  * Developed by the TrustedBSD Project.  * Limit access to interfaces until they are specifically administratively  * enabled.  Prevents protocol stack-driven packet leakage in unsafe  * environments.  */
+comment|/*  * Developed by the TrustedBSD Project.  *  * Limit access to interfaces until they are specifically administratively  * enabled.  Prevents protocol stack-driven packet leakage in unsafe  * environments.  */
 end_comment
 
 begin_include
@@ -84,7 +84,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_ifoff_enabled
+name|ifoff_enabled
 init|=
 literal|1
 decl_stmt|;
@@ -102,7 +102,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|mac_ifoff_enabled
+name|ifoff_enabled
 argument_list|,
 literal|0
 argument_list|,
@@ -117,7 +117,7 @@ argument_list|(
 literal|"security.mac.ifoff.enabled"
 argument_list|,
 operator|&
-name|mac_ifoff_enabled
+name|ifoff_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -125,7 +125,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_ifoff_lo_enabled
+name|ifoff_lo_enabled
 init|=
 literal|1
 decl_stmt|;
@@ -143,7 +143,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|mac_ifoff_lo_enabled
+name|ifoff_lo_enabled
 argument_list|,
 literal|0
 argument_list|,
@@ -158,7 +158,7 @@ argument_list|(
 literal|"security.mac.ifoff.lo_enabled"
 argument_list|,
 operator|&
-name|mac_ifoff_lo_enabled
+name|ifoff_lo_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -166,7 +166,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_ifoff_other_enabled
+name|ifoff_other_enabled
 init|=
 literal|0
 decl_stmt|;
@@ -184,7 +184,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|mac_ifoff_other_enabled
+name|ifoff_other_enabled
 argument_list|,
 literal|0
 argument_list|,
@@ -199,7 +199,7 @@ argument_list|(
 literal|"security.mac.ifoff.other_enabled"
 argument_list|,
 operator|&
-name|mac_ifoff_other_enabled
+name|ifoff_other_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -207,7 +207,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_ifoff_bpfrecv_enabled
+name|ifoff_bpfrecv_enabled
 init|=
 literal|0
 decl_stmt|;
@@ -225,7 +225,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|mac_ifoff_bpfrecv_enabled
+name|ifoff_bpfrecv_enabled
 argument_list|,
 literal|0
 argument_list|,
@@ -241,7 +241,7 @@ argument_list|(
 literal|"security.mac.ifoff.bpfrecv.enabled"
 argument_list|,
 operator|&
-name|mac_ifoff_bpfrecv_enabled
+name|ifoff_bpfrecv_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -260,7 +260,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_ifoff_enabled
+name|ifoff_enabled
 condition|)
 return|return
 operator|(
@@ -269,7 +269,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|mac_ifoff_lo_enabled
+name|ifoff_lo_enabled
 operator|&&
 name|ifp
 operator|->
@@ -284,7 +284,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|mac_ifoff_other_enabled
+name|ifoff_other_enabled
 operator|&&
 name|ifp
 operator|->
@@ -322,7 +322,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_ifoff_enabled
+name|ifoff_enabled
 condition|)
 return|return
 operator|(
@@ -331,7 +331,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|mac_ifoff_lo_enabled
+name|ifoff_lo_enabled
 operator|&&
 name|ifp
 operator|->
@@ -346,7 +346,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|mac_ifoff_other_enabled
+name|ifoff_other_enabled
 operator|&&
 name|ifp
 operator|->
@@ -363,7 +363,7 @@ if|if
 condition|(
 name|viabpf
 operator|&&
-name|mac_ifoff_bpfrecv_enabled
+name|ifoff_bpfrecv_enabled
 condition|)
 return|return
 operator|(
@@ -381,7 +381,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_ifoff_bpfdesc_check_receive
+name|ifoff_bpfdesc_check_receive
 parameter_list|(
 name|struct
 name|bpf_d
@@ -420,7 +420,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_ifoff_ifnet_check_transmit
+name|ifoff_ifnet_check_transmit
 parameter_list|(
 name|struct
 name|ifnet
@@ -457,7 +457,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_ifoff_inpcb_check_deliver
+name|ifoff_inpcb_check_deliver
 parameter_list|(
 name|struct
 name|inpcb
@@ -520,7 +520,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_ifoff_socket_check_deliver
+name|ifoff_socket_check_deliver
 parameter_list|(
 name|struct
 name|socket
@@ -584,28 +584,28 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mac_policy_ops
-name|mac_ifoff_ops
+name|ifoff_ops
 init|=
 block|{
 operator|.
 name|mpo_bpfdesc_check_receive
 operator|=
-name|mac_ifoff_bpfdesc_check_receive
+name|ifoff_bpfdesc_check_receive
 block|,
 operator|.
 name|mpo_ifnet_check_transmit
 operator|=
-name|mac_ifoff_ifnet_check_transmit
+name|ifoff_ifnet_check_transmit
 block|,
 operator|.
 name|mpo_inpcb_check_deliver
 operator|=
-name|mac_ifoff_inpcb_check_deliver
+name|ifoff_inpcb_check_deliver
 block|,
 operator|.
 name|mpo_socket_check_deliver
 operator|=
-name|mac_ifoff_socket_check_deliver
+name|ifoff_socket_check_deliver
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -614,7 +614,7 @@ begin_expr_stmt
 name|MAC_POLICY_SET
 argument_list|(
 operator|&
-name|mac_ifoff_ops
+name|ifoff_ops
 argument_list|,
 name|mac_ifoff
 argument_list|,

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2003-2004 Networks Associates Technology, Inc.  * C
 end_comment
 
 begin_comment
-comment|/*  * Developed by the TrustedBSD Project.  *  * Administratively limit access to local UDP/TCP ports for binding purposes.  * Intended to be combined with net.inet.ip.portrange.reservedhigh to allow  * specific uids and gids to bind specific ports for specific purposes,  * while not opening the door to any user replacing an "official" service  * while you're restarting it.  This only affects ports explicitly bound by  * the user process (either for listen/outgoing socket for TCP, or send/  * receive for UDP).  This module will not limit ports bound implicitly for  * out-going connections where the process hasn't explicitly selected a port:  * these are automatically selected by the IP stack.  *  * To use this module, security.mac.enforce_socket must be enabled, and  * you will probably want to twiddle the net.inet sysctl listed above.  * Then use sysctl(8) to modify the rules string:  *  * # sysctl security.mac.portacl.rules="uid:425:tcp:80,uid:425:tcp:79"  *  * This ruleset, for example, permits uid 425 to bind TCP ports 80 (http)  * and 79 (finger).  User names and group names can't be used directly  * because the kernel only knows about uids and gids.  */
+comment|/*  * Developed by the TrustedBSD Project.  *  * Administratively limit access to local UDP/TCP ports for binding purposes.  * Intended to be combined with net.inet.ip.portrange.reservedhigh to allow  * specific uids and gids to bind specific ports for specific purposes,  * while not opening the door to any user replacing an "official" service  * while you're restarting it.  This only affects ports explicitly bound by  * the user process (either for listen/outgoing socket for TCP, or send/  * receive for UDP).  This module will not limit ports bound implicitly for  * out-going connections where the process hasn't explicitly selected a port:  * these are automatically selected by the IP stack.  *  * To use this module, security.mac.enforce_socket must be enabled, and you  * will probably want to twiddle the net.inet sysctl listed above.  Then use  * sysctl(8) to modify the rules string:  *  * # sysctl security.mac.portacl.rules="uid:425:tcp:80,uid:425:tcp:79"  *  * This ruleset, for example, permits uid 425 to bind TCP ports 80 (http) and  * 79 (finger).  User names and group names can't be used directly because  * the kernel only knows about uids and gids.  */
 end_comment
 
 begin_include
@@ -150,7 +150,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_portacl_enabled
+name|portacl_enabled
 init|=
 literal|1
 decl_stmt|;
@@ -168,7 +168,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|mac_portacl_enabled
+name|portacl_enabled
 argument_list|,
 literal|0
 argument_list|,
@@ -183,7 +183,7 @@ argument_list|(
 literal|"security.mac.portacl.enabled"
 argument_list|,
 operator|&
-name|mac_portacl_enabled
+name|portacl_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -191,7 +191,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_portacl_suser_exempt
+name|portacl_suser_exempt
 init|=
 literal|1
 decl_stmt|;
@@ -209,7 +209,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|mac_portacl_suser_exempt
+name|portacl_suser_exempt
 argument_list|,
 literal|0
 argument_list|,
@@ -224,7 +224,7 @@ argument_list|(
 literal|"security.mac.portacl.suser_exempt"
 argument_list|,
 operator|&
-name|mac_portacl_suser_exempt
+name|portacl_suser_exempt
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -232,7 +232,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_portacl_autoport_exempt
+name|portacl_autoport_exempt
 init|=
 literal|1
 decl_stmt|;
@@ -250,7 +250,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|mac_portacl_autoport_exempt
+name|portacl_autoport_exempt
 argument_list|,
 literal|0
 argument_list|,
@@ -266,7 +266,7 @@ argument_list|(
 literal|"security.mac.portacl.autoport_exempt"
 argument_list|,
 operator|&
-name|mac_portacl_autoport_exempt
+name|portacl_autoport_exempt
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -274,7 +274,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_portacl_port_high
+name|portacl_port_high
 init|=
 literal|1023
 decl_stmt|;
@@ -292,7 +292,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|mac_portacl_port_high
+name|portacl_port_high
 argument_list|,
 literal|0
 argument_list|,
@@ -307,7 +307,7 @@ argument_list|(
 literal|"security.mac.portacl.port_high"
 argument_list|,
 operator|&
-name|mac_portacl_port_high
+name|portacl_port_high
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -317,7 +317,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_PORTACL
 argument_list|,
-literal|"mac_portacl_rule"
+literal|"portacl_rule"
 argument_list|,
 literal|"Rules for mac_portacl"
 argument_list|)
@@ -1309,7 +1309,7 @@ if|if
 condition|(
 name|port
 operator|>
-name|mac_portacl_port_high
+name|portacl_port_high
 condition|)
 return|return
 operator|(
@@ -1482,7 +1482,7 @@ name|error
 operator|!=
 literal|0
 operator|&&
-name|mac_portacl_suser_exempt
+name|portacl_suser_exempt
 operator|!=
 literal|0
 condition|)
@@ -1556,7 +1556,7 @@ decl_stmt|;
 comment|/* Only run if we are enabled. */
 if|if
 condition|(
-name|mac_portacl_enabled
+name|portacl_enabled
 operator|==
 literal|0
 condition|)
@@ -1670,7 +1670,7 @@ expr_stmt|;
 comment|/* 	 * Sockets are frequently bound with a specific IP address but a port 	 * number of '0' to request automatic port allocation.  This is often 	 * desirable as long as IP_PORTRANGELOW isn't set, which might permit 	 * automatic allocation of a "privileged" port.  The autoport exempt 	 * flag exempts port 0 allocation from rule checking as long as a low 	 * port isn't required. 	 */
 if|if
 condition|(
-name|mac_portacl_autoport_exempt
+name|portacl_autoport_exempt
 operator|&&
 name|port
 operator|==
@@ -1723,7 +1723,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mac_policy_ops
-name|mac_portacl_ops
+name|portacl_ops
 init|=
 block|{
 operator|.
@@ -1748,9 +1748,9 @@ begin_expr_stmt
 name|MAC_POLICY_SET
 argument_list|(
 operator|&
-name|mac_portacl_ops
+name|portacl_ops
 argument_list|,
-name|trustedbsd_mac_portacl
+name|mac_portacl
 argument_list|,
 literal|"TrustedBSD MAC/portacl"
 argument_list|,

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1999-2002, 2007 Robert N. M. Watson  * Copyright (c
 end_comment
 
 begin_comment
-comment|/*  * Developed by the TrustedBSD Project.  * Experiment with a partition-like model.  */
+comment|/*  * Developed by the TrustedBSD Project.  *  * Experiment with a partition-like model.  */
 end_comment
 
 begin_include
@@ -155,7 +155,7 @@ end_define
 begin_function
 specifier|static
 name|void
-name|mac_partition_init_label
+name|partition_init_label
 parameter_list|(
 name|struct
 name|label
@@ -176,7 +176,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_partition_destroy_label
+name|partition_destroy_label
 parameter_list|(
 name|struct
 name|label
@@ -197,7 +197,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_partition_copy_label
+name|partition_copy_label
 parameter_list|(
 name|struct
 name|label
@@ -226,7 +226,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_partition_externalize_label
+name|partition_externalize_label
 parameter_list|(
 name|struct
 name|label
@@ -306,7 +306,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_partition_internalize_label
+name|partition_internalize_label
 parameter_list|(
 name|struct
 name|label
@@ -373,7 +373,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_partition_proc_create_swapper
+name|partition_proc_create_swapper
 parameter_list|(
 name|struct
 name|ucred
@@ -396,7 +396,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_partition_proc_create_init
+name|partition_proc_create_init
 parameter_list|(
 name|struct
 name|ucred
@@ -419,7 +419,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_partition_cred_relabel
+name|partition_cred_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -525,7 +525,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_partition_cred_check_relabel
+name|partition_cred_check_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -556,7 +556,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * Require BSD privilege in order to change the partition. 		 * Originally we also required that the process not be 		 * in a partition in the first place, but this didn't 		 * interact well with sendmail. 		 */
+comment|/* 		 * Require BSD privilege in order to change the partition. 		 * Originally we also required that the process not be in a 		 * partition in the first place, but this didn't interact 		 * well with sendmail. 		 */
 name|error
 operator|=
 name|priv_check_cred
@@ -580,7 +580,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_partition_cred_check_visible
+name|partition_cred_check_visible
 parameter_list|(
 name|struct
 name|ucred
@@ -626,7 +626,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_partition_proc_check_debug
+name|partition_proc_check_debug
 parameter_list|(
 name|struct
 name|ucred
@@ -672,7 +672,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_partition_proc_check_sched
+name|partition_proc_check_sched
 parameter_list|(
 name|struct
 name|ucred
@@ -718,7 +718,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_partition_proc_check_signal
+name|partition_proc_check_signal
 parameter_list|(
 name|struct
 name|ucred
@@ -767,7 +767,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_partition_socket_check_visible
+name|partition_socket_check_visible
 parameter_list|(
 name|struct
 name|ucred
@@ -814,7 +814,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_partition_vnode_check_exec
+name|partition_vnode_check_exec
 parameter_list|(
 name|struct
 name|ucred
@@ -877,83 +877,83 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mac_policy_ops
-name|mac_partition_ops
+name|partition_ops
 init|=
 block|{
 operator|.
 name|mpo_cred_init_label
 operator|=
-name|mac_partition_init_label
+name|partition_init_label
 block|,
 operator|.
 name|mpo_cred_destroy_label
 operator|=
-name|mac_partition_destroy_label
+name|partition_destroy_label
 block|,
 operator|.
 name|mpo_cred_copy_label
 operator|=
-name|mac_partition_copy_label
+name|partition_copy_label
 block|,
 operator|.
 name|mpo_cred_externalize_label
 operator|=
-name|mac_partition_externalize_label
+name|partition_externalize_label
 block|,
 operator|.
 name|mpo_cred_internalize_label
 operator|=
-name|mac_partition_internalize_label
+name|partition_internalize_label
 block|,
 operator|.
 name|mpo_proc_create_swapper
 operator|=
-name|mac_partition_proc_create_swapper
+name|partition_proc_create_swapper
 block|,
 operator|.
 name|mpo_proc_create_init
 operator|=
-name|mac_partition_proc_create_init
+name|partition_proc_create_init
 block|,
 operator|.
 name|mpo_cred_relabel
 operator|=
-name|mac_partition_cred_relabel
+name|partition_cred_relabel
 block|,
 operator|.
 name|mpo_cred_check_relabel
 operator|=
-name|mac_partition_cred_check_relabel
+name|partition_cred_check_relabel
 block|,
 operator|.
 name|mpo_cred_check_visible
 operator|=
-name|mac_partition_cred_check_visible
+name|partition_cred_check_visible
 block|,
 operator|.
 name|mpo_proc_check_debug
 operator|=
-name|mac_partition_proc_check_debug
+name|partition_proc_check_debug
 block|,
 operator|.
 name|mpo_proc_check_sched
 operator|=
-name|mac_partition_proc_check_sched
+name|partition_proc_check_sched
 block|,
 operator|.
 name|mpo_proc_check_signal
 operator|=
-name|mac_partition_proc_check_signal
+name|partition_proc_check_signal
 block|,
 operator|.
 name|mpo_socket_check_visible
 operator|=
-name|mac_partition_socket_check_visible
+name|partition_socket_check_visible
 block|,
 operator|.
 name|mpo_vnode_check_exec
 operator|=
-name|mac_partition_vnode_check_exec
+name|partition_vnode_check_exec
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -962,7 +962,7 @@ begin_expr_stmt
 name|MAC_POLICY_SET
 argument_list|(
 operator|&
-name|mac_partition_ops
+name|partition_ops
 argument_list|,
 name|mac_partition
 argument_list|,

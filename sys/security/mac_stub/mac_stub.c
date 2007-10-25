@@ -5262,7 +5262,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mac_policy_ops
-name|mac_stub_ops
+name|stub_ops
 init|=
 block|{
 operator|.
@@ -6382,7 +6382,7 @@ begin_expr_stmt
 name|MAC_POLICY_SET
 argument_list|(
 operator|&
-name|mac_stub_ops
+name|stub_ops
 argument_list|,
 name|mac_stub
 argument_list|,
