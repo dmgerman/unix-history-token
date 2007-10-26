@@ -33,30 +33,14 @@ directive|include
 file|<ufs/ffs/fs.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|GPTBOOT
-argument_list|)
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|__arm__
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UFS_SMALL_CGBASE
+end_ifdef
 
 begin_comment
-comment|/* XXX: Revert to old (broken for over 1.5Tb filesystems) version of cgbase    (see sys/ufs/ffs/fs.h rev 1.39) so that i386 boot loader (boot2) can    support both UFS1 and UFS2 again. */
+comment|/* XXX: Revert to old (broken for over 1.5Tb filesystems) version of cgbase    (see sys/ufs/ffs/fs.h rev 1.39) so that small boot loaders (e.g. boot2) can    support both UFS1 and UFS2. */
 end_comment
 
 begin_undef

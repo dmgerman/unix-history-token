@@ -935,12 +935,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|GPTBOOT
-end_define
-
 begin_include
 include|#
 directive|include
