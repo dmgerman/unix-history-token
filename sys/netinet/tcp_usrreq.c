@@ -4822,7 +4822,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Compute window scaling to request: 	 * Scale to fit into sweet spot.  See tcp_syncache.c. 	 * XXX: This should move to tcp_output(). 	 * XXX: This should be based on the actual MSS. 	 */
+comment|/* 	 * Compute window scaling to request: 	 * Scale to fit into sweet spot.  See tcp_syncache.c. 	 * XXX: This should move to tcp_output(). 	 */
 while|while
 condition|(
 name|tp
@@ -4832,14 +4832,14 @@ operator|<
 name|TCP_MAX_WINSHIFT
 operator|&&
 operator|(
-literal|0x1
+name|TCP_MAXWIN
 operator|<<
 name|tp
 operator|->
 name|request_r_scale
 operator|)
 operator|<
-name|tcp_minmss
+name|sb_max
 condition|)
 name|tp
 operator|->
