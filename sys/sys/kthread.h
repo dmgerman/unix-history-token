@@ -313,7 +313,7 @@ begin_decl_stmt
 name|void
 name|kthread_exit
 argument_list|(
-name|int
+name|void
 argument_list|)
 name|__dead2
 decl_stmt|;
