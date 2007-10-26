@@ -321,7 +321,7 @@ name|NFS_NFSSTATS
 argument_list|,
 name|nfsstats
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|nfsstats

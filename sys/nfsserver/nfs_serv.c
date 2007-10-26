@@ -424,7 +424,7 @@ name|NFS_NFSRVSTATS
 argument_list|,
 name|nfsrvstats
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|nfsrvstats
