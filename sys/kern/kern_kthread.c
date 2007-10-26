@@ -1235,6 +1235,22 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* 	 * We could rely on thread_exit to call exit1() but 	 * there is extra work that needs to be done 	 */
+if|if
+condition|(
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_numthreads
+operator|==
+literal|1
+condition|)
+name|kproc_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|thread_exit
 argument_list|()
 expr_stmt|;
