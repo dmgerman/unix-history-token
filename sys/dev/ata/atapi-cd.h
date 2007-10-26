@@ -234,6 +234,10 @@ name|MST_CDRW
 value|0x20
 define|#
 directive|define
+name|MST_DVD
+value|0x40
+define|#
+directive|define
 name|MST_NO_DISC
 value|0x70
 define|#
