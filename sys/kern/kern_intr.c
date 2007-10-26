@@ -5263,9 +5263,7 @@ name|M_ITHREAD
 argument_list|)
 expr_stmt|;
 name|kthread_exit
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 		 * Service interrupts.  If another interrupt arrives while 		 * we are running, it will set it_need to note that we 		 * should make another pass. 		 */
@@ -5528,9 +5526,7 @@ name|M_ITHREAD
 argument_list|)
 expr_stmt|;
 name|kthread_exit
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 		 * Service interrupts.  If another interrupt arrives while 		 * we are running, it will set it_need to note that we 		 * should make another pass. 		 */
