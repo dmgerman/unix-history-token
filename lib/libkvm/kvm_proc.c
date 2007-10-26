@@ -2083,7 +2083,7 @@ name|mtd
 operator|.
 name|td_name
 argument_list|,
-name|MAXOCOMLEN
+name|MAXCOMLEN
 argument_list|)
 expr_stmt|;
 name|kp
