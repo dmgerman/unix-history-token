@@ -1613,7 +1613,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * If there are processes blocked on zone_clust, waiting for pages to be freed up, 	 * cause them to be woken up by draining the packet zone. We are exposed to a race here  	 * (in the check for the UMA_ZFLAG_FULL) where we might miss the flag set, but that is  	 * deliberate. We don't want to acquire the zone lock for every mbuf free. 	 */
+comment|/* 	 * If there are processes blocked on zone_clust, waiting for pages 	 * to be freed up, * cause them to be woken up by draining the 	 * packet zone.  We are exposed to a race here * (in the check for 	 * the UMA_ZFLAG_FULL) where we might miss the flag set, but that 	 * is deliberate. We don't want to acquire the zone lock for every 	 * mbuf free. 	 */
 if|if
 condition|(
 name|uma_zone_exhausted_nolock
