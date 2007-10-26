@@ -251,7 +251,7 @@ comment|/* XXX acl_type_t */
 end_comment
 
 begin_comment
-comment|/*  * Kernel functions to manage and evaluate labels.  */
+comment|/*  * Entry points to the TrustedBSD MAC Framework from the remainder of the  * kernel: entry points are named based on a principle object type and an  * action relating to it.  They are sorted alphabetically first by object  * type and then action.  In some situations, the principle object type is  * obvious, and in other cases, less so as multiple objects may be inolved  * in the operation.  */
 end_comment
 
 begin_function_decl
