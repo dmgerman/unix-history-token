@@ -36,6 +36,7 @@ end_include
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__i386__
@@ -45,6 +46,12 @@ operator|!
 name|defined
 argument_list|(
 name|GPTBOOT
+argument_list|)
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|__arm__
 argument_list|)
 end_if
 
