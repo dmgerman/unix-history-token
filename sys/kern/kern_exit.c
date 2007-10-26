@@ -459,7 +459,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|if
+while|while
 condition|(
 name|p
 operator|->
@@ -468,8 +468,6 @@ operator|&
 name|P_HADTHREADS
 condition|)
 block|{
-name|retry
-label|:
 comment|/* 		 * First check if some other thread got here before us.. 		 * if so, act apropriatly, (exit or suspend); 		 */
 name|thread_suspend_check
 argument_list|(
@@ -479,14 +477,13 @@ expr_stmt|;
 comment|/* 		 * Kill off the other threads. This requires 		 * some co-operation from other parts of the kernel 		 * so it may not be instantaneous.  With this state set 		 * any thread entering the kernel from userspace will 		 * thread_exit() in trap().  Any thread attempting to 		 * sleep will return immediately with EINTR or EWOULDBLOCK 		 * which will hopefully force them to back out to userland 		 * freeing resources as they go.  Any thread attempting 		 * to return to userland will thread_exit() from userret(). 		 * thread_exit() will unsuspend us when the last of the 		 * other threads exits. 		 * If there is already a thread singler after resumption, 		 * calling thread_single will fail; in that case, we just 		 * re-check all suspension request, the thread should 		 * either be suspended there or exit. 		 */
 if|if
 condition|(
+operator|!
 name|thread_single
 argument_list|(
 name|SINGLE_EXIT
 argument_list|)
 condition|)
-goto|goto
-name|retry
-goto|;
+break|break;
 comment|/* 		 * All other activity in this process is now stopped. 		 * Threading support has been turned off. 		 */
 block|}
 name|KASSERT

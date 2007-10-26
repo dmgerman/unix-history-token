@@ -5269,11 +5269,6 @@ name|dummy
 parameter_list|)
 block|{
 name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-name|struct
 name|thread
 modifier|*
 name|td
@@ -5281,12 +5276,6 @@ decl_stmt|;
 name|td
 operator|=
 name|curthread
-expr_stmt|;
-name|p
-operator|=
-name|td
-operator|->
-name|td_proc
 expr_stmt|;
 for|for
 control|(

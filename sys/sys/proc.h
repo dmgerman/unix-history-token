@@ -947,12 +947,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSEDx100
+name|TDF_KTH_SUSP
 value|0x00000100
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* kthread is suspended */
 end_comment
 
 begin_define
@@ -1198,7 +1198,7 @@ comment|/* AST-based MAC event pending. */
 end_comment
 
 begin_comment
-comment|/*  * "Private" flags kept in td_pflags:  * These are only accessed by curthread and thus need no locking.  */
+comment|/*  * "Private" flags kept in td_pflags:  * These are only written by curthread and thus need no locking.  */
 end_comment
 
 begin_define
@@ -1430,6 +1430,17 @@ end_define
 
 begin_comment
 comment|/* Already in BO_BDFLUSH, do not recurse */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_KTHREAD
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* This is an official kernel thread */
 end_comment
 
 begin_comment
