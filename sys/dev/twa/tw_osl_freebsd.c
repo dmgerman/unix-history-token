@@ -3847,7 +3847,7 @@ operator|->
 name|ctlr_handle
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Don't touch req after a reset.  It (and any 			 * associated data) will already have been 			 * freed by the callback.  Just return. 			 */
+comment|/* 			 * Don't touch req after a reset.  It (and any 			 * associated data) will already have been 			 * unmapped by the callback. 			 */
 name|user_buf
 operator|->
 name|driver_pkt
@@ -3856,11 +3856,13 @@ name|os_status
 operator|=
 name|error
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|ETIMEDOUT
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|fw_passthru_err
+goto|;
 block|}
 comment|/*  		 * Either the request got completed, or we were woken up by a 		 * signal.  Calculate the new timeout, in case it was the latter. 		 */
 name|timeout

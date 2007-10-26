@@ -2168,6 +2168,33 @@ name|EIO
 operator|)
 return|;
 block|}
+comment|/* Release simq at the end of a reset */
+if|if
+condition|(
+name|sc
+operator|->
+name|state
+operator|&
+name|TW_OSLI_CTLR_STATE_SIMQ_FROZEN
+condition|)
+block|{
+name|xpt_release_simq
+argument_list|(
+name|sc
+operator|->
+name|sim
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|state
+operator|&=
+operator|~
+name|TW_OSLI_CTLR_STATE_SIMQ_FROZEN
+expr_stmt|;
+block|}
 name|xpt_setup_ccb
 argument_list|(
 operator|&
@@ -2357,6 +2384,20 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+comment|/* Don't double freeze if already frozen */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|state
+operator|&
+name|TW_OSLI_CTLR_STATE_SIMQ_FROZEN
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2384,6 +2425,7 @@ name|state
 operator||=
 name|TW_OSLI_CTLR_STATE_SIMQ_FROZEN
 expr_stmt|;
+block|}
 block|}
 end_function
 

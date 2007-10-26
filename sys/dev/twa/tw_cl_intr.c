@@ -113,6 +113,18 @@ condition|)
 goto|goto
 name|out
 goto|;
+comment|/* If we get an interrupt while resetting, it is a shared 	   one for another device, so just bail */
+if|if
+condition|(
+name|ctlr
+operator|->
+name|state
+operator|&
+name|TW_CLI_CTLR_STATE_RESET_IN_PROGRESS
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* 	 * Synchronize access between writes to command and control registers 	 * in 64-bit environments, on G66. 	 */
 if|if
 condition|(

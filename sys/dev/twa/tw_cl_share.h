@@ -91,6 +91,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TW_CL_DEVICE_ID_9K_SA
+value|0x1005
+end_define
+
+begin_comment
+comment|/* 9000 PCIe SAS series device id */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TW_CL_BAR_TYPE_IO
 value|1
 end_define
