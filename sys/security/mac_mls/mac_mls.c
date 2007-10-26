@@ -5567,7 +5567,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mls_create_mbuf_linklayer
+name|mls_mbuf_create_linklayer
 parameter_list|(
 name|struct
 name|ifnet
@@ -6068,7 +6068,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mls_mbuf_create_from_firewall
+name|mls_netinet_firewall_send
 parameter_list|(
 name|struct
 name|mbuf
@@ -13173,9 +13173,9 @@ operator|=
 name|mls_inpcb_create_mbuf
 block|,
 operator|.
-name|mpo_create_mbuf_linklayer
+name|mpo_mbuf_create_linklayer
 operator|=
-name|mls_create_mbuf_linklayer
+name|mls_mbuf_create_linklayer
 block|,
 operator|.
 name|mpo_bpfdesc_create_mbuf
@@ -13613,9 +13613,9 @@ operator|=
 name|mls_vnode_check_write
 block|,
 operator|.
-name|mpo_mbuf_create_from_firewall
+name|mpo_netinet_firewall_send
 operator|=
-name|mls_mbuf_create_from_firewall
+name|mls_netinet_firewall_send
 block|, }
 decl_stmt|;
 end_decl_stmt

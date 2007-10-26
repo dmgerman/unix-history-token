@@ -1497,7 +1497,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_mbuf_linklayer
+name|mac_mbuf_create_linklayer
 argument_list|(
 name|ifp
 argument_list|,

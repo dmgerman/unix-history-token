@@ -1393,7 +1393,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|stub_create_mbuf_linklayer
+name|stub_mbuf_create_linklayer
 parameter_list|(
 name|struct
 name|ifnet
@@ -1543,7 +1543,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|stub_mbuf_create_from_firewall
+name|stub_netinet_firewall_send
 parameter_list|(
 name|struct
 name|mbuf
@@ -5691,9 +5691,9 @@ operator|=
 name|stub_inpcb_create_mbuf
 block|,
 operator|.
-name|mpo_create_mbuf_linklayer
+name|mpo_mbuf_create_linklayer
 operator|=
-name|stub_create_mbuf_linklayer
+name|stub_mbuf_create_linklayer
 block|,
 operator|.
 name|mpo_bpfdesc_create_mbuf
@@ -5716,9 +5716,9 @@ operator|=
 name|stub_mbuf_create_netlayer
 block|,
 operator|.
-name|mpo_mbuf_create_from_firewall
+name|mpo_netinet_firewall_send
 operator|=
-name|stub_mbuf_create_from_firewall
+name|stub_netinet_firewall_send
 block|,
 operator|.
 name|mpo_ipq_match

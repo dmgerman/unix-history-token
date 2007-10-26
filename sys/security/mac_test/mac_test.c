@@ -4038,7 +4038,7 @@ end_function
 begin_expr_stmt
 name|COUNTER_DECL
 argument_list|(
-name|create_mbuf_linklayer
+name|mbuf_create_linklayer
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4046,7 +4046,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|void
-name|test_create_mbuf_linklayer
+name|test_mbuf_create_linklayer
 parameter_list|(
 name|struct
 name|ifnet
@@ -4085,7 +4085,7 @@ argument_list|)
 expr_stmt|;
 name|COUNTER_INC
 argument_list|(
-name|create_mbuf_linklayer
+name|mbuf_create_linklayer
 argument_list|)
 expr_stmt|;
 block|}
@@ -11496,9 +11496,9 @@ operator|=
 name|test_inpcb_create_mbuf
 block|,
 operator|.
-name|mpo_create_mbuf_linklayer
+name|mpo_mbuf_create_linklayer
 operator|=
-name|test_create_mbuf_linklayer
+name|test_mbuf_create_linklayer
 block|,
 operator|.
 name|mpo_bpfdesc_create_mbuf

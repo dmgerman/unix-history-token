@@ -5990,7 +5990,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|biba_create_mbuf_linklayer
+name|biba_mbuf_create_linklayer
 parameter_list|(
 name|struct
 name|ifnet
@@ -6491,7 +6491,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|biba_mbuf_create_from_firewall
+name|biba_netinet_firewall_send
 parameter_list|(
 name|struct
 name|mbuf
@@ -6501,7 +6501,7 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
-name|label
+name|mlabel
 parameter_list|)
 block|{
 name|struct
@@ -6513,10 +6513,10 @@ name|dest
 operator|=
 name|SLOT
 argument_list|(
-name|label
+name|mlabel
 argument_list|)
 expr_stmt|;
-comment|/* XXX: where is the label for the firewall really comming from? */
+comment|/* XXX: where is the label for the firewall really coming from? */
 name|biba_set_effective
 argument_list|(
 name|dest
@@ -14335,9 +14335,9 @@ operator|=
 name|biba_inpcb_create_mbuf
 block|,
 operator|.
-name|mpo_create_mbuf_linklayer
+name|mpo_mbuf_create_linklayer
 operator|=
-name|biba_create_mbuf_linklayer
+name|biba_mbuf_create_linklayer
 block|,
 operator|.
 name|mpo_bpfdesc_create_mbuf
@@ -14795,9 +14795,9 @@ operator|=
 name|biba_vnode_check_write
 block|,
 operator|.
-name|mpo_mbuf_create_from_firewall
+name|mpo_netinet_firewall_send
 operator|=
-name|biba_mbuf_create_from_firewall
+name|biba_netinet_firewall_send
 block|,
 operator|.
 name|mpo_priv_check

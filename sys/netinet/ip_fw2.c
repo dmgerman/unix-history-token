@@ -7491,7 +7491,7 @@ name|m
 argument_list|)
 expr_stmt|;
 else|else
-name|mac_mbuf_create_from_firewall
+name|mac_netinet_firewall_send
 argument_list|(
 name|m
 argument_list|)

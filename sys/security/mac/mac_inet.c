@@ -1004,7 +1004,7 @@ end_function
 
 begin_function
 name|void
-name|mac_mbuf_create_from_firewall
+name|mac_netinet_firewall_send
 parameter_list|(
 name|struct
 name|mbuf
@@ -1031,7 +1031,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|mbuf_create_from_firewall
+name|netinet_firewall_send
 argument_list|,
 name|m
 argument_list|,

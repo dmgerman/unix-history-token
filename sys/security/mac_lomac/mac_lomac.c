@@ -6429,7 +6429,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|lomac_create_mbuf_linklayer
+name|lomac_mbuf_create_linklayer
 parameter_list|(
 name|struct
 name|ifnet
@@ -7031,7 +7031,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|lomac_mbuf_create_from_firewall
+name|lomac_netinet_firewall_send
 parameter_list|(
 name|struct
 name|mbuf
@@ -12617,9 +12617,9 @@ operator|=
 name|lomac_inpcb_create_mbuf
 block|,
 operator|.
-name|mpo_create_mbuf_linklayer
+name|mpo_mbuf_create_linklayer
 operator|=
-name|lomac_create_mbuf_linklayer
+name|lomac_mbuf_create_linklayer
 block|,
 operator|.
 name|mpo_bpfdesc_create_mbuf
@@ -12902,9 +12902,9 @@ operator|=
 name|lomac_thread_userret
 block|,
 operator|.
-name|mpo_mbuf_create_from_firewall
+name|mpo_netinet_firewall_send
 operator|=
-name|lomac_mbuf_create_from_firewall
+name|lomac_netinet_firewall_send
 block|,
 operator|.
 name|mpo_priv_check

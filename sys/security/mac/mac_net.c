@@ -1066,7 +1066,7 @@ end_function
 
 begin_function
 name|void
-name|mac_create_mbuf_linklayer
+name|mac_mbuf_create_linklayer
 parameter_list|(
 name|struct
 name|ifnet
@@ -1098,7 +1098,7 @@ argument_list|)
 expr_stmt|;
 name|MAC_PERFORM
 argument_list|(
-name|create_mbuf_linklayer
+name|mbuf_create_linklayer
 argument_list|,
 name|ifp
 argument_list|,
