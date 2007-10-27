@@ -3105,7 +3105,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Transfer all of the cached pages with offset greater than or  *	equal to 'offidxstart' from the original object's cache to the  *	new object's cache.  Initially, the new object's cache must be  *	empty.  Offset 'offidxstart' in the original object must  *	correspond to offset zero in the new object.  *  *	The new object must be locked.  */
+comment|/*  *	Transfer all of the cached pages with offset greater than or  *	equal to 'offidxstart' from the original object's cache to the  *	new object's cache.  However, any cached pages with offset  *	greater than or equal to the new object's size are kept in the  *	original object.  Initially, the new object's cache must be  *	empty.  Offset 'offidxstart' in the original object must  *	correspond to offset zero in the new object.  *  *	The new object must be locked.  */
 end_comment
 
 begin_function
@@ -3232,29 +3232,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|KASSERT
-argument_list|(
-name|new_object
-operator|->
-name|cache
-operator|==
-name|NULL
-operator|||
-name|new_object
-operator|->
-name|type
-operator|==
-name|OBJT_SWAP
-argument_list|,
-operator|(
-literal|"vm_page_cache_transfer: object %p's type is incompatible"
-literal|" with cached pages"
-operator|,
-name|new_object
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Update the object and offset of each page that was 		 * transferred to the new object's cache. 		 */
 while|while
 condition|(
 operator|(
@@ -3268,6 +3245,46 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|pindex
+operator|-
+name|offidxstart
+operator|)
+operator|>=
+name|new_object
+operator|->
+name|size
+condition|)
+block|{
+comment|/* 				 * Return all of the cached pages with 				 * offset greater than or equal to the 				 * new object's size to the original 				 * object's cache.  				 */
+name|new_object
+operator|->
+name|cache
+operator|=
+name|m
+operator|->
+name|left
+expr_stmt|;
+name|m
+operator|->
+name|left
+operator|=
+name|orig_object
+operator|->
+name|cache
+expr_stmt|;
+name|orig_object
+operator|->
+name|cache
+operator|=
+name|m
+expr_stmt|;
+break|break;
+block|}
 name|m_next
 operator|=
 name|vm_page_splay
@@ -3281,6 +3298,7 @@ operator|->
 name|right
 argument_list|)
 expr_stmt|;
+comment|/* Update the page's object and offset. */
 name|m
 operator|->
 name|object
@@ -3319,6 +3337,28 @@ operator|=
 name|m_next
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|new_object
+operator|->
+name|cache
+operator|==
+name|NULL
+operator|||
+name|new_object
+operator|->
+name|type
+operator|==
+name|OBJT_SWAP
+argument_list|,
+operator|(
+literal|"vm_page_cache_transfer: object %p's type is incompatible"
+literal|" with cached pages"
+operator|,
+name|new_object
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
