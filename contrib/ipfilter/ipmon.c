@@ -9020,12 +9020,12 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 name|write_pid
 argument_list|(
 name|pidfile
 argument_list|)
 expr_stmt|;
+block|}
 name|signal
 argument_list|(
 name|SIGHUP
