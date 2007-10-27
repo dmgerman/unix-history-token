@@ -1714,7 +1714,7 @@ name|RFHIGHPID
 argument_list|,
 literal|0
 argument_list|,
-literal|"interd"
+literal|"intr"
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -1858,7 +1858,7 @@ name|RFHIGHPID
 argument_list|,
 literal|0
 argument_list|,
-literal|"interd"
+literal|"intr"
 argument_list|,
 literal|"%s"
 argument_list|,
