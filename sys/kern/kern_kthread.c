@@ -853,7 +853,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a kernel thread.  It shares its address space  * with proc0 - ie: kernel only.  *  * func is the function to start.  * arg is the parameter to pass to function on first startup.  * newtdp is the return value pointing to the thread's struct thread.  *  ** XXX fix this --> flags are flags to fork1 (in unistd.h)   *  ** XXX are any used?  * fmt and following will be *printf'd into (*newtd)->td_name (for ps, etc.).  */
+comment|/*  * Create a kernel thread.  It shares its address space  * with proc0 - ie: kernel only.  *  * func is the function to start.  * arg is the parameter to pass to function on first startup.  * newtdp is the return value pointing to the thread's struct thread.  *  ** XXX fix this --> flags are flags to fork1 (in unistd.h)   * fmt and following will be *printf'd into (*newtd)->td_name (for ps, etc.).  */
 end_comment
 
 begin_function
@@ -929,6 +929,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+comment|/* If no process supplied, put it on proc0 */
 if|if
 condition|(
 name|p
@@ -949,19 +950,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|p
-operator|==
-operator|&
-name|proc0
-condition|)
-name|oldtd
-operator|=
-operator|&
-name|thread0
-expr_stmt|;
-else|else
 name|oldtd
 operator|=
 name|FIRST_THREAD_IN_PROC
@@ -970,7 +958,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Initialize our td  */
+comment|/* Initialize our new td  */
 name|newtd
 operator|=
 name|thread_alloc
@@ -1235,6 +1223,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* a module may be waiting for us to exit */
+name|wakeup
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We could rely on thread_exit to call exit1() but 	 * there is extra work that needs to be done 	 */
 if|if
 condition|(
@@ -1251,6 +1245,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* never returns */
 name|thread_exit
 argument_list|()
 expr_stmt|;
