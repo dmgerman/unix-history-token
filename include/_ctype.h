@@ -507,7 +507,7 @@ literal|0
 operator|||
 name|_c
 operator|>=
-name|__mb_sb_limit
+literal|128
 operator|)
 condition|?
 literal|0
