@@ -425,8 +425,6 @@ literal|"from"
 block|,
 literal|"export"
 block|,
-literal|"union"
-block|,
 literal|"acls"
 block|,
 literal|"exec"
