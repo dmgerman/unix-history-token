@@ -4099,8 +4099,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 else|else
-name|status
-operator|=
+block|{
 name|AcpiEvaluateObject
 argument_list|(
 name|acpi_get_handle
@@ -4115,6 +4114,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|status
+operator|=
+name|AE_OK
+expr_stmt|;
+block|}
 name|ACPI_SERIAL_END
 argument_list|(
 name|pci_link
