@@ -354,6 +354,7 @@ name|if_mtu
 operator|=
 name|DSMTU
 expr_stmt|;
+comment|/* 	 * IFF_LOOPBACK should not be removed from disc's flags because 	 * it controls what PF-specific routes are magically added when 	 * a network address is assigned to the interface.  Things just 	 * won't work as intended w/o such routes because the output 	 * interface selection for a packet is totally route-driven. 	 * A valid alternative to IFF_LOOPBACK can be IFF_BROADCAST or 	 * IFF_POINTOPOINT, but it would result in different properties 	 * of the interface. 	 */
 name|ifp
 operator|->
 name|if_flags
