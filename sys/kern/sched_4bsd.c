@@ -381,32 +381,12 @@ begin_comment
 comment|/* Default sched quantum */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|callout
-name|roundrobin_callout
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
 name|setup_runqs
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|roundrobin
-parameter_list|(
-name|void
-modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1155,59 +1135,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Force switch among equal priority processes every 100ms.  * We don't actually need to force a context switch of the current process.  * The act of firing the event triggers a context switch to softclock() and  * then switching back out again which is equivalent to a preemption, thus  * no further work is needed on the local CPU.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|roundrobin
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|SMP
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
-name|forward_roundrobin
-argument_list|()
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|callout_reset
-argument_list|(
-operator|&
-name|roundrobin_callout
-argument_list|,
-name|sched_quantum
-argument_list|,
-name|roundrobin
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Constants for digital decay and forget:  *	90% of (td_estcpu) usage in 5 * loadav time  *	95% of (ts_pctcpu) usage in 60 seconds (load insensitive)  *          Note that, as ps(1) mentions, this can let percentages  *          total over 100% (I've seen 137.9% for 3 processes).  *  * Note that schedclock() updates td_estcpu and p_cpticks asynchronously.  *  * We wish to decay away 90% of td_estcpu in (5 * loadavg) seconds.  * That is, the system wants to compute a value of decay such  * that the following for loop:  * 	for (i = 0; i< (5 * loadavg); i++)  * 		td_estcpu *= decay;  * will compute  * 	td_estcpu *= 0.1;  * for all values of loadavg:  *  * Mathematically this loop can be expressed by saying:  * 	decay ** (5 * loadavg) ~= .1  *  * The system computes decay as:  * 	decay = (2 * loadavg) / (2 * loadavg + 1)  *  * We wish to prove that the system's computation of decay  * will always fulfill the equation:  * 	decay ** (5 * loadavg) ~= .1  *  * If we compute b as:  * 	b = 2 * loadavg  * then  * 	decay = b / (b + 1)  *  * We now need to prove two things:  *	1) Given factor ** (5 * loadavg) ~= .1, prove factor == b/(b+1)  *	2) Given b/(b+1) ** power ~= .1, prove power == (5 * loadavg)  *  * Facts:  *         For x close to zero, exp(x) =~ 1 + x, since  *              exp(x) = 0! + x**1/1! + x**2/2! + ... .  *              therefore exp(-1/b) =~ 1 - (1/b) = (b-1)/b.  *         For x close to zero, ln(1+x) =~ x, since  *              ln(1+x) = x - x**2/2 + x**3/3 - ...     -1< x< 1  *              therefore ln(b/(b+1)) = ln(1 - 1/(b+1)) =~ -1/(b+1).  *         ln(.1) =~ -2.30  *  * Proof of (1):  *    Solve (factor)**(power) =~ .1 given power (5*loadav):  *	solving for factor,  *      ln(factor) =~ (-2.30/5*loadav), or  *      factor =~ exp(-1/((5/2.30)*loadav)) =~ exp(-1/(2*loadav)) =  *          exp(-1/b) =~ (b-1)/b =~ b/(b+1).                    QED  *  * Proof of (2):  *    Solve (factor)**(power) =~ .1 given factor == (b/(b+1)):  *	solving for power,  *      power*ln(b/(b+1)) =~ -2.30, or  *      power =~ 2.3 * (b + 1) = 4.6*loadav + 2.3 =~ 5*loadav.  QED  *  * Actual power values for the implemented algorithm are as follows:  *      loadav: 1       2       3       4  *      power:  5.68    10.32   14.94   19.55  */
 end_comment
 
@@ -1946,20 +1873,6 @@ literal|2
 operator|*
 name|sched_quantum
 expr_stmt|;
-name|callout_init
-argument_list|(
-operator|&
-name|roundrobin_callout
-argument_list|,
-name|CALLOUT_MPSAFE
-argument_list|)
-expr_stmt|;
-comment|/* Kick off timeout driven events by calling first time. */
-name|roundrobin
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* Account for thread0. */
 name|sched_load_add
 argument_list|()
@@ -2170,6 +2083,30 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Force a context switch if the current thread has used up a full 	 * quantum (default quantum is 100ms). 	 */
+if|if
+condition|(
+operator|!
+name|TD_IS_IDLETHREAD
+argument_list|(
+name|td
+argument_list|)
+operator|&&
+name|ticks
+operator|-
+name|PCPU_GET
+argument_list|(
+name|switchticks
+argument_list|)
+operator|>=
+name|sched_quantum
+condition|)
+name|td
+operator|->
+name|td_flags
+operator||=
+name|TDF_NEEDRESCHED
+expr_stmt|;
 block|}
 end_function
 
