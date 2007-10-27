@@ -2070,9 +2070,14 @@ operator|)
 return|;
 name|error
 operator|=
-name|tsleep
+name|msleep
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|lock
 argument_list|,
 name|PWAIT
 operator||
