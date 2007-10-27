@@ -237,6 +237,9 @@ operator|--
 name|count
 operator|>=
 literal|0
+operator|&&
+operator|!
+name|db_pager_quit
 condition|)
 block|{
 name|fp
