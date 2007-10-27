@@ -4408,17 +4408,6 @@ name|retval
 decl_stmt|,
 name|best
 decl_stmt|;
-comment|/* We only support built in local APICs. */
-if|if
-condition|(
-operator|!
-operator|(
-name|cpu_feature
-operator|&
-name|CPUID_APIC
-operator|)
-condition|)
-return|return;
 comment|/* Don't probe if APIC mode is disabled. */
 if|if
 condition|(
