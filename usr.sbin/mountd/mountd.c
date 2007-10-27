@@ -3060,9 +3060,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|res
-operator|->
-name|ai_addr
+name|sin6
 operator|==
 name|NULL
 condition|)
