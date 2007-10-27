@@ -158,6 +158,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|p
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* start with no idle process */
 ifdef|#
 directive|ifdef
 name|SMP
@@ -246,12 +251,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|p
-operator|=
-name|td
-operator|->
-name|td_proc
-expr_stmt|;
 if|if
 condition|(
 name|error
