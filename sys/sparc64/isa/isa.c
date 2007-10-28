@@ -813,9 +813,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"isa_setup_children: no PnP map entry for node "
+name|dev
+argument_list|,
+literal|"no PnP map entry for node "
 literal|"0x%lx: %s\n"
 argument_list|,
 operator|(
@@ -1297,17 +1299,30 @@ name|rintr
 operator|==
 name|PCI_INVALID_IRQ
 condition|)
-name|panic
+block|{
+name|device_printf
 argument_list|(
-literal|"isa_setup_children: could not map ISA "
-literal|"interrupt %d"
+name|dev
+argument_list|,
+literal|"could not map ISA "
+literal|"interrupt %d for node 0x%lx: %s\n"
 argument_list|,
 name|intrs
 index|[
 name|i
 index|]
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|node
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 name|isa_ino
 index|[
 name|intrs
@@ -1912,12 +1927,9 @@ block|{
 comment|/* 	 * Just pass through. This is going to be handled by either 	 * one of the parent PCI buses or the nexus device. 	 * The interrupt had been routed before it was added to the 	 * resource list of the child. 	 */
 return|return
 operator|(
-name|BUS_SETUP_INTR
-argument_list|(
-name|device_get_parent
+name|bus_generic_setup_intr
 argument_list|(
 name|dev
-argument_list|)
 argument_list|,
 name|child
 argument_list|,
@@ -1960,12 +1972,9 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|BUS_TEARDOWN_INTR
-argument_list|(
-name|device_get_parent
+name|bus_generic_teardown_intr
 argument_list|(
 name|dev
-argument_list|)
 argument_list|,
 name|child
 argument_list|,
