@@ -4232,9 +4232,9 @@ name|p
 operator|->
 name|p_pid
 argument_list|,
-name|th
+name|td
 operator|->
-name|th_name
+name|td_name
 argument_list|)
 expr_stmt|;
 name|TD_CLR_IWAIT
