@@ -12207,7 +12207,7 @@ name|NGQF_FN2
 case|:
 name|printf
 argument_list|(
-literal|" - fn@%p (%p, %p, %p, %d (%x))\n"
+literal|" - fn2@%p (%p, %p, %p, %d (%x))\n"
 argument_list|,
 name|_NGI_FN2
 argument_list|(
