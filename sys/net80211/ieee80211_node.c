@@ -8665,6 +8665,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Send a deauthenticate frame and drop the station. 			 * This is somewhat complicated due to reference counts 			 * and locking.  At this point a station will typically 			 * have a reference count of 1.  ieee80211_node_leave 			 * will do a "free" of the node which will drop the 			 * reference count.  But in the meantime a reference 			 * wil be held by the deauth frame.  The actual reclaim 			 * of the node will happen either after the tx is 			 * completed or by ieee80211_node_leave. 			 * 			 * Separately we must drop the node lock before sending 			 * in case the driver takes a lock, as this will result 			 * in  LOR between the node lock and the driver lock. 			 */
+name|ieee80211_ref_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 name|IEEE80211_NODE_UNLOCK
 argument_list|(
 name|nt
@@ -8695,6 +8700,11 @@ name|ieee80211_node_leave
 argument_list|(
 name|ic
 argument_list|,
+name|ni
+argument_list|)
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
