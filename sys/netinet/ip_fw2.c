@@ -7483,7 +7483,7 @@ name|replyto
 operator|!=
 name|NULL
 condition|)
-name|mac_mbuf_create_netlayer
+name|mac_netinet_firewall_reply
 argument_list|(
 name|replyto
 argument_list|,

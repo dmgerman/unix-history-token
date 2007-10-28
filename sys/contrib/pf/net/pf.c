@@ -8064,7 +8064,7 @@ name|__FreeBSD__
 ifdef|#
 directive|ifdef
 name|MAC
-argument|if (replyto) 		mac_mbuf_create_netlayer(replyto, m); 	else 		mac_netinet_firewall_send(m);
+argument|if (replyto) 		mac_netinet_firewall_reply(replyto, m); 	else 		mac_netinet_firewall_send(m);
 else|#
 directive|else
 argument|(void)replyto;

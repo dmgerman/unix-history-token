@@ -1124,7 +1124,7 @@ goto|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_mbuf_create_netlayer
+name|mac_netinet_icmp_reply
 argument_list|(
 name|n
 argument_list|,
@@ -3315,7 +3315,7 @@ label|:
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_netinet_icmp_reply
+name|mac_netinet_icmp_replyinplace
 argument_list|(
 name|m
 argument_list|)
