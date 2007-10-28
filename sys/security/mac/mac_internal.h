@@ -169,6 +169,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|mac_ifnet_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * MAC Framework infrastructure functions.  */
 end_comment
@@ -317,6 +325,26 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|MAC_IFNET_LOCK
+parameter_list|(
+name|ifp
+parameter_list|)
+value|mtx_lock(&mac_ifnet_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_IFNET_UNLOCK
+parameter_list|(
+name|ifp
+parameter_list|)
+value|mtx_unlock(&mac_ifnet_mtx)
+end_define
 
 begin_comment
 comment|/*  * MAC Framework per-object type functions.  It's not yet clear how the  * namespaces, etc, should work for these, so for now, sort by object type.  */

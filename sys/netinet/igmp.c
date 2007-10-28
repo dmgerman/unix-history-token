@@ -1712,7 +1712,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_mbuf_create_linklayer
+name|mac_netinet_igmp_send
 argument_list|(
 name|inm
 operator|->

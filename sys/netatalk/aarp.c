@@ -615,7 +615,7 @@ return|return;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_mbuf_create_linklayer
+name|mac_netatalk_aarp_send
 argument_list|(
 name|ifp
 argument_list|,
@@ -2949,7 +2949,7 @@ return|return;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_mbuf_create_linklayer
+name|mac_netatalk_aarp_send
 argument_list|(
 name|ifp
 argument_list|,

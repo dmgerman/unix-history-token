@@ -8217,7 +8217,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_mbuf_create_linklayer
+name|mac_netinet6_nd6_send
 argument_list|(
 name|ifp
 argument_list|,
