@@ -1030,7 +1030,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Int 15:E820 'SMAP' structure  *  * XXX add constants for type  */
+comment|/*  * Int 15:E820 'SMAP' structure  */
 end_comment
 
 begin_define
@@ -1043,6 +1043,41 @@ end_define
 begin_comment
 comment|/* 'SMAP' */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SMAP_TYPE_MEMORY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMAP_TYPE_RESERVED
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMAP_TYPE_ACPI_RECLAIM
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMAP_TYPE_ACPI_NVS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMAP_TYPE_ACPI_ERROR
+value|5
+end_define
 
 begin_struct
 struct|struct
