@@ -297,7 +297,7 @@ begin_define
 define|#
 directive|define
 name|PCIOCGETCONF
-value|_IOWR('p', 1, struct pci_conf_io)
+value|_IOWR('p', 5, struct pci_conf_io)
 end_define
 
 begin_define
