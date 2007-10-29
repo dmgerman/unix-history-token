@@ -128,6 +128,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|APM_ENT_TYPE_FREEBSD_ZFS
+value|"FreeBSD-ZFS"
+end_define
+
+begin_define
+define|#
+directive|define
 name|APM_ENT_TYPE_APPLE_HFS
 value|"Apple_HFS"
 end_define

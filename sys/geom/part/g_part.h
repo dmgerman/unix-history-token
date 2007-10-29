@@ -65,6 +65,9 @@ comment|/* A UFS/UFS2 file system entry. */
 name|G_PART_ALIAS_FREEBSD_VINUM
 block|,
 comment|/* A Vinum partition entry. */
+name|G_PART_ALIAS_FREEBSD_ZFS
+block|,
+comment|/* A ZFS file system entry. */
 name|G_PART_ALIAS_MBR
 block|,
 comment|/* A MBR (extended) partition entry. */
