@@ -1840,7 +1840,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kproc_kthread_create
+name|kproc_kthread_add
 argument_list|(
 name|ithread_loop
 argument_list|,
