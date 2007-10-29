@@ -3195,6 +3195,15 @@ operator|->
 name|ie_count
 operator|>=
 name|intr_storm_threshold
+operator|&&
+operator|!
+operator|(
+name|ie
+operator|->
+name|ie_flags
+operator|&
+name|IE_SOFT
+operator|)
 condition|)
 block|{
 comment|/* Report the message only once every second. */
