@@ -1150,6 +1150,28 @@ name|E1000_SCR_MODE_1000BX
 value|0x0380
 end_define
 
+begin_comment
+comment|/* 88E1116 page 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_POWER_DOWN
+value|0x0004
+end_define
+
+begin_comment
+comment|/* 88E1116 page 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SCR_RGMII_POWER_UP
+value|0x0008
+end_define
+
 begin_define
 define|#
 directive|define
