@@ -378,6 +378,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Object-specific entry point implementations are sorted alphabetically by  * object type and then by operation.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
