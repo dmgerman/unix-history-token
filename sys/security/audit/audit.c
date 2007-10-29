@@ -887,13 +887,13 @@ name|audit_nae_mask
 operator|.
 name|am_success
 operator|=
-name|AU_NULL
+literal|0
 expr_stmt|;
 name|audit_nae_mask
 operator|.
 name|am_failure
 operator|=
-name|AU_NULL
+literal|0
 expr_stmt|;
 name|TAILQ_INIT
 argument_list|(

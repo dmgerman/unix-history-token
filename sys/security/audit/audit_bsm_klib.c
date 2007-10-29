@@ -220,7 +220,7 @@ index|]
 expr_stmt|;
 name|class
 operator|=
-name|AU_NULL
+literal|0
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -485,7 +485,7 @@ index|]
 operator|.
 name|sy_auevent
 argument_list|,
-name|AU_NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
