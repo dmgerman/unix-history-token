@@ -516,12 +516,6 @@ name|mii_pdata
 operator|=
 name|mii
 expr_stmt|;
-name|sc
-operator|->
-name|mii_flags
-operator||=
-name|MIIF_NOISOLATE
-expr_stmt|;
 name|mii
 operator|->
 name|mii_instance
@@ -916,7 +910,7 @@ operator|&
 name|BMCR_AUTOEN
 condition|)
 block|{
-comment|/* 		 * The media status bits are only valid of autonegotiation 		 * has completed (or it's disabled). 		 */
+comment|/* 		 * The media status bits are only valid if autonegotiation 		 * has completed (or it's disabled). 		 */
 if|if
 condition|(
 operator|(
