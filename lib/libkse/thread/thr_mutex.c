@@ -794,6 +794,9 @@ case|:
 case|case
 name|PTHREAD_MUTEX_NORMAL
 case|:
+case|case
+name|PTHREAD_MUTEX_ADAPTIVE_NP
+case|:
 comment|/* Nothing to do here. */
 break|break;
 comment|/* Single UNIX Spec 2 recursive mutex: */
@@ -3940,6 +3943,9 @@ case|:
 case|case
 name|PTHREAD_MUTEX_NORMAL
 case|:
+case|case
+name|PTHREAD_MUTEX_ADAPTIVE_NP
+case|:
 name|ret
 operator|=
 name|EBUSY
@@ -4014,6 +4020,9 @@ block|{
 comment|/* case PTHREAD_MUTEX_DEFAULT: */
 case|case
 name|PTHREAD_MUTEX_ERRORCHECK
+case|:
+case|case
+name|PTHREAD_MUTEX_ADAPTIVE_NP
 case|:
 comment|/* 		 * POSIX specifies that mutexes should return EDEADLK if a 		 * recursive lock is detected. 		 */
 name|ret
