@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *	FileName :	  xgehal-channel-fp.c  *  *	Description:  HAL channel object functionality (fast path)  *  *	Created:	  10 June 2004  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -76,6 +72,17 @@ if|if
 condition|(
 name|channel
 operator|->
+name|terminating
+condition|)
+block|{
+return|return
+name|XGE_HAL_FAIL
+return|;
+block|}
+if|if
+condition|(
+name|channel
+operator|->
 name|reserve_length
 operator|-
 name|channel
@@ -108,8 +115,8 @@ name|XGE_TRACE
 argument_list|,
 literal|"dtrh 0x"
 name|XGE_OS_LLXFMT
-literal|" allocated,	"
-literal|"channel	%d:%d:%d, reserve_idx %d"
+literal|" allocated, "
+literal|"channel %d:%d:%d, reserve_idx %d"
 argument_list|,
 call|(
 name|unsigned
@@ -185,8 +192,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* switch between empty	and	full arrays	*/
-comment|/* the idea	behind such	a design is	that by	having free	and	reserved 	 * arrays separated	we basically separated irq and non-irq parts. 	 * i.e.	no additional lock need	to be done when	we free	a resource */
+comment|/* switch between empty and full arrays */
+comment|/* the idea behind such a design is that by having free and reserved 	 * arrays separated we basically separated irq and non-irq parts. 	 * i.e. no additional lock need to be done when we free a resource */
 if|if
 condition|(
 name|channel
@@ -257,8 +264,8 @@ name|xge_debug_channel
 argument_list|(
 name|XGE_TRACE
 argument_list|,
-literal|"switch on channel %d:%d:%d,	reserve_length %d, "
-literal|"free_length	%d"
+literal|"switch on channel %d:%d:%d, reserve_length %d, "
+literal|"free_length %d"
 argument_list|,
 name|channel
 operator|->
@@ -432,7 +439,7 @@ operator|*
 operator|)
 name|channelh
 decl_stmt|;
-comment|/* restore a previously	allocated dtrh at current offset and update 	 * the available reserve length	accordingly. If	dtrh is	null just 	 * update the reserve length, only */
+comment|/* restore a previously allocated dtrh at current offset and update 	 * the available reserve length accordingly. If dtrh is null just 	 * update the reserve length, only */
 if|if
 condition|(
 name|dtrh
@@ -458,7 +465,7 @@ argument_list|,
 literal|"dtrh 0x"
 name|XGE_OS_LLXFMT
 literal|" restored for "
-literal|"channel %d:%d:%d, offset %d at	reserve	index %d, "
+literal|"channel %d:%d:%d, offset %d at reserve index %d, "
 argument_list|,
 operator|(
 name|unsigned
@@ -504,8 +511,8 @@ name|xge_debug_channel
 argument_list|(
 name|XGE_TRACE
 argument_list|,
-literal|"channel %d:%d:%d,	restored "
-literal|"for offset	%d,	new	reserve_length %d, free	length %d"
+literal|"channel %d:%d:%d, restored "
+literal|"for offset %d, new reserve_length %d, free length %d"
 argument_list|,
 name|channel
 operator|->
@@ -760,8 +767,8 @@ name|XGE_TRACE
 argument_list|,
 literal|"dtrh 0x"
 name|XGE_OS_LLXFMT
-literal|" freed,	"
-literal|"channel	%d:%d:%d, new free_length %d"
+literal|" freed, "
+literal|"channel %d:%d:%d, new free_length %d"
 argument_list|,
 operator|(
 name|unsigned
@@ -848,7 +855,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_channel_userdata	- Get user-specified channel context.  * @channelh: Channel handle. Obtained via xge_hal_channel_open().  *  * Returns:	per-channel	"user data", which can be any ULD-defined context.  * The %userdata "gets"	into the channel at	open time  * (see	xge_hal_channel_open()).  *  * See also: xge_hal_channel_open().  */
+comment|/**  * xge_hal_channel_userdata - Get user-specified channel context.  * @channelh: Channel handle. Obtained via xge_hal_channel_open().  *  * Returns: per-channel "user data", which can be any ULD-defined context.  * The %userdata "gets" into the channel at open time  * (see xge_hal_channel_open()).  *  * See also: xge_hal_channel_open().  */
 end_comment
 
 begin_function
@@ -881,7 +888,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_channel_id -	Get	channel	ID.  * @channelh: Channel handle. Obtained via xge_hal_channel_open().  *  * Returns:	channel	ID.	For	link layer channel id is the number  * in the range	from 0 to 7	that identifies	hardware ring or fifo,  * depending on	the	channel	type.  */
+comment|/**  * xge_hal_channel_id - Get channel ID.  * @channelh: Channel handle. Obtained via xge_hal_channel_open().  *  * Returns: channel ID. For link layer channel id is the number  * in the range from 0 to 7 that identifies hardware ring or fifo,  * depending on the channel type.  */
 end_comment
 
 begin_function
@@ -913,7 +920,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_check_alignment - Check buffer alignment	and	calculate the  * "misaligned"	portion.  * @dma_pointer: DMA address of	the	buffer.  * @size: Buffer size, in bytes.  * @alignment: Alignment "granularity" (see	below),	in bytes.  * @copy_size: Maximum number of bytes to "extract"	from the buffer  * (in order to	spost it as	a separate scatter-gather entry). See below.  *  * Check buffer	alignment and calculate	"misaligned" portion, if exists.  * The buffer is considered	aligned	if its address is multiple of  * the specified @alignment. If	this is	the	case,  * xge_hal_check_alignment() returns zero.  * Otherwise, xge_hal_check_alignment()	uses the last argument,  * @copy_size,  * to calculate	the	size to	"extract" from the buffer. The @copy_size  * may or may not be equal @alignment. The difference between these	two  * arguments is	that the @alignment	is used	to make	the	decision: aligned  * or not aligned. While the @copy_size	is used	to calculate the portion  * of the buffer to	"extract", i.e.	to post	as a separate entry	in the  * transmit	descriptor.	For	example, the combination  * @alignment=8	and	@copy_size=64 will work	okay on	AMD	Opteron	boxes.  *  * Note: @copy_size	should be a	multiple of	@alignment.	In many	practical  * cases @copy_size	and	@alignment will	probably be	equal.  *  * See also: xge_hal_fifo_dtr_buffer_set_aligned().  */
+comment|/**  * xge_hal_check_alignment - Check buffer alignment and calculate the  * "misaligned" portion.  * @dma_pointer: DMA address of the buffer.  * @size: Buffer size, in bytes.  * @alignment: Alignment "granularity" (see below), in bytes.  * @copy_size: Maximum number of bytes to "extract" from the buffer  * (in order to spost it as a separate scatter-gather entry). See below.  *  * Check buffer alignment and calculate "misaligned" portion, if exists.  * The buffer is considered aligned if its address is multiple of  * the specified @alignment. If this is the case,  * xge_hal_check_alignment() returns zero.  * Otherwise, xge_hal_check_alignment() uses the last argument,  * @copy_size,  * to calculate the size to "extract" from the buffer. The @copy_size  * may or may not be equal @alignment. The difference between these two  * arguments is that the @alignment is used to make the decision: aligned  * or not aligned. While the @copy_size is used to calculate the portion  * of the buffer to "extract", i.e. to post as a separate entry in the  * transmit descriptor. For example, the combination  * @alignment=8 and @copy_size=64 will work okay on AMD Opteron boxes.  *  * Note: @copy_size should be a multiple of @alignment. In many practical  * cases @copy_size and @alignment will probably be equal.  *  * See also: xge_hal_fifo_dtr_buffer_set_aligned().  */
 end_comment
 
 begin_function

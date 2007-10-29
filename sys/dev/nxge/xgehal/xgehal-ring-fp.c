@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *	FileName :	  xgehal-ring-fp.c  *  *	Description:  HAL Rx ring object functionality (fast path)  *  *	Created:	  10 June 2004  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -380,7 +376,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_dtr_private	- Get ULD private per-descriptor data.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  *  * Returns:	private	ULD	info associated	with the descriptor.  * ULD requests	per-descriptor space via xge_hal_channel_open().  *  * See also: xge_hal_fifo_dtr_private().  * Usage: See ex_rx_compl{}.  */
+comment|/**  * xge_hal_ring_dtr_private - Get ULD private per-descriptor data.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  *  * Returns: private ULD info associated with the descriptor.  * ULD requests per-descriptor space via xge_hal_channel_open().  *  * See also: xge_hal_fifo_dtr_private().  * Usage: See ex_rx_compl{}.  */
 end_comment
 
 begin_function
@@ -422,7 +418,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_dtr_reserve	- Reserve ring descriptor.  * @channelh: Channel handle.  * @dtrh: Reserved descriptor. On success HAL fills	this "out" parameter  *		  with a valid handle.  *  * Reserve Rx descriptor for the subsequent	filling-in (by upper layer  * driver (ULD)) and posting on	the	corresponding channel (@channelh)  * via xge_hal_ring_dtr_post().  *  * Returns:	XGE_HAL_OK - success.  * XGE_HAL_INF_OUT_OF_DESCRIPTORS -	Currently no descriptors available.  *  * See also: xge_hal_fifo_dtr_reserve(), xge_hal_ring_dtr_free(),  * xge_hal_fifo_dtr_reserve_sp(), xge_hal_status_e{}.  * Usage: See ex_post_all_rx{}.  */
+comment|/**  * xge_hal_ring_dtr_reserve - Reserve ring descriptor.  * @channelh: Channel handle.  * @dtrh: Reserved descriptor. On success HAL fills this "out" parameter  *        with a valid handle.  *  * Reserve Rx descriptor for the subsequent filling-in (by upper layer  * driver (ULD)) and posting on the corresponding channel (@channelh)  * via xge_hal_ring_dtr_post().  *  * Returns: XGE_HAL_OK - success.  * XGE_HAL_INF_OUT_OF_DESCRIPTORS - Currently no descriptors available.  *  * See also: xge_hal_fifo_dtr_reserve(), xge_hal_ring_dtr_free(),  * xge_hal_fifo_dtr_reserve_sp(), xge_hal_status_e{}.  * Usage: See ex_post_all_rx{}.  */
 end_comment
 
 begin_function
@@ -569,7 +565,7 @@ operator|)
 operator|*
 name|dtrh
 decl_stmt|;
-comment|/* instead of memset: reset	this RxD */
+comment|/* instead of memset: reset this RxD */
 name|rxdp
 operator|->
 name|control_1
@@ -611,7 +607,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_dtr_info_get - Get extended	information	associated with  * a completed receive descriptor for 1b mode.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  * @ext_info: See xge_hal_dtr_info_t{}.	Returned by	HAL.  *  * Retrieve	extended information associated	with a completed receive descriptor.  *  * See also: xge_hal_dtr_info_t{}, xge_hal_ring_dtr_1b_get(),  * xge_hal_ring_dtr_5b_get().  */
+comment|/**  * xge_hal_ring_dtr_info_get - Get extended information associated with  * a completed receive descriptor for 1b mode.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  * @ext_info: See xge_hal_dtr_info_t{}. Returned by HAL.  *  * Retrieve extended information associated with a completed receive descriptor.  *  * See also: xge_hal_dtr_info_t{}, xge_hal_ring_dtr_1b_get(),  * xge_hal_ring_dtr_5b_get().  */
 end_comment
 
 begin_function
@@ -631,7 +627,7 @@ modifier|*
 name|ext_info
 parameter_list|)
 block|{
-comment|/* cast	to 1-buffer	mode RxD: the code below relies	on the fact 	 * that	control_1 and control_2	are	formatted the same way.. */
+comment|/* cast to 1-buffer mode RxD: the code below relies on the fact 	 * that control_1 and control_2 are formatted the same way.. */
 name|xge_hal_ring_rxd_1_t
 modifier|*
 name|rxdp
@@ -697,7 +693,7 @@ operator|->
 name|control_2
 argument_list|)
 expr_stmt|;
-comment|/* Herc	only, a	few	extra cycles imposed on	Xena and/or 	 * when	RTH	is not enabled. 	 * Alternatively, could	check 	 * xge_hal_device_check_id(), hldev->config.rth_en,	queue->rth_en */
+comment|/* Herc only, a few extra cycles imposed on Xena and/or 	 * when RTH is not enabled. 	 * Alternatively, could check 	 * xge_hal_device_check_id(), hldev->config.rth_en, queue->rth_en */
 name|ext_info
 operator|->
 name|rth_it_hit
@@ -746,7 +742,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_dtr_info_nb_get	- Get extended information associated  * with	a completed	receive	descriptor for 3b or 5b  * modes.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  * @ext_info: See xge_hal_dtr_info_t{}.	Returned by	HAL.  *  * Retrieve	extended information associated	with a completed receive descriptor.  *  * See also: xge_hal_dtr_info_t{}, xge_hal_ring_dtr_1b_get(),  *			 xge_hal_ring_dtr_5b_get().  */
+comment|/**  * xge_hal_ring_dtr_info_nb_get - Get extended information associated  * with a completed receive descriptor for 3b or 5b  * modes.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  * @ext_info: See xge_hal_dtr_info_t{}. Returned by HAL.  *  * Retrieve extended information associated with a completed receive descriptor.  *  * See also: xge_hal_dtr_info_t{}, xge_hal_ring_dtr_1b_get(),  *           xge_hal_ring_dtr_5b_get().  */
 end_comment
 
 begin_function
@@ -766,7 +762,7 @@ modifier|*
 name|ext_info
 parameter_list|)
 block|{
-comment|/* cast	to 1-buffer	mode RxD: the code below relies	on the fact 	 * that	control_1 and control_2	are	formatted the same way.. */
+comment|/* cast to 1-buffer mode RxD: the code below relies on the fact 	 * that control_1 and control_2 are formatted the same way.. */
 name|xge_hal_ring_rxd_1_t
 modifier|*
 name|rxdp
@@ -832,7 +828,7 @@ operator|->
 name|control_2
 argument_list|)
 expr_stmt|;
-comment|/* Herc	only, a	few	extra cycles imposed on	Xena and/or 	 * when	RTH	is not enabled.	Same comment as	above. */
+comment|/* Herc only, a few extra cycles imposed on Xena and/or 	 * when RTH is not enabled. Same comment as above. */
 name|ext_info
 operator|->
 name|rth_it_hit
@@ -881,7 +877,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_dtr_1b_set - Prepare 1-buffer-mode descriptor.  * @dtrh: Descriptor handle.  * @dma_pointer: DMA address of	a single receive buffer	this descriptor  *				 should	carry. Note	that by	the	time  *				 xge_hal_ring_dtr_1b_set  *				 is	called,	the	receive	buffer should be already mapped  *				 to	the	corresponding Xframe device.  * @size: Size of the receive @dma_pointer buffer.  *  * Prepare 1-buffer-mode Rx	descriptor for posting  * (via	xge_hal_ring_dtr_post()).  *  * This	inline helper-function does	not	return any parameters and always  * succeeds.  *  * See also: xge_hal_ring_dtr_3b_set(),	xge_hal_ring_dtr_5b_set().  * Usage: See ex_post_all_rx{}.  */
+comment|/**  * xge_hal_ring_dtr_1b_set - Prepare 1-buffer-mode descriptor.  * @dtrh: Descriptor handle.  * @dma_pointer: DMA address of a single receive buffer this descriptor  *               should carry. Note that by the time  *               xge_hal_ring_dtr_1b_set  *               is called, the receive buffer should be already mapped  *               to the corresponding Xframe device.  * @size: Size of the receive @dma_pointer buffer.  *  * Prepare 1-buffer-mode Rx descriptor for posting  * (via xge_hal_ring_dtr_post()).  *  * This inline helper-function does not return any parameters and always  * succeeds.  *  * See also: xge_hal_ring_dtr_3b_set(), xge_hal_ring_dtr_5b_set().  * Usage: See ex_post_all_rx{}.  */
 end_comment
 
 begin_function
@@ -959,7 +955,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_dtr_1b_get - Get data from the completed 1-buf  * descriptor.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  * @dma_pointer: DMA address of	a single receive buffer	_this_ descriptor  *				 carries. Returned by HAL.  * @pkt_length:	Length (in bytes) of the data in the buffer	pointed	by  *				@dma_pointer. Returned by HAL.  *  * Retrieve	protocol data from the completed 1-buffer-mode Rx descriptor.  * This	inline helper-function uses	completed descriptor to	populate receive  * buffer pointer and other	"out" parameters. The function always succeeds.  *  * See also: xge_hal_ring_dtr_3b_get(),	xge_hal_ring_dtr_5b_get().  * Usage: See ex_rx_compl{}.  */
+comment|/**  * xge_hal_ring_dtr_1b_get - Get data from the completed 1-buf  * descriptor.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  * @dma_pointer: DMA address of a single receive buffer _this_ descriptor  *               carries. Returned by HAL.  * @pkt_length: Length (in bytes) of the data in the buffer pointed by  *              @dma_pointer. Returned by HAL.  *  * Retrieve protocol data from the completed 1-buffer-mode Rx descriptor.  * This inline helper-function uses completed descriptor to populate receive  * buffer pointer and other "out" parameters. The function always succeeds.  *  * See also: xge_hal_ring_dtr_3b_get(), xge_hal_ring_dtr_5b_get().  * Usage: See ex_rx_compl{}.  */
 end_comment
 
 begin_function
@@ -1027,7 +1023,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_dtr_3b_set - Prepare 3-buffer-mode descriptor.  * @dtrh: Descriptor handle.  * @dma_pointers: Array	of DMA addresses. Contains exactly 3 receive buffers  *				 _this_	descriptor should carry.  *				 Note that by the time xge_hal_ring_dtr_3b_set  *				 is	called,	the	receive	buffers	should be mapped  *				 to	the	corresponding Xframe device.  * @sizes: Array of	receive	buffer sizes. Contains 3 sizes:	one	size per  *		   buffer from @dma_pointers.  *  * Prepare 3-buffer-mode Rx	descriptor for posting (via  * xge_hal_ring_dtr_post()).  * This	inline helper-function does	not	return any parameters and always  * succeeds.  *  * See also: xge_hal_ring_dtr_1b_set(),	xge_hal_ring_dtr_5b_set().  */
+comment|/**  * xge_hal_ring_dtr_3b_set - Prepare 3-buffer-mode descriptor.  * @dtrh: Descriptor handle.  * @dma_pointers: Array of DMA addresses. Contains exactly 3 receive buffers  *               _this_ descriptor should carry.  *               Note that by the time xge_hal_ring_dtr_3b_set  *               is called, the receive buffers should be mapped  *               to the corresponding Xframe device.  * @sizes: Array of receive buffer sizes. Contains 3 sizes: one size per  *         buffer from @dma_pointers.  *  * Prepare 3-buffer-mode Rx descriptor for posting (via  * xge_hal_ring_dtr_post()).  * This inline helper-function does not return any parameters and always  * succeeds.  *  * See also: xge_hal_ring_dtr_1b_set(), xge_hal_ring_dtr_5b_set().  */
 end_comment
 
 begin_function
@@ -1152,7 +1148,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_dtr_3b_get - Get data from the completed 3-buf  * descriptor.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  * @dma_pointers: DMA addresses	of the 3 receive buffers _this_	descriptor  *				  carries. The first two buffers contain ethernet and  *				  (IP +	transport) headers.	The	3rd	buffer contains	packet  *				  data.  *				  Returned by HAL.  * @sizes: Array of	receive	buffer sizes. Contains 3 sizes:	one	size per  * buffer from @dma_pointers. Returned by HAL.  *  * Retrieve	protocol data from the completed 3-buffer-mode Rx descriptor.  * This	inline helper-function uses	completed descriptor to	populate receive  * buffer pointer and other	"out" parameters. The function always succeeds.  *  * See also: xge_hal_ring_dtr_3b_get(),	xge_hal_ring_dtr_5b_get().  */
+comment|/**  * xge_hal_ring_dtr_3b_get - Get data from the completed 3-buf  * descriptor.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  * @dma_pointers: DMA addresses of the 3 receive buffers _this_ descriptor  *                carries. The first two buffers contain ethernet and  *                (IP + transport) headers. The 3rd buffer contains packet  *                data.  *                Returned by HAL.  * @sizes: Array of receive buffer sizes. Contains 3 sizes: one size per  * buffer from @dma_pointers. Returned by HAL.  *  * Retrieve protocol data from the completed 3-buffer-mode Rx descriptor.  * This inline helper-function uses completed descriptor to populate receive  * buffer pointer and other "out" parameters. The function always succeeds.  *  * See also: xge_hal_ring_dtr_3b_get(), xge_hal_ring_dtr_5b_get().  */
 end_comment
 
 begin_function
@@ -1278,7 +1274,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_dtr_5b_set - Prepare 5-buffer-mode descriptor.  * @dtrh: Descriptor handle.  * @dma_pointers: Array	of DMA addresses. Contains exactly 5 receive buffers  *				 _this_	descriptor should carry.  *				 Note that by the time xge_hal_ring_dtr_5b_set  *				 is	called,	the	receive	buffers	should be mapped  *				 to	the	corresponding Xframe device.  * @sizes: Array of	receive	buffer sizes. Contains 5 sizes:	one	size per  *		   buffer from @dma_pointers.  *  * Prepare 3-buffer-mode Rx	descriptor for posting (via  * xge_hal_ring_dtr_post()).  * This	inline helper-function does	not	return any parameters and always  * succeeds.  *  * See also: xge_hal_ring_dtr_1b_set(),	xge_hal_ring_dtr_3b_set().  */
+comment|/**  * xge_hal_ring_dtr_5b_set - Prepare 5-buffer-mode descriptor.  * @dtrh: Descriptor handle.  * @dma_pointers: Array of DMA addresses. Contains exactly 5 receive buffers  *               _this_ descriptor should carry.  *               Note that by the time xge_hal_ring_dtr_5b_set  *               is called, the receive buffers should be mapped  *               to the corresponding Xframe device.  * @sizes: Array of receive buffer sizes. Contains 5 sizes: one size per  *         buffer from @dma_pointers.  *  * Prepare 3-buffer-mode Rx descriptor for posting (via  * xge_hal_ring_dtr_post()).  * This inline helper-function does not return any parameters and always  * succeeds.  *  * See also: xge_hal_ring_dtr_1b_set(), xge_hal_ring_dtr_3b_set().  */
 end_comment
 
 begin_function
@@ -1463,7 +1459,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_dtr_5b_get - Get data from the completed 5-buf  * descriptor.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  * @dma_pointers: DMA addresses	of the 5 receive buffers _this_	descriptor  *				  carries. The first 4 buffers contains	L2 (ethernet) through  *				  L5 headers. The 5th buffer contain received (applicaion)  *				  data.	Returned by	HAL.  * @sizes: Array of	receive	buffer sizes. Contains 5 sizes:	one	size per  * buffer from @dma_pointers. Returned by HAL.  *  * Retrieve	protocol data from the completed 5-buffer-mode Rx descriptor.  * This	inline helper-function uses	completed descriptor to	populate receive  * buffer pointer and other	"out" parameters. The function always succeeds.  *  * See also: xge_hal_ring_dtr_3b_get(),	xge_hal_ring_dtr_5b_get().  */
+comment|/**  * xge_hal_ring_dtr_5b_get - Get data from the completed 5-buf  * descriptor.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  * @dma_pointers: DMA addresses of the 5 receive buffers _this_ descriptor  *                carries. The first 4 buffers contains L2 (ethernet) through  *                L5 headers. The 5th buffer contain received (applicaion)  *                data. Returned by HAL.  * @sizes: Array of receive buffer sizes. Contains 5 sizes: one size per  * buffer from @dma_pointers. Returned by HAL.  *  * Retrieve protocol data from the completed 5-buffer-mode Rx descriptor.  * This inline helper-function uses completed descriptor to populate receive  * buffer pointer and other "out" parameters. The function always succeeds.  *  * See also: xge_hal_ring_dtr_3b_get(), xge_hal_ring_dtr_5b_get().  */
 end_comment
 
 begin_function
@@ -1715,7 +1711,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|XGE_DEBUG_ASSERT
-comment|/* make	sure Xena overwrites the (illegal) t_code on completion	*/
+comment|/* make sure Xena overwrites the (illegal) t_code on completion */
 name|XGE_HAL_RXD_SET_T_CODE
 argument_list|(
 name|rxdp
@@ -1733,7 +1729,7 @@ name|XGE_TRACE
 argument_list|,
 literal|"xge_hal_ring_dtr_pre_post: rxd 0x"
 name|XGE_OS_LLXFMT
-literal|" posted %d  post_qid	%d"
+literal|" posted %d  post_qid %d"
 argument_list|,
 operator|(
 name|unsigned
@@ -1856,7 +1852,11 @@ name|rxdp_priv
 operator|=
 name|__hal_ring_rxd_priv
 argument_list|(
-name|channelh
+operator|(
+name|xge_hal_ring_t
+operator|*
+operator|)
+name|channel
 argument_list|,
 name|rxdp
 argument_list|)
@@ -1977,7 +1977,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_dtr_post_post -	FIXME.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  *   * TBD  */
+comment|/**  * xge_hal_ring_dtr_post_post - FIXME.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  *   * TBD  */
 end_comment
 
 begin_function
@@ -2281,7 +2281,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_dtr_post - Post	descriptor on the ring channel.  * @channelh: Channel handle.  * @dtrh: Descriptor obtained via xge_hal_ring_dtr_reserve().  *  * Post	descriptor on the 'ring' type channel.  * Prior to	posting	the	descriptor should be filled	in accordance with  * Host/Xframe interface specification for a given service (LL,	etc.).  *  * See also: xge_hal_fifo_dtr_post_many(), xge_hal_fifo_dtr_post().  * Usage: See ex_post_all_rx{}.  */
+comment|/**  * xge_hal_ring_dtr_post - Post descriptor on the ring channel.  * @channelh: Channel handle.  * @dtrh: Descriptor obtained via xge_hal_ring_dtr_reserve().  *  * Post descriptor on the 'ring' type channel.  * Prior to posting the descriptor should be filled in accordance with  * Host/Xframe interface specification for a given service (LL, etc.).  *  * See also: xge_hal_fifo_dtr_post_many(), xge_hal_fifo_dtr_post().  * Usage: See ex_post_all_rx{}.  */
 end_comment
 
 begin_function
@@ -2315,7 +2315,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_dtr_next_completed - Get the _next_	completed  * descriptor.  * @channelh: Channel handle.  * @dtrh: Descriptor handle. Returned by HAL.  * @t_code:	Transfer code, as per Xframe User Guide,  *			Receive	Descriptor Format. Returned	by HAL.  *  * Retrieve	the	_next_ completed descriptor.  * HAL uses	channel	callback (*xge_hal_channel_callback_f) to notifiy  * upper-layer driver (ULD)	of new completed descriptors. After	that  * the ULD can use xge_hal_ring_dtr_next_completed to retrieve the rest  * completions (the	very first completion is passed	by HAL via  * xge_hal_channel_callback_f).  *  * Implementation-wise,	the	upper-layer	driver is free to call  * xge_hal_ring_dtr_next_completed either immediately from inside the  * channel callback, or	in a deferred fashion and separate (from HAL)  * context.  *  * Non-zero	@t_code	means failure to fill-in receive buffer(s)  * of the descriptor.  * For instance, parity	error detected during the data transfer.  * In this case	Xframe will	complete the descriptor	and	indicate  * for the host	that the received data is not to be	used.  * For details please refer	to Xframe User Guide.  *  * Returns:	XGE_HAL_OK - success.  * XGE_HAL_INF_NO_MORE_COMPLETED_DESCRIPTORS - No completed	descriptors  * are currently available for processing.  *  * See also: xge_hal_channel_callback_f{},  * xge_hal_fifo_dtr_next_completed(), xge_hal_status_e{}.  * Usage: See ex_rx_compl{}.  */
+comment|/**  * xge_hal_ring_dtr_next_completed - Get the _next_ completed  * descriptor.  * @channelh: Channel handle.  * @dtrh: Descriptor handle. Returned by HAL.  * @t_code: Transfer code, as per Xframe User Guide,  *          Receive Descriptor Format. Returned by HAL.  *  * Retrieve the _next_ completed descriptor.  * HAL uses channel callback (*xge_hal_channel_callback_f) to notifiy  * upper-layer driver (ULD) of new completed descriptors. After that  * the ULD can use xge_hal_ring_dtr_next_completed to retrieve the rest  * completions (the very first completion is passed by HAL via  * xge_hal_channel_callback_f).  *  * Implementation-wise, the upper-layer driver is free to call  * xge_hal_ring_dtr_next_completed either immediately from inside the  * channel callback, or in a deferred fashion and separate (from HAL)  * context.  *  * Non-zero @t_code means failure to fill-in receive buffer(s)  * of the descriptor.  * For instance, parity error detected during the data transfer.  * In this case Xframe will complete the descriptor and indicate  * for the host that the received data is not to be used.  * For details please refer to Xframe User Guide.  *  * Returns: XGE_HAL_OK - success.  * XGE_HAL_INF_NO_MORE_COMPLETED_DESCRIPTORS - No completed descriptors  * are currently available for processing.  *  * See also: xge_hal_channel_callback_f{},  * xge_hal_fifo_dtr_next_completed(), xge_hal_status_e{}.  * Usage: See ex_rx_compl{}.  */
 end_comment
 
 begin_function
@@ -2406,7 +2406,7 @@ name|defined
 argument_list|(
 name|XGE_HAL_DMA_DTR_STREAMING
 argument_list|)
-comment|/* Note: 24	bytes at most means: 	 *	- Control_3	in case	of 5-buffer	mode 	 *	- Control_1	and	Control_2 	 * 	 * This	is the only	length needs to	be invalidated 	 * type	of channels.*/
+comment|/* Note: 24 bytes at most means: 	 *  - Control_3 in case of 5-buffer mode 	 *  - Control_1 and Control_2 	 * 	 * This is the only length needs to be invalidated 	 * type of channels.*/
 name|priv
 operator|=
 name|__hal_ring_rxd_priv
@@ -2443,7 +2443,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* check whether it	is not the end */
+comment|/* check whether it is not the end */
 if|if
 condition|(
 operator|!
@@ -2480,7 +2480,7 @@ operator|->
 name|indicate_max_pkts
 condition|)
 block|{
-comment|/* reset it. since we don't	want to	return 			 * garbage to the ULD */
+comment|/* reset it. since we don't want to return 	         * garbage to the ULD */
 operator|*
 name|dtrh
 operator|=
@@ -2568,7 +2568,7 @@ operator|->
 name|control_1
 argument_list|)
 expr_stmt|;
-comment|/* see XGE_HAL_SET_RXD_T_CODE()	above..	*/
+comment|/* see XGE_HAL_SET_RXD_T_CODE() above.. */
 name|xge_assert
 argument_list|(
 operator|*
@@ -2581,7 +2581,7 @@ name|xge_debug_ring
 argument_list|(
 name|XGE_TRACE
 argument_list|,
-literal|"compl_index %d	post_qid %d	t_code %d rxd 0x"
+literal|"compl_index %d post_qid %d t_code %d rxd 0x"
 name|XGE_OS_LLXFMT
 argument_list|,
 operator|(
@@ -2659,7 +2659,7 @@ return|return
 name|XGE_HAL_OK
 return|;
 block|}
-comment|/* reset it. since we don't	want to	return 	 * garbage to the ULD */
+comment|/* reset it. since we don't want to return 	 * garbage to the ULD */
 operator|*
 name|dtrh
 operator|=
@@ -2672,7 +2672,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_dtr_free - Free	descriptor.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  *  * Free	the	reserved descriptor. This operation	is "symmetrical" to  * xge_hal_ring_dtr_reserve. The "free-ing"	completes the descriptor's  * lifecycle.  *  * After free-ing (see xge_hal_ring_dtr_free())	the	descriptor again can  * be:  *  * - reserved (xge_hal_ring_dtr_reserve);  *  * - posted	(xge_hal_ring_dtr_post);  *  * - completed (xge_hal_ring_dtr_next_completed);  *  * - and recycled again	(xge_hal_ring_dtr_free).  *  * For alternative state transitions and more details please refer to  * the design doc.  *  * See also: xge_hal_ring_dtr_reserve(), xge_hal_fifo_dtr_free().  * Usage: See ex_rx_compl{}.  */
+comment|/**  * xge_hal_ring_dtr_free - Free descriptor.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  *  * Free the reserved descriptor. This operation is "symmetrical" to  * xge_hal_ring_dtr_reserve. The "free-ing" completes the descriptor's  * lifecycle.  *  * After free-ing (see xge_hal_ring_dtr_free()) the descriptor again can  * be:  *  * - reserved (xge_hal_ring_dtr_reserve);  *  * - posted (xge_hal_ring_dtr_post);  *  * - completed (xge_hal_ring_dtr_next_completed);  *  * - and recycled again (xge_hal_ring_dtr_free).  *  * For alternative state transitions and more details please refer to  * the design doc.  *  * See also: xge_hal_ring_dtr_reserve(), xge_hal_fifo_dtr_free().  * Usage: See ex_rx_compl{}.  */
 end_comment
 
 begin_function
@@ -2822,7 +2822,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_ring_is_next_dtr_completed -	Check if the next dtr is completed  * @channelh: Channel handle.  *  * Checks if the the _next_	completed descriptor is	in host	memory  *  * Returns:	XGE_HAL_OK - success.  * XGE_HAL_INF_NO_MORE_COMPLETED_DESCRIPTORS - No completed	descriptors  * are currently available for processing.  */
+comment|/**  * xge_hal_ring_is_next_dtr_completed - Check if the next dtr is completed  * @channelh: Channel handle.  *  * Checks if the the _next_ completed descriptor is in host memory  *  * Returns: XGE_HAL_OK - success.  * XGE_HAL_INF_NO_MORE_COMPLETED_DESCRIPTORS - No completed descriptors  * are currently available for processing.  */
 end_comment
 
 begin_function
@@ -2880,7 +2880,7 @@ return|return
 name|XGE_HAL_INF_NO_MORE_COMPLETED_DESCRIPTORS
 return|;
 block|}
-comment|/* check whether it	is not the end */
+comment|/* check whether it is not the end */
 if|if
 condition|(
 operator|!

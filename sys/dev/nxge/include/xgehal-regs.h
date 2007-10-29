@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *  FileName :    xgehal-regs.h  *  *  Description:  Xframe mem-mapped register space  *  *  Created:      14 May 2004  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,6 +14,10 @@ define|#
 directive|define
 name|XGE_HAL_REGS_H
 end_define
+
+begin_macro
+name|__EXTERN_BEGIN_DECLS
+end_macro
 
 begin_typedef
 typedef|typedef
@@ -74,7 +74,7 @@ value|BIT(40)
 define|#
 directive|define
 name|XGE_HAL_GEN_ERROR_INTR
-value|(XGE_HAL_GEN_INTR_TXPIC  | \ 					 XGE_HAL_GEN_INTR_RXPIC  | \ 					 XGE_HAL_GEN_INTR_TXDMA  | \ 					 XGE_HAL_GEN_INTR_RXDMA  | \ 					 XGE_HAL_GEN_INTR_TXMAC  | \ 					 XGE_HAL_GEN_INTR_RXMAC  | \ 					 XGE_HAL_GEN_INTR_TXXGXS | \ 					 XGE_HAL_GEN_INTR_RXXGXS | \ 					 XGE_HAL_GEN_INTR_MC)
+value|(XGE_HAL_GEN_INTR_TXPIC  | \ 	                 XGE_HAL_GEN_INTR_RXPIC  | \ 	                 XGE_HAL_GEN_INTR_TXDMA  | \ 	                 XGE_HAL_GEN_INTR_RXDMA  | \ 	                 XGE_HAL_GEN_INTR_TXMAC  | \ 	                 XGE_HAL_GEN_INTR_RXMAC  | \ 	                 XGE_HAL_GEN_INTR_TXXGXS | \ 	                 XGE_HAL_GEN_INTR_RXXGXS | \ 	                 XGE_HAL_GEN_INTR_MC)
 name|u64
 name|general_int_mask
 decl_stmt|;
@@ -109,7 +109,7 @@ value|vBIT(0xA5,24,8)
 define|#
 directive|define
 name|XGE_HAL_SW_RESET_ALL
-value|(XGE_HAL_SW_RESET_XENA  | \ 					    XGE_HAL_SW_RESET_FLASH | \ 					    XGE_HAL_SW_RESET_EOI | \ 					    XGE_HAL_SW_RESET_XGXS)
+value|(XGE_HAL_SW_RESET_XENA  | \ 	                    XGE_HAL_SW_RESET_FLASH | \ 	                    XGE_HAL_SW_RESET_EOI | \ 	                    XGE_HAL_SW_RESET_XGXS)
 comment|/* The SW_RESET register must read this value after a successful reset. */
 if|#
 directive|if
@@ -266,7 +266,7 @@ value|BIT(5)
 define|#
 directive|define
 name|XGE_HAL_SERR_SOURCE_ANY
-value|(XGE_HAL_SERR_SOURCE_PIC   | \ 					 XGE_HAL_SERR_SOURCE_TXDMA | \ 					 XGE_HAL_SERR_SOURCE_RXDMA | \ 					 XGE_HAL_SERR_SOURCE_MAC   | \ 					 XGE_HAL_SERR_SOURCE_MC    | \ 					 XGE_HAL_SERR_SOURCE_XGXS)
+value|(XGE_HAL_SERR_SOURCE_PIC   | \ 	                 XGE_HAL_SERR_SOURCE_TXDMA | \ 	                 XGE_HAL_SERR_SOURCE_RXDMA | \ 	                 XGE_HAL_SERR_SOURCE_MAC   | \ 	                 XGE_HAL_SERR_SOURCE_MC    | \ 	                 XGE_HAL_SERR_SOURCE_XGXS)
 name|u64
 name|pci_info
 decl_stmt|;
@@ -2792,7 +2792,7 @@ index|[
 literal|0x8
 index|]
 decl_stmt|;
-comment|/*         u64 rmac_addr_cfg; #define XGE_HAL_RMAC_ADDR_UCASTn_EN(n)     mBIT(0)_n(n) #define XGE_HAL_RMAC_ADDR_MCASTn_EN(n)     mBIT(0)_n(n) #define XGE_HAL_RMAC_ADDR_BCAST_EN         vBIT(0)_48 #define XGE_HAL_RMAC_ADDR_ALL_ADDR_EN      vBIT(0)_49 */
+comment|/* 	    u64 rmac_addr_cfg; #define XGE_HAL_RMAC_ADDR_UCASTn_EN(n)     mBIT(0)_n(n) #define XGE_HAL_RMAC_ADDR_MCASTn_EN(n)     mBIT(0)_n(n) #define XGE_HAL_RMAC_ADDR_BCAST_EN         vBIT(0)_48 #define XGE_HAL_RMAC_ADDR_ALL_ADDR_EN      vBIT(0)_49 */
 name|u64
 name|tmac_ipg_cfg
 decl_stmt|;
@@ -2863,7 +2863,7 @@ value|vBIT(n,40,4)
 define|#
 directive|define
 name|XGE_HAL_MAC_LINK_UTIL_DISABLE
-value|(XGE_HAL_MAC_TX_LINK_UTIL_DISABLE | \ 				       XGE_HAL_MAC_RX_LINK_UTIL_DISABLE)
+value|(XGE_HAL_MAC_TX_LINK_UTIL_DISABLE | \ 	                   XGE_HAL_MAC_RX_LINK_UTIL_DISABLE)
 name|u64
 name|rmac_invalid_ipg
 decl_stmt|;
@@ -4579,6 +4579,10 @@ directive|define
 name|XGE_HAL_EEPROM_SIZE
 value|(0x01<< 11)
 end_define
+
+begin_macro
+name|__EXTERN_END_DECLS
+end_macro
 
 begin_endif
 endif|#

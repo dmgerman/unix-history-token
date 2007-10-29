@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *  FileName :    xge-defs.h  *  *  Description:  global definitions  *  *  Created:      13 May 2004  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -164,7 +160,7 @@ comment|/*---------------------------- DMA attributes --------------------------
 end_comment
 
 begin_comment
-comment|/* XGE_OS_DMA_REQUIRES_SYNC  - should be defined or                              NOT defined in the Makefile */
+comment|/* XGE_OS_DMA_REQUIRES_SYNC  - should be defined or 	                         NOT defined in the Makefile */
 end_comment
 
 begin_define
@@ -283,7 +279,7 @@ name|_file
 parameter_list|,
 name|_line
 parameter_list|)
-value|{ \ 	if (_vaddr) { \ 		int i; \ 		for (i=0; i<g_malloc_cnt; i++) { \ 			if (g_malloc_arr[i].ptr == NULL) { \ 				break; \ 			} \ 		} \ 		if (i == g_malloc_cnt) { \ 			g_malloc_cnt++; \ 			if (g_malloc_cnt>= XGE_OS_MALLOC_CNT_MAX) { \ 			  xge_os_bug("g_malloc_cnt exceed %d", \ 						XGE_OS_MALLOC_CNT_MAX); \ 			} \ 		} \ 		g_malloc_arr[i].ptr = _vaddr; \ 		g_malloc_arr[i].size = _size; \ 		g_malloc_arr[i].file = _file; \ 		g_malloc_arr[i].line = _line; \ 		for (i=0; i<_size; i++) { \ 			*((char *)_vaddr+i) = 0x5a; \ 		} \ 	} \ }
+value|{ \ 	if (_vaddr) { \ 	    int index_mem_chk; \ 	    for (index_mem_chk=0; index_mem_chk< g_malloc_cnt; index_mem_chk++) { \ 	        if (g_malloc_arr[index_mem_chk].ptr == NULL) { \ 	            break; \ 	        } \ 	    } \ 	    if (index_mem_chk == g_malloc_cnt) { \ 	        g_malloc_cnt++; \ 	        if (g_malloc_cnt>= XGE_OS_MALLOC_CNT_MAX) { \ 	          xge_os_bug("g_malloc_cnt exceed %d", \ 	                    XGE_OS_MALLOC_CNT_MAX); \ 	        } \ 	    } \ 	    g_malloc_arr[index_mem_chk].ptr = _vaddr; \ 	    g_malloc_arr[index_mem_chk].size = _size; \ 	    g_malloc_arr[index_mem_chk].file = _file; \ 	    g_malloc_arr[index_mem_chk].line = _line; \ 	    for (index_mem_chk=0; index_mem_chk<_size; index_mem_chk++) { \ 	        *((char *)_vaddr+index_mem_chk) = 0x5a; \ 	    } \ 	} \ }
 end_define
 
 begin_define
@@ -295,7 +291,7 @@ name|_vaddr
 parameter_list|,
 name|_check_size
 parameter_list|)
-value|{ \ 	int i; \ 	for (i=0; i<XGE_OS_MALLOC_CNT_MAX; i++) { \ 		if (g_malloc_arr[i].ptr == _vaddr) { \ 			g_malloc_arr[i].ptr = NULL; \ 			if(_check_size&& g_malloc_arr[i].size!=_check_size) { \ 				xge_os_printf("OSPAL: freeing with wrong " \ 				      "size %d! allocated at %s:%d:"XGE_OS_LLXFMT":%d", \ 					 (int)_check_size, \ 					 g_malloc_arr[i].file, \ 					 g_malloc_arr[i].line, \ 					 (unsigned long long)(ulong_t) \ 					    g_malloc_arr[i].ptr, \ 					 g_malloc_arr[i].size); \ 			} \ 			break; \ 		} \ 	} \ 	if (i == XGE_OS_MALLOC_CNT_MAX) { \ 		xge_os_printf("OSPAL: ptr "XGE_OS_LLXFMT" not found!", \ 			    (unsigned long long)(ulong_t)_vaddr); \ 	} \ }
+value|{ \ 	int index_mem_chk; \ 	for (index_mem_chk=0; index_mem_chk< XGE_OS_MALLOC_CNT_MAX; index_mem_chk++) { \ 	    if (g_malloc_arr[index_mem_chk].ptr == _vaddr) { \ 	        g_malloc_arr[index_mem_chk].ptr = NULL; \ 	        if(_check_size&& g_malloc_arr[index_mem_chk].size!=_check_size) { \ 	            xge_os_printf("OSPAL: freeing with wrong " \ 	                  "size %d! allocated at %s:%d:"XGE_OS_LLXFMT":%d", \ 	                 (int)_check_size, \ 	                 g_malloc_arr[index_mem_chk].file, \ 	                 g_malloc_arr[index_mem_chk].line, \ 	                 (unsigned long long)(ulong_t) \ 	                    g_malloc_arr[index_mem_chk].ptr, \ 	                 g_malloc_arr[index_mem_chk].size); \ 	        } \ 	        break; \ 	    } \ 	} \ 	if (index_mem_chk == XGE_OS_MALLOC_CNT_MAX) { \ 	    xge_os_printf("OSPAL: ptr "XGE_OS_LLXFMT" not found!", \ 	            (unsigned long long)(ulong_t)_vaddr); \ 	} \ }
 end_define
 
 begin_else

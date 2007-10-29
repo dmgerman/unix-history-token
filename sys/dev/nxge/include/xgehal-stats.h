@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/* 	xge_hal_fifo_t            *fifo    = (xge_hal_fifo_t *)channelh;  *  FileName :    xgehal-stats.h  *  *  Description:  HW statistics object  *  *  Created:      2 June 2004  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -354,7 +350,7 @@ decl_stmt|;
 name|u32
 name|rd_rtry_wr_ack_cnt
 decl_stmt|;
-comment|/*	DMA Transaction statistics. */
+comment|/*  DMA Transaction statistics. */
 name|u32
 name|txp_wr_cnt
 decl_stmt|;
@@ -842,7 +838,7 @@ decl_stmt|;
 name|u32
 name|wr_rtry_cnt
 decl_stmt|;
-comment|/*	PCI/PCI-X Write / DMA Transaction statistics. */
+comment|/*  PCI/PCI-X Write / DMA Transaction statistics. */
 name|u32
 name|txp_wr_cnt
 decl_stmt|;
@@ -1047,7 +1043,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * struct xge_hal_stats_channel_into_t - HAL channel statistics.  * @full_cnt: TBD  * @usage_max: TBD  * @reserve_free_swaps_cnt: Reserve/free swap counter. Internal usage.  * @max_compl_per_intr_cnt: Maximum number of completions per interrupt.  * @avg_compl_per_intr_cnt: Average number of completions per interrupt.  *           Note that a total number of completed descriptors  *           for the given channel can be calculated as  *           (@traffic_intr_cnt * @avg_compl_per_intr_cnt).  * @total_compl_cnt: Total completion count.  *        @total_compl_cnt == (@traffic_intr_cnt * @avg_compl_per_intr_cnt).  * @total_posts: Total number of descriptor postings on the channel.  *        Counts the number of xge_hal_ring_dtr_post()  *        or xge_hal_fifo_dtr_post() calls by ULD, for ring and fifo  *        channel, respectively.  * @total_posts_many: Total number of posts on the channel that involved  *        more than one descriptor. Counts the number of  *        xge_hal_fifo_dtr_post_many() calls performed by ULD.  * @total_buffers: Total number of buffers posted on the channel.  * @copied_frags: TBD  * @copied_buffers: TBD  * @avg_buffers_per_post: Average number of buffers transferred in a single  *        post operation.  *        Calculated as @total_buffers/@total_posts.  * @avg_buffer_size: Average buffer size transferred by a single post  *       operation on a fifo channel. The counter is not supported for a ring  *       channel. Calculated as a total number of transmitted octets divided  *       by @total_buffers.  * @avg_post_size: Average amount of data transferred by a single post.  *       Calculated as a total number of transmitted octets divided by  *       @total_posts.  * @ring_bump_cnt: Ring "bump" count. Number of times the hardware could  *       not post receive data (and had to continue keeping it on-board)  *       because of unavailable receive descriptor(s).  * @total_posts_dtrs_many: Total number of posts on the channel that involving  *       more than one descriptor.  * @total_posts_frags_many: Total number of fragments posted on the channel  *	 during post requests of multiple descriptors.  * @total_posts_dang_dtrs: Total number of posts on the channel involving  *       dangling descriptors.  * @total_posts_dang_frags: Total number of dangling fragments posted on the channel  *	 during post request containing multiple descriptors.  *  * HAL channel counters.  * See also: xge_hal_stats_device_info_t{}.  */
+comment|/**  * struct xge_hal_stats_channel_into_t - HAL channel statistics.  * @full_cnt: TBD  * @usage_max: TBD  * @reserve_free_swaps_cnt: Reserve/free swap counter. Internal usage.  * @max_compl_per_intr_cnt: Maximum number of completions per interrupt.  * @avg_compl_per_intr_cnt: Average number of completions per interrupt.  *           Note that a total number of completed descriptors  *           for the given channel can be calculated as  *           (@traffic_intr_cnt * @avg_compl_per_intr_cnt).  * @total_compl_cnt: Total completion count.  *        @total_compl_cnt == (@traffic_intr_cnt * @avg_compl_per_intr_cnt).  * @total_posts: Total number of descriptor postings on the channel.  *        Counts the number of xge_hal_ring_dtr_post()  *        or xge_hal_fifo_dtr_post() calls by ULD, for ring and fifo  *        channel, respectively.  * @total_posts_many: Total number of posts on the channel that involved  *        more than one descriptor. Counts the number of  *        xge_hal_fifo_dtr_post_many() calls performed by ULD.  * @total_buffers: Total number of buffers posted on the channel.  * @copied_frags: TBD  * @copied_buffers: TBD  * @avg_buffers_per_post: Average number of buffers transferred in a single  *        post operation.  *        Calculated as @total_buffers/@total_posts.  * @avg_buffer_size: Average buffer size transferred by a single post  *       operation on a fifo channel. The counter is not supported for a ring  *       channel. Calculated as a total number of transmitted octets divided  *       by @total_buffers.  * @avg_post_size: Average amount of data transferred by a single post.  *       Calculated as a total number of transmitted octets divided by  *       @total_posts.  * @ring_bump_cnt: Ring "bump" count. Number of times the hardware could  *       not post receive data (and had to continue keeping it on-board)  *       because of unavailable receive descriptor(s).  * @total_posts_dtrs_many: Total number of posts on the channel that involving  *       more than one descriptor.  * @total_posts_frags_many: Total number of fragments posted on the channel  *   during post requests of multiple descriptors.  * @total_posts_dang_dtrs: Total number of posts on the channel involving  *       dangling descriptors.  * @total_posts_dang_frags: Total number of dangling fragments posted on the channel  *   during post request containing multiple descriptors.  *  * HAL channel counters.  * See also: xge_hal_stats_device_info_t{}.  */
 end_comment
 
 begin_typedef
@@ -1381,52 +1377,6 @@ block|}
 name|xge_hal_stats_device_info_t
 typedef|;
 end_typedef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XGEHAL_RNIC
-end_ifdef
-
-begin_comment
-comment|/**  * struct xge_hal_vp_statistics_t - Virtual Path Statistics  *  * @no_nces: Number of NCEs on Adapter in this VP  * @no_sqs: Number of SQs on Adapter in this VP  * @no_srqs: Number of SRQs on Adapter in this VP  * @no_cqrqs: Number of CQRQs on Adapter in this VP  * @no_tcp_sessions: Number of TCP sessions on Adapter in this VP  * @no_lro_sessions: Number of LRO sessions on Adapter in this VP  * @no_spdm_sessions: Number of SPDM sessions on Adapter in this VP  *  * This structure contains fields to keep statistics of virtual path  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|xge_hal_vp_statistics_t
-block|{
-name|u32
-name|no_nces
-decl_stmt|;
-name|u32
-name|no_sqs
-decl_stmt|;
-name|u32
-name|no_srqs
-decl_stmt|;
-name|u32
-name|no_cqrqs
-decl_stmt|;
-name|u32
-name|no_tcp_sessions
-decl_stmt|;
-name|u32
-name|no_lro_sessions
-decl_stmt|;
-name|u32
-name|no_spdm_sessions
-decl_stmt|;
-block|}
-name|xge_hal_vp_statistics_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* ========================== XFRAME ER STATISTICS ======================== */

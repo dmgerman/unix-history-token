@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *  FileName :    xge-list.h  *  *  Description:  Generic bi-directional linked list implementation  *  *  Created:      14 May 2004  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -410,7 +406,7 @@ parameter_list|,
 name|_h
 parameter_list|)
 define|\
-value|for (_p = (_h)->next, xge_os_prefetch(_p->next); _p != (_h); \ 		_p = _p->next, xge_os_prefetch(_p->next))
+value|for (_p = (_h)->next, xge_os_prefetch(_p->next); _p != (_h); \ 	    _p = _p->next, xge_os_prefetch(_p->next))
 end_define
 
 begin_define
@@ -425,7 +421,7 @@ parameter_list|,
 name|_h
 parameter_list|)
 define|\
-value|for (_p = (_h)->next, _n = _p->next; _p != (_h); \                 _p = _n, _n = _p->next)
+value|for (_p = (_h)->next, _n = _p->next; _p != (_h); \ 	            _p = _n, _n = _p->next)
 end_define
 
 begin_ifdef
@@ -435,7 +431,7 @@ name|__GNUC__
 end_ifdef
 
 begin_comment
-comment|/**  * xge_container_of - Given a member, return the containing structure.  * @ptr:	the pointer to the member.  * @type:	the type of the container struct this is embedded in.  * @member:	the name of the member within the struct.  *  * Cast a member of a structure out to the containing structure.  */
+comment|/**  * xge_container_of - Given a member, return the containing structure.  * @ptr:    the pointer to the member.  * @type:   the type of the container struct this is embedded in.  * @member: the name of the member within the struct.  *  * Cast a member of a structure out to the containing structure.  */
 end_comment
 
 begin_define
@@ -449,7 +445,7 @@ name|type
 parameter_list|,
 name|member
 parameter_list|)
-value|({			\          __typeof( ((type *)0)->member ) *__mptr = (ptr);	\         (type *)(void *)( (char *)__mptr - ((size_t)&((type *)0)->member) );})
+value|({          \ 	     __typeof( ((type *)0)->member ) *__mptr = (ptr);   \ 	    (type *)(void *)( (char *)__mptr - ((size_t)&((type *)0)->member) );})
 end_define
 
 begin_else
@@ -482,7 +478,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/**  * xge_offsetof - Offset of the member in the containing structure.  * @t:	struct name.  * @m:	the name of the member within the struct.  *  * Return the offset of the member @m in the structure @t.  */
+comment|/**  * xge_offsetof - Offset of the member in the containing structure.  * @t:  struct name.  * @m:  the name of the member within the struct.  *  * Return the offset of the member @m in the structure @t.  */
 end_comment
 
 begin_define

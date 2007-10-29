@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *	FileName :	  xgehal-device-fp.c  *  *	Description:  HAL device object	functionality (fast	path)  *  *	Created:	  10 June 2004  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -37,7 +33,7 @@ file|<dev/nxge/include/xgehal-fifo.h>
 end_include
 
 begin_comment
-comment|/**  * xge_hal_device_bar0 - Get BAR0 mapped address.  * @hldev: HAL device handle.  *  * Returns:	BAR0 address of	the	specified device.  */
+comment|/**  * xge_hal_device_bar0 - Get BAR0 mapped address.  * @hldev: HAL device handle.  *  * Returns: BAR0 address of the specified device.  */
 end_comment
 
 begin_function
@@ -61,7 +57,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_isrbar0 -	Get	BAR0 mapped	address.  * @hldev: HAL device handle.  *  * Returns:	BAR0 address of	the	specified device.  */
+comment|/**  * xge_hal_device_isrbar0 - Get BAR0 mapped address.  * @hldev: HAL device handle.  *  * Returns: BAR0 address of the specified device.  */
 end_comment
 
 begin_function
@@ -85,7 +81,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_bar1 - Get BAR1 mapped address.  * @hldev: HAL device handle.  *  * Returns:	BAR1 address of	the	specified device.  */
+comment|/**  * xge_hal_device_bar1 - Get BAR1 mapped address.  * @hldev: HAL device handle.  *  * Returns: BAR1 address of the specified device.  */
 end_comment
 
 begin_function
@@ -109,7 +105,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_bar0_set - Set BAR0 mapped address.  * @hldev: HAL device handle.  * @bar0: BAR0 mapped address.  * * Set BAR0 address in the HAL device	object.  */
+comment|/**  * xge_hal_device_bar0_set - Set BAR0 mapped address.  * @hldev: HAL device handle.  * @bar0: BAR0 mapped address.  * * Set BAR0 address in the HAL device object.  */
 end_comment
 
 begin_function
@@ -142,7 +138,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_isrbar0_set -	Set	BAR0 mapped	address.  * @hldev: HAL device handle.  * @isrbar0: BAR0 mapped address.  * * Set BAR0 address in the HAL device	object.  */
+comment|/**  * xge_hal_device_isrbar0_set - Set BAR0 mapped address.  * @hldev: HAL device handle.  * @isrbar0: BAR0 mapped address.  * * Set BAR0 address in the HAL device object.  */
 end_comment
 
 begin_function
@@ -175,7 +171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_bar1_set - Set BAR1 mapped address.  * @hldev: HAL device handle.  * @channelh: Channel handle.  * @bar1: BAR1 mapped address.  *  * Set BAR1	address	for	the	given channel.  */
+comment|/**  * xge_hal_device_bar1_set - Set BAR1 mapped address.  * @hldev: HAL device handle.  * @channelh: Channel handle.  * @bar1: BAR1 mapped address.  *  * Set BAR1 address for the given channel.  */
 end_comment
 
 begin_function
@@ -216,7 +212,7 @@ argument_list|(
 name|fifo
 argument_list|)
 expr_stmt|;
-comment|/* Initializing	the	BAR1 address as	the	start of 	 * the FIFO	queue pointer and as a location	of FIFO	control 	 * word. */
+comment|/* Initializing the BAR1 address as the start of 	 * the FIFO queue pointer and as a location of FIFO control 	 * word. */
 name|fifo
 operator|->
 name|hw_pair
@@ -249,7 +245,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_rev -	Get	Device revision	number.  * @hldev: HAL device handle.  *  * Returns:	Device revision	number  */
+comment|/**  * xge_hal_device_rev - Get Device revision number.  * @hldev: HAL device handle.  *  * Returns: Device revision number  */
 end_comment
 
 begin_function
@@ -272,7 +268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_begin_irq	- Begin	IRQ	processing.  * @hldev: HAL device handle.  * @reason:	"Reason" for the interrupt,	the	value of Xframe's  *			general_int_status register.  *  * The function	performs two actions, It first checks whether (shared IRQ) the  * interrupt was raised	by the device. Next, it	masks the device interrupts.  *  * Note:  * xge_hal_device_begin_irq() does not flush MMIO writes through the  * bridge. Therefore, two back-to-back interrupts are potentially possible.  * It is the responsibility	of the ULD to make sure	that only one  * xge_hal_device_continue_irq() runs at a time.  *  * Returns:	0, if the interrupt	is not "ours" (note	that in	this case the  * device remain enabled).  * Otherwise, xge_hal_device_begin_irq() returns 64bit general adapter  * status.  * See also: xge_hal_device_handle_irq()  */
+comment|/**  * xge_hal_device_begin_irq - Begin IRQ processing.  * @hldev: HAL device handle.  * @reason: "Reason" for the interrupt, the value of Xframe's  *          general_int_status register.  *  * The function performs two actions, It first checks whether (shared IRQ) the  * interrupt was raised by the device. Next, it masks the device interrupts.  *  * Note:  * xge_hal_device_begin_irq() does not flush MMIO writes through the  * bridge. Therefore, two back-to-back interrupts are potentially possible.  * It is the responsibility of the ULD to make sure that only one  * xge_hal_device_continue_irq() runs at a time.  *  * Returns: 0, if the interrupt is not "ours" (note that in this case the  * device remain enabled).  * Otherwise, xge_hal_device_begin_irq() returns 64bit general adapter  * status.  * See also: xge_hal_device_handle_irq()  */
 end_comment
 
 begin_function
@@ -341,7 +337,7 @@ name|val64
 argument_list|)
 condition|)
 block|{
-comment|/* not Xframe interrupt	*/
+comment|/* not Xframe interrupt */
 name|hldev
 operator|->
 name|stats
@@ -411,7 +407,7 @@ name|hldev
 argument_list|,
 literal|1
 argument_list|,
-comment|/*	critical: slot freeze */
+comment|/* critical: slot freeze */
 sizeof|sizeof
 argument_list|(
 name|u64
@@ -440,7 +436,7 @@ name|reason
 operator|=
 name|val64
 expr_stmt|;
-comment|/* separate	fast path, i.e.	no errors */
+comment|/* separate fast path, i.e. no errors */
 if|if
 condition|(
 name|val64
@@ -884,7 +880,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_clear_rx - Acknowledge (that is, clear) the  * condition that has caused the RX	interrupt.  * @hldev: HAL device handle.  *  * Acknowledge (that is, clear)	the	condition that has caused  * the Rx interrupt.  * See also: xge_hal_device_begin_irq(), xge_hal_device_continue_irq(),  * xge_hal_device_clear_tx(), xge_hal_device_mask_rx().  */
+comment|/**  * xge_hal_device_clear_rx - Acknowledge (that is, clear) the  * condition that has caused the RX interrupt.  * @hldev: HAL device handle.  *  * Acknowledge (that is, clear) the condition that has caused  * the Rx interrupt.  * See also: xge_hal_device_begin_irq(), xge_hal_device_continue_irq(),  * xge_hal_device_clear_tx(), xge_hal_device_mask_rx().  */
 end_comment
 
 begin_function
@@ -932,7 +928,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_clear_tx - Acknowledge (that is, clear) the  * condition that has caused the TX	interrupt.  * @hldev: HAL device handle.  *  * Acknowledge (that is, clear)	the	condition that has caused  * the Tx interrupt.  * See also: xge_hal_device_begin_irq(), xge_hal_device_continue_irq(),  * xge_hal_device_clear_rx(), xge_hal_device_mask_tx().  */
+comment|/**  * xge_hal_device_clear_tx - Acknowledge (that is, clear) the  * condition that has caused the TX interrupt.  * @hldev: HAL device handle.  *  * Acknowledge (that is, clear) the condition that has caused  * the Tx interrupt.  * See also: xge_hal_device_begin_irq(), xge_hal_device_continue_irq(),  * xge_hal_device_clear_rx(), xge_hal_device_mask_tx().  */
 end_comment
 
 begin_function
@@ -980,7 +976,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_poll_rx_channel -	Poll Rx	channel	for	completed  * descriptors and process the same.  * @channel: HAL channel.  * @got_rx: Buffer to return the flag set if receive interrupt is occured  *  * The function	polls the Rx channel for the completed	descriptors	and	calls  * the upper-layer driver (ULD)	via	supplied completion	callback.  *  * Returns:	XGE_HAL_OK,	if the polling is completed	successful.  * XGE_HAL_COMPLETIONS_REMAIN: There are still more	completed  * descriptors available which are yet to be processed.  *  * See also: xge_hal_device_poll_tx_channel()  */
+comment|/**  * xge_hal_device_poll_rx_channel - Poll Rx channel for completed  * descriptors and process the same.  * @channel: HAL channel.  * @got_rx: Buffer to return the flag set if receive interrupt is occured  *  * The function polls the Rx channel for the completed  descriptors and calls  * the upper-layer driver (ULD) via supplied completion callback.  *  * Returns: XGE_HAL_OK, if the polling is completed successful.  * XGE_HAL_COMPLETIONS_REMAIN: There are still more completed  * descriptors available which are yet to be processed.  *  * See also: xge_hal_device_poll_tx_channel()  */
 end_comment
 
 begin_function
@@ -1196,7 +1192,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_poll_tx_channel -	Poll Tx	channel	for	completed  * descriptors and process the same.  * @channel: HAL channel.  * @got_tx: Buffer to return the flag set if transmit interrupt is occured  *  * The function	polls the Tx channel for the completed	descriptors	and	calls  * the upper-layer driver (ULD)	via	supplied completion	callback.  *  * Returns:	XGE_HAL_OK,	if the polling is completed	successful.  * XGE_HAL_COMPLETIONS_REMAIN: There are still more	completed  * descriptors available which are yet to be processed.  *  * See also: xge_hal_device_poll_rx_channel().  */
+comment|/**  * xge_hal_device_poll_tx_channel - Poll Tx channel for completed  * descriptors and process the same.  * @channel: HAL channel.  * @got_tx: Buffer to return the flag set if transmit interrupt is occured  *  * The function polls the Tx channel for the completed  descriptors and calls  * the upper-layer driver (ULD) via supplied completion callback.  *  * Returns: XGE_HAL_OK, if the polling is completed successful.  * XGE_HAL_COMPLETIONS_REMAIN: There are still more completed  * descriptors available which are yet to be processed.  *  * See also: xge_hal_device_poll_rx_channel().  */
 end_comment
 
 begin_function
@@ -1365,7 +1361,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_poll_rx_channels - Poll Rx channels for completed  * descriptors and process the same.  * @hldev: HAL device handle.  * @got_rx: Buffer to return flag set if receive is ready  *  * The function	polls the Rx channels for the completed	descriptors	and	calls  * the upper-layer driver (ULD)	via	supplied completion	callback.  *  * Returns:	XGE_HAL_OK,	if the polling is completed	successful.  * XGE_HAL_COMPLETIONS_REMAIN: There are still more	completed  * descriptors available which are yet to be processed.  *  * See also: xge_hal_device_poll_tx_channels(),	xge_hal_device_continue_irq().  */
+comment|/**  * xge_hal_device_poll_rx_channels - Poll Rx channels for completed  * descriptors and process the same.  * @hldev: HAL device handle.  * @got_rx: Buffer to return flag set if receive is ready  *  * The function polls the Rx channels for the completed descriptors and calls  * the upper-layer driver (ULD) via supplied completion callback.  *  * Returns: XGE_HAL_OK, if the polling is completed successful.  * XGE_HAL_COMPLETIONS_REMAIN: There are still more completed  * descriptors available which are yet to be processed.  *  * See also: xge_hal_device_poll_tx_channels(), xge_hal_device_continue_irq().  */
 end_comment
 
 begin_function
@@ -1437,7 +1433,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_poll_tx_channels - Poll Tx channels for completed  * descriptors and process the same.  * @hldev: HAL device handle.  * @got_tx: Buffer to return flag set if transmit is ready  *  * The function	polls the Tx channels for the completed	descriptors	and	calls  * the upper-layer driver (ULD)	via	supplied completion	callback.  *  * Returns:	XGE_HAL_OK,	if the polling is completed	successful.  * XGE_HAL_COMPLETIONS_REMAIN: There are still more	completed  * descriptors available which are yet to be processed.  *  * See also: xge_hal_device_poll_rx_channels(),	xge_hal_device_continue_irq().  */
+comment|/**  * xge_hal_device_poll_tx_channels - Poll Tx channels for completed  * descriptors and process the same.  * @hldev: HAL device handle.  * @got_tx: Buffer to return flag set if transmit is ready  *  * The function polls the Tx channels for the completed descriptors and calls  * the upper-layer driver (ULD) via supplied completion callback.  *  * Returns: XGE_HAL_OK, if the polling is completed successful.  * XGE_HAL_COMPLETIONS_REMAIN: There are still more completed  * descriptors available which are yet to be processed.  *  * See also: xge_hal_device_poll_rx_channels(), xge_hal_device_continue_irq().  */
 end_comment
 
 begin_function
@@ -1509,7 +1505,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_mask_tx -	Mask Tx	interrupts.  * @hldev: HAL device handle.  *  * Mask	Tx device interrupts.  *  * See also: xge_hal_device_unmask_tx(), xge_hal_device_mask_rx(),  * xge_hal_device_clear_tx().  */
+comment|/**  * xge_hal_device_mask_tx - Mask Tx interrupts.  * @hldev: HAL device handle.  *  * Mask Tx device interrupts.  *  * See also: xge_hal_device_unmask_tx(), xge_hal_device_mask_rx(),  * xge_hal_device_clear_tx().  */
 end_comment
 
 begin_function
@@ -1557,7 +1553,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_mask_rx -	Mask Rx	interrupts.  * @hldev: HAL device handle.  *  * Mask	Rx device interrupts.  *  * See also: xge_hal_device_unmask_rx(), xge_hal_device_mask_tx(),  * xge_hal_device_clear_rx().  */
+comment|/**  * xge_hal_device_mask_rx - Mask Rx interrupts.  * @hldev: HAL device handle.  *  * Mask Rx device interrupts.  *  * See also: xge_hal_device_unmask_rx(), xge_hal_device_mask_tx(),  * xge_hal_device_clear_rx().  */
 end_comment
 
 begin_function
@@ -1605,7 +1601,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_mask_all - Mask all device interrupts.  * @hldev: HAL device handle.  *  * Mask	all	device interrupts.  *  * See also: xge_hal_device_unmask_all()  */
+comment|/**  * xge_hal_device_mask_all - Mask all device interrupts.  * @hldev: HAL device handle.  *  * Mask all device interrupts.  *  * See also: xge_hal_device_unmask_all()  */
 end_comment
 
 begin_function
@@ -1653,7 +1649,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_unmask_tx	- Unmask Tx	interrupts.  * @hldev: HAL device handle.  *  * Unmask Tx device	interrupts.  *  * See also: xge_hal_device_mask_tx(), xge_hal_device_clear_tx().  */
+comment|/**  * xge_hal_device_unmask_tx - Unmask Tx interrupts.  * @hldev: HAL device handle.  *  * Unmask Tx device interrupts.  *  * See also: xge_hal_device_mask_tx(), xge_hal_device_clear_tx().  */
 end_comment
 
 begin_function
@@ -1701,7 +1697,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_unmask_rx	- Unmask Rx	interrupts.  * @hldev: HAL device handle.  *  * Unmask Rx device	interrupts.  *  * See also: xge_hal_device_mask_rx(), xge_hal_device_clear_rx().  */
+comment|/**  * xge_hal_device_unmask_rx - Unmask Rx interrupts.  * @hldev: HAL device handle.  *  * Unmask Rx device interrupts.  *  * See also: xge_hal_device_mask_rx(), xge_hal_device_clear_rx().  */
 end_comment
 
 begin_function
@@ -1797,7 +1793,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_continue_irq - Continue handling IRQ:	process	all  * completed descriptors.  * @hldev: HAL device handle.  *  * Process completed descriptors and unmask	the	device interrupts.  *  * The xge_hal_device_continue_irq() walks all open	channels  * and calls upper-layer driver	(ULD) via supplied completion  * callback. Note that the completion callback is specified	at channel open  * time, see xge_hal_channel_open().  *  * Note	that the xge_hal_device_continue_irq is	part of	the	_fast_ path.  * To optimize the processing, the function	does _not_ check for  * errors and alarms.  *  * The latter is done in a polling fashion,	via	xge_hal_device_poll().  *  * Returns:	XGE_HAL_OK.  *  * See also: xge_hal_device_handle_irq(), xge_hal_device_poll(),  * xge_hal_ring_dtr_next_completed(),  * xge_hal_fifo_dtr_next_completed(), xge_hal_channel_callback_f{}.  */
+comment|/**  * xge_hal_device_continue_irq - Continue handling IRQ: process all  * completed descriptors.  * @hldev: HAL device handle.  *  * Process completed descriptors and unmask the device interrupts.  *  * The xge_hal_device_continue_irq() walks all open channels  * and calls upper-layer driver (ULD) via supplied completion  * callback. Note that the completion callback is specified at channel open  * time, see xge_hal_channel_open().  *  * Note that the xge_hal_device_continue_irq is part of the _fast_ path.  * To optimize the processing, the function does _not_ check for  * errors and alarms.  *  * The latter is done in a polling fashion, via xge_hal_device_poll().  *  * Returns: XGE_HAL_OK.  *  * See also: xge_hal_device_handle_irq(), xge_hal_device_poll(),  * xge_hal_ring_dtr_next_completed(),  * xge_hal_fifo_dtr_next_completed(), xge_hal_channel_callback_f{}.  */
 end_comment
 
 begin_function
@@ -1915,7 +1911,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_handle_irq - Handle device IRQ.  * @hldev: HAL device handle.  *  * Perform the complete	handling of	the	line interrupt.	The	function  * performs	two	calls.  * First it	uses xge_hal_device_begin_irq()	to	check the reason for  * the interrupt and mask the device interrupts.  * Second, it calls	xge_hal_device_continue_irq() to process all  * completed descriptors and re-enable the interrupts.  *  * Returns:	XGE_HAL_OK - success;  * XGE_HAL_ERR_WRONG_IRQ - (shared)	IRQ	produced by	other device.  *  * See also: xge_hal_device_begin_irq(), xge_hal_device_continue_irq().  */
+comment|/**  * xge_hal_device_handle_irq - Handle device IRQ.  * @hldev: HAL device handle.  *  * Perform the complete handling of the line interrupt. The function  * performs two calls.  * First it uses xge_hal_device_begin_irq() to  check the reason for  * the interrupt and mask the device interrupts.  * Second, it calls xge_hal_device_continue_irq() to process all  * completed descriptors and re-enable the interrupts.  *  * Returns: XGE_HAL_OK - success;  * XGE_HAL_ERR_WRONG_IRQ - (shared) IRQ produced by other device.  *  * See also: xge_hal_device_begin_irq(), xge_hal_device_continue_irq().  */
 end_comment
 
 begin_function
@@ -2030,7 +2026,7 @@ modifier|*
 name|ip
 parameter_list|)
 block|{
-comment|/* Match Source	address	field */
+comment|/* Match Source address field */
 if|if
 condition|(
 operator|(
@@ -2066,7 +2062,7 @@ condition|)
 return|return
 name|XGE_HAL_FAIL
 return|;
-comment|/* Match Source	Port field */
+comment|/* Match Source Port field */
 if|if
 condition|(
 operator|(
@@ -2084,7 +2080,7 @@ condition|)
 return|return
 name|XGE_HAL_FAIL
 return|;
-comment|/* Match Destination Port field	*/
+comment|/* Match Destination Port field */
 if|if
 condition|(
 operator|(
@@ -2109,7 +2105,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __hal_tcp_seg_len: Find the tcp seg len.  * @ip:	ip header.  * @tcp: tcp header.  * returns:	Tcp	seg	length.  */
+comment|/*  * __hal_tcp_seg_len: Find the tcp seg len.  * @ip: ip header.  * @tcp: tcp header.  * returns: Tcp seg length.  */
 end_comment
 
 begin_function
@@ -2172,7 +2168,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __hal_ip_lro_capable: Finds whether ip is lro capable.  * @ip:	ip header.  * @ext_info:  descriptor info.  */
+comment|/*  * __hal_ip_lro_capable: Finds whether ip is lro capable.  * @ip: ip header.  * @ext_info:  descriptor info.  */
 end_comment
 
 begin_function
@@ -2213,7 +2209,7 @@ name|xge_debug_ring
 argument_list|(
 name|XGE_TRACE
 argument_list|,
-literal|"Dump	Ip:"
+literal|"Dump Ip:"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2274,7 +2270,7 @@ name|xge_debug_ring
 argument_list|(
 name|XGE_ERR
 argument_list|,
-literal|"iphdr !=45	:%d"
+literal|"iphdr !=45 :%d"
 argument_list|,
 name|ip
 operator|->
@@ -2298,7 +2294,7 @@ name|xge_debug_ring
 argument_list|(
 name|XGE_ERR
 argument_list|,
-literal|"IP	fragmented"
+literal|"IP fragmented"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2312,7 +2308,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __hal_tcp_lro_capable: Finds	whether	tcp	is lro capable.  * @ip:	ip header.  * @tcp: tcp header.  */
+comment|/*  * __hal_tcp_lro_capable: Finds whether tcp is lro capable.  * @ip: ip header.  * @tcp: tcp header.  */
 end_comment
 
 begin_function
@@ -2352,7 +2348,7 @@ name|xge_debug_ring
 argument_list|(
 name|XGE_TRACE
 argument_list|,
-literal|"Dump	Tcp:"
+literal|"Dump Tcp:"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2393,7 +2389,7 @@ argument_list|)
 expr_stmt|;
 name|xge_os_printf
 argument_list|(
-literal|"i:%d	%02x, "
+literal|"i:%d %02x, "
 argument_list|,
 name|i
 argument_list|,
@@ -2449,7 +2445,7 @@ name|doff_res
 operator|>>
 literal|2
 decl_stmt|;
-comment|/* TCP header	len	*/
+comment|/* TCP header len */
 name|u16
 name|off
 init|=
@@ -2461,7 +2457,7 @@ name|i
 decl_stmt|,
 name|diff
 decl_stmt|;
-comment|/* Does	Packet can contain time	stamp */
+comment|/* Does Packet can contain time stamp */
 if|if
 condition|(
 name|tcp_hdr_len
@@ -2469,7 +2465,7 @@ operator|<
 literal|32
 condition|)
 block|{
-comment|/* 			 * If the session is not opened, we	can	consider 			 * this	packet for LRO 			 */
+comment|/* 	         * If the session is not opened, we can consider 	         * this packet for LRO 	         */
 if|if
 condition|(
 name|lro
@@ -2502,7 +2498,7 @@ condition|)
 name|off
 operator|++
 expr_stmt|;
-comment|/* Next	option == Timestamp	*/
+comment|/* Next option == Timestamp */
 if|if
 condition|(
 operator|(
@@ -2519,7 +2515,7 @@ operator|!=
 literal|0x8
 condition|)
 block|{
-comment|/* 			 * If the session ie not opened, we	can	consider 			 * this	packet for LRO 			 */
+comment|/* 	         * If the session ie not opened, we can consider 	         * this packet for LRO 	         */
 if|if
 condition|(
 name|lro
@@ -2547,7 +2543,7 @@ condition|)
 return|return
 name|XGE_HAL_OK
 return|;
-comment|/* 		 * Now the session is opened. If the LRO frame doesn't 		 * have	time stamp,	we cannot consider current packet for 		 * LRO. 		 */
+comment|/* 	     * Now the session is opened. If the LRO frame doesn't 	     * have time stamp, we cannot consider current packet for 	     * LRO. 	     */
 if|if
 condition|(
 name|lro
@@ -2562,7 +2558,7 @@ name|xge_debug_ring
 argument_list|(
 name|XGE_ERR
 argument_list|,
-literal|"Pkt received with time	stamp after	session	opened with	no time	stamp :	%02x %02x"
+literal|"Pkt received with time stamp after session opened with no time stamp : %02x %02x"
 argument_list|,
 name|tcp
 operator|->
@@ -2577,7 +2573,7 @@ return|return
 name|XGE_HAL_FAIL
 return|;
 block|}
-comment|/* 		 * If the difference is	greater	than three,	then there are 		 * more	options	possible. 		 * else, there are two cases: 		 * case	1: remaining are padding bytes. 		 * case	2: remaining can contain options or	padding 		 */
+comment|/* 	     * If the difference is greater than three, then there are 	     * more options possible. 	     * else, there are two cases: 	     * case 1: remaining are padding bytes. 	     * case 2: remaining can contain options or padding 	     */
 name|off
 operator|+=
 operator|(
@@ -2606,12 +2602,12 @@ operator|>
 literal|3
 condition|)
 block|{
-comment|/* 			 * Probably	contains more options. 			 */
+comment|/* 	         * Probably contains more options. 	         */
 name|xge_debug_ring
 argument_list|(
 name|XGE_ERR
 argument_list|,
-literal|"tcphdr	not	fastpth	: pkt received with	tcp	options	in addition	to time	stamp after	the	session	is opened %02x %02x	"
+literal|"tcphdr not fastpth : pkt received with tcp options in addition to time stamp after the session is opened %02x %02x "
 argument_list|,
 name|tcp
 operator|->
@@ -2676,7 +2672,7 @@ name|xge_debug_ring
 argument_list|(
 name|XGE_ERR
 argument_list|,
-literal|"tcphdr	not	fastpth	: pkt received with	tcp	options	in addition	to time	stamp after	the	session	is opened %02x %02x	"
+literal|"tcphdr not fastpth : pkt received with tcp options in addition to time stamp after the session is opened %02x %02x "
 argument_list|,
 name|tcp
 operator|->
@@ -2691,7 +2687,7 @@ return|return
 name|XGE_HAL_FAIL
 return|;
 block|}
-comment|/* 		 * Update the time stamp of	LRO	frame. 		 */
+comment|/* 	     * Update the time stamp of LRO frame. 	     */
 name|xge_os_memcpy
 argument_list|(
 operator|(
@@ -2740,9 +2736,9 @@ name|_exit_fail
 label|:
 name|xge_debug_ring
 argument_list|(
-name|XGE_ERR
+name|XGE_TRACE
 argument_list|,
-literal|"tcphdr	not	fastpth	%02x %02x"
+literal|"tcphdr not fastpth %02x %02x"
 argument_list|,
 name|tcp
 operator|->
@@ -2760,7 +2756,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __hal_lro_capable: Finds	whether	frame is lro capable.  * @buffer:	Ethernet frame.  * @ip:	ip frame.  * @tcp: tcp frame.  * @ext_info: Descriptor info.  */
+comment|/*  * __hal_lro_capable: Finds whether frame is lro capable.  * @buffer: Ethernet frame.  * @ip: ip frame.  * @tcp: tcp frame.  * @ext_info: Descriptor info.  */
 end_comment
 
 begin_function
@@ -2839,7 +2835,7 @@ name|i
 decl_stmt|;
 name|xge_os_printf
 argument_list|(
-literal|"Dump	Eth:"
+literal|"Dump Eth:"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2876,7 +2872,7 @@ argument_list|)
 expr_stmt|;
 name|xge_os_printf
 argument_list|(
-literal|"i:%d	%02x, "
+literal|"i:%d %02x, "
 argument_list|,
 name|i
 argument_list|,
@@ -2927,7 +2923,7 @@ operator|)
 expr_stmt|;
 break|break;
 default|default:
-comment|//	XGE_HAL_FRAME_TYPE_IPX,	etc.
+comment|// XGE_HAL_FRAME_TYPE_IPX, etc.
 return|return
 name|XGE_HAL_FAIL
 return|;
@@ -2946,7 +2942,7 @@ operator|+=
 name|XGE_HAL_HEADER_VLAN_SIZE
 expr_stmt|;
 block|}
-comment|/* Grab	ip,	tcp	headers	*/
+comment|/* Grab ip, tcp headers */
 operator|*
 name|ip
 operator|=
@@ -3010,7 +3006,7 @@ name|xge_debug_ring
 argument_list|(
 name|XGE_TRACE
 argument_list|,
-literal|"ip_length:%d	ip:"
+literal|"ip_length:%d ip:"
 name|XGE_OS_LLXFMT
 literal|" tcp:"
 name|XGE_OS_LLXFMT
@@ -3051,7 +3047,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __hal_open_lro_session: Open	a new LRO session.  * @buffer:	Ethernet frame.  * @ip:	ip header.  * @tcp: tcp header.  * @lro: lro pointer  * @ext_info: Descriptor info.  * @hldev: Hal context.  * @ring_lro: LRO descriptor per rx ring.  * @slot: Bucket no.  * @tcp_seg_len: Length	of tcp segment.  * @ts_off:	time stamp offset in the packet.  */
+comment|/*  * __hal_open_lro_session: Open a new LRO session.  * @buffer: Ethernet frame.  * @ip: ip header.  * @tcp: tcp header.  * @lro: lro pointer  * @ext_info: Descriptor info.  * @hldev: Hal context.  * @ring_lro: LRO descriptor per rx ring.  * @slot: Bucket no.  * @tcp_seg_len: Length of tcp segment.  * @ts_off: time stamp offset in the packet.  */
 end_comment
 
 begin_function
@@ -3221,7 +3217,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __hal_lro_get_free_slot:	Get	a free LRO bucket.  * @ring_lro: LRO descriptor per ring.  */
+comment|/*  * __hal_lro_get_free_slot: Get a free LRO bucket.  * @ring_lro: LRO descriptor per ring.  */
 end_comment
 
 begin_function
@@ -3283,7 +3279,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __hal_get_lro_session: Gets matching	LRO	session	or creates one.  * @eth_hdr:	Ethernet header.  * @ip:	ip header.  * @tcp: tcp header.  * @lro: lro pointer  * @ext_info: Descriptor info.  * @hldev: Hal context.  * @ring_lro: LRO descriptor per rx ring  */
+comment|/*  * __hal_get_lro_session: Gets matching LRO session or creates one.  * @eth_hdr:    Ethernet header.  * @ip: ip header.  * @tcp: tcp header.  * @lro: lro pointer  * @ext_info: Descriptor info.  * @hldev: Hal context.  * @ring_lro: LRO descriptor per rx ring  */
 end_comment
 
 begin_function
@@ -3356,7 +3352,7 @@ name|lro_match
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Compare the incoming	frame with the lro session left	from the  	 * previous	call.  There is	a good chance that this	incoming frame 	 * matches the lro session. 	 */
+comment|/* 	 * Compare the incoming frame with the lro session left from the  	 * previous call.  There is a good chance that this incoming frame 	 * matches the lro session. 	 */
 if|if
 condition|(
 name|ring_lro
@@ -3398,7 +3394,7 @@ operator|!
 name|lro_match
 condition|)
 block|{
-comment|/* 		 * Search in the pool of LROs for the session that matches  		 * the incoming	frame. 		 */
+comment|/* 	     * Search in the pool of LROs for the session that matches  	     * the incoming frame. 	     */
 for|for
 control|(
 name|i
@@ -3473,7 +3469,7 @@ condition|(
 name|lro_match
 condition|)
 block|{
-comment|/* 		 * Matching	LRO	Session	found 		 */
+comment|/* 	     * Matching LRO Session found 	     */
 operator|*
 name|lro
 operator|=
@@ -3547,7 +3543,7 @@ name|ts_off
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Close the current session and open a	new 			 * LRO session with	this packet, 			 * provided	it has tcp payload 			 */
+comment|/* 	         * Close the current session and open a new 	         * LRO session with this packet, 	         * provided it has tcp payload 	         */
 name|tcp_seg_len
 operator|=
 name|__hal_tcp_seg_len
@@ -3588,7 +3584,7 @@ return|return
 name|XGE_HAL_INF_LRO_END_2
 return|;
 block|}
-comment|/*  			 * Open	a new LRO session 			 */
+comment|/*  	         * Open a new LRO session 	         */
 name|__hal_open_lro_session
 argument_list|(
 name|eth_hdr
@@ -3614,7 +3610,7 @@ return|return
 name|XGE_HAL_INF_LRO_END_3
 return|;
 block|}
-comment|/* 		 * The frame is	good, in-sequence, can be LRO-ed; 		 * take	its	(latest) ACK - unless it is	a dupack. 		 * Note: to	be exact need to check window size as well.. 		*/
+comment|/* 	     * The frame is good, in-sequence, can be LRO-ed; 	     * take its (latest) ACK - unless it is a dupack. 	     * Note: to be exact need to check window size as well.. 	    */
 if|if
 condition|(
 name|lro_match
@@ -3732,10 +3728,10 @@ name|xge_debug_ring
 argument_list|(
 name|XGE_TRACE
 argument_list|,
-literal|"Creating	lro	session."
+literal|"Creating lro session."
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Open	a LRO session, provided	the	packet contains	payload. 	 */
+comment|/* 	 * Open a LRO session, provided the packet contains payload. 	 */
 name|tcp_seg_len
 operator|=
 name|__hal_tcp_seg_len
@@ -3782,7 +3778,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __hal_lro_under_optimal_thresh: Finds whether combined session is optimal.  * @ip:	ip header.  * @tcp: tcp header.  * @lro: lro pointer  * @hldev: Hal context.  */
+comment|/*  * __hal_lro_under_optimal_thresh: Finds whether combined session is optimal.  * @ip: ip header.  * @tcp: tcp header.  * @lro: lro pointer  * @hldev: Hal context.  */
 end_comment
 
 begin_function
@@ -3843,7 +3839,7 @@ argument_list|(
 name|XGE_TRACE
 argument_list|,
 literal|"Max LRO frame len exceeded:"
-literal|"max length %d	"
+literal|"max length %d "
 argument_list|,
 name|hldev
 operator|->
@@ -3882,8 +3878,8 @@ name|xge_debug_ring
 argument_list|(
 name|XGE_TRACE
 argument_list|,
-literal|"Max sg count	exceeded:"
-literal|"max sg %d	"
+literal|"Max sg count exceeded:"
+literal|"max sg %d "
 argument_list|,
 name|hldev
 operator|->
@@ -3912,7 +3908,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __hal_collapse_ip_hdr: Collapses	ip header.  * @ip:	ip header.  * @tcp: tcp header.  * @lro: lro pointer  * @hldev: Hal context.  */
+comment|/*  * __hal_collapse_ip_hdr: Collapses ip header.  * @ip: ip header.  * @tcp: tcp header.  * @lro: lro pointer  * @hldev: Hal context.  */
 end_comment
 
 begin_function
@@ -3949,7 +3945,7 @@ argument_list|,
 name|tcp
 argument_list|)
 expr_stmt|;
-comment|/* May be we have to handle	time stamps	or more	options	*/
+comment|/* May be we have to handle time stamps or more options */
 return|return
 name|XGE_HAL_OK
 return|;
@@ -3957,7 +3953,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __hal_collapse_tcp_hdr: Collapses tcp header.  * @ip:	ip header.  * @tcp: tcp header.  * @lro: lro pointer  * @hldev: Hal context.  */
+comment|/*  * __hal_collapse_tcp_hdr: Collapses tcp header.  * @ip: ip header.  * @tcp: tcp header.  * @lro: lro pointer  * @hldev: Hal context.  */
 end_comment
 
 begin_function
@@ -4001,7 +3997,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __hal_append_lro: Appends new frame to existing LRO session.  * @ip:	ip header.  * @tcp: IN	tcp	header,	OUT	tcp	payload.  * @seg_len: tcp payload length.  * @lro: lro pointer  * @hldev: Hal context.  */
+comment|/*  * __hal_append_lro: Appends new frame to existing LRO session.  * @ip: ip header.  * @tcp: IN tcp header, OUT tcp payload.  * @seg_len: tcp payload length.  * @lro: lro pointer  * @hldev: Hal context.  */
 end_comment
 
 begin_function
@@ -4062,10 +4058,10 @@ argument_list|,
 name|hldev
 argument_list|)
 expr_stmt|;
-comment|// Update mbuf chain will be done in ll	driver.
+comment|// Update mbuf chain will be done in ll driver.
 comment|// xge_hal_accumulate_large_rx on success of appending new frame to
-comment|// lro will	return to ll driver	tcpdata	pointer, and tcp payload length.
-comment|// along with return code lro frame	appended.
+comment|// lro will return to ll driver tcpdata pointer, and tcp payload length.
+comment|// along with return code lro frame appended.
 name|lro
 operator|->
 name|sg_num
@@ -4118,7 +4114,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * __xge_hal_accumulate_large_rx:	LRO	a given	frame  * frames  * @ring: rx ring number  * @eth_hdr: ethernet header.  * @ip_hdr: ip header (optional)  * @tcp: tcp header.  * @seglen:	packet length.  * @p_lro: lro pointer.  * @ext_info: descriptor info, see xge_hal_dtr_info_t{}.  * @hldev: HAL device.  * @lro_end3: for lro_end3 output  *  * LRO the newly received frame, i.e. attach it	(if	possible) to the  * already accumulated (i.e., already LRO-ed) received frames (if any),  * to form one super-sized frame for the subsequent	processing  * by the stack.  */
+comment|/**  * __xge_hal_accumulate_large_rx:   LRO a given frame  * frames  * @ring: rx ring number  * @eth_hdr: ethernet header.  * @ip_hdr: ip header (optional)  * @tcp: tcp header.  * @seglen: packet length.  * @p_lro: lro pointer.  * @ext_info: descriptor info, see xge_hal_dtr_info_t{}.  * @hldev: HAL device.  * @lro_end3: for lro_end3 output  *  * LRO the newly received frame, i.e. attach it (if possible) to the  * already accumulated (i.e., already LRO-ed) received frames (if any),  * to form one super-sized frame for the subsequent processing  * by the stack.  */
 end_comment
 
 begin_function
@@ -4214,7 +4210,7 @@ condition|)
 return|return
 name|XGE_HAL_INF_LRO_UNCAPABLE
 return|;
-comment|/* 	 * This	function shall get matching LRO or else 	 * create one and return it 	 */
+comment|/* 	 * This function shall get matching LRO or else 	 * create one and return it 	 */
 name|ret
 operator|=
 name|__hal_get_lro_session
@@ -4353,7 +4349,7 @@ operator|=
 name|XGE_HAL_INF_LRO_END_2
 expr_stmt|;
 block|}
-comment|/* 	 * Since its time to flush, 	 * update ip header	so that	it can be sent up 	 */
+comment|/* 	 * Since its time to flush, 	 * update ip header so that it can be sent up 	 */
 if|if
 condition|(
 operator|(
@@ -4453,7 +4449,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_accumulate_large_rx:	LRO	a given	frame  * frames  * @buffer:	Ethernet frame.  * @tcp: tcp header.  * @seglen:	packet length.  * @p_lro: lro pointer.  * @ext_info: descriptor info, see xge_hal_dtr_info_t{}.  * @hldev: HAL device.  * @lro_end3: for lro_end3 output  *  * LRO the newly received frame, i.e. attach it	(if	possible) to the  * already accumulated (i.e., already LRO-ed) received frames (if any),  * to form one super-sized frame for the subsequent	processing  * by the stack.  */
+comment|/**  * xge_hal_accumulate_large_rx: LRO a given frame  * frames  * @buffer: Ethernet frame.  * @tcp: tcp header.  * @seglen: packet length.  * @p_lro: lro pointer.  * @ext_info: descriptor info, see xge_hal_dtr_info_t{}.  * @hldev: HAL device.  * @lro_end3: for lro_end3 output  *  * LRO the newly received frame, i.e. attach it (if possible) to the  * already accumulated (i.e., already LRO-ed) received frames (if any),  * to form one super-sized frame for the subsequent processing  * by the stack.  */
 end_comment
 
 begin_function
@@ -4549,7 +4545,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_lro_next_session: Returns next LRO session in the list or NULL  *					if none	exists.  * @hldev: HAL Context.  * @ring: rx ring number.  */
+comment|/**  * xge_hal_lro_next_session: Returns next LRO session in the list or NULL  *                  if none exists.  * @hldev: HAL Context.  * @ring: rx ring number.  */
 end_comment
 
 begin_function

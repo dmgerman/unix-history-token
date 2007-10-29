@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *  FileName :    xgehal-device.c  *  *  Description:  HAL device object functionality  *  *  Created:      10 May 2004  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -2370,7 +2366,7 @@ operator|==
 name|XGE_HAL_CARD_HERC
 condition|)
 block|{
-comment|/* 				 * Unmask only Link Up interrupt 				 */
+comment|/* 	             * Unmask only Link Up interrupt 	             */
 name|temp64
 operator|=
 name|xge_os_pio_mem_read64
@@ -2447,7 +2443,7 @@ operator|==
 name|XGE_HAL_CARD_HERC
 condition|)
 block|{
-comment|/* 				 * Mask both Link Up and Down interrupts 				 */
+comment|/* 	             * Mask both Link Up and Down interrupts 	             */
 name|temp64
 operator|=
 name|xge_os_pio_mem_read64
@@ -2510,7 +2506,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* Disable PIC Intrs in the general intr mask 			 * register */
+comment|/* Disable PIC Intrs in the general intr mask 	         * register */
 name|xge_os_pio_mem_write64
 argument_list|(
 name|hldev
@@ -2713,7 +2709,7 @@ block|}
 else|else
 block|{
 comment|/* flag == 0 */
-comment|/*  Disable TxDMA Intrs in the general intr mask 			 *  register */
+comment|/*  Disable TxDMA Intrs in the general intr mask 	         *  register */
 name|xge_os_pio_mem_write64
 argument_list|(
 name|hldev
@@ -2784,7 +2780,7 @@ operator|)
 name|val64
 operator|)
 expr_stmt|;
-comment|/* All RxDMA block interrupts are disabled for now 			 * TODO */
+comment|/* All RxDMA block interrupts are disabled for now 	         * TODO */
 name|xge_os_pio_mem_write64
 argument_list|(
 name|hldev
@@ -2807,7 +2803,7 @@ block|}
 else|else
 block|{
 comment|/* flag == 0 */
-comment|/*  Disable RxDMA Intrs in the general intr mask 			 *  register */
+comment|/*  Disable RxDMA Intrs in the general intr mask 	         *  register */
 name|xge_os_pio_mem_write64
 argument_list|(
 name|hldev
@@ -2907,7 +2903,7 @@ block|}
 else|else
 block|{
 comment|/* flag == 0 */
-comment|/* Disable MAC Intrs in the general intr mask 			 * register */
+comment|/* Disable MAC Intrs in the general intr mask 	         * register */
 name|xge_os_pio_mem_write64
 argument_list|(
 name|hldev
@@ -2983,7 +2979,7 @@ operator|)
 name|val64
 operator|)
 expr_stmt|;
-comment|/* All XGXS block error interrupts are disabled for now 			 * TODO */
+comment|/* All XGXS block error interrupts are disabled for now 	         * TODO */
 name|xge_os_pio_mem_write64
 argument_list|(
 name|hldev
@@ -3081,7 +3077,7 @@ block|}
 else|else
 block|{
 comment|/* flag == 0 */
-comment|/* Disable MC Intrs in the general intr mask 			 * register */
+comment|/* Disable MC Intrs in the general intr mask 	         * register */
 name|xge_os_pio_mem_write64
 argument_list|(
 name|hldev
@@ -3157,7 +3153,7 @@ block|}
 else|else
 block|{
 comment|/* flag == 0 */
-comment|/* Disable Tx Traffic Intrs in the general intr mask 			 * register. */
+comment|/* Disable Tx Traffic Intrs in the general intr mask 	         * register. */
 name|xge_os_pio_mem_write64
 argument_list|(
 name|hldev
@@ -3232,7 +3228,7 @@ block|}
 else|else
 block|{
 comment|/* flag == 0 */
-comment|/* Disable Rx Traffic Intrs in the general intr mask 			 * register. 			 */
+comment|/* Disable Rx Traffic Intrs in the general intr mask 	         * register. 	         */
 name|xge_os_pio_mem_write64
 argument_list|(
 name|hldev
@@ -4358,7 +4354,7 @@ condition|(
 name|runtime
 condition|)
 block|{
-comment|/* 		 * we don't want to re-configure RTI in case when 		 * bimodal interrupts are in use. Instead reconfigure TTI 		 * with new RTI values. 		 */
+comment|/* 	     * we don't want to re-configure RTI in case when 	     * bimodal interrupts are in use. Instead reconfigure TTI 	     * with new RTI values. 	     */
 if|if
 condition|(
 name|hldev
@@ -5580,7 +5576,7 @@ operator||
 name|XGE_HAL_SWAPPER_CTRL_STATS_SE
 operator|)
 expr_stmt|;
-comment|/* 	if (hldev->config.intr_mode == XGE_HAL_INTR_MODE_MSIX) { 		 val64 |= XGE_HAL_SWAPPER_CTRL_XMSI_SE; 	} */
+comment|/* 	if (hldev->config.intr_mode == XGE_HAL_INTR_MODE_MSIX) { 	     val64 |= XGE_HAL_SWAPPER_CTRL_XMSI_SE; 	} */
 name|__hal_pio_mem_write32_lower
 argument_list|(
 name|hldev
@@ -5984,7 +5980,7 @@ index|[
 name|pnum
 index|]
 decl_stmt|;
-comment|/* 			 * Skip and clear empty ports 			 */
+comment|/* 	         * Skip and clear empty ports 	         */
 if|if
 condition|(
 operator|!
@@ -5993,7 +5989,7 @@ operator|->
 name|num
 condition|)
 block|{
-comment|/* 				 * Clear CAM memory 				 */
+comment|/* 	             * Clear CAM memory 	             */
 name|xge_os_pio_mem_write64
 argument_list|(
 name|hldev
@@ -6027,7 +6023,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * Assign new Port values according 				 * to configuration 				 */
+comment|/* 	             * Assign new Port values according 	             * to configuration 	             */
 name|val64
 operator|=
 name|vBIT
@@ -7238,7 +7234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * xge__hal_device_rts_mac_enable  *  * @devh: HAL device handle.  * @index: index number where the MAC addr will be stored  * @macaddr: MAC address  *  * - Enable RTS steering for the given MAC address. This function has to be  * called with lock acquired.  *  * NOTE:  * 1. ULD has to call this function with the index value which  *    statisfies the following condition:  *	ring_num = (index % 8)  * 2.ULD also needs to make sure that the index is not  *   occupied by any MAC address. If that index has any MAC address  *   it will be overwritten and HAL will not check for it.  *  */
+comment|/*  * xge__hal_device_rts_mac_enable  *  * @devh: HAL device handle.  * @index: index number where the MAC addr will be stored  * @macaddr: MAC address  *  * - Enable RTS steering for the given MAC address. This function has to be  * called with lock acquired.  *  * NOTE:  * 1. ULD has to call this function with the index value which  *    statisfies the following condition:  *  ring_num = (index % 8)  * 2.ULD also needs to make sure that the index is not  *   occupied by any MAC address. If that index has any MAC address  *   it will be overwritten and HAL will not check for it.  *  */
 end_comment
 
 begin_function
@@ -8578,7 +8574,7 @@ name|void
 modifier|*
 name|mem
 decl_stmt|;
-comment|/* 		 * Allocate memory to hold the copy of SPDM table. 		 */
+comment|/* 	     * Allocate memory to hold the copy of SPDM table. 	     */
 if|if
 condition|(
 operator|(
@@ -8728,7 +8724,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * We are here because the host driver tries to 		 * do a soft reset on the device. 		 * Since the device soft reset clears the SPDM table, copy 		 * the entries from the local SPDM table to the actual one. 		 */
+comment|/* 	     * We are here because the host driver tries to 	     * do a soft reset on the device. 	     * Since the device soft reset clears the SPDM table, copy 	     * the entries from the local SPDM table to the actual one. 	     */
 name|xge_os_spin_lock
 argument_list|(
 operator|&
@@ -9591,95 +9587,11 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|hldev
-operator|->
-name|config
-operator|.
-name|intr_mode
-operator|==
-name|XGE_HAL_INTR_MODE_MSI
-operator|||
-name|hldev
-operator|->
-name|config
-operator|.
-name|intr_mode
-operator|==
-name|XGE_HAL_INTR_MODE_MSIX
-condition|)
-block|{
-comment|/* Upper limit of the MSI number enabled by the system */
-name|xge_os_pci_read32
-argument_list|(
-name|hldev
-operator|->
-name|pdev
-argument_list|,
-name|hldev
-operator|->
-name|cfgh
-argument_list|,
-name|xge_offsetof
-argument_list|(
-name|xge_hal_pci_config_le_t
-argument_list|,
-name|msi_control
-argument_list|)
-argument_list|,
-operator|&
-name|hldev
-operator|->
-name|msi_mask
-argument_list|)
-expr_stmt|;
-name|hldev
-operator|->
-name|msi_mask
-operator|&=
-literal|0x70
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hldev
-operator|->
-name|msi_mask
-condition|)
-return|return;
-name|hldev
-operator|->
-name|msi_mask
-operator|>>=
-literal|4
-expr_stmt|;
-comment|/* 		 * This number's power of 2 is the number 		 * of MSIs enabled. 		 */
-name|hldev
-operator|->
-name|msi_mask
-operator|=
-operator|(
-literal|0x1
-operator|<<
-name|hldev
-operator|->
-name|msi_mask
-operator|)
-expr_stmt|;
-comment|/* 		 * If 32 MSIs are enabled, then MSI numbers range from 0 - 31. 		 */
-name|hldev
-operator|->
-name|msi_mask
-operator|-=
-literal|1
-expr_stmt|;
-block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * __hal_device_pci_info_get - Get PCI bus informations such as width, frequency  *                               and mode.  * @devh: HAL device handle.  * @pci_mode:		pointer to a variable of enumerated type  *			xge_hal_pci_mode_e{}.  * @bus_frequency:	pointer to a variable of enumerated type  *			xge_hal_pci_bus_frequency_e{}.  * @bus_width:		pointer to a variable of enumerated type  *			xge_hal_pci_bus_width_e{}.  *  * Get pci mode, frequency, and PCI bus width.  *  * Returns: one of the xge_hal_status_e{} enumerated types.  * XGE_HAL_OK			- for success.  * XGE_HAL_ERR_INVALID_PCI_INFO - for invalid PCI information from the card.  * XGE_HAL_ERR_BAD_DEVICE_ID	- for invalid card.  *  * See Also: xge_hal_pci_mode_e, xge_hal_pci_mode_e, xge_hal_pci_width_e.  */
+comment|/*  * __hal_device_pci_info_get - Get PCI bus informations such as width, frequency  *                               and mode.  * @devh: HAL device handle.  * @pci_mode:       pointer to a variable of enumerated type  *          xge_hal_pci_mode_e{}.  * @bus_frequency:  pointer to a variable of enumerated type  *          xge_hal_pci_bus_frequency_e{}.  * @bus_width:      pointer to a variable of enumerated type  *          xge_hal_pci_bus_width_e{}.  *  * Get pci mode, frequency, and PCI bus width.  *  * Returns: one of the xge_hal_status_e{} enumerated types.  * XGE_HAL_OK           - for success.  * XGE_HAL_ERR_INVALID_PCI_INFO - for invalid PCI information from the card.  * XGE_HAL_ERR_BAD_DEVICE_ID    - for invalid card.  *  * See Also: xge_hal_pci_mode_e, xge_hal_pci_mode_e, xge_hal_pci_width_e.  */
 end_comment
 
 begin_function
@@ -10137,7 +10049,7 @@ operator|==
 name|XGE_HAL_DEFAULT_USE_HARDCODE
 condition|)
 block|{
-comment|/* 			 * There is no way to detect BUS frequency on Xena, 			 * so, in case of automatic configuration we hopelessly 			 * assume 133MHZ. 			 */
+comment|/* 	         * There is no way to detect BUS frequency on Xena, 	         * so, in case of automatic configuration we hopelessly 	         * assume 133MHZ. 	         */
 name|hldev
 operator|->
 name|config
@@ -10482,7 +10394,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* 		         * Mask the Link Up interrupt and unmask the Link Down 		         * interrupt. 		         */
+comment|/* 	             * Mask the Link Up interrupt and unmask the Link Down 	             * interrupt. 	             */
 name|val64
 operator|=
 name|xge_os_pio_mem_read64
@@ -10882,7 +10794,7 @@ operator|==
 name|XGE_HAL_CARD_HERC
 condition|)
 block|{
-comment|/* 		 * Mask the Link Down interrupt and unmask the Link up 		 * interrupt 		 */
+comment|/* 	     * Mask the Link Down interrupt and unmask the Link up 	     * interrupt 	     */
 name|val64
 operator|=
 name|xge_os_pio_mem_read64
@@ -11119,7 +11031,7 @@ name|XGE_HAL_LINK_DOWN
 else|:
 name|XGE_HAL_LINK_UP
 expr_stmt|;
-comment|/* check if the current link state is still considered 		 * to be changed. This way we will make sure that this is 		 * not a noise which needs to be filtered out */
+comment|/* check if the current link state is still considered 	     * to be changed. This way we will make sure that this is 	     * not a noise which needs to be filtered out */
 if|if
 condition|(
 name|hldev
@@ -11597,7 +11509,7 @@ name|bus_width
 operator|=
 name|XGE_HAL_PCI_BUS_WIDTH_UNKNOWN
 expr_stmt|;
-comment|/* 		 * FIXME: this cannot happen. 		 * But if it happens we cannot continue just like that 		 */
+comment|/* 	     * FIXME: this cannot happen. 	     * But if it happens we cannot continue just like that 	     */
 name|xge_debug_device
 argument_list|(
 name|XGE_ERR
@@ -11633,7 +11545,7 @@ name|XGE_HAL_PCI_BASIC_MODE
 operator|)
 condition|)
 block|{
-comment|/* PCI optimization: set TxReqTimeOut 		 * register (0x800+0x120) to 0x1ff or 		 * something close to this. 		 * Note: not to be used for PCI-X! */
+comment|/* PCI optimization: set TxReqTimeOut 	     * register (0x800+0x120) to 0x1ff or 	     * something close to this. 	     * Note: not to be used for PCI-X! */
 name|val64
 operator|=
 name|XGE_HAL_TXREQTO_VAL
@@ -12153,7 +12065,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* force polling_cnt to be "0", otherwise 		 * IRQ workload statistics will be screwed. This could 		 * be worked out in TXPIC handler later. */
+comment|/* force polling_cnt to be "0", otherwise 	     * IRQ workload statistics will be screwed. This could 	     * be worked out in TXPIC handler later. */
 name|hldev
 operator|->
 name|config
@@ -12472,6 +12384,17 @@ name|pcc_enable
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+comment|// Removing temporarily as FreeBSD is seeing lower performance
+comment|// attributable to this fix.
+comment|/* SXE-2-010 */
+block|if (xge_hal_device_check_id(hldev) == XGE_HAL_CARD_HERC) {
+comment|/* Turn off the ECC error reporting for RLDRAM interface */
+block|if ((status = xge_hal_fix_rldram_ecc_error(hldev)) != XGE_HAL_OK) 	        return status; 	}
+endif|#
+directive|endif
 name|__hal_fifo_hw_initialize
 argument_list|(
 name|hldev
@@ -12569,7 +12492,7 @@ operator|==
 name|XGE_HAL_INTR_MODE_MSI
 condition|)
 block|{
-comment|/* 		 * If MSI is enabled, ensure that One Shot for MSI in PCI_CTRL 		 * is disabled. 		 */
+comment|/* 	     * If MSI is enabled, ensure that One Shot for MSI in PCI_CTRL 	     * is disabled. 	     */
 name|val64
 operator|=
 name|xge_os_pio_mem_read64
@@ -13207,7 +13130,7 @@ operator|->
 name|bar2
 condition|)
 block|{
-comment|/* 			     * 94: MSIXTable 00000004  ( BIR:4  Offset:0x0 ) 			     * 98: PBATable  00000404  ( BIR:4  Offset:0x400 ) 			     */
+comment|/* 	             * 94: MSIXTable 00000004  ( BIR:4  Offset:0x0 ) 	             * 98: PBATable  00000404  ( BIR:4  Offset:0x400 ) 	             */
 name|u64
 modifier|*
 name|msix_vetor_table
@@ -13338,7 +13261,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __hal_device_poll - General private routine to poll the device.  * @hldev: HAL device handle.  *  * Returns: one of the xge_hal_status_e{} enumerated types.  * XGE_HAL_OK			- for success.  * XGE_HAL_ERR_CRITICAL         - when encounters critical error.  */
+comment|/*  * __hal_device_poll - General private routine to poll the device.  * @hldev: HAL device handle.  *  * Returns: one of the xge_hal_status_e{} enumerated types.  * XGE_HAL_OK           - for success.  * XGE_HAL_ERR_CRITICAL         - when encounters critical error.  */
 end_comment
 
 begin_function
@@ -13729,7 +13652,7 @@ operator|<
 literal|4
 condition|)
 block|{
-comment|/* 		 * For Xena 1,2,3 we enable only 4 PCCs Due to 		 * SXE-008 (Transmit DMA arbitration issue) 		 */
+comment|/* 	     * For Xena 1,2,3 we enable only 4 PCCs Due to 	     * SXE-008 (Transmit DMA arbitration issue) 	     */
 if|if
 condition|(
 operator|(
@@ -14265,9 +14188,9 @@ name|d_hist
 operator|/=
 name|_HIST_SIZE
 expr_stmt|;
-comment|//	xge_os_printf("d %d iwl_avg %d len_avg %d:%d:%d tval %d avg %d hist %d pstep %d",
-comment|//		      d, iwl_avg, len_txavg, len_rxavg, len_avg, tval, d*bytes_avg,
-comment|//		      d_hist*bytes_hist, pstep);
+comment|//  xge_os_printf("d %d iwl_avg %d len_avg %d:%d:%d tval %d avg %d hist %d pstep %d",
+comment|//            d, iwl_avg, len_txavg, len_rxavg, len_avg, tval, d*bytes_avg,
+comment|//            d_hist*bytes_hist, pstep);
 comment|/* make an adaptive step */
 if|if
 condition|(
@@ -15185,7 +15108,7 @@ operator|==
 name|XGE_HAL_CARD_HERC
 condition|)
 block|{
-comment|/*  Check for Link interrupts. If both Link Up/Down 			 *  bits are set, clear both and check adapter status 			 */
+comment|/*  Check for Link interrupts. If both Link Up/Down 	         *  bits are set, clear both and check adapter status 	         */
 if|if
 condition|(
 operator|(
@@ -15506,7 +15429,7 @@ operator|->
 name|upper_layer_info
 argument_list|)
 expr_stmt|;
-comment|/* 		 * This feature implements adaptive receive interrupt 		 * coalecing. It is disabled by default. To enable it 		 * set hldev->config.rxufca_lo_lim to be not equal to 		 * hldev->config.rxufca_hi_lim. 		 * 		 * We are using HW timer for this feature, so 		 * use needs to configure hldev->config.rxufca_lbolt_period 		 * which is essentially a time slice of timer. 		 * 		 * For those who familiar with Linux, lbolt means jiffies 		 * of this timer. I.e. timer tick. 		 */
+comment|/* 	     * This feature implements adaptive receive interrupt 	     * coalecing. It is disabled by default. To enable it 	     * set hldev->config.rxufca_lo_lim to be not equal to 	     * hldev->config.rxufca_hi_lim. 	     * 	     * We are using HW timer for this feature, so 	     * use needs to configure hldev->config.rxufca_lbolt_period 	     * which is essentially a time slice of timer. 	     * 	     * For those who familiar with Linux, lbolt means jiffies 	     * of this timer. I.e. timer tick. 	     */
 if|if
 condition|(
 name|hldev
@@ -15587,7 +15510,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * This feature implements adaptive TTI timer re-calculation 		 * based on host utilization, number of interrupt processed, 		 * number of RXD per tick and avarage length of packets per 		 * tick. 		 */
+comment|/* 	     * This feature implements adaptive TTI timer re-calculation 	     * based on host utilization, number of interrupt processed, 	     * number of RXD per tick and avarage length of packets per 	     * tick. 	     */
 if|if
 condition|(
 name|hldev
@@ -17294,7 +17217,7 @@ operator|==
 name|XGE_HAL_CARD_HERC
 condition|)
 block|{
-comment|/* 		 * Configure the link stability period. 		 */
+comment|/* 	     * Configure the link stability period. 	     */
 name|val64
 operator|=
 name|xge_os_pio_mem_read64
@@ -17338,7 +17261,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Use the link stability period 1 ms as default 			 */
+comment|/* 	         * Use the link stability period 1 ms as default 	         */
 name|val64
 operator||=
 name|XGE_HAL_MISC_CONTROL_LINK_STABILITY_PERIOD
@@ -17365,7 +17288,7 @@ operator|->
 name|misc_control
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Clearing any possible Link up/down interrupts that 		 * could have popped up just before Enabling the card. 		 */
+comment|/* 	     * Clearing any possible Link up/down interrupts that 	     * could have popped up just before Enabling the card. 	     */
 name|val64
 operator|=
 name|xge_os_pio_mem_read64
@@ -17429,7 +17352,7 @@ operator|==
 name|XGE_HAL_CARD_XENA
 condition|)
 block|{
-comment|/* 		 * Clearing any possible Link state change interrupts that 		 * could have popped up just before Enabling the card. 		 */
+comment|/* 	     * Clearing any possible Link state change interrupts that 	     * could have popped up just before Enabling the card. 	     */
 name|val64
 operator|=
 name|xge_os_pio_mem_read64
@@ -17938,7 +17861,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Now re-enable it as due to noise, hardware 			 * turned it off */
+comment|/* Now re-enable it as due to noise, hardware 	         * turned it off */
 name|val64
 operator|=
 name|xge_os_pio_mem_read64
@@ -18115,7 +18038,7 @@ condition|)
 endif|#
 directive|endif
 block|{
-comment|/* 		 * With some switches the link state change interrupt does not 		 * occur even though the xgxs reset is done as per SPN-006. So, 		 * poll the adapter status register and check if the link state 		 * is ok. 		 */
+comment|/* 	     * With some switches the link state change interrupt does not 	     * occur even though the xgxs reset is done as per SPN-006. So, 	     * poll the adapter status register and check if the link state 	     * is ok. 	     */
 name|adp_status
 operator|=
 name|xge_os_pio_mem_read64
@@ -18192,7 +18115,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_disable - Disable Xframe adapter.  * @hldev: Device handle.  *  * Disable this device. To gracefully reset the adapter, the host should:  *  *	- call xge_hal_device_disable();  *  *	- call xge_hal_device_intr_disable();  *  *	- close all opened channels and clean up outstanding resources;  *  *	- do some work (error recovery, change mtu, reset, etc);  *  *	- call xge_hal_device_enable();  *  *	- open channels, replenish RxDs, etc.  *  *	- call xge_hal_device_intr_enable().  *  * Note: Disabling the device does _not_ include disabling of interrupts.  * After disabling the device stops receiving new frames but those frames  * that were already in the pipe will keep coming for some few milliseconds.  *  * Returns:  XGE_HAL_OK - success.  * XGE_HAL_ERR_DEVICE_IS_NOT_QUIESCENT - Failed to restore the device to  * a "quiescent" state.  *  * See also: xge_hal_status_e{}.  */
+comment|/**  * xge_hal_device_disable - Disable Xframe adapter.  * @hldev: Device handle.  *  * Disable this device. To gracefully reset the adapter, the host should:  *  *  - call xge_hal_device_disable();  *  *  - call xge_hal_device_intr_disable();  *  *  - close all opened channels and clean up outstanding resources;  *  *  - do some work (error recovery, change mtu, reset, etc);  *  *  - call xge_hal_device_enable();  *  *  - open channels, replenish RxDs, etc.  *  *  - call xge_hal_device_intr_enable().  *  * Note: Disabling the device does _not_ include disabling of interrupts.  * After disabling the device stops receiving new frames but those frames  * that were already in the pipe will keep coming for some few milliseconds.  *  * Returns:  XGE_HAL_OK - success.  * XGE_HAL_ERR_DEVICE_IS_NOT_QUIESCENT - Failed to restore the device to  * a "quiescent" state.  *  * See also: xge_hal_status_e{}.  */
 end_comment
 
 begin_function
@@ -19014,7 +18937,7 @@ operator|!=
 name|XGE_HAL_INTR_MODE_IRQLINE
 condition|)
 block|{
-comment|/* 		 * make sure all interrupts going to be disabled if MSI 		 * is enabled. 		 */
+comment|/* 	     * make sure all interrupts going to be disabled if MSI 	     * is enabled. 	     */
 name|__hal_device_intr_mgmt
 argument_list|(
 name|hldev
@@ -19027,7 +18950,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Enable the Tx traffic interrupts only if the TTI feature is 		 * enabled. 		 */
+comment|/* 	     * Enable the Tx traffic interrupts only if the TTI feature is 	     * enabled. 	     */
 name|val64
 operator|=
 literal|0
@@ -19122,7 +19045,7 @@ operator|==
 name|XGE_HAL_CARD_HERC
 condition|)
 block|{
-comment|/* 			 * To enable MSI-X, MSI also needs to be enabled, 			 * due to a bug in the herc NIC. 			 */
+comment|/* 	         * To enable MSI-X, MSI also needs to be enabled, 	         * due to a bug in the herc NIC. 	         */
 name|__hal_device_msi_intr_endis
 argument_list|(
 name|hldev
@@ -19284,7 +19207,7 @@ operator|==
 name|XGE_HAL_CARD_HERC
 condition|)
 block|{
-comment|/* 			 * To disable MSI-X, MSI also needs to be disabled, 			 * due to a bug in the herc NIC. 			 */
+comment|/* 	         * To disable MSI-X, MSI also needs to be disabled, 	         * due to a bug in the herc NIC. 	         */
 name|__hal_device_msi_intr_endis
 argument_list|(
 name|hldev
@@ -20186,18 +20109,6 @@ block|{
 name|xge_hal_pci_bar0_t
 modifier|*
 name|bar0
-init|=
-operator|(
-name|xge_hal_pci_bar0_t
-operator|*
-operator|)
-operator|(
-name|void
-operator|*
-operator|)
-name|hldev
-operator|->
-name|bar0
 decl_stmt|;
 name|u64
 name|val64
@@ -20216,6 +20127,20 @@ return|return
 name|XGE_HAL_ERR_INVALID_DEVICE
 return|;
 block|}
+name|bar0
+operator|=
+operator|(
+name|xge_hal_pci_bar0_t
+operator|*
+operator|)
+operator|(
+name|void
+operator|*
+operator|)
+name|hldev
+operator|->
+name|bar0
+expr_stmt|;
 if|if
 condition|(
 name|index
@@ -21507,128 +21432,6 @@ return|return
 name|XGE_HAL_ERR_BAD_DEVICE_ID
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|XGEHAL_RNIC
-if|if
-condition|(
-name|__hal_blockpool_create
-argument_list|(
-name|hldev
-argument_list|,
-operator|&
-name|hldev
-operator|->
-name|block_pool
-argument_list|,
-name|XGE_HAL_BLOCKPOOL_SIZE
-argument_list|)
-operator|!=
-name|XGE_HAL_OK
-condition|)
-block|{
-name|xge_debug_device
-argument_list|(
-name|XGE_ERR
-argument_list|,
-literal|"block pool: __hal_blockpool_create failed"
-argument_list|)
-expr_stmt|;
-name|xge_hal_device_terminate
-argument_list|(
-name|hldev
-argument_list|)
-expr_stmt|;
-return|return
-name|XGE_HAL_ERR_OUT_OF_MEMORY
-return|;
-block|}
-if|if
-condition|(
-name|__hal_regpool_create
-argument_list|(
-name|hldev
-argument_list|,
-operator|&
-name|hldev
-operator|->
-name|reg_pool
-argument_list|,
-name|XGE_HAL_REGPOOL_SIZE
-argument_list|)
-operator|!=
-name|XGE_HAL_OK
-condition|)
-block|{
-name|xge_debug_device
-argument_list|(
-name|XGE_ERR
-argument_list|,
-literal|"reg pool: __hal_regpool_create failed"
-argument_list|)
-expr_stmt|;
-name|xge_hal_device_terminate
-argument_list|(
-name|hldev
-argument_list|)
-expr_stmt|;
-return|return
-name|XGE_HAL_ERR_OUT_OF_MEMORY
-return|;
-block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|XGE_HAL_MAX_VIRTUAL_PATHS
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|__hal_vp_initialize
-argument_list|(
-name|hldev
-argument_list|,
-name|i
-argument_list|,
-operator|&
-name|device_config
-operator|->
-name|vp_config
-index|[
-name|i
-index|]
-argument_list|)
-operator|!=
-name|XGE_HAL_OK
-condition|)
-block|{
-name|xge_debug_device
-argument_list|(
-name|XGE_ERR
-argument_list|,
-literal|"virtual Paths: __hal_vp_initialize failed"
-argument_list|)
-expr_stmt|;
-name|xge_hal_device_terminate
-argument_list|(
-name|hldev
-argument_list|)
-expr_stmt|;
-return|return
-name|XGE_HAL_ERR_OUT_OF_MEMORY
-return|;
-block|}
-block|}
-endif|#
-directive|endif
 comment|/* allocate and initialize FIFO types of channels according to 	 * configuration */
 for|for
 control|(
@@ -21667,13 +21470,6 @@ name|hldev
 argument_list|,
 name|i
 argument_list|,
-ifdef|#
-directive|ifdef
-name|XGEHAL_RNIC
-literal|0
-argument_list|,
-endif|#
-directive|endif
 name|XGE_HAL_CHANNEL_TYPE_FIFO
 argument_list|)
 expr_stmt|;
@@ -21912,13 +21708,6 @@ name|hldev
 argument_list|,
 name|i
 argument_list|,
-ifdef|#
-directive|ifdef
-name|XGEHAL_RNIC
-literal|0
-argument_list|,
-endif|#
-directive|endif
 name|XGE_HAL_CHANNEL_TYPE_RING
 argument_list|)
 expr_stmt|;
@@ -22466,6 +22255,118 @@ operator|*
 operator|)
 name|devh
 decl_stmt|;
+name|xge_list_t
+modifier|*
+name|item
+decl_stmt|;
+name|xge_hal_channel_t
+modifier|*
+name|channel
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|XGE_HAL_TX_MULTI_RESERVE_IRQ
+argument_list|)
+name|unsigned
+name|long
+name|flags
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * go through each opened tx channel and aquire 	 * lock, so it will serialize with HAL termination flag 	 */
+name|xge_list_for_each
+argument_list|(
+argument|item
+argument_list|,
+argument|&hldev->fifo_channels
+argument_list|)
+block|{
+name|channel
+operator|=
+name|xge_container_of
+argument_list|(
+name|item
+argument_list|,
+name|xge_hal_channel_t
+argument_list|,
+name|item
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|XGE_HAL_TX_MULTI_RESERVE
+argument_list|)
+name|xge_os_spin_lock
+argument_list|(
+operator|&
+name|channel
+operator|->
+name|reserve_lock
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|XGE_HAL_TX_MULTI_RESERVE_IRQ
+argument_list|)
+name|xge_os_spin_lock_irq
+argument_list|(
+operator|&
+name|channel
+operator|->
+name|reserve_lock
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|channel
+operator|->
+name|terminating
+operator|=
+literal|1
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|XGE_HAL_TX_MULTI_RESERVE
+argument_list|)
+name|xge_os_spin_unlock
+argument_list|(
+operator|&
+name|channel
+operator|->
+name|reserve_lock
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|XGE_HAL_TX_MULTI_RESERVE_IRQ
+argument_list|)
+name|xge_os_spin_unlock_irq
+argument_list|(
+operator|&
+name|channel
+operator|->
+name|reserve_lock
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 name|hldev
 operator|->
 name|terminating
@@ -22488,14 +22389,6 @@ modifier|*
 name|hldev
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|XGEHAL_RNIC
-name|int
-name|i
-decl_stmt|;
-endif|#
-directive|endif
 name|xge_assert
 argument_list|(
 name|g_xge_hal_driver
@@ -22886,49 +22779,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|XGEHAL_RNIC
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|XGE_HAL_MAX_VIRTUAL_PATHS
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|__hal_vp_terminate
-argument_list|(
-name|hldev
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-block|}
-name|__hal_blockpool_destroy
-argument_list|(
-operator|&
-name|hldev
-operator|->
-name|block_pool
-argument_list|)
-expr_stmt|;
-name|__hal_regpool_destroy
-argument_list|(
-operator|&
-name|hldev
-operator|->
-name|reg_pool
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -23024,6 +22874,8 @@ operator|->
 name|pdev
 argument_list|,
 name|XGE_HAL_VPD_BUFFER_SIZE
+operator|+
+literal|16
 argument_list|)
 expr_stmt|;
 if|if
@@ -23354,13 +23206,15 @@ argument_list|,
 name|vpd_data
 argument_list|,
 name|XGE_HAL_VPD_BUFFER_SIZE
+operator|+
+literal|16
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_handle_tcode - Handle transfer code.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  * @t_code: One of the enumerated (and documented in the Xframe user guide)  *          "transfer codes".  *  * Handle descriptor's transfer code. The latter comes with each completed  * descriptor, see xge_hal_fifo_dtr_next_completed() and  * xge_hal_ring_dtr_next_completed().  * Transfer codes are enumerated in xgehal-fifo.h and xgehal-ring.h.  *  * Returns: one of the xge_hal_status_e{} enumerated types.  * XGE_HAL_OK			- for success.  * XGE_HAL_ERR_CRITICAL         - when encounters critical error.  */
+comment|/**  * xge_hal_device_handle_tcode - Handle transfer code.  * @channelh: Channel handle.  * @dtrh: Descriptor handle.  * @t_code: One of the enumerated (and documented in the Xframe user guide)  *          "transfer codes".  *  * Handle descriptor's transfer code. The latter comes with each completed  * descriptor, see xge_hal_fifo_dtr_next_completed() and  * xge_hal_ring_dtr_next_completed().  * Transfer codes are enumerated in xgehal-fifo.h and xgehal-ring.h.  *  * Returns: one of the xge_hal_status_e{} enumerated types.  * XGE_HAL_OK           - for success.  * XGE_HAL_ERR_CRITICAL         - when encounters critical error.  */
 end_comment
 
 begin_function
@@ -23484,7 +23338,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* handle link "down" immediately without going through 		 * xge_hal_device_poll() routine. */
+comment|/* handle link "down" immediately without going through 	     * xge_hal_device_poll() routine. */
 if|if
 condition|(
 name|t_code
@@ -24047,7 +23901,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_device_pci_info_get - Get PCI bus informations such as width,  *			 frequency, and mode from previously stored values.  * @devh:		HAL device handle.  * @pci_mode:		pointer to a variable of enumerated type  *			xge_hal_pci_mode_e{}.  * @bus_frequency:	pointer to a variable of enumerated type  *			xge_hal_pci_bus_frequency_e{}.  * @bus_width:		pointer to a variable of enumerated type  *			xge_hal_pci_bus_width_e{}.  *  * Get pci mode, frequency, and PCI bus width.  * Returns: one of the xge_hal_status_e{} enumerated types.  * XGE_HAL_OK			- for success.  * XGE_HAL_ERR_INVALID_DEVICE	- for invalid device handle.  * See Also: xge_hal_pci_mode_e, xge_hal_pci_mode_e, xge_hal_pci_width_e.  */
+comment|/**  * xge_hal_device_pci_info_get - Get PCI bus informations such as width,  *           frequency, and mode from previously stored values.  * @devh:       HAL device handle.  * @pci_mode:       pointer to a variable of enumerated type  *          xge_hal_pci_mode_e{}.  * @bus_frequency:  pointer to a variable of enumerated type  *          xge_hal_pci_bus_frequency_e{}.  * @bus_width:      pointer to a variable of enumerated type  *          xge_hal_pci_bus_width_e{}.  *  * Get pci mode, frequency, and PCI bus width.  * Returns: one of the xge_hal_status_e{} enumerated types.  * XGE_HAL_OK           - for success.  * XGE_HAL_ERR_INVALID_DEVICE   - for invalid device handle.  * See Also: xge_hal_pci_mode_e, xge_hal_pci_mode_e, xge_hal_pci_width_e.  */
 end_comment
 
 begin_function
@@ -24448,7 +24302,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * Log a warning 		 */
+comment|/* 	     * Log a warning 	     */
 name|xge_debug_device
 argument_list|(
 name|XGE_ERR
@@ -24897,7 +24751,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_spdm_entry_add - Add a new entry to the SPDM table.  * @devh: HAL device handle.  * @src_ip: Source ip address(IPv4/IPv6).  * @dst_ip: Destination ip address(IPv4/IPv6).  * @l4_sp: L4 source port.  * @l4_dp: L4 destination port.  * @is_tcp: Set to 1, if the protocol is TCP.  *		   0, if the protocol is UDP.  * @is_ipv4: Set to 1, if the protocol is IPv4.  *		   0, if the protocol is IPv6.  * @tgt_queue: Target queue to route the receive packet.  *  * This function add a new entry to the SPDM table.  *  * Returns:  XGE_HAL_OK - success.  * XGE_HAL_ERR_SPDM_NOT_ENABLED -  SPDM support is not enabled.  * XGE_HAL_INF_MEM_STROBE_CMD_EXECUTING - Failed to add a new entry with in  *					the time(timeout).  * XGE_HAL_ERR_SPDM_TABLE_FULL - SPDM table is full.  * XGE_HAL_ERR_SPDM_INVALID_ENTRY - Invalid SPDM entry.  *  * See also: xge_hal_spdm_entry_remove{}.  */
+comment|/**  * xge_hal_spdm_entry_add - Add a new entry to the SPDM table.  * @devh: HAL device handle.  * @src_ip: Source ip address(IPv4/IPv6).  * @dst_ip: Destination ip address(IPv4/IPv6).  * @l4_sp: L4 source port.  * @l4_dp: L4 destination port.  * @is_tcp: Set to 1, if the protocol is TCP.  *         0, if the protocol is UDP.  * @is_ipv4: Set to 1, if the protocol is IPv4.  *         0, if the protocol is IPv6.  * @tgt_queue: Target queue to route the receive packet.  *  * This function add a new entry to the SPDM table.  *  * Returns:  XGE_HAL_OK - success.  * XGE_HAL_ERR_SPDM_NOT_ENABLED -  SPDM support is not enabled.  * XGE_HAL_INF_MEM_STROBE_CMD_EXECUTING - Failed to add a new entry with in  *                  the time(timeout).  * XGE_HAL_ERR_SPDM_TABLE_FULL - SPDM table is full.  * XGE_HAL_ERR_SPDM_INVALID_ENTRY - Invalid SPDM entry.  *  * See also: xge_hal_spdm_entry_remove{}.  */
 end_comment
 
 begin_function
@@ -25473,7 +25327,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * xge_hal_spdm_entry_remove - Remove an entry from the SPDM table.  * @devh: HAL device handle.  * @src_ip: Source ip address(IPv4/IPv6).  * @dst_ip: Destination ip address(IPv4/IPv6).  * @l4_sp: L4 source port.  * @l4_dp: L4 destination port.  * @is_tcp: Set to 1, if the protocol is TCP.  *		   0, if the protocol os UDP.  * @is_ipv4: Set to 1, if the protocol is IPv4.  *		   0, if the protocol is IPv6.  *  * This function remove an entry from the SPDM table.  *  * Returns:  XGE_HAL_OK - success.  * XGE_HAL_ERR_SPDM_NOT_ENABLED -  SPDM support is not enabled.  * XGE_HAL_INF_MEM_STROBE_CMD_EXECUTING - Failed to remove an entry with in  *					the time(timeout).  * XGE_HAL_ERR_SPDM_ENTRY_NOT_FOUND - Unable to locate the entry in the SPDM  *					table.  *  * See also: xge_hal_spdm_entry_add{}.  */
+comment|/**  * xge_hal_spdm_entry_remove - Remove an entry from the SPDM table.  * @devh: HAL device handle.  * @src_ip: Source ip address(IPv4/IPv6).  * @dst_ip: Destination ip address(IPv4/IPv6).  * @l4_sp: L4 source port.  * @l4_dp: L4 destination port.  * @is_tcp: Set to 1, if the protocol is TCP.  *         0, if the protocol os UDP.  * @is_ipv4: Set to 1, if the protocol is IPv4.  *         0, if the protocol is IPv6.  *  * This function remove an entry from the SPDM table.  *  * Returns:  XGE_HAL_OK - success.  * XGE_HAL_ERR_SPDM_NOT_ENABLED -  SPDM support is not enabled.  * XGE_HAL_INF_MEM_STROBE_CMD_EXECUTING - Failed to remove an entry with in  *                  the time(timeout).  * XGE_HAL_ERR_SPDM_ENTRY_NOT_FOUND - Unable to locate the entry in the SPDM  *                  table.  *  * See also: xge_hal_spdm_entry_add{}.  */
 end_comment
 
 begin_function
@@ -25746,7 +25600,7 @@ condition|)
 block|{
 continue|continue;
 block|}
-comment|/* 		 * Compare the src/dst IP addresses of source and target 		 */
+comment|/* 	     * Compare the src/dst IP addresses of source and target 	     */
 if|if
 condition|(
 name|is_ipv4
@@ -25954,7 +25808,7 @@ name|line_no
 operator|++
 control|)
 block|{
-comment|/* 		 *  SPDM line 2,3,4 are valid only for IPv6 entry. 		 *  SPDM line 5& 6 are reserved. We don't have to 		 *  read these entries in the above cases. 		 */
+comment|/* 	     *  SPDM line 2,3,4 are valid only for IPv6 entry. 	     *  SPDM line 5& 6 are reserved. We don't have to 	     *  read these entries in the above cases. 	     */
 if|if
 condition|(
 operator|(
@@ -26052,7 +25906,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * Log a warning 		 */
+comment|/* 	     * Log a warning 	     */
 name|xge_debug_device
 argument_list|(
 name|XGE_ERR
@@ -26166,7 +26020,7 @@ name|l4_dp
 operator|)
 condition|)
 block|{
-comment|/* 		 * Log a warning 		 */
+comment|/* 	     * Log a warning 	     */
 name|xge_debug_device
 argument_list|(
 name|XGE_ERR
@@ -26187,7 +26041,7 @@ condition|(
 name|is_ipv4
 condition|)
 block|{
-comment|/* Upper 32 bits of spdm_line(64 bit) contains the 		 * src IPv4 address. Lower 32 bits of spdm_line 		 * contains the destination IPv4 address. 		 */
+comment|/* Upper 32 bits of spdm_line(64 bit) contains the 	     * src IPv4 address. Lower 32 bits of spdm_line 	     * contains the destination IPv4 address. 	     */
 name|u32
 name|temp_src_ip
 init|=
@@ -26259,7 +26113,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * SPDM line 1& 2 contains the src IPv6 address. 		 * SPDM line 3& 4 contains the dst IPv6 address. 		 */
+comment|/* 	     * SPDM line 1& 2 contains the src IPv6 address. 	     * SPDM line 3& 4 contains the dst IPv6 address. 	     */
 if|if
 condition|(
 operator|(
@@ -26327,7 +26181,7 @@ index|]
 operator|)
 condition|)
 block|{
-comment|/* 			 * Log a warning 			 */
+comment|/* 	         * Log a warning 	         */
 name|xge_debug_device
 argument_list|(
 name|XGE_ERR
@@ -27885,7 +27739,7 @@ operator|<
 literal|72000
 condition|)
 block|{
-comment|/* 	 	 * Wait for an Hour 	 	 */
+comment|/* 	     * Wait for an Hour 	     */
 name|hldev
 operator|->
 name|stats
@@ -27900,7 +27754,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Logging Error messages in the excess temperature, 		 * Bias current, laser ouput for three cycle 		 */
+comment|/* 	     * Logging Error messages in the excess temperature, 	     * Bias current, laser ouput for three cycle 	     */
 name|__hal_updt_stats_xpak
 argument_list|(
 name|hldev
@@ -29309,6 +29163,248 @@ operator|&
 name|bar0
 operator|->
 name|rts_mac_cfg
+argument_list|)
+expr_stmt|;
+return|return
+name|XGE_HAL_OK
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * xge_hal_fix_rldram_ecc_error  * @hldev: private member of the device structure.  *  * SXE-02-010. This function will turn OFF the ECC error reporting for the   * interface bet'n external Micron RLDRAM II device and memory controller.  * The error would have been reported in RLD_ECC_DB_ERR_L and RLD_ECC_DB_ERR_U  * fields of MC_ERR_REG register. Issue reported by HP-Unix folks during the  * qualification of Herc.   */
+end_comment
+
+begin_function
+name|xge_hal_status_e
+name|xge_hal_fix_rldram_ecc_error
+parameter_list|(
+name|xge_hal_device_t
+modifier|*
+name|hldev
+parameter_list|)
+block|{
+name|xge_hal_pci_bar0_t
+modifier|*
+name|bar0
+init|=
+operator|(
+name|xge_hal_pci_bar0_t
+operator|*
+operator|)
+name|hldev
+operator|->
+name|bar0
+decl_stmt|;
+name|u64
+name|val64
+decl_stmt|;
+comment|// Enter Test Mode.
+name|val64
+operator|=
+name|XGE_HAL_MC_RLDRAM_TEST_MODE
+expr_stmt|;
+name|xge_os_pio_mem_write64
+argument_list|(
+name|hldev
+operator|->
+name|pdev
+argument_list|,
+name|hldev
+operator|->
+name|regh0
+argument_list|,
+name|val64
+argument_list|,
+operator|&
+name|bar0
+operator|->
+name|mc_rldram_test_ctrl
+argument_list|)
+expr_stmt|;
+comment|// Enable fg/bg tests.
+name|val64
+operator|=
+literal|0x0100000000000000ULL
+expr_stmt|;
+name|xge_os_pio_mem_write64
+argument_list|(
+name|hldev
+operator|->
+name|pdev
+argument_list|,
+name|hldev
+operator|->
+name|regh0
+argument_list|,
+name|val64
+argument_list|,
+operator|&
+name|bar0
+operator|->
+name|mc_driver
+argument_list|)
+expr_stmt|;
+comment|// Enable RLDRAM configuration.
+name|val64
+operator|=
+literal|0x0000000000017B00ULL
+expr_stmt|;
+name|xge_os_pio_mem_write64
+argument_list|(
+name|hldev
+operator|->
+name|pdev
+argument_list|,
+name|hldev
+operator|->
+name|regh0
+argument_list|,
+name|val64
+argument_list|,
+operator|&
+name|bar0
+operator|->
+name|mc_rldram_mrs
+argument_list|)
+expr_stmt|;
+comment|// Enable RLDRAM queues.
+name|val64
+operator|=
+literal|0x0000000001017B00ULL
+expr_stmt|;
+name|xge_os_pio_mem_write64
+argument_list|(
+name|hldev
+operator|->
+name|pdev
+argument_list|,
+name|hldev
+operator|->
+name|regh0
+argument_list|,
+name|val64
+argument_list|,
+operator|&
+name|bar0
+operator|->
+name|mc_rldram_mrs
+argument_list|)
+expr_stmt|;
+comment|// Setup test ranges
+name|val64
+operator|=
+literal|0x00000000001E0100ULL
+expr_stmt|;
+name|xge_os_pio_mem_write64
+argument_list|(
+name|hldev
+operator|->
+name|pdev
+argument_list|,
+name|hldev
+operator|->
+name|regh0
+argument_list|,
+name|val64
+argument_list|,
+operator|&
+name|bar0
+operator|->
+name|mc_rldram_test_add
+argument_list|)
+expr_stmt|;
+name|val64
+operator|=
+literal|0x00000100001F0100ULL
+expr_stmt|;
+name|xge_os_pio_mem_write64
+argument_list|(
+name|hldev
+operator|->
+name|pdev
+argument_list|,
+name|hldev
+operator|->
+name|regh0
+argument_list|,
+name|val64
+argument_list|,
+operator|&
+name|bar0
+operator|->
+name|mc_rldram_test_add_bkg
+argument_list|)
+expr_stmt|;
+comment|// Start Reads.
+name|val64
+operator|=
+literal|0x0001000000010000ULL
+expr_stmt|;
+name|xge_os_pio_mem_write64
+argument_list|(
+name|hldev
+operator|->
+name|pdev
+argument_list|,
+name|hldev
+operator|->
+name|regh0
+argument_list|,
+name|val64
+argument_list|,
+operator|&
+name|bar0
+operator|->
+name|mc_rldram_test_ctrl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|__hal_device_register_poll
+argument_list|(
+name|hldev
+argument_list|,
+operator|&
+name|bar0
+operator|->
+name|mc_rldram_test_ctrl
+argument_list|,
+literal|1
+argument_list|,
+name|XGE_HAL_MC_RLDRAM_TEST_DONE
+argument_list|,
+name|XGE_HAL_DEVICE_CMDMEM_WAIT_MAX_MILLIS
+argument_list|)
+operator|!=
+name|XGE_HAL_OK
+condition|)
+block|{
+return|return
+name|XGE_HAL_INF_MEM_STROBE_CMD_EXECUTING
+return|;
+block|}
+comment|// Exit test mode
+name|val64
+operator|=
+literal|0x0000000000000000ULL
+expr_stmt|;
+name|xge_os_pio_mem_write64
+argument_list|(
+name|hldev
+operator|->
+name|pdev
+argument_list|,
+name|hldev
+operator|->
+name|regh0
+argument_list|,
+name|val64
+argument_list|,
+operator|&
+name|bar0
+operator|->
+name|mc_rldram_test_ctrl
 argument_list|)
 expr_stmt|;
 return|return

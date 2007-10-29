@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *  FileName :    xge-os-pal.h  *  *  Description:  top-level header file. works just like switching between  *                os-depndent parts  *  *  Created:      6st May 2004  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -42,29 +38,6 @@ include|#
 directive|include
 file|<dev/nxge/xge-osdep.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XGEHAL_RNIC
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IN
-end_define
-
-begin_define
-define|#
-directive|define
-name|OUT
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -244,7 +217,7 @@ name|__xge_trace
 parameter_list|(
 name|tb
 parameter_list|)
-value|{ \ 	int msgsize = xge_os_strlen(tb->msg) + 2; \ 	int offset = tb->offset; \ 	if (msgsize != 2&& msgsize< tb->msgbuf_max) { \ 		int leftsize =  tb->size - offset; \ 		if ((msgsize + tb->msgbuf_max)> leftsize) { \ 			xge_os_memzero(tb->data + offset, leftsize); \ 			offset = 0; \ 			tb->wrapped_once = 1; \ 		} \ 		xge_os_memcpy(tb->data + offset, tb->msg, msgsize-1); \ 		*(tb->data + offset + msgsize-1) = '\n'; \ 		*(tb->data + offset + msgsize) = 0; \ 		offset += msgsize; \ 		tb->offset = offset; \ 		dmesg_start = tb->data + offset; \ 		*tb->msg = 0; \ 	} \ }
+value|{ \ 	int msgsize = xge_os_strlen(tb->msg) + 2; \ 	int offset = tb->offset; \ 	if (msgsize != 2&& msgsize< tb->msgbuf_max) { \ 	    int leftsize =  tb->size - offset; \ 	    if ((msgsize + tb->msgbuf_max)> leftsize) { \ 	        xge_os_memzero(tb->data + offset, leftsize); \ 	        offset = 0; \ 	        tb->wrapped_once = 1; \ 	    } \ 	    xge_os_memcpy(tb->data + offset, tb->msg, msgsize-1); \ 	    *(tb->data + offset + msgsize-1) = '\n'; \ 	    *(tb->data + offset + msgsize) = 0; \ 	    offset += msgsize; \ 	    tb->offset = offset; \ 	    dmesg_start = tb->data + offset; \ 	    *tb->msg = 0; \ 	} \ }
 end_define
 
 begin_define
@@ -256,7 +229,7 @@ name|tb
 parameter_list|,
 name|fmt
 parameter_list|)
-value|{ \ 	if (tb != NULL) { \ 		char *_p = tb->msg; \ 		if (tb->timestamp) { \ 			xge_os_timestamp(tb->msg); \ 			_p = tb->msg + xge_os_strlen(tb->msg); \ 		} \ 		xge_os_vasprintf(_p, fmt); \ 		__xge_trace(tb); \ 	} \ }
+value|{ \ 	if (tb != NULL) { \ 	    char *_p = tb->msg; \ 	    if (tb->timestamp) { \ 	        xge_os_timestamp(tb->msg); \ 	        _p = tb->msg + xge_os_strlen(tb->msg); \ 	    } \ 	    xge_os_vasprintf(_p, fmt); \ 	    __xge_trace(tb); \ 	} \ }
 end_define
 
 begin_ifdef
@@ -275,7 +248,7 @@ parameter_list|,
 name|fmt
 modifier|...
 parameter_list|)
-value|{ \ 	if (tb != NULL) { \ 		if (tb->timestamp) { \ 			xge_os_timestamp(tb->msg); \ 		} \ 		xge_os_sprintf(tb->msg + xge_os_strlen(tb->msg), fmt); \ 		__xge_trace(tb); \ 	} \ }
+value|{ \ 	if (tb != NULL) { \ 	    if (tb->timestamp) { \ 	        xge_os_timestamp(tb->msg); \ 	    } \ 	    xge_os_sprintf(tb->msg + xge_os_strlen(tb->msg), fmt); \ 	    __xge_trace(tb); \ 	} \ }
 end_define
 
 begin_endif

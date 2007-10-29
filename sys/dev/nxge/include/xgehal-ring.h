@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *  FileName :    xgehal-ring.h  *  *  Description:  HAL Rx ring object functionality  *  *  Created:      19 May 2004  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -324,7 +320,7 @@ begin_define
 define|#
 directive|define
 name|XGE_HAL_RXD_FRAME_TCP_OR_UDP
-value|(XGE_HAL_RXD_FRAME_PROTO_TCP | \ 				XGE_HAL_RXD_FRAME_PROTO_UDP)
+value|(XGE_HAL_RXD_FRAME_PROTO_TCP | \ 	            XGE_HAL_RXD_FRAME_PROTO_UDP)
 end_define
 
 begin_comment
@@ -825,7 +821,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|(n==1 ? sizeof(xge_hal_ring_rxd_1_t) : \ 		(n==3 ? sizeof(xge_hal_ring_rxd_3_t) : \ 			sizeof(xge_hal_ring_rxd_5_t)))
+value|(n==1 ? sizeof(xge_hal_ring_rxd_1_t) : \ 	    (n==3 ? sizeof(xge_hal_ring_rxd_3_t) : \ 	        sizeof(xge_hal_ring_rxd_5_t)))
 end_define
 
 begin_define
@@ -932,7 +928,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * struct xge_hal_dtr_info_t - Extended information associated with a  * completed ring descriptor.  * @l3_cksum: Result of IP checksum check (by Xframe hardware).  *            This field containing XGE_HAL_L3_CKSUM_OK would mean that  *            the checksum is correct, otherwise - the datagram is  *            corrupted.  * @l4_cksum: Result of TCP/UDP checksum check (by Xframe hardware).  *            This field containing XGE_HAL_L4_CKSUM_OK would mean that  *            the checksum is correct. Otherwise - the packet is  *            corrupted.  * @frame: See xge_hal_frame_type_e{}.  * @proto:    Reporting bits for various higher-layer protocols, including (but  *	      note restricted to) TCP and UDP. See xge_hal_frame_proto_e{}.  * @vlan:     VLAN tag extracted from the received frame.  * @rth_value: Receive Traffic Hashing(RTH) hash value. Produced by Xframe II  *             hardware if RTH is enabled.  * @rth_it_hit: Set, If RTH hash value calculated by the Xframe II hardware  *             has a matching entry in the Indirection table.  * @rth_spdm_hit: Set, If RTH hash value calculated by the Xframe II hardware  *             has a matching entry in the Socket Pair Direct Match table.  * @rth_hash_type: RTH hash code of the function used to calculate the hash.  * @reserved_pad: Unused byte.  */
+comment|/**  * struct xge_hal_dtr_info_t - Extended information associated with a  * completed ring descriptor.  * @l3_cksum: Result of IP checksum check (by Xframe hardware).  *            This field containing XGE_HAL_L3_CKSUM_OK would mean that  *            the checksum is correct, otherwise - the datagram is  *            corrupted.  * @l4_cksum: Result of TCP/UDP checksum check (by Xframe hardware).  *            This field containing XGE_HAL_L4_CKSUM_OK would mean that  *            the checksum is correct. Otherwise - the packet is  *            corrupted.  * @frame: See xge_hal_frame_type_e{}.  * @proto:    Reporting bits for various higher-layer protocols, including (but  *        note restricted to) TCP and UDP. See xge_hal_frame_proto_e{}.  * @vlan:     VLAN tag extracted from the received frame.  * @rth_value: Receive Traffic Hashing(RTH) hash value. Produced by Xframe II  *             hardware if RTH is enabled.  * @rth_it_hit: Set, If RTH hash value calculated by the Xframe II hardware  *             has a matching entry in the Indirection table.  * @rth_spdm_hit: Set, If RTH hash value calculated by the Xframe II hardware  *             has a matching entry in the Socket Pair Direct Match table.  * @rth_hash_type: RTH hash code of the function used to calculate the hash.  * @reserved_pad: Unused byte.  */
 end_comment
 
 begin_typedef

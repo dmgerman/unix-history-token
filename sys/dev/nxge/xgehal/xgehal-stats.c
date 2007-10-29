@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *  FileName :    xgehal-stats.c  *  *  Description:  statistics object implementation  *  *  Created:      2 June 2004  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -1310,7 +1306,7 @@ parameter_list|,
 name|_p
 parameter_list|)
 define|\
-value|hldev->stats.pcim_info_latest->link_info[_link]._p =		      \ 	((hldev->stats.pcim_info->link_info[_link]._p>=	              \ 		hldev->stats.pcim_info_saved->link_info[_link]._p) ?	      \ 		hldev->stats.pcim_info->link_info[_link]._p -		      \ 			hldev->stats.pcim_info_saved->link_info[_link]._p :   \ 		((-1) - hldev->stats.pcim_info_saved->link_info[_link]._p) +  \ 			hldev->stats.pcim_info->link_info[_link]._p)
+value|hldev->stats.pcim_info_latest->link_info[_link]._p =              \ 	((hldev->stats.pcim_info->link_info[_link]._p>=                  \ 	    hldev->stats.pcim_info_saved->link_info[_link]._p) ?          \ 	    hldev->stats.pcim_info->link_info[_link]._p -             \ 	        hldev->stats.pcim_info_saved->link_info[_link]._p :   \ 	    ((-1) - hldev->stats.pcim_info_saved->link_info[_link]._p) +  \ 	        hldev->stats.pcim_info->link_info[_link]._p)
 define|#
 directive|define
 name|set_latest_stat_aggr_cnt
@@ -1320,7 +1316,7 @@ parameter_list|,
 name|_p
 parameter_list|)
 define|\
-value|hldev->stats.pcim_info_latest->aggr_info[_aggr]._p =		      \ 	((hldev->stats.pcim_info->aggr_info[_aggr]._p>=		      \ 		hldev->stats.pcim_info_saved->aggr_info[_aggr]._p) ?	      \ 		hldev->stats.pcim_info->aggr_info[_aggr]._p -		      \ 			hldev->stats.pcim_info_saved->aggr_info[_aggr]._p :   \ 		((-1) - hldev->stats.pcim_info_saved->aggr_info[_aggr]._p) +  \ 			hldev->stats.pcim_info->aggr_info[_aggr]._p)
+value|hldev->stats.pcim_info_latest->aggr_info[_aggr]._p =              \ 	((hldev->stats.pcim_info->aggr_info[_aggr]._p>=              \ 	    hldev->stats.pcim_info_saved->aggr_info[_aggr]._p) ?          \ 	    hldev->stats.pcim_info->aggr_info[_aggr]._p -             \ 	        hldev->stats.pcim_info_saved->aggr_info[_aggr]._p :   \ 	    ((-1) - hldev->stats.pcim_info_saved->aggr_info[_aggr]._p) +  \ 	        hldev->stats.pcim_info->aggr_info[_aggr]._p)
 for|for
 control|(
 name|i
@@ -2108,7 +2104,7 @@ parameter_list|,
 name|_p
 parameter_list|)
 define|\
-value|hldev->stats.hw_info_latest._p =                                \ 	((hldev->stats.hw_info->_p>= hldev->stats.hw_info_saved._p) ?  \           hldev->stats.hw_info->_p - hldev->stats.hw_info_saved._p :    \ 	  ((-1) - hldev->stats.hw_info_saved._p) + hldev->stats.hw_info->_p)
+value|hldev->stats.hw_info_latest._p =                                \ 	((hldev->stats.hw_info->_p>= hldev->stats.hw_info_saved._p) ?  \ 	      hldev->stats.hw_info->_p - hldev->stats.hw_info_saved._p :    \ 	  ((-1) - hldev->stats.hw_info_saved._p) + hldev->stats.hw_info->_p)
 if|if
 condition|(
 name|xge_hal_device_check_id
@@ -3691,6 +3687,27 @@ operator|*
 operator|)
 name|channelh
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|channel
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|channel
+operator|->
+name|magic
+operator|!=
+name|XGE_HAL_MAGIC
+operator|)
+condition|)
+block|{
+return|return
+name|XGE_HAL_ERR_INVALID_DEVICE
+return|;
+block|}
 name|hldev
 operator|=
 operator|(
@@ -3711,27 +3728,6 @@ operator|)
 operator|||
 operator|(
 name|hldev
-operator|->
-name|magic
-operator|!=
-name|XGE_HAL_MAGIC
-operator|)
-condition|)
-block|{
-return|return
-name|XGE_HAL_ERR_INVALID_DEVICE
-return|;
-block|}
-if|if
-condition|(
-operator|(
-name|channel
-operator|==
-name|NULL
-operator|)
-operator|||
-operator|(
-name|channel
 operator|->
 name|magic
 operator|!=
