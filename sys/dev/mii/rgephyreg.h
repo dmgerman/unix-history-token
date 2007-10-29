@@ -910,6 +910,127 @@ begin_comment
 comment|/* 1000base-T HD capable */
 end_comment
 
+begin_comment
+comment|/* RTL8211B(L) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_MII_SSR
+value|0x11
+end_define
+
+begin_comment
+comment|/* PHY Specific status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_SSR_S1000
+value|0x8000
+end_define
+
+begin_comment
+comment|/* 1000Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_SSR_S100
+value|0x4000
+end_define
+
+begin_comment
+comment|/* 100Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_SSR_S10
+value|0x0000
+end_define
+
+begin_comment
+comment|/* 10Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_SSR_SPD_MASK
+value|0xc000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_SSR_FDX
+value|0x2000
+end_define
+
+begin_comment
+comment|/* full duplex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_SSR_PAGE_RECEIVED
+value|0x1000
+end_define
+
+begin_comment
+comment|/* new page received */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_SSR_SPD_DPLX_RESOLVED
+value|0x0800
+end_define
+
+begin_comment
+comment|/* speed/duplex resolved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_SSR_LINK
+value|0x0400
+end_define
+
+begin_comment
+comment|/* link up */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_SSR_MDI_XOVER
+value|0x0040
+end_define
+
+begin_comment
+comment|/* MDI crossover */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_SSR_JABBER
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Jabber */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
