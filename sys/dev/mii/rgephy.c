@@ -482,12 +482,6 @@ name|mii_pdata
 operator|=
 name|mii
 expr_stmt|;
-name|sc
-operator|->
-name|mii_anegticks
-operator|=
-name|MII_ANEGTICKS_GIGE
-expr_stmt|;
 name|mii
 operator|->
 name|mii_instance
