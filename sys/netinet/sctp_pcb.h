@@ -1761,6 +1761,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|sctp_is_in_timewait
+parameter_list|(
+name|uint32_t
+name|tag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|sctp_add_vtag_to_timewait
 parameter_list|(
@@ -1980,6 +1990,8 @@ parameter_list|,
 name|struct
 name|timeval
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

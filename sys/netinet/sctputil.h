@@ -260,6 +260,8 @@ parameter_list|(
 name|struct
 name|sctp_inpcb
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

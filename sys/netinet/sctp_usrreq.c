@@ -10794,6 +10794,15 @@ name|state
 expr_stmt|;
 name|sstat
 operator|->
+name|sstat_assoc_id
+operator|=
+name|sctp_get_associd
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
+name|sstat
+operator|->
 name|sstat_rwnd
 operator|=
 name|stcb
