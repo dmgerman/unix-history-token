@@ -502,12 +502,9 @@ block|{
 return|return
 operator|(
 name|_c
-operator|<
-literal|0
-operator|||
-name|_c
-operator|>=
-name|__mb_sb_limit
+operator|&
+operator|~
+literal|0x7F
 operator|)
 condition|?
 literal|0
