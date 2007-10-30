@@ -2181,6 +2181,9 @@ block|{
 case|case
 name|PTHREAD_MUTEX_ERRORCHECK
 case|:
+case|case
+name|PTHREAD_MUTEX_ADAPTIVE_NP
+case|:
 if|if
 condition|(
 name|abstime
