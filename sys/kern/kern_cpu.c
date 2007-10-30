@@ -80,7 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/smp.h>
 end_include
 
 begin_include
@@ -93,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sbuf.h>
 end_include
 
 begin_include
@@ -1157,6 +1163,38 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* 	 * If still booting and secondary CPUs not started yet, don't allow 	 * changing the frequency until they're online.  This is because we 	 * can't switch to them using sched_bind() and thus we'd only be 	 * switching the main CPU.  XXXTODO: Need to think more about how to 	 * handle having different CPUs at different frequencies.   	 */
+if|if
+condition|(
+name|mp_ncpus
+operator|>
+literal|1
+operator|&&
+operator|!
+name|smp_active
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"rejecting change, SMP not started yet\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+endif|#
+directive|endif
+comment|/* SMP */
 comment|/* 	 * If the requested level has a lower priority, don't allow 	 * the new level right now. 	 */
 if|if
 condition|(
