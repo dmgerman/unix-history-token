@@ -344,7 +344,51 @@ directive|include
 file|<runetype.h>
 end_include
 
+begin_comment
+comment|/*  * These four use the __mb_sb_limit symbol which breaks RELENG_6's  * forward compatibility after 602113. Force them built as non-inlined  * form to recover.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_EXTERNALIZE_CTYPE_INLINES_
+end_ifndef
+
+begin_function_decl
+name|__BEGIN_DECLS
+name|int
+name|__sbmaskrune
+parameter_list|(
+name|__ct_rune_t
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|__ct_rune_t
+name|__sbtoupper
+parameter_list|(
+name|__ct_rune_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|__ct_rune_t
+name|__sbtolower
+parameter_list|(
+name|__ct_rune_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
+name|__END_DECLS
+endif|#
+directive|endif
 specifier|static
 name|__inline
 name|int
@@ -388,6 +432,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_EXTERNALIZE_CTYPE_INLINES_
+end_ifdef
+
 begin_function
 specifier|static
 name|__inline
@@ -426,6 +476,11 @@ name|_f
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -502,12 +557,9 @@ block|{
 return|return
 operator|(
 name|_c
-operator|<
-literal|0
-operator|||
-name|_c
-operator|>=
-name|__mb_sb_limit
+operator|&
+operator|~
+literal|0x7F
 operator|)
 condition|?
 literal|0
@@ -564,6 +616,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_EXTERNALIZE_CTYPE_INLINES_
+end_ifdef
+
 begin_function
 specifier|static
 name|__inline
@@ -596,6 +654,11 @@ index|]
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -633,6 +696,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_EXTERNALIZE_CTYPE_INLINES_
+end_ifdef
+
 begin_function
 specifier|static
 name|__inline
@@ -665,6 +734,11 @@ index|]
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
