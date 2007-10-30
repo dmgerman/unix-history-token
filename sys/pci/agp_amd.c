@@ -1042,23 +1042,11 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|error
-operator|=
-name|agp_generic_detach
+name|agp_free_cdev
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-name|error
-return|;
 comment|/* Disable the TLB.. */
 name|WRITE2
 argument_list|(
@@ -1108,6 +1096,11 @@ argument_list|(
 name|sc
 operator|->
 name|gatt
+argument_list|)
+expr_stmt|;
+name|agp_free_res
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
