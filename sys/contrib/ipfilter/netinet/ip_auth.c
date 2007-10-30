@@ -349,9 +349,16 @@ operator|)
 operator|||
 expr|\
 operator|(
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+operator|(
 name|__FreeBSD_version
 operator|>=
 literal|400000
+operator|)
 operator|)
 end_if
 

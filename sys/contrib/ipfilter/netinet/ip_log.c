@@ -314,10 +314,20 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+operator|(
 name|__FreeBSD_version
 operator|>=
 literal|220000
+operator|)
+operator|)
 operator|&&
+expr|\
 name|defined
 argument_list|(
 name|_KERNEL
@@ -376,6 +386,7 @@ end_include
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|NetBSD
@@ -385,6 +396,7 @@ operator|(
 name|__NetBSD_Version__
 operator|>=
 literal|104000000
+operator|)
 operator|)
 end_if
 
@@ -436,9 +448,11 @@ argument_list|(
 name|NetBSD
 argument_list|)
 operator|&&
+operator|(
 name|NetBSD
 operator|>
 literal|199609
+operator|)
 operator|)
 operator|||
 expr|\
@@ -448,16 +462,25 @@ argument_list|(
 name|OpenBSD
 argument_list|)
 operator|&&
+operator|(
 name|OpenBSD
 operator|>
 literal|199603
 operator|)
+operator|)
 operator|||
 expr|\
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
 operator|(
 name|__FreeBSD_version
 operator|>=
 literal|300000
+operator|)
 operator|)
 end_if
 

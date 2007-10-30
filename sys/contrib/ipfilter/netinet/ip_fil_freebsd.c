@@ -1987,12 +1987,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|READ_ENTER
-argument_list|(
-operator|&
-name|ipf_global
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|fr_ioctlswitch
@@ -2020,12 +2014,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|RWLOCK_EXIT
-argument_list|(
-operator|&
-name|ipf_global
-argument_list|)
-expr_stmt|;
 name|SPL_X
 argument_list|(
 name|s
@@ -2035,12 +2023,6 @@ return|return
 name|error
 return|;
 block|}
-name|RWLOCK_EXIT
-argument_list|(
-operator|&
-name|ipf_global
-argument_list|)
-expr_stmt|;
 name|SPL_X
 argument_list|(
 name|s
@@ -4697,6 +4679,10 @@ begin_comment
 comment|/* __FreeBSD_version< 300000 */
 end_comment
 
+begin_comment
+comment|/*  * m0 - pointer to mbuf where the IP packet starts  * mpp - pointer to the mbuf pointer that is the start of the mbuf chain  */
+end_comment
+
 begin_function
 name|int
 name|fr_fastroute
@@ -4750,7 +4736,8 @@ name|mbuf
 modifier|*
 name|m
 init|=
-name|m0
+operator|*
+name|mpp
 decl_stmt|;
 specifier|register
 name|struct
@@ -5329,7 +5316,7 @@ operator|-
 literal|1
 expr_stmt|;
 goto|goto
-name|done
+name|bad
 goto|;
 break|break;
 block|}

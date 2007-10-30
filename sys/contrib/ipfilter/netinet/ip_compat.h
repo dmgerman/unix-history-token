@@ -166,14 +166,18 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|SOLARIS2
 argument_list|)
 operator|&&
+operator|(
 name|SOLARIS2
 operator|>=
 literal|8
+operator|)
+operator|)
 end_if
 
 begin_ifndef
