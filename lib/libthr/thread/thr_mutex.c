@@ -1433,6 +1433,19 @@ block|{
 comment|/* 		 * For adaptive mutexes, spin for a bit in the expectation 		 * that if the application requests this mutex type then 		 * the lock is likely to be released quickly and it is 		 * faster than entering the kernel 		 */
 if|if
 condition|(
+name|m
+operator|->
+name|m_lock
+operator|.
+name|m_flags
+operator|&
+name|UMUTEX_PRIO_PROTECT
+condition|)
+goto|goto
+name|sleep_in_kernel
+goto|;
+if|if
+condition|(
 operator|!
 name|_thr_is_smp
 condition|)
@@ -1497,17 +1510,6 @@ condition|(
 name|_thr_spinloops
 operator|!=
 literal|0
-operator|&&
-operator|!
-operator|(
-name|m
-operator|->
-name|m_lock
-operator|.
-name|m_flags
-operator|&
-name|UMUTEX_PRIO_PROTECT
-operator|)
 condition|)
 block|{
 name|count
@@ -1605,6 +1607,8 @@ name|done
 goto|;
 block|}
 block|}
+name|sleep_in_kernel
+label|:
 if|if
 condition|(
 name|abstime
