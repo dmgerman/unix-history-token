@@ -9960,11 +9960,13 @@ name|state
 operator|!=
 name|NG_BTSOCKET_L2CAP_CLOSED
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EACCES
-operator|)
-return|;
+expr_stmt|;
+break|break;
+block|}
 switch|switch
 condition|(
 name|sopt
