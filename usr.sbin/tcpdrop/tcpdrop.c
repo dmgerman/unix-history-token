@@ -170,13 +170,20 @@ name|argc
 operator|!=
 literal|5
 condition|)
-name|errx
+block|{
+name|fprintf
 argument_list|(
-literal|1
+name|stderr
 argument_list|,
 literal|"usage: tcpdrop laddr lport faddr fport\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|memset
 argument_list|(
 operator|&
