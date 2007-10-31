@@ -317,7 +317,7 @@ comment|/* IPLT_* */
 name|u_char
 name|ilik_otype
 decl_stmt|;
-name|char
+name|u_char
 name|ilik_unit
 decl_stmt|;
 comment|/* IPL_LOG* */
@@ -462,25 +462,6 @@ name|ip_lookup_deref
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|,
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ip_lookup_iterate
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
 name|int
 operator|,
 name|void

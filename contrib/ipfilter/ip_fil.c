@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_fil.c,v 2.133.2.16 2007/05/28 11:56:22 darrenr Exp $"
+literal|"@(#)$Id: ip_fil.c,v 2.133.2.18 2007/09/09 11:32:05 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -492,6 +492,11 @@ directive|if
 name|defined
 argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOLARIS2
 argument_list|)
 end_if
 
@@ -2510,6 +2515,8 @@ control|)
 block|{
 name|COPYIFNAME
 argument_list|(
+name|v
+argument_list|,
 name|ifp
 argument_list|,
 name|ifname
@@ -2737,6 +2744,32 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_addrlist
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 operator|(

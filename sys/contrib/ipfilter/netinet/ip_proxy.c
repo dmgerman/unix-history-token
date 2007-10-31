@@ -681,7 +681,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_proxy.c,v 2.62.2.20 2007/05/31 12:27:36 darrenr Exp $"
+literal|"@(#)$Id: ip_proxy.c,v 2.62.2.21 2007/06/02 21:22:28 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1809,7 +1809,8 @@ block|{
 name|ap_ctl_t
 name|ctl
 decl_stmt|;
-name|caddr_t
+name|u_char
+modifier|*
 name|ptr
 decl_stmt|;
 name|int
@@ -1828,6 +1829,8 @@ block|{
 case|case
 name|SIOCPROXY
 case|:
+name|error
+operator|=
 name|BCOPYIN
 argument_list|(
 name|data
@@ -1841,6 +1844,15 @@ name|ctl
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+name|EFAULT
+return|;
 name|ptr
 operator|=
 name|NULL
@@ -1858,7 +1870,8 @@ name|KMALLOCS
 argument_list|(
 name|ptr
 argument_list|,
-name|caddr_t
+name|u_char
+operator|*
 argument_list|,
 name|ctl
 operator|.

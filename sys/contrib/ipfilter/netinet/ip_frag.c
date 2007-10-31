@@ -676,7 +676,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* static const char rcsid[] = "@(#)$Id: ip_frag.c,v 2.77.2.5 2006/02/26 08:26:54 darrenr Exp $";*/
+comment|/* static const char rcsid[] = "@(#)$Id: ip_frag.c,v 2.77.2.12 2007/09/20 12:51:51 darrenr Exp $"; */
 end_comment
 
 begin_endif
@@ -4573,12 +4573,7 @@ name|token
 operator|->
 name|ipt_data
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
-operator|-
-literal|1
+name|NULL
 expr_stmt|;
 block|}
 name|RWLOCK_EXIT
@@ -4593,34 +4588,27 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|WRITE_ENTER
+ifdef|#
+directive|ifdef
+name|USE_MUTEXES
+name|fr_fragderef
 argument_list|(
+operator|&
+name|frag
+argument_list|,
 name|lock
 argument_list|)
 expr_stmt|;
-name|frag
-operator|->
-name|ipfr_ref
-operator|--
-expr_stmt|;
-if|if
-condition|(
-name|frag
-operator|->
-name|ipfr_ref
-operator|<=
-literal|0
-condition|)
-name|fr_fragfree
+else|#
+directive|else
+name|fr_fragderef
 argument_list|(
+operator|&
 name|frag
 argument_list|)
 expr_stmt|;
-name|RWLOCK_EXIT
-argument_list|(
-name|lock
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|error
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: alist_new.c,v 1.1.2.2 2006/08/25 22:43:21 darrenr Exp $  */
+comment|/*  * Copyright (C) 2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: alist_new.c,v 1.1.2.3 2007/06/06 08:05:33 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -264,6 +264,12 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|slash
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|slash
 operator|=
@@ -294,6 +300,12 @@ argument_list|(
 name|mask
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|slash
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|slash
 operator|=
