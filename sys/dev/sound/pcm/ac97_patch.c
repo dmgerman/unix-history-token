@@ -124,6 +124,10 @@ case|case
 literal|0x02d91014
 case|:
 comment|/* IBM Thinkcentre */
+case|case
+literal|0x099c103c
+case|:
+comment|/* HP nx6110 */
 name|ac97_wrcd
 argument_list|(
 name|codec
