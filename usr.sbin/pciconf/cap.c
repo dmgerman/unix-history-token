@@ -1169,6 +1169,15 @@ literal|"retry mode"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PCIM_HTCAP_X86_ENCODING
+case|:
+name|printf
+argument_list|(
+literal|"X86 encoding"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
