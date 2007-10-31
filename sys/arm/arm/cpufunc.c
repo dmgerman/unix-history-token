@@ -1975,6 +1975,11 @@ operator|||
 expr|\
 name|defined
 argument_list|(
+name|CPU_ARM9E
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|CPU_ARM10
 argument_list|)
 operator|||
