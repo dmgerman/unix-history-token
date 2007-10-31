@@ -304,6 +304,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_AMD5536
+value|0x209a1022
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_ACER_LABS_ID
 value|0x10b9
 end_define
