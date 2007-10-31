@@ -203,7 +203,7 @@ name|rman
 operator|->
 name|dm_size
 operator|>
-literal|100
+literal|1000
 operator|)
 operator|||
 operator|(
