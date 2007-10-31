@@ -42,18 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pthread.h>
 end_include
 
@@ -1445,6 +1433,14 @@ block|{
 comment|/* 		 * For adaptive mutexes, spin for a bit in the expectation 		 * that if the application requests this mutex type then 		 * the lock is likely to be released quickly and it is 		 * faster than entering the kernel 		 */
 if|if
 condition|(
+operator|!
+name|_thr_is_smp
+condition|)
+goto|goto
+name|yield_loop
+goto|;
+if|if
+condition|(
 name|m
 operator|->
 name|m_type
@@ -1501,8 +1497,6 @@ condition|(
 name|_thr_spinloops
 operator|!=
 literal|0
-operator|&&
-name|_thr_is_smp
 operator|&&
 operator|!
 operator|(
@@ -1566,6 +1560,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|yield_loop
+label|:
 if|if
 condition|(
 name|_thr_yieldloops
