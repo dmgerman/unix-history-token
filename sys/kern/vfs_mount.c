@@ -1704,20 +1704,14 @@ operator|->
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* Kick out MNT_ROOTFS early as it is legal internally */
-if|if
-condition|(
+comment|/* 	 * Filter out MNT_ROOTFS.  We do not want clients of nmount() in 	 * userspace to set this flag, but we must filter it out if we want 	 * MNT_UPDATE on the root file system to work. 	 * MNT_ROOTFS should only be set in the kernel in vfs_mountroot_try(). 	 */
 name|uap
 operator|->
 name|flags
-operator|&
+operator|&=
+operator|~
 name|MNT_ROOTFS
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
+expr_stmt|;
 name|iovcnt
 operator|=
 name|uap
@@ -3835,7 +3829,7 @@ operator|->
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* Kick out MNT_ROOTFS early as it is legal internally */
+comment|/* 	 * Filter out MNT_ROOTFS.  We do not want clients of mount() in 	 * userspace to set this flag, but we must filter it out if we want 	 * MNT_UPDATE on the root file system to work. 	 * MNT_ROOTFS should only be set in the kernel in vfs_mountroot_try(). 	 */
 name|uap
 operator|->
 name|flags
