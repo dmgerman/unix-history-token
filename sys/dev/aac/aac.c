@@ -6027,12 +6027,16 @@ argument_list|(
 name|cm
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Dequeue all events so that there's no risk of events getting 	 * stranded. 	 */
 name|sc
 operator|=
 name|cm
 operator|->
 name|cm_sc
 expr_stmt|;
+while|while
+condition|(
+operator|(
 name|event
 operator|=
 name|TAILQ_FIRST
@@ -6042,10 +6046,7 @@ name|sc
 operator|->
 name|aac_ev_cmfree
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|event
+operator|)
 operator|!=
 name|NULL
 condition|)
