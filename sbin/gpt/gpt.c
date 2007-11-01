@@ -3430,6 +3430,17 @@ condition|)
 goto|goto
 name|close
 goto|;
+comment|/* 	 * Don't look for a GPT unless we have a valid PMBR. 	 */
+if|if
+condition|(
+name|map_find
+argument_list|(
+name|MAP_TYPE_PMBR
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|gpt_gpt
@@ -3464,6 +3475,7 @@ condition|)
 goto|goto
 name|close
 goto|;
+block|}
 return|return
 operator|(
 name|fd
