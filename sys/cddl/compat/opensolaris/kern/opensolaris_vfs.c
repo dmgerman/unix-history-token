@@ -649,6 +649,14 @@ name|vfsconf
 modifier|*
 name|vfsp
 decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|newcr
+decl_stmt|,
+modifier|*
+name|oldcr
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -821,7 +829,14 @@ name|mnt_opt
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Set the mount level flags. 	 */
+comment|/* 	 * Set the mount level flags. 	 * crdup() can sleep, so do it before acquiring a mutex. 	 */
+name|newcr
+operator|=
+name|crdup
+argument_list|(
+name|kcred
+argument_list|)
+expr_stmt|;
 name|MNT_ILOCK
 argument_list|(
 name|mp
@@ -861,21 +876,17 @@ name|MNT_ROOTFS
 operator|)
 expr_stmt|;
 comment|/* 	 * Unprivileged user can trigger mounting a snapshot, but we don't want 	 * him to unmount it, so we switch to privileged credentials. 	 */
-name|crfree
-argument_list|(
+name|oldcr
+operator|=
 name|mp
 operator|->
 name|mnt_cred
-argument_list|)
 expr_stmt|;
 name|mp
 operator|->
 name|mnt_cred
 operator|=
-name|crdup
-argument_list|(
-name|kcred
-argument_list|)
+name|newcr
 expr_stmt|;
 name|mp
 operator|->
@@ -892,6 +903,11 @@ expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
 name|mp
+argument_list|)
+expr_stmt|;
+name|crfree
+argument_list|(
+name|oldcr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Mount the filesystem. 	 * XXX The final recipients of VFS_MOUNT just overwrite the ndp they 	 * get.  No freeing of cn_pnbuf. 	 */
