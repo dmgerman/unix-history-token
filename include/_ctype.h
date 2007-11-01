@@ -502,9 +502,12 @@ block|{
 return|return
 operator|(
 name|_c
-operator|&
-operator|~
-literal|0x7F
+operator|<
+literal|0
+operator|||
+name|_c
+operator|>=
+literal|128
 operator|)
 condition|?
 literal|0
