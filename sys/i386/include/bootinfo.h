@@ -133,56 +133,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Constants for converting boot-style device number to type,  * adaptor (uba, mba, etc), unit number and partition number.  * Type (== major device number) is in the low byte  * for backward compatibility.  Except for that of the "magic  * number", each mask applies to the shifted value.  * Format:  *	 (4) (4) (4) (4)  (8)     (8)  *	--------------------------------  *	|MA | AD| CT| UN| PART  | TYPE |  *	--------------------------------  */
+comment|/*  * Constants for converting boot-style device number to type,  * adaptor (uba, mba, etc), unit number and partition number.  * Type (== major device number) is in the low byte  * for backward compatibility.  Except for that of the "magic  * number", each mask applies to the shifted value.  * Format:  *	 (4)   (8)   (4)  (8)     (8)  *	--------------------------------  *	|MA | SLICE | UN| PART  | TYPE |  *	--------------------------------  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|B_ADAPTORSHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_ADAPTORMASK
-value|0x0f
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_ADAPTOR
-parameter_list|(
-name|val
-parameter_list|)
-value|(((val)>> B_ADAPTORSHIFT)& B_ADAPTORMASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_CONTROLLERSHIFT
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_CONTROLLERMASK
-value|0xf
-end_define
-
-begin_define
-define|#
-directive|define
-name|B_CONTROLLER
-parameter_list|(
-name|val
-parameter_list|)
-value|(((val)>>B_CONTROLLERSHIFT)& B_CONTROLLERMASK)
-end_define
 
 begin_define
 define|#
@@ -301,16 +253,14 @@ name|MAKEBOOTDEV
 parameter_list|(
 name|type
 parameter_list|,
-name|adaptor
-parameter_list|,
-name|controller
+name|slice
 parameter_list|,
 name|unit
 parameter_list|,
 name|partition
 parameter_list|)
 define|\
-value|(((type)<< B_TYPESHIFT) | ((adaptor)<< B_ADAPTORSHIFT) | \ 	((controller)<< B_CONTROLLERSHIFT) | ((unit)<< B_UNITSHIFT) | \ 	((partition)<< B_PARTITIONSHIFT) | B_DEVMAGIC)
+value|(((type)<< B_TYPESHIFT) | ((slice)<< B_SLICESHIFT) | \ 	((unit)<< B_UNITSHIFT) | ((partition)<< B_PARTITIONSHIFT) | \ 	B_DEVMAGIC)
 end_define
 
 begin_define
