@@ -778,14 +778,30 @@ name|NULL
 condition|)
 return|return;
 block|}
-comment|/* Fourth step, write out the gptboot binary to the boot partition. */
-name|buf
+comment|/* 	 * Fourth step, write out the gptboot binary to the boot partition. 	 * When writing to a disk device, the write must be sector aligned 	 * and not write to any partial sectors, so round up the buffer size 	 * to the next sector and zero it. 	 */
+name|bsize
 operator|=
-name|malloc
-argument_list|(
+operator|(
 name|sb
 operator|.
 name|st_size
+operator|+
+name|secsz
+operator|-
+literal|1
+operator|)
+operator|/
+name|secsz
+operator|*
+name|secsz
+expr_stmt|;
+name|buf
+operator|=
+name|calloc
+argument_list|(
+literal|1
+argument_list|,
+name|bsize
 argument_list|)
 expr_stmt|;
 name|nbytes
@@ -875,9 +891,7 @@ name|fd
 argument_list|,
 name|buf
 argument_list|,
-name|sb
-operator|.
-name|st_size
+name|bsize
 argument_list|)
 expr_stmt|;
 if|if
@@ -898,9 +912,7 @@ if|if
 condition|(
 name|nbytes
 operator|!=
-name|sb
-operator|.
-name|st_size
+name|bsize
 condition|)
 block|{
 name|warnx
