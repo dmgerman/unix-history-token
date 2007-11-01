@@ -1429,8 +1429,6 @@ name|major
 argument_list|,
 literal|0
 argument_list|,
-literal|0
-argument_list|,
 name|unit
 argument_list|,
 literal|0

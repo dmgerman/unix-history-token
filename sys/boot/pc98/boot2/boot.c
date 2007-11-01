@@ -1064,15 +1064,7 @@ name|MAKEBOOTDEV
 argument_list|(
 name|maj
 argument_list|,
-operator|(
 name|slice
-operator|>>
-literal|4
-operator|)
-argument_list|,
-name|slice
-operator|&
-literal|0xf
 argument_list|,
 name|unit
 argument_list|,

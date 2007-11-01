@@ -2243,8 +2243,6 @@ operator|.
 name|type
 index|]
 argument_list|,
-literal|0
-argument_list|,
 name|dsk
 operator|.
 name|slice

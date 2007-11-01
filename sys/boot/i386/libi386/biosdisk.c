@@ -6232,7 +6232,6 @@ name|MAKEBOOTDEV
 argument_list|(
 name|major
 argument_list|,
-operator|(
 name|dev
 operator|->
 name|d_kind
@@ -6242,24 +6241,6 @@ operator|.
 name|slice
 operator|+
 literal|1
-operator|)
-operator|>>
-literal|4
-argument_list|,
-comment|/* XXX slices may be wrong here */
-operator|(
-name|dev
-operator|->
-name|d_kind
-operator|.
-name|biosdisk
-operator|.
-name|slice
-operator|+
-literal|1
-operator|)
-operator|&
-literal|0xf
 argument_list|,
 name|unit
 argument_list|,
