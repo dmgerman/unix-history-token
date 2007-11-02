@@ -8572,6 +8572,13 @@ operator|=
 name|entry
 init|;
 name|current
+operator|!=
+operator|&
+name|map
+operator|->
+name|header
+operator|&&
+name|current
 operator|->
 name|start
 operator|<
@@ -8680,6 +8687,13 @@ name|current
 operator|=
 name|entry
 init|;
+name|current
+operator|!=
+operator|&
+name|map
+operator|->
+name|header
+operator|&&
 name|current
 operator|->
 name|start
