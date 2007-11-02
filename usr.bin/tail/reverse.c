@@ -625,6 +625,10 @@ decl_stmt|;
 name|off_t
 name|enomem
 decl_stmt|;
+name|tl
+operator|=
+name|NULL
+expr_stmt|;
 define|#
 directive|define
 name|BSZ

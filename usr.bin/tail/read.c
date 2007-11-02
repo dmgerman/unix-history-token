@@ -524,6 +524,8 @@ name|llines
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|p
+operator|=
 name|sp
 operator|=
 name|NULL

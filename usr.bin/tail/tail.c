@@ -234,6 +234,10 @@ name|style
 operator|=
 name|NOTSET
 expr_stmt|;
+name|off
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
