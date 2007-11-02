@@ -2484,22 +2484,10 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Disable any entry to the idle function. */
+comment|/*      * Disable any entry to the idle function.  There is a small race where      * an idle thread have passed this check but not gone to sleep.  This      * is ok since device_shutdown() does not free the softc, otherwise      * we'd have to be sure all threads were evicted before returning.      */
 name|cpu_disable_idle
 operator|=
 name|TRUE
-expr_stmt|;
-comment|/* Signal and wait for all processors to exit acpi_cpu_idle(). */
-name|smp_rendezvous
-argument_list|(
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
 expr_stmt|;
 name|return_VALUE
 argument_list|(
