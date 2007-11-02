@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *  FileName :    xgehal-mgmt.c  *  *  Description:  Xframe-family management facility implementation  *  *  Created:      1 September 2004  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -2448,7 +2444,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Use beacon control register to control the LED. 	 * LED link output corresponds to bit 8 of the beacon control 	 * register. Note that, in the case of Xena, beacon control register 	 * represents the gpio control register. In the case of Herc, LED 	 * handling is done by beacon control register as opposed to gpio 	 * control register in Xena. Beacon control is used only to toggle      * and the value written into it does not depend on the link state.      * It is upto the ULD to toggle the LED even number of times which       * brings the LED to it's original state.  	 */
+comment|/* 	 * Use beacon control register to control the LED. 	 * LED link output corresponds to bit 8 of the beacon control 	 * register. Note that, in the case of Xena, beacon control register 	 * represents the gpio control register. In the case of Herc, LED 	 * handling is done by beacon control register as opposed to gpio 	 * control register in Xena. Beacon control is used only to toggle 	 * and the value written into it does not depend on the link state. 	 * It is upto the ULD to toggle the LED even number of times which  	 * brings the LED to it's original state.  	 */
 name|val64
 operator|=
 name|xge_os_pio_mem_read64
@@ -3864,7 +3860,7 @@ comment|/* 	 * This code if for MAC loopbak 	 * Should be enabled through anothe
 if|#
 directive|if
 literal|0
-block|val64 = xge_os_pio_mem_read64(hldev->pdev, hldev->regh0,&bar0->mac_cfg);     if ( enable )     {         val64 |= ( XGE_HAL_MAC_CFG_TMAC_LOOPBACK | XGE_HAL_MAC_CFG_RMAC_PROM_ENABLE );     } 	__hal_pio_mem_write32_upper(hldev->pdev, hldev->regh0, 		    (u32)(val64>> 32), (char*)&bar0->mac_cfg); 	xge_os_mdelay(1);
+block|val64 = xge_os_pio_mem_read64(hldev->pdev, hldev->regh0,&bar0->mac_cfg); 	if ( enable ) 	{ 	    val64 |= ( XGE_HAL_MAC_CFG_TMAC_LOOPBACK | XGE_HAL_MAC_CFG_RMAC_PROM_ENABLE ); 	} 	__hal_pio_mem_write32_upper(hldev->pdev, hldev->regh0, 	        (u32)(val64>> 32), (char*)&bar0->mac_cfg); 	xge_os_mdelay(1);
 endif|#
 directive|endif
 name|val64
@@ -5619,7 +5615,7 @@ name|excess_temp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * Notify the ULD on Excess Xpak temperature alarm msg 			 */
+comment|/* 	         * Notify the ULD on Excess Xpak temperature alarm msg 	         */
 if|if
 condition|(
 name|g_xge_hal_driver
@@ -5659,7 +5655,7 @@ name|excess_bias_current
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * Notify the ULD on Excess  xpak bias current alarm msg 			 */
+comment|/* 	         * Notify the ULD on Excess  xpak bias current alarm msg 	         */
 if|if
 condition|(
 name|g_xge_hal_driver
@@ -5699,7 +5695,7 @@ name|excess_laser_output
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * Notify the ULD on Excess Xpak Laser o/p power 			 * alarm msg 			 */
+comment|/* 	         * Notify the ULD on Excess Xpak Laser o/p power 	         * alarm msg 	         */
 if|if
 condition|(
 name|g_xge_hal_driver

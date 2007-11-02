@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *  FileName :    xgehal-driver.c  *  *  Description:  HAL driver object functionality  *  *  Created:      10 May 2004  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -795,7 +791,7 @@ name|tracebuf_size
 operator|==
 literal|0
 condition|)
-comment|/* 		 * Trace buffer implementation is not lock protected. 		 * The only harm to expect is memcpy() to go beyond of 		 * allowed boundaries. To make it safe (driver-wise), 		 * we pre-allocate needed number of extra bytes. 		 */
+comment|/* 	     * Trace buffer implementation is not lock protected. 	     * The only harm to expect is memcpy() to go beyond of 	     * allowed boundaries. To make it safe (driver-wise), 	     * we pre-allocate needed number of extra bytes. 	     */
 name|config
 operator|->
 name|tracebuf_size

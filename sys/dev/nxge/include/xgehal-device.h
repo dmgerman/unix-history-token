@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *  FileName :    xgehal-device.h  *  *  Description:  HAL device object functionality  *  *  Created:      14 May 2004  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -66,77 +62,6 @@ include|#
 directive|include
 file|<dev/nxge/include/xgehal-ring.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XGEHAL_RNIC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"xgehal-common-regs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xgehal-pcicfg-mgmt-regs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xgehal-mrpcim-regs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xgehal-srpcim-regs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xgehal-vpath-regs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xgehal-bitmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xgehal-virtualpath.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xgehal-lbwrapper.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xgehal-blockpool.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xgehal-regpool.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|__EXTERN_BEGIN_DECLS
@@ -344,7 +269,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * enum xge_hal_pci_mode_e - PIC bus speed and mode specific enumeration.  * @XGE_HAL_PCI_33MHZ_MODE:		33 MHZ pci mode.  * @XGE_HAL_PCI_66MHZ_MODE:		66 MHZ pci mode.  * @XGE_HAL_PCIX_M1_66MHZ_MODE:		PCIX M1 66MHZ mode.  * @XGE_HAL_PCIX_M1_100MHZ_MODE:	PCIX M1 100MHZ mode.  * @XGE_HAL_PCIX_M1_133MHZ_MODE:	PCIX M1 133MHZ mode.  * @XGE_HAL_PCIX_M2_66MHZ_MODE:		PCIX M2 66MHZ mode.  * @XGE_HAL_PCIX_M2_100MHZ_MODE:	PCIX M2 100MHZ mode.  * @XGE_HAL_PCIX_M2_133MHZ_MODE:	PCIX M3 133MHZ mode.  * @XGE_HAL_PCIX_M1_RESERVED:		PCIX M1 reserved mode.  * @XGE_HAL_PCIX_M1_66MHZ_NS:		PCIX M1 66MHZ mode not supported.  * @XGE_HAL_PCIX_M1_100MHZ_NS:		PCIX M1 100MHZ mode not supported.  * @XGE_HAL_PCIX_M1_133MHZ_NS:		PCIX M1 133MHZ not supported.  * @XGE_HAL_PCIX_M2_RESERVED:		PCIX M2 reserved.  * @XGE_HAL_PCIX_533_RESERVED:		PCIX 533 reserved.  * @XGE_HAL_PCI_BASIC_MODE:		PCI basic mode, XENA specific value.  * @XGE_HAL_PCIX_BASIC_MODE:		PCIX basic mode, XENA specific value.  * @XGE_HAL_PCI_INVALID_MODE:		Invalid PCI or PCIX mode.  *  */
+comment|/**  * enum xge_hal_pci_mode_e - PIC bus speed and mode specific enumeration.  * @XGE_HAL_PCI_33MHZ_MODE:     33 MHZ pci mode.  * @XGE_HAL_PCI_66MHZ_MODE:     66 MHZ pci mode.  * @XGE_HAL_PCIX_M1_66MHZ_MODE:     PCIX M1 66MHZ mode.  * @XGE_HAL_PCIX_M1_100MHZ_MODE:    PCIX M1 100MHZ mode.  * @XGE_HAL_PCIX_M1_133MHZ_MODE:    PCIX M1 133MHZ mode.  * @XGE_HAL_PCIX_M2_66MHZ_MODE:     PCIX M2 66MHZ mode.  * @XGE_HAL_PCIX_M2_100MHZ_MODE:    PCIX M2 100MHZ mode.  * @XGE_HAL_PCIX_M2_133MHZ_MODE:    PCIX M3 133MHZ mode.  * @XGE_HAL_PCIX_M1_RESERVED:       PCIX M1 reserved mode.  * @XGE_HAL_PCIX_M1_66MHZ_NS:       PCIX M1 66MHZ mode not supported.  * @XGE_HAL_PCIX_M1_100MHZ_NS:      PCIX M1 100MHZ mode not supported.  * @XGE_HAL_PCIX_M1_133MHZ_NS:      PCIX M1 133MHZ not supported.  * @XGE_HAL_PCIX_M2_RESERVED:       PCIX M2 reserved.  * @XGE_HAL_PCIX_533_RESERVED:      PCIX 533 reserved.  * @XGE_HAL_PCI_BASIC_MODE:     PCI basic mode, XENA specific value.  * @XGE_HAL_PCIX_BASIC_MODE:        PCIX basic mode, XENA specific value.  * @XGE_HAL_PCI_INVALID_MODE:       Invalid PCI or PCIX mode.  *  */
 end_comment
 
 begin_typedef
@@ -425,7 +350,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * enum xge_hal_pci_bus_frequency_e - PCI bus frequency enumeration.  * @XGE_HAL_PCI_BUS_FREQUENCY_33MHZ:	PCI bus frequency 33MHZ  * @XGE_HAL_PCI_BUS_FREQUENCY_66MHZ:	PCI bus frequency 66MHZ  * @XGE_HAL_PCI_BUS_FREQUENCY_100MHZ:	PCI bus frequency 100MHZ  * @XGE_HAL_PCI_BUS_FREQUENCY_133MHZ:	PCI bus frequency 133MHZ  * @XGE_HAL_PCI_BUS_FREQUENCY_200MHZ:	PCI bus frequency 200MHZ  * @XGE_HAL_PCI_BUS_FREQUENCY_250MHZ:	PCI bus frequency 250MHZ  * @XGE_HAL_PCI_BUS_FREQUENCY_266MHZ:	PCI bus frequency 266MHZ  * @XGE_HAL_PCI_BUS_FREQUENCY_UNKNOWN:	Unrecognized PCI bus frequency value.  *  */
+comment|/**  * enum xge_hal_pci_bus_frequency_e - PCI bus frequency enumeration.  * @XGE_HAL_PCI_BUS_FREQUENCY_33MHZ:    PCI bus frequency 33MHZ  * @XGE_HAL_PCI_BUS_FREQUENCY_66MHZ:    PCI bus frequency 66MHZ  * @XGE_HAL_PCI_BUS_FREQUENCY_100MHZ:   PCI bus frequency 100MHZ  * @XGE_HAL_PCI_BUS_FREQUENCY_133MHZ:   PCI bus frequency 133MHZ  * @XGE_HAL_PCI_BUS_FREQUENCY_200MHZ:   PCI bus frequency 200MHZ  * @XGE_HAL_PCI_BUS_FREQUENCY_250MHZ:   PCI bus frequency 250MHZ  * @XGE_HAL_PCI_BUS_FREQUENCY_266MHZ:   PCI bus frequency 266MHZ  * @XGE_HAL_PCI_BUS_FREQUENCY_UNKNOWN:  Unrecognized PCI bus frequency value.  *  */
 end_comment
 
 begin_typedef
@@ -470,7 +395,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * enum xge_hal_pci_bus_width_e - PCI bus width enumeration.  * @XGE_HAL_PCI_BUS_WIDTH_64BIT:	64 bit bus width.  * @XGE_HAL_PCI_BUS_WIDTH_32BIT:	32 bit bus width.  * @XGE_HAL_PCI_BUS_WIDTH_UNKNOWN:  unknown bus width.  *  */
+comment|/**  * enum xge_hal_pci_bus_width_e - PCI bus width enumeration.  * @XGE_HAL_PCI_BUS_WIDTH_64BIT:    64 bit bus width.  * @XGE_HAL_PCI_BUS_WIDTH_32BIT:    32 bit bus width.  * @XGE_HAL_PCI_BUS_WIDTH_UNKNOWN:  unknown bus width.  *  */
 end_comment
 
 begin_typedef
@@ -918,29 +843,6 @@ decl_stmt|;
 name|xge_list_t
 name|ring_channels
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|XGEHAL_RNIC
-name|__hal_bitmap_entry_t
-name|bitmap_table
-index|[
-name|XGE_HAL_MAX_BITMAP_BITS
-index|]
-decl_stmt|;
-name|__hal_virtualpath_t
-name|virtual_paths
-index|[
-name|XGE_HAL_MAX_VIRTUAL_PATHS
-index|]
-decl_stmt|;
-name|__hal_blockpool_t
-name|block_pool
-decl_stmt|;
-name|__hal_regpool_t
-name|reg_pool
-decl_stmt|;
-endif|#
-directive|endif
 specifier|volatile
 name|int
 name|is_initialized
@@ -1038,9 +940,6 @@ name|spdm_table
 decl_stmt|;
 name|spinlock_t
 name|spdm_lock
-decl_stmt|;
-name|u32
-name|msi_mask
 decl_stmt|;
 if|#
 directive|if
@@ -1671,6 +1570,17 @@ end_function_decl
 begin_function_decl
 name|int
 name|xge_hal_reinitialize_hw
+parameter_list|(
+name|xge_hal_device_t
+modifier|*
+name|hldev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|xge_hal_status_e
+name|xge_hal_fix_rldram_ecc_error
 parameter_list|(
 name|xge_hal_device_t
 modifier|*
@@ -2705,6 +2615,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|xge_hal_lro_terminate
+parameter_list|(
+name|u32
+name|lro_scale
+parameter_list|,
+name|xge_hal_device_t
+modifier|*
+name|hldev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -3492,20 +3416,6 @@ name|lro_t
 modifier|*
 modifier|*
 name|lro_end3
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|xge_hal_lro_terminate
-parameter_list|(
-name|u32
-name|lro_scale
-parameter_list|,
-name|xge_hal_device_t
-modifier|*
-name|hldev
 parameter_list|)
 function_decl|;
 end_function_decl

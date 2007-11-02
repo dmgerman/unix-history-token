@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *  FileName :    hal-ring.c  *  *  Description:  Rx ring object implementation  *  *  Created:      10 May 2004  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -516,7 +512,7 @@ name|ring
 operator|->
 name|rxd_size
 expr_stmt|;
-comment|/* Note: memblock_item_idx is index of the item within 		 *       the memblock. For instance, in case of three RxD-blocks 		 *       per memblock this value can be 0,1 or 2. */
+comment|/* Note: memblock_item_idx is index of the item within 	     *       the memblock. For instance, in case of three RxD-blocks 	     *       per memblock this value can be 0,1 or 2. */
 name|rxdblock_priv
 operator|=
 name|__hal_mempool_item_priv
@@ -816,6 +812,8 @@ parameter_list|)
 block|{
 name|xge_hal_dtr_h
 name|dtr
+init|=
+name|NULL
 decl_stmt|;
 while|while
 condition|(
@@ -2499,7 +2497,7 @@ operator|.
 name|rts_mac_en
 condition|)
 block|{
-comment|/* 		 * Activate default (QoS-based) Rx steering 		 */
+comment|/* 	     * Activate default (QoS-based) Rx steering 	     */
 name|val64
 operator|=
 name|xge_os_pio_mem_read64
@@ -2631,7 +2629,7 @@ name|val64
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Note: If a queue does not exist, it should be assigned a maximum 	 *	 length of zero. Otherwise, packet loss could occur. 	 *	 P. 4-4 User guide. 	 * 	 * All configured rings will be properly set at device open time 	 * by utilizing device_mtu_set() API call. */
+comment|/* Note: If a queue does not exist, it should be assigned a maximum 	 *   length of zero. Otherwise, packet loss could occur. 	 *   P. 4-4 User guide. 	 * 	 * All configured rings will be properly set at device open time 	 * by utilizing device_mtu_set() API call. */
 for|for
 control|(
 name|i

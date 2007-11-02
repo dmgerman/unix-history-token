@@ -196,8 +196,15 @@ end_endif
 begin_define
 define|#
 directive|define
-name|XGE_COUNT_TCODESTAT
+name|XGE_COUNT_SWSTAT
 value|54
+end_define
+
+begin_define
+define|#
+directive|define
+name|XGE_COUNT_DRIVERSTATS
+value|27
 end_define
 
 begin_define
@@ -224,8 +231,7 @@ parameter_list|,
 name|fmt
 modifier|...
 parameter_list|)
-define|\
-value|{                                                                             \     fprintf( fd, fmt );                                                       \     fprintf( fd, "\n" );                                                      \     printf( fmt );                                                            \     printf( "\n" );                                                           \ }
+value|{                                                \ 	fprintf(fd, fmt);                                                      \ 	fprintf(fd, "\n");                                                     \ 	printf(fmt);                                                           \ 	printf("\n");                                                          \ }
 end_define
 
 begin_define
@@ -260,7 +266,7 @@ name|u64
 name|value
 decl_stmt|;
 block|}
-name|bar0reg_t
+name|xge_register_info_t
 typedef|;
 end_typedef
 
@@ -446,6 +452,27 @@ name|flag
 decl_stmt|;
 block|}
 name|xge_stats_tcode_info_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|xge_stats_driver_info_t
+block|{
+name|u8
+name|name
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* Driver statistics name          */
+name|u64
+name|value
+decl_stmt|;
+comment|/* Value                           */
+block|}
+name|xge_stats_driver_info_t
 typedef|;
 end_typedef
 

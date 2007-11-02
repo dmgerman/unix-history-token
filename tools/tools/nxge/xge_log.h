@@ -97,7 +97,7 @@ name|line
 index|[
 literal|68
 index|]
-init|=                                                              \
+init|=                                                               \
 literal|"==================================================================="
 decl_stmt|;
 end_decl_stmt
@@ -113,8 +113,7 @@ name|maxSize
 parameter_list|,
 name|pOffset
 parameter_list|)
-define|\
-value|{                                                                             \     XGE_PRINT_LINE(fd);                                                       \     spaceCount = (maxSize) - 9;                                               \     if( (pOffset) == 1 )                                                      \     {                                                                         \         XGE_PRINT(fd, "PARAMETER%*s\tOFFSET\tVALUE", spaceCount, " ");        \     }                                                                         \     else                                                                      \     {                                                                         \         XGE_PRINT(fd, "PARAMETER%*s\tVALUE", spaceCount, " ");                \     }                                                                         \     XGE_PRINT_LINE(fd);                                                       \ }
+value|{                               \ 	XGE_PRINT_LINE(fd);                                                    \ 	spaceCount = (maxSize) - 9;                                            \ 	if((pOffset) == 1) {                                                   \ 	    XGE_PRINT(fd, "PARAMETER%*s\tOFFSET\tVALUE", spaceCount, " ");     \ 	}                                                                      \ 	else {                                                                 \ 	    XGE_PRINT(fd, "PARAMETER%*s\tVALUE", spaceCount, " ");             \ 	}                                                                      \ 	XGE_PRINT_LINE(fd);                                                    \ }
 end_define
 
 begin_define
@@ -128,8 +127,7 @@ name|maxSize
 parameter_list|,
 name|pOffset
 parameter_list|)
-define|\
-value|{                                                                             \     XGE_PRINT_LINE(fd);                                                       \     spaceCount = (maxSize) - 9;                                               \     if( (pOffset) == 1 )                                                      \     {                                                                         \         XGE_PRINT(fd, "OFFSET\t\tVALUE", spaceCount, " ");                    \     }                                                                         \     else                                                                      \     {                                                                         \         XGE_PRINT(fd, "VALUE", spaceCount, " ");                              \     }                                                                         \     XGE_PRINT_LINE(fd);                                                       \ }
+value|{                          \ 	XGE_PRINT_LINE(fd);                                                    \ 	spaceCount = (maxSize) - 9;                                            \ 	if((pOffset) == 1) {                                                   \ 	    XGE_PRINT(fd, "OFFSET\t\tVALUE", spaceCount, " ");                 \ 	}                                                                      \ 	else {                                                                 \ 	    XGE_PRINT(fd, "VALUE", spaceCount, " ");                           \ 	}                                                                      \ 	XGE_PRINT_LINE(fd);                                                    \ }
 end_define
 
 begin_define
@@ -200,8 +198,7 @@ name|offset
 parameter_list|,
 name|value
 parameter_list|)
-define|\
-value|{                                                                             \     spaceCount = XGE_STR_MAX_LEN_REGS - strlen(parameter);                    \     XGE_PRINT(fd, XGE_FORMAT_REGS, (parameter), (spaceCount), " ", (offset),  \         (value));                                                             \ }
+value|{                         \ 	spaceCount = XGE_STR_MAX_LEN_REGS - strlen(parameter);                 \ 	XGE_PRINT(fd, XGE_FORMAT_REGS, (parameter), (spaceCount), " ",         \ 	    (offset), (value));                                                \ }
 end_define
 
 begin_define
@@ -217,8 +214,7 @@ name|offset
 parameter_list|,
 name|value
 parameter_list|)
-define|\
-value|{                                                                             \     spaceCount = XGE_STR_MAX_LEN_PCICONF - strlen(parameter);                 \     XGE_PRINT(fd, XGE_FORMAT_PCICONF, (parameter), (spaceCount), " ",         \         (offset), (value));                                                   \ }
+value|{                      \ 	spaceCount = XGE_STR_MAX_LEN_PCICONF - strlen(parameter);              \ 	XGE_PRINT(fd, XGE_FORMAT_PCICONF, (parameter), (spaceCount), " ",      \ 	    (offset), (value));                                                \ }
 end_define
 
 begin_define
@@ -232,8 +228,7 @@ name|parameter
 parameter_list|,
 name|value
 parameter_list|)
-define|\
-value|{                                                                             \     spaceCount = XGE_STR_MAX_LEN_DEVCONF - strlen(parameter);                 \     XGE_PRINT(fd, XGE_FORMAT_DEVCONF, (parameter), (spaceCount), " ",         \         (value));                                                             \ }
+value|{                              \ 	spaceCount = XGE_STR_MAX_LEN_DEVCONF - strlen(parameter);              \ 	XGE_PRINT(fd, XGE_FORMAT_DEVCONF, (parameter), (spaceCount), " ",      \ 	    (value));                                                          \ }
 end_define
 
 begin_define
@@ -247,8 +242,7 @@ name|parameter
 parameter_list|,
 name|value
 parameter_list|)
-define|\
-value|{                                                                             \     spaceCount = XGE_STR_MAX_LEN_STATS - strlen(parameter);                   \     XGE_PRINT(fd, XGE_FORMAT_STATS, (parameter), (spaceCount), " ", (value)); \ }
+value|{                                \ 	spaceCount = XGE_STR_MAX_LEN_STATS - strlen(parameter);                \ 	XGE_PRINT(fd, XGE_FORMAT_STATS, (parameter), (spaceCount), " ",        \ 	    (value));                                                          \ }
 end_define
 
 begin_decl_stmt
@@ -17289,6 +17283,177 @@ block|,
 literal|0
 block|,
 literal|2
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|xge_stats_driver_info_t
+name|driverInfo
+index|[]
+init|=
+block|{
+block|{
+literal|"isr_filter"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"isr_line"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"isr_msi"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"tx_calls"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"tx_completions"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"tx_desc_compl"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"tx_tcode"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"tx_defrag"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"tx_no_txd"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"tx_map_fail"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"tx_max_frags"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"tx_tso"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"tx_posted"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"tx_again"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"rx_completions"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"rx_desc_compl"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"rx_tcode"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"rx_no_buf"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"rx_map_fail"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"lro_uncapable"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"lro_begin"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"lro_end1"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"lro_end2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"lro_end3"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"lro_append"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"lro_session_exceeded"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"lro_close"
 block|,
 literal|0
 block|}

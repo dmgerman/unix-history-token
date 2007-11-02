@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2007 Neterion, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/******************************************  *  getinfo.h  *  *  To get the Tx, Rx, PCI, Interrupt statistics,  *  PCI configuration space,device configuration  *  and bar0 register values  ******************************************/
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -41,7 +37,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|XGE_QUERY_INTRSTATS
+name|XGE_QUERY_DEVSTATS
 value|3
 end_define
 
@@ -62,28 +58,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|XGE_QUERY_TCODE
+name|XGE_QUERY_SWSTATS
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|XGE_SET_BUFFER_MODE_1
+name|XGE_QUERY_DRIVERSTATS
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|XGE_SET_BUFFER_MODE_2
+name|XGE_SET_BUFFER_MODE_1
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|XGE_SET_BUFFER_MODE_3
+name|XGE_SET_BUFFER_MODE_2
 value|9
 end_define
 
@@ -107,49 +103,80 @@ end_comment
 
 begin_function_decl
 name|int
-name|getPciConf
-parameter_list|()
+name|xge_get_pciconf
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|getDevConf
-parameter_list|()
+name|xge_get_devconf
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|getStats
-parameter_list|()
+name|xge_get_hwstats
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|getRegInfo
-parameter_list|()
+name|xge_get_registers
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|getIntrStats
-parameter_list|()
+name|xge_get_devstats
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|getTcodeStats
-parameter_list|()
+name|xge_get_swstats
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|getReadReg
+name|xge_get_drvstats
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|xge_get_register
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|xge_set_register
 parameter_list|(
 name|char
 modifier|*
@@ -162,37 +189,25 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getWriteReg
+name|xge_get_drv_version
 parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|getDriverVersion
-parameter_list|()
+name|xge_get_buffer_mode
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|getBufMode
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|changeBufMode
+name|xge_change_buffer_mode
 parameter_list|(
 name|char
 modifier|*
@@ -202,7 +217,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|logStats
+name|xge_print_hwstats
 parameter_list|(
 name|void
 modifier|*
@@ -215,7 +230,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|logPciConf
+name|xge_print_pciconf
 parameter_list|(
 name|void
 modifier|*
@@ -225,7 +240,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|logDevConf
+name|xge_print_devconf
 parameter_list|(
 name|void
 modifier|*
@@ -235,7 +250,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|logRegInfo
+name|xge_print_registers
 parameter_list|(
 name|void
 modifier|*
@@ -245,7 +260,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|logReadReg
+name|xge_print_register
 parameter_list|(
 name|u64
 parameter_list|,
@@ -256,7 +271,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|logIntrStats
+name|xge_print_devstats
 parameter_list|(
 name|void
 modifier|*
@@ -266,7 +281,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|logTcodeStats
+name|xge_print_swstats
 parameter_list|(
 name|void
 modifier|*
@@ -276,7 +291,17 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|logDriverInfo
+name|xge_print_drvstats
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|xge_print_drv_version
 parameter_list|(
 name|char
 modifier|*
@@ -333,6 +358,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|xge_stats_driver_info_t
+name|driverInfo
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|ifreq
 name|ifreqp
@@ -345,16 +378,9 @@ name|sockfd
 decl_stmt|,
 name|indexer
 decl_stmt|,
-name|bufferSize
+name|buffer_size
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|pAccess
 decl_stmt|;
 end_decl_stmt
 
