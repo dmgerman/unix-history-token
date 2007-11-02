@@ -190,6 +190,33 @@ file|<sys/refcount.h>
 end_include
 
 begin_comment
+comment|/* Used by fstat(1). */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_sizeof
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|znode
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|znode_t
+argument_list|)
+argument_list|,
+literal|"sizeof(znode_t)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Functions needed for userland (ie: libzpool) are not put under  * #ifdef_KERNEL; the rest of the functions have dependencies  * (such as VFS logic) that will not compile easily in userland.  */
 end_comment
 
