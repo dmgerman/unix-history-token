@@ -1208,8 +1208,6 @@ name|ibm_ids
 index|[]
 init|=
 block|{
-literal|"IBM0057"
-block|,
 literal|"IBM0068"
 block|,
 name|NULL
