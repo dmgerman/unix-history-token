@@ -867,13 +867,65 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* XXX no other OS tries to do this */
-block|if (((p1->p_flag& (P_HADTHREADS|P_SYSTEM)) == P_HADTHREADS)&& 		    (flags& (RFCFDG | RFFDG))) { 			PROC_LOCK(p1); 			if (thread_single(SINGLE_BOUNDARY)) { 				PROC_UNLOCK(p1); 				return (ERESTART); 			} 			PROC_UNLOCK(p1); 		}
-endif|#
-directive|endif
+if|if
+condition|(
+operator|(
+operator|(
+name|p1
+operator|->
+name|p_flag
+operator|&
+operator|(
+name|P_HADTHREADS
+operator||
+name|P_SYSTEM
+operator|)
+operator|)
+operator|==
+name|P_HADTHREADS
+operator|)
+operator|&&
+operator|(
+name|flags
+operator|&
+operator|(
+name|RFCFDG
+operator||
+name|RFFDG
+operator|)
+operator|)
+condition|)
+block|{
+name|PROC_LOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|thread_single
+argument_list|(
+name|SINGLE_BOUNDARY
+argument_list|)
+condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ERESTART
+operator|)
+return|;
+block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+block|}
 name|vm_forkproc
 argument_list|(
 name|td
@@ -935,13 +987,49 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX no other OS tries to do this */
-block|if (((p1->p_flag& (P_HADTHREADS|P_SYSTEM)) == P_HADTHREADS)&& 		    (flags& (RFCFDG | RFFDG))) { 			PROC_LOCK(p1); 			thread_single_end(); 			PROC_UNLOCK(p1); 		}
-endif|#
-directive|endif
+if|if
+condition|(
+operator|(
+operator|(
+name|p1
+operator|->
+name|p_flag
+operator|&
+operator|(
+name|P_HADTHREADS
+operator||
+name|P_SYSTEM
+operator|)
+operator|)
+operator|==
+name|P_HADTHREADS
+operator|)
+operator|&&
+operator|(
+name|flags
+operator|&
+operator|(
+name|RFCFDG
+operator||
+name|RFFDG
+operator|)
+operator|)
+condition|)
+block|{
+name|PROC_LOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+name|thread_single_end
+argument_list|()
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|procp
 operator|=
@@ -953,20 +1041,7 @@ literal|0
 operator|)
 return|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* XXX no other OS tries to do this */
-comment|/* 	 * Note 1:1 allows for forking with one thread coming out on the 	 * other side with the expectation that the process is about to 	 * exec. 	 */
-block|if ((p1->p_flag& (P_HADTHREADS|P_SYSTEM)) == P_HADTHREADS) {
-comment|/* 		 * Systems processes don't need this. 		 * Idle the other threads for a second. 		 * Since the user space is copied, it must remain stable. 		 * In addition, all threads (from the user perspective) 		 * need to either be suspended or in the kernel, 		 * where they will try restart in the parent and will 		 * be aborted in the child. 		 * keep threadds at the boundary there. 		 */
-block|PROC_LOCK(p1); 		if (thread_single(SINGLE_BOUNDARY)) {
-comment|/* Abort. Someone else is single threading before us. */
-block|PROC_UNLOCK(p1); 			return (ERESTART); 		} 		PROC_UNLOCK(p1);
-comment|/* 		 * All other activity in this process 		 * is now suspended at the user boundary, 		 * (or other safe places if we think of any). 		 */
-block|}
-endif|#
-directive|endif
+comment|/* 	 * XXX 	 * We did have single-threading code here 	 * however it proved un-needed and caused problems 	 */
 comment|/* Allocate new proc. */
 name|newproc
 operator|=
@@ -2747,14 +2822,6 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX no other OS tries to do this */
-comment|/* 	 * If other threads are waiting, let them continue now. 	 */
-block|if ((p1->p_flag& (P_HADTHREADS|P_SYSTEM)) == P_HADTHREADS) { 		PROC_LOCK(p1); 		thread_single_end(); 		PROC_UNLOCK(p1); 	}
-endif|#
-directive|endif
 comment|/* 	 * Return child proc pointer to parent. 	 */
 operator|*
 name|procp
@@ -2821,29 +2888,6 @@ argument_list|,
 name|newproc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-operator|->
-name|p_flag
-operator|&
-name|P_HADTHREADS
-condition|)
-block|{
-name|PROC_LOCK
-argument_list|(
-name|p1
-argument_list|)
-expr_stmt|;
-name|thread_single_end
-argument_list|()
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p1
-argument_list|)
-expr_stmt|;
-block|}
 name|pause
 argument_list|(
 literal|"fork"
