@@ -1454,7 +1454,7 @@ argument_list|,
 operator|&
 name|dummy_buffer
 argument_list|,
-name|request
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
