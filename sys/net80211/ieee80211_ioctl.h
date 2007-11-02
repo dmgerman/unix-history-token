@@ -982,7 +982,7 @@ name|uint16_t
 name|isi_freq
 decl_stmt|;
 comment|/* MHz */
-name|uint16_t
+name|uint32_t
 name|isi_flags
 decl_stmt|;
 comment|/* channel flags */
