@@ -3529,7 +3529,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"swap_pager_getpages: object mismatch %p/%p"
+literal|"swap_pager_putpages: object mismatch %p/%p"
 argument_list|,
 name|object
 argument_list|,
