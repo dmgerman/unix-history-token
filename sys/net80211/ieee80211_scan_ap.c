@@ -1264,7 +1264,16 @@ name|ieee80211_create_ibss
 argument_list|(
 name|ic
 argument_list|,
+name|ieee80211_ht_adjust_channel
+argument_list|(
+name|ic
+argument_list|,
 name|c
+argument_list|,
+name|ic
+operator|->
+name|ic_flags_ext
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

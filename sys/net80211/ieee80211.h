@@ -764,6 +764,30 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_SEQ_BA_RANGE
+value|2048
+end_define
+
+begin_comment
+comment|/* 2^11 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_SEQ_BA_BEFORE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(IEEE80211_SEQ_SUB(b, a+1)< IEEE80211_SEQ_BA_RANGE-1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_NWID_LEN
 value|32
 end_define
@@ -2555,28 +2579,28 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_HTCAP_MAXRXAMPDU_8K
-value|0x00
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|IEEE80211_HTCAP_MAXRXAMPDU_16K
-value|0x01
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|IEEE80211_HTCAP_MAXRXAMPDU_32K
-value|0x02
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|IEEE80211_HTCAP_MAXRXAMPDU_64K
-value|0x03
+value|3
 end_define
 
 begin_define
@@ -2601,7 +2625,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_HTCAP_MPDUDENSITY_NA
-value|0x00
+value|0
 end_define
 
 begin_comment
@@ -2612,7 +2636,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_HTCAP_MPDUDENSITY_025
-value|0x04
+value|1
 end_define
 
 begin_comment
@@ -2623,7 +2647,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_HTCAP_MPDUDENSITY_05
-value|0x08
+value|2
 end_define
 
 begin_comment
@@ -2634,7 +2658,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_HTCAP_MPDUDENSITY_1
-value|0x0c
+value|3
 end_define
 
 begin_comment
@@ -2645,7 +2669,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_HTCAP_MPDUDENSITY_2
-value|0x10
+value|4
 end_define
 
 begin_comment
@@ -2656,7 +2680,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_HTCAP_MPDUDENSITY_4
-value|0x14
+value|5
 end_define
 
 begin_comment
@@ -2667,7 +2691,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_HTCAP_MPDUDENSITY_8
-value|0x18
+value|6
 end_define
 
 begin_comment
@@ -2678,7 +2702,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_HTCAP_MPDUDENSITY_16
-value|0x1c
+value|7
 end_define
 
 begin_comment
@@ -3401,10 +3425,10 @@ block|}
 name|__packed
 name|band
 index|[
-literal|4
+literal|10
 index|]
 struct|;
-comment|/* up to 4 sub bands */
+comment|/* sub bands */
 block|}
 name|__packed
 struct|;

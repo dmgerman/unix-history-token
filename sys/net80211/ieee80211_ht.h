@@ -22,23 +22,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_SEND_ACTION
-parameter_list|(
-name|_ni
-parameter_list|,
-name|_cat
-parameter_list|,
-name|_act
-parameter_list|,
-name|_args
-parameter_list|)
-define|\
-value|((*(_ic)->ic_send_action)(_ni, _cat, _act, _args))
-end_define
-
-begin_define
-define|#
-directive|define
 name|IEEE80211_AGGR_BAWMAX
 value|64
 end_define
@@ -46,6 +29,17 @@ end_define
 begin_comment
 comment|/* max block ack window size */
 end_comment
+
+begin_comment
+comment|/* threshold for aging overlapping non-HT bss */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NONHT_PRESENT_AGE
+value|msecs_to_ticks(60*1000)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -81,6 +75,11 @@ directive|define
 name|IEEE80211_AGGR_SETUP
 value|0x0008
 comment|/* deferred state setup */
+define|#
+directive|define
+name|IEEE80211_AGGR_NAK
+value|0x0010
+comment|/* peer NAK'd ADDBA request */
 name|uint8_t
 name|txa_ac
 decl_stmt|;
@@ -154,7 +153,7 @@ parameter_list|(
 name|tap
 parameter_list|)
 define|\
-value|(((tap)->txa_flags& \ 	 (IEEE80211_AGGR_RUNNING|IEEE80211_AGGR_XCHGPEND)) != 0)
+value|(((tap)->txa_flags& \ 	 (IEEE80211_AGGR_RUNNING|IEEE80211_AGGR_XCHGPEND|IEEE80211_AGGR_NAK)) != 0)
 end_define
 
 begin_struct
@@ -179,14 +178,18 @@ name|ieee80211_seq
 name|rxa_start
 decl_stmt|;
 comment|/* start of current BA window */
-name|ieee80211_seq
-name|rxa_nxt
-decl_stmt|;
-comment|/* next seq# in BA window */
 name|uint16_t
 name|rxa_wnd
 decl_stmt|;
 comment|/* BA window size */
+name|int
+name|rxa_age
+decl_stmt|;
+comment|/* age of oldest frame in window */
+name|int
+name|rxa_nframes
+decl_stmt|;
+comment|/* frames since ADDBA */
 name|struct
 name|mbuf
 modifier|*
@@ -377,6 +380,83 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|ieee80211_channel
+modifier|*
+name|ieee80211_ht_adjust_channel
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_channel
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_ht_wds_init
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_ht_node_join
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_ht_node_leave
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_htinfo_update
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|int
+name|protmode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_ht_timeout
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ieee80211_parse_htcap
 parameter_list|(
@@ -428,6 +508,21 @@ end_function_decl
 begin_function_decl
 name|int
 name|ieee80211_ampdu_request
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_ampdu_stop
 parameter_list|(
 name|struct
 name|ieee80211_node
