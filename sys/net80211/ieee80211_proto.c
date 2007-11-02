@@ -4949,17 +4949,6 @@ operator|==
 name|IEEE80211_M_STA
 condition|)
 block|{
-comment|/* 			 * Try to be intelligent about clocking the state 			 * machine.  If we're currently in RUN state then 			 * we should be able to apply any new state/parameters 			 * simply by re-associating.  Otherwise we need to 			 * re-scan to select an appropriate ap. 			 */
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_state
-operator|!=
-name|IEEE80211_S_RUN
-operator|||
-name|forcescan
-condition|)
 name|ieee80211_new_state
 argument_list|(
 name|ic
@@ -4967,16 +4956,6 @@ argument_list|,
 name|IEEE80211_S_SCAN
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-else|else
-name|ieee80211_new_state
-argument_list|(
-name|ic
-argument_list|,
-name|IEEE80211_S_ASSOC
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
