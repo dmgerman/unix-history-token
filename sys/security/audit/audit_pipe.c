@@ -1708,10 +1708,12 @@ operator|&
 name|audit_pipe_mtx
 argument_list|)
 expr_stmt|;
-name|cv_signal
+name|cv_broadcastpri
 argument_list|(
 operator|&
 name|audit_pipe_cv
+argument_list|,
+name|PSOCK
 argument_list|)
 expr_stmt|;
 block|}
@@ -1782,10 +1784,12 @@ operator|&
 name|audit_pipe_mtx
 argument_list|)
 expr_stmt|;
-name|cv_signal
+name|cv_broadcastpri
 argument_list|(
 operator|&
 name|audit_pipe_cv
+argument_list|,
+name|PSOCK
 argument_list|)
 expr_stmt|;
 block|}
