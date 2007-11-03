@@ -1648,10 +1648,7 @@ argument_list|(
 name|NULL
 argument_list|,
 comment|/* parent */
-sizeof|sizeof
-argument_list|(
-name|u_int32_t
-argument_list|)
+literal|1
 argument_list|,
 comment|/* alignment */
 name|SAFE_MAX_DSIZE
