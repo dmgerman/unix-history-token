@@ -2076,7 +2076,13 @@ name|mpt_lprt
 argument_list|(
 name|mpt
 argument_list|,
+name|msg
+operator|->
+name|AckRequired
+condition|?
 name|MPT_PRT_WARN
+else|:
+name|MPT_PRT_INFO
 argument_list|,
 literal|"Unhandled Event Notify Frame. Event %#x "
 literal|"(ACK %sequired).\n"
