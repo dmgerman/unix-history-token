@@ -367,6 +367,17 @@ begin_comment
 comment|/* set tx hold count (ifbrparam) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BRDGSIFAMAX
+value|30
+end_define
+
+begin_comment
+comment|/* set max interface addrs (ifbreq) */
+end_comment
+
 begin_comment
 comment|/*  * Generic bridge control request.  */
 end_comment
@@ -414,6 +425,24 @@ name|uint8_t
 name|ifbr_state
 decl_stmt|;
 comment|/* member if STP state */
+name|uint32_t
+name|ifbr_addrcnt
+decl_stmt|;
+comment|/* member if addr number */
+name|uint32_t
+name|ifbr_addrmax
+decl_stmt|;
+comment|/* member if addr max */
+name|uint32_t
+name|ifbr_addrexceeded
+decl_stmt|;
+comment|/* member if addr violations */
+name|uint8_t
+name|pad
+index|[
+literal|32
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
