@@ -2296,17 +2296,6 @@ name|USAGE
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|service
-operator|<
-name|SDP_SERVICE_CLASS_SERVICE_DISCOVERY_SERVER
-condition|)
-return|return
-operator|(
-name|USAGE
-operator|)
-return|;
 comment|/* Initialize attribute values array */
 for|for
 control|(
