@@ -4335,10 +4335,6 @@ operator|=
 literal|0xffffffff
 expr_stmt|;
 block|}
-name|addr
-operator|&=
-name|mask
-expr_stmt|;
 block|}
 name|sin
 operator|->
