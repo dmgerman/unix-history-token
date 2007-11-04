@@ -1275,6 +1275,26 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+block|{
+name|USB_VENDOR_EPSON
+block|,
+name|USB_PRODUCT_EPSON_5000
+block|}
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_EPSON
+block|,
+name|USB_PRODUCT_EPSON_6000
+block|}
+block|,
+literal|0
+block|}
+block|,
 comment|/* UMAX */
 block|{
 block|{
@@ -1717,6 +1737,10 @@ end_macro
 
 begin_block
 block|{
+name|usb_interface_descriptor_t
+modifier|*
+name|id
+decl_stmt|;
 name|USB_MATCH_START
 argument_list|(
 name|uscanner
@@ -1729,14 +1753,15 @@ condition|(
 name|uaa
 operator|->
 name|iface
-operator|!=
+operator|==
 name|NULL
 condition|)
 return|return
 name|UMATCH_NONE
 return|;
-return|return
-operator|(
+comment|/* do not grab the entire device */
+if|if
+condition|(
 name|uscanner_lookup
 argument_list|(
 name|uaa
@@ -1747,14 +1772,53 @@ name|uaa
 operator|->
 name|product
 argument_list|)
-operator|!=
+operator|==
 name|NULL
-condition|?
-name|UMATCH_VENDOR_PRODUCT
-else|:
+condition|)
+return|return
 name|UMATCH_NONE
-operator|)
 return|;
+comment|/* not in the list of known devices */
+name|id
+operator|=
+name|usbd_get_interface_descriptor
+argument_list|(
+name|uaa
+operator|->
+name|iface
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|id
+operator|==
+name|NULL
+condition|)
+return|return
+name|UMATCH_NONE
+return|;
+comment|/* 	 * There isn't a specific UICLASS for scanners, many vendors use 	 * UICLASS_VENDOR, so detecting the right interface is not so easy. 	 * But certainly we can exclude PRINTER and MASS - which some 	 * multifunction devices implement. 	 */
+if|if
+condition|(
+name|id
+operator|->
+name|bInterfaceClass
+operator|==
+name|UICLASS_PRINTER
+operator|||
+name|id
+operator|->
+name|bInterfaceClass
+operator|==
+name|UICLASS_MASS
+condition|)
+return|return
+name|UMATCH_NONE
+return|;
+return|return
+name|UMATCH_VENDOR_PRODUCT
+return|;
+comment|/* ok we found it */
 block|}
 end_block
 
@@ -1808,6 +1872,9 @@ decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
+name|int
+name|ifnum
+decl_stmt|;
 name|usbd_devinfo
 argument_list|(
 name|uaa
@@ -1846,41 +1913,30 @@ name|uaa
 operator|->
 name|device
 expr_stmt|;
-name|err
+name|id
 operator|=
-name|usbd_set_config_no
+name|usbd_get_interface_descriptor
 argument_list|(
 name|uaa
 operator|->
-name|device
-argument_list|,
-literal|1
-argument_list|,
-literal|1
+name|iface
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
-if|if
-condition|(
-name|err
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: setting config no failed\n"
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
+name|ifnum
+operator|=
+name|id
 operator|->
-name|sc_dev
-argument_list|)
-argument_list|)
+name|bInterfaceNumber
 expr_stmt|;
-name|USB_ATTACH_ERROR_RETURN
-expr_stmt|;
-block|}
-comment|/* XXX We only check the first interface */
+if|#
+directive|if
+literal|0
+comment|/* 	 * This was in the original driver, but we cannot change the 	 * configuration of the whole device while attaching only to 	 * one of its interfaces. This can kill other already-attached 	 * driver, and/or possibly prevent this driver from attaching 	 * if an error occurs in set_config_no. 	 * If a device need setting the configuration, this must be done 	 * before attaching drivers to the various interfaces. 	 */
+block|err = usbd_set_config_no(uaa->device, 1, 1);
+comment|/* XXX */
+block|if (err) { 		printf("%s: setting config no failed\n", 		    USBDEVNAME(sc->sc_dev)); 		USB_ATTACH_ERROR_RETURN; 	}
+endif|#
+directive|endif
 name|err
 operator|=
 name|usbd_device2interface_handle
@@ -1889,7 +1945,7 @@ name|sc
 operator|->
 name|sc_udev
 argument_list|,
-literal|0
+name|ifnum
 argument_list|,
 operator|&
 name|sc
