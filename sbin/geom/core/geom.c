@@ -149,6 +149,33 @@ directive|include
 file|"misc/subr.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RESCUE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|gpart_version
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|g_command
+name|gpart_class_commands
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -2442,6 +2469,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RESCUE
+end_ifndef
+
 begin_function
 specifier|static
 specifier|const
@@ -2716,6 +2749,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !RESCUE */
+end_comment
 
 begin_comment
 comment|/*  * Class name should be all capital letters.  */
@@ -3007,10 +3049,47 @@ literal|"Invalid utility name."
 argument_list|)
 expr_stmt|;
 block|}
-name|set_class_name
+ifndef|#
+directive|ifndef
+name|RESCUE
+name|load_library
 argument_list|()
 expr_stmt|;
-name|load_library
+else|#
+directive|else
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|class_name
+argument_list|,
+literal|"part"
+argument_list|)
+condition|)
+block|{
+name|version
+operator|=
+operator|&
+name|gpart_version
+expr_stmt|;
+name|class_commands
+operator|=
+name|gpart_class_commands
+expr_stmt|;
+block|}
+else|else
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Invalid class name."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !RESCUE */
+name|set_class_name
 argument_list|()
 expr_stmt|;
 if|if
