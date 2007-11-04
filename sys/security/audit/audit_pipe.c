@@ -3595,6 +3595,11 @@ condition|(
 literal|1
 condition|)
 do|;
+name|ap
+operator|->
+name|ap_reads
+operator|++
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
