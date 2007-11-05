@@ -2016,6 +2016,10 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|u_int8_t
+name|ks_leds
+decl_stmt|;
+comment|/* store for async led requests */
 endif|#
 directive|endif
 block|}
@@ -7516,11 +7520,6 @@ name|int
 name|leds
 parameter_list|)
 block|{
-name|u_int8_t
-name|res
-init|=
-name|leds
-decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -7531,6 +7530,12 @@ operator|,
 name|leds
 operator|)
 argument_list|)
+expr_stmt|;
+name|state
+operator|->
+name|ks_leds
+operator|=
+name|leds
 expr_stmt|;
 name|usbd_set_report_async
 argument_list|(
@@ -7543,7 +7548,9 @@ argument_list|,
 literal|0
 argument_list|,
 operator|&
-name|res
+name|state
+operator|->
+name|ks_leds
 argument_list|,
 literal|1
 argument_list|)
