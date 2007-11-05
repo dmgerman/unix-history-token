@@ -154,6 +154,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RSSI_DUMMY_MARKER
+value|0x127
+end_define
+
+begin_define
+define|#
+directive|define
 name|RSSI_EP_MULTIPLIER
 value|(1<<7)
 end_define
@@ -183,7 +190,8 @@ name|y
 parameter_list|,
 name|len
 parameter_list|)
-value|(((x) * ((len) - 1) + (y)) / (len))
+define|\
+value|((x != RSSI_DUMMY_MARKER) ? (((x) * ((len) - 1) + (y)) / (len)) : (y))
 end_define
 
 begin_define
@@ -934,6 +942,8 @@ name|ise
 decl_stmt|;
 name|int
 name|hash
+decl_stmt|,
+name|offchan
 decl_stmt|;
 name|hash
 operator|=
@@ -1023,6 +1033,12 @@ operator|->
 name|st_scangen
 operator|-
 literal|1
+expr_stmt|;
+name|se
+operator|->
+name|se_avgrssi
+operator|=
+name|RSSI_DUMMY_MARKER
 expr_stmt|;
 name|IEEE80211_ADDR_COPY
 argument_list|(
@@ -1244,27 +1260,34 @@ operator|->
 name|i_addr3
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Record rssi data using extended precision LPF filter. 	 */
+name|offchan
+operator|=
+operator|(
+name|IEEE80211_CHAN2IEEE
+argument_list|(
+name|sp
+operator|->
+name|curchan
+argument_list|)
+operator|!=
+name|sp
+operator|->
+name|bchan
+operator|&&
+name|ic
+operator|->
+name|ic_phytype
+operator|!=
+name|IEEE80211_T_FH
+operator|)
+expr_stmt|;
 if|if
 condition|(
-name|se
-operator|->
-name|se_lastupdate
-operator|==
-literal|0
+operator|!
+name|offchan
 condition|)
-comment|/* first sample */
-name|se
-operator|->
-name|se_avgrssi
-operator|=
-name|RSSI_IN
-argument_list|(
-name|rssi
-argument_list|)
-expr_stmt|;
-else|else
-comment|/* avg w/ previous samples */
+block|{
+comment|/* 		 * Record rssi data using extended precision LPF filter. 		 * 		 * NB: use only on-channel data to insure we get a good 		 *     estimate of the signal we'll see when associated. 		 */
 name|RSSI_LPF
 argument_list|(
 name|se
@@ -1274,10 +1297,8 @@ argument_list|,
 name|rssi
 argument_list|)
 expr_stmt|;
-name|se
+name|ise
 operator|->
-name|base
-operator|.
 name|se_rssi
 operator|=
 name|RSSI_GET
@@ -1287,14 +1308,13 @@ operator|->
 name|se_avgrssi
 argument_list|)
 expr_stmt|;
-name|se
+name|ise
 operator|->
-name|base
-operator|.
 name|se_noise
 operator|=
 name|noise
 expr_stmt|;
+block|}
 name|ise
 operator|->
 name|se_rstamp
@@ -1337,6 +1357,20 @@ name|sp
 operator|->
 name|capinfo
 expr_stmt|;
+comment|/* 	 * Beware of overriding se_chan for frames seen 	 * off-channel; this can cause us to attempt an 	 * assocation on the wrong channel. 	 */
+if|if
+condition|(
+name|ise
+operator|->
+name|se_chan
+operator|==
+name|NULL
+operator|||
+operator|!
+name|offchan
+condition|)
+block|{
+comment|/* 		 * NB: this is not right when the frame is received 		 * off-channel but se_chan is assumed set by code 		 * elsewhere so we must assign something; the scan 		 * entry should be ignored because the rssi will be 		 * zero (because the frames are received off-channel). 		 * 		 * We could locate the correct channel using sp->chan 		 * but it's not clear we should join an ap that we 		 * never see on-channel during a scan. 		 */
 name|ise
 operator|->
 name|se_chan
@@ -1345,6 +1379,7 @@ name|sp
 operator|->
 name|curchan
 expr_stmt|;
+block|}
 name|ise
 operator|->
 name|se_fhdwell
