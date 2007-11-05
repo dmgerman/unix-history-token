@@ -5205,15 +5205,6 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|td
-operator|=
-name|curthread
-expr_stmt|;
 for|for
 control|(
 init|;
