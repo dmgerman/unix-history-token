@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: praliases.c,v 8.93 2001/09/11 04:05:07 gshapiro Exp $"
+literal|"@(#)$Id: praliases.c,v 8.94 2007/05/11 18:50:36 ca Exp $"
 argument_list|)
 end_macro
 
@@ -167,7 +167,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|uid_t
+name|gid_t
 name|RunAsGid
 decl_stmt|;
 end_decl_stmt
