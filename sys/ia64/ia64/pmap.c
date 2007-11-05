@@ -6796,7 +6796,7 @@ comment|/*  * this code makes some *MAJOR* assumptions:  * 1. Current pmap& pmap
 end_comment
 
 begin_function
-name|vm_page_t
+name|void
 name|pmap_enter_quick
 parameter_list|(
 name|pmap_t
@@ -6810,9 +6810,6 @@ name|m
 parameter_list|,
 name|vm_prot_t
 name|prot
-parameter_list|,
-name|vm_page_t
-name|mpte
 parameter_list|)
 block|{
 name|pmap_t
@@ -6851,11 +6848,6 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 block|}
 end_function
 

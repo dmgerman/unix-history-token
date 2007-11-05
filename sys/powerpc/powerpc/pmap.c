@@ -5158,7 +5158,7 @@ block|}
 end_function
 
 begin_function
-name|vm_page_t
+name|void
 name|pmap_enter_quick
 parameter_list|(
 name|pmap_t
@@ -5172,9 +5172,6 @@ name|m
 parameter_list|,
 name|vm_prot_t
 name|prot
-parameter_list|,
-name|vm_page_t
-name|mpte
 parameter_list|)
 block|{
 name|PMAP_LOCK
@@ -5206,11 +5203,6 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 block|}
 end_function
 

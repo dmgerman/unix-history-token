@@ -9193,7 +9193,7 @@ comment|/*  * this code makes some *MAJOR* assumptions:  * 1. Current pmap& pmap
 end_comment
 
 begin_function
-name|vm_page_t
+name|void
 name|pmap_enter_quick
 parameter_list|(
 name|pmap_t
@@ -9207,9 +9207,6 @@ name|m
 parameter_list|,
 name|vm_prot_t
 name|prot
-parameter_list|,
-name|vm_page_t
-name|mpte
 parameter_list|)
 block|{
 name|PMAP_LOCK
@@ -9217,8 +9214,9 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-name|mpte
-operator|=
+operator|(
+name|void
+operator|)
 name|pmap_enter_quick_locked
 argument_list|(
 name|pmap
@@ -9229,7 +9227,7 @@ name|m
 argument_list|,
 name|prot
 argument_list|,
-name|mpte
+name|NULL
 argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
@@ -9237,11 +9235,6 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|mpte
-operator|)
-return|;
 block|}
 end_function
 
