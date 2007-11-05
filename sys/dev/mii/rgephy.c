@@ -452,6 +452,12 @@ name|mii_pdata
 operator|=
 name|mii
 expr_stmt|;
+name|sc
+operator|->
+name|mii_anegticks
+operator|=
+name|MII_ANEGTICKS_GIGE
+expr_stmt|;
 name|mii
 operator|->
 name|mii_instance
@@ -1064,7 +1070,15 @@ argument_list|)
 operator|!=
 name|IFM_AUTO
 condition|)
+block|{
+name|sc
+operator|->
+name|mii_ticks
+operator|=
+literal|0
+expr_stmt|;
 break|break;
+block|}
 comment|/* 		 * Check to see if we have link.  If we do, we don't 		 * need to restart the autonegotiation process.  Read 		 * the BMSR twice in case it's latched. 		 */
 name|reg
 operator|=
@@ -1081,18 +1095,42 @@ name|reg
 operator|&
 name|RL_GMEDIASTAT_LINK
 condition|)
+block|{
+name|sc
+operator|->
+name|mii_ticks
+operator|=
+literal|0
+expr_stmt|;
 break|break;
-comment|/* 		 * Only retry autonegotiation every 5 seconds. 		 */
+block|}
+comment|/* Announce link loss right after it happens. */
 if|if
 condition|(
+name|sc
+operator|->
+name|mii_ticks
 operator|++
+operator|==
+literal|0
+condition|)
+break|break;
+comment|/* Only retry autonegotiation every mii_anegticks seconds. */
+if|if
+condition|(
 name|sc
 operator|->
 name|mii_ticks
 operator|<=
-name|MII_ANEGTICKS
+name|sc
+operator|->
+name|mii_anegticks
 condition|)
-break|break;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|sc
 operator|->
 name|mii_ticks
@@ -1104,11 +1142,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 block|}
 comment|/* Update the media status. */
 name|rgephy_status
