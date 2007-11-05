@@ -1480,6 +1480,11 @@ name|ISP_LOGINFO
 expr_stmt|;
 block|}
 comment|/* 	 * Make sure we're in reset state. 	 */
+name|ISP_LOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 name|isp_reset
 argument_list|(
 name|isp
@@ -1495,6 +1500,11 @@ name|ISP_RESETSTATE
 condition|)
 block|{
 name|isp_uninit
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
+name|ISP_UNLOCK
 argument_list|(
 name|isp
 argument_list|)
@@ -1528,6 +1538,11 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
+name|ISP_UNLOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
@@ -1557,10 +1572,20 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
+name|ISP_UNLOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
 block|}
+name|ISP_UNLOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
