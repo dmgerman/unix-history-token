@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.132 2007/03/21 23:56:18 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.134 2007/09/24 23:05:37 ca Exp $  */
 end_comment
 
 begin_comment
@@ -3084,6 +3084,44 @@ end_endif
 
 begin_comment
 comment|/* SOLARIS>= 21000 || (SOLARIS< 10000&& SOLARIS>= 210) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SOLARIS
+operator|>=
+literal|21100
+operator|||
+operator|(
+name|SOLARIS
+operator|<
+literal|10000
+operator|&&
+name|SOLARIS
+operator|>=
+literal|211
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GETLDAPALIASBYNAME_VERSION
+value|2
+end_define
+
+begin_comment
+comment|/* changed in S11 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOLARIS>= 21100 || (SOLARIS< 10000&& SOLARIS>= 211) */
 end_comment
 
 begin_ifndef

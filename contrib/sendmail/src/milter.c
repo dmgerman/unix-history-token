@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.267 2007/02/27 22:21:12 ca Exp $"
+literal|"@(#)$Id: milter.c,v 8.269 2007/06/06 17:26:12 ca Exp $"
 argument_list|)
 end_macro
 
@@ -460,6 +460,9 @@ name|milter
 operator|*
 operator|,
 name|ENVELOPE
+operator|*
+operator|,
+name|milters_T
 operator|*
 operator|)
 argument_list|)
@@ -7189,109 +7192,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MILTER_CAN_DELRCPTS -- can any milter filters delete recipients? ** **	Parameters: **		none ** **	Returns: **		true if any filter deletes recipients, false otherwise */
-end_comment
-
-begin_function
-name|bool
-name|milter_can_delrcpts
-parameter_list|()
-block|{
-name|bool
-name|can
-init|=
-name|false
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|64
-argument_list|,
-literal|10
-argument_list|)
-condition|)
-name|sm_dprintf
-argument_list|(
-literal|"milter_can_delrcpts:"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|InputFilters
-index|[
-name|i
-index|]
-operator|!=
-name|NULL
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|struct
-name|milter
-modifier|*
-name|m
-init|=
-name|InputFilters
-index|[
-name|i
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|SMFIF_DELRCPT
-argument_list|,
-name|m
-operator|->
-name|mf_fflags
-argument_list|)
-condition|)
-block|{
-name|can
-operator|=
-name|true
-expr_stmt|;
-break|break;
-block|}
-block|}
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|64
-argument_list|,
-literal|10
-argument_list|)
-condition|)
-name|sm_dprintf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|can
-condition|?
-literal|"true"
-else|:
-literal|"false"
-argument_list|)
-expr_stmt|;
-return|return
-name|can
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* **  MILTER_QUIT_FILTER -- close down a single filter ** **	Parameters: **		m -- milter structure of filter to close down. **		e -- current envelope. ** **	Returns: **		none */
 end_comment
 
@@ -9469,7 +9369,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MILTER_NEGOTIATE -- get version and flags from filter ** **	Parameters: **		m -- milter filter structure. **		e -- current envelope. ** **	Returns: **		0 on success, -1 otherwise */
+comment|/* **  MILTER_NEGOTIATE -- get version and flags from filter ** **	Parameters: **		m -- milter filter structure. **		e -- current envelope. **		milters -- milters structure. ** **	Returns: **		0 on success, -1 otherwise */
 end_comment
 
 begin_function
@@ -9480,6 +9380,8 @@ parameter_list|(
 name|m
 parameter_list|,
 name|e
+parameter_list|,
+name|milters
 parameter_list|)
 name|struct
 name|milter
@@ -9489,6 +9391,10 @@ decl_stmt|;
 name|ENVELOPE
 modifier|*
 name|e
+decl_stmt|;
+name|milters_T
+modifier|*
+name|milters
 decl_stmt|;
 block|{
 name|char
@@ -10406,6 +10312,51 @@ name|MILTER_OPTLEN
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|SMFIF_DELRCPT
+argument_list|,
+name|m
+operator|->
+name|mf_fflags
+argument_list|)
+condition|)
+name|milters
+operator|->
+name|mis_flags
+operator||=
+name|MIS_FL_DEL_RCPT
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|SMFIP_NORCPT
+argument_list|,
+name|m
+operator|->
+name|mf_pflags
+argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|SMFIP_NR_RCPT
+argument_list|,
+name|m
+operator|->
+name|mf_pflags
+argument_list|)
+condition|)
+name|milters
+operator|->
+name|mis_flags
+operator||=
+name|MIS_FL_REJ_RCPT
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -15016,7 +14967,7 @@ comment|/* **  MTA callouts */
 end_comment
 
 begin_comment
-comment|/* **  MILTER_INIT -- open and negotiate with all of the filters ** **	Parameters: **		e -- current envelope. **		state -- return state from response. ** **	Returns: **		true iff at least one filter is active */
+comment|/* **  MILTER_INIT -- open and negotiate with all of the filters ** **	Parameters: **		e -- current envelope. **		state -- return state from response. **		milters -- milters structure. ** **	Returns: **		true iff at least one filter is active */
 end_comment
 
 begin_comment
@@ -15030,6 +14981,8 @@ parameter_list|(
 name|e
 parameter_list|,
 name|state
+parameter_list|,
+name|milters
 parameter_list|)
 name|ENVELOPE
 modifier|*
@@ -15038,6 +14991,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|state
+decl_stmt|;
+name|milters_T
+modifier|*
+name|milters
 decl_stmt|;
 block|{
 name|int
@@ -15055,6 +15012,19 @@ condition|)
 name|sm_dprintf
 argument_list|(
 literal|"milter_init\n"
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|milters
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|milters
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -15164,6 +15134,8 @@ argument_list|(
 name|m
 argument_list|,
 name|e
+argument_list|,
+name|milters
 argument_list|)
 operator|<
 literal|0

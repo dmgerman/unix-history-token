@@ -6,6 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sm/gen.h>
+end_include
+
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: monitor.c,v 8.7 2007/04/23 16:26:28 ca Exp $"
+argument_list|)
+end_macro
+
+begin_include
+include|#
+directive|include
 file|"libmilter.h"
 end_include
 

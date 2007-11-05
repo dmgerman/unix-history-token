@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: makemap.c,v 8.177 2004/08/03 23:57:24 ca Exp $"
+literal|"@(#)$Id: makemap.c,v 8.178 2007/05/11 18:45:39 ca Exp $"
 argument_list|)
 end_macro
 
@@ -147,7 +147,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|uid_t
+name|gid_t
 name|RunAsGid
 decl_stmt|;
 end_decl_stmt

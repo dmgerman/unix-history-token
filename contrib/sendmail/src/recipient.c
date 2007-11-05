@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: recipient.c,v 8.348 2007/03/19 21:33:09 ca Exp $"
+literal|"@(#)$Id: recipient.c,v 8.349 2007/07/10 17:01:22 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1315,6 +1315,34 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_ADDR_TYPE_MODES
+if|if
+condition|(
+name|AddrTypeModes
+condition|)
+name|macdefine
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
+name|macid
+argument_list|(
+literal|"{addr_type}"
+argument_list|)
+argument_list|,
+literal|"e r d"
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+comment|/* _FFR_ADDR_TYPE_MODES */
 name|macdefine
 argument_list|(
 operator|&

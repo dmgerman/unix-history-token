@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2006 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2001-2007 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: ldap.c,v 1.78 2006/08/30 22:56:59 ca Exp $"
+literal|"@(#)$Id: ldap.c,v 1.80 2007/10/12 00:19:44 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4026,13 +4026,6 @@ name|statp
 operator|=
 name|EX_TEMPFAIL
 expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-condition|)
-block|{
 switch|switch
 condition|(
 name|save_errno
@@ -4051,20 +4044,28 @@ case|case
 name|LDAP_TIMEOUT
 case|:
 case|case
+name|ETIMEDOUT
+case|:
+case|case
 name|LDAP_UNAVAILABLE
 case|:
-comment|/* 				**  server disappeared, 				**  try reopen on next search 				*/
+comment|/* 			**  server disappeared, 			**  try reopen on next search 			*/
 name|statp
 operator|=
 name|EX_RESTART
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
 name|save_errno
 operator|+=
 name|E_LDAPBASE
 expr_stmt|;
-block|}
 name|SM_LDAP_ERROR_CLEANUP
 argument_list|()
 expr_stmt|;
@@ -4577,6 +4578,9 @@ case|case
 name|LDAP_TIMEOUT
 case|:
 case|case
+name|ETIMEDOUT
+case|:
+case|case
 name|LDAP_UNAVAILABLE
 case|:
 comment|/* 					**  server disappeared, 					**  try reopen on next search 					*/
@@ -4876,6 +4880,29 @@ operator|->
 name|ldap_timelimit
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_LDAP_NETWORK_TIMEOUT
+operator|&&
+name|defined
+argument_list|(
+name|LDAP_OPT_NETWORK_TIMEOUT
+argument_list|)
+name|ldap_set_option
+argument_list|(
+name|ld
+argument_list|,
+name|LDAP_OPT_NETWORK_TIMEOUT
+argument_list|,
+operator|&
+name|lmap
+operator|->
+name|ldap_networktmo
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_NETWORK_TIMEOUT&& defined(LDAP_OPT_NETWORK_TIMEOUT) */
 ifdef|#
 directive|ifdef
 name|LDAP_OPT_RESTART

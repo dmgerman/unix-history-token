@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2003, 2005, 2006 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: ldap.h,v 1.32 2006/08/30 22:56:58 ca Exp $  */
+comment|/*  * Copyright (c) 2001-2003, 2005-2007 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: ldap.h,v 1.33 2007/10/10 00:06:44 ca Exp $  */
 end_comment
 
 begin_ifndef
@@ -326,6 +326,16 @@ comment|/* ldapmap_lookup options */
 name|char
 name|ldap_attrsep
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_LDAP_NETWORK_TIMEOUT
+name|struct
+name|timeval
+name|ldap_networktmo
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_NETWORK_TIMEOUT */
 comment|/* Linked list of maps sharing the same LDAP binding */
 name|void
 modifier|*
