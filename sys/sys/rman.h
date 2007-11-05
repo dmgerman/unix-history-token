@@ -130,6 +130,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RF_OPTIONAL
+value|0x0080
+end_define
+
+begin_comment
+comment|/* for bus_alloc_resources() */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RF_ALIGNMENT_SHIFT
 value|10
 end_define
