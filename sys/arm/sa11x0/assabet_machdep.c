@@ -1946,7 +1946,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Set stack for exception handlers */
-name|proc_linkup
+name|proc_linkup0
 argument_list|(
 operator|&
 name|proc0

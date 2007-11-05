@@ -1094,6 +1094,17 @@ name|sigio_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|kern_logsigexit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Sysctl variable kern.logsigexit */
+end_comment
+
 begin_comment
 comment|/*  * Lock the pointers for a sigio object in the underlying objects of  * a file descriptor.  */
 end_comment

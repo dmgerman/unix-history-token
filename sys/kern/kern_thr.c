@@ -789,6 +789,17 @@ operator|=
 name|thread_alloc
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|newtd
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 comment|/* 	 * Try the copyout as soon as we allocate the td so we don't 	 * have to tear things down in a failure case below. 	 * Here we copy out tid to two places, one for child and one 	 * for parent, because pthread can create a detached thread, 	 * if parent wants to safely access child tid, it has to provide  	 * its storage, because child thread may exit quickly and 	 * memory is freed before parent thread can access it. 	 */
 if|if
 condition|(

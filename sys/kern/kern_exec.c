@@ -3742,6 +3742,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|error
+operator|=
 name|vmspace_exec
 argument_list|(
 name|p
@@ -3755,6 +3757,15 @@ operator|->
 name|sv_maxuser
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|vmspace
 operator|=
 name|p

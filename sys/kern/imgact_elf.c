@@ -3205,6 +3205,8 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|exec_new_vmspace
 argument_list|(
 name|imgp
@@ -3233,6 +3235,15 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|vmspace
 operator|=
 name|imgp

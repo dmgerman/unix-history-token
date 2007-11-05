@@ -1932,7 +1932,7 @@ expr_stmt|;
 name|undefined_init
 argument_list|()
 expr_stmt|;
-name|proc_linkup
+name|proc_linkup0
 argument_list|(
 operator|&
 name|proc0

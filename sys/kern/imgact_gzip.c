@@ -1013,6 +1013,8 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Destroy old process VM and create a new one (with a new stack) 	 */
+name|error
+operator|=
 name|exec_new_vmspace
 argument_list|(
 name|gz
@@ -1038,6 +1040,23 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|gz
+operator|->
+name|where
+operator|=
+name|__LINE__
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 name|vmspace
 operator|=
 name|gz

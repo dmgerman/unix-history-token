@@ -4447,7 +4447,7 @@ comment|/*  * Initialize a preallocated and zeroed pmap structure, such as one i
 end_comment
 
 begin_function
-name|void
+name|int
 name|pmap_pinit
 parameter_list|(
 name|pmap_t
@@ -4497,6 +4497,26 @@ argument_list|,
 name|TSB_BSIZE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pm
+operator|->
+name|pm_tsb
+operator|==
+name|NULL
+condition|)
+block|{
+name|PMAP_LOCK_DESTROY
+argument_list|(
+name|pm
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 block|}
 comment|/* 	 * Allocate an object for it. 	 */
 if|if
@@ -4645,6 +4665,11 @@ name|pm_stats
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 

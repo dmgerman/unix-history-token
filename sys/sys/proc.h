@@ -4126,6 +4126,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|proc_linkup0
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|proc_linkup
 parameter_list|(
 name|struct

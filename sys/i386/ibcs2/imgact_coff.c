@@ -1563,6 +1563,8 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|exec_new_vmspace
 argument_list|(
 name|imgp
@@ -1571,6 +1573,13 @@ operator|&
 name|ibcs2_svr3_sysvec
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|fail
+goto|;
 name|vmspace
 operator|=
 name|imgp

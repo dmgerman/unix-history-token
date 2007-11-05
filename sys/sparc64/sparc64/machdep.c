@@ -1679,7 +1679,7 @@ name|intr_init1
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize proc0 stuff (p_contested needs to be done early). 	 */
-name|proc_linkup
+name|proc_linkup0
 argument_list|(
 operator|&
 name|proc0

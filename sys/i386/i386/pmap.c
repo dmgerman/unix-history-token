@@ -4706,7 +4706,7 @@ comment|/*  * Initialize a preallocated and zeroed pmap structure,  * such as on
 end_comment
 
 begin_function
-name|void
+name|int
 name|pmap_pinit
 parameter_list|(
 name|pmap_t
@@ -4761,6 +4761,26 @@ argument_list|,
 name|NBPTD
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pmap
+operator|->
+name|pm_pdir
+operator|==
+name|NULL
+condition|)
+block|{
+name|PMAP_LOCK_DESTROY
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|PAE
@@ -5093,6 +5113,11 @@ operator|->
 name|pm_stats
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 

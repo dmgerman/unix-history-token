@@ -1120,7 +1120,7 @@ name|init_param1
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Start initializing proc0 and thread0. 	 */
-name|proc_linkup
+name|proc_linkup0
 argument_list|(
 operator|&
 name|proc0

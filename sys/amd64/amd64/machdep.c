@@ -4772,7 +4772,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/*  	 * This may be done better later if it gets more high level  	 * components in it. If so just link td->td_proc here. 	 */
-name|proc_linkup
+name|proc_linkup0
 argument_list|(
 operator|&
 name|proc0
