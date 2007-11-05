@@ -52,7 +52,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: editmap.c,v 1.24 2004/08/03 18:40:10 ca Exp $"
+literal|"@(#)$Id: editmap.c,v 1.25 2007/05/11 18:50:35 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -191,7 +191,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|uid_t
+name|gid_t
 name|RunAsGid
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: util.c,v 8.410 2006/12/18 18:36:44 ca Exp $"
+literal|"@(#)$Id: util.c,v 8.413 2007/09/26 23:29:11 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3522,6 +3522,16 @@ name|mci_mailer
 operator|->
 name|m_flags
 argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|MCIF_INLONGLINE
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
 condition|)
 block|{
 if|if
@@ -3606,6 +3616,16 @@ operator|->
 name|mci_mailer
 operator|->
 name|m_flags
+argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|MCIF_INLONGLINE
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
 argument_list|)
 condition|)
 block|{
@@ -3692,7 +3712,17 @@ operator|||
 operator|!
 name|noeol
 operator|)
-operator|&&
+condition|)
+block|{
+name|mci
+operator|->
+name|mci_flags
+operator|&=
+operator|~
+name|MCIF_INLONGLINE
+expr_stmt|;
+if|if
+condition|(
 name|sm_io_fputs
 argument_list|(
 name|mci
@@ -3717,6 +3747,14 @@ name|true
 expr_stmt|;
 break|break;
 block|}
+block|}
+else|else
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_INLONGLINE
+expr_stmt|;
 if|if
 condition|(
 name|l
@@ -9551,9 +9589,10 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* 	**  Initialize to 1 instead of 0 because this code gets called 	**  before proc_list_add() gets called, so we (the daemon child 	**  for this connection) don't count ourselves. 	*/
 name|n
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 for|for
 control|(
