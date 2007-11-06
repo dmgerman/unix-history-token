@@ -404,6 +404,14 @@ name|ATI_IXP_400_ID
 block|,
 literal|"ATI IXP 400"
 block|}
+block|,
+block|{
+name|ATI_VENDOR_ID
+block|,
+name|ATI_IXP_SB600_ID
+block|,
+literal|"ATI IXP SB600"
+block|}
 block|, }
 struct|;
 end_struct
