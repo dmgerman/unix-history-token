@@ -2270,7 +2270,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: Should check errors on heap_insert, by draining the 		 * whole pipe p and hoping in the future we are more successful. 		 */
+comment|/* 		 * XXX Should check errors on heap_insert, by draining the 		 * whole pipe p and hoping in the future we are more successful. 		 */
 name|heap_insert
 argument_list|(
 operator|&
@@ -2303,7 +2303,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|((_m)->m_pkthdr.len*8*hz - (q)->numbytes + p->bandwidth - 1 ) / \ 	    p->bandwidth ;
+value|((_m)->m_pkthdr.len * 8 * hz - (q)->numbytes + p->bandwidth - 1) / \     p->bandwidth;
 end_define
 
 begin_comment
@@ -2474,7 +2474,7 @@ argument_list|(
 literal|"dummynet: ready_event- pipe is gone\n"
 argument_list|)
 expr_stmt|;
-return|return ;
+return|return;
 block|}
 name|p_was_empty
 operator|=
@@ -2486,7 +2486,7 @@ operator|==
 name|NULL
 operator|)
 expr_stmt|;
-comment|/*      * schedule fixed-rate queues linked to this pipe:      * Account for the bw accumulated since last scheduling, then      * drain as many pkts as allowed by q->numbytes and move to      * the delay line (in p) computing output time.      * bandwidth==0 (no limit) means we can drain the whole queue,      * setting len_scaled = 0 does the job.      */
+comment|/* 	 * Schedule fixed-rate queues linked to this pipe: 	 * account for the bw accumulated since last scheduling, then 	 * drain as many pkts as allowed by q->numbytes and move to 	 * the delay line (in p) computing output time. 	 * bandwidth==0 (no limit) means we can drain the whole queue, 	 * setting len_scaled = 0 does the job. 	 */
 name|q
 operator|->
 name|numbytes
@@ -2548,7 +2548,7 @@ name|q
 operator|->
 name|numbytes
 condition|)
-break|break ;
+break|break;
 name|q
 operator|->
 name|numbytes
@@ -2567,7 +2567,7 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * If we have more packets queued, schedule next ready event      * (can only occur when bandwidth != 0, otherwise we would have      * flushed the whole queue in the previous loop).      * To this purpose we record the current time and compute how many      * ticks to go for the finish time of the packet.      */
+comment|/* 	 * If we have more packets queued, schedule next ready event 	 * (can only occur when bandwidth != 0, otherwise we would have 	 * flushed the whole queue in the previous loop). 	 * To this purpose we record the current time and compute how many 	 * ticks to go for the finish time of the packet. 	 */
 if|if
 condition|(
 operator|(
@@ -2617,11 +2617,11 @@ operator|)
 name|q
 argument_list|)
 expr_stmt|;
-comment|/* XXX should check errors on heap_insert, and drain the whole 	 * queue on error hoping next time we are luckier. 	 */
+comment|/* 		 * XXX Should check errors on heap_insert, and drain the whole 		 * queue on error hoping next time we are luckier. 		 */
 block|}
 else|else
 block|{
-comment|/* RED needs to know when the queue becomes empty */
+comment|/* RED needs to know when the queue becomes empty. */
 name|q
 operator|->
 name|q_time
@@ -2635,7 +2635,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*      * If the delay line was empty call transmit_event() now.      * Otherwise, the scheduler will take care of it.      */
+comment|/* 	 * If the delay line was empty call transmit_event() now. 	 * Otherwise, the scheduler will take care of it. 	 */
 if|if
 condition|(
 name|p_was_empty
@@ -2653,7 +2653,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called when we can transmit packets on WF2Q queues. Take pkts out of  * the queues at their start time, and enqueue into the delay line.  * Packets are drained until p->numbytes< 0. As long as  * len_scaled>= p->numbytes, the packet goes into the delay line  * with a deadline p->delay. For the last packet, if p->numbytes<0,  * there is an additional delay.  */
+comment|/*  * Called when we can transmit packets on WF2Q queues. Take pkts out of  * the queues at their start time, and enqueue into the delay line.  * Packets are drained until p->numbytes< 0. As long as  * len_scaled>= p->numbytes, the packet goes into the delay line  * with a deadline p->delay. For the last packet, if p->numbytes< 0,  * there is an additional delay.  */
 end_comment
 
 begin_function
@@ -2747,7 +2747,7 @@ name|bandwidth
 expr_stmt|;
 else|else
 block|{
-comment|/* tx clock is for real, the ifq must be empty or this is a NOP */
+comment|/* 		 * tx clock is for real, 		 * the ifq must be empty or this is a NOP. 		 */
 if|if
 condition|(
 name|p
@@ -2764,7 +2764,7 @@ name|ifq_head
 operator|!=
 name|NULL
 condition|)
-return|return ;
+return|return;
 else|else
 block|{
 name|DPRINTF
@@ -2784,7 +2784,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * While we have backlogged traffic AND credit, we need to do      * something on the queue.      */
+comment|/* 	 * While we have backlogged traffic AND credit, we need to do 	 * something on the queue. 	 */
 while|while
 condition|(
 name|p
@@ -2817,7 +2817,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* have some eligible pkts to send out */
+comment|/* Have some eligible pkts to send out. */
 name|struct
 name|dn_flow_queue
 modifier|*
@@ -2850,7 +2850,7 @@ name|q
 operator|->
 name|fs
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|len
 init|=
 name|pkt
@@ -2881,7 +2881,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* remove queue from heap */
+comment|/* Remove queue from heap. */
 name|p
 operator|->
 name|numbytes
@@ -2913,7 +2913,7 @@ name|p
 operator|->
 name|sum
 expr_stmt|;
-comment|/* update V */
+comment|/* Update V. */
 name|q
 operator|->
 name|S
@@ -2922,7 +2922,7 @@ name|q
 operator|->
 name|F
 expr_stmt|;
-comment|/* update start time */
+comment|/* Update start time. */
 if|if
 condition|(
 name|q
@@ -2932,7 +2932,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Flow not backlogged any more */
+comment|/* Flow not backlogged any more. */
 name|fs
 operator|->
 name|backlogged
@@ -2957,8 +2957,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* still backlogged */
-comment|/* 		 * update F and position in backlogged queue, then 		 * put flow in not_eligible_heap (we will fix this later). 		 */
+comment|/* Still backlogged. */
+comment|/* 				 * Update F and position in backlogged queue, 				 * then put flow in not_eligible_heap 				 * (we will fix this later). 				 */
 name|len
 operator|=
 operator|(
@@ -2982,7 +2982,7 @@ name|MY_M
 operator|)
 operator|/
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|fs
 operator|->
@@ -3026,7 +3026,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * now compute V = max(V, min(S_i)). Remember that all elements in sch 	 * have by definition S_i<= V so if sch is not empty, V is surely 	 * the max and we must not update it. Conversely, if sch is empty 	 * we only need to look at neh. 	 */
+comment|/* 		 * Now compute V = max(V, min(S_i)). Remember that all elements 		 * in sch have by definition S_i<= V so if sch is not empty, 		 * V is surely the max and we must not update it. Conversely, 		 * if sch is empty we only need to look at neh. 		 */
 if|if
 condition|(
 name|sch
@@ -3061,7 +3061,7 @@ operator|.
 name|key
 argument_list|)
 expr_stmt|;
-comment|/* move from neh to sch any packets that have become eligible */
+comment|/* Move from neh to sch any packets that have become eligible */
 while|while
 condition|(
 name|neh
@@ -3132,7 +3132,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* tx clock is from a real thing */
+comment|/* Tx clock is from a real thing */
 name|p
 operator|->
 name|numbytes
@@ -3140,8 +3140,8 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* mark not ready for I/O */
-break|break ;
+comment|/* Mark not ready for I/O. */
+break|break;
 block|}
 block|}
 if|if
@@ -3173,7 +3173,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 	 * no traffic and no events scheduled. We can get rid of idle-heap. 	 */
+comment|/* 		 * No traffic and no events scheduled. 		 * We can get rid of idle-heap. 		 */
 name|int
 name|i
 decl_stmt|;
@@ -3249,7 +3249,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*      * If we are getting clocks from dummynet (not a real interface) and      * If we are under credit, schedule the next ready event.      * Also fix the delivery time of the last packet.      */
+comment|/* 	 * If we are getting clocks from dummynet (not a real interface) and 	 * If we are under credit, schedule the next ready event. 	 * Also fix the delivery time of the last packet. 	 */
 if|if
 condition|(
 name|p
@@ -3268,13 +3268,13 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* this implies bandwidth>0 */
+comment|/* This implies bw> 0. */
 name|dn_key
 name|t
 init|=
 literal|0
 decl_stmt|;
-comment|/* number of ticks i have to wait */
+comment|/* Number of ticks i have to wait. */
 if|if
 condition|(
 name|p
@@ -3334,9 +3334,9 @@ operator|)
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* XXX should check errors on heap_insert, and drain the whole 	 * queue on error hoping next time we are luckier. 	 */
+comment|/* 		 * XXX Should check errors on heap_insert, and drain the whole 		 * queue on error hoping next time we are luckier. 		 */
 block|}
-comment|/*      * If the delay line was empty call transmit_event() now.      * Otherwise, the scheduler will take care of it.      */
+comment|/* 	 * If the delay line was empty call transmit_event() now. 	 * Otherwise, the scheduler will take care of it. 	 */
 if|if
 condition|(
 name|p_was_empty
@@ -4392,7 +4392,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	 * No way to get room, use or create overflow queue. 	 */
+comment|/* No way to get room, use or create overflow queue. */
 name|i
 operator|=
 name|fs
@@ -4449,7 +4449,9 @@ literal|"dummynet: sorry, cannot allocate queue for new flow\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|q
@@ -4485,7 +4487,7 @@ name|F
 operator|+
 literal|1
 expr_stmt|;
-comment|/* hack - mark timestamp as invalid */
+comment|/* hack - mark timestamp as invalid. */
 name|fs
 operator|->
 name|rq
@@ -4501,7 +4503,9 @@ name|rq_elements
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|q
+operator|)
 return|;
 block|}
 end_function
@@ -5926,7 +5930,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dummynet hook for packets. Below 'pipe' is a pipe or a queue  * depending on whether WF2Q or fixed bw is used.  *  * pipe_nr	pipe or queue the packet is destined for.  * dir		where shall we send the packet after dummynet.  * m		the mbuf with the packet  * ifp		the 'ifp' parameter from the caller.  *		NULL in ip_input, destination interface in ip_output,  * rule		matching rule, in case of multiple passes  *  */
+comment|/*  * dummynet hook for packets. Below 'pipe' is a pipe or a queue  * depending on whether WF2Q or fixed bw is used.  *  * pipe_nr	pipe or queue the packet is destined for.  * dir		where shall we send the packet after dummynet.  * m		the mbuf with the packet  * ifp		the 'ifp' parameter from the caller.  *		NULL in ip_input, destination interface in ip_output,  * rule		matching rule, in case of multiple passes  */
 end_comment
 
 begin_function
@@ -5982,7 +5986,7 @@ name|dn_pipe
 modifier|*
 name|pipe
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|len
 init|=
 name|m
@@ -6083,7 +6087,7 @@ expr_stmt|;
 name|DUMMYNET_LOCK
 argument_list|()
 expr_stmt|;
-comment|/*      * This is a dummynet rule, so we expect an O_PIPE or O_QUEUE rule.      *      * XXXGL: probably the pipe->fs and fs->pipe logic here      * below can be simplified.      */
+comment|/* 	 * This is a dummynet rule, so we expect an O_PIPE or O_QUEUE rule. 	 * 	 * XXXGL: probably the pipe->fs and fs->pipe logic here 	 * below can be simplified. 	 */
 if|if
 condition|(
 name|is_pipe
@@ -6212,8 +6216,8 @@ condition|)
 goto|goto
 name|dropit
 goto|;
-comment|/* cannot allocate queue		*/
-comment|/*      * update statistics, then check reasons to drop pkt      */
+comment|/* Cannot allocate queue. */
+comment|/* Update statistics, then check reasons to drop pkt. */
 name|q
 operator|->
 name|tot_bytes
@@ -6241,7 +6245,7 @@ condition|)
 goto|goto
 name|dropit
 goto|;
-comment|/* random pkt drop			*/
+comment|/* Random pkt drop. */
 if|if
 condition|(
 name|fs
@@ -6264,7 +6268,7 @@ condition|)
 goto|goto
 name|dropit
 goto|;
-comment|/* queue size overflow			*/
+comment|/* Queue size overflow. */
 block|}
 else|else
 block|{
@@ -6281,7 +6285,7 @@ condition|)
 goto|goto
 name|dropit
 goto|;
-comment|/* queue count overflow			*/
+comment|/* Queue count overflow. */
 block|}
 if|if
 condition|(
@@ -6303,7 +6307,7 @@ condition|)
 goto|goto
 name|dropit
 goto|;
-comment|/* XXX expensive to zero, see if we can remove it*/
+comment|/* XXX expensive to zero, see if we can remove it. */
 name|mtag
 operator|=
 name|m_tag_get
@@ -6330,7 +6334,7 @@ condition|)
 goto|goto
 name|dropit
 goto|;
-comment|/* cannot allocate packet header	*/
+comment|/* Cannot allocate packet header. */
 name|m_tag_prepend
 argument_list|(
 name|m
@@ -6338,7 +6342,7 @@ argument_list|,
 name|mtag
 argument_list|)
 expr_stmt|;
-comment|/* attach to mbuf chain */
+comment|/* Attach to mbuf chain. */
 name|pkt
 operator|=
 operator|(
@@ -6352,8 +6356,7 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-comment|/* ok, i can handle the pkt now... */
-comment|/* build and enqueue packet + parameters */
+comment|/* 	 * Ok, i can handle the pkt now... 	 * Build and enqueue packet + parameters. 	 */
 name|pkt
 operator|->
 name|rule
@@ -6424,17 +6427,17 @@ name|head
 operator|!=
 name|m
 condition|)
-comment|/* flow was not idle, we are done */
+comment|/* Flow was not idle, we are done. */
 goto|goto
 name|done
 goto|;
-comment|/*      * If we reach this point the flow was previously idle, so we need      * to schedule it. This involves different actions for fixed-rate or      * WF2Q queues.      */
+comment|/* 	 * If we reach this point the flow was previously idle, so we need 	 * to schedule it. This involves different actions for fixed-rate or 	 * WF2Q queues. 	 */
 if|if
 condition|(
 name|is_pipe
 condition|)
 block|{
-comment|/* 	 * Fixed-rate queue: just insert into the ready_heap. 	 */
+comment|/* Fixed-rate queue: just insert into the ready_heap. */
 name|dn_key
 name|t
 init|=
@@ -6469,7 +6472,7 @@ name|t
 operator|==
 literal|0
 condition|)
-comment|/* must process it now */
+comment|/* Must process it now. */
 name|ready_event
 argument_list|(
 name|q
@@ -6497,7 +6500,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * WF2Q. First, compute start time S: if the flow was idle (S=F+1) 	 * set S to the virtual time V for the controlling pipe, and update 	 * the sum of weights for the pipe; otherwise, remove flow from 	 * idle_heap and set S to max(F,V). 	 * Second, compute finish time F = S + len/weight. 	 * Third, if pipe was idle, update V=max(S, V). 	 * Fourth, count one more backlogged flow. 	 */
+comment|/* 		 * WF2Q. First, compute start time S: if the flow was 		 * idle (S = F + 1) set S to the virtual time V for the 		 * controlling pipe, and update the sum of weights for the pipe; 		 * otherwise, remove flow from idle_heap and set S to max(F,V). 		 * Second, compute finish time F = S + len / weight. 		 * Third, if pipe was idle, update V = max(S, V). 		 * Fourth, count one more backlogged flow. 		 */
 if|if
 condition|(
 name|DN_KEY_GT
@@ -6512,7 +6515,7 @@ name|F
 argument_list|)
 condition|)
 block|{
-comment|/* means timestamps are invalid */
+comment|/* Means timestamps are invalid. */
 name|q
 operator|->
 name|S
@@ -6529,7 +6532,7 @@ name|fs
 operator|->
 name|weight
 expr_stmt|;
-comment|/* add weight of new queue */
+comment|/* Add weight of new queue. */
 block|}
 else|else
 block|{
@@ -6576,7 +6579,7 @@ name|MY_M
 operator|)
 operator|/
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|fs
 operator|->
@@ -6620,7 +6623,7 @@ operator|->
 name|backlogged
 operator|++
 expr_stmt|;
-comment|/* 	 * Look at eligibility. A flow is not eligibile if S>V (when 	 * this happens, it means that there is some other flow already 	 * scheduled for the same pipe, so the scheduler_heap cannot be 	 * empty). If the flow is not eligible we just store it in the 	 * not_eligible_heap. Otherwise, we store in the scheduler_heap 	 * and possibly invoke ready_event_wfq() right now if there is 	 * leftover credit. 	 * Note that for all flows in scheduler_heap (SCH), S_i<= V, 	 * and for all flows in not_eligible_heap (NEH), S_i> V . 	 * So when we need to compute max( V, min(S_i) ) forall i in SCH+NEH, 	 * we only need to look into NEH. 	 */
+comment|/* 		 * Look at eligibility. A flow is not eligibile if S>V (when 		 * this happens, it means that there is some other flow already 		 * scheduled for the same pipe, so the scheduler_heap cannot be 		 * empty). If the flow is not eligible we just store it in the 		 * not_eligible_heap. Otherwise, we store in the scheduler_heap 		 * and possibly invoke ready_event_wfq() right now if there is 		 * leftover credit. 		 * Note that for all flows in scheduler_heap (SCH), S_i<= V, 		 * and for all flows in not_eligible_heap (NEH), S_i> V. 		 * So when we need to compute max(V, min(S_i)) forall i in 		 * SCH+NEH, we only need to look into NEH. 		 */
 if|if
 condition|(
 name|DN_KEY_GT
@@ -6635,7 +6638,7 @@ name|V
 argument_list|)
 condition|)
 block|{
-comment|/* not eligible */
+comment|/* Not eligible. */
 if|if
 condition|(
 name|pipe
@@ -6695,7 +6698,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-comment|/* pipe is idle */
+comment|/* Pipe is idle. */
 if|if
 condition|(
 name|pipe
@@ -6770,7 +6773,9 @@ name|head
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|dropit
 label|:
