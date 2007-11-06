@@ -1168,7 +1168,7 @@ parameter_list|,
 name|struct
 name|ksem
 modifier|*
-name|ksemptr
+name|ks
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2273,7 +2273,7 @@ parameter_list|,
 name|struct
 name|ksem
 modifier|*
-name|ksemptr
+name|ks
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2290,7 +2290,7 @@ parameter_list|,
 name|struct
 name|ksem
 modifier|*
-name|ksemptr
+name|ks
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2307,7 +2307,7 @@ parameter_list|,
 name|struct
 name|ksem
 modifier|*
-name|ksemptr
+name|ks
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2324,7 +2324,7 @@ parameter_list|,
 name|struct
 name|ksem
 modifier|*
-name|ksemptr
+name|ks
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2341,7 +2341,7 @@ parameter_list|,
 name|struct
 name|ksem
 modifier|*
-name|ksemptr
+name|ks
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2358,7 +2358,7 @@ parameter_list|,
 name|struct
 name|ksem
 modifier|*
-name|ksemptr
+name|ks
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -3143,12 +3143,12 @@ parameter_list|,
 name|struct
 name|ksem
 modifier|*
-name|ksem
+name|ks
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|posixlabel
+name|kslabel
 parameter_list|)
 block|{
 name|LABEL_CHECK
@@ -3162,7 +3162,7 @@ argument_list|)
 expr_stmt|;
 name|LABEL_CHECK
 argument_list|(
-name|posixlabel
+name|kslabel
 argument_list|,
 name|MAGIC_POSIX_SEM
 argument_list|)
@@ -7061,12 +7061,12 @@ parameter_list|,
 name|struct
 name|ksem
 modifier|*
-name|ksemptr
+name|ks
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ks_label
+name|kslabel
 parameter_list|)
 block|{
 name|LABEL_CHECK
@@ -7080,7 +7080,7 @@ argument_list|)
 expr_stmt|;
 name|LABEL_CHECK
 argument_list|(
-name|ks_label
+name|kslabel
 argument_list|,
 name|MAGIC_POSIX_SEM
 argument_list|)
