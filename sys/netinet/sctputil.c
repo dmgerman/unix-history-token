@@ -4793,6 +4793,9 @@ name|struct
 name|sctp_inpcb
 modifier|*
 name|inp
+parameter_list|,
+name|int
+name|save_in_twait
 parameter_list|)
 block|{
 name|u_long
@@ -4852,6 +4855,8 @@ name|x
 argument_list|,
 operator|&
 name|now
+argument_list|,
+name|save_in_twait
 argument_list|)
 condition|)
 block|{
@@ -5057,17 +5062,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sctp_is_vtag_good
+name|sctp_is_in_timewait
 argument_list|(
-name|m
-argument_list|,
 name|override_tag
-argument_list|,
-operator|&
-name|now
 argument_list|)
 condition|)
 block|{
+comment|/* 			 * It must be in the time-wait hash, we put it there 			 * when we aloc one. If not the peer is playing 			 * games. 			 */
 name|asoc
 operator|->
 name|my_vtag
@@ -5090,6 +5091,11 @@ argument_list|,
 name|ENOMEM
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"Huh is_in_timewait fails"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -5106,6 +5112,8 @@ operator|=
 name|sctp_select_a_tag
 argument_list|(
 name|m
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -5117,6 +5125,8 @@ operator|=
 name|sctp_select_a_tag
 argument_list|(
 name|m
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|asoc
@@ -5126,6 +5136,8 @@ operator|=
 name|sctp_select_a_tag
 argument_list|(
 name|m
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|asoc

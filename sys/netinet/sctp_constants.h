@@ -4550,14 +4550,14 @@ comment|/*  * If we use the per-endpoint model than we do not have a hash table 
 end_comment
 
 begin_comment
-comment|/*  * Number of seconds of time wait, tied to MSL value (2 minutes), so 2 * MSL  * = 4 minutes or 480 seconds.  */
+comment|/*  * Number of seconds of time wait for a vtag.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTP_TIME_WAIT
-value|480
+value|60
 end_define
 
 begin_comment

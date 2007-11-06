@@ -24355,6 +24355,8 @@ operator|=
 name|sctp_select_a_tag
 argument_list|(
 name|inp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|initackm_out
@@ -24418,6 +24420,8 @@ operator|=
 name|sctp_select_a_tag
 argument_list|(
 name|inp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|initackm_out
