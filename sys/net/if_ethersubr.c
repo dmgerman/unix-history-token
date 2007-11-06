@@ -2404,6 +2404,7 @@ expr_stmt|;
 block|}
 name|ip_dn_io_ptr
 argument_list|(
+operator|&
 name|m
 argument_list|,
 name|dst
