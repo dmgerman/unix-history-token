@@ -104,6 +104,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATI_IXP_SB600_ID
+value|0x4384
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATI_IXP_BASE_RATE
 value|48000
 end_define

@@ -477,6 +477,14 @@ name|ATI_IXP_400_ID
 block|,
 literal|"ATI IXP 400"
 block|}
+block|,
+block|{
+name|ATI_VENDOR_ID
+block|,
+name|ATI_IXP_SB600_ID
+block|,
+literal|"ATI IXP SB600"
+block|}
 block|, }
 struct|;
 end_struct
@@ -4016,7 +4024,7 @@ name|codec_not_ready_bits
 operator||=
 name|detected_codecs
 expr_stmt|;
-comment|/* disable detected interupt sources */
+comment|/* disable detected interrupt sources */
 name|enable
 operator|=
 name|atiixp_rd
