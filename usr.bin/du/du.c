@@ -514,6 +514,8 @@ break|break;
 case|case
 literal|'h'
 case|:
+if|if
+condition|(
 name|setenv
 argument_list|(
 literal|"BLOCKSIZE"
@@ -521,6 +523,14 @@ argument_list|,
 literal|"512"
 argument_list|,
 literal|1
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|warnx
+argument_list|(
+literal|"setenv: cannot set BLOCKSIZE=512"
 argument_list|)
 expr_stmt|;
 name|hflag
@@ -535,6 +545,8 @@ name|hflag
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
 name|setenv
 argument_list|(
 literal|"BLOCKSIZE"
@@ -542,6 +554,14 @@ argument_list|,
 literal|"1024"
 argument_list|,
 literal|1
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|warnx
+argument_list|(
+literal|"setenv: cannot set BLOCKSIZE=1024"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -552,6 +572,8 @@ name|hflag
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
 name|setenv
 argument_list|(
 literal|"BLOCKSIZE"
@@ -559,6 +581,14 @@ argument_list|,
 literal|"1048576"
 argument_list|,
 literal|1
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|warnx
+argument_list|(
+literal|"setenv: cannot set BLOCKSIZE=1048576"
 argument_list|)
 expr_stmt|;
 break|break;
