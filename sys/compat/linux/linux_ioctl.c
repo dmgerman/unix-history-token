@@ -12425,6 +12425,9 @@ case|:
 case|case
 name|LINUX_SIOCSPGRP
 case|:
+case|case
+name|LINUX_SIOCGIFCOUNT
+case|:
 comment|/* these ioctls don't take an interface name */
 ifdef|#
 directive|ifdef
@@ -12488,6 +12491,9 @@ case|case
 name|LINUX_SIOCDEVPRIVATE
 operator|+
 literal|1
+case|:
+case|case
+name|LINUX_SIOCGIFINDEX
 case|:
 comment|/* copy in the interface name and translate it. */
 name|error
@@ -13098,6 +13104,38 @@ operator|*
 operator|)
 name|args
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|LINUX_SIOCGIFINDEX
+case|:
+name|args
+operator|->
+name|cmd
+operator|=
+name|SIOCGIFINDEX
+expr_stmt|;
+name|error
+operator|=
+name|ioctl
+argument_list|(
+name|td
+argument_list|,
+operator|(
+expr|struct
+name|ioctl_args
+operator|*
+operator|)
+name|args
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|LINUX_SIOCGIFCOUNT
+case|:
+name|error
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 comment|/* 	 * XXX This is slightly bogus, but these ioctls are currently 	 * XXX only used by the aironet (if_an) network driver. 	 */

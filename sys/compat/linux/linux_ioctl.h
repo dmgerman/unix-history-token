@@ -1177,6 +1177,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_SIOCGIFINDEX
+value|0x8933
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SIOGIFINDEX
+value|LINUX_SIOCGIFINDEX
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SIOCGIFCOUNT
+value|0x8938
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_IOCTL_SOCKET_MIN
 value|LINUX_FIOSETOWN
 end_define
@@ -1185,7 +1206,7 @@ begin_define
 define|#
 directive|define
 name|LINUX_IOCTL_SOCKET_MAX
-value|LINUX_SIOCDELMULTI
+value|LINUX_SIOCGIFCOUNT
 end_define
 
 begin_comment
