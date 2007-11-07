@@ -9,6 +9,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"runefile.h"
+end_include
+
 begin_comment
 comment|/*  * This should look a LOT like a _RuneEntry  */
 end_comment
