@@ -12636,7 +12636,7 @@ condition|(
 name|kmem_size
 argument_list|()
 operator|<
-literal|256
+literal|512
 operator|*
 operator|(
 literal|1
@@ -12647,19 +12647,19 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS WARNING: Recommended minimum kmem_size is 256MB; "
+literal|"ZFS WARNING: Recommended minimum kmem_size is 512MB; "
 literal|"expect unstable behavior.\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"             Consider tuning vm.kmem_size or "
-literal|"vm.kmem_size_min\n"
+literal|"	     Consider tuning vm.kmem_size and "
+literal|"vm.kmem_size_max\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"             in /boot/loader.conf.\n"
+literal|"	     in /boot/loader.conf.\n"
 argument_list|)
 expr_stmt|;
 block|}
