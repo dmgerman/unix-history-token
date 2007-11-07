@@ -2129,8 +2129,8 @@ parameter_list|(
 name|vm_map_t
 name|map
 parameter_list|,
-name|boolean_t
-name|user_wait
+name|int
+name|timo
 parameter_list|)
 block|{
 name|mtx_lock
@@ -2162,7 +2162,7 @@ name|PVM
 argument_list|,
 literal|"vmmaps"
 argument_list|,
-literal|0
+name|timo
 argument_list|)
 operator|)
 return|;
@@ -7113,7 +7113,7 @@ name|vm_map_unlock_and_wait
 argument_list|(
 name|map
 argument_list|,
-name|user_unwire
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -7753,7 +7753,7 @@ name|vm_map_unlock_and_wait
 argument_list|(
 name|map
 argument_list|,
-name|user_wire
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -9261,7 +9261,7 @@ name|vm_map_unlock_and_wait
 argument_list|(
 name|map
 argument_list|,
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 name|vm_map_lock

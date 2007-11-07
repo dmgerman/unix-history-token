@@ -858,8 +858,8 @@ parameter_list|(
 name|vm_map_t
 name|map
 parameter_list|,
-name|boolean_t
-name|user_wait
+name|int
+name|timo
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1341,7 +1341,7 @@ name|vm_map_unlock_and_wait
 argument_list|(
 name|map
 argument_list|,
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
