@@ -414,6 +414,12 @@ name|uint8_t
 name|ifbr_state
 decl_stmt|;
 comment|/* member if STP state */
+name|uint8_t
+name|pad
+index|[
+literal|44
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
