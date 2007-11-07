@@ -15,6 +15,12 @@ directive|define
 name|_MBLOCAL_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<runetype.h>
+end_include
+
 begin_comment
 comment|/*  * Rune initialization function prototypes.  */
 end_comment
