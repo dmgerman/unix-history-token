@@ -162,24 +162,21 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|bool_t
 name|check_bound
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fdlist
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|uaddr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Returns 1 if the given address is bound for the given addr& transport  * For all error cases, we assume that the address is bound  * Returns 0 for success.  */

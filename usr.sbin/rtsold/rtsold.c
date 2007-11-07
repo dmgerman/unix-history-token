@@ -261,21 +261,18 @@ name|PROBE_INTERVAL
 value|60
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|int
-decl|main
-name|__P
-argument_list|(
-operator|(
+name|main
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* static variables and functions */
@@ -354,40 +351,34 @@ literal|0
 end_if
 
 begin_endif
-unit|static int ifreconfig __P((char *));
+unit|static int ifreconfig(char *);
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|make_packet
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ifinfo
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|timeval
 modifier|*
 name|rtsol_check_timer
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifndef
 ifndef|#
@@ -395,37 +386,31 @@ directive|ifndef
 name|SMALL
 end_ifndef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|rtsold_set_dump_file
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|usage
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int

@@ -288,18 +288,15 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|ip_ntoa
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern

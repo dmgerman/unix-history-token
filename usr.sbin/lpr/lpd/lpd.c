@@ -398,33 +398,30 @@ begin_comment
 comment|/* XXX from libc/net/rcmd.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|__ivaliduser_sa
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|sockaddr
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|socklen_t
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|uid_t

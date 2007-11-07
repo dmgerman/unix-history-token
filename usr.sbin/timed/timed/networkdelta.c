@@ -47,30 +47,27 @@ directive|include
 file|"globals.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|long
 name|median
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|float
-operator|,
+parameter_list|,
 name|float
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|long
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|long
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Compute a corrected date.  *	Compute the median of the reasonable differences.  First compute  *	the median of all authorized differences, and then compute the  *	median of all differences that are reasonably close to the first  *	median.  *  * This differs from the original BSD implementation, which looked for  *	the largest group of machines with essentially the same date.  *	That assumed that machines with bad clocks would be uniformly  *	distributed.  Unfortunately, in real life networks, the distribution  *	of machines is not uniform among models of machines, and the  *	distribution of errors in clocks tends to be quite consistent  *	for a given model.  In other words, all model VI Supre Servres  *	from GoFast Inc. tend to have about the same error.  *	The original BSD implementation would chose the clock of the  *	most common model, and discard all others.  *  *	Therefore, get best we can do is to try to average over all  *	of the machines in the network, while discarding "obviously"  *	bad values.  */

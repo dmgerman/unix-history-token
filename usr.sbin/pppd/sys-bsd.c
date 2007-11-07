@@ -574,37 +574,31 @@ begin_comment
 comment|/* Prototypes for procedures local to this file. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|dodefaultroute
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int32_t
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|get_ether_addr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int32_t
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|sockaddr_dl
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * sys_init - System-dependent initialization.  */

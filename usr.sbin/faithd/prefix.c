@@ -100,43 +100,37 @@ directive|include
 file|"prefix.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|prefix_set
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|prefix
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|config
 modifier|*
 name|config_load1
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#
@@ -145,7 +139,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void config_show1 __P((const struct config *)); static void config_show __P((void));
+unit|static void config_show1(const struct config *); static void config_show(void);
 endif|#
 directive|endif
 end_endif

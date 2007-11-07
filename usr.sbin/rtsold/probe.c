@@ -153,24 +153,21 @@ name|probesock
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sendprobe
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|in6_addr
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|ifinfo
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int

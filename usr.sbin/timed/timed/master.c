@@ -123,40 +123,34 @@ begin_comment
 comment|/* slaves listening to our clock */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|mchgdate
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|tsp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|logwtmp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * The main function of `master' is to periodically compute the differences  * (deltas) between its clock and the clocks of the slaves, to compute the  * network average delta, and to send to the slaves the differences between  * their individual deltas and the network delta.  * While waiting, it receives messages from the slaves (i.e. requests for  * master's name, remote requests to set the network time, ...), and  * takes the appropriate action.  */

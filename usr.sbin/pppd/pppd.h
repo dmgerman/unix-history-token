@@ -911,164 +911,144 @@ decl_stmt|;
 comment|/* PPP protocol number */
 comment|/* Initialization procedure */
 name|void
-argument_list|(
-argument|*init
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|init
+function_decl|)
+parameter_list|(
 name|int
 name|unit
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/* Process a received packet */
 name|void
-argument_list|(
-argument|*input
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|input
+function_decl|)
+parameter_list|(
 name|int
 name|unit
-operator|,
+parameter_list|,
 name|u_char
-operator|*
+modifier|*
 name|pkt
-operator|,
+parameter_list|,
 name|int
 name|len
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/* Process a received protocol-reject */
 name|void
-argument_list|(
-argument|*protrej
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|protrej
+function_decl|)
+parameter_list|(
 name|int
 name|unit
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/* Lower layer has come up */
 name|void
-argument_list|(
-argument|*lowerup
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|lowerup
+function_decl|)
+parameter_list|(
 name|int
 name|unit
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/* Lower layer has gone down */
 name|void
-argument_list|(
-argument|*lowerdown
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|lowerdown
+function_decl|)
+parameter_list|(
 name|int
 name|unit
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/* Open the protocol */
 name|void
-argument_list|(
-argument|*open
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|open
+function_decl|)
+parameter_list|(
 name|int
 name|unit
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/* Close the protocol */
 name|void
-argument_list|(
-argument|*close
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|close
+function_decl|)
+parameter_list|(
 name|int
 name|unit
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|reason
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/* Print a packet in readable form */
 name|int
-argument_list|(
-argument|*printpkt
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|printpkt
+function_decl|)
+parameter_list|(
 name|u_char
-operator|*
+modifier|*
 name|pkt
-operator|,
+parameter_list|,
 name|int
 name|len
-operator|,
+parameter_list|,
 name|void
-argument_list|(
-argument|*printer
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|printer
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-operator|,
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+parameter_list|,
 name|void
-operator|*
+modifier|*
 name|arg
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/* Process a received data packet */
 name|void
-argument_list|(
-argument|*datainput
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|datainput
+function_decl|)
+parameter_list|(
 name|int
 name|unit
-operator|,
+parameter_list|,
 name|u_char
-operator|*
+modifier|*
 name|pkt
-operator|,
+parameter_list|,
 name|int
 name|len
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|int
 name|enabled_flag
 decl_stmt|;
@@ -1080,46 +1060,40 @@ decl_stmt|;
 comment|/* Text name of protocol */
 comment|/* Check requested options, assign defaults */
 name|void
-argument_list|(
-argument|*check_options
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|check_options
+function_decl|)
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/* Configure interface for demand-dial */
 name|int
-argument_list|(
-argument|*demand_conf
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|demand_conf
+function_decl|)
+parameter_list|(
 name|int
 name|unit
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/* Say whether to bring up link for this pkt */
 name|int
-argument_list|(
-argument|*active_pkt
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|active_pkt
+function_decl|)
+parameter_list|(
 name|u_char
-operator|*
+modifier|*
 name|pkt
-operator|,
+parameter_list|,
 name|int
 name|len
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -1146,350 +1120,305 @@ begin_comment
 comment|/* Procedures exported from main.c. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|detach
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Detach from controlling tty */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|die
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Cleanup and exit */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|quit
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* like die(1) */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|novm
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Say we ran out of memory, and die */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|timeout
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|func
-argument_list|)
-argument_list|(
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|)
-operator|,
+modifier|*
+parameter_list|)
+parameter_list|,
 name|void
-operator|*
+modifier|*
 name|arg
-operator|,
+parameter_list|,
 name|int
 name|t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Call func(arg) after t seconds */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|untimeout
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|func
-argument_list|)
-argument_list|(
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|)
-operator|,
+modifier|*
+parameter_list|)
+parameter_list|,
 name|void
-operator|*
+modifier|*
 name|arg
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Cancel call to func(arg) */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|run_program
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|prog
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|args
-operator|,
+parameter_list|,
 name|int
 name|must_exist
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Run program prog with args in child */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|demuxprotrej
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Demultiplex a Protocol-Reject */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|format_packet
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-argument_list|,
-operator|...
-argument_list|)
-operator|,
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Format a packet in human-readable form */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|log_packet
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Format a packet and log it with syslog */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|print_string
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-argument_list|,
-operator|...
-argument_list|)
-operator|,
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Format a string for output */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|fmtmsg
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* sprintf++ */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|vfmtmsg
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* vsprintf++ */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|script_setenv
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* set script env var */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|script_unsetenv
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* unset script env var */
@@ -1499,345 +1428,291 @@ begin_comment
 comment|/* Procedures exported from auth.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|link_required
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* we are starting to use the link */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|link_terminated
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* we are finished with the link */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|link_down
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* the LCP layer has left the Opened state */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|link_established
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* the link is up; authenticate now */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|np_up
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* a network protocol has come up */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|np_down
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* a network protocol has gone down */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|np_finished
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* a network protocol no longer needs link */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|auth_peer_fail
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* peer failed to authenticate itself */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|auth_peer_success
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* peer successfully authenticated itself */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|auth_withpeer_fail
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* we failed to authenticate ourselves */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|auth_withpeer_success
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* we successfully authenticated ourselves */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|auth_check_options
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* check authentication options supplied */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|auth_reset
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* check what secrets we have */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|check_passwd
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Check peer-supplied username/password */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|get_secret
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* get "secret" for chap */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|auth_ip_addr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* check if IP address is authorized */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|bad_ip_adrs
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* check if IP address is unreasonable */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|check_access
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* check permissions on secrets file */
@@ -1847,121 +1722,100 @@ begin_comment
 comment|/* Procedures exported from demand.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|demand_conf
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* config interface(s) for demand-dial */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|demand_block
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* set all NPs to queue up packets */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|demand_unblock
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* set all NPs to pass packets */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|demand_discard
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* set all NPs to discard packets */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|demand_rexmit
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* retransmit saved frames for an NP */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|loop_chars
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* process chars from loopback */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|loop_frame
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* process frame from loopback */
@@ -1971,586 +1825,490 @@ begin_comment
 comment|/* Procedures exported from sys-*.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|sys_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Do system-dependent initialization */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|sys_cleanup
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Restore system state before exiting */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|sys_check_options
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Check options specified */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|sys_close
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Clean up in a child before execing */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|ppp_available
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Test whether ppp kernel support exists */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|open_ppp_loopback
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Open loopback for demand-dialling */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|establish_ppp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Turn serial port into a ppp interface */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|restore_loop
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Transfer ppp unit back to loopback */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|disestablish_ppp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Restore port to normal operation */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|clean_check
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Check if line was 8-bit clean */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|set_up_tty
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Set up port's speed, parameters, etc. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|restore_tty
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Restore port's original parameters */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|setdtr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Raise or lower port's DTR line */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|output
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|u_char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Output a PPP packet */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|wait_input
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|timeval
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Wait for input, with timeout */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|wait_loop_output
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|timeval
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Wait for pkt from loopback, with timeout */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|wait_time
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|timeval
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Wait for given length of time */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|read_packet
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Read PPP packet */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|get_loop_output
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Read pkts from loopback */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ppp_send_config
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Configure i/f transmit parameters */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ppp_set_xaccm
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|ext_accm
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Set extended transmit ACCM */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ppp_recv_config
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Configure i/f receive parameters */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|ccp_test
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|u_char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Test support for compression scheme */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ccp_flags_set
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Set kernel CCP state */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|ccp_fatal_error
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Test for fatal decomp error in kernel */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|get_idle_time
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|ppp_idle
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Find out how long link has been idle */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|sifvjcomp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Configure VJ TCP header compression */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|sifup
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Configure i/f up (for IP) */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|sifnpmode
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|u
-operator|,
+parameter_list|,
 name|int
 name|proto
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|NPmode
 name|mode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Set mode for handling packets for proto */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|sifdown
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Configure i/f down (for IP) */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|sifaddr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Configure IP addresses for i/f */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|cifaddr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Reset i/f IP addresses */
@@ -2562,41 +2320,35 @@ directive|ifdef
 name|INET6
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|sif6addr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|eui64_t
-operator|,
+parameter_list|,
 name|eui64_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Configure IPv6 addresses for i/f */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|cif6addr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|eui64_t
-operator|,
+parameter_list|,
 name|eui64_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Remove an IPv6 address from i/f */
@@ -2607,186 +2359,156 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|sifdefaultroute
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Create default route through i/f */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|cifdefaultroute
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Delete default route through i/f */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|sifproxyarp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Add proxy ARP entry for peer */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|cifproxyarp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Delete proxy ARP entry for peer */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|u_int32_t
 name|GetMask
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Get appropriate netmask for address */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|lock
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Create lock file for device */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|unlock
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Delete previously-created lock file */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|daemon
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Detach us from terminal session */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|logwtmp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Write entry to wtmp file */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|get_host_seed
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Get host-dependent random number seed */
@@ -2798,25 +2520,22 @@ directive|ifdef
 name|PPP_FILTER
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|set_filters
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|bpf_program
-operator|*
+modifier|*
 name|pass
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|bpf_program
-operator|*
+modifier|*
 name|active
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Set filter programs in kernel */
@@ -2831,187 +2550,160 @@ begin_comment
 comment|/* Procedures exported from options.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|parse_args
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|argc
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|argv
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Parse options from arguments given */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|usage
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Print a usage message */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|options_from_file
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|filename
-operator|,
+parameter_list|,
 name|int
 name|must_exist
-operator|,
+parameter_list|,
 name|int
 name|check_prot
-operator|,
+parameter_list|,
 name|int
 name|privileged
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Parse options from an options file */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|options_from_user
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Parse options from user's .ppprc */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|options_for_tty
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Parse options from /etc/ppp/options.tty */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|scan_args
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|argc
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|argv
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Look for tty name in command-line args */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|getword
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
+modifier|*
 name|f
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|word
-operator|,
+parameter_list|,
 name|int
-operator|*
+modifier|*
 name|newlinep
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|filename
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Read a word from a file */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|option_error
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|fmt
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Print an error message about an option */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|setipaddr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* set IP addresses */

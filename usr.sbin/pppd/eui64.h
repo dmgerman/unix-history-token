@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*     eui64.h - EUI64 routines for IPv6CP.     Copyright (C) 1999  Tommi Komulainen<Tommi.Komulainen@iki.fi>      Redistribution and use in source and binary forms are permitted     provided that the above copyright notice and this paragraph are     duplicated in all such forms and that any documentation,     advertising materials, and other materials related to such     distribution and use acknowledge that the software was developed     by Tommi Komulainen.  The name of the author may not be used     to endorse or promote products derived from this software without     specific prior written permission.     THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR     IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED     WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.           $Id: eui64.h,v 1.3 1999/09/30 19:56:37 masputra Exp $ */
 end_comment
 
@@ -269,18 +273,15 @@ parameter_list|)
 value|eui64_set32(e, l)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|eui64_ntoa
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|eui64_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Returns ascii representation of id */

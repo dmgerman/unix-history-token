@@ -60,31 +60,25 @@ directive|include
 file|"magic.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|long
 name|mrand48
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|srand48
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * magic_init - Initialize the magic number generator.  *  * Attempts to compute a random number seed which will not repeat.  * The current method uses the current hostid, current process ID  * and current time, currently.  */

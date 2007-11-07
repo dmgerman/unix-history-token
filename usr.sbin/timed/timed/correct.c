@@ -65,20 +65,17 @@ directive|include
 file|<sys/times.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|adjclock
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|timeval
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * sends to the slaves the corrections for their clocks after fixing our  * own  */
