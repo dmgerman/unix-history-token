@@ -1714,6 +1714,10 @@ condition|(
 name|c
 operator|==
 name|ABORT_CHAR
+operator|||
+name|c
+operator|<
+literal|0
 condition|)
 name|_rl_abort_internal
 argument_list|()
