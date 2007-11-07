@@ -481,6 +481,16 @@ argument_list|(
 name|RL_STATE_NUMERICARG
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|key
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 return|return
 operator|(
 name|_rl_dispatch
