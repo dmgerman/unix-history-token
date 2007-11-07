@@ -7042,6 +7042,8 @@ parameter_list|)
 block|{
 name|int
 name|nstr
+decl_stmt|,
+name|foundenv
 decl_stmt|;
 name|char
 modifier|*
@@ -7057,6 +7059,10 @@ decl_stmt|,
 modifier|*
 name|path
 decl_stmt|;
+name|foundenv
+operator|=
+literal|1
+expr_stmt|;
 name|Fortune_path
 operator|=
 name|getenv
@@ -7070,10 +7076,16 @@ name|Fortune_path
 operator|==
 name|NULL
 condition|)
+block|{
 name|Fortune_path
 operator|=
-literal|""
+name|FORTDIR
 expr_stmt|;
+name|foundenv
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|path
 operator|=
 name|strdup
@@ -7184,6 +7196,27 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|foundenv
+operator|==
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"fortune: FORTUNE_PATH: None of the specified "
+literal|"directories found.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|path
@@ -7195,20 +7228,6 @@ literal|0
 index|]
 operator|=
 name|FORTDIR
-expr_stmt|;
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|Fortune_path
-argument_list|)
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Ignoring FORTUNE_PATH; no directories found.\n"
-argument_list|)
 expr_stmt|;
 block|}
 block|}
