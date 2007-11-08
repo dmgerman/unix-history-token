@@ -542,9 +542,10 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|names
+index|[]
 init|=
 literal|"pqrsPQRS"
 decl_stmt|;
@@ -597,10 +598,14 @@ name|n
 operator|>=
 literal|32
 operator|*
-name|strlen
+operator|(
+sizeof|sizeof
 argument_list|(
 name|names
 argument_list|)
+operator|-
+literal|1
+operator|)
 condition|)
 return|return
 operator|(
