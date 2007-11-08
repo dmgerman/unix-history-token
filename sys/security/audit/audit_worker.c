@@ -623,7 +623,7 @@ condition|(
 name|audit_in_failure
 condition|)
 block|{
-comment|/* 			 * XXXRW: If we want to handle recovery, this is the 			 * spot to do it: unset audit_in_failure, and issue a 			 * wakeup on the cv. 			 */
+comment|/* 			 * Note: if we want to handle recovery, this is the 			 * spot to do it: unset audit_in_failure, and issue a 			 * wakeup on the cv. 			 */
 block|}
 block|}
 name|error
@@ -675,7 +675,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* 	 * Catch completion of a queue drain here; if we're draining and the 	 * queue is now empty, fail stop.  That audit_fail_stop is implicitly 	 * true, since audit_in_failure can only be set of audit_fail_stop is 	 * set. 	 * 	 * XXXRW: If we handle recovery from audit_in_failure, then we need 	 * to make panic here conditional. 	 */
+comment|/* 	 * Catch completion of a queue drain here; if we're draining and the 	 * queue is now empty, fail stop.  That audit_fail_stop is implicitly 	 * true, since audit_in_failure can only be set of audit_fail_stop is 	 * set. 	 * 	 * Note: if we handle recovery from audit_in_failure, then we need to 	 * make panic here conditional. 	 */
 if|if
 condition|(
 name|audit_in_failure
@@ -874,7 +874,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If an appropriate signal has been received rotate the audit log based on  * the global replacement variables.  Signal consumers as needed that the  * rotation has taken place.  *  * XXXRW: The global variables and CVs used to signal the audit_worker to  * perform a rotation are essentially a message queue of depth 1.  It would  * be much nicer to actually use a message queue.  */
+comment|/*  * If an appropriate signal has been received rotate the audit log based on  * the global replacement variables.  Signal consumers as needed that the  * rotation has taken place.  *  * The global variables and CVs used to signal the audit_worker to perform a  * rotation are essentially a message queue of depth 1.  It would be much  * nicer to actually use a message queue.  */
 end_comment
 
 begin_function
@@ -975,7 +975,6 @@ operator|!=
 name|NULL
 operator|)
 expr_stmt|;
-comment|/* 		 * XXX: What to do about write failures here? 		 */
 if|if
 condition|(
 name|old_vp
@@ -1647,7 +1646,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * audit_rotate_vnode() is called by a user or kernel thread to configure or  * de-configure auditing on a vnode.  The arguments are the replacement  * credential and vnode to substitute for the current credential and vnode,  * if any.  If either is set to NULL, both should be NULL, and this is used  * to indicate that audit is being disabled.  The real work is done in the  * audit_worker thread, but audit_rotate_vnode() waits synchronously for that  * to complete.  *  * The vnode should be referenced and opened by the caller.  The credential  * should be referenced.  audit_rotate_vnode() will own both references as of  * this call, so the caller should not release either.  *  * XXXAUDIT: Review synchronize communication logic.  Really, this is a  * message queue of depth 1.  *  * XXXAUDIT: Enhance the comments below to indicate that we are basically  * acquiring ownership of the communications queue, inserting our message,  * and waiting for an acknowledgement.  */
+comment|/*  * audit_rotate_vnode() is called by a user or kernel thread to configure or  * de-configure auditing on a vnode.  The arguments are the replacement  * credential and vnode to substitute for the current credential and vnode,  * if any.  If either is set to NULL, both should be NULL, and this is used  * to indicate that audit is being disabled.  The real work is done in the  * audit_worker thread, but audit_rotate_vnode() waits synchronously for that  * to complete.  *  * The vnode should be referenced and opened by the caller.  The credential  * should be referenced.  audit_rotate_vnode() will own both references as of  * this call, so the caller should not release either.  *  * XXXAUDIT: Review synchronize communication logic.  Really, this is a  * message queue of depth 1.  We are essentially acquiring ownership of the  * communications queue, inserting our message, and waiting for an  * acknowledgement.  */
 end_comment
 
 begin_function
