@@ -964,7 +964,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* XXXAUDIT: p_cansee()? */
 if|if
 condition|(
 operator|(
@@ -987,6 +986,29 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+if|if
+condition|(
+name|p_cansee
+argument_list|(
+name|td
+argument_list|,
+name|tp
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|udata
 operator|.
 name|au_aupinfo
@@ -1099,7 +1121,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* XXXAUDIT: p_cansee()? */
 if|if
 condition|(
 operator|(
@@ -1122,6 +1143,29 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+if|if
+condition|(
+name|p_cansee
+argument_list|(
+name|td
+argument_list|,
+name|tp
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|tp
 operator|->
 name|p_au
@@ -2039,7 +2083,7 @@ name|cred
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * If a path is specified, open the replacement vnode, perform 	 * validity checks, and grab another reference to the current 	 * credential. 	 * 	 * XXXAUDIT: On Darwin, a NULL path is used to disable audit. 	 */
+comment|/* 	 * If a path is specified, open the replacement vnode, perform 	 * validity checks, and grab another reference to the current 	 * credential. 	 * 	 * On Darwin, a NULL path argument is also used to disable audit. 	 */
 if|if
 condition|(
 name|uap
