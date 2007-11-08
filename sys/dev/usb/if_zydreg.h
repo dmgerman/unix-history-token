@@ -3828,7 +3828,7 @@ define|#
 directive|define
 name|ZYX_MAX_RXBUFSZ
 define|\
-value|((sizeof(struct zyd_plcphdr) + MCLBYTES +			\ 	  sizeof(struct zyd_rx_desc)) * 3)
+value|((sizeof (struct zyd_plcphdr) + IEEE80211_MAX_LEN +		\ 	  sizeof (struct zyd_rx_stat)) * ZYD_MAX_RXFRAMECNT + 		\ 	 sizeof (struct zyd_rx_desc))
 end_define
 
 begin_define
@@ -4181,6 +4181,9 @@ decl_stmt|;
 name|int
 name|sc_flags
 decl_stmt|;
+name|int
+name|sc_if_flags
+decl_stmt|;
 define|#
 directive|define
 name|ZD1211_FWLOADED
@@ -4233,6 +4236,12 @@ name|rf_rev
 decl_stmt|;
 name|uint8_t
 name|pa_rev
+decl_stmt|;
+name|uint8_t
+name|fix_cr47
+decl_stmt|;
+name|uint8_t
+name|fix_cr157
 decl_stmt|;
 name|uint8_t
 name|pwr_cal
