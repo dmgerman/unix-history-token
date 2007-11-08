@@ -633,6 +633,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
+name|fault_flags
+decl_stmt|,
 name|writing
 decl_stmt|;
 comment|/* 	 * Assert that someone has locked this vmspace.  (Should be 	 * curthread but we can't assert that.)  This keeps the process 	 * from exiting out from under us until this operation completes. 	 */
@@ -686,6 +688,14 @@ name|VM_PROT_OVERRIDE_WRITE
 operator|)
 else|:
 name|VM_PROT_READ
+expr_stmt|;
+name|fault_flags
+operator|=
+name|writing
+condition|?
+name|VM_FAULT_DIRTY
+else|:
+name|VM_FAULT_NORMAL
 expr_stmt|;
 comment|/* 	 * Only map in one page at a time.  We don't have to, but it 	 * makes things easier.  This way is trivial - right? 	 */
 do|do
@@ -770,7 +780,7 @@ name|pageno
 argument_list|,
 name|reqprot
 argument_list|,
-name|VM_FAULT_NORMAL
+name|fault_flags
 argument_list|)
 expr_stmt|;
 if|if
