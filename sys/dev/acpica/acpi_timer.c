@@ -376,8 +376,9 @@ comment|/* no default frequency */
 literal|"ACPI"
 block|,
 comment|/* name */
-literal|1000
-comment|/* quality */
+operator|-
+literal|1
+comment|/* quality (chosen later) */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -800,6 +801,12 @@ name|tc_get_timecount
 operator|=
 name|acpi_timer_get_timecount
 expr_stmt|;
+name|acpi_timer_timecounter
+operator|.
+name|tc_quality
+operator|=
+literal|1000
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -814,6 +821,12 @@ operator|.
 name|tc_get_timecount
 operator|=
 name|acpi_timer_get_timecount_safe
+expr_stmt|;
+name|acpi_timer_timecounter
+operator|.
+name|tc_quality
+operator|=
+literal|850
 expr_stmt|;
 block|}
 name|tc_init
@@ -1088,10 +1101,7 @@ argument_list|,
 operator|&
 name|freq
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|freq
-argument_list|)
+literal|0
 argument_list|,
 name|req
 argument_list|)

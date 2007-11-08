@@ -722,7 +722,7 @@ index|]
 operator|.
 name|state
 expr_stmt|;
-comment|/* 	 * If the battery info is in terms of mA, convert to mW by 	 * multiplying by the design voltage. 	 */
+comment|/* 	 * If the battery info is in terms of mA, convert to mW by 	 * multiplying by the design voltage.  If the design voltage 	 * is 0 (due to some error reading the battery), skip this 	 * conversion. 	 */
 if|if
 condition|(
 name|bif
@@ -730,6 +730,12 @@ operator|->
 name|units
 operator|==
 name|ACPI_BIF_UNITS_MA
+operator|&&
+name|bif
+operator|->
+name|dvol
+operator|!=
+literal|0
 condition|)
 block|{
 name|bst

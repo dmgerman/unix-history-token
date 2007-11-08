@@ -2487,11 +2487,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|acpi_hpet_table_probe
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* Bring device objects and regions online. */
 if|if
 condition|(
@@ -7329,7 +7324,7 @@ operator|!=
 name|NULL
 condition|)
 break|break;
-comment|/*  	     * Create a placeholder device for this node.  Sort the placeholder 	     * so that the probe/attach passes will run breadth-first.  Orders 	     * less than 10 are reserved for special objects (i.e., system 	     * resources).  Larger values are used for all other devices. 	     */
+comment|/*  	     * Create a placeholder device for this node.  Sort the placeholder 	     * so that the probe/attach passes will run breadth-first.  Orders 	     * less than ACPI_DEV_BASE_ORDER are reserved for special objects 	     * (i.e., system resources).  Larger values are used for all other 	     * devices. 	     */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -7349,7 +7344,7 @@ operator|+
 literal|1
 operator|)
 operator|*
-literal|10
+name|ACPI_DEV_BASE_ORDER
 expr_stmt|;
 name|acpi_probe_order
 argument_list|(
