@@ -867,8 +867,6 @@ operator|->
 name|ni_ic
 decl_stmt|;
 name|int
-name|totallen
-decl_stmt|,
 name|framelen
 decl_stmt|;
 name|struct
@@ -894,14 +892,6 @@ name|ic_stats
 operator|.
 name|is_amsdu_decap
 operator|++
-expr_stmt|;
-name|totallen
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
 expr_stmt|;
 for|for
 control|(
@@ -941,7 +931,7 @@ literal|"a-msdu"
 argument_list|,
 literal|"%s"
 argument_list|,
-literal|"first decap failed"
+literal|"decap failed"
 argument_list|)
 expr_stmt|;
 name|ic
@@ -957,9 +947,13 @@ return|;
 block|}
 if|if
 condition|(
-name|framelen
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
 operator|==
-name|totallen
+name|framelen
 condition|)
 break|break;
 name|n
