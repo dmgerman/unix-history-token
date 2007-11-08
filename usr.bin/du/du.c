@@ -528,7 +528,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|warnx
+name|warn
 argument_list|(
 literal|"setenv: cannot set BLOCKSIZE=512"
 argument_list|)
@@ -559,7 +559,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|warnx
+name|warn
 argument_list|(
 literal|"setenv: cannot set BLOCKSIZE=1024"
 argument_list|)
@@ -586,7 +586,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|warnx
+name|warn
 argument_list|(
 literal|"setenv: cannot set BLOCKSIZE=1048576"
 argument_list|)
