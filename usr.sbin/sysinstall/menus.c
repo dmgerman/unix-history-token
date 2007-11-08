@@ -6712,30 +6712,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XORG_CLIENTS
-block|}
-block|,
-block|{
-literal|" man"
-block|,
-literal|"Manual pages"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XOrgDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XORG_MAN
+name|DIST_XORG_APPS
 block|}
 block|,
 block|{
@@ -7003,29 +6980,6 @@ block|,
 literal|']'
 block|,
 name|DIST_XORG_FONTS_TT
-block|}
-block|,
-block|{
-literal|" fs"
-block|,
-literal|"Font server"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XOrgDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XORG_FONTSERVER
 block|}
 block|,
 block|{
