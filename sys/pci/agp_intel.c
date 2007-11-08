@@ -1013,9 +1013,6 @@ decl_stmt|;
 name|u_int32_t
 name|reg
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -1023,22 +1020,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|agp_generic_detach
+name|agp_free_cdev
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 comment|/* Disable aperture accesses. */
 switch|switch
 condition|(
@@ -1289,6 +1275,11 @@ argument_list|(
 name|sc
 operator|->
 name|gatt
+argument_list|)
+expr_stmt|;
+name|agp_free_res
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
