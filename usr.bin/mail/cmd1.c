@@ -1131,6 +1131,7 @@ comment|/*  * Type out the messages requested.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|jmp_buf
 name|pipestop
 decl_stmt|;

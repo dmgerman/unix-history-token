@@ -73,6 +73,7 @@ comment|/*  * Mail -- a mail program  *  * Lexical processing of commands.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -779,6 +780,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|int
 modifier|*
 name|msgvec
@@ -786,6 +788,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|reset_on_stop
 decl_stmt|;
@@ -2114,6 +2117,7 @@ comment|/*  * The following gets called on receipt of an interrupt.  This is  * 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|inithdr
 decl_stmt|;

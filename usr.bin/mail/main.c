@@ -92,6 +92,7 @@ comment|/*  * Mail -- a mail program  *  * Startup -- interface with user.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|jmp_buf
 name|hdrjmp
 decl_stmt|;

@@ -265,6 +265,7 @@ comment|/*  * The following table describes the letters which can follow  * the 
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|coltab
 block|{
@@ -2191,6 +2192,7 @@ comment|/*  * scan out a single lexical item and return its token number,  * upd
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|lex
 block|{
@@ -2932,6 +2934,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|matchto
 parameter_list|(
@@ -3045,6 +3048,7 @@ comment|/*  * See if the given substring is contained within the specified field
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|lastscan
 index|[
