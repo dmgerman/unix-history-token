@@ -2709,7 +2709,7 @@ name|SMP
 end_ifdef
 
 begin_comment
-comment|/*  * For SMP, these functions have to use the IPI mechanism for coherence.  */
+comment|/*  * For SMP, these functions have to use the IPI mechanism for coherence.  *  * N.B.: Before calling any of the following TLB invalidation functions,  * the calling processor must ensure that all stores updating a non-  * kernel page table are globally performed.  Otherwise, another  * processor could cache an old, pre-update entry without being  * invalidated.  This can happen one of two ways: (1) The pmap becomes  * active on another processor after its pm_active field is checked by  * one of the following functions but before a store updating the page  * table is globally performed. (2) The pmap becomes active on another  * processor before its pm_active field is checked but due to  * speculative loads one of the following functions stills reads the  * pmap as inactive on the other processor.  *   * The kernel page table is exempt because its pm_active field is  * immutable.  The kernel page table is always active on every  * processor.  */
 end_comment
 
 begin_function
@@ -4475,7 +4475,8 @@ name|pm_stats
 operator|.
 name|resident_count
 expr_stmt|;
-name|atomic_subtract_int
+comment|/* 	 * This is a release store so that the ordinary store unmapping 	 * the page table page is globally performed before TLB shoot- 	 * down is begun. 	 */
+name|atomic_subtract_rel_int
 argument_list|(
 operator|&
 name|cnt
