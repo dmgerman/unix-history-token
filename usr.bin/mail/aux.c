@@ -146,6 +146,7 @@ comment|/*  * Make a copy of new argument incorporating old one.  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|save2str
