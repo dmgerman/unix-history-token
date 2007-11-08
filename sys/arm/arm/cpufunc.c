@@ -934,6 +934,30 @@ comment|/* idcache_wbinv_all	*/
 name|armv5_ec_idcache_wbinv_range
 block|,
 comment|/* idcache_wbinv_range	*/
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_all    */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wbinv_range  */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_inv_range    */
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* l2cache_wb_range     */
 comment|/* Other functions */
 name|cpufunc_nullop
 block|,
