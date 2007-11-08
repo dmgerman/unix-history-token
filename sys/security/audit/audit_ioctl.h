@@ -66,28 +66,6 @@ begin_comment
 comment|/* Local audit trail. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOTYET
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|AUDITPIPE_PRESELECT_MODE_PRIORITY
-value|3
-end_define
-
-begin_comment
-comment|/* Prioritized trail. */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Ioctls to read and control the behavior of individual audit pipe devices.  */
 end_comment
