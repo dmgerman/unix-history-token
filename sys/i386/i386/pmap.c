@@ -7526,8 +7526,23 @@ name|pv_entry_count
 operator|>
 name|pv_entry_high_water
 condition|)
-name|pagedaemon_wakeup
-argument_list|()
+if|if
+condition|(
+name|ratecheck
+argument_list|(
+operator|&
+name|lastprint
+argument_list|,
+operator|&
+name|printinterval
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"Approaching the limit on PV entries, consider "
+literal|"increasing either the vm.pmap.shpgperproc or the "
+literal|"vm.pmap.pv_entry_max tunable.\n"
+argument_list|)
 expr_stmt|;
 name|pc
 operator|=
@@ -7795,25 +7810,6 @@ operator|)
 return|;
 block|}
 comment|/* 		 * Reclaim pv entries: At first, destroy mappings to 		 * inactive pages.  After that, if a pv chunk entry 		 * is still needed, destroy mappings to active pages. 		 */
-if|if
-condition|(
-name|ratecheck
-argument_list|(
-operator|&
-name|lastprint
-argument_list|,
-operator|&
-name|printinterval
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"Approaching the limit on PV entries, "
-literal|"consider increasing tunables "
-literal|"vm.pmap.shpgperproc or "
-literal|"vm.pmap.pv_entry_max\n"
-argument_list|)
-expr_stmt|;
 name|PV_STAT
 argument_list|(
 name|pmap_collect_inactive
