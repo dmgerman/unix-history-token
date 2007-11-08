@@ -5251,9 +5251,31 @@ operator|->
 name|type
 operator|==
 name|OBJT_DEFAULT
+operator|||
+operator|(
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_SWAP
+operator|&&
+operator|!
+name|vm_pager_has_page
+argument_list|(
+name|object
+argument_list|,
+name|m
+operator|->
+name|pindex
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
 condition|)
 block|{
-comment|/* 		 * Hypothesis: A cache-elgible page belonging to a 		 * default object must be zero filled. 		 */
+comment|/* 		 * Hypothesis: A cache-elgible page belonging to a 		 * default object or swap object but without a backing 		 * store must be zero filled. 		 */
 name|vm_page_free
 argument_list|(
 name|m
