@@ -2065,6 +2065,8 @@ operator||
 name|LOCKLEAF
 operator||
 name|MPSAFE
+operator||
+name|AUDITVNODE1
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
@@ -2126,6 +2128,14 @@ argument_list|,
 literal|0
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
 if|if
