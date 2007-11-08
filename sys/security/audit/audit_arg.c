@@ -2530,7 +2530,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * XXXAUDIT: Witness warning for possible sleep here? 	 */
 name|KASSERT
 argument_list|(
 operator|(
