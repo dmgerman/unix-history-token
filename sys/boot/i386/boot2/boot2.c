@@ -922,6 +922,12 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|UFS_SMALL_CGBASE
+end_define
+
 begin_include
 include|#
 directive|include

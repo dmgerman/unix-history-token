@@ -407,6 +407,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|UFS_SMALL_CGBASE
+end_define
+
 begin_include
 include|#
 directive|include
