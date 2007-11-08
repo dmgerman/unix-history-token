@@ -1076,7 +1076,6 @@ comment|/*  * Return the current thread's audit record, if any.  */
 end_comment
 
 begin_function
-name|__inline__
 name|struct
 name|kaudit_record
 modifier|*
