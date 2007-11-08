@@ -98,49 +98,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The AUDIT_EXCESSIVELY_VERBOSE define enables a number of gratuitously  * noisy printf's to the console.  Due to the volume, it should be left off  * unless you want your system to churn a lot whenever the audit record flow  * gets high.  */
-end_comment
-
-begin_comment
-comment|//#define	AUDIT_EXCESSIVELY_VERBOSE
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AUDIT_EXCESSIVELY_VERBOSE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|AUDIT_PRINTF
-parameter_list|(
-name|x
-parameter_list|)
-value|printf x
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|AUDIT_PRINTF
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Audit control variables that are usually set/read via system calls and  * used to control various aspects of auditing.  */
 end_comment
 
