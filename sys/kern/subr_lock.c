@@ -130,6 +130,9 @@ operator|&
 name|lock_class_sx
 block|,
 operator|&
+name|lock_class_rm
+block|,
+operator|&
 name|lock_class_rw
 block|,
 operator|&

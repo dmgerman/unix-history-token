@@ -76,7 +76,6 @@ file|<ddb/ddb.h>
 end_include
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|pcpu
 modifier|*
@@ -182,6 +181,28 @@ name|cpuid
 argument_list|,
 name|size
 argument_list|)
+expr_stmt|;
+name|pcpu
+operator|->
+name|pc_rm_queue
+operator|.
+name|rmq_next
+operator|=
+operator|&
+name|pcpu
+operator|->
+name|pc_rm_queue
+expr_stmt|;
+name|pcpu
+operator|->
+name|pc_rm_queue
+operator|.
+name|rmq_prev
+operator|=
+operator|&
+name|pcpu
+operator|->
+name|pc_rm_queue
 expr_stmt|;
 block|}
 end_function

@@ -80,6 +80,30 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/*   * XXXUPS remove as soon as we have per cpu variable  * linker sets and  can define rm_queue in _rm_lock.h */
+end_comment
+
+begin_struct
+struct|struct
+name|rm_queue
+block|{
+name|struct
+name|rm_queue
+modifier|*
+specifier|volatile
+name|rmq_next
+decl_stmt|;
+name|struct
+name|rm_queue
+modifier|*
+specifier|volatile
+name|rmq_prev
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * This structure maps out the global data that needs to be kept on a  * per-cpu basis.  The members are accessed via the PCPU_GET/SET/PTR  * macros defined in<machine/pcpu.h>.  Machine dependent fields are  * defined in the PCPU_MD_FIELDS macro defined in<machine/pcpu.h>.  */
 end_comment
 
@@ -171,6 +195,11 @@ name|device
 modifier|*
 name|pc_device
 decl_stmt|;
+comment|/*  	 * Stuff for read mostly lock 	 *  	 * XXXUPS remove as soon as we have per cpu variable 	 * linker sets. 	 */
+name|struct
+name|rm_queue
+name|pc_rm_queue
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -228,6 +257,18 @@ end_endif
 begin_comment
 comment|/*  * Machine dependent callouts.  cpu_pcpu_init() is responsible for  * initializing machine dependent fields of struct pcpu, and  * db_show_mdpcpu() is responsible for handling machine dependent  * fields for the DDB 'show pcpu' command.  */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcpu
+modifier|*
+name|cpuid_to_pcpu
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void

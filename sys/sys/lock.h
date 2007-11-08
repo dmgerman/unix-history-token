@@ -823,6 +823,14 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|lock_class
+name|lock_class_rm
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|lock_class
 name|lock_class_lockmgr
 decl_stmt|;
 end_decl_stmt
