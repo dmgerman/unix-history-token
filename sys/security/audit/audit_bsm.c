@@ -370,7 +370,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-comment|/* Create the header token */
 name|tm
 operator|.
 name|tv_usec
@@ -433,7 +432,6 @@ argument_list|,
 name|tokens
 argument_list|)
 expr_stmt|;
-comment|/* Serialize token data to the record. */
 name|rec
 operator|->
 name|len
@@ -574,7 +572,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX May want turn some (or all) of these macros into functions in order  * to reduce the generated code sized.  *  * XXXAUDIT: These macros assume that 'kar', 'ar', 'rec', and 'tok' in the  * caller are OK with this.  */
+comment|/*  * XXX: May want turn some (or all) of these macros into functions in order  * to reduce the generated code sized.  *  * XXXAUDIT: These macros assume that 'kar', 'ar', 'rec', and 'tok' in the  * caller are OK with this.  */
 end_comment
 
 begin_define

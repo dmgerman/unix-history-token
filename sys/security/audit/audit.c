@@ -264,11 +264,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Audit control settings that are set/read by system calls and are  * hence non-static.  */
-end_comment
-
-begin_comment
-comment|/*  * Define the audit control flags.  */
+comment|/*  * Audit control settings that are set/read by system calls and are hence  * non-static.  *  * Define the audit control flags.  */
 end_comment
 
 begin_decl_stmt
@@ -355,7 +351,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Queue of audit records ready for delivery to disk.  We insert new  * records at the tail, and remove records from the head.  Also,  * a count of the number of records used for checking queue depth.  * In addition, a counter of records that we have allocated but are  * not yet in the queue, which is needed to estimate the total  * size of the combined set of records outstanding in the system.  */
+comment|/*  * Queue of audit records ready for delivery to disk.  We insert new records  * at the tail, and remove records from the head.  Also, a count of the  * number of records used for checking queue depth.  In addition, a counter  * of records that we have allocated but are not yet in the queue, which is  * needed to estimate the total size of the combined set of records  * outstanding in the system.  */
 end_comment
 
 begin_decl_stmt
@@ -389,7 +385,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Condition variable to signal to the worker that it has work to do:  * either new records are in the queue, or a log replacement is taking  * place.  */
+comment|/*  * Condition variable to signal to the worker that it has work to do: either  * new records are in the queue, or a log replacement is taking place.  */
 end_comment
 
 begin_decl_stmt
@@ -411,7 +407,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Condition variable for  auditing threads wait on when in fail-stop mode.  * Threads wait on this CV forever (and ever), never seeing the light of  * day again.  */
+comment|/*  * Condition variable for  auditing threads wait on when in fail-stop mode.  * Threads wait on this CV forever (and ever), never seeing the light of day  * again.  */
 end_comment
 
 begin_decl_stmt
@@ -886,7 +882,7 @@ name|af_filesz
 operator|=
 literal|0
 expr_stmt|;
-comment|/* '0' means unset, unbounded */
+comment|/* '0' means unset, unbounded. */
 name|audit_fstat
 operator|.
 name|af_currsz
@@ -1258,7 +1254,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * Decide whether to commit the audit record by checking the 	 * error value from the system call and using the appropriate 	 * audit mask. 	 * 	 * XXXAUDIT: Synchronize access to audit_nae_mask? 	 */
+comment|/* 	 * Decide whether to commit the audit record by checking the error 	 * value from the system call and using the appropriate audit mask. 	 * 	 * XXXAUDIT: Synchronize access to audit_nae_mask? 	 */
 if|if
 condition|(
 name|ar
@@ -1309,7 +1305,7 @@ block|{
 case|case
 name|AUE_OPEN_RWTC
 case|:
-comment|/* The open syscall always writes a AUE_OPEN_RWTC event; change 		 * it to the proper type of event based on the flags and the 		 * error value. 		 */
+comment|/* 		 * The open syscall always writes a AUE_OPEN_RWTC event; 		 * change it to the proper type of event based on the flags 		 * and the error value. 		 */
 name|ar
 operator|->
 name|k_ar
@@ -1510,7 +1506,7 @@ name|ar_retval
 operator|=
 name|retval
 expr_stmt|;
-comment|/* 	 * We might want to do some system-wide post-filtering 	 * here at some point. 	 */
+comment|/* 	 * We might want to do some system-wide post-filtering here at some 	 * point. 	 */
 comment|/* 	 * Timestamp system call end. 	 */
 name|nanotime
 argument_list|(
@@ -1522,13 +1518,13 @@ operator|.
 name|ar_endtime
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note: it could be that some records initiated while audit was 	 * enabled should still be committed? 	 */
 name|mtx_lock
 argument_list|(
 operator|&
 name|audit_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note: it could be that some records initiated while audit was 	 * enabled should still be committed? 	 */
 if|if
 condition|(
 name|audit_suspended
@@ -1717,7 +1713,7 @@ name|p_au
 operator|->
 name|ai_mask
 expr_stmt|;
-comment|/* 	 * Allocate an audit record, if preselection allows it, and store 	 * in the thread for later use. 	 */
+comment|/* 	 * Allocate an audit record, if preselection allows it, and store in 	 * the thread for later use. 	 */
 name|class
 operator|=
 name|au_event_class
@@ -1836,7 +1832,7 @@ block|{
 name|int
 name|retval
 decl_stmt|;
-comment|/* 	 * Commit the audit record as desired; once we pass the record 	 * into audit_commit(), the memory is owned by the audit 	 * subsystem. 	 * The return value from the system call is stored on the user 	 * thread. If there was an error, the return value is set to -1, 	 * imitating the behavior of the cerror routine. 	 */
+comment|/* 	 * Commit the audit record as desired; once we pass the record into 	 * audit_commit(), the memory is owned by the audit subsystem.  The 	 * return value from the system call is stored on the user thread. 	 * If there was an error, the return value is set to -1, imitating 	 * the behavior of the cerror routine. 	 */
 if|if
 condition|(
 name|error
@@ -2091,7 +2087,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy the audit info from the parent process to the child process when  * a fork takes place.  */
+comment|/*  * Copy the audit info from the parent process to the child process when a  * fork takes place.  */
 end_comment
 
 begin_function

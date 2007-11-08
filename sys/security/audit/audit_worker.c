@@ -1038,7 +1038,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 	 * Signal that replacement have occurred to wake up and 	 * start any other replacements started in parallel.  We can 	 * continue about our business in the mean time.  We 	 * broadcast so that both new replacements can be inserted, 	 * but also so that the source(s) of replacement can return 	 * successfully. 	 */
+comment|/* 	 * Signal that replacement have occurred to wake up and start any 	 * other replacements started in parallel.  We can continue about our 	 * business in the mean time.  We broadcast so that both new 	 * replacements can be inserted, but also so that the source(s) of 	 * replacement can return successfully. 	 */
 if|if
 condition|(
 name|do_replacement_signal

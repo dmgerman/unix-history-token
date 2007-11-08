@@ -919,7 +919,7 @@ file|<sys/malloc.h>
 end_include
 
 begin_comment
-comment|/*  * Some of the BSM tokenizer functions take different parameters in the  * kernel implementations in order to save the copying of large kernel data  * structures. The prototypes of these functions are declared here.  */
+comment|/*  * Some of the BSM tokenizer functions take different parameters in the  * kernel implementations in order to save the copying of large kernel data  * structures.  The prototypes of these functions are declared here.  */
 end_comment
 
 begin_function_decl
