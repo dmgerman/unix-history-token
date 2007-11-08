@@ -468,18 +468,6 @@ name|trigger_info
 modifier|*
 name|ti
 decl_stmt|;
-comment|/* If nobody's listening, we ain't talking. */
-if|if
-condition|(
-operator|!
-name|audit_isopen
-condition|)
-return|return
-operator|(
-name|ENODEV
-operator|)
-return|;
-comment|/* 	 * Note: Use a condition variable instead of msleep/wakeup? 	 */
 name|ti
 operator|=
 name|malloc
@@ -499,6 +487,32 @@ operator|&
 name|audit_trigger_mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|audit_isopen
+condition|)
+block|{
+comment|/* If nobody's listening, we ain't talking. */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|audit_trigger_mtx
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ti
+argument_list|,
+name|M_AUDITTRIGGER
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
+block|}
 name|ti
 operator|->
 name|trigger
