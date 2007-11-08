@@ -13218,7 +13218,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|blkno

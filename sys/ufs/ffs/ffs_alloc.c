@@ -210,7 +210,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 end_ifdef
 
 begin_function_decl
@@ -518,7 +518,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|(
@@ -584,7 +584,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 name|reclaimed
 operator|=
 literal|0
@@ -1065,7 +1065,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|vp
@@ -1166,7 +1166,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 name|reclaimed
 operator|=
 literal|0
@@ -2405,7 +2405,7 @@ literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 for|for
 control|(
 name|i
@@ -2751,7 +2751,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|start_ap
@@ -2959,7 +2959,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|!
@@ -3307,7 +3307,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|!
@@ -3596,7 +3596,7 @@ literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 for|for
 control|(
 name|i
@@ -3942,7 +3942,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|start_ap
@@ -4150,7 +4150,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|!
@@ -4501,7 +4501,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|!
@@ -6646,7 +6646,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|ITOV
@@ -9962,7 +9962,7 @@ return|return;
 block|}
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|(
@@ -10591,7 +10591,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 end_ifdef
 
 begin_comment
@@ -10921,7 +10921,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 end_comment
 
 begin_comment

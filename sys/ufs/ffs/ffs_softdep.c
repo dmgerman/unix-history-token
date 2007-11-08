@@ -18,25 +18,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * For now we want the safety net that the DIAGNOSTIC and DEBUG flags provide.  */
+comment|/*  * For now we want the safety net that the INVARIANTS and DEBUG flags provide.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DIAGNOSTIC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DIAGNOSTIC
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -12975,7 +12958,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|freeblks
@@ -13022,7 +13005,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 name|ACQUIRE_LOCK
 argument_list|(
 operator|&
@@ -17841,7 +17824,7 @@ control|)
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|deplist
@@ -18004,7 +17987,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 name|adp
 operator|->
 name|ad_state
@@ -18128,7 +18111,7 @@ control|)
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|dp
@@ -18159,7 +18142,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 name|dp
 operator|->
 name|di_db
@@ -18186,7 +18169,7 @@ control|)
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|dp
@@ -18221,7 +18204,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 name|dp
 operator|->
 name|di_ib
@@ -18599,7 +18582,7 @@ control|)
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|deplist
@@ -18702,7 +18685,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 name|adp
 operator|->
 name|ad_state
@@ -18817,7 +18800,7 @@ control|)
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|dp
@@ -18848,7 +18831,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 name|dp
 operator|->
 name|di_extb
@@ -18962,7 +18945,7 @@ control|)
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|deplist
@@ -19131,7 +19114,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 name|adp
 operator|->
 name|ad_state
@@ -19255,7 +19238,7 @@ control|)
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|dp
@@ -19286,7 +19269,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 name|dp
 operator|->
 name|di_db
@@ -19313,7 +19296,7 @@ control|)
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|dp
@@ -19348,7 +19331,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 name|dp
 operator|->
 name|di_ib

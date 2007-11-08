@@ -2489,7 +2489,7 @@ decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|(
