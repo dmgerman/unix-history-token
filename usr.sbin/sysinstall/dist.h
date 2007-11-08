@@ -293,7 +293,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DIST_XORG_CLIENTS
+name|DIST_XORG_APPS
 value|0x000001
 end_define
 
@@ -302,13 +302,6 @@ define|#
 directive|define
 name|DIST_XORG_LIB
 value|0x000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_XORG_MAN
-value|0x000004
 end_define
 
 begin_define
@@ -393,13 +386,6 @@ define|#
 directive|define
 name|DIST_XORG_FONTS_TT
 value|0x200000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_XORG_FONTSERVER
-value|0x400000
 end_define
 
 begin_define
