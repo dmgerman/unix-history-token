@@ -396,11 +396,7 @@ begin_decl_stmt
 name|int
 name|wpi_debug
 init|=
-name|WPI_DEBUG_SCANNING
-operator||
-name|WPI_DEBUG_CMD
-operator||
-name|WPI_DEBUG_NOTIFY
+literal|0
 decl_stmt|;
 end_decl_stmt
 
