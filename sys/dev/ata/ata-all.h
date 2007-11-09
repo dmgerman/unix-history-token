@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 - 2006 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1998 - 2007 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -1382,6 +1382,91 @@ name|ATA_AHCI_CT_SIZE
 value|256
 end_define
 
+begin_struct
+struct|struct
+name|ata_ahci_dma_prd
+block|{
+name|u_int64_t
+name|dba
+decl_stmt|;
+name|u_int32_t
+name|reserved
+decl_stmt|;
+name|u_int32_t
+name|dbc
+decl_stmt|;
+comment|/* 0 based */
+define|#
+directive|define
+name|ATA_AHCI_PRD_MASK
+value|0x003fffff
+comment|/* max 4MB */
+define|#
+directive|define
+name|ATA_AHCI_PRD_IPC
+value|(1<<31)
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ata_ahci_cmd_tab
+block|{
+name|u_int8_t
+name|cfis
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|u_int8_t
+name|acmd
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|u_int8_t
+name|reserved
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|struct
+name|ata_ahci_dma_prd
+name|prd_tab
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ata_ahci_cmd_list
+block|{
+name|u_int16_t
+name|cmd_flags
+decl_stmt|;
+name|u_int16_t
+name|prd_length
+decl_stmt|;
+comment|/* PRD entries */
+name|u_int32_t
+name|bytecount
+decl_stmt|;
+name|u_int64_t
+name|cmd_table_phys
+decl_stmt|;
+comment|/* 128byte aligned */
+block|}
+name|__packed
+struct|;
+end_struct
+
 begin_comment
 comment|/* DMA register defines */
 end_comment
@@ -2547,6 +2632,10 @@ define|#
 directive|define
 name|ATA_ATAPI_SLAVE
 value|0x08
+define|#
+directive|define
+name|ATA_PORTMULTIPLIER
+value|0x10
 name|struct
 name|mtx
 name|state_mtx

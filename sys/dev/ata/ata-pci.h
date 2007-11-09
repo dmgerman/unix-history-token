@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 - 2006 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003 - 2007 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -829,6 +829,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_I82801IB_AH2
+value|0x29218086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_I82801IB_AH6
 value|0x29228086
 end_define
@@ -920,6 +927,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_JMB368
+value|0x2368197b
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_MARVELL_ID
 value|0x11ab
 end_define
@@ -964,6 +978,20 @@ define|#
 directive|define
 name|ATA_M88SX6081
 value|0x608111ab
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_M88SX6101
+value|0x610111ab
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_M88SX6145
+value|0x614511ab
 end_define
 
 begin_define
@@ -1160,6 +1188,34 @@ define|#
 directive|define
 name|ATA_NFORCE_MCP55_S2
 value|0x037f10de
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_NFORCE_MCP61
+value|0x03ec10de
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_NFORCE_MCP61_S1
+value|0x03e710de
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_NFORCE_MCP61_S2
+value|0x03f610de
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_NFORCE_MCP61_S3
+value|0x03f710de
 end_define
 
 begin_define
@@ -1552,6 +1608,20 @@ define|#
 directive|define
 name|ATA_SII3112_1
 value|0x02401095
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_SII3124
+value|0x31241095
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_SII3132
+value|0x31321095
 end_define
 
 begin_define
@@ -2005,6 +2075,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_VIA8237S
+value|0x53371106
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_VIA8251
 value|0x33491106
 end_define
@@ -2135,15 +2212,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|MV5XXX
-value|5
+name|MV50XX
+value|50
 end_define
 
 begin_define
 define|#
 directive|define
-name|MV6XXX
-value|6
+name|MV60XX
+value|60
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV61XX
+value|61
 end_define
 
 begin_define
@@ -2263,6 +2347,13 @@ define|#
 directive|define
 name|SIIMEMIO
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIIPRBIO
+value|2
 end_define
 
 begin_define
