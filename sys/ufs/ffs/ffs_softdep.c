@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * For now we want the safety net that the INVARIANTS and DEBUG flags provide.  */
+comment|/*  * For now we want the safety net that the DEBUG flag provides.  */
 end_comment
 
 begin_ifndef
@@ -17616,11 +17616,17 @@ name|fs
 decl_stmt|;
 name|ufs_lbn_t
 name|i
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|ufs_lbn_t
 name|prevlbn
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|deplist
 decl_stmt|;
@@ -18364,11 +18370,17 @@ name|fs
 decl_stmt|;
 name|ufs_lbn_t
 name|i
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|ufs_lbn_t
 name|prevlbn
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|deplist
 decl_stmt|;
