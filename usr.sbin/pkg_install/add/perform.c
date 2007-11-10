@@ -1061,6 +1061,12 @@ goto|;
 comment|/* close enough for government work */
 block|}
 comment|/* Now check the packing list for conflicts */
+if|if
+condition|(
+operator|!
+name|IgnoreDeps
+condition|)
+block|{
 for|for
 control|(
 name|p
@@ -1354,6 +1360,9 @@ if|if
 condition|(
 operator|!
 name|Fake
+operator|&&
+operator|!
+name|IgnoreDeps
 condition|)
 block|{
 name|char
@@ -1768,6 +1777,7 @@ argument_list|(
 literal|" - already installed.\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -2598,6 +2608,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|IgnoreDeps
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -2717,6 +2733,7 @@ argument_list|,
 name|contents
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}

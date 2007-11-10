@@ -53,7 +53,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"hvIRfFnrp:P:SMt:C:K"
+literal|"hviIRfFnrp:P:SMt:C:K"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,14 @@ name|Boolean
 name|FailOnAlreadyInstalled
 init|=
 name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|IgnoreDeps
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -768,6 +776,14 @@ case|:
 name|Chroot
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|IgnoreDeps
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -1704,7 +1720,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_add [-vInfFrRMSK] [-t template] [-p prefix] [-P prefix] [-C chrootdir]"
+literal|"usage: pkg_add [-viInfFrRMSK] [-t template] [-p prefix] [-P prefix] [-C chrootdir]"
 argument_list|,
 literal|"               pkg-name [pkg-name ...]"
 argument_list|)
