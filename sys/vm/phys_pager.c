@@ -102,7 +102,7 @@ file|<vm/vm_pager.h>
 end_include
 
 begin_comment
-comment|/* list of device pager objects */
+comment|/* list of phys pager objects */
 end_comment
 
 begin_decl_stmt
