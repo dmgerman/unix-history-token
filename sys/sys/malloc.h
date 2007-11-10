@@ -448,10 +448,6 @@ name|malloc_mtx
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX struct malloc_type is unused for contig*(). */
-end_comment
-
 begin_function_decl
 name|void
 name|contigfree
