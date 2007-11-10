@@ -116,13 +116,18 @@ name|struct
 name|pthread
 modifier|*
 name|curthread
-init|=
-name|_get_curthread
-argument_list|()
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|_thr_check_init
+argument_list|()
+expr_stmt|;
+name|curthread
+operator|=
+name|_get_curthread
+argument_list|()
+expr_stmt|;
 comment|/* Lock the key table: */
 name|THR_LOCK_ACQUIRE
 argument_list|(
