@@ -72,6 +72,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|rm_wowned
+parameter_list|(
+name|struct
+name|rmlock
+modifier|*
+name|rm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|rm_sysinit
 parameter_list|(
