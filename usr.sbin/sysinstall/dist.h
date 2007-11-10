@@ -349,13 +349,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_XORG_PRINTSERVER
-value|0x000400
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIST_XORG_VFBSERVER
 value|0x000800
 end_define
