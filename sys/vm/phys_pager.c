@@ -113,7 +113,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* list of device pager objects */
+comment|/* list of phys pager objects */
 end_comment
 
 begin_decl_stmt
@@ -248,7 +248,7 @@ name|phys_pager_alloc_lock
 argument_list|,
 name|PVM
 argument_list|,
-literal|"swpalc"
+literal|"phyalc"
 argument_list|,
 literal|0
 argument_list|)
