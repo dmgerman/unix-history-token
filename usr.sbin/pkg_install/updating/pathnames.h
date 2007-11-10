@@ -4,73 +4,25 @@ comment|/*-  * -----------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* Copy from ../version/version.h */
-end_comment
-
-begin_comment
-comment|/* Where the ports lives by default */
+comment|/* Where the updating file lives by default */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DEF_PORTS_DIR
+name|DEF_UPDATING
 value|"/usr/ports/UPDATING"
 end_define
 
 begin_comment
-comment|/* just in case we change the environment variable name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PORTSDIR
-value|"PORTSDIR"
-end_define
-
-begin_comment
-comment|/* macro to get name of directory where we put logging information */
+comment|/* macro to define location of the UPDATING file */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UPDATING
-value|(getenv(PORTSDIR) ? strcat(getenv(PORTSDIR), \ 	"/UPDATING") : DEF_PORTS_DIR)
-end_define
-
-begin_comment
-comment|/* Where we put logging information by default, else ${PKG_DBDIR} if set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEF_LOG_DIR
-value|"/var/db/pkg"
-end_define
-
-begin_comment
-comment|/* just in case we change the environment variable name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PKG_DBDIR
-value|"PKG_DBDIR"
-end_define
-
-begin_comment
-comment|/* macro to get name of directory where we put logging information */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_DIR
-value|(getenv(PKG_DBDIR) ? getenv(PKG_DBDIR) : DEF_LOG_DIR)
+value|(getenv(PORTSDIR) ? strcat(getenv(PORTSDIR), \         "/UPDATING") : DEF_UPDATING)
 end_define
 
 end_unit

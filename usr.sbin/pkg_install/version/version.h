@@ -19,39 +19,6 @@ directive|define
 name|_INST_VERSION_H_INCLUDE
 end_define
 
-begin_comment
-comment|/* Where the ports lives by default */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEF_PORTS_DIR
-value|"/usr/ports"
-end_define
-
-begin_comment
-comment|/* just in case we change the environment variable name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PORTSDIR
-value|"PORTSDIR"
-end_define
-
-begin_comment
-comment|/* macro to get name of directory where we put logging information */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PORTS_DIR
-value|(getenv(PORTSDIR) ? getenv(PORTSDIR) : DEF_PORTS_DIR)
-end_define
-
 begin_struct
 struct|struct
 name|index_entry
