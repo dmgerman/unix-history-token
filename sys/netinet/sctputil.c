@@ -24846,7 +24846,7 @@ name|freed_so_far
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|uint32_t
 name|copied_so_far
 init|=
 literal|0

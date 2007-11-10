@@ -517,14 +517,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|asoc
-operator|->
-name|my_rwnd
+name|result
 operator|&&
 operator|(
-name|asoc
-operator|->
-name|my_rwnd
+name|result
 operator|<
 name|stcb
 operator|->
