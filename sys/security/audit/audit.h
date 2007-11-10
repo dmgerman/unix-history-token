@@ -814,6 +814,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|audit_arg_auditinfo_addr
+parameter_list|(
+name|struct
+name|auditinfo_addr
+modifier|*
+name|au_info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|audit_arg_upath
 parameter_list|(
 name|struct
