@@ -432,6 +432,10 @@ name|struct
 name|au_tid
 name|ar_subj_term
 decl_stmt|;
+name|struct
+name|au_tid_addr
+name|ar_subj_term_addr
+decl_stmt|;
 name|char
 name|ar_subj_comm
 index|[
@@ -472,6 +476,10 @@ decl_stmt|;
 name|struct
 name|au_tid
 name|ar_arg_termid
+decl_stmt|;
+name|struct
+name|au_tid_addr
+name|ar_arg_termid_addr
 decl_stmt|;
 name|uid_t
 name|ar_arg_uid

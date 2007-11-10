@@ -300,12 +300,6 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|auditinfo
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|kaudit_record
 struct_decl|;
 end_struct_decl
@@ -2319,7 +2313,7 @@ name|p_sched
 decl_stmt|;
 comment|/* (*) Scheduler-specific data. */
 name|struct
-name|auditinfo
+name|auditinfo_addr
 modifier|*
 name|p_au
 decl_stmt|;
