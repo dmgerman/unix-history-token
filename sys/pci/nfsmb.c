@@ -208,6 +208,13 @@ name|NFSMB_DEVICEID_NF4_55_SMB
 value|0x0368
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSMB_DEVICEID_NF4_61_SMB
+value|0x03eb
+end_define
+
 begin_comment
 comment|/* PCI Configuration space registers */
 end_comment
@@ -738,6 +745,9 @@ case|:
 case|case
 name|NFSMB_DEVICEID_NF4_55_SMB
 case|:
+case|case
+name|NFSMB_DEVICEID_NF4_61_SMB
+case|:
 name|device_set_desc
 argument_list|(
 name|dev
@@ -1167,6 +1177,9 @@ name|NFSMB_DEVICEID_NF4_51_SMB
 case|:
 case|case
 name|NFSMB_DEVICEID_NF4_55_SMB
+case|:
+case|case
+name|NFSMB_DEVICEID_NF4_61_SMB
 case|:
 comment|/* Trying to add secondary device as slave */
 name|nfsmb_sc
