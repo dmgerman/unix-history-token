@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -39,7 +39,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.960 2007/02/07 20:18:47 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.967 2007/10/01 16:22:14 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1699,6 +1699,14 @@ name|bool
 name|sm_milterlist
 decl_stmt|;
 comment|/* any filters in the list? */
+name|milters_T
+name|sm_milters
+decl_stmt|;
+comment|/* e_nrcpts from envelope before recipient() call */
+name|unsigned
+name|int
+name|sm_e_nrcpts_orig
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* MILTER */
@@ -3508,6 +3516,11 @@ name|e
 argument_list|,
 operator|&
 name|state
+argument_list|,
+operator|&
+name|smtp
+operator|.
+name|sm_milters
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -5131,7 +5144,7 @@ name|authenticating
 operator|=
 name|SASL_NOT_AUTH
 expr_stmt|;
-comment|/* rfc 2254 4. */
+comment|/* RFC 2554 4. */
 name|message
 argument_list|(
 literal|"501 5.0.0 AUTH aborted"
@@ -5225,7 +5238,7 @@ name|authenticating
 operator|=
 name|SASL_NOT_AUTH
 expr_stmt|;
-comment|/* rfc 2254 4. */
+comment|/* RFC 2554 4. */
 name|message
 argument_list|(
 literal|"501 5.5.4 cannot decode AUTH parameter %s"
@@ -6498,6 +6511,45 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 			**  RFC 2554 4. 			**  Unlike a zero-length client answer to a 			**  334 reply, a zero- length initial response 			**  is sent as a single equals sign ("="). 			*/
+if|if
+condition|(
+name|ismore
+operator|&&
+operator|*
+name|q
+operator|==
+literal|'='
+operator|&&
+operator|*
+operator|(
+name|q
+operator|+
+literal|1
+operator|)
+operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* will be free()d, don't use in=""; */
+name|in
+operator|=
+name|xalloc
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+operator|*
+name|in
+operator|=
+literal|'\0'
+expr_stmt|;
+name|inlen
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|ismore
@@ -9770,6 +9822,14 @@ name|milter_rcpt_added
 operator|=
 name|false
 expr_stmt|;
+name|smtp
+operator|.
+name|sm_e_nrcpts_orig
+operator|=
+name|e
+operator|->
+name|e_nrcpts
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -9910,7 +9970,46 @@ expr_stmt|;
 if|#
 directive|if
 name|MILTER
-comment|/* 			**  Do not expand recipients at RCPT time (in the call 			**  to recipient()).  If they are expanded, it 			**  is impossible for removefromlist() to figure 			**  out the expanded members of the original 			**  recipient and mark them as QS_DONTSEND. 			*/
+comment|/* 			**  Do not expand recipients at RCPT time (in the call 			**  to recipient()) if a milter can delete or reject 			**  a RCPT.  If they are expanded, it is impossible 			**  for removefromlist() to figure out the expanded 			**  members of the original recipient and mark them 			**  as QS_DONTSEND. 			*/
+if|if
+condition|(
+operator|!
+operator|(
+name|smtp
+operator|.
+name|sm_milterlist
+operator|&&
+name|smtp
+operator|.
+name|sm_milterize
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_DISCARD
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+operator|)
+operator|&&
+operator|(
+name|smtp
+operator|.
+name|sm_milters
+operator|.
+name|mis_flags
+operator|&
+operator|(
+name|MIS_FL_DEL_RCPT
+operator||
+name|MIS_FL_REJ_RCPT
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
 name|e
 operator|->
 name|e_flags
@@ -11047,6 +11146,24 @@ expr_stmt|;
 name|milter_cmd_fail
 operator|=
 name|false
+expr_stmt|;
+if|if
+condition|(
+name|smtp
+operator|.
+name|sm_e_nrcpts_orig
+operator|<
+name|e
+operator|->
+name|e_nrcpts
+condition|)
+name|e
+operator|->
+name|e_nrcpts
+operator|=
+name|smtp
+operator|.
+name|sm_e_nrcpts_orig
 expr_stmt|;
 block|}
 endif|#
@@ -14075,6 +14192,10 @@ condition|(
 name|aborting
 condition|)
 block|{
+name|ADDRESS
+modifier|*
+name|q
+decl_stmt|;
 comment|/* Log who the mail would have gone to */
 name|logundelrcpts
 argument_list|(
@@ -14088,6 +14209,32 @@ literal|8
 argument_list|,
 name|false
 argument_list|)
+expr_stmt|;
+comment|/* 		**  If something above refused the message, we still haven't 		**  accepted responsibility for it.  Don't send DSNs. 		*/
+for|for
+control|(
+name|q
+operator|=
+name|e
+operator|->
+name|e_sendqueue
+init|;
+name|q
+operator|!=
+name|NULL
+condition|;
+name|q
+operator|=
+name|q
+operator|->
+name|q_next
+control|)
+name|q
+operator|->
+name|q_flags
+operator|&=
+operator|~
+name|Q_PINGFLAGS
 expr_stmt|;
 name|flush_errors
 argument_list|(
@@ -15629,13 +15776,12 @@ name|e
 operator|->
 name|e_flags
 operator|&=
+operator|~
+operator|(
 name|EF_RET_PARAM
-expr_stmt|;
-name|e
-operator|->
-name|e_flags
-operator|&=
+operator||
 name|EF_NO_BODY_RETN
+operator|)
 expr_stmt|;
 name|macdefine
 argument_list|(

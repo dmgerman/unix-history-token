@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -230,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.1042 2007/02/27 22:21:13 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.1052 2007/10/05 23:06:30 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -1829,7 +1829,7 @@ name|QS_IS_ATTEMPTED
 parameter_list|(
 name|s
 parameter_list|)
-value|((s) == QS_QUEUEUP || \ 				 (s) == QS_RETRY || \ 				 (s) == QS_SENT)
+value|((s) == QS_QUEUEUP || \ 				 (s) == QS_RETRY || \ 				 (s) == QS_SENT || \ 				 (s) == QS_DISCARDED)
 end_define
 
 begin_define
@@ -4654,6 +4654,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MCIF_INLONGLINE
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* in the middle of a long line */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MCIF_ONLY_EHLO
 value|0x10000000
 end_define
@@ -5479,6 +5490,8 @@ operator|*
 operator|,
 name|ENVELOPE
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5819,6 +5832,17 @@ modifier|*
 name|e_id
 decl_stmt|;
 comment|/* code for this entry in queue */
+if|#
+directive|if
+name|_FFR_SESSID
+name|char
+modifier|*
+name|e_sessid
+decl_stmt|;
+comment|/* session ID for this envelope */
+endif|#
+directive|endif
+comment|/* _FFR_SESSID */
 name|int
 name|e_qgrp
 decl_stmt|;
@@ -10880,6 +10904,59 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|milters
+block|{
+name|mi_int32
+name|mis_flags
+decl_stmt|;
+comment|/* filter flags */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|milters
+name|milters_T
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MIS_FL_NONE
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* no requirements... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIS_FL_DEL_RCPT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* can delete rcpt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIS_FL_REJ_RCPT
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* can reject rcpt */
+end_comment
+
 begin_comment
 comment|/* MTA flags */
 end_comment
@@ -13345,21 +13422,7 @@ begin_define
 define|#
 directive|define
 name|NOQID
-value|"*~*"
-end_define
-
-begin_comment
-comment|/* use id or NOQID (to avoid NOQUEUE in logfile) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E_ID
-parameter_list|(
-name|id
-parameter_list|)
-value|((id) == NULL ? NOQID : (id))
+value|""
 end_define
 
 begin_define
@@ -13473,6 +13536,32 @@ end_define
 
 begin_comment
 comment|/* **  Global variables. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_ADDR_TYPE_MODES
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|AddrTypeModes
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* addr_type: extra "mode" information */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_ADDR_TYPE_MODES */
 end_comment
 
 begin_decl_stmt
@@ -16596,19 +16685,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|bool
-name|milter_can_delrcpts
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
 name|milter_init
 name|__P
 argument_list|(
@@ -16617,6 +16693,9 @@ name|ENVELOPE
 operator|*
 operator|,
 name|char
+operator|*
+operator|,
+name|milters_T
 operator|*
 operator|)
 argument_list|)
