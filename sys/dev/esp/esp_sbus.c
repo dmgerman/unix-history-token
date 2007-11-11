@@ -2907,8 +2907,6 @@ operator|->
 name|sc_irqres
 argument_list|,
 name|INTR_TYPE_BIO
-operator||
-name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
