@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.663 2006/10/05 20:58:59 ca Exp $"
+literal|"@(#)$Id: readcf.c,v 8.664 2007/07/10 17:01:22 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9526,6 +9526,24 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_EIGHT_BIT_ADDR_OK */
+if|#
+directive|if
+name|_FFR_ADDR_TYPE_MODES
+define|#
+directive|define
+name|O_ADDR_TYPE_MODES
+value|0xe0
+block|{
+literal|"AddrTypeModes"
+block|,
+name|O_ADDR_TYPE_MODES
+block|,
+name|OI_NONE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_ADDR_TYPE_MODES */
 block|{
 name|NULL
 block|,
@@ -15213,6 +15231,23 @@ break|break;
 endif|#
 directive|endif
 comment|/* _FFR_EIGHT_BIT_ADDR_OK */
+if|#
+directive|if
+name|_FFR_ADDR_TYPE_MODES
+case|case
+name|O_ADDR_TYPE_MODES
+case|:
+name|AddrTypeModes
+operator|=
+name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_ADDR_TYPE_MODES */
 default|default:
 if|if
 condition|(

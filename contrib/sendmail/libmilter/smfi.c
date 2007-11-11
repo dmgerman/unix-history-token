@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smfi.c,v 8.82 2007/01/20 06:37:19 ca Exp $"
+literal|"@(#)$Id: smfi.c,v 8.83 2007/04/23 16:44:39 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3125,7 +3125,7 @@ condition|)
 operator|*
 name|patchlevel
 operator|=
-name|SM_LM_VRS_MINOR
+name|SM_LM_VRS_PLVL
 argument_list|(
 name|SMFI_VERSION
 argument_list|)
