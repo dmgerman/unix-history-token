@@ -11290,7 +11290,7 @@ operator|->
 name|flags
 operator|&
 operator|(
-name|ZYD_RX_BADCRC32
+name|ZYD_RX_BADCRC16
 operator||
 name|ZYD_RX_BADCRC32
 operator|)
