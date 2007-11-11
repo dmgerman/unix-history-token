@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.400 2006/12/21 00:24:06 ca Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.401 2007/09/27 23:33:59 ca Exp $"
 argument_list|)
 end_macro
 
@@ -776,7 +776,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"parseaddr: queuing message\n"
+literal|"parseaddr: queueing message\n"
 argument_list|)
 expr_stmt|;
 name|message

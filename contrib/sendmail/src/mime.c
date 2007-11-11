@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mime.c,v 8.146 2006/08/16 16:52:11 ca Exp $"
+literal|"@(#)$Id: mime.c,v 8.147 2007/09/26 23:29:11 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2322,6 +2322,19 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|MCIF_INLONGLINE
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+condition|)
+block|{
 name|bt
 operator|=
 name|mimeboundary
@@ -2338,14 +2351,24 @@ operator|!=
 name|MBT_NOTSEP
 condition|)
 break|break;
+block|}
 if|if
 condition|(
 operator|!
-name|putline
+name|putxline
 argument_list|(
 name|buf
 argument_list|,
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
 name|mci
+argument_list|,
+name|PXLF_MAPFROM
+operator||
+name|PXLF_NOADDEOL
 argument_list|)
 condition|)
 goto|goto

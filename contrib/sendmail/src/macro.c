@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001, 2003, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001, 2003, 2006, 2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: macro.c,v 8.102 2006/12/21 23:06:10 ca Exp $"
+literal|"@(#)$Id: macro.c,v 8.107 2007/08/06 22:29:02 ca Exp $"
 argument_list|)
 end_macro
 
@@ -62,6 +62,184 @@ begin_comment
 comment|/* macro id to name table */
 end_comment
 
+begin_comment
+comment|/* **  Codes for long named macros. **  See also macname(): 	* if not ASCII printable, look up the name * 	if (n<= 0x20 || n> 0x7f) **  First use 1 to NEXTMACROID_L, then use NEXTMACROID_H to MAXMACROID. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEXTMACROID_L
+value|037
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEXTMACROID_H
+value|0240
+end_define
+
+begin_if
+if|#
+directive|if
+name|_FFR_MORE_MACROS
+end_if
+
+begin_comment
+comment|/* table for next id in non-printable ASCII range: disallow some value */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|NextMIdTable
+index|[]
+init|=
+block|{
+comment|/*  0  nul */
+literal|1
+block|,
+comment|/*  1  soh */
+literal|2
+block|,
+comment|/*  2  stx */
+literal|3
+block|,
+comment|/*  3  etx */
+literal|4
+block|,
+comment|/*  4  eot */
+literal|5
+block|,
+comment|/*  5  enq */
+literal|6
+block|,
+comment|/*  6  ack */
+literal|7
+block|,
+comment|/*  7  bel */
+literal|8
+block|,
+comment|/*  8  bs  */
+literal|14
+block|,
+comment|/*  9  ht  */
+operator|-
+literal|1
+block|,
+comment|/* 10  nl  */
+operator|-
+literal|1
+block|,
+comment|/* 11  vt  */
+operator|-
+literal|1
+block|,
+comment|/* 12  np  */
+operator|-
+literal|1
+block|,
+comment|/* 13  cr  */
+operator|-
+literal|1
+block|,
+comment|/* 14  so  */
+literal|15
+block|,
+comment|/* 15  si  */
+literal|16
+block|,
+comment|/* 16  dle */
+literal|17
+block|,
+comment|/* 17  dc1 */
+literal|18
+block|,
+comment|/* 18  dc2 */
+literal|19
+block|,
+comment|/* 19  dc3 */
+literal|20
+block|,
+comment|/* 20  dc4 */
+literal|21
+block|,
+comment|/* 21  nak */
+literal|22
+block|,
+comment|/* 22  syn */
+literal|23
+block|,
+comment|/* 23  etb */
+literal|24
+block|,
+comment|/* 24  can */
+literal|25
+block|,
+comment|/* 25  em  */
+literal|26
+block|,
+comment|/* 26  sub */
+literal|27
+block|,
+comment|/* 27  esc */
+literal|28
+block|,
+comment|/* 28  fs  */
+literal|29
+block|,
+comment|/* 29  gs  */
+literal|30
+block|,
+comment|/* 30  rs  */
+literal|31
+block|,
+comment|/* 31  us  */
+literal|32
+block|,
+comment|/* 32  sp  */
+operator|-
+literal|1
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NEXTMACROID
+parameter_list|(
+name|mid
+parameter_list|)
+value|(		\ 	(mid< NEXTMACROID_L) ? (NextMIdTable[mid]) :	\ 	((mid< NEXTMACROID_H) ? NEXTMACROID_H : (mid + 1)))
+end_define
+
+begin_decl_stmt
+name|int
+name|NextMacroId
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* codes for long named macros */
+end_comment
+
+begin_comment
+comment|/* see sendmail.h: Special characters in rewriting rules. */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _FFR_MORE_MACROS */
+end_comment
+
 begin_decl_stmt
 name|int
 name|NextMacroId
@@ -74,8 +252,23 @@ begin_comment
 comment|/* codes for long named macros */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NEXTMACROID
+parameter_list|(
+name|mid
+parameter_list|)
+value|((mid) + 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* see sendmail.h: Special characters in rewriting rules. */
+comment|/* _FFR_MORE_MACROS */
 end_comment
 
 begin_comment
@@ -2036,6 +2229,13 @@ literal|1
 index|]
 operator|==
 literal|'\0'
+operator|&&
+name|mbuf
+index|[
+literal|0
+index|]
+operator|>=
+literal|0x20
 condition|)
 block|{
 comment|/* ${x} == $x */
@@ -2126,7 +2326,13 @@ operator|=
 name|mid
 operator|=
 name|NextMacroId
-operator|++
+expr_stmt|;
+name|NextMacroId
+operator|=
+name|NEXTMACROID
+argument_list|(
+name|NextMacroId
+argument_list|)
 expr_stmt|;
 block|}
 block|}

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mpeix.c,v 1.6 2002/05/24 20:50:14 gshapiro Exp $"
+literal|"@(#)$Id: mpeix.c,v 1.7 2007/05/11 18:51:22 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -1238,7 +1238,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uid_t
+name|gid_t
 name|sendmail_mpe_egid
 init|=
 operator|-

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.1128 2007/04/03 21:32:29 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.1136 2007/10/10 00:06:45 ca Exp $"
 argument_list|)
 end_macro
 
@@ -21044,44 +21044,10 @@ name|id
 operator|==
 name|NULL
 condition|)
-block|{
 name|id
 operator|=
 literal|"NOQUEUE"
 expr_stmt|;
-name|idlen
-operator|=
-name|strlen
-argument_list|(
-name|id
-argument_list|)
-operator|+
-name|SyslogPrefixLen
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|id
-argument_list|,
-name|NOQID
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|id
-operator|=
-literal|""
-expr_stmt|;
-name|idlen
-operator|=
-name|SyslogPrefixLen
-expr_stmt|;
-block|}
-else|else
 name|idlen
 operator|=
 name|strlen
@@ -23253,6 +23219,15 @@ init|=
 block|{
 if|#
 directive|if
+name|_FFR_ADDR_TYPE_MODES
+comment|/* more info in {addr_type}, requires m4 changes! */
+literal|"_FFR_ADDR_TYPE_MODES"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_ADDR_TYPE_MODES */
+if|#
+directive|if
 name|_FFR_ALLOW_SASLINFO
 comment|/* DefaultAuthInfo can be specified by user. */
 comment|/* DefaultAuthInfo doesn't really work in 8.13 anymore. */
@@ -23380,6 +23355,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_DPO_CS */
+if|#
+directive|if
+name|_FFR_DPRINTF_MAP
+comment|/* dprintf map for logging */
+literal|"_FFR_DPRINTF_MAP"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DPRINTF_MAP */
 if|#
 directive|if
 name|_FFR_DROP_TRUSTUSER_WARNING
@@ -23564,6 +23548,15 @@ directive|endif
 comment|/* _FFR_MAX_SLEEP_TIME */
 if|#
 directive|if
+name|_FFR_MORE_MACROS
+comment|/* allow more long macro names ("unprintable" characters). */
+literal|"_FFR_MORE_MACROS"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MORE_MACROS */
+if|#
+directive|if
 name|_FFR_MSG_ACCEPT
 comment|/* allow to override "Message accepted for delivery" */
 literal|"_FFR_MSG_ACCEPT"
@@ -23590,6 +23583,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_NO_PIPE */
+if|#
+directive|if
+name|_FFR_LDAP_NETWORK_TIMEOUT
+comment|/* set LDAP_OPT_NETWORK_TIMEOUT if available (-c) */
+literal|"_FFR_LDAP_NETWORK_TIMEOUT"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_NETWORK_TIMEOUT */
 if|#
 directive|if
 name|_FFR_LOG_NTRIES
@@ -23680,6 +23682,24 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_RHS */
+if|#
+directive|if
+name|_FFR_RUNPQG
+comment|/* 	**  allow -qGqueue_group -qp to work, i.e., 	**  restrict a persistent queue runner to a queue group. 	*/
+literal|"_FFR_RUNPQG"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_RUNPQG */
+if|#
+directive|if
+name|_FFR_SESSID
+comment|/* session id (for logging) */
+literal|"_FFR_SESSID"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_SESSID */
 if|#
 directive|if
 name|_FFR_SHM_STATUS

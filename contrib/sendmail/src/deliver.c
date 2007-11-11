@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.1012 2007/03/29 21:20:15 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.1015 2007/10/17 21:35:30 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2250,7 +2250,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"No deliveries: auto-queuing\n"
+literal|"No deliveries: auto-queueing\n"
 argument_list|)
 expr_stmt|;
 name|mode
@@ -13190,6 +13190,28 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ok
+operator|&&
+name|bitset
+argument_list|(
+name|MCIF_INLONGLINE
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+condition|)
+name|ok
+operator|=
+name|putline
+argument_list|(
+literal|""
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
 comment|/* 		**  Ignore an I/O error that was caused by EPIPE. 		**  Some broken mailers don't read the entire body 		**  but just exit() thus causing an I/O error. 		*/
 if|if
 condition|(
@@ -13643,6 +13665,15 @@ literal|'\0'
 if|#
 directive|if
 name|PIPELINING
+operator|&&
+name|bitset
+argument_list|(
+name|MCIF_PIPELINED
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
 operator|&&
 name|mci
 operator|->
