@@ -91,6 +91,43 @@ define|\
 value|((*(_ic)->ic_send_mgmt)(_ic, _ni, _type, _arg))
 end_define
 
+begin_comment
+comment|/*  * The formation of some management frames requires guidance to  * deal with legacy clients.  When the client is identified as  * "legacy 11b" this parameter can be passed in the arg param of a  * IEEE80211_SEND_MGMT call.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_SEND_LEGACY_11B
+value|0x1
+end_define
+
+begin_comment
+comment|/* legacy 11b client */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_SEND_LEGACY_11
+value|0x2
+end_define
+
+begin_comment
+comment|/* other legacy client */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_SEND_LEGACY
+value|0x3
+end_define
+
+begin_comment
+comment|/* any legacy client */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 specifier|const

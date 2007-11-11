@@ -326,6 +326,16 @@ directive|define
 name|IEEE80211_NODE_HTCOMPAT
 value|0x0080
 comment|/* HT setup w/ vendor OUI's */
+define|#
+directive|define
+name|IEEE80211_NODE_AMPDU_RX
+value|0x0400
+comment|/* AMPDU rx enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_AMPDU_TX
+value|0x0800
+comment|/* AMPDU tx enabled */
 name|uint16_t
 name|ni_ath_defkeyix
 decl_stmt|;
@@ -342,6 +352,10 @@ name|uint16_t
 name|ni_vlan
 decl_stmt|;
 comment|/* vlan tag */
+name|uint32_t
+name|ni_jointime
+decl_stmt|;
+comment|/* time of join (secs) */
 name|uint32_t
 modifier|*
 name|ni_challenge
@@ -498,6 +512,11 @@ name|ni_dtim_count
 decl_stmt|;
 comment|/* DTIM count for last bcn */
 comment|/* 11n state */
+name|uint8_t
+modifier|*
+name|ni_htcap_ie
+decl_stmt|;
+comment|/* captured HTCAP ie */
 name|uint16_t
 name|ni_htcap
 decl_stmt|;
@@ -593,6 +612,14 @@ define|#
 directive|define
 name|IEEE80211_NODE_ATH
 value|(IEEE80211_NODE_FF | IEEE80211_NODE_TURBOP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_AMPDU
+define|\
+value|(IEEE80211_NODE_AMPDU_RX | IEEE80211_NODE_AMPDU_TX)
 end_define
 
 begin_define
@@ -815,6 +842,21 @@ name|ieee80211_reset_bss
 parameter_list|(
 name|struct
 name|ieee80211com
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_setbsschan
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;

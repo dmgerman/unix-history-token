@@ -411,6 +411,27 @@ parameter_list|)
 value|do {\ 	(_m)->m_nextpkt = NULL;					\ 	if ((_ni)->ni_savedq.ifq_tail != NULL) { 		\ 		_age -= M_AGE_GET((_ni)->ni_savedq.ifq_tail);	\ 		(_ni)->ni_savedq.ifq_tail->m_nextpkt = (_m);	\ 	} else { 						\ 		(_ni)->ni_savedq.ifq_head = (_m); 		\ 	}							\ 	M_AGE_SET(_m, _age);					\ 	(_ni)->ni_savedq.ifq_tail = (_m); 			\ 	(_qlen) = ++(_ni)->ni_savedq.ifq_len; 			\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_TAPQ_INIT
+parameter_list|(
+name|_tap
+parameter_list|)
+value|do {				\ 	mtx_init(&(tap)->txa_q.ifq_mtx, "ampdu tx queue", NULL, MTX_DEF); \ 	(_tap)->txa_q.ifq_maxlen = IEEE80211_AGGR_BAWMAX;	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_TAPQ_DESTROY
+parameter_list|(
+name|_tap
+parameter_list|)
+define|\
+value|mtx_destroy(&(_tap)->txa_q.ifq_mtx)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -620,6 +641,16 @@ parameter_list|(
 name|ms
 parameter_list|)
 value|(((ms)*hz)/1000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ticks_to_msecs
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) / hz)
 end_define
 
 begin_define

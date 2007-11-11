@@ -126,6 +126,10 @@ name|ns_rx_unencrypted
 decl_stmt|;
 comment|/* rx unecrypted w/ privacy */
 name|uint32_t
+name|ns_rx_drop
+decl_stmt|;
+comment|/* rx discard other reason */
+name|uint32_t
 name|ns_tx_data
 decl_stmt|;
 comment|/* tx data frames */
@@ -599,6 +603,10 @@ name|is_ampdu_bar_oow
 decl_stmt|;
 comment|/* A-MPDU BAR before ADDBA */
 name|uint32_t
+name|is_ampdu_bar_move
+decl_stmt|;
+comment|/* A-MPDU BAR moved window */
+name|uint32_t
 name|is_ampdu_bar_rx
 decl_stmt|;
 comment|/* A-MPDU BAR frames handled */
@@ -615,9 +623,69 @@ name|is_ampdu_rx_copy
 decl_stmt|;
 comment|/* A-MPDU frames copied down */
 name|uint32_t
+name|is_ampdu_rx_drop
+decl_stmt|;
+comment|/* A-MPDU frames dropped */
+name|uint32_t
+name|is_tx_badstate
+decl_stmt|;
+comment|/* tx discard state != RUN */
+name|uint32_t
+name|is_tx_notassoc
+decl_stmt|;
+comment|/* tx failed, sta not assoc */
+name|uint32_t
+name|is_tx_classify
+decl_stmt|;
+comment|/* tx classification failed */
+name|uint32_t
+name|is_ht_assoc_nohtcap
+decl_stmt|;
+comment|/* non-HT sta rejected */
+name|uint32_t
+name|is_ht_assoc_downgrade
+decl_stmt|;
+comment|/* HT sta forced to legacy */
+name|uint32_t
+name|is_ht_assoc_norate
+decl_stmt|;
+comment|/* HT assoc w/ rate mismatch */
+name|uint32_t
+name|is_ampdu_rx_age
+decl_stmt|;
+comment|/* A-MPDU sent up 'cuz of age */
+name|uint32_t
+name|is_ampdu_rx_move
+decl_stmt|;
+comment|/* A-MPDU MSDU moved window */
+name|uint32_t
+name|is_addba_reject
+decl_stmt|;
+comment|/* ADDBA reject 'cuz disabled */
+name|uint32_t
+name|is_addba_norequest
+decl_stmt|;
+comment|/* ADDBA response w/o ADDBA */
+name|uint32_t
+name|is_addba_badtoken
+decl_stmt|;
+comment|/* ADDBA response w/ wrong 						   dialogtoken */
+name|uint32_t
+name|is_ampdu_stop
+decl_stmt|;
+comment|/* A-MPDU stream stopped */
+name|uint32_t
+name|is_ampdu_stop_failed
+decl_stmt|;
+comment|/* A-MPDU stream not running */
+name|uint32_t
+name|is_ampdu_rx_reorder
+decl_stmt|;
+comment|/* A-MPDU held for rx reorder */
+name|uint32_t
 name|is_spare
 index|[
-literal|32
+literal|16
 index|]
 decl_stmt|;
 block|}
@@ -636,7 +704,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * WPA/RSN get/set key request.  Specify the key/cipher  * type and whether the key is to be used for sending and/or  * receiving.  The key index should be set only when working  * with global keys (use IEEE80211_KEYIX_NONE for ``no index'').  * Otherwise a unicast/pairwise key is specified by the bssid  * (on a station) or mac address (on an ap).  They key length  * must include any MIC key data; otherwise it should be no  more than IEEE80211_KEYBUF_SIZE.  */
+comment|/*  * WPA/RSN get/set key request.  Specify the key/cipher  * type and whether the key is to be used for sending and/or  * receiving.  The key index should be set only when working  * with global keys (use IEEE80211_KEYIX_NONE for ``no index'').  * Otherwise a unicast/pairwise key is specified by the bssid  * (on a station) or mac address (on an ap).  They key length  * must include any MIC key data; otherwise it should be no  * more than IEEE80211_KEYBUF_SIZE.  */
 end_comment
 
 begin_struct
@@ -2209,6 +2277,28 @@ end_define
 
 begin_comment
 comment|/* sta inactivity handling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_HTPROTMODE
+value|102
+end_define
+
+begin_comment
+comment|/* HT protection (off, rts) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_HTCONF
+value|105
+end_define
+
+begin_comment
+comment|/* HT config (off, HT20, HT40)*/
 end_comment
 
 begin_comment
