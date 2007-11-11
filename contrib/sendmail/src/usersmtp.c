@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: usersmtp.c,v 8.469 2006/12/13 20:11:15 ca Exp $"
+literal|"@(#)$Id: usersmtp.c,v 8.470 2007/10/17 21:35:30 ca Exp $"
 argument_list|)
 end_macro
 
@@ -11233,7 +11233,22 @@ name|mci_out
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|".%s"
+literal|"%s.%s"
+argument_list|,
+name|bitset
+argument_list|(
+name|MCIF_INLONGLINE
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+condition|?
+name|m
+operator|->
+name|m_eol
+else|:
+literal|""
 argument_list|,
 name|m
 operator|->

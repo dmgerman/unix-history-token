@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.972 2007/03/29 22:55:17 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.975 2007/06/18 20:08:40 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1623,7 +1623,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"queueup: cannot create %s, uid=%d: %s"
+literal|"queueup: cannot create %s, euid=%d: %s"
 argument_list|,
 name|tf
 argument_list|,
@@ -3984,6 +3984,8 @@ operator|&
 name|mcibuf
 argument_list|,
 name|e
+argument_list|,
+name|PXLF_HEADER
 argument_list|)
 expr_stmt|;
 name|TrafficLogFile
@@ -8248,6 +8250,24 @@ name|qgrp
 index|]
 operator|->
 name|qg_maxqrun
+expr_stmt|;
+comment|/* 		**  If no runners are configured for this group but 		**  the queue is "forced" then lets use 1 runner. 		*/
+if|if
+condition|(
+name|maxrunners
+operator|==
+literal|0
+operator|&&
+name|bitset
+argument_list|(
+name|RWG_FORCE
+argument_list|,
+name|flags
+argument_list|)
+condition|)
+name|maxrunners
+operator|=
+literal|1
 expr_stmt|;
 comment|/* No need to have more runners then there are jobs */
 if|if

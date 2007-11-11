@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: vacation.c,v 8.143 2006/12/19 19:00:43 ca Exp $"
+literal|"@(#)$Id: vacation.c,v 8.144 2007/05/11 18:50:36 ca Exp $"
 argument_list|)
 end_macro
 
@@ -166,7 +166,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|uid_t
+name|gid_t
 name|RunAsGid
 decl_stmt|;
 end_decl_stmt
