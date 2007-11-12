@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/agpvar.h>
+file|<dev/agp/agpvar.h>
 end_include
 
 begin_define

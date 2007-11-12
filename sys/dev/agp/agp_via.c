@@ -80,6 +80,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/agp/agppriv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/agp/agpreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -87,18 +99,6 @@ begin_include
 include|#
 directive|include
 file|<dev/pci/pcireg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pci/agppriv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pci/agpreg.h>
 end_include
 
 begin_include

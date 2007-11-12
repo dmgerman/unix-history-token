@@ -162,7 +162,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Enable the agp hardware with the relavent mode. The mode bits are  * defined in<pci/agpreg.h>  */
+comment|/*  * Enable the agp hardware with the relavent mode. The mode bits are  * defined in<dev/agp/agpreg.h>  */
 end_comment
 
 begin_function_decl
