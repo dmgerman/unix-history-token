@@ -1260,8 +1260,8 @@ name|eax
 operator|&
 literal|0xff00
 operator|)
-operator|>
-literal|0x300
+operator|>=
+literal|0x3000
 condition|)
 name|bd
 operator|->
