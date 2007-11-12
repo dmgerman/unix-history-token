@@ -1016,7 +1016,7 @@ name|mnt_optnew
 argument_list|,
 literal|"mode"
 argument_list|,
-literal|"%o"
+literal|"%ho"
 argument_list|,
 operator|&
 name|root_mode
