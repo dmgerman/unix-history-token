@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/agpreg.h>
+file|<dev/agp/agpreg.h>
 end_include
 
 begin_include
