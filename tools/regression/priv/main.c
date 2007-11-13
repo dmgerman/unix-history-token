@@ -352,6 +352,16 @@ name|priv_msgbuf_cleanup
 block|}
 block|,
 block|{
+literal|"priv_netinet_ipsec_pfkey"
+block|,
+name|priv_netinet_ipsec_pfkey_setup
+block|,
+name|priv_netinet_ipsec_pfkey
+block|,
+name|priv_netinet_ipsec_pfkey_cleanup
+block|}
+block|,
+block|{
 literal|"priv_netinet_raw"
 block|,
 name|priv_netinet_raw_setup
