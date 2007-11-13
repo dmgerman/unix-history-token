@@ -201,6 +201,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|hashdestroy
+argument_list|(
+name|ntfs_nthashtbl
+argument_list|,
+name|M_NTFSNTHASH
+argument_list|,
+name|ntfs_nthash
+argument_list|)
+expr_stmt|;
 name|lockdestroy
 argument_list|(
 operator|&
