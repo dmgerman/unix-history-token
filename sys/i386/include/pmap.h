@@ -466,28 +466,6 @@ directive|ifndef
 name|NKPDE
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NKPDE
-value|(KVA_PAGES - 1)
-end_define
-
-begin_comment
-comment|/* number of page tables/pde's */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -504,47 +482,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * The *PTDI values control the layout of virtual memory  *  * XXX This works for now, but I am not real happy with it, I'll fix it  * right after I fix locore.s and the magic 28K hole  *  * SMP_PRIVPAGES: The per-cpu address space is 0xff80000 -> 0xffbfffff  */
+comment|/*  * The *PTDI values control the layout of virtual memory  *  * XXX This works for now, but I am not real happy with it, I'll fix it  * right after I fix locore.s and the magic 28K hole  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MPPTDI
-value|(NPDEPTD-1)
-end_define
-
-begin_comment
-comment|/* per cpu ptd entry */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KPTDI
-value|(MPPTDI-NKPDE)
-end_define
-
-begin_comment
-comment|/* start of kernel virtual pde's */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -555,15 +495,6 @@ end_define
 
 begin_comment
 comment|/* start of kernel virtual pde's */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP */
 end_comment
 
 begin_define

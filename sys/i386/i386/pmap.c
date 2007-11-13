@@ -796,25 +796,6 @@ name|crashdumpmap
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|pt_entry_t
-modifier|*
-name|SMPpt
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|pt_entry_t
@@ -4988,7 +4969,6 @@ name|allpmaps_lock
 argument_list|)
 expr_stmt|;
 comment|/* Wire in kernel global address entries. */
-comment|/* XXX copies current process, does not fill in MPPTDI */
 name|bcopy
 argument_list|(
 name|PTD
@@ -5009,23 +4989,6 @@ name|pd_entry_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-name|pmap
-operator|->
-name|pm_pdir
-index|[
-name|MPPTDI
-index|]
-operator|=
-name|PTD
-index|[
-name|MPPTDI
-index|]
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* install self-referential address mapping entry(s) */
 for|for
 control|(
@@ -5990,20 +5953,6 @@ name|pm_pdir
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-name|pmap
-operator|->
-name|pm_pdir
-index|[
-name|MPPTDI
-index|]
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|pmap_qremove
 argument_list|(
 operator|(
