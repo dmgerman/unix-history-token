@@ -3644,9 +3644,6 @@ name|ic
 operator|->
 name|ic_caps
 operator|=
-name|IEEE80211_C_WEP
-comment|/* s/w WEP */
-operator||
 name|IEEE80211_C_MONITOR
 comment|/* monitor mode supported */
 operator||
