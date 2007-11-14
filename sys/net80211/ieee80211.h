@@ -1460,15 +1460,63 @@ name|ieee80211_action
 name|am_header
 decl_stmt|;
 name|uint8_t
-name|am_enable
-decl_stmt|;
-name|uint8_t
-name|am_mode
+name|am_control
 decl_stmt|;
 block|}
 name|__packed
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_A_HT_MIMOPWRSAVE_ENA
+value|0x01
+end_define
+
+begin_comment
+comment|/* PS enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_A_HT_MIMOPWRSAVE_MODE
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_A_HT_MIMOPWRSAVE_MODE_S
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_A_HT_MIMOPWRSAVE_DYNAMIC
+value|0x02
+end_define
+
+begin_comment
+comment|/* Dynamic Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_A_HT_MIMOPWRSAVE_STATIC
+value|0x00
+end_define
+
+begin_comment
+comment|/* no SM packets */
+end_comment
+
+begin_comment
+comment|/* bits 2-7 reserved */
+end_comment
 
 begin_comment
 comment|/* Block Ack actions */
