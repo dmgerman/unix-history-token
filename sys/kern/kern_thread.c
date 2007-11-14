@@ -1247,7 +1247,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|cpu_thread_setup
+name|cpu_thread_alloc
 argument_list|(
 name|td
 argument_list|)
@@ -1274,7 +1274,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|cpu_thread_clean
+name|cpu_thread_free
 argument_list|(
 name|td
 argument_list|)

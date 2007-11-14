@@ -3329,7 +3329,7 @@ name|mutex_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize the rest of proc 0's PCB. 	 * 	 * Set the kernel sp, reserving space for an (empty) trapframe, 	 * and make proc0's trapframe pointer point to it for sanity. 	 * Initialise proc0's backing store to start after u area. 	 */
-name|cpu_thread_setup
+name|cpu_thread_alloc
 argument_list|(
 operator|&
 name|thread0

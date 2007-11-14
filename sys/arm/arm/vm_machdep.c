@@ -1505,7 +1505,7 @@ end_function
 
 begin_function
 name|void
-name|cpu_thread_setup
+name|cpu_thread_alloc
 parameter_list|(
 name|struct
 name|thread
@@ -1588,6 +1588,18 @@ directive|endif
 endif|#
 directive|endif
 block|}
+end_function
+
+begin_function
+name|void
+name|cpu_thread_free
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{ }
 end_function
 
 begin_function
