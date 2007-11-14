@@ -2171,6 +2171,24 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|bcopy
+argument_list|(
+name|p
+operator|->
+name|p_comm
+argument_list|,
+name|td
+operator|->
+name|td_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|td
+operator|->
+name|td_name
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * mark as execed, wakeup the process that vforked (if any) and tell 	 * it that it now has its own resources back 	 */
 name|p
 operator|->
