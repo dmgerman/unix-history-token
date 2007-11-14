@@ -1443,6 +1443,17 @@ begin_comment
 comment|/* This is an official kernel thread */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDP_CALLCHAIN
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Capture thread's callchain */
+end_comment
+
 begin_comment
 comment|/*  * Reasons that the current thread can not be run yet.  * More than one may apply.  */
 end_comment
