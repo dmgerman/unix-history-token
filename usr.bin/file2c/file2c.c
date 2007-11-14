@@ -53,7 +53,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-n count] [-s] [-x] [prefix [suffix]]\n"
+literal|"usage: %s [-sx] [-n count] [prefix [suffix]]\n"
 argument_list|,
 name|getprogname
 argument_list|()
