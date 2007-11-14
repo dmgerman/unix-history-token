@@ -200,7 +200,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|int
+name|u_long
 name|ps_strings
 decl_stmt|;
 name|size_t
