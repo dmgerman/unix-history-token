@@ -696,9 +696,9 @@ name|KTR_TRAP
 argument_list|,
 literal|"trap: %s type=%s (%s)"
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|trapname
 argument_list|(
@@ -1840,9 +1840,9 @@ name|KTR_SYSC
 argument_list|,
 literal|"syscall: p=%s %s(%x %x %x)"
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|syscallnames
 index|[
@@ -1991,9 +1991,9 @@ name|KTR_SYSC
 argument_list|,
 literal|"syscall: p=%s %s ret=%x"
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|syscallnames
 index|[

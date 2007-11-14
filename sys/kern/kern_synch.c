@@ -642,9 +642,9 @@ name|p
 operator|->
 name|p_pid
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|wmesg
 argument_list|,
@@ -1043,9 +1043,9 @@ name|p
 operator|->
 name|p_pid
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|wmesg
 argument_list|,
@@ -1636,9 +1636,9 @@ name|p
 operator|->
 name|p_pid
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 if|#
@@ -1815,9 +1815,9 @@ name|p
 operator|->
 name|p_pid
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 comment|/*  	 * If the last thread was exiting, finish cleaning it up. 	 */

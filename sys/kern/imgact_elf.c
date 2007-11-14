@@ -5619,9 +5619,9 @@ name|psinfo
 operator|->
 name|pr_fname
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_comm
+name|td_name
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5638,9 +5638,9 @@ name|psinfo
 operator|->
 name|pr_psargs
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_comm
+name|td_name
 argument_list|,
 sizeof|sizeof
 argument_list|(

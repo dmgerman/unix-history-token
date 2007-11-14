@@ -1312,9 +1312,9 @@ name|td_tid
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|p
+name|td
 operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|req
 operator|->

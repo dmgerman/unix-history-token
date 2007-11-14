@@ -3130,9 +3130,9 @@ name|p
 operator|->
 name|p_pid
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 name|sched_fork_exit
@@ -3204,9 +3204,9 @@ name|printf
 argument_list|(
 literal|"Kernel thread \"%s\" (pid %d) exited prematurely.\n"
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|p
 operator|->

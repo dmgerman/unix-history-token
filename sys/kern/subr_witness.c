@@ -9723,9 +9723,9 @@ name|p
 operator|->
 name|p_pid
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|td
 argument_list|,
