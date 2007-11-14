@@ -260,6 +260,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP
+value|NULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|PTHREAD_COND_INITIALIZER
 value|NULL
 end_define
@@ -351,6 +358,11 @@ init|=
 literal|3
 block|,
 comment|/* No error checking */
+name|PTHREAD_MUTEX_ADAPTIVE_NP
+init|=
+literal|4
+block|,
+comment|/* Adaptive mutex, spins briefly before blocking on lock */
 name|PTHREAD_MUTEX_TYPE_MAX
 block|}
 enum|;
