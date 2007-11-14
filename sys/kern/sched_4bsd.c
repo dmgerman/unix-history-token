@@ -2139,9 +2139,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|td
 operator|->
@@ -2193,9 +2191,7 @@ name|child
 argument_list|,
 name|child
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|child
 operator|->
@@ -2448,9 +2444,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|td
 operator|->
@@ -2462,9 +2456,7 @@ name|curthread
 argument_list|,
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 name|THREAD_LOCK_ASSERT
@@ -3997,9 +3989,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|td
 operator|->
@@ -4009,9 +3999,7 @@ name|curthread
 argument_list|,
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now that the thread is moving to the run-queue, set the lock 	 * to the scheduler's lock. 	 */
@@ -4396,9 +4384,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|td
 operator|->
@@ -4408,9 +4394,7 @@ name|curthread
 argument_list|,
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now that the thread is moving to the run-queue, set the lock 	 * to the scheduler's lock. 	 */
@@ -4592,9 +4576,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|td
 operator|->
@@ -4604,9 +4586,7 @@ name|curthread
 argument_list|,
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 if|if

@@ -1429,9 +1429,7 @@ name|sig
 argument_list|,
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 endif|#

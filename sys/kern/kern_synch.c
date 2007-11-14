@@ -1667,9 +1667,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|td
 operator|->
@@ -1693,9 +1691,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|td
 operator|->
@@ -1705,9 +1701,7 @@ name|newtd
 argument_list|,
 name|newtd
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 else|else
@@ -1721,9 +1715,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|td
 operator|->
@@ -1798,9 +1790,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|,
 name|td
 operator|->

@@ -819,9 +819,7 @@ name|td_tid
 operator|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 operator|,
 name|td
 operator|->
@@ -4360,9 +4358,7 @@ name|td_name
 else|:
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -4724,9 +4720,7 @@ name|td_name
 else|:
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -5050,9 +5044,7 @@ name|td_name
 else|:
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 switch|switch

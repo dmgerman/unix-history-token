@@ -4479,9 +4479,7 @@ name|p_pid
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Bzero already done in thread_alloc_spare() because we can't 	 * do the crhold here because we are in schedlock already. 	 */
@@ -5762,9 +5760,7 @@ name|p_pid
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 name|td

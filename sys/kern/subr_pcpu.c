@@ -332,9 +332,7 @@ name|p_pid
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 else|else
@@ -383,9 +381,7 @@ name|p_pid
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 else|else
@@ -425,9 +421,7 @@ name|p_pid
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_comm
+name|td_name
 argument_list|)
 expr_stmt|;
 else|else
