@@ -24846,7 +24846,7 @@ name|freed_so_far
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|uint32_t
 name|copied_so_far
 init|=
 literal|0
@@ -27983,7 +27983,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 					 * If we don't have a next we need a 					 * lock, if there is a next interupt 					 * is filling ahead of us and we 					 * don't need a lock to remove this 					 * guy (which is the head of the 					 * queue). 					 */
+comment|/* 					 * If we don't have a next we need a 					 * lock, if there is a next 					 * interrupt is filling ahead of us 					 * and we don't need a lock to 					 * remove this guy (which is the 					 * head of the queue). 					 */
 if|if
 condition|(
 name|hold_rlock
