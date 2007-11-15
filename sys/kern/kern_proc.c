@@ -143,6 +143,12 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -677,6 +683,13 @@ operator|*
 operator|)
 name|mem
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|process_ctor
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -804,6 +817,13 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|process_dtor
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -934,6 +954,13 @@ name|p_threads
 argument_list|)
 expr_stmt|;
 comment|/* all threads in proc */
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|process_init
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_stats
@@ -982,6 +1009,13 @@ name|proc
 operator|*
 operator|)
 name|mem
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|process_fini
+argument_list|,
+name|p
+argument_list|)
 expr_stmt|;
 name|pstats_free
 argument_list|(
