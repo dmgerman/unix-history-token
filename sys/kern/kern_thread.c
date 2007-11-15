@@ -125,6 +125,12 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
+
 begin_comment
 comment|/*  * thread related storage.  */
 end_comment
@@ -501,6 +507,13 @@ name|td_critnest
 operator|=
 literal|1
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|thread_ctor
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|AUDIT
@@ -613,6 +626,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|thread_dtor
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|free_unr
 argument_list|(
 name|tid_unrhdr
@@ -677,6 +697,13 @@ name|td_turnstile
 operator|=
 name|turnstile_alloc
 argument_list|()
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|thread_init
+argument_list|,
+name|td
+argument_list|)
 expr_stmt|;
 name|td
 operator|->
@@ -747,6 +774,13 @@ name|thread
 operator|*
 operator|)
 name|mem
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|thread_fini
+argument_list|,
+name|td
+argument_list|)
 expr_stmt|;
 name|turnstile_free
 argument_list|(
