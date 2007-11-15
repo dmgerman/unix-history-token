@@ -4522,6 +4522,24 @@ operator|->
 name|ku_proc
 argument_list|)
 expr_stmt|;
+name|bcopy
+argument_list|(
+name|ku
+operator|->
+name|ku_comm
+argument_list|,
+name|td2
+operator|->
+name|td_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|td2
+operator|->
+name|td_name
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* inherit parts of blocked thread's context as a good template */
 name|cpu_set_upcall
 argument_list|(
