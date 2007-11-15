@@ -1223,7 +1223,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* a module may be waiting for us to exit */
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+comment|/* A module may be waiting for us to exit. */
 name|wakeup
 argument_list|(
 name|curthread
@@ -1246,6 +1251,22 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* never returns */
+name|p
+operator|=
+name|curthread
+operator|->
+name|td_proc
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|PROC_SLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|thread_exit
 argument_list|()
 expr_stmt|;
