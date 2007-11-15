@@ -371,7 +371,7 @@ name|char
 name|buf
 index|[
 sizeof|sizeof
-expr|"static, network, read-only, synthetic, loopback, unicode"]
+expr|"static, network, read-only, synthetic, loopback, unicode, jail"]
 expr_stmt|;
 name|int
 name|comma
