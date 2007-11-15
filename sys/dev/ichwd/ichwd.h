@@ -211,6 +211,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVICEID_63XXESB
+value|0x2670
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVICEID_ICH7
 value|0x27b8
 end_define

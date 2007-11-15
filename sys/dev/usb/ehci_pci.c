@@ -420,6 +420,24 @@ literal|"Intel 82801GB/R (ICH7) USB 2.0 controller"
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|PCI_EHCI_DEVICEID_63XX
+value|0x268c8086
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ehci_device_63XX
+init|=
+literal|"Intel 63XXESB USB 2.0 controller"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* NEC */
 end_comment
@@ -906,6 +924,14 @@ case|:
 return|return
 operator|(
 name|ehci_device_6300
+operator|)
+return|;
+case|case
+name|PCI_EHCI_DEVICEID_63XX
+case|:
+return|return
+operator|(
+name|ehci_device_63XX
 operator|)
 return|;
 case|case
