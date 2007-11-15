@@ -4526,7 +4526,9 @@ name|bcopy
 argument_list|(
 name|ku
 operator|->
-name|ku_comm
+name|ku_proc
+operator|->
+name|p_comm
 argument_list|,
 name|td2
 operator|->
