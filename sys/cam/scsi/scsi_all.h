@@ -5734,7 +5734,7 @@ operator|)
 operator|&
 name|mode_header
 index|[
-literal|2
+literal|1
 index|]
 operator|+
 name|scsi_2btoul
