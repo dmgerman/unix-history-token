@@ -7135,29 +7135,6 @@ name|DIST_XORG_NESTSERVER
 block|}
 block|,
 block|{
-literal|" prt"
-block|,
-literal|"X Print Server"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XOrgDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XORG_PRINTSERVER
-block|}
-block|,
-block|{
 literal|" vfb"
 block|,
 literal|"Virtual Framebuffer"
