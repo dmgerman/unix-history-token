@@ -205,6 +205,13 @@ end_include
 begin_define
 define|#
 directive|define
+name|_PATH_PTS
+value|"/dev/pts/"
+end_define
+
+begin_define
+define|#
+directive|define
 name|W_SEP
 value|" \t"
 end_define
@@ -3370,7 +3377,7 @@ name|BSD_PID_MAX
 end_undef
 
 begin_comment
-comment|/*-  * The user can specify a device via one of three formats:  *     1) fully qualified, e.g.:     /dev/ttyp0 /dev/console  *     2) missing "/dev", e.g.:      ttyp0      console  *     3) two-letters, e.g.:         p0         co  *        (matching letters that would be seen in the "TT" column)  */
+comment|/*-  * The user can specify a device via one of three formats:  *     1) fully qualified, e.g.:     /dev/ttyp0 /dev/console	/dev/pts/0  *     2) missing "/dev", e.g.:      ttyp0      console		pts/0  *     3) two-letters, e.g.:         p0         co		0  *        (matching letters that would be seen in the "TT" column)  */
 end_comment
 
 begin_function
@@ -3408,12 +3415,24 @@ name|pathbuf2
 index|[
 name|PATH_MAX
 index|]
+decl_stmt|,
+name|pathbuf3
+index|[
+name|PATH_MAX
+index|]
 decl_stmt|;
 name|ttypath
 operator|=
 name|NULL
 expr_stmt|;
 name|pathbuf2
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|pathbuf3
 index|[
 literal|0
 index|]
@@ -3504,6 +3523,23 @@ condition|)
 break|break;
 if|if
 condition|(
+name|strncmp
+argument_list|(
+name|pathbuf
+argument_list|,
+name|_PATH_PTS
+argument_list|,
+name|strlen
+argument_list|(
+name|_PATH_PTS
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|pathbuf
@@ -3566,6 +3602,58 @@ name|NULL
 expr_stmt|;
 break|break;
 block|}
+comment|/* Check to see if /dev/pts/${elem} exists */
+name|strlcpy
+argument_list|(
+name|pathbuf3
+argument_list|,
+name|_PATH_PTS
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pathbuf3
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|strlcat
+argument_list|(
+name|pathbuf3
+argument_list|,
+name|elem
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pathbuf3
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|pathbuf3
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|S_ISCHR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+comment|/* No need to repeat stat()&& S_ISCHR() checks */
+name|ttypath
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+block|}
 break|break;
 block|}
 if|if
@@ -3589,7 +3677,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|pathbuf2
+name|pathbuf3
 index|[
 literal|0
 index|]
@@ -3598,7 +3686,9 @@ literal|'\0'
 condition|)
 name|warn
 argument_list|(
-literal|"%s and %s"
+literal|"%s, %s, and %s"
+argument_list|,
+name|pathbuf3
 argument_list|,
 name|pathbuf2
 argument_list|,
@@ -3636,7 +3726,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|pathbuf2
+name|pathbuf3
 index|[
 literal|0
 index|]
@@ -3645,7 +3735,9 @@ literal|'\0'
 condition|)
 name|warnx
 argument_list|(
-literal|"%s and %s: Not a terminal"
+literal|"%s, %s, and %s: Not a terminal"
+argument_list|,
+name|pathbuf3
 argument_list|,
 name|pathbuf2
 argument_list|,
