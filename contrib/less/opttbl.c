@@ -355,12 +355,23 @@ end_comment
 begin_decl_stmt
 name|public
 name|int
+name|follow_mode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* F cmd Follows file desc or file name? */
+end_comment
+
+begin_decl_stmt
+name|public
+name|int
 name|oldbot
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Old bottom of screen behavior */
+comment|/* Old bottom of screen behavior {{REMOVE}} */
 end_comment
 
 begin_if
@@ -1054,6 +1065,20 @@ name|oldbot_optname
 init|=
 block|{
 literal|"old-bot"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|optname
+name|follow_optname
+init|=
+block|{
+literal|"follow-name"
 block|,
 name|NULL
 block|}
@@ -2160,6 +2185,30 @@ block|{
 literal|"Use new bottom of screen behavior"
 block|,
 literal|"Use old bottom of screen behavior"
+block|,
+name|NULL
+block|}
+block|}
+block|,
+block|{
+literal|'.'
+block|,
+operator|&
+name|follow_optname
+block|,
+name|BOOL
+block|,
+name|FOLLOW_DESC
+block|,
+operator|&
+name|follow_mode
+block|,
+name|NULL
+block|,
+block|{
+literal|"F command Follows file descriptor"
+block|,
+literal|"F command Follows file name"
 block|,
 name|NULL
 block|}
