@@ -762,6 +762,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define HAVE_STAT_INO if your struct stat has st_ino and st_dev. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STAT_INO
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<stdint.h> header file. */
 end_comment
 
@@ -999,6 +1010,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_VOID
+value|1
+end_define
+
+begin_comment
+comment|/* Define HAVE_WCTYPE if you have iswupper, iswlower, towupper, towlower. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCTYPE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<wctype.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCTYPE_H
 value|1
 end_define
 
