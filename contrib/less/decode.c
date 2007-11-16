@@ -2923,7 +2923,7 @@ name|off_t
 operator|)
 literal|0
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 operator|==
 name|BAD_LSEEK
