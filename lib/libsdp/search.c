@@ -1045,6 +1045,17 @@ literal|1
 operator|)
 return|;
 block|}
+name|rsp
+operator|+=
+name|xpdu
+operator|.
+name|len
+expr_stmt|;
+name|ss
+operator|->
+name|tid
+operator|++
+expr_stmt|;
 comment|/* Save continuation state (if any) */
 name|ss
 operator|->
@@ -1052,9 +1063,7 @@ name|cslen
 operator|=
 name|rsp
 index|[
-name|xpdu
-operator|.
-name|len
+literal|0
 index|]
 expr_stmt|;
 if|if
@@ -1100,10 +1109,6 @@ operator|->
 name|cs
 argument_list|,
 name|rsp
-operator|+
-name|xpdu
-operator|.
-name|len
 operator|+
 literal|1
 argument_list|,
@@ -1210,17 +1215,6 @@ name|offset
 expr_stmt|;
 block|}
 block|}
-name|rsp
-operator|+=
-name|xpdu
-operator|.
-name|len
-expr_stmt|;
-name|ss
-operator|->
-name|tid
-operator|++
-expr_stmt|;
 block|}
 do|while
 condition|(
