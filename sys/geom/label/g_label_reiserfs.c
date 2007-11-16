@@ -77,7 +77,7 @@ end_define
 begin_typedef
 typedef|typedef
 struct|struct
-name|resiserfs_sb
+name|reiserfs_sb
 block|{
 name|uint8_t
 name|fake1
