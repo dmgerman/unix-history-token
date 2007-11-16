@@ -1709,7 +1709,15 @@ argument_list|)
 operator|!=
 name|IFM_AUTO
 condition|)
+block|{
+name|sc
+operator|->
+name|mii_ticks
+operator|=
+literal|0
+expr_stmt|;
 break|break;
+block|}
 comment|/* 		 * check for link. 		 * Read the status register twice; BMSR_LINK is latch-low. 		 */
 name|reg
 operator|=
@@ -1743,6 +1751,16 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Announce link loss right after it happens. */
+if|if
+condition|(
+name|sc
+operator|->
+name|mii_ticks
+operator|++
+operator|==
+literal|0
+condition|)
+break|break;
 if|if
 condition|(
 name|sc
