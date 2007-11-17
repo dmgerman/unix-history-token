@@ -1943,18 +1943,12 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"size=%d cp=%lx packet=%x\n"
+literal|"size=%d cp=%p packet=%p\n"
 argument_list|,
 name|size
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|cp
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|packet
 argument_list|)
 expr_stmt|;
@@ -2217,18 +2211,12 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"size=%d cp=%lx packet=%x\n"
+literal|"size=%d cp=%p packet=%p\n"
 argument_list|,
 name|size
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|cp
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|packet
 argument_list|)
 expr_stmt|;
