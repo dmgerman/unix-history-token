@@ -548,7 +548,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|((struct physical *)((char *)fp - (int)(&((struct physical *)0)->name)))
+value|((struct physical *)((char *)fp - (uintptr_t)(&((struct physical *)0)->name)))
 end_define
 
 begin_define

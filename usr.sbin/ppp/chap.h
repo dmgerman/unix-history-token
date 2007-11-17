@@ -152,7 +152,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((struct chap *)((char *)a - (int)&((struct chap *)0)->auth))
+value|((struct chap *)((char *)a - (uintptr_t)&((struct chap *)0)->auth))
 end_define
 
 begin_struct
