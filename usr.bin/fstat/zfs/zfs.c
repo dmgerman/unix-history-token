@@ -197,12 +197,13 @@ modifier|*
 name|dataptr
 decl_stmt|;
 name|int
+modifier|*
+name|zphys_addr
+decl_stmt|;
+name|size_t
 name|len
 decl_stmt|,
 name|size
-decl_stmt|,
-modifier|*
-name|zphys_addr
 decl_stmt|;
 name|len
 operator|=
