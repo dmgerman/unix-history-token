@@ -337,7 +337,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"invalid version size %d in %s"
+literal|"invalid version size %zd in %s"
 argument_list|,
 name|data
 operator|.
