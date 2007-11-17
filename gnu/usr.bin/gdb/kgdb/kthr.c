@@ -141,9 +141,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|uintptr_t
-name|lookup
+name|kgdb_lookup
 parameter_list|(
 specifier|const
 name|char
@@ -272,7 +271,7 @@ name|paddr
 decl_stmt|;
 name|addr
 operator|=
-name|lookup
+name|kgdb_lookup
 argument_list|(
 literal|"_allproc"
 argument_list|)
@@ -305,7 +304,7 @@ argument_list|)
 expr_stmt|;
 name|dumppcb
 operator|=
-name|lookup
+name|kgdb_lookup
 argument_list|(
 literal|"_dumppcb"
 argument_list|)
@@ -323,7 +322,7 @@ operator|)
 return|;
 name|addr
 operator|=
-name|lookup
+name|kgdb_lookup
 argument_list|(
 literal|"_dumptid"
 argument_list|)
@@ -357,7 +356,7 @@ literal|1
 expr_stmt|;
 name|addr
 operator|=
-name|lookup
+name|kgdb_lookup
 argument_list|(
 literal|"_stopped_cpus"
 argument_list|)
@@ -390,7 +389,7 @@ literal|0
 expr_stmt|;
 name|stoppcbs
 operator|=
-name|lookup
+name|kgdb_lookup
 argument_list|(
 literal|"_stoppcbs"
 argument_list|)
