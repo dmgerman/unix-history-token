@@ -885,7 +885,7 @@ if|if
 condition|(
 name|curkthr
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|inferior_ptid
 operator|=
