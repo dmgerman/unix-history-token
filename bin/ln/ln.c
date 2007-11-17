@@ -250,7 +250,7 @@ modifier|*
 name|p
 decl_stmt|,
 modifier|*
-name|sourcedir
+name|targetdir
 decl_stmt|;
 name|int
 name|ch
@@ -509,7 +509,7 @@ comment|/* NOTREACHED */
 case|case
 literal|1
 case|:
-comment|/* ln target */
+comment|/* ln source */
 name|exit
 argument_list|(
 name|linkit
@@ -528,7 +528,7 @@ expr_stmt|;
 case|case
 literal|2
 case|:
-comment|/* ln target source */
+comment|/* ln source target */
 name|exit
 argument_list|(
 name|linkit
@@ -550,8 +550,8 @@ expr_stmt|;
 default|default:
 empty_stmt|;
 block|}
-comment|/* ln target1 target2 directory */
-name|sourcedir
+comment|/* ln source1 source2 directory */
+name|targetdir
 operator|=
 name|argv
 index|[
@@ -566,7 +566,7 @@ name|hflag
 operator|&&
 name|lstat
 argument_list|(
-name|sourcedir
+name|targetdir
 argument_list|,
 operator|&
 name|sb
@@ -593,7 +593,7 @@ literal|1
 argument_list|,
 literal|"%s"
 argument_list|,
-name|sourcedir
+name|targetdir
 argument_list|)
 expr_stmt|;
 block|}
@@ -601,7 +601,7 @@ if|if
 condition|(
 name|stat
 argument_list|(
-name|sourcedir
+name|targetdir
 argument_list|,
 operator|&
 name|sb
@@ -613,7 +613,7 @@ literal|1
 argument_list|,
 literal|"%s"
 argument_list|,
-name|sourcedir
+name|targetdir
 argument_list|)
 expr_stmt|;
 if|if
@@ -638,7 +638,7 @@ init|;
 operator|*
 name|argv
 operator|!=
-name|sourcedir
+name|targetdir
 condition|;
 operator|++
 name|argv
@@ -650,7 +650,7 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
-name|sourcedir
+name|targetdir
 argument_list|,
 literal|1
 argument_list|)
@@ -670,12 +670,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|target
+name|source
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|source
+name|target
 parameter_list|,
 name|int
 name|isdir
@@ -709,12 +709,12 @@ operator|!
 name|sflag
 condition|)
 block|{
-comment|/* If target doesn't exist, quit now. */
+comment|/* If source doesn't exist, quit now. */
 if|if
 condition|(
 name|stat
 argument_list|(
-name|target
+name|source
 argument_list|,
 operator|&
 name|sb
@@ -725,7 +725,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|target
+name|source
 argument_list|)
 expr_stmt|;
 return|return
@@ -753,7 +753,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|target
+name|source
 argument_list|)
 expr_stmt|;
 return|return
@@ -763,7 +763,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * If the source is a directory (and not a symlink if hflag), 	 * append the target's name. 	 */
+comment|/* 	 * If the target is a directory (and not a symlink if hflag), 	 * append the source's name. 	 */
 if|if
 condition|(
 name|isdir
@@ -771,7 +771,7 @@ operator|||
 operator|(
 name|lstat
 argument_list|(
-name|source
+name|target
 argument_list|,
 operator|&
 name|sb
@@ -793,7 +793,7 @@ name|hflag
 operator|&&
 name|stat
 argument_list|(
-name|source
+name|target
 argument_list|,
 operator|&
 name|sb
@@ -817,7 +817,7 @@ name|p
 operator|=
 name|strrchr
 argument_list|(
-name|target
+name|source
 argument_list|,
 literal|'/'
 argument_list|)
@@ -827,7 +827,7 @@ name|NULL
 condition|)
 name|p
 operator|=
-name|target
+name|source
 expr_stmt|;
 else|else
 operator|++
@@ -846,7 +846,7 @@ argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|source
+name|target
 argument_list|,
 name|p
 argument_list|)
@@ -868,7 +868,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|target
+name|source
 argument_list|)
 expr_stmt|;
 return|return
@@ -877,7 +877,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|source
+name|target
 operator|=
 name|path
 expr_stmt|;
@@ -887,7 +887,7 @@ operator|=
 operator|!
 name|lstat
 argument_list|(
-name|source
+name|target
 argument_list|,
 operator|&
 name|sb
@@ -917,7 +917,7 @@ if|if
 condition|(
 name|rmdir
 argument_list|(
-name|source
+name|target
 argument_list|)
 condition|)
 block|{
@@ -925,7 +925,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|source
+name|target
 argument_list|)
 expr_stmt|;
 return|return
@@ -940,7 +940,7 @@ if|if
 condition|(
 name|unlink
 argument_list|(
-name|source
+name|target
 argument_list|)
 condition|)
 block|{
@@ -948,7 +948,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|source
+name|target
 argument_list|)
 expr_stmt|;
 return|return
@@ -977,7 +977,7 @@ name|stderr
 argument_list|,
 literal|"replace %s? "
 argument_list|,
-name|source
+name|target
 argument_list|)
 expr_stmt|;
 name|first
@@ -1042,7 +1042,7 @@ if|if
 condition|(
 name|rmdir
 argument_list|(
-name|source
+name|target
 argument_list|)
 condition|)
 block|{
@@ -1050,7 +1050,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|source
+name|target
 argument_list|)
 expr_stmt|;
 return|return
@@ -1065,7 +1065,7 @@ if|if
 condition|(
 name|unlink
 argument_list|(
-name|source
+name|target
 argument_list|)
 condition|)
 block|{
@@ -1073,7 +1073,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|source
+name|target
 argument_list|)
 expr_stmt|;
 return|return
@@ -1091,9 +1091,9 @@ modifier|*
 name|linkf
 call|)
 argument_list|(
-name|target
-argument_list|,
 name|source
+argument_list|,
+name|target
 argument_list|)
 condition|)
 block|{
@@ -1101,7 +1101,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|source
+name|target
 argument_list|)
 expr_stmt|;
 return|return
@@ -1121,11 +1121,11 @@ name|printf
 argument_list|(
 literal|"%s %c> %s\n"
 argument_list|,
-name|source
+name|target
 argument_list|,
 name|linkch
 argument_list|,
-name|target
+name|source
 argument_list|)
 expr_stmt|;
 return|return
