@@ -1812,7 +1812,7 @@ operator|==
 name|NPE_IMAGE_MARKER
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
 operator|->
@@ -1825,7 +1825,7 @@ argument_list|)
 expr_stmt|;
 comment|/* reached end of library, image not found */
 return|return
-name|EIO
+name|ESRCH
 return|;
 block|}
 name|offset
@@ -1836,7 +1836,7 @@ name|size
 expr_stmt|;
 block|}
 return|return
-name|EIO
+name|ESRCH
 return|;
 block|}
 end_function
