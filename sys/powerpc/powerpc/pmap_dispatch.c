@@ -677,6 +677,27 @@ end_function
 
 begin_function
 name|int
+name|pmap_page_wired_mappings
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+return|return
+operator|(
+name|MMU_PAGE_WIRED_MAPPINGS
+argument_list|(
+name|mmu_obj
+argument_list|,
+name|m
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|pmap_pinit
 parameter_list|(
 name|pmap_t

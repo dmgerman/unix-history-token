@@ -345,6 +345,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pmap_page_wired_mappings
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pmap_pinit
 parameter_list|(
 name|pmap_t
