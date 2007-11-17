@@ -40,6 +40,16 @@ directive|define
 name|FETCH_INFERIOR_REGISTERS
 end_define
 
+begin_comment
+comment|/* We can attach and detach.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATTACH_DETACH
+end_define
+
 begin_endif
 endif|#
 directive|endif
