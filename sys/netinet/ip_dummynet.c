@@ -377,6 +377,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|io_fast
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|unsigned
 name|long
 name|io_pkt
@@ -989,6 +996,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Number of ticks coalesced by dummynet taskqueue."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_ip_dummynet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|io_fast
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|io_fast
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable fast dummynet io."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4571,11 +4599,15 @@ name|q
 operator|->
 name|numbytes
 operator|=
+name|io_fast
+condition|?
 name|fs
 operator|->
 name|pipe
 operator|->
 name|bandwidth
+else|:
+literal|0
 expr_stmt|;
 name|fs
 operator|->
@@ -6542,11 +6574,15 @@ name|q
 operator|->
 name|numbytes
 operator|=
+name|io_fast
+condition|?
 name|fs
 operator|->
 name|pipe
 operator|->
 name|bandwidth
+else|:
+literal|0
 expr_stmt|;
 name|q
 operator|->
@@ -8640,9 +8676,13 @@ name|q
 operator|->
 name|numbytes
 operator|=
+name|io_fast
+condition|?
 name|p
 operator|->
 name|bandwidth
+else|:
+literal|0
 expr_stmt|;
 name|pipe
 operator|->
