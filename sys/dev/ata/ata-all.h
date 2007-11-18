@@ -931,7 +931,7 @@ begin_define
 define|#
 directive|define
 name|ATA_AHCI_GHC_HR
-value|0x80000001
+value|0x00000001
 end_define
 
 begin_define
