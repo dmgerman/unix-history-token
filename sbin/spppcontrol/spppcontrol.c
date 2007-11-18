@@ -326,7 +326,7 @@ operator|.
 name|cmd
 operator|=
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|SPPPIOGDEFS
 expr_stmt|;
@@ -1113,7 +1113,7 @@ operator|.
 name|cmd
 operator|=
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|SPPPIOSDEFS
 expr_stmt|;
