@@ -351,6 +351,7 @@ begin_function_decl
 name|int
 name|expand_number
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|_buf

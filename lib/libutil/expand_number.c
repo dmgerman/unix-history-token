@@ -55,6 +55,7 @@ begin_function
 name|int
 name|expand_number
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|buf
