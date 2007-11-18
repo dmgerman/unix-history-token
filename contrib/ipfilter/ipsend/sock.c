@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: sock.c,v 2.8.4.4 2006/03/21 16:10:56 darrenr Exp $"
+literal|"@(#)$Id: sock.c,v 2.8.4.7 2007/09/13 07:19:34 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,6 +156,23 @@ argument_list|(
 name|__osf__
 argument_list|)
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/lock.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -388,11 +405,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__osf__
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<net/route.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1719,6 +1747,15 @@ name|fd
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 if|#
 directive|if
 name|defined
@@ -1769,6 +1806,11 @@ operator|->
 name|ki_fd
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -1817,6 +1859,11 @@ operator|->
 name|kp_proc
 operator|.
 name|p_fd
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -2347,7 +2394,8 @@ name|int
 name|fd
 decl_stmt|,
 name|nfd
-decl_stmt|,
+decl_stmt|;
+name|socklen_t
 name|len
 decl_stmt|;
 name|printf

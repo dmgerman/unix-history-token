@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $FreeBSD$  * Id: ip_state.h,v 2.68.2.3 2005/03/03 14:24:11 darrenr Exp  */
+comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $FreeBSD$  * Id: ip_state.h,v 2.68.2.10 2007/10/16 09:33:24 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -111,33 +111,25 @@ end_endif
 begin_define
 define|#
 directive|define
-name|PAIRS
+name|SEQ_GE
 parameter_list|(
-name|s1
+name|a
 parameter_list|,
-name|d1
-parameter_list|,
-name|s2
-parameter_list|,
-name|d2
+name|b
 parameter_list|)
-value|((((s1) == (s2))&& ((d1) == (d2))) ||\ 				 (((s1) == (d2))&& ((d1) == (s2))))
+value|((int)((a) - (b))>= 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IPPAIR
+name|SEQ_GT
 parameter_list|(
-name|s1
+name|a
 parameter_list|,
-name|d1
-parameter_list|,
-name|s2
-parameter_list|,
-name|d2
+name|b
 parameter_list|)
-value|PAIRS((s1).s_addr, (d1).s_addr, \ 				      (s2).s_addr, (d2).s_addr)
+value|((int)((a) - (b))> 0)
 end_define
 
 begin_typedef
@@ -186,14 +178,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|is_sync
-decl_stmt|;
-name|struct
-name|nat
-modifier|*
-name|is_nat
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|frentry_t
 modifier|*
@@ -928,6 +912,13 @@ name|ISL_ORPHAN
 value|0xfffa
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISL_UNLOAD
+value|0xfff9
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1005,6 +996,10 @@ decl_stmt|;
 name|u_long
 modifier|*
 name|iss_bucketlen
+decl_stmt|;
+name|ipftq_t
+modifier|*
+name|iss_tcptab
 decl_stmt|;
 block|}
 name|ips_stat_t
@@ -1346,6 +1341,11 @@ operator|,
 name|ioctlcmd_t
 operator|,
 name|int
+operator|,
+name|int
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1425,9 +1425,6 @@ name|fr_statederef
 name|__P
 argument_list|(
 operator|(
-name|fr_info_t
-operator|*
-operator|,
 name|ipstate_t
 operator|*
 operator|*

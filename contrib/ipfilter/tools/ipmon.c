@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2001-2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_ifndef
@@ -457,7 +457,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipmon.c,v 1.33.2.15 2006/03/18 06:59:39 darrenr Exp $"
+literal|"@(#)$Id: ipmon.c,v 1.33.2.20 2007/09/20 12:51:56 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4650,6 +4650,22 @@ argument_list|,
 literal|"NAT:CLONE "
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|nl
+operator|->
+name|nl_type
+operator|==
+name|NL_DESTROY
+condition|)
+name|strcpy
+argument_list|(
+name|t
+argument_list|,
+literal|"NAT:DESTROY "
+argument_list|)
+expr_stmt|;
 else|else
 name|sprintf
 argument_list|(
@@ -4765,7 +4781,7 @@ name|sprintf
 argument_list|(
 name|t
 argument_list|,
-literal|"[%s,%s]"
+literal|"[%s,%s PR %s]"
 argument_list|,
 name|HOSTNAME_V4
 argument_list|(
@@ -4788,6 +4804,13 @@ operator|)
 name|nl
 operator|->
 name|nl_origport
+argument_list|)
+argument_list|,
+name|getproto
+argument_list|(
+name|nl
+operator|->
+name|nl_p
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5153,14 +5176,16 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|sl
 operator|->
 name|isl_type
-operator|==
-name|ISL_NEW
 condition|)
+block|{
+case|case
+name|ISL_NEW
+case|:
 name|strcpy
 argument_list|(
 name|t
@@ -5168,15 +5193,10 @@ argument_list|,
 literal|"STATE:NEW "
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
-operator|==
+break|break;
+case|case
 name|ISL_CLONE
-condition|)
+case|:
 name|strcpy
 argument_list|(
 name|t
@@ -5184,16 +5204,10 @@ argument_list|,
 literal|"STATE:CLONED "
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
-operator|==
+break|break;
+case|case
 name|ISL_EXPIRE
-condition|)
-block|{
+case|:
 if|if
 condition|(
 operator|(
@@ -5239,16 +5253,10 @@ argument_list|,
 literal|"STATE:EXPIRE "
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
-operator|==
+break|break;
+case|case
 name|ISL_FLUSH
-condition|)
+case|:
 name|strcpy
 argument_list|(
 name|t
@@ -5256,15 +5264,10 @@ argument_list|,
 literal|"STATE:FLUSH "
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
-operator|==
+break|break;
+case|case
 name|ISL_INTERMEDIATE
-condition|)
+case|:
 name|strcpy
 argument_list|(
 name|t
@@ -5272,15 +5275,10 @@ argument_list|,
 literal|"STATE:INTERMEDIATE "
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
-operator|==
+break|break;
+case|case
 name|ISL_REMOVE
-condition|)
+case|:
 name|strcpy
 argument_list|(
 name|t
@@ -5288,15 +5286,10 @@ argument_list|,
 literal|"STATE:REMOVE "
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
-operator|==
+break|break;
+case|case
 name|ISL_KILLED
-condition|)
+case|:
 name|strcpy
 argument_list|(
 name|t
@@ -5304,7 +5297,19 @@ argument_list|,
 literal|"STATE:KILLED "
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+case|case
+name|ISL_UNLOAD
+case|:
+name|strcpy
+argument_list|(
+name|t
+argument_list|,
+literal|"STATE:UNLOAD "
+argument_list|)
+expr_stmt|;
+break|break;
+default|default :
 name|sprintf
 argument_list|(
 name|t
@@ -5316,6 +5321,8 @@ operator|->
 name|isl_type
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|t
 operator|+=
 name|strlen
@@ -6228,9 +6235,20 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_INET6
+name|struct
+name|ip6_ext
+modifier|*
+name|ehp
+decl_stmt|;
+name|u_short
+name|ehl
+decl_stmt|;
 name|ip6_t
 modifier|*
 name|ip6
+decl_stmt|;
+name|int
+name|go
 decl_stmt|;
 endif|#
 directive|endif
@@ -7043,6 +7061,114 @@ operator|->
 name|ip6_plen
 argument_list|)
 expr_stmt|;
+name|go
+operator|=
+literal|1
+expr_stmt|;
+name|ehp
+operator|=
+operator|(
+expr|struct
+name|ip6_ext
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|ip6
+operator|+
+name|hl
+operator|)
+expr_stmt|;
+while|while
+condition|(
+name|go
+operator|==
+literal|1
+condition|)
+block|{
+switch|switch
+condition|(
+name|p
+condition|)
+block|{
+case|case
+name|IPPROTO_HOPOPTS
+case|:
+case|case
+name|IPPROTO_MOBILITY
+case|:
+case|case
+name|IPPROTO_DSTOPTS
+case|:
+case|case
+name|IPPROTO_ROUTING
+case|:
+case|case
+name|IPPROTO_AH
+case|:
+name|p
+operator|=
+name|ehp
+operator|->
+name|ip6e_nxt
+expr_stmt|;
+name|ehl
+operator|=
+literal|8
+operator|+
+operator|(
+name|ehp
+operator|->
+name|ip6e_len
+operator|<<
+literal|3
+operator|)
+expr_stmt|;
+name|hl
+operator|+=
+name|ehl
+expr_stmt|;
+name|ehp
+operator|=
+operator|(
+expr|struct
+name|ip6_ext
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|ehp
+operator|+
+name|ehl
+operator|)
+expr_stmt|;
+break|break;
+case|case
+name|IPPROTO_FRAGMENT
+case|:
+name|hl
+operator|+=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip6_frag
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
+default|default :
+name|go
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+block|}
 else|#
 directive|else
 name|sprintf
@@ -10346,6 +10472,10 @@ continue|continue;
 name|nr
 operator|+=
 name|tr
+expr_stmt|;
+name|n
+operator|=
+literal|0
 expr_stmt|;
 name|tr
 operator|=

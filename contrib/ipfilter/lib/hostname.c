@@ -3,6 +3,10 @@ begin_comment
 comment|/*	$FreeBSD$	*/
 end_comment
 
+begin_comment
+comment|/*  * Copyright (C) 2002-2003 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: hostname.c,v 1.6.2.2 2007/01/16 02:25:22 darrenr Exp $   */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -49,6 +53,20 @@ name|netent
 modifier|*
 name|np
 decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|ipa
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ipa
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX gcc */
 if|if
 condition|(
 name|v

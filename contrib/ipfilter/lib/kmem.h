@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  * $Id: kmem.h,v 1.2 2002/08/21 22:57:36 darrenr Exp $  */
+comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  * $Id: kmem.h,v 1.2.4.1 2006/06/16 17:21:04 darrenr Exp $  */
 end_comment
 
 begin_ifndef

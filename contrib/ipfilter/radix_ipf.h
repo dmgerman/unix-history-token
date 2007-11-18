@@ -104,6 +104,16 @@ name|defined
 argument_list|(
 name|__sgi
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__osf__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 end_if
 
 begin_define
@@ -794,6 +804,11 @@ name|IRIX
 operator|>=
 literal|60516
 operator|)
+operator|||
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 operator|)
 operator|&&
 name|defined

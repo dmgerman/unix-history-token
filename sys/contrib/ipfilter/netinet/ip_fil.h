@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $FreeBSD$  * Id: ip_fil.h,v 2.170.2.29 2006/03/29 11:19:55 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $FreeBSD$  * Id: ip_fil.h,v 2.170.2.51 2007/10/10 09:48:03 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -234,7 +234,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SIOCATHST
+name|SIOCSTAT1
 value|_IOWR('r', 78, struct ipfobj)
 end_define
 
@@ -269,7 +269,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SIOCGFRST
+name|SIOCSTAT2
 value|_IOWR('r', 83, struct ipfobj)
 end_define
 
@@ -320,6 +320,48 @@ define|#
 directive|define
 name|SIOCIPFL6
 value|_IOWR('r', 90, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCIPFITER
+value|_IOWR('r', 91, struct ipfobj)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGENITER
+value|_IOWR('r', 92, struct ipfobj)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGTABL
+value|_IOWR('r', 93, struct ipfobj)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCIPFDELTOK
+value|_IOWR('r', 94, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCLOOKUPITER
+value|_IOWR('r', 95, struct ipfobj)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGTQTAB
+value|_IOWR('r', 96, struct ipfobj)
 end_define
 
 begin_else
@@ -456,7 +498,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SIOCATHST
+name|SIOCSTAT1
 value|_IOWR(r, 78, struct ipfobj)
 end_define
 
@@ -491,7 +533,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SIOCGFRST
+name|SIOCSTAT2
 value|_IOWR(r, 83, struct ipfobj)
 end_define
 
@@ -544,6 +586,48 @@ name|SIOCIPFL6
 value|_IOWR(r, 90, int)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIOCIPFITER
+value|_IOWR(r, 91, struct ipfobj)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGENITER
+value|_IOWR(r, 92, struct ipfobj)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGTABL
+value|_IOWR(r, 93, struct ipfobj)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCIPFDELTOK
+value|_IOWR(r, 94, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCLOOKUPITER
+value|_IOWR(r, 95, struct ipfobj)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGTQTAB
+value|_IOWR(r, 96, struct ipfobj)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -568,6 +652,20 @@ define|#
 directive|define
 name|SIOCINSFR
 value|SIOCINAFR
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCATHST
+value|SIOCSTAT1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGFRST
+value|SIOCSTAT2
 end_define
 
 begin_struct_decl
@@ -645,6 +743,23 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+struct|struct
+block|{
+name|u_short
+name|type
+decl_stmt|;
+name|u_short
+name|subtype
+decl_stmt|;
+name|char
+name|label
+index|[
+literal|12
+index|]
+decl_stmt|;
+block|}
+name|i6un
+struct|;
 block|}
 name|i6addr_t
 typedef|;
@@ -683,6 +798,23 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+struct|struct
+block|{
+name|u_short
+name|type
+decl_stmt|;
+name|u_short
+name|subtype
+decl_stmt|;
+name|char
+name|label
+index|[
+literal|12
+index|]
+decl_stmt|;
+block|}
+name|i6un
+struct|;
 block|}
 name|i6addr_t
 typedef|;
@@ -704,14 +836,28 @@ begin_define
 define|#
 directive|define
 name|iplookupnum
-value|i6[0]
+value|i6[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|iplookupname
+value|i6un.label
 end_define
 
 begin_define
 define|#
 directive|define
 name|iplookuptype
-value|i6[1]
+value|i6un.type
+end_define
+
+begin_define
+define|#
+directive|define
+name|iplookupsubtype
+value|i6un.subtype
 end_define
 
 begin_comment
@@ -739,7 +885,7 @@ name|I60
 parameter_list|(
 name|x
 parameter_list|)
-value|(((i6addr_t *)(x))->i6[0])
+value|(((u_32_t *)(x))[0])
 end_define
 
 begin_define
@@ -749,7 +895,7 @@ name|I61
 parameter_list|(
 name|x
 parameter_list|)
-value|(((i6addr_t *)(x))->i6[1])
+value|(((u_32_t *)(x))[1])
 end_define
 
 begin_define
@@ -759,7 +905,7 @@ name|I62
 parameter_list|(
 name|x
 parameter_list|)
-value|(((i6addr_t *)(x))->i6[2])
+value|(((u_32_t *)(x))[2])
 end_define
 
 begin_define
@@ -769,7 +915,7 @@ name|I63
 parameter_list|(
 name|x
 parameter_list|)
-value|(((i6addr_t *)(x))->i6[3])
+value|(((u_32_t *)(x))[3])
 end_define
 
 begin_define
@@ -779,7 +925,7 @@ name|HI60
 parameter_list|(
 name|x
 parameter_list|)
-value|ntohl(((i6addr_t *)(x))->i6[0])
+value|ntohl(((u_32_t *)(x))[0])
 end_define
 
 begin_define
@@ -789,7 +935,7 @@ name|HI61
 parameter_list|(
 name|x
 parameter_list|)
-value|ntohl(((i6addr_t *)(x))->i6[1])
+value|ntohl(((u_32_t *)(x))[1])
 end_define
 
 begin_define
@@ -799,7 +945,7 @@ name|HI62
 parameter_list|(
 name|x
 parameter_list|)
-value|ntohl(((i6addr_t *)(x))->i6[2])
+value|ntohl(((u_32_t *)(x))[2])
 end_define
 
 begin_define
@@ -809,7 +955,7 @@ name|HI63
 parameter_list|(
 name|x
 parameter_list|)
-value|ntohl(((i6addr_t *)(x))->i6[3])
+value|ntohl(((u_32_t *)(x))[3])
 end_define
 
 begin_define
@@ -900,7 +1046,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|{ i6addr_t *_i6 = (i6addr_t *)(a); \ 		  _i6->i6[0] = NLADD(_i6->i6[0], 1); \ 		  if (_i6->i6[0] == 0) { \ 			_i6->i6[0] = NLADD(_i6->i6[1], 1); \ 			if (_i6->i6[1] == 0) { \ 				_i6->i6[0] = NLADD(_i6->i6[2], 1); \ 				if (_i6->i6[2] == 0) { \ 					_i6->i6[0] = NLADD(_i6->i6[3], 1); \ 				} \ 			} \ 		  } \ 		}
+value|{ u_32_t *_i6 = (u_32_t *)(a); \ 		  _i6[3] = NLADD(_i6[3], 1); \ 		  if (_i6[3] == 0) { \ 			_i6[2] = NLADD(_i6[2], 1); \ 			if (_i6[2] == 0) { \ 				_i6[1] = NLADD(_i6[1], 1); \ 				if (_i6[1] == 0) { \ 					_i6[0] = NLADD(_i6[0], 1); \ 				} \ 			} \ 		  } \ 		}
 end_define
 
 begin_define
@@ -1147,11 +1293,11 @@ begin_define
 define|#
 directive|define
 name|FI_CMP
-value|0xcfe3
+value|0xcf03
 end_define
 
 begin_comment
-comment|/* Not FI_FRAG,FI_NATED,FI_FRAGTAIL */
+comment|/* Not FI_FRAG,FI_NATED,FI_FRAGTAIL,broadcast */
 end_comment
 
 begin_define
@@ -1188,6 +1334,13 @@ define|#
 directive|define
 name|FI_COALESCE
 value|0x20000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FI_NEWNAT
+value|0x40000
 end_define
 
 begin_define
@@ -1250,6 +1403,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|fi_srcname
+value|fi_src.iplookupname
+end_define
+
+begin_define
+define|#
+directive|define
+name|fi_dstname
+value|fi_dst.iplookupname
+end_define
+
+begin_define
+define|#
+directive|define
 name|fi_srctype
 value|fi_src.iplookuptype
 end_define
@@ -1259,6 +1426,20 @@ define|#
 directive|define
 name|fi_dsttype
 value|fi_dst.iplookuptype
+end_define
+
+begin_define
+define|#
+directive|define
+name|fi_srcsubtype
+value|fi_src.iplookupsubtype
+end_define
+
+begin_define
+define|#
+directive|define
+name|fi_dstsubtype
+value|fi_dst.iplookupsubtype
 end_define
 
 begin_define
@@ -1453,6 +1634,10 @@ name|int
 name|fin_error
 decl_stmt|;
 comment|/* Error code to return */
+name|int
+name|fin_cksum
+decl_stmt|;
+comment|/* -1 bad, 1 good, 0 not done */
 name|void
 modifier|*
 name|fin_nat
@@ -1464,6 +1649,10 @@ decl_stmt|;
 name|void
 modifier|*
 name|fin_nattag
+decl_stmt|;
+name|void
+modifier|*
+name|fin_exthdr
 decl_stmt|;
 name|ip_t
 modifier|*
@@ -2041,8 +2230,22 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|fri_dlookup
+value|fri_mip.fi_dst
+end_define
+
+begin_define
+define|#
+directive|define
+name|fri_slookup
+value|fri_mip.fi_src
+end_define
+
+begin_define
+define|#
+directive|define
 name|fri_dstnum
-value|fri_ip.fi_dstnum
+value|fri_mip.fi_dstnum
 end_define
 
 begin_define
@@ -2055,8 +2258,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|fri_dstname
+value|fri_mip.fi_dstname
+end_define
+
+begin_define
+define|#
+directive|define
+name|fri_srcname
+value|fri_mip.fi_srcname
+end_define
+
+begin_define
+define|#
+directive|define
 name|fri_dstptr
-value|fri_ip.fi_dstptr
+value|fri_mip.fi_dstptr
 end_define
 
 begin_define
@@ -2222,6 +2439,11 @@ name|int
 name|fr_statecnt
 decl_stmt|;
 comment|/* state count - for limit rules */
+comment|/* 	 * The line number from a file is here because we need to be able to 	 * match the rule generated with ``grep rule ipf.conf | ipf -rf -'' 	 * with the rule loaded using ``ipf -f ipf.conf'' - thus it can't be 	 * on the other side of fr_func. 	 */
+name|int
+name|fr_flineno
+decl_stmt|;
+comment|/* line number from conf file */
 comment|/* 	 * These are only incremented when a packet  matches this rule and 	 * it is the last match 	 */
 name|U_QUAD_T
 name|fr_hits
@@ -2271,10 +2493,6 @@ name|int
 name|fr_statemax
 decl_stmt|;
 comment|/* max reference count */
-name|int
-name|fr_flineno
-decl_stmt|;
-comment|/* line number from conf file */
 name|u_32_t
 name|fr_type
 decl_stmt|;
@@ -2627,6 +2845,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|fr_dlookup
+value|fr_ip.fi_dst
+end_define
+
+begin_define
+define|#
+directive|define
+name|fr_slookup
+value|fr_ip.fi_src
+end_define
+
+begin_define
+define|#
+directive|define
+name|fr_dstname
+value|fr_ip.fi_dstname
+end_define
+
+begin_define
+define|#
+directive|define
+name|fr_srcname
+value|fr_ip.fi_srcname
+end_define
+
+begin_define
+define|#
+directive|define
 name|fr_dsttype
 value|fr_ip.fi_dsttype
 end_define
@@ -2636,6 +2882,20 @@ define|#
 directive|define
 name|fr_srctype
 value|fr_ip.fi_srctype
+end_define
+
+begin_define
+define|#
+directive|define
+name|fr_dstsubtype
+value|fr_ip.fi_dstsubtype
+end_define
+
+begin_define
+define|#
+directive|define
+name|fr_srcsubtype
+value|fr_ip.fi_srcsubtype
 end_define
 
 begin_define
@@ -4902,6 +5162,20 @@ parameter_list|)
 value|(((x) / IPF_HZ_MULT) * IPF_HZ_DIVIDE)
 end_define
 
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|ipftq_delete_fn_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/*  * Structure to define address for pool lookups.  */
 end_comment
@@ -5117,6 +5391,83 @@ begin_comment
 comment|/* struct ipftune */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPFOBJ_NAT
+value|14
+end_define
+
+begin_comment
+comment|/* struct nat */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFOBJ_IPFITER
+value|15
+end_define
+
+begin_comment
+comment|/* struct ipfruleiter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFOBJ_GENITER
+value|16
+end_define
+
+begin_comment
+comment|/* struct ipfgeniter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFOBJ_GTABLE
+value|17
+end_define
+
+begin_comment
+comment|/* struct ipftable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFOBJ_LOOKUPITER
+value|18
+end_define
+
+begin_comment
+comment|/* struct ipflookupiter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFOBJ_STATETQTAB
+value|19
+end_define
+
+begin_comment
+comment|/* struct ipftq [NSTATES] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFOBJ_COUNT
+value|20
+end_define
+
+begin_comment
+comment|/* How many #defines are above this? */
+end_comment
+
 begin_typedef
 typedef|typedef
 union|union
@@ -5155,6 +5506,7 @@ block|{
 name|ipftunevalptr_t
 name|ipft_una
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ipft_name
@@ -5322,6 +5674,243 @@ directive|define
 name|ipft_vchar
 value|ipft_un.ipftu_char
 end_define
+
+begin_comment
+comment|/*  *  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ipfruleiter
+block|{
+name|int
+name|iri_inout
+decl_stmt|;
+name|char
+name|iri_group
+index|[
+name|FR_GROUPLEN
+index|]
+decl_stmt|;
+name|int
+name|iri_active
+decl_stmt|;
+name|int
+name|iri_nrules
+decl_stmt|;
+name|int
+name|iri_v
+decl_stmt|;
+name|frentry_t
+modifier|*
+name|iri_rule
+decl_stmt|;
+block|}
+name|ipfruleiter_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Values for iri_inout  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_IN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_OUT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_ACIN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_ACOUT
+value|3
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ipfgeniter
+block|{
+name|int
+name|igi_type
+decl_stmt|;
+name|int
+name|igi_nitems
+decl_stmt|;
+name|void
+modifier|*
+name|igi_data
+decl_stmt|;
+block|}
+name|ipfgeniter_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IPFGENITER_IPF
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFGENITER_NAT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFGENITER_IPNAT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFGENITER_FRAG
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFGENITER_AUTH
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFGENITER_STATE
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFGENITER_NATFRAG
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFGENITER_HOSTMAP
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFGENITER_LOOKUP
+value|8
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ipftable
+block|{
+name|int
+name|ita_type
+decl_stmt|;
+name|void
+modifier|*
+name|ita_table
+decl_stmt|;
+block|}
+name|ipftable_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IPFTABLE_BUCKETS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFTABLE_BUCKETS_NATIN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFTABLE_BUCKETS_NATOUT
+value|3
+end_define
+
+begin_comment
+comment|/*  *  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ipftoken
+block|{
+name|struct
+name|ipftoken
+modifier|*
+name|ipt_next
+decl_stmt|;
+name|struct
+name|ipftoken
+modifier|*
+modifier|*
+name|ipt_pnext
+decl_stmt|;
+name|void
+modifier|*
+name|ipt_ctx
+decl_stmt|;
+name|void
+modifier|*
+name|ipt_data
+decl_stmt|;
+name|u_long
+name|ipt_die
+decl_stmt|;
+name|int
+name|ipt_type
+decl_stmt|;
+name|int
+name|ipt_uid
+decl_stmt|;
+name|int
+name|ipt_subtype
+decl_stmt|;
+name|int
+name|ipt_alive
+decl_stmt|;
+block|}
+name|ipftoken_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* ** HPUX Port */
@@ -5827,6 +6416,87 @@ begin_comment
 comment|/* #ifndef _KERNEL */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD
+end_ifdef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+operator|(
+name|__NetBSD_Version__
+operator|<
+literal|399000000
+operator|)
+operator|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__osf__
+argument_list|)
+operator|||
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|500043
+operator|)
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|selinfo
+name|ipfselwait
+index|[
+name|IPL_LOGSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -5880,6 +6550,23 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipf_inject
+name|__P
+argument_list|(
+operator|(
+name|fr_info_t
+operator|*
+operator|,
+name|mb_t
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6195,19 +6882,6 @@ end_endif
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipfsync
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|fr_qout
 name|__P
 argument_list|(
@@ -6409,19 +7083,6 @@ operator|*
 operator|,
 name|cred_t
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ipfsync
-name|__P
-argument_list|(
-operator|(
-name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6650,6 +7311,83 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__NetBSD_Version__
+operator|>=
+literal|499001000
+operator|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|iplioctl
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+operator|,
+name|u_long
+operator|,
+name|void
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|lwp
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__NetBSD_Version__
+operator|>=
+literal|399001400
+operator|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|iplioctl
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+operator|,
+name|u_long
+operator|,
+name|caddr_t
+operator|,
+name|int
+operator|,
+expr|struct
+name|lwp
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -6672,6 +7410,16 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -6842,6 +7590,63 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__NetBSD_Version__
+operator|>=
+literal|399001400
+operator|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|iplopen
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+expr|struct
+name|lwp
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|iplclose
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+expr|struct
+name|lwp
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -6883,6 +7688,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __NetBSD_Version__>= 399001400 */
+end_comment
 
 begin_endif
 endif|#
@@ -7184,6 +7998,72 @@ begin_comment
 comment|/* MENTAT */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipf_pfil_hook
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipf_pfil_unhook
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ipf_event_reg
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ipf_event_dereg
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -7251,6 +8131,8 @@ begin_decl_stmt
 specifier|extern
 name|ipfrwlock_t
 name|ipf_frcache
+decl_stmt|,
+name|ipf_tokens
 decl_stmt|;
 end_decl_stmt
 
@@ -7330,7 +8212,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|iplattach
+name|ipfattach
 name|__P
 argument_list|(
 operator|(
@@ -7343,7 +8225,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipldetach
+name|ipfdetach
 name|__P
 argument_list|(
 operator|(
@@ -7486,6 +8368,33 @@ operator|,
 name|ioctlcmd_t
 operator|,
 name|int
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_ipf_ioctl
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|,
+name|ioctlcmd_t
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7653,7 +8562,7 @@ directive|if
 operator|(
 name|__FreeBSD_version
 operator|<
-literal|490000
+literal|501000
 operator|)
 operator|||
 operator|!
@@ -8411,7 +9320,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|fr_lock
 name|__P
 argument_list|(
@@ -8514,6 +9423,25 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|ipf_queueflush
+name|__P
+argument_list|(
+operator|(
+name|ipftq_delete_fn_t
+operator|,
+name|ipftq_t
+operator|*
+operator|,
+name|ipftq_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|fr_rulen
 name|__P
 argument_list|(
@@ -8600,7 +9528,120 @@ name|fr_zerostats
 name|__P
 argument_list|(
 operator|(
-name|char
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ipftoken_t
+modifier|*
+name|ipf_findtoken
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipf_getnextrule
+name|__P
+argument_list|(
+operator|(
+name|ipftoken_t
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ipf_expiretokens
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ipf_freetoken
+name|__P
+argument_list|(
+operator|(
+name|ipftoken_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipf_deltoken
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipfsync
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipf_genericiter
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|,
+name|void
 operator|*
 operator|)
 argument_list|)
@@ -8698,13 +9739,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|ipl_suppress
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ipl_buffer_sz
 decl_stmt|;
 end_decl_stmt
 

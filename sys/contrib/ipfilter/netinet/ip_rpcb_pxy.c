@@ -8,7 +8,7 @@ comment|/*  * Overview:  *   This is an in-kernel application proxy for Sun's RP
 end_comment
 
 begin_comment
-comment|/*  * TODO / NOTES  *  *   o Must implement locking to protect proxy session data.  *   o Fragmentation isn't supported.  *   o Only supports UDP.  *   o Doesn't support multiple RPC records in a single request.  *   o Errors should be more fine-grained.  (e.g., malloc failure vs.  *     illegal RPCB request / reply)  *   o Even with the limit on the total amount of recorded transactions,  *     should there be a timeout on transaction removal?  *   o There is a potential collision between cloning, wildcard NAT and  *     state entries.  There should be an appr_getport routine for  *     to avoid this.  *   o The enclosed hack of STREAMS support is pretty sick and most likely  *     broken.  *  *	$Id: ip_rpcb_pxy.c,v 2.25.2.3 2005/02/04 10:22:56 darrenr Exp $  */
+comment|/*  * TODO / NOTES  *  *   o Must implement locking to protect proxy session data.  *   o Fragmentation isn't supported.  *   o Only supports UDP.  *   o Doesn't support multiple RPC records in a single request.  *   o Errors should be more fine-grained.  (e.g., malloc failure vs.  *     illegal RPCB request / reply)  *   o Even with the limit on the total amount of recorded transactions,  *     should there be a timeout on transaction removal?  *   o There is a potential collision between cloning, wildcard NAT and  *     state entries.  There should be an appr_getport routine for  *     to avoid this.  *   o The enclosed hack of STREAMS support is pretty sick and most likely  *     broken.  *  *	$Id: ip_rpcb_pxy.c,v 2.25.2.7 2007/06/04 09:16:31 darrenr Exp $  */
 end_comment
 
 begin_define
@@ -1329,6 +1329,10 @@ name|aps
 operator|->
 name|aps_data
 expr_stmt|;
+name|rx
+operator|=
+name|NULL
+expr_stmt|;
 name|m
 operator|=
 name|fin
@@ -1446,6 +1450,11 @@ name|rm_buflen
 operator|=
 name|dlen
 expr_stmt|;
+name|rx
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* XXX gcc */
 comment|/* Send off to decode reply. */
 name|rv
 operator|=
@@ -3950,7 +3959,7 @@ argument|static int ippr_rpcb_getnat(fin, nat, proto, port) 	fr_info_t *fin; 	na
 argument_list|,
 argument|ipnat; 	tcphdr_t tcp; 	ipstate_t *is; 	fr_info_t fi; 	nat_t *natl; 	int nflags;  	ipn = nat->nat_ptr;
 comment|/* Generate dummy fr_info */
-argument|bcopy((char *)fin, (char *)&fi, sizeof(fi)); 	fi.fin_out =
+argument|bcopy((char *)fin, (char *)&fi, sizeof(fi)); 	fi.fin_state = NULL; 	fi.fin_nat = NULL; 	fi.fin_out =
 literal|0
 argument|; 	fi.fin_src = fin->fin_dst; 	fi.fin_dst = nat->nat_outip; 	fi.fin_p = proto; 	fi.fin_sport =
 literal|0
@@ -3962,7 +3971,7 @@ argument|); 		TCP_OFF_A(&tcp, sizeof(tcphdr_t)>>
 literal|2
 argument|); 		fi.fin_dlen = sizeof(tcphdr_t); 		tcp.th_flags = TH_SYN; 		nflags = NAT_TCP; 	} else { 		fi.fin_dlen = sizeof(udphdr_t); 		nflags = NAT_UDP; 	}  	nflags |= SI_W_SPORT|NAT_SEARCH; 	fi.fin_dp =&tcp; 	fi.fin_plen = fi.fin_hlen + fi.fin_dlen;
 comment|/* 	 * Search for existing NAT& state entries.  Pay close attention to 	 * mutexes / locks grabbed from lookup routines, as not doing so could 	 * lead to bad things. 	 * 	 * If successful, fr_stlookup returns with ipf_state locked.  We have 	 * no use for this lock, so simply unlock it if necessary. 	 */
-argument|is = fr_stlookup(&fi,&tcp, NULL); 	if (is != NULL) 		RWLOCK_EXIT(&ipf_state);  	RWLOCK_EXIT(&ipf_nat);  	WRITE_ENTER(&ipf_nat); 	natl = nat_inlookup(&fi, nflags, proto, fi.fin_src, fi.fin_dst);  	if ((natl != NULL)&& (is != NULL)) { 		MUTEX_DOWNGRADE(&ipf_nat); 		return(
+argument|is = fr_stlookup(&fi,&tcp, NULL); 	if (is != NULL) { 		RWLOCK_EXIT(&ipf_state); 	}  	RWLOCK_EXIT(&ipf_nat);  	WRITE_ENTER(&ipf_nat); 	natl = nat_inlookup(&fi, nflags, proto, fi.fin_src, fi.fin_dst);  	if ((natl != NULL)&& (is != NULL)) { 		MUTEX_DOWNGRADE(&ipf_nat); 		return(
 literal|0
 argument|); 	}
 comment|/* Slightly modify the following structures for actual use in creating 	 * NAT and/or state entries.  We're primarily concerned with stripping 	 * flags that may be detrimental to the creation process or simply 	 * shouldn't be associated with a table entry. 	 */
@@ -3989,7 +3998,7 @@ argument|fi.fin_dst = nat->nat_inip; 		fi.fin_nat = (void *)natl; 		fi.fin_flx |
 comment|/* 			 * XXX nat_delete is private to ip_nat.c.  Should 			 * check w/ Darren about this one. 			 * 			 * nat_delete(natl, NL_EXPIRE); 			 */
 argument|return(-
 literal|1
-argument|); 		} 		if (fi.fin_state != NULL) 			fr_statederef(&fi, (ipstate_t **)&fi.fin_state); 	}  	return(
+argument|); 		} 		if (fi.fin_state != NULL) 			fr_statederef((ipstate_t **)&fi.fin_state); 	}  	return(
 literal|0
 argument|); }
 comment|/* --------------------------------------------------------------------	*/

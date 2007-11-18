@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_pool.h,v 2.26.2.3 2005/06/12 07:18:27 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_pool.h,v 2.26.2.6 2007/10/10 09:51:43 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -112,6 +112,11 @@ name|defined
 argument_list|(
 name|__hpux
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 end_if
 
 begin_include
@@ -203,6 +208,9 @@ decl_stmt|;
 name|int
 name|ipn_info
 decl_stmt|;
+name|int
+name|ipn_ref
+decl_stmt|;
 name|char
 name|ipn_name
 index|[
@@ -277,8 +285,15 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|IPOOL_DELETE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPOOL_ANON
-value|0x80000000
+value|0x02
 end_define
 
 begin_typedef
@@ -430,7 +445,9 @@ name|ip_pool_destroy
 name|__P
 argument_list|(
 operator|(
-name|iplookupop_t
+name|int
+operator|,
+name|char
 operator|*
 operator|)
 argument_list|)
@@ -459,6 +476,20 @@ name|__P
 argument_list|(
 operator|(
 name|ip_pool_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ip_pool_node_deref
+name|__P
+argument_list|(
+operator|(
+name|ip_pool_node_t
 operator|*
 operator|)
 argument_list|)
@@ -525,6 +556,41 @@ name|__P
 argument_list|(
 operator|(
 name|iplookupop_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip_pool_getnext
+name|__P
+argument_list|(
+operator|(
+name|ipftoken_t
+operator|*
+operator|,
+name|ipflookupiter_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ip_pool_iterderef
+name|__P
+argument_list|(
+operator|(
+name|u_int
+operator|,
+name|int
+operator|,
+name|void
 operator|*
 operator|)
 argument_list|)

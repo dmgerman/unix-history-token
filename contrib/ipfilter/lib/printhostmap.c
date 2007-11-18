@@ -3,6 +3,10 @@ begin_comment
 comment|/*	$FreeBSD$	*/
 end_comment
 
+begin_comment
+comment|/*  * Copyright (C) 2002-2005 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: printhostmap.c,v 1.3.2.3 2006/09/30 21:42:07 darrenr Exp $   */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -25,10 +29,6 @@ name|u_int
 name|hv
 decl_stmt|;
 block|{
-name|struct
-name|in_addr
-name|in
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"%s,"
@@ -53,26 +53,15 @@ name|hm_dstip
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|in
-operator|.
-name|s_addr
-operator|=
-name|htonl
-argument_list|(
-name|hmp
-operator|->
-name|hm_mapip
-operator|.
-name|s_addr
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s "
 argument_list|,
 name|inet_ntoa
 argument_list|(
-name|in
+name|hmp
+operator|->
+name|hm_mapip
 argument_list|)
 argument_list|)
 expr_stmt|;

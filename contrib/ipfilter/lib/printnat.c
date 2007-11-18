@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
+comment|/*  * Copyright (C) 2002-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
 end_comment
 
 begin_include
@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: printnat.c,v 1.22.2.11 2005/11/14 17:45:06 darrenr Exp $"
+literal|"@(#)$Id: printnat.c,v 1.22.2.14 2007/09/06 16:40:11 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,6 +139,34 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|np
+operator|->
+name|in_ifnames
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"-"
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" \"%s\""
+argument_list|,
+name|np
+operator|->
+name|in_ifnames
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|" %s"
@@ -191,6 +219,34 @@ literal|0
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|np
+operator|->
+name|in_ifnames
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-"
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|",\"%s\""
+argument_list|,
+name|np
+operator|->
+name|in_ifnames
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|",%s"
@@ -836,6 +892,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|int
+name|protoprinted
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1132,6 +1193,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|protoprinted
+operator|=
+literal|1
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1238,6 +1303,10 @@ argument_list|,
 name|np
 argument_list|)
 expr_stmt|;
+name|protoprinted
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|np
@@ -1308,37 +1377,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|np
-operator|->
-name|in_flags
-operator|&
-name|IPN_TCPUDP
-operator|||
-name|np
-operator|->
-name|in_p
-condition|)
-block|{
-name|putchar
-argument_list|(
-literal|' '
-argument_list|)
-expr_stmt|;
-name|printproto
-argument_list|(
-name|pr
-argument_list|,
-name|np
-operator|->
-name|in_p
-argument_list|,
-name|np
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1435,6 +1473,41 @@ operator|.
 name|ipt_tag
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|protoprinted
+operator|&&
+operator|(
+name|np
+operator|->
+name|in_flags
+operator|&
+name|IPN_TCPUDP
+operator|||
+name|np
+operator|->
+name|in_p
+operator|)
+condition|)
+block|{
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+name|printproto
+argument_list|(
+name|pr
+argument_list|,
+name|np
+operator|->
+name|in_p
+argument_list|,
+name|np
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"

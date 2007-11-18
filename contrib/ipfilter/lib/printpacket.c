@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printpacket.c,v 1.12.4.2 2005/12/04 09:33:06 darrenr Exp $  */
+comment|/*  * Copyright (C) 2000-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printpacket.c,v 1.12.4.5 2007/09/09 22:15:30 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -194,6 +194,11 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -277,7 +282,11 @@ name|printf
 argument_list|(
 literal|" @%d"
 argument_list|,
+operator|(
 name|off
+operator|&
+name|IP_OFFMASK
+operator|)
 operator|<<
 literal|3
 argument_list|)

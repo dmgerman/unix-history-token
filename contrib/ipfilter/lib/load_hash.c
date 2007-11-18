@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: load_hash.c,v 1.11.2.3 2005/11/13 15:41:12 darrenr Exp $  */
+comment|/*  * Copyright (C) 2002-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: load_hash.c,v 1.11.2.5 2006/07/14 06:12:25 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -354,6 +354,12 @@ name|NULL
 expr_stmt|;
 name|iph
 operator|.
+name|iph_list
+operator|=
+name|NULL
+expr_stmt|;
+name|iph
+operator|.
 name|iph_ref
 operator|=
 literal|0
@@ -535,10 +541,7 @@ return|;
 block|}
 name|iph
 operator|.
-name|iph_table
-index|[
-literal|0
-index|]
+name|iph_list
 operator|=
 name|list
 expr_stmt|;
@@ -562,6 +565,12 @@ name|iph
 operator|.
 name|iph_table
 argument_list|)
+expr_stmt|;
+name|iph
+operator|.
+name|iph_list
+operator|=
+name|NULL
 expr_stmt|;
 for|for
 control|(

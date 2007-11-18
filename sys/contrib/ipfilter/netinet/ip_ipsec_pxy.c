@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2001-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Simple ISAKMP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_ipsec_pxy.c,v 2.20.2.7 2005/08/20 13:48:22 darrenr Exp $  *  */
+comment|/*  * Copyright (C) 2001-2003 by Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Simple ISAKMP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_ipsec_pxy.c,v 2.20.2.8 2006/07/14 06:12:14 darrenr Exp $  *  */
 end_comment
 
 begin_define
@@ -1060,9 +1060,6 @@ name|NULL
 condition|)
 name|fr_statederef
 argument_list|(
-operator|&
-name|fi
-argument_list|,
 operator|(
 name|ipstate_t
 operator|*
@@ -1494,9 +1491,6 @@ name|NULL
 condition|)
 name|fr_statederef
 argument_list|(
-operator|&
-name|fi
-argument_list|,
 operator|(
 name|ipstate_t
 operator|*

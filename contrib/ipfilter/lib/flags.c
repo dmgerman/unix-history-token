@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: flags.c,v 1.4 2002/11/02 07:16:36 darrenr Exp $  */
+comment|/*  * Copyright (C) 2001-2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: flags.c,v 1.4.4.1 2006/06/16 17:20:58 darrenr Exp $  */
 end_comment
 
 begin_include

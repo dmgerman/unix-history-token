@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1995-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_nat.h	1.5 2/4/96  * $FreeBSD$  * Id: ip_nat.h,v 2.90.2.9 2005/03/28 11:09:55 darrenr Exp  */
+comment|/*  * Copyright (C) 1995-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_nat.h	1.5 2/4/96  * $FreeBSD$  * Id: ip_nat.h,v 2.90.2.20 2007/09/25 08:27:32 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -570,6 +570,16 @@ name|int
 name|nat_rev
 decl_stmt|;
 comment|/* 0 = forward, 1 = reverse */
+name|int
+name|nat_redir
+decl_stmt|;
+comment|/* copy of in_redir */
+name|u_32_t
+name|nat_seqnext
+index|[
+literal|2
+index|]
+decl_stmt|;
 block|}
 name|nat_t
 typedef|;
@@ -643,6 +653,20 @@ define|#
 directive|define
 name|nat_tcpstate
 value|nat_tqe.tqe_state
+end_define
+
+begin_define
+define|#
+directive|define
+name|nat_die
+value|nat_tqe.tqe_die
+end_define
+
+begin_define
+define|#
+directive|define
+name|nat_touched
+value|nat_tqe.tqe_touched
 end_define
 
 begin_comment
@@ -736,6 +760,10 @@ name|NAT_NOTRULEPORT
 value|0x0040
 end_define
 
+begin_comment
+comment|/* Don't use the port # in the NAT rule */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -808,6 +836,9 @@ typedef|typedef
 struct|struct
 name|ipnat
 block|{
+name|ipfmutex_t
+name|in_lock
+decl_stmt|;
 name|struct
 name|ipnat
 modifier|*
@@ -1425,85 +1456,6 @@ name|natget_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|tr_flags
-end_undef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|nattrpnt
-block|{
-name|struct
-name|in_addr
-name|tr_dstip
-decl_stmt|;
-comment|/* real destination IP# */
-name|struct
-name|in_addr
-name|tr_srcip
-decl_stmt|;
-comment|/* real source IP# */
-name|struct
-name|in_addr
-name|tr_locip
-decl_stmt|;
-comment|/* local source IP# */
-name|u_int
-name|tr_flags
-decl_stmt|;
-name|int
-name|tr_expire
-decl_stmt|;
-name|u_short
-name|tr_dstport
-decl_stmt|;
-comment|/* real destination port# */
-name|u_short
-name|tr_srcport
-decl_stmt|;
-comment|/* real source port# */
-name|u_short
-name|tr_locport
-decl_stmt|;
-comment|/* local source port# */
-name|struct
-name|nattrpnt
-modifier|*
-name|tr_hnext
-decl_stmt|;
-name|struct
-name|nattrpnt
-modifier|*
-modifier|*
-name|tr_phnext
-decl_stmt|;
-name|struct
-name|nattrpnt
-modifier|*
-name|tr_next
-decl_stmt|;
-name|struct
-name|nattrpnt
-modifier|*
-modifier|*
-name|tr_pnext
-decl_stmt|;
-comment|/* previous next */
-block|}
-name|nattrpnt_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|TN_CMPSIZ
-value|offsetof(nattrpnt_t, tr_hnext)
-end_define
-
 begin_comment
 comment|/*  * This structure gets used to help NAT sessions keep the same NAT rule (and  * thus translation for IP address) when:  * (a) round-robin redirects are in use  * (b) different IP add  */
 end_comment
@@ -1513,6 +1465,17 @@ typedef|typedef
 struct|struct
 name|hostmap
 block|{
+name|struct
+name|hostmap
+modifier|*
+name|hm_hnext
+decl_stmt|;
+name|struct
+name|hostmap
+modifier|*
+modifier|*
+name|hm_phnext
+decl_stmt|;
 name|struct
 name|hostmap
 modifier|*
@@ -1682,9 +1645,9 @@ name|nat_t
 modifier|*
 name|ns_instances
 decl_stmt|;
-name|nattrpnt_t
+name|hostmap_t
 modifier|*
-name|ns_trpntlist
+name|ns_maplist
 decl_stmt|;
 name|u_long
 modifier|*
@@ -1692,6 +1655,12 @@ name|ns_bucketlen
 index|[
 literal|2
 index|]
+decl_stmt|;
+name|u_long
+name|ns_ticks
+decl_stmt|;
+name|u_int
+name|ns_orphans
 decl_stmt|;
 block|}
 name|natstat_t
@@ -1776,6 +1745,13 @@ define|#
 directive|define
 name|NL_NEWBLOCK
 value|NAT_MAPBLK
+end_define
+
+begin_define
+define|#
+directive|define
+name|NL_DESTROY
+value|0xfffc
 end_define
 
 begin_define
@@ -1908,6 +1884,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|fr_nat_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_nat_doflush
 decl_stmt|;
 end_decl_stmt
 
@@ -2055,6 +2038,11 @@ operator|,
 name|ioctlcmd_t
 operator|,
 name|int
+operator|,
+name|int
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2259,6 +2247,23 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|nat_delete
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nat
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|nat_insert
 name|__P
@@ -2433,6 +2438,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|fr_ipnatderef
+name|__P
+argument_list|(
+operator|(
+name|ipnat_t
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|fr_natderef
 name|__P
 argument_list|(
@@ -2496,6 +2516,21 @@ name|nat_t
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fr_hostmapdel
+name|__P
+argument_list|(
+operator|(
+name|hostmap_t
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

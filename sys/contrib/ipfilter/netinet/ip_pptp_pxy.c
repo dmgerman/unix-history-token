@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2002-2003 by Darren Reed  *  * Simple PPTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_pptp_pxy.c,v 2.10.2.13 2006/03/17 10:40:05 darrenr Exp $  *  */
+comment|/*  * Copyright (C) 2002-2003 by Darren Reed  *  * Simple PPTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_pptp_pxy.c,v 2.10.2.15 2006/10/31 12:11:23 darrenr Exp $  *  */
 end_comment
 
 begin_define
@@ -446,7 +446,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Setup for a new PPTP proxy.  */
+comment|/*  * Setup for a new PPTP proxy.  *  * NOTE: The printf's are broken up with %s in them to prevent them being  * optimised into puts statements on FreeBSD (this doesn't exist in the kernel)  */
 end_comment
 
 begin_function
@@ -1379,9 +1379,6 @@ name|NULL
 condition|)
 name|fr_statederef
 argument_list|(
-operator|&
-name|fi
-argument_list|,
 operator|(
 name|ipstate_t
 operator|*

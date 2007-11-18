@@ -681,7 +681,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_proxy.c,v 2.62.2.16 2006/03/29 11:19:56 darrenr Exp $"
+literal|"@(#)$Id: ip_proxy.c,v 2.62.2.21 2007/06/02 21:22:28 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -816,6 +816,8 @@ block|,
 name|ippr_ftp_in
 block|,
 name|ippr_ftp_out
+block|,
+name|NULL
 block|,
 name|NULL
 block|}
@@ -1104,6 +1106,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1131,6 +1135,8 @@ block|,
 name|NULL
 block|,
 name|ippr_h245_out
+block|,
+name|NULL
 block|,
 name|NULL
 block|}
@@ -1189,6 +1195,14 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -1296,9 +1310,11 @@ name|a
 operator|=
 name|ap_proxylist
 init|;
+operator|(
 name|a
-operator|->
-name|apr_p
+operator|!=
+name|NULL
+operator|)
 condition|;
 name|a
 operator|=
@@ -1773,6 +1789,8 @@ parameter_list|,
 name|cmd
 parameter_list|,
 name|mode
+parameter_list|,
+name|ctx
 parameter_list|)
 name|caddr_t
 name|data
@@ -1783,11 +1801,16 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
+name|void
+modifier|*
+name|ctx
+decl_stmt|;
 block|{
 name|ap_ctl_t
 name|ctl
 decl_stmt|;
-name|caddr_t
+name|u_char
+modifier|*
 name|ptr
 decl_stmt|;
 name|int
@@ -1806,6 +1829,8 @@ block|{
 case|case
 name|SIOCPROXY
 case|:
+name|error
+operator|=
 name|BCOPYIN
 argument_list|(
 name|data
@@ -1819,6 +1844,15 @@ name|ctl
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+name|EFAULT
+return|;
 name|ptr
 operator|=
 name|NULL
@@ -1836,7 +1870,8 @@ name|KMALLOCS
 argument_list|(
 name|ptr
 argument_list|,
-name|caddr_t
+name|u_char
+operator|*
 argument_list|,
 name|ctl
 operator|.
@@ -4548,6 +4583,9 @@ name|printf
 argument_list|(
 literal|"appr_fixseqack: seq %x ack %x\n"
 argument_list|,
+operator|(
+name|u_32_t
+operator|)
 name|ntohl
 argument_list|(
 name|tcp
@@ -4555,6 +4593,9 @@ operator|->
 name|th_seq
 argument_list|)
 argument_list|,
+operator|(
+name|u_32_t
+operator|)
 name|ntohl
 argument_list|(
 name|tcp

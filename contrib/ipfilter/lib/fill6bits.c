@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: fill6bits.c,v 1.5 2002/03/27 15:09:57 darrenr Exp $  */
+comment|/*  * Copyright (C) 2000-2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: fill6bits.c,v 1.5.4.1 2006/06/16 17:20:58 darrenr Exp $  */
 end_comment
 
 begin_include

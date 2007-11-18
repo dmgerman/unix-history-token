@@ -3,6 +3,10 @@ begin_comment
 comment|/*	$FreeBSD$	*/
 end_comment
 
+begin_comment
+comment|/*  * Copyright (C) 2002-2005 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: getportproto.c,v 1.2.4.4 2006/06/16 17:21:00 darrenr Exp $   */
+end_comment
+
 begin_include
 include|#
 directive|include

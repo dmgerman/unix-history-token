@@ -120,6 +120,12 @@ directive|include
 file|<sys/dlpihdr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"radix_ipf_local.h"
+end_include
+
 begin_else
 else|#
 directive|else
@@ -241,7 +247,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: sdlpi.c,v 2.8.2.1 2004/12/09 19:41:13 darrenr Exp $"
+literal|"@(#)$Id: sdlpi.c,v 2.8.2.2 2007/02/17 12:41:51 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

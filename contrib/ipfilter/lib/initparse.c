@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: initparse.c,v 1.6 2002/01/28 06:50:46 darrenr Exp $  */
+comment|/*  * Copyright (C) 2000-2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: initparse.c,v 1.6.4.1 2006/06/16 17:21:02 darrenr Exp $  */
 end_comment
 
 begin_include

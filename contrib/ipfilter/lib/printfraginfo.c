@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2004 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printfraginfo.c,v 1.1.2.2 2004/03/23 15:15:45 darrenr Exp $  */
+comment|/*  * Copyright (C) 2004-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printfraginfo.c,v 1.1.2.5 2006/12/25 15:10:37 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -63,37 +63,10 @@ name|ipfr_src
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|kmemcpy
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|fr
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|ifr
-operator|->
-name|ipfr_rule
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|fr
-argument_list|)
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-return|return;
+comment|/* 	if (kmemcpy((char *)&fr, (u_long)ifr->ipfr_rule, 		    sizeof(fr)) == -1) 		return; */
 name|printf
 argument_list|(
-literal|"%s id %d ttl %d pr %d seen0 %d ifp %p tos %#02x = %#x\n"
+literal|"%s id %d ttl %ld pr %d seen0 %d ref %d tos %#02x\n"
 argument_list|,
 name|hostname
 argument_list|(
@@ -111,10 +84,6 @@ name|ipfr_id
 argument_list|,
 name|ifr
 operator|->
-name|ipfr_seen0
-argument_list|,
-name|ifr
-operator|->
 name|ipfr_ttl
 argument_list|,
 name|ifr
@@ -123,15 +92,15 @@ name|ipfr_p
 argument_list|,
 name|ifr
 operator|->
-name|ipfr_ifp
+name|ipfr_seen0
+argument_list|,
+name|ifr
+operator|->
+name|ipfr_ref
 argument_list|,
 name|ifr
 operator|->
 name|ipfr_tos
-argument_list|,
-name|fr
-operator|.
-name|fr_flags
 argument_list|)
 expr_stmt|;
 block|}

@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: iptests.c,v 2.8.2.7 2006/03/21 16:10:55 darrenr Exp $"
+literal|"@(#)$Id: iptests.c,v 2.8.2.9 2007/09/13 07:19:34 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,6 +101,23 @@ argument_list|(
 name|__osf__
 argument_list|)
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/lock.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -409,6 +426,23 @@ define|#
 directive|define
 name|_NET_ROUTE_INCLUDED
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__osf__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"radix_ipf_local.h"
+end_include
 
 begin_endif
 endif|#
@@ -6636,7 +6670,8 @@ name|sin
 decl_stmt|;
 name|int
 name|fd
-decl_stmt|,
+decl_stmt|;
+name|socklen_t
 name|slen
 decl_stmt|;
 name|bzero

@@ -369,7 +369,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_scan.c,v 2.40.2.6 2006/03/26 23:06:49 darrenr Exp $"
+literal|"@(#)$Id: ip_scan.c,v 2.40.2.10 2007/06/02 21:22:28 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -652,9 +652,16 @@ if|if
 condition|(
 name|err
 condition|)
+block|{
+name|KFREE
+argument_list|(
+name|isc
+argument_list|)
+expr_stmt|;
 return|return
 name|err
 return|;
+block|}
 name|WRITE_ENTER
 argument_list|(
 operator|&
@@ -1123,9 +1130,12 @@ name|fr_isc
 expr_stmt|;
 if|if
 condition|(
-operator|!
+operator|(
 name|i
-operator|||
+operator|!=
+name|NULL
+operator|)
+operator|&&
 operator|(
 name|i
 operator|!=
@@ -1144,11 +1154,6 @@ name|is_isc
 operator|=
 name|i
 expr_stmt|;
-if|if
-condition|(
-name|i
-condition|)
-block|{
 name|ATOMIC_INC32
 argument_list|(
 name|i
@@ -1193,18 +1198,6 @@ operator|->
 name|is_flags
 operator||=
 name|IS_SC_MATCHS
-expr_stmt|;
-block|}
-else|else
-name|is
-operator|->
-name|is_flags
-operator||=
-operator|(
-name|IS_SC_CLIENT
-operator||
-name|IS_SC_SERVER
-operator|)
 expr_stmt|;
 block|}
 block|}
@@ -2778,6 +2771,10 @@ parameter_list|,
 name|cmd
 parameter_list|,
 name|mode
+parameter_list|,
+name|uid
+parameter_list|,
+name|ctx
 parameter_list|)
 name|caddr_t
 name|data
@@ -2787,6 +2784,12 @@ name|cmd
 decl_stmt|;
 name|int
 name|mode
+decl_stmt|,
+name|uid
+decl_stmt|;
+name|void
+modifier|*
+name|ctx
 decl_stmt|;
 block|{
 name|ipscanstat_t
@@ -2855,6 +2858,8 @@ name|iscs_list
 operator|=
 name|ipsc_list
 expr_stmt|;
+name|err
+operator|=
 name|BCOPYOUT
 argument_list|(
 operator|&
@@ -2867,6 +2872,16 @@ argument_list|(
 name|ipscs
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
+name|err
+operator|=
+name|EFAULT
 expr_stmt|;
 break|break;
 default|default :

@@ -3,6 +3,10 @@ begin_comment
 comment|/*	$FreeBSD$	*/
 end_comment
 
+begin_comment
+comment|/*  * Copyright (C) 2003 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: mutex_emul.c,v 1.2.4.1 2006/06/16 17:21:06 darrenr Exp $   */
+end_comment
+
 begin_include
 include|#
 directive|include
