@@ -4550,7 +4550,7 @@ literal|"-d"
 argument_list|,
 name|tmpstr
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|err
