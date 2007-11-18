@@ -202,6 +202,11 @@ modifier|*
 name|filename
 decl_stmt|;
 comment|/* file which was loaded */
+name|char
+modifier|*
+name|pathname
+decl_stmt|;
+comment|/* file name with full path */
 name|int
 name|id
 decl_stmt|;
@@ -246,6 +251,32 @@ argument_list|)
 name|loaded
 expr_stmt|;
 comment|/* preload dependency support */
+name|int
+name|loadcnt
+decl_stmt|;
+comment|/* load counter value */
+comment|/*      * Function Boundary Tracing (FBT) or Statically Defined Tracing (SDT)      * fields.      */
+name|int
+name|nenabled
+decl_stmt|;
+comment|/* number of enabled probes. */
+name|int
+name|fbt_nentries
+decl_stmt|;
+comment|/* number of fbt entries created. */
+name|void
+modifier|*
+name|sdt_probes
+decl_stmt|;
+name|int
+name|sdt_nentries
+decl_stmt|;
+name|size_t
+name|sdt_nprobes
+decl_stmt|;
+name|size_t
+name|sdt_size
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1180,6 +1211,42 @@ name|ELF_RELOC_RELA
 value|2
 end_define
 
+begin_comment
+comment|/*  * This is version 1 of the KLD file status structure. It is identified  * by it's _size_ in the version field.  */
+end_comment
+
+begin_struct
+struct|struct
+name|kld_file_stat_1
+block|{
+name|int
+name|version
+decl_stmt|;
+comment|/* set to sizeof(linker_file_stat) */
+name|char
+name|name
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|int
+name|refs
+decl_stmt|;
+name|int
+name|id
+decl_stmt|;
+name|caddr_t
+name|address
+decl_stmt|;
+comment|/* load address */
+name|size_t
+name|size
+decl_stmt|;
+comment|/* size in bytes */
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
@@ -1217,6 +1284,12 @@ name|size_t
 name|size
 decl_stmt|;
 comment|/* size in bytes */
+name|char
+name|pathname
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
