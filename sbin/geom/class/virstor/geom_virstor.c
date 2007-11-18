@@ -1690,6 +1690,9 @@ if|if
 condition|(
 name|msize
 operator|<
+operator|(
+name|off_t
+operator|)
 name|MAX
 argument_list|(
 name|md
@@ -2106,11 +2109,11 @@ argument_list|(
 name|md
 operator|.
 name|chunk_count
-argument_list|)
 operator|*
 name|md
 operator|.
 name|md_chunk_size
+argument_list|)
 operator|>
 name|msize
 operator|-
