@@ -3707,6 +3707,8 @@ decl_stmt|,
 name|iovcnt
 decl_stmt|,
 name|what
+init|=
+literal|0
 decl_stmt|;
 name|m
 operator|=
