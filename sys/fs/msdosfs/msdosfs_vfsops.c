@@ -2318,7 +2318,7 @@ name|pm_bo
 operator|=
 name|bo
 expr_stmt|;
-comment|/* 	 * Initialize ownerships and permissions, since nothing else will 	 * initialize them if we are mounting root. 	 */
+comment|/* 	 * Initialize ownerships and permissions, since nothing else will 	 * initialize them iff we are mounting root. 	 */
 name|pmp
 operator|->
 name|pm_uid
