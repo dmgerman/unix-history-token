@@ -106,6 +106,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|static
+name|void
+name|assert_lockmgr
+parameter_list|(
+name|struct
+name|lock_object
+modifier|*
+name|lock
+parameter_list|,
+name|int
+name|what
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -187,6 +203,11 @@ name|LC_RECURSABLE
 operator||
 name|LC_UPGRADABLE
 block|,
+operator|.
+name|lc_assert
+operator|=
+name|assert_lockmgr
+block|,
 ifdef|#
 directive|ifdef
 name|DDB
@@ -213,6 +234,27 @@ end_decl_stmt
 begin_comment
 comment|/*  * Locking primitives implementation.  * Locks provide shared/exclusive sychronization.  */
 end_comment
+
+begin_function
+name|void
+name|assert_lockmgr
+parameter_list|(
+name|struct
+name|lock_object
+modifier|*
+name|lock
+parameter_list|,
+name|int
+name|what
+parameter_list|)
+block|{
+name|panic
+argument_list|(
+literal|"lockmgr locks do not support assertions"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void

@@ -162,6 +162,22 @@ end_function
 begin_function_decl
 specifier|static
 name|void
+name|assert_rm
+parameter_list|(
+name|struct
+name|lock_object
+modifier|*
+name|lock
+parameter_list|,
+name|int
+name|what
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|lock_rm
 parameter_list|(
 name|struct
@@ -206,6 +222,11 @@ name|LC_SLEEPLOCK
 operator||
 name|LC_RECURSABLE
 block|,
+operator|.
+name|lc_assert
+operator|=
+name|assert_rm
+block|,
 if|#
 directive|if
 literal|0
@@ -229,6 +250,28 @@ name|unlock_rm
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|assert_rm
+parameter_list|(
+name|struct
+name|lock_object
+modifier|*
+name|lock
+parameter_list|,
+name|int
+name|what
+parameter_list|)
+block|{
+name|panic
+argument_list|(
+literal|"assert_rm called"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
