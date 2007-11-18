@@ -350,12 +350,6 @@ name|vnode
 modifier|*
 name|tn_vnode
 decl_stmt|;
-comment|/* Pointer to the node returned by tmpfs_lookup() after doing a 	 * delete or a rename lookup; its value is only valid in these two 	 * situations.  In case we were looking up . or .., it holds a null 	 * pointer. */
-name|struct
-name|tmpfs_dirent
-modifier|*
-name|tn_lookup_dirent
-decl_stmt|;
 comment|/* interlock to protect tn_vpstate */
 name|struct
 name|mtx
@@ -866,6 +860,25 @@ name|struct
 name|componentname
 modifier|*
 name|cnp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|tmpfs_dirent
+modifier|*
+name|tmpfs_dir_search
+parameter_list|(
+name|struct
+name|tmpfs_node
+modifier|*
+name|node
+parameter_list|,
+name|struct
+name|tmpfs_node
+modifier|*
+name|f
 parameter_list|)
 function_decl|;
 end_function_decl
