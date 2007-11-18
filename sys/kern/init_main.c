@@ -2066,6 +2066,35 @@ operator|&
 name|vmspace0
 argument_list|)
 expr_stmt|;
+comment|/*- 	 * call the init and ctor for the new thread and proc 	 * we wait to do this until all other structures 	 * are fairly sane. 	 */
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|process_init
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|thread_init
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|process_ctor
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|thread_ctor
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Charge root for one process. 	 */
 operator|(
 name|void
