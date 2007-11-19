@@ -1233,14 +1233,30 @@ begin_define
 define|#
 directive|define
 name|atomic_cmpset_acq_long
-value|atomic_cmpset_acq_32
+parameter_list|(
+name|dst
+parameter_list|,
+name|old
+parameter_list|,
+name|new
+parameter_list|)
+define|\
+value|atomic_cmpset_acq_32((volatile u_int *)(dst), (u_int)(old), (u_int)(new))
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_cmpset_rel_long
-value|atomic_cmpset_rel_32
+parameter_list|(
+name|dst
+parameter_list|,
+name|old
+parameter_list|,
+name|new
+parameter_list|)
+define|\
+value|atomic_cmpset_rel_32((volatile u_int *)(dst), (u_int)(old), (u_int)(new))
 end_define
 
 begin_define
