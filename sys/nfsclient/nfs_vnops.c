@@ -9524,17 +9524,6 @@ name|n_attrstamp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Kludge: Map EEXIST => 0 assuming that it is a reply to a retry. 	 */
-if|if
-condition|(
-name|error
-operator|==
-name|EEXIST
-condition|)
-name|error
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -9875,18 +9864,7 @@ argument_list|)
 expr_stmt|;
 name|nfsmout
 label|:
-comment|/* 	 * If we get an EEXIST error, silently convert it to no-error 	 * in case of an NFS retry. 	 */
-if|if
-condition|(
-name|error
-operator|==
-name|EEXIST
-condition|)
-name|error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 	 * If we do not have (or no longer have) an error, and we could 	 * not extract the newvp from the response due to the request being 	 * NFSv2 or the error being EEXIST.  We have to do a lookup in order 	 * to obtain a newvp to return. 	 */
+comment|/* 	 * If we do not have an error and we could not extract the newvp from 	 * the response due to the request being NFSv2, we have to do a 	 * lookup in order to obtain a newvp to return. 	 */
 if|if
 condition|(
 name|error
@@ -10419,37 +10397,17 @@ name|n_attrstamp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Kludge: Map EEXIST => 0 assuming that you have a reply to a retry 	 * if we can succeed in looking up the directory. 	 */
 if|if
 condition|(
 name|error
 operator|==
-name|EEXIST
-operator|||
-operator|(
-operator|!
-name|error
+literal|0
 operator|&&
-operator|!
-name|gotvp
-operator|)
-condition|)
-block|{
-if|if
-condition|(
 name|newvp
-condition|)
-block|{
-name|vput
-argument_list|(
-name|newvp
-argument_list|)
-expr_stmt|;
-name|newvp
-operator|=
+operator|==
 name|NULL
-expr_stmt|;
-block|}
+condition|)
+block|{
 name|error
 operator|=
 name|nfs_lookitup
