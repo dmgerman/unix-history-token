@@ -1359,6 +1359,15 @@ argument_list|(
 name|ATA_DMA_EOT
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|nsegs
+operator|<=
+name|ATA_DMA_ENTRIES
+argument_list|,
+literal|"too many DMA segment entries\n"
+argument_list|)
+expr_stmt|;
 name|args
 operator|->
 name|nsegs
