@@ -747,6 +747,9 @@ name|EVP_bf_cbc
 argument_list|()
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_CAMELLIA
 case|case
 name|CRYPTO_CAMELLIA_CBC
 case|:
@@ -790,6 +793,8 @@ operator|)
 return|;
 block|}
 break|break;
+endif|#
+directive|endif
 case|case
 name|CRYPTO_3DES_CBC
 case|:
