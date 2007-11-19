@@ -130,7 +130,7 @@ condition|)
 name|_pthread_mutex_lock
 argument_list|(
 operator|(
-name|pthread_mutex_t
+name|void
 operator|*
 operator|)
 operator|&
@@ -192,7 +192,7 @@ block|{
 name|_pthread_mutex_unlock
 argument_list|(
 operator|(
-name|pthread_mutex_t
+name|void
 operator|*
 operator|)
 operator|&
@@ -204,7 +204,7 @@ expr_stmt|;
 name|_pthread_mutex_destroy
 argument_list|(
 operator|(
-name|pthread_mutex_t
+name|void
 operator|*
 operator|)
 operator|&
