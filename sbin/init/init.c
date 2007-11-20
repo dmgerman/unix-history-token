@@ -1428,9 +1428,6 @@ name|sa_handler
 operator|=
 name|SIG_IGN
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sigaction
 argument_list|(
 name|SIGTTIN
@@ -1446,9 +1443,6 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sigaction
 argument_list|(
 name|SIGTTOU
@@ -2538,9 +2532,6 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|revoke
 argument_list|(
 name|name
@@ -3435,9 +3426,6 @@ name|sa_handler
 operator|=
 name|SIG_IGN
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sigaction
 argument_list|(
 name|SIGTSTP
@@ -3453,9 +3441,6 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sigaction
 argument_list|(
 name|SIGHUP
@@ -4469,9 +4454,6 @@ name|ty_name
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|sp
@@ -4673,9 +4655,6 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|sp
@@ -6645,9 +6624,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Try to run the rc.shutdown script within a period of time */
-operator|(
-name|void
-operator|)
 name|runshutdown
 argument_list|()
 expr_stmt|;
@@ -6874,9 +6850,6 @@ name|sa_handler
 operator|=
 name|SIG_IGN
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sigaction
 argument_list|(
 name|SIGTSTP
@@ -6892,9 +6865,6 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sigaction
 argument_list|(
 name|SIGHUP
@@ -6935,9 +6905,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|dup2
 argument_list|(
 name|fd
@@ -6945,9 +6912,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|dup2
 argument_list|(
 name|fd
@@ -6955,9 +6919,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|dup2
 argument_list|(
 name|fd
