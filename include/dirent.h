@@ -92,6 +92,12 @@ begin_comment
 comment|/* see telldir.h */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|pthread_mutex
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* structure describing an open directory. */
 end_comment
@@ -134,11 +140,12 @@ name|int
 name|dd_flags
 decl_stmt|;
 comment|/* flags for readdir */
-name|void
+name|struct
+name|pthread_mutex
 modifier|*
 name|dd_lock
 decl_stmt|;
-comment|/* hack to avoid including<pthread.h> */
+comment|/* lock */
 name|struct
 name|_telldir
 modifier|*
