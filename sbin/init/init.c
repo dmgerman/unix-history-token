@@ -1724,7 +1724,7 @@ argument_list|(
 name|_fspath
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Try to avoid the trailing slash in _PATH_DEV. 		 * Be *very* defensive. 		 */
+comment|/* 		 * Try to avoid the trailing slash in _PATH_DEV. 		 * Be *very* defensive. 		 */
 name|s
 operator|=
 name|strdup
@@ -6015,7 +6015,7 @@ decl_stmt|,
 modifier|*
 name|old_type
 decl_stmt|;
-comment|/*  	 * mark all sessions for death, (!SE_PRESENT)  	 * as we find or create new ones they'll be marked as keepers, 	 * we'll later nuke all the ones not found in /etc/ttys 	 */
+comment|/* 	 * mark all sessions for death, (!SE_PRESENT) 	 * as we find or create new ones they'll be marked as keepers, 	 * we'll later nuke all the ones not found in /etc/ttys 	 */
 for|for
 control|(
 name|sp
