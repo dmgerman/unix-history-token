@@ -528,6 +528,14 @@ literal|"Marvell Yukon 88E8056 Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|VENDORID_MARVELL
+block|,
+name|DEVICEID_MRVL_436A
+block|,
+literal|"Marvell Yukon 88E8058 Gigabit Ethernet"
+block|}
+block|,
+block|{
 name|VENDORID_DLINK
 block|,
 name|DEVICEID_DLINK_DGE550SX

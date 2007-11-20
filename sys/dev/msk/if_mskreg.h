@@ -186,6 +186,13 @@ name|DEVICEID_MRVL_4364
 value|0x4364
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEVICEID_MRVL_436A
+value|0x436A
+end_define
+
 begin_comment
 comment|/*  * D-Link gigabit ethernet device ID  */
 end_comment
