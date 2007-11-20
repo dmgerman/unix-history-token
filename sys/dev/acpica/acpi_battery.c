@@ -624,9 +624,15 @@ name|dev_idx
 operator|=
 name|i
 expr_stmt|;
-comment|/* 	 * Be sure we can get various info from the battery.  Note that we 	 * can't check acpi_BatteryIsPresent() because smart batteries only 	 * return that the device is present. 	 */
+comment|/* 	 * Be sure we can get various info from the battery.  Note that 	 * acpi_BatteryIsPresent() is not enough because smart batteries only 	 * return that the device is present. 	 */
 if|if
 condition|(
+operator|!
+name|acpi_BatteryIsPresent
+argument_list|(
+name|batt_dev
+argument_list|)
+operator|||
 name|ACPI_BATT_GET_STATUS
 argument_list|(
 name|batt_dev
