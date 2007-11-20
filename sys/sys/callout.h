@@ -23,7 +23,7 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
-name|mtx
+name|lock_object
 struct_decl|;
 end_struct_decl
 
@@ -89,11 +89,11 @@ parameter_list|)
 function_decl|;
 comment|/* function to call */
 name|struct
-name|mtx
+name|lock_object
 modifier|*
-name|c_mtx
+name|c_lock
 decl_stmt|;
-comment|/* mutex to lock */
+comment|/* lock to handle */
 name|int
 name|c_flags
 decl_stmt|;
@@ -155,6 +155,17 @@ end_define
 
 begin_comment
 comment|/* handler returns with mtx unlocked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLOUT_SHAREDLOCK
+value|0x0020
+end_define
+
+begin_comment
+comment|/* callout lock held in shared mode */
 end_comment
 
 begin_struct
@@ -275,20 +286,50 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|callout_init_mtx
+name|_callout_init_lock
 parameter_list|(
 name|struct
 name|callout
 modifier|*
 parameter_list|,
 name|struct
-name|mtx
+name|lock_object
 modifier|*
 parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|callout_init_mtx
+parameter_list|(
+name|c
+parameter_list|,
+name|mtx
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|_callout_init_lock((c), ((mtx) != NULL) ?&(mtx)->lock_object :	\ 	    NULL, (flags))
+end_define
+
+begin_define
+define|#
+directive|define
+name|callout_init_rw
+parameter_list|(
+name|c
+parameter_list|,
+name|rw
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|_callout_init_lock((c), ((rw) != NULL) ?&(rw)->lock_object :	\ 	   NULL, (flags))
+end_define
 
 begin_define
 define|#
