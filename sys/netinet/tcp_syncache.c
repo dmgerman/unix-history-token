@@ -4008,60 +4008,13 @@ goto|goto
 name|failed
 goto|;
 block|}
-comment|/* 	 * If timestamps were present in the SYN and we accepted 	 * them in our SYN|ACK we require them to be present from 	 * now on.  And vice versa. 	 */
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|sc_flags
-operator|&
-name|SCF_TIMESTAMP
-operator|)
-operator|&&
-operator|!
-operator|(
-name|to
-operator|->
-name|to_flags
-operator|&
-name|TOF_TS
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|s
-operator|=
-name|tcp_log_addrs
-argument_list|(
-name|inc
-argument_list|,
-name|th
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-operator|)
-condition|)
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"%s; %s: Timestamp missing, "
-literal|"segment rejected\n"
-argument_list|,
-name|s
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-goto|goto
-name|failed
-goto|;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* 	 * If timestamps were present in the SYN and we accepted 	 * them in our SYN|ACK we require them to be present from 	 * now on.  And vice versa. 	 * 	 * Unfortunately, during testing of 7.0 some users found 	 * network devices that violate this constraint, so it must 	 * be disabled. 	 */
+block|if ((sc->sc_flags& SCF_TIMESTAMP)&& !(to->to_flags& TOF_TS)) { 		if ((s = tcp_log_addrs(inc, th, NULL, NULL))) 			log(LOG_DEBUG, "%s; %s: Timestamp missing, " 			    "segment rejected\n", s, __func__); 		goto failed; 	}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
