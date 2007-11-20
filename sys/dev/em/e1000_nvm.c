@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include
@@ -1125,7 +1125,7 @@ name|timeout
 operator|=
 name|NVM_MAX_RETRY_SPI
 expr_stmt|;
-comment|/* Read "Status Register" repeatedly until the LSB is cleared. 		 * The EEPROM will signal that the command has been completed 		 * by clearing bit 0 of the internal status register.  If it's 		 * not cleared within 'timeout', then error out. */
+comment|/* 		 * Read "Status Register" repeatedly until the LSB is cleared. 		 * The EEPROM will signal that the command has been completed 		 * by clearing bit 0 of the internal status register.  If it's 		 * not cleared within 'timeout', then error out. 		 */
 while|while
 condition|(
 name|timeout
@@ -1264,7 +1264,7 @@ argument_list|(
 literal|"e1000_read_nvm_spi"
 argument_list|)
 expr_stmt|;
-comment|/* A check for invalid values:  offset too large, too many words, 	 * and not enough words. */
+comment|/* 	 * A check for invalid values:  offset too large, too many words, 	 * and not enough words. 	 */
 if|if
 condition|(
 operator|(
@@ -1391,7 +1391,7 @@ operator|->
 name|address_bits
 argument_list|)
 expr_stmt|;
-comment|/* Read the data.  SPI NVMs increment the address with each byte 	 * read and will roll over if reading beyond the end.  This allows 	 * us to read the whole NVM from any offset */
+comment|/* 	 * Read the data.  SPI NVMs increment the address with each byte 	 * read and will roll over if reading beyond the end.  This allows 	 * us to read the whole NVM from any offset 	 */
 for|for
 control|(
 name|i
@@ -1500,7 +1500,7 @@ argument_list|(
 literal|"e1000_read_nvm_microwire"
 argument_list|)
 expr_stmt|;
-comment|/* A check for invalid values:  offset too large, too many words, 	 * and not enough words. */
+comment|/* 	 * A check for invalid values:  offset too large, too many words, 	 * and not enough words. 	 */
 if|if
 condition|(
 operator|(
@@ -1616,7 +1616,7 @@ operator|->
 name|address_bits
 argument_list|)
 expr_stmt|;
-comment|/* Read the data.  For microwire, each word requires the 		 * overhead of setup and tear-down. */
+comment|/* 		 * Read the data.  For microwire, each word requires the 		 * overhead of setup and tear-down. 		 */
 name|data
 index|[
 name|i
@@ -1701,7 +1701,7 @@ argument_list|(
 literal|"e1000_read_nvm_eerd"
 argument_list|)
 expr_stmt|;
-comment|/* A check for invalid values:  offset too large, too many words, 	 * and not enough words. */
+comment|/* 	 * A check for invalid values:  offset too large, too many words, 	 * too many words for the offset, and not enough words. 	 */
 if|if
 condition|(
 operator|(
@@ -1868,7 +1868,7 @@ argument_list|(
 literal|"e1000_write_nvm_spi"
 argument_list|)
 expr_stmt|;
-comment|/* A check for invalid values:  offset too large, too many words, 	 * and not enough words. */
+comment|/* 	 * A check for invalid values:  offset too large, too many words, 	 * and not enough words. 	 */
 if|if
 condition|(
 operator|(
@@ -1979,7 +1979,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Some SPI eeproms use the 8th address bit embedded in the 		 * opcode */
+comment|/* 		 * Some SPI eeproms use the 8th address bit embedded in the 		 * opcode 		 */
 if|if
 condition|(
 operator|(
@@ -2181,7 +2181,7 @@ argument_list|(
 literal|"e1000_write_nvm_microwire"
 argument_list|)
 expr_stmt|;
-comment|/* A check for invalid values:  offset too large, too many words, 	 * and not enough words. */
+comment|/* 	 * A check for invalid values:  offset too large, too many words, 	 * and not enough words. 	 */
 if|if
 condition|(
 operator|(
@@ -2465,12 +2465,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_read_part_num_generic - Read device part number  *  @hw: pointer to the HW structure  *  @part_num: pointer to device part number  *  *  Reads the product board assembly (PBA) number from the EEPROM and stores  *  the value in part_num.  **/
+comment|/**  *  e1000_read_pba_num_generic - Read device part number  *  @hw: pointer to the HW structure  *  @pba_num: pointer to device part number  *  *  Reads the product board assembly (PBA) number from the EEPROM and stores  *  the value in pba_num.  **/
 end_comment
 
 begin_function
 name|s32
-name|e1000_read_part_num_generic
+name|e1000_read_pba_num_generic
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -2479,7 +2479,7 @@ name|hw
 parameter_list|,
 name|u32
 modifier|*
-name|part_num
+name|pba_num
 parameter_list|)
 block|{
 name|s32
@@ -2490,7 +2490,7 @@ name|nvm_data
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
-literal|"e1000_read_part_num_generic"
+literal|"e1000_read_pba_num_generic"
 argument_list|)
 expr_stmt|;
 name|ret_val
@@ -2522,7 +2522,7 @@ name|out
 goto|;
 block|}
 operator|*
-name|part_num
+name|pba_num
 operator|=
 call|(
 name|u32
@@ -2562,7 +2562,7 @@ name|out
 goto|;
 block|}
 operator|*
-name|part_num
+name|pba_num
 operator||=
 name|nvm_data
 expr_stmt|;
@@ -3074,8 +3074,6 @@ operator|->
 name|func
 operator|.
 name|acquire_nvm
-operator|!=
-name|NULL
 condition|)
 return|return
 name|hw
@@ -3087,7 +3085,6 @@ argument_list|(
 name|hw
 argument_list|)
 return|;
-else|else
 return|return
 name|E1000_SUCCESS
 return|;
@@ -3115,8 +3112,6 @@ operator|->
 name|func
 operator|.
 name|release_nvm
-operator|!=
-name|NULL
 condition|)
 name|hw
 operator|->

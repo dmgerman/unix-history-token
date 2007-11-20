@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -375,7 +375,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 function_decl|;
@@ -486,7 +486,7 @@ parameter_list|,
 name|u32
 name|usec_interval
 parameter_list|,
-name|boolean_t
+name|bool
 modifier|*
 name|success
 parameter_list|)
@@ -511,6 +511,30 @@ name|e1000_get_phy_type_from_id
 parameter_list|(
 name|u32
 name|phy_id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|e1000_power_up_phy_copper
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|e1000_power_down_phy_copper
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -617,12 +641,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IGP4_PHY_PAGE_SELECT
+name|BM_PHY_PAGE_SELECT
 value|22
 end_define
 
 begin_comment
-comment|/* Page Select for IGP 4 */
+comment|/* Page Select for BM */
 end_comment
 
 begin_define
@@ -637,55 +661,6 @@ define|#
 directive|define
 name|PHY_REG_MASK
 value|0x1F
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGP4_WUC_PAGE
-value|800
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGP4_WUC_ADDRESS_OPCODE
-value|0x11
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGP4_WUC_DATA_OPCODE
-value|0x12
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGP4_WUC_ENABLE_PAGE
-value|769
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGP4_WUC_ENABLE_REG
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGP4_WUC_ENABLE_BIT
-value|(1<< 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGP4_WUC_HOST_WU_BIT
-value|(1<< 4)
 end_define
 
 begin_define
@@ -727,16 +702,16 @@ name|IGP01E1000_PSCFR_SMART_SPEED
 value|0x0080
 end_define
 
+begin_comment
+comment|/* Enable flexible speed on link-up */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IGP01E1000_GMII_FLEX_SPD
 value|0x0010
 end_define
-
-begin_comment
-comment|/* Enable flexible speed                                                   * on link-up */
-end_comment
 
 begin_define
 define|#

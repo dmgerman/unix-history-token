@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|_E1000_MAC_H_
 end_define
 
 begin_comment
-comment|/* Functions that should not be called directly from drivers but can be used  * by other files in this 'shared code'  */
+comment|/*  * Functions that should not be called directly from drivers but can be used  * by other files in this 'shared code'  */
 end_comment
 
 begin_function_decl
@@ -257,7 +257,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|e1000_mc_addr_list_update_generic
+name|e1000_update_mc_addr_list_generic
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -506,6 +506,18 @@ name|addr
 parameter_list|,
 name|u32
 name|index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_check_alt_mac_addr_generic
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
 parameter_list|)
 function_decl|;
 end_function_decl

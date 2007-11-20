@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -72,16 +72,16 @@ begin_comment
 comment|/* Global "knob" for the workaround */
 end_comment
 
+begin_comment
+comment|/* If TBI_COMPAT_ENABLED, then this is the current state (on/off) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TBI_SBP_ENABLED
 value|0x2
 end_define
-
-begin_comment
-comment|/* If TBI_COMPAT_ENABLED,                                 * then this is the current state (on/off) */
-end_comment
 
 begin_endif
 endif|#

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|_E1000_MANAGE_H_
 end_define
 
 begin_function_decl
-name|boolean_t
+name|bool
 name|e1000_check_mng_mode_generic
 parameter_list|(
 name|struct
@@ -32,7 +32,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|boolean_t
+name|bool
 name|e1000_enable_tx_pkt_filtering_generic
 parameter_list|(
 name|struct
@@ -272,16 +272,16 @@ begin_comment
 comment|/* Enable bit - RO */
 end_comment
 
+begin_comment
+comment|/* Driver sets this bit when done to put command in RAM */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|E1000_HICR_C
 value|0x02
 end_define
-
-begin_comment
-comment|/* Driver sets this bit when done                                           * to put command in RAM */
-end_comment
 
 begin_define
 define|#
@@ -308,16 +308,16 @@ name|E1000_HICR_FW_RESET
 value|0x80
 end_define
 
+begin_comment
+comment|/* Intel(R) Active Management Technology signature */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|E1000_IAMT_SIGNATURE
 value|0x544D4149
 end_define
-
-begin_comment
-comment|/* Intel(R) Active Management                                           * Technology signature */
-end_comment
 
 begin_endif
 endif|#

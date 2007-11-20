@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -43,6 +43,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_KMRNCTRLSTA_OFFSET_MAC2PHY_OPMODE
+value|0x1F
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_KMRNCTRLSTA_FIFO_CTRL_RX_BYPASS
 value|0x0008
 end_define
@@ -73,6 +80,13 @@ define|#
 directive|define
 name|E1000_KMRNCTRLSTA_HD_CTRL_1000_DEFAULT
 value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KMRNCTRLSTA_OPMODE_E_IDLE
+value|0x2000
 end_define
 
 begin_define
@@ -235,16 +249,16 @@ begin_comment
 comment|/* DSP Distance Register (Page 5, Register 26) */
 end_comment
 
+begin_comment
+comment|/*  * 0 =<50M  * 1 = 50-80M  * 2 = 80-100M  * 3 = 110-140M  * 4 =>140M  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|GG82563_DSPD_CABLE_LENGTH
 value|0x0007
 end_define
-
-begin_comment
-comment|/* 0 =<50M;                                                           1 = 50-80M;                                                           2 = 80-110M;                                                           3 = 110-140M;                                                           4 =>140M */
-end_comment
 
 begin_comment
 comment|/* Kumeran Mode Control Register (Page 193, Register 16) */

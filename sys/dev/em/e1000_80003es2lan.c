@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -387,8 +387,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|STATIC
+name|void
+name|e1000_power_down_phy_copper_80003es2lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/* A table for the GG82563 cable length where the range is defined  * with a lower bound at "index" and the upper bound at  * "index + 5".  */
+comment|/*  * A table for the GG82563 cable length where the range is defined  * with a lower bound at "index" and the upper bound at  * "index + 5".  */
 end_comment
 
 begin_decl_stmt
@@ -481,6 +494,8 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|!=
 name|e1000_media_type_copper
@@ -495,6 +510,21 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
+else|else
+block|{
+name|func
+operator|->
+name|power_up_phy
+operator|=
+name|e1000_power_up_phy_copper
+expr_stmt|;
+name|func
+operator|->
+name|power_down_phy
+operator|=
+name|e1000_power_down_phy_copper_80003es2lan
+expr_stmt|;
 block|}
 name|phy
 operator|->
@@ -785,10 +815,21 @@ operator|>>
 name|E1000_EECD_SIZE_EX_SHIFT
 argument_list|)
 expr_stmt|;
-comment|/* Added to a constant, "size" becomes the left-shift value 	 * for setting word_size. 	 */
+comment|/* 	 * Added to a constant, "size" becomes the left-shift value 	 * for setting word_size. 	 */
 name|size
 operator|+=
 name|NVM_WORD_SIZE_BASE_SHIFT
+expr_stmt|;
+comment|/* EEPROM access above 16k is unsupported */
+if|if
+condition|(
+name|size
+operator|>
+literal|14
+condition|)
+name|size
+operator|=
+literal|14
 expr_stmt|;
 name|nvm
 operator|->
@@ -905,6 +946,8 @@ name|E1000_DEV_ID_80003ES2LAN_SERDES_DPT
 case|:
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_internal_serdes
@@ -913,6 +956,8 @@ break|break;
 default|default:
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_copper
@@ -997,6 +1042,8 @@ operator|=
 operator|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper
@@ -1011,6 +1058,8 @@ switch|switch
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 condition|)
 block|{
@@ -1065,9 +1114,9 @@ expr_stmt|;
 comment|/* multicast address update */
 name|func
 operator|->
-name|mc_addr_list_update
+name|update_mc_addr_list
 operator|=
-name|e1000_mc_addr_list_update_generic
+name|e1000_update_mc_addr_list_generic
 expr_stmt|;
 comment|/* writing VFTA */
 name|func
@@ -1489,7 +1538,7 @@ operator|)
 operator|)
 condition|)
 break|break;
-comment|/* Firmware currently using resource (fwmask) 		 * or other software thread using resource (swmask) */
+comment|/* 		 * Firmware currently using resource (fwmask) 		 * or other software thread using resource (swmask) 		 */
 name|e1000_put_hw_semaphore_generic
 argument_list|(
 name|hw
@@ -1666,13 +1715,15 @@ operator|)
 operator|<
 name|GG82563_MIN_ALT_REG
 condition|)
+block|{
 name|page_select
 operator|=
 name|GG82563_PHY_PAGE_SELECT
 expr_stmt|;
+block|}
 else|else
 block|{
-comment|/* Use Alternative Page Select register to access 		 * registers 30 and 31 		 */
+comment|/* 		 * Use Alternative Page Select register to access 		 * registers 30 and 31 		 */
 name|page_select
 operator|=
 name|GG82563_PHY_PAGE_SELECT_ALT
@@ -1710,7 +1761,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* The "ready" bit in the MDIC register may be incorrectly set 	 * before the device has completed the "Page Select" MDI 	 * transaction.  So we wait 200us after each MDI command... 	 */
+comment|/* 	 * The "ready" bit in the MDIC register may be incorrectly set 	 * before the device has completed the "Page Select" MDI 	 * transaction.  So we wait 200us after each MDI command... 	 */
 name|usec_delay
 argument_list|(
 literal|200
@@ -1829,13 +1880,15 @@ operator|)
 operator|<
 name|GG82563_MIN_ALT_REG
 condition|)
+block|{
 name|page_select
 operator|=
 name|GG82563_PHY_PAGE_SELECT
 expr_stmt|;
+block|}
 else|else
 block|{
-comment|/* Use Alternative Page Select register to access 		 * registers 30 and 31 		 */
+comment|/* 		 * Use Alternative Page Select register to access 		 * registers 30 and 31 		 */
 name|page_select
 operator|=
 name|GG82563_PHY_PAGE_SELECT_ALT
@@ -1873,7 +1926,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* The "ready" bit in the MDIC register may be incorrectly set 	 * before the device has completed the "Page Select" MDI 	 * transaction.  So we wait 200us after each MDI command... 	 */
+comment|/* 	 * The "ready" bit in the MDIC register may be incorrectly set 	 * before the device has completed the "Page Select" MDI 	 * transaction.  So we wait 200us after each MDI command... 	 */
 name|usec_delay
 argument_list|(
 literal|200
@@ -2115,7 +2168,7 @@ decl_stmt|;
 name|u16
 name|phy_data
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 name|DEBUGFUNC
@@ -2123,7 +2176,7 @@ argument_list|(
 literal|"e1000_phy_force_speed_duplex_80003es2lan"
 argument_list|)
 expr_stmt|;
-comment|/* Clear Auto-Crossover to force MDI manually.  M88E1000 requires MDI 	 * forced whenever speed and duplex are forced. 	 */
+comment|/* 	 * Clear Auto-Crossover to force MDI manually.  M88E1000 requires MDI 	 * forced whenever speed and duplex are forced. 	 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -2234,7 +2287,7 @@ name|hw
 operator|->
 name|phy
 operator|.
-name|wait_for_link
+name|autoneg_wait_to_complete
 condition|)
 block|{
 name|DEBUGOUT
@@ -2270,7 +2323,7 @@ operator|!
 name|link
 condition|)
 block|{
-comment|/* We didn't get link. 			 * Reset the DSP and cross our fingers. 			 */
+comment|/* 			 * We didn't get link. 			 * Reset the DSP and cross our fingers. 			 */
 name|ret_val
 operator|=
 name|e1000_phy_reset_dsp_generic
@@ -2328,7 +2381,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Resetting the phy means we need to verify the TX_CLK corresponds 	 * to the link speed.  10Mbps -> 2.5MHz, else 25MHz. 	 */
+comment|/* 	 * Resetting the phy means we need to verify the TX_CLK corresponds 	 * to the link speed.  10Mbps -> 2.5MHz, else 25MHz. 	 */
 name|phy_data
 operator|&=
 operator|~
@@ -2353,7 +2406,7 @@ name|phy_data
 operator||=
 name|GG82563_MSCR_TX_CLK_100MBPS_25
 expr_stmt|;
-comment|/* In addition, we must re-enable CRS on Tx for both half and full 	 * duplex. 	 */
+comment|/* 	 * In addition, we must re-enable CRS on Tx for both half and full 	 * duplex. 	 */
 name|phy_data
 operator||=
 name|GG82563_MSCR_ASSERT_CRS_ON_TX
@@ -2519,6 +2572,8 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper
@@ -2569,6 +2624,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|ret_val
 operator|=
 name|e1000_get_speed_and_duplex_fiber_serdes_generic
@@ -2580,6 +2636,7 @@ argument_list|,
 name|duplex
 argument_list|)
 expr_stmt|;
+block|}
 name|out
 label|:
 return|return
@@ -2616,7 +2673,7 @@ argument_list|(
 literal|"e1000_reset_hw_80003es2lan"
 argument_list|)
 expr_stmt|;
-comment|/* Prevent the PCI-E bus from sticking if there is no TLP connection 	 * on the last TLP read/write transaction when MAC is reset. 	 */
+comment|/* 	 * Prevent the PCI-E bus from sticking if there is no TLP connection 	 * on the last TLP read/write transaction when MAC is reset. 	 */
 name|ret_val
 operator|=
 name|e1000_disable_pcie_master_generic
@@ -2806,9 +2863,7 @@ argument_list|(
 literal|"Error initializing identification LED\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+comment|/* This is not fatal and we should not stop init due to this */
 block|}
 comment|/* Disabling VLAN filtering */
 name|DEBUGOUT
@@ -2879,6 +2934,9 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|reg_data
@@ -2899,6 +2957,9 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|reg_data
 argument_list|)
@@ -2910,7 +2971,10 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TXDCTL1
+name|E1000_TXDCTL
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|reg_data
@@ -2930,7 +2994,10 @@ name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TXDCTL1
+name|E1000_TXDCTL
+argument_list|(
+literal|1
+argument_list|)
 argument_list|,
 name|reg_data
 argument_list|)
@@ -3041,14 +3108,12 @@ argument_list|,
 name|reg_data
 argument_list|)
 expr_stmt|;
-comment|/* Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
+comment|/* 	 * Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
 name|e1000_clear_hw_cntrs_80003es2lan
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -3097,6 +3162,9 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|reg
@@ -3112,6 +3180,9 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_TXDCTL
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|reg
 argument_list|)
@@ -3123,7 +3194,10 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TXDCTL1
+name|E1000_TXDCTL
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|reg
@@ -3138,7 +3212,10 @@ name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TXDCTL1
+name|E1000_TXDCTL
+argument_list|(
+literal|1
+argument_list|)
 argument_list|,
 name|reg
 argument_list|)
@@ -3150,7 +3227,10 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TARC0
+name|E1000_TARC
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|reg
@@ -3167,6 +3247,8 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|!=
 name|e1000_media_type_copper
@@ -3184,7 +3266,10 @@ name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TARC0
+name|E1000_TARC
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|reg
 argument_list|)
@@ -3196,7 +3281,10 @@ name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TARC1
+name|E1000_TARC
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3232,7 +3320,10 @@ name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_TARC1
+name|E1000_TARC
+argument_list|(
+literal|1
+argument_list|)
 argument_list|,
 name|reg
 argument_list|)
@@ -3336,7 +3427,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Options: 		 *   MDI/MDI-X = 0 (default) 		 *   0 - Auto for all speeds 		 *   1 - MDI mode 		 *   2 - MDI-X mode 		 *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes) 		 */
+comment|/* 		 * Options: 		 *   MDI/MDI-X = 0 (default) 		 *   0 - Auto for all speeds 		 *   1 - MDI mode 		 *   2 - MDI-X mode 		 *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes) 		 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -3394,7 +3485,7 @@ name|GG82563_PSCR_CROSSOVER_MODE_AUTO
 expr_stmt|;
 break|break;
 block|}
-comment|/* Options: 		 *   disable_polarity_correction = 0 (default) 		 *       Automatic Correction for Reversed Cable Polarity 		 *   0 - Disabled 		 *   1 - Enabled 		 */
+comment|/* 		 * Options: 		 *   disable_polarity_correction = 0 (default) 		 *       Automatic Correction for Reversed Cable Polarity 		 *   0 - Disabled 		 *   1 - Enabled 		 */
 name|data
 operator|&=
 operator|~
@@ -3405,8 +3496,6 @@ condition|(
 name|phy
 operator|->
 name|disable_polarity_correction
-operator|==
-name|TRUE
 condition|)
 name|data
 operator||=
@@ -3453,7 +3542,7 @@ name|out
 goto|;
 block|}
 block|}
-comment|/* Bypass RX and TX FIFO's */
+comment|/* Bypass Rx and Tx FIFO's */
 name|ret_val
 operator|=
 name|e1000_write_kmrn_reg
@@ -3465,6 +3554,47 @@ argument_list|,
 name|E1000_KMRNCTRLSTA_FIFO_CTRL_RX_BYPASS
 operator||
 name|E1000_KMRNCTRLSTA_FIFO_CTRL_TX_BYPASS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+name|ret_val
+operator|=
+name|e1000_read_kmrn_reg
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_KMRNCTRLSTA_OFFSET_MAC2PHY_OPMODE
+argument_list|,
+operator|&
+name|data
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+name|data
+operator||=
+name|E1000_KMRNCTRLSTA_OPMODE_E_IDLE
+expr_stmt|;
+name|ret_val
+operator|=
+name|e1000_write_kmrn_reg
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_KMRNCTRLSTA_OFFSET_MAC2PHY_OPMODE
+argument_list|,
+name|data
 argument_list|)
 expr_stmt|;
 if|if
@@ -3560,15 +3690,16 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Do not init these registers when the HW is in IAMT mode, since the 	 * firmware will have already initialized them.  We only initialize 	 * them if the HW is not in IAMT mode. 	 */
+comment|/* 	 * Do not init these registers when the HW is in IAMT mode, since the 	 * firmware will have already initialized them.  We only initialize 	 * them if the HW is not in IAMT mode. 	 */
 if|if
 condition|(
+operator|!
+operator|(
 name|e1000_check_mng_mode
 argument_list|(
 name|hw
 argument_list|)
-operator|==
-name|FALSE
+operator|)
 condition|)
 block|{
 comment|/* Enable Electrical Idle on the PHY */
@@ -3637,7 +3768,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Workaround: Disable padding in Kumeran interface in the MAC 	 * and in the PHY to avoid CRC errors. 	 */
+comment|/* 	 * Workaround: Disable padding in Kumeran interface in the MAC 	 * and in the PHY to avoid CRC errors. 	 */
 name|ret_val
 operator|=
 name|e1000_read_phy_reg
@@ -3747,7 +3878,7 @@ argument_list|,
 name|ctrl
 argument_list|)
 expr_stmt|;
-comment|/* Set the mac to wait the maximum time between each 	 * iteration and increase the max iterations when 	 * polling the phy; this fixes erroneous timeouts at 10Mbps. */
+comment|/* 	 * Set the mac to wait the maximum time between each 	 * iteration and increase the max iterations when 	 * polling the phy; this fixes erroneous timeouts at 10Mbps. 	 */
 name|ret_val
 operator|=
 name|e1000_write_kmrn_reg
@@ -4245,6 +4376,46 @@ label|:
 return|return
 name|ret_val
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * e1000_power_down_phy_copper_80003es2lan - Remove link during PHY power down  * @hw: pointer to the HW structure  *  * In the case of a PHY power down to save power, or to turn off link during a  * driver unload, or wake on lan is not enabled, remove the link.  **/
+end_comment
+
+begin_function
+name|STATIC
+name|void
+name|e1000_power_down_phy_copper_80003es2lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+comment|/* If the management interface is not enabled, then power down */
+if|if
+condition|(
+operator|!
+operator|(
+name|e1000_check_mng_mode
+argument_list|(
+name|hw
+argument_list|)
+operator|||
+name|e1000_check_reset_block
+argument_list|(
+name|hw
+argument_list|)
+operator|)
+condition|)
+name|e1000_power_down_phy_copper
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 

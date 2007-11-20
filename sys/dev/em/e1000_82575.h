@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|_E1000_82575_H_
 end_define
 
 begin_comment
-comment|/* Receive Address Register Count  * Number of high/low register pairs in the RAR.  The RAR (Receive Address  * Registers) holds the directed and multicast addresses that we monitor.  * These entries are also used for MAC-based filtering.  */
+comment|/*  * Receive Address Register Count  * Number of high/low register pairs in the RAR.  The RAR (Receive Address  * Registers) holds the directed and multicast addresses that we monitor.  * These entries are also used for MAC-based filtering.  */
 end_comment
 
 begin_define
@@ -438,6 +438,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_SRRCTL_DESCTYPE_MASK
+value|0x0E000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SRRCTL_BSIZEPKT_MASK
+value|0x0000007F
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SRRCTL_BSIZEHDR_MASK
+value|0x00003F00
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_TX_HEAD_WB_ENABLE
 value|0x1
 end_define
@@ -513,7 +534,7 @@ value|( \     E1000_EIMS_RX_QUEUE  | \     E1000_EIMS_TX_QUEUE  | \     E1000_EI
 end_define
 
 begin_comment
-comment|/* Immediate Interrupt RX (A.K.A. Low Latency Interrupt) */
+comment|/* Immediate Interrupt Rx (A.K.A. Low Latency Interrupt) */
 end_comment
 
 begin_define
@@ -660,7 +681,7 @@ comment|/* RSS type, Packet type */
 name|u16
 name|hdr_info
 decl_stmt|;
-comment|/* Split Header, 				                      * header buffer length */
+comment|/* Split Header, 				                 * header buffer length */
 block|}
 name|lo_dword
 struct|;
@@ -836,6 +857,105 @@ directive|define
 name|E1000_RXDADV_RSSTYPE_IPV6_UDP_EX
 value|0x00000009
 end_define
+
+begin_comment
+comment|/* RSS Packet Types as indicated in the receive descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDADV_PKTTYPE_NONE
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDADV_PKTTYPE_IPV4
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* IPV4 hdr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDADV_PKTTYPE_IPV4_EX
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* IPV4 hdr + extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDADV_PKTTYPE_IPV6
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* IPV6 hdr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDADV_PKTTYPE_IPV6_EX
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* IPV6 hdr + extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDADV_PKTTYPE_TCP
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* TCP hdr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDADV_PKTTYPE_UDP
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* UDP hdr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDADV_PKTTYPE_SCTP
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* SCTP hdr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDADV_PKTTYPE_NFS
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* NFS hdr present */
+end_comment
 
 begin_comment
 comment|/* Transmit Descriptor - Advanced */
@@ -1307,16 +1427,16 @@ begin_comment
 comment|/* Tx Desc. write-back flushing */
 end_comment
 
+begin_comment
+comment|/* Tx Queue Arbitration Priority 0=low, 1=high */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|E1000_TXDCTL_PRIORITY
 value|0x08000000
 end_define
-
-begin_comment
-comment|/* Tx Queue Arbitration Priority                                                  0=low, 1=high */
-end_comment
 
 begin_comment
 comment|/* Additional Receive Descriptor Control definitions */
@@ -1456,6 +1576,17 @@ end_define
 
 begin_comment
 comment|/* DCA Tx Desc enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DCA_TXCTRL_TX_WB_RO_EN
+value|(1<< 11)
+end_define
+
+begin_comment
+comment|/* Tx Desc writeback RO bit */
 end_comment
 
 begin_endif

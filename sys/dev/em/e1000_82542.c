@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -163,7 +163,7 @@ begin_struct
 struct|struct
 name|e1000_dev_spec_82542
 block|{
-name|boolean_t
+name|bool
 name|dma_fairness
 decl_stmt|;
 block|}
@@ -372,6 +372,8 @@ expr_stmt|;
 comment|/* Set media type */
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_fiber
@@ -436,9 +438,9 @@ expr_stmt|;
 comment|/* multicast address update */
 name|func
 operator|->
-name|mc_addr_list_update
+name|update_mc_addr_list
 operator|=
-name|e1000_mc_addr_list_update_generic
+name|e1000_update_mc_addr_list_generic
 expr_stmt|;
 comment|/* writing VFTA */
 name|func
@@ -716,7 +718,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Delay to allow any outstanding PCI transactions to complete before 	 * resetting the device 	 */
+comment|/* 	 * Delay to allow any outstanding PCI transactions to complete before 	 * resetting the device 	 */
 name|msec_delay
 argument_list|(
 literal|10
@@ -1003,7 +1005,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Set the PCI priority bit correctly in the CTRL register.  This 	 * determines if the adapter gives priority to receives, or if it 	 * gives equal priority to transmits and receives. 	 */
+comment|/* 	 * Set the PCI priority bit correctly in the CTRL register.  This 	 * determines if the adapter gives priority to receives, or if it 	 * gives equal priority to transmits and receives. 	 */
 if|if
 condition|(
 name|dev_spec
@@ -1040,7 +1042,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
+comment|/* 	 * Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
 name|e1000_clear_hw_cntrs_82542
 argument_list|(
 name|hw
@@ -1111,9 +1113,11 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|&=
 operator|~
 name|e1000_fc_tx_pause
@@ -1126,29 +1130,37 @@ name|report_tx_early
 operator|==
 literal|1
 condition|)
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 operator|&=
 operator|~
 name|e1000_fc_rx_pause
 expr_stmt|;
-comment|/* We want to save off the original Flow Control configuration just in 	 * case we get disconnected and then reconnected into a different hub 	 * or switch with different Flow Control capabilities. 	 */
-name|mac
-operator|->
-name|original_fc
-operator|=
-name|mac
+comment|/* 	 * We want to save off the original Flow Control configuration just in 	 * case we get disconnected and then reconnected into a different hub 	 * or switch with different Flow Control capabilities. 	 */
+name|hw
 operator|->
 name|fc
+operator|.
+name|original_type
+operator|=
+name|hw
+operator|->
+name|fc
+operator|.
+name|type
 expr_stmt|;
 name|DEBUGOUT1
 argument_list|(
 literal|"After fix-ups FlowControl is now = %x\n"
 argument_list|,
-name|mac
+name|hw
 operator|->
 name|fc
+operator|.
+name|type
 argument_list|)
 expr_stmt|;
 comment|/* Call the necessary subroutine to configure the link. */
@@ -1168,7 +1180,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Initialize the flow control address, type, and PAUSE timer 	 * registers to their default values.  This is done even if flow 	 * control is disabled, because it does not hurt anything to 	 * initialize these registers. 	 */
+comment|/* 	 * Initialize the flow control address, type, and PAUSE timer 	 * registers to their default values.  This is done even if flow 	 * control is disabled, because it does not hurt anything to 	 * initialize these registers. 	 */
 name|DEBUGOUT
 argument_list|(
 literal|"Initializing Flow Control address, type and timer regs\n"
@@ -1207,9 +1219,11 @@ name|hw
 argument_list|,
 name|E1000_FCTTV
 argument_list|,
-name|mac
+name|hw
 operator|->
-name|fc_pause_time
+name|fc
+operator|.
+name|pause_time
 argument_list|)
 expr_stmt|;
 name|ret_val
@@ -1346,7 +1360,7 @@ name|u32
 name|reg
 parameter_list|)
 block|{
-comment|/* Some of the 82542 registers are located at different 	 * offsets than they are in newer adapters. 	 * Despite the difference in location, the registers 	 * function in the same manner. 	 */
+comment|/* 	 * Some of the 82542 registers are located at different 	 * offsets than they are in newer adapters. 	 * Despite the difference in location, the registers 	 * function in the same manner. 	 */
 switch|switch
 condition|(
 name|reg
@@ -1370,6 +1384,9 @@ expr_stmt|;
 break|break;
 case|case
 name|E1000_RDBAL
+argument_list|(
+literal|0
+argument_list|)
 case|:
 name|reg
 operator|=
@@ -1378,6 +1395,9 @@ expr_stmt|;
 break|break;
 case|case
 name|E1000_RDBAH
+argument_list|(
+literal|0
+argument_list|)
 case|:
 name|reg
 operator|=
@@ -1386,6 +1406,9 @@ expr_stmt|;
 break|break;
 case|case
 name|E1000_RDLEN
+argument_list|(
+literal|0
+argument_list|)
 case|:
 name|reg
 operator|=
@@ -1394,6 +1417,9 @@ expr_stmt|;
 break|break;
 case|case
 name|E1000_RDH
+argument_list|(
+literal|0
+argument_list|)
 case|:
 name|reg
 operator|=
@@ -1402,6 +1428,9 @@ expr_stmt|;
 break|break;
 case|case
 name|E1000_RDT
+argument_list|(
+literal|0
+argument_list|)
 case|:
 name|reg
 operator|=
@@ -1409,7 +1438,10 @@ literal|0x00128
 expr_stmt|;
 break|break;
 case|case
-name|E1000_RDBAL1
+name|E1000_RDBAL
+argument_list|(
+literal|1
+argument_list|)
 case|:
 name|reg
 operator|=
@@ -1417,7 +1449,10 @@ literal|0x00138
 expr_stmt|;
 break|break;
 case|case
-name|E1000_RDBAH1
+name|E1000_RDBAH
+argument_list|(
+literal|1
+argument_list|)
 case|:
 name|reg
 operator|=
@@ -1425,7 +1460,10 @@ literal|0x0013C
 expr_stmt|;
 break|break;
 case|case
-name|E1000_RDLEN1
+name|E1000_RDLEN
+argument_list|(
+literal|1
+argument_list|)
 case|:
 name|reg
 operator|=
@@ -1433,7 +1471,10 @@ literal|0x00140
 expr_stmt|;
 break|break;
 case|case
-name|E1000_RDH1
+name|E1000_RDH
+argument_list|(
+literal|1
+argument_list|)
 case|:
 name|reg
 operator|=
@@ -1441,7 +1482,10 @@ literal|0x00148
 expr_stmt|;
 break|break;
 case|case
-name|E1000_RDT1
+name|E1000_RDT
+argument_list|(
+literal|1
+argument_list|)
 case|:
 name|reg
 operator|=
@@ -1474,6 +1518,9 @@ expr_stmt|;
 break|break;
 case|case
 name|E1000_TDBAL
+argument_list|(
+literal|0
+argument_list|)
 case|:
 name|reg
 operator|=
@@ -1482,6 +1529,9 @@ expr_stmt|;
 break|break;
 case|case
 name|E1000_TDBAH
+argument_list|(
+literal|0
+argument_list|)
 case|:
 name|reg
 operator|=
@@ -1490,6 +1540,9 @@ expr_stmt|;
 break|break;
 case|case
 name|E1000_TDLEN
+argument_list|(
+literal|0
+argument_list|)
 case|:
 name|reg
 operator|=
@@ -1498,6 +1551,9 @@ expr_stmt|;
 break|break;
 case|case
 name|E1000_TDH
+argument_list|(
+literal|0
+argument_list|)
 case|:
 name|reg
 operator|=
@@ -1506,6 +1562,9 @@ expr_stmt|;
 break|break;
 case|case
 name|E1000_TDT
+argument_list|(
+literal|0
+argument_list|)
 case|:
 name|reg
 operator|=

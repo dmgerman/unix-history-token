@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -18,208 +18,6 @@ define|#
 directive|define
 name|_E1000_DEFINES_H_
 end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_POPTS_IXSM
-value|0x01
-end_define
-
-begin_comment
-comment|/* Insert IP checksum */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_POPTS_TXSM
-value|0x02
-end_define
-
-begin_comment
-comment|/* Insert TCP/UDP checksum */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_CMD_EOP
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* End of Packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_CMD_IFCS
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* Insert FCS (Ethernet CRC) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_CMD_IC
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* Insert Checksum */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_CMD_RS
-value|0x08000000
-end_define
-
-begin_comment
-comment|/* Report Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_CMD_RPS
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* Report Packet Sent */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_CMD_DEXT
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* Descriptor extension (0 = legacy) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_CMD_VLE
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* Add VLAN tag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_CMD_IDE
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* Enable Tidv register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_STAT_DD
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* Descriptor Done */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_STAT_EC
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* Excess Collisions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_STAT_LC
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* Late Collisions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_STAT_TU
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* Transmit underrun */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_CMD_TCP
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* TCP packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_CMD_IP
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* IP packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_CMD_TSE
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* TCP Seg enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_STAT_TC
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* Tx Underrun */
-end_comment
-
-begin_comment
-comment|/* Extended desc bits for Linksec and timesync */
-end_comment
 
 begin_comment
 comment|/* Number of Transmit and Receive Descriptors must be a multiple of 8 */
@@ -1635,16 +1433,16 @@ begin_comment
 comment|/* Enable ARP Request Filtering */
 end_comment
 
+begin_comment
+comment|/* Enable Neighbor Discovery Filtering */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|E1000_MANC_NEIGHBOR_EN
 value|0x00004000
 end_define
-
-begin_comment
-comment|/* Enable Neighbor Discovery                                              * Filtering */
-end_comment
 
 begin_define
 define|#
@@ -1712,6 +1510,10 @@ begin_comment
 comment|/* Block phy resets */
 end_comment
 
+begin_comment
+comment|/* Enable MAC address filtering */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1720,7 +1522,7 @@ value|0x00100000
 end_define
 
 begin_comment
-comment|/* Enable MAC address                                                     * filtering */
+comment|/* Enable MNG packets to host memory */
 end_comment
 
 begin_define
@@ -1731,7 +1533,7 @@ value|0x00200000
 end_define
 
 begin_comment
-comment|/* Enable MNG packets to host                                              * memory */
+comment|/* Enable IP address filtering */
 end_comment
 
 begin_define
@@ -1740,10 +1542,6 @@ directive|define
 name|E1000_MANC_EN_IP_ADDR_FILTER
 value|0x00400000
 end_define
-
-begin_comment
-comment|/* Enable IP address                                                     * filtering */
-end_comment
 
 begin_define
 define|#
@@ -2286,7 +2084,7 @@ comment|/* Flexible buffer shift */
 end_comment
 
 begin_comment
-comment|/* Use byte values for the following shift parameters  * Usage:  *     psrctl |= (((ROUNDUP(value0, 128)>> E1000_PSRCTL_BSIZE0_SHIFT)&  *                  E1000_PSRCTL_BSIZE0_MASK) |  *                ((ROUNDUP(value1, 1024)>> E1000_PSRCTL_BSIZE1_SHIFT)&  *                  E1000_PSRCTL_BSIZE1_MASK) |  *                ((ROUNDUP(value2, 1024)<< E1000_PSRCTL_BSIZE2_SHIFT)&  *                  E1000_PSRCTL_BSIZE2_MASK) |  *                ((ROUNDUP(value3, 1024)<< E1000_PSRCTL_BSIZE3_SHIFT) |;  *                  E1000_PSRCTL_BSIZE3_MASK))  * where value0 = [128..16256],  default=256  *       value1 = [1024..64512], default=4096  *       value2 = [0..64512],    default=4096  *       value3 = [0..64512],    default=0  */
+comment|/*  * Use byte values for the following shift parameters  * Usage:  *     psrctl |= (((ROUNDUP(value0, 128)>> E1000_PSRCTL_BSIZE0_SHIFT)&  *                  E1000_PSRCTL_BSIZE0_MASK) |  *                ((ROUNDUP(value1, 1024)>> E1000_PSRCTL_BSIZE1_SHIFT)&  *                  E1000_PSRCTL_BSIZE1_MASK) |  *                ((ROUNDUP(value2, 1024)<< E1000_PSRCTL_BSIZE2_SHIFT)&  *                  E1000_PSRCTL_BSIZE2_MASK) |  *                ((ROUNDUP(value3, 1024)<< E1000_PSRCTL_BSIZE3_SHIFT) |;  *                  E1000_PSRCTL_BSIZE3_MASK))  * where value0 = [128..16256],  default=256  *       value1 = [1024..64512], default=4096  *       value2 = [0..64512],    default=4096  *       value3 = [0..64512],    default=0  */
 end_comment
 
 begin_define
@@ -2385,6 +2183,21 @@ directive|define
 name|E1000_SWFW_PHY1_SM
 value|0x4
 end_define
+
+begin_comment
+comment|/* FACTPS Definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FACTPS_LFS
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* LAN Function Select */
+end_comment
 
 begin_comment
 comment|/* Device Control */
@@ -3852,6 +3665,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_TXD_POPTS_SHIFT
+value|8
+end_define
+
+begin_comment
+comment|/* POPTS shift */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_TXD_POPTS_IXSM
 value|0x01
 end_define
@@ -4045,6 +3869,10 @@ end_define
 
 begin_comment
 comment|/* Tx Underrun */
+end_comment
+
+begin_comment
+comment|/* Extended desc bits for Linksec and timesync */
 end_comment
 
 begin_comment
@@ -4684,7 +4512,7 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* 8KB, default Rx allocation */
+comment|/* 8KB */
 end_comment
 
 begin_define
@@ -4695,7 +4523,7 @@ value|0x000C
 end_define
 
 begin_comment
-comment|/* 12KB, default Rx allocation */
+comment|/* 12KB */
 end_comment
 
 begin_define
@@ -4706,7 +4534,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* 16KB, default TX allocation */
+comment|/* 16KB */
 end_comment
 
 begin_define
@@ -4773,7 +4601,18 @@ value|0x0030
 end_define
 
 begin_comment
-comment|/* 48KB, default RX allocation */
+comment|/* 48KB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PBA_64K
+value|0x0040
+end_define
+
+begin_comment
+comment|/* 64KB */
 end_comment
 
 begin_define
@@ -4973,7 +4812,7 @@ value|0x00000400
 end_define
 
 begin_comment
-comment|/* RX /c/ ordered set */
+comment|/* Rx /c/ ordered set */
 end_comment
 
 begin_define
@@ -5351,7 +5190,7 @@ comment|/* Loop */
 end_comment
 
 begin_comment
-comment|/* This defines the bits that are set in the Interrupt Mask  * Set/Read Register.  Each bit is documented below:  *   o RXDMT0 = Receive Descriptor Minimum Threshold hit (ring 0)  *   o RXSEQ  = Receive Sequence Error  */
+comment|/*  * This defines the bits that are set in the Interrupt Mask  * Set/Read Register.  Each bit is documented below:  *   o RXDMT0 = Receive Descriptor Minimum Threshold hit (ring 0)  *   o RXSEQ  = Receive Sequence Error  */
 end_comment
 
 begin_define
@@ -5362,7 +5201,7 @@ value|( \     E1000_IMS_RXDMT0 |    \     E1000_IMS_RXSEQ)
 end_define
 
 begin_comment
-comment|/* This defines the bits that are set in the Interrupt Mask  * Set/Read Register.  Each bit is documented below:  *   o RXT0   = Receiver Timer Interrupt (ring 0)  *   o TXDW   = Transmit Descriptor Written Back  *   o RXDMT0 = Receive Descriptor Minimum Threshold hit (ring 0)  *   o RXSEQ  = Receive Sequence Error  *   o LSC    = Link Status Change  */
+comment|/*  * This defines the bits that are set in the Interrupt Mask  * Set/Read Register.  Each bit is documented below:  *   o RXT0   = Receiver Timer Interrupt (ring 0)  *   o TXDW   = Transmit Descriptor Written Back  *   o RXDMT0 = Receive Descriptor Minimum Threshold hit (ring 0)  *   o RXSEQ  = Receive Sequence Error  *   o LSC    = Link Status Change  */
 end_comment
 
 begin_define
@@ -5472,7 +5311,7 @@ value|E1000_ICR_RXCFG
 end_define
 
 begin_comment
-comment|/* RX /c/ ordered set */
+comment|/* Rx /c/ ordered set */
 end_comment
 
 begin_define
@@ -5867,7 +5706,7 @@ value|E1000_ICR_RXCFG
 end_define
 
 begin_comment
-comment|/* RX /c/ ordered set */
+comment|/* Rx /c/ ordered set */
 end_comment
 
 begin_define
@@ -6243,16 +6082,16 @@ begin_comment
 comment|/* GRAN=1, PTHRESH=31 */
 end_comment
 
+begin_comment
+comment|/* Enable the counting of descriptors still to be processed. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|E1000_TXDCTL_COUNT_DESC
 value|0x00400000
 end_define
-
-begin_comment
-comment|/* Enable the counting of desc.                                               still to be processed. */
-end_comment
 
 begin_comment
 comment|/* Flow Control Constants */
@@ -6310,7 +6149,7 @@ comment|/* Receive Address */
 end_comment
 
 begin_comment
-comment|/* Number of high/low register pairs in the RAR. The RAR (Receive Address  * Registers) holds the directed and multicast addresses that we monitor.  * Technically, we have 16 spots.  However, we reserve one of these spots  * (RAR[15]) for our directed address used by controllers with  * manageability enabled, allowing us room for 15 multicast addresses.  */
+comment|/*  * Number of high/low register pairs in the RAR. The RAR (Receive Address  * Registers) holds the directed and multicast addresses that we monitor.  * Technically, we have 16 spots.  However, we reserve one of these spots  * (RAR[15]) for our directed address used by controllers with  * manageability enabled, allowing us room for 15 multicast addresses.  */
 end_comment
 
 begin_define
@@ -7615,7 +7454,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* 1=Local TX is Master, 0=Slave */
+comment|/* 1=Local Tx is Master, 0=Slave */
 end_comment
 
 begin_define
@@ -7729,7 +7568,7 @@ value|0x07
 end_define
 
 begin_comment
-comment|/* Next Page TX */
+comment|/* Next Page Tx */
 end_comment
 
 begin_define
@@ -7904,16 +7743,16 @@ begin_comment
 comment|/* NVM Size (0=64 word 1=256 word) */
 end_comment
 
+begin_comment
+comment|/* NVM Addressing bits based on type 0=small, 1=large */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|E1000_EECD_ADDR_BITS
 value|0x00000400
 end_define
-
-begin_comment
-comment|/* NVM Addressing bits based on type                                          * (0-small, 1-large) */
-end_comment
 
 begin_define
 define|#
@@ -8260,6 +8099,13 @@ define|#
 directive|define
 name|NVM_FLASH_VERSION
 value|0x0032
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_ALT_MAC_ADDR_PTR
+value|0x0037
 end_define
 
 begin_define
@@ -8885,7 +8731,7 @@ comment|/* Bit definitions for valid PHY IDs. */
 end_comment
 
 begin_comment
-comment|/* I = Integrated  * E = External  */
+comment|/*  * I = Integrated  * E = External  */
 end_comment
 
 begin_define
@@ -9134,16 +8980,16 @@ begin_comment
 comment|/* 1=SQE Test enabled */
 end_comment
 
+begin_comment
+comment|/* 1=CLK125 low, 0=CLK125 toggling */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|M88E1000_PSCR_CLK125_DISABLE
 value|0x0010
 end_define
-
-begin_comment
-comment|/* 1=CLK125 low,                                                 * 0=CLK125 toggling                                                 */
-end_comment
 
 begin_define
 define|#
@@ -9171,6 +9017,10 @@ begin_comment
 comment|/* Manual MDIX configuration */
 end_comment
 
+begin_comment
+comment|/* 1000BASE-T: Auto crossover, 100BASE-TX/10BASE-T: MDI Mode */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -9179,7 +9029,7 @@ value|0x0040
 end_define
 
 begin_comment
-comment|/* 1000BASE-T: Auto crossover,                                                 *  100BASE-TX/10BASE-T:                                                 *  MDI Mode                                                 */
+comment|/* Auto crossover enabled all speeds */
 end_comment
 
 begin_define
@@ -9190,7 +9040,7 @@ value|0x0060
 end_define
 
 begin_comment
-comment|/* Auto crossover enabled                                                 * all speeds.                                                 */
+comment|/*  * 1=Enable Extended 10BASE-T distance (Lower 10BASE-T Rx Threshold  * 0=Normal 10BASE-T Rx Threshold  */
 end_comment
 
 begin_define
@@ -9201,7 +9051,7 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* 1=Enable Extended 10BASE-T distance                                          * (Lower 10BASE-T RX Threshold)                                          * 0=Normal 10BASE-T RX Threshold */
+comment|/* 1=5-bit interface in 100BASE-TX, 0=MII interface in 100BASE-TX */
 end_comment
 
 begin_define
@@ -9210,10 +9060,6 @@ directive|define
 name|M88E1000_PSCR_MII_5BIT_ENABLE
 value|0x0100
 end_define
-
-begin_comment
-comment|/* 1=5-Bit interface in 100BASE-TX                                          * 0=MII interface in 100BASE-TX */
-end_comment
 
 begin_define
 define|#
@@ -9296,16 +9142,16 @@ begin_comment
 comment|/* 1=MDIX; 0=MDI */
 end_comment
 
+begin_comment
+comment|/*  * 0 =<50M  * 1 = 50-80M  * 2 = 80-110M  * 3 = 110-140M  * 4 =>140M  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|M88E1000_PSSR_CABLE_LENGTH
 value|0x0380
 end_define
-
-begin_comment
-comment|/* 0=<50M;1=50-80M;2=80-110M;                                             * 3=110-140M;4=>140M */
-end_comment
 
 begin_define
 define|#
@@ -9417,6 +9263,10 @@ begin_comment
 comment|/* 1=Fiber loopback */
 end_comment
 
+begin_comment
+comment|/*  * 1 = Lost lock detect enabled.  * Will assert lost lock and bring  * link down if idle not seen  * within 1ms in 1000BASE-T  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -9425,11 +9275,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* 1=Lost lock detect enabled.                                               * Will assert lost lock and bring                                               * link down if idle not seen                                               * within 1ms in 1000BASE-T                                               */
-end_comment
-
-begin_comment
-comment|/* Number of times we will attempt to autonegotiate before downshifting if we  * are the master */
+comment|/*  * Number of times we will attempt to autonegotiate before downshifting if we  * are the master  */
 end_comment
 
 begin_define
@@ -9468,7 +9314,7 @@ value|0x0C00
 end_define
 
 begin_comment
-comment|/* Number of times we will attempt to autonegotiate before downshifting if we  * are the slave */
+comment|/*  * Number of times we will attempt to autonegotiate before downshifting if we  * are the slave  */
 end_comment
 
 begin_define
@@ -9607,7 +9453,7 @@ value|0x0E00
 end_define
 
 begin_comment
-comment|/* Bits...  * 15-5: page  * 4-0: register offset  */
+comment|/*  * Bits...  * 15-5: page  * 4-0: register offset  */
 end_comment
 
 begin_define
@@ -10082,6 +9928,159 @@ define|#
 directive|define
 name|E1000_GEN_POLL_TIMEOUT
 value|640
+end_define
+
+begin_comment
+comment|/* LinkSec register fields */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECTXCAP_SUM_MASK
+value|0x00FF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECTXCAP_SUM_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECRXCAP_SUM_MASK
+value|0x00FF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECRXCAP_SUM_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECTXCTRL_EN_MASK
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECTXCTRL_DISABLE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECTXCTRL_AUTH
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECTXCTRL_AUTH_ENCRYPT
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECTXCTRL_AISCI
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECTXCTRL_PNTHRSH_MASK
+value|0xFFFFFF00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECTXCTRL_RSV_MASK
+value|0x000000D8
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECRXCTRL_EN_MASK
+value|0x0000000C
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECRXCTRL_EN_SHIFT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECRXCTRL_DISABLE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECRXCTRL_CHECK
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECRXCTRL_STRICT
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECRXCTRL_DROP
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECRXCTRL_PLSH
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECRXCTRL_RP
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LSECRXCTRL_RSV_MASK
+value|0xFFFFFF33
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNREFERENCED_PARAMETER
+parameter_list|(
+name|_p
+parameter_list|)
 end_define
 
 begin_endif

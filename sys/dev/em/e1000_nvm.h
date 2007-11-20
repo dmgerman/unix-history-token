@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -60,7 +60,7 @@ end_function_decl
 
 begin_function_decl
 name|s32
-name|e1000_read_part_num_generic
+name|e1000_read_pba_num_generic
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -69,7 +69,7 @@ name|hw
 parameter_list|,
 name|u32
 modifier|*
-name|part_num
+name|pba_num
 parameter_list|)
 function_decl|;
 end_function_decl
