@@ -1792,6 +1792,17 @@ name|msk_if_softc
 modifier|*
 name|sc_if
 decl_stmt|;
+if|if
+condition|(
+name|phy
+operator|!=
+name|PHY_ADDR_MARV
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|sc_if
 operator|=
 name|device_get_softc
@@ -1981,6 +1992,17 @@ name|msk_if_softc
 modifier|*
 name|sc_if
 decl_stmt|;
+if|if
+condition|(
+name|phy
+operator|!=
+name|PHY_ADDR_MARV
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|sc_if
 operator|=
 name|device_get_softc
@@ -2541,12 +2563,6 @@ name|gmac
 argument_list|)
 expr_stmt|;
 comment|/* Enable PHY interrupt for FIFO underrun/overflow. */
-if|if
-condition|(
-name|sc
-operator|->
-name|msk_marvell_phy
-condition|)
 name|msk_phy_writereg
 argument_list|(
 name|sc_if
@@ -2562,12 +2578,6 @@ block|}
 else|else
 block|{
 comment|/* 		 * Link state changed to down. 		 * Disable PHY interrupts. 		 */
-if|if
-condition|(
-name|sc
-operator|->
-name|msk_marvell_phy
-condition|)
 name|msk_phy_writereg
 argument_list|(
 name|sc_if
@@ -7809,26 +7819,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Check whether PHY Id is MARVELL. */
-if|if
-condition|(
-name|msk_phy_readreg
-argument_list|(
-name|sc_if
-argument_list|,
-name|PHY_ADDR_MARV
-argument_list|,
-name|PHY_MARV_ID0
-argument_list|)
-operator|==
-name|PHY_MARV_ID0_VAL
-condition|)
-name|sc
-operator|->
-name|msk_marvell_phy
-operator|=
-literal|1
-expr_stmt|;
 name|fail
 label|:
 if|if
@@ -16147,15 +16137,6 @@ block|{
 name|uint16_t
 name|status
 decl_stmt|;
-if|if
-condition|(
-name|sc_if
-operator|->
-name|msk_softc
-operator|->
-name|msk_marvell_phy
-condition|)
-block|{
 name|msk_phy_readreg
 argument_list|(
 name|sc_if
@@ -16194,7 +16175,6 @@ argument_list|,
 literal|"PHY FIFO underrun/overflow.\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -20774,12 +20754,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Disable PHY interrupt. */
-if|if
-condition|(
-name|sc
-operator|->
-name|msk_marvell_phy
-condition|)
 name|msk_phy_writereg
 argument_list|(
 name|sc_if

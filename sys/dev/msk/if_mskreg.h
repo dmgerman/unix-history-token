@@ -15947,9 +15947,6 @@ name|int
 name|msk_clock
 decl_stmt|;
 name|int
-name|msk_marvell_phy
-decl_stmt|;
-name|int
 name|msk_msi
 decl_stmt|;
 name|struct
