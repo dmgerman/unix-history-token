@@ -5794,14 +5794,14 @@ begin_define
 define|#
 directive|define
 name|CHIP_REV_YU_EC_U_A0
-value|0
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|CHIP_REV_YU_EC_U_A1
-value|1
+value|2
 end_define
 
 begin_comment
@@ -7637,7 +7637,7 @@ begin_define
 define|#
 directive|define
 name|MSK_ECU_AE_THR
-value|0x0180
+value|0x0070
 end_define
 
 begin_comment
@@ -7654,6 +7654,13 @@ end_define
 begin_comment
 comment|/* Tx BMU FIFO Level */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MSK_ECU_JUMBO_WM
+value|0x01
+end_define
 
 begin_define
 define|#
@@ -13453,6 +13460,28 @@ end_define
 
 begin_comment
 comment|/* disable VLAN tagging */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TX_JUMBO_ENA
+value|BIT_23
+end_define
+
+begin_comment
+comment|/* Enable Jumbo Mode (Yukon-EC Ultra) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TX_JUMBO_DIS
+value|BIT_22
+end_define
+
+begin_comment
+comment|/* Disable Jumbo Mode (Yukon-EC Ultra) */
 end_comment
 
 begin_define
