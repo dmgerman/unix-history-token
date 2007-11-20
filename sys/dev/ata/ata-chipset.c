@@ -5664,7 +5664,9 @@ name|nsegs
 operator|<=
 name|ATA_DMA_ENTRIES
 argument_list|,
+operator|(
 literal|"too many DMA segment entries\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|args
@@ -17917,7 +17919,9 @@ name|nsegs
 operator|<=
 name|ATA_DMA_ENTRIES
 argument_list|,
+operator|(
 literal|"too many DMA segment entries\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|args
@@ -24657,7 +24661,9 @@ name|nsegs
 operator|<=
 name|ATA_DMA_ENTRIES
 argument_list|,
+operator|(
 literal|"too many DMA segment entries\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|args
@@ -32315,7 +32321,9 @@ name|nsegs
 operator|<=
 name|ATA_DMA_ENTRIES
 argument_list|,
+operator|(
 literal|"too many DMA segment entries\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|args
