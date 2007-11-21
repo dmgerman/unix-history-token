@@ -1167,9 +1167,6 @@ argument_list|(
 name|iv
 argument_list|)
 expr_stmt|;
-name|critical_exit
-argument_list|()
-expr_stmt|;
 comment|/* Schedule a heavyweight interrupt process. */
 if|if
 condition|(
@@ -1201,6 +1198,9 @@ else|else
 name|error
 operator|=
 literal|0
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
