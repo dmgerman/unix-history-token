@@ -75,7 +75,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbmaskrune
+name|__maskrune
 argument_list|(
 name|c
 argument_list|,
@@ -104,7 +104,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -135,7 +135,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -195,7 +195,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -224,7 +224,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -282,7 +282,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -311,7 +311,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -340,7 +340,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -369,7 +369,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -398,7 +398,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -427,7 +427,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -456,7 +456,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -485,7 +485,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -514,7 +514,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -543,7 +543,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -572,7 +572,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -601,7 +601,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbistype
+name|__istype
 argument_list|(
 name|c
 argument_list|,
@@ -685,7 +685,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbtolower
+name|__tolower
 argument_list|(
 name|c
 argument_list|)
@@ -712,7 +712,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__sbtoupper
+name|__toupper
 argument_list|(
 name|c
 argument_list|)

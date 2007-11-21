@@ -83,13 +83,6 @@ directive|include
 file|"setlocale.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|__mb_sb_limit
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|extern
 name|_RuneLocale
@@ -161,10 +154,6 @@ decl_stmt|;
 specifier|static
 name|int
 name|Cached__mb_cur_max
-decl_stmt|;
-specifier|static
-name|int
-name|Cached__mb_sb_limit
 decl_stmt|;
 specifier|static
 name|size_t
@@ -329,10 +318,6 @@ expr_stmt|;
 name|__mb_cur_max
 operator|=
 name|Cached__mb_cur_max
-expr_stmt|;
-name|__mb_sb_limit
-operator|=
-name|Cached__mb_sb_limit
 expr_stmt|;
 name|__mbrtowc
 operator|=
@@ -728,10 +713,6 @@ expr_stmt|;
 name|Cached__mb_cur_max
 operator|=
 name|__mb_cur_max
-expr_stmt|;
-name|Cached__mb_sb_limit
-operator|=
-name|__mb_sb_limit
 expr_stmt|;
 name|Cached__mbrtowc
 operator|=
