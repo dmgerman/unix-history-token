@@ -3584,6 +3584,15 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_phys_set_pool
+argument_list|(
+name|VM_FREEPOOL_DEFAULT
+argument_list|,
+name|m
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
