@@ -4709,6 +4709,10 @@ name|pd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|infoprint
+operator|=
+literal|0
+expr_stmt|;
 return|return;
 block|}
 if|if
