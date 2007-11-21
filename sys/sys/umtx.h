@@ -254,8 +254,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|UMTX_OP_MAX
+name|UMTX_OP_WAIT_UINT
 value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_OP_MAX
+value|12
 end_define
 
 begin_comment
