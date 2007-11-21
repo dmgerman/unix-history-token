@@ -151,6 +151,12 @@ operator|/
 literal|32
 index|]
 decl_stmt|;
+name|void
+modifier|*
+name|vbits
+init|=
+name|bits
+decl_stmt|;
 name|u
 operator|.
 name|e
@@ -291,11 +297,7 @@ name|fpi
 argument_list|,
 name|be
 argument_list|,
-operator|(
-name|ULong
-operator|*
-operator|)
-name|bits
+name|vbits
 argument_list|,
 operator|&
 name|kind
