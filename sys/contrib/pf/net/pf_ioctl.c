@@ -20046,7 +20046,9 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*	pfi_cleanup(); */
+name|pfi_cleanup
+argument_list|()
+expr_stmt|;
 name|pf_osfp_flush
 argument_list|()
 expr_stmt|;
