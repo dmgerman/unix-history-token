@@ -309,7 +309,7 @@ modifier|*
 name|curthread
 parameter_list|)
 block|{
-name|umtx_t
+name|long
 name|cycle
 decl_stmt|;
 name|int

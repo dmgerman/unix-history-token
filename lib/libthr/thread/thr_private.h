@@ -929,7 +929,7 @@ name|umutex
 name|lock
 decl_stmt|;
 comment|/* Internal condition variable cycle number. */
-name|umtx_t
+name|long
 name|cycle
 decl_stmt|;
 comment|/* How many low level locks the thread held. */
