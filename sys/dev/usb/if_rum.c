@@ -5225,6 +5225,12 @@ condition|(
 name|data
 operator|->
 name|m
+operator|!=
+name|NULL
+operator|&&
+name|data
+operator|->
+name|m
 operator|->
 name|m_flags
 operator|&
@@ -5240,13 +5246,8 @@ name|data
 operator|->
 name|m
 argument_list|,
-name|status
-operator|==
-name|USBD_NORMAL_COMPLETION
-condition|?
 literal|0
-else|:
-name|ETIMEDOUT
+comment|/*XXX*/
 argument_list|)
 expr_stmt|;
 if|if
