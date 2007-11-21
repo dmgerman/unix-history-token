@@ -321,6 +321,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|dblfault_handler
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+name|frame
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|int
 name|trap_pfault
@@ -344,15 +356,6 @@ name|trapframe
 modifier|*
 parameter_list|,
 name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|dblfault_handler
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2497,11 +2500,43 @@ end_comment
 begin_function
 name|void
 name|dblfault_handler
-parameter_list|()
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+name|frame
+parameter_list|)
 block|{
 name|printf
 argument_list|(
 literal|"\nFatal double fault\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"rip = 0x%lx\n"
+argument_list|,
+name|frame
+operator|->
+name|tf_rip
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"rsp = 0x%lx\n"
+argument_list|,
+name|frame
+operator|->
+name|tf_rsp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"rbp = 0x%lx\n"
+argument_list|,
+name|frame
+operator|->
+name|tf_rbp
 argument_list|)
 expr_stmt|;
 ifdef|#
