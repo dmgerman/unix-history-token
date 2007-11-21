@@ -3009,6 +3009,9 @@ index|[
 literal|0
 index|]
 operator|>
+operator|(
+name|u_int
+operator|)
 name|ceiling
 operator|)
 operator|||
@@ -3026,6 +3029,9 @@ index|[
 literal|0
 index|]
 operator|<
+operator|(
+name|u_int
+operator|)
 name|ceiling
 operator|)
 condition|)
@@ -3062,6 +3068,9 @@ index|[
 literal|0
 index|]
 operator|>
+operator|(
+name|u_int
+operator|)
 name|ceiling
 condition|)
 block|{
