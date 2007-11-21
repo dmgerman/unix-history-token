@@ -1495,28 +1495,28 @@ begin_define
 define|#
 directive|define
 name|MA_OWNED
-value|0x01
+value|LA_XLOCKED
 end_define
 
 begin_define
 define|#
 directive|define
 name|MA_NOTOWNED
-value|0x02
+value|LA_UNLOCKED
 end_define
 
 begin_define
 define|#
 directive|define
 name|MA_RECURSED
-value|0x04
+value|LA_RECURSED
 end_define
 
 begin_define
 define|#
 directive|define
 name|MA_NOTRECURSED
-value|0x08
+value|LA_NOTRECURSED
 end_define
 
 begin_endif
