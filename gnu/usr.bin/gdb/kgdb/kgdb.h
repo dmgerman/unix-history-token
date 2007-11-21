@@ -56,6 +56,9 @@ decl_stmt|;
 name|int
 name|pid
 decl_stmt|;
+name|u_char
+name|cpu
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -614,6 +614,14 @@ name|paddr
 operator|=
 name|paddr
 expr_stmt|;
+name|kt
+operator|->
+name|cpu
+operator|=
+name|td
+operator|.
+name|td_oncpu
+expr_stmt|;
 name|first
 operator|=
 name|kt
