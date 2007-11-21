@@ -2149,28 +2149,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVICE_POLLING
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|poll_handler_t
-name|em_poll
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* POLLING */
-end_comment
-
 begin_else
 else|#
 directive|else
@@ -2282,6 +2260,28 @@ end_endif
 
 begin_comment
 comment|/* EM_FAST_IRQ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|poll_handler_t
+name|em_poll
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* POLLING */
 end_comment
 
 begin_comment
