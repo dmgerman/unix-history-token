@@ -1215,7 +1215,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * This is version 1 of the KLD file status structure. It is identified  * by it's _size_ in the version field.  */
+comment|/*  * This is version 1 of the KLD file status structure. It is identified  * by its _size_ in the version field.  */
 end_comment
 
 begin_struct
@@ -1225,7 +1225,7 @@ block|{
 name|int
 name|version
 decl_stmt|;
-comment|/* set to sizeof(linker_file_stat) */
+comment|/* set to sizeof(struct kld_file_stat_1) */
 name|char
 name|name
 index|[
@@ -1266,7 +1266,7 @@ block|{
 name|int
 name|version
 decl_stmt|;
-comment|/* set to sizeof(linker_file_stat) */
+comment|/* set to sizeof(struct kld_file_stat) */
 name|char
 name|name
 index|[
