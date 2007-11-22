@@ -832,11 +832,11 @@ name|NULL
 block|,
 name|NULL
 block|,
-name|NULL
-block|,
-name|NULL
-block|,
 name|ASMC_FAN_FUNCS
+block|,
+name|NULL
+block|,
+name|NULL
 block|,
 name|ASMC_MM_TEMPS
 block|,
