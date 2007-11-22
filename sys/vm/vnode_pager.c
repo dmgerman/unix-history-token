@@ -1501,16 +1501,10 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX work around SMP data integrity race 			 * by unmapping the page from user processes. 			 * The garbage we just cleared may be mapped 			 * to a user process running on another cpu 			 * and this code is not running through normal 			 * I/O channels which handle SMP issues for 			 * us, so unmap page to synchronize all cpus. 			 * 			 * XXX should vm_pager_unmap_page() have 			 * dealt with this? 			 */
+comment|/* 			 * Clear out partial-page dirty bits.  This 			 * has the side effect of setting the valid 			 * bits, but that is ok.  There are a bunch 			 * of places in the VM system where we expected 			 * m->dirty == VM_PAGE_BITS_ALL.  The file EOF 			 * case is one of them.  If the page is still 			 * partially dirty, make it fully dirty. 			 * 			 * note that we do not clear out the valid 			 * bits.  This would prevent bogus_page 			 * replacement from working properly. 			 */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|pmap_remove_all
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* 			 * Clear out partial-page dirty bits.  This 			 * has the side effect of setting the valid 			 * bits, but that is ok.  There are a bunch 			 * of places in the VM system where we expected 			 * m->dirty == VM_PAGE_BITS_ALL.  The file EOF 			 * case is one of them.  If the page is still 			 * partially dirty, make it fully dirty. 			 * 			 * note that we do not clear out the valid 			 * bits.  This would prevent bogus_page 			 * replacement from working properly. 			 */
 name|vm_page_set_validclean
 argument_list|(
 name|m
