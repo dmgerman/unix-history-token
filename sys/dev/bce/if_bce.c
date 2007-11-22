@@ -784,7 +784,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|bce_shutdown
 parameter_list|(
 name|device_t
@@ -4466,7 +4466,7 @@ comment|/* Returns:                                                             
 end_comment
 
 begin_comment
-comment|/*   Nothing                                                                */
+comment|/*   0 on success, positive value on failure.                               */
 end_comment
 
 begin_comment
@@ -4475,7 +4475,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|bce_shutdown
 parameter_list|(
 name|device_t
@@ -4556,6 +4556,11 @@ argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
