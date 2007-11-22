@@ -757,6 +757,10 @@ name|l
 operator|=
 name|sp
 expr_stmt|;
+name|sp
+operator|=
+name|NULL
+expr_stmt|;
 name|llines
 index|[
 name|recno
