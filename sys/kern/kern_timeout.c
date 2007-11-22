@@ -724,6 +724,11 @@ name|lock_class
 modifier|*
 name|class
 decl_stmt|;
+name|struct
+name|lock_object
+modifier|*
+name|c_lock
+decl_stmt|;
 name|int
 name|c_flags
 decl_stmt|,
@@ -783,6 +788,12 @@ condition|?
 literal|0
 else|:
 literal|1
+expr_stmt|;
+name|c_lock
+operator|=
+name|c
+operator|->
+name|c_lock
 expr_stmt|;
 name|c_func
 operator|=
@@ -872,7 +883,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|class
+name|c_lock
 operator|!=
 name|NULL
 condition|)
@@ -881,8 +892,6 @@ name|class
 operator|->
 name|lc_lock
 argument_list|(
-name|c
-operator|->
 name|c_lock
 argument_list|,
 name|sharedlock
@@ -898,8 +907,6 @@ name|class
 operator|->
 name|lc_unlock
 argument_list|(
-name|c
-operator|->
 name|c_lock
 argument_list|)
 expr_stmt|;
@@ -914,8 +921,6 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|c
-operator|->
 name|c_lock
 operator|==
 operator|&
@@ -1102,8 +1107,6 @@ name|class
 operator|->
 name|lc_unlock
 argument_list|(
-name|c
-operator|->
 name|c_lock
 argument_list|)
 expr_stmt|;
