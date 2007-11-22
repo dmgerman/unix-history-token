@@ -3300,12 +3300,6 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
@@ -3336,12 +3330,6 @@ expr_stmt|;
 name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|if
