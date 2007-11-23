@@ -8940,7 +8940,9 @@ argument_list|)
 condition|)
 name|taskqueue_enqueue_fast
 argument_list|(
-name|taskqueue_fast
+name|sc
+operator|->
+name|nfe_tq
 argument_list|,
 operator|&
 name|sc
@@ -9994,7 +9996,9 @@ argument_list|)
 expr_stmt|;
 name|taskqueue_enqueue_fast
 argument_list|(
-name|taskqueue_fast
+name|sc
+operator|->
+name|nfe_tq
 argument_list|,
 operator|&
 name|sc
@@ -10237,7 +10241,9 @@ argument_list|)
 condition|)
 name|taskqueue_enqueue_fast
 argument_list|(
-name|taskqueue_fast
+name|sc
+operator|->
+name|nfe_tq
 argument_list|,
 operator|&
 name|sc
@@ -10270,7 +10276,9 @@ condition|)
 block|{
 name|taskqueue_enqueue_fast
 argument_list|(
-name|taskqueue_fast
+name|sc
+operator|->
+name|nfe_tq
 argument_list|,
 operator|&
 name|sc
@@ -15079,7 +15087,9 @@ argument_list|)
 condition|)
 name|taskqueue_enqueue_fast
 argument_list|(
-name|taskqueue_fast
+name|sc
+operator|->
+name|nfe_tq
 argument_list|,
 operator|&
 name|sc
