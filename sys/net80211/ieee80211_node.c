@@ -2981,6 +2981,7 @@ name|se_htcap_ie
 operator|!=
 name|NULL
 condition|)
+block|{
 name|ieee80211_saveie
 argument_list|(
 operator|&
@@ -2993,6 +2994,16 @@ operator|->
 name|se_htcap_ie
 argument_list|)
 expr_stmt|;
+name|ieee80211_parse_htcap
+argument_list|(
+name|ni
+argument_list|,
+name|ni
+operator|->
+name|ni_htcap_ie
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|se
