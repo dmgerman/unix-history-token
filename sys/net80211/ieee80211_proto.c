@@ -2717,9 +2717,9 @@ comment|/* IEEE80211_MODE_11A */
 block|{
 literal|3
 block|,
-literal|5
+literal|4
 block|,
-literal|7
+literal|6
 block|,
 literal|0
 block|,
@@ -2743,9 +2743,9 @@ comment|/* IEEE80211_MODE_11G */
 block|{
 literal|3
 block|,
-literal|5
+literal|4
 block|,
-literal|7
+literal|6
 block|,
 literal|0
 block|,
@@ -2805,7 +2805,6 @@ literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11NA */
-comment|/* XXXcheck*/
 block|{
 literal|3
 block|,
@@ -2819,7 +2818,6 @@ literal|0
 block|}
 block|,
 comment|/* IEEE80211_MODE_11NG */
-comment|/* XXXcheck*/
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2864,7 +2862,7 @@ comment|/* IEEE80211_MODE_11A */
 block|{
 literal|7
 block|,
-literal|5
+literal|4
 block|,
 literal|10
 block|,
@@ -2890,7 +2888,7 @@ comment|/* IEEE80211_MODE_11G */
 block|{
 literal|7
 block|,
-literal|5
+literal|4
 block|,
 literal|10
 block|,
@@ -3009,9 +3007,9 @@ comment|/* IEEE80211_MODE_11A */
 block|{
 literal|1
 block|,
-literal|4
+literal|3
 block|,
-literal|5
+literal|4
 block|,
 literal|188
 block|,
@@ -3035,9 +3033,9 @@ comment|/* IEEE80211_MODE_11G */
 block|{
 literal|1
 block|,
-literal|4
+literal|3
 block|,
-literal|5
+literal|4
 block|,
 literal|188
 block|,
@@ -3154,9 +3152,9 @@ comment|/* IEEE80211_MODE_11A */
 block|{
 literal|1
 block|,
-literal|3
+literal|2
 block|,
-literal|4
+literal|3
 block|,
 literal|102
 block|,
@@ -3180,9 +3178,9 @@ comment|/* IEEE80211_MODE_11G */
 block|{
 literal|1
 block|,
-literal|3
+literal|2
 block|,
-literal|4
+literal|3
 block|,
 literal|102
 block|,
@@ -3299,7 +3297,7 @@ comment|/* IEEE80211_MODE_11A */
 block|{
 literal|3
 block|,
-literal|5
+literal|4
 block|,
 literal|10
 block|,
@@ -3325,7 +3323,7 @@ comment|/* IEEE80211_MODE_11G */
 block|{
 literal|3
 block|,
-literal|5
+literal|4
 block|,
 literal|10
 block|,
@@ -3375,7 +3373,7 @@ block|}
 block|,
 comment|/* IEEE80211_MODE_STURBO_A */
 block|{
-literal|1
+literal|3
 block|,
 literal|4
 block|,
@@ -3388,7 +3386,7 @@ block|}
 block|,
 comment|/* IEEE80211_MODE_11NA */
 block|{
-literal|1
+literal|3
 block|,
 literal|4
 block|,
@@ -3444,9 +3442,9 @@ comment|/* IEEE80211_MODE_11A */
 block|{
 literal|2
 block|,
-literal|4
+literal|3
 block|,
-literal|5
+literal|4
 block|,
 literal|188
 block|,
@@ -3470,9 +3468,9 @@ comment|/* IEEE80211_MODE_11G */
 block|{
 literal|2
 block|,
-literal|4
+literal|3
 block|,
-literal|5
+literal|4
 block|,
 literal|188
 block|,
@@ -3589,9 +3587,9 @@ comment|/* IEEE80211_MODE_11A */
 block|{
 literal|2
 block|,
-literal|3
+literal|2
 block|,
-literal|4
+literal|3
 block|,
 literal|102
 block|,
@@ -3615,9 +3613,9 @@ comment|/* IEEE80211_MODE_11G */
 block|{
 literal|2
 block|,
-literal|3
+literal|2
 block|,
-literal|4
+literal|3
 block|,
 literal|102
 block|,
