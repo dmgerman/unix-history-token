@@ -792,6 +792,12 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|void
+modifier|*
+name|vl
+init|=
+name|l
+decl_stmt|;
 if|if
 condition|(
 name|type
@@ -822,11 +828,7 @@ argument_list|)
 expr_stmt|;
 name|sp
 operator|=
-operator|(
-name|u_int32_t
-operator|*
-operator|)
-name|l
+name|vl
 expr_stmt|;
 name|fp
 operator|->
