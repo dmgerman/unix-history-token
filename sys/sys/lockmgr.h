@@ -577,21 +577,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|transferlockers
-parameter_list|(
-name|struct
-name|lock
-modifier|*
-parameter_list|,
-name|struct
-name|lock
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|lockmgr_printinfo
 parameter_list|(
 name|struct
