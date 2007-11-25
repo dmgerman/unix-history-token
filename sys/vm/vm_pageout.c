@@ -938,7 +938,6 @@ comment|/*  * vm_pageout_fallback_object_lock:  *   * Lock vm object currently a
 end_comment
 
 begin_function
-specifier|static
 name|boolean_t
 name|vm_pageout_fallback_object_lock
 parameter_list|(
