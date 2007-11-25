@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rwlock.h>
+file|<sys/rmlock.h>
 end_include
 
 begin_struct_decl
@@ -206,8 +206,8 @@ name|int
 name|ph_nhooks
 decl_stmt|;
 name|struct
-name|rwlock
-name|ph_mtx
+name|rmlock
+name|ph_lock
 decl_stmt|;
 union|union
 block|{
@@ -396,11 +396,34 @@ end_define
 begin_define
 define|#
 directive|define
-name|PFIL_RLOCK
+name|PFIL_LOCK_INIT
 parameter_list|(
 name|p
 parameter_list|)
-value|rw_rlock(&(p)->ph_mtx)
+define|\
+value|rm_init(&(p)->ph_lock, "PFil hook read/write mutex", LO_RECURSABLE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFIL_LOCK_DESTROY
+parameter_list|(
+name|p
+parameter_list|)
+value|rm_destroy(&(p)->ph_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFIL_RLOCK
+parameter_list|(
+name|p
+parameter_list|,
+name|t
+parameter_list|)
+value|rm_rlock(&(p)->ph_lock, (t))
 end_define
 
 begin_define
@@ -410,7 +433,7 @@ name|PFIL_WLOCK
 parameter_list|(
 name|p
 parameter_list|)
-value|rw_wlock(&(p)->ph_mtx)
+value|rm_wlock(&(p)->ph_lock)
 end_define
 
 begin_define
@@ -419,8 +442,10 @@ directive|define
 name|PFIL_RUNLOCK
 parameter_list|(
 name|p
+parameter_list|,
+name|t
 parameter_list|)
-value|rw_runlock(&(p)->ph_mtx)
+value|rm_runlock(&(p)->ph_lock, (t))
 end_define
 
 begin_define
@@ -430,7 +455,7 @@ name|PFIL_WUNLOCK
 parameter_list|(
 name|p
 parameter_list|)
-value|rw_wunlock(&(p)->ph_mtx)
+value|rm_wunlock(&(p)->ph_lock)
 end_define
 
 begin_define

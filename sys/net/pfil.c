@@ -44,7 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rwlock.h>
+file|<sys/rmlock.h>
 end_include
 
 begin_include
@@ -238,6 +238,10 @@ name|inp
 parameter_list|)
 block|{
 name|struct
+name|rm_priotracker
+name|rmpt
+decl_stmt|;
+name|struct
 name|packet_filter_hook
 modifier|*
 name|pfh
@@ -258,6 +262,9 @@ decl_stmt|;
 name|PFIL_RLOCK
 argument_list|(
 name|ph
+argument_list|,
+operator|&
+name|rmpt
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -346,6 +353,9 @@ block|}
 name|PFIL_RUNLOCK
 argument_list|(
 name|ph
+argument_list|,
+operator|&
+name|rmpt
 argument_list|)
 expr_stmt|;
 operator|*
@@ -424,14 +434,9 @@ block|}
 name|PFIL_LIST_UNLOCK
 argument_list|()
 expr_stmt|;
-name|rw_init
+name|PFIL_LOCK_INIT
 argument_list|(
-operator|&
 name|ph
-operator|->
-name|ph_mtx
-argument_list|,
-literal|"PFil hook read/write mutex"
 argument_list|)
 expr_stmt|;
 name|PFIL_WLOCK
@@ -565,12 +570,9 @@ argument_list|,
 name|M_IFADDR
 argument_list|)
 expr_stmt|;
-name|rw_destroy
+name|PFIL_LOCK_DESTROY
 argument_list|(
-operator|&
 name|ph
-operator|->
-name|ph_mtx
 argument_list|)
 expr_stmt|;
 return|return
