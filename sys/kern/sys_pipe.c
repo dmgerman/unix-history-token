@@ -4005,6 +4005,11 @@ name|pipe_state
 operator||=
 name|PIPE_WANTW
 expr_stmt|;
+name|pipeselwakeup
+argument_list|(
+name|wpipe
+argument_list|)
+expr_stmt|;
 name|pipeunlock
 argument_list|(
 name|wpipe
@@ -4089,6 +4094,11 @@ operator|->
 name|pipe_state
 operator||=
 name|PIPE_WANTW
+expr_stmt|;
+name|pipeselwakeup
+argument_list|(
+name|wpipe
+argument_list|)
 expr_stmt|;
 name|pipeunlock
 argument_list|(
@@ -4850,6 +4860,11 @@ name|wpipe
 argument_list|)
 expr_stmt|;
 block|}
+name|pipeselwakeup
+argument_list|(
+name|wpipe
+argument_list|)
+expr_stmt|;
 name|pipeunlock
 argument_list|(
 name|wpipe
