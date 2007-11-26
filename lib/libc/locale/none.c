@@ -793,6 +793,14 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|__mb_sb_limit
+init|=
+literal|256
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|size_t
 function_decl|(
