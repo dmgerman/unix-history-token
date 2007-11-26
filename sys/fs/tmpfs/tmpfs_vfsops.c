@@ -638,12 +638,6 @@ name|tn_vpstate
 operator|=
 literal|0
 expr_stmt|;
-name|node
-operator|->
-name|tn_lookup_dirent
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 operator|(
 literal|0
