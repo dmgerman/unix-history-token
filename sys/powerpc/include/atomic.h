@@ -1064,6 +1064,104 @@ operator|)
 return|;
 end_return
 
+begin_function
+unit|}  static
+name|__inline
+name|u_long
+name|atomic_cmpset_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_long
+name|cmpval
+parameter_list|,
+name|u_long
+name|newval
+parameter_list|)
+block|{
+name|uint32_t
+name|ret
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
+asm|__asm __volatile (
+literal|"1:\tlwarx %0, 0, %2\n\t"
+comment|/* load old value */
+literal|"cmplw %3, %0\n\t"
+comment|/* compare */
+literal|"bne 2f\n\t"
+comment|/* exit if not equal */
+literal|"stwcx. %4, 0, %2\n\t"
+comment|/* attempt to store */
+literal|"bne- 1b\n\t"
+comment|/* spin if failed */
+literal|"li %0, 1\n\t"
+comment|/* success - retval = 1 */
+literal|"b 3f\n\t"
+comment|/* we've succeeded */
+literal|"2:\n\t"
+literal|"stwcx. %0, 0, %2\n\t"
+comment|/* clear reservation (74xx) */
+literal|"li %0, 0\n\t"
+comment|/* failure - retval = 0 */
+literal|"3:\n\t"
+operator|:
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|cmpval
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|newval
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_return
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+end_return
+
 begin_if
 unit|}
 if|#
@@ -1089,13 +1187,6 @@ begin_define
 define|#
 directive|define
 name|atomic_cmpset_int
-value|atomic_cmpset_32
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_cmpset_long
 value|atomic_cmpset_32
 end_define
 
@@ -1215,6 +1306,85 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|u_long
+name|atomic_cmpset_acq_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_long
+name|cmpval
+parameter_list|,
+name|u_long
+name|newval
+parameter_list|)
+block|{
+name|int
+name|retval
+decl_stmt|;
+name|retval
+operator|=
+name|atomic_cmpset_long
+argument_list|(
+name|p
+argument_list|,
+name|cmpval
+argument_list|,
+name|newval
+argument_list|)
+expr_stmt|;
+name|powerpc_mb
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|retval
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|uint32_t
+name|atomic_cmpset_rel_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_long
+name|cmpval
+parameter_list|,
+name|u_long
+name|newval
+parameter_list|)
+block|{
+name|powerpc_mb
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|atomic_cmpset_long
+argument_list|(
+name|p
+argument_list|,
+name|cmpval
+argument_list|,
+name|newval
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -1227,36 +1397,6 @@ define|#
 directive|define
 name|atomic_cmpset_rel_int
 value|atomic_cmpset_rel_32
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_cmpset_acq_long
-parameter_list|(
-name|dst
-parameter_list|,
-name|old
-parameter_list|,
-name|new
-parameter_list|)
-define|\
-value|atomic_cmpset_acq_32((volatile u_int *)(dst), (u_int)(old), (u_int)(new))
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_cmpset_rel_long
-parameter_list|(
-name|dst
-parameter_list|,
-name|old
-parameter_list|,
-name|new
-parameter_list|)
-define|\
-value|atomic_cmpset_rel_32((volatile u_int *)(dst), (u_int)(old), (u_int)(new))
 end_define
 
 begin_define
