@@ -1145,9 +1145,6 @@ argument_list|(
 name|isrc
 argument_list|)
 expr_stmt|;
-name|critical_exit
-argument_list|()
-expr_stmt|;
 comment|/* Schedule the ithread if needed. */
 if|if
 condition|(
@@ -1173,6 +1170,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|critical_exit
+argument_list|()
+expr_stmt|;
 name|td
 operator|->
 name|td_intr_nesting_level
