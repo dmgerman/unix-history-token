@@ -1819,7 +1819,7 @@ comment|/* Function:    fr_newauth                                              
 end_comment
 
 begin_comment
-comment|/* Returns:     int - 0 == success, else error                              */
+comment|/* Returns:     int - 1 == success, 0 = did not put packet on auth queue    */
 end_comment
 
 begin_comment
@@ -1980,12 +1980,6 @@ name|fr_authend
 operator|=
 literal|0
 expr_stmt|;
-name|RWLOCK_EXIT
-argument_list|(
-operator|&
-name|ipf_auth
-argument_list|)
-expr_stmt|;
 name|fra
 operator|=
 name|fr_auth
@@ -1997,6 +1991,12 @@ operator|->
 name|fra_index
 operator|=
 name|i
+expr_stmt|;
+name|RWLOCK_EXIT
+argument_list|(
+operator|&
+name|ipf_auth
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4506,13 +4506,6 @@ operator|&
 name|ipf_auth
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We exit ipf_global here because a program that enters in 	 * here will have a lock on it and goto sleep having this lock. 	 * If someone were to do an 'ipf -D' the system would then 	 * deadlock.  The catch with releasing it here is that the 	 * caller of this function expects it to be held when we 	 * return so we have to reacquire it in here. 	 */
-name|RWLOCK_EXIT
-argument_list|(
-operator|&
-name|ipf_global
-argument_list|)
-expr_stmt|;
 name|MUTEX_ENTER
 argument_list|(
 operator|&
@@ -4637,12 +4630,6 @@ name|MUTEX_EXIT
 argument_list|(
 operator|&
 name|ipf_authmx
-argument_list|)
-expr_stmt|;
-name|READ_ENTER
-argument_list|(
-operator|&
-name|ipf_global
 argument_list|)
 expr_stmt|;
 if|if
@@ -4985,6 +4972,12 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
+name|WRITE_ENTER
+argument_list|(
+operator|&
+name|ipf_auth
+argument_list|)
+expr_stmt|;
 name|fr_authused
 operator|--
 expr_stmt|;
@@ -5062,6 +5055,12 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+name|RWLOCK_EXIT
+argument_list|(
+operator|&
+name|ipf_auth
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
