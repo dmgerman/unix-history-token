@@ -192,12 +192,6 @@ operator|->
 name|d_buf
 operator|==
 name|NULL
-operator|||
-name|src
-operator|->
-name|d_size
-operator|==
-literal|0
 condition|)
 block|{
 name|LIBELF_SET_ERROR
@@ -509,6 +503,13 @@ name|dsz
 expr_stmt|;
 if|if
 condition|(
+name|src
+operator|->
+name|d_size
+operator|==
+literal|0
+operator|||
+operator|(
 name|db
 operator|==
 name|sb
@@ -523,6 +524,7 @@ operator|&&
 name|fsz
 operator|==
 name|msz
+operator|)
 condition|)
 return|return
 operator|(
