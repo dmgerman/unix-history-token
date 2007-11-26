@@ -1897,9 +1897,6 @@ name|ih_argument
 argument_list|)
 expr_stmt|;
 block|}
-name|critical_exit
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|thread
@@ -1929,6 +1926,9 @@ name|ia64_send_eoi
 argument_list|(
 name|vector
 argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 block|}
 end_function
