@@ -2116,9 +2116,6 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-name|critical_exit
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|thread
@@ -2169,6 +2166,9 @@ name|uintptr_t
 operator|)
 name|vector
 argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
