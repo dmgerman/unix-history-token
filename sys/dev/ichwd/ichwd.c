@@ -256,6 +256,14 @@ literal|8
 block|}
 block|,
 block|{
+name|DEVICEID_63XXESB
+block|,
+literal|"Intel 63XXESB watchdog timer"
+block|,
+literal|8
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
