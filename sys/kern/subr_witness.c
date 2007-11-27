@@ -1810,6 +1810,13 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
+block|{
+literal|"scrlock"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
 ifdef|#
 directive|ifdef
 name|__i386__
