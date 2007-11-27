@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"20071102"
+value|"20071127"
 end_define
 
 begin_include
@@ -6826,12 +6826,24 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|WPI_LOCK_DECL
+expr_stmt|;
+name|WPI_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|callout_stop
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|calib_to
+argument_list|)
+expr_stmt|;
+name|WPI_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 switch|switch
