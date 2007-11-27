@@ -690,6 +690,13 @@ name|atomic_subtract_ptr
 value|atomic_subtract_32
 end_define
 
+begin_define
+define|#
+directive|define
+name|atomic_readandclear_ptr
+value|atomic_readandclear_32
+end_define
+
 begin_if
 if|#
 directive|if

@@ -1463,6 +1463,13 @@ name|atomic_readandclear_long
 value|atomic_readandclear_64
 end_define
 
+begin_define
+define|#
+directive|define
+name|atomic_readandclear_ptr
+value|atomic_readandclear_64
+end_define
+
 begin_comment
 comment|/*  * Atomically add the value of v to the integer pointed to by p and return  * the previous value of *p.  *  * XXX: Should we use the fetchadd instruction here?  */
 end_comment
