@@ -1814,9 +1814,6 @@ name|ih_argument
 argument_list|)
 expr_stmt|;
 block|}
-name|critical_exit
-argument_list|()
-expr_stmt|;
 comment|/* 	 * If the ithread needs to run, disable the source and schedule the 	 * thread. 	 */
 if|if
 condition|(
@@ -1870,6 +1867,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|critical_exit
+argument_list|()
+expr_stmt|;
 name|sched_unpin
 argument_list|()
 expr_stmt|;
