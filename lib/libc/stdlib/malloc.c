@@ -8,7 +8,7 @@ comment|/*  * MALLOC_PRODUCTION disables assertions and statistics gathering.  I
 end_comment
 
 begin_comment
-comment|/* #define MALLOC_PRODUCTION */
+comment|/* #define	MALLOC_PRODUCTION */
 end_comment
 
 begin_ifndef
@@ -559,11 +559,11 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_PTR
-value|(1<< SIZEOF_PTR_2POW)
+value|(1U<< SIZEOF_PTR_2POW)
 end_define
 
 begin_comment
-comment|/* sizeof(int) == (1<< SIZEOF_INT_2POW). */
+comment|/* sizeof(int) == (1U<< SIZEOF_INT_2POW). */
 end_comment
 
 begin_ifndef
@@ -643,7 +643,7 @@ begin_define
 define|#
 directive|define
 name|CACHELINE
-value|((size_t)(1<< CACHELINE_2POW))
+value|((size_t)(1U<< CACHELINE_2POW))
 end_define
 
 begin_comment
@@ -672,7 +672,7 @@ begin_define
 define|#
 directive|define
 name|SMALL_MAX_DEFAULT
-value|(1<< SMALL_MAX_2POW_DEFAULT)
+value|(1U<< SMALL_MAX_2POW_DEFAULT)
 end_define
 
 begin_comment
@@ -708,7 +708,7 @@ begin_define
 define|#
 directive|define
 name|RUN_MAX_SMALL
-value|(1<< RUN_MAX_SMALL_2POW)
+value|(1U<< RUN_MAX_SMALL_2POW)
 end_define
 
 begin_comment
@@ -1887,7 +1887,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int32_t
+name|int
 name|opt_narenas_lshift
 init|=
 literal|0
@@ -5357,11 +5357,20 @@ name|ret
 operator|==
 name|NULL
 condition|)
+block|{
 name|ret
 operator|=
 name|choose_arena_hard
 argument_list|()
 expr_stmt|;
+name|assert
+argument_list|(
+name|ret
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 else|#
 directive|else
 if|if
@@ -5875,7 +5884,7 @@ comment|/* Clear bit. */
 name|mask
 operator|^=
 operator|(
-literal|1
+literal|1U
 operator|<<
 name|bit
 operator|)
@@ -5986,7 +5995,7 @@ comment|/* Clear bit. */
 name|mask
 operator|^=
 operator|(
-literal|1
+literal|1U
 operator|<<
 name|bit
 operator|)
@@ -6062,7 +6071,7 @@ name|SIZE_INV
 parameter_list|(
 name|s
 parameter_list|)
-value|(((1<< SIZE_INV_SHIFT) / (s<< QUANTUM_2POW_MIN)) + 1)
+value|(((1U<< SIZE_INV_SHIFT) / (s<< QUANTUM_2POW_MIN)) + 1)
 specifier|static
 specifier|const
 name|unsigned
@@ -6909,7 +6918,7 @@ name|elm
 index|]
 operator|&
 operator|(
-literal|1
+literal|1U
 operator|<<
 name|bit
 operator|)
@@ -6926,7 +6935,7 @@ name|elm
 index|]
 operator||=
 operator|(
-literal|1
+literal|1U
 operator|<<
 name|bit
 operator|)
@@ -8429,7 +8438,7 @@ name|nregs
 operator|&
 operator|(
 operator|(
-literal|1
+literal|1U
 operator|<<
 operator|(
 name|SIZEOF_INT_2POW
@@ -8461,7 +8470,7 @@ name|UINT_MAX
 operator|>>
 operator|(
 operator|(
-literal|1
+literal|1U
 operator|<<
 operator|(
 name|SIZEOF_INT_2POW
@@ -8820,7 +8829,7 @@ name|try_nregs
 operator|&
 operator|(
 operator|(
-literal|1
+literal|1U
 operator|<<
 operator|(
 name|SIZEOF_INT_2POW
@@ -8942,7 +8951,7 @@ name|try_nregs
 operator|&
 operator|(
 operator|(
-literal|1
+literal|1U
 operator|<<
 operator|(
 name|SIZEOF_INT_2POW
@@ -9242,7 +9251,7 @@ condition|(
 name|size
 operator|<
 operator|(
-literal|1
+literal|1U
 operator|<<
 name|TINY_MIN_2POW
 operator|)
@@ -9250,7 +9259,7 @@ condition|)
 name|size
 operator|=
 operator|(
-literal|1
+literal|1U
 operator|<<
 name|TINY_MIN_2POW
 operator|)
@@ -11182,7 +11191,7 @@ operator|->
 name|reg_size
 operator|=
 operator|(
-literal|1
+literal|1U
 operator|<<
 operator|(
 name|TINY_MIN_2POW
@@ -13482,8 +13491,6 @@ argument_list|,
 name|huge_ndalloc
 argument_list|,
 name|huge_allocated
-operator|*
-name|chunksize
 argument_list|)
 expr_stmt|;
 comment|/* Print stats for each arena. */
@@ -14267,7 +14274,7 @@ expr_stmt|;
 name|small_max
 operator|=
 operator|(
-literal|1
+literal|1U
 operator|<<
 name|opt_small_max_2pow
 operator|)
@@ -14321,7 +14328,7 @@ comment|/* Set variables according to the value of opt_quantum_2pow. */
 name|quantum
 operator|=
 operator|(
-literal|1
+literal|1U
 operator|<<
 name|opt_quantum_2pow
 operator|)
@@ -14633,7 +14640,7 @@ name|narenas
 operator|<<=
 name|opt_narenas_lshift
 expr_stmt|;
-comment|/* 		 * Make sure not to exceed the limits of what base_malloc() 		 * can handle. 		 */
+comment|/* 		 * Make sure not to exceed the limits of what base_alloc() can 		 * handle. 		 */
 if|if
 condition|(
 name|narenas
@@ -14669,14 +14676,16 @@ if|if
 condition|(
 operator|(
 name|narenas
-operator|<<
+operator|>>
+operator|-
 name|opt_narenas_lshift
 operator|)
 operator|<
 name|narenas
 condition|)
 name|narenas
-operator|<<=
+operator|>>=
+operator|-
 name|opt_narenas_lshift
 expr_stmt|;
 comment|/* Make sure there is at least one arena. */
@@ -14964,7 +14973,7 @@ operator|*
 name|narenas
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize one arena here.  The rest are lazily created in 	 * arena_choose_hard(). 	 */
+comment|/* 	 * Initialize one arena here.  The rest are lazily created in 	 * choose_arena_hard(). 	 */
 name|arenas_extend
 argument_list|(
 literal|0
