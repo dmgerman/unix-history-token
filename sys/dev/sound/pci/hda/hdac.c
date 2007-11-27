@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20071020_0048"
+value|"20071122_0049"
 end_define
 
 begin_define
@@ -397,29 +397,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|HDA_NVIDIA_MCP61A
+name|HDA_NVIDIA_MCP61_1
 value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x03e4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_NVIDIA_MCP61B
+name|HDA_NVIDIA_MCP61_2
 value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x03f0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_NVIDIA_MCP65A
+name|HDA_NVIDIA_MCP65_1
 value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x044a)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_NVIDIA_MCP65B
+name|HDA_NVIDIA_MCP65_2
 value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x044b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP67_1
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x055c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP67_2
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x055d)
 end_define
 
 begin_define
@@ -703,6 +717,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACER_A4520_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ACER, 0x0127)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACER_3681WXM_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ACER, 0x0110)
 end_define
@@ -938,6 +959,24 @@ value|HDA_MODEL_CONSTRUCT(MEDION, 0xffff)
 end_define
 
 begin_comment
+comment|/* Apple Computer Inc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APPLE_VENDORID
+value|0x106b
+end_define
+
+begin_define
+define|#
+directive|define
+name|APPLE_MB3_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(APPLE, 0x00a1)
+end_define
+
+begin_comment
 comment|/*  * Apple Intel MacXXXX seems using Sigmatel codec/vendor id  * instead of their own, which is beyond my comprehension  * (see HDA_CODEC_STAC9221 below).  */
 end_comment
 
@@ -1046,6 +1085,13 @@ define|#
 directive|define
 name|TOSHIBA_U200_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(TOSHIBA, 0x0001)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOSHIBA_A135_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(TOSHIBA, 0xff01)
 end_define
 
 begin_define
@@ -1831,27 +1877,33 @@ literal|"NVidia MCP55"
 block|}
 block|,
 block|{
-name|HDA_NVIDIA_MCP61A
+name|HDA_NVIDIA_MCP61_1
 block|,
-literal|"NVidia MCP61A"
+literal|"NVidia MCP61"
 block|}
 block|,
 block|{
-name|HDA_NVIDIA_MCP61B
+name|HDA_NVIDIA_MCP61_2
 block|,
-literal|"NVidia MCP61B"
+literal|"NVidia MCP61"
 block|}
 block|,
 block|{
-name|HDA_NVIDIA_MCP65A
+name|HDA_NVIDIA_MCP65_1
 block|,
-literal|"NVidia MCP65A"
+literal|"NVidia MCP65"
 block|}
 block|,
 block|{
-name|HDA_NVIDIA_MCP65B
+name|HDA_NVIDIA_MCP67_1
 block|,
-literal|"NVidia MCP65B"
+literal|"NVidia MCP67"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP67_2
+block|,
+literal|"NVidia MCP67"
 block|}
 block|,
 block|{
@@ -3328,6 +3380,33 @@ literal|1
 block|}
 block|,
 block|{
+name|TOSHIBA_A135_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC861VD
+block|,
+name|HDAC_HP_SWITCH_CTL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+literal|27
+block|,
+block|{
+literal|20
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
 name|DELL_D820_SUBVENDOR
 block|,
 name|HDA_CODEC_STAC9220
@@ -3401,6 +3480,35 @@ block|{
 literal|5
 block|,
 literal|7
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
+name|APPLE_MB3_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC885
+block|,
+name|HDAC_HP_SWITCH_CTL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+literal|21
+block|,
+block|{
+literal|20
+block|,
+literal|22
 block|,
 operator|-
 literal|1
@@ -3523,6 +3631,33 @@ block|{
 name|ACER_3681WXM_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC883
+block|,
+name|HDAC_HP_SWITCH_CTL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+literal|20
+block|,
+block|{
+literal|21
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
+name|ACER_A4520_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC268
 block|,
 name|HDAC_HP_SWITCH_CTL
 block|,
@@ -15640,8 +15775,17 @@ name|codec
 operator|->
 name|sc
 decl_stmt|;
+name|struct
+name|hdac_widget
+modifier|*
+name|w
+decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|chn
+decl_stmt|,
+name|totalchn
 decl_stmt|;
 name|nid_t
 name|cad
@@ -15774,8 +15918,19 @@ name|fmt
 operator|&
 name|AFMT_STEREO
 condition|)
+block|{
 name|fmt
 operator||=
+literal|1
+expr_stmt|;
+name|totalchn
+operator|=
+literal|2
+expr_stmt|;
+block|}
+else|else
+name|totalchn
+operator|=
 literal|1
 expr_stmt|;
 name|HDAC_WRITE_2
@@ -15793,6 +15948,10 @@ name|HDAC_SDFMT
 argument_list|,
 name|fmt
 argument_list|)
+expr_stmt|;
+name|chn
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -15814,6 +15973,29 @@ name|i
 operator|++
 control|)
 block|{
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|ch
+operator|->
+name|devinfo
+argument_list|,
+name|ch
+operator|->
+name|io
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
@@ -15862,15 +16044,44 @@ index|[
 name|i
 index|]
 argument_list|,
+operator|(
+name|chn
+operator|<
+name|totalchn
+operator|)
+condition|?
+operator|(
+operator|(
 name|ch
 operator|->
 name|sid
 operator|<<
 literal|4
+operator|)
+operator||
+name|chn
+operator|)
+else|:
+literal|0
 argument_list|)
 argument_list|,
 name|cad
 argument_list|)
+expr_stmt|;
+name|chn
+operator|+=
+name|HDA_PARAM_AUDIO_WIDGET_CAP_STEREO
+argument_list|(
+name|w
+operator|->
+name|param
+operator|.
+name|widget_cap
+argument_list|)
+condition|?
+literal|2
+else|:
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -21322,6 +21533,18 @@ block|,
 name|HDA_CODEC_AD1986A
 block|,
 name|HDA_QUIRK_EAPDINV
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|APPLE_MB3_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC885
+block|,
+name|HDA_QUIRK_GPIO0
+operator||
+name|HDA_QUIRK_OVREF50
 block|,
 literal|0
 block|}
