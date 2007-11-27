@@ -5825,15 +5825,6 @@ name|sc
 operator|=
 name|xsc
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|an_gone
-condition|)
-block|{
-return|return;
-block|}
 name|AN_LOCK_ASSERT
 argument_list|(
 name|sc
