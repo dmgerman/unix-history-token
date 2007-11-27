@@ -548,6 +548,8 @@ argument_list|,
 name|_kse_lock_wait
 argument_list|,
 name|_kse_lock_wakeup
+argument_list|,
+name|calloc
 argument_list|)
 expr_stmt|;
 name|l
