@@ -547,12 +547,12 @@ name|char
 name|names
 index|[]
 init|=
-literal|"pqrsPQRS"
+literal|"pqrsPQRSlmnoLMNO"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This function creates and initializes a pts/ptc pair  *  * pts == /dev/tty[pqrsPQRS][0123456789abcdefghijklmnopqrstuv]  * ptc == /dev/pty[pqrsPQRS][0123456789abcdefghijklmnopqrstuv]  */
+comment|/*  * This function creates and initializes a pts/ptc pair  *  * pts == /dev/tty[pqrsPQRSlmnoLMNO][0123456789abcdefghijklmnopqrstuv]  * ptc == /dev/pty[pqrsPQRSlmnoLMNO][0123456789abcdefghijklmnopqrstuv]  */
 end_comment
 
 begin_function

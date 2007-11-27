@@ -429,7 +429,7 @@ for|for
 control|(
 name|cp1
 operator|=
-literal|"pqrsPQRS"
+literal|"pqrsPQRSlmnoLMNO"
 init|;
 operator|*
 name|cp1
