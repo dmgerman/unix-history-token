@@ -2076,7 +2076,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerZero) container %d\n"
+literal|"(ContainerZero) container %d\n"
 argument_list|,
 name|aif
 operator|->
@@ -2107,7 +2107,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerCopy) container %d to %d\n"
+literal|"(ContainerCopy) container %d to %d\n"
 argument_list|,
 name|aif
 operator|->
@@ -2155,7 +2155,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerCreateMirror) container %d\n"
+literal|"(ContainerCreateMirror) container %d\n"
 argument_list|,
 name|aif
 operator|->
@@ -2187,7 +2187,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerMergeMirror) container %d\n"
+literal|"(ContainerMergeMirror) container %d\n"
 argument_list|,
 name|aif
 operator|->
@@ -2219,7 +2219,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerScrubMirror) container %d\n"
+literal|"(ContainerScrubMirror) container %d\n"
 argument_list|,
 name|aif
 operator|->
@@ -2250,7 +2250,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerRebuildRaid5) container %d\n"
+literal|"(ContainerRebuildRaid5) container %d\n"
 argument_list|,
 name|aif
 operator|->
@@ -2281,7 +2281,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerScrubRaid5) container %d\n"
+literal|"(ContainerScrubRaid5) container %d\n"
 argument_list|,
 name|aif
 operator|->
@@ -2312,7 +2312,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerMorph) container %d\n"
+literal|"(ContainerMorph) container %d\n"
 argument_list|,
 name|aif
 operator|->
@@ -2344,7 +2344,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerPartCopy) container %d to "
+literal|"(ContainerPartCopy) container %d to "
 literal|"%d\n"
 argument_list|,
 name|aif
@@ -2393,7 +2393,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerRebuildMirror) container "
+literal|"(ContainerRebuildMirror) container "
 literal|"%d\n"
 argument_list|,
 name|aif
@@ -2425,7 +2425,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerCrazyCache) container %d\n"
+literal|"(ContainerCrazyCache) container %d\n"
 argument_list|,
 name|aif
 operator|->
