@@ -2033,7 +2033,7 @@ decl_stmt|;
 endif|#
 directive|endif
 name|struct
-name|callout_handle
+name|callout
 name|an_stat_ch
 decl_stmt|;
 name|struct
