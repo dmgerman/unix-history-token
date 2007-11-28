@@ -236,17 +236,12 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|err
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"socket: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"socket"
 argument_list|)
 expr_stmt|;
 if|if
@@ -272,17 +267,12 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|err
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"bind: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"bind"
 argument_list|)
 expr_stmt|;
 if|if
@@ -298,17 +288,12 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|err
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"listen: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"listen"
 argument_list|)
 expr_stmt|;
 while|while
@@ -484,17 +469,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"listen: %x"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"listen"
 argument_list|)
 expr_stmt|;
 name|port
@@ -604,17 +584,12 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|err
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"socket: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"socket"
 argument_list|)
 expr_stmt|;
 comment|/* No warning in default case on ENOPROTOOPT. */
@@ -689,17 +664,12 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"fcntl(F_SETFL): %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"fcntl(F_SETFL)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -729,17 +699,12 @@ name|errno
 operator|!=
 name|EINPROGRESS
 condition|)
-name|errx
+name|err
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"connect: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"connect"
 argument_list|)
 expr_stmt|;
 block|}
@@ -768,17 +733,12 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|err
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"connect: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"connect"
 argument_list|)
 expr_stmt|;
 block|}
