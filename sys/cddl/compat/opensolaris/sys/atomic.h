@@ -456,6 +456,7 @@ operator|)
 name|atomic_cas_64
 argument_list|(
 operator|(
+specifier|volatile
 name|uint64_t
 operator|*
 operator|)
