@@ -165,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|AMR_ENABLE_CAM
-value|0
+value|1
 end_define
 
 begin_endif
