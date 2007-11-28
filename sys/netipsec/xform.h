@@ -81,6 +81,13 @@ decl_stmt|;
 name|u_int8_t
 name|proto
 decl_stmt|;
+comment|/* Cache those two for enc(4) in xform_ipip. */
+name|u_int8_t
+name|alg_auth
+decl_stmt|;
+name|u_int8_t
+name|alg_enc
+decl_stmt|;
 block|}
 struct|;
 end_struct
