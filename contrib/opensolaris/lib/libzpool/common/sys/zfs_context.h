@@ -1863,26 +1863,6 @@ parameter_list|()
 value|time(NULL)
 define|#
 directive|define
-name|open64
-parameter_list|(
-modifier|...
-parameter_list|)
-value|open(__VA_ARGS__)
-define|#
-directive|define
-name|pread64
-parameter_list|(
-name|d
-parameter_list|,
-name|p
-parameter_list|,
-name|n
-parameter_list|,
-name|o
-parameter_list|)
-value|pread(d, p, n, o)
-define|#
-directive|define
 name|pwrite64
 parameter_list|(
 name|d
