@@ -8944,12 +8944,11 @@ argument_list|(
 operator|&
 name|ctx
 argument_list|,
-name|_KEYBUF
-argument_list|(
 name|sav
 operator|->
 name|key_auth
-argument_list|)
+operator|->
+name|key_data
 argument_list|,
 name|_KEYLEN
 argument_list|(
