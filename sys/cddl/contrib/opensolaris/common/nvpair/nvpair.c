@@ -8893,8 +8893,10 @@ decl_stmt|;
 name|int
 name|nvl_endian
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
 name|_LITTLE_ENDIAN
 name|int
 name|host_endian
