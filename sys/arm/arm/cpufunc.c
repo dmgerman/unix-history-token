@@ -3015,9 +3015,9 @@ expr_stmt|;
 name|pmap_pte_init_generic
 argument_list|()
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 endif|#
 directive|endif
@@ -6450,6 +6450,16 @@ argument_list|()
 expr_stmt|;
 comment|/* Now really make sure they are clean.  */
 asm|__asm __volatile ("mcr\tp15, 0, r0, c7, c7, 0" : : );
+if|if
+condition|(
+name|vector_page
+operator|==
+name|ARM_VECTORS_HIGH
+condition|)
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_VECRELOC
+expr_stmt|;
 comment|/* Set the control register */
 name|ctrl
 operator|=
