@@ -7882,7 +7882,7 @@ name|size
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX should be panic ? */
+comment|/* XXX should be panic ? 				 * -> No, we are called w/o knowing if 				 *    IPsec processing is needed. */
 block|}
 return|return
 name|size
