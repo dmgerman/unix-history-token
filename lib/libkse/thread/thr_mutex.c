@@ -1106,6 +1106,16 @@ operator|=
 literal|0
 block|}
 decl_stmt|;
+specifier|static
+specifier|const
+name|struct
+name|pthread_mutex_attr
+modifier|*
+name|pattr
+init|=
+operator|&
+name|attr
+decl_stmt|;
 return|return
 operator|(
 name|thr_mutex_init
@@ -1117,7 +1127,7 @@ name|pthread_mutexattr_t
 operator|*
 operator|)
 operator|&
-name|attr
+name|pattr
 argument_list|,
 name|calloc_cb
 argument_list|)
