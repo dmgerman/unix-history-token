@@ -1840,6 +1840,12 @@ literal|"NVidia MCP65"
 block|}
 block|,
 block|{
+name|HDA_NVIDIA_MCP65_2
+block|,
+literal|"NVidia MCP65"
+block|}
+block|,
+block|{
 name|HDA_NVIDIA_MCP67_1
 block|,
 literal|"NVidia MCP67"
