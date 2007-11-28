@@ -1525,35 +1525,6 @@ begin_comment
 comment|/* __BSD_VISIBLE */
 end_comment
 
-begin_comment
-comment|/*  * Solaris compatibility definitions.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_SOLARIS_C_SOURCE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|stat64
-value|stat
-end_define
-
-begin_define
-define|#
-directive|define
-name|fstat64
-value|fstat
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef

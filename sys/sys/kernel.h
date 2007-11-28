@@ -166,12 +166,6 @@ name|ticks
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SOLARIS_C_SOURCE
-end_ifndef
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -182,11 +176,6 @@ end_decl_stmt
 begin_comment
 comment|/* once a second sleep address */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
