@@ -78,7 +78,7 @@ end_function_decl
 
 begin_function_decl
 name|s32
-name|ixgbe_get_link_settings_82598
+name|ixgbe_get_link_capabilities_82598
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -98,7 +98,7 @@ end_function_decl
 
 begin_function_decl
 name|s32
-name|ixgbe_get_copper_link_settings_82598
+name|ixgbe_get_copper_link_capabilities_82598
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -214,26 +214,6 @@ name|struct
 name|ixgbe_hw
 modifier|*
 name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
-name|ixgbe_check_copper_link_82598
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-name|hw
-parameter_list|,
-name|ixgbe_link_speed
-modifier|*
-name|speed
-parameter_list|,
-name|bool
-modifier|*
-name|link_up
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -508,6 +488,15 @@ operator|=
 operator|&
 name|ixgbe_get_num_rx_addrs_82598
 expr_stmt|;
+name|hw
+operator|->
+name|func
+operator|.
+name|ixgbe_func_check_link
+operator|=
+operator|&
+name|ixgbe_check_mac_link_82598
+expr_stmt|;
 comment|/* Link */
 if|if
 condition|(
@@ -532,15 +521,6 @@ name|hw
 operator|->
 name|func
 operator|.
-name|ixgbe_func_check_link
-operator|=
-operator|&
-name|ixgbe_check_copper_link_82598
-expr_stmt|;
-name|hw
-operator|->
-name|func
-operator|.
 name|ixgbe_func_setup_link_speed
 operator|=
 operator|&
@@ -550,10 +530,10 @@ name|hw
 operator|->
 name|func
 operator|.
-name|ixgbe_func_get_link_settings
+name|ixgbe_func_get_link_capabilities
 operator|=
 operator|&
-name|ixgbe_get_copper_link_settings_82598
+name|ixgbe_get_copper_link_capabilities_82598
 expr_stmt|;
 block|}
 else|else
@@ -571,15 +551,6 @@ name|hw
 operator|->
 name|func
 operator|.
-name|ixgbe_func_check_link
-operator|=
-operator|&
-name|ixgbe_check_mac_link_82598
-expr_stmt|;
-name|hw
-operator|->
-name|func
-operator|.
 name|ixgbe_func_setup_link_speed
 operator|=
 operator|&
@@ -589,10 +560,10 @@ name|hw
 operator|->
 name|func
 operator|.
-name|ixgbe_func_get_link_settings
+name|ixgbe_func_get_link_capabilities
 operator|=
 operator|&
-name|ixgbe_get_link_settings_82598
+name|ixgbe_get_link_capabilities_82598
 expr_stmt|;
 block|}
 return|return
@@ -602,12 +573,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_get_link_settings_82598 - Determines default link settings  *  @hw: pointer to hardware structure  *  @speed: pointer to link speed  *  @autoneg: boolean auto-negotiation value  *  *  Determines the default link settings by reading the AUTOC register.  **/
+comment|/**  *  ixgbe_get_link_capabilities_82598 - Determines link capabilities   *  @hw: pointer to hardware structure  *  @speed: pointer to link speed  *  @autoneg: boolean auto-negotiation value  *  *  Determines the link capabilities by reading the AUTOC register.  **/
 end_comment
 
 begin_function
 name|s32
-name|ixgbe_get_link_settings_82598
+name|ixgbe_get_link_capabilities_82598
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -782,12 +753,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_get_copper_link_settings_82598 - Determines default link settings  *  @hw: pointer to hardware structure  *  @speed: pointer to link speed  *  @autoneg: boolean auto-negotiation value  *  *  Determines the default link settings by reading the AUTOC register.  **/
+comment|/**  *  ixgbe_get_copper_link_capabilities_82598 - Determines link capabilities  *  @hw: pointer to hardware structure  *  @speed: pointer to link speed  *  @autoneg: boolean auto-negotiation value  *  *  Determines the link capabilities by reading the AUTOC register.  **/
 end_comment
 
 begin_function
 name|s32
-name|ixgbe_get_copper_link_settings_82598
+name|ixgbe_get_copper_link_capabilities_82598
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -912,6 +883,14 @@ operator|=
 name|ixgbe_media_type_fiber
 expr_stmt|;
 break|break;
+case|case
+name|IXGBE_DEV_ID_82598AT
+case|:
+name|media_type
+operator|=
+name|ixgbe_media_type_copper
+expr_stmt|;
+break|break;
 default|default:
 name|media_type
 operator|=
@@ -926,7 +905,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_get_num_of_tx_queues_82598 - Get number of TX queues  *  @hw: pointer to hardware structure  *  *  Returns the number of transmit queues for the given adapter.  **/
+comment|/**  *  ixgbe_get_num_of_tx_queues_82598 - Get number of Tx queues  *  @hw: pointer to hardware structure  *  *  Returns the number of transmit queues for the given adapter.  **/
 end_comment
 
 begin_function
@@ -946,7 +925,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_get_num_of_rx_queues_82598 - Get number of RX queues  *  @hw: pointer to hardware structure  *  *  Returns the number of receive queues for the given adapter.  **/
+comment|/**  *  ixgbe_get_num_of_rx_queues_82598 - Get number of Rx queues  *  @hw: pointer to hardware structure  *  *  Returns the number of receive queues for the given adapter.  **/
 end_comment
 
 begin_function
@@ -1050,6 +1029,11 @@ argument_list|,
 name|IXGBE_AUTOC
 argument_list|,
 name|autoc_reg
+argument_list|)
+expr_stmt|;
+name|IXGBE_WRITE_FLUSH
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 name|msec_delay
@@ -1512,7 +1496,7 @@ name|IXGBE_PCS1GANA_SYM_PAUSE
 operator|)
 condition|)
 block|{
-comment|/* 		 * Now we need to check if the user selected RX ONLY 		 * of pause frames.  In this case, we had to advertise 		 * FULL flow control because we could not advertise RX 		 * ONLY. Hence, we must now check to see if we need to 		 * turn OFF  the TRANSMISSION of PAUSE frames. 		 */
+comment|/* 		 * Now we need to check if the user selected Rx ONLY 		 * of pause frames.  In this case, we had to advertise 		 * FULL flow control because we could not advertise RX 		 * ONLY. Hence, we must now check to see if we need to 		 * turn OFF  the TRANSMISSION of PAUSE frames. 		 */
 if|if
 condition|(
 name|hw
@@ -1774,7 +1758,7 @@ argument_list|,
 name|IXGBE_PCS1GANA
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Check for a software override of the flow control settings, 		 * and setup the device accordingly.  If auto-negotiation is 		 * enabled, then software will have to set the "PAUSE" bits to 		 * the correct value and re-start auto- negotiation.  However, 		 * if auto-negotiation is disabled, then software will have to 		 * manually configure flow control. 		 * 		 * The possible values of the "fc" parameter are: 		 * 0:  Flow control is completely disabled 		 * 1:  Rx flow control is enabled (we can receive pause frames, 		 *     but not send pause frames). 		 * 2:  Tx flow control is enabled (we can send pause frames but 		 *     we do not support receiving pause frames). 		 * 3:  Both Rx and TX flow control (symmetric) are enabled. 		 */
+comment|/* 		 * Check for a software override of the flow control settings, 		 * and setup the device accordingly.  If auto-negotiation is 		 * enabled, then software will have to set the "PAUSE" bits to 		 * the correct value and re-start auto- negotiation.  However, 		 * if auto-negotiation is disabled, then software will have to 		 * manually configure flow control. 		 * 		 * The possible values of the "fc" parameter are: 		 * 0:  Flow control is completely disabled 		 * 1:  Rx flow control is enabled (we can receive pause frames, 		 *     but not send pause frames). 		 * 2:  Tx flow control is enabled (we can send pause frames but 		 *     we do not support receiving pause frames). 		 * 3:  Both Rx and Tx flow control (symmetric) are enabled. 		 */
 switch|switch
 condition|(
 name|hw
@@ -1801,7 +1785,7 @@ break|break;
 case|case
 name|ixgbe_fc_rx_pause
 case|:
-comment|/* 			 * RX Flow control is enabled and TX Flow control is 			 * disabled by a software over-ride. Since there really 			 * isn't a way to advertise that we are capable of RX 			 * Pause ONLY, we will advertise that we support both 			 * symmetric and asymmetric RX PAUSE.  Later, we will 			 * disable the adapter's ability to send PAUSE frames. 			 */
+comment|/* 			 * Rx Flow control is enabled and Tx Flow control is 			 * disabled by a software over-ride. Since there really 			 * isn't a way to advertise that we are capable of RX 			 * Pause ONLY, we will advertise that we support both 			 * symmetric and asymmetric Rx PAUSE.  Later, we will 			 * disable the adapter's ability to send PAUSE frames. 			 */
 name|reg
 operator||=
 operator|(
@@ -1814,7 +1798,7 @@ break|break;
 case|case
 name|ixgbe_fc_tx_pause
 case|:
-comment|/* 			 * TX Flow control is enabled, and RX Flow control is 			 * disabled, by a software over-ride. 			 */
+comment|/* 			 * Tx Flow control is enabled, and Rx Flow control is 			 * disabled, by a software over-ride. 			 */
 name|reg
 operator||=
 operator|(
@@ -1832,7 +1816,7 @@ break|break;
 case|case
 name|ixgbe_fc_full
 case|:
-comment|/* 			 * Flow control (both RX and TX) is enabled by a 			 * software over-ride. 			 */
+comment|/* 			 * Flow control (both Rx and Tx) is enabled by a 			 * software over-ride. 			 */
 name|reg
 operator||=
 operator|(
@@ -2011,6 +1995,7 @@ name|IXGBE_AUTOC_10G_KX4
 operator|)
 operator|)
 condition|)
+block|{
 name|hw
 operator|->
 name|mac
@@ -2019,6 +2004,7 @@ name|link_mode_select
 operator|=
 name|IXGBE_AUTOC_LMS_10G_LINK_NO_AN
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2033,6 +2019,7 @@ operator|!
 name|autoneg
 operator|)
 condition|)
+block|{
 name|hw
 operator|->
 name|mac
@@ -2041,6 +2028,7 @@ name|link_mode_select
 operator|=
 name|IXGBE_AUTOC_LMS_1G_LINK_NO_AN
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2140,22 +2128,6 @@ block|{
 name|s32
 name|status
 decl_stmt|;
-name|ixgbe_link_speed
-name|speed
-init|=
-literal|0
-decl_stmt|;
-name|bool
-name|link_up
-init|=
-name|FALSE
-decl_stmt|;
-comment|/* Set up MAC */
-name|ixgbe_setup_mac_link_82598
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
 comment|/* Restart autonegotiation on PHY */
 name|status
 operator|=
@@ -2164,114 +2136,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Synchronize MAC to PHY speed */
-if|if
-condition|(
-name|status
-operator|==
-name|IXGBE_SUCCESS
-condition|)
-name|status
-operator|=
-name|ixgbe_check_link
-argument_list|(
-name|hw
-argument_list|,
-operator|&
-name|speed
-argument_list|,
-operator|&
-name|link_up
-argument_list|)
-expr_stmt|;
-return|return
-name|status
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/**  *  ixgbe_check_copper_link_82598 - Syncs MAC& PHY link settings  *  @hw: pointer to hardware structure  *  @speed: pointer to link speed  *  @link_up: TRUE if link is up, FALSE otherwise  *  *  Reads the mac link, phy link, and synchronizes the MAC to PHY.  **/
-end_comment
-
-begin_function
-name|s32
-name|ixgbe_check_copper_link_82598
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-name|hw
-parameter_list|,
-name|ixgbe_link_speed
-modifier|*
-name|speed
-parameter_list|,
-name|bool
-modifier|*
-name|link_up
-parameter_list|)
-block|{
-name|s32
-name|status
-decl_stmt|;
-name|ixgbe_link_speed
-name|phy_speed
-init|=
-literal|0
-decl_stmt|;
-name|bool
-name|phy_link
-init|=
-name|FALSE
-decl_stmt|;
-comment|/* This is the speed and link the MAC is set at */
-name|ixgbe_check_mac_link_82598
-argument_list|(
-name|hw
-argument_list|,
-name|speed
-argument_list|,
-name|link_up
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Check current speed and link status of the PHY register. 	 * This is a vendor specific register and may have to 	 * be changed for other copper PHYs. 	 */
-name|status
-operator|=
-name|ixgbe_check_phy_link
-argument_list|(
-name|hw
-argument_list|,
-operator|&
-name|phy_speed
-argument_list|,
-operator|&
-name|phy_link
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|status
-operator|==
-name|IXGBE_SUCCESS
-operator|)
-operator|&&
-operator|(
-name|phy_link
-operator|)
-condition|)
-block|{
-comment|/* 		 * Check current link status of the MACs link's register 		 * matches that of the speed in the PHY register 		 */
-if|if
-condition|(
-operator|*
-name|speed
-operator|!=
-name|phy_speed
-condition|)
-block|{
-comment|/* 			 * The copper PHY requires 82598 attach type to be XAUI 			 * for 10G and BX for 1G 			 */
+comment|/* Set MAC to KX/KX4 autoneg, which defaultis to Parallel detection */
 name|hw
 operator|->
 name|mac
@@ -2279,55 +2144,25 @@ operator|.
 name|link_attach_type
 operator|=
 operator|(
-name|IXGBE_AUTOC_10G_XAUI
+name|IXGBE_AUTOC_10G_KX4
 operator||
-name|IXGBE_AUTOC_1G_BX
+name|IXGBE_AUTOC_1G_KX
 operator|)
 expr_stmt|;
-comment|/* Synchronize the MAC speed to the PHY speed */
-name|status
+name|hw
+operator|->
+name|mac
+operator|.
+name|link_mode_select
 operator|=
-name|ixgbe_setup_mac_link_speed_82598
+name|IXGBE_AUTOC_LMS_KX4_AN
+expr_stmt|;
+comment|/* Set up MAC */
+name|ixgbe_setup_mac_link_82598
 argument_list|(
 name|hw
-argument_list|,
-name|phy_speed
-argument_list|,
-name|FALSE
-argument_list|,
-name|FALSE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|status
-operator|==
-name|IXGBE_SUCCESS
-condition|)
-name|ixgbe_check_mac_link_82598
-argument_list|(
-name|hw
-argument_list|,
-name|speed
-argument_list|,
-name|link_up
-argument_list|)
-expr_stmt|;
-else|else
-name|status
-operator|=
-name|IXGBE_ERR_LINK_SETUP
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-operator|*
-name|link_up
-operator|=
-name|phy_link
-expr_stmt|;
-block|}
 return|return
 name|status
 return|;
@@ -2360,11 +2195,6 @@ block|{
 name|s32
 name|status
 decl_stmt|;
-name|bool
-name|link_up
-init|=
-literal|0
-decl_stmt|;
 comment|/* Setup the PHY according to input speed */
 name|status
 operator|=
@@ -2379,24 +2209,31 @@ argument_list|,
 name|autoneg_wait_to_complete
 argument_list|)
 expr_stmt|;
-comment|/* Synchronize MAC to PHY speed */
-if|if
-condition|(
-name|status
-operator|==
-name|IXGBE_SUCCESS
-condition|)
-name|status
+comment|/* Set MAC to KX/KX4 autoneg, which defaults to Parallel detection */
+name|hw
+operator|->
+name|mac
+operator|.
+name|link_attach_type
 operator|=
-name|ixgbe_check_link
+operator|(
+name|IXGBE_AUTOC_10G_KX4
+operator||
+name|IXGBE_AUTOC_1G_KX
+operator|)
+expr_stmt|;
+name|hw
+operator|->
+name|mac
+operator|.
+name|link_mode_select
+operator|=
+name|IXGBE_AUTOC_LMS_KX4_AN
+expr_stmt|;
+comment|/* Set up MAC */
+name|ixgbe_setup_mac_link_82598
 argument_list|(
 name|hw
-argument_list|,
-operator|&
-name|speed
-argument_list|,
-operator|&
-name|link_up
 argument_list|)
 expr_stmt|;
 return|return
@@ -2791,7 +2628,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Power up the Atlas TX lanes if they are currently powered down. 	 * Atlas TX lanes are powered down for MAC loopback tests, but 	 * they are not automatically restored on reset. 	 */
+comment|/* 	 * Power up the Atlas Tx lanes if they are currently powered down. 	 * Atlas Tx lanes are powered down for MAC loopback tests, but 	 * they are not automatically restored on reset. 	 */
 name|ixgbe_read_analog_reg8
 argument_list|(
 name|hw
@@ -2809,7 +2646,7 @@ operator|&
 name|IXGBE_ATLAS_PDN_TX_REG_EN
 condition|)
 block|{
-comment|/* Enable TX Atlas so packets can be transmitted again */
+comment|/* Enable Tx Atlas so packets can be transmitted again */
 name|ixgbe_read_analog_reg8
 argument_list|(
 name|hw
@@ -3314,7 +3151,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_get_num_rx_addrs_82598 - Get RX address registers  *  @hw: pointer to hardware structure  *  *  Returns the of RAR entries for the given adapter.  **/
+comment|/**  *  ixgbe_get_num_rx_addrs_82598 - Get Rx address registers  *  @hw: pointer to hardware structure  *  *  Returns the of RAR entries for the given adapter.  **/
 end_comment
 
 begin_function

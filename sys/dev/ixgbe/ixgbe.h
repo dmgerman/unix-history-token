@@ -687,6 +687,17 @@ value|1000000000/(1950 * 256)
 end_define
 
 begin_comment
+comment|/* Used for auto RX queue configuration */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mp_ncpus
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * ******************************************************************************  * vendor_info_array  *   * This array contains the list of Subvendor/Subdevice IDs on which the driver  * should load.  *  *****************************************************************************  */
 end_comment
 
@@ -811,6 +822,9 @@ decl_stmt|;
 name|u32
 name|me
 decl_stmt|;
+name|u32
+name|msix
+decl_stmt|;
 name|union
 name|ixgbe_adv_tx_desc
 modifier|*
@@ -820,10 +834,10 @@ name|struct
 name|ixgbe_dma_alloc
 name|txdma
 decl_stmt|;
-name|uint32_t
+name|u32
 name|next_avail_tx_desc
 decl_stmt|;
-name|uint32_t
+name|u32
 name|next_tx_to_clean
 decl_stmt|;
 name|struct
@@ -832,14 +846,18 @@ modifier|*
 name|tx_buffers
 decl_stmt|;
 specifier|volatile
-name|uint16_t
+name|u16
 name|tx_avail
 decl_stmt|;
-name|uint32_t
+name|u32
 name|txd_cmd
 decl_stmt|;
 name|bus_dma_tag_t
 name|txtag
+decl_stmt|;
+comment|/* Interrupt soft stat */
+name|u64
+name|tx_irq
 decl_stmt|;
 block|}
 struct|;
@@ -860,6 +878,9 @@ name|adapter
 decl_stmt|;
 name|u32
 name|me
+decl_stmt|;
+name|u32
+name|msix
 decl_stmt|;
 name|u32
 name|payload
@@ -909,6 +930,9 @@ modifier|*
 name|lmp
 decl_stmt|;
 comment|/* Soft stats */
+name|u64
+name|rx_irq
+decl_stmt|;
 name|u64
 name|packet_count
 decl_stmt|;
@@ -995,6 +1019,7 @@ decl_stmt|;
 name|int
 name|if_flags
 decl_stmt|;
+comment|/* Dual locks for the driver */
 name|struct
 name|mtx
 name|core_mtx
@@ -1018,32 +1043,32 @@ modifier|*
 name|tq
 decl_stmt|;
 comment|/* Info about the board itself */
-name|uint32_t
+name|u32
 name|part_num
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link_active
 decl_stmt|;
-name|uint16_t
+name|u16
 name|max_frame_size
 decl_stmt|;
-name|uint16_t
-name|link_duplex
+name|u32
+name|link_speed
 decl_stmt|;
-name|uint32_t
+name|u32
 name|tx_int_delay
 decl_stmt|;
-name|uint32_t
+name|u32
 name|tx_abs_int_delay
 decl_stmt|;
-name|uint32_t
+name|u32
 name|rx_int_delay
 decl_stmt|;
-name|uint32_t
+name|u32
 name|rx_abs_int_delay
 decl_stmt|;
 comment|/* Indicates the cluster size to use */
-name|boolean_t
+name|bool
 name|bigbufs
 decl_stmt|;
 comment|/* 	 * Transmit rings: 	 *	Allocated at run time, an array of rings. 	 */
@@ -1070,7 +1095,7 @@ decl_stmt|;
 name|int
 name|num_rx_queues
 decl_stmt|;
-name|uint32_t
+name|u32
 name|rx_process_limit
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
@@ -1109,6 +1134,14 @@ decl_stmt|;
 name|unsigned
 name|long
 name|tso_tx
+decl_stmt|;
+name|unsigned
+name|long
+name|linkvec
+decl_stmt|;
+name|unsigned
+name|long
+name|link_irq
 decl_stmt|;
 name|struct
 name|ixgbe_hw_stats

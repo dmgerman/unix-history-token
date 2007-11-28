@@ -176,6 +176,22 @@ end_function_decl
 
 begin_function_decl
 name|s32
+name|ixgbe_read_pba_num
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+modifier|*
+name|pba_num
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
 name|ixgbe_identify_phy
 parameter_list|(
 name|struct
@@ -296,7 +312,7 @@ end_function_decl
 
 begin_function_decl
 name|s32
-name|ixgbe_get_link_settings
+name|ixgbe_get_link_capabilities
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -468,9 +484,6 @@ modifier|*
 name|addr
 parameter_list|,
 name|u32
-name|vind
-parameter_list|,
-name|u32
 name|enable_addr
 parameter_list|)
 function_decl|;
@@ -516,8 +529,8 @@ parameter_list|,
 name|u32
 name|mc_addr_count
 parameter_list|,
-name|u32
-name|pad
+name|ixgbe_mc_addr_itr
+name|func
 parameter_list|)
 function_decl|;
 end_function_decl

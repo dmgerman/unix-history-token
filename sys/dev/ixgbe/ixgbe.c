@@ -51,7 +51,7 @@ name|char
 name|ixgbe_driver_version
 index|[]
 init|=
-literal|"1.2.6"
+literal|"1.2.16"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +94,18 @@ block|{
 name|IXGBE_INTEL_VENDOR_ID
 block|,
 name|IXGBE_DEV_ID_82598EB_CX4
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|IXGBE_INTEL_VENDOR_ID
+block|,
+name|IXGBE_DEV_ID_82598AT
 block|,
 literal|0
 block|,
@@ -728,7 +740,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ixgbe_enable_vlans
+name|ixgbe_enable_hw_vlans
 parameter_list|(
 name|struct
 name|adapter
@@ -849,7 +861,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|boolean_t
-name|ixgbe_tx_csum_setup
+name|ixgbe_tx_ctx_setup
 parameter_list|(
 name|struct
 name|tx_ring
@@ -904,6 +916,19 @@ name|ixgbe_configure_ivars
 parameter_list|(
 name|struct
 name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|u8
+modifier|*
+name|ixgbe_mc_array_itr
+parameter_list|(
+name|u8
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1244,7 +1269,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Number of RX Queues */
+comment|/*  * Number of RX Queues, with 0 setting  * it autoconfigures to the number of cpus.  */
 end_comment
 
 begin_decl_stmt
@@ -1252,7 +1277,7 @@ specifier|static
 name|int
 name|ixgbe_rx_queues
 init|=
-literal|8
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -3128,6 +3153,32 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
+name|device_t
+name|dev
+init|=
+name|adapter
+operator|->
+name|dev
+decl_stmt|;
+name|struct
+name|tx_ring
+modifier|*
+name|txr
+init|=
+name|adapter
+operator|->
+name|tx_rings
+decl_stmt|;
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+init|=
+operator|&
+name|adapter
+operator|->
+name|hw
+decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -3158,9 +3209,6 @@ if|if
 condition|(
 name|IXGBE_READ_REG
 argument_list|(
-operator|&
-name|adapter
-operator|->
 name|hw
 argument_list|,
 name|IXGBE_TFCS
@@ -3186,9 +3234,46 @@ argument_list|,
 literal|"Watchdog timeout -- resetting\n"
 argument_list|)
 expr_stmt|;
-name|ixgbe_print_debug_info
+name|device_printf
 argument_list|(
-name|adapter
+name|dev
+argument_list|,
+literal|"Queue(0) tdh = %d, hw tdt = %d\n"
+argument_list|,
+name|IXGBE_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_TDH
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+argument_list|,
+name|IXGBE_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_TDT
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"TX desc avail = %d, Next TX to Clean = %d\n"
+argument_list|,
+name|txr
+operator|->
+name|tx_avail
+argument_list|,
+name|txr
+operator|->
+name|next_tx_to_clean
 argument_list|)
 expr_stmt|;
 name|adapter
@@ -3307,8 +3392,6 @@ name|mac
 operator|.
 name|addr
 argument_list|,
-literal|0
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -3348,7 +3431,7 @@ name|if_capenable
 operator|&
 name|IFCAP_VLAN_HWTAGGING
 condition|)
-name|ixgbe_enable_vlans
+name|ixgbe_enable_hw_vlans
 argument_list|(
 name|adapter
 argument_list|)
@@ -4126,6 +4209,11 @@ operator|->
 name|tx_mtx
 argument_list|)
 expr_stmt|;
+operator|++
+name|txr
+operator|->
+name|tx_irq
+expr_stmt|;
 while|while
 condition|(
 name|loop_cnt
@@ -4225,6 +4313,11 @@ name|loop
 init|=
 name|MAX_INTR
 decl_stmt|;
+operator|++
+name|rxr
+operator|->
+name|rx_irq
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -4283,6 +4376,11 @@ name|adapter
 operator|->
 name|core_mtx
 argument_list|)
+expr_stmt|;
+operator|++
+name|adapter
+operator|->
+name|link_irq
 expr_stmt|;
 name|reg_eicr
 operator|=
@@ -4390,6 +4488,14 @@ argument_list|(
 literal|"ixgbe_media_status: begin"
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|core_mtx
+argument_list|)
+expr_stmt|;
 name|ixgbe_update_link_status
 argument_list|(
 name|adapter
@@ -4414,13 +4520,45 @@ name|adapter
 operator|->
 name|link_active
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|core_mtx
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|ifmr
 operator|->
 name|ifm_status
 operator||=
 name|IFM_ACTIVE
 expr_stmt|;
+switch|switch
+condition|(
+name|adapter
+operator|->
+name|link_speed
+condition|)
+block|{
+case|case
+name|IXGBE_LINK_SPEED_1GB_FULL
+case|:
+name|ifmr
+operator|->
+name|ifm_active
+operator||=
+name|IFM_1000_T
+operator||
+name|IFM_FDX
+expr_stmt|;
+break|break;
+case|case
+name|IXGBE_LINK_SPEED_10GB_FULL
+case|:
 name|ifmr
 operator|->
 name|ifm_active
@@ -4428,6 +4566,16 @@ operator||=
 name|IFM_10G_SR
 operator||
 name|IFM_FDX
+expr_stmt|;
+break|break;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|core_mtx
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -4482,6 +4630,58 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+switch|switch
+condition|(
+name|IFM_SUBTYPE
+argument_list|(
+name|ifm
+operator|->
+name|ifm_media
+argument_list|)
+condition|)
+block|{
+case|case
+name|IFM_AUTO
+case|:
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|autoneg
+operator|=
+name|TRUE
+expr_stmt|;
+name|adapter
+operator|->
+name|hw
+operator|.
+name|phy
+operator|.
+name|autoneg_advertised
+operator|=
+name|IXGBE_LINK_SPEED_1GB_FULL
+operator||
+name|IXGBE_LINK_SPEED_10GB_FULL
+expr_stmt|;
+break|break;
+default|default:
+name|device_printf
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|,
+literal|"Only auto media type\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -4940,18 +5140,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|m_head
-operator|->
-name|m_pkthdr
-operator|.
-name|csum_flags
-operator|&
-name|CSUM_OFFLOAD
-condition|)
-block|{
-if|if
-condition|(
-name|ixgbe_tx_csum_setup
+name|ixgbe_tx_ctx_setup
 argument_list|(
 name|txr
 argument_list|,
@@ -4964,7 +5153,6 @@ name|IXGBE_TXD_POPTS_TXSM
 operator|<<
 literal|8
 expr_stmt|;
-block|}
 name|i
 operator|=
 name|txr
@@ -5424,16 +5612,20 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|uint32_t
+name|u32
 name|fctrl
 decl_stmt|;
-name|uint8_t
+name|u8
 name|mta
 index|[
 name|MAX_NUM_MULTICAST_ADDRESSES
 operator|*
 name|IXGBE_ETH_LENGTH_OF_ADDRESS
 index|]
+decl_stmt|;
+name|u8
+modifier|*
+name|update_ptr
 decl_stmt|;
 name|struct
 name|ifmultiaddr
@@ -5596,6 +5788,10 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|update_ptr
+operator|=
+name|mta
+expr_stmt|;
 name|ixgbe_update_mc_addr_list
 argument_list|(
 operator|&
@@ -5603,14 +5799,52 @@ name|adapter
 operator|->
 name|hw
 argument_list|,
-name|mta
+name|update_ptr
 argument_list|,
 name|mcnt
 argument_list|,
-literal|0
+name|ixgbe_mc_array_itr
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+comment|/*  * This is an iterator function now needed by the multicast  * shared code. It simply feeds the shared code routine the  * addresses in the array of ixgbe_set_multi() one by one.  */
+specifier|static
+name|u8
+modifier|*
+name|ixgbe_mc_array_itr
+parameter_list|(
+name|u8
+modifier|*
+modifier|*
+name|update_ptr
+parameter_list|)
+block|{
+name|u8
+modifier|*
+name|addr
+init|=
+operator|*
+name|update_ptr
+decl_stmt|;
+name|u8
+modifier|*
+name|newptr
+decl_stmt|;
+name|newptr
+operator|=
+name|addr
+operator|+
+name|IXGBE_ETH_LENGTH_OF_ADDRESS
+expr_stmt|;
+operator|*
+name|update_ptr
+operator|=
+name|newptr
+expr_stmt|;
+return|return
+name|addr
+return|;
 block|}
 comment|/*********************************************************************  *  Timer routine  *  *  This routine checks for link status,updates statistics,  *  and runs the watchdog timer.  *  **********************************************************************/
 specifier|static
@@ -5706,9 +5940,6 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|uint32_t
-name|link_speed
-decl_stmt|;
 name|boolean_t
 name|link_up
 init|=
@@ -5738,6 +5969,8 @@ operator|->
 name|hw
 argument_list|,
 operator|&
+name|adapter
+operator|->
 name|link_speed
 argument_list|,
 operator|&
@@ -5766,9 +5999,21 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Link is up %d Mbps %s \n"
+literal|"Link is up %d Gbps %s \n"
 argument_list|,
-literal|10000
+operator|(
+operator|(
+name|adapter
+operator|->
+name|link_speed
+operator|==
+literal|128
+operator|)
+condition|?
+literal|10
+else|:
+literal|1
+operator|)
 argument_list|,
 literal|"Full Duplex"
 argument_list|)
@@ -5821,6 +6066,12 @@ expr_stmt|;
 name|adapter
 operator|->
 name|link_active
+operator|=
+name|FALSE
+expr_stmt|;
+name|adapter
+operator|->
+name|watchdog_timer
 operator|=
 name|FALSE
 expr_stmt|;
@@ -5937,8 +6188,6 @@ operator|.
 name|mac
 operator|.
 name|addr
-argument_list|,
-literal|0
 argument_list|,
 name|IXGBE_RAH_AV
 argument_list|)
@@ -6218,6 +6467,12 @@ name|error
 operator|)
 return|;
 block|}
+name|txr
+operator|->
+name|msix
+operator|=
+name|vector
+expr_stmt|;
 name|adapter
 operator|->
 name|msix
@@ -6369,6 +6624,12 @@ name|error
 operator|)
 return|;
 block|}
+name|rxr
+operator|->
+name|msix
+operator|=
+name|vector
+expr_stmt|;
 name|adapter
 operator|->
 name|msix
@@ -6494,6 +6755,12 @@ name|error
 operator|)
 return|;
 block|}
+name|adapter
+operator|->
+name|linkvec
+operator|=
+name|vector
+expr_stmt|;
 name|adapter
 operator|->
 name|msix
@@ -6689,7 +6956,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MSI Interrupts enabled\n"
+literal|"MSI Interrupt enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6710,7 +6977,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Legacy Interrupts enabled\n"
+literal|"Legacy Interrupt enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6894,7 +7161,11 @@ argument|); 			return (ENXIO);       	}
 comment|/* Now figure out now many vectors we need to use */
 argument|val = pci_msix_count(dev);
 comment|/* check configured values */
-argument|want = ixgbe_tx_queues + ixgbe_rx_queues + ixgbe_other_queues;
+argument|if (ixgbe_rx_queues ==
+literal|0
+argument|)
+comment|/* Autoconfigure */
+argument|ixgbe_rx_queues = mp_ncpus; 	want = ixgbe_tx_queues + ixgbe_rx_queues + ixgbe_other_queues;
 comment|/* 	 *  We arent going to do anything fancy for now, 	 *  we either can meet desired config or we fail. 	 */
 argument|if (val>= want)  		val = want; 	else  		return (ENXIO);
 comment|/* Initialize the resource arrays */
@@ -6907,8 +7178,9 @@ literal|0
 argument|) { 		adapter->msix =
 literal|1
 argument|; 		device_printf(dev,
-literal|"MSI/X enabled with %d vectors\n"
-argument|, val); 	} else { 		device_printf(dev,
+literal|"MSI/X Enabled with %d TX Queue, "
+literal|"%d RX Queues, and Link Interrupt\n"
+argument|,  		    ixgbe_tx_queues, ixgbe_rx_queues); 	} else { 		device_printf(dev,
 literal|"FAIL pci_alloc_msix() %d\n"
 argument|, error); 		return (error); 	} 	return (
 literal|0
@@ -6962,7 +7234,7 @@ argument|); 		return (EIO); 	}  	return (
 literal|0
 argument|); }
 comment|/*********************************************************************  *  *  Setup networking device structure and register an interface.  *  **********************************************************************/
-argument|static void ixgbe_setup_interface(device_t dev, struct adapter *adapter) { 	struct ifnet   *ifp; 	INIT_DEBUGOUT(
+argument|static void ixgbe_setup_interface(device_t dev, struct adapter *adapter) { 	struct ifnet   *ifp; 	struct ixgbe_hw *hw =&adapter->hw; 	INIT_DEBUGOUT(
 literal|"ixgbe_setup_interface: begin"
 argument|);  	ifp = adapter->ifp = if_alloc(IFT_ETHER); 	if (ifp == NULL) 		panic(
 literal|"%s: can not if_alloc()\n"
@@ -6976,11 +7248,15 @@ argument|;  	ether_ifattach(ifp, adapter->hw.mac.addr);  	adapter->max_frame_siz
 comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
 argument|ifp->if_data.ifi_hdrlen = sizeof(struct ether_vlan_header);  	if (adapter->msix)
 comment|/* RSS and HWCSUM not compatible */
-argument|ifp->if_capabilities |= IFCAP_TSO4; 	else 		ifp->if_capabilities |= (IFCAP_HWCSUM | IFCAP_TSO4); 	ifp->if_capabilities |= IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_MTU; 	ifp->if_capabilities |= IFCAP_JUMBO_MTU;  	ifp->if_capenable = ifp->if_capabilities;
+argument|ifp->if_capabilities |= IFCAP_TSO4; 	else 		ifp->if_capabilities |= (IFCAP_HWCSUM | IFCAP_TSO4); 	ifp->if_capabilities |= IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_MTU; 	ifp->if_capabilities |= IFCAP_JUMBO_MTU;  	ifp->if_capenable = ifp->if_capabilities;  	if (hw->device_id == IXGBE_DEV_ID_82598AT) 		ixgbe_setup_link_speed(hw, (IXGBE_LINK_SPEED_10GB_FULL | 		    IXGBE_LINK_SPEED_1GB_FULL), TRUE, TRUE); 	else 		ixgbe_setup_link_speed(hw, IXGBE_LINK_SPEED_10GB_FULL, 		    TRUE, FALSE);
 comment|/* 	 * Specify the media types supported by this adapter and register 	 * callbacks to update media and link information 	 */
 argument|ifmedia_init(&adapter->media, IFM_IMASK, ixgbe_media_change, 		     ixgbe_media_status); 	ifmedia_add(&adapter->media, IFM_ETHER | IFM_10G_SR | 		    IFM_FDX,
 literal|0
-argument|, NULL); 	ifmedia_add(&adapter->media, IFM_ETHER | IFM_AUTO,
+argument|, NULL); 	if (hw->device_id == IXGBE_DEV_ID_82598AT) { 		ifmedia_add(&adapter->media, 		    IFM_ETHER | IFM_1000_T | IFM_FDX,
+literal|0
+argument|, NULL); 		ifmedia_add(&adapter->media, 		    IFM_ETHER | IFM_1000_T,
+literal|0
+argument|, NULL); 	} 	ifmedia_add(&adapter->media, IFM_ETHER | IFM_AUTO,
 literal|0
 argument|, NULL); 	ifmedia_set(&adapter->media, IFM_ETHER | IFM_AUTO);  	return; }
 comment|/********************************************************************  * Manage DMA'able memory.  *******************************************************************/
@@ -7184,7 +7460,9 @@ argument|); 	IXGBE_WRITE_REG(&adapter->hw, IXGBE_TDT(
 literal|0
 argument|),
 literal|0
-argument|);  	IXGBE_WRITE_REG(&adapter->hw, IXGBE_TIPG, IXGBE_TIPG_FIBER_DEFAULT);
+argument|);  	IXGBE_WRITE_REG(&adapter->hw, IXGBE_TIPG, IXGBE_TIPG_FIBER_DEFAULT);  	adapter->watchdog_timer =
+literal|0
+argument|;
 comment|/* Setup Transmit Descriptor Cmd Settings */
 argument|txr->txd_cmd = IXGBE_TXD_CMD_IFCS;  	return; }
 comment|/*********************************************************************  *  *  Free all transmit rings.  *  **********************************************************************/
@@ -7198,14 +7476,18 @@ argument|);  	if (txr->tx_buffers == NULL) 		return;  	tx_buffer = txr->tx_buffe
 literal|0
 argument|; i< adapter->num_tx_desc; i++, tx_buffer++) { 		if (tx_buffer->m_head != NULL) { 			bus_dmamap_sync(txr->txtag, tx_buffer->map, 			    BUS_DMASYNC_POSTWRITE); 			bus_dmamap_unload(txr->txtag, 			    tx_buffer->map); 			m_freem(tx_buffer->m_head); 			tx_buffer->m_head = NULL; 			if (tx_buffer->map != NULL) { 				bus_dmamap_destroy(txr->txtag, 				    tx_buffer->map); 				tx_buffer->map = NULL; 			} 		} else if (tx_buffer->map != NULL) { 			bus_dmamap_unload(txr->txtag, 			    tx_buffer->map); 			bus_dmamap_destroy(txr->txtag, 			    tx_buffer->map); 			tx_buffer->map = NULL; 		} 	}  	if (txr->tx_buffers != NULL) { 		free(txr->tx_buffers, M_DEVBUF); 		txr->tx_buffers = NULL; 	} 	if (txr->txtag != NULL) { 		bus_dma_tag_destroy(txr->txtag); 		txr->txtag = NULL; 	} 	return; }
 comment|/*********************************************************************  *  *  Advanced Context Descriptor setup for VLAN or CSUM  *  **********************************************************************/
-argument|static boolean_t ixgbe_tx_csum_setup(struct tx_ring *txr, struct mbuf *mp) { 	struct adapter *adapter = txr->adapter; 	struct ixgbe_adv_tx_context_desc *TXD; 	struct ixgbe_tx_buf        *tx_buffer; 	uint32_t vlan_macip_lens =
+argument|static boolean_t ixgbe_tx_ctx_setup(struct tx_ring *txr, struct mbuf *mp) { 	struct adapter *adapter = txr->adapter; 	struct ixgbe_adv_tx_context_desc *TXD; 	struct ixgbe_tx_buf        *tx_buffer; 	uint32_t vlan_macip_lens =
 literal|0
 argument_list|,
 argument|type_tucmd_mlhl =
 literal|0
 argument|; 	struct ether_vlan_header *eh; 	struct ip *ip; 	struct ip6_hdr *ip6; 	int  ehdrlen
 argument_list|,
-argument|ip_hlen; 	u16	etype; 	u8	ipproto; 	int ctxd = txr->next_avail_tx_desc;
+argument|ip_hlen =
+literal|0
+argument|; 	u16	etype; 	u8	ipproto =
+literal|0
+argument|; 	bool	offload = TRUE; 	int ctxd = txr->next_avail_tx_desc;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -7219,17 +7501,20 @@ literal|0
 argument|;
 endif|#
 directive|endif
-argument|tx_buffer =&txr->tx_buffers[ctxd]; 	TXD = (struct ixgbe_adv_tx_context_desc *)&txr->tx_base[ctxd];
+argument|if ((mp->m_pkthdr.csum_flags& CSUM_OFFLOAD) ==
+literal|0
+argument|) 		offload = FALSE;  	tx_buffer =&txr->tx_buffers[ctxd]; 	TXD = (struct ixgbe_adv_tx_context_desc *)&txr->tx_base[ctxd];
 comment|/* 	** In advanced descriptors the vlan tag must  	** be placed into the descriptor itself. 	*/
 if|#
 directive|if
 name|__FreeBSD_version
 operator|<
 literal|700000
-argument|mtag = VLAN_OUTPUT_TAG(ifp, mp); 	if (mtag != NULL) 		vlan_macip_lens |= 		    htole16(VLAN_TAG_VALUE(mtag))<< IXGBE_ADVTXD_VLAN_SHIFT;
+argument|mtag = VLAN_OUTPUT_TAG(ifp, mp); 	if (mtag != NULL) { 		vlan_macip_lens |= 		    htole16(VLAN_TAG_VALUE(mtag))<< IXGBE_ADVTXD_VLAN_SHIFT; 	} else if (offload == FALSE) 		return FALSE;
+comment|/* No need for CTX */
 else|#
 directive|else
-argument|if (mp->m_flags& M_VLANTAG) { 		vtag = htole16(mp->m_pkthdr.ether_vtag); 		vlan_macip_lens |= (vtag<< IXGBE_ADVTXD_VLAN_SHIFT); 	}
+argument|if (mp->m_flags& M_VLANTAG) { 		vtag = htole16(mp->m_pkthdr.ether_vtag); 		vlan_macip_lens |= (vtag<< IXGBE_ADVTXD_VLAN_SHIFT); 	} else if (offload == FALSE) 		return FALSE;
 endif|#
 directive|endif
 comment|/* 	 * Determine where frame payload starts. 	 * Jump over vlan headers if already present, 	 * helpful for QinQ too. 	 */
@@ -7241,7 +7526,7 @@ argument|; 			if (mp->m_len< ehdrlen + ip_hlen) 				return FALSE;
 comment|/* failure */
 argument|ipproto = ip->ip_p; 			type_tucmd_mlhl |= IXGBE_ADVTXD_TUCMD_IPV4; 			break; 		case ETHERTYPE_IPV6: 			ip6 = (struct ip6_hdr *)(mp->m_data + ehdrlen); 			ip_hlen = sizeof(struct ip6_hdr); 			if (mp->m_len< ehdrlen + ip_hlen) 				return FALSE;
 comment|/* failure */
-argument|ipproto = ip6->ip6_nxt; 			type_tucmd_mlhl |= IXGBE_ADVTXD_TUCMD_IPV6; 			break; 		default: 			return FALSE; 	}  	vlan_macip_lens |= ip_hlen; 	type_tucmd_mlhl |= IXGBE_ADVTXD_DCMD_DEXT | IXGBE_ADVTXD_DTYP_CTXT;  	switch (ipproto) { 		case IPPROTO_TCP: 			if (mp->m_pkthdr.csum_flags& CSUM_TCP) 				type_tucmd_mlhl |= IXGBE_ADVTXD_TUCMD_L4T_TCP; 			break; 		case IPPROTO_UDP: 			if (mp->m_pkthdr.csum_flags& CSUM_UDP) 				type_tucmd_mlhl |= IXGBE_ADVTXD_TUCMD_L4T_UDP; 			break; 	}
+argument|ipproto = ip6->ip6_nxt; 			type_tucmd_mlhl |= IXGBE_ADVTXD_TUCMD_IPV6; 			break; 		default: 			offload = FALSE; 			break; 	}  	vlan_macip_lens |= ip_hlen; 	type_tucmd_mlhl |= IXGBE_ADVTXD_DCMD_DEXT | IXGBE_ADVTXD_DTYP_CTXT;  	switch (ipproto) { 		case IPPROTO_TCP: 			if (mp->m_pkthdr.csum_flags& CSUM_TCP) 				type_tucmd_mlhl |= IXGBE_ADVTXD_TUCMD_L4T_TCP; 			break; 		case IPPROTO_UDP: 			if (mp->m_pkthdr.csum_flags& CSUM_UDP) 				type_tucmd_mlhl |= IXGBE_ADVTXD_TUCMD_L4T_UDP; 			break; 		default: 			offload = FALSE; 			break; 	}
 comment|/* Now copy bits into descriptor */
 argument|TXD->vlan_macip_lens |= htole32(vlan_macip_lens); 	TXD->type_tucmd_mlhl |= htole32(type_tucmd_mlhl); 	TXD->seqnum_seed = htole32(
 literal|0
@@ -7262,7 +7547,7 @@ argument|;
 comment|/* We've consumed the first desc, adjust counters */
 argument|if (++ctxd == adapter->num_tx_desc) 		ctxd =
 literal|0
-argument|; 	txr->next_avail_tx_desc = ctxd; 	--txr->tx_avail;          return TRUE; }
+argument|; 	txr->next_avail_tx_desc = ctxd; 	--txr->tx_avail;          return (offload); }
 if|#
 directive|if
 name|__FreeBSD_version
@@ -7378,7 +7663,7 @@ argument|if (num_avail == adapter->num_tx_desc) 			adapter->watchdog_timer =
 literal|0
 argument|;
 comment|/* Some were cleaned, so reset timer */
-argument|else if (num_avail == txr->tx_avail) 			adapter->watchdog_timer = IXGBE_TX_TIMEOUT; 	}  	txr->tx_avail = num_avail; 	return TRUE; }
+argument|else if (num_avail != txr->tx_avail) 			adapter->watchdog_timer = IXGBE_TX_TIMEOUT; 	}  	txr->tx_avail = num_avail; 	return TRUE; }
 comment|/*********************************************************************  *  *  Get a buffer from system mbuf buffer pool.  *  **********************************************************************/
 argument|static int ixgbe_get_buf(struct rx_ring *rxr, int i) { 	struct adapter	*adapter = rxr->adapter; 	struct mbuf	*mp; 	bus_dmamap_t	map; 	int		nsegs
 argument_list|,
@@ -7752,7 +8037,7 @@ argument|; 	} 	if (status& IXGBE_RXD_STAT_L4CS) {
 comment|/* Did it pass? */
 argument|if (!(errors& IXGBE_RXD_ERR_TCPE)) { 			mp->m_pkthdr.csum_flags |= 				(CSUM_DATA_VALID | CSUM_PSEUDO_HDR); 			mp->m_pkthdr.csum_data = htons(
 literal|0xffff
-argument|); 		}  	} 	return; }   static void ixgbe_enable_vlans(struct adapter *adapter) { 	uint32_t        ctrl;  	ixgbe_disable_intr(adapter); 	ctrl = IXGBE_READ_REG(&adapter->hw, IXGBE_VLNCTRL); 	ctrl |= IXGBE_VLNCTRL_VME; 	ctrl&= ~IXGBE_VLNCTRL_CFIEN; 	IXGBE_WRITE_REG(&adapter->hw, IXGBE_VLNCTRL, ctrl); 	ixgbe_enable_intr(adapter);  	return; }   static void ixgbe_enable_intr(struct adapter *adapter) { 	u32 mask;
+argument|); 		}  	} 	return; }   static void ixgbe_enable_hw_vlans(struct adapter *adapter) { 	uint32_t        ctrl;  	ixgbe_disable_intr(adapter); 	ctrl = IXGBE_READ_REG(&adapter->hw, IXGBE_VLNCTRL); 	ctrl |= IXGBE_VLNCTRL_VME; 	ctrl&= ~IXGBE_VLNCTRL_CFIEN; 	IXGBE_WRITE_REG(&adapter->hw, IXGBE_VLNCTRL, ctrl); 	ixgbe_enable_intr(adapter);  	return; }   static void ixgbe_enable_intr(struct adapter *adapter) { 	u32 mask;
 comment|/* With RSS set up what to auto clear */
 argument|if (adapter->msix) { 		mask = IXGBE_EIMS_ENABLE_MASK; 		mask&= ~IXGBE_EIMS_OTHER; 		mask&= ~IXGBE_EIMS_LSC; 		IXGBE_WRITE_REG(&adapter->hw, IXGBE_EIAC, mask); 	}  	mask = IXGBE_EIMS_ENABLE_MASK; 	IXGBE_WRITE_REG(&adapter->hw, IXGBE_EIMS, IXGBE_EIMS_ENABLE_MASK); 	IXGBE_WRITE_FLUSH(&adapter->hw);  	return; }  static void ixgbe_disable_intr(struct adapter *adapter) { 	IXGBE_WRITE_REG(&adapter->hw, IXGBE_EIMC, ~
 literal|0
@@ -7760,29 +8045,27 @@ argument|); 	return; }  u16 ixgbe_read_pci_cfg(struct ixgbe_hw *hw, u32 reg) { 	
 literal|2
 argument|);  	return (value); }  static void ixgbe_set_ivar(struct adapter *adapter, u16 entry, u8 vector) { 	u32 ivar
 argument_list|,
-argument|index; 	vector |= IXGBE_IVAR_ALLOC_VAL; 	index = (entry>>
+argument|index;  	vector |= IXGBE_IVAR_ALLOC_VAL; 	index = (entry>>
 literal|2
 argument|)&
 literal|0x1F
-argument|; 	ivar = IXGBE_READ_REG(&adapter->hw, IXGBE_IVAR(index)); 	ivar |= (vector<< (
+argument|; 	ivar = IXGBE_READ_REG(&adapter->hw, IXGBE_IVAR(index)); 	ivar&= ~(
+literal|0xFF
+argument|<< (
 literal|8
 argument|* (entry&
 literal|0x3
-argument|))); 	IXGBE_WRITE_REG(&adapter->hw, IXGBE_IVAR(index), ivar); }  static void ixgbe_configure_ivars(struct adapter *adapter) { 	int	i
-argument_list|,
-argument|vec;          for (i =
-literal|0
-argument|, vec =
-literal|1
-argument|; i< adapter->num_rx_queues; i++, vec++)                 ixgbe_set_ivar(adapter, IXGBE_IVAR_RX_QUEUE(i), vec);          for (i =
-literal|0
-argument|, vec =
+argument|))); 	ivar |= (vector<< (
 literal|8
-argument|; i< adapter->num_tx_queues; i++, vec++) 		ixgbe_set_ivar(adapter, IXGBE_IVAR_TX_QUEUE(i), vec);
-comment|/* For the Link interrupt */
-argument|ixgbe_set_ivar(adapter, IXGBE_IVAR_OTHER_CAUSES_INDEX,
+argument|* (entry&
+literal|0x3
+argument|))); 	IXGBE_WRITE_REG(&adapter->hw, IXGBE_IVAR(index), ivar); }  static void ixgbe_configure_ivars(struct adapter *adapter) { 	struct  tx_ring *txr = adapter->tx_rings; 	struct  rx_ring *rxr = adapter->rx_rings;          for (int i =
 literal|0
-argument|); }
+argument|; i< adapter->num_rx_queues; i++, rxr++)                 ixgbe_set_ivar(adapter, IXGBE_IVAR_RX_QUEUE(i), rxr->msix);          for (int i =
+literal|0
+argument|; i< adapter->num_tx_queues; i++, txr++) 		ixgbe_set_ivar(adapter, IXGBE_IVAR_TX_QUEUE(i), txr->msix);
+comment|/* For the Link interrupt */
+argument|ixgbe_set_ivar(adapter, IXGBE_IVAR_OTHER_CAUSES_INDEX, adapter->linkvec); }
 comment|/**********************************************************************  *  *  Update the board statistics counters.  *  **********************************************************************/
 argument|static void ixgbe_update_stats_counters(struct adapter *adapter) { 	struct ifnet   *ifp; 	struct ixgbe_hw *hw =&adapter->hw; 	u64  good_rx
 argument_list|,
@@ -7838,7 +8121,9 @@ argument|, 	       ((long long)adapter->stats.roc + 	       (long long)adapter->
 literal|"Crc errors = %llu\n"
 argument|, 	       (long long)adapter->stats.crcerrs); 	device_printf(dev,
 literal|"Driver dropped packets = %lu\n"
-argument|, 	       adapter->dropped_pkts);  	device_printf(dev,
+argument|, 	       adapter->dropped_pkts); 	device_printf(dev,
+literal|"watchdog timeouts = %ld\n"
+argument|, 	       adapter->watchdog_events);  	device_printf(dev,
 literal|"XON Rcvd = %llu\n"
 argument|, 	       (long long)adapter->stats.lxonrxc); 	device_printf(dev,
 literal|"XON Xmtd = %llu\n"
@@ -7856,13 +8141,19 @@ argument|, 	       (long long)adapter->stats.gptc); 	device_printf(dev,
 literal|"TSO Transmissions = %lu\n"
 argument|, 	       adapter->tso_tx);  	return; }
 comment|/**********************************************************************  *  *  This routine is called only when em_display_debug_stats is enabled.  *  This routine provides a way to take a look at important statistics  *  maintained by the driver and hardware.  *  **********************************************************************/
-argument|static void ixgbe_print_debug_info(struct adapter *adapter) { 	device_t dev = adapter->dev; 	struct rx_ring *rxr = adapter->rx_rings; 	struct ixgbe_hw *hw =&adapter->hw; 	uint8_t *hw_addr = adapter->hw.hw_addr;   	device_printf(dev,
+argument|static void ixgbe_print_debug_info(struct adapter *adapter) { 	device_t dev = adapter->dev; 	struct rx_ring *rxr = adapter->rx_rings; 	struct tx_ring *txr = adapter->tx_rings; 	struct ixgbe_hw *hw =&adapter->hw;
+ifdef|#
+directive|ifdef
+name|IXGBE_DEBUG
+argument|uint8_t *hw_addr = adapter->hw.hw_addr;
+comment|/* 	 * This is not normally that useful, turn it on or 	 * add to as needed... 	 */
+argument|device_printf(dev,
 literal|"Adapter hardware address = %p \n"
 argument|, hw_addr); 	device_printf(dev,
-literal|"CTRL = 0x%x RXCTRL = 0x%x \n"
+literal|"TXDCTL = 0x%x RXCTRL = 0x%x \n"
 argument|, 	    IXGBE_READ_REG(hw, IXGBE_TXDCTL(
 literal|0
-argument|)), 	    IXGBE_READ_REG(hw, IXGBE_RXCTRL));  	device_printf(dev,
+argument|)), 	    IXGBE_READ_REG(hw, IXGBE_RXCTRL));   	device_printf(dev,
 literal|"RXDCTL(0) = 0x%x RXDCTL(1) = 0x%x"
 literal|" RXCTRL(2) = 0x%x \n"
 argument|, 	    IXGBE_READ_REG(hw, IXGBE_RXDCTL(
@@ -7880,31 +8171,34 @@ argument|)), 	    IXGBE_READ_REG(hw, IXGBE_SRRCTL(
 literal|1
 argument|)), 	    IXGBE_READ_REG(hw, IXGBE_SRRCTL(
 literal|2
-argument|))); 	device_printf(dev,
-literal|"EIMC = 0x%x EIMS = 0x%x\n"
-argument|, 	    IXGBE_READ_REG(hw, IXGBE_EIMC), 	    IXGBE_READ_REG(hw, IXGBE_EIMS)); 	device_printf(dev,
+argument|)));
+endif|#
+directive|endif
+argument|device_printf(dev,
 literal|"Queue(0) tdh = %d, hw tdt = %d\n"
 argument|, 	    IXGBE_READ_REG(hw, IXGBE_TDH(
 literal|0
 argument|)), 	    IXGBE_READ_REG(hw, IXGBE_TDT(
 literal|0
-argument|))); 	device_printf(dev,
+argument|)));  	for (int i =
+literal|0
+argument|; i< adapter->num_rx_queues; i++) { 		device_printf(dev,
+literal|"Queue[%d]: rdh = %d, hw rdt = %d\n"
+argument|, 	    	    i, IXGBE_READ_REG(hw, IXGBE_RDH(i)), 	    	    IXGBE_READ_REG(hw, IXGBE_RDT(i))); 	}  	device_printf(dev,
 literal|"Error Byte Count = %u \n"
 argument|, 	    IXGBE_READ_REG(hw, IXGBE_ERRBC));  	for (int i =
 literal|0
 argument|; i< adapter->num_rx_queues; i++, rxr++) { 		device_printf(dev,
 literal|"Queue %d Packets Received: %lu\n"
-argument|, 	    	    rxr->me, (long)rxr->packet_count); 	}  	rxr = adapter->rx_rings;
-comment|// Reset
-argument|for (int i =
-literal|0
-argument|; i< adapter->num_rx_queues; i++, rxr++) { 		device_printf(dev,
+argument|, 	    	    rxr->me, (long)rxr->packet_count); 		device_printf(dev,
 literal|"Queue %d Bytes Received: %lu\n"
-argument|, 	    	    rxr->me, (long)rxr->byte_count); 	}  	for (int i =
-literal|0
-argument|; i< adapter->num_rx_queues; i++) { 		device_printf(dev,
-literal|"Queue[%d]: rdh = %d, hw rdt = %d\n"
-argument|, 	    	    i, IXGBE_READ_REG(hw, IXGBE_RDH(i)), 	    	    IXGBE_READ_REG(hw, IXGBE_RDT(i))); 	}  	return; }  static int ixgbe_sysctl_stats(SYSCTL_HANDLER_ARGS) { 	int             error; 	int             result; 	struct adapter *adapter;  	result = -
+argument|, 	    	    rxr->me, (long)rxr->byte_count); 		device_printf(dev,
+literal|"RX Queue %d IRQ Handled: %lu\n"
+argument|, 	    	    rxr->me, (long)rxr->rx_irq); 	}  	device_printf(dev,
+literal|"TX Queue IRQ Handled: %lu\n"
+argument|,     	    (long)txr->tx_irq); 	device_printf(dev,
+literal|"Link IRQ Handled: %lu\n"
+argument|,     	    (long)adapter->link_irq); 	return; }  static int ixgbe_sysctl_stats(SYSCTL_HANDLER_ARGS) { 	int             error; 	int             result; 	struct adapter *adapter;  	result = -
 literal|1
 argument|; 	error = sysctl_handle_int(oidp,&result,
 literal|0

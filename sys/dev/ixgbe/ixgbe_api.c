@@ -161,6 +161,9 @@ case|case
 name|IXGBE_DEV_ID_82598AF_DUAL_PORT
 case|:
 case|case
+name|IXGBE_DEV_ID_82598AT
+case|:
+case|case
 name|IXGBE_DEV_ID_82598EB_CX4
 case|:
 name|hw
@@ -256,7 +259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_start_hw - Prepares hardware for TX/TX  *  @hw: pointer to hardware structure  *  *  Starts the hardware by filling the bus info structure and media type,  *  clears all on chip counters, initializes receive address registers,  *  multicast table, VLAN filter table, calls routine to setup link and  *  flow control settings, and leaves transmit and receive units disabled  *  and uninitialized.  **/
+comment|/**  *  ixgbe_start_hw - Prepares hardware for Rx/Tx  *  @hw: pointer to hardware structure  *  *  Starts the hardware by filling the bus info structure and media type,  *  clears all on chip counters, initializes receive address registers,  *  multicast table, VLAN filter table, calls routine to setup link and  *  flow control settings, and leaves transmit and receive units disabled  *  and uninitialized.  **/
 end_comment
 
 begin_function
@@ -418,7 +421,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_get_num_of_tx_queues - Get TX queues  *  @hw: pointer to hardware structure  *  *  Returns the number of transmit queues for the given adapter.  **/
+comment|/**  *  ixgbe_get_num_of_tx_queues - Get Tx queues  *  @hw: pointer to hardware structure  *  *  Returns the number of transmit queues for the given adapter.  **/
 end_comment
 
 begin_function
@@ -449,7 +452,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_get_num_of_rx_queues - Get RX queues  *  @hw: pointer to hardware structure  *  *  Returns the number of receive queues for the given adapter.  **/
+comment|/**  *  ixgbe_get_num_of_rx_queues - Get Rx queues  *  @hw: pointer to hardware structure  *  *  Returns the number of receive queues for the given adapter.  **/
 end_comment
 
 begin_function
@@ -480,7 +483,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_stop_adapter - Disable TX/TX units  *  @hw: pointer to hardware structure  *  *  Sets the adapter_stopped flag within ixgbe_hw struct. Clears interrupts,  *  disables transmit and receive units. The adapter_stopped flag is used by  *  the shared code and drivers to determine if the adapter is in a stopped  *  state and should not touch the hardware.  **/
+comment|/**  *  ixgbe_stop_adapter - Disable Rx/Tx units  *  @hw: pointer to hardware structure  *  *  Sets the adapter_stopped flag within ixgbe_hw struct. Clears interrupts,  *  disables transmit and receive units. The adapter_stopped flag is used by  *  the shared code and drivers to determine if the adapter is in a stopped  *  state and should not touch the hardware.  **/
 end_comment
 
 begin_function
@@ -505,6 +508,35 @@ name|hw
 operator|)
 argument_list|,
 name|IXGBE_NOT_IMPLEMENTED
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  ixgbe_read_pba_num - Reads part number from EEPROM  *  @hw: pointer to hardware strucure  *  @pba_num: stores the part number from the EEPROM  *  *  Reads the part number from the EEPROM.  **/
+end_comment
+
+begin_function
+name|s32
+name|ixgbe_read_pba_num
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+modifier|*
+name|pba_num
+parameter_list|)
+block|{
+return|return
+name|ixgbe_read_pba_num_generic
+argument_list|(
+name|hw
+argument_list|,
+name|pba_num
 argument_list|)
 return|;
 block|}
@@ -939,12 +971,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_get_link_settings - Set link settings to default  *  @hw: pointer to hardware structure  *  *  Sets the default link settings based on attach type in the hw struct.  **/
+comment|/**  *  ixgbe_get_link_capabilities - Returns link capabilities  *  @hw: pointer to hardware structure  *  *  Determines the link capabilities of the current configuration.  **/
 end_comment
 
 begin_function
 name|s32
-name|ixgbe_get_link_settings
+name|ixgbe_get_link_capabilities
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -965,7 +997,7 @@ name|ixgbe_call_func
 argument_list|(
 name|hw
 argument_list|,
-name|ixgbe_func_get_link_settings
+name|ixgbe_func_get_link_capabilities
 argument_list|,
 operator|(
 name|hw
@@ -1374,7 +1406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_set_rar - Set RX address register  *  @hw: pointer to hardware structure  *  @addr: Address to put into receive address register  *  @index: Receive address register to write  *  @vind: Vind to set RAR to  *  @enable_addr: set flag that address is active  *  *  Puts an ethernet address into a receive address register.  **/
+comment|/**  *  ixgbe_set_rar - Set Rx address register  *  @hw: pointer to hardware structure  *  @addr: Address to put into receive address register  *  @index: Receive address register to write  *  @enable_addr: set flag that address is active  *  *  Puts an ethernet address into a receive address register.  **/
 end_comment
 
 begin_function
@@ -1394,9 +1426,6 @@ modifier|*
 name|addr
 parameter_list|,
 name|u32
-name|vind
-parameter_list|,
-name|u32
 name|enable_addr
 parameter_list|)
 block|{
@@ -1413,8 +1442,6 @@ operator|,
 name|index
 operator|,
 name|addr
-operator|,
-name|vind
 operator|,
 name|enable_addr
 operator|)
@@ -1488,7 +1515,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_update_mc_addr_list - Updates the MAC's list of multicast addresses  *  @hw: pointer to hardware structure  *  @mc_addr_list: the list of new multicast addresses  *  @mc_addr_count: number of addresses  *  @pad: number of bytes between addresses in the list  *  *  The given list replaces any existing list. Clears the MC addrs from receive  *  address registers and the multicast table. Uses unsed receive address  *  registers for the first multicast addresses, and hashes the rest into the  *  multicast table.  **/
+comment|/**  *  ixgbe_update_mc_addr_list - Updates the MAC's list of multicast addresses  *  @hw: pointer to hardware structure  *  @mc_addr_list: the list of new multicast addresses  *  @mc_addr_count: number of addresses  *  @func: iterator function to walk the multicast address list  *  *  The given list replaces any existing list. Clears the MC addrs from receive  *  address registers and the multicast table. Uses unused receive address  *  registers for the first multicast addresses, and hashes the rest into the  *  multicast table.  **/
 end_comment
 
 begin_function
@@ -1507,8 +1534,8 @@ parameter_list|,
 name|u32
 name|mc_addr_count
 parameter_list|,
-name|u32
-name|pad
+name|ixgbe_mc_addr_itr
+name|func
 parameter_list|)
 block|{
 return|return
@@ -1525,7 +1552,7 @@ name|mc_addr_list
 operator|,
 name|mc_addr_count
 operator|,
-name|pad
+name|func
 operator|)
 argument_list|,
 name|IXGBE_NOT_IMPLEMENTED

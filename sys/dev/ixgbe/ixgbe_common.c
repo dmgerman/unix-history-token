@@ -438,7 +438,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_start_hw_generic - Prepare hardware for TX/RX  *  @hw: pointer to hardware structure  *  *  Starts the hardware by filling the bus info structure and media type, clears  *  all on chip counters, initializes receive address registers, multicast  *  table, VLAN filter table, calls routine to set up link and flow control  *  settings, and leaves transmit and receive units disabled and uninitialized  **/
+comment|/**  *  ixgbe_start_hw_generic - Prepare hardware for Tx/Rx  *  @hw: pointer to hardware structure  *  *  Starts the hardware by filling the bus info structure and media type, clears  *  all on chip counters, initializes receive address registers, multicast  *  table, VLAN filter table, calls routine to set up link and flow control  *  settings, and leaves transmit and receive units disabled and uninitialized  **/
 end_comment
 
 begin_function
@@ -523,6 +523,11 @@ argument_list|,
 name|IXGBE_CTRL_EXT
 argument_list|,
 name|ctrl_ext
+argument_list|)
+expr_stmt|;
+name|IXGBE_WRITE_FLUSH
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 comment|/* Clear adapter stopped flag */
@@ -1060,6 +1065,110 @@ block|}
 end_function
 
 begin_comment
+comment|/**  *  ixgbe_read_pba_num - Reads part number from EEPROM  *  @hw: pointer to hardware strucure  *  @pba_num: stores the part number from the EEPROM  *  *  Reads the part number from the EEPROM.  **/
+end_comment
+
+begin_function
+name|s32
+name|ixgbe_read_pba_num_generic
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+modifier|*
+name|pba_num
+parameter_list|)
+block|{
+name|s32
+name|ret_val
+decl_stmt|;
+name|u16
+name|data
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"ixgbe_read_pba_num_generic"
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+name|ixgbe_read_eeprom
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_PBANUM0_PTR
+argument_list|,
+operator|&
+name|data
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"NVM Read Error\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ret_val
+return|;
+block|}
+operator|*
+name|pba_num
+operator|=
+call|(
+name|u32
+call|)
+argument_list|(
+name|data
+operator|<<
+literal|16
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+name|ixgbe_read_eeprom
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_PBANUM1_PTR
+argument_list|,
+operator|&
+name|data
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"NVM Read Error\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ret_val
+return|;
+block|}
+operator|*
+name|pba_num
+operator||=
+name|data
+expr_stmt|;
+return|return
+name|IXGBE_SUCCESS
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  *  ixgbe_get_mac_addr_generic - Generic get MAC address  *  @hw: pointer to hardware structure  *  @mac_addr: Adapter MAC address  *  *  Reads the adapter's MAC address from first Receive Address Register (RAR0)  *  A reset of the adapter must be performed prior to calling this function  *  in order for the MAC address to have been loaded from the EEPROM into RAR0  **/
 end_comment
 
@@ -1330,7 +1439,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_stop_adapter_generic - Generic stop TX/RX units  *  @hw: pointer to hardware structure  *  *  Sets the adapter_stopped flag within ixgbe_hw struct. Clears interrupts,  *  disables transmit and receive units. The adapter_stopped flag is used by  *  the shared code and drivers to determine if the adapter is in a stopped  *  state and should not touch the hardware.  **/
+comment|/**  *  ixgbe_stop_adapter_generic - Generic stop Tx/Rx units  *  @hw: pointer to hardware structure  *  *  Sets the adapter_stopped flag within ixgbe_hw struct. Clears interrupts,  *  disables transmit and receive units. The adapter_stopped flag is used by  *  the shared code and drivers to determine if the adapter is in a stopped  *  state and should not touch the hardware.  **/
 end_comment
 
 begin_function
@@ -1383,6 +1492,11 @@ argument_list|,
 name|IXGBE_RXCTRL
 argument_list|,
 name|reg_val
+argument_list|)
+expr_stmt|;
+name|IXGBE_WRITE_FLUSH
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 name|msec_delay
@@ -1468,6 +1582,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Prevent the PCI-E bus from from hanging by disabling PCI-E master 	 * access and verify no pending requests 	 */
+if|if
+condition|(
+name|ixgbe_disable_pcie_master
+argument_list|(
+name|hw
+argument_list|)
+operator|!=
+name|IXGBE_SUCCESS
+condition|)
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"PCI-E Master disable polling has failed.\n"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|IXGBE_SUCCESS
 return|;
@@ -1526,6 +1657,11 @@ argument_list|,
 name|IXGBE_LEDCTL
 argument_list|,
 name|led_reg
+argument_list|)
+expr_stmt|;
+name|IXGBE_WRITE_FLUSH
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 return|return
@@ -1588,6 +1724,11 @@ argument_list|,
 name|led_reg
 argument_list|)
 expr_stmt|;
+name|IXGBE_WRITE_FLUSH
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
 return|return
 name|IXGBE_SUCCESS
 return|;
@@ -1635,6 +1776,11 @@ argument_list|,
 name|IXGBE_LEDCTL
 argument_list|,
 name|led_reg
+argument_list|)
+expr_stmt|;
+name|IXGBE_WRITE_FLUSH
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 return|return
@@ -1685,6 +1831,11 @@ argument_list|,
 name|IXGBE_LEDCTL
 argument_list|,
 name|led_reg
+argument_list|)
+expr_stmt|;
+name|IXGBE_WRITE_FLUSH
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 return|return
@@ -2779,6 +2930,11 @@ argument_list|,
 name|IXGBE_SWSM
 argument_list|,
 name|swsm
+argument_list|)
+expr_stmt|;
+name|IXGBE_WRITE_FLUSH
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 block|}
@@ -3913,7 +4069,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_set_rar_generic - Set RX address register  *  @hw: pointer to hardware structure  *  @addr: Address to put into receive address register  *  @index: Receive address register to write  *  @vind: Vind to set RAR to  *  @enable_addr: set flag that address is active  *  *  Puts an ethernet address into a receive address register.  **/
+comment|/**  *  ixgbe_set_rar_generic - Set Rx address register  *  @hw: pointer to hardware structure  *  @addr: Address to put into receive address register  *  @index: Receive address register to write  *  @enable_addr: set flag that address is active  *  *  Puts an ethernet address into a receive address register.  **/
 end_comment
 
 begin_function
@@ -3933,9 +4089,6 @@ modifier|*
 name|addr
 parameter_list|,
 name|u32
-name|vind
-parameter_list|,
-name|u32
 name|enable_addr
 parameter_list|)
 block|{
@@ -3944,7 +4097,23 @@ name|rar_low
 decl_stmt|,
 name|rar_high
 decl_stmt|;
-comment|/* 	 * HW expects these in little endian so we reverse the byte order from 	 * network order (big endian) to little endian 	 */
+name|u32
+name|rar_entries
+init|=
+name|ixgbe_get_num_rx_addrs
+argument_list|(
+name|hw
+argument_list|)
+decl_stmt|;
+comment|/* Make sure we are using a valid rar index range */
+if|if
+condition|(
+name|index
+operator|<
+name|rar_entries
+condition|)
+block|{
+comment|/* 		 * HW expects these in little endian so we reverse the byte 		 * order from network order (big endian) to little endian 		 */
 name|rar_low
 operator|=
 operator|(
@@ -4015,16 +4184,6 @@ index|]
 operator|<<
 literal|8
 operator|)
-operator||
-operator|(
-operator|(
-name|vind
-operator|<<
-name|IXGBE_RAH_VIND_SHIFT
-operator|)
-operator|&
-name|IXGBE_RAH_VIND_MASK
-operator|)
 operator|)
 expr_stmt|;
 if|if
@@ -4061,6 +4220,15 @@ argument_list|,
 name|rar_high
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"Current RAR index is out of range."
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|IXGBE_SUCCESS
 return|;
@@ -4068,7 +4236,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_enable_rar - Enable RX address register  *  @hw: pointer to hardware structure  *  @index: index into the RAR table  *  *  Enables the select receive address register.  **/
+comment|/**  *  ixgbe_enable_rar - Enable Rx address register  *  @hw: pointer to hardware structure  *  @index: index into the RAR table  *  *  Enables the select receive address register.  **/
 end_comment
 
 begin_function
@@ -4120,7 +4288,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_disable_rar - Disable RX address register  *  @hw: pointer to hardware structure  *  @index: index into the RAR table  *  *  Disables the select receive address register.  **/
+comment|/**  *  ixgbe_disable_rar - Disable Rx address register  *  @hw: pointer to hardware structure  *  @index: index into the RAR table  *  *  Disables the select receive address register.  **/
 end_comment
 
 begin_function
@@ -4374,8 +4542,6 @@ operator|->
 name|mac
 operator|.
 name|addr
-argument_list|,
-literal|0
 argument_list|,
 name|IXGBE_RAH_AV
 argument_list|)
@@ -4874,8 +5040,6 @@ name|rar_used_count
 argument_list|,
 name|mc_addr
 argument_list|,
-literal|0
-argument_list|,
 name|IXGBE_RAH_AV
 argument_list|)
 expr_stmt|;
@@ -4924,7 +5088,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_update_mc_addr_list_generic - Updates MAC list of multicast addresses  *  @hw: pointer to hardware structure  *  @mc_addr_list: the list of new multicast addresses  *  @mc_addr_count: number of addresses  *  @pad: number of bytes between addresses in the list  *  *  The given list replaces any existing list. Clears the MC addrs from receive  *  address registers and the multicast table. Uses unsed receive address  *  registers for the first multicast addresses, and hashes the rest into the  *  multicast table.  **/
+comment|/**  *  ixgbe_update_mc_addr_list_generic - Updates MAC list of multicast addresses  *  @hw: pointer to hardware structure  *  @mc_addr_list: the list of new multicast addresses  *  @mc_addr_count: number of addresses  *  @func: iterator function to walk the multicast address list  *  *  The given list replaces any existing list. Clears the MC addrs from receive  *  address registers and the multicast table. Uses unused receive address  *  registers for the first multicast addresses, and hashes the rest into the  *  multicast table.  **/
 end_comment
 
 begin_function
@@ -4943,8 +5107,8 @@ parameter_list|,
 name|u32
 name|mc_addr_count
 parameter_list|,
-name|u32
-name|pad
+name|ixgbe_mc_addr_itr
+name|next
 parameter_list|)
 block|{
 name|u32
@@ -5099,17 +5263,11 @@ name|ixgbe_add_mc_addr
 argument_list|(
 name|hw
 argument_list|,
+name|next
+argument_list|(
+operator|&
 name|mc_addr_list
-operator|+
-operator|(
-name|i
-operator|*
-operator|(
-name|IXGBE_ETH_LENGTH_OF_ADDRESS
-operator|+
-name|pad
-operator|)
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5706,7 +5864,7 @@ name|fc
 operator|.
 name|original_type
 expr_stmt|;
-comment|/* 	 * The possible values of the "flow_control" parameter are: 	 * 0: Flow control is completely disabled 	 * 1: Rx flow control is enabled (we can receive pause frames but not 	 *    send pause frames). 	 * 2: Tx flow control is enabled (we can send pause frames but we do not 	 *    support receiving pause frames) 	 * 3: Both Rx and TX flow control (symmetric) are enabled. 	 * other: Invalid. 	 */
+comment|/* 	 * The possible values of the "flow_control" parameter are: 	 * 0: Flow control is completely disabled 	 * 1: Rx flow control is enabled (we can receive pause frames but not 	 *    send pause frames). 	 * 2: Tx flow control is enabled (we can send pause frames but we do not 	 *    support receiving pause frames) 	 * 3: Both Rx and Tx flow control (symmetric) are enabled. 	 * other: Invalid. 	 */
 switch|switch
 condition|(
 name|hw
@@ -5723,7 +5881,7 @@ break|break;
 case|case
 name|ixgbe_fc_rx_pause
 case|:
-comment|/* 		 * RX Flow control is enabled, 		 * and TX Flow control is disabled. 		 */
+comment|/* 		 * Rx Flow control is enabled, 		 * and Tx Flow control is disabled. 		 */
 name|frctl_reg
 operator||=
 name|IXGBE_FCTRL_RFCE
@@ -5732,7 +5890,7 @@ break|break;
 case|case
 name|ixgbe_fc_tx_pause
 case|:
-comment|/* 		 * TX Flow control is enabled, and RX Flow control is disabled, 		 * by a software over-ride. 		 */
+comment|/* 		 * Tx Flow control is enabled, and Rx Flow control is disabled, 		 * by a software over-ride. 		 */
 name|rmcs_reg
 operator||=
 name|IXGBE_RMCS_TFCE_802_3X
@@ -5741,7 +5899,7 @@ break|break;
 case|case
 name|ixgbe_fc_full
 case|:
-comment|/* 		 * Flow control (both RX and TX) is enabled by a software 		 * over-ride. 		 */
+comment|/* 		 * Flow control (both Rx and Tx) is enabled by a software 		 * over-ride. 		 */
 name|frctl_reg
 operator||=
 name|IXGBE_FCTRL_RFCE
@@ -5784,6 +5942,40 @@ argument_list|,
 name|rmcs_reg
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Check for invalid software configuration, zeros are completely 	 * invalid for all parameters used past this point, and if we enable 	 * flow control with zero water marks, we blast flow control packets. 	 */
+if|if
+condition|(
+operator|!
+name|hw
+operator|->
+name|fc
+operator|.
+name|low_water
+operator|||
+operator|!
+name|hw
+operator|->
+name|fc
+operator|.
+name|high_water
+operator|||
+operator|!
+name|hw
+operator|->
+name|fc
+operator|.
+name|pause_time
+condition|)
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"Flow control structure initialized incorrectly\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|IXGBE_ERR_INVALID_LINK_SETTINGS
+return|;
+block|}
 comment|/* 	 * We need to set up the Receive Threshold high and low water 	 * marks as well as (optionally) enabling the transmission of 	 * XON frames. 	 */
 if|if
 condition|(

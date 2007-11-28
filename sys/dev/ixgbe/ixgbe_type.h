@@ -57,6 +57,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_DEV_ID_82598AT
+value|0x10C8
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_DEV_ID_82598EB_CX4
 value|0x10DD
 end_define
@@ -549,12 +556,8 @@ name|IXGBE_RAL
 parameter_list|(
 name|_i
 parameter_list|)
-value|(0x05400 + ((_i) * 8))
+value|(((_i)<= 15) ? (0x05400 + ((_i) * 8)) : (0x0A200 + ((_i) * 8)))
 end_define
-
-begin_comment
-comment|/* 16 of these (0-15) */
-end_comment
 
 begin_define
 define|#
@@ -563,12 +566,8 @@ name|IXGBE_RAH
 parameter_list|(
 name|_i
 parameter_list|)
-value|(0x05404 + ((_i) * 8))
+value|(((_i)<= 15) ? (0x05404 + ((_i) * 8)) : (0x0A204 + ((_i) * 8)))
 end_define
-
-begin_comment
-comment|/* 16 of these (0-15) */
-end_comment
 
 begin_define
 define|#
@@ -802,6 +801,13 @@ define|#
 directive|define
 name|IXGBE_DTXCTL
 value|0x07E00
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_DTXCTL_V2
+value|0x04A80
 end_define
 
 begin_define
@@ -2684,7 +2690,7 @@ value|(1<< 11)
 end_define
 
 begin_comment
-comment|/* TX Desc writeback RO bit */
+comment|/* Tx Desc writeback RO bit */
 end_comment
 
 begin_define
@@ -3227,6 +3233,13 @@ end_define
 begin_comment
 comment|/* PHY IDs*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TN1010_PHY_ID
+value|0x00A19410
+end_define
 
 begin_define
 define|#
@@ -3887,6 +3900,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_EICR_GPI_SDP1
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Gen Purpose Interrupt on SDP1 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_EICS_MNG
 value|IXGBE_EICR_MNG
 end_define
@@ -4109,7 +4133,7 @@ value|( \ 				IXGBE_EIMS_RTX_QUEUE       | \ 				IXGBE_EIMS_LSC             | \ 
 end_define
 
 begin_comment
-comment|/* Immediate Interrupt RX (A.K.A. Low Latency Interrupt) */
+comment|/* Immediate Interrupt Rx (A.K.A. Low Latency Interrupt) */
 end_comment
 
 begin_define
@@ -5428,6 +5452,20 @@ name|IXGBE_FW_PTR
 value|0x0F
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_PBANUM0_PTR
+value|0x15
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PBANUM1_PTR
+value|0x16
+end_define
+
 begin_comment
 comment|/* Legacy EEPROM word offsets */
 end_comment
@@ -6034,6 +6072,13 @@ define|#
 directive|define
 name|IXGBE_MAX_FRAME_SZ
 value|0x40040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_DTXCTL_TE
+value|0x00000001
 end_define
 
 begin_define
@@ -7805,6 +7850,20 @@ name|IXGBE_LINK_SPEED_10GB_FULL
 value|0x0080
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_LINK_SPEED_82598_AUTONEG
+value|(IXGBE_LINK_SPEED_1GB_FULL | \ 					IXGBE_LINK_SPEED_10GB_FULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_LINK_SPEED_82599_AUTONEG
+value|(IXGBE_LINK_SPEED_100_FULL | \ 					IXGBE_LINK_SPEED_1GB_FULL | \ 					IXGBE_LINK_SPEED_10GB_FULL)
+end_define
+
 begin_enum
 enum|enum
 name|ixgbe_eeprom_type
@@ -7844,6 +7903,8 @@ name|ixgbe_phy_unknown
 init|=
 literal|0
 block|,
+name|ixgbe_phy_tn
+block|,
 name|ixgbe_phy_qt
 block|,
 name|ixgbe_phy_xaui
@@ -7864,6 +7925,8 @@ block|,
 name|ixgbe_media_type_copper
 block|,
 name|ixgbe_media_type_backplane
+block|,
+name|ixgbe_media_type_virtual
 block|}
 enum|;
 end_enum
@@ -8291,6 +8354,27 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* iterator type for walking multicast address lists */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u8
+modifier|*
+function_decl|(
+modifier|*
+name|ixgbe_mc_addr_itr
+function_decl|)
+parameter_list|(
+name|u8
+modifier|*
+modifier|*
+name|mc_addr_ptr
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/* forward declaration */
 end_comment
 
@@ -8605,7 +8689,7 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
-name|ixgbe_func_get_link_settings
+name|ixgbe_func_get_link_capabilities
 function_decl|)
 parameter_list|(
 name|struct
@@ -8757,8 +8841,6 @@ name|u8
 modifier|*
 parameter_list|,
 name|u32
-parameter_list|,
-name|u32
 parameter_list|)
 function_decl|;
 name|s32
@@ -8798,7 +8880,7 @@ modifier|*
 parameter_list|,
 name|u32
 parameter_list|,
-name|u32
+name|ixgbe_mc_addr_itr
 parameter_list|)
 function_decl|;
 name|s32
