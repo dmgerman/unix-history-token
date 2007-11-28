@@ -1143,7 +1143,7 @@ parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&(_sc)->core_mtx, _name, MTX_NETWORK_LOCK, MTX_DEF)
+value|mtx_init(&(_sc)->core_mtx, _name, "EM Core Lock", MTX_DEF)
 end_define
 
 begin_define
@@ -1156,7 +1156,7 @@ parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&(_sc)->tx_mtx, _name, MTX_NETWORK_LOCK, MTX_DEF)
+value|mtx_init(&(_sc)->tx_mtx, _name, "EM TX Lock", MTX_DEF)
 end_define
 
 begin_define
