@@ -2509,11 +2509,6 @@ argument_list|(
 operator|&
 name|to
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|&
 name|opt
 argument_list|)
 expr_stmt|;
