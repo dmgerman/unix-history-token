@@ -7524,6 +7524,13 @@ operator|->
 name|phys_addr
 argument_list|)
 expr_stmt|;
+name|vm_page_unwire
+argument_list|(
+name|m
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|m
@@ -7805,6 +7812,8 @@ argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_NOOBJ
+operator||
+name|VM_ALLOC_WIRED
 argument_list|)
 expr_stmt|;
 if|if
@@ -7863,6 +7872,8 @@ argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_NOOBJ
+operator||
+name|VM_ALLOC_WIRED
 argument_list|)
 expr_stmt|;
 if|if
@@ -7900,6 +7911,8 @@ argument_list|,
 name|VM_ALLOC_SYSTEM
 operator||
 name|VM_ALLOC_NOOBJ
+operator||
+name|VM_ALLOC_WIRED
 argument_list|)
 expr_stmt|;
 if|if
@@ -13039,6 +13052,13 @@ argument_list|(
 name|m
 operator|->
 name|phys_addr
+argument_list|)
+expr_stmt|;
+name|vm_page_unwire
+argument_list|(
+name|m
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vm_page_free
