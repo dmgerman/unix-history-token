@@ -7880,13 +7880,7 @@ name|IEEE80211_MSG_DEBUG
 argument_list|,
 name|ni
 argument_list|,
-literal|"station %sassociated at aid %d: %s preamble, %s slot time%s%s%s%s%s%s"
-argument_list|,
-name|newassoc
-condition|?
-literal|""
-else|:
-literal|"re"
+literal|"station associated at aid %d: %s preamble, %s slot time%s%s%s%s%s%s"
 argument_list|,
 name|IEEE80211_NODE_AID
 argument_list|(
@@ -8047,7 +8041,9 @@ name|ic
 argument_list|,
 name|ni
 argument_list|,
-name|newassoc
+name|resp
+operator|==
+name|IEEE80211_FC0_SUBTYPE_ASSOC_RESP
 argument_list|)
 expr_stmt|;
 block|}
