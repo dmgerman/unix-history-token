@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -22,6 +22,29 @@ end_define
 begin_comment
 comment|/* Tunables */
 end_comment
+
+begin_comment
+comment|/* Set FAST handling on by default */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|700000
+end_if
+
+begin_define
+define|#
+directive|define
+name|EM_FAST_IRQ
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * EM_TXD: Maximum number of Transmit Descriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of transmit descriptors allocated by the driver.  *   Increasing this value allows the driver to queue more transmits. Each  *   descriptor is 16 bytes.  *   Since TDLEN should be multiple of 128bytes, the number of transmit  *   desscriptors should meet the following condition.  *      (num_tx_desc * sizeof(struct e1000_tx_desc)) % 128 == 0  */
@@ -141,10 +164,6 @@ directive|define
 name|EM_TX_TIMEOUT
 value|5
 end_define
-
-begin_comment
-comment|/* set to 5 seconds */
-end_comment
 
 begin_comment
 comment|/*  * This parameter controls when the driver calls the routine to reclaim  * transmit descriptors.  */
@@ -292,13 +311,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|EM_TX_BUFFER_SIZE
-value|((uint32_t) 1514)
-end_define
-
-begin_define
-define|#
-directive|define
 name|EM_FC_PAUSE_TIME
 value|0x0680
 end_define
@@ -309,6 +321,28 @@ directive|define
 name|EM_EEPROM_APME
 value|0x400;
 end_define
+
+begin_comment
+comment|/* Code compatilbility between 6 and 7 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHER_BPF_MTAP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHER_BPF_MTAP
+value|BPF_MTAP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * TDBA/RDBA should be aligned on 16 byte boundary. But TDLEN/RDLEN should be  * multiple of 128 bytes. So we align TDBA/RDBA on 128 byte boundary. This will  * also optimize cache line size effect. H/W supports up to cache line size 128.  */
@@ -560,12 +594,8 @@ begin_define
 define|#
 directive|define
 name|EM_TSO_SIZE
-value|65535
+value|(65535 + sizeof(struct ether_vlan_header))
 end_define
-
-begin_comment
-comment|/* maxsize of a dma transfer */
-end_comment
 
 begin_define
 define|#
@@ -600,7 +630,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* Offload bits in csum flags */
+comment|/* Offload bits in mbuf flag */
 end_comment
 
 begin_struct_decl
@@ -741,9 +771,19 @@ decl_stmt|;
 name|int
 name|if_flags
 decl_stmt|;
+name|int
+name|max_frame_size
+decl_stmt|;
+name|int
+name|min_frame_size
+decl_stmt|;
 name|struct
 name|mtx
+name|core_mtx
+decl_stmt|;
+name|struct
 name|mtx
+name|tx_mtx
 decl_stmt|;
 name|int
 name|em_insert_vlan_header
@@ -770,9 +810,6 @@ name|int
 name|has_manage
 decl_stmt|;
 comment|/* Info about the board itself */
-name|uint32_t
-name|part_num
-decl_stmt|;
 name|uint8_t
 name|link_active
 decl_stmt|;
@@ -1099,54 +1136,107 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|EM_LOCK_INIT
+name|EM_CORE_LOCK_INIT
 parameter_list|(
 name|_sc
 parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&(_sc)->mtx, _name, MTX_NETWORK_LOCK, MTX_DEF)
+value|mtx_init(&(_sc)->core_mtx, _name, "EM Core Lock", MTX_DEF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|EM_LOCK_DESTROY
+name|EM_TX_LOCK_INIT
 parameter_list|(
 name|_sc
+parameter_list|,
+name|_name
 parameter_list|)
-value|mtx_destroy(&(_sc)->mtx)
+define|\
+value|mtx_init(&(_sc)->tx_mtx, _name, "EM TX Lock", MTX_DEF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|EM_LOCK
+name|EM_CORE_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_lock(&(_sc)->mtx)
+value|mtx_destroy(&(_sc)->core_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|EM_UNLOCK
+name|EM_TX_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_unlock(&(_sc)->mtx)
+value|mtx_destroy(&(_sc)->tx_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|EM_LOCK_ASSERT
+name|EM_CORE_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_assert(&(_sc)->mtx, MA_OWNED)
+value|mtx_lock(&(_sc)->core_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_TX_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_CORE_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->core_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_TX_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_CORE_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->core_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_TX_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->tx_mtx, MA_OWNED)
 end_define
 
 begin_endif

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -195,16 +195,16 @@ begin_comment
 comment|/* FW Disables SW Writes */
 end_comment
 
+begin_comment
+comment|/* FW established a valid mode */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|E1000_ICH_FWSM_FW_VALID
 value|0x00008000
 end_define
-
-begin_comment
-comment|/* FW established a valid                                                      * mode.                                                      */
-end_comment
 
 begin_define
 define|#
@@ -365,7 +365,7 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/* Additional interrupts need to be handled for ICH family:     DSW = The FW changed the status of the DISSW bit in FWSM     PHYINT = The LAN connected device generates an interrupt     EPRST = Manageability reset event */
+comment|/*  * Additional interrupts need to be handled for ICH family:  *  DSW = The FW changed the status of the DISSW bit in FWSM  *  PHYINT = The LAN connected device generates an interrupt  *  EPRST = Manageability reset event  */
 end_comment
 
 begin_define

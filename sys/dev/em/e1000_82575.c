@@ -4,11 +4,11 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* e1000_82575  */
+comment|/* e1000_82575  * e1000_82576  */
 end_comment
 
 begin_include
@@ -262,7 +262,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 function_decl|;
@@ -407,7 +407,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|bool
 name|e1000_sgmii_active_82575
 parameter_list|(
 name|struct
@@ -431,11 +431,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|STATIC
+name|s32
+name|e1000_read_mac_addr_82575
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|STATIC
+name|void
+name|e1000_power_down_phy_copper_82575
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|e1000_dev_spec_82575
 block|{
-name|boolean_t
+name|bool
 name|sgmii_active
 decl_stmt|;
 block|}
@@ -491,6 +517,8 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|!=
 name|e1000_media_type_copper
@@ -505,6 +533,21 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
+else|else
+block|{
+name|func
+operator|->
+name|power_up_phy
+operator|=
+name|e1000_power_up_phy_copper
+expr_stmt|;
+name|func
+operator|->
+name|power_down_phy
+operator|=
+name|e1000_power_down_phy_copper_82575
+expr_stmt|;
 block|}
 name|phy
 operator|->
@@ -554,8 +597,6 @@ name|e1000_sgmii_active_82575
 argument_list|(
 name|hw
 argument_list|)
-operator|==
-name|TRUE
 condition|)
 block|{
 name|func
@@ -864,10 +905,21 @@ operator|>>
 name|E1000_EECD_SIZE_EX_SHIFT
 argument_list|)
 expr_stmt|;
-comment|/* Added to a constant, "size" becomes the left-shift value 	 * for setting word_size. 	 */
+comment|/* 	 * Added to a constant, "size" becomes the left-shift value 	 * for setting word_size. 	 */
 name|size
 operator|+=
 name|NVM_WORD_SIZE_BASE_SHIFT
+expr_stmt|;
+comment|/* EEPROM access above 16k is unsupported */
+if|if
+condition|(
+name|size
+operator|>
+literal|14
+condition|)
+name|size
+operator|=
+literal|14
 expr_stmt|;
 name|nvm
 operator|->
@@ -967,9 +1019,9 @@ modifier|*
 name|dev_spec
 decl_stmt|;
 name|u32
-name|ctrl
-decl_stmt|,
 name|ctrl_ext
+init|=
+literal|0
 decl_stmt|;
 name|s32
 name|ret_val
@@ -1022,9 +1074,11 @@ operator|->
 name|dev_spec
 expr_stmt|;
 comment|/* Set media type */
-comment|/* The 82575 uses bits 22:23 for link mode. The mode can be changed          * based on the EEPROM. We cannot rely upon device ID. There          * is no distinguishable difference between fiber and internal          * SerDes mode on the 82575. There can be an external PHY attached          * on the SGMII interface. For this, we'll set sgmii_active to TRUE.          */
+comment|/* 	 * The 82575 uses bits 22:23 for link mode. The mode can be changed          * based on the EEPROM. We cannot rely upon device ID. There          * is no distinguishable difference between fiber and internal          * SerDes mode on the 82575. There can be an external PHY attached          * on the SGMII interface. For this, we'll set sgmii_active to TRUE.          */
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_copper
@@ -1057,9 +1111,15 @@ condition|)
 block|{
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|=
 name|e1000_media_type_internal_serdes
+expr_stmt|;
+name|ctrl_ext
+operator||=
+name|E1000_CTRL_I2C_ENA
 expr_stmt|;
 block|}
 elseif|else
@@ -1076,29 +1136,28 @@ name|sgmii_active
 operator|=
 name|TRUE
 expr_stmt|;
-name|ctrl
-operator|=
-name|E1000_READ_REG
-argument_list|(
-name|hw
-argument_list|,
-name|E1000_CTRL
-argument_list|)
+name|ctrl_ext
+operator||=
+name|E1000_CTRL_I2C_ENA
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ctrl_ext
+operator|&=
+operator|~
+name|E1000_CTRL_I2C_ENA
+expr_stmt|;
+block|}
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_CTRL
+name|E1000_CTRL_EXT
 argument_list|,
-operator|(
-name|ctrl
-operator||
-name|E1000_CTRL_I2C_ENA
-operator|)
+name|ctrl_ext
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Set mta register count */
 name|mac
 operator|->
@@ -1177,6 +1236,8 @@ operator|=
 operator|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_copper
@@ -1200,12 +1261,19 @@ name|rar_set
 operator|=
 name|e1000_rar_set_82575
 expr_stmt|;
+comment|/* read mac address */
+name|func
+operator|->
+name|read_mac_addr
+operator|=
+name|e1000_read_mac_addr_82575
+expr_stmt|;
 comment|/* multicast address update */
 name|func
 operator|->
-name|mc_addr_list_update
+name|update_mc_addr_list
 operator|=
-name|e1000_mc_addr_list_update_generic
+name|e1000_update_mc_addr_list_generic
 expr_stmt|;
 comment|/* writing VFTA */
 name|func
@@ -1491,7 +1559,7 @@ operator|-
 name|E1000_ERR_PARAM
 return|;
 block|}
-comment|/* Set up Op-code, Phy Address, and register address in the I2CCMD 	 * register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
+comment|/* 	 * Set up Op-code, Phy Address, and register address in the I2CCMD 	 * register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
 name|i2ccmd
 operator|=
 operator|(
@@ -1715,7 +1783,7 @@ operator|&
 literal|0xFF00
 operator|)
 expr_stmt|;
-comment|/* Set up Op-code, Phy Address, and register address in the I2CCMD 	 * register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
+comment|/* 	 * Set up Op-code, Phy Address, and register address in the I2CCMD 	 * register.  The MAC will take care of interfacing with the 	 * PHY to retrieve the desired data. 	 */
 name|i2ccmd
 operator|=
 operator|(
@@ -1865,15 +1933,16 @@ argument_list|(
 literal|"e1000_get_phy_id_82575"
 argument_list|)
 expr_stmt|;
-comment|/* For SGMII PHYs, we try the list of possible addresses until 	 * we find one that works.  For non-SGMII PHYs 	 * (e.g. integrated copper PHYs), an address of 1 should 	 * work.  The result of this function should mean phy->phy_addr 	 * and phy->id are set correctly. 	 */
+comment|/* 	 * For SGMII PHYs, we try the list of possible addresses until 	 * we find one that works.  For non-SGMII PHYs 	 * (e.g. integrated copper PHYs), an address of 1 should 	 * work.  The result of this function should mean phy->phy_addr 	 * and phy->id are set correctly. 	 */
 if|if
 condition|(
+operator|!
+operator|(
 name|e1000_sgmii_active_82575
 argument_list|(
 name|hw
 argument_list|)
-operator|==
-name|FALSE
+operator|)
 condition|)
 block|{
 name|phy
@@ -1893,7 +1962,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* The address field in the I2CCMD register is 3 bits and 0 is invalid. 	 * Therefore, we need to test 1-7 	 */
+comment|/* 	 * The address field in the I2CCMD register is 3 bits and 0 is invalid. 	 * Therefore, we need to test 1-7 	 */
 for|for
 control|(
 name|phy
@@ -1944,7 +2013,7 @@ operator|->
 name|addr
 argument_list|)
 expr_stmt|;
-comment|/* At the time of this writing, The M88 part is 			 * the only supported SGMII PHY product. */
+comment|/* 			 * At the time of this writing, The M88 part is 			 * the only supported SGMII PHY product. 			 */
 if|if
 condition|(
 name|phy_id
@@ -2029,13 +2098,13 @@ argument_list|(
 literal|"e1000_phy_hw_reset_sgmii_82575"
 argument_list|)
 expr_stmt|;
-comment|/* This isn't a true "hard" reset, but is the only reset 	 * available to us at this time. 	 */
+comment|/* 	 * This isn't a true "hard" reset, but is the only reset 	 * available to us at this time. 	 */
 name|DEBUGOUT
 argument_list|(
 literal|"Soft resetting SGMII attached PHY...\n"
 argument_list|)
 expr_stmt|;
-comment|/* SFP documentation requires the following to configure the SPF module 	 * to work on SGMII.  No further documentation is given. 	 */
+comment|/* 	 * SFP documentation requires the following to configure the SPF module 	 * to work on SGMII.  No further documentation is given. 	 */
 name|ret_val
 operator|=
 name|e1000_write_phy_reg
@@ -2083,7 +2152,7 @@ name|e1000_hw
 modifier|*
 name|hw
 parameter_list|,
-name|boolean_t
+name|bool
 name|active
 parameter_list|)
 block|{
@@ -2209,7 +2278,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-comment|/* LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. */
+comment|/* 		 * LPLU and SmartSpeed are mutually exclusive.  LPLU is used 		 * during Dx states where the power conservation is most 		 * important.  During driver activity we should enable 		 * SmartSpeed, so performance is maintained. 		 */
 if|if
 condition|(
 name|phy
@@ -2523,7 +2592,7 @@ operator|)
 operator|)
 condition|)
 break|break;
-comment|/* Firmware currently using resource (fwmask) 		 * or other software thread using resource (swmask) */
+comment|/* 		 * Firmware currently using resource (fwmask) 		 * or other software thread using resource (swmask) 		 */
 name|e1000_put_hw_semaphore_generic
 argument_list|(
 name|hw
@@ -2816,6 +2885,8 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|!=
 name|e1000_media_type_copper
@@ -2824,8 +2895,6 @@ name|e1000_sgmii_active_82575
 argument_list|(
 name|hw
 argument_list|)
-operator|==
-name|TRUE
 condition|)
 block|{
 name|ret_val
@@ -2841,6 +2910,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|ret_val
 operator|=
 name|e1000_get_speed_and_duplex_copper_generic
@@ -2852,6 +2922,7 @@ argument_list|,
 name|duplex
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|ret_val
 return|;
@@ -2892,6 +2963,8 @@ condition|(
 operator|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|!=
 name|e1000_media_type_copper
@@ -2902,8 +2975,6 @@ name|e1000_sgmii_active_82575
 argument_list|(
 name|hw
 argument_list|)
-operator|==
-name|TRUE
 operator|)
 condition|)
 name|ret_val
@@ -2991,7 +3062,7 @@ name|duplex
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Read the PCS Status register for link state. For non-copper mode, 	 * the status register is not accurate. The PCS status register is 	 * used instead. */
+comment|/* 	 * Read the PCS Status register for link state. For non-copper mode, 	 * the status register is not accurate. The PCS status register is 	 * used instead. 	 */
 name|pcs
 operator|=
 name|E1000_READ_REG
@@ -3001,7 +3072,7 @@ argument_list|,
 name|E1000_PCS_LSTAT
 argument_list|)
 expr_stmt|;
-comment|/* The link up bit determines when link is up on autoneg. The sync ok 	 * gets set once both sides sync up and agree upon link. Stable link 	 * can be determined by checking for both link up and link sync ok 	 */
+comment|/* 	 * The link up bit determines when link is up on autoneg. The sync ok 	 * gets set once both sides sync up and agree upon link. Stable link 	 * can be determined by checking for both link up and link sync ok 	 */
 if|if
 condition|(
 operator|(
@@ -3130,12 +3201,7 @@ argument_list|,
 name|index
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
 block|}
-name|out
-label|:
 return|return;
 block|}
 end_function
@@ -3168,7 +3234,7 @@ argument_list|(
 literal|"e1000_reset_hw_82575"
 argument_list|)
 expr_stmt|;
-comment|/* Prevent the PCI-E bus from sticking if there is no TLP connection 	 * on the last TLP read/write transaction when MAC is reset. 	 */
+comment|/* 	 * Prevent the PCI-E bus from sticking if there is no TLP connection 	 * on the last TLP read/write transaction when MAC is reset. 	 */
 name|ret_val
 operator|=
 name|e1000_disable_pcie_master_generic
@@ -3266,7 +3332,7 @@ condition|(
 name|ret_val
 condition|)
 block|{
-comment|/* When auto config read does not complete, do not 		 * return with an error. This can happen in situations 		 * where there is no eeprom and prevents getting link. 		 */
+comment|/* 		 * When auto config read does not complete, do not 		 * return with an error. This can happen in situations 		 * where there is no eeprom and prevents getting link. 		 */
 name|DEBUGOUT
 argument_list|(
 literal|"Auto Read Done did not complete\n"
@@ -3311,6 +3377,11 @@ argument_list|(
 name|hw
 argument_list|,
 name|E1000_ICR
+argument_list|)
+expr_stmt|;
+name|e1000_check_alt_mac_addr_generic
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 return|return
@@ -3379,9 +3450,7 @@ argument_list|(
 literal|"Error initializing identification LED\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+comment|/* This is not fatal and we should not stop init due to this */
 block|}
 comment|/* Disabling VLAN filtering */
 name|DEBUGOUT
@@ -3394,7 +3463,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Setup the receive address. */
+comment|/* Setup the receive address */
 name|e1000_init_rx_addrs_generic
 argument_list|(
 name|hw
@@ -3442,14 +3511,12 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
+comment|/* 	 * Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
 name|e1000_clear_hw_cntrs_82575
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -3479,7 +3546,7 @@ decl_stmt|;
 name|s32
 name|ret_val
 decl_stmt|;
-name|boolean_t
+name|bool
 name|link
 decl_stmt|;
 name|DEBUGFUNC
@@ -3604,7 +3671,7 @@ operator|.
 name|autoneg
 condition|)
 block|{
-comment|/* Setup autoneg and flow control advertisement 		 * and perform autonegotiation. */
+comment|/* 		 * Setup autoneg and flow control advertisement 		 * and perform autonegotiation. 		 */
 name|ret_val
 operator|=
 name|e1000_copper_link_autoneg
@@ -3622,7 +3689,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* PHY will be set to 10H, 10F, 100H or 100F 		 * depending on user settings. */
+comment|/* 		 * PHY will be set to 10H, 10F, 100H or 100F 		 * depending on user settings. 		 */
 name|DEBUGOUT
 argument_list|(
 literal|"Forcing Speed and Duplex\n"
@@ -3664,7 +3731,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Check link status. Wait up to 100 microseconds for link to become 	 * valid. 	 */
+comment|/* 	 * Check link status. Wait up to 100 microseconds for link to become 	 * valid. 	 */
 name|ret_val
 operator|=
 name|e1000_phy_has_link_generic
@@ -3749,7 +3816,7 @@ argument_list|(
 literal|"e1000_setup_fiber_serdes_link_82575"
 argument_list|)
 expr_stmt|;
-comment|/* On the 82575, SerDes loopback mode persists until it is 	 * explicitly turned off or a power cycle is performed.  A read to 	 * the register does not indicate its status.  Therefore, we ensure 	 * loopback mode is disabled during initialization. 	 */
+comment|/* 	 * On the 82575, SerDes loopback mode persists until it is 	 * explicitly turned off or a power cycle is performed.  A read to 	 * the register does not indicate its status.  Therefore, we ensure 	 * loopback mode is disabled during initialization. 	 */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -3813,7 +3880,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* New SerDes mode allows for forcing speed or autonegotiating speed 	 * at 1gb. Autoneg should be default set by most drivers. This is the 	 * mode that will be compatible with older link partners and switches. 	 * However, both are supported by the hardware and some drivers/tools. 	 */
+comment|/* 	 * New SerDes mode allows for forcing speed or autonegotiating speed 	 * at 1gb. Autoneg should be default set by most drivers. This is the 	 * mode that will be compatible with older link partners and switches. 	 * However, both are supported by the hardware and some drivers/tools. 	 */
 name|reg
 operator|=
 name|E1000_READ_REG
@@ -3822,6 +3889,19 @@ name|hw
 argument_list|,
 name|E1000_PCS_LCTL
 argument_list|)
+expr_stmt|;
+name|reg
+operator|&=
+operator|~
+operator|(
+name|E1000_PCS_LCTL_AN_ENABLE
+operator||
+name|E1000_PCS_LCTL_FLV_LINK_UP
+operator||
+name|E1000_PCS_LCTL_FSD
+operator||
+name|E1000_PCS_LCTL_FORCE_LINK
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -3937,16 +4017,19 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|!=
 name|e1000_media_type_copper
 operator|||
+operator|!
+operator|(
 name|e1000_sgmii_active_82575
 argument_list|(
 name|hw
 argument_list|)
-operator|==
-name|FALSE
+operator|)
 condition|)
 goto|goto
 name|out
@@ -3986,7 +4069,7 @@ operator||
 name|E1000_PCS_LCTL_FORCE_LINK
 operator|)
 expr_stmt|;
-comment|/* The PHY should be setup prior to calling this function. 		 * All we need to do is restart autoneg and enable autoneg. 		 */
+comment|/* 		 * The PHY should be setup prior to calling this function. 		 * All we need to do is restart autoneg and enable autoneg. 		 */
 name|reg
 operator||=
 name|E1000_PCS_LCTL_AN_RESTART
@@ -4077,7 +4160,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|e1000_sgmii_active_82575
 parameter_list|(
 name|struct
@@ -4091,7 +4174,7 @@ name|e1000_dev_spec_82575
 modifier|*
 name|dev_spec
 decl_stmt|;
-name|boolean_t
+name|bool
 name|ret_val
 decl_stmt|;
 name|DEBUGFUNC
@@ -4330,6 +4413,91 @@ block|}
 return|return
 name|E1000_SUCCESS
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_read_mac_addr_82575 - Read device MAC address  *  @hw: pointer to the HW structure  **/
+end_comment
+
+begin_function
+name|STATIC
+name|s32
+name|e1000_read_mac_addr_82575
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|s32
+name|ret_val
+init|=
+name|E1000_SUCCESS
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_read_mac_addr_82575"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e1000_check_alt_mac_addr_generic
+argument_list|(
+name|hw
+argument_list|)
+condition|)
+name|ret_val
+operator|=
+name|e1000_read_mac_addr_generic
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+return|return
+name|ret_val
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * e1000_power_down_phy_copper_82575 - Remove link during PHY power down  * @hw: pointer to the HW structure  *  * In the case of a PHY power down to save power, or to turn off link during a  * driver unload, or wake on lan is not enabled, remove the link.  **/
+end_comment
+
+begin_function
+name|STATIC
+name|void
+name|e1000_power_down_phy_copper_82575
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+comment|/* If the management interface is not enabled, then power down */
+if|if
+condition|(
+operator|!
+operator|(
+name|e1000_check_mng_mode
+argument_list|(
+name|hw
+argument_list|)
+operator|||
+name|e1000_check_reset_block
+argument_list|(
+name|hw
+argument_list|)
+operator|)
+condition|)
+name|e1000_power_down_phy_copper
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -4736,6 +4904,8 @@ if|if
 condition|(
 name|hw
 operator|->
+name|phy
+operator|.
 name|media_type
 operator|==
 name|e1000_media_type_internal_serdes

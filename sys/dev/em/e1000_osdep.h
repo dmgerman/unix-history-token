@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*$FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -360,6 +360,13 @@ begin_typedef
 typedef|typedef
 name|int8_t
 name|s8
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|boolean_t
+name|bool
 typedef|;
 end_typedef
 
