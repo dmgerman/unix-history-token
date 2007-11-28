@@ -726,6 +726,14 @@ name|void
 modifier|*
 name|sival_ptr
 decl_stmt|;
+comment|/* 6.0 compatibility */
+name|int
+name|sigval_int
+decl_stmt|;
+name|void
+modifier|*
+name|sigval_ptr
+decl_stmt|;
 block|}
 union|;
 end_union
