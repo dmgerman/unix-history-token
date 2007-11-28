@@ -246,6 +246,12 @@ name|L_MAXMIN
 value|L_MAXMIN32
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -361,6 +367,9 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(minor_t)((x)& L_MAXMIN)
+endif|#
+directive|endif
+comment|/* sun */
 comment|/*  * These are versions of the kernel routines for compressing and  * expanding long device numbers that don't return errors.  */
 if|#
 directive|if

@@ -380,7 +380,7 @@ name|ve
 operator|->
 name|ve_lastused
 argument_list|,
-name|lbolt
+name|LBOLT
 operator|-
 name|ve
 operator|->
@@ -590,7 +590,7 @@ name|ve
 operator|->
 name|ve_lastused
 operator|=
-name|lbolt
+name|LBOLT
 expr_stmt|;
 name|ve
 operator|->
@@ -685,7 +685,7 @@ name|ve
 operator|->
 name|ve_lastused
 operator|!=
-name|lbolt
+name|LBOLT
 condition|)
 block|{
 name|avl_remove
@@ -702,7 +702,7 @@ name|ve
 operator|->
 name|ve_lastused
 operator|=
-name|lbolt
+name|LBOLT
 expr_stmt|;
 name|avl_add
 argument_list|(

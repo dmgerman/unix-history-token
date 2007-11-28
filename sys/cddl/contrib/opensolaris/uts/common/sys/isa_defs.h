@@ -80,9 +80,17 @@ name|__x86
 endif|#
 directive|endif
 comment|/*  * Define the appropriate "processor characteristics"  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 define|#
 directive|define
 name|_LITTLE_ENDIAN
+endif|#
+directive|endif
 define|#
 directive|define
 name|_STACK_GROWS_DOWNWARD
@@ -257,9 +265,17 @@ name|__x86
 endif|#
 directive|endif
 comment|/*  * Define the appropriate "processor characteristics"  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 define|#
 directive|define
 name|_LITTLE_ENDIAN
+endif|#
+directive|endif
 define|#
 directive|define
 name|_STACK_GROWS_DOWNWARD
@@ -448,9 +464,17 @@ name|__sparcv8
 endif|#
 directive|endif
 comment|/*  * Define the appropriate "processor characteristics" shared between  * all Solaris on SPARC systems.  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 define|#
 directive|define
 name|_BIG_ENDIAN
+endif|#
+directive|endif
 define|#
 directive|define
 name|_STACK_GROWS_DOWNWARD

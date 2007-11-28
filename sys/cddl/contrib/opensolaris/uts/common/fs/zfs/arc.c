@@ -5161,7 +5161,7 @@ operator||
 name|ARC_INDIRECT
 operator|)
 operator|&&
-name|lbolt
+name|LBOLT
 operator|-
 name|ab
 operator|->
@@ -6710,7 +6710,7 @@ block|}
 comment|/* reset the growth delay for every reclaim */
 name|growtime
 operator|=
-name|lbolt
+name|LBOLT
 operator|+
 operator|(
 name|arc_grow_retry
@@ -6763,7 +6763,7 @@ operator|(
 operator|(
 name|growtime
 operator|-
-name|lbolt
+name|LBOLT
 operator|)
 operator|<=
 literal|0
@@ -7588,7 +7588,7 @@ name|buf
 operator|->
 name|b_arc_access
 operator|=
-name|lbolt
+name|LBOLT
 expr_stmt|;
 name|DTRACE_PROBE1
 argument_list|(
@@ -7714,14 +7714,14 @@ name|buf
 operator|->
 name|b_arc_access
 operator|=
-name|lbolt
+name|LBOLT
 expr_stmt|;
 return|return;
 block|}
 comment|/* 		 * This buffer has been "accessed" only once so far, 		 * but it is still in the cache. Move it to the MFU 		 * state. 		 */
 if|if
 condition|(
-name|lbolt
+name|LBOLT
 operator|>
 name|buf
 operator|->
@@ -7735,7 +7735,7 @@ name|buf
 operator|->
 name|b_arc_access
 operator|=
-name|lbolt
+name|LBOLT
 expr_stmt|;
 name|DTRACE_PROBE1
 argument_list|(
@@ -7842,7 +7842,7 @@ name|buf
 operator|->
 name|b_arc_access
 operator|=
-name|lbolt
+name|LBOLT
 expr_stmt|;
 name|arc_change_state
 argument_list|(
@@ -7953,7 +7953,7 @@ name|buf
 operator|->
 name|b_arc_access
 operator|=
-name|lbolt
+name|LBOLT
 expr_stmt|;
 block|}
 elseif|else
@@ -8007,7 +8007,7 @@ name|buf
 operator|->
 name|b_arc_access
 operator|=
-name|lbolt
+name|LBOLT
 expr_stmt|;
 name|DTRACE_PROBE1
 argument_list|(

@@ -7219,7 +7219,7 @@ name|zilog
 operator|->
 name|zl_replay_time
 operator|=
-name|lbolt
+name|LBOLT
 expr_stmt|;
 name|ASSERT
 argument_list|(

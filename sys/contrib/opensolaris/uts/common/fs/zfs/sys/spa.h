@@ -694,8 +694,10 @@ parameter_list|)
 define|\
 value|{						\ 	(bp)->blk_dva[0].dva_word[0] = 0;	\ 	(bp)->blk_dva[0].dva_word[1] = 0;	\ 	(bp)->blk_dva[1].dva_word[0] = 0;	\ 	(bp)->blk_dva[1].dva_word[1] = 0;	\ 	(bp)->blk_dva[2].dva_word[0] = 0;	\ 	(bp)->blk_dva[2].dva_word[1] = 0;	\ 	(bp)->blk_prop = 0;			\ 	(bp)->blk_pad[0] = 0;			\ 	(bp)->blk_pad[1] = 0;			\ 	(bp)->blk_pad[2] = 0;			\ 	(bp)->blk_birth = 0;			\ 	(bp)->blk_fill = 0;			\ 	ZIO_SET_CHECKSUM(&(bp)->blk_cksum, 0, 0, 0, 0);	\ }
 comment|/*  * Note: the byteorder is either 0 or -1, both of which are palindromes.  * This simplifies the endianness handling a bit.  */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
 name|_BIG_ENDIAN
 define|#
 directive|define

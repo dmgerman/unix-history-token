@@ -6342,7 +6342,7 @@ operator|>=
 name|zio_gang_bang
 operator|&&
 operator|(
-name|lbolt
+name|LBOLT
 operator|&
 literal|0x1
 operator|)
@@ -6767,7 +6767,7 @@ operator|>=
 name|zio_gang_bang
 operator|&&
 operator|(
-name|lbolt
+name|LBOLT
 operator|&
 literal|0x3
 operator|)
