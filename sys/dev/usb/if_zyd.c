@@ -638,6 +638,13 @@ argument_list|)
 block|,
 name|ZYD_ZD1211B_DEV
 argument_list|(
+name|PLANEX2
+argument_list|,
+name|GW_US54GXS
+argument_list|)
+block|,
+name|ZYD_ZD1211B_DEV
+argument_list|(
 name|SAGEM
 argument_list|,
 name|XG76NA
