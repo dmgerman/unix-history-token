@@ -1234,7 +1234,7 @@ name|TID_TO_WME_AC
 parameter_list|(
 name|_tid
 parameter_list|)
-value|(      \ 	((_tid)< 1) ? WME_AC_BE : \ 	((_tid)< 3) ? WME_AC_BK : \ 	((_tid)< 6) ? WME_AC_VI : \ 	WME_AC_VO)
+value|(      \ 	((_tid) == 0 || (_tid) == 3) ? WME_AC_BE : \ 	((_tid)< 3) ? WME_AC_BK : \ 	((_tid)< 6) ? WME_AC_VI : \ 	WME_AC_VO)
 end_define
 
 begin_comment
