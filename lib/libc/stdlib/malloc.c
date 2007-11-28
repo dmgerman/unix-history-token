@@ -10782,10 +10782,9 @@ name|arena
 argument_list|,
 name|size
 argument_list|,
-name|true
+name|zero
 argument_list|)
 expr_stmt|;
-comment|// XXX zero?
 if|if
 condition|(
 name|ret
