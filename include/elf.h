@@ -43,23 +43,6 @@ directive|include
 file|<sys/elf64.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_SOLARIS_C_SOURCE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/_elf_solaris.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
