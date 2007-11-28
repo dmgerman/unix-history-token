@@ -1482,6 +1482,8 @@ name|sectorsize
 operator|==
 literal|0
 condition|)
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|disk
@@ -1493,12 +1495,19 @@ argument_list|,
 operator|&
 name|sectorsize
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|sectorsize
+operator|=
+literal|0
 expr_stmt|;
+comment|/* back out on error for safety */
 if|if
 condition|(
 name|sectorsize
 operator|&&
-operator|!
 name|ioctl
 argument_list|(
 name|disk
@@ -1510,6 +1519,9 @@ argument_list|,
 operator|&
 name|mediasize
 argument_list|)
+operator|!=
+operator|-
+literal|1
 condition|)
 name|getfssize
 argument_list|(
@@ -2059,7 +2071,6 @@ name|lp
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|ioctl
 argument_list|(
 name|disk
@@ -2075,6 +2086,9 @@ operator|)
 operator|&
 name|lab
 argument_list|)
+operator|!=
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -2167,8 +2181,9 @@ operator|*
 operator|)
 name|lp
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|warn
 argument_list|(
