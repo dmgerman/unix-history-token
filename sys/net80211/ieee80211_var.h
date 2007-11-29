@@ -2415,6 +2415,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|ieee80211_channel
+modifier|*
+name|ieee80211_find_channel_byieee
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|int
+name|ieee
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ieee80211_setmode
 parameter_list|(
