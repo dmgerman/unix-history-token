@@ -1477,6 +1477,10 @@ name|int
 operator|)
 name|tomove
 expr_stmt|;
+name|cur
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 else|else
