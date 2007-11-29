@@ -522,15 +522,20 @@ name|averunnable
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_function_decl
+name|void
+name|read_cpu_time
+parameter_list|(
 name|long
+modifier|*
 name|cp_time
-index|[
-name|CPUSTATES
-index|]
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Writes array of CPUSTATES */
+end_comment
 
 begin_else
 else|#

@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcpu.h>
 end_include
 
@@ -190,6 +196,12 @@ name|vmmeter
 name|pc_cnt
 decl_stmt|;
 comment|/* VM stats counters */
+name|long
+name|pc_cp_time
+index|[
+name|CPUSTATES
+index|]
+decl_stmt|;
 name|struct
 name|device
 modifier|*
