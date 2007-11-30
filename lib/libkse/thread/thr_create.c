@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -55,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -1312,6 +1324,7 @@ name|struct
 name|pthread
 modifier|*
 name|curthread
+name|__unused
 parameter_list|,
 name|void
 modifier|*
@@ -1330,7 +1343,7 @@ name|arg
 parameter_list|)
 block|{
 comment|/* Run the current thread's start routine with argument: */
-name|pthread_exit
+name|_pthread_exit
 argument_list|(
 name|start_routine
 argument_list|(

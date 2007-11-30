@@ -15,17 +15,6 @@ directive|include
 file|"thr_private.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|int
-name|__wait
-parameter_list|(
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 name|LT10_COMPAT_PRIVATE
 argument_list|(
@@ -41,6 +30,28 @@ name|wait
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|__wait
+parameter_list|(
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|pid_t
+name|_wait
+parameter_list|(
+name|int
+modifier|*
+name|istat
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|__weak_reference

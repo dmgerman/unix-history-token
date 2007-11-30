@@ -6,7 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -43,6 +55,19 @@ name|int
 name|errno
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|_thread_seterrno
+parameter_list|(
+name|pthread_t
+name|thread
+parameter_list|,
+name|int
+name|error
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void

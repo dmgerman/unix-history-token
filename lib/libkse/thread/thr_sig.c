@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -55,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -344,7 +356,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
-comment|/* Unused */
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -570,7 +582,7 @@ argument_list|(
 name|sigset
 argument_list|)
 expr_stmt|;
-name|pthread_sigmask
+name|_pthread_sigmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -581,13 +593,13 @@ operator|&
 name|oldset
 argument_list|)
 expr_stmt|;
-name|pthread_attr_init
+name|_pthread_attr_init
 argument_list|(
 operator|&
 name|attr
 argument_list|)
 expr_stmt|;
-name|pthread_attr_setscope
+name|_pthread_attr_setscope
 argument_list|(
 operator|&
 name|attr
@@ -604,7 +616,7 @@ expr_stmt|;
 comment|/* sigmask will be inherited */
 if|if
 condition|(
-name|pthread_create
+name|_pthread_create
 argument_list|(
 operator|&
 name|_thr_sig_daemon
@@ -622,13 +634,13 @@ argument_list|(
 literal|"can not create signal daemon thread!\n"
 argument_list|)
 expr_stmt|;
-name|pthread_attr_destroy
+name|_pthread_attr_destroy
 argument_list|(
 operator|&
 name|attr
 argument_list|)
 expr_stmt|;
-name|pthread_sigmask
+name|_pthread_sigmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -955,9 +967,9 @@ name|siginfo_t
 modifier|*
 name|info
 parameter_list|,
-name|ucontext_t
+name|void
 modifier|*
-name|ucp
+name|ucp_arg
 parameter_list|)
 block|{
 name|struct
@@ -978,6 +990,10 @@ name|kse
 modifier|*
 name|curkse
 decl_stmt|;
+name|ucontext_t
+modifier|*
+name|ucp
+decl_stmt|;
 name|struct
 name|sigaction
 name|act
@@ -990,6 +1006,14 @@ decl_stmt|;
 name|err_save
 operator|=
 name|errno
+expr_stmt|;
+name|ucp
+operator|=
+operator|(
+name|ucontext_t
+operator|*
+operator|)
+name|ucp_arg
 expr_stmt|;
 name|DBG_MSG
 argument_list|(
@@ -2754,6 +2778,7 @@ parameter_list|,
 name|siginfo_t
 modifier|*
 name|info
+name|__unused
 parameter_list|)
 block|{
 name|struct

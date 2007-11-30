@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -92,6 +104,7 @@ begin_function
 name|void
 name|_thr_exit
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -99,6 +112,7 @@ parameter_list|,
 name|int
 name|lineno
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -272,7 +286,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pthread_cleanup_pop
+name|_pthread_cleanup_pop
 argument_list|(
 literal|1
 argument_list|)

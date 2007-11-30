@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -13,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -84,6 +96,30 @@ name|pthread_mutexattr_settype
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|int
+name|_pthread_mutexattr_setkind_np
+parameter_list|(
+name|pthread_mutexattr_t
+modifier|*
+name|attr
+parameter_list|,
+name|int
+name|kind
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_mutexattr_getkind_np
+parameter_list|(
+name|pthread_mutexattr_t
+name|attr
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|__weak_reference

@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -19,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -211,15 +223,8 @@ block|{
 comment|/* 				 * Specify the thread kernel signal 				 * handler: 				 */
 name|newact
 operator|.
-name|sa_handler
+name|sa_sigaction
 operator|=
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|_thr_sig_handler
 expr_stmt|;
 block|}
@@ -236,15 +241,8 @@ condition|)
 block|{
 name|newact
 operator|.
-name|sa_handler
+name|sa_sigaction
 operator|=
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|_thr_sig_handler
 expr_stmt|;
 block|}

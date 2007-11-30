@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -54,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libc_private.h"
 end_include
 
@@ -78,6 +90,15 @@ name|fork
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|pid_t
+name|_fork
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|__weak_reference

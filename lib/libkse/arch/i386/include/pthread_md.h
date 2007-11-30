@@ -864,6 +864,10 @@ operator|(
 name|intptr_t
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|kcb
 operator|->

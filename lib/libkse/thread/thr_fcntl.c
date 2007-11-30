@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
+file|"namespace.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"namespace.h"
+file|<stdarg.h>
 end_include
 
 begin_include
@@ -24,13 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"un-namespace.h"
+file|<pthread.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -54,6 +54,21 @@ name|fcntl
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|int
+name|__fcntl
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|__weak_reference

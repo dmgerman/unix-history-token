@@ -25,6 +25,7 @@ specifier|inline
 name|void
 name|atomic_swap32
 parameter_list|(
+specifier|volatile
 name|intptr_t
 modifier|*
 name|dst
@@ -110,7 +111,7 @@ parameter_list|,
 name|r
 parameter_list|)
 define|\
-value|atomic_swap32((intptr_t *)d, (intptr_t)v, (intptr_t *)r)
+value|atomic_swap32((volatile intptr_t *)d, (intptr_t)v, (intptr_t *)r)
 end_define
 
 begin_define
@@ -125,7 +126,7 @@ parameter_list|,
 name|r
 parameter_list|)
 define|\
-value|atomic_swap32((intptr_t *)d, (intptr_t)v, (intptr_t *)r)
+value|atomic_swap32((volatile intptr_t *)d, (intptr_t)v, (intptr_t *)r)
 end_define
 
 begin_endif

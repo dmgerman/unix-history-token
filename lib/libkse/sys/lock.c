@@ -768,6 +768,10 @@ block|}
 comment|/* 	 * Atomically swap the head of the lock request with 	 * this request. 	 */
 name|atomic_swap_ptr
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|lck
 operator|->
@@ -777,6 +781,10 @@ name|lu
 operator|->
 name|lu_myreq
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|lu
 operator|->
@@ -799,6 +807,10 @@ argument_list|(
 operator|(
 specifier|volatile
 name|uintptr_t
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
@@ -892,10 +904,6 @@ break|break;
 block|}
 name|atomic_swap_int
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|lu
 operator|->
@@ -1031,6 +1039,10 @@ specifier|volatile
 name|uintptr_t
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|lck
 operator|->
@@ -1049,6 +1061,10 @@ argument_list|(
 operator|(
 specifier|volatile
 name|uintptr_t
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
@@ -1075,6 +1091,10 @@ specifier|volatile
 name|uintptr_t
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|lu
 operator|->
@@ -1097,6 +1117,10 @@ argument_list|(
 operator|(
 specifier|volatile
 name|uintptr_t
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
@@ -1226,10 +1250,6 @@ condition|)
 block|{
 name|atomic_swap_int
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|lu_h
 operator|->
@@ -1291,10 +1311,6 @@ condition|)
 block|{
 name|atomic_swap_int
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|myreq
 operator|->
@@ -1379,10 +1395,6 @@ condition|)
 block|{
 name|atomic_swap_int
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|myreq
 operator|->
@@ -1445,6 +1457,7 @@ name|struct
 name|lock
 modifier|*
 name|lck
+name|__unused
 comment|/* unused */
 parameter_list|,
 name|struct

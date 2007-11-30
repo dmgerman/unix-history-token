@@ -57,6 +57,25 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+name|int
+name|__accept
+parameter_list|(
+name|int
+name|s
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|addr
+parameter_list|,
+name|socklen_t
+modifier|*
+name|addrlen
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|__weak_reference
 argument_list|(

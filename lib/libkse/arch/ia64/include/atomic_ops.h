@@ -21,6 +21,7 @@ specifier|inline
 name|void
 name|atomic_swap_int
 parameter_list|(
+specifier|volatile
 name|int
 modifier|*
 name|dst
@@ -43,6 +44,7 @@ specifier|inline
 name|void
 name|atomic_swap_long
 parameter_list|(
+specifier|volatile
 name|long
 modifier|*
 name|dst
@@ -71,7 +73,7 @@ parameter_list|,
 name|r
 parameter_list|)
 define|\
-value|atomic_swap_long((long*)d, (long)v, (long*)r)
+value|atomic_swap_long((volatile long *)d, (long)v, (long *)r)
 end_define
 
 begin_endif

@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -32,8 +38,29 @@ end_include
 begin_include
 include|#
 directive|include
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"thr_private.h"
 end_include
+
+begin_function_decl
+name|int
+name|_sigaltstack
+parameter_list|(
+name|stack_t
+modifier|*
+name|_ss
+parameter_list|,
+name|stack_t
+modifier|*
+name|_oss
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|LT10_COMPAT_PRIVATE

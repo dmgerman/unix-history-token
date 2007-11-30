@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -42,8 +48,33 @@ end_include
 begin_include
 include|#
 directive|include
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"thr_private.h"
 end_include
+
+begin_function_decl
+name|ssize_t
+name|__readv
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+specifier|const
+name|struct
+name|iovec
+modifier|*
+name|iov
+parameter_list|,
+name|int
+name|iovcnt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|LT10_COMPAT_PRIVATE
