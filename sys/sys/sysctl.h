@@ -3233,6 +3233,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|sysctl_rename_oid
+parameter_list|(
+name|struct
+name|sysctl_oid
+modifier|*
+name|oidp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|sysctl_move_oid
 parameter_list|(
