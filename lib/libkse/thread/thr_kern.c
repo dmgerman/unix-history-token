@@ -937,8 +937,8 @@ end_function_decl
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|thr_accounting
 parameter_list|(
 name|struct
@@ -1645,6 +1645,33 @@ name|k_locklevel
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Reinitialize the thread and signal locks so that 	 * sigaction() will work after a fork(). 	 */
+name|_lock_reinit
+argument_list|(
+operator|&
+name|curthread
+operator|->
+name|lock
+argument_list|,
+name|LCK_ADAPTIVE
+argument_list|,
+name|_thr_lock_wait
+argument_list|,
+name|_thr_lock_wakeup
+argument_list|)
+expr_stmt|;
+name|_lock_reinit
+argument_list|(
+operator|&
+name|_thread_signal_lock
+argument_list|,
+name|LCK_ADAPTIVE
+argument_list|,
+name|_kse_lock_wait
+argument_list|,
+name|_kse_lock_wakeup
+argument_list|)
+expr_stmt|;
 name|_thr_spinlock_init
 argument_list|()
 expr_stmt|;
@@ -2129,6 +2156,7 @@ name|struct
 name|lock
 modifier|*
 name|lock
+name|__unused
 parameter_list|,
 name|struct
 name|lockuser
@@ -2339,6 +2367,7 @@ name|struct
 name|lock
 modifier|*
 name|lock
+name|__unused
 parameter_list|,
 name|struct
 name|lockuser
@@ -2400,6 +2429,7 @@ name|struct
 name|lock
 modifier|*
 name|lock
+name|__unused
 parameter_list|,
 name|struct
 name|lockuser
@@ -4420,10 +4450,12 @@ name|thr_resume_wrapper
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|,
 name|siginfo_t
 modifier|*
 name|siginfo
+name|__unused
 parameter_list|,
 name|ucontext_t
 modifier|*
