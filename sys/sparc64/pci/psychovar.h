@@ -32,7 +32,7 @@ modifier|*
 name|sc_mtx
 decl_stmt|;
 comment|/* Interrupt Group Number for this device */
-name|int
+name|uint32_t
 name|sc_ign
 decl_stmt|;
 name|bus_addr_t
@@ -42,7 +42,7 @@ name|phandle_t
 name|sc_node
 decl_stmt|;
 comment|/* Firmware node */
-name|int
+name|u_int
 name|sc_mode
 decl_stmt|;
 define|#
@@ -54,7 +54,7 @@ directive|define
 name|PSYCHO_MODE_PSYCHO
 value|2
 comment|/* Bus A or B of a psycho pair? */
-name|int
+name|u_int
 name|sc_half
 decl_stmt|;
 name|struct
@@ -118,6 +118,12 @@ decl_stmt|;
 name|struct
 name|rman
 name|sc_pci_io_rman
+decl_stmt|;
+name|uint8_t
+name|sc_pci_hpbcfg
+index|[
+literal|16
+index|]
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
