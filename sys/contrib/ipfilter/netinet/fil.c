@@ -112,7 +112,7 @@ directive|if
 operator|(
 name|__NetBSD_Version__
 operator|<
-literal|399001400
+literal|301000000
 operator|)
 end_if
 
@@ -10769,16 +10769,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|_KERNEL
-if|if
-condition|(
-operator|(
-name|pass
-operator|&
-name|FR_RETMASK
-operator|)
-operator|==
-literal|0
-condition|)
 name|fin
 operator|->
 name|fin_m
@@ -12040,6 +12030,14 @@ operator|(
 name|pass
 operator|&
 name|FR_KEEPSTATE
+operator|)
+operator|&&
+operator|(
+name|fin
+operator|->
+name|fin_m
+operator|!=
+name|NULL
 operator|)
 operator|&&
 operator|!
