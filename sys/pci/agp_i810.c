@@ -424,6 +424,16 @@ literal|"Intel 82830M (830M GMCH) SVGA controller"
 block|}
 block|,
 block|{
+literal|0x25628086
+block|,
+name|CHIP_I830
+block|,
+literal|0x00020000
+block|,
+literal|"Intel 82845M (845M GMCH) SVGA controller"
+block|}
+block|,
+block|{
 literal|0x35828086
 block|,
 name|CHIP_I855
