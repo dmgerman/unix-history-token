@@ -49,7 +49,9 @@ begin_function_decl
 name|Elf_Dyn
 modifier|*
 name|rtld_dynamic_addr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
