@@ -2754,6 +2754,10 @@ directive|ifdef
 name|INVARIANTS
 if|if
 condition|(
+name|start_lvl
+operator|>
+literal|0
+operator|&&
 name|start_ap
 index|[
 name|start_lvl
@@ -3945,6 +3949,10 @@ directive|ifdef
 name|INVARIANTS
 if|if
 condition|(
+name|start_lvl
+operator|>
+literal|0
+operator|&&
 name|start_ap
 index|[
 name|start_lvl
