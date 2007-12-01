@@ -2757,7 +2757,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_LOCKS
-name|stack_print
+name|stack_print_ddb
 argument_list|(
 operator|&
 name|lkp
