@@ -4399,7 +4399,7 @@ return|;
 if|if
 condition|(
 name|reg
-operator|>
+operator|>=
 sizeof|sizeof
 argument_list|(
 name|sc
