@@ -13100,16 +13100,7 @@ name|rate
 operator|=
 name|ic
 operator|->
-name|ic_bss
-operator|->
-name|ni_rates
-operator|.
-name|rs_rates
-index|[
-name|ic
-operator|->
 name|ic_fixed_rate
-index|]
 expr_stmt|;
 else|else
 name|rate
