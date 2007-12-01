@@ -252,7 +252,9 @@ name|__inline
 name|char
 modifier|*
 name|ppc_get_tp
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -304,7 +306,9 @@ expr|struct
 name|tcb
 operator|*
 name|ppc_get_tcb
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 block|{
 return|return
 operator|(

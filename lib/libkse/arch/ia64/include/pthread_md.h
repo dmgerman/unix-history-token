@@ -179,7 +179,9 @@ expr|struct
 name|tcb
 operator|*
 name|ia64_get_tcb
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 block|{
 specifier|register
 name|char
