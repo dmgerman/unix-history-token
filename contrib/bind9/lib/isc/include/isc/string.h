@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: string.h,v 1.12.18.3 2005/08/16 04:39:05 marka Exp $ */
+comment|/* $Id: string.h,v 1.12.18.6 2007/09/13 05:04:01 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -23,12 +23,6 @@ end_define
 begin_comment
 comment|/*! \file */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
 
 begin_include
 include|#
@@ -59,6 +53,29 @@ include|#
 directive|include
 file|<isc/types.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_HAVESTRINGSH
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -201,8 +218,17 @@ name|format
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/*  * Print 'format' to 'target' which is a pointer to a string of at least  * 'size' bytes.  *  * Requires:  *	'target' is a pointer to a char[] of at least 'size' bytes.  *	'size' an integer> 0.  *	'format' == NULL or points to a NUL terminated string.  *  * Ensures:  *	If result == ISC_R_SUCCESS  *		'target' will be a NUL terminated string of no more  *		than 'size' bytes (including NUL).  *  *	If result == ISC_R_NOSPACE  *		'target' is undefined.  *  * Returns:  *	ISC_R_SUCCESS  -- 'format' was successfully printed to 'target'.  *	ISC_R_NOSPACE  -- 'format' could not be printed to 'target' since it  *	                  is too small.  */

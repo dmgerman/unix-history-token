@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: server.c,v 1.419.18.49.12.2 2007/07/09 02:23:16 marka Exp $ */
+comment|/* $Id: server.c,v 1.419.18.57 2007/08/28 07:20:01 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -8686,6 +8686,16 @@ argument_list|(
 name|zone
 argument_list|,
 name|view
+argument_list|)
+expr_stmt|;
+name|CHECK
+argument_list|(
+name|dns_view_addzone
+argument_list|(
+name|view
+argument_list|,
+name|zone
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dns_zone_detach
@@ -18695,6 +18705,12 @@ argument_list|(
 name|zone
 argument_list|)
 expr_stmt|;
+name|dns_zone_detach
+argument_list|(
+operator|&
+name|zone
+argument_list|)
+expr_stmt|;
 name|msg
 operator|=
 literal|"zone refresh queued"
@@ -22137,8 +22153,9 @@ name|view
 decl_stmt|;
 name|isc_boolean_t
 name|flushed
-init|=
-name|ISC_FALSE
+decl_stmt|;
+name|isc_boolean_t
+name|found
 decl_stmt|;
 name|isc_result_t
 name|result
@@ -22192,6 +22209,14 @@ operator|==
 name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
+name|flushed
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+name|found
+operator|=
+name|ISC_FALSE
+expr_stmt|;
 for|for
 control|(
 name|view
@@ -22235,6 +22260,10 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
+name|found
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 name|result
 operator|=
 name|dns_view_flushcache
@@ -22248,29 +22277,40 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-goto|goto
-name|out
-goto|;
 name|flushed
 operator|=
-name|ISC_TRUE
+name|ISC_FALSE
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|flushed
+operator|&&
+name|found
 condition|)
+block|{
 name|result
 operator|=
 name|ISC_R_SUCCESS
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|found
+condition|)
+name|result
+operator|=
+name|ISC_R_NOTFOUND
 expr_stmt|;
 else|else
 name|result
 operator|=
 name|ISC_R_FAILURE
 expr_stmt|;
-name|out
-label|:
+block|}
 name|isc_task_endexclusive
 argument_list|(
 name|server
@@ -22315,8 +22355,9 @@ name|view
 decl_stmt|;
 name|isc_boolean_t
 name|flushed
-init|=
-name|ISC_FALSE
+decl_stmt|;
+name|isc_boolean_t
+name|found
 decl_stmt|;
 name|isc_result_t
 name|result
@@ -22471,6 +22512,10 @@ name|flushed
 operator|=
 name|ISC_TRUE
 expr_stmt|;
+name|found
+operator|=
+name|ISC_FALSE
+expr_stmt|;
 for|for
 control|(
 name|view
@@ -22514,6 +22559,10 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
+name|found
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 name|result
 operator|=
 name|dns_view_flushname
@@ -22537,10 +22586,22 @@ block|}
 if|if
 condition|(
 name|flushed
+operator|&&
+name|found
 condition|)
 name|result
 operator|=
 name|ISC_R_SUCCESS
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|found
+condition|)
+name|result
+operator|=
+name|ISC_R_NOTFOUND
 expr_stmt|;
 else|else
 name|result

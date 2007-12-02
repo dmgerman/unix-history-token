@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: validator.c,v 1.119.18.29 2007/01/08 02:41:59 marka Exp $ */
+comment|/* $Id: validator.c,v 1.119.18.35 2007/09/26 04:39:45 each Exp $ */
 end_comment
 
 begin_comment
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<isc/util.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/sha2.h>
 end_include
 
 begin_include
@@ -184,6 +190,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VALATTR_CANCELED
+value|0x0002
+end_define
+
+begin_comment
+comment|/*%< Cancelled. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VALATTR_TRIEDVERIFY
 value|0x0004
 end_define
@@ -312,6 +329,16 @@ parameter_list|(
 name|v
 parameter_list|)
 value|(((v)->attributes& VALATTR_SHUTDOWN) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CANCELED
+parameter_list|(
+name|v
+parameter_list|)
+value|(((v)->attributes& VALATTR_CANCELED) != 0)
 end_define
 
 begin_function_decl
@@ -1123,6 +1150,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|CANCELED
+argument_list|(
+name|val
+argument_list|)
+condition|)
+block|{
+name|validator_done
+argument_list|(
+name|val
+argument_list|,
+name|ISC_R_CANCELED
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|eresult
 operator|==
 name|ISC_R_SUCCESS
@@ -1454,6 +1498,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|CANCELED
+argument_list|(
+name|val
+argument_list|)
+condition|)
+block|{
+name|validator_done
+argument_list|(
+name|val
+argument_list|,
+name|ISC_R_CANCELED
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|eresult
 operator|==
 name|ISC_R_SUCCESS
@@ -1515,7 +1576,12 @@ operator|||
 name|eresult
 operator|==
 name|DNS_R_NCACHENXRRSET
+operator|||
+name|eresult
+operator|==
+name|DNS_R_SERVFAIL
 condition|)
+comment|/* RFC 1034 parent? */
 block|{
 name|validator_log
 argument_list|(
@@ -1526,7 +1592,12 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"falling back to insecurity proof"
+literal|"falling back to insecurity proof (%s)"
+argument_list|,
+name|dns_result_totext
+argument_list|(
+name|eresult
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|val
@@ -1796,6 +1867,23 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|CANCELED
+argument_list|(
+name|val
+argument_list|)
+condition|)
+block|{
+name|validator_done
+argument_list|(
+name|val
+argument_list|,
+name|ISC_R_CANCELED
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|eresult
@@ -2150,6 +2238,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|CANCELED
+argument_list|(
+name|val
+argument_list|)
+condition|)
+block|{
+name|validator_done
+argument_list|(
+name|val
+argument_list|,
+name|ISC_R_CANCELED
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|eresult
 operator|==
 name|ISC_R_SUCCESS
@@ -2390,6 +2495,23 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|CANCELED
+argument_list|(
+name|val
+argument_list|)
+condition|)
+block|{
+name|validator_done
+argument_list|(
+name|val
+argument_list|,
+name|ISC_R_CANCELED
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|eresult
@@ -3385,6 +3507,23 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|CANCELED
+argument_list|(
+name|val
+argument_list|)
+condition|)
+block|{
+name|validator_done
+argument_list|(
+name|val
+argument_list|,
+name|ISC_R_CANCELED
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|result
@@ -6839,6 +6978,12 @@ operator|.
 name|digest_type
 operator|==
 name|DNS_DSDIGEST_SHA256
+operator|&&
+name|dlv
+operator|.
+name|length
+operator|==
+name|ISC_SHA256_DIGESTLENGTH
 condition|)
 block|{
 name|digest_type
@@ -8310,6 +8455,12 @@ operator|.
 name|digest_type
 operator|==
 name|DNS_DSDIGEST_SHA256
+operator|&&
+name|ds
+operator|.
+name|length
+operator|==
+name|ISC_SHA256_DIGESTLENGTH
 condition|)
 block|{
 name|digest_type
@@ -10892,6 +11043,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If this is a response to a DS query, we need to look in 		 * the parent zone for the trust anchor. 		 */
 if|if
 condition|(
 name|val
@@ -11424,6 +11576,48 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|dns_name_copy
+argument_list|(
+name|val
+operator|->
+name|event
+operator|->
+name|name
+argument_list|,
+name|secroot
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* 		 * If this is a response to a DS query, we need to look in 		 * the parent zone for the trust anchor. 		 */
+if|if
+condition|(
+name|val
+operator|->
+name|event
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_ds
+operator|&&
+name|dns_name_countlabels
+argument_list|(
+name|secroot
+argument_list|)
+operator|>
+literal|1U
+condition|)
+name|dns_name_split
+argument_list|(
+name|secroot
+argument_list|,
+literal|1
+argument_list|,
+name|NULL
+argument_list|,
+name|secroot
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 name|dns_keytable_finddeepestmatch
@@ -11432,11 +11626,7 @@ name|val
 operator|->
 name|keytable
 argument_list|,
-name|val
-operator|->
-name|event
-operator|->
-name|name
+name|secroot
 argument_list|,
 name|secroot
 argument_list|)
@@ -12927,13 +13117,6 @@ argument_list|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
-name|type
-operator|!=
-literal|0
-argument_list|)
-expr_stmt|;
-name|REQUIRE
-argument_list|(
 name|rdataset
 operator|!=
 name|NULL
@@ -13623,6 +13806,12 @@ name|task
 argument_list|)
 expr_stmt|;
 block|}
+name|validator
+operator|->
+name|attributes
+operator||=
+name|VALATTR_CANCELED
+expr_stmt|;
 block|}
 name|UNLOCK
 argument_list|(
