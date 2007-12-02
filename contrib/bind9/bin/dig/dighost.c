@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dighost.c,v 1.259.18.39 2007/02/14 23:45:43 marka Exp $ */
+comment|/* $Id: dighost.c,v 1.259.18.43 2007/08/28 07:19:55 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -668,6 +668,14 @@ directive|define
 name|MAXDLEN
 value|256
 end_define
+
+begin_decl_stmt
+name|int
+name|idnoptions
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -6338,17 +6346,9 @@ modifier|*
 name|lookup
 parameter_list|)
 block|{
-name|dig_server_t
-modifier|*
-name|s
-decl_stmt|;
 name|dig_query_t
 modifier|*
 name|q
-decl_stmt|;
-name|void
-modifier|*
-name|ptr
 decl_stmt|;
 name|REQUIRE
 argument_list|(
@@ -6424,9 +6424,39 @@ operator|)
 return|;
 block|}
 comment|/* 	 * At this point, we know there are no queries on the lookup, 	 * so can make it go away also. 	 */
+name|destroy_lookup
+argument_list|(
+name|lookup
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ISC_TRUE
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|destroy_lookup
+parameter_list|(
+name|dig_lookup_t
+modifier|*
+name|lookup
+parameter_list|)
+block|{
+name|dig_server_t
+modifier|*
+name|s
+decl_stmt|;
+name|void
+modifier|*
+name|ptr
+decl_stmt|;
 name|debug
 argument_list|(
-literal|"cleared"
+literal|"destroy"
 argument_list|)
 expr_stmt|;
 name|s
@@ -6589,11 +6619,6 @@ argument_list|,
 name|lookup
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ISC_TRUE
-operator|)
-return|;
 block|}
 end_function
 
@@ -8879,11 +8904,11 @@ name|mr
 operator|=
 name|idn_encodename
 argument_list|(
+name|idnoptions
+operator||
 name|IDN_LOCALMAP
 operator||
 name|IDN_NAMEPREP
-operator||
-name|IDN_ASCCHECK
 operator||
 name|IDN_IDNCONV
 operator||
@@ -18901,7 +18926,10 @@ name|fgets
 argument_list|(
 name|buf
 argument_list|,
-literal|1500
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 name|fp
 argument_list|)

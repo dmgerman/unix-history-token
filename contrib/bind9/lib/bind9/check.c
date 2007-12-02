@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: check.c,v 1.44.18.31 2006/08/21 00:09:52 marka Exp $ */
+comment|/* $Id: check.c,v 1.44.18.35 2007/09/13 05:04:01 each Exp $ */
 end_comment
 
 begin_comment
@@ -21,12 +21,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<isc/sockaddr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/string.h>
 end_include
 
 begin_include
@@ -136,6 +136,24 @@ include|#
 directive|include
 file|<bind9/check.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DNS_RDATASET_FIXED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DNS_RDATASET_FIXED
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -576,9 +594,31 @@ argument_list|)
 argument_list|,
 literal|"fixed"
 argument_list|)
-operator|!=
+operator|==
 literal|0
-operator|&&
+condition|)
+block|{
+if|#
+directive|if
+operator|!
+name|DNS_RDATASET_FIXED
+name|cfg_obj_log
+argument_list|(
+name|obj
+argument_list|,
+name|logctx
+argument_list|,
+name|ISC_LOG_WARNING
+argument_list|,
+literal|"rrset-order: order 'fixed' not fully implemented"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+elseif|else
+if|if
+condition|(
 name|strcasecmp
 argument_list|(
 name|cfg_obj_asstring

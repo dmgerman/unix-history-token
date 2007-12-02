@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_parse.c,v 1.5.18.3 2005/10/11 00:25:10 marka Exp $"
+literal|"$Id: ns_parse.c,v 1.5.18.4 2007/08/27 03:34:24 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,11 +100,20 @@ begin_comment
 comment|/* Macros. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|SOLARIS2
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__COVERITY__
+argument_list|)
+end_if
 
 begin_define
 define|#

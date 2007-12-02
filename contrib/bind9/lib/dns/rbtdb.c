@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rbtdb.c,v 1.196.18.41 2006/10/26 06:04:29 marka Exp $ */
+comment|/* $Id: rbtdb.c,v 1.196.18.48 2007/08/28 07:20:04 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -784,6 +784,24 @@ parameter_list|(
 name|l
 parameter_list|)
 value|((void)0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DNS_RDATASET_FIXED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DNS_RDATASET_FIXED
+value|1
 end_define
 
 begin_endif
@@ -1936,6 +1954,18 @@ name|event
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*%  * 'init_count' is used to initialize 'newheader->count' which inturn  * is used to determine where in the cycle rrset-order cyclic starts.  * We don't lock this as we don't care about simultanious updates.  *  * Note:  *	Both init_count and header->count can be ISC_UINT32_MAX.  *      The count on the returned rdataset however can't be as  *	that indicates that the database does not implement cyclic  *	processing.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|init_count
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Locking  *  * If a routine is going to lock more than one lock in this module, then  * the locking must be done in the following order:  *  *	Tree Lock  *  *	Node Lock	(Only one from the set may be locked at one time by  *			 any caller)  *  *	Database Lock  *  * Failure to follow this hierarchy can result in deadlock.  */
@@ -3907,7 +3937,7 @@ operator|*
 name|noqname
 operator|)
 operator|->
-name|nsec
+name|nsecsig
 operator|!=
 name|NULL
 condition|)
@@ -7857,13 +7887,13 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|header
+name|rdataset
 operator|->
 name|count
 operator|==
 name|ISC_UINT32_MAX
 condition|)
-name|header
+name|rdataset
 operator|->
 name|count
 operator|=
@@ -8283,6 +8313,9 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|raw
 operator|+=
 literal|2
@@ -8293,6 +8326,14 @@ operator|*
 name|count
 operator|)
 expr_stmt|;
+else|#
+directive|else
+name|raw
+operator|+=
+literal|2
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|count
@@ -8317,10 +8358,21 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|raw
 operator|+=
 literal|4
 expr_stmt|;
+else|#
+directive|else
+name|raw
+operator|+=
+literal|2
+expr_stmt|;
+endif|#
+directive|endif
 name|region
 operator|.
 name|base
@@ -13469,10 +13521,14 @@ argument_list|(
 name|header
 argument_list|)
 operator|||
-name|NXDOMAIN
+name|RBTDB_RDATATYPE_BASE
 argument_list|(
 name|header
+operator|->
+name|type
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|header_prev
@@ -20129,7 +20185,8 @@ name|newheader
 operator|->
 name|count
 operator|=
-literal|0
+name|init_count
+operator|++
 expr_stmt|;
 name|newheader
 operator|->
@@ -20590,7 +20647,8 @@ name|newheader
 operator|->
 name|count
 operator|=
-literal|0
+name|init_count
+operator|++
 expr_stmt|;
 name|newheader
 operator|->
@@ -21817,7 +21875,8 @@ name|newheader
 operator|->
 name|count
 operator|=
-literal|0
+name|init_count
+operator|++
 expr_stmt|;
 name|newheader
 operator|->
@@ -23949,6 +24008,9 @@ name|ISC_R_NOMORE
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 if|if
 condition|(
 operator|(
@@ -23972,6 +24034,8 @@ name|count
 operator|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|raw
 operator|+=
 literal|2
@@ -24057,6 +24121,9 @@ name|rdataset
 operator|->
 name|private5
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 if|if
 condition|(
 operator|(
@@ -24070,6 +24137,8 @@ operator|==
 literal|0
 condition|)
 block|{
+endif|#
+directive|endif
 name|length
 operator|=
 name|raw
@@ -24088,6 +24157,9 @@ name|raw
 operator|+=
 name|length
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 block|}
 name|rdataset
 operator|->
@@ -24097,6 +24169,20 @@ name|raw
 operator|+
 literal|4
 expr_stmt|;
+comment|/* length(2) + order(2) */
+else|#
+directive|else
+name|rdataset
+operator|->
+name|private5
+operator|=
+name|raw
+operator|+
+literal|2
+expr_stmt|;
+comment|/* length(2) */
+endif|#
+directive|endif
 return|return
 operator|(
 name|ISC_R_SUCCESS
@@ -24129,10 +24215,15 @@ operator|->
 name|private5
 decl_stmt|;
 comment|/* RDATASLAB */
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|unsigned
 name|int
 name|offset
 decl_stmt|;
+endif|#
+directive|endif
 name|isc_region_t
 name|r
 decl_stmt|;
@@ -24144,6 +24235,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Find the start of the record if not already in private5 	 * then skip the length and order fields. 	 */
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 if|if
 condition|(
 operator|(
@@ -24202,6 +24296,8 @@ operator|+=
 name|offset
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|r
 operator|.
 name|length
@@ -24218,10 +24314,21 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|raw
 operator|+=
 literal|4
 expr_stmt|;
+else|#
+directive|else
+name|raw
+operator|+=
+literal|2
+expr_stmt|;
+endif|#
+directive|endif
 name|r
 operator|.
 name|base

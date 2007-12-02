@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: query.c,v 1.257.18.36.12.1 2007/04/30 01:10:19 marka Exp $ */
+comment|/* $Id: query.c,v 1.257.18.40 2007/09/26 03:08:14 each Exp $ */
 end_comment
 
 begin_comment
@@ -11001,6 +11001,10 @@ parameter_list|,
 name|dns_dbnode_t
 modifier|*
 name|node
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
 parameter_list|)
 block|{
 name|dns_name_t
@@ -11071,7 +11075,7 @@ name|db
 argument_list|,
 name|node
 argument_list|,
-name|NULL
+name|version
 argument_list|,
 name|dns_rdatatype_ds
 argument_list|,
@@ -11101,7 +11105,7 @@ name|db
 argument_list|,
 name|node
 argument_list|,
-name|NULL
+name|version
 argument_list|,
 name|dns_rdatatype_nsec
 argument_list|,
@@ -11280,6 +11284,10 @@ parameter_list|,
 name|dns_db_t
 modifier|*
 name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
 parameter_list|,
 name|dns_name_t
 modifier|*
@@ -11464,7 +11472,7 @@ name|db
 argument_list|,
 name|name
 argument_list|,
-name|NULL
+name|version
 argument_list|,
 name|dns_rdatatype_nsec
 argument_list|,
@@ -11796,6 +11804,10 @@ name|dns_db_t
 modifier|*
 name|db
 parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
+parameter_list|,
 name|dns_name_t
 modifier|*
 modifier|*
@@ -11979,6 +11991,8 @@ argument_list|(
 name|client
 argument_list|,
 name|db
+argument_list|,
+name|version
 argument_list|,
 name|client
 operator|->
@@ -15910,6 +15924,8 @@ argument_list|,
 name|db
 argument_list|,
 name|node
+argument_list|,
+name|version
 argument_list|)
 expr_stmt|;
 block|}
@@ -16250,6 +16266,8 @@ argument_list|,
 name|db
 argument_list|,
 name|node
+argument_list|,
+name|version
 argument_list|)
 expr_stmt|;
 block|}
@@ -16355,6 +16373,8 @@ argument_list|(
 name|client
 argument_list|,
 name|db
+argument_list|,
+name|version
 argument_list|,
 operator|&
 name|fname
@@ -16521,6 +16541,8 @@ argument_list|(
 name|client
 argument_list|,
 name|db
+argument_list|,
+name|version
 argument_list|,
 name|client
 operator|->
@@ -18085,6 +18107,8 @@ name|client
 argument_list|,
 name|db
 argument_list|,
+name|version
+argument_list|,
 name|dns_fixedname_name
 argument_list|(
 operator|&
@@ -19200,11 +19224,10 @@ expr_stmt|;
 comment|/* 	 * Set AD.  We must clear it if we add non-validated data to a 	 * response. 	 */
 if|if
 condition|(
+name|WANTDNSSEC
+argument_list|(
 name|client
-operator|->
-name|view
-operator|->
-name|enablednssec
+argument_list|)
 condition|)
 name|message
 operator|->

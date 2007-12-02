@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rdataslab.c,v 1.35.18.5 2006/03/05 23:58:51 marka Exp $ */
+comment|/* $Id: rdataslab.c,v 1.35.18.8 2007/08/28 07:20:05 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -75,8 +75,26 @@ directive|include
 file|<dns/rdataslab.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DNS_RDATASET_FIXED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DNS_RDATASET_FIXED
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * The rdataslab structure allows iteration to occur in both load order  * and DNSSEC order.  The structure is as follows:  *  *	header		(reservelen bytes)  *	record count	(2 bytes)  *	offset table	(4 x record count bytes in load order)  *	data records  *		data length	(2 bytes)  *		order		(2 bytes)  *		data		(data length bytes)  *  * Offsets are from the end of the header.  *  * Load order traversal is performed by walking the offset table to find  * the start of the record.  *  * DNSSEC order traversal is performed by walking the data records.  *  * The order is stored with record to allow for efficient reconstuction of  * of the offset table following a merge or subtraction.  *  * The iterator methods here currently only support DNSSEC order iteration.  *  * The iterator methods in rbtdb support both load order and DNSSEC order  * iteration.  *  * WARNING:  *	rbtdb.c directly interacts with the slab's raw structures.  If the  *	structure changes then rbtdb.c also needs to be updated to reflect  *	the changes.  See the areas tagged with "RDATASLAB".  */
+comment|/*  * The rdataslab structure allows iteration to occur in both load order  * and DNSSEC order.  The structure is as follows:  *  *	header		(reservelen bytes)  *	record count	(2 bytes)  *	offset table	(4 x record count bytes in load order)  *	data records  *		data length	(2 bytes)  *		order		(2 bytes)  *		data		(data length bytes)  *  * If DNS_RDATASET_FIXED is defined to be zero (0) the format of a  * rdataslab is as follows:  *  *	header		(reservelen bytes)  *	record count	(2 bytes)  *	data records  *		data length	(2 bytes)  *		data		(data length bytes)  *  * Offsets are from the end of the header.  *  * Load order traversal is performed by walking the offset table to find  * the start of the record (DNS_RDATASET_FIXED = 1).  *  * DNSSEC order traversal is performed by walking the data records.  *  * The order is stored with record to allow for efficient reconstuction of  * of the offset table following a merge or subtraction.  *  * The iterator methods here currently only support DNSSEC order iteration.  *  * The iterator methods in rbtdb support both load order and DNSSEC order  * iteration.  *  * WARNING:  *	rbtdb.c directly interacts with the slab's raw structures.  If the  *	structure changes then rbtdb.c also needs to be updated to reflect  *	the changes.  See the areas tagged with "RDATASLAB".  */
 end_comment
 
 begin_struct
@@ -148,6 +166,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
+end_if
 
 begin_function
 specifier|static
@@ -311,6 +335,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|isc_result_t
 name|dns_rdataslab_fromrdataset
@@ -342,11 +371,16 @@ name|char
 modifier|*
 name|rawbuf
 decl_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|unsigned
 name|char
 modifier|*
 name|offsetbase
 decl_stmt|;
+endif|#
+directive|endif
 name|unsigned
 name|int
 name|buflen
@@ -366,11 +400,16 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|unsigned
 name|int
 modifier|*
 name|offsettable
 decl_stmt|;
+endif|#
+directive|endif
 name|buflen
 operator|=
 name|reservelen
@@ -502,6 +541,9 @@ operator|.
 name|rdata
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|x
 index|[
 name|i
@@ -511,6 +553,8 @@ name|order
 operator|=
 name|i
 expr_stmt|;
+endif|#
+directive|endif
 name|result
 operator|=
 name|dns_rdataset_next
@@ -627,6 +671,9 @@ name|length
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 comment|/* 			 * Preserve the least order so A, B, A -> A, B 			 * after duplicate removal. 			 */
 if|if
 condition|(
@@ -662,11 +709,16 @@ index|]
 operator|.
 name|order
 expr_stmt|;
+endif|#
+directive|endif
 name|nitems
 operator|--
 expr_stmt|;
 block|}
 else|else
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|buflen
 operator|+=
 operator|(
@@ -684,8 +736,32 @@ operator|.
 name|length
 operator|)
 expr_stmt|;
+else|#
+directive|else
+name|buflen
+operator|+=
+operator|(
+literal|2
+operator|+
+name|x
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|.
+name|rdata
+operator|.
+name|length
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * Don't forget the last item! 	 */
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|buflen
 operator|+=
 operator|(
@@ -703,6 +779,27 @@ operator|.
 name|length
 operator|)
 expr_stmt|;
+else|#
+directive|else
+name|buflen
+operator|+=
+operator|(
+literal|2
+operator|+
+name|x
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|.
+name|rdata
+operator|.
+name|length
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Ensure that singleton types are actually singletons. 	 */
 if|if
 condition|(
@@ -752,6 +849,9 @@ goto|goto
 name|free_rdatas
 goto|;
 block|}
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 comment|/* Allocate temporary offset table. */
 name|offsettable
 operator|=
@@ -807,6 +907,8 @@ name|int
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|region
 operator|->
 name|base
@@ -823,10 +925,15 @@ name|rawbuf
 operator|+=
 name|reservelen
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|offsetbase
 operator|=
 name|rawbuf
 expr_stmt|;
+endif|#
+directive|endif
 operator|*
 name|rawbuf
 operator|++
@@ -849,6 +956,9 @@ operator|&
 literal|0x00ff
 operator|)
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 comment|/* Skip load order table.  Filled in later. */
 name|rawbuf
 operator|+=
@@ -856,6 +966,8 @@ name|nitems
 operator|*
 literal|4
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -884,6 +996,9 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|offsettable
 index|[
 name|x
@@ -898,6 +1013,8 @@ name|rawbuf
 operator|-
 name|offsetbase
 expr_stmt|;
+endif|#
+directive|endif
 operator|*
 name|rawbuf
 operator|++
@@ -934,11 +1051,16 @@ operator|&
 literal|0x00ff
 operator|)
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|rawbuf
 operator|+=
 literal|2
 expr_stmt|;
 comment|/* filled in later */
+endif|#
+directive|endif
 name|memcpy
 argument_list|(
 name|rawbuf
@@ -974,6 +1096,9 @@ operator|.
 name|length
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|fillin_offsets
 argument_list|(
 name|offsetbase
@@ -998,6 +1123,8 @@ name|int
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|result
 operator|=
 name|ISC_R_SUCCESS
@@ -1101,6 +1228,9 @@ name|ISC_R_NOMORE
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|raw
 operator|+=
 literal|2
@@ -1111,6 +1241,14 @@ operator|*
 name|count
 operator|)
 expr_stmt|;
+else|#
+directive|else
+name|raw
+operator|+=
+literal|2
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * The privateuint4 field is the number of rdata beyond the cursor 	 * position, so we decrement the total count by one before storing 	 * it. 	 */
 name|count
 operator|--
@@ -1204,12 +1342,25 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|raw
 operator|+=
 name|length
 operator|+
 literal|4
 expr_stmt|;
+else|#
+directive|else
+name|raw
+operator|+=
+name|length
+operator|+
+literal|2
+expr_stmt|;
+endif|#
+directive|endif
 name|rdataset
 operator|->
 name|private5
@@ -1273,10 +1424,21 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|raw
 operator|+=
 literal|4
 expr_stmt|;
+else|#
+directive|else
+name|raw
+operator|+=
+literal|2
+expr_stmt|;
+endif|#
+directive|endif
 name|r
 operator|.
 name|base
@@ -1587,6 +1749,9 @@ operator|*
 name|current
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|current
 operator|+=
 operator|(
@@ -1595,6 +1760,8 @@ operator|*
 name|count
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|count
@@ -1619,12 +1786,23 @@ operator|*
 name|current
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|current
 operator|+=
 name|length
 operator|+
 literal|2
 expr_stmt|;
+else|#
+directive|else
+name|current
+operator|+=
+name|length
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -1698,10 +1876,15 @@ operator|*
 name|tcurrent
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|tcurrent
 operator|+=
 literal|2
 expr_stmt|;
+endif|#
+directive|endif
 name|region
 operator|.
 name|base
@@ -1803,6 +1986,9 @@ operator|*
 name|current
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|current
 operator|+=
 operator|(
@@ -1811,6 +1997,8 @@ operator|*
 name|count
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -1990,6 +2178,9 @@ name|nncount
 init|=
 literal|0
 decl_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|unsigned
 name|int
 name|oncount
@@ -2016,6 +2207,8 @@ name|int
 modifier|*
 name|offsettable
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * XXX  Need parameter to allow "delete rdatasets in nslab" merge, 	 * or perhaps another merge routine for this purpose. 	 */
 name|REQUIRE
 argument_list|(
@@ -2060,6 +2253,9 @@ operator|*
 name|ocurrent
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|ocurrent
 operator|+=
 operator|(
@@ -2068,6 +2264,8 @@ operator|*
 name|ocount
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ostart
 operator|=
 name|ocurrent
@@ -2092,6 +2290,9 @@ operator|*
 name|ncurrent
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|ncurrent
 operator|+=
 operator|(
@@ -2100,6 +2301,8 @@ operator|*
 name|ncount
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 name|INSIST
 argument_list|(
 name|ocount
@@ -2111,10 +2314,15 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|oncount
 operator|=
 name|ncount
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Yes, this is inefficient! 	 */
 comment|/* 	 * Figure out the length of the old slab's data. 	 */
 name|olength
@@ -2149,6 +2357,9 @@ operator|*
 name|ocurrent
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|olength
 operator|+=
 name|length
@@ -2161,6 +2372,20 @@ name|length
 operator|+
 literal|2
 expr_stmt|;
+else|#
+directive|else
+name|olength
+operator|+=
+name|length
+operator|+
+literal|2
+expr_stmt|;
+name|ocurrent
+operator|+=
+name|length
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * Start figuring out the target length and count. 	 */
 name|tlength
@@ -2196,10 +2421,16 @@ operator|*
 name|ncurrent
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|ncurrent
 operator|+=
 literal|2
 expr_stmt|;
+comment|/* Skip order. */
+endif|#
+directive|endif
 name|nregion
 operator|.
 name|base
@@ -2244,6 +2475,9 @@ argument_list|)
 condition|)
 block|{
 comment|/* 			 * This rdata isn't in the old slab. 			 */
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|tlength
 operator|+=
 name|nregion
@@ -2252,6 +2486,18 @@ name|length
 operator|+
 literal|8
 expr_stmt|;
+else|#
+directive|else
+name|tlength
+operator|+=
+name|nregion
+operator|.
+name|length
+operator|+
+literal|2
+expr_stmt|;
+endif|#
+directive|endif
 name|tcount
 operator|++
 expr_stmt|;
@@ -2394,10 +2640,15 @@ name|tstart
 operator|+
 name|reservelen
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|offsetbase
 operator|=
 name|tcurrent
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Write the new count. 	 */
 operator|*
 name|tcurrent
@@ -2421,6 +2672,9 @@ operator|&
 literal|0x00ff
 operator|)
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 comment|/* 	 * Skip offset table. 	 */
 name|tcurrent
 operator|+=
@@ -2490,6 +2744,8 @@ name|int
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Merge the two slabs. 	 */
 name|ocurrent
 operator|=
@@ -2502,6 +2758,9 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|oorder
 operator|=
 name|ocurrent
@@ -2523,6 +2782,8 @@ operator|<
 name|ocount
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|rdata_from_slab
 argument_list|(
 operator|&
@@ -2544,6 +2805,9 @@ name|reservelen
 operator|+
 literal|2
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|ncurrent
 operator|+=
 operator|(
@@ -2552,6 +2816,8 @@ operator|*
 name|oncount
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ncount
@@ -2567,6 +2833,9 @@ operator|&
 name|nrdata
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|norder
 operator|=
 name|ncurrent
@@ -2588,6 +2857,8 @@ operator|<
 name|oncount
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|rdata_from_slab
 argument_list|(
 operator|&
@@ -2677,6 +2948,9 @@ condition|(
 name|fromold
 condition|)
 block|{
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|offsettable
 index|[
 name|oorder
@@ -2686,6 +2960,8 @@ name|tcurrent
 operator|-
 name|offsetbase
 expr_stmt|;
+endif|#
+directive|endif
 name|length
 operator|=
 name|ordata
@@ -2714,11 +2990,16 @@ operator|&
 literal|0x00ff
 operator|)
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|tcurrent
 operator|+=
 literal|2
 expr_stmt|;
 comment|/* fill in later */
+endif|#
+directive|endif
 name|memcpy
 argument_list|(
 name|tcurrent
@@ -2750,6 +3031,9 @@ operator|&
 name|ordata
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|oorder
 operator|=
 name|ocurrent
@@ -2771,6 +3055,8 @@ operator|<
 name|ocount
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|rdata_from_slab
 argument_list|(
 operator|&
@@ -2788,6 +3074,9 @@ block|}
 block|}
 else|else
 block|{
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|offsettable
 index|[
 name|ocount
@@ -2799,6 +3088,8 @@ name|tcurrent
 operator|-
 name|offsetbase
 expr_stmt|;
+endif|#
+directive|endif
 name|length
 operator|=
 name|nrdata
@@ -2827,11 +3118,16 @@ operator|&
 literal|0x00ff
 operator|)
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|tcurrent
 operator|+=
 literal|2
 expr_stmt|;
 comment|/* fill in later */
+endif|#
+directive|endif
 name|memcpy
 argument_list|(
 name|tcurrent
@@ -2865,6 +3161,9 @@ operator|&
 name|nrdata
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|norder
 operator|=
 name|ncurrent
@@ -2886,6 +3185,8 @@ operator|<
 name|oncount
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|rdata_from_slab
 argument_list|(
 operator|&
@@ -2920,6 +3221,9 @@ do|;
 block|}
 block|}
 block|}
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|fillin_offsets
 argument_list|(
 name|offsetbase
@@ -2950,6 +3254,8 @@ name|int
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|INSIST
 argument_list|(
 name|tcurrent
@@ -3054,6 +3360,9 @@ name|mrdata
 init|=
 name|DNS_RDATA_INIT
 decl_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|unsigned
 name|char
 modifier|*
@@ -3064,6 +3373,8 @@ name|int
 modifier|*
 name|offsettable
 decl_stmt|;
+endif|#
+directive|endif
 name|unsigned
 name|int
 name|order
@@ -3158,6 +3469,9 @@ name|rcount
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|mcurrent
 operator|+=
 literal|4
@@ -3170,6 +3484,8 @@ literal|4
 operator|*
 name|scount
 expr_stmt|;
+endif|#
+directive|endif
 name|sstart
 operator|=
 name|scurrent
@@ -3290,6 +3606,9 @@ name|mrdata
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|tlength
 operator|+=
 operator|(
@@ -3298,7 +3617,9 @@ operator|*
 name|tcount
 operator|)
 expr_stmt|;
-comment|/* 	 * Check that all the records originally existed.  The numeric  	 * check only works as rdataslabs do not contain duplicates. 	 */
+endif|#
+directive|endif
+comment|/* 	 * Check that all the records originally existed.  The numeric 	 * check only works as rdataslabs do not contain duplicates. 	 */
 if|if
 condition|(
 operator|(
@@ -3382,6 +3703,9 @@ name|tstart
 operator|+
 name|reservelen
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|offsetbase
 operator|=
 name|tcurrent
@@ -3438,6 +3762,8 @@ name|int
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Write the new count. 	 */
 operator|*
 name|tcurrent
@@ -3461,6 +3787,9 @@ operator|&
 literal|0x00ff
 operator|)
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|tcurrent
 operator|+=
 operator|(
@@ -3469,6 +3798,8 @@ operator|*
 name|tcount
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Copy the parts of mslab not in sslab. 	 */
 name|mcurrent
 operator|=
@@ -3490,6 +3821,9 @@ operator|*
 name|mcurrent
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|mcurrent
 operator|+=
 operator|(
@@ -3498,6 +3832,8 @@ operator|*
 name|mcount
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -3519,6 +3855,9 @@ name|mrdatabegin
 init|=
 name|mcurrent
 decl_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|order
 operator|=
 name|mcurrent
@@ -3540,6 +3879,8 @@ operator|<
 name|mcount
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|rdata_from_slab
 argument_list|(
 operator|&
@@ -3621,6 +3962,9 @@ name|mcurrent
 operator|-
 name|mrdatabegin
 decl_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|offsettable
 index|[
 name|order
@@ -3630,6 +3974,8 @@ name|tcurrent
 operator|-
 name|offsetbase
 expr_stmt|;
+endif|#
+directive|endif
 name|memcpy
 argument_list|(
 name|tcurrent
@@ -3651,6 +3997,9 @@ name|mrdata
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|fillin_offsets
 argument_list|(
 name|offsetbase
@@ -3675,6 +4024,8 @@ name|int
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|INSIST
 argument_list|(
 name|tcurrent
@@ -3787,6 +4138,9 @@ operator|(
 name|ISC_FALSE
 operator|)
 return|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|current1
 operator|+=
 operator|(
@@ -3803,6 +4157,8 @@ operator|*
 name|count2
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|count1
@@ -3838,6 +4194,9 @@ operator|*
 name|current2
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|current1
 operator|+=
 literal|2
@@ -3846,6 +4205,8 @@ name|current2
 operator|+=
 literal|2
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|length1
@@ -3988,6 +4349,9 @@ operator|(
 name|ISC_FALSE
 operator|)
 return|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
 name|current1
 operator|+=
 operator|(
@@ -4004,6 +4368,8 @@ operator|*
 name|count2
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|count1

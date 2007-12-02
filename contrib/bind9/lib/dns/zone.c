@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: zone.c,v 1.410.18.47 2006/12/07 06:21:16 marka Exp $ */
+comment|/* $Id: zone.c,v 1.410.18.52 2007/08/30 05:15:03 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1059,6 +1059,10 @@ name|void
 modifier|*
 name|isselfarg
 decl_stmt|;
+comment|/*% 	 * Serial number for deferred journal compaction. 	 */
+name|isc_uint32_t
+name|compact_serial
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1344,6 +1348,13 @@ define|#
 directive|define
 name|DNS_ZONEFLG_SOABEFOREAXFR
 value|0x01000000U
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_ZONEFLG_NEEDCOMPACT
+value|0x02000000U
 end_define
 
 begin_define
@@ -5689,6 +5700,13 @@ condition|)
 block|{
 if|if
 condition|(
+name|DNS_ZONE_FLAG
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_LOADED
+argument_list|)
+operator|&&
 operator|!
 name|DNS_ZONE_FLAG
 argument_list|(
@@ -15673,6 +15691,17 @@ name|again
 init|=
 name|ISC_FALSE
 decl_stmt|;
+name|isc_boolean_t
+name|compact
+init|=
+name|ISC_FALSE
+decl_stmt|;
+name|isc_uint32_t
+name|serial
+decl_stmt|;
+name|isc_result_t
+name|tresult
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|DNS_ZONE_VALID
@@ -15703,12 +15732,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|isc_uint32_t
-name|serial
-decl_stmt|;
-name|isc_result_t
-name|tresult
-decl_stmt|;
 comment|/* 		 * We don't own these, zone->dctx must stay valid. 		 */
 name|db
 operator|=
@@ -15740,11 +15763,18 @@ operator|&
 name|serial
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Note: we are task locked here so we can test 		 * zone->xfr safely. 		 */
 if|if
 condition|(
 name|tresult
 operator|==
 name|ISC_R_SUCCESS
+operator|&&
+name|zone
+operator|->
+name|xfr
+operator|==
+name|NULL
 condition|)
 block|{
 name|tresult
@@ -15816,6 +15846,25 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|tresult
+operator|==
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|compact
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+name|zone
+operator|->
+name|compact_serial
+operator|=
+name|serial
+expr_stmt|;
+block|}
 block|}
 name|LOCK_ZONE
 argument_list|(
@@ -15827,6 +15876,17 @@ argument_list|(
 name|zone
 argument_list|,
 name|DNS_ZONEFLG_DUMPING
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|compact
+condition|)
+name|DNS_ZONE_SETFLAG
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_NEEDCOMPACT
 argument_list|)
 expr_stmt|;
 if|if
@@ -26785,10 +26845,6 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-name|message
-operator|=
-name|NULL
-expr_stmt|;
 name|result
 operator|=
 name|dns_message_create
@@ -27530,12 +27586,6 @@ operator|&
 name|temprdataset
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|message
-operator|!=
-name|NULL
-condition|)
 name|dns_message_destroy
 argument_list|(
 operator|&
@@ -32381,6 +32431,95 @@ operator|->
 name|tsigkey
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Handle any deferred journal compaction. 	 */
+if|if
+condition|(
+name|DNS_ZONE_FLAG
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_NEEDCOMPACT
+argument_list|)
+condition|)
+block|{
+name|result
+operator|=
+name|dns_journal_compact
+argument_list|(
+name|zone
+operator|->
+name|mctx
+argument_list|,
+name|zone
+operator|->
+name|journal
+argument_list|,
+name|zone
+operator|->
+name|compact_serial
+argument_list|,
+name|zone
+operator|->
+name|journalsize
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|result
+condition|)
+block|{
+case|case
+name|ISC_R_SUCCESS
+case|:
+case|case
+name|ISC_R_NOSPACE
+case|:
+case|case
+name|ISC_R_NOTFOUND
+case|:
+name|dns_zone_log
+argument_list|(
+name|zone
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
+literal|"dns_journal_compact: %s"
+argument_list|,
+name|dns_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|dns_zone_log
+argument_list|(
+name|zone
+argument_list|,
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"dns_journal_compact failed: %s"
+argument_list|,
+name|dns_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|DNS_ZONE_CLRFLAG
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_NEEDCOMPACT
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * This transfer finishing freed up a transfer quota slot. 	 * Let any other zones waiting for quota have it. 	 */
 name|RWLOCK
 argument_list|(
