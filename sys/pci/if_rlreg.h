@@ -4372,6 +4372,17 @@ value|0x14ea
 end_define
 
 begin_comment
+comment|/*  * Planex FNW-3603-TX device ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PLANEX_DEVICEID_FNW3603TX
+value|0xab06
+end_define
+
+begin_comment
 comment|/*  * Planex FNW-3800-TX device ID  */
 end_comment
 
