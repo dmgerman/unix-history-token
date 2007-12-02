@@ -185,6 +185,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_AMRCAM
+argument_list|,
+literal|"amrcam"
+argument_list|,
+literal|"AMR CAM memory"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/***********************************************************************  * Enqueue/dequeue functions  */
 end_comment
@@ -1460,7 +1472,7 @@ operator|*
 name|aep
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_AMRCAM
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -1641,7 +1653,7 @@ operator|*
 name|ap
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_AMRCAM
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -1995,7 +2007,7 @@ name|free
 argument_list|(
 name|ap
 argument_list|,
-name|M_DEVBUF
+name|M_AMRCAM
 argument_list|)
 expr_stmt|;
 if|if
@@ -2008,7 +2020,7 @@ name|free
 argument_list|(
 name|aep
 argument_list|,
-name|M_DEVBUF
+name|M_AMRCAM
 argument_list|)
 expr_stmt|;
 if|if
@@ -2415,7 +2427,7 @@ name|free
 argument_list|(
 name|ap
 argument_list|,
-name|M_DEVBUF
+name|M_AMRCAM
 argument_list|)
 expr_stmt|;
 else|else
@@ -2423,7 +2435,7 @@ name|free
 argument_list|(
 name|aep
 argument_list|,
-name|M_DEVBUF
+name|M_AMRCAM
 argument_list|)
 expr_stmt|;
 if|if
