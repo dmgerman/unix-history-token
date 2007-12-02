@@ -572,16 +572,6 @@ name|flags
 decl_stmt|,
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TCP_SIGNATURE
-name|int
-name|sigoff
-init|=
-literal|0
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|mbuf
 modifier|*
@@ -2488,25 +2478,6 @@ argument_list|,
 name|opt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TCP_SIGNATURE
-name|sigoff
-operator|=
-name|to
-operator|.
-name|to_signature
-operator|-
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|&
-name|to
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TCP_SIGNATURE */
 block|}
 ifdef|#
 directive|ifdef
@@ -3724,6 +3695,16 @@ name|t_flags
 operator|&
 name|TF_SIGNATURE
 condition|)
+block|{
+name|int
+name|sigoff
+init|=
+name|to
+operator|.
+name|to_signature
+operator|-
+name|opt
+decl_stmt|;
 name|tcp_signature_compute
 argument_list|(
 name|m
@@ -3753,6 +3734,7 @@ argument_list|,
 name|IPSEC_DIR_OUTBOUND
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * Put TCP length in extended header, and then 	 * checksum extended header and data. 	 */
