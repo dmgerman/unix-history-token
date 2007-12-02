@@ -2204,6 +2204,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KERN_PROC_VMMAP
+value|13
+end_define
+
+begin_comment
+comment|/* VM map entries for process */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_PROC_FILEDESC
+value|14
+end_define
+
+begin_comment
+comment|/* File descriptors for process */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KERN_PROC_INC_THREAD
 value|0x10
 end_define
@@ -3008,6 +3030,14 @@ begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
 name|_kern_ipc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_proc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
