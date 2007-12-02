@@ -211,7 +211,7 @@ parameter_list|(
 name|args
 modifier|...
 parameter_list|)
-value|_thread_printf(STDOUT_FILENO, ##args)
+value|_thread_printf(STDERR_FILENO, ##args)
 end_define
 
 begin_define
