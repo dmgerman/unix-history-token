@@ -689,7 +689,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the queue headers for the free queue, the active queue 	 * and the inactive queue. 	 */
+comment|/* 	 * Initialize the queue headers for the hold queue, the active queue, 	 * and the inactive queue. 	 */
 name|vm_pageq_init
 argument_list|()
 expr_stmt|;
