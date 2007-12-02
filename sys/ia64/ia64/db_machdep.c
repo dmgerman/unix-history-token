@@ -3977,25 +3977,6 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|stack_save
-parameter_list|(
-name|struct
-name|stack
-modifier|*
-name|st
-parameter_list|)
-block|{
-name|stack_zero
-argument_list|(
-name|st
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Nothing for now. 	 * Is libuwx reentrant? 	 * Can unw_create* sleep? 	 */
-block|}
-end_function
-
 begin_ifdef
 ifdef|#
 directive|ifdef
