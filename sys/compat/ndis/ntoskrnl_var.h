@@ -5153,6 +5153,17 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|ntoskrnl_time
+parameter_list|(
+name|uint64_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|uint16_t
 name|ExQueryDepthSList
 parameter_list|(

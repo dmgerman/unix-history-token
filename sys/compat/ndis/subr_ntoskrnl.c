@@ -1507,17 +1507,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|ntoskrnl_time
-parameter_list|(
-name|uint64_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|uint8_t
 name|IoIsWdmVersionAvailable
 parameter_list|(
@@ -7446,8 +7435,11 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return the number of 100 nanosecond intervals since  * January 1, 1601. (?!?!)  */
+end_comment
+
 begin_function
-specifier|static
 name|void
 name|ntoskrnl_time
 parameter_list|(
@@ -7490,7 +7482,10 @@ operator|*
 literal|10000000
 operator|+
 literal|11644473600
+operator|*
+literal|10000000
 expr_stmt|;
+comment|/* 100ns ticks from 1601 to 1970 */
 return|return;
 block|}
 end_function
