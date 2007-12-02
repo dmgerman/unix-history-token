@@ -1896,11 +1896,12 @@ block|{
 name|void
 modifier|*
 name|p
+decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|amr_free
 argument_list|(
 name|sc
