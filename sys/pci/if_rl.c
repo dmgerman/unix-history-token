@@ -405,6 +405,16 @@ block|,
 block|{
 name|PLANEX_VENDORID
 block|,
+name|PLANEX_DEVICEID_FNW3603TX
+block|,
+name|RL_8139
+block|,
+literal|"Planex FNW-3603-TX"
+block|}
+block|,
+block|{
+name|PLANEX_VENDORID
+block|,
 name|PLANEX_DEVICEID_FNW3800TX
 block|,
 name|RL_8139
