@@ -11215,6 +11215,13 @@ comment|/* Set SSID -- always do this last. */
 ifdef|#
 directive|ifdef
 name|NDIS_DEBUG
+if|if
+condition|(
+name|ndis_debug
+operator|>
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Setting ESSID to "
@@ -11236,6 +11243,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|len
