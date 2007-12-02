@@ -351,9 +351,6 @@ parameter_list|,
 name|vm_ooffset_t
 name|off
 parameter_list|,
-name|int
-name|pageno
-parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|)
@@ -12516,8 +12513,6 @@ name|bp
 argument_list|,
 name|foff
 argument_list|,
-name|i
-argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -12952,9 +12947,6 @@ parameter_list|,
 name|vm_ooffset_t
 name|off
 parameter_list|,
-name|int
-name|pageno
-parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|)
@@ -13252,8 +13244,6 @@ name|bp
 argument_list|,
 name|foff
 argument_list|,
-name|i
-argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -13482,8 +13472,6 @@ argument_list|(
 name|bp
 argument_list|,
 name|foff
-argument_list|,
-name|i
 argument_list|,
 name|m
 argument_list|)
