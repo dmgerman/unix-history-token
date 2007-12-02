@@ -2226,6 +2226,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KERN_PROC_KSTACK
+value|15
+end_define
+
+begin_comment
+comment|/* Kernel stacks for process */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KERN_PROC_INC_THREAD
 value|0x10
 end_define
