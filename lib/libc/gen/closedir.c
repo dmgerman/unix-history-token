@@ -129,10 +129,6 @@ name|__isthreaded
 condition|)
 name|_pthread_mutex_lock
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|dirp
 operator|->
@@ -191,10 +187,6 @@ condition|)
 block|{
 name|_pthread_mutex_unlock
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|dirp
 operator|->
@@ -203,10 +195,6 @@ argument_list|)
 expr_stmt|;
 name|_pthread_mutex_destroy
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|dirp
 operator|->

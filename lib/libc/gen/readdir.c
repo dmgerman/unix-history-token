@@ -347,10 +347,6 @@ condition|)
 block|{
 name|_pthread_mutex_lock
 argument_list|(
-operator|(
-name|pthread_mutex_t
-operator|*
-operator|)
 operator|&
 name|dirp
 operator|->
@@ -366,10 +362,6 @@ argument_list|)
 expr_stmt|;
 name|_pthread_mutex_unlock
 argument_list|(
-operator|(
-name|pthread_mutex_t
-operator|*
-operator|)
 operator|&
 name|dirp
 operator|->
@@ -442,10 +434,6 @@ condition|)
 block|{
 name|_pthread_mutex_lock
 argument_list|(
-operator|(
-name|pthread_mutex_t
-operator|*
-operator|)
 operator|&
 name|dirp
 operator|->
@@ -479,10 +467,6 @@ argument_list|)
 expr_stmt|;
 name|_pthread_mutex_unlock
 argument_list|(
-operator|(
-name|pthread_mutex_t
-operator|*
-operator|)
 operator|&
 name|dirp
 operator|->
