@@ -158,7 +158,7 @@ name|setlocale
 argument_list|(
 name|LC_NUMERIC
 argument_list|,
-literal|""
+literal|"C"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -697,7 +697,7 @@ name|setlocale
 argument_list|(
 name|LC_NUMERIC
 argument_list|,
-literal|""
+literal|"C"
 argument_list|)
 argument_list|)
 expr_stmt|;
