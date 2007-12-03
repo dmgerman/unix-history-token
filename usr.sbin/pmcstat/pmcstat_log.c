@@ -5842,6 +5842,46 @@ name|pl_arch
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ev
+operator|.
+name|pl_u
+operator|.
+name|pl_i
+operator|.
+name|pl_version
+operator|&
+literal|0xFF000000
+operator|)
+operator|!=
+name|PMC_VERSION_MAJOR
+operator|<<
+literal|24
+operator|&&
+name|a
+operator|->
+name|pa_verbosity
+operator|>
+literal|0
+condition|)
+name|warnx
+argument_list|(
+literal|"WARNING: Log version 0x%x != expected "
+literal|"version 0x%x."
+argument_list|,
+name|ev
+operator|.
+name|pl_u
+operator|.
+name|pl_i
+operator|.
+name|pl_version
+argument_list|,
+name|PMC_VERSION
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PMCLOG_TYPE_MAP_IN
@@ -6286,7 +6326,7 @@ name|a
 operator|->
 name|pa_printfile
 argument_list|,
-literal|"unknown %d"
+literal|"unknown event (type %d).\n"
 argument_list|,
 name|ev
 operator|.
@@ -6322,12 +6362,12 @@ operator|(
 name|PMCSTAT_RUNNING
 operator|)
 return|;
-name|err
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
 literal|"ERROR: event parsing failed "
-literal|"(record %jd, offset 0x%jx)"
+literal|"(record %jd, offset 0x%jx)."
 argument_list|,
 operator|(
 name|uintmax_t
