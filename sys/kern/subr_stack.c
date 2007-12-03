@@ -1118,7 +1118,7 @@ name|strlcpy
 argument_list|(
 name|namebuf
 argument_list|,
-literal|"Unknown func"
+literal|"??"
 argument_list|,
 name|buflen
 argument_list|)
@@ -1181,7 +1181,7 @@ name|strlcpy
 argument_list|(
 name|namebuf
 argument_list|,
-literal|"Unknown func"
+literal|"??"
 argument_list|,
 name|buflen
 argument_list|)
