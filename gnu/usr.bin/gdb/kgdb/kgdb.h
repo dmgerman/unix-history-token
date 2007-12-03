@@ -29,13 +29,6 @@ name|kvm
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|verbose
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|kthr
