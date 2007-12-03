@@ -93,7 +93,6 @@ modifier|*
 name|rve
 parameter_list|)
 block|{
-specifier|static
 name|FPI
 name|fpi
 init|=
@@ -111,7 +110,7 @@ operator|-
 name|LDBL_MANT_DIG
 block|,
 comment|/* emax */
-name|FPI_Round_near
+name|FLT_ROUNDS
 block|,
 comment|/* rounding */
 ifdef|#
@@ -164,9 +163,28 @@ operator|=
 operator|*
 name|ld
 expr_stmt|;
+comment|/* 	 * gdtoa doesn't know anything about the sign of the number, so 	 * if the number is negative, we need to swap rounding modes of 	 * 2 (upwards) and 3 (downwards). 	 */
 operator|*
 name|sign
 operator|=
+name|u
+operator|.
+name|bits
+operator|.
+name|sign
+expr_stmt|;
+name|fpi
+operator|.
+name|rounding
+operator|^=
+operator|(
+name|fpi
+operator|.
+name|rounding
+operator|>>
+literal|1
+operator|)
+operator|&
 name|u
 operator|.
 name|bits

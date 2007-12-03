@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<float.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"gdtoaimp.h"
 end_include
 
@@ -49,11 +55,13 @@ name|long
 name|double
 name|result
 decl_stmt|;
-name|strtopQ
+name|strtorQ
 argument_list|(
 name|s
 argument_list|,
 name|sp
+argument_list|,
+name|FLT_ROUNDS
 argument_list|,
 operator|&
 name|result
