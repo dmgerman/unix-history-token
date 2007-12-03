@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005-2006, Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2005-2007, Joseph Koshy  * Copyright (c) 2007 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by A. Joseph Koshy under  * sponsorship from the FreeBSD Foundation and Google, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -55,10 +55,12 @@ name|PMCLOG_TYPE_SYSEXIT
 block|,
 name|PMCLOG_TYPE_USERDATA
 block|,
-comment|/* 	 * V2 ABI 	 * 	 * The MAP_{IN,OUT} event types obsolete the MAPPING_CHANGE 	 * event type of the older (V1) ABI. 	 */
+comment|/* 	 * V2 ABI 	 * 	 * The MAP_{IN,OUT} event types obsolete the MAPPING_CHANGE 	 * event type.  The CALLCHAIN event type obsoletes the 	 * PCSAMPLE event type. 	 */
 name|PMCLOG_TYPE_MAP_IN
 block|,
 name|PMCLOG_TYPE_MAP_OUT
+block|,
+name|PMCLOG_TYPE_CALLCHAIN
 block|}
 enum|;
 end_enum
@@ -78,6 +80,65 @@ end_define
 begin_comment
 comment|/*  * The following structures are used to describe the size of each kind  * of log entry to sizeof().  To keep the compiler from adding  * padding, the fields of each structure are aligned to their natural  * boundaries, and the structures are marked as 'packed'.  *  * The actual reading and writing of the log file is always in terms  * of 4 byte quantities.  */
 end_comment
+
+begin_struct
+struct|struct
+name|pmclog_callchain
+block|{
+name|PMCLOG_ENTRY_HEADER
+name|uint32_t
+name|pl_pid
+decl_stmt|;
+name|uint32_t
+name|pl_pmcid
+decl_stmt|;
+name|uint32_t
+name|pl_cpuflags
+decl_stmt|;
+comment|/* 8 byte aligned */
+name|uintptr_t
+name|pl_pc
+index|[
+name|PMC_CALLCHAIN_DEPTH_MAX
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|PMC_CALLCHAIN_CPUFLAGS_TO_CPU
+parameter_list|(
+name|CF
+parameter_list|)
+value|(((CF)>> 16)& 0xFFFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_CALLCHAIN_CPUFLAGS_TO_USERMODE
+parameter_list|(
+name|CF
+parameter_list|)
+value|((CF)& PMC_CC_F_USERSPACE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_CALLCHAIN_TO_CPUFLAGS
+parameter_list|(
+name|CPU
+parameter_list|,
+name|FLAGS
+parameter_list|)
+define|\
+value|(((CPU)<< 16) | ((FLAGS)& 0xFFFF))
+end_define
 
 begin_struct
 struct|struct
@@ -351,6 +412,10 @@ union|union
 name|pmclog_entry
 block|{
 comment|/* only used to size scratch areas */
+name|struct
+name|pmclog_callchain
+name|pl_cc
+decl_stmt|;
 name|struct
 name|pmclog_closelog
 name|pl_cl
