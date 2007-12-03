@@ -246,9 +246,6 @@ case|:
 case|case
 literal|0xD
 case|:
-case|case
-literal|0xE
-case|:
 name|cputype
 operator|=
 name|PMC_CPU_INTEL_PM
