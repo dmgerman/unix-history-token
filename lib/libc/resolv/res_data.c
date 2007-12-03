@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_data.c,v 1.3.18.1 2005/04/27 05:01:10 sra Exp $"
+literal|"$Id: res_data.c,v 1.3.18.2 2007/09/14 05:35:47 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,12 +140,6 @@ directive|include
 file|"port_after.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|_res
-end_undef
-
 begin_decl_stmt
 specifier|const
 name|char
@@ -221,6 +215,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|_res
+end_undef
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -246,6 +246,32 @@ endif|#
 directive|endif
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DO_PTHREADS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__linux
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_res
+value|(*__res_state())
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Proto. */
