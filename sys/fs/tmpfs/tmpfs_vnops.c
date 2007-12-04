@@ -2426,6 +2426,8 @@ name|resid
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|node
 operator|=
@@ -2624,6 +2626,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|addr
 operator|=
 name|uio
