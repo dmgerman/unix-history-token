@@ -1470,7 +1470,7 @@ argument_list|)
 expr_stmt|;
 name|putstr
 argument_list|(
-literal|"\nCopyright (C) 1984-2005 Mark Nudelman\n\n"
+literal|"\nCopyright (C) 1984-2007 Mark Nudelman\n\n"
 argument_list|)
 expr_stmt|;
 name|putstr
