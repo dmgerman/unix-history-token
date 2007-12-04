@@ -2133,7 +2133,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Position the current file at at what is hopefully the tag that was chosen  * using either findtag() or one of nextgtag() and prevgtag().  Returns -1  * if it was unable to position at the tag, 0 if succesful.  */
+comment|/*  * Position the current file at at what is hopefully the tag that was chosen  * using either findtag() or one of nextgtag() and prevgtag().  Returns -1  * if it was unable to position at the tag, 0 if successful.  */
 end_comment
 
 begin_function

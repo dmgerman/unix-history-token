@@ -859,6 +859,14 @@ end_function_decl
 
 begin_function_decl
 name|public
+name|void
+name|reopen_curr_ifile
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|public
 name|int
 name|edit_stdin
 parameter_list|()
