@@ -190,14 +190,7 @@ name|sctp_sendspace
 operator|=
 name|min
 argument_list|(
-operator|(
-name|min
-argument_list|(
-name|SB_MAX
-argument_list|,
 name|sb_max_adj
-argument_list|)
-operator|)
 argument_list|,
 operator|(
 operator|(
