@@ -7945,7 +7945,7 @@ argument_list|(
 literal|"%1D"
 argument_list|,
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 name|data
