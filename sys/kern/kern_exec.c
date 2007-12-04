@@ -1648,6 +1648,14 @@ condition|)
 goto|goto
 name|exec_fail_dealloc
 goto|;
+name|imgp
+operator|->
+name|proc
+operator|->
+name|p_osrel
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 *	If the current process has a special image activator it 	 *	wants to try first, call it.   For example, emulating shell 	 *	scripts differently. 	 */
 name|error
 operator|=

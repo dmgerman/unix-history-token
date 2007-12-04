@@ -380,6 +380,13 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|osreldate
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|envmode
 decl_stmt|;
 end_decl_stmt

@@ -1417,12 +1417,18 @@ operator|=
 operator|&
 name|thread0
 expr_stmt|;
-comment|/* 	 * Initialize magic number. 	 */
+comment|/* 	 * Initialize magic number and osrel. 	 */
 name|p
 operator|->
 name|p_magic
 operator|=
 name|P_MAGIC
+expr_stmt|;
+name|p
+operator|->
+name|p_osrel
+operator|=
+name|osreldate
 expr_stmt|;
 comment|/* 	 * Initialize thread and process structures. 	 */
 name|procinit

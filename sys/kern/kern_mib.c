@@ -436,13 +436,6 @@ begin_comment
 comment|/*  * NOTICE: The *userland* release date is available in  * /usr/include/osreldate.h  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|osreldate
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
