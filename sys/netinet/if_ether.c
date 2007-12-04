@@ -3113,7 +3113,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"arp: %*D is using my IP address %s!\n"
+literal|"arp: %*D is using my IP address %s on %s!\n"
 argument_list|,
 name|ifp
 operator|->
@@ -3134,6 +3134,10 @@ name|inet_ntoa
 argument_list|(
 name|isaddr
 argument_list|)
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|itaddr
