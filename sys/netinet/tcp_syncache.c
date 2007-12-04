@@ -5076,7 +5076,7 @@ name|to
 operator|->
 name|to_flags
 operator|&
-name|TOF_SACK
+name|TOF_SACKPERM
 condition|)
 name|sc
 operator|->
