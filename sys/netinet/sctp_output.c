@@ -54167,6 +54167,7 @@ name|now_filled
 init|=
 literal|0
 decl_stmt|;
+name|unsigned
 name|int
 name|inqueue_bytes
 init|=
