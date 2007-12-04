@@ -2074,6 +2074,10 @@ decl_stmt|;
 name|au_id_t
 name|auid
 decl_stmt|;
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Make sure we are using the correct preselection mask. 	 */
 name|auid
 operator|=
