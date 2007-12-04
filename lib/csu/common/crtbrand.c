@@ -86,11 +86,9 @@ name|aligned
 argument_list|(
 literal|4
 argument_list|)
-operator|,
-name|used
 operator|)
 argument_list|)
-name|__unused
+name|__used
 init|=
 block|{
 sizeof|sizeof
