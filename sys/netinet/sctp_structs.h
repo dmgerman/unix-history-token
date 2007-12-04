@@ -2013,6 +2013,10 @@ name|sb_cc
 decl_stmt|;
 comment|/* shadow of sb_cc */
 name|uint32_t
+name|sb_send_resv
+decl_stmt|;
+comment|/* amount reserved on a send */
+name|uint32_t
 name|my_rwnd_control_len
 decl_stmt|;
 comment|/* shadow of sb_mbcnt used for rwnd 					 * control */
