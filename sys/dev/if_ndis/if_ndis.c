@@ -10646,6 +10646,10 @@ argument_list|(
 operator|(
 literal|"Setting BSSID to %6D\n"
 operator|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 operator|&
 name|bssid
 operator|,
