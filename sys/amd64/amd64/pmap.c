@@ -5866,7 +5866,7 @@ if|if
 condition|(
 name|pd
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 operator|*
@@ -5893,7 +5893,7 @@ literal|0
 expr_stmt|;
 name|pd
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|pmap
 operator|->
@@ -5943,7 +5943,7 @@ if|if
 condition|(
 name|pd
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 operator|*
