@@ -66,6 +66,17 @@ comment|/* End of replaced UNMOUNT_TRAP macro definition */
 end_comment
 
 begin_comment
+comment|/* umount(8) executable path, for type:=program */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNMOUNT_PROGRAM
+value|"/sbin/umount"
+end_define
+
+begin_comment
 comment|/*  * The next line is a literal inclusion of a file which includes a  * definition for the NFS_FH_DREF macro for a particular architecture.  * If it defines the wrong entry, check the AC_CHECK_NFS_FH_DREF m4 macro  * in $srcdir/m4/macros.  */
 end_comment
 
@@ -107,6 +118,13 @@ parameter_list|,
 name|src
 parameter_list|)
 value|{ \ 		(dst)->addr = (struct sockaddr *) (src); \ 		(dst)->addrlen = sizeof(*src); \ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFS_ARGS_T_ADDR_IS_POINTER
+value|1
 end_define
 
 begin_comment
