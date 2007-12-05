@@ -48,13 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/common/cxgb_ctl_defs.h>
+file|<common/cxgb_ctl_defs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/common/cxgb_sge_defs.h>
+file|<common/cxgb_sge_defs.h>
 end_include
 
 begin_include

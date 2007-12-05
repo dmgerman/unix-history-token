@@ -39,6 +39,29 @@ directive|include
 file|<dev/mii/mii.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_DEFINED
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<common/cxgb_version.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cxgb_config.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -50,6 +73,11 @@ include|#
 directive|include
 file|<dev/cxgb/cxgb_config.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -76,6 +104,24 @@ struct_decl|struct
 name|sge_rspq
 struct_decl|;
 end_struct_decl
+
+begin_struct
+struct|struct
+name|t3_mbuf_hdr
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|mh_head
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mh_tail
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -195,6 +241,32 @@ directive|define
 name|TASKQUEUE_CURRENT
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|if_name
+parameter_list|(
+name|ifp
+parameter_list|)
+value|(ifp)->if_xname
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_SANITY
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -206,49 +278,6 @@ directive|define
 name|__read_mostly
 value|__attribute__((__section__(".data.read_mostly")))
 end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INVARIANTS
-argument_list|)
-operator|&&
-operator|(
-name|__FreeBSD_version
-operator|>
-literal|700000
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|M_SANITY
-value|m_sanity
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|M_SANITY
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Workaround for weird Chelsio issue  */
@@ -362,8 +391,37 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TX_START_MAX_DESC
+name|TX_START_MIN_DESC
 value|(TX_MAX_DESC<< 2)
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|TX_START_MAX_DESC
+value|(TX_ETH_Q_SIZE>> 2)
+end_define
+
+begin_comment
+comment|/* maximum number of descriptors */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|TX_START_MAX_DESC
+value|(TX_MAX_DESC<< 3)
 end_define
 
 begin_comment
@@ -431,7 +489,7 @@ begin_define
 define|#
 directive|define
 name|L1_CACHE_BYTES
-value|32
+value|64
 end_define
 
 begin_function
@@ -692,27 +750,6 @@ directive|define
 name|cpu_to_be32
 value|htobe32
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|if_name
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|if_name
-parameter_list|(
-name|ifp
-parameter_list|)
-value|(ifp)->if_xname
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Standard PHY definitions */

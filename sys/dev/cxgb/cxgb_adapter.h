@@ -18,20 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
@@ -558,6 +544,9 @@ name|uint16_t
 name|ip_len
 decl_stmt|;
 name|uint16_t
+name|mss
+decl_stmt|;
+name|uint16_t
 name|vtag
 decl_stmt|;
 name|uint8_t
@@ -681,9 +670,8 @@ name|bus_dmamap_t
 name|desc_map
 decl_stmt|;
 name|struct
-name|mbuf
-modifier|*
-name|m
+name|t3_mbuf_hdr
+name|rspq_mh
 decl_stmt|;
 define|#
 directive|define
@@ -698,6 +686,24 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DISABLE_MBUF_IOVEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|rspq_mbuf
+value|rspq_mh.mh_head
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct
@@ -1381,6 +1387,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|PORT_LOCK_ASSERT_OWNED
+parameter_list|(
+name|port
+parameter_list|)
+value|sx_assert(&(port)->lock, SA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ADAPTER_LOCK
 parameter_list|(
 name|adap
@@ -1420,14 +1436,6 @@ parameter_list|)
 value|SX_DESTROY(&(adap)->lock)
 end_define
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|700000
-end_if
-
 begin_define
 define|#
 directive|define
@@ -1437,44 +1445,6 @@ name|adap
 parameter_list|)
 value|sx_assert(&(adap)->lock, SA_UNLOCKED)
 end_define
-
-begin_define
-define|#
-directive|define
-name|PORT_LOCK_ASSERT_OWNED
-parameter_list|(
-name|port
-parameter_list|)
-value|sx_assert(&(port)->lock, SA_LOCKED)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ADAPTER_LOCK_ASSERT_NOTOWNED
-parameter_list|(
-name|adap
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PORT_LOCK_ASSERT_OWNED
-parameter_list|(
-name|port
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -2158,6 +2128,10 @@ name|struct
 name|mbuf
 modifier|*
 modifier|*
+parameter_list|,
+name|int
+modifier|*
+name|free
 parameter_list|)
 function_decl|;
 end_function_decl
