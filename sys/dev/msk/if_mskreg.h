@@ -154,6 +154,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVICEID_MRVL_8039
+value|0X4353
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVICEID_MRVL_4360
 value|0x4360
 end_define
