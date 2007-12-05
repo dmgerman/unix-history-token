@@ -2734,6 +2734,9 @@ name|si_flags
 operator||=
 name|SI_NAMED
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
 if|if
 condition|(
 name|cr
@@ -2750,6 +2753,8 @@ name|cr
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|dev
 operator|->
 name|si_cred
