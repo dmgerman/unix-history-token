@@ -10988,9 +10988,16 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|boothowto
 operator|&
 name|RB_SERIAL
+operator|)
+operator|&&
+name|COM_CONSOLE
+argument_list|(
+name|flags
+argument_list|)
 condition|)
 block|{
 name|boot_speed
