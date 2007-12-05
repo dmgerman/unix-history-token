@@ -1978,13 +1978,6 @@ name|stats
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|val
-argument_list|,
-name|M_TEMP
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -2010,6 +2003,13 @@ name|utp
 operator|->
 name|stats
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|val
+argument_list|,
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 comment|/* ignore actual new value */
