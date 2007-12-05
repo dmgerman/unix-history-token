@@ -2276,6 +2276,9 @@ argument_list|,
 literal|"mb_reclaim()"
 argument_list|)
 expr_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|mbstat
 operator|.
 name|m_drain
@@ -2328,6 +2331,9 @@ name|pr
 operator|->
 name|pr_drain
 call|)
+argument_list|()
+expr_stmt|;
+name|NET_UNLOCK_GIANT
 argument_list|()
 expr_stmt|;
 block|}
