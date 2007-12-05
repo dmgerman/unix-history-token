@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * am_compat.h:  *  * This file contains compatibility functions and macros, all of which  * should be auto-discovered, but for one reason or another (mostly  * brain-damage on the part of system designers and header files) they cannot.  *  * Each compatibility macro/function must include instructions on how/when  * it can be removed the am-utils code.  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/include/am_compat.h  *  */
+end_comment
+
+begin_comment
+comment|/*  *  * This file contains compatibility functions and macros, all of which  * should be auto-discovered, but for one reason or another (mostly  * brain-damage on the part of system designers and header files) they cannot.  *  * Each compatibility macro/function must include instructions on how/when  * it can be removed the am-utils code.  *  */
 end_comment
 
 begin_ifndef
@@ -321,6 +325,37 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|MNT2_NFS_OPT_PRIVATE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MNTTAB_OPT_PRIVATE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_OPT_PRIVATE
+value|"private"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(MNT2_NFS_OPT_PRIVATE)&& !defined(MNTTAB_OPT_PRIVATE) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|MNT2_NFS_OPT_RETRANS
 argument_list|)
 operator|&&
@@ -586,6 +621,37 @@ begin_comment
 comment|/* defined(MNT2_NFS_OPT_NONLM)&& !defined(MNTTAB_OPT_NOLOCK) */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MNT2_NFS_OPT_XLATECOOKIE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MNTTAB_OPT_XLATECOOKIE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_OPT_XLATECOOKIE
+value|"xlatecookie"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(MNT2_NFS_OPT_XLATECOOKIE)&& !defined(MNTTAB_OPT_XLATECOOKIE) */
+end_comment
+
 begin_comment
 comment|/*  * Complete MNTTAB_OPT_* options based on MNT2_CDFS_OPT_* mount options.  */
 end_comment
@@ -831,6 +897,103 @@ end_endif
 
 begin_comment
 comment|/* defined(MNT2_CDFS_OPT_EXTATT)&& !defined(MNTTAB_OPT_EXTATT) */
+end_comment
+
+begin_comment
+comment|/*  * Complete MNTTAB_OPT_* options based on MNT2_PCFS_OPT_* mount options.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MNT2_PCFS_OPT_LONGNAME
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MNTTAB_OPT_LONGNAME
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_OPT_LONGNAME
+value|"longnames"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(MNT2_PCFS_OPT_LONGNAME)&& !defined(MNTTAB_OPT_LONGNAME) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MNT2_PCFS_OPT_NOWIN95
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MNTTAB_OPT_NOWIN95
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_OPT_NOWIN95
+value|"nowin95"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(MNT2_PCFS_OPT_NOWIN95)&& !defined(MNTTAB_OPT_NOWIN95) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MNT2_PCFS_OPT_SHORTNAME
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MNTTAB_OPT_SHORTNAME
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_OPT_SHORTNAME
+value|"shortnames"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(MNT2_PCFS_OPT_SHORTNAME)&& !defined(MNTTAB_OPT_SHORTNAME) */
 end_comment
 
 begin_comment
@@ -1188,6 +1351,28 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|MNTTAB_OPT_PUBLIC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_OPT_PUBLIC
+value|"public"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not MNTTAB_OPT_PUBLIC */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MNTTAB_OPT_RETRANS
 end_ifndef
 
@@ -1337,6 +1522,98 @@ end_endif
 
 begin_comment
 comment|/* not MNTTAB_OPT_WSIZE */
+end_comment
+
+begin_comment
+comment|/* next four are useful for pcfs mounts */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MNTTAB_OPT_USER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_OPT_USER
+value|"user"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not MNTTAB_OPT_USER */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MNTTAB_OPT_GROUP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_OPT_GROUP
+value|"group"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not MNTTAB_OPT_GROUP */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MNTTAB_OPT_MASK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_OPT_MASK
+value|"mask"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not MNTTAB_OPT_MASK */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MNTTAB_OPT_DIRMASK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_OPT_DIRMASK
+value|"dirmask"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not MNTTAB_OPT_DIRMASK */
 end_comment
 
 begin_comment
@@ -1567,6 +1844,42 @@ begin_comment
 comment|/* defined(HAVE_FS_XFS)&& !defined(xfs_args_t) */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_FS_AUTOFS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|MOUNT_TYPE_AUTOFS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MNTTYPE_AUTOFS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MNTTYPE_AUTOFS
+value|"autofs"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(HAVE_FS_AUTOFS)&& defined(MOUNT_TYPE_AUTOFS)&& !defined(MNTTYPE_AUTOFS) */
+end_comment
+
 begin_comment
 comment|/*  * If NFS3, then make sure that "proto" and "vers" mnttab options  * are available.  */
 end_comment
@@ -1628,6 +1941,133 @@ end_endif
 
 begin_comment
 comment|/* not HAVE_FS_NFS3 */
+end_comment
+
+begin_comment
+comment|/*  * If loop device (header file) exists, define mount table option  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_LOOP_DEVICE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MNTTAB_OPT_LOOP
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_OPT_LOOP
+value|"loop"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(HAVE_LOOP_DEVICE)&& !defined(MNTTAB_OPT_LOOP) */
+end_comment
+
+begin_comment
+comment|/*  * Define a dummy struct netconfig for non-TLI systems  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_NETCONFIG_H
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_SYS_NETCONFIG_H
+argument_list|)
+end_if
+
+begin_struct
+struct|struct
+name|netconfig
+block|{
+name|int
+name|dummy
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not HAVE_NETCONFIG_H and not HAVE_SYS_NETCONFIG_H */
+end_comment
+
+begin_comment
+comment|/* some OSs don't define INADDR_NONE and assume it's unsigned -1 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INADDR_NONE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INADDR_NONE
+value|0xffffffffU
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INADDR_NONE */
+end_comment
+
+begin_comment
+comment|/* some OSs don't define INADDR_LOOPBACK */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INADDR_LOOPBACK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INADDR_LOOPBACK
+value|0x7f000001
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not INADDR_LOOPBACK */
 end_comment
 
 begin_endif

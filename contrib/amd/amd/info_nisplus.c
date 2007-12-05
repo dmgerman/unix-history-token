@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: info_nisplus.c,v 1.3.2.5 2004/01/06 03:15:16 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/info_nisplus.c  *  */
 end_comment
 
 begin_comment
@@ -164,9 +164,6 @@ operator|*
 operator|)
 name|opaquedata
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"NISplus callback for<%s,%s>"
@@ -176,9 +173,6 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 call|(
 modifier|*
 name|data
@@ -243,6 +237,9 @@ comment|/* if map does not have ".org_dir" then append it */
 name|nis_name
 name|map_name
 decl_stmt|;
+name|size_t
+name|l
+decl_stmt|;
 name|org
 operator|=
 name|strstr
@@ -268,10 +265,8 @@ operator|=
 literal|""
 expr_stmt|;
 comment|/* make some room for the NIS map_name */
-name|map_name
+name|l
 operator|=
-name|xmalloc
-argument_list|(
 name|strlen
 argument_list|(
 name|map
@@ -281,6 +276,12 @@ sizeof|sizeof
 argument_list|(
 name|NISPLUS_ORGDIR
 argument_list|)
+expr_stmt|;
+name|map_name
+operator|=
+name|xmalloc
+argument_list|(
+name|l
 argument_list|)
 expr_stmt|;
 if|if
@@ -308,9 +309,11 @@ return|return
 name|ENOMEM
 return|;
 block|}
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|map_name
+argument_list|,
+name|l
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -337,9 +340,6 @@ name|ncd_fn
 operator|=
 name|fn
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"NISplus reload for %s"
@@ -347,9 +347,6 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|result
 operator|=
 name|nis_list
@@ -460,9 +457,6 @@ operator|*
 operator|)
 name|opaquedata
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"NISplus search callback for<%s>"
@@ -487,9 +481,6 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|data
 operator|->
 name|value
@@ -568,6 +559,9 @@ modifier|*
 name|org
 decl_stmt|;
 comment|/* if map does not have ".org_dir" then append it */
+name|size_t
+name|l
+decl_stmt|;
 name|org
 operator|=
 name|strstr
@@ -593,10 +587,8 @@ operator|=
 literal|""
 expr_stmt|;
 comment|/* make some room for the NIS index */
-name|index
+name|l
 operator|=
-name|xmalloc
-argument_list|(
 sizeof|sizeof
 argument_list|(
 literal|'['
@@ -634,6 +626,12 @@ sizeof|sizeof
 argument_list|(
 name|NISPLUS_ORGDIR
 argument_list|)
+expr_stmt|;
+name|index
+operator|=
+name|xmalloc
+argument_list|(
+name|l
 argument_list|)
 expr_stmt|;
 if|if
@@ -661,9 +659,11 @@ return|return
 name|ENOMEM
 return|;
 block|}
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|index
+argument_list|,
+name|l
 argument_list|,
 literal|"[%s%s],%s%s"
 argument_list|,
@@ -688,9 +688,6 @@ name|value
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"NISplus search for %s"
@@ -698,9 +695,6 @@ argument_list|,
 name|index
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|result
 operator|=
 name|nis_list
@@ -790,9 +784,6 @@ name|objects
 operator|.
 name|objects_val
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"NISplus search found<nothing>"
@@ -816,9 +807,6 @@ operator|->
 name|status
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 if|if
 condition|(
 name|value
@@ -864,9 +852,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"NISplus search found %s"
@@ -875,9 +860,6 @@ operator|*
 name|val
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 block|}
 else|else
 block|{
@@ -885,17 +867,11 @@ name|error
 operator|=
 name|ENOENT
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"NISplus search found nothing"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 block|}
 operator|*
 name|tp
@@ -906,9 +882,6 @@ break|break;
 case|case
 name|NIS_NOSUCHNAME
 case|:
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"NISplus search returned %d"
@@ -918,9 +891,6 @@ operator|->
 name|status
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|error
 operator|=
 name|ENOENT
@@ -994,6 +964,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|size_t
+name|l
+decl_stmt|;
 name|org
 operator|=
 name|strstr
@@ -1019,10 +992,8 @@ operator|=
 literal|""
 expr_stmt|;
 comment|/* make some room for the NIS map_name */
-name|map_name
+name|l
 operator|=
-name|xmalloc
-argument_list|(
 name|strlen
 argument_list|(
 name|map
@@ -1032,6 +1003,12 @@ sizeof|sizeof
 argument_list|(
 name|NISPLUS_ORGDIR
 argument_list|)
+expr_stmt|;
+name|map_name
+operator|=
+name|xmalloc
+argument_list|(
+name|l
 argument_list|)
 expr_stmt|;
 if|if
@@ -1059,9 +1036,11 @@ return|return
 name|ENOMEM
 return|;
 block|}
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|map_name
+argument_list|,
+name|l
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -1125,9 +1104,6 @@ operator|!=
 name|NIS_SUCCESS
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"NISplus init<%s>: %s (%d)"
@@ -1146,9 +1122,6 @@ operator|->
 name|status
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|error
 operator|=
 name|ENOENT
