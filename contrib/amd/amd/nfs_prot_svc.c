@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: nfs_prot_svc.c,v 1.5.2.6 2004/01/21 04:04:58 ib42 Exp $  * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/nfs_prot_svc.c  *  */
 end_comment
 
 begin_ifdef
@@ -329,7 +329,7 @@ end_comment
 begin_decl_stmt
 name|SVCXPRT
 modifier|*
-name|nfs_program_2_transp
+name|current_transp
 decl_stmt|;
 end_decl_stmt
 
@@ -431,6 +431,75 @@ decl_stmt|;
 name|nfssvcproc_t
 name|local
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_TRANSPORT_TYPE_TLI
+comment|/*    * On TLI systems we don't use an INET network type, but a "ticlts" (see    * /etc/netconfig and conf/transp_tli.c:create_nfs_service).  This means    * that packets could only come from the loopback interface, and we don't    * need to check them and filter possibly spoofed packets.  Therefore we    * only need to check if the UID caller is correct.    */
+ifdef|#
+directive|ifdef
+name|HAVE___RPC_GET_LOCAL_UID
+name|uid_t
+name|u
+decl_stmt|;
+comment|/* extern definition for an internal libnsl function */
+specifier|extern
+name|int
+name|__rpc_get_local_uid
+argument_list|(
+name|SVCXPRT
+operator|*
+name|transp
+argument_list|,
+name|uid_t
+operator|*
+name|uid
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|__rpc_get_local_uid
+argument_list|(
+name|transp
+argument_list|,
+operator|&
+name|u
+argument_list|)
+operator|>=
+literal|0
+operator|&&
+name|u
+operator|!=
+literal|0
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_WARNING
+argument_list|,
+literal|"ignoring request from UID %ld, must be 0"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|u
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+else|#
+directive|else
+comment|/* not HAVE___RPC_GET_LOCAL_UID */
+name|dlog
+argument_list|(
+literal|"cannot verify local uid for rpc request"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE___RPC_GET_LOCAL_UID */
+else|#
+directive|else
+comment|/* not HAVE_TRANPORT_TYPE_TLI */
 name|struct
 name|sockaddr_in
 modifier|*
@@ -462,7 +531,8 @@ name|MNT2_NFS_OPT_RESVPORT
 comment|/* Verify that the request comes from a reserved port */
 if|if
 condition|(
-operator|(
+name|sinp
+operator|&&
 name|ntohs
 argument_list|(
 name|sinp
@@ -471,7 +541,6 @@ name|sin_port
 argument_list|)
 operator|>=
 name|IPPORT_RESERVED
-operator|)
 operator|&&
 operator|!
 operator|(
@@ -492,6 +561,11 @@ argument_list|,
 name|inet_dquad
 argument_list|(
 name|dq
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dq
+argument_list|)
 argument_list|,
 name|sinp
 operator|->
@@ -517,11 +591,8 @@ comment|/* if the address does not match, ignore the request */
 if|if
 condition|(
 name|sinp
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
 operator|&&
+operator|(
 name|sinp
 operator|->
 name|sin_addr
@@ -531,7 +602,64 @@ operator|!=
 name|myipaddr
 operator|.
 name|s_addr
+operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|gopt
+operator|.
+name|flags
+operator|&
+name|CFM_NFS_ANY_INTERFACE
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|is_interface_local
+argument_list|(
+name|sinp
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_WARNING
+argument_list|,
+literal|"ignoring request from %s:%u, not a local interface"
+argument_list|,
+name|inet_dquad
+argument_list|(
+name|dq
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dq
+argument_list|)
+argument_list|,
+name|sinp
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+argument_list|,
+name|ntohs
+argument_list|(
+name|sinp
+operator|->
+name|sin_port
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
 block|{
 name|plog
 argument_list|(
@@ -542,6 +670,11 @@ argument_list|,
 name|inet_dquad
 argument_list|(
 name|dq
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dq
+argument_list|)
 argument_list|,
 name|sinp
 operator|->
@@ -561,6 +694,11 @@ name|inet_dquad
 argument_list|(
 name|dq2
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dq2
+argument_list|)
+argument_list|,
 name|myipaddr
 operator|.
 name|s_addr
@@ -569,7 +707,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|nfs_program_2_transp
+block|}
+endif|#
+directive|endif
+comment|/* not HAVE_TRANPORT_TYPE_TLI */
+name|current_transp
 operator|=
 name|NULL
 expr_stmt|;
@@ -705,7 +847,7 @@ operator|)
 name|nfsproc_lookup_2_svc
 expr_stmt|;
 comment|/*      * Cheap way to pass transp down to amfs_auto_lookuppn so it can      * be stored in the am_node structure and later used for      * quick_reply().      */
-name|nfs_program_2_transp
+name|current_transp
 operator|=
 name|transp
 expr_stmt|;
@@ -1128,7 +1270,7 @@ argument_list|,
 name|rqstp
 argument_list|)
 expr_stmt|;
-name|nfs_program_2_transp
+name|current_transp
 operator|=
 name|NULL
 expr_stmt|;
