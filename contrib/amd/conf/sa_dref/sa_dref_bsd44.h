@@ -15,5 +15,12 @@ parameter_list|)
 value|{ \ 		(dst)->addr = (struct sockaddr *) (src); \ 		(dst)->addrlen = sizeof(*src); \ 	}
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFS_ARGS_T_ADDR_IS_POINTER
+value|1
+end_define
+
 end_unit
 

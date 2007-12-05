@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: ops_lofs.c,v 1.3.2.5 2004/01/06 03:15:16 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/ops_lofs.c  *  */
 end_comment
 
 begin_comment
@@ -60,8 +60,12 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|lofs_fmount
+name|lofs_mount
 parameter_list|(
+name|am_node
+modifier|*
+name|am
+parameter_list|,
 name|mntfs
 modifier|*
 name|mf
@@ -72,31 +76,15 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|lofs_fumount
+name|lofs_umount
 parameter_list|(
+name|am_node
+modifier|*
+name|am
+parameter_list|,
 name|mntfs
 modifier|*
 name|mf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|mount_lofs
-parameter_list|(
-name|char
-modifier|*
-name|dir
-parameter_list|,
-name|char
-modifier|*
-name|fs_name
-parameter_list|,
-name|char
-modifier|*
-name|opts
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -117,15 +105,13 @@ block|,
 literal|0
 block|,
 comment|/* lofs_init */
-name|amfs_auto_fmount
+name|lofs_mount
 block|,
-name|lofs_fmount
+name|lofs_umount
 block|,
-name|amfs_auto_fumount
+name|amfs_error_lookup_child
 block|,
-name|lofs_fumount
-block|,
-name|amfs_error_lookuppn
+name|amfs_error_mount_child
 block|,
 name|amfs_error_readdir
 block|,
@@ -138,8 +124,11 @@ comment|/* lofs_mounted */
 literal|0
 block|,
 comment|/* lofs_umounted */
-name|find_amfs_auto_srvr
+name|amfs_generic_find_srvr
 block|,
+literal|0
+block|,
+comment|/* lofs_get_wchan */
 name|FS_MKMNT
 operator||
 name|FS_NOTIMEOUT
@@ -147,6 +136,16 @@ operator||
 name|FS_UBACKGROUND
 operator||
 name|FS_AMQINFO
+block|,
+comment|/* nfs_fs_flags */
+ifdef|#
+directive|ifdef
+name|HAVE_FS_AUTOFS
+name|AUTOFS_LOFS_FS_FLAGS
+block|,
+endif|#
+directive|endif
+comment|/* HAVE_FS_AUTOFS */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -185,9 +184,6 @@ return|return
 literal|0
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"LOFS: mounting fs \"%s\" on \"%s\""
@@ -201,9 +197,6 @@ operator|->
 name|opt_fs
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/*    * Determine magic cookie to put in mtab    */
 return|return
 name|strdup
@@ -217,13 +210,12 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|mount_lofs
 parameter_list|(
 name|char
 modifier|*
-name|dir
+name|mntdir
 parameter_list|,
 name|char
 modifier|*
@@ -232,6 +224,9 @@ parameter_list|,
 name|char
 modifier|*
 name|opts
+parameter_list|,
+name|int
+name|on_autofs
 parameter_list|)
 block|{
 name|mntent_t
@@ -267,7 +262,7 @@ name|mnt
 operator|.
 name|mnt_dir
 operator|=
-name|dir
+name|mntdir
 expr_stmt|;
 name|mnt
 operator|.
@@ -295,6 +290,24 @@ operator|&
 name|mnt
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_FS_AUTOFS
+if|if
+condition|(
+name|on_autofs
+condition|)
+name|flags
+operator||=
+name|autofs_compute_mount_flags
+argument_list|(
+operator|&
+name|mnt
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_FS_AUTOFS */
 comment|/*    * Call generic mount routine    */
 return|return
 name|mount_fs
@@ -315,6 +328,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|mnttab_file_name
+argument_list|,
+name|on_autofs
 argument_list|)
 return|;
 block|}
@@ -323,13 +338,26 @@ end_function
 begin_function
 specifier|static
 name|int
-name|lofs_fmount
+name|lofs_mount
 parameter_list|(
+name|am_node
+modifier|*
+name|am
+parameter_list|,
 name|mntfs
 modifier|*
 name|mf
 parameter_list|)
 block|{
+name|int
+name|on_autofs
+init|=
+name|mf
+operator|->
+name|mf_flags
+operator|&
+name|MFF_ON_AUTOFS
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -348,6 +376,8 @@ argument_list|,
 name|mf
 operator|->
 name|mf_mopts
+argument_list|,
+name|on_autofs
 argument_list|)
 expr_stmt|;
 if|if
@@ -379,13 +409,32 @@ end_function
 begin_function
 specifier|static
 name|int
-name|lofs_fumount
+name|lofs_umount
 parameter_list|(
+name|am_node
+modifier|*
+name|am
+parameter_list|,
 name|mntfs
 modifier|*
 name|mf
 parameter_list|)
 block|{
+name|int
+name|unmount_flags
+init|=
+operator|(
+name|mf
+operator|->
+name|mf_flags
+operator|&
+name|MFF_ON_AUTOFS
+operator|)
+condition|?
+name|AMU_UMOUNT_AUTOFS
+else|:
+literal|0
+decl_stmt|;
 return|return
 name|UMOUNT_FS
 argument_list|(
@@ -394,6 +443,8 @@ operator|->
 name|mf_mount
 argument_list|,
 name|mnttab_file_name
+argument_list|,
+name|unmount_flags
 argument_list|)
 return|;
 block|}

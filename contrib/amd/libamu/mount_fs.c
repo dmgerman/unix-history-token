@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: mount_fs.c,v 1.11.2.12 2004/01/06 03:15:24 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/libamu/mount_fs.c  *  */
 end_comment
 
 begin_ifdef
@@ -47,9 +47,11 @@ name|append_opts
 parameter_list|(
 name|old
 parameter_list|,
+name|l
+parameter_list|,
 name|new
 parameter_list|)
-value|{ \ 	if (*(old) != '\0') strcat(old, ","); \ 	strcat(old, new); }
+value|{ \ 	if (*(old) != '\0') \ 	  xstrlcat(old, ",", l); \ 	xstrlcat(old, new, l); }
 end_define
 
 begin_comment
@@ -274,7 +276,7 @@ block|,
 endif|#
 directive|endif
 comment|/* defined(MNT2_GEN_OPT_OVERLAY)&& defined(MNTTAB_OPT_OVERLAY) */
-comment|/*    * Do not define MNT2_NFS_OPT_* entries here!  This is for generic    * mount(2) options only, not for NFS mount options.    */
+comment|/*    * Do not define MNT2_NFS_OPT_* entries here!  This is for generic    * mount(2) options only, not for NFS mount options.  If you need to put    * something here, it's probably not the right place: see    * include/am_compat.h.    */
 block|{
 literal|0
 block|,
@@ -311,7 +313,7 @@ ifdef|#
 directive|ifdef
 name|MNT2_GEN_OPT_NEWTYPE
 name|flags
-operator|=
+operator||=
 name|MNT2_GEN_OPT_NEWTYPE
 expr_stmt|;
 endif|#
@@ -344,7 +346,7 @@ control|)
 block|{
 name|flags
 operator||=
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mntp
 argument_list|,
@@ -442,6 +444,9 @@ specifier|const
 name|char
 modifier|*
 name|mnttabname
+parameter_list|,
+name|int
+name|on_autofs
 parameter_list|)
 block|{
 name|int
@@ -452,16 +457,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MOUNT_TABLE_ON_FILE
-ifdef|#
-directive|ifdef
-name|MNTTAB_OPT_DEV
-name|struct
-name|stat
-name|stb
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* MNTTAB_OPT_DEV */
 name|char
 modifier|*
 name|zopts
@@ -473,52 +468,70 @@ name|xopts
 init|=
 name|NULL
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MNTTAB_OPT_DEV
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|HAVE_FS_NFS3
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|MNTTAB_OPT_VERS
-argument_list|)
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|MNTTAB_OPT_PROTO
-argument_list|)
-name|char
-name|optsbuf
-index|[
-literal|48
-index|]
+name|size_t
+name|l
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* defined(MNTTAB_OPT_DEV) || (defined(HAVE_FS_NFS3)&& defined(MNTTAB_OPT_VERS)) || defined(MNTTAB_OPT_PROTO) */
-endif|#
-directive|endif
 comment|/* MOUNT_TABLE_ON_FILE */
+name|char
+modifier|*
+name|mnt_dir
+init|=
+literal|0
+decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|NEED_AUTOFS_SPACE_HACK
+name|char
+modifier|*
+name|old_mnt_dir
+init|=
+literal|0
+decl_stmt|;
+comment|/* perform space hack */
+if|if
+condition|(
+name|on_autofs
+condition|)
+block|{
+name|old_mnt_dir
+operator|=
+name|mnt
+operator|->
+name|mnt_dir
+expr_stmt|;
+name|mnt
+operator|->
+name|mnt_dir
+operator|=
+name|mnt_dir
+operator|=
+name|autofs_strdup_space_hack
+argument_list|(
+name|old_mnt_dir
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+comment|/* NEED_AUTOFS_SPACE_HACK */
+name|mnt_dir
+operator|=
+name|strdup
+argument_list|(
+name|mnt
+operator|->
+name|mnt_dir
+argument_list|)
+expr_stmt|;
 name|dlog
 argument_list|(
-literal|"%s fstype "
+literal|"'%s' fstype "
 name|MTYPE_PRINTF_TYPE
 literal|" (%s) flags %#x (%s)"
 argument_list|,
-name|mnt
-operator|->
 name|mnt_dir
 argument_list|,
 name|type
@@ -534,15 +547,8 @@ operator|->
 name|mnt_opts
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|again
 label|:
-name|clock_valid
-operator|=
-literal|0
-expr_stmt|;
 name|error
 operator|=
 name|MOUNT_TRAP
@@ -567,83 +573,12 @@ name|plog
 argument_list|(
 name|XLOG_ERROR
 argument_list|,
-literal|"%s: mount: %m"
+literal|"'%s': mount: %m"
 argument_list|,
-name|mnt
-operator|->
 name|mnt_dir
 argument_list|)
 expr_stmt|;
 comment|/*      * The following code handles conditions which shouldn't      * occur.  They are possible either because amd screws up      * in preparing for the mount, or because some human      * messed with the mount point.  Both have been known to      * happen. -- stolcke 2/22/95      */
-if|if
-condition|(
-name|errno
-operator|==
-name|ENOENT
-condition|)
-block|{
-comment|/*        * Occasionally the mount point vanishes, probably        * due to some race condition.  Just recreate it        * as necessary.        */
-name|errno
-operator|=
-name|mkdirs
-argument_list|(
-name|mnt
-operator|->
-name|mnt_dir
-argument_list|,
-literal|0555
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errno
-operator|!=
-literal|0
-operator|&&
-name|errno
-operator|!=
-name|EEXIST
-condition|)
-name|plog
-argument_list|(
-name|XLOG_ERROR
-argument_list|,
-literal|"%s: mkdirs: %m"
-argument_list|,
-name|mnt
-operator|->
-name|mnt_dir
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|plog
-argument_list|(
-name|XLOG_WARNING
-argument_list|,
-literal|"extra mkdirs required for %s"
-argument_list|,
-name|mnt
-operator|->
-name|mnt_dir
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|MOUNT_TRAP
-argument_list|(
-name|type
-argument_list|,
-name|mnt
-argument_list|,
-name|flags
-argument_list|,
-name|mnt_data
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-elseif|else
 if|if
 condition|(
 name|errno
@@ -656,11 +591,11 @@ name|errno
 operator|=
 name|umount_fs
 argument_list|(
-name|mnt
-operator|->
 name|mnt_dir
 argument_list|,
 name|mnttabname
+argument_list|,
+name|on_autofs
 argument_list|)
 expr_stmt|;
 if|if
@@ -673,10 +608,8 @@ name|plog
 argument_list|(
 name|XLOG_ERROR
 argument_list|,
-literal|"%s: umount: %m"
+literal|"'%s': umount: %m"
 argument_list|,
-name|mnt
-operator|->
 name|mnt_dir
 argument_list|)
 expr_stmt|;
@@ -686,10 +619,8 @@ name|plog
 argument_list|(
 name|XLOG_WARNING
 argument_list|,
-literal|"extra umount required for %s"
+literal|"extra umount required for '%s'"
 argument_list|,
-name|mnt
-operator|->
 name|mnt_dir
 argument_list|)
 expr_stmt|;
@@ -730,6 +661,23 @@ goto|goto
 name|again
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|NEED_AUTOFS_SPACE_HACK
+comment|/* Undo space hack */
+if|if
+condition|(
+name|on_autofs
+condition|)
+name|mnt
+operator|->
+name|mnt_dir
+operator|=
+name|old_mnt_dir
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NEED_AUTOFS_SPACE_HACK */
 if|if
 condition|(
 name|error
@@ -737,22 +685,20 @@ operator|<
 literal|0
 condition|)
 block|{
-return|return
+name|error
+operator|=
 name|errno
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 ifdef|#
 directive|ifdef
 name|MOUNT_TABLE_ON_FILE
 comment|/*    * Allocate memory for options:    *        dev=..., vers={2,3}, proto={tcp,udp}    */
-name|zopts
+name|l
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
 name|strlen
 argument_list|(
 name|mnt
@@ -761,6 +707,16 @@ name|mnt_opts
 argument_list|)
 operator|+
 literal|48
+expr_stmt|;
+name|zopts
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+name|l
 argument_list|)
 expr_stmt|;
 comment|/* copy standard options */
@@ -770,23 +726,28 @@ name|mnt
 operator|->
 name|mnt_opts
 expr_stmt|;
-name|strcpy
+name|xstrlcpy
 argument_list|(
 name|zopts
 argument_list|,
 name|xopts
+argument_list|,
+name|l
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MNTTAB_OPT_DEV
+block|{
 comment|/* add the extra dev= field to the mount table */
+name|struct
+name|stat
+name|stb
+decl_stmt|;
 if|if
 condition|(
 name|lstat
 argument_list|(
-name|mnt
-operator|->
 name|mnt_dir
 argument_list|,
 operator|&
@@ -796,6 +757,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|char
+name|optsbuf
+index|[
+literal|48
+index|]
+decl_stmt|;
 if|if
 condition|(
 sizeof|sizeof
@@ -808,9 +775,14 @@ operator|==
 literal|2
 condition|)
 comment|/* e.g. SunOS 4.1 */
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|optsbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|optsbuf
+argument_list|)
 argument_list|,
 literal|"%s=%04lx"
 argument_list|,
@@ -828,9 +800,14 @@ argument_list|)
 expr_stmt|;
 else|else
 comment|/* e.g. System Vr4 */
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|optsbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|optsbuf
+argument_list|)
 argument_list|,
 literal|"%s=%08lx"
 argument_list|,
@@ -848,9 +825,12 @@ name|append_opts
 argument_list|(
 name|zopts
 argument_list|,
+name|l
+argument_list|,
 name|optsbuf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -883,9 +863,20 @@ operator|!=
 name|NFS_VERSION3
 condition|)
 block|{
-name|sprintf
+name|char
+name|optsbuf
+index|[
+literal|48
+index|]
+decl_stmt|;
+name|xsnprintf
 argument_list|(
 name|optsbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|optsbuf
+argument_list|)
 argument_list|,
 literal|"%s=%d"
 argument_list|,
@@ -897,6 +888,8 @@ expr_stmt|;
 name|append_opts
 argument_list|(
 name|zopts
+argument_list|,
+name|l
 argument_list|,
 name|optsbuf
 argument_list|)
@@ -914,7 +907,7 @@ condition|(
 name|nfs_proto
 operator|&&
 operator|!
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mnt
 argument_list|,
@@ -922,9 +915,20 @@ name|MNTTAB_OPT_PROTO
 argument_list|)
 condition|)
 block|{
-name|sprintf
+name|char
+name|optsbuf
+index|[
+literal|48
+index|]
+decl_stmt|;
+name|xsnprintf
 argument_list|(
 name|optsbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|optsbuf
+argument_list|)
 argument_list|,
 literal|"%s=%s"
 argument_list|,
@@ -936,6 +940,8 @@ expr_stmt|;
 name|append_opts
 argument_list|(
 name|zopts
+argument_list|,
+name|l
 argument_list|,
 name|optsbuf
 argument_list|)
@@ -972,7 +978,7 @@ operator|->
 name|mnt_ro
 operator|=
 operator|(
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mnt
 argument_list|,
@@ -993,6 +999,16 @@ directive|ifdef
 name|HAVE_MNTENT_T_MNT_TIME_STRING
 block|{
 comment|/* allocate enough space for a long */
+name|size_t
+name|l
+init|=
+literal|13
+operator|*
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
+decl_stmt|;
 name|char
 modifier|*
 name|str
@@ -1003,17 +1019,14 @@ operator|*
 operator|)
 name|xmalloc
 argument_list|(
-literal|13
-operator|*
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
+name|l
 argument_list|)
 decl_stmt|;
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|str
+argument_list|,
+name|l
 argument_list|,
 literal|"%ld"
 argument_list|,
@@ -1091,9 +1104,463 @@ comment|/* MNTTAB_OPT_DEV */
 endif|#
 directive|endif
 comment|/* MOUNT_TABLE_ON_FILE */
+name|out
+label|:
+name|XFREE
+argument_list|(
+name|mnt_dir
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
+name|error
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Compute all NFS attribute cache related flags separately.  Note that this  * function now computes attribute-cache flags for both Amd's automount  * points (NFS) as well as any normal NFS mount that Amd performs.  Edit  * with caution.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|compute_nfs_attrcache_flags
+parameter_list|(
+name|nfs_args_t
+modifier|*
+name|nap
+parameter_list|,
+name|mntent_t
+modifier|*
+name|mntp
+parameter_list|)
+block|{
+name|int
+name|acval
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|err_acval
+init|=
+literal|1
+decl_stmt|;
+comment|/* 1 means we found no 'actimeo' value */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_NFS_ARGS_T_ACREGMIN
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_NFS_ARGS_T_ACREGMAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_NFS_ARGS_T_ACDIRMIN
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_NFS_ARGS_T_ACDIRMAX
+argument_list|)
+name|int
+name|err_acrdmm
+decl_stmt|;
+comment|/* for ac{reg,dir}{min,max} */
+endif|#
+directive|endif
+comment|/* HAVE_NFS_ARGS_T_AC{REG,DIR}{MIN,MAX} */
+comment|/************************************************************************/
+comment|/***	ATTRIBUTE CACHES						***/
+comment|/************************************************************************/
+comment|/*    * acval is set to 0 at the top of the function.  If actimeo mount option    * exists and defined in mntopts, then its acval is set to it.    * If the value is non-zero, then we set all attribute cache fields to it.    * If acval is zero, it means it was never defined in mntopts or the    * actimeo mount option does not exist, in which case we check for    * individual mount options per attribute cache.    * Regardless of the value of acval, mount flags are set based directly    * on the values of the attribute caches.    */
+ifdef|#
+directive|ifdef
+name|MNTTAB_OPT_ACTIMEO
+name|err_acval
+operator|=
+name|hasmntvalerr
+argument_list|(
+name|mntp
+argument_list|,
+name|MNTTAB_OPT_ACTIMEO
+argument_list|,
+operator|&
+name|acval
+argument_list|)
+expr_stmt|;
+comment|/* attr cache timeout (sec) */
+endif|#
+directive|endif
+comment|/* MNTTAB_OPT_ACTIMEO */
+comment|/*** acregmin ***/
+ifdef|#
+directive|ifdef
+name|HAVE_NFS_ARGS_T_ACREGMIN
+name|err_acrdmm
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 1 means we found no acregmin value */
+if|if
+condition|(
+operator|!
+name|err_acval
+condition|)
+block|{
+name|nap
+operator|->
+name|acregmin
+operator|=
+name|acval
+expr_stmt|;
+comment|/* min ac timeout for reg files (sec) */
+block|}
+else|else
+block|{
+ifdef|#
+directive|ifdef
+name|MNTTAB_OPT_ACREGMIN
+name|err_acrdmm
+operator|=
+name|hasmntvalerr
+argument_list|(
+name|mntp
+argument_list|,
+name|MNTTAB_OPT_ACREGMIN
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+operator|&
+name|nap
+operator|->
+name|acregmin
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* not MNTTAB_OPT_ACREGMIN */
+name|nap
+operator|->
+name|acregmin
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not MNTTAB_OPT_ACREGMIN */
+block|}
+comment|/* set this flag iff we changed acregmin (possibly to zero) */
+ifdef|#
+directive|ifdef
+name|MNT2_NFS_OPT_ACREGMIN
+if|if
+condition|(
+operator|!
+name|err_acval
+operator|||
+operator|!
+name|err_acrdmm
+condition|)
+name|nap
+operator|->
+name|flags
+operator||=
+name|MNT2_NFS_OPT_ACREGMIN
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MNT2_NFS_OPT_ACREGMIN */
+endif|#
+directive|endif
+comment|/* HAVE_NFS_ARGS_T_ACREGMIN */
+comment|/*** acregmax ***/
+ifdef|#
+directive|ifdef
+name|HAVE_NFS_ARGS_T_ACREGMAX
+name|err_acrdmm
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 1 means we found no acregmax value */
+if|if
+condition|(
+operator|!
+name|err_acval
+condition|)
+block|{
+name|nap
+operator|->
+name|acregmax
+operator|=
+name|acval
+expr_stmt|;
+comment|/* max ac timeout for reg files (sec) */
+block|}
+else|else
+block|{
+ifdef|#
+directive|ifdef
+name|MNTTAB_OPT_ACREGMAX
+name|err_acrdmm
+operator|=
+name|hasmntvalerr
+argument_list|(
+name|mntp
+argument_list|,
+name|MNTTAB_OPT_ACREGMAX
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+operator|&
+name|nap
+operator|->
+name|acregmax
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* not MNTTAB_OPT_ACREGMAX */
+name|nap
+operator|->
+name|acregmax
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not MNTTAB_OPT_ACREGMAX */
+block|}
+comment|/* set this flag iff we changed acregmax (possibly to zero) */
+ifdef|#
+directive|ifdef
+name|MNT2_NFS_OPT_ACREGMAX
+if|if
+condition|(
+operator|!
+name|err_acval
+operator|||
+operator|!
+name|err_acrdmm
+condition|)
+name|nap
+operator|->
+name|flags
+operator||=
+name|MNT2_NFS_OPT_ACREGMAX
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MNT2_NFS_OPT_ACREGMAX */
+endif|#
+directive|endif
+comment|/* HAVE_NFS_ARGS_T_ACREGMAX */
+comment|/*** acdirmin ***/
+ifdef|#
+directive|ifdef
+name|HAVE_NFS_ARGS_T_ACDIRMIN
+name|err_acrdmm
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 1 means we found no acdirmin value */
+if|if
+condition|(
+operator|!
+name|err_acval
+condition|)
+block|{
+name|nap
+operator|->
+name|acdirmin
+operator|=
+name|acval
+expr_stmt|;
+comment|/* min ac timeout for dirs (sec) */
+block|}
+else|else
+block|{
+ifdef|#
+directive|ifdef
+name|MNTTAB_OPT_ACDIRMIN
+name|err_acrdmm
+operator|=
+name|hasmntvalerr
+argument_list|(
+name|mntp
+argument_list|,
+name|MNTTAB_OPT_ACDIRMIN
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+operator|&
+name|nap
+operator|->
+name|acdirmin
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* not MNTTAB_OPT_ACDIRMIN */
+name|nap
+operator|->
+name|acdirmin
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not MNTTAB_OPT_ACDIRMIN */
+block|}
+comment|/* set this flag iff we changed acdirmin (possibly to zero) */
+ifdef|#
+directive|ifdef
+name|MNT2_NFS_OPT_ACDIRMIN
+if|if
+condition|(
+operator|!
+name|err_acval
+operator|||
+operator|!
+name|err_acrdmm
+condition|)
+name|nap
+operator|->
+name|flags
+operator||=
+name|MNT2_NFS_OPT_ACDIRMIN
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MNT2_NFS_OPT_ACDIRMIN */
+endif|#
+directive|endif
+comment|/* HAVE_NFS_ARGS_T_ACDIRMIN */
+comment|/*** acdirmax ***/
+ifdef|#
+directive|ifdef
+name|HAVE_NFS_ARGS_T_ACDIRMAX
+name|err_acrdmm
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 1 means we found no acdirmax value */
+if|if
+condition|(
+operator|!
+name|err_acval
+condition|)
+block|{
+name|nap
+operator|->
+name|acdirmax
+operator|=
+name|acval
+expr_stmt|;
+comment|/* max ac timeout for dirs (sec) */
+block|}
+else|else
+block|{
+ifdef|#
+directive|ifdef
+name|MNTTAB_OPT_ACDIRMAX
+name|err_acrdmm
+operator|=
+name|hasmntvalerr
+argument_list|(
+name|mntp
+argument_list|,
+name|MNTTAB_OPT_ACDIRMAX
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+operator|&
+name|nap
+operator|->
+name|acdirmax
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* not MNTTAB_OPT_ACDIRMAX */
+name|nap
+operator|->
+name|acdirmax
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not MNTTAB_OPT_ACDIRMAX */
+block|}
+comment|/* set this flag iff we changed acdirmax (possibly to zero) */
+ifdef|#
+directive|ifdef
+name|MNT2_NFS_OPT_ACDIRMAX
+if|if
+condition|(
+operator|!
+name|err_acval
+operator|||
+operator|!
+name|err_acrdmm
+condition|)
+name|nap
+operator|->
+name|flags
+operator||=
+name|MNT2_NFS_OPT_ACDIRMAX
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MNT2_NFS_OPT_ACDIRMAX */
+endif|#
+directive|endif
+comment|/* HAVE_NFS_ARGS_T_ACDIRMAX */
+comment|/* don't cache attributes */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MNTTAB_OPT_NOAC
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|MNT2_NFS_OPT_NOAC
+argument_list|)
+if|if
+condition|(
+name|amu_hasmntopt
+argument_list|(
+name|mntp
+argument_list|,
+name|MNTTAB_OPT_NOAC
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|nap
+operator|->
+name|flags
+operator||=
+name|MNT2_NFS_OPT_NOAC
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(MNTTAB_OPT_NOAC)&& defined(MNT2_NFS_OPT_NOAC) */
 block|}
 end_function
 
@@ -1103,9 +1570,6 @@ end_comment
 
 begin_function
 name|void
-ifdef|#
-directive|ifdef
-name|HAVE_TRANSPORT_TYPE_TLI
 name|compute_nfs_args
 parameter_list|(
 name|nfs_args_t
@@ -1148,66 +1612,7 @@ name|char
 modifier|*
 name|fs_name
 parameter_list|)
-else|#
-directive|else
-comment|/* not HAVE_TRANSPORT_TYPE_TLI */
-function|compute_nfs_args
-parameter_list|(
-name|nfs_args_t
-modifier|*
-name|nap
-parameter_list|,
-name|mntent_t
-modifier|*
-name|mntp
-parameter_list|,
-name|int
-name|genflags
-parameter_list|,
-name|struct
-name|sockaddr_in
-modifier|*
-name|ip_addr
-parameter_list|,
-name|u_long
-name|nfs_version
-parameter_list|,
-name|char
-modifier|*
-name|nfs_proto
-parameter_list|,
-name|am_nfs_handle_t
-modifier|*
-name|fhp
-parameter_list|,
-name|char
-modifier|*
-name|host_name
-parameter_list|,
-name|char
-modifier|*
-name|fs_name
-parameter_list|)
-endif|#
-directive|endif
-comment|/* not HAVE_TRANSPORT_TYPE_TLI */
 block|{
-name|int
-name|acval
-init|=
-literal|0
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_FS_NFS3
-specifier|static
-name|am_nfs_fh3
-name|fh3
-decl_stmt|;
-comment|/* static, b/c gcc on aix corrupts stack */
-endif|#
-directive|endif
-comment|/* HAVE_FS_NFS3 */
 comment|/* initialize just in case */
 name|memset
 argument_list|(
@@ -1224,6 +1629,14 @@ name|nfs_args_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* compute all of the NFS attribute-cache flags */
+name|compute_nfs_attrcache_flags
+argument_list|(
+name|nap
+argument_list|,
+name|mntp
+argument_list|)
+expr_stmt|;
 comment|/************************************************************************/
 comment|/***	FILEHANDLE DATA AND LENGTH					***/
 comment|/************************************************************************/
@@ -1237,63 +1650,6 @@ operator|==
 name|NFS_VERSION3
 condition|)
 block|{
-name|memset
-argument_list|(
-operator|(
-name|voidp
-operator|)
-operator|&
-name|fh3
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|am_nfs_fh3
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|fh3
-operator|.
-name|fh3_length
-operator|=
-name|fhp
-operator|->
-name|v3
-operator|.
-name|mountres3_u
-operator|.
-name|mountinfo
-operator|.
-name|fhandle
-operator|.
-name|fhandle3_len
-expr_stmt|;
-name|memmove
-argument_list|(
-name|fh3
-operator|.
-name|fh3_u
-operator|.
-name|data
-argument_list|,
-name|fhp
-operator|->
-name|v3
-operator|.
-name|mountres3_u
-operator|.
-name|mountinfo
-operator|.
-name|fhandle
-operator|.
-name|fhandle3_val
-argument_list|,
-name|fh3
-operator|.
-name|fh3_length
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -1313,13 +1669,11 @@ operator|->
 name|NFS_FH_FIELD
 argument_list|,
 operator|&
-operator|(
-name|fh3
+name|fhp
+operator|->
+name|v3
 operator|.
-name|fh3_u
-operator|.
-name|data
-operator|)
+name|am_fh3_data
 argument_list|)
 expr_stmt|;
 else|#
@@ -1332,7 +1686,9 @@ operator|->
 name|NFS_FH_FIELD
 argument_list|,
 operator|&
-name|fh3
+name|fhp
+operator|->
+name|v3
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1374,13 +1730,9 @@ operator|->
 name|NFS_FH_FIELD
 argument_list|,
 operator|&
-operator|(
 name|fhp
 operator|->
 name|v2
-operator|.
-name|fhs_fh
-operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1399,9 +1751,11 @@ name|nap
 operator|->
 name|fhsize
 operator|=
-name|fh3
+name|fhp
+operator|->
+name|v3
 operator|.
-name|fh3_length
+name|am_fh3_length
 expr_stmt|;
 else|else
 endif|#
@@ -1433,9 +1787,11 @@ name|nap
 operator|->
 name|fh_len
 operator|=
-name|fh3
+name|fhp
+operator|->
+name|v3
 operator|.
-name|fh3_length
+name|am_fh3_length
 expr_stmt|;
 else|else
 endif|#
@@ -1453,6 +1809,7 @@ comment|/* HAVE_NFS_ARGS_T_FH_LEN */
 comment|/************************************************************************/
 comment|/***	HOST NAME							***/
 comment|/************************************************************************/
+comment|/*    * XXX: warning, using xstrlcpy in NFS_HN_DREF, which may corrupt a    * struct nfs_args, or truncate our concocted "hostname:/path"    * string prematurely.    */
 name|NFS_HN_DREF
 argument_list|(
 name|nap
@@ -1474,240 +1831,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MNT2_NFS_OPT_HOSTNAME */
-comment|/************************************************************************/
-comment|/***	ATTRIBUTE CACHES						***/
-comment|/************************************************************************/
-comment|/*    * acval is set to 0 at the top of the function.  If actimeo mount option    * exists and defined in mntopts, then it acval is set to it.    * If the value is non-zero, then we set all attribute cache fields to it.    * If acval is zero, it means it was never defined in mntopts or the    * actimeo mount option does not exist, in which case we check for    * individual mount options per attribute cache.    * Regardless of the value of acval, mount flags are set based directly    * on the values of the attribute caches.    */
-ifdef|#
-directive|ifdef
-name|MNTTAB_OPT_ACTIMEO
-name|acval
-operator|=
-name|hasmntval
-argument_list|(
-name|mntp
-argument_list|,
-name|MNTTAB_OPT_ACTIMEO
-argument_list|)
-expr_stmt|;
-comment|/* attr cache timeout (sec) */
-endif|#
-directive|endif
-comment|/* MNTTAB_OPT_ACTIMEO */
-if|if
-condition|(
-name|acval
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|HAVE_NFS_ARGS_T_ACREGMIN
-name|nap
-operator|->
-name|acregmin
-operator|=
-name|acval
-expr_stmt|;
-comment|/* min ac timeout for reg files (sec) */
-name|nap
-operator|->
-name|acregmax
-operator|=
-name|acval
-expr_stmt|;
-comment|/* max ac timeout for reg files (sec) */
-endif|#
-directive|endif
-comment|/* HAVE_NFS_ARGS_T_ACREGMIN */
-ifdef|#
-directive|ifdef
-name|HAVE_NFS_ARGS_T_ACDIRMIN
-name|nap
-operator|->
-name|acdirmin
-operator|=
-name|acval
-expr_stmt|;
-comment|/* min ac timeout for dirs (sec) */
-name|nap
-operator|->
-name|acdirmax
-operator|=
-name|acval
-expr_stmt|;
-comment|/* max ac timeout for dirs (sec) */
-endif|#
-directive|endif
-comment|/* HAVE_NFS_ARGS_T_ACDIRMIN */
-block|}
-else|else
-block|{
-ifdef|#
-directive|ifdef
-name|MNTTAB_OPT_ACREGMIN
-name|nap
-operator|->
-name|acregmin
-operator|=
-name|hasmntval
-argument_list|(
-name|mntp
-argument_list|,
-name|MNTTAB_OPT_ACREGMIN
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MNTTAB_OPT_ACREGMIN */
-ifdef|#
-directive|ifdef
-name|MNTTAB_OPT_ACREGMAX
-name|nap
-operator|->
-name|acregmax
-operator|=
-name|hasmntval
-argument_list|(
-name|mntp
-argument_list|,
-name|MNTTAB_OPT_ACREGMAX
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MNTTAB_OPT_ACREGMAX */
-ifdef|#
-directive|ifdef
-name|MNTTAB_OPT_ACDIRMIN
-name|nap
-operator|->
-name|acdirmin
-operator|=
-name|hasmntval
-argument_list|(
-name|mntp
-argument_list|,
-name|MNTTAB_OPT_ACDIRMIN
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MNTTAB_OPT_ACDIRMIN */
-ifdef|#
-directive|ifdef
-name|MNTTAB_OPT_ACDIRMAX
-name|nap
-operator|->
-name|acdirmax
-operator|=
-name|hasmntval
-argument_list|(
-name|mntp
-argument_list|,
-name|MNTTAB_OPT_ACDIRMAX
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MNTTAB_OPT_ACDIRMAX */
-block|}
-comment|/* end of "if (acval)" statement */
-ifdef|#
-directive|ifdef
-name|MNT2_NFS_OPT_ACREGMIN
-if|if
-condition|(
-name|nap
-operator|->
-name|acregmin
-condition|)
-name|nap
-operator|->
-name|flags
-operator||=
-name|MNT2_NFS_OPT_ACREGMIN
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MNT2_NFS_OPT_ACREGMIN */
-ifdef|#
-directive|ifdef
-name|MNT2_NFS_OPT_ACREGMAX
-if|if
-condition|(
-name|nap
-operator|->
-name|acregmax
-condition|)
-name|nap
-operator|->
-name|flags
-operator||=
-name|MNT2_NFS_OPT_ACREGMAX
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MNT2_NFS_OPT_ACREGMAX */
-ifdef|#
-directive|ifdef
-name|MNT2_NFS_OPT_ACDIRMIN
-if|if
-condition|(
-name|nap
-operator|->
-name|acdirmin
-condition|)
-name|nap
-operator|->
-name|flags
-operator||=
-name|MNT2_NFS_OPT_ACDIRMIN
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MNT2_NFS_OPT_ACDIRMIN */
-ifdef|#
-directive|ifdef
-name|MNT2_NFS_OPT_ACDIRMAX
-if|if
-condition|(
-name|nap
-operator|->
-name|acdirmax
-condition|)
-name|nap
-operator|->
-name|flags
-operator||=
-name|MNT2_NFS_OPT_ACDIRMAX
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MNT2_NFS_OPT_ACDIRMAX */
-ifdef|#
-directive|ifdef
-name|MNTTAB_OPT_NOAC
-comment|/* don't cache attributes */
-if|if
-condition|(
-name|hasmntopt
-argument_list|(
-name|mntp
-argument_list|,
-name|MNTTAB_OPT_NOAC
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-name|nap
-operator|->
-name|flags
-operator||=
-name|MNT2_NFS_OPT_NOAC
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MNTTAB_OPT_NOAC */
 comment|/************************************************************************/
 comment|/***	IP ADDRESS OF REMOTE HOST					***/
 comment|/************************************************************************/
@@ -1909,7 +2032,7 @@ name|MNT2_NFS_OPT_NOCONN
 comment|/* check if user specified to use unconnected or connected sockets */
 if|if
 condition|(
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mntp
 argument_list|,
@@ -1927,7 +2050,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mntp
 argument_list|,
@@ -2020,7 +2143,7 @@ directive|ifdef
 name|MNTTAB_OPT_RESVPORT
 if|if
 condition|(
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mntp
 argument_list|,
@@ -2156,6 +2279,24 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MNT2_NFS_OPT_RSIZE */
+if|if
+condition|(
+name|nfs_version
+operator|==
+name|NFS_VERSION
+operator|&&
+name|nap
+operator|->
+name|rsize
+operator|>
+literal|8192
+condition|)
+name|nap
+operator|->
+name|rsize
+operator|=
+literal|8192
+expr_stmt|;
 name|nap
 operator|->
 name|wsize
@@ -2185,6 +2326,24 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MNT2_NFS_OPT_WSIZE */
+if|if
+condition|(
+name|nfs_version
+operator|==
+name|NFS_VERSION
+operator|&&
+name|nap
+operator|->
+name|wsize
+operator|>
+literal|8192
+condition|)
+name|nap
+operator|->
+name|wsize
+operator|=
+literal|8192
+expr_stmt|;
 name|nap
 operator|->
 name|timeo
@@ -2270,9 +2429,12 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MNT2_NFS_OPT_BIODS */
+ifdef|#
+directive|ifdef
+name|MNT2_NFS_OPT_SOFT
 if|if
 condition|(
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mntp
 argument_list|,
@@ -2287,12 +2449,15 @@ name|flags
 operator||=
 name|MNT2_NFS_OPT_SOFT
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* MNT2_NFS_OPT_SOFT */
 ifdef|#
 directive|ifdef
 name|MNT2_NFS_OPT_SPONGY
 if|if
 condition|(
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mntp
 argument_list|,
@@ -2368,7 +2533,7 @@ directive|ifdef
 name|MNTTAB_OPT_INTR
 if|if
 condition|(
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mntp
 argument_list|,
@@ -2436,7 +2601,7 @@ directive|ifdef
 name|MNTTAB_OPT_NODEVS
 if|if
 condition|(
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mntp
 argument_list|,
@@ -2459,7 +2624,7 @@ directive|ifdef
 name|MNTTAB_OPT_COMPRESS
 if|if
 condition|(
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mntp
 argument_list|,
@@ -2483,7 +2648,7 @@ name|MNTTAB_OPT_PRIVATE
 comment|/* mount private, single-client tree */
 if|if
 condition|(
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mntp
 argument_list|,
@@ -2570,7 +2735,7 @@ name|MNTTAB_OPT_NOCTO
 argument_list|)
 if|if
 condition|(
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mntp
 argument_list|,
@@ -2601,7 +2766,7 @@ name|MNTTAB_OPT_POSIX
 argument_list|)
 if|if
 condition|(
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mntp
 argument_list|,
@@ -2640,7 +2805,7 @@ name|MNTTAB_OPT_PROPLIST
 argument_list|)
 if|if
 condition|(
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mntp
 argument_list|,
@@ -2686,7 +2851,7 @@ name|nap
 operator|->
 name|maxgrouplist
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|nap
 operator|->
@@ -2710,7 +2875,7 @@ name|MNTTAB_OPT_NOLOCK
 argument_list|)
 if|if
 condition|(
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mntp
 argument_list|,
@@ -2728,6 +2893,37 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(MNT2_NFS_OPT_NONLM)&& defined(MNTTAB_OPT_NOLOCK) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MNT2_NFS_OPT_XLATECOOKIE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|MNTTAB_OPT_XLATECOOKIE
+argument_list|)
+if|if
+condition|(
+name|amu_hasmntopt
+argument_list|(
+name|mntp
+argument_list|,
+name|MNTTAB_OPT_XLATECOOKIE
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|nap
+operator|->
+name|flags
+operator||=
+name|MNT2_NFS_OPT_XLATECOOKIE
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(MNT2_NFS_OPT_XLATECOOKIE)&& defined(MNTTAB_OPT_XLATECOOKIE) */
 ifdef|#
 directive|ifdef
 name|HAVE_NFS_ARGS_T_OPTSTR
@@ -2867,89 +3063,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MNT2_NFS_OPT_DUMBTIMR */
-ifdef|#
-directive|ifdef
-name|MNT2_NFS_OPT_NOAC
-comment|/*    * Don't cache attributes - they are changing under the kernel's feet.    * For example, IRIX5.2 will dispense with nfs lookup calls and hand stale    * filehandles to getattr unless we disable attribute caching on the    * automount points.    */
-name|nap
-operator|->
-name|flags
-operator||=
-name|MNT2_NFS_OPT_NOAC
-expr_stmt|;
-else|#
-directive|else
-comment|/* not MNT2_NFS_OPT_NOAC */
-comment|/*    * Setting these to 0 results in an error on some systems, which is why    * it's better to use "noac" if possible.    */
-if|#
-directive|if
-name|defined
+comment|/* compute all of the NFS attribute-cache flags */
+name|compute_nfs_attrcache_flags
 argument_list|(
-name|MNT2_NFS_OPT_ACREGMIN
+name|nap
+argument_list|,
+name|mntp
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|MNT2_NFS_OPT_ACREGMAX
-argument_list|)
-name|nap
-operator|->
-name|acregmin
-operator|=
-name|nap
-operator|->
-name|acregmax
-operator|=
-literal|0
 expr_stmt|;
-comment|/* XXX: was 1, but why? */
-name|nap
-operator|->
-name|flags
-operator||=
-name|MNT2_NFS_OPT_ACREGMIN
-operator||
-name|MNT2_NFS_OPT_ACREGMAX
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(MNT2_NFS_OPT_ACREGMIN)&& defined(MNT2_NFS_OPT_ACREGMAX) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MNT2_NFS_OPT_ACDIRMIN
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|MNT2_NFS_OPT_ACDIRMAX
-argument_list|)
-name|nap
-operator|->
-name|acdirmin
-operator|=
-name|nap
-operator|->
-name|acdirmax
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX: was 1, but why? */
-name|nap
-operator|->
-name|flags
-operator||=
-name|MNT2_NFS_OPT_ACDIRMIN
-operator||
-name|MNT2_NFS_OPT_ACDIRMAX
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(MNT2_NFS_OPT_ACDIRMIN)&& defined(MNT2_NFS_OPT_ACDIRMAX) */
-endif|#
-directive|endif
-comment|/* not MNT2_NFS_OPT_NOAC */
 comment|/*    * Provide a slight bit more security by requiring the kernel to use    * reserved ports.    */
 ifdef|#
 directive|ifdef
@@ -2991,7 +3112,7 @@ modifier|*
 name|fhdata
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 specifier|static
@@ -3080,6 +3201,7 @@ name|len
 operator|/
 expr|sizeof
 operator|(
+name|unsigned
 name|short
 name|int
 operator|)
@@ -3088,9 +3210,14 @@ name|i
 operator|++
 control|)
 block|{
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
 argument_list|,
 literal|"%04x"
 argument_list|,
@@ -3103,11 +3230,16 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat
+name|xstrlcat
 argument_list|(
 name|buf
 argument_list|,
 name|str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3245,11 +3377,8 @@ name|plog
 argument_list|(
 name|XLOG_DEBUG
 argument_list|,
-literal|"NA->syncaddr {netbuf} 0x%x"
+literal|"NA->syncaddr {netbuf} %p"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|nbp
 argument_list|)
 expr_stmt|;
@@ -3313,6 +3442,23 @@ comment|/* don't print knconf->unused field */
 else|#
 directive|else
 comment|/* not HAVE_TRANSPORT_TYPE_TLI */
+ifdef|#
+directive|ifdef
+name|NFS_ARGS_T_ADDR_IS_POINTER
+name|sap
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+name|nap
+operator|->
+name|addr
+expr_stmt|;
+else|#
+directive|else
+comment|/* not NFS_ARGS_T_ADDR_IS_POINTER */
 name|sap
 operator|=
 operator|(
@@ -3325,6 +3471,9 @@ name|nap
 operator|->
 name|addr
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* not NFS_ARGS_T_ADDR_IS_POINTER */
 name|plog
 argument_list|(
 name|XLOG_DEBUG
@@ -3360,11 +3509,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_STRUCT_SOCKADDR_SA_LEN
+comment|/* as per POSIX, sin_len need not be set (used internally by kernel) */
 name|plog
 argument_list|(
 name|XLOG_DEBUG
 argument_list|,
-literal|"NA->addr.sin_len = \"%d\""
+literal|"NA->addr.sin_len = %d"
 argument_list|,
 name|sap
 operator|->
@@ -3378,7 +3528,7 @@ name|plog
 argument_list|(
 name|XLOG_DEBUG
 argument_list|,
-literal|"NA->addr.sin_family = \"%d\""
+literal|"NA->addr.sin_family = %d"
 argument_list|,
 name|sap
 operator|->
@@ -3389,7 +3539,7 @@ name|plog
 argument_list|(
 name|XLOG_DEBUG
 argument_list|,
-literal|"NA->addr.sin_port = \"%d\""
+literal|"NA->addr.sin_port = %d"
 argument_list|,
 name|sap
 operator|->
@@ -3425,6 +3575,23 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* not HAVE_TRANSPORT_TYPE_TLI */
+ifdef|#
+directive|ifdef
+name|HAVE_NFS_ARGS_T_ADDRLEN
+name|plog
+argument_list|(
+name|XLOG_DEBUG
+argument_list|,
+literal|"NA->addrlen = %d"
+argument_list|,
+name|nap
+operator|->
+name|addrlen
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ifdef HAVE_NFS_ARGS_T_ADDRLEN */
 name|plog
 argument_list|(
 name|XLOG_DEBUG

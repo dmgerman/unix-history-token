@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: rpc_fwd.c,v 1.3.2.5 2004/01/06 03:15:16 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/rpc_fwd.c  *  */
 end_comment
 
 begin_comment
@@ -48,9 +48,8 @@ begin_define
 define|#
 directive|define
 name|XID_ALLOC
-parameter_list|(
-name|struct
-define|)	(xid++)
+parameter_list|()
+value|(xid++)
 end_define
 
 begin_define
@@ -97,6 +96,7 @@ name|rf_oldid
 decl_stmt|;
 comment|/* Original packet id */
 name|fwd_fun
+modifier|*
 name|rf_fwd
 decl_stmt|;
 comment|/* Forwarding function */
@@ -159,7 +159,9 @@ name|time_t
 name|now
 init|=
 name|clocktime
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 decl_stmt|;
 name|rpc_forward
 modifier|*
@@ -203,9 +205,6 @@ name|p
 condition|)
 block|{
 comment|/*      * Call forwarding function to say that      * this message was junked.      */
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"Re-using packet forwarding slot - id %#x"
@@ -215,9 +214,6 @@ operator|->
 name|rf_xid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 if|if
 condition|(
 name|p
@@ -551,7 +547,8 @@ parameter_list|(
 name|int
 name|type_id
 parameter_list|,
-name|voidp
+name|char
+modifier|*
 name|pkt
 parameter_list|,
 name|int
@@ -567,8 +564,8 @@ name|sockaddr_in
 modifier|*
 name|replyto
 parameter_list|,
-name|voidp
-name|i
+name|opaque_t
+name|cb_arg
 parameter_list|,
 name|fwd_fun
 name|cb
@@ -611,9 +608,6 @@ return|return
 name|ENOENT
 return|;
 comment|/*    * See if the type_id is fully specified.    * If so, then discard any old entries    * for this id.    * Otherwise make sure the type_id is    * fully qualified by allocating an id here.    */
-ifdef|#
-directive|ifdef
-name|DEBUG
 switch|switch
 condition|(
 name|type_id
@@ -626,7 +620,9 @@ name|RPC_XID_PORTMAP
 case|:
 name|dlog
 argument_list|(
-literal|"Sending PORTMAP request"
+literal|"Sending PORTMAP request %#x"
+argument_list|,
+name|type_id
 argument_list|)
 expr_stmt|;
 break|break;
@@ -646,21 +642,33 @@ name|RPC_XID_NFSPING
 case|:
 name|dlog
 argument_list|(
-literal|"Sending NFS ping"
+literal|"Sending NFS ping %#x"
+argument_list|,
+name|type_id
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|RPC_XID_WEBNFS
+case|:
+name|dlog
+argument_list|(
+literal|"Sending WebNFS lookup %#x"
+argument_list|,
+name|type_id
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|dlog
 argument_list|(
-literal|"UNKNOWN RPC XID"
+literal|"UNKNOWN RPC XID %#x"
+argument_list|,
+name|type_id
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
-comment|/* DEBUG */
 if|if
 condition|(
 name|type_id
@@ -681,17 +689,11 @@ condition|(
 name|p
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"Discarding earlier rpc fwd handle"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|fwd_free
 argument_list|(
 name|p
@@ -701,17 +703,11 @@ block|}
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"Allocating a new xid..."
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|type_id
 operator|=
 name|MK_RPC_XID
@@ -719,9 +715,7 @@ argument_list|(
 name|type_id
 argument_list|,
 name|XID_ALLOC
-argument_list|(
-expr|struct
-argument_list|)
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -755,18 +749,26 @@ name|p
 operator|->
 name|rf_oldid
 operator|=
+name|ntohl
+argument_list|(
 operator|*
 name|pkt_int
+argument_list|)
 expr_stmt|;
 comment|/*    * Replace with newly allocated id    */
 name|p
 operator|->
 name|rf_xid
 operator|=
+name|type_id
+expr_stmt|;
 operator|*
 name|pkt_int
 operator|=
+name|htonl
+argument_list|(
 name|type_id
+argument_list|)
 expr_stmt|;
 comment|/*    * The sendto may fail if, for example, the route    * to a remote host is lost because an intermediate    * gateway has gone down.  Important to fill in the    * rest of "p" otherwise nasty things happen later...    */
 ifdef|#
@@ -787,7 +789,7 @@ name|fwdto
 condition|)
 name|dlog
 argument_list|(
-literal|"Sending packet id %#x to %s.%d"
+literal|"Sending packet id %#x to %s:%d"
 argument_list|,
 name|p
 operator|->
@@ -796,6 +798,11 @@ argument_list|,
 name|inet_dquad
 argument_list|(
 name|dq
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dq
+argument_list|)
 argument_list|,
 name|fwdto
 operator|->
@@ -1048,7 +1055,7 @@ name|p
 operator|->
 name|rf_ptr
 operator|=
-name|i
+name|cb_arg
 expr_stmt|;
 return|return
 name|error
@@ -1086,6 +1093,9 @@ decl_stmt|;
 name|u_int
 modifier|*
 name|pkt_int
+decl_stmt|;
+name|u_int
+name|pkt_xid
 decl_stmt|;
 name|int
 name|rc
@@ -1257,6 +1267,20 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+comment|/*      * Clear error indication, otherwise the error condition persists and      * amd gets into an infinite loop.      */
+if|if
+condition|(
+name|t_errno
+operator|==
+name|TLOOK
+condition|)
+name|t_rcvuderr
+argument_list|(
+name|fwd_sock
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 else|#
 directive|else
@@ -1362,13 +1386,17 @@ operator|*
 operator|)
 name|pkt
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-switch|switch
-condition|(
+name|pkt_xid
+operator|=
+name|ntohl
+argument_list|(
 operator|*
 name|pkt_int
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|pkt_xid
 operator|&
 name|RPC_XID_MASK
 condition|)
@@ -1378,7 +1406,9 @@ name|RPC_XID_PORTMAP
 case|:
 name|dlog
 argument_list|(
-literal|"Receiving PORTMAP reply"
+literal|"Receiving PORTMAP reply %#x"
+argument_list|,
+name|pkt_xid
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1389,8 +1419,7 @@ name|dlog
 argument_list|(
 literal|"Receiving MOUNTD reply %#x"
 argument_list|,
-operator|*
-name|pkt_int
+name|pkt_xid
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1401,28 +1430,36 @@ name|dlog
 argument_list|(
 literal|"Receiving NFS ping %#x"
 argument_list|,
-operator|*
-name|pkt_int
+name|pkt_xid
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|RPC_XID_WEBNFS
+case|:
+name|dlog
+argument_list|(
+literal|"Receiving WebNFS lookup %#x"
+argument_list|,
+name|pkt_xid
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|dlog
 argument_list|(
-literal|"UNKNOWN RPC XID"
+literal|"UNKNOWN RPC XID %#x"
+argument_list|,
+name|pkt_xid
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|p
 operator|=
 name|fwd_locate
 argument_list|(
-operator|*
-name|pkt_int
+name|pkt_xid
 argument_list|)
 expr_stmt|;
 if|if
@@ -1431,20 +1468,13 @@ operator|!
 name|p
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"Can't forward reply id %#x"
 argument_list|,
-operator|*
-name|pkt_int
+name|pkt_xid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 goto|goto
 name|out
 goto|;
@@ -1460,9 +1490,12 @@ comment|/*      * Put the original message id back      * into the packet.      
 operator|*
 name|pkt_int
 operator|=
+name|htonl
+argument_list|(
 name|p
 operator|->
 name|rf_oldid
+argument_list|)
 expr_stmt|;
 comment|/*      * Call forwarding function      */
 call|(

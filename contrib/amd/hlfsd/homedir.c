@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: homedir.c,v 1.5.2.11 2004/01/06 03:15:23 ezk Exp $  *  * HLFSD was written at Columbia University Computer Science Department, by  * Erez Zadok<ezk@cs.columbia.edu> and Alexander Dupuy<dupuy@cs.columbia.edu>  * It is being distributed under the same terms and conditions as amd does.  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/hlfsd/homedir.c  *  * HLFSD was written at Columbia University Computer Science Department, by  * Erez Zadok<ezk@cs.columbia.edu> and Alexander Dupuy<dupuy@cs.columbia.edu>  * It is being distributed under the same terms and conditions as amd does.  */
 end_comment
 
 begin_ifdef
@@ -165,7 +165,7 @@ specifier|static
 name|void
 name|table_add
 parameter_list|(
-name|int
+name|u_int
 parameter_list|,
 specifier|const
 name|char
@@ -289,11 +289,6 @@ name|old_groupid
 decl_stmt|,
 name|old_userid
 decl_stmt|;
-name|clock_valid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* invalidate logging clock */
 if|if
 condition|(
 operator|(
@@ -361,9 +356,14 @@ operator|==
 literal|0
 condition|)
 comment|/* force all uid 0 to use root's home */
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|linkval
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|linkval
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -373,9 +373,14 @@ name|home_subdir
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|linkval
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|linkval
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -474,18 +479,16 @@ name|tv_sec
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-comment|/*    * only run this forking code if asked for -D fork    * or if did not ask for -D nofork    */
+comment|/*    * only run this forking code if did not ask for -D fork    */
+if|if
+condition|(
+operator|!
 name|amuDebug
 argument_list|(
-argument|D_FORK
+name|D_FORK
 argument_list|)
+condition|)
 block|{
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/* fork child to process request if none in progress */
 if|if
 condition|(
@@ -501,8 +504,6 @@ name|child
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
 condition|)
 name|found
 operator|->
@@ -524,17 +525,6 @@ literal|5
 argument_list|)
 expr_stmt|;
 comment|/* wait a bit if in progress */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DEBUG
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_WAITPID
-argument_list|)
 if|if
 condition|(
 name|found
@@ -542,122 +532,13 @@ operator|->
 name|child
 condition|)
 block|{
-comment|/* perhaps it's a child we lost count of? let's wait on it */
-name|int
-name|status
-decl_stmt|,
-name|child
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|child
-operator|=
-name|waitpid
-argument_list|(
-operator|(
-name|pid_t
-operator|)
-name|found
-operator|->
-name|child
-argument_list|,
-operator|&
-name|status
-argument_list|,
-name|WNOHANG
-argument_list|)
-operator|)
-operator|>
-literal|0
-condition|)
-block|{
-name|plog
-argument_list|(
-name|XLOG_ERROR
-argument_list|,
-literal|"found lost child %d"
-argument_list|,
-name|child
-argument_list|)
-expr_stmt|;
-name|found
-operator|->
-name|child
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|WIFEXITED
-argument_list|(
-name|status
-argument_list|)
-condition|)
-name|found
-operator|->
-name|last_status
-operator|=
-name|WEXITSTATUS
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|WIFSIGNALED
-argument_list|(
-name|status
-argument_list|)
-condition|)
-name|found
-operator|->
-name|last_status
-operator|=
-operator|-
-name|WTERMSIG
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|plog
-argument_list|(
-name|XLOG_ERROR
-argument_list|,
-literal|"unknown child exit status (%d) ???"
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-name|found
-operator|->
-name|last_status
-operator|=
-literal|255
-expr_stmt|;
-block|}
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* DEBUG&& HAVE_WAITPID */
-if|if
-condition|(
-name|found
-operator|->
-name|child
-condition|)
-block|{
+comment|/* better safe than sorry - maybe */
 name|found
 operator|->
 name|last_status
 operator|=
 literal|1
 expr_stmt|;
-comment|/* better safe than sorry - maybe */
 return|return
 name|alt_spooldir
 return|;
@@ -694,17 +575,12 @@ name|child
 condition|)
 block|{
 comment|/* PARENT */
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|lastchild
 condition|)
-name|plog
+name|dlog
 argument_list|(
-name|XLOG_INFO
-argument_list|,
 literal|"cache spill uid = %ld, pid = %ld, home = %s"
 argument_list|,
 operator|(
@@ -726,9 +602,6 @@ operator|->
 name|home
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|lastchild
 operator|=
 name|found
@@ -742,15 +615,8 @@ name|NULL
 return|;
 comment|/* return NULL to parent, so it can continue */
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 block|}
-comment|/* end of Debug(D_FORK) */
-endif|#
-directive|endif
-comment|/* DEBUG */
-comment|/*    * CHILD: (or parent if -D nofork)    *    * Check and create dir if needed.    * Check disk space and/or quotas too.    *    * We don't need to set the _last_status field of found after the fork    * in the child, b/c that information would be later determined in    * nfsproc_readlink_2() and the correct exit status would be returned    * to the parent upon SIGCHLD in interlock().    *    */
+comment|/*    * CHILD: (or parent if -D fork)    *    * Check and create dir if needed.    * Check disk space and/or quotas too.    *    * We don't need to set the _last_status field of found after the fork    * in the child, b/c that information would be later determined in    * nfsproc_readlink_2() and the correct exit status would be returned    * to the parent upon SIGCHLD in interlock().    *    */
 name|am_set_mypid
 argument_list|()
 expr_stmt|;
@@ -974,14 +840,14 @@ name|fd
 decl_stmt|,
 name|len
 decl_stmt|;
-name|clock_valid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* invalidate logging clock */
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s/._hlfstmp_%lu"
 argument_list|,
@@ -1183,13 +1049,6 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|found
-condition|)
 name|dlog
 argument_list|(
 literal|"delaying on child %ld for %d seconds"
@@ -1204,9 +1063,6 @@ argument_list|,
 name|secs
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|tv
 operator|.
 name|tv_usec
@@ -1276,12 +1132,6 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-name|int
-name|max_errors
-init|=
-literal|10
-decl_stmt|;
-comment|/* avoid infinite loops */
 ifdef|#
 directive|ifdef
 name|HAVE_WAITPID
@@ -1304,7 +1154,7 @@ argument_list|,
 name|WNOHANG
 argument_list|)
 operator|)
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{
@@ -1331,38 +1181,13 @@ operator|)
 literal|0
 argument_list|)
 operator|)
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{
 endif|#
 directive|endif
 comment|/* not HAVE_WAITPID */
-if|if
-condition|(
-name|child
-operator|<
-literal|0
-condition|)
-block|{
-name|plog
-argument_list|(
-name|XLOG_WARNING
-argument_list|,
-literal|"waitpid/wait3: %m"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|--
-name|max_errors
-operator|>
-literal|0
-condition|)
-continue|continue;
-else|else
-break|break;
-block|}
 comment|/* high chances this was the last child forked */
 if|if
 condition|(
@@ -1397,42 +1222,6 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|WIFSIGNALED
-argument_list|(
-name|status
-argument_list|)
-condition|)
-name|lastchild
-operator|->
-name|last_status
-operator|=
-operator|-
-name|WTERMSIG
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|plog
-argument_list|(
-name|XLOG_ERROR
-argument_list|,
-literal|"unknown child exit status (%d) ???"
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-name|lastchild
-operator|->
-name|last_status
-operator|=
-literal|255
-expr_stmt|;
-block|}
 name|lastchild
 operator|=
 operator|(
@@ -1445,11 +1234,6 @@ block|}
 else|else
 block|{
 comment|/* and if not, we have to search for it... */
-name|int
-name|found
-init|=
-literal|0
-decl_stmt|;
 for|for
 control|(
 name|lostchild
@@ -1477,12 +1261,6 @@ operator|==
 name|child
 condition|)
 block|{
-name|lostchild
-operator|->
-name|child
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|WIFEXITED
@@ -1499,63 +1277,15 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|WIFSIGNALED
-argument_list|(
-name|status
-argument_list|)
-condition|)
 name|lostchild
 operator|->
-name|last_status
+name|child
 operator|=
-operator|-
-name|WTERMSIG
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|plog
-argument_list|(
-name|XLOG_ERROR
-argument_list|,
-literal|"unknown child exit status (%d) ???"
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-name|lostchild
-operator|->
-name|last_status
-operator|=
-literal|255
-expr_stmt|;
-block|}
-name|found
-operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 block|}
 block|}
-if|if
-condition|(
-operator|!
-name|found
-condition|)
-name|plog
-argument_list|(
-name|XLOG_ERROR
-argument_list|,
-literal|"no record of child %d found???"
-argument_list|,
-name|child
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 block|}
@@ -1835,9 +1565,14 @@ argument_list|,
 literal|"/"
 argument_list|)
 condition|)
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|mboxfile
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mboxfile
+argument_list|)
 argument_list|,
 literal|"/%s/%s"
 argument_list|,
@@ -1847,9 +1582,14 @@ name|username
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|mboxfile
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mboxfile
+argument_list|)
 argument_list|,
 literal|"%s/%s/%s"
 argument_list|,
@@ -2112,11 +1852,6 @@ name|getpwent
 argument_list|()
 return|;
 block|}
-name|clock_valid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* invalidate logging clock */
 comment|/* return here to read another entry */
 name|readent
 label|:
@@ -2216,14 +1951,19 @@ goto|goto
 name|readent
 goto|;
 block|}
-name|strcpy
+comment|/* pw_name will show up in passwd_ent.pw_name */
+name|xstrlcpy
 argument_list|(
 name|pw_name
 argument_list|,
 name|cp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pw_name
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* will show up in passwd_ent.pw_name */
 comment|/* skip passwd */
 name|strtok
 argument_list|(
@@ -2332,14 +2072,19 @@ goto|goto
 name|readent
 goto|;
 block|}
-name|strcpy
+comment|/* pw_dir will show up in passwd_ent.pw_dir */
+name|xstrlcpy
 argument_list|(
 name|pw_dir
 argument_list|,
 name|cp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pw_dir
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* will show up in passwd_ent.pw_dir */
 comment|/* the rest of the fields are unimportant and not being considered */
 name|plog
 argument_list|(
@@ -2572,11 +2317,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|clock_valid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* invalidate logging clock */
 name|hlfsd_setpwent
 argument_list|()
 expr_stmt|;
@@ -2787,7 +2527,7 @@ specifier|static
 name|void
 name|table_add
 parameter_list|(
-name|int
+name|u_int
 name|u
 parameter_list|,
 specifier|const
@@ -2804,11 +2544,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|clock_valid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* invalidate logging clock */
 if|if
 condition|(
 name|max_pwtab_num
@@ -3045,9 +2780,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"ignoring duplicate home %s for uid %d (already %s)"
@@ -3064,9 +2796,6 @@ operator|.
 name|home
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 return|return;
 block|}
 comment|/* add new password entry */
@@ -3181,7 +2910,7 @@ name|uid2home_t
 modifier|*
 name|plt_search
 parameter_list|(
-name|int
+name|u_int
 name|u
 parameter_list|)
 block|{

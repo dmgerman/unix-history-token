@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: hlfsd.c,v 1.7.2.9 2004/01/19 00:25:55 ezk Exp $  *  * HLFSD was written at Columbia University Computer Science Department, by  * Erez Zadok<ezk@cs.columbia.edu> and Alexander Dupuy<dupuy@cs.columbia.edu>  * It is being distributed under the same terms and conditions as amd does.  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/hlfsd/hlfsd.c  *  * HLFSD was written at Columbia University Computer Science Department, by  * Erez Zadok<ezk@cs.columbia.edu> and Alexander Dupuy<dupuy@cs.columbia.edu>  * It is being distributed under the same terms and conditions as amd does.  */
 end_comment
 
 begin_ifdef
@@ -248,7 +248,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_int
 name|cache_interval
 init|=
 name|DEFAULT_CACHE_INTERVAL
@@ -425,6 +425,62 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|2
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|fatalerror
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+define|#
+directive|define
+name|ERRM
+value|": %m"
+name|size_t
+name|l
+init|=
+name|strlen
+argument_list|(
+name|str
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|ERRM
+argument_list|)
+operator|-
+literal|1
+decl_stmt|;
+name|char
+modifier|*
+name|tmp
+init|=
+name|strnsave
+argument_list|(
+name|str
+argument_list|,
+name|l
+argument_list|)
+decl_stmt|;
+name|xstrlcat
+argument_list|(
+name|tmp
+argument_list|,
+name|ERRM
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|tmp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1164,25 +1220,19 @@ argument_list|(
 name|logfile
 argument_list|,
 name|orig_umask
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DEBUG
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|MOUNT_TABLE_ON_FILE
-argument_list|)
 if|if
 condition|(
-name|debug_flags
-operator|&
+name|amuDebug
+argument_list|(
 name|D_MTAB
+argument_list|)
 condition|)
 name|dlog
 argument_list|(
@@ -1191,7 +1241,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* defined(DEBUG)&& !defined(MOUNT_TABLE_ON_FILE) */
+comment|/* not MOUNT_TABLE_ON_FILE */
 comment|/* avoid hanging on other NFS servers if started elsewhere */
 if|if
 condition|(
@@ -1291,11 +1341,6 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
-name|clock_valid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* invalidate logging clock */
 if|if
 condition|(
 operator|!
@@ -1552,11 +1597,12 @@ name|OPEN_SPOOLMODE
 argument_list|)
 expr_stmt|;
 comment|/* create failsafe link to alternate spool directory */
+operator|*
+operator|(
 name|slinkname
-index|[
 operator|-
 literal|1
-index|]
+operator|)
 operator|=
 literal|'/'
 expr_stmt|;
@@ -1655,11 +1701,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+operator|*
+operator|(
 name|slinkname
-index|[
 operator|-
 literal|1
-index|]
+operator|)
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -1732,7 +1779,7 @@ name|sa
 operator|.
 name|sa_flags
 operator|=
-name|SA_RESTART
+literal|0
 expr_stmt|;
 name|sigemptyset
 argument_list|(
@@ -1803,7 +1850,7 @@ name|sa
 operator|.
 name|sa_flags
 operator|=
-name|SA_RESTART
+literal|0
 expr_stmt|;
 name|sigemptyset
 argument_list|(
@@ -1850,19 +1897,16 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* not HAVE_SIGACTION */
-ifdef|#
-directive|ifdef
-name|DEBUG
-comment|/*    * In the parent, if -D nodaemon (or -D daemon) , we don't need to    * set this signal handler.    */
+comment|/*    * In the parent, if -D daemon, we don't need to    * set this signal handler.    */
+if|if
+condition|(
+operator|!
 name|amuDebug
 argument_list|(
-argument|D_DAEMON
+name|D_DAEMON
 argument_list|)
+condition|)
 block|{
-endif|#
-directive|endif
-comment|/* DEBUG */
-comment|/* XXX: port to use pure svr4 signals */
 name|s
 operator|=
 operator|-
@@ -1884,6 +1928,32 @@ argument_list|,
 name|stoplight
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SIGSUSPEND
+block|{
+name|sigset_t
+name|mask
+decl_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+name|mask
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|sigsuspend
+argument_list|(
+operator|&
+name|mask
+argument_list|)
+expr_stmt|;
+comment|/* wait for child to set up */
+block|}
+else|#
+directive|else
+comment|/* not HAVE_SIGSUSPEND */
 name|s
 operator|=
 name|sigpause
@@ -1892,23 +1962,25 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* wait for child to set up */
+endif|#
+directive|endif
+comment|/* not HAVE_SIGSUSPEND */
 name|sleep
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 block|}
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/*    * setup options to mount table (/etc/{mtab,mnttab}) entry    */
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|hostpid_fs
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hostpid_fs
+argument_list|)
 argument_list|,
 literal|"%s:(pid%d)"
 argument_list|,
@@ -1961,29 +2033,44 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|strcpy
+name|xstrlcpy
 argument_list|(
 name|preopts
 argument_list|,
 name|default_mntopts
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|preopts
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Turn off all kinds of attribute and symlink caches as      * much as possible.  Also make sure that mount does not      * show up to df.      */
 ifdef|#
 directive|ifdef
 name|MNTTAB_OPT_INTR
-name|strcat
+name|xstrlcat
 argument_list|(
 name|preopts
 argument_list|,
 literal|","
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|preopts
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat
+name|xstrlcat
 argument_list|(
 name|preopts
 argument_list|,
 name|MNTTAB_OPT_INTR
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|preopts
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1992,18 +2079,28 @@ comment|/* MNTTAB_OPT_INTR */
 ifdef|#
 directive|ifdef
 name|MNTTAB_OPT_IGNORE
-name|strcat
+name|xstrlcat
 argument_list|(
 name|preopts
 argument_list|,
 literal|","
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|preopts
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat
+name|xstrlcat
 argument_list|(
 name|preopts
 argument_list|,
 name|MNTTAB_OPT_IGNORE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|preopts
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2012,11 +2109,16 @@ comment|/* MNTTAB_OPT_IGNORE */
 ifdef|#
 directive|ifdef
 name|MNT2_GEN_OPT_CACHE
-name|strcat
+name|xstrlcat
 argument_list|(
 name|preopts
 argument_list|,
 literal|",nocache"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|preopts
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2025,11 +2127,16 @@ comment|/* MNT2_GEN_OPT_CACHE */
 ifdef|#
 directive|ifdef
 name|MNT2_NFS_OPT_SYMTTL
-name|strcat
+name|xstrlcat
 argument_list|(
 name|preopts
 argument_list|,
 literal|",symttl=0"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|preopts
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2043,12 +2150,27 @@ name|preopts
 expr_stmt|;
 block|}
 comment|/*    * Make sure that amd's top-level NFS mounts are hidden by default    * from df.    * If they don't appear to support the either the "ignore" mnttab    * option entry, or the "auto" one, set the mount type to "nfs".    */
+ifdef|#
+directive|ifdef
+name|HIDE_MOUNT_TYPE
 name|mnt
 operator|.
 name|mnt_type
 operator|=
 name|HIDE_MOUNT_TYPE
 expr_stmt|;
+else|#
+directive|else
+comment|/* not HIDE_MOUNT_TYPE */
+name|mnt
+operator|.
+name|mnt_type
+operator|=
+literal|"nfs"
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not HIDE_MOUNT_TYPE */
 comment|/* some systems don't have a mount type, but a mount flag */
 ifndef|#
 directive|ifndef
@@ -2059,6 +2181,8 @@ operator|&
 name|localsocket
 operator|.
 name|sin_addr
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|localsocket
@@ -2082,9 +2206,14 @@ endif|#
 directive|endif
 comment|/* not HAVE_TRANSPORT_TYPE_TLI */
 comment|/*    * Update hostname field.    * Make some name prog:pid (i.e., hlfsd:174) for hostname    */
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|progpid_fs
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|progpid_fs
+argument_list|)
 argument_list|,
 literal|"%s:%d"
 argument_list|,
@@ -2110,7 +2239,7 @@ name|int
 operator|)
 name|MAXHOSTNAMELEN
 condition|)
-name|strcpy
+name|xstrlcpy
 argument_list|(
 name|progpid_fs
 operator|+
@@ -2119,6 +2248,15 @@ operator|-
 literal|3
 argument_list|,
 literal|".."
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|progpid_fs
+argument_list|)
+operator|-
+name|MAXHOSTNAMELEN
+operator|+
+literal|3
 argument_list|)
 expr_stmt|;
 name|genflags
@@ -2156,8 +2294,6 @@ operator|&
 name|anh
 operator|.
 name|v2
-operator|.
-name|fhs_fh
 argument_list|,
 name|root_fhp
 argument_list|,
@@ -2225,6 +2361,8 @@ name|mnt
 argument_list|,
 name|genflags
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|localsocket
 argument_list|,
@@ -2257,29 +2395,22 @@ operator|&
 name|mnt
 argument_list|)
 expr_stmt|;
-name|clock_valid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* invalidate logging clock */
-comment|/*  * The following code could be cleverly ifdef-ed, but I duplicated the  * mount_fs call three times for simplicity and readability.  */
-ifdef|#
-directive|ifdef
-name|DEBUG
-comment|/*  * For some reason, this mount may have to be done in the background, if I am  * using -D nodebug.  I suspect that the actual act of mounting requires  * calling to hlfsd itself to invoke one or more of its nfs calls, to stat  * /mail.  That means that even if you say -D nodaemon, at least the mount  * of hlfsd itself on top of /mail will be done in the background.  * The other alternative I have is to run svc_run, but set a special  * signal handler to perform the mount in N seconds via some alarm.  *      -Erez Zadok.  */
+comment|/*  * For some reason, this mount may have to be done in the background, if I am  * using -D daemon.  I suspect that the actual act of mounting requires  * calling to hlfsd itself to invoke one or more of its nfs calls, to stat  * /mail.  That means that even if you say -D daemon, at least the mount  * of hlfsd itself on top of /mail will be done in the background.  * The other alternative I have is to run svc_run, but set a special  * signal handler to perform the mount in N seconds via some alarm.  *      -Erez Zadok.  */
 if|if
 condition|(
-name|debug_flags
-operator|&
+operator|!
+name|amuDebug
+argument_list|(
 name|D_DAEMON
+argument_list|)
 condition|)
 block|{
-comment|/* asked for -D daemon */
+comment|/* Normal case */
 name|plog
 argument_list|(
 name|XLOG_INFO
 argument_list|,
-literal|"parent NFS mounting hlfsd service points"
+literal|"normal NFS mounting hlfsd service points"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2306,6 +2437,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|mnttab_file_name
+argument_list|,
+literal|0
 argument_list|)
 operator|<
 literal|0
@@ -2318,7 +2451,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* asked for -D nodaemon */
+comment|/* asked for -D daemon */
 if|if
 condition|(
 name|fork
@@ -2366,6 +2499,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|mnttab_file_name
+argument_list|,
+literal|0
 argument_list|)
 operator|<
 literal|0
@@ -2396,52 +2531,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|#
-directive|else
-comment|/* not DEBUG */
-name|plog
-argument_list|(
-name|XLOG_INFO
-argument_list|,
-literal|"normal NFS mounting hlfsd service points"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mount_fs
-argument_list|(
-operator|&
-name|mnt
-argument_list|,
-name|genflags
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|nfs_args
-argument_list|,
-name|retry
-argument_list|,
-name|type
-argument_list|,
-literal|2
-argument_list|,
-literal|"udp"
-argument_list|,
-name|mnttab_file_name
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"nfsmount: %m"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* not DEBUG */
 ifdef|#
 directive|ifdef
 name|HAVE_TRANSPORT_TYPE_TLI
@@ -2475,25 +2564,26 @@ argument_list|,
 literal|"hlfsd ready to serve"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-comment|/*    * If asked not to fork a daemon (-D nodaemon), then hlfsd_init()    * will not run svc_run.  We must start svc_run here.    */
-name|dlog
+comment|/*    * If asked not to fork a daemon (-D daemon), then hlfsd_init()    * will not run svc_run.  We must start svc_run here.    */
+if|if
+condition|(
+name|amuDebug
 argument_list|(
+name|D_DAEMON
+argument_list|)
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_DEBUG
+argument_list|,
 literal|"starting no-daemon debugging svc_run"
 argument_list|)
 expr_stmt|;
-name|amuDebugNo
-argument_list|(
-argument|D_DAEMON
-argument_list|)
 name|svc_run
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
+block|}
 name|cleanup
 argument_list|(
 literal|0
@@ -2532,11 +2622,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_SIGACTION */
-name|clock_valid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* invalidate logging clock */
 comment|/*    * Initialize file handles.    */
 name|plog
 argument_list|(
@@ -2548,17 +2633,15 @@ expr_stmt|;
 name|hlfsd_init_filehandles
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-comment|/*    * If -D daemon then we must fork.    */
+comment|/*    * If not -D daemon then we must fork.    */
+if|if
+condition|(
+operator|!
 name|amuDebug
 argument_list|(
-argument|D_DAEMON
+name|D_DAEMON
 argument_list|)
-endif|#
-directive|endif
-comment|/* DEBUG */
+condition|)
 name|child
 operator|=
 name|fork
@@ -2634,7 +2717,7 @@ name|sa
 operator|.
 name|sa_flags
 operator|=
-name|SA_RESTART
+literal|0
 expr_stmt|;
 name|sigemptyset
 argument_list|(
@@ -2724,7 +2807,7 @@ name|sa
 operator|.
 name|sa_flags
 operator|=
-name|SA_RESTART
+literal|0
 expr_stmt|;
 name|sigemptyset
 argument_list|(
@@ -2785,7 +2868,7 @@ name|sa
 operator|.
 name|sa_flags
 operator|=
-name|SA_RESTART
+literal|0
 expr_stmt|;
 name|sigemptyset
 argument_list|(
@@ -2869,7 +2952,7 @@ name|sa
 operator|.
 name|sa_flags
 operator|=
-name|SA_RESTART
+literal|0
 expr_stmt|;
 name|sigemptyset
 argument_list|(
@@ -2964,42 +3047,22 @@ argument_list|(
 literal|"setitimer: %m"
 argument_list|)
 expr_stmt|;
-name|gettimeofday
+name|clocktime
 argument_list|(
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
-operator|(
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|startup
-operator|)
-argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-comment|/*    * If -D daemon, then start serving here in the child,    * and the parent will exit.  But if -D nodaemon, then    * skip this code and make sure svc_run is entered elsewhere.    */
+comment|/*    * If not -D daemon, then start serving here in the child,    * and the parent will exit.  But if -D daemon, then    * skip this code and make sure svc_run is entered elsewhere.    */
+if|if
+condition|(
+operator|!
 name|amuDebug
 argument_list|(
-argument|D_DAEMON
+name|D_DAEMON
 argument_list|)
+condition|)
 block|{
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/*      * Dissociate from the controlling terminal      */
 name|amu_release_controlling_tty
 argument_list|()
@@ -3038,14 +3101,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* should never happen, just in case */
-ifdef|#
-directive|ifdef
-name|DEBUG
 block|}
-comment|/* end of code that runs iff hlfsd daemonizes */
-endif|#
-directive|endif
-comment|/* DEBUG */
 block|}
 end_function
 
@@ -3080,11 +3136,6 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-name|clock_valid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* invalidate logging clock */
 if|if
 condition|(
 name|getpid
@@ -3107,6 +3158,8 @@ argument_list|(
 name|logfile
 argument_list|,
 name|orig_umask
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/*    * parent performs the reload, while the child continues to serve    * clients accessing the home dir link.    */
@@ -3222,21 +3275,15 @@ decl_stmt|;
 name|int
 name|umount_result
 decl_stmt|;
-name|clock_valid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* invalidate logging clock */
-ifdef|#
-directive|ifdef
-name|DEBUG
+if|if
+condition|(
+operator|!
 name|amuDebug
 argument_list|(
-argument|D_DAEMON
+name|D_DAEMON
 argument_list|)
-endif|#
-directive|endif
-comment|/* DEBUG */
+condition|)
+block|{
 if|if
 condition|(
 name|getpid
@@ -3245,16 +3292,6 @@ operator|!=
 name|masterpid
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|amuDebug
-argument_list|(
-argument|D_DAEMON
-argument_list|)
-endif|#
-directive|endif
-comment|/* DEBUG */
 if|if
 condition|(
 name|fork
@@ -3271,6 +3308,7 @@ name|am_set_mypid
 argument_list|()
 expr_stmt|;
 return|return;
+block|}
 block|}
 name|am_set_mypid
 argument_list|()
@@ -3291,23 +3329,19 @@ argument_list|(
 name|dir_name
 argument_list|,
 name|mnttab_file_name
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|==
 name|EBUSY
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"cleanup(): umount delaying for 10 seconds"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|sleep
 argument_list|(
 literal|10
@@ -3361,21 +3395,22 @@ comment|/* retry unmount */
 block|}
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|dlog
+if|if
+condition|(
+operator|!
+name|amuDebug
 argument_list|(
+name|D_DAEMON
+argument_list|)
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_INFO
+argument_list|,
 literal|"cleanup(): killing processes and terminating"
 argument_list|)
 expr_stmt|;
-name|amuDebug
-argument_list|(
-argument|D_DAEMON
-argument_list|)
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|kill
 argument_list|(
 name|masterpid
@@ -3383,16 +3418,6 @@ argument_list|,
 name|SIGKILL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|amuDebug
-argument_list|(
-argument|D_DAEMON
-argument_list|)
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|kill
 argument_list|(
 name|serverpid
@@ -3400,6 +3425,7 @@ argument_list|,
 name|SIGKILL
 argument_list|)
 expr_stmt|;
+block|}
 name|plog
 argument_list|(
 name|XLOG_INFO
@@ -3407,7 +3433,7 @@ argument_list|,
 literal|"hlfsd terminating with status 0\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -3438,7 +3464,7 @@ operator|==
 name|masterpid
 condition|)
 block|{
-name|exit
+name|_exit
 argument_list|(
 literal|4
 argument_list|)
@@ -3568,11 +3594,16 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|strcpy
+name|xstrlcpy
 argument_list|(
 name|lessmess
 argument_list|,
 name|mess
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lessmess
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|lessmess

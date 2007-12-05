@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: mtab.c,v 1.3.2.8 2004/01/06 03:15:24 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/libamu/mtab.c  *  */
 end_comment
 
 begin_ifdef
@@ -234,7 +234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Utility routine which returns a pointer to whatever  * follows an = in a mount option.  Returns null if option  * doesn't exist or doesn't have an '='.  Won't fall for opt,foo=.  */
+comment|/*  * Utility routine which returns a pointer to whatever  * follows an = in a mount option.  Returns null if option  * doesn't exist or doesn't have an '='.  Won't fail for opt,foo=.  */
 end_comment
 
 begin_function
@@ -270,7 +270,7 @@ name|char
 modifier|*
 name|str
 init|=
-name|hasmntopt
+name|amu_hasmntopt
 argument_list|(
 name|mnt
 argument_list|,
@@ -318,7 +318,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Utility routine which determines the value of a  * numeric option in the mount options (such as port=%d).  * Returns 0 if the option is not specified.  */
+comment|/*  * Wrapper around hasmntvalerr(), which retains backwards compatibiliy with  * older use of hasmntval().  *  * XXX: eventually, all use of hasmntval() should be replaced with  * hasmntvalerr().  */
 end_comment
 
 begin_function
@@ -334,11 +334,236 @@ modifier|*
 name|opt
 parameter_list|)
 block|{
+name|int
+name|err
+decl_stmt|,
+name|val
+init|=
+literal|0
+decl_stmt|;
+name|err
+operator|=
+name|hasmntvalerr
+argument_list|(
+name|mnt
+argument_list|,
+name|opt
+argument_list|,
+operator|&
+name|val
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+comment|/* if there was an error (hasmntvalerr returned 1) */
+return|return
+literal|0
+return|;
+comment|/* redundant: val==0 above, but leave here for clarity */
+comment|/* otherwise there was no error */
+return|return
+name|val
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Utility routine which determines the value of a numeric option in the  * mount options (such as port=%d), and fills in the value in the argument  * valp (argument won't be touched if no value is set, for example due to an  * error).  *  * Returns non-zero (1) on error; returns 0 on success.  *  * XXX: eventually, all use of hasmntval() should be replaced with  * hasmntvalerr().  */
+end_comment
+
+begin_function
+name|unsigned
+name|int
+name|hasmntvalerr
+parameter_list|(
+name|mntent_t
+modifier|*
+name|mnt
+parameter_list|,
+name|char
+modifier|*
+name|opt
+parameter_list|,
+name|int
+modifier|*
+name|valp
+parameter_list|)
+block|{
 name|char
 modifier|*
 name|str
 init|=
-name|hasmntopt
+name|amu_hasmntopt
+argument_list|(
+name|mnt
+argument_list|,
+name|opt
+argument_list|)
+decl_stmt|;
+name|int
+name|err
+init|=
+literal|1
+decl_stmt|;
+comment|/* 1 means no good value was set (an error) */
+name|char
+modifier|*
+name|eq
+decl_stmt|,
+modifier|*
+name|endptr
+decl_stmt|;
+name|long
+name|int
+name|i
+decl_stmt|;
+comment|/* exit if no option specificed */
+if|if
+condition|(
+operator|!
+name|str
+condition|)
+block|{
+goto|goto
+name|out
+goto|;
+block|}
+name|eq
+operator|=
+name|hasmnteq
+argument_list|(
+name|mnt
+argument_list|,
+name|opt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|eq
+condition|)
+block|{
+comment|/* no argument to option ('=' sign was missing) */
+name|plog
+argument_list|(
+name|XLOG_MAP
+argument_list|,
+literal|"numeric option to \"%s\" missing"
+argument_list|,
+name|opt
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+comment|/* if got here, then we had an '=' after option name */
+name|endptr
+operator|=
+name|NULL
+expr_stmt|;
+name|i
+operator|=
+name|strtol
+argument_list|(
+name|eq
+argument_list|,
+operator|&
+name|endptr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* hex and octal allowed ;-) */
+if|if
+condition|(
+operator|!
+name|endptr
+operator|||
+operator|(
+name|endptr
+operator|!=
+name|eq
+operator|&&
+operator|(
+operator|*
+name|endptr
+operator|==
+literal|','
+operator|||
+operator|*
+name|endptr
+operator|==
+literal|'\0'
+operator|)
+operator|)
+condition|)
+block|{
+comment|/*        * endptr set means strtol saw a non-digit.  If the non-digit is a        * comma, it's probably the start of the next option.  If the comma is        * the first char though, complain about it (foo=,bar is made        * noticeable by this).        *        * Similar reasoning for '\0' instead of comma, it's the end of the        * string.        */
+operator|*
+name|valp
+operator|=
+operator|(
+name|int
+operator|)
+name|i
+expr_stmt|;
+comment|/* set good value */
+name|err
+operator|=
+literal|0
+expr_stmt|;
+comment|/* no error */
+block|}
+else|else
+block|{
+comment|/* whatever was after the '=' sign wasn't a number */
+name|plog
+argument_list|(
+name|XLOG_MAP
+argument_list|,
+literal|"invalid numeric option in \"%s\": \"%s\""
+argument_list|,
+name|opt
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+comment|/* fall through to error/exit processing */
+block|}
+name|out
+label|:
+return|return
+name|err
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Utility routine which returns the string value of  * an option in the mount options (such as proto=udp).  * Returns NULL if the option is not specified.  * Returns malloc'ed string (caller must free!)  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|hasmntstr
+parameter_list|(
+name|mntent_t
+modifier|*
+name|mnt
+parameter_list|,
+name|char
+modifier|*
+name|opt
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|str
+init|=
+name|amu_hasmntopt
 argument_list|(
 name|mnt
 argument_list|,
@@ -372,84 +597,70 @@ name|char
 modifier|*
 name|endptr
 init|=
-name|NULL
-decl_stmt|;
-name|long
-name|int
-name|i
-init|=
-name|strtol
+name|strchr
 argument_list|(
 name|eq
 argument_list|,
-operator|&
-name|endptr
-argument_list|,
-literal|0
+literal|','
 argument_list|)
 decl_stmt|;
-comment|/* hex and octal allowed ;-) */
+comment|/* if saw no comma, return strdup'd string */
 if|if
 condition|(
 operator|!
 name|endptr
-operator|||
-comment|/* 	   * endptr set means strtol saw a non-digit.  If the 	   * non-digit is a comma, it's probably the start of the next 	   * option.  If the comma is the first char though, complain about 	   * it (foo=,bar is made noticeable by this). 	   * 	   * Similar reasoning for '\0' instead of comma, it's the end 	   * of the string. 	   */
-operator|(
-name|endptr
-operator|!=
-name|eq
-operator|&&
-operator|(
-operator|*
-name|endptr
-operator|==
-literal|','
-operator|||
-operator|*
-name|endptr
-operator|==
-literal|'\0'
-operator|)
-operator|)
 condition|)
 return|return
-operator|(
-operator|(
-name|int
-operator|)
-name|i
-operator|)
-return|;
-comment|/* whatever was after the '=' sign wasn't a number */
-name|plog
+name|strdup
 argument_list|(
-name|XLOG_MAP
-argument_list|,
-literal|"invalid numeric option in \"%s\": \"%s\""
-argument_list|,
-name|opt
-argument_list|,
-name|str
+name|eq
 argument_list|)
-expr_stmt|;
-block|}
+return|;
 else|else
 block|{
-comment|/* No argument to option ('=' sign was missing) */
-name|plog
+comment|/* else we need to copy only the chars needed */
+name|int
+name|len
+init|=
+name|endptr
+operator|-
+name|eq
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+init|=
+name|xmalloc
 argument_list|(
-name|XLOG_MAP
+name|len
+operator|+
+literal|1
+argument_list|)
+decl_stmt|;
+name|strncpy
+argument_list|(
+name|buf
 argument_list|,
-literal|"numeric option to \"%s\" missing"
+name|eq
 argument_list|,
-name|opt
+name|len
 argument_list|)
 expr_stmt|;
+name|buf
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+return|return
+name|buf
+return|;
+block|}
 block|}
 block|}
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function
