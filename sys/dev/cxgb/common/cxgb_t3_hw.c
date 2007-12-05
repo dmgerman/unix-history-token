@@ -2252,7 +2252,7 @@ name|VPD_ENTRY
 argument_list|(
 name|sn
 argument_list|,
-literal|16
+name|SERNUM_LEN
 argument_list|)
 expr_stmt|;
 comment|/* serial number */
@@ -2959,6 +2959,19 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|10
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|p
+operator|->
+name|sn
+argument_list|,
+name|vpd
+operator|.
+name|sn_data
+argument_list|,
+name|SERNUM_LEN
 argument_list|)
 expr_stmt|;
 comment|/* Old eeproms didn't have port information */
@@ -4177,7 +4190,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|CH_ERR
+name|CH_WARN
 argument_list|(
 name|adapter
 argument_list|,
@@ -4428,7 +4441,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|CH_ERR
+name|CH_WARN
 argument_list|(
 name|adapter
 argument_list|,
@@ -4805,7 +4818,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/**  *	t3_cim_ctl_blk_read - read a block from CIM control region  *  *	@adap: the adapter  *	@addr: the start address within the CIM control region  *	@n: number of words to read  *	@valp: where to store the result  *  *	Reads a block of 4-byte words from the CIM control region.  */
+comment|/**  *	t3_cim_ctl_blk_read - read a block from CIM control region  *	@adap: the adapter  *	@addr: the start address within the CIM control region  *	@n: number of words to read  *	@valp: where to store the result  *  *	Reads a block of 4-byte words from the CIM control region.  */
 end_comment
 
 begin_function
@@ -6115,6 +6128,31 @@ literal|0
 block|}
 block|}
 decl_stmt|;
+if|if
+condition|(
+name|t3_read_reg
+argument_list|(
+name|adapter
+argument_list|,
+name|A_PCIE_INT_CAUSE
+argument_list|)
+operator|&
+name|F_PEXERR
+condition|)
+name|CH_ALERT
+argument_list|(
+name|adapter
+argument_list|,
+literal|"PEX error code 0x%x\n"
+argument_list|,
+name|t3_read_reg
+argument_list|(
+name|adapter
+argument_list|,
+name|A_PCIE_PEX_ERR
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|t3_handle_intr_status
@@ -7621,7 +7659,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * T3 slow path (non-data) interrupt handler.  */
+comment|/**  *	t3_slow_intr_handler - control path interrupt handler  *	@adapter: the adapter  *  *	T3 interrupt handler for non-data interrupt events, e.g., errors.  *	The designation 'slow' is because it involves register reads, while  *	data interrupts typically don't involve any MMIOs.  */
 end_comment
 
 begin_function
@@ -8303,6 +8341,22 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|is_pcie
+argument_list|(
+name|adapter
+argument_list|)
+condition|)
+name|t3_write_reg
+argument_list|(
+name|adapter
+argument_list|,
+name|A_PCIE_PEX_ERR
+argument_list|,
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
 name|t3_write_reg
 argument_list|(
 name|adapter
@@ -8506,6 +8560,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|SG_CONTEXT_CMD_ATTEMPTS
+value|100
+end_define
+
 begin_comment
 comment|/**  * 	t3_sge_write_context - write an SGE context  * 	@adapter: the adapter  * 	@id: the context id  * 	@type: the context type  *  * 	Program an SGE context with the values already loaded in the  * 	CONTEXT_DATA? registers.  */
 end_comment
@@ -8594,7 +8655,7 @@ name|F_CONTEXT_CMD_BUSY
 argument_list|,
 literal|0
 argument_list|,
-literal|5
+name|SG_CONTEXT_CMD_ATTEMPTS
 argument_list|,
 literal|1
 argument_list|)
@@ -9277,6 +9338,11 @@ name|V_CQ_OVERFLOW_MODE
 argument_list|(
 name|ovfl_mode
 argument_list|)
+operator||
+name|V_CQ_ERR
+argument_list|(
+name|ovfl_mode
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|t3_write_reg
@@ -9422,7 +9488,7 @@ name|F_CONTEXT_CMD_BUSY
 argument_list|,
 literal|0
 argument_list|,
-literal|5
+name|SG_CONTEXT_CMD_ATTEMPTS
 argument_list|,
 literal|1
 argument_list|)
@@ -9540,7 +9606,7 @@ name|F_CONTEXT_CMD_BUSY
 argument_list|,
 literal|0
 argument_list|,
-literal|5
+name|SG_CONTEXT_CMD_ATTEMPTS
 argument_list|,
 literal|1
 argument_list|)
@@ -9658,7 +9724,7 @@ name|F_CONTEXT_CMD_BUSY
 argument_list|,
 literal|0
 argument_list|,
-literal|5
+name|SG_CONTEXT_CMD_ATTEMPTS
 argument_list|,
 literal|1
 argument_list|)
@@ -9776,7 +9842,7 @@ name|F_CONTEXT_CMD_BUSY
 argument_list|,
 literal|0
 argument_list|,
-literal|5
+name|SG_CONTEXT_CMD_ATTEMPTS
 argument_list|,
 literal|1
 argument_list|)
@@ -9785,7 +9851,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	t3_sge_cqcntxt_op - perform an operation on a completion queue context  *	@adapter: the adapter  *	@id: the context id  *	@op: the operation to perform  *  *	Perform the selected operation on an SGE completion queue context.  *	The caller is responsible for ensuring only one context operation  *	occurs at a time.  */
+comment|/**  *	t3_sge_cqcntxt_op - perform an operation on a completion queue context  *	@adapter: the adapter  *	@id: the context id  *	@op: the operation to perform  *	@credits: credits to return to the CQ  *  *	Perform the selected operation on an SGE completion queue context.  *	The caller is responsible for ensuring only one context operation  *	occurs at a time.  *  *	For most operations the function returns the current HW position in  *	the completion queue.  */
 end_comment
 
 begin_function
@@ -9869,7 +9935,7 @@ name|F_CONTEXT_CMD_BUSY
 argument_list|,
 literal|0
 argument_list|,
-literal|5
+name|SG_CONTEXT_CMD_ATTEMPTS
 argument_list|,
 literal|1
 argument_list|,
@@ -9939,7 +10005,7 @@ name|F_CONTEXT_CMD_BUSY
 argument_list|,
 literal|0
 argument_list|,
-literal|5
+name|SG_CONTEXT_CMD_ATTEMPTS
 argument_list|,
 literal|1
 argument_list|)
@@ -10040,7 +10106,7 @@ name|F_CONTEXT_CMD_BUSY
 argument_list|,
 literal|0
 argument_list|,
-literal|5
+name|SG_CONTEXT_CMD_ATTEMPTS
 argument_list|,
 literal|1
 argument_list|)
@@ -10693,6 +10759,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  *	tp_wr_bits_indirect - set/clear bits in an indirect TP register  *	@adap: the adapter  *	@addr: the indirect TP register address  *	@mask: specifies the field within the register to modify  *	@val: new value for the field  *  *	Sets a field of an indirect TP register to the given value.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -10867,7 +10937,7 @@ value|t3_write_reg((adap), A_ ## reg, (start)); \ 	start += size
 end_define
 
 begin_comment
-comment|/*  *	partition_mem - partition memory and configure TP memory settings  *	@adap: the adapter  *	@p: the TP parameters  *  *	Partitions context and payload memory and configures TP's memory  *	registers.  */
+comment|/**  *	partition_mem - partition memory and configure TP memory settings  *	@adap: the adapter  *	@p: the TP parameters  *  *	Partitions context and payload memory and configures TP's memory  *	registers.  */
 end_comment
 
 begin_function
@@ -12434,7 +12504,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initial congestion control parameters.  */
+comment|/**  *	init_cong_ctrl - initialize congestion control parameters  *	@a: the alpha values for congestion control  *	@b: the beta values for congestion control  *  *	Initialize the congestion control parameters.  */
 end_comment
 
 begin_function
@@ -12853,7 +12923,7 @@ value|2U
 end_define
 
 begin_comment
-comment|/**  *	t3_load_mtus - write the MTU and congestion control HW tables  *	@adap: the adapter  *	@mtus: the unrestricted values for the MTU table  *	@alphs: the values for the congestion control alpha parameter  *	@beta: the values for the congestion control beta parameter  *	@mtu_cap: the maximum permitted effective MTU  *  *	Write the MTU table with the supplied MTUs capping each at&mtu_cap.  *	Update the high-speed congestion control table with the supplied alpha,  * 	beta, and MTUs.  */
+comment|/**  *	t3_load_mtus - write the MTU and congestion control HW tables  *	@adap: the adapter  *	@mtus: the unrestricted values for the MTU table  *	@alpha: the values for the congestion control alpha parameter  *	@beta: the values for the congestion control beta parameter  *	@mtu_cap: the maximum permitted effective MTU  *  *	Write the MTU table with the supplied MTUs capping each at&mtu_cap.  *	Update the high-speed congestion control table with the supplied alpha,  * 	beta, and MTUs.  */
 end_comment
 
 begin_function
@@ -13701,16 +13771,15 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|u32
 modifier|*
 name|buf
 init|=
 operator|(
+specifier|const
 name|u32
 operator|*
-operator|)
-operator|(
-name|uintptr_t
 operator|)
 name|data
 decl_stmt|;
@@ -13845,6 +13914,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/**  *	t3_config_trace_filter - configure one of the tracing filters  *	@adapter: the adapter  *	@tp: the desired trace filter parameters  *	@filter_index: which filter to configure  *	@invert: if set non-matching packets are traced instead of matching ones  *	@enable: whether to enable or disable the filter  *  *	Configures one of the tracing filters available in HW.  */
+end_comment
 
 begin_function
 name|void
@@ -14765,6 +14838,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/**  *	tp_init - configure TP  *	@adap: the adapter  *	@p: TP configuration parameters  *  *	Initializes the TP HW module.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -14883,6 +14960,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  *	t3_mps_set_active_ports - configure port failover  *	@adap: the adapter  *	@port_mask: bitmap of active ports  *  *	Sets the active ports according to the supplied bitmap.  */
+end_comment
+
 begin_function
 name|int
 name|t3_mps_set_active_ports
@@ -14941,7 +15022,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform the bits of HW initialization that are dependent on the Tx  * channels being used.  */
+comment|/**  * 	chan_init_hw - channel-dependent HW initialization  *	@adap: the adapter  *	@chan_map: bitmap of Tx channels being used  *  *	Perform the bits of HW initialization that are dependent on the Tx  *	channels being used.  */
 end_comment
 
 begin_function
@@ -15029,6 +15110,54 @@ condition|?
 literal|0xffffffff
 else|:
 literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|chan_map
+operator|==
+literal|2
+condition|)
+name|t3_write_reg
+argument_list|(
+name|adap
+argument_list|,
+name|A_TP_TX_MOD_QUEUE_REQ_MAP
+argument_list|,
+name|V_TX_MOD_QUEUE_REQ_MAP
+argument_list|(
+literal|0xff
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|t3_write_reg
+argument_list|(
+name|adap
+argument_list|,
+name|A_TP_TX_MOD_QUE_TABLE
+argument_list|,
+operator|(
+literal|12
+operator|<<
+literal|16
+operator|)
+operator||
+literal|0xd9c8
+argument_list|)
+expr_stmt|;
+name|t3_write_reg
+argument_list|(
+name|adap
+argument_list|,
+name|A_TP_TX_MOD_QUE_TABLE
+argument_list|,
+operator|(
+literal|13
+operator|<<
+literal|16
+operator|)
+operator||
+literal|0xfbea
 argument_list|)
 expr_stmt|;
 block|}
@@ -15151,6 +15280,36 @@ literal|16
 operator|)
 operator||
 literal|0x1010
+argument_list|)
+expr_stmt|;
+name|t3_write_reg
+argument_list|(
+name|adap
+argument_list|,
+name|A_TP_TX_MOD_QUE_TABLE
+argument_list|,
+operator|(
+literal|12
+operator|<<
+literal|16
+operator|)
+operator||
+literal|0xba98
+argument_list|)
+expr_stmt|;
+name|t3_write_reg
+argument_list|(
+name|adap
+argument_list|,
+name|A_TP_TX_MOD_QUE_TABLE
+argument_list|,
+operator|(
+literal|13
+operator|<<
+literal|16
+operator|)
+operator||
+literal|0xfedc
 argument_list|)
 expr_stmt|;
 block|}
@@ -16815,7 +16974,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize and configure T3 HW modules.  This performs the  * initialization steps that need to be done once after a card is reset.  * MAC and PHY initialization is handled separarely whenever a port is enabled.  *  * fw_params are passed to FW and their value is platform dependent.  Only the  * top 8 bits are available for use, the rest must be 0.  */
+comment|/**  * 	t3_init_hw - initialize and configure T3 HW modules  * 	@adapter: the adapter  * 	@fw_params: initial parameters to pass to firmware (optional)  *  *	Initialize and configure T3 HW modules.  This performs the  *	initialization steps that need to be done once after a card is reset.  *	MAC and PHY initialization is handled separarely whenever a port is  *	enabled.  *  *	@fw_params are passed to FW and their value is platform dependent.  *	Only the top 8 bits are available for use, the rest must be 0.  */
 end_comment
 
 begin_function
@@ -17110,6 +17269,24 @@ argument_list|,
 name|A_PM1_RX_CFG
 argument_list|,
 literal|0xffffffff
+argument_list|)
+expr_stmt|;
+name|t3_write_reg
+argument_list|(
+name|adapter
+argument_list|,
+name|A_PM1_RX_MODE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|t3_write_reg
+argument_list|(
+name|adapter
+argument_list|,
+name|A_PM1_TX_MODE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|chan_init_hw
@@ -17411,7 +17588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	init_link_config - initialize a link's SW state  *	@lc: structure holding the link state  *	@ai: information about the current card  *  *	Initializes the SW state maintained for each link, including the link's  *	capabilities and default speed/duplex/flow-control/autonegotiation  *	settings.  */
+comment|/**  *	init_link_config - initialize a link's SW state  *	@lc: structure holding the link state  *	@caps: link capabilities  *  *	Initializes the SW state maintained for each link, including the link's  *	capabilities and default speed/duplex/flow-control/autonegotiation  *	settings.  */
 end_comment
 
 begin_function
@@ -17833,6 +18010,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/**  *	early_hw_init - HW initialization done at card detection time  *	@adapter: the adapter  *	@ai: contains information about the adapter type and properties  *  *	Perfoms the part of HW initialization that is done early on when the  *	driver first detecs the card.  Most of the HW state is initialized  *	lazily later on when a port or an offload function are first used.  */
+end_comment
+
 begin_function
 name|void
 name|early_hw_init
@@ -18016,7 +18197,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reset the adapter.  PCIe cards lose their config space during reset, PCI-X  * ones don't.  */
+comment|/**  *	t3_reset_adapter - reset the adapter  *	@adapter: the adapter  *  * 	Reset the adapter.  */
 end_comment
 
 begin_function
@@ -18136,7 +18317,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize adapter SW state for the various HW modules, set initial values  * for some adapter tunables, take PHYs out of reset, and initialize the MDIO  * interface.  */
+comment|/**  *	t3_prep_adapter - prepare SW and HW for operation  *	@adapter: the adapter  *	@ai: contains information about the adapter type and properties  *  *	Initialize adapter SW state for the various HW modules, set initial  *	values for some adapter tunables, take PHYs out of reset, and  *	initialize the MDIO interface.  */
 end_comment
 
 begin_function
