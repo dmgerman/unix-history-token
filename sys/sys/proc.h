@@ -2307,6 +2307,10 @@ name|u_int
 name|p_magic
 decl_stmt|;
 comment|/* (b) Magic number. */
+name|int
+name|p_osrel
+decl_stmt|;
+comment|/* (x) osreldate for the 					       binary (from ELF note, if any) */
 name|char
 name|p_comm
 index|[
