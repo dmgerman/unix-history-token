@@ -1643,6 +1643,7 @@ name|mode2res
 decl_stmt|,
 name|oldval2
 decl_stmt|;
+comment|/* Check for type #1 first. */
 name|oldval1
 operator|=
 name|inl
@@ -1663,17 +1664,6 @@ name|oldval1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|oldval1
-operator|&
-name|CONF1_ENABLE_MSK
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
 name|cfgmech
 operator|=
 name|CFGMECH_1
@@ -1797,7 +1787,7 @@ name|cfgmech
 operator|)
 return|;
 block|}
-block|}
+comment|/* Type #1 didn't work, so try type #2. */
 name|oldval2
 operator|=
 name|inb
@@ -1901,6 +1891,7 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* Nothing worked, so punt. */
 name|cfgmech
 operator|=
 name|CFGMECH_NONE
