@@ -864,7 +864,7 @@ name|a
 parameter_list|,
 name|i
 parameter_list|)
-value|(((uint8_t *)(a))[(i)/NBBY]& (1<<((i)%NBBY)))
+value|(((const uint8_t *)(a))[(i)/NBBY]& (1<<((i)%NBBY)))
 end_define
 
 begin_define
@@ -876,7 +876,7 @@ name|a
 parameter_list|,
 name|i
 parameter_list|)
-value|((((uint8_t *)(a))[(i)/NBBY]& (1<<((i)%NBBY))) == 0)
+value|((((const uint8_t *)(a))[(i)/NBBY]& (1<<((i)%NBBY))) == 0)
 end_define
 
 begin_comment
