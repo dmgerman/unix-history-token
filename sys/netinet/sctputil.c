@@ -26277,8 +26277,7 @@ comment|/* 	 * If we reach here, control has a some data for us to read off. 	 *
 name|control
 operator|->
 name|some_taken
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -28615,11 +28614,38 @@ operator|)
 condition|)
 block|{
 comment|/* 				 * big trouble.. we have the lock and its 				 * corrupt? 				 */
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|panic
 argument_list|(
 literal|"Impossible data==NULL length !=0"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+name|out_flags
+operator||=
+name|MSG_EOR
+expr_stmt|;
+name|out_flags
+operator||=
+name|MSG_TRUNC
+expr_stmt|;
+name|control
+operator|->
+name|length
+operator|=
+literal|0
+expr_stmt|;
+name|SCTP_INP_READ_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done_with_control
+goto|;
 block|}
 name|SCTP_INP_READ_UNLOCK
 argument_list|(
@@ -29023,7 +29049,7 @@ name|msg_flags
 condition|)
 operator|*
 name|msg_flags
-operator||=
+operator|=
 name|out_flags
 expr_stmt|;
 name|out
