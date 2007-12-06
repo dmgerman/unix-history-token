@@ -1711,6 +1711,29 @@ name|flags
 operator||=
 name|PTHREAD_SCOPE_SYSTEM
 expr_stmt|;
+comment|/* 	 * After a fork, it is possible that an upcall occurs in 	 * the parent KSE that fork()'d before the child process 	 * is fully created and before its vm space is copied. 	 * During the upcall, the tcb is set to null or to another 	 * thread, and this is what gets copied in the child process 	 * when the vm space is cloned sometime after the upcall 	 * occurs.  Note that we shouldn't have to set the kcb, but 	 * we do it for completeness. 	 */
+name|_kcb_set
+argument_list|(
+name|curthread
+operator|->
+name|kse
+operator|->
+name|k_kcb
+argument_list|)
+expr_stmt|;
+name|_tcb_set
+argument_list|(
+name|curthread
+operator|->
+name|kse
+operator|->
+name|k_kcb
+argument_list|,
+name|curthread
+operator|->
+name|tcb
+argument_list|)
+expr_stmt|;
 comment|/* After a fork(), there child should have no pending signals. */
 name|sigemptyset
 argument_list|(
