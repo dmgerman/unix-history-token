@@ -250,9 +250,16 @@ name|pam_err
 operator|!=
 name|PAM_SUCCESS
 condition|)
+block|{
+name|PAM_LOG
+argument_list|(
+literal|"No PAM_RHOST"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|err
 goto|;
+block|}
 name|pam_err
 operator|=
 name|pam_get_item
@@ -271,9 +278,16 @@ name|pam_err
 operator|!=
 name|PAM_SUCCESS
 condition|)
+block|{
+name|PAM_LOG
+argument_list|(
+literal|"No PAM_TTY"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|err
 goto|;
+block|}
 if|if
 condition|(
 name|tty
@@ -281,6 +295,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|PAM_LOG
+argument_list|(
+literal|"No PAM_TTY"
+argument_list|)
+expr_stmt|;
 name|pam_err
 operator|=
 name|PAM_SERVICE_ERR
@@ -356,9 +375,18 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|PAM_LOG
+argument_list|(
+literal|"Failed to open %s"
+argument_list|,
+name|_PATH_LASTLOG
+argument_list|)
+expr_stmt|;
 goto|goto
 name|file_err
 goto|;
+block|}
 comment|/* 	 * Record session in lastlog(5). 	 */
 name|llpos
 operator|=
@@ -815,6 +843,11 @@ name|void
 modifier|*
 name|tty
 decl_stmt|;
+name|int
+name|pam_err
+decl_stmt|;
+name|pam_err
+operator|=
 name|pam_get_item
 argument_list|(
 name|pamh
@@ -831,6 +864,15 @@ operator|&
 name|tty
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pam_err
+operator|!=
+name|PAM_SUCCESS
+condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 name|strncmp
@@ -915,6 +957,27 @@ expr_stmt|;
 return|return
 operator|(
 name|PAM_SUCCESS
+operator|)
+return|;
+name|err
+label|:
+if|if
+condition|(
+name|openpam_get_option
+argument_list|(
+name|pamh
+argument_list|,
+literal|"no_fail"
+argument_list|)
+condition|)
+return|return
+operator|(
+name|PAM_SUCCESS
+operator|)
+return|;
+return|return
+operator|(
+name|pam_err
 operator|)
 return|;
 block|}
