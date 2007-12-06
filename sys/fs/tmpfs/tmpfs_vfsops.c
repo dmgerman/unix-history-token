@@ -824,7 +824,7 @@ comment|/* Size counters. */
 name|ino_t
 name|nodes_max
 decl_stmt|;
-name|off_t
+name|size_t
 name|size_max
 decl_stmt|;
 comment|/* Root node attributes. */
