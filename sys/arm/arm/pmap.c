@@ -5594,6 +5594,7 @@ name|kro_mappings
 operator|++
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|flags
