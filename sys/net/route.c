@@ -737,17 +737,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|KASSERT
-argument_list|(
-name|rt
-operator|==
-name|newrt
-argument_list|,
-operator|(
-literal|"locking wrong route"
-operator|)
-argument_list|)
-expr_stmt|;
 name|RT_LOCK
 argument_list|(
 name|newrt
