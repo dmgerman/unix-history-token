@@ -724,6 +724,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACER_A4710_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ACER, 0x012f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACER_3681WXM_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ACER, 0x0110)
 end_define
@@ -3675,6 +3682,33 @@ block|}
 block|,
 block|{
 name|ACER_A4520_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC268
+block|,
+name|HDAC_HP_SWITCH_CTL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+literal|20
+block|,
+block|{
+literal|21
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
+name|ACER_A4710_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC268
 block|,
