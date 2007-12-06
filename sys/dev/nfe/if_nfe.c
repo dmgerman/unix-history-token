@@ -2754,6 +2754,8 @@ name|NFE_40BIT_ADDR
 operator||
 name|NFE_PWR_MGMT
 operator||
+name|NFE_CORRECT_MACADDR
+operator||
 name|NFE_TX_FLOW_CTRL
 expr_stmt|;
 break|break;
@@ -2778,6 +2780,8 @@ operator||
 name|NFE_40BIT_ADDR
 operator||
 name|NFE_PWR_MGMT
+operator||
+name|NFE_CORRECT_MACADDR
 operator||
 name|NFE_TX_FLOW_CTRL
 expr_stmt|;
