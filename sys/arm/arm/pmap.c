@@ -1205,7 +1205,7 @@ name|l1
 operator|->
 name|l1_domain_first
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -1229,7 +1229,7 @@ index|]
 operator|=
 name|i
 operator|+
-literal|2
+literal|1
 expr_stmt|;
 comment|/* 	 * Copy the kernel's L1 entries to each new L1. 	 */
 if|if
@@ -2329,6 +2329,8 @@ operator|->
 name|pm_domain
 operator|=
 name|domain
+operator|+
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -2388,6 +2390,8 @@ index|[
 name|pm
 operator|->
 name|pm_domain
+operator|-
+literal|1
 index|]
 operator|=
 name|l1
@@ -2401,6 +2405,8 @@ operator|=
 name|pm
 operator|->
 name|pm_domain
+operator|-
+literal|1
 expr_stmt|;
 name|l1
 operator|->
