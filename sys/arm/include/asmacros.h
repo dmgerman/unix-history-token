@@ -58,7 +58,7 @@ value|\         mov     r0, r0;
 comment|/* NOP for previous instruction */
 value|\ 	mrs	r0, spsr_all;
 comment|/* Put the SPSR on the stack */
-value|\ 	str	r0, [sp, #-4]!;
+value|\ 	str	r0, [sp, #-4]!;						   \ 	mov	r0, #0xe0000004;					   \ 	mov	r1, #0;							   \ 	str	r1, [r0];						   \ 	mov	r0, #0xe0000008;					   \ 	mov	r1, #0xffffffff;					   \ 	str	r1, [r0];
 end_define
 
 begin_comment
@@ -138,7 +138,7 @@ value|\ 	ldrgt	lr, [r0, #16];						   \ 	ldrgt	r1, =0xe0000008;					   \ 	ldrgt	
 comment|/* Get the end of the RAS */
 value|\ 	movgt	r2, #0;
 comment|/* Reset the magic addresses */
-value|\ 	strgt	r2, [r5];						   \ 	strgt	r2, [r1];						   \ 	cmpgt	lr, r3;
+value|\ 	strgt	r2, [r5];						   \ 	movgt	r2, #0xffffffff;					   \ 	strgt	r2, [r1];						   \ 	cmpgt	lr, r3;
 comment|/* Were we in the RAS ? */
 value|\ 	cmpgt	r4, lr;							   \ 	strgt	r3, [r0, #16];
 comment|/* Yes, update the pc */
