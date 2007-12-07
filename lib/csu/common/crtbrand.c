@@ -88,7 +88,7 @@ literal|4
 argument_list|)
 operator|)
 argument_list|)
-name|__unused
+name|__used
 init|=
 block|{
 sizeof|sizeof
