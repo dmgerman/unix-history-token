@@ -9359,6 +9359,11 @@ name|cmd_type_len
 init|=
 literal|0
 decl_stmt|;
+name|u32
+name|hdrlen
+init|=
+literal|0
+decl_stmt|;
 name|int
 name|nsegs
 decl_stmt|,
@@ -9383,13 +9388,6 @@ name|struct
 name|m_tag
 modifier|*
 name|mtag
-decl_stmt|;
-else|#
-directive|else
-name|u32
-name|hdrlen
-init|=
-literal|0
 decl_stmt|;
 endif|#
 directive|endif
