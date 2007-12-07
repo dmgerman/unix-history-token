@@ -139,11 +139,11 @@ begin_define
 define|#
 directive|define
 name|EM_TX_TIMEOUT
-value|10
+value|5
 end_define
 
 begin_comment
-comment|/* set to 10 seconds */
+comment|/* set to 5 seconds */
 end_comment
 
 begin_comment
@@ -582,12 +582,8 @@ begin_define
 define|#
 directive|define
 name|EM_TSO_SIZE
-value|65535
+value|(65535 + sizeof(struct ether_vlan_header))
 end_define
-
-begin_comment
-comment|/* maxsize of a dma transfer */
-end_comment
 
 begin_define
 define|#
@@ -1135,7 +1131,7 @@ parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&(_sc)->core_mtx, _name, MTX_NETWORK_LOCK, MTX_DEF)
+value|mtx_init(&(_sc)->core_mtx, _name, "EM Core Lock", MTX_DEF)
 end_define
 
 begin_define
@@ -1148,7 +1144,7 @@ parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&(_sc)->tx_mtx, _name, MTX_NETWORK_LOCK, MTX_DEF)
+value|mtx_init(&(_sc)->tx_mtx, _name, "EM TX Lock", MTX_DEF)
 end_define
 
 begin_define

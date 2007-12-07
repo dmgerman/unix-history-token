@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifdef
@@ -267,7 +267,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"Version - 6.7.2"
+literal|"Version - 6.7.3"
 decl_stmt|;
 end_decl_stmt
 
@@ -2149,28 +2149,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVICE_POLLING
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|poll_handler_t
-name|em_poll
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* POLLING */
-end_comment
-
 begin_else
 else|#
 directive|else
@@ -2282,6 +2260,28 @@ end_endif
 
 begin_comment
 comment|/* EM_FAST_IRQ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|poll_handler_t
+name|em_poll
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* POLLING */
 end_comment
 
 begin_comment
@@ -4467,6 +4467,11 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+name|EM_TX_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|adapter
 operator|->
 name|in_detach
@@ -4583,11 +4588,6 @@ name|dev
 argument_list|)
 expr_stmt|;
 block|}
-name|EM_CORE_UNLOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
 name|ether_ifdetach
 argument_list|(
 name|adapter
@@ -4640,6 +4640,16 @@ name|adapter
 argument_list|)
 expr_stmt|;
 name|em_free_receive_structures
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|EM_TX_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|EM_CORE_UNLOCK
 argument_list|(
 name|adapter
 argument_list|)
@@ -4750,7 +4760,17 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+name|EM_TX_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|em_stop
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|EM_TX_UNLOCK
 argument_list|(
 name|adapter
 argument_list|)
@@ -5502,11 +5522,23 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
+block|{
+name|EM_TX_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|em_stop
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+name|EM_TX_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+block|}
 name|adapter
 operator|->
 name|if_flags
@@ -5924,30 +5956,12 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|EM_FAST_IRQ
-name|struct
-name|task
-modifier|*
-name|t
-init|=
-operator|&
-name|adapter
-operator|->
-name|rxtx_task
-decl_stmt|;
-endif|#
-directive|endif
 name|EM_CORE_LOCK_ASSERT
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-comment|/* 	** The timer is set to 10 every time start queues a packet. 	** Then txeof keeps resetting to 10 as long as it cleans at 	** least one descriptor. 	** Finally, anytime all descriptors are clean the timer is 	** set to 0. 	*/
-ifndef|#
-directive|ifndef
-name|EM_FAST_IRQ
+comment|/* 	** The timer is set to 5 every time start queues a packet. 	** Then txeof keeps resetting it as long as it cleans at 	** least one descriptor. 	** Finally, anytime all descriptors are clean the timer is 	** set to 0. 	*/
 if|if
 condition|(
 operator|(
@@ -5965,60 +5979,7 @@ operator|->
 name|watchdog_timer
 operator|)
 condition|)
-else|#
-directive|else
-comment|/* FAST_IRQ */
-if|if
-condition|(
-name|adapter
-operator|->
-name|watchdog_timer
-operator|==
-literal|0
-condition|)
-endif|#
-directive|endif
 return|return;
-ifdef|#
-directive|ifdef
-name|EM_FAST_IRQ
-comment|/* 	 * Force a clean if things seem sluggish, this 	 * is a 6.3 scheduler workaround. 	 */
-if|if
-condition|(
-operator|(
-operator|--
-name|adapter
-operator|->
-name|watchdog_timer
-operator|!=
-literal|0
-operator|)
-operator|&&
-operator|(
-name|t
-operator|->
-name|ta_pending
-operator|==
-literal|0
-operator|)
-condition|)
-block|{
-name|taskqueue_enqueue
-argument_list|(
-name|adapter
-operator|->
-name|tq
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|rxtx_task
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-endif|#
-directive|endif
 comment|/* If we are in this routine because of pause frames, then 	 * don't reset the hardware. 	 */
 if|if
 condition|(
@@ -6124,7 +6085,17 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+name|EM_TX_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|em_stop
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|EM_TX_UNLOCK
 argument_list|(
 name|adapter
 argument_list|)
@@ -6517,7 +6488,17 @@ argument_list|,
 literal|"Could not setup receive structures\n"
 argument_list|)
 expr_stmt|;
+name|EM_TX_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|em_stop
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|EM_TX_UNLOCK
 argument_list|(
 name|adapter
 argument_list|)
@@ -8473,6 +8454,17 @@ operator|>=
 literal|700000
 if|if
 condition|(
+name|m_head
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_TSO
+condition|)
+block|{
+name|error
+operator|=
 name|em_tso_setup
 argument_list|(
 name|adapter
@@ -8485,12 +8477,25 @@ argument_list|,
 operator|&
 name|txd_lower
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+name|TRUE
 condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* something foobar */
 comment|/* we need to make a final sentinel transmit desc */
 name|tso_desc
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 elseif|else
 endif|#
 directive|endif
@@ -9382,7 +9387,7 @@ decl_stmt|;
 else|#
 directive|else
 name|u32
-name|paylen
+name|hdrlen
 init|=
 literal|0
 decl_stmt|;
@@ -9746,7 +9751,17 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|700000
-comment|/* First try TSO */
+if|if
+condition|(
+name|m_head
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_TSO
+condition|)
+block|{
 if|if
 condition|(
 name|em_tso_adv_setup
@@ -9756,7 +9771,7 @@ argument_list|,
 name|m_head
 argument_list|,
 operator|&
-name|paylen
+name|hdrlen
 argument_list|)
 condition|)
 block|{
@@ -9776,14 +9791,14 @@ name|E1000_TXD_POPTS_TXSM
 operator|<<
 literal|8
 expr_stmt|;
-name|olinfo_status
-operator||=
-name|paylen
-operator|<<
-name|E1000_ADVTXD_PAYLEN_SHIFT
-expr_stmt|;
 block|}
-elseif|else
+else|else
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 endif|#
 directive|endif
 comment|/* Do all other context descriptor setup */
@@ -9801,6 +9816,23 @@ operator||=
 name|E1000_TXD_POPTS_TXSM
 operator|<<
 literal|8
+expr_stmt|;
+comment|/* Calculate payload length */
+name|olinfo_status
+operator||=
+operator|(
+operator|(
+name|m_head
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|-
+name|hdrlen
+operator|)
+operator|<<
+name|E1000_ADVTXD_PAYLEN_SHIFT
+operator|)
 expr_stmt|;
 comment|/* Set up our transmit descriptors */
 name|i
@@ -11461,7 +11493,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*********************************************************************  *  *  This routine disables all traffic on the adapter by issuing a  *  global reset on the MAC and deallocates TX/RX buffers.  *  **********************************************************************/
+comment|/*********************************************************************  *  *  This routine disables all traffic on the adapter by issuing a  *  global reset on the MAC and deallocates TX/RX buffers.  *  *  This routine should always be called with BOTH the CORE  *  and TX locks.  **********************************************************************/
 specifier|static
 name|void
 name|em_stop
@@ -11488,6 +11520,11 @@ operator|->
 name|ifp
 decl_stmt|;
 name|EM_CORE_LOCK_ASSERT
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|EM_TX_LOCK_ASSERT
 argument_list|(
 name|adapter
 argument_list|)
@@ -12410,7 +12447,7 @@ literal|0
 argument|) {                	adapter->msi =
 literal|1
 argument|;                	device_printf(adapter->dev,
-literal|"Using MSI interrupts\n"
+literal|"Using MSI interrupt\n"
 argument|); 		return (TRUE); 	}  	return (FALSE); }
 endif|#
 directive|endif
@@ -12575,7 +12612,7 @@ argument|NULL,
 comment|/* lockarg */
 argument|&dma->dma_tag); 	if (error) { 		device_printf(adapter->dev,
 literal|"%s: bus_dma_tag_create failed: %d\n"
-argument|, 		    __func__, error); 		goto fail_0; 	}  	error = bus_dmamem_alloc(dma->dma_tag, (void**)&dma->dma_vaddr, 	    BUS_DMA_NOWAIT,&dma->dma_map); 	if (error) { 		device_printf(adapter->dev,
+argument|, 		    __func__, error); 		goto fail_0; 	}  	error = bus_dmamem_alloc(dma->dma_tag, (void**)&dma->dma_vaddr, 	    BUS_DMA_NOWAIT | BUS_DMA_COHERENT,&dma->dma_map); 	if (error) { 		device_printf(adapter->dev,
 literal|"%s: bus_dmamem_alloc(%ju) failed: %d\n"
 argument|, 		    __func__, (uintmax_t)size, error); 		goto fail_2; 	}  	dma->dma_paddr =
 literal|0
@@ -12785,11 +12822,7 @@ name|__FreeBSD_version
 operator|>=
 literal|700000
 comment|/**********************************************************************  *  *  Setup work for hardware segmentation offload (TSO)  *  **********************************************************************/
-argument|static boolean_t em_tso_setup(struct adapter *adapter, struct mbuf *mp, uint32_t *txd_upper,    uint32_t *txd_lower) { 	struct e1000_context_desc *TXD; 	struct em_buffer *tx_buffer; 	struct ether_vlan_header *eh; 	struct ip *ip; 	struct ip6_hdr *ip6; 	struct tcphdr *th; 	int curr_txd, ehdrlen, hdr_len, ip_hlen, isip6; 	uint16_t etype;
-comment|/* 	 * XXX: This is not really correct as the stack would not have 	 * set up all checksums. 	 * XXX: Return FALSE is not sufficient as we may have to return 	 * in true failure cases as well.  Should do -1 (failure), 0 (no) 	 * and 1 (success). 	 */
-argument|if (((mp->m_pkthdr.csum_flags& CSUM_TSO) ==
-literal|0
-argument|) || 	     (mp->m_pkthdr.len<= EM_TX_BUFFER_SIZE)) 		return FALSE;
+argument|static bool em_tso_setup(struct adapter *adapter, struct mbuf *mp, uint32_t *txd_upper,    uint32_t *txd_lower) { 	struct e1000_context_desc *TXD; 	struct em_buffer *tx_buffer; 	struct ether_vlan_header *eh; 	struct ip *ip; 	struct ip6_hdr *ip6; 	struct tcphdr *th; 	int curr_txd, ehdrlen, hdr_len, ip_hlen, isip6; 	uint16_t etype;
 comment|/* 	 * This function could/should be extended to support IP/IPv6 	 * fragmentation as well.  But as they say, one step at a time. 	 */
 comment|/* 	 * Determine where frame payload starts. 	 * Jump over vlan headers if already present, 	 * helpful for QinQ too. 	 */
 argument|eh = mtod(mp, struct ether_vlan_header *); 	if (eh->evl_encap_proto == htons(ETHERTYPE_VLAN)) { 		etype = ntohs(eh->evl_proto); 		ehdrlen = ETHER_HDR_LEN + ETHER_VLAN_ENCAP_LEN; 	} else { 		etype = ntohs(eh->evl_encap_proto); 		ehdrlen = ETHER_HDR_LEN; 	}
@@ -12885,7 +12918,7 @@ argument|;  	if (++curr_txd == adapter->num_tx_desc) 		curr_txd =
 literal|0
 argument|;  	adapter->num_tx_desc_avail--; 	adapter->next_avail_tx_desc = curr_txd; 	adapter->tx_tso = TRUE;  	return TRUE; }
 comment|/**********************************************************************  *  *  Setup work for hardware segmentation offload (TSO) on  *  adapters using advanced tx descriptors (82575)  *  **********************************************************************/
-argument|static boolean_t em_tso_adv_setup(struct adapter *adapter, struct mbuf *mp, u32 *paylen) { 	struct e1000_adv_tx_context_desc *TXD; 	struct em_buffer        *tx_buffer; 	u32 vlan_macip_lens =
+argument|static boolean_t em_tso_adv_setup(struct adapter *adapter, struct mbuf *mp, u32 *hdrlen) { 	struct e1000_adv_tx_context_desc *TXD; 	struct em_buffer        *tx_buffer; 	u32 vlan_macip_lens =
 literal|0
 argument|, type_tucmd_mlhl =
 literal|0
@@ -12893,9 +12926,7 @@ argument|; 	u32 mss_l4len_idx =
 literal|0
 argument|; 	u16 vtag =
 literal|0
-argument|; 	int ctxd, ehdrlen, hdrlen, ip_hlen, tcp_hlen; 	struct ether_vlan_header *eh; 	struct ip *ip; 	struct tcphdr *th;  	if (((mp->m_pkthdr.csum_flags& CSUM_TSO) ==
-literal|0
-argument|) || 	     (mp->m_pkthdr.len<= EM_TX_BUFFER_SIZE)) 		return FALSE;
+argument|; 	int ctxd, ehdrlen, ip_hlen, tcp_hlen; 	struct ether_vlan_header *eh; 	struct ip *ip; 	struct tcphdr *th;
 comment|/* 	 * Determine where frame payload starts. 	 * Jump over vlan headers if already present 	 */
 argument|eh = mtod(mp, struct ether_vlan_header *); 	if (eh->evl_encap_proto == htons(ETHERTYPE_VLAN)) 		ehdrlen = ETHER_HDR_LEN + ETHER_VLAN_ENCAP_LEN; 	else 		ehdrlen = ETHER_HDR_LEN;
 comment|/* Ensure we have at least the IP+TCP header in the first mbuf. */
@@ -12911,9 +12942,9 @@ argument|; 	ip_hlen = ip->ip_hl<<
 literal|2
 argument|; 	th = (struct tcphdr *)((caddr_t)ip + ip_hlen); 	th->th_sum = in_pseudo(ip->ip_src.s_addr, 	    ip->ip_dst.s_addr, htons(IPPROTO_TCP)); 	tcp_hlen = th->th_off<<
 literal|2
-argument|; 	hdrlen = ehdrlen + ip_hlen + tcp_hlen;
-comment|/* Calculate payload, this is used in the transmit desc in encap */
-argument|*paylen = mp->m_pkthdr.len - hdrlen;
+argument|;
+comment|/* 	 * Calculate header length, this is used 	 * in the transmit desc in igb_encap 	 */
+argument|*hdrlen = ehdrlen + ip_hlen + tcp_hlen;
 comment|/* VLAN MACLEN IPLEN */
 argument|if (mp->m_flags& M_VLANTAG) { 		vtag = htole16(mp->m_pkthdr.ether_vtag); 		vlan_macip_lens |= (vtag<< E1000_ADVTXD_VLAN_SHIFT); 	}  	vlan_macip_lens |= (ehdrlen<< E1000_ADVTXD_MACLEN_SHIFT); 	vlan_macip_lens |= ip_hlen; 	TXD->vlan_macip_lens |= htole32(vlan_macip_lens);
 comment|/* ADV DTYPE TUCMD */
