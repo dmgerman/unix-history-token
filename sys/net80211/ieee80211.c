@@ -1332,7 +1332,7 @@ name|KASSERT
 argument_list|(
 name|ifp
 operator|->
-name|if_spare2
+name|if_llsoftc
 operator|==
 name|NULL
 argument_list|,
@@ -1343,11 +1343,10 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_spare2
+name|if_llsoftc
 operator|=
 name|ic
 expr_stmt|;
-comment|/* XXX temp backpointer */
 block|}
 end_function
 

@@ -289,14 +289,6 @@ argument_list|)
 name|inp_list
 expr_stmt|;
 comment|/* list for all PCBs of this proto */
-name|u_int32_t
-name|inp_flow
-decl_stmt|;
-comment|/* Local and foreign ports, local and foreign addr. */
-name|struct
-name|in_conninfo
-name|inp_inc
-decl_stmt|;
 name|void
 modifier|*
 name|inp_ppcb
@@ -314,23 +306,13 @@ modifier|*
 name|inp_socket
 decl_stmt|;
 comment|/* back pointer to socket */
-comment|/* list for this PCB's local port */
-name|struct
-name|label
-modifier|*
-name|inp_label
+name|u_int32_t
+name|inp_flow
 decl_stmt|;
-comment|/* MAC label */
 name|int
 name|inp_flags
 decl_stmt|;
 comment|/* generic IP/datagram flags */
-name|struct
-name|inpcbpolicy
-modifier|*
-name|inp_sp
-decl_stmt|;
-comment|/* for IPSEC */
 name|u_char
 name|inp_vflag
 decl_stmt|;
@@ -380,6 +362,36 @@ name|u_char
 name|inp_ip_minttl
 decl_stmt|;
 comment|/* minimum TTL or drop */
+name|uint32_t
+name|inp_ispare1
+decl_stmt|;
+comment|/* connection id / queue id */
+name|void
+modifier|*
+name|inp_pspare
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* rtentry / general use */
+comment|/* Local and foreign ports, local and foreign addr. */
+name|struct
+name|in_conninfo
+name|inp_inc
+decl_stmt|;
+comment|/* list for this PCB's local port */
+name|struct
+name|label
+modifier|*
+name|inp_label
+decl_stmt|;
+comment|/* MAC label */
+name|struct
+name|inpcbpolicy
+modifier|*
+name|inp_sp
+decl_stmt|;
+comment|/* for IPSEC */
 comment|/* Protocol-dependent part; options. */
 struct|struct
 block|{
@@ -713,6 +725,14 @@ decl_stmt|;
 name|struct
 name|mtx
 name|ipi_mtx
+decl_stmt|;
+comment|/* 	 * vimage 1 	 * general use 1 	 */
+name|void
+modifier|*
+name|ipi_pspare
+index|[
+literal|2
+index|]
 decl_stmt|;
 block|}
 struct|;

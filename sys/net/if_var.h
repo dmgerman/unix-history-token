@@ -499,14 +499,9 @@ decl_stmt|;
 comment|/* pointer to link-level address */
 name|void
 modifier|*
-name|if_spare2
+name|if_llsoftc
 decl_stmt|;
-comment|/* spare pointer 2 */
-name|void
-modifier|*
-name|if_spare3
-decl_stmt|;
-comment|/* spare pointer 3 */
+comment|/* link layer softc */
 name|int
 name|if_drv_flags
 decl_stmt|;
@@ -603,6 +598,21 @@ modifier|*
 name|if_lagg
 decl_stmt|;
 comment|/* lagg glue */
+name|void
+modifier|*
+name|if_pspare
+index|[
+literal|10
+index|]
+decl_stmt|;
+comment|/* multiq/TOE 3; vimage 3; general use 4 */
+name|int
+name|if_ispare
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* general use 2 */
 block|}
 struct|;
 end_struct

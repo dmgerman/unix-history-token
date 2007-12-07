@@ -628,6 +628,14 @@ name|int
 name|rfbuf_cnt
 decl_stmt|;
 comment|/* recv buffer autoscaling byte count */
+name|void
+modifier|*
+name|t_pspare
+index|[
+literal|5
+index|]
+decl_stmt|;
+comment|/* toe usrreqs / toepcb * / congestion algo / vimage / 1 general use */
 block|}
 struct|;
 end_struct

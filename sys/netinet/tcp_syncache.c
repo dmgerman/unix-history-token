@@ -533,6 +533,19 @@ directive|define
 name|SCF_SACK
 value|0x80
 comment|/* send SACK option */
+ifndef|#
+directive|ifndef
+name|DISABLE_TCP_OFFLOAD
+name|void
+modifier|*
+name|sc_pspare
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* toepcb / toe_usrreqs */
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|MAC

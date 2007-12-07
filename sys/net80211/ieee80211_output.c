@@ -1088,7 +1088,7 @@ name|ic
 init|=
 name|ifp
 operator|->
-name|if_spare2
+name|if_llsoftc
 decl_stmt|;
 comment|/* XXX */
 name|struct
