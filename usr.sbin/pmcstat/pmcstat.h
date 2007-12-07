@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005-2007, Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2005-2007, Joseph Koshy  * Copyright (c) 2007 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by A. Joseph Koshy under  * sponsorship from the FreeBSD Foundation and Google, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -172,6 +172,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FLAG_DO_CALLGRAPHS
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* -G */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLAG_DO_ANALYSIS
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* -g or -G */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_SAMPLE_COUNT
 value|65536
 end_define
@@ -195,6 +217,13 @@ define|#
 directive|define
 name|DEFAULT_BUFFER_SIZE
 value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_CALLGRAPH_DEPTH
+value|4
 end_define
 
 begin_define
@@ -306,7 +335,7 @@ name|T
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {				\ 		fprintf((A)->pa_printfile, "%-8s", T);			\ 		fprintf((A)->pa_printfile, " "  __VA_ARGS__);		\ 		fprintf((A)->pa_printfile, "\n");			\ 	} while (0)
+value|do {				\ 		(void) fprintf((A)->pa_printfile, "%-9s", T);		\ 		(void) fprintf((A)->pa_printfile, " "  __VA_ARGS__);	\ 		(void) fprintf((A)->pa_printfile, "\n");		\ 	} while (0)
 end_define
 
 begin_enum
@@ -469,10 +498,23 @@ modifier|*
 name|pa_mapfilename
 decl_stmt|;
 comment|/* mapfile name */
+name|FILE
+modifier|*
+name|pa_graphfile
+decl_stmt|;
+comment|/* where to send the callgraph */
+name|int
+name|pa_graphdepth
+decl_stmt|;
+comment|/* print depth for callgraphs */
 name|double
 name|pa_interval
 decl_stmt|;
 comment|/* printing interval in seconds */
+name|uint32_t
+name|pa_cpumask
+decl_stmt|;
+comment|/* filter for CPUs analysed */
 name|int
 name|pa_argc
 decl_stmt|;
