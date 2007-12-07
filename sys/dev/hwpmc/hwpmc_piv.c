@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2005 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003-2007 Joseph Koshy  * Copyright (c) 2007 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by A. Joseph Koshy under  * sponsorship from the FreeBSD Foundation and Google, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -57,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
 end_include
 
 begin_include
@@ -5729,7 +5735,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 	 * Thread mode PMCs. 	 * 	 * On HTT machines, this PMC may be in use by two threads 	 * running on two logical CPUS.  Thus we look at the 	 * 'pm_runcount' field and only turn off the appropriate TO/T1 	 * bits (and keep the PMC running) if two logical CPUs were 	 * using the PMC. 	 * 	 */
+comment|/* 	 * Thread mode PMCs. 	 * 	 * On HTT machines, this PMC may be in use by two threads 	 * running on two logical CPUS.  Thus we look at the 	 * 'runcount' field and only turn off the appropriate TO/T1 	 * bits (and keep the PMC running) if two logical CPUs were 	 * using the PMC. 	 * 	 */
 comment|/* bits to mask */
 name|cccrtbits
 operator|=
@@ -6059,13 +6065,19 @@ parameter_list|(
 name|int
 name|cpu
 parameter_list|,
-name|uintptr_t
-name|eip
-parameter_list|,
-name|int
-name|usermode
+name|struct
+name|trapframe
+modifier|*
+name|tf
 parameter_list|)
 block|{
+name|uint32_t
+name|cccrval
+decl_stmt|,
+name|ovf_mask
+decl_stmt|,
+name|ovf_partner
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -6075,22 +6087,15 @@ name|error
 decl_stmt|,
 name|ri
 decl_stmt|;
-name|uint32_t
-name|cccrval
-decl_stmt|,
-name|ovf_mask
-decl_stmt|,
-name|ovf_partner
+name|struct
+name|pmc_hw
+modifier|*
+name|phw
 decl_stmt|;
 name|struct
 name|p4_cpu
 modifier|*
 name|pc
-decl_stmt|;
-name|struct
-name|pmc_hw
-modifier|*
-name|phw
 decl_stmt|;
 name|struct
 name|pmc
@@ -6108,7 +6113,7 @@ name|INT
 argument_list|,
 literal|1
 argument_list|,
-literal|"cpu=%d eip=%p um=%d"
+literal|"cpu=%d tf=0x%p um=%d"
 argument_list|,
 name|cpu
 argument_list|,
@@ -6116,9 +6121,12 @@ operator|(
 name|void
 operator|*
 operator|)
-name|eip
+name|tf
 argument_list|,
-name|usermode
+name|TRAPF_USERMODE
+argument_list|(
+name|tf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|pc
@@ -6283,9 +6291,12 @@ name|cpu
 argument_list|,
 name|pm
 argument_list|,
-name|eip
+name|tf
 argument_list|,
-name|usermode
+name|TRAPF_USERMODE
+argument_list|(
+name|tf
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -6427,9 +6438,12 @@ name|cpu
 argument_list|,
 name|pm
 argument_list|,
-name|eip
+name|tf
 argument_list|,
-name|usermode
+name|TRAPF_USERMODE
+argument_list|(
+name|tf
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Only the first processor executing the NMI handler 		 * in a HTT pair will restart a PMC, and that too 		 * only if there were no errors. 		 */
@@ -6507,7 +6521,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|did_interrupt
+operator|)
 return|;
 block|}
 end_function

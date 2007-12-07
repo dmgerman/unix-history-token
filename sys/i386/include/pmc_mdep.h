@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2005 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003-2005 Joseph Koshy  * Copyright (c) 2007 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by A. Joseph Koshy under  * sponsorship from the FreeBSD Foundation and Google, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -140,9 +140,144 @@ name|pmc
 struct_decl|;
 end_struct_decl
 
+begin_define
+define|#
+directive|define
+name|PMC_TRAPFRAME_TO_PC
+parameter_list|(
+name|TF
+parameter_list|)
+value|((TF)->tf_eip)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_TRAPFRAME_TO_FP
+parameter_list|(
+name|TF
+parameter_list|)
+value|((TF)->tf_ebp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_TRAPFRAME_TO_SP
+parameter_list|(
+name|TF
+parameter_list|)
+value|((TF)->tf_esp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_IN_KERNEL_STACK
+parameter_list|(
+name|S
+parameter_list|,
+name|START
+parameter_list|,
+name|END
+parameter_list|)
+define|\
+value|((S)>= (START)&& (S)< (END))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_IN_KERNEL
+parameter_list|(
+name|va
+parameter_list|)
+value|(((va)>= USRSTACK)&&	\ 	((va)< VM_MAX_KERNEL_ADDRESS))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_IN_USERSPACE
+parameter_list|(
+name|va
+parameter_list|)
+value|((va)<= VM_MAXUSER_ADDRESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_IN_TRAP_HANDLER
+parameter_list|(
+name|PC
+parameter_list|)
+define|\
+value|((PC)>= (uintptr_t) start_exceptions&&	\ 	 (PC)< (uintptr_t) end_exceptions)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_AT_FUNCTION_PROLOGUE_PUSH_BP
+parameter_list|(
+name|I
+parameter_list|)
+define|\
+value|(((I)& 0xffffffff) == 0xe5894855)
+end_define
+
+begin_comment
+comment|/* pushq %rbp; movq %rsp,%rbp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_AT_FUNCTION_PROLOGUE_MOV_SP_BP
+parameter_list|(
+name|I
+parameter_list|)
+define|\
+value|(((I)& 0x00ffffff) == 0x00e58948)
+end_define
+
+begin_comment
+comment|/* movq %rsp,%rbp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_AT_FUNCTION_EPILOGUE_RET
+parameter_list|(
+name|I
+parameter_list|)
+define|\
+value|(((I)& 0xFF) == 0xC3)
+end_define
+
+begin_comment
+comment|/* ret */
+end_comment
+
 begin_comment
 comment|/*  * Prototypes  */
 end_comment
+
+begin_decl_stmt
+name|void
+name|start_exceptions
+argument_list|(
+name|void
+argument_list|)
+decl_stmt|,
+name|end_exceptions
+argument_list|(
+name|void
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void

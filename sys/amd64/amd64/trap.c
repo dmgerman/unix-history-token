@@ -717,17 +717,7 @@ argument_list|(
 name|cpuid
 argument_list|)
 argument_list|,
-operator|(
-name|uintptr_t
-operator|)
 name|frame
-operator|->
-name|tf_rip
-argument_list|,
-name|TRAPF_USERMODE
-argument_list|(
-name|frame
-argument_list|)
 argument_list|)
 condition|)
 goto|goto

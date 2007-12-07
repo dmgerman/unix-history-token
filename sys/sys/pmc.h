@@ -1207,6 +1207,12 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1240,6 +1246,13 @@ define|#
 directive|define
 name|PMC_NSAMPLES
 value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_CALLCHAIN_DEPTH
+value|8
 end_define
 
 begin_define
@@ -1384,7 +1397,7 @@ union|;
 name|uint32_t
 name|pm_stalled
 decl_stmt|;
-comment|/* true for stalled sampling PMCs */
+comment|/* marks stalled sampling PMCs */
 name|uint32_t
 name|pm_caps
 decl_stmt|;
@@ -1640,6 +1653,13 @@ begin_comment
 comment|/* in the middle of a flush */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PMC_PO_INITIAL_MAPPINGS_DONE
+value|0x00000020
+end_define
+
 begin_comment
 comment|/*  * struct pmc_hw -- describe the state of the PMC hardware  *  * When in use, a HW PMC is associated with one allocated 'struct pmc'  * pointed to by field 'phw_pmc'.  When inactive, this field is NULL.  *  * On an SMP box, one or more HW PMC's in process virtual mode with  * the same 'phw_pmc' could be executing on different CPUs.  In order  * to handle this case correctly, we need to ensure that only  * incremental counts get added to the saved value in the associated  * 'struct pmc'.  The 'phw_save' field is used to keep the saved PMC  * value at the time the hardware is started during this context  * switch (i.e., the difference between the new (hardware) count and  * the saved count is atomically added to the count field in 'struct  * pmc' at context switch time).  *  */
 end_comment
@@ -1779,27 +1799,50 @@ begin_struct
 struct|struct
 name|pmc_sample
 block|{
-name|uintfptr_t
-name|ps_pc
+name|uint16_t
+name|ps_nsamples
 decl_stmt|;
-comment|/* PC value at interrupt */
+comment|/* callchain depth */
+name|uint8_t
+name|ps_cpu
+decl_stmt|;
+comment|/* cpu number */
+name|uint8_t
+name|ps_flags
+decl_stmt|;
+comment|/* other flags */
+name|pid_t
+name|ps_pid
+decl_stmt|;
+comment|/* process PID or -1 */
 name|struct
 name|pmc
 modifier|*
 name|ps_pmc
 decl_stmt|;
 comment|/* interrupting PMC */
-name|int
-name|ps_usermode
+name|uintptr_t
+modifier|*
+name|ps_pc
 decl_stmt|;
-comment|/* true for user mode PCs */
-name|pid_t
-name|ps_pid
-decl_stmt|;
-comment|/* process PID or -1 */
+comment|/* (const) callchain start */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|PMC_SAMPLE_FREE
+value|((uint16_t) 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_SAMPLE_INUSE
+value|((uint16_t) 0xFFFF)
+end_define
 
 begin_struct
 struct|struct
@@ -1819,6 +1862,11 @@ specifier|volatile
 name|ps_write
 decl_stmt|;
 comment|/* write pointer */
+name|uintptr_t
+modifier|*
+name|ps_callchains
+decl_stmt|;
+comment|/* all saved call chains */
 name|struct
 name|pmc_sample
 modifier|*
@@ -2195,11 +2243,10 @@ parameter_list|(
 name|int
 name|_cpu
 parameter_list|,
-name|uintptr_t
-name|_pc
-parameter_list|,
-name|int
-name|_usermode
+name|struct
+name|trapframe
+modifier|*
+name|_tf
 parameter_list|)
 function_decl|;
 name|int
@@ -2948,11 +2995,51 @@ name|pmc
 modifier|*
 name|_pm
 parameter_list|,
-name|uintfptr_t
-name|_pc
+name|struct
+name|trapframe
+modifier|*
+name|_tf
 parameter_list|,
 name|int
-name|_usermode
+name|_inuserspace
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pmc_save_kernel_callchain
+parameter_list|(
+name|uintptr_t
+modifier|*
+name|_cc
+parameter_list|,
+name|int
+name|_maxsamples
+parameter_list|,
+name|struct
+name|trapframe
+modifier|*
+name|_tf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pmc_save_user_callchain
+parameter_list|(
+name|uintptr_t
+modifier|*
+name|_cc
+parameter_list|,
+name|int
+name|_maxsamples
+parameter_list|,
+name|struct
+name|trapframe
+modifier|*
+name|_tf
 parameter_list|)
 function_decl|;
 end_function_decl
