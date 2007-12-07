@@ -378,17 +378,21 @@ decl_stmt|,
 name|ras_start
 decl_stmt|;
 asm|__asm __volatile("1:\n"
-literal|"mov	%0, #0xe0000008\n"
-literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0]\n"
 literal|"adr	%1, 1b\n"
 literal|"mov	%0, #0xe0000004\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%0, #0xe0000008\n"
+literal|"adr	%1, 2f\n"
 literal|"str	%1, [%0]\n"
 literal|"ldr	%1, [%2]\n"
 literal|"cmp	%1, %3\n"
 literal|"streq	%4, [%2]\n"
 literal|"2:\n"
 literal|"mov	%1, #0\n"
+literal|"mov	%0, #0xe0000004\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%1, #0xffffffff\n"
+literal|"mov	%0, #0xe0000008\n"
 literal|"str	%1, [%0]\n"
 literal|"moveq	%1, #1\n"
 literal|"movne	%1, #0\n"
@@ -417,6 +421,9 @@ literal|"+r"
 operator|(
 name|newval
 operator|)
+operator|:
+operator|:
+literal|"memory"
 block|)
 function|;
 end_function
@@ -450,17 +457,21 @@ decl_stmt|,
 name|start
 decl_stmt|;
 asm|__asm __volatile("1:\n"
-literal|"mov	%0, #0xe0000008\n"
-literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0]\n"
 literal|"adr	%1, 1b\n"
 literal|"mov	%0, #0xe0000004\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%0, #0xe0000008\n"
+literal|"adr	%1, 2f\n"
 literal|"str	%1, [%0]\n"
 literal|"ldr	%1, [%2]\n"
 literal|"add	%1, %1, %3\n"
 literal|"str	%1, [%2]\n"
 literal|"2:\n"
+literal|"mov	%0, #0xe0000004\n"
 literal|"mov	%1, #0\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%1, #0xffffffff\n"
+literal|"mov	%0, #0xe0000008\n"
 literal|"str	%1, [%0]\n"
 operator|:
 literal|"=r"
@@ -482,6 +493,9 @@ literal|"+r"
 operator|(
 name|val
 operator|)
+operator|:
+operator|:
+literal|"memory"
 block|)
 function|;
 end_function
@@ -507,17 +521,21 @@ decl_stmt|,
 name|start
 decl_stmt|;
 asm|__asm __volatile("1:\n"
-literal|"mov	%0, #0xe0000008\n"
-literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0]\n"
 literal|"adr	%1, 1b\n"
 literal|"mov	%0, #0xe0000004\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%0, #0xe0000008\n"
+literal|"adr	%1, 2f\n"
 literal|"str	%1, [%0]\n"
 literal|"ldr	%1, [%2]\n"
 literal|"sub	%1, %1, %3\n"
 literal|"str	%1, [%2]\n"
 literal|"2:\n"
+literal|"mov	%0, #0xe0000004\n"
 literal|"mov	%1, #0\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%1, #0xffffffff\n"
+literal|"mov	%0, #0xe0000008\n"
 literal|"str	%1, [%0]\n"
 operator|:
 literal|"=r"
@@ -539,6 +557,9 @@ literal|"+r"
 operator|(
 name|val
 operator|)
+operator|:
+operator|:
+literal|"memory"
 block|)
 function|;
 end_function
@@ -564,17 +585,21 @@ decl_stmt|,
 name|start
 decl_stmt|;
 asm|__asm __volatile("1:\n"
-literal|"mov	%0, #0xe0000008\n"
-literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0]\n"
 literal|"adr	%1, 1b\n"
 literal|"mov	%0, #0xe0000004\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%0, #0xe0000008\n"
+literal|"adr	%1, 2f\n"
 literal|"str	%1, [%0]\n"
 literal|"ldr	%1, [%2]\n"
 literal|"orr	%1, %1, %3\n"
 literal|"str	%1, [%2]\n"
 literal|"2:\n"
+literal|"mov	%0, #0xe0000004\n"
 literal|"mov	%1, #0\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%1, #0xffffffff\n"
+literal|"mov	%0, #0xe0000008\n"
 literal|"str	%1, [%0]\n"
 operator|:
 literal|"=r"
@@ -596,6 +621,9 @@ literal|"+r"
 operator|(
 name|setmask
 operator|)
+operator|:
+operator|:
+literal|"memory"
 block|)
 function|;
 end_function
@@ -621,17 +649,21 @@ decl_stmt|,
 name|start
 decl_stmt|;
 asm|__asm __volatile("1:\n"
-literal|"mov	%0, #0xe0000008\n"
-literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0]\n"
 literal|"adr	%1, 1b\n"
 literal|"mov	%0, #0xe0000004\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%0, #0xe0000008\n"
+literal|"adr	%1, 2f\n"
 literal|"str	%1, [%0]\n"
 literal|"ldr	%1, [%2]\n"
 literal|"bic	%1, %1, %3\n"
 literal|"str	%1, [%2]\n"
 literal|"2:\n"
+literal|"mov	%0, #0xe0000004\n"
 literal|"mov	%1, #0\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%1, #0xffffffff\n"
+literal|"mov	%0, #0xe0000008\n"
 literal|"str	%1, [%0]\n"
 operator|:
 literal|"=r"
@@ -653,6 +685,9 @@ literal|"+r"
 operator|(
 name|clearmask
 operator|)
+operator|:
+operator|:
+literal|"memory"
 block|)
 function|;
 end_function
@@ -678,17 +713,21 @@ decl_stmt|,
 name|start
 decl_stmt|;
 asm|__asm __volatile("1:\n"
-literal|"mov	%0, #0xe0000008\n"
-literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0]\n"
 literal|"adr	%1, 1b\n"
 literal|"mov	%0, #0xe0000004\n"
 literal|"str	%1, [%0]\n"
-literal|"ldr	%1, %2\n"
-literal|"add	%3, %1, %3\n"
-literal|"str	%3, %2\n"
+literal|"mov	%0, #0xe0000008\n"
+literal|"adr	%1, 2f\n"
+literal|"str	%1, [%0]\n"
+literal|"ldr	%1, [%2]\n"
+literal|"add	%0, %1, %3\n"
+literal|"str	%0, [%2]\n"
 literal|"2:\n"
+literal|"mov	%0, #0xe0000004\n"
 literal|"mov	%3, #0\n"
+literal|"str	%3, [%0]\n"
+literal|"mov	%0, #0xe0000008\n"
+literal|"mov	%3, #0xffffffff\n"
 literal|"str	%3, [%0]\n"
 operator|:
 literal|"=r"
@@ -701,9 +740,8 @@ operator|(
 name|start
 operator|)
 operator|,
-literal|"=m"
+literal|"+r"
 operator|(
-operator|*
 name|p
 operator|)
 operator|,
@@ -711,6 +749,9 @@ literal|"+r"
 operator|(
 name|v
 operator|)
+operator|:
+operator|:
+literal|"memory"
 block|)
 function|;
 end_function
