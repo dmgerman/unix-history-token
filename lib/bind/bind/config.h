@@ -74,6 +74,20 @@ begin_comment
 comment|/* #undef POSIX_GETGRNAM_R */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAVE_MEMMOVE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_MEMCHR
+value|1
+end_define
+
 begin_comment
 comment|/* #undef NEED_SETGROUPENT */
 end_comment
@@ -180,6 +194,10 @@ directive|define
 name|HAS_PW_CLASS
 value|1
 end_define
+
+begin_comment
+comment|/* #undef ssize_t */
+end_comment
 
 begin_comment
 comment|/* #undef uintptr_t */

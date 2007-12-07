@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: nsupdate.c,v 1.130.18.15 2006/12/07 05:39:45 marka Exp $ */
+comment|/* $Id: nsupdate.c,v 1.130.18.19 2007/08/28 07:20:01 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -8383,11 +8383,27 @@ operator|==
 name|STATUS_SYNTAX
 operator|)
 condition|)
+block|{
 name|result
 operator|=
 name|get_next_command
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|interactive
+operator|&&
+name|result
+operator|==
+name|STATUS_SYNTAX
+condition|)
+name|fatal
+argument_list|(
+literal|"syntax error"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|result
@@ -10894,6 +10910,33 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
+name|dns_message_puttempname
+argument_list|(
+name|soaquery
+argument_list|,
+operator|&
+name|name
+argument_list|)
+expr_stmt|;
+name|dns_rdataset_disassociate
+argument_list|(
+name|rdataset
+argument_list|)
+expr_stmt|;
+name|dns_message_puttemprdataset
+argument_list|(
+name|soaquery
+argument_list|,
+operator|&
+name|rdataset
+argument_list|)
+expr_stmt|;
+name|dns_message_destroy
+argument_list|(
+operator|&
+name|soaquery
+argument_list|)
+expr_stmt|;
 name|done_update
 argument_list|()
 expr_stmt|;

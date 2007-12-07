@@ -106,20 +106,71 @@ name|isc_int32_t
 name|val
 parameter_list|)
 block|{
-return|return
-name|atomic_cmpset_int
-argument_list|(
+specifier|register
+name|int
+name|done
+decl_stmt|,
+name|ras_start
+decl_stmt|;
+asm|__asm __volatile("1:\n"
+literal|"adr	%1, 1b\n"
+literal|"mov	%0, #0xe0000004\n"
+literal|"str	%1, [%0]\n"
+literal|"mov	%0, #0xe0000008\n"
+literal|"adr	%1, 2f\n"
+literal|"str	%1, [%0]\n"
+literal|"ldr	%1, [%2]\n"
+literal|"cmp	%1, %3\n"
+literal|"streq	%4, [%2]\n"
+literal|"2:\n"
+literal|"mov	%3, #0\n"
+literal|"mov	%0, #0xe0000004\n"
+literal|"str	%3, [%0]\n"
+literal|"mov	%3, #0xffffffff\n"
+literal|"mov	%0, #0xe0000008\n"
+literal|"str	%3, [%0]\n"
+operator|:
+literal|"=r"
+operator|(
+name|ras_start
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|done
+operator|)
+operator|,
+literal|"+r"
+operator|(
 name|p
-argument_list|,
+operator|)
+operator|,
+literal|"+r"
+operator|(
 name|cmpval
-argument_list|,
+operator|)
+operator|,
+literal|"+r"
+operator|(
 name|val
-argument_list|)
-return|;
-block|}
+operator|)
+operator|:
+operator|:
+literal|"memory"
+block|)
+function|;
 end_function
 
+begin_return
+return|return
+operator|(
+name|done
+operator|)
+return|;
+end_return
+
 begin_else
+unit|}
 else|#
 directive|else
 end_else

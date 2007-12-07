@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: socket.c,v 1.237.18.24 2006/06/06 00:56:09 marka Exp $ */
+comment|/* $Id: socket.c,v 1.237.18.29 2007/08/28 07:20:06 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -169,6 +169,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/once.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isc/platform.h>
 end_include
 
@@ -257,6 +263,31 @@ directive|define
 name|ISC_SOCKADDR_LEN_T
 value|unsigned int
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SO_BSDCOMPAT
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/utsname.h>
+end_include
 
 begin_endif
 endif|#
@@ -6153,8 +6184,146 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SO_BSDCOMPAT
+end_ifdef
+
 begin_comment
-comment|/*  * Create a new 'type' socket managed by 'manager'.  Events  * will be posted to 'task' and when dispatched 'action' will be  * called with 'arg' as the arg value.  The new socket is returned  * in 'socketp'.  */
+comment|/*  * This really should not be necessary to do.  Having to workout  * which kernel version we are on at run time so that we don't cause  * the kernel to issue a warning about us using a deprecated socket option.  * Such warnings should *never* be on by default in production kernels.  *  * We can't do this a build time because executables are moved between  * machines and hence kernels.  *  * We can't just not set SO_BSDCOMAT because some kernels require it.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|isc_once_t
+name|bsdcompat_once
+init|=
+name|ISC_ONCE_INIT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|isc_boolean_t
+name|bsdcompat
+init|=
+name|ISC_TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|clear_bsdcompat
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|__linux__
+name|struct
+name|utsname
+name|buf
+decl_stmt|;
+name|char
+modifier|*
+name|endp
+decl_stmt|;
+name|long
+name|int
+name|major
+decl_stmt|;
+name|long
+name|int
+name|minor
+decl_stmt|;
+name|uname
+argument_list|(
+operator|&
+name|buf
+argument_list|)
+expr_stmt|;
+comment|/* Can only fail if buf is bad in Linux. */
+comment|/* Paranoia in parsing can be increased, but we trust uname(). */
+name|major
+operator|=
+name|strtol
+argument_list|(
+name|buf
+operator|.
+name|release
+argument_list|,
+operator|&
+name|endp
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|endp
+operator|==
+literal|'.'
+condition|)
+block|{
+name|minor
+operator|=
+name|strtol
+argument_list|(
+name|endp
+operator|+
+literal|1
+argument_list|,
+operator|&
+name|endp
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|major
+operator|>
+literal|2
+operator|)
+operator|||
+operator|(
+operator|(
+name|major
+operator|==
+literal|2
+operator|)
+operator|&&
+operator|(
+name|minor
+operator|>=
+literal|4
+operator|)
+operator|)
+condition|)
+block|{
+name|bsdcompat
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* __linux __ */
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*%  * Create a new 'type' socket managed by 'manager'.  Events  * will be posted to 'task' and when dispatched 'action' will be  * called with 'arg' as the arg value.  The new socket is returned  * in 'socketp'.  */
 end_comment
 
 begin_function
@@ -6231,6 +6400,11 @@ name|err
 init|=
 literal|"socket"
 decl_stmt|;
+name|int
+name|try
+init|=
+literal|0
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_MANAGER
@@ -6280,6 +6454,8 @@ name|pf
 operator|=
 name|pf
 expr_stmt|;
+name|again
+label|:
 switch|switch
 condition|(
 name|type
@@ -6337,6 +6513,27 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|sock
+operator|->
+name|fd
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EINTR
+operator|&&
+name|try
+operator|++
+operator|<
+literal|42
+condition|)
+goto|goto
+name|again
+goto|;
 ifdef|#
 directive|ifdef
 name|F_DUPFD
@@ -6593,11 +6790,26 @@ block|}
 ifdef|#
 directive|ifdef
 name|SO_BSDCOMPAT
+name|RUNTIME_CHECK
+argument_list|(
+name|isc_once_do
+argument_list|(
+operator|&
+name|bsdcompat_once
+argument_list|,
+name|clear_bsdcompat
+argument_list|)
+operator|==
+name|ISC_R_SUCCESS
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|type
 operator|!=
 name|isc_sockettype_unix
+operator|&&
+name|bsdcompat
 operator|&&
 name|setsockopt
 argument_list|(
@@ -6809,7 +7021,7 @@ name|ISC_PLATFORM_HAVEIN6PKTINFO
 ifdef|#
 directive|ifdef
 name|IPV6_RECVPKTINFO
-comment|/* 2292bis */
+comment|/* RFC 3542 */
 if|if
 condition|(
 operator|(
@@ -6888,7 +7100,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* 2292 */
+comment|/* RFC 2292 */
 if|if
 condition|(
 operator|(
@@ -6973,7 +7185,7 @@ comment|/* ISC_PLATFORM_HAVEIN6PKTINFO */
 ifdef|#
 directive|ifdef
 name|IPV6_USE_MIN_MTU
-comment|/*2292bis, not too common yet*/
+comment|/* RFC 3542, not too common yet*/
 comment|/* use minimum MTU */
 if|if
 condition|(

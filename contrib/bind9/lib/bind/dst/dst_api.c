@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/dst_api.c,v 1.10.332.5 2006/03/10 00:20:08 marka Exp $"
+literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/dst_api.c,v 1.10.332.7 2007/09/26 04:41:47 each Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1251,8 +1251,9 @@ argument_list|(
 name|dg_key
 argument_list|)
 expr_stmt|;
-name|pubkey
-operator|=
+operator|(
+name|void
+operator|)
 name|dst_free_key
 argument_list|(
 name|pubkey
@@ -1625,6 +1626,11 @@ name|nn
 operator|,
 name|errno
 operator|)
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 return|return
