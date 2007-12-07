@@ -872,7 +872,7 @@ name|a
 parameter_list|,
 name|i
 parameter_list|)
-value|((a)[(i)/NBBY] |= 1<<((i)%NBBY))
+value|(((unsigned char *)(a))[(i)/NBBY] |= 1<<((i)%NBBY))
 end_define
 
 begin_define
@@ -884,7 +884,7 @@ name|a
 parameter_list|,
 name|i
 parameter_list|)
-value|((a)[(i)/NBBY]&= ~(1<<((i)%NBBY)))
+value|(((unsigned char *)(a))[(i)/NBBY]&= ~(1<<((i)%NBBY)))
 end_define
 
 begin_define
@@ -896,7 +896,8 @@ name|a
 parameter_list|,
 name|i
 parameter_list|)
-value|((a)[(i)/NBBY]& (1<<((i)%NBBY)))
+define|\
+value|(((const unsigned char *)(a))[(i)/NBBY]& (1<<((i)%NBBY)))
 end_define
 
 begin_define
@@ -908,7 +909,8 @@ name|a
 parameter_list|,
 name|i
 parameter_list|)
-value|(((a)[(i)/NBBY]& (1<<((i)%NBBY))) == 0)
+define|\
+value|((((const unsigned char *)(a))[(i)/NBBY]& (1<<((i)%NBBY))) == 0
 end_define
 
 begin_comment
