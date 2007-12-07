@@ -5594,7 +5594,8 @@ name|kro_mappings
 operator|++
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|flags
@@ -5616,6 +5617,7 @@ operator|.
 name|uro_mappings
 operator|++
 expr_stmt|;
+block|}
 name|pg
 operator|->
 name|md
