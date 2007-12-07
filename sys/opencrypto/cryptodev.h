@@ -274,6 +274,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CAMELLIA_BLOCK_LEN
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|EALG_MAX_BLOCK_LEN
 value|AES_BLOCK_LEN
 end_define
@@ -451,8 +458,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|CRYPTO_CAMELLIA_CBC
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
 name|CRYPTO_ALGORITHM_MAX
-value|20
+value|21
 end_define
 
 begin_comment
