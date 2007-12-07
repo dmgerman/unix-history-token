@@ -11800,6 +11800,7 @@ operator|++
 name|dp
 expr_stmt|;
 else|else
+block|{
 name|error
 argument_list|(
 name|_
@@ -11808,6 +11809,12 @@ literal|"odd number of quotation marks"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 do|while
 condition|(
