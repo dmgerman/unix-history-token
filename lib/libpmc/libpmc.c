@@ -664,8 +664,10 @@ name|NULL
 condition|)
 comment|/* no mask keywords */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|q
 operator|=
@@ -687,8 +689,10 @@ literal|'\0'
 condition|)
 comment|/* no more data */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|c
 operator|=
@@ -745,8 +749,10 @@ name|NULL
 condition|)
 comment|/* not found */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 operator|*
 name|evmask
@@ -760,7 +766,9 @@ operator|++
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|c
+operator|)
 return|;
 block|}
 end_function
@@ -1001,11 +1009,15 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -1092,8 +1104,10 @@ literal|'\0'
 condition|)
 comment|/* skip '=' */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|count
 operator|=
@@ -1119,8 +1133,10 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|pmc_config
 operator|->
@@ -1215,8 +1231,10 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|unitmask
 operator|=
@@ -1241,8 +1259,10 @@ literal|'\0'
 condition|)
 comment|/* skip '=' */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 while|while
 condition|(
@@ -1323,8 +1343,10 @@ condition|)
 continue|continue;
 else|else
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -1333,8 +1355,10 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 elseif|else
@@ -1357,8 +1381,10 @@ expr_stmt|;
 block|}
 else|else
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -1387,7 +1413,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2688,11 +2716,15 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|pmask
@@ -2956,8 +2988,10 @@ literal|'\0'
 condition|)
 comment|/* skip '=' */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|count
 operator|=
@@ -2983,8 +3017,10 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|pmc_config
 operator|->
@@ -3073,8 +3109,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|pmc_config
 operator|->
@@ -3121,8 +3159,10 @@ expr_stmt|;
 block|}
 else|else
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* other post processing */
@@ -3172,8 +3212,10 @@ operator|)
 condition|)
 comment|/*> 1 bit set */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -3256,7 +3298,9 @@ name|evmask
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5219,11 +5263,15 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|pmask
@@ -5648,8 +5696,10 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* process additional flags */
@@ -5699,8 +5749,10 @@ literal|'\0'
 condition|)
 comment|/* skip '=' */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -5767,8 +5819,10 @@ literal|0x3
 expr_stmt|;
 else|else
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 elseif|else
@@ -5789,8 +5843,10 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|q
 operator|=
@@ -5811,8 +5867,10 @@ literal|'\0'
 condition|)
 comment|/* skip '=' */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|count
 operator|=
@@ -5838,8 +5896,10 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|evmask
 operator|=
@@ -5936,8 +5996,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|pmc_config
 operator|->
@@ -5997,8 +6059,10 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|q
 operator|=
@@ -6019,8 +6083,10 @@ literal|'\0'
 condition|)
 comment|/* skip '=' */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|count
 operator|=
@@ -6046,8 +6112,10 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|pmc_config
 operator|->
@@ -6100,8 +6168,10 @@ literal|'\0'
 condition|)
 comment|/* skip '=' */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|count
 operator|=
@@ -6127,8 +6197,10 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|pmc_config
 operator|->
@@ -6179,8 +6251,10 @@ name|PMC_CAP_USER
 expr_stmt|;
 else|else
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* other post processing */
@@ -6255,8 +6329,10 @@ operator|==
 literal|0x18
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 comment|/* can't have own+other bits together */
 if|if
@@ -6290,8 +6366,10 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -6364,7 +6442,9 @@ name|evmask
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -6432,6 +6512,7 @@ name|pmc_config
 parameter_list|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
 operator|||
@@ -6440,6 +6521,7 @@ operator|||
 name|ctrspec
 operator|||
 name|pmc_config
+operator|)
 return|;
 comment|/* shut up gcc */
 block|}
@@ -7194,11 +7276,15 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|pmc_config
@@ -7494,8 +7580,10 @@ literal|'\0'
 condition|)
 comment|/* skip '=' */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|count
 operator|=
@@ -7521,8 +7609,10 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|pmc_config
 operator|->
@@ -7633,8 +7723,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -7738,11 +7830,13 @@ operator|>
 literal|1
 operator|)
 condition|)
+comment|/* Only one mask keyword is allowed. */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
-comment|/* only one mask keyword allowed */
 name|pmc_config
 operator|->
 name|pm_caps
@@ -7770,8 +7864,10 @@ expr_stmt|;
 block|}
 else|else
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* post processing */
@@ -7928,7 +8024,9 @@ name|evmask
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8274,7 +8372,9 @@ name|spec_copy
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -8307,6 +8407,7 @@ operator|=
 name|pid
 expr_stmt|;
 return|return
+operator|(
 name|PMC_CALL
 argument_list|(
 name|PMCATTACH
@@ -8314,6 +8415,7 @@ argument_list|,
 operator|&
 name|pmc_attach_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -8387,11 +8489,15 @@ operator|.
 name|pm_caps
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 end_function
@@ -8427,11 +8533,15 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8461,8 +8571,10 @@ operator|=
 name|ENXIO
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 operator|*
@@ -8472,7 +8584,9 @@ operator|&
 name|cpu_info
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8505,6 +8619,7 @@ operator|=
 name|pid
 expr_stmt|;
 return|return
+operator|(
 name|PMC_CALL
 argument_list|(
 name|PMCDETACH
@@ -8512,6 +8627,7 @@ argument_list|,
 operator|&
 name|pmc_detach_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -8550,6 +8666,7 @@ operator|=
 name|PMC_STATE_DISABLED
 expr_stmt|;
 return|return
+operator|(
 name|PMC_CALL
 argument_list|(
 name|PMCADMIN
@@ -8557,6 +8674,7 @@ argument_list|,
 operator|&
 name|ssa
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -8595,6 +8713,7 @@ operator|=
 name|PMC_STATE_FREE
 expr_stmt|;
 return|return
+operator|(
 name|PMC_CALL
 argument_list|(
 name|PMCADMIN
@@ -8602,6 +8721,7 @@ argument_list|,
 operator|&
 name|ssa
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -8772,8 +8892,10 @@ operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -8797,8 +8919,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 operator|*
 name|eventnames
@@ -8830,7 +8954,9 @@ operator|->
 name|pm_ev_name
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8843,12 +8969,14 @@ name|void
 parameter_list|)
 block|{
 return|return
+operator|(
 name|PMC_CALL
 argument_list|(
 name|FLUSHLOG
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -8880,8 +9008,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 comment|/* copy out fields in the current userland<->library interface */
 name|ds
@@ -8949,7 +9079,9 @@ operator|.
 name|pm_log_sweeps
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8989,8 +9121,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 operator|*
 name|msr
@@ -9000,7 +9134,9 @@ operator|.
 name|pm_msr
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -9041,7 +9177,9 @@ literal|1
 condition|)
 comment|/* already inited */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* retrieve the system call number from the KLD */
 if|if
@@ -9058,8 +9196,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|pmc_modstat
 operator|.
@@ -9088,8 +9228,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|pmc_syscall
 operator|=
@@ -9350,7 +9492,9 @@ operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -9396,7 +9540,9 @@ operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|i
@@ -9407,12 +9553,14 @@ name|cap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|pmc_capability_names
 index|[
 name|i
 operator|-
 literal|1
 index|]
+operator|)
 return|;
 block|}
 end_function
@@ -9442,17 +9590,21 @@ operator|<=
 name|PMC_CLASS_LAST
 condition|)
 return|return
+operator|(
 name|pmc_class_names
 index|[
 name|pc
 index|]
+operator|)
 return|;
 name|errno
 operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -9482,17 +9634,21 @@ operator|<=
 name|PMC_CPU_LAST
 condition|)
 return|return
+operator|(
 name|pmc_cputype_names
 index|[
 name|cp
 index|]
+operator|)
 return|;
 name|errno
 operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -9522,17 +9678,21 @@ operator|<=
 name|PMC_DISP_LAST
 condition|)
 return|return
+operator|(
 name|pmc_disposition_names
 index|[
 name|pd
 index|]
+operator|)
 return|;
 name|errno
 operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -9562,19 +9722,23 @@ operator|<=
 name|PMC_EVENT_LAST
 condition|)
 return|return
+operator|(
 name|pmc_event_table
 index|[
 name|pe
 index|]
 operator|.
 name|pm_ev_name
+operator|)
 return|;
 name|errno
 operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -9604,17 +9768,21 @@ operator|<=
 name|PMC_MODE_LAST
 condition|)
 return|return
+operator|(
 name|pmc_mode_names
 index|[
 name|pm
 index|]
+operator|)
 return|;
 name|errno
 operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -9644,17 +9812,21 @@ operator|<=
 name|PMC_STATE_LAST
 condition|)
 return|return
+operator|(
 name|pmc_state_names
 index|[
 name|ps
 index|]
+operator|)
 return|;
 name|errno
 operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -9679,14 +9851,18 @@ operator|=
 name|ENXIO
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|cpu_info
 operator|.
 name|pm_ncpu
+operator|)
 return|;
 block|}
 end_function
@@ -9712,8 +9888,10 @@ operator|=
 name|ENXIO
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -9737,14 +9915,18 @@ operator|=
 name|EINVAL
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|cpu_info
 operator|.
 name|pm_npmc
+operator|)
 return|;
 block|}
 end_function
@@ -9787,8 +9969,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|nbytes
 operator|=
@@ -9822,8 +10006,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|pmci
 operator|->
@@ -9849,8 +10035,10 @@ name|pmci
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* kernel<->library, library<->userland interfaces are identical */
@@ -9865,7 +10053,9 @@ operator|)
 name|pmci
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -9918,8 +10108,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 operator|*
 name|value
@@ -9929,7 +10121,9 @@ operator|.
 name|pm_value
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -9953,6 +10147,7 @@ operator|=
 name|pmc
 expr_stmt|;
 return|return
+operator|(
 name|PMC_CALL
 argument_list|(
 name|PMCRELEASE
@@ -9960,6 +10155,7 @@ argument_list|,
 operator|&
 name|pmc_release_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -10016,8 +10212,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 operator|*
 name|oldvaluep
@@ -10027,7 +10225,9 @@ operator|.
 name|pm_value
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -10072,11 +10272,15 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -10100,6 +10304,7 @@ operator|=
 name|pmc
 expr_stmt|;
 return|return
+operator|(
 name|PMC_CALL
 argument_list|(
 name|PMCSTART
@@ -10107,6 +10312,7 @@ argument_list|,
 operator|&
 name|pmc_start_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -10130,6 +10336,7 @@ operator|=
 name|pmc
 expr_stmt|;
 return|return
+operator|(
 name|PMC_CALL
 argument_list|(
 name|PMCSTOP
@@ -10137,6 +10344,7 @@ argument_list|,
 operator|&
 name|pmc_stop_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -10210,11 +10418,15 @@ operator|.
 name|pm_width
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 end_function
@@ -10253,6 +10465,7 @@ operator|=
 name|value
 expr_stmt|;
 return|return
+operator|(
 name|PMC_CALL
 argument_list|(
 name|PMCRW
@@ -10260,6 +10473,7 @@ argument_list|,
 operator|&
 name|pmc_write_op
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -10283,6 +10497,7 @@ operator|=
 name|userdata
 expr_stmt|;
 return|return
+operator|(
 name|PMC_CALL
 argument_list|(
 name|WRITELOG
@@ -10290,6 +10505,7 @@ argument_list|,
 operator|&
 name|wl
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
