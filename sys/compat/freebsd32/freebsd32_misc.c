@@ -888,8 +888,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|error
-operator|=
 name|statfs_scale_blocks
 argument_list|(
 name|in
@@ -897,15 +895,6 @@ argument_list|,
 name|INT32_MAX
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|bzero
 argument_list|(
 name|out
