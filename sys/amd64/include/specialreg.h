@@ -674,6 +674,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AMDID_PAGE1GB
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|AMDID_RDTSCP
 value|0x08000000
 end_define

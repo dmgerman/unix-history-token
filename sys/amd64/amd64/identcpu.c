@@ -924,8 +924,8 @@ literal|"\031<s24>"
 comment|/* Same */
 literal|"\032FFXSR"
 comment|/* Fast FXSAVE/FXRSTOR */
-literal|"\033<b26>"
-comment|/* Undefined */
+literal|"\033Page1GB"
+comment|/* 1-GB large page support */
 literal|"\034RDTSCP"
 comment|/* RDTSCP */
 literal|"\035<b28>"
