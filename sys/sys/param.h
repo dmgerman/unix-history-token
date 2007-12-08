@@ -910,7 +910,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|((((const unsigned char *)(a))[(i)/NBBY]& (1<<((i)%NBBY))) == 0
+value|((((const unsigned char *)(a))[(i)/NBBY]& (1<<((i)%NBBY))) == 0)
 end_define
 
 begin_comment
