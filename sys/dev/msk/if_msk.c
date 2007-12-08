@@ -490,6 +490,14 @@ block|,
 block|{
 name|VENDORID_MARVELL
 block|,
+name|DEVICEID_MRVL_8039
+block|,
+literal|"Marvell Yukon 88E8039 Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|VENDORID_MARVELL
+block|,
 name|DEVICEID_MRVL_4361
 block|,
 literal|"Marvell Yukon 88E8050 Gigabit Ethernet"
