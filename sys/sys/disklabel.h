@@ -955,6 +955,17 @@ begin_comment
 comment|/* SGI's Extent File system */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FS_ZFS
+value|27
+end_define
+
+begin_comment
+comment|/* Sun's ZFS */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1022,6 +1033,8 @@ literal|"UDF"
 block|,
 literal|"?"
 literal|"EFS"
+block|,
+literal|"ZFS"
 block|,
 name|NULL
 block|}
