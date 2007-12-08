@@ -885,9 +885,6 @@ modifier|*
 name|out
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|statfs_scale_blocks
 argument_list|(
 name|in
