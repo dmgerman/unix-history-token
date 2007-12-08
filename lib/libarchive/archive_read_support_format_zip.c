@@ -1812,6 +1812,16 @@ expr_stmt|;
 comment|/* If there's no body, force read_data() to return EOF immediately. */
 if|if
 condition|(
+literal|0
+operator|==
+operator|(
+name|zip
+operator|->
+name|flags
+operator|&
+name|ZIP_LENGTH_AT_END
+operator|)
+operator|&&
 name|zip
 operator|->
 name|entry_bytes_remaining
