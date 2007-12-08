@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|ARCMSR_DRIVER_VERSION
-value|"Driver Version 1.20.00.14 2007-2-05"
+value|"Driver Version 1.20.00.15 2007-10-07"
 end_define
 
 begin_define
@@ -123,6 +123,17 @@ directive|define
 name|ARCMSR_RELEASE_SIMQ_LEVEL
 value|230
 end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_MAX_HBB_POSTQUEUE
+value|264
+end_define
+
+begin_comment
+comment|/* (ARCMSR_MAX_OUTSTANDING_CMD+8) */
+end_comment
 
 begin_comment
 comment|/* ********************************************************************* */
@@ -388,6 +399,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_ARECA_1201
+value|0x1201
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIDevVenIDARC1110
 value|0x111017D3
 end_define
@@ -544,6 +566,17 @@ define|#
 directive|define
 name|PCIDevVenIDARC1681
 value|0x168117D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIDevVenIDARC1201
+value|0x120117D3
 end_define
 
 begin_comment
@@ -1019,6 +1052,321 @@ value|0x0000003F
 end_define
 
 begin_comment
+comment|/*  ************************************************************************ **                SPEC. for Areca HBB adapter ************************************************************************ */
+end_comment
+
+begin_comment
+comment|/* ARECA HBB COMMAND for its FIRMWARE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_DRV2IOP_DOORBELL
+value|0x00020400
+end_define
+
+begin_comment
+comment|/* window of "instruction flags" from driver to iop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_DRV2IOP_DOORBELL_MASK
+value|0x00020404
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_IOP2DRV_DOORBELL
+value|0x00020408
+end_define
+
+begin_comment
+comment|/* window of "instruction flags" from iop to driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_IOP2DRV_DOORBELL_MASK
+value|0x0002040C
+end_define
+
+begin_comment
+comment|/* ARECA FLAG LANGUAGE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_IOP2DRV_DATA_WRITE_OK
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* ioctl transfer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_IOP2DRV_DATA_READ_OK
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* ioctl transfer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_IOP2DRV_CDB_DONE
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_IOP2DRV_MESSAGE_CMD_DONE
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_DOORBELL_HANDLE_INT
+value|0x0000000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_DOORBELL_INT_CLEAR_PATTERN
+value|0xFF00FFF0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_MESSAGE_INT_CLEAR_PATTERN
+value|0xFF00FFF7
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_MESSAGE_GET_CONFIG
+value|0x00010008
+end_define
+
+begin_comment
+comment|/* (ARCMSR_INBOUND_MESG0_GET_CONFIG<<16)|ARCMSR_DRV2IOP_MESSAGE_CMD_POSTED) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_MESSAGE_SET_CONFIG
+value|0x00020008
+end_define
+
+begin_comment
+comment|/* (ARCMSR_INBOUND_MESG0_SET_CONFIG<<16)|ARCMSR_DRV2IOP_MESSAGE_CMD_POSTED) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_MESSAGE_ABORT_CMD
+value|0x00030008
+end_define
+
+begin_comment
+comment|/* (ARCMSR_INBOUND_MESG0_ABORT_CMD<<16)|ARCMSR_DRV2IOP_MESSAGE_CMD_POSTED) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_MESSAGE_STOP_BGRB
+value|0x00040008
+end_define
+
+begin_comment
+comment|/* (ARCMSR_INBOUND_MESG0_STOP_BGRB<<16)|ARCMSR_DRV2IOP_MESSAGE_CMD_POSTED) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_MESSAGE_FLUSH_CACHE
+value|0x00050008
+end_define
+
+begin_comment
+comment|/* (ARCMSR_INBOUND_MESG0_FLUSH_CACHE<<16)|ARCMSR_DRV2IOP_MESSAGE_CMD_POSTED) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_MESSAGE_START_BGRB
+value|0x00060008
+end_define
+
+begin_comment
+comment|/* (ARCMSR_INBOUND_MESG0_START_BGRB<<16)|ARCMSR_DRV2IOP_MESSAGE_CMD_POSTED) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_MESSAGE_START_DRIVER_MODE
+value|0x000E0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_MESSAGE_SET_POST_WINDOW
+value|0x000F0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_MESSAGE_ACTIVE_EOI_MODE
+value|0x00100008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_MESSAGE_FIRMWARE_OK
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* ARCMSR_OUTBOUND_MESG1_FIRMWARE_OK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_DRV2IOP_DATA_WRITE_OK
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* ioctl transfer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_DRV2IOP_DATA_READ_OK
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* ioctl transfer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_DRV2IOP_CDB_POSTED
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_DRV2IOP_MESSAGE_CMD_POSTED
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_DRV2IOP_END_OF_INTERRUPT
+value|0x00000010
+end_define
+
+begin_comment
+comment|/*  */
+end_comment
+
+begin_comment
+comment|/* data tunnel buffer between user space program and its firmware */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_MSGCODE_RWBUFFER
+value|0x0000fa00
+end_define
+
+begin_comment
+comment|/* iop msgcode_rwbuffer for message command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_IOCTL_WBUFFER
+value|0x0000fe00
+end_define
+
+begin_comment
+comment|/* user space data to iop 128bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_IOCTL_RBUFFER
+value|0x0000ff00
+end_define
+
+begin_comment
+comment|/* iop data to user space 128bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBB_BASE0_OFFSET
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBB_BASE1_OFFSET
+value|0x00000018
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBB_BASE0_LEN
+value|0x00021000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBB_BASE1_LEN
+value|0x00010000
+end_define
+
+begin_comment
 comment|/*  ************************************************************* **   structure for holding DMA address data  ************************************************************* */
 end_comment
 
@@ -1034,7 +1382,7 @@ comment|/* bit24 */
 end_comment
 
 begin_comment
-comment|/* ************************************************************************************************ **                            ARECA FIRMWARE SPEC ************************************************************************************************ **		Usage of IOP331 adapter **		(All In/Out is in IOP331's view) **		1. Message 0 --> InitThread message and retrun code **		2. Doorbell is used for RS-232 emulation **				inDoorBell :    bit0 -- data in ready            (DRIVER DATA WRITE OK) **								bit1 -- data out has been read   (DRIVER DATA READ OK) **				outDooeBell:    bit0 -- data out ready           (IOP331 DATA WRITE OK) **								bit1 -- data in has been read    (IOP331 DATA READ OK) **		3. Index Memory Usage **			offset 0xf00 : for RS232 out (request buffer) **			offset 0xe00 : for RS232 in  (scratch buffer) **			offset 0xa00 : for inbound message code message_rwbuffer (driver send to IOP331) **			offset 0xa00 : for outbound message code message_rwbuffer (IOP331 send to driver) **		4. RS-232 emulation **			Currently 128 byte buffer is used **			          1st u_int32_t : Data length (1--124) **			        Byte 4--127 : Max 124 bytes of data **		5. PostQ **		All SCSI Command must be sent through postQ: **		(inbound queue port)	Request frame must be 32 bytes aligned  **            #   bit27--bit31 => flag for post ccb  **			  #   bit0--bit26 => real address (bit27--bit31) of post arcmsr_cdb   **													bit31 : 0 : 256 bytes frame **															1 : 512 bytes frame **													bit30 : 0 : normal request **															1 : BIOS request **                                                  bit29 : reserved **                                                  bit28 : reserved **                                                  bit27 : reserved **  ------------------------------------------------------------------------------- **		(outbount queue port)	Request reply                           **            #   bit27--bit31 => flag for reply **			  #   bit0--bit26 => real address (bit27--bit31) of reply arcmsr_cdb  **													bit31 : must be 0 (for this type of reply) **													bit30 : reserved for BIOS handshake **													bit29 : reserved **													bit28 : 0 : no error, ignore AdapStatus/DevStatus/SenseData **															1 : Error, error code in AdapStatus/DevStatus/SenseData **													bit27 : reserved **		6. BIOS request **			All BIOS request is the same with request from PostQ **			Except : **				Request frame is sent from configuration space **								offset: 0x78 : Request Frame (bit30 == 1) **								offset: 0x18 : writeonly to generate IRQ to IOP331 **				Completion of request: **				                      (bit30 == 0, bit28==err flag) **		7. Definition of SGL entry (structure) **		8. Message1 Out - Diag Status Code (????) **		9. Message0 message code : **			0x00 : NOP **			0x01 : Get Config ->offset 0xa00 :for outbound message code message_rwbuffer (IOP331 send to driver) **												Signature             0x87974060(4) **												Request len           0x00000200(4) **												numbers of queue      0x00000100(4) **												SDRAM Size            0x00000100(4)-->256 MB **												IDE Channels          0x00000008(4) **												vendor                40 bytes char **												model                  8 bytes char **												FirmVer               16 bytes char **                          					Device Map            16 bytes char ** **                          					FirmwareVersion DWORD<== Added for checking of new firmware capability **			0x02 : Set Config ->offset 0xa00 : for inbound message code message_rwbuffer (driver send to IOP331) **												Signature             0x87974063(4) **												UPPER32 of Request Frame  (4)-->Driver Only **			0x03 : Reset (Abort all queued Command) **			0x04 : Stop Background Activity **			0x05 : Flush Cache **			0x06 : Start Background Activity (re-start if background is halted) **			0x07 : Check If Host Command Pending (Novell May Need This Function) **			0x08 : Set controller time ->offset 0xa00 : for inbound message code message_rwbuffer (driver to IOP331) **			        							byte 0 : 0xaa<-- signature **                          					byte 1 : 0x55<-- signature **			        							byte 2 : year (04) **			        							byte 3 : month (1..12) **			        							byte 4 : date (1..31) **			        							byte 5 : hour (0..23) **			        							byte 6 : minute (0..59) **			        							byte 7 : second (0..59) ************************************************************************************************ */
+comment|/* ************************************************************************************************ **                            ARECA FIRMWARE SPEC ************************************************************************************************ **		Usage of IOP331 adapter **		(All In/Out is in IOP331's view) **		1. Message 0 --> InitThread message and retrun code **		2. Doorbell is used for RS-232 emulation **				inDoorBell :    bit0 -- data in ready            (DRIVER DATA WRITE OK) **								bit1 -- data out has been read   (DRIVER DATA READ OK) **				outDooeBell:    bit0 -- data out ready           (IOP331 DATA WRITE OK) **								bit1 -- data in has been read    (IOP331 DATA READ OK) **		3. Index Memory Usage **			offset 0xf00 : for RS232 out (request buffer) **			offset 0xe00 : for RS232 in  (scratch buffer) **			offset 0xa00 : for inbound message code msgcode_rwbuffer (driver send to IOP331) **			offset 0xa00 : for outbound message code msgcode_rwbuffer (IOP331 send to driver) **		4. RS-232 emulation **			Currently 128 byte buffer is used **			          1st u_int32_t : Data length (1--124) **			        Byte 4--127 : Max 124 bytes of data **		5. PostQ **		All SCSI Command must be sent through postQ: **		(inbound queue port)	Request frame must be 32 bytes aligned  **            #   bit27--bit31 => flag for post ccb  **			  #   bit0--bit26 => real address (bit27--bit31) of post arcmsr_cdb   **													bit31 : 0 : 256 bytes frame **															1 : 512 bytes frame **													bit30 : 0 : normal request **															1 : BIOS request **                                                  bit29 : reserved **                                                  bit28 : reserved **                                                  bit27 : reserved **  ------------------------------------------------------------------------------- **		(outbount queue port)	Request reply                           **            #   bit27--bit31 => flag for reply **			  #   bit0--bit26 => real address (bit27--bit31) of reply arcmsr_cdb  **													bit31 : must be 0 (for this type of reply) **													bit30 : reserved for BIOS handshake **													bit29 : reserved **													bit28 : 0 : no error, ignore AdapStatus/DevStatus/SenseData **															1 : Error, error code in AdapStatus/DevStatus/SenseData **													bit27 : reserved **		6. BIOS request **			All BIOS request is the same with request from PostQ **			Except : **				Request frame is sent from configuration space **								offset: 0x78 : Request Frame (bit30 == 1) **								offset: 0x18 : writeonly to generate IRQ to IOP331 **				Completion of request: **				                      (bit30 == 0, bit28==err flag) **		7. Definition of SGL entry (structure) **		8. Message1 Out - Diag Status Code (????) **		9. Message0 message code : **			0x00 : NOP **			0x01 : Get Config ->offset 0xa00 :for outbound message code msgcode_rwbuffer (IOP331 send to driver) **												Signature             0x87974060(4) **												Request len           0x00000200(4) **												numbers of queue      0x00000100(4) **												SDRAM Size            0x00000100(4)-->256 MB **												IDE Channels          0x00000008(4) **												vendor                40 bytes char **												model                  8 bytes char **												FirmVer               16 bytes char **												Device Map            16 bytes char **	 **					FirmwareVersion DWORD<== Added for checking of new firmware capability **			0x02 : Set Config ->offset 0xa00 : for inbound message code msgcode_rwbuffer (driver send to IOP331) **												Signature             0x87974063(4) **												UPPER32 of Request Frame  (4)-->Driver Only **			0x03 : Reset (Abort all queued Command) **			0x04 : Stop Background Activity **			0x05 : Flush Cache **			0x06 : Start Background Activity (re-start if background is halted) **			0x07 : Check If Host Command Pending (Novell May Need This Function) **			0x08 : Set controller time ->offset 0xa00 : for inbound message code msgcode_rwbuffer (driver to IOP331) **											byte 0 : 0xaa<-- signature **											byte 1 : 0x55<-- signature **											byte 2 : year (04) **											byte 3 : month (1..12) **											byte 4 : date (1..31) **											byte 5 : hour (0..23) **											byte 6 : minute (0..59) **											byte 7 : second (0..59) ************************************************************************************************ */
 end_comment
 
 begin_comment
@@ -1712,11 +2060,41 @@ begin_struct
 struct|struct
 name|AdapterControlBlock
 block|{
+name|u_int32_t
+name|adapter_type
+decl_stmt|;
+comment|/* adapter A,B..... */
+define|#
+directive|define
+name|ACB_ADAPTER_TYPE_A
+value|0x00000001
+comment|/* hba I IOP */
+define|#
+directive|define
+name|ACB_ADAPTER_TYPE_B
+value|0x00000002
+comment|/* hbb M IOP */
+define|#
+directive|define
+name|ACB_ADAPTER_TYPE_C
+value|0x00000004
+comment|/* hbc P IOP */
+define|#
+directive|define
+name|ACB_ADAPTER_TYPE_D
+value|0x00000008
+comment|/* hbd A IOP */
 name|bus_space_tag_t
 name|btag
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|bus_space_handle_t
 name|bhandle
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|bus_dma_tag_t
 name|parent_dmat
@@ -1759,6 +2137,9 @@ name|struct
 name|resource
 modifier|*
 name|sys_res_arcmsr
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|struct
 name|resource
@@ -1789,12 +2170,16 @@ name|unsigned
 name|long
 name|vir2phy_offset
 decl_stmt|;
+name|unsigned
+name|long
+name|srb_phyaddr
+decl_stmt|;
 comment|/* Offset is used in making arc cdb physical to virtual calculations */
 name|u_int32_t
 name|outbound_int_enable
 decl_stmt|;
 name|struct
-name|MessageUnit
+name|MessageUnit_UNION
 modifier|*
 name|pmu
 decl_stmt|;
@@ -1841,7 +2226,7 @@ value|0x0020
 comment|/* ioctl clear rqbuffer */
 define|#
 directive|define
-name|ACB_F_MESSAGE_WQBUFFER_READED
+name|ACB_F_MESSAGE_WQBUFFER_READ
 value|0x0040
 define|#
 directive|define
@@ -2570,7 +2955,7 @@ comment|/*byte*/
 end_comment
 
 begin_comment
-comment|/* **============================================================================== **  0x3f-0x3e :  ** Bit       Default                       Description ** 15:12        0h                          Reserved ** 11           0b                Discard Timer SERR# Enable: Controls the generation of SERR# on the primary interface (P_SERR#) in response **                                                            to a timer discard on either the primary or secondary interface. **                                                            0b=SERR# is not asserted. **                                                            1b=SERR# is asserted. ** 10           0b                Discard Timer Status (DTS): This bit is set to a '1b' when either the primary or secondary discard timer expires. **                                                            The delayed completion is then discarded. ** 09           0b             Secondary Discard Timer (SDT): Sets the maximum number of PCI clock cycles  **									that bridge waits for an initiator on the secondary bus  **									to repeat a delayed transaction request.  **                                                            The counter starts when the delayed transaction completion is ready  **									to be returned to the initiator.  **                                                            When the initiator has not repeated the transaction  **									at least once before the counter expires,bridge  **										discards the delayed transaction from its queues. **                                                            0b=The secondary master time-out counter is 2 15 PCI clock cycles. **                                                            1b=The secondary master time-out counter is 2 10 PCI clock cycles. ** 08           0b               Primary Discard Timer (PDT): Sets the maximum number of PCI clock cycles  **									that bridge waits for an initiator on the primary bus  **									to repeat a delayed transaction request.  **                                                            The counter starts when the delayed transaction completion  **									is ready to be returned to the initiator.  **                                                            When the initiator has not repeated the transaction  **									at least once before the counter expires,  **									bridge discards the delayed transaction from its queues. **                                                            0b=The primary master time-out counter is 2 15 PCI clock cycles. **                                                            1b=The primary master time-out counter is 2 10 PCI clock cycles. ** 07           0b            Fast Back-to-Back Enable (FBE): The bridge does not initiate back to back transactions. ** 06           0b                 Secondary Bus Reset (SBR):  **                                                            When cleared to 0b: The bridge deasserts S_RST#,  **									when it had been asserted by writing this bit to a 1b. **                                                                When set to 1b: The bridge asserts S_RST#. ** 05           0b                   Master Abort Mode (MAM): Dictates bridge behavior on the initiator bus  **									when a master abort termination occurs in response to  **										a delayed transaction initiated by bridge on the target bus. **                                                            0b=The bridge asserts TRDY# in response to a non-locked delayed transaction, **										and returns FFFF FFFFh when a read. **                                                            1b=When the transaction had not yet been completed on the initiator bus  **										(e.g.,delayed reads, or non-posted writes),  **                                                                 then bridge returns a Target Abort in response to the original requester  **                                                                 when it returns looking for its delayed completion on the initiator bus.  **                                                                 When the transaction had completed on the initiator bus (e.g., a PMW),  **										then bridge asserts P_SERR# (when enabled). **                                   For PCI-X transactions this bit is an enable for the assertion of P_SERR# due to a master abort  **								while attempting to deliver a posted memory write on the destination bus. ** 04           0b                   VGA Alias Filter Enable: This bit dictates bridge behavior in conjunction with the VGA enable bit  **								(also of this register),  **                                                            and the VGA Palette Snoop Enable bit (Command Register).  **                                                            When the VGA enable, or VGA Palette Snoop enable bits are on (i.e., 1b)  **									the VGA Aliasing bit for the corresponding enabled functionality,: **                                                            0b=Ignores address bits AD[15:10] when decoding VGA I/O addresses. **                                                            1b=Ensures that address bits AD[15:10] equal 000000b when decoding VGA I/O addresses. **                                   When all VGA cycle forwarding is disabled, (i.e., VGA Enable bit =0b and VGA Palette Snoop bit =0b),  **									then this bit has no impact on bridge behavior. ** 03           0b                                VGA Enable: Setting this bit enables address decoding **								 and transaction forwarding of the following VGA transactions from the primary bus  **									to the secondary bus: **                                                            frame buffer memory addresses 000A0000h:000BFFFFh,  **									VGA I/O addresses 3B0:3BBh and 3C0h:3DFh, where AD[31:16]=¡§0000h¡ **									¨ and AD[15:10] are either not decoded (i.e., don't cares), **										 or must be ¡§000000b¡¨ **                                                            depending upon the state of the VGA Alias Filter Enable bit. (bit(4) of this register) **                                                            I/O and Memory Enable bits must be set in the Command register  **										to enable forwarding of VGA cycles. ** 02           0b                                ISA Enable: Setting this bit enables special handling  **								for the forwarding of ISA I/O transactions that fall within the address range  **									specified by the I/O Base and Limit registers,  **										and are within the lowest 64Kbyte of the I/O address map  **											(i.e., 0000 0000h - 0000 FFFFh). **                                                            0b=All I/O transactions that fall within the I/O Base  **										and Limit registers' specified range are forwarded  **											from primary to secondary unfiltered. **                                                            1b=Blocks the forwarding from primary to secondary  **											of the top 768 bytes of each 1Kbyte alias.  **												On the secondary the top 768 bytes of each 1K alias  **													are inversely decoded and forwarded  **														from secondary to primary. ** 01           0b                      SERR# Forward Enable: 0b=The bridge does not assert P_SERR# as a result of an S_SERR# assertion. **                                                            1b=The bridge asserts P_SERR# whenever S_SERR# is detected  **									asserted provided the SERR# Enable bit is set (PCI Command Register bit(8)=1b). ** 00           0b                     Parity Error Response: This bit controls bridge response to a parity error  **										that is detected on its secondary interface. **                                                            0b=When a data parity error is detected bridge does not assert S_PERR#.  **                                                            Also bridge does not assert P_SERR# in response to a detected address  **										or attribute parity error. **                                                            1b=When a data parity error is detected bridge asserts S_PERR#.  **										The bridge also asserts P_SERR# (when enabled globally via bit(8)  **											of the Command register) **                                                            in response to a detected address or attribute parity error. **============================================================================== */
+comment|/* **============================================================================== **  0x3f-0x3e :  ** Bit       Default                       Description ** 15:12        0h                          Reserved ** 11           0b                Discard Timer SERR# Enable: Controls the generation of SERR# on the primary interface (P_SERR#) in response **                                                            to a timer discard on either the primary or secondary interface. **                                                            0b=SERR# is not asserted. **                                                            1b=SERR# is asserted. ** 10           0b                Discard Timer Status (DTS): This bit is set to a '1b' when either the primary or secondary discard timer expires. **                                                            The delayed completion is then discarded. ** 09           0b             Secondary Discard Timer (SDT): Sets the maximum number of PCI clock cycles  **									that bridge waits for an initiator on the secondary bus  **									to repeat a delayed transaction request.  **                                                            The counter starts when the delayed transaction completion is ready  **									to be returned to the initiator.  **                                                            When the initiator has not repeated the transaction  **									at least once before the counter expires,bridge  **										discards the delayed transaction from its queues. **                                                            0b=The secondary master time-out counter is 2 15 PCI clock cycles. **                                                            1b=The secondary master time-out counter is 2 10 PCI clock cycles. ** 08           0b               Primary Discard Timer (PDT): Sets the maximum number of PCI clock cycles  **									that bridge waits for an initiator on the primary bus  **									to repeat a delayed transaction request.  **                                                            The counter starts when the delayed transaction completion  **									is ready to be returned to the initiator.  **                                                            When the initiator has not repeated the transaction  **									at least once before the counter expires,  **									bridge discards the delayed transaction from its queues. **                                                            0b=The primary master time-out counter is 2 15 PCI clock cycles. **                                                            1b=The primary master time-out counter is 2 10 PCI clock cycles. ** 07           0b            Fast Back-to-Back Enable (FBE): The bridge does not initiate back to back transactions. ** 06           0b                 Secondary Bus Reset (SBR):  **                                                            When cleared to 0b: The bridge deasserts S_RST#,  **									when it had been asserted by writing this bit to a 1b. **                                                                When set to 1b: The bridge asserts S_RST#. ** 05           0b                   Master Abort Mode (MAM): Dictates bridge behavior on the initiator bus  **									when a master abort termination occurs in response to  **										a delayed transaction initiated by bridge on the target bus. **                                                            0b=The bridge asserts TRDY# in response to a non-locked delayed transaction, **										and returns FFFF FFFFh when a read. **                                                            1b=When the transaction had not yet been completed on the initiator bus  **										(e.g.,delayed reads, or non-posted writes),  **                                                                 then bridge returns a Target Abort in response to the original requester  **                                                                 when it returns looking for its delayed completion on the initiator bus.  **                                                                 When the transaction had completed on the initiator bus (e.g., a PMW),  **										then bridge asserts P_SERR# (when enabled). **                                   For PCI-X transactions this bit is an enable for the assertion of P_SERR# due to a master abort  **								while attempting to deliver a posted memory write on the destination bus. ** 04           0b                   VGA Alias Filter Enable: This bit dictates bridge behavior in conjunction with the VGA enable bit  **								(also of this register),  **                                                            and the VGA Palette Snoop Enable bit (Command Register).  **                                                            When the VGA enable, or VGA Palette Snoop enable bits are on (i.e., 1b)  **									the VGA Aliasing bit for the corresponding enabled functionality,: **                                                            0b=Ignores address bits AD[15:10] when decoding VGA I/O addresses. **                                                            1b=Ensures that address bits AD[15:10] equal 000000b when decoding VGA I/O addresses. **                                   When all VGA cycle forwarding is disabled, (i.e., VGA Enable bit =0b and VGA Palette Snoop bit =0b),  **									then this bit has no impact on bridge behavior. ** 03           0b                                VGA Enable: Setting this bit enables address decoding **								 and transaction forwarding of the following VGA transactions from the primary bus  **									to the secondary bus: **                                                            frame buffer memory addresses 000A0000h:000BFFFFh,  **									VGA I/O addresses 3B0:3BBh and 3C0h:3DFh, where AD[31:16]=¡§0000h?**									?and AD[15:10] are either not decoded (i.e., don't cares), **										 or must be ¡§000000b¡¨ **                                                            depending upon the state of the VGA Alias Filter Enable bit. (bit(4) of this register) **                                                            I/O and Memory Enable bits must be set in the Command register  **										to enable forwarding of VGA cycles. ** 02           0b                                ISA Enable: Setting this bit enables special handling  **								for the forwarding of ISA I/O transactions that fall within the address range  **									specified by the I/O Base and Limit registers,  **										and are within the lowest 64Kbyte of the I/O address map  **											(i.e., 0000 0000h - 0000 FFFFh). **                                                            0b=All I/O transactions that fall within the I/O Base  **										and Limit registers' specified range are forwarded  **											from primary to secondary unfiltered. **                                                            1b=Blocks the forwarding from primary to secondary  **											of the top 768 bytes of each 1Kbyte alias.  **												On the secondary the top 768 bytes of each 1K alias  **													are inversely decoded and forwarded  **														from secondary to primary. ** 01           0b                      SERR# Forward Enable: 0b=The bridge does not assert P_SERR# as a result of an S_SERR# assertion. **                                                            1b=The bridge asserts P_SERR# whenever S_SERR# is detected  **									asserted provided the SERR# Enable bit is set (PCI Command Register bit(8)=1b). ** 00           0b                     Parity Error Response: This bit controls bridge response to a parity error  **										that is detected on its secondary interface. **                                                            0b=When a data parity error is detected bridge does not assert S_PERR#.  **                                                            Also bridge does not assert P_SERR# in response to a detected address  **										or attribute parity error. **                                                            1b=When a data parity error is detected bridge asserts S_PERR#.  **										The bridge also asserts P_SERR# (when enabled globally via bit(8)  **											of the Command register) **                                                            in response to a detected address or attribute parity error. **============================================================================== */
 end_comment
 
 begin_define
@@ -3556,7 +3941,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|MessageUnit
+name|HBA_MessageUnit
 block|{
 name|u_int32_t
 name|resrved0
@@ -3642,7 +4027,7 @@ index|]
 decl_stmt|;
 comment|/*0800 09FF                    128*/
 name|u_int32_t
-name|message_rwbuffer
+name|msgcode_rwbuffer
 index|[
 literal|256
 index|]
@@ -3676,6 +4061,157 @@ literal|32
 index|]
 decl_stmt|;
 comment|/*0F80 0FFF                     32*/
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ********************************************************************* **  ********************************************************************* */
+end_comment
+
+begin_struct
+struct|struct
+name|HBB_DOORBELL
+block|{
+name|u_int8_t
+name|doorbell_reserved
+index|[
+literal|132096
+index|]
+decl_stmt|;
+comment|/*reserved */
+name|u_int32_t
+name|drv2iop_doorbell
+decl_stmt|;
+comment|/*offset 0x00020400:00,01,02,03: window of "instruction flags" from driver to iop */
+name|u_int32_t
+name|drv2iop_doorbell_mask
+decl_stmt|;
+comment|/*                  04,05,06,07: doorbell mask */
+name|u_int32_t
+name|iop2drv_doorbell
+decl_stmt|;
+comment|/*                  08,09,10,11: window of "instruction flags" from iop to driver */
+name|u_int32_t
+name|iop2drv_doorbell_mask
+decl_stmt|;
+comment|/*                  12,13,14,15: doorbell mask */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ********************************************************************* **  ********************************************************************* */
+end_comment
+
+begin_struct
+struct|struct
+name|HBB_RWBUFFER
+block|{
+name|u_int8_t
+name|message_reserved0
+index|[
+literal|64000
+index|]
+decl_stmt|;
+comment|/*reserved */
+name|u_int32_t
+name|msgcode_rwbuffer
+index|[
+literal|256
+index|]
+decl_stmt|;
+comment|/*offset 0x0000fa00:   0,   1,   2,   3,...,1023: message code read write 1024bytes */
+name|u_int32_t
+name|message_wbuffer
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*offset 0x0000fe00:1024,1025,1026,1027,...,1151: user space data to iop 128bytes */
+name|u_int32_t
+name|message_reserved1
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*                  1152,1153,1154,1155,...,1279: message reserved*/
+name|u_int32_t
+name|message_rbuffer
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*offset 0x0000ff00:1280,1281,1282,1283,...,1407: iop data to user space 128bytes */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ********************************************************************* **  ********************************************************************* */
+end_comment
+
+begin_struct
+struct|struct
+name|HBB_MessageUnit
+block|{
+name|u_int32_t
+name|post_qbuffer
+index|[
+name|ARCMSR_MAX_HBB_POSTQUEUE
+index|]
+decl_stmt|;
+comment|/* post queue buffer for iop */
+name|u_int32_t
+name|done_qbuffer
+index|[
+name|ARCMSR_MAX_HBB_POSTQUEUE
+index|]
+decl_stmt|;
+comment|/* done queue buffer for iop */
+name|int32_t
+name|postq_index
+decl_stmt|;
+comment|/* post queue index */
+name|int32_t
+name|doneq_index
+decl_stmt|;
+comment|/* done queue index */
+name|struct
+name|HBB_DOORBELL
+modifier|*
+name|hbb_doorbell
+decl_stmt|;
+name|struct
+name|HBB_RWBUFFER
+modifier|*
+name|hbb_rwbuffer
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ********************************************************************* **  ********************************************************************* */
+end_comment
+
+begin_struct
+struct|struct
+name|MessageUnit_UNION
+block|{
+union|union
+block|{
+name|struct
+name|HBA_MessageUnit
+name|hbamu
+decl_stmt|;
+name|struct
+name|HBB_MessageUnit
+name|hbbmu
+decl_stmt|;
+block|}
+name|muu
+union|;
 block|}
 struct|;
 end_struct
