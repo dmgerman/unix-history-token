@@ -4196,6 +4196,10 @@ condition|(
 name|entry
 operator|->
 name|gpe_deleted
+operator|||
+name|entry
+operator|->
+name|gpe_internal
 condition|)
 continue|continue;
 name|gctl_error
