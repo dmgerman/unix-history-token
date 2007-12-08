@@ -5505,6 +5505,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|COUNT_IPIS
+operator|(
 operator|*
 name|ipi_lazypmap_counts
 index|[
@@ -5513,6 +5514,7 @@ argument_list|(
 name|cpuid
 argument_list|)
 index|]
+operator|)
 operator|++
 expr_stmt|;
 endif|#
