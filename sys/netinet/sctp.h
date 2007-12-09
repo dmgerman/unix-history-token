@@ -2090,6 +2090,20 @@ name|SCTP_THRESHOLD_LOGGING
 value|0x02000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_LOG_AT_SEND_2_SCTP
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LOG_AT_SEND_2_OUTQ
+value|0x08000000
+end_define
+
 begin_endif
 endif|#
 directive|endif
