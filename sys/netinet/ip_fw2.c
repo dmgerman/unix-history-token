@@ -11710,17 +11710,12 @@ case|case
 name|IPPROTO_NONE
 case|:
 comment|/* RFC 2460 */
-name|PULLUP_TO
-argument_list|(
-name|hlen
-argument_list|,
+comment|/* 				 * Packet ends here, and IPv6 header has 				 * already been pulled up. If ip6e_len!=0 				 * then octets must be ignored. 				 */
 name|ulp
-argument_list|,
-expr|struct
-name|ip6_ext
-argument_list|)
+operator|=
+name|ip
 expr_stmt|;
-comment|/* Packet ends here. if ip6e_len!=0 octets 				 * must be ignored. */
+comment|/* non-NULL to get out of loop. */
 break|break;
 case|case
 name|IPPROTO_OSPFIGP
