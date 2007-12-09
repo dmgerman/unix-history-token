@@ -97,13 +97,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|__scanfdebug
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
@@ -160,10 +153,6 @@ argument_list|,
 literal|""
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|__scanfdebug
-operator|=
-literal|1
 expr_stmt|;
 comment|/* 	 * Various tests for normalized numbers 	 */
 name|sscanf

@@ -447,13 +447,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|__scanfdebug
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -3331,19 +3324,6 @@ operator|=
 name|res
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|__scanfdebug
-operator|&&
-name|p
-operator|-
-name|buf
-operator|!=
-name|width
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
 name|nassigned
 operator|++
 expr_stmt|;

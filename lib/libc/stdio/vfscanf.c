@@ -462,14 +462,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|int
-name|__scanfdebug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
@@ -3628,19 +3620,6 @@ operator|=
 name|res
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|__scanfdebug
-operator|&&
-name|p
-operator|-
-name|buf
-operator|!=
-name|width
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
 name|nassigned
 operator|++
 expr_stmt|;
