@@ -14570,7 +14570,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|700099
+literal|700044
 if|if
 condition|(
 name|xpt_bus_register
