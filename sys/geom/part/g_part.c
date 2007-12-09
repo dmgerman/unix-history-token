@@ -2207,7 +2207,6 @@ name|gpe_index
 operator|==
 name|index
 condition|)
-block|{
 name|index
 operator|=
 name|entry
@@ -2216,11 +2215,18 @@ name|gpe_index
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|entry
+operator|->
+name|gpe_index
+operator|<
+name|index
+condition|)
 name|last
 operator|=
 name|entry
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|entry
