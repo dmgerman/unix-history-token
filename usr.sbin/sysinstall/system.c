@@ -381,13 +381,15 @@ parameter_list|)
 block|{
 name|char
 modifier|*
-name|gunzip
+name|unzipper
 init|=
 name|RunningAsInit
 condition|?
-literal|"/stand/gunzip"
+literal|"/stand/"
+name|UNZIPPER
 else|:
-literal|"/usr/bin/gunzip"
+literal|"/usr/bin/"
+name|UNZIPPER
 decl_stmt|;
 if|if
 condition|(
@@ -452,7 +454,7 @@ name|vsystem
 argument_list|(
 literal|"%s< %s> %s"
 argument_list|,
-name|gunzip
+name|unzipper
 argument_list|,
 name|fname
 argument_list|,
