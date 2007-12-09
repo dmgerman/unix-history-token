@@ -4844,6 +4844,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ndis_80211
+condition|)
 name|taskqueue_drain
 argument_list|(
 name|sc
@@ -5167,6 +5173,12 @@ operator|->
 name|ndis_parent_tag
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ndis_80211
+condition|)
 name|taskqueue_free
 argument_list|(
 name|sc
