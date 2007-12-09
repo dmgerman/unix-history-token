@@ -276,14 +276,9 @@ name|kind
 operator|=
 name|STRTOG_Denormal
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LDBL_IMPLICIT_NBIT
 name|be
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|FP_INFINITE
