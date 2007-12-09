@@ -112,6 +112,13 @@ directive|define
 name|FSTYPENAMES
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXPARTITIONS
+value|26
+end_define
+
 begin_include
 include|#
 directive|include
@@ -366,6 +373,13 @@ define|#
 directive|define
 name|DEFEDITOR
 value|_PATH_VI
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFPARTITIONS
+value|8
 end_define
 
 begin_decl_stmt
@@ -1381,7 +1395,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|MAXPARTITIONS
+name|lp
+operator|->
+name|d_npartitions
 condition|;
 name|i
 operator|++
@@ -7349,7 +7365,9 @@ control|(
 init|;
 name|i
 operator|<
-name|MAXPARTITIONS
+name|lp
+operator|->
+name|d_npartitions
 condition|;
 name|i
 operator|++
@@ -7680,7 +7698,7 @@ name|loclab
 operator|.
 name|d_npartitions
 operator|=
-name|MAXPARTITIONS
+name|DEFPARTITIONS
 expr_stmt|;
 comment|/* Various (unneeded) compat stuff */
 name|loclab
