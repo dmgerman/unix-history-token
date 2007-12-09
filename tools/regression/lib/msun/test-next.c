@@ -227,7 +227,11 @@ name|FE_INEXACT
 decl_stmt|;
 name|long
 name|double
+name|ldbl_small
+decl_stmt|,
 name|ldbl_eps
+decl_stmt|,
+name|ldbl_max
 decl_stmt|;
 name|printf
 argument_list|(
@@ -245,7 +249,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * We can't use a compile-time constant here because gcc on 	 * FreeBSD/i386 assumes long doubles are truncated to the 	 * double format. 	 */
-name|ldbl_eps
+name|ldbl_small
 operator|=
 name|ldexpl
 argument_list|(
@@ -254,6 +258,23 @@ argument_list|,
 name|LDBL_MIN_EXP
 operator|-
 name|LDBL_MANT_DIG
+argument_list|)
+expr_stmt|;
+name|ldbl_eps
+operator|=
+name|LDBL_EPSILON
+expr_stmt|;
+name|ldbl_max
+operator|=
+name|ldexpl
+argument_list|(
+literal|1.0
+operator|-
+name|ldbl_eps
+operator|/
+literal|2
+argument_list|,
+name|LDBL_MAX_EXP
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Special cases involving zeroes. 	 */
@@ -317,7 +338,7 @@ name|stest
 argument_list|(
 name|nextafterl
 argument_list|,
-name|ldbl_eps
+name|ldbl_small
 argument_list|,
 name|l
 argument_list|)
@@ -346,7 +367,7 @@ name|stest
 argument_list|(
 name|nexttowardl
 argument_list|,
-name|ldbl_eps
+name|ldbl_small
 argument_list|,
 name|l
 argument_list|)
@@ -519,7 +540,7 @@ literal|2.0
 argument_list|,
 literal|1.0
 operator|+
-name|LDBL_EPSILON
+name|ldbl_eps
 argument_list|,
 literal|0
 argument_list|,
@@ -535,7 +556,7 @@ name|INFINITY
 argument_list|,
 literal|1.0
 operator|-
-name|LDBL_EPSILON
+name|ldbl_eps
 operator|/
 literal|2
 argument_list|,
@@ -624,7 +645,7 @@ argument_list|,
 operator|-
 literal|1.0
 operator|+
-name|LDBL_EPSILON
+name|ldbl_eps
 operator|/
 literal|2
 argument_list|,
@@ -644,7 +665,7 @@ argument_list|,
 operator|-
 literal|1.0
 operator|-
-name|LDBL_EPSILON
+name|ldbl_eps
 argument_list|,
 literal|0
 argument_list|,
@@ -660,7 +681,7 @@ literal|1.0
 argument_list|,
 literal|1.0
 operator|+
-name|LDBL_EPSILON
+name|ldbl_eps
 argument_list|)
 argument_list|,
 literal|1.0
@@ -678,7 +699,7 @@ literal|1.0
 argument_list|,
 literal|1.0
 operator|+
-name|LDBL_EPSILON
+name|ldbl_eps
 argument_list|)
 argument_list|,
 literal|1.0
@@ -696,12 +717,12 @@ literal|1.0
 argument_list|,
 literal|1.0
 operator|+
-name|LDBL_EPSILON
+name|ldbl_eps
 argument_list|)
 argument_list|,
 literal|1.0
 operator|+
-name|LDBL_EPSILON
+name|ldbl_eps
 argument_list|,
 literal|0
 argument_list|)
@@ -1383,7 +1404,7 @@ argument_list|)
 expr_stmt|;
 name|testboth
 argument_list|(
-name|LDBL_MAX
+name|ldbl_max
 argument_list|,
 name|INFINITY
 argument_list|,
@@ -1400,7 +1421,7 @@ name|INFINITY
 argument_list|,
 literal|0.0
 argument_list|,
-name|LDBL_MAX
+name|ldbl_max
 argument_list|,
 literal|0
 argument_list|,
