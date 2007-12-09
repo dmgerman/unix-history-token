@@ -2192,6 +2192,30 @@ argument_list|,
 literal|"Seagate "
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|atadev
+operator|->
+name|param
+operator|.
+name|model
+argument_list|,
+literal|"HDS"
+argument_list|,
+literal|3
+argument_list|)
+condition|)
+name|strcpy
+argument_list|(
+name|vendor
+argument_list|,
+literal|"Hitachi "
+argument_list|)
+expr_stmt|;
 else|else
 name|strcpy
 argument_list|(
