@@ -1602,6 +1602,10 @@ expr_stmt|;
 name|alpha_mb
 argument_list|()
 expr_stmt|;
+name|busdma_pyxis_bug
+operator|=
+literal|1
+expr_stmt|;
 block|}
 endif|#
 directive|endif
