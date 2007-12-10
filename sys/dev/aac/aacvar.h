@@ -923,6 +923,35 @@ value|bus_space_read_1 (sc->aac_btag, \ 					sc->aac_bhandle, reg)
 end_define
 
 begin_comment
+comment|/* fib context (IOCTL) */
+end_comment
+
+begin_struct
+struct|struct
+name|aac_fib_context
+block|{
+name|u_int32_t
+name|unique
+decl_stmt|;
+name|int
+name|ctx_idx
+decl_stmt|;
+name|int
+name|ctx_wrap
+decl_stmt|;
+name|struct
+name|aac_fib_context
+modifier|*
+name|next
+decl_stmt|,
+modifier|*
+name|prev
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Per-controller structure.  */
 end_comment
 
@@ -997,6 +1026,9 @@ define|#
 directive|define
 name|AAC_STATE_AIF_SLEEPER
 value|(1<<3)
+name|int
+name|aac_open_cnt
+decl_stmt|;
 name|struct
 name|FsaRevision
 name|aac_revision
@@ -1092,19 +1124,6 @@ expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aac_command
-argument_list|)
-name|aac_aif
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|TAILQ_HEAD(,aac_command) aac_norm;
-endif|#
-directive|endif
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
 argument|aac_event
 argument_list|)
 name|aac_ev_cmfree
@@ -1172,17 +1191,22 @@ name|mtx
 name|aac_aifq_lock
 decl_stmt|;
 name|struct
-name|aac_aif_command
+name|aac_fib
 name|aac_aifq
 index|[
 name|AAC_AIFQ_LENGTH
 index|]
 decl_stmt|;
 name|int
-name|aac_aifq_head
+name|aifq_idx
 decl_stmt|;
 name|int
-name|aac_aifq_tail
+name|aifq_filled
+decl_stmt|;
+name|struct
+name|aac_fib_context
+modifier|*
+name|fibctx
 decl_stmt|;
 name|struct
 name|selinfo
