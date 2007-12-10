@@ -62,9 +62,11 @@ name|hflag
 condition|)
 name|printf
 argument_list|(
-literal|"%5s %5s %5s %5s %5s %5s %5s %-20s\n"
+literal|"%5s %-16s %5s %5s %5s %5s %5s %5s %-20s\n"
 argument_list|,
 literal|"PID"
+argument_list|,
+literal|"COMM"
 argument_list|,
 literal|"EUID"
 argument_list|,
@@ -86,6 +88,15 @@ argument_list|(
 literal|"%5d "
 argument_list|,
 name|pid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-16s "
+argument_list|,
+name|kipp
+operator|->
+name|ki_comm
 argument_list|)
 expr_stmt|;
 name|printf
