@@ -5007,6 +5007,7 @@ operator|=
 operator|&
 name|consfile
 expr_stmt|;
+comment|/* 		 * Open in non-blocking mode to avoid hangs during open 		 * and close(waiting for the port to drain). 		 */
 name|f
 operator|->
 name|f_file
@@ -5016,6 +5017,8 @@ argument_list|(
 name|ctty
 argument_list|,
 name|O_WRONLY
+operator||
+name|O_NONBLOCK
 argument_list|,
 literal|0
 argument_list|)
@@ -5277,6 +5280,10 @@ operator|==
 name|f
 operator|->
 name|f_prevlen
+operator|&&
+name|f
+operator|->
+name|f_prevline
 operator|&&
 operator|!
 name|strcmp
@@ -5721,6 +5728,7 @@ name|iov_base
 operator|=
 name|greetings
 expr_stmt|;
+comment|/* The time displayed is not synchornized with the other log 		 * destinations (like messages).  Following fragment was using 		 * ctime(&now), which was updating the time every 30 sec. 		 * With f_lasttime, time is synchronized correctly. 		 */
 name|v
 operator|->
 name|iov_len
@@ -5738,11 +5746,9 @@ name|f
 operator|->
 name|f_prevhost
 argument_list|,
-name|ctime
-argument_list|(
-operator|&
-name|now
-argument_list|)
+name|f
+operator|->
+name|f_lasttime
 argument_list|)
 expr_stmt|;
 if|if
@@ -5786,7 +5792,12 @@ name|v
 operator|->
 name|iov_len
 operator|=
-literal|15
+name|strlen
+argument_list|(
+name|f
+operator|->
+name|f_lasttime
+argument_list|)
 expr_stmt|;
 name|v
 operator|++
@@ -6159,7 +6170,13 @@ name|f_prevcount
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|f
+operator|->
+name|f_prevline
+condition|)
 block|{
 name|v
 operator|->
@@ -6177,6 +6194,10 @@ name|f
 operator|->
 name|f_prevlen
 expr_stmt|;
+block|}
+else|else
+block|{
+return|return;
 block|}
 name|v
 operator|++
@@ -6615,7 +6636,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* 			 * If writev(2) fails for potentially transient errors 			 * like the * filesystem being full, ignore it. 			 * Otherwise remove * this logfile from the list. 			 */
+comment|/* 			 * If writev(2) fails for potentially transient errors 			 * like the filesystem being full, ignore it. 			 * Otherwise remove this logfile from the list. 			 */
 if|if
 condition|(
 name|errno
@@ -6996,7 +7017,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|msg
+name|wmsg
 condition|)
 name|free
 argument_list|(
@@ -9829,8 +9850,6 @@ block|{
 name|pri
 operator|=
 name|LOG_PRIMASK
-operator|+
-literal|1
 expr_stmt|;
 name|pri_cmp
 operator|=
