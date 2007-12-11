@@ -1198,9 +1198,9 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|m->m_owner = curthread;					\
+value|do {								\ 		(m)->m_owner = curthread;				\
 comment|/* Add to the list of owned mutexes: */
-value|\ 		MUTEX_ASSERT_NOT_OWNED(m);				\ 		if ((m->m_lock.m_flags& UMUTEX_PRIO_PROTECT) == 0)	\ 			TAILQ_INSERT_TAIL(&curthread->mutexq, m, m_qe);	\ 		else							\ 			TAILQ_INSERT_TAIL(&curthread->pp_mutexq, m, m_qe)
+value|\ 		MUTEX_ASSERT_NOT_OWNED((m));				\ 		if (((m)->m_lock.m_flags& UMUTEX_PRIO_PROTECT) == 0)	\ 			TAILQ_INSERT_TAIL(&curthread->mutexq, (m), m_qe);\ 		else							\ 			TAILQ_INSERT_TAIL(&curthread->pp_mutexq, (m), m_qe);\ 	} while (0)
 end_define
 
 begin_function
