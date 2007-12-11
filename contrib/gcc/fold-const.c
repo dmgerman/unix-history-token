@@ -24602,6 +24602,18 @@ return|;
 block|}
 break|break;
 block|}
+comment|/* If the constant is negative, we cannot simplify this.  */
+if|if
+condition|(
+name|tree_int_cst_sgn
+argument_list|(
+name|c
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+break|break;
 comment|/* FALLTHROUGH */
 case|case
 name|NEGATE_EXPR
