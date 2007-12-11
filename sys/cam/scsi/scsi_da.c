@@ -1382,7 +1382,24 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
 block|}
-block|, }
+block|,
+block|{
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"Netac"
+block|,
+literal|"OnlyDisk*"
+block|,
+literal|"2000"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
