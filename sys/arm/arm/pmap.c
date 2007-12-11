@@ -11898,15 +11898,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|pmap_vac_me_harder
-argument_list|(
-name|pg
-argument_list|,
-name|pm
-argument_list|,
-name|sva
-argument_list|)
-expr_stmt|;
 name|vm_page_dirty
 argument_list|(
 name|pg
