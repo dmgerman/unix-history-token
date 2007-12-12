@@ -220,7 +220,18 @@ value|"cache"
 end_define
 
 begin_comment
-comment|/* cache daemon */
+comment|/* nscd daemon */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NSSRC_FALLBACK
+value|"__fallback"
+end_define
+
+begin_comment
+comment|/* internal fallback source */
 end_comment
 
 begin_comment
@@ -509,6 +520,16 @@ parameter_list|,
 name|C
 parameter_list|)
 value|{ NSSRC_COMPAT,	F,	C },
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_FALLBACK_CB
+parameter_list|(
+name|F
+parameter_list|)
+value|{ NSSRC_FALLBACK, F,	NULL },
 end_define
 
 begin_ifdef
