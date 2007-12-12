@@ -835,6 +835,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Intel ICH registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICH_PMBASE
+value|0x400
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICH_SMI_EN
+value|ICH_PMBASE + 0x30
+end_define
+
 begin_decl_stmt
 name|int
 name|_udatasel
@@ -5696,6 +5714,69 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|sysenv
+decl_stmt|;
+comment|/* 	 * On MacBooks, we need to disallow the legacy USB circuit to 	 * generate an SMI# because this can cause several problems, 	 * namely: incorrect CPU frequency detection and failure to 	 * start the APs. 	 * We do this by disabling a bit in the SMI_EN (SMI Control and 	 * Enable register) of the Intel ICH LPC Interface Bridge. 	 */
+name|sysenv
+operator|=
+name|getenv
+argument_list|(
+literal|"smbios.system.product"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sysenv
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|sysenv
+argument_list|,
+literal|"MacBook"
+argument_list|,
+literal|7
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Disabling LEGACY_USB_EN bit on "
+literal|"Intel ICH.\n"
+argument_list|)
+expr_stmt|;
+name|outl
+argument_list|(
+name|ICH_SMI_EN
+argument_list|,
+name|inl
+argument_list|(
+name|ICH_SMI_EN
+argument_list|)
+operator|&
+operator|~
+literal|0x8
+argument_list|)
+expr_stmt|;
+block|}
+name|freeenv
+argument_list|(
+name|sysenv
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * we must absolutely guarentee that hlt is the 	 * absolute next instruction after sti or we 	 * introduce a timing window. 	 */
 asm|__asm __volatile("sti; hlt");
 block|}
