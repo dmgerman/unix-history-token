@@ -651,7 +651,7 @@ name|void
 modifier|*
 name|t_toe
 decl_stmt|;
-comment|/* TOE pcb pointer	     */
+comment|/* TOE pcb pointer */
 block|}
 struct|;
 end_struct

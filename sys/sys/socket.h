@@ -502,7 +502,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|SO_NOOFFLOAD
+name|SO_NO_OFFLOAD
 value|0x4000
 end_define
 

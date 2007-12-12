@@ -1,22 +1,39 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2007, Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  $FreeBSD$  ***************************************************************************/
+comment|/*-  * Copyright (c) 2007, Chelsio Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * 2. Neither the name of the Chelsio Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_OFFLOAD_DEV_H_
+name|_NETINET_TOEDEV_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_OFFLOAD_DEV_H_
+name|_NETINET_TOEDEV_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"no user-serviceable parts inside"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* Parameter values for offload_get_phys_egress() */
+comment|/* Parameter values for offload_get_phys_egress(). */
 end_comment
 
 begin_enum
@@ -30,7 +47,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* Parameter values for toe_failover() */
+comment|/* Parameter values for toe_failover(). */
 end_comment
 
 begin_enum
@@ -57,7 +74,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* Get the toedev associated with a ifnet */
+comment|/* Get the toedev associated with a ifnet. */
 end_comment
 
 begin_define
@@ -133,7 +150,7 @@ argument_list|)
 name|entry
 expr_stmt|;
 name|char
-name|name
+name|tod_name
 index|[
 name|TOENAMSIZ
 index|]
@@ -141,47 +158,41 @@ decl_stmt|;
 comment|/* TOE device name */
 name|unsigned
 name|int
-name|ttid
+name|tod_ttid
 decl_stmt|;
 comment|/* TOE type id */
 name|unsigned
 name|long
-name|flags
+name|tod_flags
 decl_stmt|;
 comment|/* device flags */
 name|unsigned
 name|int
-name|mtu
+name|tod_mtu
 decl_stmt|;
-comment|/* max size of TX offloaded data */
+comment|/* max TX offloaded data */
 name|unsigned
 name|int
-name|nconn
+name|tod_nconn
 decl_stmt|;
-comment|/* max # of offloaded connections */
+comment|/* max # of offloaded 						 * connections 						 */
 name|struct
 name|ifnet
 modifier|*
-name|lldev
+name|tod_lldev
 decl_stmt|;
-comment|/* LL device associated with TOE messages */
+comment|/* first interface */
 specifier|const
 name|struct
 name|tom_info
 modifier|*
-name|offload_mod
+name|tod_offload_mod
 decl_stmt|;
-comment|/* attached TCP offload module */
-name|struct
-name|sysctl_oid
-modifier|*
-name|sysctl_root
-decl_stmt|;
-comment|/* root of proc dir for this TOE */
+comment|/* TCP offload module */
 name|int
 function_decl|(
 modifier|*
-name|open
+name|tod_open
 function_decl|)
 parameter_list|(
 name|struct
@@ -193,7 +204,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|close
+name|tod_close
 function_decl|)
 parameter_list|(
 name|struct
@@ -205,7 +216,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|can_offload
+name|tod_can_offload
 function_decl|)
 parameter_list|(
 name|struct
@@ -222,7 +233,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|connect
+name|tod_connect
 function_decl|)
 parameter_list|(
 name|struct
@@ -244,7 +255,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|send
+name|tod_send
 function_decl|)
 parameter_list|(
 name|struct
@@ -261,7 +272,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|recv
+name|tod_recv
 function_decl|)
 parameter_list|(
 name|struct
@@ -282,7 +293,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|ctl
+name|tod_ctl
 function_decl|)
 parameter_list|(
 name|struct
@@ -302,7 +313,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|arp_update
+name|tod_arp_update
 function_decl|)
 parameter_list|(
 name|struct
@@ -319,7 +330,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|failover
+name|tod_failover
 function_decl|)
 parameter_list|(
 name|struct
@@ -343,29 +354,29 @@ parameter_list|)
 function_decl|;
 name|void
 modifier|*
-name|priv
+name|tod_priv
 decl_stmt|;
 comment|/* driver private data */
 name|void
 modifier|*
-name|l2opt
+name|tod_l2opt
 decl_stmt|;
 comment|/* optional layer 2 data */
 name|void
 modifier|*
-name|l3opt
+name|tod_l3opt
 decl_stmt|;
 comment|/* optional layer 3 data */
 name|void
 modifier|*
-name|l4opt
+name|tod_l4opt
 decl_stmt|;
 comment|/* optional layer 4 data */
 name|void
 modifier|*
-name|ulp
+name|tod_ulp
 decl_stmt|;
-comment|/* ulp stuff */
+comment|/* upper lever protocol */
 block|}
 struct|;
 end_struct
@@ -383,7 +394,7 @@ expr_stmt|;
 name|int
 function_decl|(
 modifier|*
-name|attach
+name|ti_attach
 function_decl|)
 parameter_list|(
 name|struct
@@ -401,7 +412,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|detach
+name|ti_detach
 function_decl|)
 parameter_list|(
 name|struct
@@ -427,7 +438,7 @@ end_struct
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|init_offload_dev
 parameter_list|(
@@ -436,11 +447,10 @@ name|toedev
 modifier|*
 name|dev
 parameter_list|)
-block|{  }
+block|{ }
 end_function
 
 begin_function_decl
-specifier|extern
 name|int
 name|register_tom
 parameter_list|(
@@ -453,7 +463,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|unregister_tom
 parameter_list|(
@@ -466,7 +475,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|register_toedev
 parameter_list|(
@@ -484,7 +492,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|unregister_toedev
 parameter_list|(
@@ -497,7 +504,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|activate_offload
 parameter_list|(
@@ -510,7 +516,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|toe_send
 parameter_list|(
@@ -528,7 +533,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|toe_arp_update
 parameter_list|(
@@ -541,7 +545,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ifnet
 modifier|*
@@ -550,7 +553,7 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|dev
+name|ifp
 parameter_list|,
 name|struct
 name|socket
@@ -564,7 +567,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|toe_receive_mbuf
 parameter_list|(
@@ -587,21 +589,21 @@ end_function_decl
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|toe_neigh_update
 parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|neigh
+name|ifp
 parameter_list|)
-block|{}
+block|{ }
 end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|toe_failover
 parameter_list|(
@@ -618,12 +620,12 @@ parameter_list|,
 name|int
 name|event
 parameter_list|)
-block|{}
+block|{ }
 end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|toe_enslave
 parameter_list|(
@@ -639,7 +641,9 @@ name|slave_ifp
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -650,7 +654,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _OFFLOAD_DEV_H_ */
+comment|/* _NETINET_TOEDEV_H_ */
 end_comment
 
 end_unit

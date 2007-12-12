@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2007, Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  $FreeBSD$  ***************************************************************************/
+comment|/*-  * Copyright (c) 2007, Chelsio Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * 2. Neither the name of the Chelsio Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,23 @@ define|#
 directive|define
 name|_NETINET_TCP_OFLD_H_
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"no user-serviceable parts inside"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -85,19 +102,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ofld_send
-parameter_list|(
-name|struct
-name|tcpcb
-modifier|*
-name|tp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ofld_rcvd
+name|ofld_abort
 parameter_list|(
 name|struct
 name|tcpcb
@@ -121,7 +126,19 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ofld_abort
+name|ofld_send
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ofld_rcvd
 parameter_list|(
 name|struct
 name|tcpcb
@@ -145,7 +162,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ofld_listen_open
+name|ofld_listen_close
 parameter_list|(
 name|struct
 name|tcpcb
@@ -157,7 +174,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ofld_listen_close
+name|ofld_listen_open
 parameter_list|(
 name|struct
 name|tcpcb
@@ -190,9 +207,6 @@ modifier|*
 name|nam
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|tcpcb
 modifier|*
@@ -202,6 +216,9 @@ name|sototcpcb
 argument_list|(
 name|so
 argument_list|)
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -520,10 +537,12 @@ name|nam
 parameter_list|)
 block|{
 return|return
+operator|(
 name|tcp_output
 argument_list|(
 name|tp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -541,10 +560,12 @@ name|tp
 parameter_list|)
 block|{
 return|return
+operator|(
 name|tcp_output
 argument_list|(
 name|tp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -562,10 +583,12 @@ name|tp
 parameter_list|)
 block|{
 return|return
+operator|(
 name|tcp_output
 argument_list|(
 name|tp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -583,10 +606,12 @@ name|tp
 parameter_list|)
 block|{
 return|return
+operator|(
 name|tcp_output
 argument_list|(
 name|tp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -604,10 +629,12 @@ name|tp
 parameter_list|)
 block|{
 return|return
+operator|(
 name|tcp_output
 argument_list|(
 name|tp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -623,7 +650,7 @@ name|tcpcb
 modifier|*
 name|tp
 parameter_list|)
-block|{}
+block|{ }
 end_function
 
 begin_function
@@ -637,7 +664,7 @@ name|tcpcb
 modifier|*
 name|tp
 parameter_list|)
-block|{}
+block|{ }
 end_function
 
 begin_function
@@ -651,7 +678,7 @@ name|tcpcb
 modifier|*
 name|tp
 parameter_list|)
-block|{}
+block|{ }
 end_function
 
 begin_endif
