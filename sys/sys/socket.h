@@ -499,6 +499,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SO_NOOFFLOAD
+value|0x4000
+end_define
+
+begin_comment
+comment|/* socket cannot be offloaded */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_NO_DDP
+value|0x8000
+end_define
+
+begin_comment
+comment|/* disable direct data placement */
+end_comment
+
 begin_comment
 comment|/*  * Additional options, not kept in so_options.  */
 end_comment

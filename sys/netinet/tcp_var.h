@@ -371,6 +371,11 @@ directive|define
 name|TF_TSO
 value|0x1000000
 comment|/* TSO enabled on this connection */
+define|#
+directive|define
+name|TF_TOE
+value|0x2000000
+comment|/* this connection is offloaded */
 name|tcp_seq
 name|snd_una
 decl_stmt|;
@@ -632,10 +637,21 @@ name|void
 modifier|*
 name|t_pspare
 index|[
-literal|5
+literal|3
 index|]
 decl_stmt|;
 comment|/* toe usrreqs / toepcb * / congestion algo / vimage / 1 general use */
+name|struct
+name|toe_usrreqs
+modifier|*
+name|t_tu
+decl_stmt|;
+comment|/* offload operations vector */
+name|void
+modifier|*
+name|t_toe
+decl_stmt|;
+comment|/* TOE pcb pointer	     */
 block|}
 struct|;
 end_struct
