@@ -96,6 +96,26 @@ end_function_decl
 
 begin_function_decl
 name|double
+name|carg
+parameter_list|(
+name|double
+name|complex
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|float
+name|cargf
+parameter_list|(
+name|float
+name|complex
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|double
 name|cimag
 parameter_list|(
 name|double
