@@ -4021,13 +4021,6 @@ goto|goto
 name|failed
 goto|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* 	 * If timestamps were present in the SYN and we accepted 	 * them in our SYN|ACK we require them to be present from 	 * now on.  And vice versa. 	 * 	 * Unfortunately, during testing of 7.0 some users found 	 * network devices that violate this constraint, so it must 	 * be disabled. 	 */
-block|if ((sc->sc_flags& SCF_TIMESTAMP)&& !(to->to_flags& TOF_TS)) { 		if ((s = tcp_log_addrs(inc, th, NULL, NULL))) 			log(LOG_DEBUG, "%s; %s: Timestamp missing, " 			    "segment rejected\n", s, __func__); 		goto failed; 	}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
