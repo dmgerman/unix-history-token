@@ -170,6 +170,11 @@ init|=
 literal|0x00400000
 block|,
 comment|/* DFS processing */
+name|ATH_DEBUG_TDMA
+init|=
+literal|0x00800000
+block|,
+comment|/* TDMA processing */
 name|ATH_DEBUG_FATAL
 init|=
 literal|0x80000000
@@ -317,6 +322,12 @@ block|{
 literal|"dfs"
 block|,
 name|ATH_DEBUG_DFS
+block|}
+block|,
+block|{
+literal|"tdma"
+block|,
+name|ATH_DEBUG_TDMA
 block|}
 block|,
 block|{
@@ -529,8 +540,6 @@ specifier|const
 name|char
 modifier|*
 name|ifname
-init|=
-literal|"ath0"
 decl_stmt|;
 specifier|const
 name|char
@@ -566,6 +575,23 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|ifname
+operator|=
+name|getenv
+argument_list|(
+literal|"ATH"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifname
+operator|==
+name|NULL
+condition|)
+name|ifname
+operator|=
+literal|"ath0"
+expr_stmt|;
 name|progname
 operator|=
 name|argv
