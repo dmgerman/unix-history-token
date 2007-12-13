@@ -63,7 +63,7 @@ name|SO_OFFLOADABLE
 parameter_list|(
 name|so
 parameter_list|)
-value|((so->so_options& SO_NOOFFLOAD) == 0)
+value|((so->so_options& SO_NO_OFFLOAD) == 0)
 end_define
 
 begin_function_decl
