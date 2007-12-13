@@ -352,7 +352,7 @@ begin_define
 define|#
 directive|define
 name|PMAP_INLINE
-value|__inline
+value|__gnu89_inline
 end_define
 
 begin_else
@@ -4349,7 +4349,7 @@ end_comment
 
 begin_function
 specifier|static
-name|PMAP_INLINE
+name|__inline
 name|void
 name|pmap_free_zero_pages
 parameter_list|(
@@ -4392,7 +4392,7 @@ end_comment
 
 begin_function
 specifier|static
-name|PMAP_INLINE
+name|__inline
 name|int
 name|pmap_unwire_pte_hold
 parameter_list|(
