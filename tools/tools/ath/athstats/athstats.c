@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -82,25 +88,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../../../sys/contrib/dev/ath/ah_desc.h"
+file|"ah.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../../../../sys/net80211/ieee80211_ioctl.h"
+file|"ah_desc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../../../../sys/net80211/ieee80211_radiotap.h"
+file|"ieee80211_ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../../../../sys/dev/ath/if_athioctl.h"
+file|"ieee80211_radiotap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"if_athioctl.h"
 end_include
 
 begin_include
@@ -114,6 +126,16 @@ define|#
 directive|define
 name|NOTPRESENT
 value|{ 0, "", "" }
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFTER
+parameter_list|(
+name|prev
+parameter_list|)
+value|((prev)+1)
 end_define
 
 begin_decl_stmt
@@ -142,7 +164,7 @@ block|,
 define|#
 directive|define
 name|S_OUTPUT
-value|1
+value|AFTER(S_INPUT)
 block|{
 literal|8
 block|,
@@ -156,7 +178,7 @@ block|,
 define|#
 directive|define
 name|S_TX_ALTRATE
-value|2
+value|AFTER(S_OUTPUT)
 block|{
 literal|7
 block|,
@@ -170,7 +192,7 @@ block|,
 define|#
 directive|define
 name|S_TX_SHORTRETRY
-value|3
+value|AFTER(S_TX_ALTRATE)
 block|{
 literal|7
 block|,
@@ -184,7 +206,7 @@ block|,
 define|#
 directive|define
 name|S_TX_LONGRETRY
-value|4
+value|AFTER(S_TX_SHORTRETRY)
 block|{
 literal|7
 block|,
@@ -198,7 +220,7 @@ block|,
 define|#
 directive|define
 name|S_TX_XRETRIES
-value|5
+value|AFTER(S_TX_LONGRETRY)
 block|{
 literal|6
 block|,
@@ -212,7 +234,7 @@ block|,
 define|#
 directive|define
 name|S_MIB
-value|6
+value|AFTER(S_TX_XRETRIES)
 block|{
 literal|5
 block|,
@@ -229,7 +251,7 @@ name|__linux__
 define|#
 directive|define
 name|S_TX_LINEAR
-value|7
+value|AFTER(S_MIB)
 block|{
 literal|5
 block|,
@@ -243,7 +265,7 @@ block|,
 define|#
 directive|define
 name|S_BSTUCK
-value|8
+value|AFTER(S_TX_LINEAR)
 block|{
 literal|5
 block|,
@@ -257,7 +279,7 @@ block|,
 define|#
 directive|define
 name|S_INTRCOAL
-value|9
+value|AFTER(S_BSTUCK)
 block|{
 literal|5
 block|,
@@ -268,20 +290,18 @@ block|,
 literal|"interrupts coalesced"
 block|}
 block|,
-else|#
-directive|else
-name|NOTPRESENT
-block|,
-name|NOTPRESENT
-block|,
-name|NOTPRESENT
-block|,
-endif|#
-directive|endif
 define|#
 directive|define
 name|S_RATE
-value|10
+value|AFTER(S_INTRCOAL)
+else|#
+directive|else
+define|#
+directive|define
+name|S_RATE
+value|AFTER(S_MIB)
+endif|#
+directive|endif
 block|{
 literal|4
 block|,
@@ -295,7 +315,7 @@ block|,
 define|#
 directive|define
 name|S_WATCHDOG
-value|11
+value|AFTER(S_RATE)
 block|{
 literal|5
 block|,
@@ -309,7 +329,7 @@ block|,
 define|#
 directive|define
 name|S_FATAL
-value|12
+value|AFTER(S_WATCHDOG)
 block|{
 literal|5
 block|,
@@ -323,7 +343,7 @@ block|,
 define|#
 directive|define
 name|S_BMISS
-value|13
+value|AFTER(S_FATAL)
 block|{
 literal|5
 block|,
@@ -337,7 +357,7 @@ block|,
 define|#
 directive|define
 name|S_RXORN
-value|14
+value|AFTER(S_BMISS)
 block|{
 literal|5
 block|,
@@ -351,7 +371,7 @@ block|,
 define|#
 directive|define
 name|S_RXEOL
-value|15
+value|AFTER(S_RXORN)
 block|{
 literal|5
 block|,
@@ -365,7 +385,7 @@ block|,
 define|#
 directive|define
 name|S_TXURN
-value|16
+value|AFTER(S_RXEOL)
 block|{
 literal|5
 block|,
@@ -379,7 +399,7 @@ block|,
 define|#
 directive|define
 name|S_TX_MGMT
-value|17
+value|AFTER(S_TXURN)
 block|{
 literal|5
 block|,
@@ -393,7 +413,7 @@ block|,
 define|#
 directive|define
 name|S_TX_DISCARD
-value|18
+value|AFTER(S_TX_MGMT)
 block|{
 literal|5
 block|,
@@ -407,7 +427,7 @@ block|,
 define|#
 directive|define
 name|S_TX_INVALID
-value|19
+value|AFTER(S_TX_DISCARD)
 block|{
 literal|5
 block|,
@@ -421,7 +441,7 @@ block|,
 define|#
 directive|define
 name|S_TX_QSTOP
-value|20
+value|AFTER(S_TX_INVALID)
 block|{
 literal|5
 block|,
@@ -435,7 +455,7 @@ block|,
 define|#
 directive|define
 name|S_TX_ENCAP
-value|21
+value|AFTER(S_TX_QSTOP)
 block|{
 literal|5
 block|,
@@ -449,7 +469,7 @@ block|,
 define|#
 directive|define
 name|S_TX_NONODE
-value|22
+value|AFTER(S_TX_ENCAP)
 block|{
 literal|5
 block|,
@@ -463,7 +483,7 @@ block|,
 define|#
 directive|define
 name|S_TX_NOMBUF
-value|23
+value|AFTER(S_TX_NONODE)
 block|{
 literal|5
 block|,
@@ -480,7 +500,7 @@ name|__linux__
 define|#
 directive|define
 name|S_TX_NOMCL
-value|24
+value|AFTER(S_TX_NOMBUF)
 block|{
 literal|5
 block|,
@@ -491,16 +511,18 @@ block|,
 literal|"tx failed 'cuz cluster allocation failed"
 block|}
 block|,
-else|#
-directive|else
-name|NOTPRESENT
-block|,
-endif|#
-directive|endif
 define|#
 directive|define
 name|S_TX_FIFOERR
-value|25
+value|AFTER(S_TX_NOMCL)
+else|#
+directive|else
+define|#
+directive|define
+name|S_TX_FIFOERR
+value|AFTER(S_TX_NOMBUF)
+endif|#
+directive|endif
 block|{
 literal|5
 block|,
@@ -514,7 +536,7 @@ block|,
 define|#
 directive|define
 name|S_TX_FILTERED
-value|26
+value|AFTER(S_TX_FIFOERR)
 block|{
 literal|5
 block|,
@@ -528,7 +550,7 @@ block|,
 define|#
 directive|define
 name|S_TX_BADRATE
-value|27
+value|AFTER(S_TX_FILTERED)
 block|{
 literal|5
 block|,
@@ -542,7 +564,7 @@ block|,
 define|#
 directive|define
 name|S_TX_NOACK
-value|28
+value|AFTER(S_TX_BADRATE)
 block|{
 literal|5
 block|,
@@ -556,7 +578,7 @@ block|,
 define|#
 directive|define
 name|S_TX_RTS
-value|29
+value|AFTER(S_TX_NOACK)
 block|{
 literal|5
 block|,
@@ -570,7 +592,7 @@ block|,
 define|#
 directive|define
 name|S_TX_CTS
-value|30
+value|AFTER(S_TX_RTS)
 block|{
 literal|5
 block|,
@@ -584,7 +606,7 @@ block|,
 define|#
 directive|define
 name|S_TX_SHORTPRE
-value|31
+value|AFTER(S_TX_CTS)
 block|{
 literal|5
 block|,
@@ -598,7 +620,7 @@ block|,
 define|#
 directive|define
 name|S_TX_PROTECT
-value|32
+value|AFTER(S_TX_SHORTPRE)
 block|{
 literal|5
 block|,
@@ -612,7 +634,7 @@ block|,
 define|#
 directive|define
 name|S_RX_ORN
-value|33
+value|AFTER(S_TX_PROTECT)
 block|{
 literal|5
 block|,
@@ -626,7 +648,7 @@ block|,
 define|#
 directive|define
 name|S_RX_CRC_ERR
-value|34
+value|AFTER(S_RX_ORN)
 block|{
 literal|6
 block|,
@@ -640,7 +662,7 @@ block|,
 define|#
 directive|define
 name|S_RX_FIFO_ERR
-value|35
+value|AFTER(S_RX_CRC_ERR)
 block|{
 literal|5
 block|,
@@ -654,7 +676,7 @@ block|,
 define|#
 directive|define
 name|S_RX_CRYPTO_ERR
-value|36
+value|AFTER(S_RX_FIFO_ERR)
 block|{
 literal|5
 block|,
@@ -668,7 +690,7 @@ block|,
 define|#
 directive|define
 name|S_RX_MIC_ERR
-value|37
+value|AFTER(S_RX_CRYPTO_ERR)
 block|{
 literal|4
 block|,
@@ -682,7 +704,7 @@ block|,
 define|#
 directive|define
 name|S_RX_TOOSHORT
-value|38
+value|AFTER(S_RX_MIC_ERR)
 block|{
 literal|5
 block|,
@@ -696,7 +718,7 @@ block|,
 define|#
 directive|define
 name|S_RX_NOMBUF
-value|39
+value|AFTER(S_RX_TOOSHORT)
 block|{
 literal|5
 block|,
@@ -710,7 +732,7 @@ block|,
 define|#
 directive|define
 name|S_RX_MGT
-value|40
+value|AFTER(S_RX_NOMBUF)
 block|{
 literal|5
 block|,
@@ -724,7 +746,7 @@ block|,
 define|#
 directive|define
 name|S_RX_CTL
-value|41
+value|AFTER(S_RX_MGT)
 block|{
 literal|5
 block|,
@@ -738,7 +760,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_ERR
-value|42
+value|AFTER(S_RX_CTL)
 block|{
 literal|7
 block|,
@@ -752,7 +774,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_UNDERRUN
-value|43
+value|AFTER(S_RX_PHY_ERR)
 block|{
 literal|6
 block|,
@@ -766,7 +788,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_TIMING
-value|44
+value|AFTER(S_RX_PHY_UNDERRUN)
 block|{
 literal|6
 block|,
@@ -780,7 +802,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_PARITY
-value|45
+value|AFTER(S_RX_PHY_TIMING)
 block|{
 literal|6
 block|,
@@ -794,7 +816,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_RATE
-value|46
+value|AFTER(S_RX_PHY_PARITY)
 block|{
 literal|6
 block|,
@@ -808,7 +830,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_LENGTH
-value|47
+value|AFTER(S_RX_PHY_RATE)
 block|{
 literal|6
 block|,
@@ -822,7 +844,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_RADAR
-value|48
+value|AFTER(S_RX_PHY_LENGTH)
 block|{
 literal|6
 block|,
@@ -836,7 +858,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_SERVICE
-value|49
+value|AFTER(S_RX_PHY_RADAR)
 block|{
 literal|6
 block|,
@@ -850,7 +872,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_TOR
-value|50
+value|AFTER(S_RX_PHY_SERVICE)
 block|{
 literal|6
 block|,
@@ -864,7 +886,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_OFDM_TIMING
-value|51
+value|AFTER(S_RX_PHY_TOR)
 block|{
 literal|6
 block|,
@@ -878,7 +900,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_OFDM_SIGNAL_PARITY
-value|52
+value|AFTER(S_RX_PHY_OFDM_TIMING)
 block|{
 literal|6
 block|,
@@ -892,7 +914,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_OFDM_RATE_ILLEGAL
-value|53
+value|AFTER(S_RX_PHY_OFDM_SIGNAL_PARITY)
 block|{
 literal|6
 block|,
@@ -906,7 +928,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_OFDM_POWER_DROP
-value|54
+value|AFTER(S_RX_PHY_OFDM_RATE_ILLEGAL)
 block|{
 literal|6
 block|,
@@ -920,7 +942,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_OFDM_SERVICE
-value|55
+value|AFTER(S_RX_PHY_OFDM_POWER_DROP)
 block|{
 literal|6
 block|,
@@ -934,7 +956,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_OFDM_RESTART
-value|56
+value|AFTER(S_RX_PHY_OFDM_SERVICE)
 block|{
 literal|6
 block|,
@@ -948,7 +970,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_CCK_TIMING
-value|57
+value|AFTER(S_RX_PHY_OFDM_RESTART)
 block|{
 literal|6
 block|,
@@ -962,7 +984,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_CCK_HEADER_CRC
-value|58
+value|AFTER(S_RX_PHY_CCK_TIMING)
 block|{
 literal|6
 block|,
@@ -976,7 +998,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_CCK_RATE_ILLEGAL
-value|59
+value|AFTER(S_RX_PHY_CCK_HEADER_CRC)
 block|{
 literal|6
 block|,
@@ -990,7 +1012,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_CCK_SERVICE
-value|60
+value|AFTER(S_RX_PHY_CCK_RATE_ILLEGAL)
 block|{
 literal|6
 block|,
@@ -1004,7 +1026,7 @@ block|,
 define|#
 directive|define
 name|S_RX_PHY_CCK_RESTART
-value|61
+value|AFTER(S_RX_PHY_CCK_SERVICE)
 block|{
 literal|6
 block|,
@@ -1018,7 +1040,7 @@ block|,
 define|#
 directive|define
 name|S_BE_NOMBUF
-value|62
+value|AFTER(S_RX_PHY_CCK_RESTART)
 block|{
 literal|4
 block|,
@@ -1032,7 +1054,7 @@ block|,
 define|#
 directive|define
 name|S_BE_XMIT
-value|63
+value|AFTER(S_BE_NOMBUF)
 block|{
 literal|7
 block|,
@@ -1046,7 +1068,7 @@ block|,
 define|#
 directive|define
 name|S_PER_CAL
-value|64
+value|AFTER(S_BE_XMIT)
 block|{
 literal|4
 block|,
@@ -1060,7 +1082,7 @@ block|,
 define|#
 directive|define
 name|S_PER_CALFAIL
-value|65
+value|AFTER(S_PER_CAL)
 block|{
 literal|4
 block|,
@@ -1074,7 +1096,7 @@ block|,
 define|#
 directive|define
 name|S_PER_RFGAIN
-value|66
+value|AFTER(S_PER_CALFAIL)
 block|{
 literal|4
 block|,
@@ -1087,36 +1109,61 @@ block|}
 block|,
 if|#
 directive|if
-literal|0
+name|ATH_SUPPORT_TDMA
 define|#
 directive|define
 name|S_TDMA_UPDATE
-value|67
-block|{ 5,	"tdmau",	"tdmau",	"TDMA slot timing updates" },
+value|AFTER(S_PER_RFGAIN)
+block|{
+literal|5
+block|,
+literal|"tdmau"
+block|,
+literal|"tdmau"
+block|,
+literal|"TDMA slot timing updates"
+block|}
+block|,
 define|#
 directive|define
 name|S_TDMA_TIMERS
-value|68
-block|{ 5,	"tdmab",	"tdmab",	"TDMA slot update set beacon timers" },
+value|AFTER(S_TDMA_UPDATE)
+block|{
+literal|5
+block|,
+literal|"tdmab"
+block|,
+literal|"tdmab"
+block|,
+literal|"TDMA slot update set beacon timers"
+block|}
+block|,
 define|#
 directive|define
 name|S_TDMA_TSF
-value|69
-block|{ 5,	"tdmat",	"tdmat",	"TDMA slot update set TSF" },
-else|#
-directive|else
-name|NOTPRESENT
+value|AFTER(S_TDMA_TIMERS)
+block|{
+literal|5
 block|,
-name|NOTPRESENT
+literal|"tdmat"
 block|,
-name|NOTPRESENT
+literal|"tdmat"
 block|,
-endif|#
-directive|endif
+literal|"TDMA slot update set TSF"
+block|}
+block|,
 define|#
 directive|define
 name|S_RATE_CALLS
-value|70
+value|AFTER(S_TDMA_TSF)
+else|#
+directive|else
+define|#
+directive|define
+name|S_RATE_CALLS
+value|AFTER(S_PER_RFGAIN)
+endif|#
+directive|endif
 block|{
 literal|5
 block|,
@@ -1130,7 +1177,7 @@ block|,
 define|#
 directive|define
 name|S_RATE_RAISE
-value|71
+value|AFTER(S_RATE_CALLS)
 block|{
 literal|5
 block|,
@@ -1144,7 +1191,7 @@ block|,
 define|#
 directive|define
 name|S_RATE_DROP
-value|72
+value|AFTER(S_RATE_RAISE)
 block|{
 literal|5
 block|,
@@ -1158,7 +1205,7 @@ block|,
 define|#
 directive|define
 name|S_TX_RSSI
-value|73
+value|AFTER(S_RATE_DROP)
 block|{
 literal|4
 block|,
@@ -1172,7 +1219,7 @@ block|,
 define|#
 directive|define
 name|S_RX_RSSI
-value|74
+value|AFTER(S_TX_RSSI)
 block|{
 literal|4
 block|,
@@ -1186,7 +1233,7 @@ block|,
 define|#
 directive|define
 name|S_RX_NOISE
-value|75
+value|AFTER(S_RX_RSSI)
 block|{
 literal|5
 block|,
@@ -1200,7 +1247,7 @@ block|,
 define|#
 directive|define
 name|S_BMISS_PHANTOM
-value|76
+value|AFTER(S_RX_NOISE)
 block|{
 literal|5
 block|,
@@ -1214,7 +1261,7 @@ block|,
 define|#
 directive|define
 name|S_TX_RAW
-value|77
+value|AFTER(S_BMISS_PHANTOM)
 block|{
 literal|5
 block|,
@@ -1228,7 +1275,7 @@ block|,
 define|#
 directive|define
 name|S_RX_TOOBIG
-value|78
+value|AFTER(S_TX_RAW)
 block|{
 literal|5
 block|,
@@ -1245,7 +1292,7 @@ name|__linux__
 define|#
 directive|define
 name|S_CABQ_XMIT
-value|79
+value|AFTER(S_RX_TOOBIG)
 block|{
 literal|5
 block|,
@@ -1259,7 +1306,7 @@ block|,
 define|#
 directive|define
 name|S_CABQ_BUSY
-value|80
+value|AFTER(S_CABQ_XMIT)
 block|{
 literal|5
 block|,
@@ -1273,7 +1320,7 @@ block|,
 define|#
 directive|define
 name|S_TX_NODATA
-value|81
+value|AFTER(S_CABQ_BUSY)
 block|{
 literal|5
 block|,
@@ -1287,7 +1334,7 @@ block|,
 define|#
 directive|define
 name|S_TX_BUSDMA
-value|82
+value|AFTER(S_TX_NODATA)
 block|{
 literal|5
 block|,
@@ -1301,7 +1348,7 @@ block|,
 define|#
 directive|define
 name|S_RX_BUSDMA
-value|83
+value|AFTER(S_TX_BUSDMA)
 block|{
 literal|5
 block|,
@@ -1312,59 +1359,88 @@ block|,
 literal|"rx setup failed for dma resrcs"
 block|}
 block|,
-else|#
-directive|else
-name|NOTPRESENT
-block|,
-name|NOTPRESENT
-block|,
-name|NOTPRESENT
-block|,
-name|NOTPRESENT
-block|,
-name|NOTPRESENT
-block|,
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
 define|#
 directive|define
 name|S_FF_TXOK
-value|84
-block|{ 5,	"fftxok",	"fftxok",	"fast frames xmit successfully" },
+value|AFTER(S_RX_BUSDMA)
+else|#
+directive|else
+define|#
+directive|define
+name|S_FF_TXOK
+value|AFTER(S_RX_PHY_UNDERRUN)
+endif|#
+directive|endif
+block|{
+literal|5
+block|,
+literal|"fftxok"
+block|,
+literal|"fftxok"
+block|,
+literal|"fast frames xmit successfully"
+block|}
+block|,
 define|#
 directive|define
 name|S_FF_TXERR
-value|85
-block|{ 5,	"fftxerr",	"fftxerr",	"fast frames not xmit due to error" },
+value|AFTER(S_FF_TXOK)
+block|{
+literal|5
+block|,
+literal|"fftxerr"
+block|,
+literal|"fftxerr"
+block|,
+literal|"fast frames not xmit due to error"
+block|}
+block|,
 define|#
 directive|define
 name|S_FF_RX
-value|86
-block|{ 5,	"ffrx",		"ffrx",		"fast frames received" },
+value|AFTER(S_FF_TXERR)
+block|{
+literal|5
+block|,
+literal|"ffrx"
+block|,
+literal|"ffrx"
+block|,
+literal|"fast frames received"
+block|}
+block|,
 define|#
 directive|define
 name|S_FF_FLUSH
-value|87
-block|{ 5,	"ffflush",	"ffflush",	"fast frames flushed from staging q" },
-else|#
-directive|else
-name|NOTPRESENT
+value|AFTER(S_FF_RX)
+block|{
+literal|5
 block|,
-name|NOTPRESENT
+literal|"ffflush"
 block|,
-name|NOTPRESENT
+literal|"ffflush"
 block|,
-name|NOTPRESENT
+literal|"fast frames flushed from staging q"
+block|}
 block|,
-endif|#
-directive|endif
+define|#
+directive|define
+name|S_TX_QFULL
+value|AFTER(S_FF_FLUSH)
+block|{
+literal|5
+block|,
+literal|"txqfull"
+block|,
+literal|"txqfull"
+block|,
+literal|"tx discarded 'cuz queue is full"
+block|}
+block|,
 define|#
 directive|define
 name|S_ANT_DEFSWITCH
-value|88
+value|AFTER(S_TX_QFULL)
 block|{
 literal|5
 block|,
@@ -1378,7 +1454,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_TXSWITCH
-value|89
+value|AFTER(S_ANT_DEFSWITCH)
 block|{
 literal|5
 block|,
@@ -1392,7 +1468,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_TX0
-value|90
+value|AFTER(S_ANT_TXSWITCH)
 block|{
 literal|8
 block|,
@@ -1406,7 +1482,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_TX1
-value|91
+value|AFTER(S_ANT_TX0)
 block|{
 literal|8
 block|,
@@ -1420,7 +1496,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_TX2
-value|92
+value|AFTER(S_ANT_TX1)
 block|{
 literal|8
 block|,
@@ -1434,7 +1510,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_TX3
-value|93
+value|AFTER(S_ANT_TX2)
 block|{
 literal|8
 block|,
@@ -1448,7 +1524,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_TX4
-value|94
+value|AFTER(S_ANT_TX3)
 block|{
 literal|8
 block|,
@@ -1462,7 +1538,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_TX5
-value|95
+value|AFTER(S_ANT_TX4)
 block|{
 literal|8
 block|,
@@ -1476,7 +1552,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_TX6
-value|96
+value|AFTER(S_ANT_TX5)
 block|{
 literal|8
 block|,
@@ -1490,7 +1566,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_TX7
-value|97
+value|AFTER(S_ANT_TX6)
 block|{
 literal|8
 block|,
@@ -1504,7 +1580,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_RX0
-value|98
+value|AFTER(S_ANT_TX7)
 block|{
 literal|8
 block|,
@@ -1518,7 +1594,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_RX1
-value|99
+value|AFTER(S_ANT_RX0)
 block|{
 literal|8
 block|,
@@ -1532,7 +1608,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_RX2
-value|100
+value|AFTER(S_ANT_RX1)
 block|{
 literal|8
 block|,
@@ -1546,7 +1622,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_RX3
-value|101
+value|AFTER(S_ANT_RX2)
 block|{
 literal|8
 block|,
@@ -1560,7 +1636,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_RX4
-value|102
+value|AFTER(S_ANT_RX3)
 block|{
 literal|8
 block|,
@@ -1574,7 +1650,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_RX5
-value|103
+value|AFTER(S_ANT_RX4)
 block|{
 literal|8
 block|,
@@ -1588,7 +1664,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_RX6
-value|104
+value|AFTER(S_ANT_RX5)
 block|{
 literal|8
 block|,
@@ -1602,7 +1678,7 @@ block|,
 define|#
 directive|define
 name|S_ANT_RX7
-value|105
+value|AFTER(S_ANT_RX6)
 block|{
 literal|8
 block|,
@@ -1616,7 +1692,7 @@ block|,
 define|#
 directive|define
 name|S_TX_SIGNAL
-value|106
+value|AFTER(S_ANT_RX7)
 block|{
 literal|4
 block|,
@@ -1630,7 +1706,7 @@ block|,
 define|#
 directive|define
 name|S_RX_SIGNAL
-value|107
+value|AFTER(S_TX_SIGNAL)
 block|{
 literal|4
 block|,
@@ -1674,6 +1750,18 @@ end_define
 
 begin_struct
 struct|struct
+name|_athstats
+block|{
+name|struct
+name|ath_stats
+name|ath
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|athstatfoo_p
 block|{
 name|struct
@@ -1683,16 +1771,23 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|int
+name|optstats
+decl_stmt|;
 name|struct
 name|ifreq
 name|ifr
 decl_stmt|;
 name|struct
-name|ath_stats
+name|ath_diag
+name|atd
+decl_stmt|;
+name|struct
+name|_athstats
 name|cur
 decl_stmt|;
 name|struct
-name|ath_stats
+name|_athstats
 name|total
 decl_stmt|;
 block|}
@@ -1761,7 +1856,7 @@ modifier|*
 name|wf
 parameter_list|,
 name|struct
-name|ath_stats
+name|_athstats
 modifier|*
 name|stats
 parameter_list|)
@@ -1775,7 +1870,10 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
+operator|&
 name|stats
+operator|->
+name|ath
 expr_stmt|;
 if|if
 condition|(
@@ -1955,7 +2053,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->cur.ast_##x - wf->total.ast_##x); return 1
+value|snprintf(b, bs, "%u", wf->cur.ath.ast_##x - wf->total.ath.ast_##x); return 1
 define|#
 directive|define
 name|PHY
@@ -1963,7 +2061,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->cur.ast_rx_phy[x] - wf->total.ast_rx_phy[x]); return 1
+value|snprintf(b, bs, "%u", wf->cur.ath.ast_rx_phy[x] - wf->total.ath.ast_rx_phy[x]); return 1
 define|#
 directive|define
 name|TXANT
@@ -1971,7 +2069,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->cur.ast_ant_tx[x] - wf->total.ast_ant_tx[x]); return 1
+value|snprintf(b, bs, "%u", wf->cur.ath.ast_ant_tx[x] - wf->total.ath.ast_ant_tx[x]); return 1
 define|#
 directive|define
 name|RXANT
@@ -1979,7 +2077,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->cur.ast_ant_rx[x] - wf->total.ast_ant_rx[x]); return 1
+value|snprintf(b, bs, "%u", wf->cur.ath.ast_ant_rx[x] - wf->total.ath.ast_ant_rx[x]); return 1
 switch|switch
 condition|(
 name|s
@@ -2001,11 +2099,15 @@ name|wf
 operator|->
 name|cur
 operator|.
+name|ath
+operator|.
 name|ast_rx_packets
 operator|-
 name|wf
 operator|->
 name|total
+operator|.
+name|ath
 operator|.
 name|ast_rx_packets
 operator|)
@@ -2015,11 +2117,15 @@ name|wf
 operator|->
 name|cur
 operator|.
+name|ath
+operator|.
 name|ast_rx_mgt
 operator|-
 name|wf
 operator|->
 name|total
+operator|.
+name|ath
 operator|.
 name|ast_rx_mgt
 operator|)
@@ -2043,11 +2149,15 @@ name|wf
 operator|->
 name|cur
 operator|.
+name|ath
+operator|.
 name|ast_tx_packets
 operator|-
 name|wf
 operator|->
 name|total
+operator|.
+name|ath
 operator|.
 name|ast_tx_packets
 argument_list|)
@@ -2069,6 +2179,8 @@ argument_list|,
 name|wf
 operator|->
 name|cur
+operator|.
+name|ath
 operator|.
 name|ast_tx_rate
 operator|/
@@ -2617,6 +2729,8 @@ name|wf
 operator|->
 name|cur
 operator|.
+name|ath
+operator|.
 name|ast_tx_rssi
 argument_list|)
 expr_stmt|;
@@ -2637,6 +2751,8 @@ argument_list|,
 name|wf
 operator|->
 name|cur
+operator|.
+name|ath
 operator|.
 name|ast_rx_rssi
 argument_list|)
@@ -2902,9 +3018,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|S_FF_TXOK
 case|case
 name|S_FF_TXOK
 case|:
@@ -2922,6 +3035,14 @@ name|ff_txerr
 argument_list|)
 expr_stmt|;
 case|case
+name|S_FF_RX
+case|:
+name|STAT
+argument_list|(
+name|ff_rx
+argument_list|)
+expr_stmt|;
+case|case
 name|S_FF_FLUSH
 case|:
 name|STAT
@@ -2930,15 +3051,13 @@ name|ff_flush
 argument_list|)
 expr_stmt|;
 case|case
-name|S_FF_QFULL
+name|S_TX_QFULL
 case|:
 name|STAT
 argument_list|(
-name|ff_qfull
+name|tx_qfull
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 case|case
 name|S_RX_NOISE
 case|:
@@ -2953,6 +3072,8 @@ argument_list|,
 name|wf
 operator|->
 name|cur
+operator|.
+name|ath
 operator|.
 name|ast_rx_noise
 argument_list|)
@@ -2975,11 +3096,15 @@ name|wf
 operator|->
 name|cur
 operator|.
+name|ath
+operator|.
 name|ast_tx_rssi
 operator|+
 name|wf
 operator|->
 name|cur
+operator|.
+name|ath
 operator|.
 name|ast_rx_noise
 argument_list|)
@@ -3002,11 +3127,15 @@ name|wf
 operator|->
 name|cur
 operator|.
+name|ath
+operator|.
 name|ast_rx_rssi
 operator|+
 name|wf
 operator|->
 name|cur
+operator|.
+name|ath
 operator|.
 name|ast_rx_noise
 argument_list|)
@@ -3080,7 +3209,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->total.ast_##x); return 1
+value|snprintf(b, bs, "%u", wf->total.ath.ast_##x); return 1
 define|#
 directive|define
 name|PHY
@@ -3088,7 +3217,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->total.ast_rx_phy[x]); return 1
+value|snprintf(b, bs, "%u", wf->total.ath.ast_rx_phy[x]); return 1
 define|#
 directive|define
 name|TXANT
@@ -3096,7 +3225,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->total.ast_ant_tx[x]); return 1
+value|snprintf(b, bs, "%u", wf->total.ath.ast_ant_tx[x]); return 1
 define|#
 directive|define
 name|RXANT
@@ -3104,7 +3233,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|snprintf(b, bs, "%u", wf->total.ast_ant_rx[x]); return 1
+value|snprintf(b, bs, "%u", wf->total.ath.ast_ant_rx[x]); return 1
 switch|switch
 condition|(
 name|s
@@ -3125,11 +3254,15 @@ name|wf
 operator|->
 name|total
 operator|.
+name|ath
+operator|.
 name|ast_rx_packets
 operator|-
 name|wf
 operator|->
 name|total
+operator|.
+name|ath
 operator|.
 name|ast_rx_mgt
 argument_list|)
@@ -3152,6 +3285,8 @@ name|wf
 operator|->
 name|total
 operator|.
+name|ath
+operator|.
 name|ast_tx_packets
 argument_list|)
 expr_stmt|;
@@ -3172,6 +3307,8 @@ argument_list|,
 name|wf
 operator|->
 name|total
+operator|.
+name|ath
 operator|.
 name|ast_tx_rate
 operator|/
@@ -3720,6 +3857,8 @@ name|wf
 operator|->
 name|total
 operator|.
+name|ath
+operator|.
 name|ast_tx_rssi
 argument_list|)
 expr_stmt|;
@@ -3740,6 +3879,8 @@ argument_list|,
 name|wf
 operator|->
 name|total
+operator|.
+name|ath
 operator|.
 name|ast_rx_rssi
 argument_list|)
@@ -4005,9 +4146,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|S_FF_TXOK
 case|case
 name|S_FF_TXOK
 case|:
@@ -4025,6 +4163,14 @@ name|ff_txerr
 argument_list|)
 expr_stmt|;
 case|case
+name|S_FF_RX
+case|:
+name|STAT
+argument_list|(
+name|ff_rx
+argument_list|)
+expr_stmt|;
+case|case
 name|S_FF_FLUSH
 case|:
 name|STAT
@@ -4033,15 +4179,13 @@ name|ff_flush
 argument_list|)
 expr_stmt|;
 case|case
-name|S_FF_QFULL
+name|S_TX_QFULL
 case|:
 name|STAT
 argument_list|(
-name|ff_qfull
+name|tx_qfull
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 case|case
 name|S_RX_NOISE
 case|:
@@ -4056,6 +4200,8 @@ argument_list|,
 name|wf
 operator|->
 name|total
+operator|.
+name|ath
 operator|.
 name|ast_rx_noise
 argument_list|)
@@ -4078,11 +4224,15 @@ name|wf
 operator|->
 name|total
 operator|.
+name|ath
+operator|.
 name|ast_tx_rssi
 operator|+
 name|wf
 operator|->
 name|total
+operator|.
+name|ath
 operator|.
 name|ast_rx_noise
 argument_list|)
@@ -4105,11 +4255,15 @@ name|wf
 operator|->
 name|total
 operator|.
+name|ath
+operator|.
 name|ast_rx_rssi
 operator|+
 name|wf
 operator|->
 name|total
+operator|.
+name|ath
 operator|.
 name|ast_rx_noise
 argument_list|)
@@ -4177,6 +4331,12 @@ parameter_list|(
 name|i
 parameter_list|)
 value|(S_PHY_MIN<= i&& i<= S_PHY_MAX)
+specifier|const
+name|struct
+name|fmt
+modifier|*
+name|f
+decl_stmt|;
 name|char
 name|s
 index|[
@@ -4190,7 +4350,58 @@ name|indent
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|width
 decl_stmt|;
+name|width
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|S_LAST
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|f
+operator|=
+operator|&
+name|sf
+operator|->
+name|stats
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isphyerr
+argument_list|(
+name|i
+argument_list|)
+operator|&&
+name|f
+operator|->
+name|width
+operator|>
+name|width
+condition|)
+name|width
+operator|=
+name|f
+operator|->
+name|width
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -4249,9 +4460,11 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%s%s %s\n"
+literal|"%s%-*s %s\n"
 argument_list|,
 name|indent
+argument_list|,
+name|width
 argument_list|,
 name|s
 argument_list|,
@@ -4291,6 +4504,8 @@ name|wf
 operator|->
 name|total
 operator|.
+name|ath
+operator|.
 name|ast_ant_rx
 index|[
 name|i
@@ -4299,6 +4514,8 @@ operator|||
 name|wf
 operator|->
 name|total
+operator|.
+name|ath
 operator|.
 name|ast_ant_tx
 index|[
@@ -4317,6 +4534,8 @@ name|wf
 operator|->
 name|total
 operator|.
+name|ath
+operator|.
 name|ast_ant_tx
 index|[
 name|i
@@ -4325,6 +4544,8 @@ argument_list|,
 name|wf
 operator|->
 name|total
+operator|.
+name|ath
 operator|.
 name|ast_ant_rx
 index|[
