@@ -183,7 +183,7 @@ value|"ptmx"
 end_define
 
 begin_comment
-comment|/*  * The following are range values for pseudo TTY devices.  Pseudo TTYs have a  * name of /dev/[pt]ty[p-sP-S][0-9a-v], yielding 256 combinations per major.  */
+comment|/*  * The following are range values for pseudo TTY devices.  Pseudo TTYs have a  * name of /dev/[pt]ty[l-sL-S][0-9a-v], yielding 256 combinations per major.  */
 end_comment
 
 begin_define
@@ -197,7 +197,7 @@ begin_define
 define|#
 directive|define
 name|PT_DEV1
-value|"pqrsPQRS"
+value|"pqrsPQRSlmnoLMNO"
 end_define
 
 begin_define
