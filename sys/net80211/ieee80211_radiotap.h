@@ -194,14 +194,14 @@ name|_KERNEL
 end_ifndef
 
 begin_comment
-comment|/* Channel flags. */
+comment|/* channel attributes */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_TURBO
-value|0x00010
+value|0x00000010
 end_define
 
 begin_comment
@@ -212,7 +212,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_CCK
-value|0x00020
+value|0x00000020
 end_define
 
 begin_comment
@@ -223,7 +223,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_OFDM
-value|0x00040
+value|0x00000040
 end_define
 
 begin_comment
@@ -234,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_2GHZ
-value|0x00080
+value|0x00000080
 end_define
 
 begin_comment
@@ -245,7 +245,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_5GHZ
-value|0x00100
+value|0x00000100
 end_define
 
 begin_comment
@@ -256,7 +256,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_PASSIVE
-value|0x00200
+value|0x00000200
 end_define
 
 begin_comment
@@ -267,7 +267,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_DYN
-value|0x00400
+value|0x00000400
 end_define
 
 begin_comment
@@ -278,7 +278,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_GFSK
-value|0x00800
+value|0x00000800
 end_define
 
 begin_comment
@@ -289,7 +289,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_GSM
-value|0x01000
+value|0x00001000
 end_define
 
 begin_comment
@@ -300,7 +300,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_STURBO
-value|0x02000
+value|0x00002000
 end_define
 
 begin_comment
@@ -311,7 +311,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_HALF
-value|0x04000
+value|0x00004000
 end_define
 
 begin_comment
@@ -322,44 +322,11 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_QUARTER
-value|0x08000
+value|0x00008000
 end_define
 
 begin_comment
 comment|/* Quarter rate channel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_CHAN_HT20
-value|0x10000
-end_define
-
-begin_comment
-comment|/* HT 20 channel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_CHAN_HT40U
-value|0x20000
-end_define
-
-begin_comment
-comment|/* HT 40 channel w/ ext above */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_CHAN_HT40D
-value|0x40000
-end_define
-
-begin_comment
-comment|/* HT 40 channel w/ ext below */
 end_comment
 
 begin_endif
