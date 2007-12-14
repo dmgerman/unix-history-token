@@ -1005,9 +1005,33 @@ operator|!=
 literal|2
 condition|)
 block|{
+if|if
+condition|(
+name|no_target
+condition|)
 name|warnx
 argument_list|(
-literal|"wrong number or types of arguments"
+literal|"target directory `%s' does not exist"
+argument_list|,
+name|argv
+index|[
+name|argc
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|warnx
+argument_list|(
+literal|"target `%s' is not a directory"
+argument_list|,
+name|argv
+index|[
+name|argc
+operator|-
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 name|usage
