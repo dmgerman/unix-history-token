@@ -202,6 +202,7 @@ index|[
 name|CPUSTATES
 index|]
 decl_stmt|;
+comment|/* statclock ticks */
 name|struct
 name|device
 modifier|*
