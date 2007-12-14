@@ -180,7 +180,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* for _fetch_writev */
+comment|/* for fetch_writev */
 end_comment
 
 begin_struct_decl
@@ -191,7 +191,7 @@ end_struct_decl
 
 begin_function_decl
 name|void
-name|_fetch_seterr
+name|fetch_seterr
 parameter_list|(
 name|struct
 name|fetcherr
@@ -204,7 +204,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_fetch_syserr
+name|fetch_syserr
 parameter_list|(
 name|void
 parameter_list|)
@@ -213,7 +213,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_fetch_info
+name|fetch_info
 parameter_list|(
 specifier|const
 name|char
@@ -226,7 +226,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_fetch_default_port
+name|fetch_default_port
 parameter_list|(
 specifier|const
 name|char
@@ -237,7 +237,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_fetch_default_proxy_port
+name|fetch_default_proxy_port
 parameter_list|(
 specifier|const
 name|char
@@ -248,7 +248,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_fetch_bind
+name|fetch_bind
 parameter_list|(
 name|int
 parameter_list|,
@@ -264,7 +264,7 @@ end_function_decl
 begin_function_decl
 name|conn_t
 modifier|*
-name|_fetch_connect
+name|fetch_connect
 parameter_list|(
 specifier|const
 name|char
@@ -282,7 +282,7 @@ end_function_decl
 begin_function_decl
 name|conn_t
 modifier|*
-name|_fetch_reopen
+name|fetch_reopen
 parameter_list|(
 name|int
 parameter_list|)
@@ -292,7 +292,7 @@ end_function_decl
 begin_function_decl
 name|conn_t
 modifier|*
-name|_fetch_ref
+name|fetch_ref
 parameter_list|(
 name|conn_t
 modifier|*
@@ -302,7 +302,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_fetch_ssl
+name|fetch_ssl
 parameter_list|(
 name|conn_t
 modifier|*
@@ -314,7 +314,7 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
-name|_fetch_read
+name|fetch_read
 parameter_list|(
 name|conn_t
 modifier|*
@@ -329,7 +329,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_fetch_getln
+name|fetch_getln
 parameter_list|(
 name|conn_t
 modifier|*
@@ -339,7 +339,7 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
-name|_fetch_write
+name|fetch_write
 parameter_list|(
 name|conn_t
 modifier|*
@@ -355,7 +355,7 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
-name|_fetch_writev
+name|fetch_writev
 parameter_list|(
 name|conn_t
 modifier|*
@@ -371,7 +371,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_fetch_putln
+name|fetch_putln
 parameter_list|(
 name|conn_t
 modifier|*
@@ -387,7 +387,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_fetch_close
+name|fetch_close
 parameter_list|(
 name|conn_t
 modifier|*
@@ -397,7 +397,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_fetch_add_entry
+name|fetch_add_entry
 parameter_list|(
 name|struct
 name|url_ent
@@ -423,7 +423,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_fetch_netrc_auth
+name|fetch_netrc_auth
 parameter_list|(
 name|struct
 name|url
@@ -436,41 +436,41 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|_ftp_seterr
+name|ftp_seterr
 parameter_list|(
 name|n
 parameter_list|)
-value|_fetch_seterr(_ftp_errlist, n)
+value|fetch_seterr(ftp_errlist, n)
 end_define
 
 begin_define
 define|#
 directive|define
-name|_http_seterr
+name|http_seterr
 parameter_list|(
 name|n
 parameter_list|)
-value|_fetch_seterr(_http_errlist, n)
+value|fetch_seterr(http_errlist, n)
 end_define
 
 begin_define
 define|#
 directive|define
-name|_netdb_seterr
+name|netdb_seterr
 parameter_list|(
 name|n
 parameter_list|)
-value|_fetch_seterr(_netdb_errlist, n)
+value|fetch_seterr(netdb_errlist, n)
 end_define
 
 begin_define
 define|#
 directive|define
-name|_url_seterr
+name|url_seterr
 parameter_list|(
 name|n
 parameter_list|)
-value|_fetch_seterr(_url_errlist, n)
+value|fetch_seterr(url_errlist, n)
 end_define
 
 begin_ifndef
@@ -510,13 +510,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * I don't really like exporting _http_request() and _ftp_request(),  * but the HTTP and FTP code occasionally needs to cross-call  * eachother, and this saves me from adding a lot of special-case code  * to handle those cases.  *  * Note that _*_request() free purl, which is way ugly but saves us a  * whole lot of trouble.  */
+comment|/*  * I don't really like exporting http_request() and ftp_request(),  * but the HTTP and FTP code occasionally needs to cross-call  * eachother, and this saves me from adding a lot of special-case code  * to handle those cases.  *  * Note that _*_request() free purl, which is way ugly but saves us a  * whole lot of trouble.  */
 end_comment
 
 begin_function_decl
 name|FILE
 modifier|*
-name|_http_request
+name|http_request
 parameter_list|(
 name|struct
 name|url
@@ -544,7 +544,7 @@ end_function_decl
 begin_function_decl
 name|FILE
 modifier|*
-name|_ftp_request
+name|ftp_request
 parameter_list|(
 name|struct
 name|url

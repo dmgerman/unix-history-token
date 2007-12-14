@@ -139,7 +139,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|fetcherr
-name|_url_errlist
+name|url_errlist
 index|[]
 init|=
 block|{
@@ -346,7 +346,7 @@ name|flags
 argument_list|)
 operator|)
 return|;
-name|_url_seterr
+name|url_seterr
 argument_list|(
 name|URL_BAD_SCHEME
 argument_list|)
@@ -519,7 +519,7 @@ name|flags
 argument_list|)
 operator|)
 return|;
-name|_url_seterr
+name|url_seterr
 argument_list|(
 name|URL_BAD_SCHEME
 argument_list|)
@@ -694,7 +694,7 @@ name|flags
 argument_list|)
 operator|)
 return|;
-name|_url_seterr
+name|url_seterr
 argument_list|(
 name|URL_BAD_SCHEME
 argument_list|)
@@ -834,7 +834,7 @@ name|flags
 argument_list|)
 operator|)
 return|;
-name|_url_seterr
+name|url_seterr
 argument_list|(
 name|URL_BAD_SCHEME
 argument_list|)
@@ -1231,7 +1231,7 @@ name|doc
 operator|)
 condition|)
 block|{
-name|_url_seterr
+name|url_seterr
 argument_list|(
 name|URL_MALFORMED
 argument_list|)
@@ -1253,7 +1253,7 @@ operator|>
 literal|65535
 condition|)
 block|{
-name|_url_seterr
+name|url_seterr
 argument_list|(
 name|URL_BAD_PORT
 argument_list|)
@@ -1285,7 +1285,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -1314,7 +1314,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 name|free
@@ -1429,7 +1429,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -1865,7 +1865,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* invalid port */
-name|_url_seterr
+name|url_seterr
 argument_list|(
 name|URL_BAD_PORT
 argument_list|)
@@ -1946,7 +1946,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2058,7 +2058,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 goto|goto

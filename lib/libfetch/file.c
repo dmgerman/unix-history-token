@@ -122,7 +122,7 @@ name|f
 operator|==
 name|NULL
 condition|)
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 if|if
@@ -151,7 +151,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 block|}
@@ -250,7 +250,7 @@ name|f
 operator|==
 name|NULL
 condition|)
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 if|if
@@ -279,7 +279,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 block|}
@@ -294,7 +294,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|_fetch_stat_file
+name|fetch_stat_file
 parameter_list|(
 specifier|const
 name|char
@@ -342,7 +342,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -407,7 +407,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|_fetch_stat_file
+name|fetch_stat_file
 argument_list|(
 name|u
 operator|->
@@ -489,7 +489,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -598,7 +598,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|_fetch_stat_file
+name|fetch_stat_file
 argument_list|(
 name|fn
 argument_list|,
@@ -611,7 +611,7 @@ literal|1
 condition|)
 comment|/* should I return a partial result, or abort? */
 break|break;
-name|_fetch_add_entry
+name|fetch_add_entry
 argument_list|(
 operator|&
 name|ue

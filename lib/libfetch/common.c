@@ -119,7 +119,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|fetcherr
-name|_netdb_errlist
+name|netdb_errlist
 index|[]
 init|=
 block|{
@@ -202,7 +202,7 @@ specifier|static
 name|struct
 name|fetcherr
 modifier|*
-name|_fetch_finderr
+name|fetch_finderr
 parameter_list|(
 name|struct
 name|fetcherr
@@ -245,7 +245,7 @@ end_comment
 
 begin_function
 name|void
-name|_fetch_seterr
+name|fetch_seterr
 parameter_list|(
 name|struct
 name|fetcherr
@@ -258,7 +258,7 @@ parameter_list|)
 block|{
 name|p
 operator|=
-name|_fetch_finderr
+name|fetch_finderr
 argument_list|(
 name|p
 argument_list|,
@@ -293,7 +293,7 @@ end_comment
 
 begin_function
 name|void
-name|_fetch_syserr
+name|fetch_syserr
 parameter_list|(
 name|void
 parameter_list|)
@@ -460,7 +460,7 @@ end_comment
 
 begin_function
 name|void
-name|_fetch_info
+name|fetch_info
 parameter_list|(
 specifier|const
 name|char
@@ -514,7 +514,7 @@ end_comment
 
 begin_function
 name|int
-name|_fetch_default_port
+name|fetch_default_port
 parameter_list|(
 specifier|const
 name|char
@@ -598,7 +598,7 @@ end_comment
 
 begin_function
 name|int
-name|_fetch_default_proxy_port
+name|fetch_default_proxy_port
 parameter_list|(
 specifier|const
 name|char
@@ -653,7 +653,7 @@ end_comment
 begin_function
 name|conn_t
 modifier|*
-name|_fetch_reopen
+name|fetch_reopen
 parameter_list|(
 name|int
 name|sd
@@ -714,7 +714,7 @@ end_comment
 begin_function
 name|conn_t
 modifier|*
-name|_fetch_ref
+name|fetch_ref
 parameter_list|(
 name|conn_t
 modifier|*
@@ -740,7 +740,7 @@ end_comment
 
 begin_function
 name|int
-name|_fetch_bind
+name|fetch_bind
 parameter_list|(
 name|int
 name|sd
@@ -877,7 +877,7 @@ end_comment
 begin_function
 name|conn_t
 modifier|*
-name|_fetch_connect
+name|fetch_connect
 parameter_list|(
 specifier|const
 name|char
@@ -942,7 +942,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|_fetch_info
+name|fetch_info
 argument_list|(
 literal|"looking up %s"
 argument_list|,
@@ -1017,7 +1017,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_netdb_seterr
+name|netdb_seterr
 argument_list|(
 name|err
 argument_list|)
@@ -1039,7 +1039,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|_fetch_info
+name|fetch_info
 argument_list|(
 literal|"connecting to %s:%d"
 argument_list|,
@@ -1110,7 +1110,7 @@ name|bindaddr
 operator|!=
 literal|'\0'
 operator|&&
-name|_fetch_bind
+name|fetch_bind
 argument_list|(
 name|sd
 argument_list|,
@@ -1124,7 +1124,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_fetch_info
+name|fetch_info
 argument_list|(
 literal|"failed to bind to '%s'"
 argument_list|,
@@ -1175,7 +1175,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -1189,7 +1189,7 @@ condition|(
 operator|(
 name|conn
 operator|=
-name|_fetch_reopen
+name|fetch_reopen
 argument_list|(
 name|sd
 argument_list|)
@@ -1198,7 +1198,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 name|close
@@ -1221,7 +1221,7 @@ end_comment
 
 begin_function
 name|int
-name|_fetch_ssl
+name|fetch_ssl
 parameter_list|(
 name|conn_t
 modifier|*
@@ -1500,7 +1500,7 @@ end_comment
 
 begin_function
 name|ssize_t
-name|_fetch_read
+name|fetch_read
 parameter_list|(
 name|conn_t
 modifier|*
@@ -1662,7 +1662,7 @@ name|errno
 operator|=
 name|ETIMEDOUT
 expr_stmt|;
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -1714,7 +1714,7 @@ operator|&&
 name|fetchRestartCalls
 condition|)
 continue|continue;
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -1829,7 +1829,7 @@ end_define
 
 begin_function
 name|int
-name|_fetch_getln
+name|fetch_getln
 parameter_list|(
 name|conn_t
 modifier|*
@@ -1911,7 +1911,7 @@ do|do
 block|{
 name|len
 operator|=
-name|_fetch_read
+name|fetch_read
 argument_list|(
 name|conn
 argument_list|,
@@ -2067,7 +2067,7 @@ end_comment
 
 begin_function
 name|ssize_t
-name|_fetch_write
+name|fetch_write
 parameter_list|(
 name|conn_t
 modifier|*
@@ -2105,7 +2105,7 @@ operator|=
 name|len
 expr_stmt|;
 return|return
-name|_fetch_writev
+name|fetch_writev
 argument_list|(
 name|conn
 argument_list|,
@@ -2124,7 +2124,7 @@ end_comment
 
 begin_function
 name|ssize_t
-name|_fetch_writev
+name|fetch_writev
 parameter_list|(
 name|conn_t
 modifier|*
@@ -2287,7 +2287,7 @@ name|errno
 operator|=
 name|ETIMEDOUT
 expr_stmt|;
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -2407,7 +2407,7 @@ name|errno
 operator|=
 name|EPIPE
 expr_stmt|;
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -2518,7 +2518,7 @@ end_comment
 
 begin_function
 name|int
-name|_fetch_putln
+name|fetch_putln
 parameter_list|(
 name|conn_t
 modifier|*
@@ -2614,7 +2614,7 @@ literal|0
 condition|)
 name|ret
 operator|=
-name|_fetch_writev
+name|fetch_writev
 argument_list|(
 name|conn
 argument_list|,
@@ -2630,7 +2630,7 @@ expr_stmt|;
 else|else
 name|ret
 operator|=
-name|_fetch_writev
+name|fetch_writev
 argument_list|(
 name|conn
 argument_list|,
@@ -2666,7 +2666,7 @@ end_comment
 
 begin_function
 name|int
-name|_fetch_close
+name|fetch_close
 parameter_list|(
 name|conn_t
 modifier|*
@@ -2725,7 +2725,7 @@ end_comment
 
 begin_function
 name|int
-name|_fetch_add_entry
+name|fetch_add_entry
 parameter_list|(
 name|struct
 name|url_ent
@@ -2822,7 +2822,7 @@ name|errno
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -2922,7 +2922,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|_fetch_read_word
+name|fetch_read_word
 parameter_list|(
 name|FILE
 modifier|*
@@ -2968,7 +2968,7 @@ end_comment
 
 begin_function
 name|int
-name|_fetch_netrc_auth
+name|fetch_netrc_auth
 parameter_list|(
 name|struct
 name|url
@@ -3034,7 +3034,7 @@ name|fn
 argument_list|)
 condition|)
 block|{
-name|_fetch_info
+name|fetch_info
 argument_list|(
 literal|"$NETRC specifies a file name "
 literal|"longer than PATH_MAX"
@@ -3157,7 +3157,7 @@ condition|(
 operator|(
 name|word
 operator|=
-name|_fetch_read_word
+name|fetch_read_word
 argument_list|(
 name|f
 argument_list|)
@@ -3180,7 +3180,7 @@ condition|)
 block|{
 name|DEBUG
 argument_list|(
-name|_fetch_info
+name|fetch_info
 argument_list|(
 literal|"Using default .netrc settings"
 argument_list|)
@@ -3202,7 +3202,7 @@ operator|&&
 operator|(
 name|word
 operator|=
-name|_fetch_read_word
+name|fetch_read_word
 argument_list|(
 name|f
 argument_list|)
@@ -3224,7 +3224,7 @@ condition|)
 block|{
 name|DEBUG
 argument_list|(
-name|_fetch_info
+name|fetch_info
 argument_list|(
 literal|"Using .netrc settings for %s"
 argument_list|,
@@ -3249,7 +3249,7 @@ condition|(
 operator|(
 name|word
 operator|=
-name|_fetch_read_word
+name|fetch_read_word
 argument_list|(
 name|f
 argument_list|)
@@ -3275,7 +3275,7 @@ condition|(
 operator|(
 name|word
 operator|=
-name|_fetch_read_word
+name|fetch_read_word
 argument_list|(
 name|f
 argument_list|)
@@ -3317,7 +3317,7 @@ name|user
 argument_list|)
 condition|)
 block|{
-name|_fetch_info
+name|fetch_info
 argument_list|(
 literal|"login name in .netrc is too long"
 argument_list|)
@@ -3351,7 +3351,7 @@ condition|(
 operator|(
 name|word
 operator|=
-name|_fetch_read_word
+name|fetch_read_word
 argument_list|(
 name|f
 argument_list|)
@@ -3393,7 +3393,7 @@ name|pwd
 argument_list|)
 condition|)
 block|{
-name|_fetch_info
+name|fetch_info
 argument_list|(
 literal|"password in .netrc is too long"
 argument_list|)
@@ -3427,7 +3427,7 @@ condition|(
 operator|(
 name|word
 operator|=
-name|_fetch_read_word
+name|fetch_read_word
 argument_list|(
 name|f
 argument_list|)
