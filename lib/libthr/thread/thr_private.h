@@ -355,6 +355,12 @@ decl_stmt|;
 name|int
 name|m_refcount
 decl_stmt|;
+name|int
+name|m_spinloops
+decl_stmt|;
+name|int
+name|m_yieldloops
+decl_stmt|;
 comment|/* 	 * Link for all mutexes a thread currently owns. 	 */
 name|TAILQ_ENTRY
 argument_list|(
