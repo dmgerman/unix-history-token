@@ -424,13 +424,13 @@ function_decl|;
 specifier|const
 name|char
 modifier|*
-name|name
+name|ti_name
 decl_stmt|;
 specifier|const
 name|struct
 name|offload_id
 modifier|*
-name|id_table
+name|ti_id_table
 decl_stmt|;
 block|}
 struct|;
