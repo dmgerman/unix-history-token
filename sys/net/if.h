@@ -786,12 +786,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFCAP_TOE
+name|IFCAP_TOE4
 value|0x4000
 end_define
 
 begin_comment
 comment|/* interface can offload TCP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_TOE6
+value|0x8000
+end_define
+
+begin_comment
+comment|/* interface can offload TCP6 */
 end_comment
 
 begin_define
@@ -813,6 +824,13 @@ define|#
 directive|define
 name|IFCAP_WOL
 value|(IFCAP_WOL_UCAST | IFCAP_WOL_MCAST | IFCAP_WOL_MAGIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCAP_TSO
+value|(IFCAP_TOE4 | IFCAP_TOE6)
 end_define
 
 begin_define
