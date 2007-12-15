@@ -67,6 +67,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock_profile.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_mutex.h>
 end_include
 
@@ -792,6 +798,14 @@ name|int
 name|td_syscalls
 decl_stmt|;
 comment|/* per-thread syscall count (used by NFS :)) */
+name|struct
+name|lpohead
+name|td_lprof
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* (a) lock profiling objects. */
 block|}
 struct|;
 end_struct

@@ -17,44 +17,6 @@ end_define
 
 begin_struct
 struct|struct
-name|lock_profile_object
-block|{
-comment|/*          * This does not result in variant structure sizes because          * MUTEX_PROFILING is in opt_global.h          */
-name|u_int64_t
-name|lpo_acqtime
-decl_stmt|;
-name|u_int64_t
-name|lpo_waittime
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|lpo_filename
-decl_stmt|;
-name|u_int
-name|lpo_namehash
-decl_stmt|;
-name|int
-name|lpo_lineno
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|lpo_type
-decl_stmt|;
-comment|/*          * Fields relating to measuring contention on mutexes.          * holding must be accessed atomically since it's          * modified by threads that don't yet hold the mutex.          * locking is only modified and referenced while          * the mutex is held.          */
-name|u_int
-name|lpo_contest_holding
-decl_stmt|;
-name|u_int
-name|lpo_contest_locking
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|lock_object
 block|{
 specifier|const
@@ -72,15 +34,6 @@ comment|/* General lock type. */
 name|u_int
 name|lo_flags
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|LOCK_PROFILING
-name|struct
-name|lock_profile_object
-name|lo_profile_obj
-decl_stmt|;
-endif|#
-directive|endif
 union|union
 block|{
 comment|/* Data for witness. */
