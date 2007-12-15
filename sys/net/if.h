@@ -829,7 +829,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IFCAP_TSO
+name|IFCAP_TOE
 value|(IFCAP_TOE4 | IFCAP_TOE6)
 end_define
 
