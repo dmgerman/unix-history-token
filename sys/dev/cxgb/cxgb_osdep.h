@@ -130,7 +130,7 @@ name|PANIC_IF
 parameter_list|(
 name|exp
 parameter_list|)
-value|do {                  \ 	if (exp)                            \ 		panic("BUG: %s", exp);      \ } while (0)
+value|do {                  \ 	if (exp)                            \ 		panic("BUG: %s", #exp);      \ } while (0)
 end_define
 
 begin_define
@@ -307,20 +307,6 @@ define|#
 directive|define
 name|CXGB_TX_CLEANUP_THRESHOLD
 value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOG_WARNING
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOG_ERR
-value|2
 end_define
 
 begin_ifdef

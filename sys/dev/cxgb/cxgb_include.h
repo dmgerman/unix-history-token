@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ulp/toecore/toedev.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mbufq.h>
 end_include
 
@@ -85,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<common/jhash.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ulp/toecore/cxgb_toedev.h>
 end_include
 
 begin_else
@@ -155,12 +155,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/toecore/toedev.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/cxgb/sys/mbufq.h>
 end_include
 
@@ -168,6 +162,12 @@ begin_include
 include|#
 directive|include
 file|<dev/cxgb/common/jhash.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/cxgb/ulp/toecore/cxgb_toedev.h>
 end_include
 
 begin_endif

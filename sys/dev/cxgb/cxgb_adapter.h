@@ -120,13 +120,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ulp/toecore/toedev.h>
+file|<t3cdev.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/mbufq.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ulp/toecore/cxgb_toedev.h>
 end_include
 
 begin_else
@@ -143,13 +149,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/cxgb/t3cdev.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/cxgb/sys/mbufq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/toecore/toedev.h>
+file|<dev/cxgb/ulp/toecore/cxgb_toedev.h>
 end_include
 
 begin_endif
@@ -1211,7 +1223,7 @@ name|MAX_NPORTS
 index|]
 decl_stmt|;
 name|struct
-name|toedev
+name|t3cdev
 name|tdev
 decl_stmt|;
 name|char
@@ -1949,7 +1961,7 @@ name|int
 name|t3_offload_tx
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 parameter_list|,
 name|struct
@@ -2422,7 +2434,7 @@ name|adapter
 operator|*
 name|tdev2adap
 argument_list|(
-argument|struct toedev *d
+argument|struct t3cdev *d
 argument_list|)
 block|{
 return|return

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/taskqueue.h>
 end_include
 
@@ -9824,7 +9830,7 @@ name|int
 name|t3_offload_tx
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|tdev
 parameter_list|,
@@ -9917,7 +9923,7 @@ name|void
 name|deliver_partial_bundle
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|tdev
 parameter_list|,
@@ -9966,7 +9972,7 @@ name|int
 name|rx_offload
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|tdev
 parameter_list|,

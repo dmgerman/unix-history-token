@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/firmware.h>
 end_include
 
@@ -655,7 +661,7 @@ name|int
 name|offload_close
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|tdev
 parameter_list|)
@@ -6362,7 +6368,7 @@ name|int
 name|offload_tx
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|tdev
 parameter_list|,
@@ -7929,7 +7935,7 @@ operator|->
 name|adapter
 decl_stmt|;
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|tdev
 init|=
@@ -8168,7 +8174,7 @@ name|int
 name|offload_close
 parameter_list|(
 name|struct
-name|toedev
+name|t3cev
 modifier|*
 name|tdev
 parameter_list|)

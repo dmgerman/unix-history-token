@@ -45,6 +45,12 @@ directive|include
 file|<common/cxgb_tcb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<t3cdev.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -74,10 +80,24 @@ directive|include
 file|<dev/cxgb/common/cxgb_tcb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/cxgb/t3cdev.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_CXGB
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct_decl
 struct_decl|struct
@@ -162,7 +182,7 @@ name|int
 name|cxgb_ofld_recv
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -183,7 +203,7 @@ name|void
 name|cxgb_set_dummy_ops
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|)
@@ -191,7 +211,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Client registration.  Users of T3 driver must register themselves.  * The T3 driver will call the add function of every client for each T3  * adapter activated, passing up the toedev ptr.  Each client fills out an  * array of callback functions to process CPL messages.  */
+comment|/*  * Client registration.  Users of T3 driver must register themselves.  * The T3 driver will call the add function of every client for each T3  * adapter activated, passing up the t3cdev ptr.  Each client fills out an  * array of callback functions to process CPL messages.  */
 end_comment
 
 begin_function_decl
@@ -223,7 +243,7 @@ name|void
 name|cxgb_add_clients
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|tdev
 parameter_list|)
@@ -235,7 +255,7 @@ name|void
 name|cxgb_remove_clients
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|tdev
 parameter_list|)
@@ -251,7 +271,7 @@ name|cxgb_cpl_handler_func
 function_decl|)
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -282,7 +302,7 @@ name|add
 function_decl|)
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 parameter_list|)
 function_decl|;
@@ -293,7 +313,7 @@ name|remove
 function_decl|)
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 parameter_list|)
 function_decl|;
@@ -346,7 +366,7 @@ name|int
 name|cxgb_alloc_atid
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -367,7 +387,7 @@ name|int
 name|cxgb_alloc_stid
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -389,7 +409,7 @@ modifier|*
 name|cxgb_free_atid
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -404,9 +424,25 @@ name|void
 name|cxgb_free_stid
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
+parameter_list|,
+name|int
+name|stid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|cxgb_get_lctx
+parameter_list|(
+name|struct
+name|t3cdev
+modifier|*
+name|tdev
 parameter_list|,
 name|int
 name|stid
@@ -419,7 +455,7 @@ name|void
 name|cxgb_insert_tid
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -444,7 +480,7 @@ name|void
 name|cxgb_queue_tid_release
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -460,7 +496,7 @@ name|void
 name|cxgb_remove_tid
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -566,7 +602,7 @@ name|cpl_handler_func
 function_decl|)
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -738,19 +774,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|toe_data
+name|t3c_data
 block|{
-ifdef|#
-directive|ifdef
-name|notyet
 name|struct
-name|list_head
-name|list_node
-decl_stmt|;
-endif|#
-directive|endif
-name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 decl_stmt|;
@@ -796,17 +823,17 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * toedev -> toe_data accessor  */
+comment|/*  * t3cdev -> toe_data accessor  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TOE_DATA
+name|T3C_DATA
 parameter_list|(
 name|dev
 parameter_list|)
-value|(*(struct toe_data **)&(dev)->l4opt)
+value|(*(struct t3c_data **)&(dev)->l4opt)
 end_define
 
 begin_comment
@@ -1079,6 +1106,11 @@ name|struct
 name|rtentry
 modifier|*
 name|rt
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|sa
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1096,6 +1128,11 @@ name|struct
 name|rtentry
 modifier|*
 name|new
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|sa
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1105,7 +1142,7 @@ name|int
 name|process_rx
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -1123,10 +1160,10 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|attach_toedev
+name|attach_t3cdev
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|)
@@ -1135,15 +1172,23 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|detach_toedev
+name|detach_t3cdev
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|UNIMPLEMENTED
+parameter_list|()
+value|panic("IMPLEMENT: %s:%s:%d", __FUNCTION__, __FILE__, __LINE__)
+end_define
 
 begin_endif
 endif|#
