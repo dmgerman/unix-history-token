@@ -1264,6 +1264,35 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"(compact) flash commands       %s	%s\n"
+argument_list|,
+name|parm
+operator|->
+name|support
+operator|.
+name|command2
+operator|&
+name|ATA_SUPPORT_CFA
+condition|?
+literal|"yes"
+else|:
+literal|"no"
+argument_list|,
+name|parm
+operator|->
+name|enabled
+operator|.
+name|command2
+operator|&
+name|ATA_SUPPORT_CFA
+condition|?
+literal|"yes"
+else|:
+literal|"no"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"advanced power management      %s	%s	%d/0x%02X\n"
 argument_list|,
 name|parm
