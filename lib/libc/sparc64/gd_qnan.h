@@ -7,49 +7,49 @@ begin_define
 define|#
 directive|define
 name|f_QNAN
-value|0x7fffffff
+value|0x7fc00000
 end_define
 
 begin_define
 define|#
 directive|define
 name|d_QNAN0
-value|0x7fffffff
+value|0x7ff80000
 end_define
 
 begin_define
 define|#
 directive|define
 name|d_QNAN1
-value|0xffffffff
+value|0x00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ld_QNAN0
-value|0x7fffffff
+value|0x7fff8000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ld_QNAN1
-value|0xffffffff
+value|0x00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ld_QNAN2
-value|0xffffffff
+value|0x00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ld_QNAN3
-value|0xffffffff
+value|0x00000000
 end_define
 
 begin_define
@@ -63,28 +63,28 @@ begin_define
 define|#
 directive|define
 name|ldus_QNAN1
-value|0xffff
+value|0x8000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ldus_QNAN2
-value|0xffff
+value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ldus_QNAN3
-value|0xffff
+value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ldus_QNAN4
-value|0xffff
+value|0x0000
 end_define
 
 end_unit

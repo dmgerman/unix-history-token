@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|f_QNAN
-value|0xffc00000
+value|0x7fc00000
 end_define
 
 begin_define
@@ -21,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|d_QNAN1
-value|0xfff80000
+value|0x7ff80000
 end_define
 
 begin_define
@@ -42,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|ld_QNAN2
-value|0xffff
+value|0x7fff
 end_define
 
 begin_define
@@ -84,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|ldus_QNAN4
-value|0xffff
+value|0x7fff
 end_define
 
 end_unit
