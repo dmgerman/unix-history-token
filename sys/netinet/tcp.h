@@ -526,6 +526,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TCP_CONGESTION
+value|0x40
+end_define
+
+begin_comment
+comment|/* get/set congestion control algorithm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_CA_NAME_MAX
+value|16
+end_define
+
+begin_comment
+comment|/* max congestion control name length */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TCPI_OPT_TIMESTAMPS
 value|0x01
 end_define
