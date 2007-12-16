@@ -4107,7 +4107,7 @@ name|i
 operator|++
 control|)
 block|{
-name|m_freem_vec
+name|m_freem
 argument_list|(
 name|m_vec
 index|[
@@ -4868,7 +4868,7 @@ name|len
 expr_stmt|;
 name|err
 operator|=
-name|bus_dmamap_load_mvec_sg
+name|bus_dmamap_load_mbuf_sg
 argument_list|(
 name|txq
 operator|->
@@ -5039,7 +5039,7 @@ argument_list|,
 name|pktlen
 argument_list|)
 expr_stmt|;
-name|m_freem_vec
+name|m_freem
 argument_list|(
 name|m0
 argument_list|)
@@ -9364,7 +9364,7 @@ name|i
 operator|++
 control|)
 block|{
-name|m_freem_vec
+name|m_freem
 argument_list|(
 name|m_vec
 index|[
@@ -9753,7 +9753,7 @@ name|i
 operator|++
 control|)
 block|{
-name|m_freem_vec
+name|m_freem
 argument_list|(
 name|m_vec
 index|[
