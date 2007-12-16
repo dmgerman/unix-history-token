@@ -4624,17 +4624,6 @@ name|int
 name|val
 decl_stmt|;
 comment|/* 	 * XXX if we implement agressive power savings, then we need 	 * XXX to make sure that the clock to the emac is on here 	 */
-if|if
-condition|(
-name|phy
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-literal|0xffff
-operator|)
-return|;
 name|sc
 operator|=
 name|device_get_softc
