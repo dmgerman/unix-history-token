@@ -1027,6 +1027,12 @@ directive|elif
 name|LDBL_MANT_DIG
 operator|==
 literal|64
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__i386
+argument_list|)
 name|testboth
 argument_list|(
 literal|0x1
