@@ -77,7 +77,7 @@ call|)
 argument_list|(
 name|WRDE_APPEND
 operator|+
-name|WRDE_DOOFS
+name|WRDE_DOOFFS
 operator|+
 name|WRDE_NOCMD
 operator|+
@@ -184,7 +184,7 @@ operator|&
 name|we
 argument_list|)
 expr_stmt|;
-comment|/* WRDE_DOOFS */
+comment|/* WRDE_DOOFFS */
 name|we
 operator|.
 name|we_offs
@@ -200,7 +200,7 @@ argument_list|,
 operator|&
 name|we
 argument_list|,
-name|WRDE_DOOFS
+name|WRDE_DOOFFS
 argument_list|)
 expr_stmt|;
 name|assert
@@ -534,7 +534,7 @@ operator|&
 name|we
 argument_list|)
 expr_stmt|;
-comment|/* WRDE_DOOFS + WRDE_APPEND */
+comment|/* WRDE_DOOFFS + WRDE_APPEND */
 name|we
 operator|.
 name|we_offs
@@ -550,7 +550,7 @@ argument_list|,
 operator|&
 name|we
 argument_list|,
-name|WRDE_DOOFS
+name|WRDE_DOOFFS
 argument_list|)
 expr_stmt|;
 name|assert
@@ -571,7 +571,7 @@ name|we
 argument_list|,
 name|WRDE_APPEND
 operator||
-name|WRDE_DOOFS
+name|WRDE_DOOFFS
 argument_list|)
 expr_stmt|;
 name|assert
@@ -592,7 +592,7 @@ name|we
 argument_list|,
 name|WRDE_APPEND
 operator||
-name|WRDE_DOOFS
+name|WRDE_DOOFFS
 argument_list|)
 expr_stmt|;
 name|assert
