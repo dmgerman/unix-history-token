@@ -2506,13 +2506,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"device     r/s   w/s    kr/s    kw/s wait svc_t  %b  "
+literal|"device     r/s   w/s    kr/s    kw/s wait svc_t  %%b  "
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"device     r/i   w/i    kr/i    kw/i wait svc_t  %b  "
+literal|"device     r/i   w/i    kr/i    kw/i wait svc_t  %%b  "
 argument_list|)
 expr_stmt|;
 if|if
