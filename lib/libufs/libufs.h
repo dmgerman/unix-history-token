@@ -242,6 +242,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|berase
+parameter_list|(
+name|struct
+name|uufsd
+modifier|*
+parameter_list|,
+name|ufs2_daddr_t
+parameter_list|,
+name|ufs2_daddr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * cgroup.c  */
 end_comment
