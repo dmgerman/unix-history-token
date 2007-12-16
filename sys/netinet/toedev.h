@@ -247,9 +247,14 @@ modifier|*
 name|so
 parameter_list|,
 name|struct
-name|ifnet
+name|rtentry
 modifier|*
-name|egress_ifp
+name|rt
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|nam
 parameter_list|)
 function_decl|;
 name|int
