@@ -15,12 +15,6 @@ directive|define
 name|_SYS_LOCK_PROFILE_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_struct_decl
 struct_decl|struct
 name|lock_profile_object
@@ -36,6 +30,12 @@ name|lock_profile_object
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_ifdef
 ifdef|#
