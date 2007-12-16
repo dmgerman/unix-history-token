@@ -2639,7 +2639,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Erasing blocks [%jd...%jd[\n"
+literal|"Erasing sectors [%jd...%jd]\n"
 argument_list|,
 name|sblock
 operator|.
@@ -2649,17 +2649,17 @@ name|disk
 operator|.
 name|d_bsize
 argument_list|,
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|sblock
 operator|.
 name|fs_size
-operator|*
-name|sblock
-operator|.
-name|fs_fsize
-operator|/
-name|disk
-operator|.
-name|d_bsize
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|berase
