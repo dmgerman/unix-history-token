@@ -12,18 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -85,18 +73,6 @@ begin_include
 include|#
 directive|include
 file|<common/cxgb_firmware_exports.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mvec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbufq.h>
 end_include
 
 begin_include
@@ -168,18 +144,6 @@ begin_include
 include|#
 directive|include
 file|<dev/cxgb/common/cxgb_firmware_exports.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/sys/mvec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/sys/mbufq.h>
 end_include
 
 begin_include

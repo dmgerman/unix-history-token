@@ -161,6 +161,18 @@ directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -173,6 +185,12 @@ directive|include
 file|<cxgb_include.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/mvec.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -182,6 +200,12 @@ begin_include
 include|#
 directive|include
 file|<dev/cxgb/cxgb_include.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/cxgb/sys/mvec.h>
 end_include
 
 begin_endif
