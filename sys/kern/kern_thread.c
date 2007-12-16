@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/turnstile.h>
 end_include
 
@@ -797,6 +803,11 @@ name|td_sleepqueue
 argument_list|)
 expr_stmt|;
 name|umtx_thread_fini
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|seltdfini
 argument_list|(
 name|td
 argument_list|)

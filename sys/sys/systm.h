@@ -149,41 +149,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_int
-name|nselcoll
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* select collisions since boot */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|sellock
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* select lock variable */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|cv
-name|selwait
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* select conditional variable */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|long
 name|physmem
 decl_stmt|;

@@ -603,6 +603,17 @@ argument_list|,
 name|PSOCK
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|SEL_WAITING
+argument_list|(
+operator|&
+name|sb
+operator|->
+name|sb_sel
+argument_list|)
+condition|)
 name|sb
 operator|->
 name|sb_flags

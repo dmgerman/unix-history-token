@@ -25,6 +25,22 @@ begin_comment
 comment|/* for struct klist */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|selfd
+struct_decl|;
+end_struct_decl
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|selfdlist
+argument_list|,
+name|selfd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Used to maintain information about processes that wish to be  * notified when I/O becomes possible.  */
 end_comment
@@ -33,42 +49,25 @@ begin_struct
 struct|struct
 name|selinfo
 block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|selinfo
-argument_list|)
-name|si_thrlist
-expr_stmt|;
-comment|/* list hung off of thread */
 name|struct
-name|thread
-modifier|*
-name|si_thread
+name|selfdlist
+name|si_tdlist
 decl_stmt|;
-comment|/* thread waiting */
+comment|/* List of sleeping threads. */
 name|struct
 name|knlist
 name|si_note
 decl_stmt|;
 comment|/* kernel note list */
-name|short
-name|si_flags
+name|struct
+name|mtx
+modifier|*
+name|si_mtx
 decl_stmt|;
-comment|/* see below */
+comment|/* Lock for tdlist. */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|SI_COLL
-value|0x0001
-end_define
-
-begin_comment
-comment|/* collision occurred */
-end_comment
 
 begin_define
 define|#
@@ -77,8 +76,7 @@ name|SEL_WAITING
 parameter_list|(
 name|si
 parameter_list|)
-define|\
-value|((si)->si_thread != NULL || ((si)->si_flags& SI_COLL) != 0)
+value|(!TAILQ_EMPTY(&(si)->si_tdlist))
 end_define
 
 begin_ifdef
@@ -86,18 +84,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_function_decl
-name|void
-name|clear_selinfo_list
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -139,6 +125,18 @@ name|sip
 parameter_list|,
 name|int
 name|pri
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|seltdfini
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
