@@ -7,6 +7,10 @@ begin_comment
 comment|/* Please send bug reports to David M. Gay (dmg at acm dot org,  * with " at " changed at "@" and " dot " changed to ".").	*/
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -296,12 +300,20 @@ call|(
 name|UShort
 call|)
 argument_list|(
+operator|(
 name|bits
 index|[
 literal|1
 index|]
 operator|>>
 literal|16
+operator|)
+operator||
+operator|(
+literal|3
+operator|<<
+literal|14
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;

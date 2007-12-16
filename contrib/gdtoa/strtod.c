@@ -7,6 +7,10 @@ begin_comment
 comment|/* Please send bug reports to David M. Gay (dmg at acm dot org,  * with " at " changed at "@" and " dot " changed to ".").	*/
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1307,7 +1311,7 @@ argument_list|(
 name|rv
 argument_list|)
 operator|=
-literal|0x7ff00000
+literal|0x7ff80000
 operator||
 name|bits
 index|[

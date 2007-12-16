@@ -7,6 +7,10 @@ begin_comment
 comment|/* Please send bug reports to David M. Gay (dmg at acm dot org,  * with " at " changed at "@" and " dot " changed to ".").	*/
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -148,9 +152,6 @@ break|break;
 case|case
 name|STRTOG_Normal
 case|:
-case|case
-name|STRTOG_NaNbits
-case|:
 name|u
 operator|.
 name|L
@@ -172,6 +173,25 @@ operator|+
 literal|23
 operator|<<
 literal|23
+expr_stmt|;
+break|break;
+case|case
+name|STRTOG_NaNbits
+case|:
+comment|/* FreeBSD local: always return a quiet NaN */
+name|u
+operator|.
+name|L
+index|[
+literal|0
+index|]
+operator|=
+name|bits
+index|[
+literal|0
+index|]
+operator||
+literal|0x7fc00000
 expr_stmt|;
 break|break;
 case|case

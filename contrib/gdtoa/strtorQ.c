@@ -7,6 +7,10 @@ begin_comment
 comment|/* Please send bug reports to David M. Gay (dmg at acm dot org,  * with " at " changed at "@" and " dot " changed to ".").	*/
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -246,6 +250,7 @@ operator|)
 operator||
 operator|(
 operator|(
+operator|(
 name|exp
 operator|+
 literal|0x3fff
@@ -254,6 +259,13 @@ literal|112
 operator|)
 operator|<<
 literal|16
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+literal|15
+operator|)
 operator|)
 expr_stmt|;
 break|break;
