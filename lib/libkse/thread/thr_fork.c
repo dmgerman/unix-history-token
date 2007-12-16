@@ -75,22 +75,6 @@ directive|include
 file|"thr_private.h"
 end_include
 
-begin_expr_stmt
-name|LT10_COMPAT_PRIVATE
-argument_list|(
-name|_fork
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|LT10_COMPAT_DEFAULT
-argument_list|(
-name|fork
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 name|pid_t
 name|_fork

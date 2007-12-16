@@ -109,22 +109,6 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
-name|LT10_COMPAT_PRIVATE
-argument_list|(
-name|__select
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|LT10_COMPAT_DEFAULT
-argument_list|(
-name|select
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|__weak_reference
 argument_list|(
 name|__select
