@@ -1467,6 +1467,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|double
+name|nan
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|double
 name|nextafter
@@ -2254,6 +2266,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|float
+name|nanf
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|float
 name|nearbyintf
@@ -2794,7 +2818,30 @@ literal|0
 end_if
 
 begin_endif
-unit|long double	log10l(long double); long double	log1pl(long double); long double	log2l(long double); long double	logbl(long double); long double	logl(long double); long		lrintl(long double);
+unit|long double	log10l(long double); long double	log1pl(long double); long double	log2l(long double); long double	logbl(long double);
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|long
+name|double
+name|logl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|long		lrintl(long double);
 endif|#
 directive|endif
 end_endif
@@ -2828,6 +2875,19 @@ begin_comment
 comment|/* fundamentally !__pure2 */
 end_comment
 
+begin_decl_stmt
+name|long
+name|double
+name|nanl
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -2835,7 +2895,7 @@ literal|0
 end_if
 
 begin_endif
-unit|long double	nanl(const char *) __pure2; long double	nearbyintl(long double);
+unit|long double	nearbyintl(long double);
 endif|#
 directive|endif
 end_endif
