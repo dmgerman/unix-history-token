@@ -245,25 +245,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_comment
-comment|/* List of PowerPC architectures that support FPUs. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|OEA
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|PPC_HAVE_FPU
-end_define
-
 begin_function_decl
 name|void
 name|enable_fpu
@@ -285,15 +266,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PPC_HAVE_FPU */
-end_comment
 
 begin_endif
 endif|#
