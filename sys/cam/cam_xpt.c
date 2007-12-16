@@ -16337,6 +16337,14 @@ operator|.
 name|stqe
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|xsoftc
+operator|.
+name|xpt_lock
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 else|else
