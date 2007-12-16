@@ -2629,6 +2629,66 @@ expr_stmt|;
 undef|#
 directive|undef
 name|B2MBFACTOR
+if|if
+condition|(
+name|Eflag
+operator|&&
+operator|!
+name|Nflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Erasing blocks [%jd...%jd[\n"
+argument_list|,
+name|sblock
+operator|.
+name|fs_sblockloc
+operator|/
+name|disk
+operator|.
+name|d_bsize
+argument_list|,
+name|sblock
+operator|.
+name|fs_size
+operator|*
+name|sblock
+operator|.
+name|fs_fsize
+operator|/
+name|disk
+operator|.
+name|d_bsize
+argument_list|)
+expr_stmt|;
+name|berase
+argument_list|(
+operator|&
+name|disk
+argument_list|,
+name|sblock
+operator|.
+name|fs_sblockloc
+operator|/
+name|disk
+operator|.
+name|d_bsize
+argument_list|,
+name|sblock
+operator|.
+name|fs_size
+operator|*
+name|sblock
+operator|.
+name|fs_fsize
+operator|-
+name|sblock
+operator|.
+name|fs_sblockloc
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Wipe out old UFS1 superblock(s) if necessary. 	 */
 if|if
 condition|(
@@ -2763,14 +2823,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Eflag
+name|Xflag
 operator|==
 literal|1
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"** Exiting on Eflag 1\n"
+literal|"** Exiting on Xflag 1\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2781,13 +2841,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|Eflag
+name|Xflag
 operator|==
 literal|2
 condition|)
 name|printf
 argument_list|(
-literal|"** Leaving BAD MAGIC on Eflag 2\n"
+literal|"** Leaving BAD MAGIC on Xflag 2\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -3092,14 +3152,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|Eflag
+name|Xflag
 operator|==
 literal|3
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"** Exiting on Eflag 3\n"
+literal|"** Exiting on Xflag 3\n"
 argument_list|)
 expr_stmt|;
 name|exit

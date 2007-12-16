@@ -16,6 +16,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|Eflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Erase previous disk contents */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|Lflag
 decl_stmt|;
 end_decl_stmt
@@ -71,12 +82,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|Eflag
+name|Xflag
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* exit as if error, for testing */
+comment|/* exit in middle of newfs for testing */
 end_comment
 
 begin_decl_stmt

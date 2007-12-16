@@ -256,6 +256,16 @@ end_define
 
 begin_decl_stmt
 name|int
+name|Eflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Erase previous disk contents */
+end_comment
+
+begin_decl_stmt
+name|int
 name|Lflag
 decl_stmt|;
 end_decl_stmt
@@ -308,7 +318,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|Eflag
+name|Xflag
 init|=
 literal|0
 decl_stmt|;
@@ -680,7 +690,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"EJL:NO:RS:T:Ua:b:c:d:e:f:g:h:i:lm:no:r:s:"
+literal|"EJL:NO:RS:T:UXa:b:c:d:e:f:g:h:i:lm:no:r:s:"
 argument_list|)
 operator|)
 operator|!=
@@ -696,7 +706,8 @@ case|case
 literal|'E'
 case|:
 name|Eflag
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -860,6 +871,13 @@ case|:
 name|Uflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'X'
+case|:
+name|Xflag
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -2218,6 +2236,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"where fsoptions are:\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-E Erase previuos disk content\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
