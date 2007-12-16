@@ -260,7 +260,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/pmap.h>
+file|<vm/vm_page.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_map.h>
 end_include
 
 begin_ifdef
