@@ -1801,10 +1801,12 @@ name|int
 name|pid
 decl_stmt|,
 name|status
+decl_stmt|;
+specifier|volatile
+name|int
+name|i
 decl_stmt|,
 name|rval
-decl_stmt|,
-name|i
 decl_stmt|;
 name|rval
 operator|=
