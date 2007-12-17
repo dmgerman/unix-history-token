@@ -28,6 +28,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MALLOC_LAZY_FREE enables the use of a per-thread vector of slots that free()  * can atomically stuff object pointers into.  This can reduce arena lock  * contention.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MALLOC_LAZY_FREE
+end_define
+
+begin_comment
+comment|/*  * MALLOC_BALANCE enables monitoring of arena lock contention and dynamically  * re-balances arena load if exponentially averaged contention exceeds a  * certain threshold.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MALLOC_BALANCE
+end_define
+
 begin_include
 include|#
 directive|include
@@ -631,6 +651,59 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO_TLS
+end_ifdef
+
+begin_comment
+comment|/* MALLOC_BALANCE requires TLS. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|MALLOC_BALANCE
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MALLOC_LAZY_FREE requires TLS. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|MALLOC_LAZY_FREE
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Size and alignment of memory chunks that are allocated by the OS's virtual  * memory system.  */
 end_comment
@@ -725,6 +798,12 @@ name|RUN_MAX_SMALL
 value|(1U<< RUN_MAX_SMALL_2POW)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
+end_ifdef
+
 begin_comment
 comment|/* Default size of each arena's lazy free cache. */
 end_comment
@@ -746,6 +825,11 @@ directive|define
 name|LAZY_FREE_NPROBES
 value|5
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Hyper-threaded CPUs may need a special instruction inside spin loops in  * order to yield to another virtual CPU.  If no such instruction is defined  * above, make CPU_SPINWAIT a no-op.  */
@@ -790,6 +874,12 @@ name|BLOCK_COST_2POW
 value|4
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
+end_ifdef
+
 begin_comment
 comment|/*  * We use an exponential moving average to track recent lock contention, where  * the size of the history window is N, and alpha=2/(N+1).  *  * Due to integer math rounding, very small values here can cause substantial  * degradation in accuracy, thus making the moving average decay faster than it  * would with precise calculation.  */
 end_comment
@@ -811,6 +901,11 @@ directive|define
 name|BALANCE_THRESHOLD_DEFAULT
 value|(1U<< (SPIN_LIMIT_2POW-4))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/******************************************************************************/
@@ -947,9 +1042,9 @@ decl_stmt|;
 name|uint64_t
 name|ndalloc_large
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 comment|/* Number of times this arena reassigned a thread due to contention. */
 name|uint64_t
 name|nbalance
@@ -1348,13 +1443,18 @@ name|arena_chunk_t
 modifier|*
 name|spare
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 comment|/* 	 * The arena load balancing machinery needs to keep track of how much 	 * lock contention there is.  This value is exponentially averaged. 	 */
 name|uint32_t
 name|contention
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
 comment|/* 	 * Deallocation of small objects can be lazy, in which case free_cache 	 * stores pointers to those objects that have not yet been deallocated. 	 * In order to avoid lock contention, slots are chosen randomly.  Empty 	 * slots contain NULL. 	 */
 name|void
 modifier|*
@@ -1800,12 +1900,35 @@ directive|ifndef
 name|NO_TLS
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|unsigned
 name|narenas_2pow
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|next_arena
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1946,11 +2069,11 @@ name|false
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_TLS
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1960,6 +2083,17 @@ init|=
 name|LAZY_FREE_2POW_DEFAULT
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -2106,7 +2240,7 @@ name|malloc_mutex_init
 parameter_list|(
 name|malloc_mutex_t
 modifier|*
-name|a_mutex
+name|mutex
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2792,7 +2926,7 @@ name|malloc_mutex_init
 parameter_list|(
 name|malloc_mutex_t
 modifier|*
-name|a_mutex
+name|mutex
 parameter_list|)
 block|{
 specifier|static
@@ -2802,7 +2936,7 @@ name|lock
 init|=
 name|_SPINLOCK_INITIALIZER
 decl_stmt|;
-name|a_mutex
+name|mutex
 operator|->
 name|lock
 operator|=
@@ -2819,7 +2953,7 @@ name|malloc_mutex_lock
 parameter_list|(
 name|malloc_mutex_t
 modifier|*
-name|a_mutex
+name|mutex
 parameter_list|)
 block|{
 if|if
@@ -2829,7 +2963,7 @@ condition|)
 name|_SPINLOCK
 argument_list|(
 operator|&
-name|a_mutex
+name|mutex
 operator|->
 name|lock
 argument_list|)
@@ -2845,7 +2979,7 @@ name|malloc_mutex_unlock
 parameter_list|(
 name|malloc_mutex_t
 modifier|*
-name|a_mutex
+name|mutex
 parameter_list|)
 block|{
 if|if
@@ -2855,7 +2989,7 @@ condition|)
 name|_SPINUNLOCK
 argument_list|(
 operator|&
-name|a_mutex
+name|mutex
 operator|->
 name|lock
 argument_list|)
@@ -3295,11 +3429,21 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_TLS
-end_ifndef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|MALLOC_LAZY_FREE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|MALLOC_BALANCE
+argument_list|)
+operator|)
+end_if
 
 begin_comment
 comment|/*  * Use a simple linear congruential pseudo-random number generator:  *  *   prn(y) = (a*x + c) % m  *  * where the following constants ensure maximal period:  *  *   a == Odd number (relatively prime to 2^n), and (a-1) is a multiple of 4.  *   c == Odd number (relatively prime to 2^n).  *   m == 2^32  *  * See Knuth's TAOCP 3rd Ed., Vol. 2, pg. 17 for details on these constraints.  *  * This choice of m has the disadvantage that the quality of the bits is  * proportional to bit position.  For example. the lowest bit has a cycle of 2,  * the next has a cycle of 4, etc.  For this reason, we prefer to use the upper  * bits.  */
@@ -3346,9 +3490,20 @@ parameter_list|)
 value|prn_##suffix(lg_range)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Define PRNGs, one for each purpose, in order to avoid auto-correlation  * problems.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
+end_ifdef
 
 begin_comment
 comment|/* Define the per-thread PRNG used for lazy deallocation. */
@@ -3375,6 +3530,17 @@ literal|12347
 argument_list|)
 end_macro
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
+end_ifdef
+
 begin_comment
 comment|/* Define the PRNG used for arena assignment. */
 end_comment
@@ -3387,19 +3553,18 @@ name|balance_x
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_macro
 name|PRN_DEFINE
 argument_list|(
-name|balance
+argument|balance
 argument_list|,
-name|balance_x
+argument|balance_x
 argument_list|,
 literal|1297
 argument_list|,
 literal|1301
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_endif
 endif|#
@@ -4228,8 +4393,7 @@ parameter_list|)
 block|{
 name|unsigned
 name|i
-decl_stmt|;
-name|int
+decl_stmt|,
 name|gap_start
 decl_stmt|;
 name|malloc_printf
@@ -4348,8 +4512,7 @@ literal|0
 operator|,
 name|gap_start
 operator|=
-operator|-
-literal|1
+name|UINT_MAX
 init|;
 name|i
 operator|<
@@ -4383,8 +4546,7 @@ if|if
 condition|(
 name|gap_start
 operator|==
-operator|-
-literal|1
+name|UINT_MAX
 condition|)
 name|gap_start
 operator|=
@@ -4397,8 +4559,7 @@ if|if
 condition|(
 name|gap_start
 operator|!=
-operator|-
-literal|1
+name|UINT_MAX
 condition|)
 block|{
 if|if
@@ -4436,8 +4597,7 @@ expr_stmt|;
 block|}
 name|gap_start
 operator|=
-operator|-
-literal|1
+name|UINT_MAX
 expr_stmt|;
 block|}
 name|malloc_printf
@@ -4554,8 +4714,7 @@ if|if
 condition|(
 name|gap_start
 operator|!=
-operator|-
-literal|1
+name|UINT_MAX
 condition|)
 block|{
 if|if
@@ -4692,19 +4851,18 @@ begin_comment
 comment|/* Generate red-black tree code for chunks. */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|RB_GENERATE_STATIC
 argument_list|(
-name|chunk_tree_s
+argument|chunk_tree_s
 argument_list|,
-name|chunk_node_s
+argument|chunk_node_s
 argument_list|,
-name|link
+argument|link
 argument_list|,
-name|chunk_comp
+argument|chunk_comp
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 specifier|static
@@ -6128,6 +6286,9 @@ argument_list|(
 name|__isthreaded
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
 comment|/* 	 * Seed the PRNG used for lazy deallocation.  Since seeding only occurs 	 * on the first allocation by a thread, it is possible for a thread to 	 * deallocate before seeding.  This is not a critical issue though, 	 * since it is extremely unusual for an application to to use threads 	 * that deallocate but *never* allocate, and because even if seeding 	 * never occurs for multiple threads, they will tend to drift apart 	 * unless some aspect of the application forces deallocation 	 * synchronization. 	 */
 name|SPRN
 argument_list|(
@@ -6145,6 +6306,11 @@ argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 comment|/* 	 * Seed the PRNG used for arena load balancing.  We can get away with 	 * using the same seed here as for the lazy_free PRNG without 	 * introducing autocorrelation because the PRNG parameters are 	 * distinct. 	 */
 name|SPRN
 argument_list|(
@@ -6162,6 +6328,8 @@ argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|narenas
@@ -6169,6 +6337,9 @@ operator|>
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 name|unsigned
 name|ind
 decl_stmt|;
@@ -6228,6 +6399,52 @@ name|arenas_lock
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|malloc_spin_lock
+argument_list|(
+operator|&
+name|arenas_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ret
+operator|=
+name|arenas
+index|[
+name|next_arena
+index|]
+operator|)
+operator|==
+name|NULL
+condition|)
+name|ret
+operator|=
+name|arenas_extend
+argument_list|(
+name|next_arena
+argument_list|)
+expr_stmt|;
+name|next_arena
+operator|=
+operator|(
+name|next_arena
+operator|+
+literal|1
+operator|)
+operator|%
+name|narenas
+expr_stmt|;
+name|malloc_spin_unlock
+argument_list|(
+operator|&
+name|arenas_lock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|ret
@@ -6326,19 +6543,18 @@ begin_comment
 comment|/* Generate red-black tree code for arena chunks. */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|RB_GENERATE_STATIC
 argument_list|(
-name|arena_chunk_tree_s
+argument|arena_chunk_tree_s
 argument_list|,
-name|arena_chunk_s
+argument|arena_chunk_s
 argument_list|,
-name|link
+argument|link
 argument_list|,
-name|arena_chunk_comp
+argument|arena_chunk_comp
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 specifier|static
@@ -6412,19 +6628,18 @@ begin_comment
 comment|/* Generate red-black tree code for arena runs. */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|RB_GENERATE_STATIC
 argument_list|(
-name|arena_run_tree_s
+argument|arena_run_tree_s
 argument_list|,
-name|arena_run_s
+argument|arena_run_s
 argument_list|,
-name|link
+argument|link
 argument_list|,
-name|arena_run_comp
+argument|arena_run_comp
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 specifier|static
@@ -10200,6 +10415,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
+end_ifdef
+
 begin_function
 specifier|static
 specifier|inline
@@ -10211,9 +10432,6 @@ modifier|*
 name|arena
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|NO_TLS
 name|unsigned
 name|contention
 decl_stmt|;
@@ -10366,20 +10584,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
-else|#
-directive|else
-name|malloc_spin_lock
-argument_list|(
-operator|&
-name|arena
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -10609,11 +10820,26 @@ operator|->
 name|reg_size
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 name|arena_lock_balance
 argument_list|(
 name|arena
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|malloc_spin_lock
+argument_list|(
+operator|&
+name|arena
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -10765,11 +10991,26 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 name|arena_lock_balance
 argument_list|(
 name|arena
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|malloc_spin_lock
+argument_list|(
+operator|&
+name|arena
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ret
 operator|=
 operator|(
@@ -11050,11 +11291,26 @@ name|size
 operator|>>
 name|pagesize_2pow
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 name|arena_lock_balance
 argument_list|(
 name|arena
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|malloc_spin_lock
+argument_list|(
+operator|&
+name|arena
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ret
 operator|=
 operator|(
@@ -11537,6 +11793,7 @@ operator|*
 operator|)
 operator|(
 operator|(
+operator|(
 name|uintptr_t
 operator|)
 name|chunk
@@ -11546,6 +11803,7 @@ operator|(
 name|pageind
 operator|<<
 name|pagesize_2pow
+operator|)
 operator|)
 condition|)
 block|{
@@ -12197,11 +12455,11 @@ directive|endif
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_TLS
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
+end_ifdef
 
 begin_function
 specifier|static
@@ -12687,6 +12945,7 @@ operator|*
 operator|)
 operator|(
 operator|(
+operator|(
 name|uintptr_t
 operator|)
 name|chunk
@@ -12697,12 +12956,13 @@ name|pageind
 operator|<<
 name|pagesize_2pow
 operator|)
+operator|)
 condition|)
 block|{
 comment|/* Small allocation. */
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
 name|arena_dalloc_lazy
 argument_list|(
 name|arena
@@ -12918,15 +13178,20 @@ name|spare
 operator|=
 name|NULL
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 name|arena
 operator|->
 name|contention
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
 if|if
 condition|(
 name|opt_lazy_free_2pow
@@ -15001,9 +15266,9 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
 if|if
 condition|(
 name|opt_lazy_free_2pow
@@ -15042,6 +15307,11 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 name|_malloc_message
 argument_list|(
 literal|"Arena balance threshold: "
@@ -15153,9 +15423,9 @@ name|allocated
 decl_stmt|,
 name|mapped
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 name|uint64_t
 name|nbalance
 init|=
@@ -15233,9 +15503,9 @@ name|stats
 operator|.
 name|allocated_large
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 name|nbalance
 operator|+=
 name|arenas
@@ -15312,9 +15582,9 @@ argument_list|,
 name|mapped
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 name|malloc_printf
 argument_list|(
 literal|"Arena balance reassignments: %llu\n"
@@ -15616,9 +15886,9 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
 if|if
 condition|(
 name|ncpus
@@ -15894,9 +16164,9 @@ break|break;
 case|case
 literal|'b'
 case|:
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 name|opt_balance_threshold
 operator|>>=
 literal|1
@@ -15907,9 +16177,9 @@ break|break;
 case|case
 literal|'B'
 case|:
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 if|if
 condition|(
 name|opt_balance_threshold
@@ -16014,9 +16284,9 @@ break|break;
 case|case
 literal|'l'
 case|:
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
 if|if
 condition|(
 name|opt_lazy_free_2pow
@@ -16032,9 +16302,9 @@ break|break;
 case|case
 literal|'L'
 case|:
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
 if|if
 condition|(
 name|ncpus
@@ -16438,9 +16708,9 @@ operator|<<
 name|pagesize_2pow
 operator|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
 comment|/* 	 * Make sure that allocating the free_cache does not exceed the limits 	 * of what base_alloc() can handle. 	 */
 while|while
 condition|(
@@ -16715,9 +16985,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|NO_TLS
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 name|assert
 argument_list|(
 name|narenas
@@ -16959,6 +17229,20 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|NO_TLS
+ifndef|#
+directive|ifndef
+name|MALLOC_BALANCE
+name|next_arena
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/* Allocate and initialize arenas. */
 name|arenas
 operator|=
@@ -17052,7 +17336,12 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Seed here for the initial thread, since choose_arena_hard() is only 	 * called for other threads.  The seed values don't really matter. 	 */
+ifdef|#
+directive|ifdef
+name|MALLOC_LAZY_FREE
 name|SPRN
 argument_list|(
 name|lazy_free
@@ -17060,6 +17349,11 @@ argument_list|,
 literal|42
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MALLOC_BALANCE
 name|SPRN
 argument_list|(
 name|balance
