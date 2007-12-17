@@ -1706,6 +1706,13 @@ decl_stmt|;
 if|if
 condition|(
 name|m
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|m
 operator|->
 name|m_flags
 operator|&
@@ -1769,6 +1776,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -2115,6 +2123,13 @@ block|}
 comment|/* 	 * There is an arptab entry, but no ethernet address 	 * response yet.  Replace the held mbuf with this 	 * latest one. 	 */
 if|if
 condition|(
+name|m
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 name|la
 operator|->
 name|la_hold
@@ -2132,6 +2147,7 @@ name|la_hold
 operator|=
 name|m
 expr_stmt|;
+block|}
 name|KASSERT
 argument_list|(
 name|rt
