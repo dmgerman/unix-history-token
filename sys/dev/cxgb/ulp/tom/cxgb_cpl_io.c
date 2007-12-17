@@ -4680,28 +4680,15 @@ argument_list|(
 literal|"initializing offload socket\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* 	 * We either need to fix push frames to work with sbcompress 	 * or we need to add this 	 */
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_flags
-operator||=
-name|SB_TOE
-expr_stmt|;
 name|so
 operator|->
 name|so_snd
 operator|.
 name|sb_flags
 operator||=
-name|SB_TOE
+name|SB_NOCOALESCE
 expr_stmt|;
-endif|#
-directive|endif
 name|tp
 operator|->
 name|t_toe
