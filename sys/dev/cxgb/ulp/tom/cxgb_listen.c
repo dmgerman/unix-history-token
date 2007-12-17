@@ -146,7 +146,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcp_ofld.h>
+file|<netinet/tcp_offload.h>
 end_include
 
 begin_include

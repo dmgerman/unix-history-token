@@ -170,7 +170,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcp_ofld.h>
+file|<netinet/tcp_offload.h>
 end_include
 
 begin_include
@@ -285,6 +285,12 @@ begin_include
 include|#
 directive|include
 file|<dev/cxgb/ulp/tom/cxgb_toepcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/cxgb/ulp/tom/cxgb_tcp.h>
 end_include
 
 begin_comment
@@ -2682,7 +2688,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|cxgb_toe_abort
+name|cxgb_toe_reset
 parameter_list|(
 name|struct
 name|tcpcb
@@ -2885,9 +2891,9 @@ operator|=
 name|cxgb_toe_disconnect
 block|,
 operator|.
-name|tu_abort
+name|tu_reset
 operator|=
-name|cxgb_toe_abort
+name|cxgb_toe_reset
 block|,
 operator|.
 name|tu_send
@@ -5450,7 +5456,7 @@ operator|->
 name|t_inpcb
 argument_list|)
 expr_stmt|;
-name|tcp_drop
+name|cxgb_tcp_drop
 argument_list|(
 name|tp
 argument_list|,
@@ -9305,7 +9311,7 @@ condition|)
 block|{
 name|tp
 operator|=
-name|tcp_drop
+name|cxgb_tcp_drop
 argument_list|(
 name|tp
 argument_list|,
@@ -11650,7 +11656,7 @@ name|event
 condition|)
 block|{
 case|case
-name|SC_ENTRY_PRESENT
+name|TOE_SC_ENTRY_PRESENT
 case|:
 comment|/* 		 * entry already exists - free toepcb 		 * and l2t 		 */
 name|printf
@@ -11665,7 +11671,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SC_DROP
+name|TOE_SC_DROP
 case|:
 comment|/* 		 * The syncache has given up on this entry 		 * either it timed out, or it was evicted 		 * we need to explicitly release the tid 		 */
 name|printf

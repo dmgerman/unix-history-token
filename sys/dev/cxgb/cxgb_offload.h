@@ -1107,6 +1107,10 @@ name|rtentry
 modifier|*
 name|rt
 parameter_list|,
+name|uint8_t
+modifier|*
+name|enaddr
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
