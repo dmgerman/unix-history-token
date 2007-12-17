@@ -2807,24 +2807,6 @@ operator|)
 return|;
 block|}
 block|}
-if|if
-condition|(
-name|is_dynamic
-argument_list|()
-condition|)
-name|nss_log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"%s, %s, %s, not found"
-argument_list|,
-name|source
-argument_list|,
-name|database
-argument_list|,
-name|method
-argument_list|)
-expr_stmt|;
 operator|*
 name|mdata
 operator|=
@@ -3352,7 +3334,8 @@ operator|)
 condition|)
 break|break;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|fb_method
@@ -3399,6 +3382,27 @@ expr_stmt|;
 name|fallback_dispatch
 operator|=
 literal|0
+expr_stmt|;
+block|}
+else|else
+name|nss_log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s, %s, %s, not found, "
+literal|"and no fallback provided"
+argument_list|,
+name|srclist
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|database
+argument_list|,
+name|method_name
+argument_list|)
 expr_stmt|;
 block|}
 block|}
