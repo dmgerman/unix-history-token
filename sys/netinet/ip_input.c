@@ -8016,12 +8016,6 @@ name|IPSTEALTH
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-operator|!
-name|srcrt
-operator|&&
-operator|(
 name|ia
 operator|=
 name|ip_rtaddr
@@ -8030,7 +8024,13 @@ name|ip
 operator|->
 name|ip_dst
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|srcrt
+operator|&&
+name|ia
 operator|==
 name|NULL
 condition|)
