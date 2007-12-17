@@ -1370,9 +1370,7 @@ argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
-name|route_event
-argument_list|,
-name|RTEVENT_REDIRECT_UPDATE
+name|route_redirect_event
 argument_list|,
 name|rt0
 argument_list|,
@@ -1456,9 +1454,7 @@ argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
-name|route_event
-argument_list|,
-name|RTEVENT_REDIRECT_UPDATE
+name|route_redirect_event
 argument_list|,
 name|rt
 argument_list|,
