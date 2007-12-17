@@ -35,6 +35,13 @@ directive|define
 name|GDTOAIMP_H_INCLUDED
 end_define
 
+begin_define
+define|#
+directive|define
+name|Long
+value|int
+end_define
+
 begin_include
 include|#
 directive|include
