@@ -328,8 +328,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_XORG_NESTSERVER
+name|DIST_XORG_DRIVERS
 value|0x000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_XORG_NESTSERVER
+value|0x000400
 end_define
 
 begin_define
@@ -379,6 +386,13 @@ define|#
 directive|define
 name|DIST_XORG_FONTS_TT
 value|0x200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_XORG_FONTS_ALIAS
+value|0x400000
 end_define
 
 begin_define
@@ -444,7 +458,7 @@ define|#
 directive|define
 name|_DIST_XORG_FONTS_BASE
 define|\
-value|(DIST_XORG_FONTS_MISC | DIST_XORG_FONTS_75 | DIST_XORG_FONTS_100 | \ 	 DIST_XORG_FONTS_TT)
+value|(DIST_XORG_FONTS_MISC | DIST_XORG_FONTS_75 | DIST_XORG_FONTS_100 | \ 	 DIST_XORG_FONTS_TT | DIST_XORG_FONTS_ALIAS)
 end_define
 
 begin_define
