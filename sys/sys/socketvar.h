@@ -311,6 +311,11 @@ value|0x100
 comment|/* kernel note attached */
 define|#
 directive|define
+name|SB_NOCOALESCE
+value|0x200
+comment|/* don't coalesce new data into existing mbufs */
+define|#
+directive|define
 name|SB_AUTOSIZE
 value|0x800
 comment|/* automatically size socket buffer */
