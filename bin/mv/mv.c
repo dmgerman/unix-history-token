@@ -2141,21 +2141,9 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-name|warn
-argument_list|(
-literal|"%s %s"
-argument_list|,
-name|_PATH_RM
-argument_list|,
-name|cleanup
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 name|_exit
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -2220,7 +2208,7 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
-if|if
+switch|switch
 condition|(
 name|WEXITSTATUS
 argument_list|(
@@ -2228,6 +2216,31 @@ name|status
 argument_list|)
 condition|)
 block|{
+case|case
+literal|0
+case|:
+break|break;
+case|case
+name|EX_OSERR
+case|:
+name|warnx
+argument_list|(
+literal|"Failed to exec %s %s"
+argument_list|,
+name|_PATH_RM
+argument_list|,
+name|cleanup
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+default|default:
 name|warnx
 argument_list|(
 literal|"%s %s: terminated with %d (non-zero) status"
