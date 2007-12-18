@@ -2930,7 +2930,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (tcpstat.f || sflag<= 1) \     printf(m, tcpstat.f, plurales(tcpstat.f))
+value|if (tcpstat.f || sflag<= 1) \     printf(m, tcpstat.f, pluralies(tcpstat.f))
 name|p
 argument_list|(
 name|tcps_sndtotal
@@ -3296,11 +3296,11 @@ argument_list|,
 literal|"\t%lu correct data packet header prediction%s\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p3
 argument_list|(
 name|tcps_sc_added
 argument_list|,
-literal|"\t%lu syncache entrie%s added\n"
+literal|"\t%lu syncache entr%s added\n"
 argument_list|)
 expr_stmt|;
 name|p1a
