@@ -69,36 +69,5 @@ return|;
 block|}
 end_function
 
-begin_function
-name|double
-name|z_abs
-parameter_list|(
-name|z
-parameter_list|)
-name|double
-name|complex
-modifier|*
-name|z
-decl_stmt|;
-block|{
-return|return
-name|hypot
-argument_list|(
-name|creal
-argument_list|(
-operator|*
-name|z
-argument_list|)
-argument_list|,
-name|cimag
-argument_list|(
-operator|*
-name|z
-argument_list|)
-argument_list|)
-return|;
-block|}
-end_function
-
 end_unit
 
