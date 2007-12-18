@@ -272,6 +272,29 @@ define|\
 value|do {								\   ieee_float_shape_type sf_u;					\   sf_u.word = (i);						\   (d) = sf_u.value;						\ } while (0)
 end_define
 
+begin_comment
+comment|/*  * Common routine to process the arguments to nan(), nanf(), and nanl().  */
+end_comment
+
+begin_function_decl
+name|void
+name|_scan_nan
+parameter_list|(
+name|uint32_t
+modifier|*
+name|__words
+parameter_list|,
+name|int
+name|__num_words
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__s
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
