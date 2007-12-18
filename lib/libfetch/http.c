@@ -340,8 +340,11 @@ operator|<
 literal|2
 operator|||
 operator|!
-name|ishexnumber
+name|isxdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|io
 operator|->
@@ -372,6 +375,9 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -391,8 +397,11 @@ break|break;
 if|if
 condition|(
 operator|!
-name|ishexnumber
+name|isxdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -407,6 +416,9 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -1675,6 +1687,9 @@ operator|||
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 name|p
 index|[
 literal|1
@@ -1684,6 +1699,9 @@ operator|||
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 name|p
 index|[
 literal|2
@@ -1693,6 +1711,9 @@ operator|||
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 name|p
 index|[
 literal|3
@@ -1817,6 +1838,9 @@ name|hdr
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 operator|++
 name|hdr
@@ -1878,6 +1902,9 @@ name|buflen
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|int
+operator|)
 name|conn
 operator|->
 name|buf
@@ -2156,6 +2183,9 @@ name|p
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -2305,6 +2335,9 @@ name|p
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -2350,6 +2383,9 @@ name|p
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -2400,6 +2436,9 @@ name|p
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -3649,6 +3688,9 @@ name|len
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|int
+operator|)
 name|line
 index|[
 name|len

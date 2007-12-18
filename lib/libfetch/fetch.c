@@ -1841,6 +1841,9 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|q
 argument_list|)
@@ -1972,6 +1975,9 @@ condition|(
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|p
 argument_list|)
