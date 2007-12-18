@@ -152,7 +152,7 @@ begin_define
 define|#
 directive|define
 name|TCPTV_MIN
-value|( 3 )
+value|( hz/33 )
 end_define
 
 begin_comment
