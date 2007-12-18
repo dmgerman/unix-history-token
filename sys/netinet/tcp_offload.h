@@ -222,7 +222,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * The tcp_gen_* routines are wrappers around the toe_usrreqs calls,  * in the non-offloaded case they translate to tcp_output.  *  * Listen is a special case because it is a 1 to many relationship  * and there can be more than one offload driver in the system.  */
+comment|/*  * The tcp_output_* routines are wrappers around the toe_usrreqs calls  * which trigger packet transmission. In the non-offloaded case they  * translate to tcp_output. The tcp_offload_* routines notify TOE  * of specific events. I the non-offloaded case they are no-ops.  *  * Listen is a special case because it is a 1 to many relationship  * and there can be more than one offload driver in the system.  */
 end_comment
 
 begin_comment
@@ -257,7 +257,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|tcp_gen_connect
+name|tcp_output_connect
 parameter_list|(
 name|struct
 name|socket
@@ -329,7 +329,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|tcp_gen_send
+name|tcp_output_send
 parameter_list|(
 name|struct
 name|tcpcb
@@ -376,7 +376,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|tcp_gen_rcvd
+name|tcp_output_rcvd
 parameter_list|(
 name|struct
 name|tcpcb
@@ -423,7 +423,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|tcp_gen_disconnect
+name|tcp_output_disconnect
 parameter_list|(
 name|struct
 name|tcpcb
@@ -470,7 +470,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|tcp_gen_reset
+name|tcp_output_reset
 parameter_list|(
 name|struct
 name|tcpcb
@@ -517,7 +517,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|tcp_gen_detach
+name|tcp_offload_detach
 parameter_list|(
 name|struct
 name|tcpcb
@@ -553,7 +553,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|tcp_gen_listen_open
+name|tcp_offload_listen_open
 parameter_list|(
 name|struct
 name|tcpcb
@@ -591,7 +591,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|tcp_gen_listen_close
+name|tcp_offload_listen_close
 parameter_list|(
 name|struct
 name|tcpcb

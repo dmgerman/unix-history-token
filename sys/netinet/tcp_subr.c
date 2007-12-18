@@ -307,6 +307,12 @@ directive|include
 file|<netinet/tcp_syncache.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_offload.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3245,7 +3251,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|tcp_output
+name|tcp_output_reset
 argument_list|(
 name|tp
 argument_list|)
@@ -3642,6 +3648,12 @@ name|tcp_reass_qsize
 operator|--
 expr_stmt|;
 block|}
+comment|/* Disconnect offload device, if any. */
+name|tcp_offload_detach
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
 name|tcp_free_sackholes
 argument_list|(
 name|tp
@@ -3708,6 +3720,20 @@ expr_stmt|;
 name|INP_LOCK_ASSERT
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+comment|/* Notify any offload devices of listener close */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|==
+name|TCPS_LISTEN
+condition|)
+name|tcp_offload_listen_close
+argument_list|(
+name|tp
 argument_list|)
 expr_stmt|;
 name|in_pcbdrop
@@ -7510,7 +7536,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|tcp_output
+name|tcp_output_send
 argument_list|(
 name|tp
 argument_list|)

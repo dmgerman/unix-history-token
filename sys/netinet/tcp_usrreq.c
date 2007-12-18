@@ -297,6 +297,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_offload.h>
+end_include
+
 begin_comment
 comment|/*  * TCP protocol interface to socket abstraction.  */
 end_comment
@@ -1625,6 +1631,11 @@ argument_list|,
 name|backlog
 argument_list|)
 expr_stmt|;
+name|tcp_offload_listen_open
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
 block|}
 name|SOCK_UNLOCK
 argument_list|(
@@ -2099,9 +2110,11 @@ name|out
 goto|;
 name|error
 operator|=
-name|tcp_output
+name|tcp_output_connect
 argument_list|(
-name|tp
+name|so
+argument_list|,
+name|nam
 argument_list|)
 expr_stmt|;
 name|out
@@ -2374,9 +2387,11 @@ name|out
 goto|;
 name|error
 operator|=
-name|tcp_output
+name|tcp_output_connect
 argument_list|(
-name|tp
+name|so
+argument_list|,
+name|nam
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2426,9 +2441,11 @@ name|out
 goto|;
 name|error
 operator|=
-name|tcp_output
+name|tcp_output_connect
 argument_list|(
-name|tp
+name|so
+argument_list|,
+name|nam
 argument_list|)
 expr_stmt|;
 name|out
@@ -3096,7 +3113,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|tcp_output
+name|tcp_output_disconnect
 argument_list|(
 name|tp
 argument_list|)
@@ -3218,7 +3235,7 @@ expr_stmt|;
 name|TCPDEBUG1
 argument_list|()
 expr_stmt|;
-name|tcp_output
+name|tcp_output_rcvd
 argument_list|(
 name|tp
 argument_list|)
@@ -3625,7 +3642,7 @@ name|TF_MORETOCOME
 expr_stmt|;
 name|error
 operator|=
-name|tcp_output
+name|tcp_output_send
 argument_list|(
 name|tp
 argument_list|)
@@ -3832,7 +3849,7 @@ name|TF_FORCEDATA
 expr_stmt|;
 name|error
 operator|=
-name|tcp_output
+name|tcp_output_send
 argument_list|(
 name|tp
 argument_list|)
@@ -6524,7 +6541,7 @@ operator|&
 name|INP_DROPPED
 operator|)
 condition|)
-name|tcp_output
+name|tcp_output_disconnect
 argument_list|(
 name|tp
 argument_list|)
@@ -6569,10 +6586,16 @@ name|t_state
 condition|)
 block|{
 case|case
-name|TCPS_CLOSED
-case|:
-case|case
 name|TCPS_LISTEN
+case|:
+name|tcp_offload_listen_close
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|TCPS_CLOSED
 case|:
 name|tp
 operator|->
