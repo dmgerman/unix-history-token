@@ -1430,6 +1430,16 @@ name|tcp_rexmit_min
 operator|=
 name|TCPTV_MIN
 expr_stmt|;
+if|if
+condition|(
+name|tcp_rexmit_min
+operator|<
+literal|1
+condition|)
+name|tcp_rexmit_min
+operator|=
+literal|1
+expr_stmt|;
 name|tcp_rexmit_slop
 operator|=
 name|TCPTV_CPU_VAR
