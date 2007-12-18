@@ -20,6 +20,36 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ipc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/msg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sem.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/shm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -51,36 +81,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ipc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/msg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sem.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/shm.h>
 end_include
 
 begin_define
@@ -171,11 +171,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
-argument_list|,
-literal|"usage: ipcrm [-q msqid] [-m shmid] [-s semid]"
-argument_list|,
-literal|"             [-Q msgkey] [-M shmkey] [-S semkey] ..."
+literal|"usage: ipcrm [-q msqid] [-m shmid] [-s semid]\n"
+literal|"             [-Q msgkey] [-M shmkey] [-S semkey] ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -515,7 +512,8 @@ expr_stmt|;
 else|else
 name|warnx
 argument_list|(
-literal|"%ss are not configured in the running kernel"
+literal|"%ss are not configured "
+literal|"in the running kernel"
 argument_list|,
 name|IPC_TO_STRING
 argument_list|(
@@ -634,7 +632,8 @@ expr_stmt|;
 else|else
 name|warnx
 argument_list|(
-literal|"%ss are not configured in the running kernel"
+literal|"%ss are not configured "
+literal|"in the running kernel"
 argument_list|,
 name|IPC_TO_STRING
 argument_list|(
