@@ -9857,6 +9857,37 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* Block redundant paths to us */
+if|if
+condition|(
+operator|(
+name|bif
+operator|->
+name|bif_flags
+operator|&
+name|IFBIF_STP
+operator|)
+operator|&&
+name|bif
+operator|->
+name|bif_stp
+operator|.
+name|bp_state
+operator|==
+name|BSTP_IFSTATE_DISCARDING
+condition|)
+block|{
+name|BRIDGE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|m
+operator|)
+return|;
+block|}
 comment|/* 		 * Filter on the physical interface. 		 */
 if|if
 condition|(
