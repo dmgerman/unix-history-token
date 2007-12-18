@@ -488,6 +488,9 @@ name|pr_usrreqs
 operator|->
 name|pru_soreceive
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_USRREQS_OVERLOAD
 name|tcp_usrreqs
 operator|.
 name|pru_connect
@@ -560,6 +563,8 @@ name|cxgb_tcp_usrreqs
 operator|.
 name|pru_rcvd
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
