@@ -17,10 +17,24 @@ directive|ifndef
 name|MALLOC_PRODUCTION
 end_ifndef
 
+begin_comment
+comment|/*     * MALLOC_DEBUG enables assertions and other sanity checks, and disables     * inline functions.     */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MALLOC_DEBUG
+end_define
+
+begin_comment
+comment|/* MALLOC_STATS enables statistics calculation. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MALLOC_STATS
 end_define
 
 begin_endif
@@ -250,27 +264,6 @@ include|#
 directive|include
 file|"un-namespace.h"
 end_include
-
-begin_comment
-comment|/* MALLOC_STATS enables statistics calculation. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MALLOC_PRODUCTION
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MALLOC_STATS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -763,21 +756,32 @@ value|(1U<< SMALL_MAX_2POW_DEFAULT)
 end_define
 
 begin_comment
-comment|/*  * Maximum desired run header overhead.  Runs are sized as small as possible  * such that this setting is still honored, without violating other constraints.  * The goal is to make runs as small as possible without exceeding a per run  * external fragmentation threshold.  *  * Note that it is possible to set this low enough that it cannot be honored  * for some/all object sizes, since there is one bit of header overhead per  * object (plus a constant).  In such cases, this constraint is relaxed.  *  * RUN_MAX_OVRHD_RELAX specifies the maximum number of bits per region of  * overhead for which RUN_MAX_OVRHD is relaxed.  */
+comment|/*  * RUN_MAX_OVRHD indicates maximum desired run header overhead.  Runs are sized  * as small as possible such that this setting is still honored, without  * violating other constraints.  The goal is to make runs as small as possible  * without exceeding a per run external fragmentation threshold.  *  * We use binary fixed point math for overhead computations, where the binary  * point is implicitly RUN_BFP bits to the left.  *  * Note that it is possible to set RUN_MAX_OVRHD low enough that it cannot be  * honored for some/all object sizes, since there is one bit of header overhead  * per object (plus a constant).  This constraint is relaxed (ignored) for runs  * that are so small that the per-region overhead is greater than:  *  *   (RUN_MAX_OVRHD / (reg_size<< (3+RUN_BFP))  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RUN_BFP
+value|12
+end_define
+
+begin_comment
+comment|/*                                    \/   Implicit binary fixed point. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RUN_MAX_OVRHD
-value|0.015
+value|0x0000003dU
 end_define
 
 begin_define
 define|#
 directive|define
 name|RUN_MAX_OVRHD_RELAX
-value|1.5
+value|0x00001800U
 end_define
 
 begin_comment
@@ -816,7 +820,7 @@ value|8
 end_define
 
 begin_comment
-comment|/*  * Number of pseudo-random probes to conduct before considering the cache to be  * overly full.  It takes on average n probes to detect fullness of (n-1)/n.  * However, we are effectively doing multiple non-independent trials (each  * deallocation is a trial), so the actual average threshold for clearing the  * cache is somewhat lower.  */
+comment|/*     * Number of pseudo-random probes to conduct before considering the cache to     * be overly full.  It takes on average n probes to detect fullness of     * (n-1)/n.  However, we are effectively doing multiple non-independent     * trials (each deallocation is a trial), so the actual average threshold     * for clearing the cache is somewhat lower.     */
 end_comment
 
 begin_define
@@ -881,7 +885,7 @@ name|MALLOC_BALANCE
 end_ifdef
 
 begin_comment
-comment|/*  * We use an exponential moving average to track recent lock contention, where  * the size of the history window is N, and alpha=2/(N+1).  *  * Due to integer math rounding, very small values here can cause substantial  * degradation in accuracy, thus making the moving average decay faster than it  * would with precise calculation.  */
+comment|/*     * We use an exponential moving average to track recent lock contention,     * where the size of the history window is N, and alpha=2/(N+1).     *     * Due to integer math rounding, very small values here can cause     * substantial degradation in accuracy, thus making the moving average decay     * faster than it would with precise calculation.     */
 end_comment
 
 begin_define
@@ -892,7 +896,7 @@ value|9
 end_define
 
 begin_comment
-comment|/*  * Threshold value for the exponential moving contention average at which to  * re-assign a thread.  */
+comment|/*     * Threshold value for the exponential moving contention average at which to     * re-assign a thread.     */
 end_comment
 
 begin_define
@@ -10045,11 +10049,6 @@ name|try_mask_nelms
 decl_stmt|,
 name|try_reg0_offset
 decl_stmt|;
-name|float
-name|max_ovrhd
-init|=
-name|RUN_MAX_OVRHD
-decl_stmt|;
 name|assert
 argument_list|(
 name|min_run_size
@@ -10095,7 +10094,7 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* Counter-act the first line of the loop. */
+comment|/* Counter-act try_nregs-- in loop. */
 do|do
 block|{
 name|try_nregs
@@ -10306,42 +10305,27 @@ name|try_run_size
 operator|<=
 name|RUN_MAX_SMALL
 operator|&&
-name|max_ovrhd
-operator|>
-name|RUN_MAX_OVRHD_RELAX
-operator|/
+name|RUN_MAX_OVRHD
+operator|*
 operator|(
-call|(
-name|float
-call|)
-argument_list|(
 name|bin
 operator|->
 name|reg_size
 operator|<<
 literal|3
-argument_list|)
-operator|)
-operator|&&
-operator|(
-call|(
-name|float
-call|)
-argument_list|(
-name|try_reg0_offset
-argument_list|)
-operator|)
-operator|/
-operator|(
-call|(
-name|float
-call|)
-argument_list|(
-name|try_run_size
-argument_list|)
 operator|)
 operator|>
-name|max_ovrhd
+name|RUN_MAX_OVRHD_RELAX
+operator|&&
+operator|(
+name|try_reg0_offset
+operator|<<
+name|RUN_BFP
+operator|)
+operator|>
+name|RUN_MAX_OVRHD
+operator|*
+name|try_run_size
 condition|)
 do|;
 name|assert
