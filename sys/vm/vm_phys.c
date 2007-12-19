@@ -2515,6 +2515,8 @@ operator|&&
 name|order
 operator|<
 name|VM_NFREEORDER
+operator|-
+literal|1
 condition|;
 control|)
 block|{
@@ -2622,19 +2624,6 @@ name|m_set
 operator|,
 name|m_set
 operator|->
-name|order
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|order
-operator|<
-name|VM_NFREEORDER
-argument_list|,
-operator|(
-literal|"vm_phys_unfree_page: order %d is out of range"
-operator|,
 name|order
 operator|)
 argument_list|)
