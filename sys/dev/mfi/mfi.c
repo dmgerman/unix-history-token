@@ -4013,7 +4013,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 		 * Don't run them yet since we can't parse them. 		 * We can indirectly get the contents from 		 * the AEN mechanism via setting it lower then 		 * current.  The firmware will iterate through them. 		 */
+comment|/* The message log is a circular buffer */
 for|for
 control|(
 name|seq
@@ -4023,7 +4023,7 @@ operator|->
 name|shutdown_seq_num
 init|;
 name|seq
-operator|<=
+operator|!=
 name|log_state
 operator|->
 name|newest_seq_num
@@ -4040,6 +4040,13 @@ name|seq
 argument_list|)
 expr_stmt|;
 block|}
+name|mfi_get_entry
+argument_list|(
+name|sc
+argument_list|,
+name|seq
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|seq
