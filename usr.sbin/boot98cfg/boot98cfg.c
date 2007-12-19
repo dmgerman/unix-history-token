@@ -457,7 +457,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: Bad argument to -s option"
+literal|"%s: Bad argument to -v option"
 argument_list|,
 name|optarg
 argument_list|)
