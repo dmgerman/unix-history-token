@@ -63,7 +63,8 @@ begin_decl_stmt
 name|bus_space_tag_t
 name|uart_bus_space_io
 init|=
-name|PPC_BUS_SPACE_IO
+operator|&
+name|bs_le_tag
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +72,8 @@ begin_decl_stmt
 name|bus_space_tag_t
 name|uart_bus_space_mem
 init|=
-name|PPC_BUS_SPACE_MEM
+operator|&
+name|bs_le_tag
 decl_stmt|;
 end_decl_stmt
 

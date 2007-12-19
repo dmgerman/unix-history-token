@@ -1869,22 +1869,11 @@ name|pci
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Default to memory mapped I/O. */
 operator|*
 name|tag
 operator|=
-name|PPC_BUS_SPACE_MEM
-expr_stmt|;
-if|if
-condition|(
-name|spc
-operator|==
-name|OFW_PCI_PHYS_HI_SPACE_IO
-condition|)
-operator|*
-name|tag
-operator|=
-name|PPC_BUS_SPACE_IO
+operator|&
+name|bs_le_tag
 expr_stmt|;
 return|return
 operator|(

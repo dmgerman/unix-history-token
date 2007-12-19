@@ -1689,9 +1689,6 @@ name|rman
 modifier|*
 name|rm
 decl_stmt|;
-name|bus_space_tag_t
-name|tagval
-decl_stmt|;
 name|u_long
 name|adjstart
 decl_stmt|,
@@ -1869,10 +1866,6 @@ name|sc
 operator|->
 name|sc_mem_rman
 expr_stmt|;
-name|tagval
-operator|=
-name|PPC_BUS_SPACE_MEM
-expr_stmt|;
 break|break;
 case|case
 name|SYS_RES_IRQ
@@ -1990,7 +1983,6 @@ name|flags
 argument_list|)
 operator|)
 return|;
-break|break;
 default|default:
 name|device_printf
 argument_list|(
@@ -2070,7 +2062,8 @@ name|rman_set_bustag
 argument_list|(
 name|rv
 argument_list|,
-name|tagval
+operator|&
+name|bs_le_tag
 argument_list|)
 expr_stmt|;
 name|rman_set_bushandle

@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/resource.h>
 end_include
 
@@ -1602,9 +1608,6 @@ name|rman
 modifier|*
 name|rm
 decl_stmt|;
-name|bus_space_tag_t
-name|bt
-decl_stmt|;
 name|int
 name|needactivate
 decl_stmt|;
@@ -1641,10 +1644,6 @@ name|sc
 operator|->
 name|sc_mem_rman
 expr_stmt|;
-name|bt
-operator|=
-name|PPC_BUS_SPACE_MEM
-expr_stmt|;
 break|break;
 case|case
 name|SYS_RES_IOPORT
@@ -1655,10 +1654,6 @@ operator|&
 name|sc
 operator|->
 name|sc_io_rman
-expr_stmt|;
-name|bt
-operator|=
-name|PPC_BUS_SPACE_IO
 expr_stmt|;
 break|break;
 case|case
@@ -1684,7 +1679,6 @@ name|flags
 argument_list|)
 operator|)
 return|;
-break|break;
 default|default:
 name|device_printf
 argument_list|(
@@ -1758,7 +1752,8 @@ name|rman_set_bustag
 argument_list|(
 name|rv
 argument_list|,
-name|bt
+operator|&
+name|bs_le_tag
 argument_list|)
 expr_stmt|;
 name|rman_set_bushandle
