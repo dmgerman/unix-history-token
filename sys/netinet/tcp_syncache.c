@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -442,7 +448,7 @@ name|in_conninfo
 name|sc_inc
 decl_stmt|;
 comment|/* addresses */
-name|u_long
+name|int
 name|sc_rxttime
 decl_stmt|;
 comment|/* retransmit time */
@@ -838,7 +844,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Transmit the SYN,ACK fewer times than TCP_MAXRXTSHIFT specifies.  * 3 retransmits corresponds to a timeout of (1 + 2 + 4 + 8 == 15) seconds,  * the odds are that the user has given up attempting to connect by then.  */
+comment|/*  * Transmit the SYN,ACK fewer times than TCP_MAXRXTSHIFT specifies.  * 3 retransmits corresponds to a timeout of 3 * (1 + 2 + 4 + 8) == 45 seconds,  * the odds are that the user has given up attempting to connect by then.  */
 end_comment
 
 begin_define
@@ -1604,6 +1610,22 @@ name|sch_length
 operator|++
 expr_stmt|;
 comment|/* Reinitialize the bucket row's timer. */
+if|if
+condition|(
+name|sch
+operator|->
+name|sch_length
+operator|==
+literal|1
+condition|)
+name|sch
+operator|->
+name|sch_nextc
+operator|=
+name|ticks
+operator|+
+name|INT_MAX
+expr_stmt|;
 name|syncache_timeout
 argument_list|(
 name|sc
@@ -1757,14 +1779,18 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|sch
-operator|->
-name|sch_nextc
-operator|>
+name|TSTMP_LT
+argument_list|(
 name|sc
 operator|->
 name|sc_rxttime
+argument_list|,
+name|sch
+operator|->
+name|sch_nextc
+argument_list|)
 condition|)
+block|{
 name|sch
 operator|->
 name|sch_nextc
@@ -1775,15 +1801,6 @@ name|sc_rxttime
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|sch
-operator|->
-name|sch_bucket
-argument_list|)
-operator|&&
 name|docallout
 condition|)
 name|callout_reset
@@ -1808,6 +1825,7 @@ operator|)
 name|sch
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1860,6 +1878,15 @@ argument_list|(
 name|sch
 argument_list|)
 expr_stmt|;
+comment|/* 	 * In the following cycle we may remove some entries and/or 	 * advance some timeouts, so re-initialize the bucket timer. 	 */
+name|sch
+operator|->
+name|sch_nextc
+operator|=
+name|tick
+operator|+
+name|INT_MAX
+expr_stmt|;
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|sc
@@ -1874,22 +1901,28 @@ block|{
 comment|/* 		 * We do not check if the listen socket still exists 		 * and accept the case where the listen socket may be 		 * gone by the time we resend the SYN/ACK.  We do 		 * not expect this to happens often. If it does, 		 * then the RST will be sent by the time the remote 		 * host does the SYN/ACK->ACK. 		 */
 if|if
 condition|(
+name|TSTMP_GT
+argument_list|(
 name|sc
 operator|->
 name|sc_rxttime
-operator|>
+argument_list|,
 name|tick
+argument_list|)
 condition|)
 block|{
 if|if
 condition|(
+name|TSTMP_LT
+argument_list|(
 name|sc
 operator|->
 name|sc_rxttime
-operator|<
+argument_list|,
 name|sch
 operator|->
 name|sch_nextc
+argument_list|)
 condition|)
 name|sch
 operator|->
