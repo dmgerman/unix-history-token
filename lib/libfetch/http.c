@@ -343,7 +343,8 @@ operator|!
 name|isxdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|io
@@ -376,7 +377,8 @@ operator|!
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p
@@ -400,7 +402,8 @@ operator|!
 name|isxdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p
@@ -417,7 +420,8 @@ condition|(
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p
@@ -1688,7 +1692,8 @@ operator|!
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|p
 index|[
@@ -1700,7 +1705,8 @@ operator|!
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|p
 index|[
@@ -1712,7 +1718,8 @@ operator|!
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|p
 index|[
@@ -1839,7 +1846,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 operator|++
@@ -1903,7 +1911,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|conn
 operator|->
@@ -2184,7 +2193,8 @@ operator|&&
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p
@@ -2336,7 +2346,8 @@ operator|&&
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p
@@ -2384,7 +2395,8 @@ operator|&&
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p
@@ -2437,7 +2449,8 @@ operator|&&
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p
@@ -3708,7 +3721,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|line
 index|[

@@ -304,7 +304,8 @@ name|isftpreply
 parameter_list|(
 name|foo
 parameter_list|)
-value|(isdigit((int)foo[0])&& isdigit((int)foo[1]) \&& isdigit((int)foo[2]) \&& (foo[3] == ' ' || foo[3] == '\0'))
+define|\
+value|(isdigit((unsigned char)foo[0])&&	\ 	    isdigit((unsigned char)foo[1])&&	\ 	    isdigit((unsigned char)foo[2])&&	\ 	    (foo[3] == ' ' || foo[3] == '\0'))
 end_define
 
 begin_define
@@ -314,7 +315,8 @@ name|isftpinfo
 parameter_list|(
 name|foo
 parameter_list|)
-value|(isdigit((int)foo[0])&& isdigit((int)foo[1]) \&& isdigit((int)foo[2])&& foo[3] == '-')
+define|\
+value|(isdigit((unsigned char)foo[0])&&	\ 	    isdigit((unsigned char)foo[1])&&	\ 	    isdigit((unsigned char)foo[2])&&	\ 	    foo[3] == '-')
 end_define
 
 begin_comment
@@ -531,7 +533,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|conn
 operator|->
@@ -1813,7 +1816,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|ln
@@ -1838,7 +1842,8 @@ operator|&&
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|ln
@@ -1871,7 +1876,8 @@ operator|!
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|ln
@@ -1978,7 +1984,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|ln
@@ -3394,7 +3401,8 @@ operator|!
 name|isdigit
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p
