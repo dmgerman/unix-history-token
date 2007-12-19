@@ -4908,7 +4908,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Get the maximum unit number used in a devclass  *  * Note that this is one greater than the highest currently-allocated  * unit.  *  * @param dc		the devclass to examine  */
+comment|/**  * @brief Get the maximum unit number used in a devclass  *  * Note that this is one greater than the highest currently-allocated  * unit.  If a null devclass_t is passed in, -1 is returned to indicate  * that not even the devclass has been allocated yet.  *  * @param dc		the devclass to examine  */
 end_comment
 
 begin_function
@@ -4919,6 +4919,18 @@ name|devclass_t
 name|dc
 parameter_list|)
 block|{
+if|if
+condition|(
+name|dc
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 name|dc
