@@ -251,6 +251,13 @@ name|NG_CAR_COLOR_AWARE
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|NG_CAR_COUNT_PACKETS
+value|2
+end_define
+
 begin_comment
 comment|/* Bulk config */
 end_comment
