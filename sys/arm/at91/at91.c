@@ -1291,6 +1291,121 @@ name|NORMDEV
 value|50
 end_define
 
+begin_comment
+comment|/*  * Standard priority levels for the system.  0 is lowest and 7 is highest.  * These values are the ones Atmel uses for its Linux port, which differ  * a little form the ones that are in the standard distribution.  Also,  * the ones marked with 'TWEEK' are different based on experience.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|irq_prio
+index|[
+literal|32
+index|]
+init|=
+block|{
+literal|7
+block|,
+comment|/* Advanced Interrupt Controller (FIQ) */
+literal|7
+block|,
+comment|/* System Peripherals */
+literal|1
+block|,
+comment|/* Parallel IO Controller A */
+literal|1
+block|,
+comment|/* Parallel IO Controller B */
+literal|1
+block|,
+comment|/* Parallel IO Controller C */
+literal|1
+block|,
+comment|/* Parallel IO Controller D */
+literal|5
+block|,
+comment|/* USART 0 */
+literal|5
+block|,
+comment|/* USART 1 */
+literal|5
+block|,
+comment|/* USART 2 */
+literal|5
+block|,
+comment|/* USART 3 */
+literal|0
+block|,
+comment|/* Multimedia Card Interface */
+literal|2
+block|,
+comment|/* USB Device Port */
+literal|4
+block|,
+comment|/* Two-Wire Interface */
+comment|/* TWEEK */
+literal|5
+block|,
+comment|/* Serial Peripheral Interface */
+literal|4
+block|,
+comment|/* Serial Synchronous Controller 0 */
+literal|6
+block|,
+comment|/* Serial Synchronous Controller 1 */
+comment|/* TWEEK */
+literal|4
+block|,
+comment|/* Serial Synchronous Controller 2 */
+literal|0
+block|,
+comment|/* Timer Counter 0 */
+literal|6
+block|,
+comment|/* Timer Counter 1 */
+comment|/* TWEEK */
+literal|0
+block|,
+comment|/* Timer Counter 2 */
+literal|0
+block|,
+comment|/* Timer Counter 3 */
+literal|0
+block|,
+comment|/* Timer Counter 4 */
+literal|0
+block|,
+comment|/* Timer Counter 5 */
+literal|2
+block|,
+comment|/* USB Host port */
+literal|3
+block|,
+comment|/* Ethernet MAC */
+literal|0
+block|,
+comment|/* Advanced Interrupt Controller (IRQ0) */
+literal|0
+block|,
+comment|/* Advanced Interrupt Controller (IRQ1) */
+literal|0
+block|,
+comment|/* Advanced Interrupt Controller (IRQ2) */
+literal|0
+block|,
+comment|/* Advanced Interrupt Controller (IRQ3) */
+literal|0
+block|,
+comment|/* Advanced Interrupt Controller (IRQ4) */
+literal|0
+block|,
+comment|/* Advanced Interrupt Controller (IRQ5) */
+literal|0
+comment|/* Advanced Interrupt Controller (IRQ6) */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -1524,7 +1639,6 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|/* Priority. */
-comment|/* XXX: Give better priorities to IRQs */
 name|bus_space_write_4
 argument_list|(
 name|sc
@@ -1541,7 +1655,10 @@ name|i
 operator|*
 literal|4
 argument_list|,
-literal|0
+name|irq_prio
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 if|if
