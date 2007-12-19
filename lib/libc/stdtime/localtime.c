@@ -5510,6 +5510,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|localtime_key
+operator|<
+literal|0
+condition|)
+block|{
 name|_pthread_mutex_lock
 argument_list|(
 operator|&
@@ -5555,6 +5562,7 @@ operator|&
 name|localtime_mutex
 argument_list|)
 expr_stmt|;
+block|}
 name|p_tm
 operator|=
 name|_pthread_getspecific
@@ -5747,6 +5755,12 @@ specifier|const
 name|tmp
 decl_stmt|;
 block|{
+if|if
+condition|(
+operator|!
+name|gmt_is_set
+condition|)
+block|{
 name|_MUTEX_LOCK
 argument_list|(
 operator|&
@@ -5759,10 +5773,6 @@ operator|!
 name|gmt_is_set
 condition|)
 block|{
-name|gmt_is_set
-operator|=
-name|TRUE
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ALL_STATE
@@ -5794,6 +5804,10 @@ argument_list|(
 name|gmtptr
 argument_list|)
 expr_stmt|;
+name|gmt_is_set
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 name|_MUTEX_UNLOCK
 argument_list|(
@@ -5801,6 +5815,7 @@ operator|&
 name|gmt_mutex
 argument_list|)
 expr_stmt|;
+block|}
 name|timesub
 argument_list|(
 name|timep
@@ -5918,6 +5933,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|gmtime_key
+operator|<
+literal|0
+condition|)
+block|{
 name|_pthread_mutex_lock
 argument_list|(
 operator|&
@@ -5963,6 +5985,7 @@ operator|&
 name|gmtime_mutex
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * Changed to follow POSIX.1 threads standard, which 		 * is what BSD currently has. 		 */
 if|if
 condition|(
