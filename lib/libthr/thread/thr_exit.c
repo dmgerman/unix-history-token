@@ -203,7 +203,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pthread_cleanup_pop
+name|_pthread_cleanup_pop
 argument_list|(
 literal|1
 argument_list|)
