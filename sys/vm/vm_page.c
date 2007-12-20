@@ -3489,11 +3489,13 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
 name|vm_phys_unfree_page
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
+condition|)
 name|vm_phys_set_pool
 argument_list|(
 name|VM_FREEPOOL_DEFAULT
@@ -3501,6 +3503,15 @@ argument_list|,
 name|m
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|panic
+argument_list|(
+literal|"vm_page_alloc: cache page %p is missing"
+literal|" from the free queue"
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 block|}
