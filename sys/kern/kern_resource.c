@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/umtx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -2039,6 +2045,9 @@ block|{
 name|u_char
 name|newpri
 decl_stmt|;
+name|u_char
+name|oldpri
+decl_stmt|;
 if|if
 condition|(
 name|rtp
@@ -2125,6 +2134,12 @@ name|type
 argument_list|)
 expr_stmt|;
 comment|/* XXX fix */
+name|oldpri
+operator|=
+name|td
+operator|->
+name|td_user_pri
+expr_stmt|;
 name|sched_user_prio
 argument_list|(
 name|td
@@ -2148,6 +2163,32 @@ name|td_user_pri
 argument_list|)
 expr_stmt|;
 comment|/* XXX dubious */
+if|if
+condition|(
+name|TD_ON_UPILOCK
+argument_list|(
+name|td
+argument_list|)
+operator|&&
+name|oldpri
+operator|!=
+name|newpri
+condition|)
+block|{
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|umtx_pi_adjust
+argument_list|(
+name|td
+argument_list|,
+name|oldpri
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|thread_unlock
 argument_list|(
 name|td
