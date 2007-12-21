@@ -7719,13 +7719,13 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
+name|LAGG_PORTACTIVE
+argument_list|(
 name|sc
 operator|->
 name|sc_primary
-operator|->
-name|lp_link_state
-operator|==
-name|LINK_STATE_DOWN
+argument_list|)
 condition|)
 block|{
 name|tmp_tp
@@ -7734,7 +7734,9 @@ name|lagg_link_active
 argument_list|(
 name|sc
 argument_list|,
-name|NULL
+name|sc
+operator|->
+name|sc_primary
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If tmp_tp is null, we've recieved a packet when all 		 * our links are down. Weird, but process it anyways. 		 */
