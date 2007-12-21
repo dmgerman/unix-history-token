@@ -632,6 +632,10 @@ directive|else
 operator|&
 name|pam_conv
 block|,
+operator|(
+name|char
+operator|*
+operator|)
 name|key
 endif|#
 directive|endif
