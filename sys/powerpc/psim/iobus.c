@@ -1747,7 +1747,7 @@ argument_list|)
 expr_stmt|;
 name|rman_set_bustag
 argument_list|(
-name|rv
+name|res
 argument_list|,
 operator|&
 name|bs_le_tag
