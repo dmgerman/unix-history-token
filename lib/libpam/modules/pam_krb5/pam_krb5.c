@@ -314,6 +314,7 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|ccache_data
@@ -1428,6 +1429,7 @@ name|void
 modifier|*
 name|user
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|cache_data
@@ -2503,6 +2505,7 @@ name|void
 modifier|*
 name|user
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|ccache_name
