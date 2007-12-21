@@ -2443,7 +2443,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove the given physical page "m" from the free lists.  *  * The free page queues must be locked.  */
+comment|/*  * Search for the given physical page "m" in the free lists.  If the search  * succeeds, remove "m" from the free lists and return TRUE.  Otherwise, return  * FALSE, indicating that "m" is not in the free lists.  *  * The free page queues must be locked.  */
 end_comment
 
 begin_function
