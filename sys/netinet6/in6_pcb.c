@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -239,6 +245,12 @@ end_endif
 begin_comment
 comment|/* IPSEC */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<security/mac/mac_framework.h>
+end_include
 
 begin_decl_stmt
 name|struct
@@ -1878,6 +1890,16 @@ name|inp_vflag
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_destroy_inpcb
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|INP_UNLOCK
 argument_list|(
 name|inp
