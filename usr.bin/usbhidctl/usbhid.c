@@ -683,9 +683,9 @@ name|hid_report_size
 argument_list|(
 name|r
 argument_list|,
-literal|0
-argument_list|,
 name|hid_input
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|printf
@@ -701,9 +701,9 @@ name|hid_report_size
 argument_list|(
 name|r
 argument_list|,
-literal|0
-argument_list|,
 name|hid_output
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|printf
@@ -719,9 +719,9 @@ name|hid_report_size
 argument_list|(
 name|r
 argument_list|,
-literal|0
-argument_list|,
 name|hid_feature
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1088,9 +1088,9 @@ name|hid_report_size
 argument_list|(
 name|rd
 argument_list|,
-literal|0
-argument_list|,
 name|hid_input
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|dbuf
