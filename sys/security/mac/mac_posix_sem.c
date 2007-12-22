@@ -251,6 +251,11 @@ argument_list|,
 name|label
 argument_list|)
 expr_stmt|;
+name|mac_labelzone_free
+argument_list|(
+name|label
+argument_list|)
+expr_stmt|;
 name|MAC_DEBUG_COUNTER_DEC
 argument_list|(
 operator|&
