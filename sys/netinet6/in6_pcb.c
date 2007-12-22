@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -1987,6 +1999,16 @@ name|inp_vflag
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_destroy_inpcb
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|INP_UNLOCK
 argument_list|(
 name|inp
