@@ -1620,6 +1620,14 @@ name|NZERO
 expr_stmt|;
 name|td
 operator|->
+name|td_tid
+operator|=
+name|PID_MAX
+operator|+
+literal|1
+expr_stmt|;
+name|td
+operator|->
 name|td_state
 operator|=
 name|TDS_RUNNING

@@ -969,13 +969,14 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+comment|/* leave one number for thread0 */
 name|tid_unrhdr
 operator|=
 name|new_unrhdr
 argument_list|(
 name|PID_MAX
 operator|+
-literal|1
+literal|2
 argument_list|,
 name|INT_MAX
 argument_list|,
