@@ -2990,7 +2990,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/*  	 * Refresh PID associated with this descriptor. 	 */
+comment|/* 	 * Refresh PID associated with this descriptor. 	 */
 name|BPFD_LOCK
 argument_list|(
 name|d
@@ -4764,7 +4764,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/*  	 * Refresh PID associated with this descriptor. 	 */
+comment|/* 	 * Refresh PID associated with this descriptor. 	 */
 name|BPFD_LOCK
 argument_list|(
 name|d
