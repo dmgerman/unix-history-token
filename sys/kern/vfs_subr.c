@@ -15668,6 +15668,8 @@ name|vfs_badlock_ddb
 condition|)
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_VFSLOCK
+argument_list|,
 literal|"lock violation"
 argument_list|)
 expr_stmt|;
@@ -16179,6 +16181,8 @@ name|vfs_badlock_ddb
 condition|)
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_VFSLOCK
+argument_list|,
 literal|"lock violation"
 argument_list|)
 expr_stmt|;

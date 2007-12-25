@@ -213,6 +213,8 @@ directive|ifdef
 name|ACPI_DEBUG
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_ACPI
+argument_list|,
 literal|"AcpiOsSignal"
 argument_list|)
 expr_stmt|;
@@ -227,6 +229,8 @@ directive|ifdef
 name|ACPI_DEBUG
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_ACPI
+argument_list|,
 operator|(
 name|char
 operator|*

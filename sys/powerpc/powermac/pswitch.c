@@ -548,6 +548,8 @@ name|arg
 expr_stmt|;
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_POWERPC
+argument_list|,
 name|device_get_nameunit
 argument_list|(
 name|dev

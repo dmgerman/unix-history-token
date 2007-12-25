@@ -1899,6 +1899,8 @@ name|RB_KDB
 condition|)
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_BOOTFLAGS
+argument_list|,
 literal|"Boot flags requested debugger"
 argument_list|)
 expr_stmt|;

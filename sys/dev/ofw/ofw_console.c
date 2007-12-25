@@ -1213,6 +1213,8 @@ argument_list|)
 condition|)
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_BREAK
+argument_list|,
 literal|"Break sequence on console"
 argument_list|)
 expr_stmt|;

@@ -14940,6 +14940,8 @@ else|#
 directive|else
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_NDIS
+argument_list|,
 literal|"DbgBreakPoint(): breakpoint"
 argument_list|)
 expr_stmt|;

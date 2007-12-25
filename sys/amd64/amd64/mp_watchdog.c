@@ -654,6 +654,8 @@ expr_stmt|;
 else|else
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_WATCHDOG
+argument_list|,
 literal|"mp_watchdog"
 argument_list|)
 expr_stmt|;

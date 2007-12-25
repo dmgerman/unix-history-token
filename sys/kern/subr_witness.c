@@ -5028,6 +5028,8 @@ name|witness_kdb
 condition|)
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_WITNESS
+argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
@@ -6680,6 +6682,8 @@ name|n
 condition|)
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_WITNESS
+argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;

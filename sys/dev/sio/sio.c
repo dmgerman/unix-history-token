@@ -6692,6 +6692,8 @@ literal|0
 condition|)
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_BREAK
+argument_list|,
 literal|"Break sequence on console"
 argument_list|)
 expr_stmt|;
@@ -6744,6 +6746,8 @@ condition|)
 block|{
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_BREAK
+argument_list|,
 literal|"Line break on console"
 argument_list|)
 expr_stmt|;

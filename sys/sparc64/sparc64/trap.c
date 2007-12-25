@@ -1079,6 +1079,8 @@ operator|)
 condition|)
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_TRAPSIG
+argument_list|,
 literal|"trapsig"
 argument_list|)
 expr_stmt|;

@@ -12949,7 +12949,7 @@ define|#
 directive|define
 name|ITEM_DEBUG_CHECKS
 define|\
-value|do {								\ 		if (NGI_NODE(item) ) {					\ 			printf("item already has node");		\ 			kdb_enter("has node");				\ 			NGI_CLR_NODE(item);				\ 		}							\ 		if (NGI_HOOK(item) ) {					\ 			printf("item already has hook");		\ 			kdb_enter("has hook");				\ 			NGI_CLR_HOOK(item);				\ 		}							\ 	} while (0)
+value|do {								\ 		if (NGI_NODE(item) ) {					\ 			printf("item already has node");		\ 			kdb_enter(KDB_WHY_NETGRAPH, "has node");	\ 			NGI_CLR_NODE(item);				\ 		}							\ 		if (NGI_HOOK(item) ) {					\ 			printf("item already has hook");		\ 			kdb_enter(KDB_WHY_NETGRAPH, "has hook");	\ 			NGI_CLR_HOOK(item);				\ 		}							\ 	} while (0)
 end_define
 
 begin_else

@@ -4001,6 +4001,8 @@ name|arg
 decl_stmt|;
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_POWERFAIL
+argument_list|,
 literal|"powerfail"
 argument_list|)
 expr_stmt|;

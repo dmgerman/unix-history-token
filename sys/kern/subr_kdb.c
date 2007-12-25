@@ -487,6 +487,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Flag to indicate to debuggers why the debugger was entered.  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+specifier|volatile
+name|kdb_why
+init|=
+name|KDB_WHY_UNSET
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -854,6 +869,8 @@ operator|)
 return|;
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_SYSCTL
+argument_list|,
 literal|"sysctl debug.kdb.enter"
 argument_list|)
 expr_stmt|;
@@ -1370,13 +1387,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Enter the currently selected debugger. If a message has been provided,  * it is printed first. If the debugger does not support the enter method,  * it is entered by using breakpoint(), which enters the debugger through  * kdb_trap().  */
+comment|/*  * Enter the currently selected debugger. If a message has been provided,  * it is printed first. If the debugger does not support the enter method,  * it is entered by using breakpoint(), which enters the debugger through  * kdb_trap().  The 'why' argument will contain a more mechanically usable  * string than 'msg', and is relied upon by DDB scripting to identify the  * reason for entering the debugger so that the right script can be run.  */
 end_comment
 
 begin_function
 name|void
 name|kdb_enter
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|why
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1407,8 +1429,16 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
+name|kdb_why
+operator|=
+name|why
+expr_stmt|;
 name|breakpoint
 argument_list|()
+expr_stmt|;
+name|kdb_why
+operator|=
+name|KDB_WHY_UNSET
 expr_stmt|;
 block|}
 block|}

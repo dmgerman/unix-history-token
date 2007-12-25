@@ -969,6 +969,8 @@ argument_list|)
 expr_stmt|;
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_BREAK
+argument_list|,
 literal|"Break sequence on dcons gdb port"
 argument_list|)
 expr_stmt|;
@@ -979,6 +981,8 @@ block|}
 else|else
 name|kdb_enter
 argument_list|(
+name|KDB_WHY_BREAK
+argument_list|,
 literal|"Break sequence on dcons console port"
 argument_list|)
 expr_stmt|;
