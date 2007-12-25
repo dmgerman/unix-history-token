@@ -297,6 +297,11 @@ argument_list|(
 literal|' '
 argument_list|)
 expr_stmt|;
+name|db_capture_writech
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
 name|last_print
 operator|++
 expr_stmt|;
@@ -305,6 +310,11 @@ block|}
 else|else
 block|{
 name|cnputc
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+name|db_capture_writech
 argument_list|(
 literal|' '
 argument_list|)
@@ -425,6 +435,11 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+name|db_capture_writech
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 name|db_output_position
 operator|++
 expr_stmt|;
@@ -443,6 +458,11 @@ condition|)
 block|{
 comment|/* Newline */
 name|cnputc
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+name|db_capture_writech
 argument_list|(
 name|c
 argument_list|)
@@ -489,6 +509,11 @@ condition|)
 block|{
 comment|/* Return */
 name|cnputc
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+name|db_capture_writech
 argument_list|(
 name|c
 argument_list|)
@@ -549,6 +574,7 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+comment|/* No need to beep in a log: db_capture_writech(c); */
 block|}
 comment|/* other characters are assumed non-printing */
 block|}
@@ -622,6 +648,9 @@ name|c
 decl_stmt|,
 name|done
 decl_stmt|;
+name|db_capture_enterpager
+argument_list|()
+expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"--More--\r"
@@ -744,6 +773,9 @@ expr_stmt|;
 name|db_newlines
 operator|=
 literal|0
+expr_stmt|;
+name|db_capture_exitpager
+argument_list|()
 expr_stmt|;
 block|}
 end_function
