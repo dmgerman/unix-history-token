@@ -1273,7 +1273,7 @@ begin_define
 define|#
 directive|define
 name|MBUF_JUMBOP_MEM_NAME
-value|"mbuf_jumbo_pagesize"
+value|"mbuf_jumbo_page"
 end_define
 
 begin_define
