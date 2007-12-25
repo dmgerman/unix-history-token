@@ -11210,6 +11210,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCOM_DEVICEID_BCM5722
+value|0x165a
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCOM_DEVICEID_BCM5750
 value|0x1676
 end_define
