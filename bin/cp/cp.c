@@ -756,8 +756,10 @@ operator|>
 literal|1
 condition|)
 block|{
-name|usage
-argument_list|()
+name|warnx
+argument_list|(
+literal|"Target is not a directory"
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
