@@ -1342,6 +1342,25 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * If the mbuf was consumed by the filter for requeueing (dummynet, etc) 	 * then error will be zero but we still want to return an error to our 	 * caller so the null mbuf isn't forwarded further. 	 */
+if|if
+condition|(
+operator|*
+name|mp
+operator|==
+name|NULL
+operator|&&
+name|error
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* Consumed by the filter */
 if|if
 condition|(
 operator|*
