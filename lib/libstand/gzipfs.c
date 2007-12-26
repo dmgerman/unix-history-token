@@ -71,6 +71,9 @@ index|[
 name|Z_BUFSIZE
 index|]
 decl_stmt|;
+name|int
+name|zf_endseen
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1325,6 +1328,12 @@ operator|->
 name|zf_zstream
 operator|.
 name|avail_out
+operator|&&
+name|zf
+operator|->
+name|zf_endseen
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -1416,6 +1425,12 @@ name|Z_STREAM_END
 condition|)
 block|{
 comment|/* EOF, all done */
+name|zf
+operator|->
+name|zf_endseen
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 block|}
 if|if
