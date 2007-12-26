@@ -32,6 +32,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|db_command_script
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|command
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|db_addr_t
