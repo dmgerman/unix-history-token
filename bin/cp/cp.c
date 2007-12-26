@@ -755,18 +755,17 @@ name|argc
 operator|>
 literal|1
 condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"Target is not a directory"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s is not a directory"
+argument_list|,
+name|to
+operator|.
+name|p_path
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * Need to detect the case: 		 *	cp -R dir foo 		 * Where dir is a directory and foo does not exist, where 		 * we want pathname concatenations turned on but not for 		 * the initial mkdir(). 		 */
 if|if
 condition|(
