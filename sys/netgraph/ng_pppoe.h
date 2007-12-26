@@ -41,21 +41,6 @@ name|NGM_PPPOE_COOKIE
 value|1089893072
 end_define
 
-begin_comment
-comment|/* Number of active sessions we can handle */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPPOE_NUM_SESSIONS
-value|16
-end_define
-
-begin_comment
-comment|/* for now */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -77,39 +62,6 @@ directive|define
 name|NG_PPPOE_HOOK_ETHERNET
 value|"ethernet"
 end_define
-
-begin_define
-define|#
-directive|define
-name|NG_PPPOE_HOOK_PADI
-value|"PADI"
-end_define
-
-begin_comment
-comment|/* default PADI requests come here */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_PPPOE_HOOK_S_LEADIN
-value|"service"
-end_define
-
-begin_comment
-comment|/* PADO responses from PADI */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_PPPOE_HOOK_C_LEADIN
-value|"client"
-end_define
-
-begin_comment
-comment|/* Connect message starts this */
-end_comment
 
 begin_define
 define|#
