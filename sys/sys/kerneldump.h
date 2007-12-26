@@ -142,6 +142,10 @@ name|KERNELDUMPMAGIC
 value|"FreeBSD Kernel Dump"
 define|#
 directive|define
+name|TEXTDUMPMAGIC
+value|"FreeBSD Text Dump"
+define|#
+directive|define
 name|KERNELDUMPMAGIC_CLEARED
 value|"Cleared Kernel Dump"
 name|char
@@ -183,6 +187,10 @@ value|2
 define|#
 directive|define
 name|KERNELDUMP_ARM_VERSION
+value|1
+define|#
+directive|define
+name|KERNELDUMP_TEXT_VERSION
 value|1
 name|uint64_t
 name|dumplength
