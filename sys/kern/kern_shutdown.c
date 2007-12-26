@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_kdb.h"
 end_include
 
@@ -169,6 +175,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
 end_include
 
 begin_include
@@ -1016,6 +1028,22 @@ expr_stmt|;
 name|dumping
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+if|if
+condition|(
+name|textdump_pending
+condition|)
+name|textdump_dumpsys
+argument_list|(
+operator|&
+name|dumper
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|dumpsys
 argument_list|(
 operator|&
