@@ -256,6 +256,50 @@ value|13
 end_define
 
 begin_comment
+comment|/*  * Enable superpage reservations: 1 level.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_NRESERVLEVEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_NRESERVLEVEL
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Level 0 reservations consist of 512 pages.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_LEVEL_0_ORDER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_LEVEL_0_ORDER
+value|9
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Virtual addresses of things.  Derived from the page directory and  * page table indexes from pmap.h for precision.  * Because of the page that is both a PD and PT, it looks a little  * messy at times, but hey, we'll do anything to save a page :-)  */
 end_comment
 
