@@ -832,6 +832,24 @@ name|waitstart
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * Lock owner can only be curthread or, at least, NULL in order to 	 * have a deadlock free implementation of the primitive. 	 */
+name|KASSERT
+argument_list|(
+name|td
+operator|==
+name|NULL
+operator|||
+name|td
+operator|==
+name|curthread
+argument_list|,
+operator|(
+literal|"lockmgr: owner thread (%p) cannot differ from curthread or NULL"
+operator|,
+name|td
+operator|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 literal|0
