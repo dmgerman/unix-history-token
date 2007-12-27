@@ -136,6 +136,14 @@ argument_list|)
 name|pager_object_list
 expr_stmt|;
 comment|/* list of all objects of this pager type */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|vm_reserv
+argument_list|)
+name|rvq
+expr_stmt|;
+comment|/* list of reservations */
 name|vm_page_t
 name|cache
 decl_stmt|;
@@ -249,6 +257,17 @@ directive|define
 name|OBJ_CLEANING
 value|0x0200
 end_define
+
+begin_define
+define|#
+directive|define
+name|OBJ_COLORED
+value|0x1000
+end_define
+
+begin_comment
+comment|/* pg_color is defined */
+end_comment
 
 begin_define
 define|#
