@@ -4067,6 +4067,8 @@ argument_list|(
 name|gate
 argument_list|)
 decl_stmt|;
+name|again
+label|:
 name|RT_LOCK_ASSERT
 argument_list|(
 name|rt
@@ -4187,11 +4189,30 @@ operator|)
 return|;
 comment|/* failure */
 block|}
+comment|/* 		 * Try to reacquire the lock on rt, and if it fails, 		 * clean state and restart from scratch. 		 */
+if|if
+condition|(
+operator|!
+name|RT_TRYLOCK
+argument_list|(
+name|rt
+argument_list|)
+condition|)
+block|{
+name|RTFREE_LOCKED
+argument_list|(
+name|gwrt
+argument_list|)
+expr_stmt|;
 name|RT_LOCK
 argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
 comment|/* 		 * If there is already a gwroute, then drop it. If we 		 * are asked to replace route with itself, then do 		 * not leak its refcounter. 		 */
 if|if
 condition|(
