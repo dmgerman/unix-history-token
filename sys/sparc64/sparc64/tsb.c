@@ -510,11 +510,11 @@ name|va
 argument_list|)
 condition|)
 block|{
-name|CTR6
+name|CTR5
 argument_list|(
 name|KTR_CT2
 argument_list|,
-literal|"tsb_tte_enter: off colour va=%#lx pa=%#lx o=%p oc=%#lx ot=%d pi=%#lx"
+literal|"tsb_tte_enter: off colour va=%#lx pa=%#lx o=%p ot=%d pi=%#lx"
 argument_list|,
 name|va
 argument_list|,
@@ -526,19 +526,6 @@ argument_list|,
 name|m
 operator|->
 name|object
-argument_list|,
-name|m
-operator|->
-name|object
-condition|?
-name|m
-operator|->
-name|object
-operator|->
-name|pg_color
-else|:
-operator|-
-literal|1
 argument_list|,
 name|m
 operator|->
