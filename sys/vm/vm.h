@@ -255,6 +255,21 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|vm_reserv
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|struct
+name|vm_reserv
+modifier|*
+name|vm_reserv_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Information passed from the machine-independant VM initialization code  * for use by machine-dependant code (mainly for MMU support)  */
 end_comment
