@@ -1303,35 +1303,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|LK_EXCLUPGRADE
-case|:
-comment|/* 		 * If another process is ahead of us to get an upgrade, 		 * then we want to fail rather than have an intervening 		 * exclusive access. 		 */
-if|if
-condition|(
-name|lkp
-operator|->
-name|lk_flags
-operator|&
-name|LK_WANT_UPGRADE
-condition|)
-block|{
-name|shareunlock
-argument_list|(
-name|td
-argument_list|,
-name|lkp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|EBUSY
-expr_stmt|;
-break|break;
-block|}
-comment|/* FALLTHROUGH normal upgrade */
-case|case
 name|LK_UPGRADE
 case|:
 comment|/* 		 * Upgrade a shared lock to an exclusive one. If another 		 * shared lock has already requested an upgrade to an 		 * exclusive lock, our shared lock is released and an 		 * exclusive lock is requested (which will be granted 		 * after the upgrade). If we return an error, the file 		 * will always be unlocked. 		 */

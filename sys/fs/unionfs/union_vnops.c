@@ -233,12 +233,6 @@ name|LK_DOWNGRADE
 block|}
 block|,
 block|{
-name|LK_EXCLUPGRADE
-block|,
-name|LK_DOWNGRADE
-block|}
-block|,
-block|{
 name|LK_DOWNGRADE
 block|,
 name|LK_UPGRADE
