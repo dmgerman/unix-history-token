@@ -663,7 +663,7 @@ parameter_list|,
 name|attr
 parameter_list|)
 define|\
-value|attr void name##_RB_INSERT_COLOR(struct name *, struct type *);		\ attr void name##_RB_REMOVE_COLOR(struct name *, struct type *, struct type *);\ attr struct type *name##_RB_REMOVE(struct name *, struct type *);	\ attr struct type *name##_RB_INSERT(struct name *, struct type *);	\ attr struct type *name##_RB_FIND(struct name *, struct type *);		\ attr struct type *name##_RB_NFIND(struct name *, struct type *);	\ attr struct type *name##_RB_NEXT(struct type *);			\ attr struct type *name##_RB_MINMAX(struct name *, int);
+value|attr void name##_RB_INSERT_COLOR(struct name *, struct type *);		\ attr void name##_RB_REMOVE_COLOR(struct name *, struct type *, struct type *);\ attr struct type *name##_RB_REMOVE(struct name *, struct type *);	\ attr struct type *name##_RB_INSERT(struct name *, struct type *);	\ attr struct type *name##_RB_FIND(struct name *, struct type *);		\ attr struct type *name##_RB_NFIND(struct name *, struct type *);	\ attr struct type *name##_RB_NEXT(struct type *);			\ attr struct type *name##_RB_PREV(struct type *);			\ attr struct type *name##_RB_MINMAX(struct name *, int);
 end_define
 
 begin_comment
@@ -729,7 +729,9 @@ value|\ attr struct type *							\ name##_RB_FIND(struct name *head, struct type
 comment|/* Finds the first node greater than or equal to the search key */
 value|\ attr struct type *							\ name##_RB_NFIND(struct name *head, struct type *elm)			\ {									\ 	struct type *tmp = RB_ROOT(head);				\ 	struct type *res = NULL;					\ 	int comp;							\ 	while (tmp) {							\ 		comp = cmp(elm, tmp);					\ 		if (comp< 0) {						\ 			res = tmp;					\ 			tmp = RB_LEFT(tmp, field);			\ 		}							\ 		else if (comp> 0)					\ 			tmp = RB_RIGHT(tmp, field);			\ 		else							\ 			return (tmp);					\ 	}								\ 	return (res);							\ }									\ 									\
 comment|/* ARGSUSED */
-value|\ attr struct type *							\ name##_RB_NEXT(struct type *elm)					\ {									\ 	if (RB_RIGHT(elm, field)) {					\ 		elm = RB_RIGHT(elm, field);				\ 		while (RB_LEFT(elm, field))				\ 			elm = RB_LEFT(elm, field);			\ 	} else {							\ 		if (RB_PARENT(elm, field)&&				\ 		    (elm == RB_LEFT(RB_PARENT(elm, field), field)))	\ 			elm = RB_PARENT(elm, field);			\ 		else {							\ 			while (RB_PARENT(elm, field)&&			\ 			    (elm == RB_RIGHT(RB_PARENT(elm, field), field)))\ 				elm = RB_PARENT(elm, field);		\ 			elm = RB_PARENT(elm, field);			\ 		}							\ 	}								\ 	return (elm);							\ }									\ 									\ attr struct type *							\ name##_RB_MINMAX(struct name *head, int val)				\ {									\ 	struct type *tmp = RB_ROOT(head);				\ 	struct type *parent = NULL;					\ 	while (tmp) {							\ 		parent = tmp;						\ 		if (val< 0)						\ 			tmp = RB_LEFT(tmp, field);			\ 		else							\ 			tmp = RB_RIGHT(tmp, field);			\ 	}								\ 	return (parent);						\ }
+value|\ attr struct type *							\ name##_RB_NEXT(struct type *elm)					\ {									\ 	if (RB_RIGHT(elm, field)) {					\ 		elm = RB_RIGHT(elm, field);				\ 		while (RB_LEFT(elm, field))				\ 			elm = RB_LEFT(elm, field);			\ 	} else {							\ 		if (RB_PARENT(elm, field)&&				\ 		    (elm == RB_LEFT(RB_PARENT(elm, field), field)))	\ 			elm = RB_PARENT(elm, field);			\ 		else {							\ 			while (RB_PARENT(elm, field)&&			\ 			    (elm == RB_RIGHT(RB_PARENT(elm, field), field)))\ 				elm = RB_PARENT(elm, field);		\ 			elm = RB_PARENT(elm, field);			\ 		}							\ 	}								\ 	return (elm);							\ }									\ 									\
+comment|/* ARGSUSED */
+value|\ attr struct type *							\ name##_RB_PREV(struct type *elm)					\ {									\ 	if (RB_LEFT(elm, field)) {					\ 		elm = RB_LEFT(elm, field);				\ 		while (RB_RIGHT(elm, field))				\ 			elm = RB_RIGHT(elm, field);			\ 	} else {							\ 		if (RB_PARENT(elm, field)&&				\ 		    (elm == RB_RIGHT(RB_PARENT(elm, field), field)))	\ 			elm = RB_PARENT(elm, field);			\ 		else {							\ 			while (RB_PARENT(elm, field)&&			\ 			    (elm == RB_LEFT(RB_PARENT(elm, field), field)))\ 				elm = RB_PARENT(elm, field);		\ 			elm = RB_PARENT(elm, field);			\ 		}							\ 	}								\ 	return (elm);							\ }									\ 									\ attr struct type *							\ name##_RB_MINMAX(struct name *head, int val)				\ {									\ 	struct type *tmp = RB_ROOT(head);				\ 	struct type *parent = NULL;					\ 	while (tmp) {							\ 		parent = tmp;						\ 		if (val< 0)						\ 			tmp = RB_LEFT(tmp, field);			\ 		else							\ 			tmp = RB_RIGHT(tmp, field);			\ 	}								\ 	return (parent);						\ }
 end_define
 
 begin_define
@@ -819,6 +821,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|RB_PREV
+parameter_list|(
+name|name
+parameter_list|,
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|name##_RB_PREV(y)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RB_MIN
 parameter_list|(
 name|name
@@ -853,6 +869,21 @@ name|head
 parameter_list|)
 define|\
 value|for ((x) = RB_MIN(name, head);					\ 	     (x) != NULL;						\ 	     (x) = name##_RB_NEXT(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RB_FOREACH_REVERSE
+parameter_list|(
+name|x
+parameter_list|,
+name|name
+parameter_list|,
+name|head
+parameter_list|)
+define|\
+value|for ((x) = RB_MAX(name, head);					\ 	     (x) != NULL;						\ 	     (x) = name##_RB_PREV(x))
 end_define
 
 begin_endif
