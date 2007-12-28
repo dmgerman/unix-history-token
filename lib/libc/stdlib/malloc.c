@@ -6319,7 +6319,9 @@ argument_list|)
 operator|==
 name|false
 condition|)
-return|return;
+goto|goto
+name|RETURN
+goto|;
 block|}
 if|if
 condition|(
@@ -6334,6 +6336,13 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MALLOC_DSS
+name|RETURN
+label|:
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|MALLOC_STATS
