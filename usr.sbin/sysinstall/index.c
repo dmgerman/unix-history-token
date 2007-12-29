@@ -3620,9 +3620,6 @@ decl_stmt|;
 name|WINDOW
 modifier|*
 name|w
-init|=
-name|savescr
-argument_list|()
 decl_stmt|;
 comment|/*       * Short-circuit the package dependency checks.  We're already      * maintaining a data structure of installed packages, so if a      * package is already installed, don't try to check to make sure      * that all of its dependencies are installed.  At best this      * wastes a ton of cycles and can cause minor delays between      * package extraction.  At worst it can cause an infinite loop with      * a certain faulty INDEX file.       */
 if|if
@@ -3636,6 +3633,11 @@ condition|)
 return|return
 name|DITEM_SUCCESS
 return|;
+name|w
+operator|=
+name|savescr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|id
@@ -3906,6 +3908,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 name|DITEM_FAILURE
 return|;
