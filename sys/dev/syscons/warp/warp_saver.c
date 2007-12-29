@@ -93,7 +93,7 @@ name|adp
 parameter_list|,
 name|o
 parameter_list|)
-value|do {				\ 	int oo = o;					\ 	if (oo != last_origin)				\ 	    set_origin(adp, last_origin = oo);		\ 	} while (0)
+value|do {				\ 	int oo = o;					\ 	if (oo != last_origin)				\ 	    vidd_set_win_org(adp, last_origin = oo);		\ 	} while (0)
 end_define
 
 begin_decl_stmt
@@ -431,21 +431,21 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
-name|set_video_mode
+name|vidd_set_mode
 argument_list|(
 name|adp
 argument_list|,
 name|scrmode
 argument_list|)
 expr_stmt|;
-name|load_palette
+name|vidd_load_palette
 argument_list|(
 name|adp
 argument_list|,
 name|warp_pal
 argument_list|)
 expr_stmt|;
-name|set_border
+name|vidd_set_border
 argument_list|(
 name|adp
 argument_list|,
@@ -482,20 +482,10 @@ argument_list|(
 name|pl
 argument_list|)
 expr_stmt|;
-operator|(
-operator|*
-name|vidsw
-index|[
+name|vidd_clear
+argument_list|(
 name|adp
-operator|->
-name|va_index
-index|]
-operator|->
-name|clear
-operator|)
-operator|(
-name|adp
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* update display */
@@ -539,7 +529,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|get_mode_info
+name|vidd_get_info
 argument_list|(
 name|adp
 argument_list|,
@@ -559,7 +549,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|get_mode_info
+name|vidd_get_info
 argument_list|(
 name|adp
 argument_list|,
@@ -579,7 +569,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|get_mode_info
+name|vidd_get_info
 argument_list|(
 name|adp
 argument_list|,

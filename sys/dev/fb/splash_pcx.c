@@ -328,7 +328,7 @@ control|)
 block|{
 if|if
 condition|(
-name|get_mode_info
+name|vidd_get_info
 argument_list|(
 name|adp
 argument_list|,
@@ -497,7 +497,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|set_video_mode
+name|vidd_set_mode
 argument_list|(
 name|adp
 argument_list|,
@@ -867,7 +867,7 @@ operator|(
 literal|1
 operator|)
 return|;
-name|load_palette
+name|vidd_load_palette
 argument_list|(
 name|adp
 argument_list|,
@@ -947,7 +947,7 @@ operator|+=
 name|banksize
 control|)
 block|{
-name|set_origin
+name|vidd_set_win_org
 argument_list|(
 name|adp
 argument_list|,
@@ -1014,7 +1014,7 @@ operator|+=
 name|banksize
 expr_stmt|;
 block|}
-name|set_origin
+name|vidd_set_win_org
 argument_list|(
 name|adp
 argument_list|,
@@ -1166,7 +1166,7 @@ name|pos
 operator|-=
 name|banksize
 expr_stmt|;
-name|set_origin
+name|vidd_set_win_org
 argument_list|(
 name|adp
 argument_list|,
@@ -1211,7 +1211,7 @@ name|pos
 operator|-=
 name|banksize
 expr_stmt|;
-name|set_origin
+name|vidd_set_win_org
 argument_list|(
 name|adp
 argument_list|,

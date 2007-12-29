@@ -589,20 +589,10 @@ operator|>
 name|CURVE
 condition|)
 block|{
-operator|(
-operator|*
-name|vidsw
-index|[
+name|vidd_clear
+argument_list|(
 name|adp
-operator|->
-name|va_index
-index|]
-operator|->
-name|clear
-operator|)
-operator|(
-name|adp
-operator|)
+argument_list|)
 expr_stmt|;
 comment|/* set palette of each curves */
 for|for
@@ -635,7 +625,7 @@ name|random
 argument_list|()
 expr_stmt|;
 block|}
-name|load_palette
+name|vidd_load_palette
 argument_list|(
 name|adp
 argument_list|,
@@ -938,7 +928,7 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
-name|set_video_mode
+name|vidd_set_mode
 argument_list|(
 name|adp
 argument_list|,
@@ -1006,7 +996,7 @@ decl_stmt|;
 comment|/* check that the console is capable of running in 320x200x256 */
 if|if
 condition|(
-name|get_mode_info
+name|vidd_get_info
 argument_list|(
 name|adp
 argument_list|,
