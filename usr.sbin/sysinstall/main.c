@@ -21,6 +21,18 @@ directive|include
 file|<sys/fcntl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
+end_include
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -98,6 +110,10 @@ decl_stmt|,
 modifier|*
 name|ostype
 decl_stmt|;
+name|struct
+name|rlimit
+name|rlim
+decl_stmt|;
 comment|/* Record name to be able to restart */
 name|StartName
 operator|=
@@ -157,6 +173,55 @@ return|return
 literal|1
 return|;
 block|}
+comment|/*      * Given what it does sysinstall (and stuff sysinstall runs like      * pkg_add) shouldn't be subject to process limits.  Better to just      * let them have what they think they need than have them blow      * their brains out during an install (in sometimes strange and      * mysterious ways).      */
+name|rlim
+operator|.
+name|rlim_cur
+operator|=
+name|rlim
+operator|.
+name|rlim_max
+operator|=
+name|RLIM_INFINITY
+expr_stmt|;
+if|if
+condition|(
+name|setrlimit
+argument_list|(
+name|RLIMIT_DATA
+argument_list|,
+operator|&
+name|rlim
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Warning: setrlimit() of datasize failed.\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|setrlimit
+argument_list|(
+name|RLIMIT_STACK
+argument_list|,
+operator|&
+name|rlim
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Warning: setrlimit() of stacksize failed.\n"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PC98
