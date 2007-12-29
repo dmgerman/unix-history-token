@@ -2393,7 +2393,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* set up the keyboard */
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|sc
 operator|->
@@ -2999,7 +2999,7 @@ name|keynum
 operator|=
 name|KEYCODE_BS
 expr_stmt|;
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|sc
 operator|->
@@ -3448,7 +3448,7 @@ name|sc
 operator|->
 name|cur_scp
 condition|)
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|scp
 operator|->
@@ -3740,7 +3740,7 @@ case|:
 comment|/* function key, return string */
 name|cp
 operator|=
-name|kbd_get_fkeystr
+name|kbdd_get_fkeystr
 argument_list|(
 name|thiskbd
 argument_list|,
@@ -6641,7 +6641,7 @@ case|:
 comment|/* set keyboard repeat& delay rates (new) */
 name|error
 operator|=
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|sc
 operator|->
@@ -6734,7 +6734,7 @@ name|EINVAL
 return|;
 name|error
 operator|=
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|sc
 operator|->
@@ -6851,7 +6851,7 @@ name|sc
 operator|->
 name|cur_scp
 condition|)
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|sc
 operator|->
@@ -6894,7 +6894,7 @@ name|KDGKBINFO
 case|:
 name|error
 operator|=
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|sc
 operator|->
@@ -7131,7 +7131,7 @@ case|:
 comment|/* get keyboard type */
 name|error
 operator|=
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|sc
 operator|->
@@ -7311,7 +7311,7 @@ name|KBRELKBD
 case|:
 name|error
 operator|=
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|sc
 operator|->
@@ -7521,7 +7521,7 @@ name|keyboard
 operator|=
 name|i
 expr_stmt|;
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|sc
 operator|->
@@ -7975,7 +7975,7 @@ case|:
 comment|/* set function key string */
 name|error
 operator|=
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|sc
 operator|->
@@ -9114,7 +9114,7 @@ literal|1
 return|;
 block|}
 comment|/*       * Make sure the keyboard is accessible even when the kbd device      * driver is disabled.      */
-name|kbd_enable
+name|kbdd_enable
 argument_list|(
 name|scp
 operator|->
@@ -9136,7 +9136,7 @@ name|kbd_mode
 operator|=
 name|K_XLATE
 expr_stmt|;
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|scp
 operator|->
@@ -9155,7 +9155,7 @@ operator|->
 name|kbd_mode
 argument_list|)
 expr_stmt|;
-name|kbd_poll
+name|kbdd_poll
 argument_list|(
 name|scp
 operator|->
@@ -9179,7 +9179,7 @@ operator||
 name|flags
 argument_list|)
 expr_stmt|;
-name|kbd_poll
+name|kbdd_poll
 argument_list|(
 name|scp
 operator|->
@@ -9196,7 +9196,7 @@ name|kbd_mode
 operator|=
 name|cur_mode
 expr_stmt|;
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|scp
 operator|->
@@ -9215,7 +9215,7 @@ operator|->
 name|kbd_mode
 argument_list|)
 expr_stmt|;
-name|kbd_disable
+name|kbdd_disable
 argument_list|(
 name|scp
 operator|->
@@ -9253,7 +9253,7 @@ case|:
 comment|/* function key */
 name|p
 operator|=
-name|kbd_get_fkeystr
+name|kbdd_get_fkeystr
 argument_list|(
 name|scp
 operator|->
@@ -9671,7 +9671,7 @@ operator|->
 name|keyboard
 argument_list|)
 expr_stmt|;
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|sc
 operator|->
@@ -13496,7 +13496,7 @@ name|scp
 operator|->
 name|kbd_mode
 condition|)
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|sc
 operator|->
@@ -17429,7 +17429,7 @@ control|)
 block|{
 name|c
 operator|=
-name|kbd_read_char
+name|kbdd_read_char
 argument_list|(
 name|sc
 operator|->
@@ -17923,7 +17923,7 @@ break|break;
 case|case
 name|SLK
 case|:
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|sc
 operator|->
@@ -18664,7 +18664,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|scp
 operator|->
@@ -18749,7 +18749,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|scp
 operator|->
@@ -18806,7 +18806,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|scp
 operator|->
@@ -18861,7 +18861,7 @@ name|LOCK_MASK
 expr_stmt|;
 name|error
 operator|=
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|scp
 operator|->
@@ -20050,7 +20050,7 @@ name|k
 operator|->
 name|kb_unit
 expr_stmt|;
-name|kbd_ioctl
+name|kbdd_ioctl
 argument_list|(
 name|k0
 argument_list|,

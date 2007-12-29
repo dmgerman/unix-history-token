@@ -417,93 +417,6 @@ begin_comment
 comment|/* not yet */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|KBDMUX_INTR
-parameter_list|(
-name|kbd
-parameter_list|,
-name|arg
-parameter_list|)
-define|\
-value|(*kbdsw[(kbd)->kb_index]->intr)((kbd), (arg))
-end_define
-
-begin_define
-define|#
-directive|define
-name|KBDMUX_IOCTL
-parameter_list|(
-name|kbd
-parameter_list|,
-name|cmd
-parameter_list|,
-name|arg
-parameter_list|)
-define|\
-value|(*kbdsw[(kbd)->kb_index]->ioctl)((kbd), (cmd), (caddr_t) (arg))
-end_define
-
-begin_define
-define|#
-directive|define
-name|KBDMUX_CHECK_CHAR
-parameter_list|(
-name|kbd
-parameter_list|)
-define|\
-value|(*kbdsw[(kbd)->kb_index]->check_char)((kbd))
-end_define
-
-begin_define
-define|#
-directive|define
-name|KBDMUX_READ_CHAR
-parameter_list|(
-name|kbd
-parameter_list|,
-name|wait
-parameter_list|)
-define|\
-value|(*kbdsw[(kbd)->kb_index]->read_char)((kbd), (wait))
-end_define
-
-begin_define
-define|#
-directive|define
-name|KBDMUX_ENABLE
-parameter_list|(
-name|kbd
-parameter_list|)
-define|\
-value|(*kbdsw[(kbd)->kb_index]->enable)((kbd))
-end_define
-
-begin_define
-define|#
-directive|define
-name|KBDMUX_POLL
-parameter_list|(
-name|kbd
-parameter_list|,
-name|on
-parameter_list|)
-define|\
-value|(*kbdsw[(kbd)->kb_index]->poll)((kbd), (on))
-end_define
-
-begin_define
-define|#
-directive|define
-name|KBDMUX_CLEAR_STATE
-parameter_list|(
-name|kbd
-parameter_list|)
-define|\
-value|(*kbdsw[(kbd)->kb_index]->clear_state)((kbd))
-end_define
-
 begin_comment
 comment|/*  * kbdmux keyboard  */
 end_comment
@@ -688,7 +601,7 @@ name|kbd
 operator|->
 name|kb_data
 decl_stmt|;
-name|KBDMUX_INTR
+name|kbdd_intr
 argument_list|(
 name|kbd
 argument_list|,
@@ -888,7 +801,7 @@ expr_stmt|;
 comment|/* 		 * Read all chars from the keyboard 		 * 		 * Turns out that atkbd(4) check_char() method may return 		 * "true" while read_char() method returns NOKEY. If this 		 * happens we could stuck in the loop below. Avoid this 		 * by breaking out of the loop if read_char() method returns 		 * NOKEY. 		 */
 while|while
 condition|(
-name|KBDMUX_CHECK_CHAR
+name|kbdd_check_char
 argument_list|(
 name|kbd
 argument_list|)
@@ -896,7 +809,7 @@ condition|)
 block|{
 name|c
 operator|=
-name|KBDMUX_READ_CHAR
+name|kbdd_read_char
 argument_list|(
 name|kbd
 argument_list|,
@@ -2779,7 +2692,7 @@ argument_list|)
 block|{
 while|while
 condition|(
-name|KBDMUX_CHECK_CHAR
+name|kbdd_check_char
 argument_list|(
 name|k
 operator|->
@@ -2789,7 +2702,7 @@ condition|)
 block|{
 name|scancode
 operator|=
-name|KBDMUX_READ_CHAR
+name|kbdd_read_char
 argument_list|(
 name|k
 operator|->
@@ -4133,14 +4046,14 @@ operator|)
 return|;
 comment|/* bad keyboard */
 block|}
-name|KBDMUX_ENABLE
+name|kbdd_enable
 argument_list|(
 name|k
 operator|->
 name|kbd
 argument_list|)
 expr_stmt|;
-name|KBDMUX_CLEAR_STATE
+name|kbdd_clear_state
 argument_list|(
 name|k
 operator|->
@@ -4154,7 +4067,7 @@ name|K_RAW
 expr_stmt|;
 name|error
 operator|=
-name|KBDMUX_IOCTL
+name|kbdd_ioctl
 argument_list|(
 name|k
 operator|->
@@ -4162,6 +4075,9 @@ name|kbd
 argument_list|,
 name|KDSKBMODE
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|mode
 argument_list|)
@@ -4184,7 +4100,7 @@ name|LOCK_MASK
 expr_stmt|;
 name|error
 operator|=
-name|KBDMUX_IOCTL
+name|kbdd_ioctl
 argument_list|(
 name|k
 operator|->
@@ -4192,6 +4108,9 @@ name|kbd
 argument_list|,
 name|KDSKBSTATE
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|mode
 argument_list|)
@@ -4686,7 +4605,7 @@ argument|&state->ks_kbds
 argument_list|,
 argument|next
 argument_list|)
-name|KBDMUX_IOCTL
+name|kbdd_ioctl
 argument_list|(
 name|k
 operator|->
@@ -4820,7 +4739,7 @@ argument|&state->ks_kbds
 argument_list|,
 argument|next
 argument_list|)
-name|KBDMUX_IOCTL
+name|kbdd_ioctl
 argument_list|(
 name|k
 operator|->
@@ -5072,7 +4991,7 @@ argument|&state->ks_kbds
 argument_list|,
 argument|next
 argument_list|)
-name|KBDMUX_IOCTL
+name|kbdd_ioctl
 argument_list|(
 name|k
 operator|->
@@ -5121,7 +5040,7 @@ argument|&state->ks_kbds
 argument_list|,
 argument|next
 argument_list|)
-name|KBDMUX_IOCTL
+name|kbdd_ioctl
 argument_list|(
 name|k
 operator|->
@@ -5491,7 +5410,7 @@ argument|&state->ks_kbds
 argument_list|,
 argument|next
 argument_list|)
-name|KBDMUX_POLL
+name|kbdd_poll
 argument_list|(
 name|k
 operator|->
