@@ -1914,9 +1914,9 @@ operator|.
 name|data
 argument_list|,
 name|svc_len
+argument_list|)
 operator|==
 literal|0
-argument_list|)
 condition|)
 return|return
 operator|(
