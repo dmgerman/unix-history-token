@@ -173,7 +173,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* If installing packages we'll grow a LOT. */
+comment|/*      * Given what it does sysinstall (and stuff sysinstall runs like      * pkg_add) shouldn't be subject to process limits.  Better to just      * let them have what they think they need than have them blow      * their brains out during an install (in sometimes strange and      * mysterious ways).      */
 name|rlim
 operator|.
 name|rlim_cur
@@ -200,7 +200,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: setrlimit() failed.\n"
+literal|"Warning: setrlimit() of datasize failed.\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -219,7 +219,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: setrlimit() failed.\n"
+literal|"Warning: setrlimit() of stacksize failed.\n"
 argument_list|)
 expr_stmt|;
 ifdef|#
