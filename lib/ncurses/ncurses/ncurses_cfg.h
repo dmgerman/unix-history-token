@@ -58,13 +58,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CC_HAS_INLINE_FUNCS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|CC_HAS_PROTOS
 value|1
 end_define
@@ -73,13 +66,6 @@ begin_define
 define|#
 directive|define
 name|CPP_HAS_STATIC_CAST
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPP_HAS_VSCAN_FUNC
 value|1
 end_define
 
@@ -227,6 +213,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_INTTYPES_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_IOSTREAM
 value|1
 end_define
 
@@ -703,7 +696,7 @@ begin_define
 define|#
 directive|define
 name|NCURSES_VERSION_STRING
-value|"5.6.20061217"
+value|"5.6.20071222"
 end_define
 
 begin_define
@@ -718,6 +711,13 @@ define|#
 directive|define
 name|RETSIGTYPE
 value|void
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIG_ATOMIC_T
+value|volatile sig_atomic_t
 end_define
 
 begin_define
@@ -801,13 +801,6 @@ begin_define
 define|#
 directive|define
 name|USE_SIGWINCH
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|USE_STDIO_VSCAN
 value|1
 end_define
 
