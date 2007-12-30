@@ -4570,8 +4570,8 @@ operator|&&
 name|bp
 operator|->
 name|b_error
-operator|!=
-name|ENXIO
+operator|==
+name|EIO
 operator|&&
 operator|!
 operator|(
@@ -4583,7 +4583,7 @@ name|B_INVAL
 operator|)
 condition|)
 block|{
-comment|/* 		 * Failed write, redirty.  Must clear BIO_ERROR to prevent 		 * pages from being scrapped.  If B_INVAL is set then 		 * this case is not run and the next case is run to  		 * destroy the buffer.  B_INVAL can occur if the buffer 		 * is outside the range supported by the underlying device. 		 * If the error is that the device went away (ENXIO), we 		 * shouldn't redirty the buffer either, but discard the 		 * data too. 		 */
+comment|/* 		 * Failed write, redirty.  Must clear BIO_ERROR to prevent 		 * pages from being scrapped.  If the error is anything 		 * other than an I/O error (EIO), assume that retryingi 		 * is futile. 		 */
 name|bp
 operator|->
 name|b_ioflags
