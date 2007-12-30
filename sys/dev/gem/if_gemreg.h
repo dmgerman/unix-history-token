@@ -53,7 +53,7 @@ comment|/* status reg */
 end_comment
 
 begin_comment
-comment|/* Note: Reading the status reg clears bits 0-6 */
+comment|/* Note: Reading the status reg clears bits 0-6. */
 end_comment
 
 begin_define
@@ -258,7 +258,7 @@ comment|/* TX completion reg. */
 end_comment
 
 begin_comment
-comment|/*  * Interrupt bits, for both the GEM_STATUS and GEM_INTMASK regs.  * Bits 0-6 auto-clear when read.  */
+comment|/*  * Interrupt bits, for both the GEM_STATUS and GEM_INTMASK regs  * Bits 0-6 auto-clear when read.  */
 end_comment
 
 begin_define
@@ -692,7 +692,7 @@ value|0x3028
 end_define
 
 begin_comment
-comment|/* GEM_TX_CONFIG register bits. */
+comment|/* GEM_TX_CONFIG register bits */
 end_comment
 
 begin_define
@@ -1014,7 +1014,7 @@ value|0x4120
 end_define
 
 begin_comment
-comment|/* GEM_RX_CONFIG register bits. */
+comment|/* GEM_RX_CONFIG register bits */
 end_comment
 
 begin_define
@@ -2117,7 +2117,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* extend Rx-to-TX IPG */
+comment|/* extend RX-to-TX IPG */
 end_comment
 
 begin_define
@@ -2348,7 +2348,7 @@ comment|/* GEM MIF registers */
 end_comment
 
 begin_comment
-comment|/* Bit bang registers use low bit only */
+comment|/* Bit bang registers use low bit only. */
 end_comment
 
 begin_define
@@ -2602,7 +2602,7 @@ comment|/* poll PHY address */
 end_comment
 
 begin_comment
-comment|/* MDI0 is onboard transceiver MDI1 is external, PHYAD for both is 0 */
+comment|/* MDI0 is the onboard transceiver, MDI1 is external, PHYAD for both is 0. */
 end_comment
 
 begin_define
@@ -2635,7 +2635,7 @@ comment|/*  * The Basic part is the last value read in the POLL field of the con
 end_comment
 
 begin_comment
-comment|/* The GEM PCS/Serial link registers. */
+comment|/* GEM PCS/Serial link registers */
 end_comment
 
 begin_comment
@@ -3385,7 +3385,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * GEM descriptor table structures.  */
+comment|/*  * GEM descriptor table structures  */
 end_comment
 
 begin_struct

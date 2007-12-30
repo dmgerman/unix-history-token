@@ -28,11 +28,7 @@ file|<sys/callout.h>
 end_include
 
 begin_comment
-comment|/*  * Misc. definitions for the Sun ``Gem'' Ethernet controller family driver.  */
-end_comment
-
-begin_comment
-comment|/*  * Transmit descriptor list size.  This is arbitrary, but allocate  * enough descriptors for 64 pending transmissions and 16 segments  * per packet. This limit is not actually enforced (packets with more segments  * can be sent, depending on the busdma backend); it is however used as an  * estimate for the tx window size.  */
+comment|/*  * Transmit descriptor list size.  This is arbitrary, but allocate  * enough descriptors for 64 pending transmissions and 16 segments  * per packet.  This limit is not actually enforced (packets with  * more segments can be sent, depending on the busdma backend); it  * is however used as an estimate for the TX window size.  */
 end_comment
 
 begin_define
@@ -81,7 +77,7 @@ value|((x + 1)& GEM_NTXDESC_MASK)
 end_define
 
 begin_comment
-comment|/*  * Receive descriptor list size.  We have one Rx buffer per incoming  * packet, so this logic is a little simpler.  */
+comment|/*  * Receive descriptor list size.  We have one RX buffer per incoming  * packet, so this logic is a little simpler.  */
 end_comment
 
 begin_define
@@ -109,7 +105,7 @@ value|((x + 1)& GEM_NRXDESC_MASK)
 end_define
 
 begin_comment
-comment|/*  * How many ticks to wait until to retry on a RX descriptor that is still owned  * by the hardware.  */
+comment|/*  * How many ticks to wait until to retry on a RX descriptor that is  * still owned by the hardware.  */
 end_comment
 
 begin_define
@@ -120,14 +116,13 @@ value|(hz / 50)
 end_define
 
 begin_comment
-comment|/*  * Control structures are DMA'd to the GEM chip.  We allocate them in  * a single clump that maps to a single DMA segment to make several things  * easier.  */
+comment|/*  * Control structures are DMA'd to the GEM chip.  We allocate them  * in a single clump that maps to a single DMA segment to make  * several things easier.  */
 end_comment
 
 begin_struct
 struct|struct
 name|gem_control_data
 block|{
-comment|/* 	 * The transmit descriptors. 	 */
 name|struct
 name|gem_desc
 name|gcd_txdescs
@@ -135,7 +130,7 @@ index|[
 name|GEM_NTXDESC
 index|]
 decl_stmt|;
-comment|/* 	 * The receive descriptors. 	 */
+comment|/* TX descriptors */
 name|struct
 name|gem_desc
 name|gcd_rxdescs
@@ -143,6 +138,7 @@ index|[
 name|GEM_NRXDESC
 index|]
 decl_stmt|;
+comment|/* RX descriptors */
 block|}
 struct|;
 end_struct
@@ -178,7 +174,7 @@ value|GEM_CDOFF(gcd_rxdescs[(x)])
 end_define
 
 begin_comment
-comment|/*  * Software state for transmit job mbufs (may be elements of mbuf chains).  */
+comment|/*  * software state for transmit job mbufs (may be elements of mbuf chains)  */
 end_comment
 
 begin_struct
@@ -228,7 +224,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Software state for receive jobs.  */
+comment|/*  * software state for receive jobs  */
 end_comment
 
 begin_struct
@@ -254,7 +250,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Software state per device.  */
+comment|/*  * software state per device  */
 end_comment
 
 begin_struct
@@ -298,7 +294,7 @@ name|struct
 name|callout
 name|sc_rx_ch
 decl_stmt|;
-comment|/* delayed rx callout */
+comment|/* delayed RX callout */
 name|int
 name|sc_wdog_timer
 decl_stmt|;
@@ -318,31 +314,30 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|sc_pdmatag
 decl_stmt|;
-comment|/* parent bus dma tag */
+comment|/* parent bus DMA tag */
 name|bus_dma_tag_t
 name|sc_rdmatag
 decl_stmt|;
-comment|/* RX bus dma tag */
+comment|/* RX bus DMA tag */
 name|bus_dma_tag_t
 name|sc_tdmatag
 decl_stmt|;
-comment|/* TX bus dma tag */
+comment|/* TX bus DMA tag */
 name|bus_dma_tag_t
 name|sc_cdmatag
 decl_stmt|;
-comment|/* control data bus dma tag */
+comment|/* control data bus DMA tag */
 name|bus_dmamap_t
 name|sc_dmamap
 decl_stmt|;
-comment|/* bus dma handle */
+comment|/* bus DMA handle */
 name|int
 name|sc_phyad
 decl_stmt|;
-comment|/* addr. of PHY to use or -1 for any */
+comment|/* PHY to use or -1 for any */
 name|u_int
 name|sc_variant
 decl_stmt|;
-comment|/* which GEM are we dealing with? */
 define|#
 directive|define
 name|GEM_UNKNOWN
@@ -379,12 +374,11 @@ value|((sc)->sc_variant == GEM_APPLE_GMAC ||				\ 	(sc)->sc_variant == GEM_APPLE
 name|u_int
 name|sc_flags
 decl_stmt|;
-comment|/* */
 define|#
 directive|define
 name|GEM_INITED
 value|(1<< 0)
-comment|/* reset persistent regs initialized */
+comment|/* reset persistent regs init'ed */
 define|#
 directive|define
 name|GEM_LINK
@@ -394,13 +388,13 @@ define|#
 directive|define
 name|GEM_PCI
 value|(1<< 2)
-comment|/* XXX PCI busses are little-endian */
+comment|/* PCI busses are little-endian */
 define|#
 directive|define
 name|GEM_SERDES
 value|(1<< 3)
 comment|/* use the SERDES */
-comment|/* 	 * Ring buffer DMA stuff. 	 */
+comment|/* 	 * ring buffer DMA stuff 	 */
 name|bus_dma_segment_t
 name|sc_cdseg
 decl_stmt|;
@@ -416,7 +410,7 @@ comment|/* control data DMA map */
 name|bus_addr_t
 name|sc_cddma
 decl_stmt|;
-comment|/* 	 * Software state for transmit and receive descriptors. 	 */
+comment|/* 	 * software state for transmit and receive descriptors 	 */
 name|struct
 name|gem_txsoft
 name|sc_txsoft
@@ -431,7 +425,7 @@ index|[
 name|GEM_NRXDESC
 index|]
 decl_stmt|;
-comment|/* 	 * Control data structures. 	 */
+comment|/* 	 * control data structures 	 */
 name|struct
 name|gem_control_data
 modifier|*
@@ -448,34 +442,33 @@ value|sc_control_data->gcd_rxdescs
 name|int
 name|sc_txfree
 decl_stmt|;
-comment|/* number of free Tx descriptors */
+comment|/* number of free TX descriptors */
 name|int
 name|sc_txnext
 decl_stmt|;
-comment|/* next ready Tx descriptor */
+comment|/* next ready TX descriptor */
 name|int
 name|sc_txwin
 decl_stmt|;
-comment|/* Tx descriptors since last Tx int */
+comment|/* TX desc. since last TX intr. */
 name|struct
 name|gem_txsq
 name|sc_txfreeq
 decl_stmt|;
-comment|/* free Tx descsofts */
+comment|/* free TX descsofts */
 name|struct
 name|gem_txsq
 name|sc_txdirtyq
 decl_stmt|;
-comment|/* dirty Tx descsofts */
+comment|/* dirty TX descsofts */
 name|int
 name|sc_rxptr
 decl_stmt|;
-comment|/* next ready RX descriptor/descsoft */
+comment|/* next ready RX desc./descsoft */
 name|int
 name|sc_rxfifosize
 decl_stmt|;
-comment|/* Rx FIFO size (bytes) */
-comment|/* ========== */
+comment|/* RX FIFO size (bytes) */
 name|int
 name|sc_ifflags
 decl_stmt|;
@@ -485,6 +478,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* XXX this should be handled by bus_dma(9). */
+end_comment
 
 begin_define
 define|#
@@ -650,6 +647,7 @@ parameter_list|(
 name|struct
 name|gem_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -661,17 +659,18 @@ parameter_list|(
 name|struct
 name|gem_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|gem_suspend
+name|gem_intr
 parameter_list|(
-name|struct
-name|gem_softc
+name|void
 modifier|*
+name|v
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -683,16 +682,19 @@ parameter_list|(
 name|struct
 name|gem_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|gem_intr
+name|gem_suspend
 parameter_list|(
-name|void
+name|struct
+name|gem_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -704,6 +706,7 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
+name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -715,10 +718,12 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
+name|ifp
 parameter_list|,
 name|struct
 name|ifmediareq
 modifier|*
+name|ifmr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -732,25 +737,13 @@ name|int
 name|gem_mii_readreg
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|int
+name|phy
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|gem_mii_writereg
-parameter_list|(
-name|device_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
+name|reg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -760,6 +753,26 @@ name|void
 name|gem_mii_statchg
 parameter_list|(
 name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|gem_mii_writereg
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|phy
+parameter_list|,
+name|int
+name|reg
+parameter_list|,
+name|int
+name|val
 parameter_list|)
 function_decl|;
 end_function_decl
