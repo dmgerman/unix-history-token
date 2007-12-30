@@ -42,7 +42,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: init_keytry.c,v 1.8 2006/01/21 23:43:28 tom Exp $"
+literal|"$Id: init_keytry.c,v 1.10 2007/04/29 22:57:50 tom Exp $"
 argument_list|)
 end_macro
 
@@ -88,6 +88,7 @@ name|BROKEN_LINKER
 end_if
 
 begin_function
+specifier|const
 name|struct
 name|tinfo_fkeys
 modifier|*
@@ -163,6 +164,9 @@ operator|<
 name|STRCOUNT
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|_nc_add_to_try
 argument_list|(
 argument|&(SP->_keytry)
@@ -171,7 +175,7 @@ argument|CUR Strings[_nc_tinfo_fkeys[n].offset]
 argument_list|,
 argument|_nc_tinfo_fkeys[n].code
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 block|}
 block|}
 if|#
@@ -257,6 +261,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|_nc_add_to_try
 argument_list|(
 operator|&

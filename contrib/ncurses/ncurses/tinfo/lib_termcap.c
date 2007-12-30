@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_termcap.c,v 1.58 2006/09/02 19:39:46 Miroslav.Lichvar Exp $"
+literal|"$Id: lib_termcap.c,v 1.61 2007/06/02 19:36:03 tom Exp $"
 argument_list|)
 end_macro
 
@@ -78,84 +78,60 @@ literal|0
 expr_stmt|;
 end_expr_stmt
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|long
-name|sequence
-decl_stmt|;
-name|char
-modifier|*
-name|fix_sgr0
-decl_stmt|;
-comment|/* this holds the filtered sgr0 string */
-name|char
-modifier|*
-name|last_bufp
-decl_stmt|;
-comment|/* help with fix_sgr0 leak */
-name|TERMINAL
-modifier|*
-name|last_term
-decl_stmt|;
-block|}
-name|CACHE
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|MyCache
+value|_nc_globals.tgetent_cache
+end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_CACHE
-value|4
+name|CacheInx
+value|_nc_globals.tgetent_index
 end_define
 
-begin_decl_stmt
-specifier|static
-name|CACHE
-name|cache
-index|[
-name|MAX_CACHE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|in_cache
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|CacheSeq
+value|_nc_globals.tgetent_sequence
+end_define
 
 begin_define
 define|#
 directive|define
 name|FIX_SGR0
-value|cache[in_cache].fix_sgr0
+value|MyCache[CacheInx].fix_sgr0
 end_define
 
 begin_define
 define|#
 directive|define
 name|LAST_TRM
-value|cache[in_cache].last_term
+value|MyCache[CacheInx].last_term
 end_define
 
 begin_define
 define|#
 directive|define
 name|LAST_BUF
-value|cache[in_cache].last_bufp
+value|MyCache[CacheInx].last_bufp
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAST_USE
+value|MyCache[CacheInx].last_used
 end_define
 
 begin_define
 define|#
 directive|define
 name|LAST_SEQ
-value|cache[in_cache].sequence
+value|MyCache[CacheInx].sequence
 end_define
 
 begin_comment
@@ -180,10 +156,6 @@ end_macro
 
 begin_block
 block|{
-specifier|static
-name|long
-name|sequence
-decl_stmt|;
 name|int
 name|errcode
 decl_stmt|;
@@ -225,7 +197,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-comment|/*      * In general we cannot tell if the fixed sgr0 is still used by the      * caller, but if tgetent() is called with the same buffer, that is      * good enough, since the previous data would be invalidated by the      * current call.      */
+comment|/*      * In general we cannot tell if the fixed sgr0 is still used by the      * caller, but if tgetent() is called with the same buffer, that is      * good enough, since the previous data would be invalidated by the      * current call.      *      * bufp may be a null pointer, e.g., GNU termcap.  That allocates data,      * which is good until the next tgetent() call.  The conventional termcap      * is inconvenient because of the fixed buffer size, but because it uses      * caller-supplied buffers, can have multiple terminal descriptions in      * use at a given time.      */
 for|for
 control|(
 name|n
@@ -234,7 +206,7 @@ literal|0
 init|;
 name|n
 operator|<
-name|MAX_CACHE
+name|TGETENT_MAX
 condition|;
 operator|++
 name|n
@@ -244,11 +216,14 @@ name|bool
 name|same_result
 init|=
 operator|(
-name|bufp
-operator|!=
-literal|0
+name|MyCache
+index|[
+name|n
+index|]
+operator|.
+name|last_used
 operator|&&
-name|cache
+name|MyCache
 index|[
 name|n
 index|]
@@ -263,7 +238,7 @@ condition|(
 name|same_result
 condition|)
 block|{
-name|in_cache
+name|CacheInx
 operator|=
 name|n
 expr_stmt|;
@@ -305,16 +280,16 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|in_cache
+name|CacheInx
 operator|=
 literal|0
 init|;
-name|in_cache
+name|CacheInx
 operator|<
-name|MAX_CACHE
+name|TGETENT_MAX
 condition|;
 operator|++
-name|in_cache
+name|CacheInx
 control|)
 if|if
 condition|(
@@ -326,7 +301,7 @@ name|LAST_TRM
 operator|=
 literal|0
 expr_stmt|;
-name|in_cache
+name|CacheInx
 operator|=
 name|n
 expr_stmt|;
@@ -351,23 +326,23 @@ literal|0
 decl_stmt|;
 for|for
 control|(
-name|in_cache
+name|CacheInx
 operator|=
 literal|0
 init|;
-name|in_cache
+name|CacheInx
 operator|<
-name|MAX_CACHE
+name|TGETENT_MAX
 condition|;
 operator|++
-name|in_cache
+name|CacheInx
 control|)
 block|{
 if|if
 condition|(
 name|LAST_SEQ
 operator|<
-name|cache
+name|MyCache
 index|[
 name|best
 index|]
@@ -377,11 +352,11 @@ condition|)
 block|{
 name|best
 operator|=
-name|in_cache
+name|CacheInx
 expr_stmt|;
 block|}
 block|}
-name|in_cache
+name|CacheInx
 operator|=
 name|best
 expr_stmt|;
@@ -393,7 +368,7 @@ expr_stmt|;
 name|LAST_SEQ
 operator|=
 operator|++
-name|sequence
+name|CacheSeq
 expr_stmt|;
 name|PC
 operator|=
@@ -529,6 +504,10 @@ block|}
 name|LAST_BUF
 operator|=
 name|bufp
+expr_stmt|;
+name|LAST_USE
+operator|=
+name|TRUE
 expr_stmt|;
 operator|(
 name|void
@@ -1023,16 +1002,16 @@ begin_block
 block|{
 for|for
 control|(
-name|in_cache
+name|CacheInx
 operator|=
 literal|0
 init|;
-name|in_cache
+name|CacheInx
 operator|<
-name|MAX_CACHE
+name|TGETENT_MAX
 condition|;
 operator|++
-name|in_cache
+name|CacheInx
 control|)
 block|{
 name|FreeIfNeeded
@@ -1040,6 +1019,12 @@ argument_list|(
 name|FIX_SGR0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|LAST_TRM
+operator|!=
+literal|0
+condition|)
 name|del_curterm
 argument_list|(
 name|LAST_TRM

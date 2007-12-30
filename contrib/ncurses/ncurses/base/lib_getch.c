@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_getch.c,v 1.75 2006/03/04 20:06:09 tom Exp $"
+literal|"$Id: lib_getch.c,v 1.80 2007/09/29 20:39:34 tom Exp $"
 argument_list|)
 end_macro
 
@@ -29,6 +29,42 @@ include|#
 directive|include
 file|<fifo_defs.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|USE_REENTRANT
+end_if
+
+begin_function
+name|NCURSES_EXPORT
+function|(
+name|int
+function|)
+name|NCURSES_PUBLIC_VAR
+argument_list|(
+argument|ESCDELAY
+argument_list|)
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|SP
+condition|?
+name|SP
+operator|->
+name|_ESCDELAY
+else|:
+literal|1000
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_macro
 name|NCURSES_EXPORT_VAR
@@ -47,6 +83,11 @@ end_expr_stmt
 begin_comment
 comment|/* max interval betw. chars in funkeys, in millisecs */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -298,13 +339,21 @@ directive|ifdef
 name|TRACE
 if|if
 condition|(
-name|_nc_tracing
-operator|&
+name|USE_TRACEF
+argument_list|(
 name|TRACE_IEVENT
+argument_list|)
 condition|)
+block|{
 name|_nc_fifo_dump
 argument_list|()
 expr_stmt|;
+name|_nc_unlock_global
+argument_list|(
+name|tracef
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 return|return
@@ -732,13 +781,21 @@ directive|ifdef
 name|TRACE
 if|if
 condition|(
-name|_nc_tracing
-operator|&
+name|USE_TRACEF
+argument_list|(
 name|TRACE_IEVENT
+argument_list|)
 condition|)
+block|{
 name|_nc_fifo_dump
 argument_list|()
 expr_stmt|;
+name|_nc_unlock_global
+argument_list|(
+name|tracef
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 return|return
@@ -872,11 +929,13 @@ name|SP
 operator|==
 literal|0
 condition|)
+block|{
 name|returnCode
 argument_list|(
 name|ERR
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|cooked_key_in_fifo
@@ -903,6 +962,13 @@ argument_list|()
 expr_stmt|;
 name|returnCode
 argument_list|(
+operator|*
+name|result
+operator|>=
+name|KEY_MIN
+condition|?
+name|KEY_CODE_YES
+else|:
 name|OK
 argument_list|)
 expr_stmt|;
@@ -1068,12 +1134,8 @@ name|result
 operator|=
 name|rc
 expr_stmt|;
-name|returnCode
-argument_list|(
-name|OK
-argument_list|)
-expr_stmt|;
 block|}
+else|else
 endif|#
 directive|endif
 operator|*
@@ -1084,6 +1146,13 @@ argument_list|()
 expr_stmt|;
 name|returnCode
 argument_list|(
+operator|*
+name|result
+operator|>=
+name|KEY_MIN
+condition|?
+name|KEY_CODE_YES
+else|:
 name|OK
 argument_list|)
 expr_stmt|;
@@ -1244,7 +1313,7 @@ name|KEY_EVENT
 expr_stmt|;
 name|returnCode
 argument_list|(
-name|OK
+name|KEY_CODE_YES
 argument_list|)
 expr_stmt|;
 block|}
@@ -1469,9 +1538,10 @@ directive|if
 name|USE_SIZECHANGE
 if|if
 condition|(
-name|SP
-operator|->
-name|_sig_winch
+name|_nc_handle_sigwinch
+argument_list|(
+name|FALSE
+argument_list|)
 condition|)
 block|{
 name|_nc_update_screensize
@@ -1805,8 +1875,7 @@ name|evl
 argument_list|)
 argument_list|)
 block|{
-name|struct
-name|tries
+name|TRIES
 modifier|*
 name|ptr
 decl_stmt|;

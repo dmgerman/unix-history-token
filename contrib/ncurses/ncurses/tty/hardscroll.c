@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: hardscroll.c,v 1.36 2001/01/14 00:17:28 tom Exp $"
+literal|"$Id: hardscroll.c,v 1.41 2007/09/29 21:48:36 tom Exp $"
 argument_list|)
 end_macro
 
@@ -101,6 +101,16 @@ parameter_list|)
 value|if (_nc_tracing& (n)) { _tracef a ; putchar('\n'); }
 end_define
 
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(unsigned
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_tracing
+expr_stmt|;
+end_expr_stmt
+
 begin_else
 else|#
 directive|else
@@ -128,26 +138,21 @@ literal|0
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* obsolete: keep for ABI compat */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|USE_HASHMAP
 end_if
 
-begin_decl_stmt
-specifier|static
-name|int
-name|oldnums_allocated
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
 name|oldnums
-value|_nc_oldnums
+value|SP->_oldnum_list
 end_define
 
 begin_define
@@ -187,6 +192,13 @@ end_endif
 begin_comment
 comment|/* !USE_HASHMAP */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|OLDNUM_SIZE
+value|SP->_oldnum_size
+end_define
 
 begin_endif
 endif|#
@@ -232,7 +244,10 @@ argument_list|(
 name|TRACE_ICALLS
 argument_list|,
 operator|(
-literal|"_nc_scroll_optimize() begins"
+name|T_CALLED
+argument_list|(
+literal|"_nc_scroll_optimize"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -255,7 +270,7 @@ name|USE_HASHMAP
 comment|/* get enough storage */
 if|if
 condition|(
-name|oldnums_allocated
+name|OLDNUM_SIZE
 operator|<
 name|screen_lines
 condition|)
@@ -283,7 +298,7 @@ name|oldnums
 operator|=
 name|new_oldnums
 expr_stmt|;
-name|oldnums_allocated
+name|OLDNUM_SIZE
 operator|=
 name|screen_lines
 expr_stmt|;
@@ -302,17 +317,23 @@ directive|ifdef
 name|TRACE
 if|if
 condition|(
-name|_nc_tracing
-operator|&
-operator|(
+name|USE_TRACEF
+argument_list|(
 name|TRACE_UPDATE
 operator||
 name|TRACE_MOVE
-operator|)
+argument_list|)
 condition|)
+block|{
 name|_nc_linedump
 argument_list|()
 expr_stmt|;
+name|_nc_unlock_global
+argument_list|(
+name|tracef
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* TRACE */
@@ -641,6 +662,18 @@ endif|#
 directive|endif
 comment|/* !defined(SCROLLDEBUG)&& !defined(HASHDEBUG) */
 block|}
+name|TR
+argument_list|(
+name|TRACE_ICALLS
+argument_list|,
+operator|(
+name|T_RETURN
+argument_list|(
+literal|""
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -683,17 +716,14 @@ end_comment
 
 begin_block
 block|{
-specifier|static
-name|size_t
-name|have
+name|int
+name|n
 decl_stmt|;
-specifier|static
 name|char
 modifier|*
 name|buf
-decl_stmt|;
-name|int
-name|n
+init|=
+literal|0
 decl_stmt|;
 name|size_t
 name|want
@@ -706,20 +736,12 @@ operator|)
 operator|*
 literal|4
 decl_stmt|;
-if|if
-condition|(
-name|have
-operator|<
-name|want
-condition|)
 name|buf
 operator|=
 name|typeMalloc
 argument_list|(
 name|char
 argument_list|,
-name|have
-operator|=
 name|want
 argument_list|)
 expr_stmt|;
@@ -777,20 +799,11 @@ name|buf
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NO_LEAKS
 name|free
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|have
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tracedmp.c,v 1.27 2006/10/14 20:43:31 tom Exp $"
+literal|"$Id: lib_tracedmp.c,v 1.29 2007/06/30 23:01:19 tom Exp $"
 argument_list|)
 end_macro
 
@@ -35,6 +35,20 @@ ifdef|#
 directive|ifdef
 name|TRACE
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|my_buffer
+value|_nc_globals.tracedmp_buf
+end_define
+
+begin_define
+define|#
+directive|define
+name|my_length
+value|_nc_globals.tracedmp_used
+end_define
 
 begin_macro
 name|NCURSES_EXPORT
@@ -54,19 +68,6 @@ end_macro
 
 begin_block
 block|{
-specifier|static
-name|char
-modifier|*
-name|buf
-init|=
-literal|0
-decl_stmt|;
-specifier|static
-name|size_t
-name|used
-init|=
-literal|0
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -210,10 +211,10 @@ operator|>
 operator|(
 name|int
 operator|)
-name|used
+name|my_length
 condition|)
 block|{
-name|used
+name|my_length
 operator|=
 literal|2
 operator|*
@@ -223,15 +224,15 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-name|buf
+name|my_buffer
 operator|=
 name|typeRealloc
 argument_list|(
 name|char
 argument_list|,
-name|used
+name|my_length
 argument_list|,
-name|buf
+name|my_buffer
 argument_list|)
 expr_stmt|;
 block|}
@@ -255,7 +256,7 @@ name|char
 modifier|*
 name|ep
 init|=
-name|buf
+name|my_buffer
 decl_stmt|;
 name|bool
 name|haveattrs
@@ -397,6 +398,32 @@ argument_list|,
 name|ep
 argument_list|)
 expr_stmt|;
+comment|/* if there are multi-column characters on the line, print them now */
+name|if_WIDEC
+argument_list|(
+argument|{ 	    bool multicolumn = FALSE; 	    for (j =
+literal|0
+argument|; j< width; ++j) 		if (WidecExt(win->_line[n].text[j]) !=
+literal|0
+argument|) { 		    multicolumn = TRUE; 		    break; 		} 	    if (multicolumn) { 		ep = my_buffer; 		for (j =
+literal|0
+argument|; j< width; ++j) { 		    int test = WidecExt(win->_line[n].text[j]); 		    if (test) { 			ep[j] = test +
+literal|'0'
+argument|; 		    } else { 			ep[j] =
+literal|' '
+argument|; 		    } 		} 		ep[j] =
+literal|'\0'
+argument|; 		_tracef(
+literal|"%*s[%2d]%*s='%s'"
+argument|, (int) strlen(name),
+literal|"widec"
+argument|, n,
+literal|8
+argument|,
+literal|" "
+argument|, my_buffer); 	    } 	}
+argument_list|)
+empty_stmt|;
 comment|/* dump A_COLOR part, will screw up if there are more than 96 */
 name|havecolors
 operator|=
@@ -448,7 +475,7 @@ condition|)
 block|{
 name|ep
 operator|=
-name|buf
+name|my_buffer
 expr_stmt|;
 for|for
 control|(
@@ -579,7 +606,7 @@ literal|8
 argument_list|,
 literal|" "
 argument_list|,
-name|buf
+name|my_buffer
 argument_list|)
 expr_stmt|;
 block|}
@@ -671,7 +698,7 @@ condition|)
 block|{
 name|ep
 operator|=
-name|buf
+name|my_buffer
 expr_stmt|;
 for|for
 control|(
@@ -754,7 +781,7 @@ literal|8
 argument_list|,
 literal|" "
 argument_list|,
-name|buf
+name|my_buffer
 argument_list|)
 expr_stmt|;
 block|}
@@ -765,14 +792,14 @@ directive|if
 name|NO_LEAKS
 name|free
 argument_list|(
-name|buf
+name|my_buffer
 argument_list|)
 expr_stmt|;
-name|buf
+name|my_buffer
 operator|=
 literal|0
 expr_stmt|;
-name|used
+name|my_length
 operator|=
 literal|0
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_ttyflags.c,v 1.13 2006/12/10 01:31:54 tom Exp $"
+literal|"$Id: lib_ttyflags.c,v 1.15 2007/05/26 18:54:25 tom Exp $"
 argument_list|)
 end_macro
 
@@ -51,6 +51,20 @@ name|result
 init|=
 name|OK
 decl_stmt|;
+if|if
+condition|(
+name|buf
+operator|==
+literal|0
+condition|)
+block|{
+name|result
+operator|=
+name|ERR
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|cur_term
@@ -137,6 +151,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|result
@@ -166,6 +181,20 @@ name|result
 init|=
 name|OK
 decl_stmt|;
+if|if
+condition|(
+name|buf
+operator|==
+literal|0
+condition|)
+block|{
+name|result
+operator|=
+name|ERR
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|cur_term
@@ -253,6 +282,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|result
@@ -584,16 +614,77 @@ expr_stmt|;
 block|}
 end_block
 
+begin_function
+specifier|static
+name|TTY
+modifier|*
+name|saved_tty
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|TTY
+modifier|*
+name|result
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|SP
+operator|!=
+literal|0
+condition|)
+block|{
+name|result
+operator|=
+operator|&
+operator|(
+name|SP
+operator|->
+name|_saved_tty
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|_nc_prescreen
+operator|.
+name|saved_tty
+operator|==
+literal|0
+condition|)
+block|{
+name|_nc_prescreen
+operator|.
+name|saved_tty
+operator|=
+name|typeCalloc
+argument_list|(
+name|TTY
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|result
+operator|=
+name|_nc_prescreen
+operator|.
+name|saved_tty
+expr_stmt|;
+block|}
+return|return
+name|result
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* **	savetty()  and  resetty() ** */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|TTY
-name|buf
-decl_stmt|;
-end_decl_stmt
 
 begin_macro
 name|NCURSES_EXPORT
@@ -625,8 +716,8 @@ name|returnCode
 argument_list|(
 name|_nc_get_tty_mode
 argument_list|(
-operator|&
-name|buf
+name|saved_tty
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -663,8 +754,8 @@ name|returnCode
 argument_list|(
 name|_nc_set_tty_mode
 argument_list|(
-operator|&
-name|buf
+name|saved_tty
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;

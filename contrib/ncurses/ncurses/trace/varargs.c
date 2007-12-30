@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2001-2002,2003 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2001-2003,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: varargs.c,v 1.4 2003/05/24 21:10:28 tom Exp $"
+literal|"$Id: varargs.c,v 1.6 2007/07/14 15:51:27 tom Exp $"
 argument_list|)
 end_macro
 
@@ -99,6 +99,20 @@ parameter_list|)
 value|sval = va_arg(ap, type)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MyBuffer
+value|_nc_globals.tracearg_buf
+end_define
+
+begin_define
+define|#
+directive|define
+name|MyLength
+value|_nc_globals.tracearg_used
+end_define
+
 begin_comment
 comment|/*  * Returns a string that represents the parameter list of a printf-style call.  */
 end_comment
@@ -127,15 +141,6 @@ name|dummy
 index|[]
 init|=
 literal|""
-decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|result_buf
-decl_stmt|;
-specifier|static
-name|size_t
-name|result_len
 decl_stmt|;
 name|char
 name|buffer
@@ -167,24 +172,24 @@ name|dummy
 return|;
 if|if
 condition|(
-name|result_len
+name|MyLength
 operator|==
 literal|0
 condition|)
-name|result_buf
+name|MyBuffer
 operator|=
 name|typeMalloc
 argument_list|(
 name|char
 argument_list|,
-name|result_len
+name|MyLength
 operator|=
 name|BUFSIZ
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|result_buf
+name|MyBuffer
 operator|==
 literal|0
 condition|)
@@ -192,7 +197,7 @@ return|return
 name|dummy
 return|;
 operator|*
-name|result_buf
+name|MyBuffer
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -606,6 +611,9 @@ name|sval
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|atUnknown
+case|:
 default|default:
 name|strcpy
 argument_list|(
@@ -616,7 +624,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|result_len
+name|MyLength
 operator|+=
 name|strlen
 argument_list|(
@@ -625,24 +633,24 @@ argument_list|)
 operator|+
 literal|2
 expr_stmt|;
-name|result_buf
+name|MyBuffer
 operator|=
 name|typeRealloc
 argument_list|(
 name|char
 argument_list|,
-name|result_len
+name|MyLength
 argument_list|,
-name|result_buf
+name|MyBuffer
 argument_list|)
 expr_stmt|;
 name|sprintf
 argument_list|(
-name|result_buf
+name|MyBuffer
 operator|+
 name|strlen
 argument_list|(
-name|result_buf
+name|MyBuffer
 argument_list|)
 argument_list|,
 literal|", %s"
@@ -667,7 +675,7 @@ block|}
 block|}
 return|return
 operator|(
-name|result_buf
+name|MyBuffer
 operator|)
 return|;
 block|}

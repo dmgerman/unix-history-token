@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -104,7 +104,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: write_entry.c,v 1.68 2006/10/14 20:45:16 tom Exp $"
+literal|"$Id: write_entry.c,v 1.70 2007/11/17 23:38:28 tom Exp $"
 argument_list|)
 end_macro
 
@@ -334,7 +334,10 @@ decl_stmt|;
 name|char
 name|dir
 index|[
-literal|2
+sizeof|sizeof
+argument_list|(
+name|LEAF_FMT
+argument_list|)
 index|]
 decl_stmt|;
 name|char
@@ -364,7 +367,9 @@ literal|0
 condition|)
 name|_nc_err_abort
 argument_list|(
-literal|"Illegal terminfo subdirectory \"%c\""
+literal|"Illegal terminfo subdirectory \""
+name|LEAF_FMT
+literal|"\""
 argument_list|,
 name|code
 argument_list|)
@@ -379,19 +384,14 @@ name|dirnames
 index|]
 condition|)
 return|return;
+name|sprintf
+argument_list|(
 name|dir
-index|[
-literal|0
-index|]
-operator|=
+argument_list|,
+name|LEAF_FMT
+argument_list|,
 name|code
-expr_stmt|;
-name|dir
-index|[
-literal|1
-index|]
-operator|=
-literal|'\0'
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1548,7 +1548,8 @@ name|sprintf
 argument_list|(
 name|filename
 argument_list|,
-literal|"%c/%s"
+name|LEAF_FMT
+literal|"/%s"
 argument_list|,
 name|first_name
 index|[
@@ -1747,7 +1748,8 @@ name|sprintf
 argument_list|(
 name|linkname
 argument_list|,
-literal|"%c/%s"
+name|LEAF_FMT
+literal|"/%s"
 argument_list|,
 name|ptr
 index|[
@@ -2307,6 +2309,9 @@ argument_list|(
 operator|(
 literal|"put Strings[%d]=%s(%d)"
 operator|,
+operator|(
+name|int
+operator|)
 name|i
 operator|,
 name|_nc_visbuf
@@ -3642,6 +3647,9 @@ argument_list|(
 operator|(
 literal|"WRITE ext_Strings[%d]=%s"
 operator|,
+operator|(
+name|int
+operator|)
 name|i
 operator|,
 name|_nc_visbuf
@@ -3700,6 +3708,9 @@ argument_list|(
 operator|(
 literal|"WRITE ext_Names[%d]=%s"
 operator|,
+operator|(
+name|int
+operator|)
 name|i
 operator|,
 name|tp

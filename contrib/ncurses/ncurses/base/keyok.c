@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Thomas E. Dickey<dickey@clark.net> 1997                        *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Thomas E. Dickey            1997-on                             *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: keyok.c,v 1.6 2006/06/17 18:18:43 tom Exp $"
+literal|"$Id: keyok.c,v 1.7 2006/12/30 16:22:33 tom Exp $"
 argument_list|)
 end_macro
 
@@ -125,6 +125,8 @@ name|ch
 argument_list|)
 condition|)
 block|{
+name|code
+operator|=
 name|_nc_add_to_try
 argument_list|(
 operator|&
@@ -144,14 +146,17 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|code
-operator|=
-name|OK
-expr_stmt|;
 name|count
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|code
+operator|!=
+name|OK
+condition|)
+break|break;
 block|}
 block|}
 else|else
@@ -191,6 +196,8 @@ name|ch
 argument_list|)
 condition|)
 block|{
+name|code
+operator|=
 name|_nc_add_to_try
 argument_list|(
 operator|&
@@ -210,14 +217,17 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|code
-operator|=
-name|OK
-expr_stmt|;
 name|count
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|code
+operator|!=
+name|OK
+condition|)
+break|break;
 block|}
 block|}
 block|}
