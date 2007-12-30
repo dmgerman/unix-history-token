@@ -1951,9 +1951,16 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"no calendar file: ``%s''"
+literal|"can't open calendar file \"%s\": %s (%d)"
 argument_list|,
 name|calendarFile
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 block|}
