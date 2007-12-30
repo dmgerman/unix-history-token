@@ -1903,7 +1903,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Clear interrupt source flags and turn off interrupts. If we 	 * don't clear these flags before processing their sources we 	 * could completely miss some interrupt events as the NIC can 	 * change these flags while we're in this handler. We turn off 	 * interrupts so we don't get another RX interrupt while still 	 * processing the previous one in ifp->if_input() with the 	 * driver lock dropped. 	 */
+comment|/* 	 * Clear interrupt source flags and turn off interrupts. If we 	 * don't clear these flags before processing their sources we 	 * could completely miss some interrupt events as the NIC can 	 * change these flags while we're in this handler. We toggle 	 * the interrupt enable bit in order to keep receiving them 	 * (some chips work without this, some don't). 	 */
 call|(
 modifier|*
 name|sc
