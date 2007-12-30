@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_acs.c,v 1.30 2006/01/07 21:27:15 tom Exp $"
+literal|"$Id: lib_acs.c,v 1.34 2007/09/29 20:37:13 tom Exp $"
 argument_list|)
 end_macro
 
@@ -34,7 +34,16 @@ begin_if
 if|#
 directive|if
 name|BROKEN_LINKER
+operator|||
+name|USE_REENTRANT
 end_if
+
+begin_define
+define|#
+directive|define
+name|MyBuffer
+value|_nc_prescreen.real_acs_map
+end_define
 
 begin_macro
 name|NCURSES_EXPORT_VAR
@@ -52,20 +61,13 @@ end_macro
 
 begin_block
 block|{
-specifier|static
-name|chtype
-modifier|*
-name|the_map
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
-name|the_map
+name|MyBuffer
 operator|==
 literal|0
 condition|)
-name|the_map
+name|MyBuffer
 operator|=
 name|typeCalloc
 argument_list|(
@@ -75,10 +77,16 @@ name|ACS_LEN
 argument_list|)
 expr_stmt|;
 return|return
-name|the_map
+name|MyBuffer
 return|;
 block|}
 end_block
+
+begin_undef
+undef|#
+directive|undef
+name|MyBuffer
+end_undef
 
 begin_else
 else|#
@@ -487,42 +495,6 @@ operator|=
 literal|'f'
 expr_stmt|;
 comment|/* should be pound-sterling symbol */
-if|#
-directive|if
-operator|!
-name|USE_WIDEC_SUPPORT
-if|if
-condition|(
-name|_nc_unicode_locale
-argument_list|()
-operator|&&
-name|_nc_locale_breaks_acs
-argument_list|()
-condition|)
-block|{
-name|acs_chars
-operator|=
-name|NULL
-expr_stmt|;
-name|ena_acs
-operator|=
-name|NULL
-expr_stmt|;
-name|enter_alt_charset_mode
-operator|=
-name|NULL
-expr_stmt|;
-name|exit_alt_charset_mode
-operator|=
-name|NULL
-expr_stmt|;
-name|set_attributes
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|ena_acs
@@ -739,9 +711,10 @@ name|TRACE
 comment|/* Show the equivalent mapping, noting if it does not match the      * given attribute, whether by re-ordering or duplication.      */
 if|if
 condition|(
-name|_nc_tracing
-operator|&
+name|USE_TRACEF
+argument_list|(
 name|TRACE_CALLS
+argument_list|)
 condition|)
 block|{
 name|size_t
@@ -883,6 +856,11 @@ name|_nc_visbuf
 argument_list|(
 name|show
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|_nc_unlock_global
+argument_list|(
+name|tracef
 argument_list|)
 expr_stmt|;
 block|}

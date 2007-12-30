@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: hashmap.c,v 1.49 2006/03/11 19:33:49 tom Exp $"
+literal|"$Id: hashmap.c,v 1.56 2007/10/13 18:47:25 Miroslav.Lichvar Exp $"
 argument_list|)
 end_macro
 
@@ -101,7 +101,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|chtype
+name|NCURSES_CH_T
 name|oldtext
 index|[
 name|MAXLINES
@@ -109,7 +109,12 @@ index|]
 index|[
 name|TEXTWIDTH
 index|]
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|NCURSES_CH_T
 name|newtext
 index|[
 name|MAXLINES
@@ -176,7 +181,7 @@ name|OLDNUM
 parameter_list|(
 name|n
 parameter_list|)
-value|_nc_oldnums[n]
+value|SP->_oldnum_list[n]
 end_define
 
 begin_define
@@ -404,6 +409,12 @@ literal|0
 condition|;
 name|i
 operator|--
+operator|,
+name|from
+operator|++
+operator|,
+name|to
+operator|++
 control|)
 if|if
 condition|(
@@ -413,11 +424,9 @@ name|CharEq
 argument_list|(
 operator|*
 name|from
-operator|++
 argument_list|,
 operator|*
 name|to
-operator|++
 argument_list|)
 operator|)
 condition|)
@@ -481,6 +490,9 @@ literal|0
 condition|;
 name|i
 operator|--
+operator|,
+name|to
+operator|++
 control|)
 if|if
 condition|(
@@ -492,7 +504,6 @@ name|blank
 argument_list|,
 operator|*
 name|to
-operator|++
 argument_list|)
 operator|)
 condition|)
@@ -2003,14 +2014,34 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|SP
-operator|=
-name|typeCalloc
+if|if
+condition|(
+name|setupterm
 argument_list|(
-name|SCREEN
+name|NULL
 argument_list|,
-literal|1
+name|fileno
+argument_list|(
+name|stdout
 argument_list|)
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|)
+operator|==
+name|ERR
+condition|)
+return|return
+name|EXIT_FAILURE
+return|;
+operator|(
+name|void
+operator|)
+name|_nc_alloc_screen
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -2040,6 +2071,8 @@ index|]
 operator|=
 name|_NEWINDEX
 expr_stmt|;
+name|CharOf
+argument_list|(
 name|oldtext
 index|[
 name|n
@@ -2047,7 +2080,10 @@ index|]
 index|[
 literal|0
 index|]
+argument_list|)
 operator|=
+name|CharOf
+argument_list|(
 name|newtext
 index|[
 name|n
@@ -2055,6 +2091,7 @@ index|]
 index|[
 literal|0
 index|]
+argument_list|)
 operator|=
 literal|'.'
 expr_stmt|;
@@ -2108,11 +2145,7 @@ operator|*
 operator|)
 name|NULL
 condition|)
-name|exit
-argument_list|(
-name|EXIT_SUCCESS
-argument_list|)
-expr_stmt|;
+break|break;
 switch|switch
 condition|(
 name|line
@@ -2234,6 +2267,8 @@ condition|;
 name|n
 operator|++
 control|)
+name|CharOf
+argument_list|(
 name|newtext
 index|[
 name|n
@@ -2241,6 +2276,7 @@ index|]
 index|[
 literal|0
 index|]
+argument_list|)
 operator|=
 literal|'.'
 expr_stmt|;
@@ -2270,6 +2306,8 @@ literal|'\n'
 condition|)
 break|break;
 else|else
+name|CharOf
+argument_list|(
 name|newtext
 index|[
 name|n
@@ -2277,6 +2315,7 @@ index|]
 index|[
 literal|0
 index|]
+argument_list|)
 operator|=
 name|line
 index|[
@@ -2303,6 +2342,8 @@ condition|;
 name|n
 operator|++
 control|)
+name|CharOf
+argument_list|(
 name|oldtext
 index|[
 name|n
@@ -2310,6 +2351,7 @@ index|]
 index|[
 literal|0
 index|]
+argument_list|)
 operator|=
 literal|'.'
 expr_stmt|;
@@ -2339,6 +2381,8 @@ literal|'\n'
 condition|)
 break|break;
 else|else
+name|CharOf
+argument_list|(
 name|oldtext
 index|[
 name|n
@@ -2346,6 +2390,7 @@ index|]
 index|[
 literal|0
 index|]
+argument_list|)
 operator|=
 name|line
 index|[
@@ -2392,6 +2437,8 @@ operator|++
 control|)
 name|putchar
 argument_list|(
+name|CharOf
+argument_list|(
 name|oldtext
 index|[
 name|n
@@ -2399,6 +2446,7 @@ index|]
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putchar
@@ -2436,6 +2484,8 @@ operator|++
 control|)
 name|putchar
 argument_list|(
+name|CharOf
+argument_list|(
 name|newtext
 index|[
 name|n
@@ -2443,6 +2493,7 @@ index|]
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putchar
@@ -2495,6 +2546,7 @@ name|stderr
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
 case|case
 literal|'?'
 case|:
@@ -2504,9 +2556,21 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|#
+directive|if
+name|NO_LEAKS
+name|_nc_free_and_exit
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 return|return
 name|EXIT_SUCCESS
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 

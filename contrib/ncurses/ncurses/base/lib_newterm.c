@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -59,7 +59,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_newterm.c,v 1.64 2006/01/14 15:36:24 tom Exp $"
+literal|"$Id: lib_newterm.c,v 1.67 2007/04/21 20:47:32 tom Exp $"
 argument_list|)
 end_macro
 
@@ -220,15 +220,6 @@ begin_comment
 comment|/*  * filter() has to be called before either initscr() or newterm(), so there is  * apparently no way to make this flag apply to some terminals and not others,  * aside from possibly delaying a filter() call until some terminals have been  * initialized.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|bool
-name|filter_mode
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|NCURSES_EXPORT
 argument_list|(
@@ -258,6 +249,8 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|_nc_prescreen
+operator|.
 name|filter_mode
 operator|=
 name|TRUE
@@ -306,6 +299,8 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|_nc_prescreen
+operator|.
 name|filter_mode
 operator|=
 name|FALSE
@@ -380,31 +375,6 @@ name|ifp
 operator|)
 argument_list|)
 expr_stmt|;
-name|_nc_handle_sigwinch
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* allow user to set maximum escape delay from the environment */
-if|if
-condition|(
-operator|(
-name|value
-operator|=
-name|_nc_getenv_num
-argument_list|(
-literal|"ESCDELAY"
-argument_list|)
-operator|)
-operator|>=
-literal|0
-condition|)
-block|{
-name|ESCDELAY
-operator|=
-name|value
-expr_stmt|;
-block|}
 comment|/* this loads the capability entry, then sets LINES and COLS */
 if|if
 condition|(
@@ -441,6 +411,39 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* allow user to set maximum escape delay from the environment */
+if|if
+condition|(
+operator|(
+name|value
+operator|=
+name|_nc_getenv_num
+argument_list|(
+literal|"ESCDELAY"
+argument_list|)
+operator|)
+operator|>=
+literal|0
+condition|)
+block|{
+if|#
+directive|if
+name|USE_REENTRANT
+name|SP
+operator|->
+name|_ESCDELAY
+operator|=
+name|value
+expr_stmt|;
+else|#
+directive|else
+name|ESCDELAY
+operator|=
+name|value
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 if|if
 condition|(
 name|_nc_setupscreen
@@ -451,6 +454,8 @@ name|COLS
 argument_list|,
 name|ofp
 argument_list|,
+name|_nc_prescreen
+operator|.
 name|filter_mode
 argument_list|,
 name|slk_format
@@ -647,11 +652,6 @@ name|SP
 expr_stmt|;
 block|}
 block|}
-name|_nc_handle_sigwinch
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 name|returnSP
 argument_list|(
 name|result

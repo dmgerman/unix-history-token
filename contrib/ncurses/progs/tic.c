@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tic.c,v 1.131 2006/12/02 22:13:17 tom Exp $"
+literal|"$Id: tic.c,v 1.133 2007/07/21 17:45:59 tom Exp $"
 argument_list|)
 end_macro
 
@@ -1291,13 +1291,77 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|NO_LEAKS
+end_if
+
+begin_function
+specifier|static
+name|void
+name|free_namelist
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|src
+parameter_list|)
+block|{
+if|if
+condition|(
+name|src
+operator|!=
+literal|0
+condition|)
+block|{
+name|int
+name|n
+decl_stmt|;
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|src
+index|[
+name|n
+index|]
+operator|!=
+literal|0
+condition|;
+operator|++
+name|n
+control|)
+name|free
+argument_list|(
+name|src
+index|[
+name|n
+index|]
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|src
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Parse the "-e" option-value into a list of names */
 end_comment
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1308,7 +1372,6 @@ modifier|*
 name|src
 parameter_list|)
 block|{
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1431,6 +1494,12 @@ index|]
 operator|=
 name|s
 expr_stmt|;
+else|else
+name|free
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|nn
 operator|++
 expr_stmt|;
@@ -1447,7 +1516,6 @@ name|dst
 operator|=
 name|typeCalloc
 argument_list|(
-specifier|const
 name|char
 operator|*
 argument_list|,
@@ -1593,7 +1661,6 @@ name|dst
 operator|=
 name|typeCalloc
 argument_list|(
-specifier|const
 name|char
 operator|*
 argument_list|,
@@ -1607,6 +1674,12 @@ block|}
 if|if
 condition|(
 name|showsummary
+operator|&&
+operator|(
+name|dst
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 name|fprintf
@@ -1660,7 +1733,6 @@ specifier|static
 name|bool
 name|matches
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1922,7 +1994,6 @@ name|source_file
 init|=
 literal|"terminfo"
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -2048,7 +2119,8 @@ literal|"0123456789CILNR:TUVace:fGgo:rstvwx"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 if|if
@@ -3249,6 +3321,16 @@ literal|"No entries written\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|NO_LEAKS
+name|free_namelist
+argument_list|(
+name|namelst
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|cleanup
 argument_list|()
 expr_stmt|;

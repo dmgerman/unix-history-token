@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *	infocmp.c -- decompile an entry, or compare two entries  *		written by Eric S. Raymond  */
+comment|/*  *	infocmp.c -- decompile an entry, or compare two entries  *		written by Eric S. Raymond  *		and Thomas E Dickey  */
 end_comment
 
 begin_include
@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: infocmp.c,v 1.85 2006/08/19 21:20:37 tom Exp $"
+literal|"$Id: infocmp.c,v 1.94 2007/11/17 23:34:26 tom Exp $"
 argument_list|)
 end_macro
 
@@ -43,17 +43,6 @@ directive|define
 name|R_CURL
 value|"}"
 end_define
-
-begin_define
-define|#
-directive|define
-name|MAXTERMS
-value|32
-end_define
-
-begin_comment
-comment|/* max # terminal arguments we can handle */
-end_comment
 
 begin_define
 define|#
@@ -92,26 +81,9 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
-name|tname
-index|[
-name|MAXTERMS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* terminal type names */
-end_comment
-
-begin_decl_stmt
-specifier|static
 name|ENTRY
+modifier|*
 name|entries
-index|[
-name|MAXTERMS
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -399,7 +371,12 @@ expr_stmt|;
 name|_nc_leaks_dump_entry
 argument_list|()
 expr_stmt|;
-name|_nc_free_and_exit
+name|free
+argument_list|(
+name|entries
+argument_list|)
+expr_stmt|;
+name|_nc_free_tic
 argument_list|(
 name|code
 argument_list|)
@@ -4942,7 +4919,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: dumping differences\n"
+literal|"%s: dumping differences\n"
+argument_list|,
+name|_nc_progname
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4984,7 +4963,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: dumping common capabilities\n"
+literal|"%s: dumping common capabilities\n"
+argument_list|,
+name|_nc_progname
 argument_list|)
 expr_stmt|;
 operator|(
@@ -5026,7 +5007,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: dumping differences\n"
+literal|"%s: dumping differences\n"
+argument_list|,
+name|_nc_progname
 argument_list|)
 expr_stmt|;
 operator|(
@@ -5636,22 +5619,6 @@ operator|*
 name|tp
 operator|=
 literal|'\0'
-expr_stmt|;
-name|size
-operator|+=
-operator|(
-name|strlen
-argument_list|(
-name|term
-operator|->
-name|Strings
-index|[
-name|n
-index|]
-argument_list|)
-operator|+
-literal|1
-operator|)
 expr_stmt|;
 operator|(
 name|void
@@ -6559,7 +6526,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: environment variable TERM not set\n"
+literal|"%s: environment variable TERM not set\n"
+argument_list|,
+name|_nc_progname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6591,32 +6560,35 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|firstdir
-decl_stmt|,
-modifier|*
-name|restdir
-decl_stmt|;
 comment|/* Avoid "local data>32k" error with mwcc */
 comment|/* Also avoid overflowing smaller stacks on systems like AmigaOS */
 name|path
 modifier|*
 name|tfile
 init|=
-operator|(
-name|path
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|path
-argument_list|)
-operator|*
-name|MAXTERMS
-argument_list|)
+literal|0
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|tname
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|maxterms
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|myargv
+decl_stmt|;
+name|char
+modifier|*
+name|firstdir
+decl_stmt|,
+modifier|*
+name|restdir
 decl_stmt|;
 name|int
 name|c
@@ -6667,6 +6639,48 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|_nc_progname
+operator|=
+name|_nc_rootname
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* make sure we have enough space to add two terminal entries */
+name|myargv
+operator|=
+name|typeCalloc
+argument_list|(
+name|char
+operator|*
+argument_list|,
+name|argc
+operator|+
+literal|3
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|myargv
+argument_list|,
+name|argv
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+operator|*
+name|argc
+argument_list|)
+expr_stmt|;
+name|argv
+operator|=
+name|myargv
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -6682,7 +6696,8 @@ literal|"1A:aB:CcdEeFfGgIiLlnpqR:rs:TtUuVv:w:x"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -6926,10 +6941,6 @@ name|tversion
 operator|=
 literal|0
 expr_stmt|;
-name|limited
-operator|=
-name|FALSE
-expr_stmt|;
 break|break;
 case|case
 literal|'s'
@@ -6990,7 +7001,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: unknown sort mode\n"
+literal|"%s: unknown sort mode\n"
+argument_list|,
+name|_nc_progname
 argument_list|)
 expr_stmt|;
 name|ExitProgram
@@ -7098,6 +7111,74 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+name|maxterms
+operator|=
+operator|(
+name|argc
+operator|+
+literal|1
+operator|-
+name|optind
+operator|)
+expr_stmt|;
+name|tfile
+operator|=
+name|typeMalloc
+argument_list|(
+name|path
+argument_list|,
+name|maxterms
+argument_list|)
+expr_stmt|;
+name|tname
+operator|=
+name|typeCalloc
+argument_list|(
+name|char
+operator|*
+argument_list|,
+name|maxterms
+argument_list|)
+expr_stmt|;
+name|entries
+operator|=
+name|typeCalloc
+argument_list|(
+name|ENTRY
+argument_list|,
+name|maxterms
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tfile
+operator|==
+literal|0
+operator|||
+name|tname
+operator|==
+literal|0
+operator|||
+name|entries
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: not enough memory\n"
+argument_list|,
+name|_nc_progname
+argument_list|)
+expr_stmt|;
+name|ExitProgram
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* by default, sort by terminfo name */
 if|if
 condition|(
@@ -7202,31 +7283,6 @@ name|optind
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|termcount
-operator|>=
-name|MAXTERMS
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"infocmp: too many terminal type arguments\n"
-argument_list|)
-expr_stmt|;
-name|ExitProgram
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 specifier|const
 name|char
 modifier|*
@@ -7259,6 +7315,21 @@ block|{
 if|#
 directive|if
 name|USE_DATABASE
+if|#
+directive|if
+name|MIXEDCASE_FILENAMES
+define|#
+directive|define
+name|LEAF_FMT
+value|"%c"
+else|#
+directive|else
+define|#
+directive|define
+name|LEAF_FMT
+value|"%02x"
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -7269,15 +7340,20 @@ index|[
 name|termcount
 index|]
 argument_list|,
-literal|"%s/%c/%s"
+literal|"%s/"
+name|LEAF_FMT
+literal|"/%s"
 argument_list|,
 name|directory
 argument_list|,
+name|UChar
+argument_list|(
 operator|*
 name|argv
 index|[
 name|optind
 index|]
+argument_list|)
 argument_list|,
 name|argv
 index|[
@@ -7296,7 +7372,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: reading entry %s from file %s\n"
+literal|"%s: reading entry %s from file %s\n"
+argument_list|,
+name|_nc_progname
 argument_list|,
 name|argv
 index|[
@@ -7336,7 +7414,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"terminfo files not supported\n"
+literal|"%s: terminfo files not supported\n"
+argument_list|,
+name|_nc_progname
 argument_list|)
 expr_stmt|;
 name|ExitProgram
@@ -7360,7 +7440,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: reading entry %s from database\n"
+literal|"%s: reading entry %s from database\n"
+argument_list|,
+name|_nc_progname
 argument_list|,
 name|tname
 index|[
@@ -7411,7 +7493,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: couldn't open terminfo file %s.\n"
+literal|"%s: couldn't open terminfo file %s.\n"
+argument_list|,
+name|_nc_progname
 argument_list|,
 name|tfile
 index|[
@@ -7439,7 +7523,6 @@ expr_stmt|;
 name|termcount
 operator|++
 expr_stmt|;
-block|}
 block|}
 if|#
 directive|if
@@ -7672,7 +7755,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: about to dump %s\n"
+literal|"%s: about to dump %s\n"
+argument_list|,
+name|_nc_progname
 argument_list|,
 name|tname
 index|[
@@ -7728,7 +7813,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: length %d\n"
+literal|"%s: length %d\n"
+argument_list|,
+name|_nc_progname
 argument_list|,
 name|len
 argument_list|)
@@ -7748,7 +7835,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: dumping differences\n"
+literal|"%s: dumping differences\n"
+argument_list|,
+name|_nc_progname
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7796,7 +7885,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: dumping common capabilities\n"
+literal|"%s: dumping common capabilities\n"
+argument_list|,
+name|_nc_progname
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7844,7 +7935,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: dumping differences\n"
+literal|"%s: dumping differences\n"
+argument_list|,
+name|_nc_progname
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7892,7 +7985,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: dumping use entry\n"
+literal|"%s: dumping use entry\n"
+argument_list|,
+name|_nc_progname
 argument_list|)
 expr_stmt|;
 name|dump_entry
@@ -7962,7 +8057,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"infocmp: length %d\n"
+literal|"%s: length %d\n"
+argument_list|,
+name|_nc_progname
 argument_list|,
 name|len
 argument_list|)
@@ -8036,11 +8133,26 @@ operator|+
 name|optind
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NO_LEAKS
+name|free
+argument_list|(
+name|myargv
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|tfile
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|tname
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ExitProgram
 argument_list|(
 name|EXIT_SUCCESS

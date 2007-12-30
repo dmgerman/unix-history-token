@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_options.c,v 1.49 2006/03/04 19:28:25 tom Exp $"
+literal|"$Id: lib_options.c,v 1.50 2006/12/30 16:03:27 tom Exp $"
 argument_list|)
 end_macro
 
@@ -823,8 +823,7 @@ parameter_list|(
 name|int
 name|keycode
 parameter_list|,
-name|struct
-name|tries
+name|TRIES
 modifier|*
 name|tp
 parameter_list|)
