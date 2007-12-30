@@ -1321,6 +1321,25 @@ operator|=
 name|bytes_written
 expr_stmt|;
 block|}
+comment|/* If there's nothing to do, we're done. */
+if|if
+condition|(
+operator|!
+name|finishing
+operator|&&
+name|state
+operator|->
+name|stream
+operator|.
+name|avail_in
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
 name|ret
 operator|=
 name|BZ2_bzCompress
@@ -1393,7 +1412,10 @@ name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_PROGRAMMER
 argument_list|,
-literal|"Bzip2 compression failed"
+literal|"Bzip2 compression failed;"
+literal|" BZ2_bzCompress() returned %d"
+argument_list|,
+name|ret
 argument_list|)
 expr_stmt|;
 return|return

@@ -669,7 +669,39 @@ name|state
 operator|->
 name|buffer_size
 expr_stmt|;
-comment|/* 	 * Try to satisfy the request directly from the client 	 * buffer.  We can do this if all of the data in the copy 	 * buffer was copied from the current client buffer.  This 	 * also covers the case where the copy buffer is empty and 	 * the client buffer has all the data we need. 	 */
+comment|/* 	 * Keep pulling more data until we can satisfy the request. 	 */
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+comment|/* 		 * If we can satisfy from the copy buffer, we're done. 		 */
+if|if
+condition|(
+name|state
+operator|->
+name|avail
+operator|>=
+name|min
+condition|)
+block|{
+operator|*
+name|buff
+operator|=
+name|state
+operator|->
+name|next
+expr_stmt|;
+return|return
+operator|(
+name|state
+operator|->
+name|avail
+operator|)
+return|;
+block|}
+comment|/* 		 * We can satisfy directly from client buffer if everything 		 * currently in the copy buffer is still in the client buffer. 		 */
 if|if
 condition|(
 name|state
@@ -695,6 +727,7 @@ operator|>=
 name|min
 condition|)
 block|{
+comment|/* "Roll back" to client buffer. */
 name|state
 operator|->
 name|client_avail
@@ -711,6 +744,7 @@ name|state
 operator|->
 name|avail
 expr_stmt|;
+comment|/* Copy buffer is now empty. */
 name|state
 operator|->
 name|avail
@@ -725,6 +759,7 @@ name|state
 operator|->
 name|buffer
 expr_stmt|;
+comment|/* Return data from client buffer. */
 operator|*
 name|buff
 operator|=
@@ -740,7 +775,6 @@ name|client_avail
 operator|)
 return|;
 block|}
-comment|/* 	 * If we can't use client buffer, we'll have to use copy buffer. 	 */
 comment|/* Move data forward in copy buffer if necessary. */
 if|if
 condition|(
@@ -799,105 +833,16 @@ operator|->
 name|buffer
 expr_stmt|;
 block|}
-comment|/* Collect data in copy buffer to fulfill request. */
-while|while
-condition|(
-name|state
-operator|->
-name|avail
-operator|<
-name|min
-condition|)
-block|{
-comment|/* Copy data from client buffer to our copy buffer. */
+comment|/* If we've used up the client data, get more. */
 if|if
 condition|(
 name|state
 operator|->
 name|client_avail
-operator|>
+operator|<=
 literal|0
 condition|)
 block|{
-comment|/* First estimate: copy to fill rest of buffer. */
-name|size_t
-name|tocopy
-init|=
-operator|(
-name|state
-operator|->
-name|buffer
-operator|+
-name|state
-operator|->
-name|buffer_size
-operator|)
-operator|-
-operator|(
-name|state
-operator|->
-name|next
-operator|+
-name|state
-operator|->
-name|avail
-operator|)
-decl_stmt|;
-comment|/* Don't copy more than is available. */
-if|if
-condition|(
-name|tocopy
-operator|>
-name|state
-operator|->
-name|client_avail
-condition|)
-name|tocopy
-operator|=
-name|state
-operator|->
-name|client_avail
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|state
-operator|->
-name|next
-operator|+
-name|state
-operator|->
-name|avail
-argument_list|,
-name|state
-operator|->
-name|client_next
-argument_list|,
-name|tocopy
-argument_list|)
-expr_stmt|;
-name|state
-operator|->
-name|client_next
-operator|+=
-name|tocopy
-expr_stmt|;
-name|state
-operator|->
-name|client_avail
-operator|-=
-name|tocopy
-expr_stmt|;
-name|state
-operator|->
-name|avail
-operator|+=
-name|tocopy
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* There is no more client data: fetch more. */
-comment|/* 			 * It seems to me that const void ** and const 			 * char ** should be compatible, but they 			 * aren't, hence the cast. 			 */
 name|bytes_read
 operator|=
 call|(
@@ -996,7 +941,21 @@ name|end_of_file
 operator|=
 literal|1
 expr_stmt|;
-break|break;
+comment|/* Return whatever we do have. */
+operator|*
+name|buff
+operator|=
+name|state
+operator|->
+name|next
+expr_stmt|;
+return|return
+operator|(
+name|state
+operator|->
+name|avail
+operator|)
+return|;
 block|}
 name|a
 operator|->
@@ -1029,21 +988,87 @@ operator|->
 name|client_buff
 expr_stmt|;
 block|}
-block|}
-operator|*
-name|buff
-operator|=
+else|else
+block|{
+comment|/* We can add client data to copy buffer. */
+comment|/* First estimate: copy to fill rest of buffer. */
+name|size_t
+name|tocopy
+init|=
+operator|(
+name|state
+operator|->
+name|buffer
+operator|+
+name|state
+operator|->
+name|buffer_size
+operator|)
+operator|-
+operator|(
 name|state
 operator|->
 name|next
-expr_stmt|;
-return|return
-operator|(
+operator|+
 name|state
 operator|->
 name|avail
 operator|)
-return|;
+decl_stmt|;
+comment|/* Don't copy more than is available. */
+if|if
+condition|(
+name|tocopy
+operator|>
+name|state
+operator|->
+name|client_avail
+condition|)
+name|tocopy
+operator|=
+name|state
+operator|->
+name|client_avail
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|state
+operator|->
+name|next
+operator|+
+name|state
+operator|->
+name|avail
+argument_list|,
+name|state
+operator|->
+name|client_next
+argument_list|,
+name|tocopy
+argument_list|)
+expr_stmt|;
+comment|/* Remove this data from client buffer. */
+name|state
+operator|->
+name|client_next
+operator|+=
+name|tocopy
+expr_stmt|;
+name|state
+operator|->
+name|client_avail
+operator|-=
+name|tocopy
+expr_stmt|;
+comment|/* add it to copy buffer. */
+name|state
+operator|->
+name|avail
+operator|+=
+name|tocopy
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 

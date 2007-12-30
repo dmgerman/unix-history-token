@@ -53,6 +53,11 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+name|archive_read_support_format_mtree
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
 name|archive_read_support_format_tar
 argument_list|(
 name|a

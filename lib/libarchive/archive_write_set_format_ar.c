@@ -295,7 +295,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|basename
+name|ar_basename
 parameter_list|(
 specifier|const
 name|char
@@ -843,13 +843,13 @@ goto|goto
 name|size
 goto|;
 block|}
-comment|/*  	 * Otherwise, entry is a normal archive member. 	 * Strip leading paths from filenames, if any. 	 */
+comment|/* 	 * Otherwise, entry is a normal archive member. 	 * Strip leading paths from filenames, if any. 	 */
 if|if
 condition|(
 operator|(
 name|filename
 operator|=
-name|basename
+name|ar_basename
 argument_list|(
 name|pathname
 argument_list|)
@@ -2292,7 +2292,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|basename
+name|ar_basename
 parameter_list|(
 specifier|const
 name|char
