@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000,2002 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -41,6 +41,26 @@ begin_comment
 comment|/* ospeed */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * These systems use similar header files, which define B1200 as 1200, etc.,  * but can be overridden by defining USE_OLD_TTY so B1200 is 9, which makes all  * of the indices up to B115200 fit nicely in a 'short', allowing us to retain  * ospeed's type for compatibility.  */
 end_comment
@@ -48,6 +68,19 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|700000
+operator|)
+operator|)
+operator|||
 name|defined
 argument_list|(
 name|__NetBSD__
@@ -232,7 +265,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_baudrate.c,v 1.22 2002/01/19 23:07:53 Andrey.A.Chernov Exp $"
+literal|"$Id: lib_baudrate.c,v 1.25 2007/10/20 15:00:41 Rong-En.Fan Exp $"
 argument_list|)
 end_macro
 
@@ -472,6 +505,10 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+operator|!
+name|USE_REENTRANT
 specifier|static
 name|int
 name|last_OSpeed
@@ -480,12 +517,20 @@ specifier|static
 name|int
 name|last_baudrate
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|result
+init|=
+name|ERR
 decl_stmt|;
 name|unsigned
 name|i
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|USE_REENTRANT
 if|if
 condition|(
 name|OSpeed
@@ -498,12 +543,15 @@ operator|=
 name|last_baudrate
 expr_stmt|;
 block|}
-else|else
-block|{
+endif|#
+directive|endif
+if|if
+condition|(
 name|result
-operator|=
+operator|==
 name|ERR
-expr_stmt|;
+condition|)
+block|{
 if|if
 condition|(
 name|OSpeed
@@ -553,10 +601,28 @@ break|break;
 block|}
 block|}
 block|}
+if|#
+directive|if
+operator|!
+name|USE_REENTRANT
+if|if
+condition|(
+name|OSpeed
+operator|==
+name|last_OSpeed
+condition|)
+block|{
+name|last_OSpeed
+operator|=
+name|OSpeed
+expr_stmt|;
 name|last_baudrate
 operator|=
 name|result
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
