@@ -66,6 +66,12 @@ name|unp_socket
 decl_stmt|;
 comment|/* pointer back to socket */
 name|struct
+name|file
+modifier|*
+name|unp_file
+decl_stmt|;
+comment|/* back-pointer to file for gc. */
+name|struct
 name|vnode
 modifier|*
 name|unp_vnode
@@ -111,10 +117,14 @@ name|unp_gen_t
 name|unp_gencnt
 decl_stmt|;
 comment|/* generation count of this instance */
-name|int
+name|short
 name|unp_flags
 decl_stmt|;
 comment|/* flags */
+name|short
+name|unp_gcflag
+decl_stmt|;
+comment|/* Garbage collector flags. */
 name|struct
 name|xucred
 name|unp_peercred
@@ -123,6 +133,10 @@ comment|/* peer credentials, if applicable */
 name|u_int
 name|unp_refcount
 decl_stmt|;
+name|u_int
+name|unp_msgcount
+decl_stmt|;
+comment|/* references from message queue */
 name|struct
 name|mtx
 name|unp_mtx
@@ -170,6 +184,39 @@ end_define
 
 begin_comment
 comment|/* connect blocks until accepted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNPGC_REF
+value|0x1
+end_define
+
+begin_comment
+comment|/* unpcb has external ref. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNPGC_DEAD
+value|0x2
+end_define
+
+begin_comment
+comment|/* unpcb might be dead. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNPGC_SCANNED
+value|0x4
+end_define
+
+begin_comment
+comment|/* Has been scanned. */
 end_comment
 
 begin_comment

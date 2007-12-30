@@ -6722,13 +6722,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG_SVR4 */
-name|FILE_LOCK_ASSERT
-argument_list|(
-name|fp
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -7544,13 +7537,6 @@ expr_stmt|;
 name|afp
 operator|=
 name|NULL
-expr_stmt|;
-name|FILE_LOCK_ASSERT
-argument_list|(
-name|fp
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(

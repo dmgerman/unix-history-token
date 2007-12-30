@@ -438,39 +438,18 @@ comment|/* seekable / nonsequential */
 end_comment
 
 begin_comment
-comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  *  * Below is the list of locks that protects members in struct file.  *  * (fl)	filelist_lock  * (f)	f_mtx in struct file  * none	not locked  */
+comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  *  * Below is the list of locks that protects members in struct file.  *  * (f) protected with mtx_lock(mtx_pool_find(fp))  * none	not locked  */
 end_comment
 
 begin_struct
 struct|struct
 name|file
 block|{
-name|LIST_ENTRY
-argument_list|(
-argument|file
-argument_list|)
-name|f_list
-expr_stmt|;
-comment|/* (fl) list of active files */
-name|short
-name|f_type
-decl_stmt|;
-comment|/* descriptor type */
 name|void
 modifier|*
 name|f_data
 decl_stmt|;
 comment|/* file descriptor specific data */
-name|u_int
-name|f_flag
-decl_stmt|;
-comment|/* see fcntl.h */
-name|struct
-name|mtx
-modifier|*
-name|f_mtxp
-decl_stmt|;
-comment|/* mutex to protect data */
 name|struct
 name|fileops
 modifier|*
@@ -482,74 +461,67 @@ name|ucred
 modifier|*
 name|f_cred
 decl_stmt|;
-comment|/* credentials associated with descriptor */
-name|int
-name|f_count
-decl_stmt|;
-comment|/* (f) reference count */
+comment|/* associated credentials. */
 name|struct
 name|vnode
 modifier|*
 name|f_vnode
 decl_stmt|;
 comment|/* NULL or applicable vnode */
-comment|/* DFLAG_SEEKABLE specific fields */
-name|off_t
-name|f_offset
+name|short
+name|f_type
 decl_stmt|;
+comment|/* descriptor type */
 name|short
 name|f_vnread_flags
 decl_stmt|;
-comment|/*  				   * (f) home grown sleep lock for f_offset 				   * Used only for shared vnode locking in 				   * vnread() 				   */
-define|#
-directive|define
-name|FOFFSET_LOCKED
-value|0x1
-define|#
-directive|define
-name|FOFFSET_LOCK_WAITING
-value|0x2
-comment|/* DTYPE_SOCKET specific fields */
-name|short
-name|f_gcflag
+comment|/* (f) Sleep lock for f_offset */
+specifier|volatile
+name|u_int
+name|f_flag
 decl_stmt|;
-comment|/* used by thread doing fd garbage collection */
-define|#
-directive|define
-name|FMARK
-value|0x1
-comment|/* mark during gc() */
-define|#
-directive|define
-name|FDEFER
-value|0x2
-comment|/* defer for next gc pass */
-define|#
-directive|define
-name|FWAIT
-value|0x4
-comment|/* gc is scanning message buffers */
+comment|/* see fcntl.h */
+specifier|volatile
 name|int
-name|f_msgcount
+name|f_count
 decl_stmt|;
-comment|/* (f) references from message queue */
-comment|/* DTYPE_VNODE specific fields */
+comment|/* reference count */
+comment|/* 	 *  DTYPE_VNODE specific fields. 	 */
 name|int
 name|f_seqcount
 decl_stmt|;
-comment|/* 				 * count of sequential accesses -- cleared 				 * by most seek operations. 				 */
+comment|/* Count of sequential accesses. */
 name|off_t
 name|f_nextoff
 decl_stmt|;
-comment|/* 				 * offset of next expected read or write 				 */
+comment|/* next expected read/write offset. */
+comment|/* 	 *  DFLAG_SEEKABLE specific fields 	 */
+name|off_t
+name|f_offset
+decl_stmt|;
+comment|/* 	 * Mandatory Access control information. 	 */
 name|void
 modifier|*
 name|f_label
 decl_stmt|;
-comment|/* Place-holder for struct label pointer. */
+comment|/* Place-holder for MAC label. */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|FOFFSET_LOCKED
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOFFSET_LOCK_WAITING
+value|0x2
+end_define
 
 begin_endif
 endif|#
@@ -648,28 +620,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
-name|LIST_HEAD
-argument_list|(
-name|filelist
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|filelist
-name|filehead
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* (fl) head of list of open files */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -718,25 +668,14 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|volatile
 name|int
 name|openfiles
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* (fl) actual number of open files */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sx
-name|filelist_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sx to protect filelist and openfiles */
+comment|/* actual number of open files */
 end_comment
 
 begin_function_decl
@@ -804,7 +743,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fdrop
+name|_fdrop
 parameter_list|(
 name|struct
 name|file
@@ -865,51 +804,27 @@ name|soo_close
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Lock a file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FILE_LOCK
+begin_function_decl
+name|void
+name|finit
 parameter_list|(
-name|f
-parameter_list|)
-value|mtx_lock((f)->f_mtxp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_UNLOCK
-parameter_list|(
-name|f
-parameter_list|)
-value|mtx_unlock((f)->f_mtxp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_LOCKED
-parameter_list|(
-name|f
-parameter_list|)
-value|mtx_owned((f)->f_mtxp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_LOCK_ASSERT
-parameter_list|(
-name|f
+name|struct
+name|file
+modifier|*
 parameter_list|,
-name|type
+name|u_int
+parameter_list|,
+name|short
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|fileops
+modifier|*
 parameter_list|)
-value|mtx_assert((f)->f_mtxp, (type))
-end_define
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -1014,23 +929,24 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|fhold_locked
+name|fhold
 parameter_list|(
 name|fp
 parameter_list|)
-define|\
-value|do {								\ 		FILE_LOCK_ASSERT(fp, MA_OWNED);				\ 		(fp)->f_count++;					\ 	} while (0)
+value|atomic_add_int(&(fp)->f_count, 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|fhold
+name|fdrop
 parameter_list|(
 name|fp
+parameter_list|,
+name|td
 parameter_list|)
 define|\
-value|do {								\ 		FILE_LOCK(fp);						\ 		(fp)->f_count++;					\ 		FILE_UNLOCK(fp);					\ 	} while (0)
+value|(atomic_fetchadd_int(&(fp)->f_count, -1)<= 1 ? _fdrop((fp), (td)) : 0)
 end_define
 
 begin_decl_stmt

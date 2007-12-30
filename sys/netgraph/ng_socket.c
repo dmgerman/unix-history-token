@@ -2953,10 +2953,10 @@ operator|)
 condition|)
 block|{
 comment|/* for a VCHR, actually reference the FILE */
+name|fhold
+argument_list|(
 name|fp
-operator|->
-name|f_count
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* XXX then what :) */
 comment|/* how to pass on to other modules? */
