@@ -931,6 +931,10 @@ name|ED_RTL80X9_CONFIG0
 argument_list|)
 operator|&
 operator|(
+name|sc
+operator|->
+name|chip_type
+operator|==
 name|ED_CHIP_TYPE_RTL8029
 condition|?
 name|ED_RTL80X9_CF0_BNC
