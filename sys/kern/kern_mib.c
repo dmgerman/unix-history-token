@@ -1726,6 +1726,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|features
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"Kernel Features"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * This is really cheating.  These actually live in the libc, something  * which I'm not quite sure is a good idea anyway, but in order for  * getnext and friends to actually work, we define dummies here.  */
 end_comment
