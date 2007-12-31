@@ -149,31 +149,46 @@ end_include
 begin_define
 define|#
 directive|define
-name|PTM_PREFIX
+name|PTYM_PREFIX
 value|"pty"
 end_define
 
 begin_comment
-comment|/* pseudo tty master naming convention */
+comment|/* pty(4) master naming convention */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PTS_PREFIX
+name|PTYS_PREFIX
 value|"tty"
 end_define
 
 begin_comment
-comment|/* pseudo tty slave naming convention */
+comment|/* pty(4) slave naming convention */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NEWPTS_PREFIX
-value|"pts"
+name|PTMXM_PREFIX
+value|"ptc/"
 end_define
+
+begin_comment
+comment|/* pts(4) master naming convention */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTMXS_PREFIX
+value|"pts/"
+end_define
+
+begin_comment
+comment|/* pts(4) slave naming convention */
+end_comment
 
 begin_define
 define|#
@@ -189,21 +204,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PT_MAX
+name|PTY_MAX
 value|256
 end_define
 
 begin_define
 define|#
 directive|define
-name|PT_DEV1
+name|PTY_DEV1
 value|"pqrsPQRSlmnoLMNO"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PT_DEV2
+name|PTY_DEV2
 value|"0123456789abcdefghijklmnopqrstuv"
 end_define
 
@@ -229,7 +244,7 @@ name|ISPTM
 parameter_list|(
 name|x
 parameter_list|)
-value|(S_ISCHR((x).st_mode)&& 			\ 			 minor((x).st_rdev)>= 0&&			\ 			 minor((x).st_rdev)< PT_MAX)
+value|(S_ISCHR((x).st_mode)&& 			\ 			 minor((x).st_rdev)>= 0&&			\ 			 minor((x).st_rdev)< PTY_MAX)
 end_define
 
 begin_function
@@ -269,7 +284,7 @@ literal|0
 end_if
 
 begin_endif
-unit|int __use_pts(void) { 	int use_pts; 	size_t len; 	int error;  	len = sizeof(use_pts); 	error = sysctlbyname("kern.pts.enable",&use_pts,&len, NULL, 0); 	if (error) { 		struct stat sb;  		if (stat("/dev/ptmx",&sb) != 0) 			return (0); 		use_pts = 1; 	} 	return (use_pts); }
+unit|int __use_pts(void) { 	int use_pts; 	size_t len; 	int error;  	len = sizeof(use_pts); 	error = sysctlbyname("kern.pts.enable",&use_pts,&len, NULL, 0); 	if (error) { 		struct stat sb;  		if (stat(_PATH_DEV PTMX,&sb) != 0) 			return (0); 		use_pts = 1; 	} 	return (use_pts); }
 endif|#
 directive|endif
 end_endif
@@ -610,7 +625,7 @@ name|master
 index|[]
 init|=
 name|_PATH_DEV
-name|PTM_PREFIX
+name|PTYM_PREFIX
 literal|"XY"
 decl_stmt|;
 specifier|const
@@ -671,7 +686,7 @@ name|master
 operator|+
 name|strlen
 argument_list|(
-argument|_PATH_DEV PTM_PREFIX
+argument|_PATH_DEV PTYM_PREFIX
 argument_list|)
 expr_stmt|;
 name|mc2
@@ -685,7 +700,7 @@ for|for
 control|(
 name|pc1
 operator|=
-name|PT_DEV1
+name|PTY_DEV1
 init|;
 operator|!
 name|bflag
@@ -705,7 +720,7 @@ for|for
 control|(
 name|pc2
 operator|=
-name|PT_DEV2
+name|PTY_DEV2
 init|;
 operator|(
 operator|*
@@ -800,20 +815,20 @@ parameter_list|)
 block|{
 specifier|static
 name|char
-name|slave
+name|pty_slave
 index|[]
 init|=
 name|_PATH_DEV
-name|PTS_PREFIX
+name|PTYS_PREFIX
 literal|"XY"
 decl_stmt|;
 specifier|static
 name|char
-name|new_slave
+name|ptmx_slave
 index|[]
 init|=
 name|_PATH_DEV
-name|NEWPTS_PREFIX
+name|PTMXS_PREFIX
 literal|"4294967295"
 decl_stmt|;
 name|char
@@ -869,19 +884,19 @@ name|void
 operator|)
 name|snprintf
 argument_list|(
-argument|slave
+argument|pty_slave
 argument_list|,
-argument|sizeof(slave)
+argument|sizeof(pty_slave)
 argument_list|,
-argument|_PATH_DEV PTS_PREFIX
+argument|_PATH_DEV PTYS_PREFIX
 literal|"%s"
 argument_list|,
-argument|devname(sbuf.st_rdev, S_IFCHR) + 					       strlen(PTM_PREFIX)
+argument|devname(sbuf.st_rdev, S_IFCHR) + 					       strlen(PTYM_PREFIX)
 argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-name|slave
+name|pty_slave
 expr_stmt|;
 block|}
 else|else
@@ -891,19 +906,19 @@ name|void
 operator|)
 name|snprintf
 argument_list|(
-argument|new_slave
+argument|ptmx_slave
 argument_list|,
-argument|sizeof(new_slave)
+argument|sizeof(ptmx_slave)
 argument_list|,
-argument|_PATH_DEV NEWPTS_PREFIX
+argument|_PATH_DEV PTMXS_PREFIX
 literal|"%s"
 argument_list|,
-argument|devname(sbuf.st_rdev, S_IFCHR) + 					       strlen(PTM_PREFIX)
+argument|devname(sbuf.st_rdev, S_IFCHR) + 					       strlen(PTMXM_PREFIX)
 argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-name|new_slave
+name|ptmx_slave
 expr_stmt|;
 block|}
 block|}
