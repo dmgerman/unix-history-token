@@ -1776,13 +1776,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|malloc_mutex_t
-name|dss_chunks_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|chunk_tree_ad_t
 name|dss_chunks_ad
 decl_stmt|;
@@ -3950,6 +3943,12 @@ name|minsize
 parameter_list|)
 block|{
 comment|/* 	 * Do special DSS allocation here, since base allocations don't need to 	 * be chunk-aligned. 	 */
+name|malloc_mutex_lock
+argument_list|(
+operator|&
+name|dss_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dss_prev
@@ -3962,10 +3961,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|void
-modifier|*
-name|dss_cur
-decl_stmt|;
 name|intptr_t
 name|incr
 decl_stmt|;
@@ -3977,23 +3972,17 @@ argument_list|(
 name|minsize
 argument_list|)
 decl_stmt|;
-name|malloc_mutex_lock
-argument_list|(
-operator|&
-name|dss_mtx
-argument_list|)
-expr_stmt|;
 do|do
 block|{
 comment|/* Get the current end of the DSS. */
-name|dss_cur
+name|dss_max
 operator|=
 name|sbrk
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Calculate how much padding is necessary to 			 * chunk-align the end of the DSS.  Don't worry about 			 * dss_cur not being chunk-aligned though. 			 */
+comment|/* 			 * Calculate how much padding is necessary to 			 * chunk-align the end of the DSS.  Don't worry about 			 * dss_max not being chunk-aligned though. 			 */
 name|incr
 operator|=
 operator|(
@@ -4006,7 +3995,7 @@ name|intptr_t
 operator|)
 name|CHUNK_ADDR2OFFSET
 argument_list|(
-name|dss_cur
+name|dss_max
 argument_list|)
 expr_stmt|;
 if|if
@@ -4030,25 +4019,11 @@ if|if
 condition|(
 name|dss_prev
 operator|==
-name|dss_cur
+name|dss_max
 condition|)
 block|{
 comment|/* Success. */
-name|malloc_mutex_unlock
-argument_list|(
-operator|&
-name|dss_mtx
-argument_list|)
-expr_stmt|;
-name|base_pages
-operator|=
-name|dss_cur
-expr_stmt|;
-name|base_next_addr
-operator|=
-name|base_pages
-expr_stmt|;
-name|base_past_addr
+name|dss_max
 operator|=
 operator|(
 name|void
@@ -4056,12 +4031,24 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|uintptr_t
+name|intptr_t
 operator|)
-name|base_pages
+name|dss_prev
 operator|+
 name|incr
 operator|)
+expr_stmt|;
+name|base_pages
+operator|=
+name|dss_prev
+expr_stmt|;
+name|base_next_addr
+operator|=
+name|base_pages
+expr_stmt|;
+name|base_past_addr
+operator|=
+name|dss_max
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4072,6 +4059,12 @@ name|incr
 expr_stmt|;
 endif|#
 directive|endif
+name|malloc_mutex_unlock
+argument_list|(
+operator|&
+name|dss_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|false
@@ -4091,13 +4084,13 @@ operator|-
 literal|1
 condition|)
 do|;
+block|}
 name|malloc_mutex_unlock
 argument_list|(
 operator|&
 name|dss_mtx
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|true
@@ -5362,6 +5355,12 @@ name|size_t
 name|size
 parameter_list|)
 block|{
+name|malloc_mutex_lock
+argument_list|(
+operator|&
+name|dss_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dss_prev
@@ -5374,20 +5373,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|void
-modifier|*
-name|dss_cur
-decl_stmt|;
 name|intptr_t
 name|incr
 decl_stmt|;
 comment|/* 		 * The loop is necessary to recover from races with other 		 * threads that are using the DSS for something other than 		 * malloc. 		 */
-name|malloc_mutex_lock
-argument_list|(
-operator|&
-name|dss_mtx
-argument_list|)
-expr_stmt|;
 do|do
 block|{
 name|void
@@ -5395,7 +5384,7 @@ modifier|*
 name|ret
 decl_stmt|;
 comment|/* Get the current end of the DSS. */
-name|dss_cur
+name|dss_max
 operator|=
 name|sbrk
 argument_list|(
@@ -5415,7 +5404,7 @@ name|intptr_t
 operator|)
 name|CHUNK_ADDR2OFFSET
 argument_list|(
-name|dss_cur
+name|dss_max
 argument_list|)
 expr_stmt|;
 if|if
@@ -5424,12 +5413,10 @@ name|incr
 operator|==
 name|size
 condition|)
-block|{
 name|ret
 operator|=
-name|dss_cur
+name|dss_max
 expr_stmt|;
-block|}
 else|else
 block|{
 name|ret
@@ -5442,7 +5429,7 @@ operator|(
 operator|(
 name|intptr_t
 operator|)
-name|dss_cur
+name|dss_max
 operator|+
 name|incr
 operator|)
@@ -5463,16 +5450,10 @@ if|if
 condition|(
 name|dss_prev
 operator|==
-name|dss_cur
+name|dss_max
 condition|)
 block|{
 comment|/* Success. */
-name|malloc_mutex_unlock
-argument_list|(
-operator|&
-name|dss_mtx
-argument_list|)
-expr_stmt|;
 name|dss_max
 operator|=
 operator|(
@@ -5483,10 +5464,16 @@ operator|(
 operator|(
 name|intptr_t
 operator|)
-name|ret
+name|dss_prev
 operator|+
-name|size
+name|incr
 operator|)
+expr_stmt|;
+name|malloc_mutex_unlock
+argument_list|(
+operator|&
+name|dss_mtx
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -5507,13 +5494,13 @@ operator|-
 literal|1
 condition|)
 do|;
+block|}
 name|malloc_mutex_unlock
 argument_list|(
 operator|&
 name|dss_mtx
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|NULL
@@ -5558,7 +5545,7 @@ expr_stmt|;
 name|malloc_mutex_lock
 argument_list|(
 operator|&
-name|dss_chunks_mtx
+name|dss_mtx
 argument_list|)
 expr_stmt|;
 name|node
@@ -5688,7 +5675,7 @@ block|}
 name|malloc_mutex_unlock
 argument_list|(
 operator|&
-name|dss_chunks_mtx
+name|dss_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -5713,7 +5700,7 @@ block|}
 name|malloc_mutex_unlock
 argument_list|(
 operator|&
-name|dss_chunks_mtx
+name|dss_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -6215,10 +6202,7 @@ condition|(
 name|node
 operator|!=
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|node
 operator|->
 name|chunk
@@ -6228,7 +6212,7 @@ operator|.
 name|chunk
 condition|)
 block|{
-comment|/* 			 * Coalesce chunk with the following address range. 			 * This does not change the position within 			 * dss_chunks_ad, so only remove/insert from/into 			 * dss_chunks_szad. 			 */
+comment|/* 		 * Coalesce chunk with the following address range.  This does 		 * not change the position within dss_chunks_ad, so only 		 * remove/insert from/into dss_chunks_szad. 		 */
 name|RB_REMOVE
 argument_list|(
 name|chunk_tree_szad_s
@@ -6262,14 +6246,25 @@ name|node
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 else|else
 block|{
-comment|/* Coalescing forward failed, so insert a new node. */
+comment|/* 		 * Coalescing forward failed, so insert a new node. 		 * Drop dss_mtx during node allocation, since it is possible 		 * that a new base chunk will be allocated. 		 */
+name|malloc_mutex_unlock
+argument_list|(
+operator|&
+name|dss_mtx
+argument_list|)
+expr_stmt|;
 name|node
 operator|=
 name|base_chunk_node_alloc
 argument_list|()
+expr_stmt|;
+name|malloc_mutex_lock
+argument_list|(
+operator|&
+name|dss_mtx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6439,6 +6434,12 @@ name|size_t
 name|size
 parameter_list|)
 block|{
+name|malloc_mutex_lock
+argument_list|(
+operator|&
+name|dss_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6466,16 +6467,6 @@ name|chunk_node_t
 modifier|*
 name|node
 decl_stmt|;
-name|void
-modifier|*
-name|dss_cur
-decl_stmt|;
-name|malloc_mutex_lock
-argument_list|(
-operator|&
-name|dss_chunks_mtx
-argument_list|)
-expr_stmt|;
 comment|/* Try to coalesce with other unused chunks. */
 name|node
 operator|=
@@ -6506,14 +6497,8 @@ operator|->
 name|size
 expr_stmt|;
 block|}
-name|malloc_mutex_lock
-argument_list|(
-operator|&
-name|dss_mtx
-argument_list|)
-expr_stmt|;
 comment|/* Get the current end of the DSS. */
-name|dss_cur
+name|dss_max
 operator|=
 name|sbrk
 argument_list|(
@@ -6523,10 +6508,6 @@ expr_stmt|;
 comment|/* 		 * Try to shrink the DSS if this chunk is at the end of the 		 * DSS.  The sbrk() call here is subject to a race condition 		 * with threads that use brk(2) or sbrk(2) directly, but the 		 * alternative would be to leak memory for the sake of poorly 		 * designed multi-threaded programs. 		 */
 if|if
 condition|(
-name|dss_cur
-operator|==
-name|dss_max
-operator|&&
 operator|(
 name|void
 operator|*
@@ -6558,21 +6539,8 @@ operator|==
 name|dss_max
 condition|)
 block|{
-name|malloc_mutex_unlock
-argument_list|(
-operator|&
-name|dss_mtx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dss_prev
-operator|==
-name|dss_max
-condition|)
-block|{
 comment|/* Success. */
-name|dss_prev
+name|dss_max
 operator|=
 operator|(
 name|void
@@ -6582,17 +6550,13 @@ operator|(
 operator|(
 name|intptr_t
 operator|)
-name|dss_max
+name|dss_prev
 operator|-
 operator|(
 name|intptr_t
 operator|)
 name|size
 operator|)
-expr_stmt|;
-name|dss_max
-operator|=
-name|dss_prev
 expr_stmt|;
 if|if
 condition|(
@@ -6627,7 +6591,12 @@ name|node
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+name|malloc_mutex_unlock
+argument_list|(
+operator|&
+name|dss_mtx
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -6647,18 +6616,18 @@ name|MADV_FREE
 argument_list|)
 expr_stmt|;
 block|}
-name|malloc_mutex_unlock
-argument_list|(
-operator|&
-name|dss_chunks_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|false
 operator|)
 return|;
 block|}
+name|malloc_mutex_unlock
+argument_list|(
+operator|&
+name|dss_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|true
@@ -17764,12 +17733,6 @@ name|dss_max
 operator|=
 name|dss_base
 expr_stmt|;
-name|malloc_mutex_init
-argument_list|(
-operator|&
-name|dss_chunks_mtx
-argument_list|)
-expr_stmt|;
 name|RB_INIT
 argument_list|(
 operator|&
@@ -19170,7 +19133,7 @@ name|MALLOC_DSS
 name|malloc_mutex_lock
 argument_list|(
 operator|&
-name|dss_chunks_mtx
+name|dss_mtx
 argument_list|)
 expr_stmt|;
 endif|#
@@ -19195,7 +19158,7 @@ name|MALLOC_DSS
 name|malloc_mutex_unlock
 argument_list|(
 operator|&
-name|dss_chunks_mtx
+name|dss_mtx
 argument_list|)
 expr_stmt|;
 endif|#
