@@ -4356,7 +4356,7 @@ block|{
 comment|/* If the number of devices has changed, re-evaluate. */
 if|if
 condition|(
-name|devclass_get_maxunit
+name|devclass_get_count
 argument_list|(
 name|acpi_tz_devclass
 argument_list|)
