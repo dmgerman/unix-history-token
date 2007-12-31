@@ -739,13 +739,15 @@ case|case
 name|L2T_STATE_STALE
 case|:
 comment|/* entry is stale, kick off revalidation */
-name|arpresolve2
+name|arpresolve
 argument_list|(
 name|rt
 operator|->
 name|rt_ifp
 argument_list|,
 name|rt
+argument_list|,
+name|NULL
 argument_list|,
 operator|(
 expr|struct
@@ -858,7 +860,7 @@ expr_stmt|;
 comment|/* 		 * Only the first packet added to the arpq should kick off 		 * resolution.  However, because the m_gethdr below can fail, 		 * we allow each packet added to the arpq to retry resolution 		 * as a way of recovering from transient memory exhaustion. 		 * A better way would be to use a work request to retry L2T 		 * entries when there's no memory. 		 */
 name|printf
 argument_list|(
-literal|"doing arpresolve2 on 0x%x \n"
+literal|"doing arpresolve on 0x%x \n"
 argument_list|,
 name|e
 operator|->
@@ -867,13 +869,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|arpresolve2
+name|arpresolve
 argument_list|(
 name|rt
 operator|->
 name|rt_ifp
 argument_list|,
 name|rt
+argument_list|,
+name|NULL
 argument_list|,
 operator|(
 expr|struct
@@ -999,7 +1003,7 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"arpresolve2 returned non-zero\n"
+literal|"arpresolve returned non-zero\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1099,13 +1103,15 @@ case|case
 name|L2T_STATE_STALE
 case|:
 comment|/* entry is stale, kick off revalidation */
-name|arpresolve2
+name|arpresolve
 argument_list|(
 name|rt
 operator|->
 name|rt_ifp
 argument_list|,
 name|rt
+argument_list|,
+name|NULL
 argument_list|,
 operator|(
 expr|struct
@@ -1200,13 +1206,15 @@ name|lock
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Only the first packet added to the arpq should kick off 		 * resolution.  However, because the alloc_skb below can fail, 		 * we allow each packet added to the arpq to retry resolution 		 * as a way of recovering from transient memory exhaustion. 		 * A better way would be to use a work request to retry L2T 		 * entries when there's no memory. 		 */
-name|arpresolve2
+name|arpresolve
 argument_list|(
 name|rt
 operator|->
 name|rt_ifp
 argument_list|,
 name|rt
+argument_list|,
+name|NULL
 argument_list|,
 operator|(
 expr|struct
