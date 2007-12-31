@@ -143,10 +143,11 @@ block|,
 literal|"RealTek 8029"
 block|}
 block|,
+comment|/* Needs realtek full duplex */
 block|{
 literal|0x50004a14
 block|,
-literal|"NetVin 5000"
+literal|"NetVin NV5000SC"
 block|}
 block|,
 block|{
@@ -158,13 +159,13 @@ block|,
 block|{
 literal|0x140111f6
 block|,
-literal|"Compex"
+literal|"Compex RL2000"
 block|}
 block|,
 block|{
 literal|0x30008e2e
 block|,
-literal|"KTI"
+literal|"KTI ET32P2"
 block|}
 block|,
 block|{
@@ -185,6 +186,23 @@ block|,
 literal|"VIA VT86C926"
 block|}
 block|,
+comment|/* only do 16-bit */
+block|{
+literal|0x5a5a1050
+block|,
+literal|"Winbond W89C940F"
+block|}
+block|,
+if|#
+directive|if
+literal|0
+comment|/* Holtek needs special lovin', disabled by default */
+block|{ 0x005812c3, "Holtek HT80232" },
+comment|/* Only 16-bit I/O, Holtek fdx */
+block|{ 0x559812c3, "Holtek HT80229" },
+comment|/* Only 32-bit I/O, Holtek fdx, STOP_PG_60? */
+endif|#
+directive|endif
 block|{
 literal|0x00000000
 block|,
