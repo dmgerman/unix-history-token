@@ -3146,7 +3146,7 @@ init|=
 name|BUFSIZ
 decl_stmt|;
 name|int
-name|linklen
+name|link_name_len
 decl_stmt|;
 comment|/* Get the name of the file to which `from' is linked.        FIXME: what portability issues arise here?  Are readlink&        ENAMETOOLONG defined on all systems? -twp */
 do|do
@@ -3164,7 +3164,7 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-name|linklen
+name|link_name_len
 operator|=
 name|readlink
 argument_list|(
@@ -3184,10 +3184,9 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-name|linklen
-operator|==
-operator|-
-literal|1
+name|link_name_len
+operator|<
+literal|0
 operator|&&
 name|errno
 operator|==
@@ -3196,10 +3195,9 @@ condition|)
 do|;
 if|if
 condition|(
-name|linklen
-operator|==
-operator|-
-literal|1
+name|link_name_len
+operator|<
+literal|0
 condition|)
 name|error
 argument_list|(
@@ -3214,7 +3212,7 @@ argument_list|)
 expr_stmt|;
 name|file
 index|[
-name|linklen
+name|link_name_len
 index|]
 operator|=
 literal|'\0'
