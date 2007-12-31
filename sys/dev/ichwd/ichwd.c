@@ -264,6 +264,38 @@ literal|8
 block|}
 block|,
 block|{
+name|DEVICEID_ICH9
+block|,
+literal|"Intel ICH9 watchdog timer"
+block|,
+literal|9
+block|}
+block|,
+block|{
+name|DEVICEID_ICH9R
+block|,
+literal|"Intel ICH9R watchdog timer"
+block|,
+literal|9
+block|}
+block|,
+block|{
+name|DEVICEID_ICH9DH
+block|,
+literal|"Intel ICH9DH watchdog timer"
+block|,
+literal|9
+block|}
+block|,
+block|{
+name|DEVICEID_ICH9DO
+block|,
+literal|"Intel ICH9DO watchdog timer"
+block|,
+literal|9
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
