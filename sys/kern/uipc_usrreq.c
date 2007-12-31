@@ -8736,16 +8736,16 @@ name|unpcb
 modifier|*
 name|unp
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|unp
 operator|=
 name|fptounp
 argument_list|(
 name|fp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fp
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -8823,11 +8823,7 @@ expr_stmt|;
 comment|/* 	 * Check for a socket potentially in a cycle.  It must be in a 	 * queue as indicated by msgcount, and this must equal the file 	 * reference count.  Note that when msgcount is 0 the file is NULL. 	 */
 if|if
 condition|(
-name|unp
-operator|->
-name|unp_msgcount
-operator|!=
-literal|0
+name|fp
 operator|&&
 name|fp
 operator|->
