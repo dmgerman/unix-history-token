@@ -1370,7 +1370,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|struct
+name|mbuf
+modifier|*
 name|lacp_input
 parameter_list|(
 name|struct
@@ -1431,7 +1433,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 name|m_copydata
 argument_list|(
@@ -1495,14 +1501,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* Unknown LACP packet type */
-name|m_freem
-argument_list|(
+comment|/* Not a subtype we are interested in */
+return|return
+operator|(
 name|m
-argument_list|)
-expr_stmt|;
-break|break;
+operator|)
+return|;
 block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 

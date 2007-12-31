@@ -8366,6 +8366,8 @@ operator|==
 name|ETHERTYPE_SLOW
 condition|)
 block|{
+name|m
+operator|=
 name|lacp_input
 argument_list|(
 name|lp
@@ -8373,6 +8375,12 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
 return|return
 operator|(
 name|NULL

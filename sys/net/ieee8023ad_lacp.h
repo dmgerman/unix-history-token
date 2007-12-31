@@ -810,7 +810,9 @@ value|((struct lacp_softc *)(_sc)->sc_psc)
 end_define
 
 begin_function_decl
-name|void
+name|struct
+name|mbuf
+modifier|*
 name|lacp_input
 parameter_list|(
 name|struct
