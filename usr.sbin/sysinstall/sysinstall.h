@@ -2675,72 +2675,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|DMenu
-name|MenuXOrg
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* X.Org main menu				*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuXOrgSelect
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* X.Org distribution selection menu		*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuXOrgSelectCore
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* X.Org core distribution menu			*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuXOrgSelectServer
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* X.Org server distribution menu		*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuXOrgSelectFonts
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* X.Org font selection menu			*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuXDesktops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* X Desktops menu				*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
 name|MenuHTMLDoc
 decl_stmt|;
 end_decl_stmt
@@ -2769,17 +2703,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Fixit floppy/CDROM/shell menu		*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuXOrgConfig
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Select X.Org configuration tool		*/
 end_comment
 
 begin_decl_stmt
@@ -4030,18 +3953,6 @@ begin_function_decl
 specifier|extern
 name|int
 name|distSetSrc
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|distSetXOrg
 parameter_list|(
 name|dialogMenuItem
 modifier|*
