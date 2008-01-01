@@ -8043,11 +8043,6 @@ operator|++
 operator|=
 name|fp
 expr_stmt|;
-name|fhold
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 name|unp_internalize_fp
 argument_list|(
 name|fp
@@ -8647,6 +8642,11 @@ name|unp_msgcount
 operator|++
 expr_stmt|;
 block|}
+name|fhold
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|unp_rights
 operator|++
 expr_stmt|;
@@ -8823,11 +8823,21 @@ expr_stmt|;
 comment|/* 	 * Check for a socket potentially in a cycle.  It must be in a 	 * queue as indicated by msgcount, and this must equal the file 	 * reference count.  Note that when msgcount is 0 the file is NULL. 	 */
 if|if
 condition|(
-name|fp
+operator|(
+name|unp
+operator|->
+name|unp_gcflag
+operator|&
+name|UNPGC_REF
+operator|)
+operator|==
+literal|0
 operator|&&
 name|fp
+operator|&&
+name|unp
 operator|->
-name|f_count
+name|unp_msgcount
 operator|!=
 literal|0
 operator|&&
@@ -9076,13 +9086,8 @@ argument_list|)
 name|unp
 operator|->
 name|unp_gcflag
-operator|&=
-operator|~
-operator|(
-name|UNPGC_REF
-operator||
-name|UNPGC_DEAD
-operator|)
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * Scan marking all reachable sockets with UNPGC_REF.  Once a socket 	 * is reachable all of the sockets it references are reachable. 	 * Stop the scan once we do a complete loop without discovering 	 * a new reachable socket. 	 */
 do|do
@@ -9206,6 +9211,13 @@ name|unp
 operator|->
 name|unp_file
 expr_stmt|;
+name|fhold
+argument_list|(
+name|unp
+operator|->
+name|unp_file
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|unp
@@ -9233,28 +9245,6 @@ expr_stmt|;
 block|}
 name|UNP_GLOBAL_RUNLOCK
 argument_list|()
-expr_stmt|;
-comment|/* 	 * All further operation is now done on a local list.  We first ref 	 * all sockets to avoid closing them until all are flushed. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|unp_unreachable
-condition|;
-name|i
-operator|++
-control|)
-name|fhold
-argument_list|(
-name|unref
-index|[
-name|i
-index|]
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Now flush all sockets, free'ing rights.  This will free the 	 * struct files associated with these sockets but leave each socket 	 * with one remaining ref. 	 */
 for|for
