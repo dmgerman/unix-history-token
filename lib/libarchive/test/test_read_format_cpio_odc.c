@@ -1120,10 +1120,12 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assertA
+name|assertEqualIntA
 argument_list|(
+name|a
+argument_list|,
 literal|0
-operator|==
+argument_list|,
 name|archive_read_next_header
 argument_list|(
 name|a

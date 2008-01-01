@@ -1070,6 +1070,14 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
 name|assert
 argument_list|(
 name|archive_entry_clear
@@ -1145,6 +1153,7 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Write a regular file with ARCHIVE_EXTRACT_PERM& SGID bit */
 name|assert
 argument_list|(
@@ -1971,6 +1980,15 @@ literal|0742
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Some things don't fail if you're root, so suppress this. */
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
 comment|/* SUID bit should NOT have been set here. */
 name|assert
 argument_list|(
@@ -2009,6 +2027,7 @@ literal|0742
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* SGID should be set here. */
 name|assert
 argument_list|(

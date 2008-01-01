@@ -36,7 +36,7 @@ name|archive
 modifier|*
 name|a
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|used
 decl_stmt|,
 name|i
@@ -46,7 +46,7 @@ name|buff_size
 init|=
 literal|1000000
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|filedata_size
 init|=
 literal|100000
