@@ -1146,20 +1146,16 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-name|bsdtar_strmode
-argument_list|(
-name|entry
-argument_list|,
-name|tmp
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|out
 argument_list|,
 literal|"%s %d "
 argument_list|,
-name|tmp
+name|archive_entry_strmode
+argument_list|(
+name|entry
+argument_list|)
 argument_list|,
 call|(
 name|int
