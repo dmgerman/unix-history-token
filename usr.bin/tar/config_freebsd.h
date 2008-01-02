@@ -17,13 +17,6 @@ begin_comment
 comment|/* __FreeBSD_version */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PACKAGE_NAME
-value|"bsdtar"
-end_define
-
 begin_if
 if|#
 directive|if
@@ -82,6 +75,20 @@ begin_define
 define|#
 directive|define
 name|HAVE_CHFLAGS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_OPTARG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_OPTIND
 value|1
 end_define
 

@@ -292,6 +292,44 @@ directive|include
 file|"bsdtar.h"
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_OPTARG
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|optarg
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_OPTIND
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Per POSIX.1-1988, tar defaults to reading/writing archives to/from  * the default tape device for the system.  Pick something reasonable here.  */
 end_comment
@@ -3416,7 +3454,7 @@ name|printf
 argument_list|(
 literal|"bsdtar %s - %s\n"
 argument_list|,
-name|PACKAGE_VERSION
+name|BSDTAR_VERSION_STRING
 argument_list|,
 name|archive_version
 argument_list|()
