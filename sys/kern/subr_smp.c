@@ -1347,7 +1347,6 @@ name|teardown_func
 operator|==
 name|smp_no_rendevous_barrier
 condition|)
-block|{
 while|while
 condition|(
 name|atomic_load_acq_int
@@ -1364,7 +1363,6 @@ condition|)
 name|cpu_spinwait
 argument_list|()
 expr_stmt|;
-block|}
 comment|/* release lock */
 name|mtx_unlock_spin
 argument_list|(
