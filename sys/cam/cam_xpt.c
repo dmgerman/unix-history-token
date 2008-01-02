@@ -1077,7 +1077,7 @@ literal|0
 block|}
 block|,
 block|{
-comment|/* 		 * Unfortunately, the Quantum Atlas III has the same 		 * problem as the Atlas II drives above. 		 * Reported by: "Johan Granlund"<johan@granlund.nu> 		 * 		 * For future reference, the drive with the problem was: 		 * QUANTUM QM39100TD-SW N1B0 		 *  		 * It's possible that Quantum will fix the problem in later 		 * firmware revisions.  If that happens, the quirk entry 		 * will need to be made specific to the firmware revisions 		 * with the problem. 		 *  		 */
+comment|/* 		 * Unfortunately, the Quantum Atlas III has the same 		 * problem as the Atlas II drives above. 		 * Reported by: "Johan Granlund"<johan@granlund.nu> 		 * 		 * For future reference, the drive with the problem was: 		 * QUANTUM QM39100TD-SW N1B0 		 * 		 * It's possible that Quantum will fix the problem in later 		 * firmware revisions.  If that happens, the quirk entry 		 * will need to be made specific to the firmware revisions 		 * with the problem. 		 * 		 */
 comment|/* Reports QUEUE FULL for temporary resource shortages */
 block|{
 name|T_DIRECT
@@ -1150,7 +1150,7 @@ comment|/*maxtags*/
 literal|0
 block|}
 block|,
-comment|/* 		 * The Seagate Medalist Pro drives have very poor write 		 * performance with anything more than 2 tags. 		 *  		 * Reported by:  Paul van der Zwan<paulz@trantor.xs4all.nl> 		 * Drive:<SEAGATE ST36530N 1444> 		 * 		 * Reported by:  Jeremy Lea<reg@shale.csir.co.za> 		 * Drive:<SEAGATE ST34520W 1281> 		 * 		 * No one has actually reported that the 9G version 		 * (ST39140*) of the Medalist Pro has the same problem, but 		 * we're assuming that it does because the 4G and 6.5G 		 * versions of the drive are broken. 		 */
+comment|/* 		 * The Seagate Medalist Pro drives have very poor write 		 * performance with anything more than 2 tags. 		 * 		 * Reported by:  Paul van der Zwan<paulz@trantor.xs4all.nl> 		 * Drive:<SEAGATE ST36530N 1444> 		 * 		 * Reported by:  Jeremy Lea<reg@shale.csir.co.za> 		 * Drive:<SEAGATE ST34520W 1281> 		 * 		 * No one has actually reported that the 9G version 		 * (ST39140*) of the Medalist Pro has the same problem, but 		 * we're assuming that it does because the 4G and 6.5G 		 * versions of the drive are broken. 		 */
 block|{
 block|{
 name|T_DIRECT
@@ -4961,7 +4961,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * This is the getpassthru ioctl. It takes a XPT_GDEVLIST ccb as input, 	 * with the periphal driver name and unit name filled in.  The other 	 * fields don't really matter as input.  The passthrough driver name 	 * ("pass"), and unit number are passed back in the ccb.  The current 	 * device generation number, and the index into the device peripheral 	 * driver list, and the status are also passed back.  Note that 	 * since we do everything in one pass, unlike the XPT_GDEVLIST ccb, 	 * we never return a status of CAM_GDEVLIST_LIST_CHANGED.  It is 	 * (or rather should be) impossible for the device peripheral driver 	 * list to change since we look at the whole thing in one pass, and 	 * we do it with lock protection. 	 *  	 */
+comment|/* 	 * This is the getpassthru ioctl. It takes a XPT_GDEVLIST ccb as input, 	 * with the periphal driver name and unit name filled in.  The other 	 * fields don't really matter as input.  The passthrough driver name 	 * ("pass"), and unit number are passed back in the ccb.  The current 	 * device generation number, and the index into the device peripheral 	 * driver list, and the status are also passed back.  Note that 	 * since we do everything in one pass, unlike the XPT_GDEVLIST ccb, 	 * we never return a status of CAM_GDEVLIST_LIST_CHANGED.  It is 	 * (or rather should be) impossible for the device peripheral driver 	 * list to change since we look at the whole thing in one pass, and 	 * we do it with lock protection. 	 * 	 */
 case|case
 name|CAMGETPASSTHRU
 case|:
@@ -5308,7 +5308,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 				 * Check to see whether we have a 				 * passthrough device or not.  				 */
+comment|/* 				 * Check to see whether we have a 				 * passthrough device or not. 				 */
 if|if
 condition|(
 name|strcmp
@@ -7685,7 +7685,7 @@ literal|0
 operator|)
 condition|)
 continue|continue;
-comment|/* 		 * If we get to this point, the user definitely wants  		 * information on this bus.  So tell the caller to copy the 		 * data out. 		 */
+comment|/* 		 * If we get to this point, the user definitely wants 		 * information on this bus.  So tell the caller to copy the 		 * data out. 		 */
 name|retval
 operator||=
 name|DM_RET_COPY
@@ -8038,7 +8038,7 @@ name|NULL
 operator|)
 condition|)
 continue|continue;
-comment|/* 		 * If we get to this point, the user definitely wants  		 * information on this device.  So tell the caller to copy 		 * the data out. 		 */
+comment|/* 		 * If we get to this point, the user definitely wants 		 * information on this device.  So tell the caller to copy 		 * the data out. 		 */
 name|retval
 operator||=
 name|DM_RET_COPY
@@ -8396,7 +8396,7 @@ literal|0
 operator|)
 condition|)
 continue|continue;
-comment|/* 		 * If we get to this point, the user definitely wants  		 * information on this peripheral.  So tell the caller to 		 * copy the data out. 		 */
+comment|/* 		 * If we get to this point, the user definitely wants 		 * information on this peripheral.  So tell the caller to 		 * copy the data out. 		 */
 name|retval
 operator||=
 name|DM_RET_COPY
@@ -13825,7 +13825,7 @@ name|start_ccb
 operator|->
 name|cgdl
 expr_stmt|;
-comment|/* 		 * Check and see if the list has changed since the user 		 * last requested a list member.  If so, tell them that the 		 * list has changed, and therefore they need to start over  		 * from the beginning. 		 */
+comment|/* 		 * Check and see if the list has changed since the user 		 * last requested a list member.  If so, tell them that the 		 * list has changed, and therefore they need to start over 		 * from the beginning. 		 */
 if|if
 condition|(
 operator|(
@@ -13855,7 +13855,7 @@ name|CAM_GDEVLIST_LIST_CHANGED
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Traverse the list of peripherals and attempt to find  		 * the requested peripheral. 		 */
+comment|/* 		 * Traverse the list of peripherals and attempt to find 		 * the requested peripheral. 		 */
 for|for
 control|(
 name|nperiph
@@ -24599,7 +24599,7 @@ operator|&
 name|cpi
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If a device has gone away and another device, or the same one, 	 * is back in the same place, it should have a unit attention 	 * condition pending.  It will not report the unit attention in 	 * response to an inquiry, which may leave invalid transfer 	 * negotiations in effect.  The TUR will reveal the unit attention 	 * condition.  Only send the TUR for lun 0, since some devices  	 * will get confused by commands other than inquiry to non-existent 	 * luns.  If you think a device has gone away start your scan from 	 * lun 0.  This will insure that any bogus transfer settings are 	 * invalidated. 	 * 	 * If we haven't seen the device before and the controller supports 	 * some kind of transfer negotiation, negotiate with the first 	 * sent command if no bus reset was performed at startup.  This 	 * ensures that the device is not confused by transfer negotiation 	 * settings left over by loader or BIOS action. 	 */
+comment|/* 	 * If a device has gone away and another device, or the same one, 	 * is back in the same place, it should have a unit attention 	 * condition pending.  It will not report the unit attention in 	 * response to an inquiry, which may leave invalid transfer 	 * negotiations in effect.  The TUR will reveal the unit attention 	 * condition.  Only send the TUR for lun 0, since some devices 	 * will get confused by commands other than inquiry to non-existent 	 * luns.  If you think a device has gone away start your scan from 	 * lun 0.  This will insure that any bogus transfer settings are 	 * invalidated. 	 * 	 * If we haven't seen the device before and the controller supports 	 * some kind of transfer negotiation, negotiate with the first 	 * sent command if no bus reset was performed at startup.  This 	 * ensures that the device is not confused by transfer negotiation 	 * settings left over by loader or BIOS action. 	 */
 if|if
 condition|(
 operator|(
@@ -31652,7 +31652,7 @@ operator|.
 name|num_highpower
 operator|++
 expr_stmt|;
-comment|/*  			 * Any high powered commands queued up? 			 */
+comment|/* 			 * Any high powered commands queued up? 			 */
 if|if
 condition|(
 name|send_ccb
