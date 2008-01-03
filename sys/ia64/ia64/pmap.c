@@ -5881,7 +5881,7 @@ name|defined
 argument_list|(
 name|DIAGNOSTIC
 argument_list|)
-comment|/* 	 * XXX this makes pmap_page_protect(NONE) illegal for non-managed 	 * pages! 	 */
+comment|/* 	 * XXX This makes pmap_remove_all() illegal for non-managed pages! 	 */
 if|if
 condition|(
 name|m
