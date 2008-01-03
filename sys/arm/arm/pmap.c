@@ -11384,7 +11384,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_page_protect: illegal for unmanaged page, va: 0x%x"
+literal|"pmap_remove_all: illegal for unmanaged page, va: 0x%x"
 argument_list|,
 name|VM_PAGE_TO_PHYS
 argument_list|(
