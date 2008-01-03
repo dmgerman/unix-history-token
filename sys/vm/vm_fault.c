@@ -2928,6 +2928,8 @@ name|pmap
 argument_list|,
 name|vaddr
 argument_list|,
+name|fault_type
+argument_list|,
 name|fs
 operator|.
 name|m
@@ -4010,7 +4012,7 @@ argument_list|(
 name|dst_object
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Enter it in the pmap... 		 */
+comment|/* 		 * Enter it in the pmap as a read and/or execute access. 		 */
 name|pmap_enter
 argument_list|(
 name|dst_map
@@ -4018,6 +4020,11 @@ operator|->
 name|pmap
 argument_list|,
 name|vaddr
+argument_list|,
+name|prot
+operator|&
+operator|~
+name|VM_PROT_WRITE
 argument_list|,
 name|dst_m
 argument_list|,

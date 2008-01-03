@@ -1212,11 +1212,13 @@ name|addr
 operator|+
 name|i
 argument_list|,
+name|VM_PROT_ALL
+argument_list|,
 name|m
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
-literal|1
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|vm_page_wakeup

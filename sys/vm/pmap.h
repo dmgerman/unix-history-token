@@ -152,6 +152,8 @@ name|pmap_t
 parameter_list|,
 name|vm_offset_t
 parameter_list|,
+name|vm_prot_t
+parameter_list|,
 name|vm_page_t
 parameter_list|,
 name|vm_prot_t
