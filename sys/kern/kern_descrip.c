@@ -10925,6 +10925,14 @@ name|NULL
 condition|)
 continue|continue;
 comment|/* overestimates sparse tables. */
+if|if
+condition|(
+name|fdp
+operator|->
+name|fd_lastfile
+operator|>
+literal|0
+condition|)
 name|n
 operator|+=
 name|fdp
