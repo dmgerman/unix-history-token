@@ -1342,12 +1342,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Sequential heuristic - detect sequential operation  */
+comment|/*  * Heuristic to detect sequential operation.  */
 end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|int
 name|sequential_heuristic
 parameter_list|(
@@ -1362,6 +1361,7 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
+comment|/* 	 * Offset 0 is handled specially.  open() sets f_seqcount to 1 so 	 * that the first I/O is normally considered to be slightly 	 * sequential.  Seeking to offset 0 doesn't change sequentiality 	 * unless previous seeks have reduced f_seqcount to 0, in which 	 * case offset 0 is not special. 	 */
 if|if
 condition|(
 operator|(
@@ -1387,22 +1387,19 @@ operator|->
 name|f_nextoff
 condition|)
 block|{
-comment|/* 		 * XXX we assume that the filesystem block size is 		 * the default.  Not true, but still gives us a pretty 		 * good indicator of how sequential the read operations 		 * are. 		 */
+comment|/* 		 * f_seqcount is in units of fixed-size blocks so that it 		 * depends mainly on the amount of sequential I/O and not 		 * much on the number of sequential I/O's.  The fixed size 		 * of 16384 is hard-coded here since it is (not quite) just 		 * a magic size that works well here.  This size is more 		 * closely related to the best I/O size for real disks than 		 * to any block size used by software. 		 */
 name|fp
 operator|->
 name|f_seqcount
 operator|+=
-operator|(
+name|howmany
+argument_list|(
 name|uio
 operator|->
 name|uio_resid
-operator|+
-name|BKVASIZE
-operator|-
-literal|1
-operator|)
-operator|/
-name|BKVASIZE
+argument_list|,
+literal|16384
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1428,7 +1425,7 @@ name|IO_SEQSHIFT
 operator|)
 return|;
 block|}
-comment|/* 	 * Not sequential, quick draw-down of seqcount 	 */
+comment|/* Not sequential.  Quickly draw-down sequentiality. */
 if|if
 condition|(
 name|fp
