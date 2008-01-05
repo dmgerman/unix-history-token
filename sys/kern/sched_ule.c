@@ -8917,17 +8917,25 @@ name|td
 operator|->
 name|td_sched
 expr_stmt|;
-comment|/* 	 * We only do slicing code for TIMESHARE threads. 	 */
 if|if
 condition|(
 name|td
 operator|->
 name|td_pri_class
-operator|!=
-name|PRI_TIMESHARE
+operator|&
+name|PRI_FIFO_BIT
 condition|)
 return|return;
-comment|/* 	 * We used a tick; charge it to the thread so that we can compute our 	 * interactivity. 	 */
+if|if
+condition|(
+name|td
+operator|->
+name|td_pri_class
+operator|==
+name|PRI_TIMESHARE
+condition|)
+block|{
+comment|/* 		 * We used a tick; charge it to the thread so 		 * that we can compute our interactivity. 		 */
 name|td
 operator|->
 name|td_sched
@@ -8941,6 +8949,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * We used up one time slice. 	 */
 if|if
 condition|(
