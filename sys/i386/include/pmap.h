@@ -1240,9 +1240,6 @@ begin_struct
 struct|struct
 name|md_page
 block|{
-name|int
-name|pv_list_count
-decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
