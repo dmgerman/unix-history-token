@@ -1436,6 +1436,29 @@ operator|*
 literal|1024
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ld
+index|[
+literal|3
+index|]
+operator|>
+literal|1e3
+condition|)
+name|printw
+argument_list|(
+literal|" %6.0f"
+argument_list|,
+operator|(
+name|double
+operator|)
+name|ld
+index|[
+literal|3
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|printw
 argument_list|(
 literal|" %6.1f"
@@ -1477,6 +1500,29 @@ operator|*
 literal|1024
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ld
+index|[
+literal|6
+index|]
+operator|>
+literal|1e3
+condition|)
+name|printw
+argument_list|(
+literal|" %6.0f"
+argument_list|,
+operator|(
+name|double
+operator|)
+name|ld
+index|[
+literal|6
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|printw
 argument_list|(
 literal|" %6.1f"
@@ -1523,6 +1569,29 @@ operator|*
 literal|1024
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ld
+index|[
+literal|10
+index|]
+operator|>
+literal|1e3
+condition|)
+name|printw
+argument_list|(
+literal|" %6.0f"
+argument_list|,
+operator|(
+name|double
+operator|)
+name|ld
+index|[
+literal|10
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|printw
 argument_list|(
 literal|" %6.1f"
