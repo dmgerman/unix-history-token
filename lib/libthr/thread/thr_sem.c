@@ -1314,12 +1314,13 @@ expr_stmt|;
 if|if
 condition|(
 name|retval
-operator|>
+operator|!=
 literal|0
 condition|)
 name|retval
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 block|}
 return|return
