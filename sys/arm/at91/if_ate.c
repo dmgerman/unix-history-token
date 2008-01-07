@@ -879,7 +879,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No MAC address set"
+literal|"No MAC address set\n"
 argument_list|)
 expr_stmt|;
 goto|goto
