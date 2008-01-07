@@ -15877,7 +15877,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|rum
+name|zyd
 argument_list|,
 name|wlan
 argument_list|,
@@ -15893,7 +15893,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|rum
+name|zyd
 argument_list|,
 name|wlan_amrr
 argument_list|,
@@ -15909,7 +15909,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|rum
+name|zyd
 argument_list|,
 name|usb
 argument_list|,
