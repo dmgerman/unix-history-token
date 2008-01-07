@@ -229,6 +229,12 @@ comment|/* this can be shrunk down if something comes 				      * along that nee
 name|uint16_t
 name|mi_pad
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mi_mbuf
+decl_stmt|;
+comment|/* need to be able to handle the @#$@@#%$ing packet zone */
 define|#
 directive|define
 name|mi_size
