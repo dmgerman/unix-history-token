@@ -579,6 +579,24 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|kern_ftruncate
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+name|off_t
+name|length
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kern_futimes
 parameter_list|(
 name|struct

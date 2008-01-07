@@ -324,6 +324,11 @@ operator|=
 name|soo_write
 block|,
 operator|.
+name|fo_truncate
+operator|=
+name|soo_truncate
+block|,
+operator|.
 name|fo_ioctl
 operator|=
 name|soo_ioctl
