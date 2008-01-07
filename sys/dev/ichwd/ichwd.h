@@ -260,6 +260,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVICEID_ICH8M
+value|0x2815
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVICEID_ICH9
 value|0x2918
 end_define

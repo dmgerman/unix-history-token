@@ -256,6 +256,14 @@ literal|8
 block|}
 block|,
 block|{
+name|DEVICEID_ICH8M
+block|,
+literal|"Intel ICH8M watchdog timer"
+block|,
+literal|8
+block|}
+block|,
+block|{
 name|DEVICEID_63XXESB
 block|,
 literal|"Intel 63XXESB watchdog timer"
