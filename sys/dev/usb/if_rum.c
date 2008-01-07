@@ -582,6 +582,12 @@ name|USB_PRODUCT_SITECOMEU_WL172
 block|}
 block|,
 block|{
+name|USB_VENDOR_SPARKLAN
+block|,
+name|USB_PRODUCT_SPARKLAN_RT2573
+block|}
+block|,
+block|{
 name|USB_VENDOR_SURECOM
 block|,
 name|USB_PRODUCT_SURECOM_RT2573
