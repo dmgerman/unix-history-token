@@ -188,6 +188,17 @@ begin_comment
 comment|/* posix message queue */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DTYPE_SHM
+value|8
+end_define
+
+begin_comment
+comment|/* swap-backed shared memory */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -12227,6 +12227,14 @@ operator|(
 literal|"mque"
 operator|)
 return|;
+case|case
+name|DTYPE_SHM
+case|:
+return|return
+operator|(
+literal|"shm"
+operator|)
+return|;
 default|default:
 return|return
 operator|(
