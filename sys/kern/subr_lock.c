@@ -2476,7 +2476,7 @@ name|lock_prof_count
 operator|%
 name|lock_prof_skipcount
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 return|return;
