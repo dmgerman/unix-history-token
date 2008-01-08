@@ -304,7 +304,7 @@ name|td
 parameter_list|,
 name|x
 parameter_list|)
-value|if ((td)) (td)->td_locks += (x)
+value|((td)->td_locks += (x))
 end_define
 
 begin_define
@@ -812,11 +812,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|thr
-decl_stmt|;
 name|int
 name|extflags
 decl_stmt|,
@@ -832,19 +827,15 @@ name|waitstart
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Lock owner can only be curthread or, at least, NULL in order to 	 * have a deadlock free implementation of the primitive. 	 */
+comment|/* 	 * Lock owner can only be curthread in order to have a deadlock 	 * free implementation of the primitive. 	 */
 name|KASSERT
 argument_list|(
-name|td
-operator|==
-name|NULL
-operator|||
 name|td
 operator|==
 name|curthread
 argument_list|,
 operator|(
-literal|"lockmgr: owner thread (%p) cannot differ from curthread or NULL"
+literal|"lockmgr: owner thread (%p) cannot differ from curthread"
 operator|,
 name|td
 operator|)
@@ -853,21 +844,6 @@ expr_stmt|;
 name|error
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|td
-operator|==
-name|NULL
-condition|)
-name|thr
-operator|=
-name|LK_KERNPROC
-expr_stmt|;
-else|else
-name|thr
-operator|=
-name|td
 expr_stmt|;
 if|if
 condition|(
@@ -1076,7 +1052,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|!=
-name|thr
+name|td
 condition|)
 block|{
 name|lockflags
@@ -1222,7 +1198,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|==
-name|thr
+name|td
 operator|&&
 name|lkp
 operator|->
@@ -1238,7 +1214,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|,
-name|thr
+name|td
 operator|,
 name|lkp
 operator|->
@@ -1312,7 +1288,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|==
-name|thr
+name|td
 condition|)
 name|panic
 argument_list|(
@@ -1493,7 +1469,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|=
-name|thr
+name|td
 expr_stmt|;
 name|lkp
 operator|->
@@ -1578,11 +1554,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|==
-name|thr
-operator|&&
-name|thr
-operator|!=
-name|LK_KERNPROC
+name|td
 condition|)
 block|{
 comment|/* 			 *	Recursive lock. 			 */
@@ -1761,7 +1733,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|=
-name|thr
+name|td
 expr_stmt|;
 if|if
 condition|(
@@ -1840,7 +1812,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|!=
-name|thr
+name|td
 operator|&&
 name|lkp
 operator|->
@@ -1853,7 +1825,7 @@ name|panic
 argument_list|(
 literal|"lockmgr: thread %p, not %s %p unlocking"
 argument_list|,
-name|thr
+name|td
 argument_list|,
 literal|"exclusive lock holder"
 argument_list|,
@@ -1949,7 +1921,7 @@ name|printf
 argument_list|(
 literal|"lockmgr: thread %p unlocking unheld lock\n"
 argument_list|,
-name|thr
+name|td
 argument_list|)
 expr_stmt|;
 name|kdb_backtrace
@@ -1984,7 +1956,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|==
-name|thr
+name|td
 condition|)
 name|panic
 argument_list|(
@@ -2017,7 +1989,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|=
-name|thr
+name|td
 expr_stmt|;
 name|lkp
 operator|->
@@ -2438,6 +2410,92 @@ name|lkp
 operator|->
 name|lk_object
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Disown the lockmgr.  */
+end_comment
+
+begin_function
+name|void
+name|lockmgr_disown
+parameter_list|(
+name|struct
+name|lock
+modifier|*
+name|lkp
+parameter_list|)
+block|{
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|lkp
+operator|->
+name|lk_exclusivecount
+operator|||
+name|lkp
+operator|->
+name|lk_lockholder
+operator|==
+name|LK_KERNPROC
+argument_list|,
+operator|(
+literal|"%s: %p lockmgr must be exclusively locked"
+operator|,
+name|__func__
+operator|,
+name|lkp
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|lkp
+operator|->
+name|lk_lockholder
+operator|==
+name|td
+argument_list|,
+operator|(
+literal|"%s: %p lockmgr must be locked by curthread (%p)"
+operator|,
+name|__func__
+operator|,
+name|lkp
+operator|,
+name|td
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Drop the lock reference and switch the owner.  This will result 	 * in an atomic operation like td_lock is only accessed by curthread 	 * and lk_lockholder only needs one write. 	 */
+if|if
+condition|(
+name|lkp
+operator|->
+name|lk_lockholder
+operator|==
+name|td
+condition|)
+name|td
+operator|->
+name|td_locks
+operator|--
+expr_stmt|;
+name|lkp
+operator|->
+name|lk_lockholder
+operator|=
+name|LK_KERNPROC
 expr_stmt|;
 block|}
 end_function

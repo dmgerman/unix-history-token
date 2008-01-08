@@ -1748,7 +1748,7 @@ name|ip
 operator|->
 name|i_interlock
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
@@ -1861,7 +1861,7 @@ name|LK_SLEEPFAIL
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 condition|)
 do|;
@@ -1993,7 +1993,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2128,7 +2128,7 @@ name|ip
 operator|->
 name|i_interlock
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9250,7 +9250,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* only read the translation data from a file if it hasn't been 	 * read already */
@@ -9354,7 +9354,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
@@ -9384,7 +9384,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 expr_stmt|;
 name|ntfs_toupper_usecount
@@ -9440,7 +9440,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
