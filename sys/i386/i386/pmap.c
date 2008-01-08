@@ -8820,35 +8820,25 @@ decl_stmt|;
 name|vm_page_t
 name|free
 decl_stmt|;
-if|#
-directive|if
-name|defined
+name|KASSERT
 argument_list|(
-name|PMAP_DIAGNOSTIC
-argument_list|)
-comment|/* 	 * XXX This makes pmap_remove_all() illegal for non-managed pages! 	 */
-if|if
-condition|(
+operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"pmap_remove_all: illegal for unmanaged page, va: 0x%x"
+operator|)
+operator|==
+literal|0
 argument_list|,
-name|VM_PAGE_TO_PHYS
-argument_list|(
+operator|(
+literal|"pmap_remove_all: page %p is fictitious"
+operator|,
 name|m
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|mtx_assert
 argument_list|(
 operator|&
