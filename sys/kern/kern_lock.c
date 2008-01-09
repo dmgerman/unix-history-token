@@ -2442,12 +2442,6 @@ argument_list|(
 name|lkp
 operator|->
 name|lk_exclusivecount
-operator|||
-name|lkp
-operator|->
-name|lk_lockholder
-operator|==
-name|LK_KERNPROC
 argument_list|,
 operator|(
 literal|"%s: %p lockmgr must be exclusively locked"
@@ -2465,6 +2459,12 @@ operator|->
 name|lk_lockholder
 operator|==
 name|td
+operator|||
+name|lkp
+operator|->
+name|lk_lockholder
+operator|==
+name|LK_KERNPROC
 argument_list|,
 operator|(
 literal|"%s: %p lockmgr must be locked by curthread (%p)"
