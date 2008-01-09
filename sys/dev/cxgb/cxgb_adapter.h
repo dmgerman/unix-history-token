@@ -360,10 +360,10 @@ name|uint8_t
 name|txpkt_intf
 decl_stmt|;
 name|uint8_t
-name|nqsets
-decl_stmt|;
-name|uint8_t
 name|first_qset
+decl_stmt|;
+name|uint32_t
+name|nqsets
 decl_stmt|;
 name|uint8_t
 name|hw_addr
@@ -936,6 +936,12 @@ name|txq_coalesced
 decl_stmt|;
 name|uint32_t
 name|txq_enqueued
+decl_stmt|;
+name|uint32_t
+name|txq_dump_start
+decl_stmt|;
+name|uint32_t
+name|txq_dump_count
 decl_stmt|;
 name|unsigned
 name|long
