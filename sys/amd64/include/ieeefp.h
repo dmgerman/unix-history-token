@@ -448,7 +448,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|__CC_SUPPORTS___INLINE__
+name|__CC_SUPPORTS___INLINE
 argument_list|)
 expr|\
 operator|&&
@@ -458,26 +458,6 @@ argument_list|(
 name|__cplusplus
 argument_list|)
 end_if
-
-begin_define
-define|#
-directive|define
-name|__fldenv
-parameter_list|(
-name|addr
-parameter_list|)
-value|__asm __volatile("fldenv %0" : : "m" (*(addr)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__fnstenv
-parameter_list|(
-name|addr
-parameter_list|)
-value|__asm __volatile("fnstenv %0" : "=m" (*(addr)))
-end_define
 
 begin_define
 define|#
@@ -492,11 +472,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|__fldenv
+parameter_list|(
+name|addr
+parameter_list|)
+value|__asm __volatile("fldenv %0" : : "m" (*(addr)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|__fnstcw
 parameter_list|(
 name|addr
 parameter_list|)
 value|__asm __volatile("fnstcw %0" : "=m" (*(addr)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__fnstenv
+parameter_list|(
+name|addr
+parameter_list|)
+value|__asm __volatile("fnstenv %0" : "=m" (*(addr)))
 end_define
 
 begin_define
@@ -535,7 +535,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|fp_rnd_t
 name|__fpgetround
 parameter_list|(
@@ -568,7 +568,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|fp_rnd_t
 name|__fpsetround
 parameter_list|(
@@ -581,7 +581,6 @@ name|short
 name|_cw
 decl_stmt|;
 name|unsigned
-name|int
 name|_mxcsr
 decl_stmt|;
 name|fp_rnd_t
@@ -665,7 +664,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|fp_prec_t
 name|__fpgetprec
 parameter_list|(
@@ -698,7 +697,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|fp_prec_t
 name|__fpsetprec
 parameter_list|(
@@ -706,12 +705,12 @@ name|fp_rnd_t
 name|_m
 parameter_list|)
 block|{
+name|fp_prec_t
+name|_p
+decl_stmt|;
 name|unsigned
 name|short
 name|_cw
-decl_stmt|;
-name|fp_prec_t
-name|_p
 decl_stmt|;
 name|__fnstcw
 argument_list|(
@@ -764,7 +763,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|fp_except_t
 name|__fpgetmask
 parameter_list|(
@@ -786,9 +785,11 @@ operator|(
 operator|(
 operator|~
 name|_cw
-operator|)
 operator|&
 name|FP_MSKS_FLD
+operator|)
+operator|>>
+name|FP_MSKS_OFF
 operator|)
 return|;
 block|}
@@ -796,7 +797,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|fp_except_t
 name|__fpsetmask
 parameter_list|(
@@ -804,16 +805,15 @@ name|fp_except_t
 name|_m
 parameter_list|)
 block|{
+name|fp_except_t
+name|_p
+decl_stmt|;
+name|unsigned
+name|_mxcsr
+decl_stmt|;
 name|unsigned
 name|short
 name|_cw
-decl_stmt|;
-name|unsigned
-name|int
-name|_mxcsr
-decl_stmt|;
-name|fp_except_t
-name|_p
 decl_stmt|;
 name|__fnstcw
 argument_list|(
@@ -826,9 +826,11 @@ operator|=
 operator|(
 operator|~
 name|_cw
-operator|)
 operator|&
 name|FP_MSKS_FLD
+operator|)
+operator|>>
+name|FP_MSKS_OFF
 expr_stmt|;
 name|_cw
 operator|&=
@@ -840,6 +842,8 @@ operator||=
 operator|(
 operator|~
 name|_m
+operator|>>
+name|FP_MSKS_OFF
 operator|)
 operator|&
 name|FP_MSKS_FLD
@@ -865,10 +869,8 @@ expr_stmt|;
 name|_mxcsr
 operator||=
 operator|(
-operator|(
 operator|~
 name|_m
-operator|)
 operator|<<
 name|SSE_MSKS_OFF
 operator|)
@@ -891,23 +893,22 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|fp_except_t
 name|__fpgetsticky
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|fp_except_t
+name|_ex
+decl_stmt|;
+name|unsigned
+name|_mxcsr
+decl_stmt|;
 name|unsigned
 name|short
 name|_sw
-decl_stmt|;
-name|unsigned
-name|int
-name|_mxcsr
-decl_stmt|;
-name|fp_except_t
-name|_ex
 decl_stmt|;
 name|__fnstsw
 argument_list|(
@@ -917,9 +918,13 @@ argument_list|)
 expr_stmt|;
 name|_ex
 operator|=
+operator|(
 name|_sw
 operator|&
 name|FP_STKY_FLD
+operator|)
+operator|>>
+name|FP_STKY_OFF
 expr_stmt|;
 name|__stmxcsr
 argument_list|(
@@ -929,9 +934,13 @@ argument_list|)
 expr_stmt|;
 name|_ex
 operator||=
+operator|(
 name|_mxcsr
 operator|&
 name|SSE_STKY_FLD
+operator|)
+operator|>>
+name|SSE_STKY_OFF
 expr_stmt|;
 return|return
 operator|(
@@ -947,7 +956,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE__&& !__cplusplus */
+comment|/* __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE&& !__cplusplus */
 end_comment
 
 begin_if
@@ -964,8 +973,8 @@ name|defined
 argument_list|(
 name|__cplusplus
 argument_list|)
-expr|\
 operator|&&
+expr|\
 name|defined
 argument_list|(
 name|__GNUCLIKE_ASM
@@ -973,7 +982,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|__CC_SUPPORTS___INLINE__
+name|__CC_SUPPORTS___INLINE
 argument_list|)
 end_if
 
@@ -1056,7 +1065,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !(!__IEEEFP_NOINLINES__&& !__cplusplus&& __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE__) */
+comment|/* !(!__IEEEFP_NOINLINES__&& !__cplusplus&& __GNUCLIKE_ASM&&          __CC_SUPPORTS___INLINE) */
 end_comment
 
 begin_comment
@@ -1065,7 +1074,6 @@ end_comment
 
 begin_function_decl
 name|__BEGIN_DECLS
-specifier|extern
 name|fp_prec_t
 name|fpgetprec
 parameter_list|(
@@ -1075,7 +1083,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|fp_prec_t
 name|fpsetprec
 parameter_list|(
@@ -1094,7 +1101,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__IEEEFP_NOINLINES__&& !__cplusplus&& __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE__ */
+comment|/* !__IEEEFP_NOINLINES__&& !__cplusplus&& __GNUCLIKE_ASM&&           __CC_SUPPORTS___INLINE */
 end_comment
 
 begin_endif
