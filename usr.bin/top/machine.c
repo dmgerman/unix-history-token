@@ -219,6 +219,26 @@ name|displaymode
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TOP_USERNAME_LEN
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|namelength
+init|=
+name|TOP_USERNAME_LEN
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -227,6 +247,11 @@ init|=
 literal|8
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -969,6 +994,9 @@ name|struct
 name|statics
 modifier|*
 name|statics
+parameter_list|,
+name|char
+name|do_unames
 parameter_list|)
 block|{
 name|int
@@ -1038,6 +1066,11 @@ name|smpmode
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|do_unames
+condition|)
+block|{
 while|while
 condition|(
 operator|(
@@ -1070,6 +1103,7 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
