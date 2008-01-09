@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2003 Peter Wemm.  * Copyright (c) 1990 Andrew Moore, Talke Studio  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * 	from: @(#) ieeefp.h 	1.0 (Berkeley) 9/23/93  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  *	IEEE floating point type and constant definitions.  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,6 +14,10 @@ define|#
 directive|define
 name|_MACHINE_IEEEFP_H_
 end_define
+
+begin_comment
+comment|/*  * IEEE floating point type, constant and function definitions.  */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -533,10 +533,6 @@ begin_comment
 comment|/*  * General notes about conflicting SSE vs FP status bits.  * This code assumes that software will not fiddle with the control  * bits of the SSE and x87 in such a way to get them out of sync and  * still expect this to work.  Break this at your peril.  * Because I based this on the i386 port, the x87 state is used for  * the fpget*() functions, and is shadowed into the SSE state for  * the fpset*() functions.  For dual source fpget*() functions, I  * merge the two together.  I think.  */
 end_comment
 
-begin_comment
-comment|/* Set rounding control */
-end_comment
-
 begin_function
 specifier|static
 name|__inline__
@@ -664,7 +660,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set precision for fadd/fsub/fsqrt etc x87 instructions  * There is no equivalent SSE mode or control.  */
+comment|/*  * Get or set the rounding precision for x87 arithmetic operations.  * There is no equivalent SSE mode or control.  */
 end_comment
 
 begin_function
@@ -763,7 +759,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look at the exception masks  * Note that x87 masks are inverse of the fp*() functions  * API.  ie: mask = 1 means disable for x87 and SSE, but  * for the fp*() api, mask = 1 means enabled.  */
+comment|/*  * Get or set the exception mask.  * Note that the x87 mask bits are inverted by the API -- a mask bit of 1  * means disable for x87 and SSE, but for fp*mask() it means enable.  */
 end_comment
 
 begin_function
@@ -892,10 +888,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* See which sticky exceptions are pending, and reset them */
-end_comment
 
 begin_function
 specifier|static
@@ -1064,11 +1056,11 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__IEEEFP_NOINLINES__&& !__cplusplus&& __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE__ */
+comment|/* !(!__IEEEFP_NOINLINES__&& !__cplusplus&& __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE__) */
 end_comment
 
 begin_comment
-comment|/* Augment the userland declarations */
+comment|/* Augment the userland declarations. */
 end_comment
 
 begin_function_decl
