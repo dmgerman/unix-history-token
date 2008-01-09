@@ -1969,6 +1969,10 @@ operator|->
 name|mi_type
 operator|==
 name|EXT_PACKET
+operator|&&
+name|cnt
+operator|==
+literal|1
 condition|)
 block|{
 name|dofree
