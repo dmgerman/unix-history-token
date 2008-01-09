@@ -1159,6 +1159,9 @@ case|case
 name|EXT_DISPOSABLE
 case|:
 case|case
+name|EXT_PACKET
+case|:
+case|case
 name|EXT_EXTREF
 case|:
 name|mb_free_ext_fast
