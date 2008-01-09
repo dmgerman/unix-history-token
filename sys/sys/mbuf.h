@@ -2111,6 +2111,17 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_PKTHDR
+condition|)
 name|KASSERT
 argument_list|(
 name|SLIST_EMPTY
@@ -2128,6 +2139,8 @@ literal|"doing fast free of mbuf with tags"
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|uma_zfree_arg
 argument_list|(
 name|zone_mbuf
