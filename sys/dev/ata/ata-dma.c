@@ -332,9 +332,7 @@ name|dma
 operator|->
 name|boundary
 operator|=
-literal|128
-operator|*
-name|DEV_BSIZE
+literal|65536
 expr_stmt|;
 name|ch
 operator|->
