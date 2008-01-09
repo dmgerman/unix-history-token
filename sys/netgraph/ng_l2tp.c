@@ -279,7 +279,7 @@ begin_define
 define|#
 directive|define
 name|L2TP_MAX_XWIN
-value|16
+value|128
 end_define
 
 begin_comment
