@@ -438,26 +438,11 @@ begin_comment
 comment|/* flush to zero offset */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__GNUCLIKE_ASM
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__CC_SUPPORTS___INLINE
-argument_list|)
-expr|\
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -472,31 +457,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|__fldenv
-parameter_list|(
-name|addr
-parameter_list|)
-value|__asm __volatile("fldenv %0" : : "m" (*(addr)))
-end_define
-
-begin_define
-define|#
-directive|define
 name|__fnstcw
 parameter_list|(
 name|addr
 parameter_list|)
 value|__asm __volatile("fnstcw %0" : "=m" (*(addr)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__fnstenv
-parameter_list|(
-name|addr
-parameter_list|)
-value|__asm __volatile("fnstenv %0" : "=m" (*(addr)))
 end_define
 
 begin_define
@@ -554,6 +519,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+call|(
+name|fp_rnd_t
+call|)
+argument_list|(
 operator|(
 name|_cw
 operator|&
@@ -561,6 +530,7 @@ name|FP_RND_FLD
 operator|)
 operator|>>
 name|FP_RND_OFF
+argument_list|)
 operator|)
 return|;
 block|}
@@ -576,15 +546,15 @@ name|fp_rnd_t
 name|_m
 parameter_list|)
 block|{
-name|unsigned
-name|short
-name|_cw
+name|fp_rnd_t
+name|_p
 decl_stmt|;
 name|unsigned
 name|_mxcsr
 decl_stmt|;
-name|fp_rnd_t
-name|_p
+name|unsigned
+name|short
+name|_cw
 decl_stmt|;
 name|__fnstcw
 argument_list|(
@@ -594,6 +564,10 @@ argument_list|)
 expr_stmt|;
 name|_p
 operator|=
+call|(
+name|fp_rnd_t
+call|)
+argument_list|(
 operator|(
 name|_cw
 operator|&
@@ -601,6 +575,7 @@ name|FP_RND_FLD
 operator|)
 operator|>>
 name|FP_RND_OFF
+argument_list|)
 expr_stmt|;
 name|_cw
 operator|&=
@@ -683,6 +658,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+call|(
+name|fp_prec_t
+call|)
+argument_list|(
 operator|(
 name|_cw
 operator|&
@@ -690,6 +669,7 @@ name|FP_PRC_FLD
 operator|)
 operator|>>
 name|FP_PRC_OFF
+argument_list|)
 operator|)
 return|;
 block|}
@@ -701,7 +681,7 @@ name|__inline
 name|fp_prec_t
 name|__fpsetprec
 parameter_list|(
-name|fp_rnd_t
+name|fp_prec_t
 name|_m
 parameter_list|)
 block|{
@@ -720,6 +700,10 @@ argument_list|)
 expr_stmt|;
 name|_p
 operator|=
+call|(
+name|fp_prec_t
+call|)
+argument_list|(
 operator|(
 name|_cw
 operator|&
@@ -727,6 +711,7 @@ name|FP_PRC_FLD
 operator|)
 operator|>>
 name|FP_PRC_OFF
+argument_list|)
 expr_stmt|;
 name|_cw
 operator|&=
@@ -900,10 +885,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|fp_except_t
-name|_ex
-decl_stmt|;
 name|unsigned
+name|_ex
+decl_stmt|,
 name|_mxcsr
 decl_stmt|;
 name|unsigned
@@ -944,6 +928,9 @@ name|SSE_STKY_OFF
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|fp_except_t
+operator|)
 name|_ex
 operator|)
 return|;
@@ -956,7 +943,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUCLIKE_ASM&& __CC_SUPPORTS___INLINE&& !__cplusplus */
+comment|/* __GNUCLIKE_ASM */
 end_comment
 
 begin_if
@@ -968,21 +955,9 @@ argument_list|(
 name|__IEEEFP_NOINLINES__
 argument_list|)
 operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-operator|&&
-expr|\
 name|defined
 argument_list|(
 name|__GNUCLIKE_ASM
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__CC_SUPPORTS___INLINE
 argument_list|)
 end_if
 
@@ -1065,7 +1040,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !(!__IEEEFP_NOINLINES__&& !__cplusplus&& __GNUCLIKE_ASM&&          __CC_SUPPORTS___INLINE) */
+comment|/* !(!__IEEEFP_NOINLINES__&& __GNUCLIKE_ASM) */
 end_comment
 
 begin_comment
@@ -1101,7 +1076,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__IEEEFP_NOINLINES__&& !__cplusplus&& __GNUCLIKE_ASM&&           __CC_SUPPORTS___INLINE */
+comment|/* !__IEEEFP_NOINLINES__&& __GNUCLIKE_ASM */
 end_comment
 
 begin_endif
