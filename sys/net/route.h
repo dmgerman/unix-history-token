@@ -1266,6 +1266,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|RT_TRYLOCK
+parameter_list|(
+name|_rt
+parameter_list|)
+value|mtx_trylock(&(_rt)->rt_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RT_UNLOCK
 parameter_list|(
 name|_rt
