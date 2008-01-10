@@ -3415,6 +3415,9 @@ case|:
 case|case
 name|IFT_L2VLAN
 case|:
+case|case
+name|IFT_BRIDGE
+case|:
 if|if
 condition|(
 name|sdl
