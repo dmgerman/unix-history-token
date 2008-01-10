@@ -2458,6 +2458,13 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|ncpu
+operator|>
+literal|1
+condition|)
+block|{
+if|if
+condition|(
 name|sysctlbyname
 argument_list|(
 literal|"machdep.hlt_cpus"
@@ -2479,7 +2486,8 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot determine which CPUs are halted"
+literal|"ERROR: Cannot determine which CPUs are "
+literal|"halted"
 argument_list|)
 expr_stmt|;
 name|cpumask
@@ -2487,6 +2495,7 @@ operator|&=
 operator|~
 name|haltedcpus
 expr_stmt|;
+block|}
 while|while
 condition|(
 operator|(
