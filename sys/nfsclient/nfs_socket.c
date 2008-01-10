@@ -1071,8 +1071,7 @@ name|thread
 modifier|*
 name|td
 init|=
-operator|&
-name|thread0
+name|curthread
 decl_stmt|;
 comment|/* only used for socreate and sobind */
 if|if
