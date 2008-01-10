@@ -3337,6 +3337,12 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 name|so_mask
+decl_stmt|,
+modifier|*
+name|som
+init|=
+operator|&
+name|so_mask
 decl_stmt|;
 specifier|static
 name|int
@@ -3610,8 +3616,7 @@ name|NEXTADDR
 argument_list|(
 name|RTA_NETMASK
 argument_list|,
-operator|&
-name|so_mask
+name|som
 argument_list|)
 expr_stmt|;
 name|rtm
