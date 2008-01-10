@@ -1113,6 +1113,7 @@ name|size_cols
 parameter_list|(
 name|int
 name|ef
+name|__unused
 parameter_list|,
 name|struct
 name|radix_node
@@ -4280,6 +4281,7 @@ name|dst
 parameter_list|,
 name|u_long
 name|addr
+name|__unused
 parameter_list|,
 name|u_long
 name|mask
