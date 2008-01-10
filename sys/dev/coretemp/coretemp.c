@@ -501,53 +501,14 @@ name|cpu_id
 operator|&
 literal|15
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/*        * XXXrpaulo: I have this CPU model and when it returns from C3        * coretemp continues to function properly.        */
 comment|/* 	 * Check for errata AE18. 	 * "Processor Digital Thermal Sensor (DTS) Readout stops 	 *  updating upon returning from C3/C4 state." 	 * 	 * Adapted from the Linux coretemp driver. 	 */
-if|if
-condition|(
-name|cpu_model
-operator|==
-literal|0xe
-operator|&&
-name|cpu_mask
-operator|<
-literal|0xc
-condition|)
-block|{
-name|msr
-operator|=
-name|rdmsr
-argument_list|(
-name|MSR_BIOS_SIGN
-argument_list|)
-expr_stmt|;
-name|msr
-operator|=
-name|msr
-operator|>>
-literal|32
-expr_stmt|;
-if|if
-condition|(
-name|msr
-operator|<
-literal|0x39
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"not supported (Intel errata "
-literal|"AE18), try updating your BIOS\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-block|}
+block|if (cpu_model == 0xe&& cpu_mask< 0xc) { 		msr = rdmsr(MSR_BIOS_SIGN); 		msr = msr>> 32; 		if (msr< 0x39) { 			device_printf(dev, "not supported (Intel errata " 			    "AE18), try updating your BIOS\n"); 			return (ENXIO); 		} 	}
+endif|#
+directive|endif
 comment|/* 	 * On some Core 2 CPUs, there's an undocumented MSR that 	 * can tell us if Tj(max) is 100 or 85. 	 * 	 * The if-clause for CPUs having the MSR_IA32_EXT_CONFIG was adapted 	 * from the Linux coretemp driver. 	 */
 name|sc
 operator|->
