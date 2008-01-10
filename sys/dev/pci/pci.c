@@ -1389,7 +1389,7 @@ specifier|static
 name|int
 name|pci_do_msi
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1430,7 +1430,7 @@ specifier|static
 name|int
 name|pci_do_msix
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
