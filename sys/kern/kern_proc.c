@@ -365,6 +365,9 @@ name|struct
 name|kinfo_proc
 modifier|*
 name|kp
+parameter_list|,
+name|int
+name|preferthread
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3789,7 +3792,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fill in information that is thread specific.  * Must be called with p_slock locked.  */
+comment|/*  * Fill in information that is thread specific.  Must be called with p_slock  * locked.  If 'preferthread' is set, overwrite certain process-related  * fields that are maintained for both threads and processes.  */
 end_comment
 
 begin_function
@@ -3806,6 +3809,9 @@ name|struct
 name|kinfo_proc
 modifier|*
 name|kp
+parameter_list|,
+name|int
+name|preferthread
 parameter_list|)
 block|{
 name|struct
@@ -4217,6 +4223,21 @@ name|td
 operator|->
 name|td_user_pri
 expr_stmt|;
+if|if
+condition|(
+name|preferthread
+condition|)
+name|kp
+operator|->
+name|ki_runtime
+operator|=
+name|cputick2usec
+argument_list|(
+name|td
+operator|->
+name|td_runtime
+argument_list|)
+expr_stmt|;
 comment|/* We can't get this anymore but ps etc never used it anyway. */
 name|kp
 operator|->
@@ -4299,6 +4320,8 @@ name|p
 argument_list|)
 argument_list|,
 name|kp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|PROC_SUNLOCK
@@ -4593,6 +4616,8 @@ argument_list|)
 argument_list|,
 operator|&
 name|kinfo_proc
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|PROC_SUNLOCK
@@ -4648,6 +4673,8 @@ name|td
 argument_list|,
 operator|&
 name|kinfo_proc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|error

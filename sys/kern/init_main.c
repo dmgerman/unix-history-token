@@ -2172,6 +2172,11 @@ name|struct
 name|rusage
 name|ru
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 comment|/* 	 * Now we can look at the time, having had a chance to verify the 	 * time from the filesystem.  Pretend that proc0 started now. 	 */
 name|sx_slock
 argument_list|(
@@ -2245,6 +2250,20 @@ name|rux_iticks
 operator|=
 literal|0
 expr_stmt|;
+name|FOREACH_THREAD_IN_PROC
+argument_list|(
+argument|p
+argument_list|,
+argument|td
+argument_list|)
+block|{
+name|td
+operator|->
+name|td_runtime
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 name|sx_sunlock
 argument_list|(

@@ -594,6 +594,10 @@ name|td_ru
 decl_stmt|;
 comment|/* (t) rusage information */
 name|uint64_t
+name|td_incruntime
+decl_stmt|;
+comment|/* (t) Cpu ticks to transfer to proc. */
+name|uint64_t
 name|td_runtime
 decl_stmt|;
 comment|/* (t) How many cpu ticks we've run. */
