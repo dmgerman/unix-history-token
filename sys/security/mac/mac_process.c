@@ -1254,8 +1254,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|result
@@ -1421,8 +1419,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_LOCK

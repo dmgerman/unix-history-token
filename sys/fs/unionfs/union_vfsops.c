@@ -772,8 +772,6 @@ argument_list|,
 name|LK_SHARED
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1372,8 +1370,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|ump
@@ -2026,8 +2022,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|flags
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|*

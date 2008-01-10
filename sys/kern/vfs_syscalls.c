@@ -1723,8 +1723,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3620,8 +3618,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|AUDIT_ARG
@@ -5447,8 +5443,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -7349,8 +7343,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|==
@@ -8990,8 +8982,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -12032,8 +12022,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VATTR_NULL
@@ -12541,8 +12529,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|AUDIT_ARG
@@ -12690,8 +12676,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VATTR_NULL
@@ -13266,8 +13250,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|AUDIT_ARG
@@ -13420,8 +13402,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VATTR_NULL
@@ -14072,8 +14052,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|AUDIT_ARG
@@ -14457,8 +14435,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|setbirthtime
@@ -15301,8 +15277,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|AUDIT_ARG
@@ -15617,8 +15591,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -16099,8 +16071,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|AUDIT_ARG
@@ -18194,8 +18164,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|loff
@@ -18956,7 +18924,7 @@ name|uap
 operator|->
 name|count
 expr_stmt|;
-comment|/* vn_lock(vp, LK_SHARED | LK_RETRY, td); */
+comment|/* vn_lock(vp, LK_SHARED | LK_RETRY); */
 name|vn_lock
 argument_list|(
 name|vp
@@ -18964,8 +18932,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|AUDIT_ARG
@@ -20759,8 +20725,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -21067,8 +21031,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|atomic_set_int

@@ -1191,8 +1191,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -1846,8 +1844,6 @@ argument_list|,
 name|vp_locked
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vdrop
@@ -3084,8 +3080,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -4087,8 +4081,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|dev_relthread
@@ -5526,8 +5518,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 return|return

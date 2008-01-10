@@ -1732,8 +1732,6 @@ name|cn_lkflags
 operator||
 name|LK_RETRY
 argument_list|)
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|dirloop
@@ -2348,8 +2346,6 @@ name|cn_lkflags
 operator||
 name|LK_RETRY
 argument_list|)
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2469,8 +2465,6 @@ argument_list|,
 name|LK_UPGRADE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we're looking up the last component and we need an exclusive 	 * lock, adjust our lkflags. 	 */
@@ -2676,8 +2670,6 @@ name|cn_lkflags
 operator||
 name|LK_RETRY
 argument_list|)
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3019,8 +3011,6 @@ argument_list|,
 name|LK_SHARED
 operator||
 name|LK_NOWAIT
-argument_list|,
-name|td
 argument_list|)
 condition|)
 name|panic
@@ -3495,8 +3485,6 @@ argument_list|,
 name|LK_UPGRADE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3723,8 +3711,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Search a new directory. 	 * 	 * The last component of the filename is left accessible via 	 * cnp->cn_nameptr for callers that need the name. Callers needing 	 * the name set the SAVENAME flag. When done, they assume 	 * responsibility for freeing the pathname buffer. 	 */

@@ -3733,8 +3733,6 @@ argument_list|(
 name|fvp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=
@@ -4944,8 +4942,6 @@ argument_list|(
 name|fvp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 operator|==
 literal|0
@@ -5794,8 +5790,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|out

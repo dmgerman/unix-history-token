@@ -2705,8 +2705,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vp
@@ -3382,8 +3380,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|qvp
@@ -5262,14 +5258,6 @@ name|dqp
 decl_stmt|;
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-comment|/* XXX */
-name|struct
 name|dquot
 modifier|*
 name|dq
@@ -5559,8 +5547,6 @@ argument_list|,
 name|LK_SHARED
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|dqvplocked
@@ -6416,14 +6402,6 @@ name|dq
 decl_stmt|;
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-comment|/* XXX */
-name|struct
 name|vnode
 modifier|*
 name|dqvp
@@ -6621,8 +6599,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VFS_UNLOCK_GIANT

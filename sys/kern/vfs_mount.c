@@ -5316,8 +5316,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Put the new filesystem on the mount list after root. 	 */
@@ -5998,8 +5996,6 @@ operator||
 name|LK_INTERLOCK
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vdrop

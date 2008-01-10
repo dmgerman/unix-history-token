@@ -8545,8 +8545,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_NOWAIT
-argument_list|,
-name|td
 argument_list|)
 operator|==
 literal|0

@@ -2583,8 +2583,6 @@ argument_list|,
 name|LK_SHARED
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2836,8 +2834,6 @@ argument_list|,
 name|LK_SHARED
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|ASSERT_VOP_LOCKED
@@ -3651,8 +3647,6 @@ argument_list|,
 name|LK_SHARED
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -4456,8 +4450,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|ioflag
@@ -4902,8 +4894,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error

@@ -314,15 +314,6 @@ operator|->
 name|cn_nameptr
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|cnp
-operator|->
-name|cn_thread
-decl_stmt|;
-name|struct
 name|portalnode
 modifier|*
 name|pt
@@ -565,8 +556,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error

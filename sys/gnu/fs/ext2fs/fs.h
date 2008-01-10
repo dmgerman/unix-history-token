@@ -329,7 +329,7 @@ name|lock_super
 parameter_list|(
 name|devvp
 parameter_list|)
-value|vn_lock(devvp, LK_EXCLUSIVE | LK_RETRY, curthread)
+value|vn_lock(devvp, LK_EXCLUSIVE | LK_RETRY)
 end_define
 
 begin_define

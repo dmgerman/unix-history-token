@@ -3813,8 +3813,6 @@ argument_list|,
 name|LK_RETRY
 operator||
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3831,8 +3829,6 @@ argument_list|,
 name|LK_RETRY
 operator||
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}

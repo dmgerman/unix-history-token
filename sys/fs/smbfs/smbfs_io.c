@@ -1059,8 +1059,6 @@ argument_list|,
 name|LK_UPGRADE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1087,8 +1085,6 @@ argument_list|,
 name|LK_DOWNGRADE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return

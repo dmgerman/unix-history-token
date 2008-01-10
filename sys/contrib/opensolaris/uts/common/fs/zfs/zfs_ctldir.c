@@ -1461,12 +1461,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|ap
-operator|->
-name|a_cnp
-operator|->
-name|cn_thread
 argument_list|)
 expr_stmt|;
 return|return
@@ -2179,12 +2173,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|ap
-operator|->
-name|a_cnp
-operator|->
-name|cn_thread
 argument_list|)
 expr_stmt|;
 name|mutex_exit
@@ -2460,8 +2448,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|mutex_exit

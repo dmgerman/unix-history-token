@@ -2299,8 +2299,6 @@ argument_list|,
 name|LK_UPGRADE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2313,8 +2311,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2363,8 +2359,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_DOWNGRADE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}

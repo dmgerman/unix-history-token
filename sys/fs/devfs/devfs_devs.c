@@ -1244,8 +1244,6 @@ operator||
 name|LK_INTERLOCK
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 else|else

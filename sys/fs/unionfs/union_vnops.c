@@ -549,8 +549,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -640,8 +638,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -664,8 +660,6 @@ operator|->
 name|cn_lkflags
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_lock
@@ -675,8 +669,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1241,8 +1233,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|lockflag
@@ -1346,8 +1336,6 @@ argument_list|,
 name|LK_SHARED
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1445,8 +1433,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2487,8 +2473,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|locked
@@ -4219,10 +4203,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 name|unp
@@ -4374,10 +4354,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 name|unp
@@ -5394,8 +5370,6 @@ argument_list|(
 name|fvp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=
@@ -5451,8 +5425,6 @@ argument_list|(
 name|fvp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=
@@ -5714,8 +5686,6 @@ argument_list|(
 name|fdvp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=
@@ -5801,8 +5771,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -6990,8 +6958,6 @@ argument_list|,
 name|LK_UPGRADE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|locked
@@ -7065,8 +7031,6 @@ argument_list|,
 name|LK_DOWNGRADE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -8570,8 +8534,6 @@ argument_list|,
 name|revlock
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -9076,8 +9038,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|unp
@@ -9874,10 +9834,6 @@ argument_list|,
 name|LK_UPGRADE
 operator||
 name|LK_RETRY
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -9908,10 +9864,6 @@ argument_list|,
 name|LK_DOWNGRADE
 operator||
 name|LK_RETRY
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 block|}
@@ -10042,10 +9994,6 @@ argument_list|,
 name|LK_UPGRADE
 operator||
 name|LK_RETRY
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -10078,10 +10026,6 @@ argument_list|,
 name|LK_DOWNGRADE
 operator||
 name|LK_RETRY
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 block|}

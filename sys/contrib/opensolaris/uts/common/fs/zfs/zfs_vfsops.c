@@ -3247,8 +3247,6 @@ operator|*
 name|vpp
 argument_list|,
 name|flags
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3677,8 +3675,6 @@ operator|*
 name|vpp
 argument_list|,
 name|flags
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -4102,8 +4098,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -4238,8 +4232,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vnode_create_vobject

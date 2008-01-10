@@ -351,8 +351,6 @@ argument_list|,
 name|ltype
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vdrop
@@ -4329,10 +4327,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|tcnp
-operator|->
-name|cn_thread
 argument_list|)
 expr_stmt|;
 if|if

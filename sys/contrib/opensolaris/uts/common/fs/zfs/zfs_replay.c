@@ -454,8 +454,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -788,8 +786,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|error
@@ -1077,8 +1073,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|vn_lock
@@ -1091,8 +1085,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|error
@@ -1386,8 +1378,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1506,8 +1496,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1972,8 +1960,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|error

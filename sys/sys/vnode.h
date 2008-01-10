@@ -3035,11 +3035,6 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
 name|char
 modifier|*
 name|file
@@ -3058,10 +3053,8 @@ parameter_list|(
 name|vp
 parameter_list|,
 name|flags
-parameter_list|,
-name|td
 parameter_list|)
-value|_vn_lock(vp, flags, td, __FILE__, __LINE__)
+value|_vn_lock(vp, flags, __FILE__, __LINE__)
 end_define
 
 begin_function_decl

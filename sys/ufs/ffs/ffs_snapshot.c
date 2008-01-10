@@ -2159,8 +2159,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2194,8 +2192,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2974,8 +2970,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
-argument_list|,
-name|td
 argument_list|)
 operator|!=
 literal|0
@@ -4571,8 +4565,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -11637,8 +11629,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -13904,8 +13894,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

@@ -167,8 +167,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vdrop

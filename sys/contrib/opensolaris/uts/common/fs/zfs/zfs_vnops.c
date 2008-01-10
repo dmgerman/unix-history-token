@@ -4251,8 +4251,6 @@ argument_list|,
 name|cnp
 operator|->
 name|cn_lkflags
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4270,8 +4268,6 @@ argument_list|,
 name|ltype
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5046,8 +5042,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -6236,8 +6230,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|zfs_dirent_unlock
@@ -11200,8 +11192,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}

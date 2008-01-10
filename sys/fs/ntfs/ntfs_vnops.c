@@ -3244,10 +3244,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|cnp
-operator|->
-name|cn_thread
 argument_list|)
 expr_stmt|;
 return|return

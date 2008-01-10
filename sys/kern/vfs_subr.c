@@ -4449,8 +4449,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vgone
@@ -7773,8 +7771,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|(
@@ -9290,8 +9286,6 @@ argument_list|,
 name|flags
 operator||
 name|LK_INTERLOCK
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=
@@ -9628,8 +9622,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
-argument_list|,
-name|td
 argument_list|)
 operator|==
 literal|0
@@ -10461,8 +10453,6 @@ argument_list|,
 name|LK_INTERLOCK
 operator||
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -17567,8 +17557,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 block|}

@@ -1144,8 +1144,6 @@ operator|*
 name|vpp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 else|#
@@ -1253,8 +1251,6 @@ operator|*
 name|vpp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 else|#
@@ -1316,8 +1312,6 @@ operator|*
 name|vpp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 else|#
