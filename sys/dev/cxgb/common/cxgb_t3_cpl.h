@@ -1174,6 +1174,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_WR_GEN
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> S_WR_GEN)
+end_define
+
+begin_define
+define|#
+directive|define
 name|WR_HDR
 value|struct work_request_hdr wr
 end_define

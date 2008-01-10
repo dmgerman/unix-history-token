@@ -123,6 +123,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|cxgb_use_16k_clusters
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|buf_stack
@@ -431,7 +438,7 @@ argument_list|,
 operator|(
 name|JUMBO_Q_SIZE
 operator|>>
-literal|1
+literal|2
 operator|)
 argument_list|)
 operator|)
@@ -456,7 +463,7 @@ argument_list|,
 operator|(
 name|FL_Q_SIZE
 operator|>>
-literal|1
+literal|2
 operator|)
 argument_list|)
 operator|)
@@ -471,11 +478,22 @@ directive|if
 name|__FreeBSD_version
 operator|>
 literal|800000
+if|if
+condition|(
+name|cxgb_use_16k_clusters
+condition|)
 name|ccp
 operator|->
 name|ccp_jumbo_zone
 operator|=
 name|zone_jumbo16
+expr_stmt|;
+else|else
+name|ccp
+operator|->
+name|ccp_jumbo_zone
+operator|=
+name|zone_jumbo9
 expr_stmt|;
 else|#
 directive|else
