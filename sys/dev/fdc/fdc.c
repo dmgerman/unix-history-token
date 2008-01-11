@@ -5888,14 +5888,6 @@ operator||
 name|FDC_KTHREAD_ALIVE
 operator|)
 expr_stmt|;
-name|wakeup
-argument_list|(
-operator|&
-name|fdc
-operator|->
-name|fdc_thread
-argument_list|)
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -8316,7 +8308,6 @@ literal|0
 condition|)
 name|msleep
 argument_list|(
-operator|&
 name|fdc
 operator|->
 name|fdc_thread
