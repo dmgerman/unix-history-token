@@ -2439,6 +2439,10 @@ name|curthread
 expr_stmt|;
 name|KASSERT
 argument_list|(
+name|panicstr
+operator|!=
+name|NULL
+operator|||
 name|lkp
 operator|->
 name|lk_exclusivecount
@@ -2454,6 +2458,10 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+name|panicstr
+operator|!=
+name|NULL
+operator|||
 name|lkp
 operator|->
 name|lk_lockholder
@@ -2477,7 +2485,7 @@ name|td
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Drop the lock reference and switch the owner.  This will result 	 * in an atomic operation like td_lock is only accessed by curthread 	 * and lk_lockholder only needs one write. 	 */
+comment|/* 	 * Drop the lock reference and switch the owner.  This will result 	 * in an atomic operation like td_lock is only accessed by curthread 	 * and lk_lockholder only needs one write.  Note also that the lock 	 * owner can be alredy KERNPROC, so in that case just skip the 	 * decrement. 	 */
 if|if
 condition|(
 name|lkp
