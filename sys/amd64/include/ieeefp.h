@@ -16,7 +16,7 @@ name|_MACHINE_IEEEFP_H_
 end_define
 
 begin_comment
-comment|/*  * IEEE floating point type, constant and function definitions.  */
+comment|/*  * IEEE floating point type, constant and function definitions.  * XXX: {FP,SSE}*FLD and {FP,SSE}*OFF are undocumented pollution.  */
 end_comment
 
 begin_ifndef
@@ -37,7 +37,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * FP rounding modes  */
+comment|/*  * Rounding modes.  */
 end_comment
 
 begin_typedef
@@ -51,10 +51,10 @@ block|,
 comment|/* round to nearest */
 name|FP_RM
 block|,
-comment|/* round down to minus infinity */
+comment|/* round down towards minus infinity */
 name|FP_RP
 block|,
-comment|/* round up to plus infinity */
+comment|/* round up towards plus infinity */
 name|FP_RZ
 comment|/* truncate */
 block|}
@@ -63,7 +63,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * FP precision modes  */
+comment|/*  * Precision (i.e., rounding precision) modes.  */
 end_comment
 
 begin_typedef
@@ -96,7 +96,7 @@ value|int
 end_define
 
 begin_comment
-comment|/*  * FP exception masks  */
+comment|/*  * Exception bit masks.  */
 end_comment
 
 begin_define
@@ -177,55 +177,7 @@ comment|/* stack fault */
 end_comment
 
 begin_comment
-comment|/*  * FP registers  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FP_MSKS_REG
-value|0
-end_define
-
-begin_comment
-comment|/* exception masks */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FP_PRC_REG
-value|0
-end_define
-
-begin_comment
-comment|/* precision */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FP_RND_REG
-value|0
-end_define
-
-begin_comment
-comment|/* direction */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FP_STKY_REG
-value|1
-end_define
-
-begin_comment
-comment|/* sticky flags */
-end_comment
-
-begin_comment
-comment|/*  * FP register bit field masks  */
+comment|/*  * FPU control word bit-field masks.  */
 end_comment
 
 begin_define
@@ -258,7 +210,11 @@ value|0xc00
 end_define
 
 begin_comment
-comment|/* round control field */
+comment|/* rounding control field */
+end_comment
+
+begin_comment
+comment|/*  * FPU status word bit-field masks.  */
 end_comment
 
 begin_define
@@ -273,7 +229,7 @@ comment|/* sticky flags field */
 end_comment
 
 begin_comment
-comment|/*  * SSE mxcsr register bit field masks  */
+comment|/*  * SSE mxcsr register bit-field masks.  */
 end_comment
 
 begin_define
@@ -332,7 +288,7 @@ comment|/* flush to zero on underflow */
 end_comment
 
 begin_comment
-comment|/*  * FP register bit field offsets  */
+comment|/*  * FPU control word bit-field offsets (shift counts).  */
 end_comment
 
 begin_define
@@ -365,7 +321,11 @@ value|10
 end_define
 
 begin_comment
-comment|/* round control offset */
+comment|/* rounding control offset */
+end_comment
+
+begin_comment
+comment|/*  * FPU status word bit-field offsets (shift counts).  */
 end_comment
 
 begin_define
@@ -380,7 +340,7 @@ comment|/* sticky flags offset */
 end_comment
 
 begin_comment
-comment|/*  * SSE mxcsr register bit field offsets  */
+comment|/*  * SSE mxcsr register bit-field offsets (shift counts).  */
 end_comment
 
 begin_define
@@ -827,7 +787,7 @@ operator||=
 operator|(
 operator|~
 name|_m
-operator|>>
+operator|<<
 name|FP_MSKS_OFF
 operator|)
 operator|&
@@ -964,19 +924,9 @@ end_if
 begin_define
 define|#
 directive|define
-name|fpgetround
+name|fpgetmask
 parameter_list|()
-value|__fpgetround()
-end_define
-
-begin_define
-define|#
-directive|define
-name|fpsetround
-parameter_list|(
-name|_m
-parameter_list|)
-value|__fpsetround(_m)
+value|__fpgetmask()
 end_define
 
 begin_define
@@ -990,29 +940,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|fpsetprec
-parameter_list|(
-name|_m
-parameter_list|)
-value|__fpsetprec(_m)
-end_define
-
-begin_define
-define|#
-directive|define
-name|fpgetmask
+name|fpgetround
 parameter_list|()
-value|__fpgetmask()
-end_define
-
-begin_define
-define|#
-directive|define
-name|fpsetmask
-parameter_list|(
-name|_m
-parameter_list|)
-value|__fpsetmask(_m)
+value|__fpgetround()
 end_define
 
 begin_define
@@ -1021,6 +951,36 @@ directive|define
 name|fpgetsticky
 parameter_list|()
 value|__fpgetsticky()
+end_define
+
+begin_define
+define|#
+directive|define
+name|fpsetmask
+parameter_list|(
+name|m
+parameter_list|)
+value|__fpsetmask(m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fpsetprec
+parameter_list|(
+name|m
+parameter_list|)
+value|__fpsetprec(m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fpsetround
+parameter_list|(
+name|m
+parameter_list|)
+value|__fpsetround(m)
 end_define
 
 begin_comment
