@@ -136,7 +136,7 @@ return|return
 operator|(
 name|cpackf
 argument_list|(
-name|t
+name|a
 argument_list|,
 name|t
 argument_list|)
@@ -152,7 +152,7 @@ name|a
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * csqrtf(inf + nan i)  = inf +  nan i 		 * csqrtf(inf + y i)    = inf +  0 i 		 * csqrtf(-inf + nan i) = nan +- inf i 		 * csqrtf(-inf + y i)   = 0   +  inf i 		 */
+comment|/* 		 * csqrtf(inf + NaN i)  = inf +  NaN i 		 * csqrtf(inf + y i)    = inf +  0 i 		 * csqrtf(-inf + NaN i) = NaN +- inf i 		 * csqrtf(-inf + y i)   = 0   +  inf i 		 */
 if|if
 condition|(
 name|signbit

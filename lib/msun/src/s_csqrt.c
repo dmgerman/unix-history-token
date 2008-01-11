@@ -48,7 +48,7 @@ name|on
 end_pragma
 
 begin_comment
-comment|/* We risk spurious overflow for components>= DBL_MAX/(1+sqrt(2)) */
+comment|/* We risk spurious overflow for components>= DBL_MAX / (1 + sqrt(2)). */
 end_comment
 
 begin_define
@@ -69,30 +69,34 @@ name|z
 parameter_list|)
 block|{
 name|double
+name|complex
+name|result
+decl_stmt|;
+name|double
 name|a
-init|=
-name|creal
-argument_list|(
-name|z
-argument_list|)
 decl_stmt|,
 name|b
-init|=
-name|cimag
-argument_list|(
-name|z
-argument_list|)
 decl_stmt|;
 name|double
 name|t
 decl_stmt|;
-name|double
-name|complex
-name|result
-decl_stmt|;
 name|int
 name|scale
 decl_stmt|;
+name|a
+operator|=
+name|creal
+argument_list|(
+name|z
+argument_list|)
+expr_stmt|;
+name|b
+operator|=
+name|cimag
+argument_list|(
+name|z
+argument_list|)
+expr_stmt|;
 comment|/* Handle special cases. */
 if|if
 condition|(
@@ -154,7 +158,7 @@ return|return
 operator|(
 name|cpack
 argument_list|(
-name|t
+name|a
 argument_list|,
 name|t
 argument_list|)
@@ -170,7 +174,7 @@ name|a
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * csqrt(inf + nan i)  = inf +  nan i 		 * csqrt(inf + y i)    = inf +  0 i 		 * csqrt(-inf + nan i) = nan +- inf i 		 * csqrt(-inf + y i)   = 0   +  inf i 		 */
+comment|/* 		 * csqrt(inf + NaN i)  = inf +  NaN i 		 * csqrt(inf + y i)    = inf +  0 i 		 * csqrt(-inf + NaN i) = NaN +- inf i 		 * csqrt(-inf + y i)   = 0   +  inf i 		 */
 if|if
 condition|(
 name|signbit
@@ -221,11 +225,17 @@ comment|/* 	 * The remaining special case (b is NaN) is handled just fine by 	 *
 comment|/* Scale to avoid overflow. */
 if|if
 condition|(
+name|fabs
+argument_list|(
 name|a
+argument_list|)
 operator|>=
 name|THRESH
 operator|||
+name|fabs
+argument_list|(
 name|b
+argument_list|)
 operator|>=
 name|THRESH
 condition|)
@@ -250,7 +260,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Algorithm 312, CACM vol 10, Oct 1967 */
+comment|/* Algorithm 312, CACM vol 10, Oct 1967. */
 if|if
 condition|(
 name|a
@@ -337,7 +347,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Rescale */
+comment|/* Rescale. */
 if|if
 condition|(
 name|scale
