@@ -2825,6 +2825,8 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -2853,6 +2855,15 @@ name|di
 index|]
 operator|.
 name|unit_number
+argument_list|)
+operator|==
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"asprintf() failed (out of memory?)"
 argument_list|)
 expr_stmt|;
 comment|/* 			 * If zflag is set, skip any devices with zero I/O. 			 */
@@ -3021,6 +3032,11 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|devname
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
