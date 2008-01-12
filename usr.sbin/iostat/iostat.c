@@ -2857,13 +2857,14 @@ operator|.
 name|unit_number
 argument_list|)
 operator|==
+operator|-
 literal|1
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"asprintf() failed (out of memory?)"
+literal|"asprintf"
 argument_list|)
 expr_stmt|;
 comment|/* 			 * If zflag is set, skip any devices with zero I/O. 			 */
