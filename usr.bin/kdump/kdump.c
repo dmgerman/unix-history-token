@@ -2935,6 +2935,17 @@ argument_list|,
 name|decimal
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+operator|*
+name|ip
+operator|==
+name|SOL_SOCKET
+condition|)
+block|{
 name|ip
 operator|++
 expr_stmt|;
@@ -2958,6 +2969,7 @@ operator|*
 name|ip
 argument_list|)
 expr_stmt|;
+block|}
 name|ip
 operator|++
 expr_stmt|;
