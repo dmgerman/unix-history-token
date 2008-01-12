@@ -4918,6 +4918,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|dev_lock
 argument_list|()
 expr_stmt|;
@@ -4943,6 +4948,11 @@ block|{
 name|dev_unlock
 argument_list|()
 expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4959,6 +4969,11 @@ name|v_usecount
 expr_stmt|;
 name|dev_unlock
 argument_list|()
+expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|dev_rel
 argument_list|(
