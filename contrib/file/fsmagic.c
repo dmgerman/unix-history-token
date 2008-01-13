@@ -171,7 +171,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: fsmagic.c,v 1.47 2007/01/12 17:38:28 christos Exp $"
+literal|"@(#)$File: fsmagic.c,v 1.48 2007/10/17 19:33:31 christos Exp $"
 argument_list|)
 end_macro
 
@@ -209,6 +209,15 @@ name|int
 name|ret
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|mime
+init|=
+name|ms
+operator|->
+name|flags
+operator|&
+name|MAGIC_MIME
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -336,15 +345,7 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
-name|ms
-operator|->
-name|flags
-operator|&
-name|MAGIC_MIME
-operator|)
-operator|!=
-literal|0
+name|mime
 condition|)
 block|{
 if|if
@@ -362,6 +363,12 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|mime
+operator|&
+name|MAGIC_MIME_TYPE
+operator|)
+operator|&&
 name|file_printf
 argument_list|(
 name|ms
@@ -1335,17 +1342,22 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+operator|!
+name|mime
+operator|||
+operator|(
+name|mime
+operator|&
+name|MAGIC_MIME_TYPE
+operator|)
+operator|)
+operator|&&
 name|file_printf
 argument_list|(
 name|ms
 argument_list|,
-operator|(
-name|ms
-operator|->
-name|flags
-operator|&
-name|MAGIC_MIME
-operator|)
+name|mime
 condition|?
 literal|"application/x-empty"
 else|:
