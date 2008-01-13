@@ -8202,13 +8202,6 @@ name|flushdeps
 parameter_list|)
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-name|struct
 name|buf
 name|sentinel
 decl_stmt|;
@@ -8588,8 +8581,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|flushwithdeps

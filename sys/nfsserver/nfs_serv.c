@@ -2613,8 +2613,6 @@ operator|.
 name|ni_vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|ind
@@ -7780,8 +7778,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -9854,8 +9850,6 @@ argument_list|(
 name|dirp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -11041,8 +11035,6 @@ argument_list|(
 name|dirp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -11736,8 +11728,6 @@ argument_list|(
 name|dirp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -12891,8 +12881,6 @@ argument_list|(
 name|fdirp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -12929,8 +12917,6 @@ argument_list|(
 name|tdirp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -13520,8 +13506,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|nd
@@ -13871,8 +13855,6 @@ argument_list|(
 name|dirp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -14875,8 +14857,6 @@ argument_list|(
 name|dirp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -15801,8 +15781,6 @@ argument_list|(
 name|dirp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -16570,8 +16548,6 @@ argument_list|(
 name|dirp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -17281,8 +17257,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * end section.  Allocate rbuf and continue 	 */
@@ -17468,8 +17442,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -18805,8 +18777,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -18964,8 +18934,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

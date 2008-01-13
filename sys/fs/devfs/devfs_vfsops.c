@@ -354,8 +354,6 @@ argument_list|(
 name|rvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vfs_mountedfrom

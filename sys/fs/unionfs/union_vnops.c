@@ -500,8 +500,6 @@ argument_list|(
 name|ldvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -538,8 +536,6 @@ argument_list|(
 name|udvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_lock
@@ -583,8 +579,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -597,8 +591,6 @@ argument_list|(
 name|dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|*
@@ -801,8 +793,6 @@ argument_list|(
 name|uvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1028,8 +1018,6 @@ argument_list|(
 name|lvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1210,8 +1198,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1274,8 +1260,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1546,11 +1530,6 @@ modifier|*
 name|cnp
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|struct
 name|vnode
 modifier|*
 name|udvp
@@ -1582,10 +1561,6 @@ operator|=
 name|ap
 operator|->
 name|a_cnp
-expr_stmt|;
-name|td
-operator|=
-name|curthread
 expr_stmt|;
 name|udvp
 operator|=
@@ -1632,8 +1607,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1660,7 +1633,7 @@ name|a_vpp
 argument_list|,
 name|cnp
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -1826,11 +1799,6 @@ modifier|*
 name|cnp
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|struct
 name|vnode
 modifier|*
 name|udvp
@@ -1862,10 +1830,6 @@ operator|=
 name|ap
 operator|->
 name|a_cnp
-expr_stmt|;
-name|td
-operator|=
-name|curthread
 expr_stmt|;
 name|udvp
 operator|=
@@ -1912,8 +1876,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1940,7 +1902,7 @@ name|a_vpp
 argument_list|,
 name|cnp
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -2703,8 +2665,6 @@ operator|->
 name|a_vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|UNIONFS_INTERNAL_DEBUG
@@ -4260,10 +4220,6 @@ operator|->
 name|a_vp
 argument_list|,
 literal|0
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4411,10 +4367,6 @@ operator|->
 name|a_vp
 argument_list|,
 literal|0
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5398,8 +5350,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5453,8 +5403,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5710,8 +5658,6 @@ argument_list|(
 name|fdvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5739,8 +5685,6 @@ argument_list|(
 name|tvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -5875,8 +5819,6 @@ argument_list|(
 name|ltdvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5901,8 +5843,6 @@ argument_list|(
 name|ltvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -6227,8 +6167,6 @@ argument_list|(
 name|uvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|cnp
@@ -6685,8 +6623,6 @@ argument_list|(
 name|uvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|cnp
@@ -8058,11 +7994,6 @@ name|vnode
 modifier|*
 name|lvp
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 name|error
 operator|=
 literal|0
@@ -8082,12 +8013,6 @@ operator|=
 name|ap
 operator|->
 name|a_vp
-expr_stmt|;
-name|td
-operator|=
-name|ap
-operator|->
-name|a_td
 expr_stmt|;
 if|if
 condition|(
@@ -8113,8 +8038,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|flags
-argument_list|,
-name|td
 argument_list|)
 operator|)
 return|;
@@ -8298,8 +8221,6 @@ argument_list|(
 name|lvp
 argument_list|,
 name|flags
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VI_LOCK
@@ -8337,8 +8258,6 @@ argument_list|(
 name|lvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vdrop
@@ -8406,8 +8325,6 @@ argument_list|(
 name|uvp
 argument_list|,
 name|flags
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VI_LOCK
@@ -8446,8 +8363,6 @@ argument_list|(
 name|uvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -8461,8 +8376,6 @@ argument_list|(
 name|lvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -8522,8 +8435,6 @@ argument_list|(
 name|lvp
 argument_list|,
 name|revlock
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 else|else
@@ -8771,10 +8682,6 @@ argument_list|(
 name|lvp
 argument_list|,
 name|flags
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 name|VI_LOCK
@@ -8833,10 +8740,6 @@ argument_list|(
 name|uvp
 argument_list|,
 name|flags
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 name|VI_LOCK
@@ -9182,8 +9085,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -9226,8 +9127,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|UNIONFS_INTERNAL_DEBUG

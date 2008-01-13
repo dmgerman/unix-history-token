@@ -1099,8 +1099,6 @@ argument_list|(
 name|vnp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|vgone
@@ -1113,8 +1111,6 @@ argument_list|(
 name|vnp
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|vdrop

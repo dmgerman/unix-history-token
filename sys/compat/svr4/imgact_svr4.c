@@ -197,13 +197,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -424,8 +417,6 @@ operator|->
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/*      * Destroy old process VM and create a new one (with a new stack)      */

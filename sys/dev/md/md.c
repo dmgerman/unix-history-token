@@ -2499,8 +2499,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write
@@ -2674,8 +2672,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2732,8 +2728,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write
@@ -4452,8 +4446,6 @@ operator|->
 name|vnode
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|free
@@ -4665,8 +4657,6 @@ operator|.
 name|ni_vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4717,8 +4707,6 @@ operator|.
 name|ni_vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4835,8 +4823,6 @@ operator|.
 name|ni_vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|(
@@ -5077,8 +5063,6 @@ operator|->
 name|vnode
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|(

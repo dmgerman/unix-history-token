@@ -1873,8 +1873,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2455,8 +2453,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VFS_UNLOCK_GIANT
@@ -2808,8 +2804,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3053,8 +3047,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write
@@ -3168,8 +3160,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VFS_UNLOCK_GIANT
@@ -3725,8 +3715,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3894,8 +3882,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4045,8 +4031,6 @@ name|flags
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|curthread
-argument_list|,
 name|file
 argument_list|,
 name|line
@@ -4105,8 +4089,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|error
@@ -5533,8 +5515,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5762,8 +5742,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -5920,8 +5898,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}

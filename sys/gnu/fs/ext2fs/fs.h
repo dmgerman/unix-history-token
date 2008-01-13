@@ -339,7 +339,7 @@ name|unlock_super
 parameter_list|(
 name|devvp
 parameter_list|)
-value|VOP_UNLOCK(devvp, 0, curthread)
+value|VOP_UNLOCK(devvp, 0)
 end_define
 
 begin_comment

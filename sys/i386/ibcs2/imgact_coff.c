@@ -894,8 +894,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1286,8 +1284,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|unlocked_fail
@@ -1404,13 +1400,6 @@ literal|0
 decl_stmt|;
 name|caddr_t
 name|hole
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
 decl_stmt|;
 if|if
 condition|(
@@ -1559,8 +1548,6 @@ operator|->
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error

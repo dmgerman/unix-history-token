@@ -221,15 +221,6 @@ name|cnp
 operator|->
 name|cn_nameiop
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|cnp
-operator|->
-name|cn_thread
-decl_stmt|;
 name|int
 name|unlen
 decl_stmt|;
@@ -1492,8 +1483,6 @@ argument_list|(
 name|pdp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error

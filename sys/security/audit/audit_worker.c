@@ -409,8 +409,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -697,8 +695,6 @@ argument_list|,
 name|LK_DRAIN
 operator||
 name|LK_INTERLOCK
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|(
@@ -718,8 +714,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|panic
@@ -750,8 +744,6 @@ argument_list|,
 name|LK_DRAIN
 operator||
 name|LK_INTERLOCK
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|(
@@ -771,8 +763,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|panic
@@ -809,8 +799,6 @@ argument_list|,
 name|LK_DRAIN
 operator||
 name|LK_INTERLOCK
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|(
@@ -830,8 +818,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|panic

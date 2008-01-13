@@ -540,8 +540,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|(
@@ -562,8 +560,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -590,8 +586,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_UPGRADE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -635,8 +629,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_DOWNGRADE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write
@@ -761,8 +753,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_DOWNGRADE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write
@@ -825,8 +815,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_DOWNGRADE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write
@@ -893,8 +881,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_DOWNGRADE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write

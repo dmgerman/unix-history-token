@@ -583,8 +583,6 @@ name|dzp
 argument_list|)
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -603,8 +601,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|VN_RELE
@@ -819,8 +815,6 @@ name|dzp
 argument_list|)
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -896,8 +890,6 @@ name|dzp
 argument_list|)
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|fail
@@ -1113,8 +1105,6 @@ name|zp
 argument_list|)
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -1125,8 +1115,6 @@ name|dzp
 argument_list|)
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|VN_RELE
@@ -1404,8 +1392,6 @@ name|sdzp
 argument_list|)
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1422,8 +1408,6 @@ argument_list|(
 name|svp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -1540,8 +1524,6 @@ name|tdzp
 argument_list|)
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1981,8 +1963,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|VN_RELE

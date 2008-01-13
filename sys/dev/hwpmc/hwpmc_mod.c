@@ -2713,15 +2713,6 @@ modifier|*
 name|freepath
 parameter_list|)
 block|{
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|td
-operator|=
-name|curthread
-expr_stmt|;
 operator|*
 name|fullpath
 operator|=
@@ -2745,7 +2736,7 @@ argument_list|)
 expr_stmt|;
 name|vn_fullpath
 argument_list|(
-name|td
+name|curthread
 argument_list|,
 name|v
 argument_list|,
@@ -2759,8 +2750,6 @@ argument_list|(
 name|v
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}

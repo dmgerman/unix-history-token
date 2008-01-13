@@ -1595,8 +1595,6 @@ argument_list|(
 name|devvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1610,8 +1608,6 @@ argument_list|(
 name|devvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|DROP_GIANT
@@ -2142,8 +2138,6 @@ argument_list|(
 name|devvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4487,8 +4481,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -4554,8 +4546,6 @@ operator|->
 name|pm_devvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}

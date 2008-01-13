@@ -3292,7 +3292,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (VOP_LOCK(vp, LK_EXCLUSIVE, td) != 0) 		panic("reiserfs/iget: unexpected lock failure");
+block|if (VOP_LOCK(vp, LK_EXCLUSIVE) != 0) 		panic("reiserfs/iget: unexpected lock failure");
 comment|/* 	 * Exclusively lock the vnode before adding to hash. Note, that we 	 * must not release nor downgrade the lock (despite flags argument 	 * says) till it is fully initialized. 	 */
 block|lockmgr(vp->v_vnlock, LK_EXCLUSIVE, (struct mtx *)0, td);
 endif|#

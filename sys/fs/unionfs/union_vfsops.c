@@ -842,8 +842,6 @@ operator|->
 name|mnt_vnodecovered
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1359,8 +1357,6 @@ argument_list|(
 name|upperrootvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_lock
@@ -1571,8 +1567,6 @@ operator|->
 name|um_uppervp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -1617,8 +1611,6 @@ operator|->
 name|um_uppervp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get the unionfs root vnode. 	 */

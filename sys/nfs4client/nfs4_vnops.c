@@ -5159,8 +5159,6 @@ argument_list|(
 name|dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -8636,10 +8634,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|fcnp
-operator|->
-name|cn_thread
 argument_list|)
 expr_stmt|;
 if|if

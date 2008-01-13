@@ -3007,13 +3007,6 @@ modifier|*
 name|note_name
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-name|struct
 name|sysentvec
 modifier|*
 name|sv
@@ -3287,8 +3280,6 @@ operator|->
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -3852,8 +3843,6 @@ operator|->
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

@@ -1650,10 +1650,6 @@ argument_list|(
 name|vn
 argument_list|,
 literal|0
-argument_list|,
-name|cnp
-operator|->
-name|cn_thread
 argument_list|)
 expr_stmt|;
 name|KASSERT

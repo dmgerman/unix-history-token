@@ -734,9 +734,7 @@ argument_list|(
 name|vp
 argument_list|)
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|curthread
 argument_list|,
 name|ap
 operator|->
@@ -796,9 +794,7 @@ argument_list|(
 name|vp
 argument_list|)
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|curthread
 argument_list|)
 operator|)
 return|;
@@ -1885,8 +1881,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -2112,8 +2106,6 @@ argument_list|(
 name|filename_vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return

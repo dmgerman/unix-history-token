@@ -801,8 +801,6 @@ operator|.
 name|ni_vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|NDFREE
@@ -1381,8 +1379,6 @@ operator|->
 name|pr_root
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|change_root
@@ -1463,8 +1459,6 @@ operator|->
 name|pr_root
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VFS_UNLOCK_GIANT

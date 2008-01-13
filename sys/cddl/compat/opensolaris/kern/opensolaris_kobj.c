@@ -288,7 +288,7 @@ name|flags
 argument_list|,
 literal|0
 argument_list|,
-name|td
+name|curthread
 operator|->
 name|td_ucred
 argument_list|,
@@ -322,8 +322,6 @@ operator|.
 name|ni_vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -530,8 +528,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -823,8 +819,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return

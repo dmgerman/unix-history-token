@@ -1407,9 +1407,7 @@ argument_list|(
 name|vp
 argument_list|)
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|curthread
 argument_list|,
 name|ap
 operator|->
@@ -1448,9 +1446,7 @@ argument_list|(
 name|vp
 argument_list|)
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|curthread
 argument_list|,
 name|ap
 operator|->

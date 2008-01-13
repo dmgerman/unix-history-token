@@ -1534,8 +1534,6 @@ operator|*
 name|vpp
 argument_list|,
 name|flags
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 block|}

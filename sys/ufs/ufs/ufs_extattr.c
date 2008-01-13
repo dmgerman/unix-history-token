@@ -1063,8 +1063,6 @@ argument_list|(
 name|start_dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1156,8 +1154,6 @@ argument_list|(
 name|start_dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Check that ufs_lookup() didn't release the lock when we 		 * didn't want it to. 		 */
@@ -1196,8 +1192,6 @@ argument_list|(
 name|start_dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1309,8 +1303,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1334,8 +1326,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2707,8 +2697,6 @@ argument_list|(
 name|backing_vnode
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2723,8 +2711,6 @@ argument_list|(
 name|backing_vnode
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|free_exit
@@ -2852,8 +2838,6 @@ operator|->
 name|uele_backing_vnode
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2964,8 +2948,6 @@ argument_list|(
 name|filename_vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2994,8 +2976,6 @@ argument_list|(
 name|filename_vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3044,8 +3024,6 @@ argument_list|(
 name|filename_vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3105,8 +3083,6 @@ argument_list|(
 name|filename_vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3165,8 +3141,6 @@ argument_list|(
 name|filename_vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3894,8 +3868,6 @@ operator|->
 name|uele_backing_vnode
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -4575,8 +4547,6 @@ operator|->
 name|uele_backing_vnode
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -5128,8 +5098,6 @@ operator|->
 name|uele_backing_vnode
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return

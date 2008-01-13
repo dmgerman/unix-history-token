@@ -2115,8 +2115,6 @@ argument_list|(
 name|dp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* XXX This should probably move to the top of function. */
@@ -2743,8 +2741,6 @@ argument_list|(
 name|dp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 		 * This is a temporary assert to make sure I know what the 		 * behavior here was. 		 */
@@ -3132,8 +3128,6 @@ operator|->
 name|ni_dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3383,8 +3377,6 @@ operator|->
 name|ni_dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3439,8 +3431,6 @@ argument_list|(
 name|dp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|success
@@ -3615,15 +3605,6 @@ name|cnp
 parameter_list|)
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|cnp
-operator|->
-name|cn_thread
-decl_stmt|;
-name|struct
 name|vnode
 modifier|*
 name|dp
@@ -3793,8 +3774,6 @@ argument_list|(
 name|dp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3932,8 +3911,6 @@ argument_list|(
 name|dp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 		 * This is a temporary assert to make sure I know what the 		 * behavior here was. 		 */
@@ -4042,8 +4019,6 @@ argument_list|(
 name|dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 else|else
@@ -4118,8 +4093,6 @@ argument_list|(
 name|dp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -4304,12 +4277,6 @@ operator|->
 name|ni_vp
 argument_list|,
 literal|0
-argument_list|,
-name|ndp
-operator|->
-name|ni_cnd
-operator|.
-name|cn_thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -4410,12 +4377,6 @@ operator|->
 name|ni_dvp
 argument_list|,
 literal|0
-argument_list|,
-name|ndp
-operator|->
-name|ni_cnd
-operator|.
-name|cn_thread
 argument_list|)
 expr_stmt|;
 if|if

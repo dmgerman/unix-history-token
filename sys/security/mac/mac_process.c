@@ -1277,8 +1277,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Find out what maximum protection we may be allowing now 		 * but a policy needs to get removed. 		 */
@@ -1463,8 +1461,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write

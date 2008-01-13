@@ -2988,8 +2988,6 @@ operator|->
 name|v_vnode
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3523,8 +3521,6 @@ operator|->
 name|v_vnode
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3697,8 +3693,6 @@ operator|->
 name|v_vnode
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3857,8 +3851,6 @@ operator|->
 name|v_vnode
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -5454,8 +5446,6 @@ argument_list|(
 name|dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error

@@ -2196,8 +2196,6 @@ argument_list|(
 name|dp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2609,8 +2607,6 @@ operator|->
 name|ni_vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2639,8 +2635,6 @@ operator|->
 name|ni_dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4105,14 +4099,6 @@ name|pubflag
 parameter_list|)
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-comment|/* XXX */
-name|struct
 name|mount
 modifier|*
 name|mp
@@ -4421,8 +4407,6 @@ operator|*
 name|vpp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|out

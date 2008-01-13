@@ -2049,8 +2049,6 @@ operator|->
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|fdcloseexec
@@ -2428,8 +2426,6 @@ operator|->
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2887,8 +2883,6 @@ operator|->
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Handle deferred decrement of ref counts. 	 */

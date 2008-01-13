@@ -3768,8 +3768,6 @@ argument_list|(
 name|dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)
@@ -3800,8 +3798,6 @@ operator|->
 name|a_vpp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)
@@ -3866,8 +3862,6 @@ operator|->
 name|a_vpp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)
@@ -4285,8 +4279,6 @@ operator|->
 name|a_vpp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)

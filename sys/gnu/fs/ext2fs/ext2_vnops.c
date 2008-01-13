@@ -3507,15 +3507,6 @@ operator|->
 name|a_fcnp
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|fcnp
-operator|->
-name|cn_thread
-decl_stmt|;
-name|struct
 name|inode
 modifier|*
 name|ip
@@ -3769,8 +3760,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -3811,8 +3800,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -3886,8 +3873,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -3975,8 +3960,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4006,8 +3989,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5604,15 +5585,6 @@ operator|->
 name|a_cnp
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|cnp
-operator|->
-name|cn_thread
-decl_stmt|;
-name|struct
 name|inode
 modifier|*
 name|ip
@@ -5744,8 +5716,6 @@ argument_list|(
 name|dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Truncate inode.  The only stuff left 	 * in the directory is "." and "..".  The 	 * "." reference is inconsequential since 	 * we're quashing it.  The ".." reference 	 * has already been adjusted above.  We've 	 * removed the "." reference and the reference 	 * in the parent directory, but there may be 	 * other hard links so decrement by 2 and 	 * worry about them later. 	 */
@@ -5772,7 +5742,9 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|td
+name|cnp
+operator|->
+name|cn_thread
 argument_list|)
 expr_stmt|;
 name|cache_purge

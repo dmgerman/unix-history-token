@@ -803,8 +803,6 @@ argument_list|(
 name|lvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -818,8 +816,6 @@ argument_list|(
 name|uvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vp
@@ -1727,8 +1723,6 @@ argument_list|(
 name|dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3571,8 +3565,6 @@ argument_list|(
 name|udvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|unionfs_vn_create_on_upper_free_out2

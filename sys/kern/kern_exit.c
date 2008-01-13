@@ -1067,8 +1067,6 @@ argument_list|(
 name|ttyvp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_REVOKE

@@ -385,15 +385,6 @@ name|cnp
 operator|->
 name|cn_nameiop
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|cnp
-operator|->
-name|cn_thread
-decl_stmt|;
 name|ino_t
 name|saved_ino
 decl_stmt|;
@@ -2012,8 +2003,6 @@ argument_list|(
 name|pdp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* race to get the inode */
@@ -3137,8 +3126,6 @@ argument_list|(
 name|tvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -3919,8 +3906,6 @@ argument_list|(
 name|tvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 ifdef|#

@@ -1155,11 +1155,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -1176,10 +1171,6 @@ operator|(
 literal|"devfs_delete doomed dirent"
 operator|)
 argument_list|)
-expr_stmt|;
-name|td
-operator|=
-name|curthread
 expr_stmt|;
 name|de
 operator|->
@@ -1267,8 +1258,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vdrop

@@ -4690,8 +4690,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|mp
@@ -4913,8 +4911,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* XXXMAC: pass to vfs_mount_alloc? */
@@ -5425,8 +5421,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -6026,8 +6020,6 @@ argument_list|(
 name|coveredvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -6061,8 +6053,6 @@ argument_list|(
 name|coveredvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -6099,8 +6089,6 @@ argument_list|(
 name|coveredvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -6213,8 +6201,6 @@ argument_list|(
 name|coveredvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -6630,8 +6616,6 @@ argument_list|(
 name|coveredvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -7238,8 +7222,6 @@ argument_list|(
 name|rootvnode
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -7697,8 +7679,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vput

@@ -3972,10 +3972,8 @@ parameter_list|(
 name|vp
 parameter_list|,
 name|flags
-parameter_list|,
-name|td
 parameter_list|)
-value|VOP_LOCK1(vp, flags, td, __FILE__, __LINE__)
+value|VOP_LOCK1(vp, flags, __FILE__, __LINE__)
 end_define
 
 begin_function_decl

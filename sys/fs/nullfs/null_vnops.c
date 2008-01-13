@@ -470,7 +470,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (reles& VDESC_VP0_WILLUNLOCK) 				VOP_UNLOCK(*(vps_p[i]), 0, curthread);
+block|if (reles& VDESC_VP0_WILLUNLOCK) 				VOP_UNLOCK(*(vps_p[i]), 0);
 endif|#
 directive|endif
 if|if
@@ -1415,15 +1415,6 @@ operator|->
 name|a_flags
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|ap
-operator|->
-name|a_td
-decl_stmt|;
-name|struct
 name|null_node
 modifier|*
 name|nn
@@ -1512,8 +1503,6 @@ argument_list|(
 name|lvp
 argument_list|,
 name|flags
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We might have slept to get the lock and someone might have 		 * clean our vnode already, switching vnode lock from one in 		 * lowervp to v_lock in our own vnode structure.  Handle this 		 * case by reacquiring correct lock in requested mode. 		 */
@@ -1588,8 +1577,6 @@ argument_list|(
 name|lvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1657,15 +1644,6 @@ name|int
 name|mtxlkflag
 init|=
 literal|0
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|ap
-operator|->
-name|a_td
 decl_stmt|;
 name|struct
 name|null_node
@@ -1771,8 +1749,6 @@ argument_list|(
 name|lvp
 argument_list|,
 name|flags
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vdrop

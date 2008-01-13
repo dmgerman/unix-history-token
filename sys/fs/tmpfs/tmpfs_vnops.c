@@ -316,8 +316,6 @@ argument_list|(
 name|dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* Allocate a new vnode on the matching entry. */
@@ -4882,10 +4880,6 @@ argument_list|(
 name|fdvp
 argument_list|,
 literal|0
-argument_list|,
-name|tcnp
-operator|->
-name|cn_thread
 argument_list|)
 expr_stmt|;
 name|out

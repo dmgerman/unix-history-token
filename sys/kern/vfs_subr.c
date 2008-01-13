@@ -2661,8 +2661,6 @@ operator||
 name|LK_EXCLUSIVE
 operator||
 name|LK_NOWAIT
-argument_list|,
-name|td
 argument_list|)
 condition|)
 block|{
@@ -2720,8 +2718,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_INTERLOCK
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2755,8 +2751,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vdropl
@@ -3719,13 +3713,6 @@ name|vp
 parameter_list|)
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-name|struct
 name|mount
 modifier|*
 name|vnmp
@@ -3764,8 +3751,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_NOWAIT
-argument_list|,
-name|td
 argument_list|)
 operator|!=
 literal|0
@@ -3796,8 +3781,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3824,8 +3807,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_INTERLOCK
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write
@@ -3861,8 +3842,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_INTERLOCK
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write
@@ -7790,8 +7769,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write
@@ -9375,8 +9352,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -9667,8 +9642,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -9816,8 +9789,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|v_decr_usecount
@@ -9889,8 +9860,6 @@ operator||
 name|LK_INTERLOCK
 operator||
 name|LK_NOWAIT
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VI_LOCK
@@ -9958,8 +9927,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|done
@@ -10504,8 +10471,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vdrop
@@ -10591,8 +10556,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vdropl
@@ -10694,8 +10657,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vdropl
@@ -10787,8 +10748,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vgone
@@ -10801,8 +10760,6 @@ argument_list|(
 name|rootvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|busy
@@ -17584,8 +17541,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 block|}

@@ -4130,15 +4130,6 @@ operator|->
 name|a_fcnp
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|fcnp
-operator|->
-name|cn_thread
-decl_stmt|;
-name|struct
 name|denode
 modifier|*
 name|ip
@@ -4448,8 +4439,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -4525,8 +4514,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4806,8 +4793,6 @@ argument_list|(
 name|tdvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4855,8 +4840,6 @@ argument_list|(
 name|tdvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -4917,8 +4900,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4930,8 +4911,6 @@ argument_list|(
 name|fdvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -5037,8 +5016,6 @@ argument_list|(
 name|fdvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -5046,8 +5023,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5089,8 +5064,6 @@ argument_list|(
 name|fdvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -5098,8 +5071,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5150,8 +5121,6 @@ argument_list|(
 name|fdvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -5159,8 +5128,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5207,8 +5174,6 @@ argument_list|(
 name|fdvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -5286,8 +5251,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5374,8 +5337,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5388,8 +5349,6 @@ argument_list|(
 name|fvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|bad
@@ -6391,8 +6350,6 @@ argument_list|(
 name|dvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Truncate the directory that is being deleted. 	 */

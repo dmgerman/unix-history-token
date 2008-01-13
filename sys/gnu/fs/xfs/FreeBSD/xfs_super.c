@@ -420,8 +420,6 @@ operator|->
 name|v_vnode
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -751,8 +749,6 @@ argument_list|(
 name|devvp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|devvp
