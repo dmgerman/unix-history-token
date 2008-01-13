@@ -1123,22 +1123,6 @@ name|m
 operator|=
 name|n
 expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|"collapsed into immediate - list:%d\n"
-argument_list|,
-operator|!
-name|SLIST_EMPTY
-argument_list|(
-operator|&
-name|m0
-operator|->
-name|m_pkthdr
-operator|.
-name|tags
-argument_list|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|retry
 goto|;
