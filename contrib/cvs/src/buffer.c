@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * Copyright (C) 1996-2005 The Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  */
+end_comment
+
+begin_comment
 comment|/* Code for the buffer data structure.  */
 end_comment
 
@@ -682,12 +686,6 @@ name|ALLOC_COUNT
 value|(16)
 name|alc
 operator|=
-operator|(
-operator|(
-expr|struct
-name|buffer_data
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|ALLOC_COUNT
@@ -698,7 +696,6 @@ expr|struct
 name|buffer_data
 argument_list|)
 argument_list|)
-operator|)
 expr_stmt|;
 name|space
 operator|=
@@ -715,15 +712,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|alc
-operator|==
-name|NULL
-operator|||
+operator|!
 name|space
-operator|==
-name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|alc
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 for|for
 control|(
 name|i
@@ -5291,12 +5290,12 @@ name|s
 decl_stmt|;
 name|int
 name|closefp
-init|=
-literal|1
+decl_stmt|,
+name|statted
 decl_stmt|;
-comment|/* Must be a pipe or a socket.  What could go wrong? */
-name|assert
-argument_list|(
+comment|/* Must be a pipe or a socket. What could go wrong?      * Well, apparently for disconnected clients under AIX, the      * fstat() will return -1 on the server if the client has gone      * away.      */
+if|if
+condition|(
 name|fstat
 argument_list|(
 name|fileno
@@ -5309,10 +5308,22 @@ argument_list|,
 operator|&
 name|s
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
-argument_list|)
+condition|)
+name|statted
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|statted
+operator|=
+literal|1
+expr_stmt|;
+name|closefp
+operator|=
+name|statted
 expr_stmt|;
 comment|/* Flush the buffer if we can */
 if|if
@@ -5364,6 +5375,8 @@ block|{
 comment|/* shutdown() sockets */
 if|if
 condition|(
+name|statted
+operator|&&
 name|S_ISSOCK
 argument_list|(
 name|s
@@ -5406,7 +5419,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 name|errno
 argument_list|,
@@ -5471,6 +5484,8 @@ name|NO_SOCKET_TO_FD
 comment|/* shutdown() sockets */
 if|if
 condition|(
+name|statted
+operator|&&
 name|S_ISSOCK
 argument_list|(
 name|s
@@ -5507,6 +5522,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|statted
+operator|&&
 name|closefp
 operator|&&
 name|fclose
@@ -5521,15 +5538,7 @@ condition|)
 block|{
 if|if
 condition|(
-literal|0
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
-operator|||
 name|server_active
-endif|#
-directive|endif
-comment|/* SERVER_SUPPORT */
 condition|)
 block|{
 comment|/* Syslog this? */
@@ -5537,10 +5546,11 @@ block|}
 ifdef|#
 directive|ifdef
 name|CLIENT_SUPPORT
+comment|/* We are already closing the connection. 	 * On error, print a warning and try to 	 * continue to avoid infinte loops. 	 */
 else|else
 name|error
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 name|errno
 argument_list|,
@@ -5596,6 +5606,7 @@ operator|==
 name|EINTR
 condition|)
 do|;
+comment|/* We are already closing the connection. 	 * On error, print a warning and try to 	 * continue to avoid infinte loops. 	 */
 if|if
 condition|(
 name|w
@@ -5605,7 +5616,7 @@ literal|1
 condition|)
 name|error
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 name|errno
 argument_list|,
@@ -6948,6 +6959,8 @@ name|struct
 name|buffer_data
 modifier|*
 name|outdata
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -7168,6 +7181,16 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+comment|/* if ((have + PACKET_SLOP + 4)> BUFFER_DATA_SIZE), then 	   outdata may be NULL. */
+if|if
+condition|(
+name|outdata
+operator|==
+name|NULL
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 name|outdata
 operator|->
 name|size

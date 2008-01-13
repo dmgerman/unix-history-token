@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS kit.  *  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS kit.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -717,7 +717,7 @@ init|=
 block|{
 literal|"# Set this to \"no\" if pserver shouldn't check system users/passwords\n"
 block|,
-literal|"#SystemAuth=no\n"
+literal|"#SystemAuth=yes\n"
 block|,
 literal|"\n"
 block|,
@@ -764,7 +764,7 @@ literal|"\n"
 block|,
 literal|"# Set `RereadLogAfterVerify' to `always' (the default) to allow the verifymsg\n"
 block|,
-literal|"# script to change the log message.  Set it to `stat' to force CVS to verify"
+literal|"# script to change the log message.  Set it to `stat' to force CVS to verify\n"
 block|,
 literal|"# that the file has changed before reading it (this can take up to an extra\n"
 block|,
@@ -1777,6 +1777,33 @@ argument_list|(
 name|rcs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|rcsnode
+condition|)
+block|{
+comment|/* Probably not necessary (?); RCS_parsercsfile already printed a 	   message.  */
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"Failed to parse `%s'."
+argument_list|,
+name|rcs
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|rcs
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|retcode
 operator|=
 name|RCS_checkout
