@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Patch  *   * Create a Larry Wall format "patch" file between a previous release and the  * current head of a module, or between two releases.  Can specify the  * release as either a date or a revision number.  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Patch  *   * Create a Larry Wall format "patch" file between a previous release and the  * current head of a module, or between two releases.  Can specify the  * release as either a date or a revision number.  */
 end_comment
 
 begin_include
@@ -277,7 +277,7 @@ name|patch_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-flR] [-c|-u] [-s|-t] [-V %%d]\n"
+literal|"Usage: %s %s [-flR] [-c|-u] [-s|-t] [-V %%d] [-k kopt]\n"
 block|,
 literal|"    -r rev|-D date [-r rev2 | -D date2] modules...\n"
 block|,
@@ -295,11 +295,13 @@ literal|"\t-s\tShort patch - one liner per file.\n"
 block|,
 literal|"\t-t\tTop two diffs - last change made to the file.\n"
 block|,
+literal|"\t-V vers\tUse RCS Version \"vers\" for keyword expansion.\n"
+block|,
+literal|"\t-k kopt\tSpecify keyword expansion mode.\n"
+block|,
 literal|"\t-D date\tDate.\n"
 block|,
 literal|"\t-r rev\tRevision - symbolic or numeric.\n"
-block|,
-literal|"\t-V vers\tUse RCS Version \"vers\" for keyword expansion.\n"
 block|,
 literal|"(Specify the --help global option for a list of other help options)\n"
 block|,
@@ -392,17 +394,12 @@ case|:
 case|case
 literal|'q'
 case|:
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 comment|/* The CVS 1.5 client sends these options (in addition to 		   Global_option requests), so we must ignore them.  */
 if|if
 condition|(
 operator|!
 name|server_active
 condition|)
-endif|#
-directive|endif
 name|error
 argument_list|(
 literal|1
@@ -1488,6 +1485,11 @@ argument_list|(
 name|repository
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|where
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
@@ -1679,6 +1681,12 @@ name|rcs
 init|=
 name|NULL
 decl_stmt|;
+name|char
+modifier|*
+name|rcs_orig
+init|=
+name|NULL
+decl_stmt|;
 name|RCSNode
 modifier|*
 name|rcsfile
@@ -1747,6 +1755,23 @@ decl_stmt|;
 name|int
 name|line_length
 decl_stmt|;
+name|int
+name|dargc
+init|=
+literal|0
+decl_stmt|;
+name|size_t
+name|darg_allocated
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|dargv
+init|=
+name|NULL
+decl_stmt|;
 name|line1
 operator|=
 name|NULL
@@ -1813,6 +1838,8 @@ name|isattic
 operator|=
 literal|1
 expr_stmt|;
+name|rcs_orig
+operator|=
 name|rcs
 operator|=
 name|xmalloc
@@ -2237,6 +2264,10 @@ argument_list|,
 literal|"cannot create temporary file %s"
 argument_list|,
 name|tmpfile1
+condition|?
+name|tmpfile1
+else|:
+literal|"(null)"
 argument_list|)
 expr_stmt|;
 name|ret
@@ -2292,6 +2323,10 @@ argument_list|,
 literal|"cannot create temporary file %s"
 argument_list|,
 name|tmpfile2
+condition|?
+name|tmpfile2
+else|:
+literal|"(null)"
 argument_list|)
 expr_stmt|;
 name|ret
@@ -2347,6 +2382,10 @@ argument_list|,
 literal|"cannot create temporary file %s"
 argument_list|,
 name|tmpfile3
+condition|?
+name|tmpfile3
+else|:
+literal|"(null)"
 argument_list|)
 expr_stmt|;
 name|ret
@@ -2629,6 +2668,39 @@ name|t
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|unidiff
+condition|)
+name|run_add_arg_p
+argument_list|(
+operator|&
+name|dargc
+argument_list|,
+operator|&
+name|darg_allocated
+argument_list|,
+operator|&
+name|dargv
+argument_list|,
+literal|"-u"
+argument_list|)
+expr_stmt|;
+else|else
+name|run_add_arg_p
+argument_list|(
+operator|&
+name|dargc
+argument_list|,
+operator|&
+name|darg_allocated
+argument_list|,
+operator|&
+name|dargv
+argument_list|,
+literal|"-c"
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|diff_exec
@@ -2641,11 +2713,9 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|unidiff
-condition|?
-literal|"-u"
-else|:
-literal|"-c"
+name|dargc
+argument_list|,
+name|dargv
 argument_list|,
 name|tmpfile3
 argument_list|)
@@ -3501,6 +3571,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|tmpfile1
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 name|CVS_UNLINK
 argument_list|(
 name|tmpfile1
@@ -3519,6 +3596,23 @@ argument_list|,
 name|tmpfile1
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|tmpfile1
+argument_list|)
+expr_stmt|;
+name|tmpfile1
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tmpfile2
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|CVS_UNLINK
@@ -3539,6 +3633,23 @@ argument_list|,
 name|tmpfile2
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|tmpfile2
+argument_list|)
+expr_stmt|;
+name|tmpfile2
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tmpfile3
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|CVS_UNLINK
@@ -3561,27 +3672,32 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|tmpfile1
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|tmpfile2
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
 name|tmpfile3
 argument_list|)
 expr_stmt|;
-name|tmpfile1
-operator|=
-name|tmpfile2
-operator|=
 name|tmpfile3
 operator|=
 name|NULL
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|dargc
+condition|)
+block|{
+name|run_arg_free_p
+argument_list|(
+name|dargc
+argument_list|,
+name|dargv
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|dargv
+argument_list|)
+expr_stmt|;
+block|}
 name|out2
 label|:
 if|if
@@ -3608,13 +3724,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rcs
-operator|!=
-name|NULL
+name|rcs_orig
 condition|)
 name|free
 argument_list|(
-name|rcs
+name|rcs_orig
 argument_list|)
 expr_stmt|;
 return|return

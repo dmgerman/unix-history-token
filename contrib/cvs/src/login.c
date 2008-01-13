@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, Cyclic Software, Bloomington, IN, USA  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with CVS.  *   * Allow user to log in for an authenticating server.  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (c) 1995, Cyclic Software, Bloomington, IN, USA  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with CVS.  *   * Allow user to log in for an authenticating server.  */
 end_comment
 
 begin_include
@@ -255,9 +255,11 @@ operator|)
 argument_list|)
 condition|)
 comment|/* special case since strtoul ignores leading white space */
-name|entry_version
+name|q
 operator|=
-literal|0
+name|linebuf
+operator|+
+literal|1
 expr_stmt|;
 else|else
 name|entry_version
@@ -1034,6 +1036,10 @@ argument_list|,
 literal|"unable to open temp file %s"
 argument_list|,
 name|tmp_name
+condition|?
+name|tmp_name
+else|:
+literal|"(null)"
 argument_list|)
 expr_stmt|;
 name|line
@@ -1360,7 +1366,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 name|errno
 argument_list|,

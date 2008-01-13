@@ -19,6 +19,12 @@ directive|include
 file|"cvs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"xsize.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -454,7 +460,7 @@ name|to
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* now, set the times for the copied file to match those of the original */
+comment|/* preserve last access& modification times */
 name|memset
 argument_list|(
 operator|(
@@ -1708,18 +1714,13 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+comment|/* This is called by the server parent process in contexts where        it is not OK to send output (e.g. after we sent "ok" to the        client).  */
 if|if
 condition|(
 name|trace
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
-comment|/* This is called by the server parent process in contexts where 	   it is not OK to send output (e.g. after we sent "ok" to the 	   client).  */
 operator|&&
 operator|!
 name|server_active
-endif|#
-directive|endif
 condition|)
 operator|(
 name|void
@@ -2698,7 +2699,13 @@ literal|1
 argument_list|,
 name|errno
 argument_list|,
-literal|"Failed to create temporary file"
+literal|"Failed to create temporary file %s"
+argument_list|,
+name|fn
+condition|?
+name|fn
+else|:
+literal|"(null)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2883,11 +2890,17 @@ name|fp
 operator|==
 name|NULL
 condition|)
+block|{
 name|free
 argument_list|(
 name|fn
 argument_list|)
 expr_stmt|;
+name|fn
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* mkstemp is defined to open mode 0600 using glibc 2.0.7+ */
 comment|/* FIXME - configure can probably tell us which version of glibc we are      * linking to and not chmod for 2.0.7+      */
 else|else
@@ -2938,11 +2951,17 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|free
 argument_list|(
 name|fn
 argument_list|)
 expr_stmt|;
+name|fn
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 else|else
 name|chmod
 argument_list|(
@@ -3101,6 +3120,27 @@ name|filename
 operator|=
 name|fn
 expr_stmt|;
+if|if
+condition|(
+name|fn
+operator|==
+name|NULL
+operator|&&
+name|fp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 return|return
 name|fp
 return|;
@@ -3116,6 +3156,13 @@ end_ifdef
 begin_comment
 comment|/* char *  * xreadlink ( const char *link )  *  * Like the X/OPEN and 4.4BSD readlink() function, but allocates and returns  * its own buf.  *  * INPUTS  *  link	The original path.  *  * RETURNS  *  The resolution of the final symbolic link in the path.  *  * ERRORS  *  This function exits with a fatal error if it fails to read the link for  *  any reason.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXSIZE
+value|(SIZE_MAX< SSIZE_MAX ? SIZE_MAX : SSIZE_MAX)
+end_define
 
 begin_function
 name|char
@@ -3136,17 +3183,23 @@ name|file
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|size_t
 name|buflen
 init|=
 literal|128
 decl_stmt|;
-name|int
+comment|/* Get the name of the file to which `from' is linked. */
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|ssize_t
+name|r
+decl_stmt|;
+name|size_t
 name|link_name_len
 decl_stmt|;
-comment|/* Get the name of the file to which `from' is linked.        FIXME: what portability issues arise here?  Are readlink&        ENAMETOOLONG defined on all systems? -twp */
-do|do
-block|{
 name|file
 operator|=
 name|xrealloc
@@ -3156,7 +3209,7 @@ argument_list|,
 name|buflen
 argument_list|)
 expr_stmt|;
-name|link_name_len
+name|r
 operator|=
 name|readlink
 argument_list|(
@@ -3165,31 +3218,27 @@ argument_list|,
 name|file
 argument_list|,
 name|buflen
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
-name|buflen
-operator|*=
-literal|2
-expr_stmt|;
-block|}
-do|while
-condition|(
 name|link_name_len
-operator|<
-literal|0
-operator|&&
-name|errno
-operator|==
-name|ENAMETOOLONG
-condition|)
-do|;
+operator|=
+name|r
+expr_stmt|;
 if|if
 condition|(
-name|link_name_len
+name|r
 operator|<
 literal|0
+ifdef|#
+directive|ifdef
+name|ERANGE
+comment|/* AIX 4 and HP-UX report ERANGE if the buffer is too small. */
+operator|&&
+name|errno
+operator|!=
+name|ERANGE
+endif|#
+directive|endif
 condition|)
 name|error
 argument_list|(
@@ -3202,6 +3251,18 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+comment|/* If there is space for the NUL byte, set it and return. */
+if|if
+condition|(
+name|r
+operator|>=
+literal|0
+operator|&&
+name|link_name_len
+operator|<
+name|buflen
+condition|)
+block|{
 name|file
 index|[
 name|link_name_len
@@ -3212,6 +3273,44 @@ expr_stmt|;
 return|return
 name|file
 return|;
+block|}
+if|if
+condition|(
+name|buflen
+operator|<=
+name|MAXSIZE
+operator|/
+literal|2
+condition|)
+name|buflen
+operator|*=
+literal|2
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|buflen
+operator|<
+name|MAXSIZE
+condition|)
+name|buflen
+operator|=
+name|MAXSIZE
+expr_stmt|;
+else|else
+comment|/* Our buffer cannot grow any bigger.  */
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|ENAMETOOLONG
+argument_list|,
+literal|"cannot readlink %s"
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3366,6 +3465,11 @@ argument_list|,
 literal|'/'
 argument_list|)
 decl_stmt|;
+name|assert
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|last
@@ -3425,14 +3529,9 @@ name|home
 return|;
 if|if
 condition|(
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 operator|!
 name|server_active
 operator|&&
-endif|#
-directive|endif
 operator|(
 name|env
 operator|=
@@ -3589,6 +3688,14 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|assert
+argument_list|(
+name|argv
+operator|||
+operator|!
+name|argc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|size_overflow_p

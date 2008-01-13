@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2003 The Free Software Foundation.  *  * Portions Copyright (c) 2003 Derek Price  *                         and Ximbiot<http://ximbiot.com>,  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS kit.  *  *  *  * This file contains the interface between the server and the rest of CVS.  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS kit.  *  *  *  * This file contains the interface between the server and the rest of CVS.  */
 end_comment
 
 begin_comment
@@ -38,6 +38,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Nonzero if we are using the server.  Used by various places to call  * server-specific functions.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|server_active
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Expand to `S', ` ', or the empty string.  Used in `%s-> ...' trace printfs.  */
@@ -78,17 +89,6 @@ ifdef|#
 directive|ifdef
 name|SERVER_SUPPORT
 end_ifdef
-
-begin_comment
-comment|/*  * Nonzero if we are using the server.  Used by various places to call  * server-specific functions.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|server_active
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Server functions exported to the rest of CVS.  */

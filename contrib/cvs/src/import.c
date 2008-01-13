@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * "import" checks in the vendor release located in the current directory into  * the CVS source repository.  The CVS vendor branch support is utilized.  *   * At least three arguments are expected to follow the options:  *	repository	Where the source belongs relative to the CVSROOT  *	VendorTag	Vendor's major tag  *	VendorReleTag	Tag for this particular release  *  * Additional arguments specify more Vendor Release Tags.  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * "import" checks in the vendor release located in the current directory into  * the CVS source repository.  The CVS vendor branch support is utilized.  *   * At least three arguments are expected to follow the options:  *	repository	Where the source belongs relative to the CVSROOT  *	VendorTag	Vendor's major tag  *	VendorReleTag	Tag for this particular release  *  * Additional arguments specify more Vendor Release Tags.  */
 end_comment
 
 begin_include
@@ -445,17 +445,12 @@ case|:
 case|case
 literal|'q'
 case|:
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 comment|/* The CVS 1.5 client sends these options (in addition to 		   Global_option requests), so we must ignore them.  */
 if|if
 condition|(
 operator|!
 name|server_active
 condition|)
-endif|#
-directive|endif
 name|error
 argument_list|(
 literal|1
@@ -471,9 +466,6 @@ break|break;
 case|case
 literal|'d'
 case|:
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 if|if
 condition|(
 name|server_active
@@ -499,8 +491,6 @@ literal|"due to client limitations"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|use_file_modtime
 operator|=
 literal|1
@@ -540,6 +530,15 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|message
+condition|)
+name|free
+argument_list|(
+name|message
+argument_list|)
+expr_stmt|;
 name|message
 operator|=
 name|xstrdup
@@ -618,9 +617,6 @@ argument_list|(
 name|import_usage
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 comment|/* This is for handling the Checkin-time request.  It might seem a        bit odd to enable the use_file_modtime code even in the case        where Checkin-time was not sent for a particular file.  The        effect is that we use the time of upload, rather than the time        when we call RCS_checkin.  Since those times are both during        CVS's run, that seems OK, and it is easier to implement than        putting the "was Checkin-time sent" flag in CVS/Entries or some        such place.  */
 if|if
 condition|(
@@ -630,8 +626,6 @@ name|use_file_modtime
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Don't allow "CVS" as any directory in module path.      *      * Could abstract this to valid_module_path, but I don't think we'll need      * to call it from anywhere else.      */
 if|if
 condition|(
@@ -908,69 +902,67 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Consistency checks on the specified vendor branch.  It must be      * composed of only numbers and dots ('.').  Also, for now we only      * support branching to a single level, so the specified vendor branch      * must only have two dots in it (like "1.1.1").      */
-for|for
-control|(
-name|cp
-operator|=
-name|vbranch
-init|;
-operator|*
-name|cp
-operator|!=
-literal|'\0'
-condition|;
-name|cp
-operator|++
-control|)
-if|if
-condition|(
+block|{
+name|regex_t
+name|pat
+decl_stmt|;
+name|int
+name|ret
+init|=
+name|regcomp
+argument_list|(
+operator|&
+name|pat
+argument_list|,
+literal|"^[1-9][0-9]*\\.[1-9][0-9]*\\.[1-9][0-9]*$"
+argument_list|,
+name|REG_EXTENDED
+argument_list|)
+decl_stmt|;
+name|assert
+argument_list|(
 operator|!
-name|isdigit
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|cp
-argument_list|)
-operator|&&
-operator|*
-name|cp
-operator|!=
-literal|'.'
-condition|)
-name|error
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"%s is not a numeric branch"
-argument_list|,
-name|vbranch
+name|ret
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|numdots
+name|regexec
 argument_list|(
+operator|&
+name|pat
+argument_list|,
 name|vbranch
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
-operator|!=
-literal|2
 condition|)
+block|{
 name|error
 argument_list|(
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"Only branches with two dots are supported: %s"
+literal|"Only numeric branch specifications with two dots are\n"
+literal|"supported by import, not `%s'.  For example: `1.1.1'."
 argument_list|,
 name|vbranch
 argument_list|)
 expr_stmt|;
+block|}
+name|regfree
+argument_list|(
+operator|&
+name|pat
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Set vhead to the branch's parent.  */
 name|vhead
 operator|=
 name|xstrdup
@@ -1011,14 +1003,9 @@ endif|#
 directive|endif
 if|if
 condition|(
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 operator|!
 name|server_active
 operator|&&
-endif|#
-directive|endif
 name|use_editor
 condition|)
 block|{
@@ -1033,9 +1020,6 @@ argument_list|,
 operator|&
 name|message
 argument_list|,
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 name|current_parsed_root
 operator|->
 name|isremote
@@ -1046,8 +1030,6 @@ operator|*
 operator|)
 name|NULL
 else|:
-endif|#
-directive|endif
 name|repository
 argument_list|,
 operator|(
@@ -1381,6 +1363,10 @@ argument_list|,
 literal|"cannot create temporary file `%s'"
 argument_list|,
 name|tmpfile
+condition|?
+name|tmpfile
+else|:
+literal|"(null)"
 argument_list|)
 expr_stmt|;
 comment|/* On systems where we can unlink an open file, do so, so it will go        away no matter how we exit.  FIXME-maybe: Should be checking for        errors but I'm not sure which error(s) we get if we are on a system        where one can't unlink open files.  */
@@ -2011,6 +1997,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|current_parsed_root
+operator|->
+name|isremote
+condition|)
+name|lock_dir_for_write
+argument_list|(
+name|repository
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|dirp
 operator|=
@@ -2083,9 +2081,6 @@ condition|)
 goto|goto
 name|one_more_time_boys
 goto|;
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 comment|/* CVS directories are created in the temp directory by 	       server.c because it doesn't special-case import.  So 	       don't print a message about them, regardless of -I!.  */
 if|if
 condition|(
@@ -2105,8 +2100,6 @@ condition|)
 goto|goto
 name|one_more_time_boys
 goto|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ign_name
@@ -2369,6 +2362,16 @@ name|dirp
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|current_parsed_root
+operator|->
+name|isremote
+condition|)
+name|Lock_Cleanup
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|dirlist
@@ -3353,6 +3356,8 @@ argument_list|,
 name|message
 argument_list|,
 name|vbranch
+argument_list|,
+literal|0
 argument_list|,
 operator|(
 name|RCS_FLAGS_QUIET
@@ -7078,9 +7083,6 @@ operator|=
 name|new
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 if|if
 condition|(
 operator|!
@@ -7091,15 +7093,6 @@ name|current_parsed_root
 operator|->
 name|isremote
 condition|)
-else|#
-directive|else
-if|if
-condition|(
-operator|!
-name|quiet
-condition|)
-endif|#
-directive|endif
 name|error
 argument_list|(
 literal|0
@@ -7157,9 +7150,6 @@ goto|goto
 name|out
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 if|if
 condition|(
 operator|!
@@ -7173,18 +7163,6 @@ argument_list|(
 name|repository
 argument_list|)
 condition|)
-else|#
-directive|else
-if|if
-condition|(
-operator|!
-name|isdir
-argument_list|(
-name|repository
-argument_list|)
-condition|)
-endif|#
-directive|endif
 block|{
 name|rcs
 operator|=

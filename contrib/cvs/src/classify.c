@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   */
 end_comment
 
 begin_include
@@ -862,6 +862,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
 name|strcmp
 argument_list|(
 name|vers
@@ -870,10 +871,16 @@ name|ts_user
 argument_list|,
 name|vers
 operator|->
+name|ts_conflict
+condition|?
+name|vers
+operator|->
+name|ts_conflict
+else|:
+name|vers
+operator|->
 name|ts_rcs
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 comment|/* 		 * The user file is still unmodified, so nothing special at 		 * all to do -- no lists updated, unless the sticky -k option 		 * has changed.  If the sticky tag has changed, we just need 		 * to re-register the entry 		 */
@@ -904,6 +911,17 @@ condition|)
 name|ret
 operator|=
 name|T_CHECKOUT
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|vers
+operator|->
+name|ts_conflict
+condition|)
+name|ret
+operator|=
+name|T_CONFLICT
 expr_stmt|;
 else|else
 block|{
@@ -973,6 +991,7 @@ name|T_NEEDS_MERGE
 expr_stmt|;
 else|#
 directive|else
+comment|/* Files with conflict markers and new timestamps fall through 		 * here, but they need to.  T_CONFLICT is an error in 		 * commit_fileproc, whereas T_CONFLICT with conflict markers 		 * is caught but only warned about.  Similarly, update_fileproc 		 * currently reregisters a file that was conflicted but lost 		 * its markers. 		 */
 name|ret
 operator|=
 name|T_MODIFIED

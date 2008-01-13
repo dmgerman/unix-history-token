@@ -164,9 +164,6 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 comment|/* The client handles another way, by (after it does its own ignore file        processing, and only if !ign_inhibit_server), letting the server        know about the files and letting it decide whether to ignore        them based on CVSROOOTADM_IGNORE.  */
 if|if
 condition|(
@@ -175,8 +172,6 @@ name|current_parsed_root
 operator|->
 name|isremote
 condition|)
-endif|#
-directive|endif
 block|{
 name|char
 modifier|*
@@ -803,13 +798,39 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|s_ign_list
+condition|)
+block|{
+comment|/* Don't save the ignore list twice - if there are two 		     * bangs in a local .cvsignore file then we don't want to 		     * save the new list the first bang created. 		     * 		     * We still need to free the "new" ignore list. 		     */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ign_count
+condition|;
+name|i
+operator|++
+control|)
+name|free
+argument_list|(
+name|ign_list
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Save the ignore list for later.  */
 name|s_ign_list
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|ign_count
@@ -848,6 +869,7 @@ name|s_ign_count
 operator|=
 name|ign_count
 expr_stmt|;
+block|}
 name|ign_count
 operator|=
 literal|1
@@ -1165,6 +1187,8 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|+
+literal|1
 argument_list|)
 operator|==
 literal|0

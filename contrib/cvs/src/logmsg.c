@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  */
 end_comment
 
 begin_include
@@ -969,9 +969,6 @@ name|retcode
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 name|assert
 argument_list|(
 operator|!
@@ -983,15 +980,6 @@ operator|!
 name|repository
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|assert
-argument_list|(
-name|repository
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|noexec
@@ -1434,22 +1422,13 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 if|if
 condition|(
+operator|!
 name|current_parsed_root
 operator|->
 name|isremote
-condition|)
-empty_stmt|;
-comment|/* nothing, leave editinfo_editor NULL */
-elseif|else
-endif|#
-directive|endif
-if|if
-condition|(
+operator|&&
 name|repository
 operator|!=
 name|NULL
@@ -2100,9 +2079,6 @@ name|pre_stbuf
 decl_stmt|,
 name|post_stbuf
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 if|if
 condition|(
 name|current_parsed_root
@@ -2111,8 +2087,6 @@ name|isremote
 condition|)
 comment|/* The verification will happen on the server.  */
 return|return;
-endif|#
-directive|endif
 comment|/* FIXME? Do we really want to skip this on noexec?  What do we do        for the other administrative files?  */
 if|if
 condition|(
@@ -2178,6 +2152,10 @@ argument_list|,
 literal|"cannot create temporary file %s"
 argument_list|,
 name|fname
+condition|?
+name|fname
+else|:
+literal|"(null)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3425,6 +3403,11 @@ modifier|*
 name|fmt_percent
 decl_stmt|;
 comment|/* the location of the percent sign 				   that starts the format string. */
+name|assert
+argument_list|(
+name|repository
+argument_list|)
+expr_stmt|;
 comment|/* The user may specify a format string as part of the filter.        Originally, `%s' was the only valid string.  The string that        was substituted for it was:<repository-name><file1><file2><file3> ...         Each file was either a new directory/import (T_TITLE), or a        added (T_ADDED), modified (T_MODIFIED), or removed (T_REMOVED)        file.         It is desirable to preserve that behavior so lots of commitlog        scripts won't die when they get this new code.  At the same        time, we'd like to pass other information about the files (like        version numbers, statuses, or checkin times).         The solution is to allow a format string that allows us to        specify those other pieces of information.  The format string        will be composed of `%' followed by a single format character,        or followed by a set of format characters surrounded by `{' and        `}' as separators.  The format characters are:           s = file name 	 V = old version number (pre-checkin) 	 v = new version number (post-checkin)         For example, valid format strings are:           %{} 	 %s 	 %{s} 	 %{sVv}         There's no reason that more items couldn't be added (like        modification date or file status [added, modified, updated,        etc.]) -- the code modifications would be minimal (logmsg.c        (title_proc) and commit.c (check_fileproc)).         The output will be a string of tokens separated by spaces.  For        backwards compatibility, the the first token will be the        repository name.  The rest of the tokens will be        comma-delimited lists of the information requested in the        format string.  For example, if `/u/src/master' is the        repository, `%{sVv}' is the format string, and three files        (ChangeLog, Makefile, foo.c) were modified, the output might        be:           /u/src/master ChangeLog,1.1,1.2 Makefile,1.3,1.4 foo.c,1.12,1.13         Why this duplicates the old behavior when the format string is        `%s' is left as an exercise for the reader. */
 name|fmt_percent
 operator|=

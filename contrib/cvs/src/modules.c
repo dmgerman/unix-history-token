@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *    Copyright (c) 1992, Brian Berliner and Jeff Polk  *    Copyright (c) 1989-1992, Brian Berliner  *  *    You may distribute under the terms of the GNU General Public License  *    as specified in the README file that comes with the CVS source  *    distribution.  *  * Modules  *  *	Functions for accessing the modules file.  *  *	The modules file supports basically three formats of lines:  *		key [options] directory files... [ -x directory [files] ] ...  *		key [options] directory [ -x directory [files] ] ...  *		key -a aliases...  *  *	The -a option allows an aliasing step in the parsing of the modules  *	file.  The "aliases" listed on a line following the -a are  *	processed one-by-one, as if they were specified as arguments on the  *	command line.  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *  *    You may distribute under the terms of the GNU General Public License  *    as specified in the README file that comes with the CVS source  *    distribution.  *  * Modules  *  *	Functions for accessing the modules file.  *  *	The modules file supports basically three formats of lines:  *		key [options] directory files... [ -x directory [files] ] ...  *		key [options] directory [ -x directory [files] ] ...  *		key -a aliases...  *  *	The -a option allows an aliasing step in the parsing of the modules  *	file.  The "aliases" listed on a line following the -a are  *	processed one-by-one, as if they were specified as arguments on the  *	command line.  */
 end_comment
 
 begin_include
@@ -409,12 +409,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|spec_opt
-init|=
-name|NULL
-decl_stmt|;
-name|char
-modifier|*
-name|xvalue
 init|=
 name|NULL
 decl_stmt|;
@@ -1467,6 +1461,14 @@ operator|=
 name|cp
 operator|+
 literal|1
+expr_stmt|;
+name|assert
+argument_list|(
+name|strlen
+argument_list|(
+name|mfile
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* put the / back in mname */
 operator|*
@@ -2810,6 +2812,10 @@ name|expanded_path
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|real_prog
+condition|)
 name|free
 argument_list|(
 name|real_prog
@@ -2889,17 +2895,6 @@ condition|)
 name|free
 argument_list|(
 name|value
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|xvalue
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|xvalue
 argument_list|)
 expr_stmt|;
 return|return
