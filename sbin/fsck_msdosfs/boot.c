@@ -745,7 +745,7 @@ condition|)
 block|{
 name|pwarn
 argument_list|(
-literal|"Invalid signature in fsinfo block"
+literal|"Invalid signature in fsinfo block, "
 argument_list|)
 expr_stmt|;
 if|if
