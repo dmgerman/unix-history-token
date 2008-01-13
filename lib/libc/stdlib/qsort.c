@@ -519,11 +519,12 @@ decl_stmt|,
 modifier|*
 name|pn
 decl_stmt|;
-name|int
+name|size_t
 name|d
 decl_stmt|,
 name|r
-decl_stmt|,
+decl_stmt|;
+name|int
 name|swaptype
 decl_stmt|,
 name|swap_cnt
