@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * Copyright (C) 1994-2005 The Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  */
+end_comment
+
+begin_comment
 comment|/* Interface between the client and the rest of CVS.  */
 end_comment
 
@@ -605,6 +609,7 @@ name|send_arg
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|string
@@ -619,13 +624,18 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|send_option_string
+name|send_options
 name|PROTO
 argument_list|(
 operator|(
+name|int
+name|argc
+operator|,
 name|char
 operator|*
-name|string
+specifier|const
+operator|*
+name|argv
 operator|)
 argument_list|)
 decl_stmt|;

@@ -124,6 +124,19 @@ modifier|*
 name|finfo
 decl_stmt|;
 block|{
+name|char
+modifier|*
+name|watched
+init|=
+name|fileattr_get0
+argument_list|(
+name|finfo
+operator|->
+name|file
+argument_list|,
+literal|"_watched"
+argument_list|)
+decl_stmt|;
 name|fileattr_set
 argument_list|(
 name|finfo
@@ -137,6 +150,17 @@ condition|?
 literal|""
 else|:
 name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|watched
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|watched
 argument_list|)
 expr_stmt|;
 return|return
@@ -213,6 +237,18 @@ if|if
 condition|(
 name|setting_default
 condition|)
+block|{
+name|char
+modifier|*
+name|watched
+init|=
+name|fileattr_get0
+argument_list|(
+name|NULL
+argument_list|,
+literal|"_watched"
+argument_list|)
+decl_stmt|;
 name|fileattr_set
 argument_list|(
 name|NULL
@@ -226,6 +262,18 @@ else|:
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|watched
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|watched
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|err
 return|;
@@ -1563,17 +1611,17 @@ name|edit_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-lR] [files...]\n"
+literal|"Usage: %s %s [-lR] [-a<action>]... [<file>]...\n"
 block|,
-literal|"-l: Local directory only, not recursive\n"
+literal|"-l\tLocal directory only, not recursive.\n"
 block|,
-literal|"-R: Process directories recursively\n"
+literal|"-R\tProcess directories recursively (default).\n"
 block|,
-literal|"-a: Specify what actions for temporary watch, one of\n"
+literal|"-a\tSpecify action to register for temporary watch, one of:\n"
 block|,
-literal|"    edit,unedit,commit,all,none\n"
+literal|"  \t`edit', `unedit', `commit', `all', or `none' (defaults to `all').\n"
 block|,
-literal|"(Specify the --help global option for a list of other help options)\n"
+literal|"(Specify the --help global option for a list of other help options.)\n"
 block|,
 name|NULL
 block|}
@@ -2420,13 +2468,13 @@ name|unedit_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-lR] [files...]\n"
+literal|"Usage: %s %s [-lR] [<file>]...\n"
 block|,
-literal|"-l: Local directory only, not recursive\n"
+literal|"-l\tLocal directory only, not recursive.\n"
 block|,
-literal|"-R: Process directories recursively\n"
+literal|"-R\tProcess directories recursively (default).\n"
 block|,
-literal|"(Specify the --help global option for a list of other help options)\n"
+literal|"(Specify the --help global option for a list of other help options.)\n"
 block|,
 name|NULL
 block|}
@@ -4445,13 +4493,13 @@ name|editors_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-lR] [files...]\n"
+literal|"Usage: %s %s [-lR] [<file>]...\n"
 block|,
-literal|"\t-l\tProcess this directory only (not recursive).\n"
+literal|"-l\tProcess this directory only (not recursive).\n"
 block|,
-literal|"\t-R\tProcess directories recursively.\n"
+literal|"-R\tProcess directories recursively (default).\n"
 block|,
-literal|"(Specify the --help global option for a list of other help options)\n"
+literal|"(Specify the --help global option for a list of other help options.)\n"
 block|,
 name|NULL
 block|}

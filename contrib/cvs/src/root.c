@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Mark D. Baushke  * Copyright (c) 2002, Derek R. Price  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Name of Root  *   * Determine the path to the CVSROOT and set "Root" accordingly.  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Poritons Copyright (c) 1992, Mark D. Baushke  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Name of Root  *   * Determine the path to the CVSROOT and set "Root" accordingly.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"cvs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
 end_include
 
 begin_include
@@ -43,6 +49,8 @@ literal|"gserver"
 block|,
 literal|"ext"
 block|,
+literal|"extssh"
+block|,
 literal|"fork"
 block|}
 decl_stmt|;
@@ -55,7 +63,7 @@ name|DEBUG
 end_ifndef
 
 begin_function
-name|char
+name|cvsroot_t
 modifier|*
 name|Name_Root
 parameter_list|(
@@ -63,10 +71,12 @@ name|dir
 parameter_list|,
 name|update_dir
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|dir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|update_dir
@@ -76,10 +86,12 @@ name|FILE
 modifier|*
 name|fpin
 decl_stmt|;
-name|char
+name|cvsroot_t
 modifier|*
 name|ret
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|xupdate_dir
 decl_stmt|;
@@ -324,11 +336,9 @@ name|cp
 operator|=
 name|root
 operator|+
-operator|(
 name|len
 operator|-
 literal|1
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -344,29 +354,18 @@ literal|'\0'
 expr_stmt|;
 comment|/* strip the newline */
 comment|/*      * root now contains a candidate for CVSroot. It must be an      * absolute pathname or specify a remote server.      */
+name|ret
+operator|=
+name|parse_cvsroot
+argument_list|(
+name|root
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
-operator|(
-name|strchr
-argument_list|(
-name|root
-argument_list|,
-literal|':'
-argument_list|)
+name|ret
 operator|==
 name|NULL
-operator|)
-operator|&&
-endif|#
-directive|endif
-operator|!
-name|isabsolute
-argument_list|(
-name|root
-argument_list|)
 condition|)
 block|{
 name|error
@@ -386,55 +385,30 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"ignoring %s because it does not contain an absolute pathname."
+literal|"ignoring %s because it does not contain a valid root."
 argument_list|,
 name|CVSADM_ROOT
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|NULL
 expr_stmt|;
 goto|goto
 name|out
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 if|if
 condition|(
-operator|(
-name|strchr
-argument_list|(
-name|root
-argument_list|,
-literal|':'
-argument_list|)
-operator|==
-name|NULL
-operator|)
+operator|!
+name|ret
+operator|->
+name|isremote
 operator|&&
 operator|!
 name|isdir
 argument_list|(
-name|root
+name|ret
+operator|->
+name|directory
 argument_list|)
 condition|)
-else|#
-directive|else
-comment|/* ! CLIENT_SUPPORT */
-if|if
-condition|(
-operator|!
-name|isdir
-argument_list|(
-name|root
-argument_list|)
-condition|)
-endif|#
-directive|endif
-comment|/* CLIENT_SUPPORT */
 block|{
 name|error
 argument_list|(
@@ -460,6 +434,11 @@ argument_list|,
 name|root
 argument_list|)
 expr_stmt|;
+name|free_cvsroot_t
+argument_list|(
+name|ret
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|NULL
@@ -468,19 +447,6 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* allocate space to return and fill it in */
-name|strip_trailing_slashes
-argument_list|(
-name|root
-argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|xstrdup
-argument_list|(
-name|root
-argument_list|)
-expr_stmt|;
 name|out
 label|:
 name|free
@@ -505,9 +471,7 @@ name|root
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 block|}
 end_function
@@ -995,6 +959,12 @@ name|method
 operator|=
 name|null_method
 expr_stmt|;
+name|newroot
+operator|->
+name|isremote
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CLIENT_SUPPORT
@@ -1037,12 +1007,6 @@ expr_stmt|;
 name|newroot
 operator|->
 name|proxy_port
-operator|=
-literal|0
-expr_stmt|;
-name|newroot
-operator|->
-name|isremote
 operator|=
 literal|0
 expr_stmt|;
@@ -1249,6 +1213,11 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* CLIENT_SUPPORT */
+name|assert
+argument_list|(
+name|root_in
+argument_list|)
+expr_stmt|;
 comment|/* allocate some space */
 name|newroot
 operator|=
@@ -1335,6 +1304,7 @@ name|CLIENT_SUPPORT
 comment|/* Look for method options, for instance, proxy, proxyport. 	 * We don't handle these, but we like to try and warn the user that 	 * they are being ignored. 	 */
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|strchr
@@ -1343,6 +1313,9 @@ name|method
 argument_list|,
 literal|';'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 operator|*
@@ -1554,9 +1527,6 @@ name|local_method
 operator|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 name|newroot
 operator|->
 name|isremote
@@ -1569,9 +1539,6 @@ operator|!=
 name|local_method
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* CLIENT_SUPPORT */
 if|if
 condition|(
 operator|(
@@ -2533,6 +2500,19 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+name|assert
+argument_list|(
+name|root
+operator|&&
+name|root
+operator|->
+name|hostname
+operator|&&
+name|root
+operator|->
+name|directory
+argument_list|)
+expr_stmt|;
 comment|/* get the appropriate port string */
 name|sprintf
 argument_list|(

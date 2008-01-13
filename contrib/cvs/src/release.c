@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * Copyright (C) 1994-2005 The Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  */
+end_comment
+
+begin_comment
 comment|/*  * Release: "cancel" a checkout in the history log.  *   * - Enter a line in the history log indicating the "release". - If asked to,  * delete the local working directory.  */
 end_comment
 
@@ -169,10 +173,6 @@ name|int
 name|i
 decl_stmt|,
 name|c
-decl_stmt|;
-name|char
-modifier|*
-name|repository
 decl_stmt|;
 name|char
 modifier|*
@@ -350,6 +350,17 @@ literal|"%s %s%s-n -q -d %s update"
 argument_list|,
 name|program_path
 argument_list|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CLIENT_SUPPORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SERVER_SUPPORT
+argument_list|)
 name|cvsauthenticate
 condition|?
 literal|"-a "
@@ -362,6 +373,14 @@ literal|"-x "
 else|:
 literal|""
 argument_list|,
+else|#
+directive|else
+literal|""
+argument_list|,
+literal|""
+argument_list|,
+endif|#
+directive|endif
 name|current_parsed_root
 operator|->
 name|original
@@ -522,23 +541,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|repository
-operator|=
-name|Name_Repository
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -547,6 +549,8 @@ condition|)
 block|{
 name|int
 name|line_length
+decl_stmt|,
+name|status
 decl_stmt|;
 comment|/* The "release" command piggybacks on "update", which 	       does the real work of finding out if anything is not 	       up-to-date with the repository.  Then "release" prompts 	       the user, telling her how many files have been 	       modified, and asking if she still wants to do the 	       release.  */
 name|fp
@@ -645,14 +649,16 @@ literal|"cannot read from subprocess"
 argument_list|)
 expr_stmt|;
 comment|/* If the update exited with an error, then we just want to 	       complain and go on to the next arg.  Especially, we do 	       not want to delete the local copy, since it's obviously 	       not what the user thinks it is.  */
-if|if
-condition|(
-operator|(
+name|status
+operator|=
 name|pclose
 argument_list|(
 name|fp
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|status
 operator|!=
 literal|0
 condition|)
@@ -663,14 +669,11 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"unable to release `%s'"
+literal|"unable to release `%s' (%d)"
 argument_list|,
 name|thisarg
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|repository
+argument_list|,
+name|status
 argument_list|)
 expr_stmt|;
 if|if
@@ -732,11 +735,6 @@ argument_list|,
 name|cvs_cmd_name
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|repository
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|restore_cwd
@@ -754,11 +752,6 @@ continue|continue;
 block|}
 block|}
 comment|/* Note:  client.c doesn't like to have other code            changing the current directory on it.  So a fair amount            of effort is needed to make sure it doesn't get confused            about the directory and (for example) overwrite            CVS/Entries file in the wrong directory.  See release-17            through release-23. */
-name|free
-argument_list|(
-name|repository
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|restore_cwd
@@ -769,10 +762,8 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
+name|error_exit
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -857,10 +848,8 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
+name|error_exit
+argument_list|()
 expr_stmt|;
 block|}
 ifdef|#
@@ -975,10 +964,8 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
+name|error_exit
+argument_list|()
 expr_stmt|;
 block|}
 endif|#

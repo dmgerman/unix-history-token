@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Add  *   * Adds a file or directory to the RCS source repository.  For a file,  * the entry is marked as "needing to be added" in the user's own CVS  * directory, and really added to the repository when it is committed.  * For a directory, it is added at the appropriate place in the source  * repository and a CVS directory is generated within the directory.  *   * The -m option is currently the only supported option.  Some may wish to  * supply standard "rcs" options here, but I've found that this causes more  * trouble than anything else.  *   * The user files or directories must already exist.  For a directory, it must  * not already have a CVS file in it.  *   * An "add" on a file that has been "remove"d but not committed will cause the  * file to be resurrected.  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (c) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Add  *   * Adds a file or directory to the RCS source repository.  For a file,  * the entry is marked as "needing to be added" in the user's own CVS  * directory, and really added to the repository when it is committed.  * For a directory, it is added at the appropriate place in the source  * repository and a CVS directory is generated within the directory.  *   * The -m option is currently the only supported option.  Some may wish to  * supply standard "rcs" options here, but I've found that this causes more  * trouble than anything else.  *   * The user files or directories must already exist.  For a directory, it must  * not already have a CVS file in it.  *   * An "add" on a file that has been "remove"d but not committed will cause the  * file to be resurrected.  */
 end_comment
 
 begin_include
@@ -95,9 +95,11 @@ init|=
 block|{
 literal|"Usage: %s %s [-k rcs-kflag] [-m message] files...\n"
 block|,
-literal|"\t-k\tUse \"rcs-kflag\" to add the file with the specified kflag.\n"
+literal|"\t-k rcs-kflag\tUse \"rcs-kflag\" to add the file with the specified\n"
 block|,
-literal|"\t-m\tUse \"message\" for the creation log.\n"
+literal|"\t\t\tkflag.\n"
+block|,
+literal|"\t-m message\tUse \"message\" for the creation log.\n"
 block|,
 literal|"(Specify the --help global option for a list of other help options)\n"
 block|,
@@ -247,6 +249,15 @@ break|break;
 case|case
 literal|'m'
 case|:
+if|if
+condition|(
+name|message
+condition|)
+name|free
+argument_list|(
+name|message
+argument_list|)
+expr_stmt|;
 name|message
 operator|=
 name|xstrdup
@@ -495,10 +506,30 @@ name|argc
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* We snipped out all the arguments in the above sanity 	       check.  We can just forget the whole thing (and we 	       better, because if we fired up the server and passed it 	       nothing, it would spit back a usage message).  */
+if|if
+condition|(
+name|options
+condition|)
+name|free
+argument_list|(
+name|options
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|message
+condition|)
+name|free
+argument_list|(
+name|message
+argument_list|)
+expr_stmt|;
 return|return
 name|err
 return|;
+block|}
 name|start_server
 argument_list|()
 expr_stmt|;
@@ -1786,13 +1817,41 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|prev
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+comment|/* There is no previous revision.  Either: 				 * 				 *  * Revision 1.1 was dead, as when a file was 				 *    inititially added on a branch,  				 * 				 * or 				 * 				 *  * All previous revisions have been deleted. 				 *    For instance, via `admin -o'. 				 */
+if|if
+condition|(
+operator|!
+name|really_quiet
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"File `%s' has no previous revision to resurrect."
+argument_list|,
+name|finfo
+operator|.
+name|fullname
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|prev
+argument_list|)
+expr_stmt|;
+goto|goto
+name|skip_this_file
+goto|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2519,6 +2578,8 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|skip_this_file
+label|:
 name|free
 argument_list|(
 name|repository
@@ -2818,9 +2879,6 @@ return|return
 literal|1
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 if|if
 condition|(
 operator|!
@@ -2831,17 +2889,6 @@ argument_list|(
 name|CVSADM
 argument_list|)
 condition|)
-else|#
-directive|else
-if|if
-condition|(
-name|isfile
-argument_list|(
-name|CVSADM
-argument_list|)
-condition|)
-endif|#
-directive|endif
 block|{
 name|error
 argument_list|(
@@ -3158,11 +3205,17 @@ name|attrs
 operator|!=
 name|NULL
 condition|)
+block|{
 name|free
 argument_list|(
 name|attrs
 argument_list|)
 expr_stmt|;
+name|attrs
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* 	 * Set up an update list with a single title node for Update_Logfile 	 */
 name|ulist
 operator|=
@@ -3274,16 +3327,11 @@ name|ulist
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 if|if
 condition|(
 operator|!
 name|server_active
 condition|)
-endif|#
-directive|endif
 name|Create_Admin
 argument_list|(
 literal|"."
@@ -3377,6 +3425,17 @@ argument_list|(
 name|message
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|attrs
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|attrs
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3399,6 +3458,15 @@ name|free_cwd
 argument_list|(
 operator|&
 name|cwd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|message
+condition|)
+name|free
+argument_list|(
+name|message
 argument_list|)
 expr_stmt|;
 if|if

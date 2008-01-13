@@ -15,6 +15,12 @@ begin_comment
 comment|/* The `checked_out' member of a hardlink_info struct is used only    when files are being checked out or updated.  It is used only when    hardlinked files are being checked out. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PRESERVE_PERMISSIONS_SUPPORT
+end_ifdef
+
 begin_struct
 struct|struct
 name|hardlink_info
@@ -121,6 +127,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PRESERVE_PERMISSIONS_SUPPORT */
+end_comment
 
 end_unit
 
