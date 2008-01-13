@@ -109,11 +109,25 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_ZLIB_H
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|HAVE_LIBZ
-end_ifdef
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BUILTIN_DECOMPRESS
+end_define
 
 begin_include
 include|#
@@ -135,7 +149,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: compress.c,v 1.51 2007/03/05 02:41:29 christos Exp $"
+literal|"@(#)$File: compress.c,v 1.54 2007/12/02 00:28:10 christos Exp $"
 argument_list|)
 end_macro
 
@@ -393,7 +407,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBZ
+name|BUILTIN_DECOMPRESS
 end_ifdef
 
 begin_function_decl
@@ -469,6 +483,15 @@ name|int
 name|rv
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|mime
+init|=
+name|ms
+operator|->
+name|flags
+operator|&
+name|MAGIC_MIME
 decl_stmt|;
 if|if
 condition|(
@@ -593,10 +616,25 @@ name|error
 goto|;
 if|if
 condition|(
+name|mime
+operator|==
+name|MAGIC_MIME
+operator|||
+name|mime
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|file_printf
 argument_list|(
 name|ms
 argument_list|,
+name|mime
+condition|?
+literal|" compressed-encoding="
+else|:
 literal|" ("
 argument_list|)
 operator|==
@@ -606,8 +644,19 @@ condition|)
 goto|goto
 name|error
 goto|;
+block|}
 if|if
 condition|(
+operator|(
+name|mime
+operator|==
+literal|0
+operator|||
+name|mime
+operator|&
+name|MAGIC_MIME_ENCODING
+operator|)
+operator|&&
 name|file_buffer
 argument_list|(
 name|ms
@@ -630,6 +679,9 @@ name|error
 goto|;
 if|if
 condition|(
+operator|!
+name|mime
+operator|&&
 name|file_printf
 argument_list|(
 name|ms
@@ -1390,7 +1442,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBZ
+name|BUILTIN_DECOMPRESS
 end_ifdef
 
 begin_define
@@ -1825,7 +1877,7 @@ name|r
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_LIBZ
+name|BUILTIN_DECOMPRESS
 if|if
 condition|(
 name|method

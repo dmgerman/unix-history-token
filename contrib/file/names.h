@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in MAGIC must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * $File: names.h,v 1.27 2007/05/08 16:47:03 christos Exp $  */
+comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in MAGIC must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * $File: names.h,v 1.29 2007/12/27 20:30:35 christos Exp $  */
 end_comment
 
 begin_comment
@@ -40,19 +40,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|L_FORT
-value|2
-end_define
-
-begin_comment
-comment|/* the oldest one */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|L_MAKE
-value|3
+value|2
 end_define
 
 begin_comment
@@ -63,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|L_PLI
-value|4
+value|3
 end_define
 
 begin_comment
@@ -74,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|L_MACH
-value|5
+value|4
 end_define
 
 begin_comment
@@ -85,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|L_ENG
-value|6
+value|5
 end_define
 
 begin_comment
@@ -96,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|L_PAS
-value|7
+value|6
 end_define
 
 begin_comment
@@ -107,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|L_MAIL
-value|8
+value|7
 end_define
 
 begin_comment
@@ -118,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|L_NEWS
-value|9
+value|8
 end_define
 
 begin_comment
@@ -129,7 +118,7 @@ begin_define
 define|#
 directive|define
 name|L_JAVA
-value|10
+value|9
 end_define
 
 begin_comment
@@ -140,7 +129,7 @@ begin_define
 define|#
 directive|define
 name|L_HTML
-value|11
+value|10
 end_define
 
 begin_comment
@@ -151,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|L_BCPL
-value|12
+value|11
 end_define
 
 begin_comment
@@ -162,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|L_M4
-value|13
+value|12
 end_define
 
 begin_comment
@@ -173,7 +162,7 @@ begin_define
 define|#
 directive|define
 name|L_PO
-value|14
+value|13
 end_define
 
 begin_comment
@@ -210,12 +199,6 @@ block|{
 literal|"C++ program"
 block|,
 literal|"text/x-c++"
-block|}
-block|,
-block|{
-literal|"FORTRAN program"
-block|,
-literal|"text/x-fortran"
 block|}
 block|,
 block|{
