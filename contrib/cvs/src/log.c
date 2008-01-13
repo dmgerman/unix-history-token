@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Print Log Information  *   * Prints the RCS "log" (rlog) information for the specified files.  With no  * argument, prints the log information for all the files in the directory  * (recursive by default).  *  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Print Log Information  *   * Prints the RCS "log" (rlog) information for the specified files.  With no  * argument, prints the log information for all the files in the directory  * (recursive by default).  *  * $FreeBSD$  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"cvs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
 end_include
 
 begin_comment
@@ -369,6 +375,9 @@ operator|(
 name|RCSNode
 operator|*
 operator|,
+name|char
+operator|*
+operator|,
 expr|struct
 name|option_revlist
 operator|*
@@ -635,17 +644,21 @@ literal|"    [-w[logins]] [files...]\n"
 block|,
 literal|"\t-l\tLocal directory only, no recursion.\n"
 block|,
-literal|"\t-R\tOnly print name of RCS file.\n"
+literal|"\t-b\tOnly list revisions on the default branch.\n"
 block|,
 literal|"\t-h\tOnly print header.\n"
+block|,
+literal|"\t-R\tOnly print name of RCS file.\n"
 block|,
 literal|"\t-t\tOnly print header and descriptive text.\n"
 block|,
 literal|"\t-N\tDo not list tags.\n"
 block|,
-literal|"\t-S\tDo not print name/header if no revisions selected.\n"
+literal|"\t-S\tDo not print name/header if no revisions selected.  -d, -r,\n"
 block|,
-literal|"\t-b\tOnly list revisions on the default branch.\n"
+literal|"\t\t-s,& -w have little effect in conjunction with -b, -h, -R, and\n"
+block|,
+literal|"\t\t-t without this option.\n"
 block|,
 literal|"\t-r[revisions]\tA comma-separated list of revisions to print:\n"
 block|,
@@ -1229,6 +1242,21 @@ name|p
 operator|->
 name|next
 expr_stmt|;
+name|assert
+argument_list|(
+name|p
+operator|->
+name|start
+operator|!=
+name|NULL
+operator|&&
+name|p
+operator|->
+name|end
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|send_to_server
 argument_list|(
 literal|"Argument -d\012"
@@ -1303,12 +1331,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|start
-condition|)
 name|free
 argument_list|(
 name|p
@@ -1316,12 +1338,6 @@ operator|->
 name|start
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|end
-condition|)
 name|free
 argument_list|(
 name|p
@@ -1357,6 +1373,15 @@ operator|=
 name|p
 operator|->
 name|next
+expr_stmt|;
+name|assert
+argument_list|(
+name|p
+operator|->
+name|end
+operator|!=
+name|NULL
+argument_list|)
 expr_stmt|;
 name|send_to_server
 argument_list|(
@@ -1395,12 +1420,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|end
-condition|)
 name|free
 argument_list|(
 name|p
@@ -3597,6 +3616,10 @@ name|Node
 modifier|*
 name|p
 decl_stmt|;
+name|char
+modifier|*
+name|baserev
+decl_stmt|;
 name|int
 name|selrev
 init|=
@@ -3624,20 +3647,12 @@ name|struct
 name|log_data_and_rcs
 name|log_data_and_rcs
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|rcsfile
 operator|=
 name|finfo
 operator|->
 name|rcs
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* no rcs file.  What *do* we know about this file? */
+expr_stmt|;
 name|p
 operator|=
 name|findnode
@@ -3666,20 +3681,55 @@ name|p
 operator|->
 name|data
 decl_stmt|;
-if|if
-condition|(
+name|baserev
+operator|=
 name|e
 operator|->
 name|version
+expr_stmt|;
+if|if
+condition|(
+name|baserev
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+operator|++
+name|baserev
+expr_stmt|;
+block|}
+else|else
+name|baserev
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|rcsfile
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* no rcs file.  What *do* we know about this file? */
+if|if
+condition|(
+name|baserev
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|baserev
 index|[
 literal|0
 index|]
 operator|==
 literal|'0'
 operator|&&
-name|e
-operator|->
-name|version
+name|baserev
 index|[
 literal|1
 index|]
@@ -3756,6 +3806,8 @@ operator|=
 name|log_expand_revlist
 argument_list|(
 name|rcsfile
+argument_list|,
+name|baserev
 argument_list|,
 name|log_data
 operator|->
@@ -4590,6 +4642,8 @@ name|log_expand_revlist
 parameter_list|(
 name|rcs
 parameter_list|,
+name|baserev
+parameter_list|,
 name|revlist
 parameter_list|,
 name|default_branch
@@ -4597,6 +4651,10 @@ parameter_list|)
 name|RCSNode
 modifier|*
 name|rcs
+decl_stmt|;
+name|char
+modifier|*
+name|baserev
 decl_stmt|;
 name|struct
 name|option_revlist
@@ -4699,6 +4757,47 @@ argument_list|(
 name|rcs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|nr
+operator|->
+name|first
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|really_quiet
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"No head revision in archive `%s'."
+argument_list|,
+name|rcs
+operator|->
+name|path
+argument_list|)
+expr_stmt|;
+name|nr
+operator|->
+name|last
+operator|=
+name|NULL
+expr_stmt|;
+name|nr
+operator|->
+name|fields
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 name|nr
 operator|->
 name|last
@@ -4724,6 +4823,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+block|}
 elseif|else
 if|if
 condition|(
@@ -4736,6 +4836,15 @@ name|char
 modifier|*
 name|branch
 decl_stmt|;
+name|assert
+argument_list|(
+name|r
+operator|->
+name|first
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* Print just the head of the branch.  */
 if|if
 condition|(
@@ -4817,16 +4926,17 @@ block|}
 block|}
 if|if
 condition|(
+operator|!
 name|nr
 operator|->
 name|first
-operator|==
-name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|really_quiet
 condition|)
-block|{
 name|error
 argument_list|(
 literal|0
@@ -4922,6 +5032,31 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|baserev
+operator|&&
+name|strcmp
+argument_list|(
+name|r
+operator|->
+name|first
+argument_list|,
+name|TAG_BASE
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|nr
+operator|->
+name|first
+operator|=
+name|xstrdup
+argument_list|(
+name|baserev
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|RCS_nodeisbranch
@@ -5085,6 +5220,31 @@ else|else
 block|{
 if|if
 condition|(
+name|baserev
+operator|&&
+name|strcmp
+argument_list|(
+name|r
+operator|->
+name|last
+argument_list|,
+name|TAG_BASE
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|nr
+operator|->
+name|last
+operator|=
+name|xstrdup
+argument_list|(
+name|baserev
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|RCS_nodeisbranch
 argument_list|(
 name|rcs
@@ -5234,6 +5394,11 @@ argument_list|,
 literal|'.'
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|cp
@@ -5317,6 +5482,11 @@ operator|->
 name|last
 argument_list|,
 literal|'.'
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|cp
 argument_list|)
 expr_stmt|;
 operator|*
@@ -5942,6 +6112,13 @@ operator|->
 name|head
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|nr
+operator|->
+name|first
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 name|strrchr
@@ -5951,6 +6128,11 @@ operator|->
 name|first
 argument_list|,
 literal|'.'
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|cp
 argument_list|)
 expr_stmt|;
 operator|*
@@ -7668,6 +7850,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|assert
+argument_list|(
+name|pdel
+argument_list|)
+expr_stmt|;
 name|cvs_output
 argument_list|(
 literal|"  lines: +"
