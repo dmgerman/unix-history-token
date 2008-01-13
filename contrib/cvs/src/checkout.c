@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Create Version  *   * "checkout" creates a "version" of an RCS repository.  This version is owned  * totally by the user and is actually an independent copy, to be dealt with  * as seen fit.  Once "checkout" has been called in a given directory, it  * never needs to be called again.  The user can keep up-to-date by calling  * "update" when he feels like it; this will supply him with a merge of his  * own modifications and the changes made in the RCS original.  See "update"  * for details.  *   * "checkout" can be given a list of directories or files to be updated and in  * the case of a directory, will recursivley create any sub-directories that  * exist in the repository.  *   * When the user is satisfied with his own modifications, the present version  * can be committed by "commit"; this keeps the present version in tact,  * usually.  *   * The call is cvs checkout [options]<module-name>...  *   * "checkout" creates a directory ./CVS, in which it keeps its administration,  * in two files, Repository and Entries. The first contains the name of the  * repository.  The second contains one line for each registered file,  * consisting of the version number it derives from, its time stamp at  * derivation time and its name.  Both files are normal files and can be  * edited by the user, if necessary (when the repository is moved, e.g.)  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Create Version  *   * "checkout" creates a "version" of an RCS repository.  This version is owned  * totally by the user and is actually an independent copy, to be dealt with  * as seen fit.  Once "checkout" has been called in a given directory, it  * never needs to be called again.  The user can keep up-to-date by calling  * "update" when he feels like it; this will supply him with a merge of his  * own modifications and the changes made in the RCS original.  See "update"  * for details.  *   * "checkout" can be given a list of directories or files to be updated and in  * the case of a directory, will recursivley create any sub-directories that  * exist in the repository.  *   * When the user is satisfied with his own modifications, the present version  * can be committed by "commit"; this keeps the present version in tact,  * usually.  *   * The call is cvs checkout [options]<module-name>...  *   * "checkout" creates a directory ./CVS, in which it keeps its administration,  * in two files, Repository and Entries. The first contains the name of the  * repository.  The second contains one line for each registered file,  * consisting of the version number it derives from, its time stamp at  * derivation time and its name.  Both files are normal files and can be  * edited by the user, if necessary (when the repository is moved, e.g.)  */
 end_comment
 
 begin_comment
@@ -147,7 +147,7 @@ name|export_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-NRfln] [-r rev] [-D date] [-d dir] [-k kopt] module...\n"
+literal|"Usage: %s %s [-NRfln] [-r tag] [-D date] [-d dir] [-k kopt] module...\n"
 block|,
 literal|"\t-N\tDon't shorten module paths if -d specified.\n"
 block|,
@@ -159,7 +159,7 @@ literal|"\t-R\tProcess directories recursively (default).\n"
 block|,
 literal|"\t-n\tDo not run module program (if any).\n"
 block|,
-literal|"\t-r rev\tExport revision or tag.\n"
+literal|"\t-r tag\tExport tagged revisions.\n"
 block|,
 literal|"\t-D date\tExport revisions as of date.\n"
 block|,
@@ -547,17 +547,12 @@ case|:
 case|case
 literal|'q'
 case|:
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 comment|/* The CVS 1.5 client sends these options (in addition to 		   Global_option requests), so we must ignore them.  */
 if|if
 condition|(
 operator|!
 name|server_active
 condition|)
-endif|#
-directive|endif
 name|error
 argument_list|(
 literal|1
@@ -1440,9 +1435,6 @@ else|:
 literal|"(null)"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 comment|/* Don't compare remote CVSROOTs to our destination directory. */
 if|if
 condition|(
@@ -1453,9 +1445,6 @@ condition|)
 return|return
 literal|1
 return|;
-endif|#
-directive|endif
-comment|/* CLIENT_SUPPORT */
 comment|/* set current - even if where is set we'll need to cd back... */
 name|current
 operator|=
@@ -3488,7 +3477,7 @@ literal|0
 argument_list|,
 name|aflag
 argument_list|,
-name|NULL
+name|repository
 argument_list|)
 expr_stmt|;
 name|tag_validated
