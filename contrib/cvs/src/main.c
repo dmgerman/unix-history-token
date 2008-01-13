@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *    Copyright (c) 1992, Brian Berliner and Jeff Polk  *    Copyright (c) 1989-1992, Brian Berliner  *  *    You may distribute under the terms of the GNU General Public License  *    as specified in the README file that comes with the CVS source distribution.  *  * This is the main C driver for the CVS system.  *  * Credit to Dick Grune, Vrije Universiteit, Amsterdam, for writing  * the shell-script CVS system that this is based on.  *  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1986-2006 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2006 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License  * as specified in the README file that comes with the CVS source distribution.  *  * This is the main C driver for the CVS system.  *  * Credit to Dick Grune, Vrije Universiteit, Amsterdam, for writing  * the shell-script CVS system that this is based on.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -188,6 +188,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Zero if compression isn't supported or requested; non-zero to indicate  * a compression level to request from gzip.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|gzip_level
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Set if we should be writing CVSADM directories at top level.  At    least for now we'll make the default be off (the CVS 1.9, not CVS    1.9.2, behavior). */
 end_comment
 
@@ -244,20 +254,6 @@ begin_decl_stmt
 name|List
 modifier|*
 name|root_directories
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* We step through the above values.  This variable is set to reflect  * the currently active value.  *  * Now static.  FIXME - this variable should be removable (well, localizable)  * with a little more work.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|current_root
 init|=
 name|NULL
 decl_stmt|;
@@ -798,9 +794,7 @@ block|,
 comment|/* I really don't think I want to try to define "version control"        in one line.  I'm not sure one can get more concise than the        paragraph in ../cvs.spec without assuming the reader knows what        version control means.  */
 literal|"For CVS updates and additional information, see\n"
 block|,
-literal|"    the CVS home page at http://www.cvshome.org/ or\n"
-block|,
-literal|"    Pascal Molli's CVS site at http://www.loria.fr/~molli/cvs-index.html\n"
+literal|"    the CVS home page at http://cvs.nongnu.org/\n"
 block|,
 name|NULL
 block|, }
@@ -1018,22 +1012,22 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|current_root
+name|current_parsed_root
 operator|==
 name|NULL
 operator|&&
 name|p
 operator|->
 name|data
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{
-name|current_root
+name|current_parsed_root
 operator|=
 name|p
 operator|->
-name|key
+name|data
 expr_stmt|;
 return|return
 literal|1
@@ -1502,11 +1496,16 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|char
+name|cvsroot_t
 modifier|*
-name|CVSroot
+name|CVSroot_parsed
 init|=
-name|CVSROOT_DFLT
+name|NULL
+decl_stmt|;
+name|int
+name|cvsroot_update_env
+init|=
+literal|1
 decl_stmt|;
 name|char
 modifier|*
@@ -1530,13 +1529,6 @@ literal|0
 decl_stmt|;
 name|int
 name|tmpdir_update_env
-decl_stmt|,
-name|cvs_update_env
-decl_stmt|;
-name|int
-name|free_CVSroot
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|free_Editor
@@ -1704,10 +1696,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*      * Query the environment variables up-front, so that      * they can be overridden by command line arguments      */
-name|cvs_update_env
-operator|=
-literal|0
-expr_stmt|;
 name|tmpdir_update_env
 operator|=
 operator|*
@@ -1791,30 +1779,6 @@ name|Editor
 operator|=
 name|cp
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|cp
-operator|=
-name|getenv
-argument_list|(
-name|CVSROOT_ENV
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|CVSroot
-operator|=
-name|cp
-expr_stmt|;
-name|cvs_update_env
-operator|=
-literal|0
-expr_stmt|;
-comment|/* it's already there */
-block|}
 if|if
 condition|(
 name|getenv
@@ -2117,7 +2081,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"\ Copyright (c) 1989-2004 Brian Berliner, david d `zoo' zuhn, \n\                         Jeff Polk, and other authors\n"
+literal|"\ Copyright (C) 2006 Free Software Foundation, Inc.\n\ \n\ Senior active maintainers include Larry Jones, Derek R. Price,\n\ and Mark D. Baushke.  Please see the AUTHORS and README files from the CVS\n\ distribution kit for a complete list of contributors and copyrights.\n"
 argument_list|,
 name|stdout
 argument_list|)
@@ -2172,6 +2136,15 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SYSTEM_CLEANUP
+comment|/* Hook for OS-specific behavior, for example socket subsystems 		 * on NT and OS2 or dealing with windows and arguments on Mac. 		 */
+name|SYSTEM_CLEANUP
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|0
@@ -2186,6 +2159,15 @@ break|break;
 case|case
 literal|'T'
 case|:
+if|if
+condition|(
+name|free_Tmpdir
+condition|)
+name|free
+argument_list|(
+name|Tmpdir
+argument_list|)
+expr_stmt|;
 name|Tmpdir
 operator|=
 name|xstrdup
@@ -2206,6 +2188,15 @@ break|break;
 case|case
 literal|'e'
 case|:
+if|if
+condition|(
+name|free_Editor
+condition|)
+name|free
+argument_list|(
+name|Editor
+argument_list|)
+expr_stmt|;
 name|Editor
 operator|=
 name|xstrdup
@@ -2239,31 +2230,6 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|free_CVSroot
-condition|)
-name|free
-argument_list|(
-name|CVSroot
-argument_list|)
-expr_stmt|;
-name|CVSroot
-operator|=
-name|xstrdup
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-name|free_CVSroot
-operator|=
-literal|1
-expr_stmt|;
-name|cvs_update_env
-operator|=
-literal|1
-expr_stmt|;
-comment|/* need to update environment */
 break|break;
 case|case
 literal|'H'
@@ -2285,9 +2251,6 @@ break|break;
 case|case
 literal|'z'
 case|:
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 name|gzip_level
 operator|=
 name|strtol
@@ -2324,9 +2287,6 @@ argument_list|,
 literal|"gzip compression level must be between 0 and 9"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* CLIENT_SUPPORT */
 comment|/* If no CLIENT_SUPPORT, we just silently ignore the gzip 		 * level, so that users can have it in their .cvsrc and not 		 * cause any trouble. 		 * 		 * We still parse the argument to -z for correctness since 		 * one user complained of being bitten by a run of 		 * `cvs -z -n up' which read -n as the argument to -z without 		 * complaining.  */
 break|break;
 case|case
@@ -2661,6 +2621,9 @@ block|}
 endif|#
 directive|endif
 comment|/* AUTH_SERVER_SUPPORT || HAVE_GSSAPI */
+endif|#
+directive|endif
+comment|/* SERVER_SUPPORT */
 name|server_active
 operator|=
 name|strcmp
@@ -2672,13 +2635,7 @@ argument_list|)
 operator|==
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SERVER_SUPPORT */
 comment|/* This is only used for writing into the history file.  For 	   remote connections, it might be nice to have hostname 	   and/or remote path, on the other hand I'm not sure whether 	   it is worth the trouble.  */
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 if|if
 condition|(
 name|server_active
@@ -2691,8 +2648,6 @@ literal|"<remote>"
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 block|{
 name|CurDir
 operator|=
@@ -2728,10 +2683,21 @@ index|]
 operator|==
 literal|'\0'
 condition|)
+block|{
+if|if
+condition|(
+name|free_Tmpdir
+condition|)
+name|free
+argument_list|(
+name|Tmpdir
+argument_list|)
+expr_stmt|;
 name|Tmpdir
 operator|=
 literal|"/tmp"
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|HAVE_PUTENV
@@ -2995,30 +2961,49 @@ argument_list|,
 name|cvs_cmd_name
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
-comment|/* Fiddling with CVSROOT doesn't make sense if we're running 	       in server mode, since the client will send the repository 	       directory after the connection is made. */
+comment|/* Fiddling with CVSROOT doesn't make sense if we're running 	 * in server mode, since the client will send the repository 	 * directory after the connection is made. 	 */
 if|if
 condition|(
 operator|!
 name|server_active
 condition|)
-endif|#
-directive|endif
 block|{
-name|char
-modifier|*
-name|CVSADM_Root
-decl_stmt|;
-comment|/* See if we are able to find a 'better' value for CVSroot 	       in the CVSADM_ROOT directory. */
-name|CVSADM_Root
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* "cvs import" shouldn't check CVS/Root; in general it 	       ignores CVS directories and CVS/Root is likely to 	       specify a different repository than the one we are 	       importing to.  */
+comment|/* First check if a root was set via the command line.  */
 if|if
 condition|(
+name|CVSroot_cmdline
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|CVSroot_parsed
+operator|=
+name|parse_cvsroot
+argument_list|(
+name|CVSroot_cmdline
+argument_list|)
+operator|)
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Bad CVSROOT: `%s'."
+argument_list|,
+name|CVSroot_cmdline
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* See if we are able to find a 'better' value for CVSroot 	     * in the CVSADM_ROOT directory. 	     * 	     * "cvs import" shouldn't check CVS/Root; in general it 	     * ignores CVS directories and CVS/Root is likely to 	     * specify a different repository than the one we are 	     * importing to, but if this is not import and no root was 	     * specified on the command line, set the root from the 	     * CVS/Root file. 	     */
+if|if
+condition|(
+operator|!
+name|CVSroot_parsed
+operator|&&
 operator|!
 operator|(
 name|cm
@@ -3027,64 +3012,107 @@ name|attr
 operator|&
 name|CVS_CMD_IGNORE_ADMROOT
 operator|)
-comment|/* -d overrides CVS/Root, so don't give an error if the 		   latter points to a nonexistent repository.  */
-operator|&&
-name|CVSroot_cmdline
-operator|==
-name|NULL
 condition|)
-block|{
-name|CVSADM_Root
+name|CVSroot_parsed
 operator|=
 name|Name_Root
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* Now, if there is no root on the command line and we didn't find 	     * one in a file, set it via the $CVSROOT env var. 	     */
 if|if
 condition|(
-name|CVSADM_Root
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|CVSroot
-operator|==
-name|NULL
-operator|||
 operator|!
-name|cvs_update_env
+name|CVSroot_parsed
 condition|)
 block|{
-name|CVSroot
+name|char
+modifier|*
+name|tmp
+init|=
+name|getenv
+argument_list|(
+name|CVSROOT_ENV
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|tmp
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|CVSroot_parsed
 operator|=
-name|CVSADM_Root
-expr_stmt|;
-name|cvs_update_env
-operator|=
+name|parse_cvsroot
+argument_list|(
+name|tmp
+argument_list|)
+operator|)
+condition|)
+name|error
+argument_list|(
 literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Bad CVSROOT: `%s'."
+argument_list|,
+name|tmp
+argument_list|)
 expr_stmt|;
-comment|/* need to update environment */
+name|cvsroot_update_env
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|CVSROOT_DFLT
+if|if
+condition|(
+operator|!
+name|CVSroot_parsed
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|CVSroot_parsed
+operator|=
+name|parse_cvsroot
+argument_list|(
+name|CVSROOT_DFLT
+argument_list|)
+operator|)
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Bad CVSROOT: `%s'."
+argument_list|,
+name|CVSROOT_DFLT
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* CVSROOT_DFLT */
 comment|/* Now we've reconciled CVSROOT from the command line, the 	       CVS/Root file, and the environment variable.  Do the 	       last sanity checks on the variable. */
 if|if
 condition|(
 operator|!
-name|CVSroot
+name|CVSroot_parsed
 condition|)
 block|{
 name|error
@@ -3108,52 +3136,6 @@ name|CVSROOT_ENV
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-operator|*
-name|CVSroot
-condition|)
-block|{
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"CVSROOT is set but empty!  Make sure that the"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"specification of CVSROOT is valid, either via the"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"`-d' option, the %s environment variable, or the"
-argument_list|,
-name|CVSROOT_ENV
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"CVS/Root file (if any)."
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/* Here begins the big loop over unique cvsroot values.  We            need to call do_recursion once for each unique value found            in CVS/Root.  Prime the list with the current value. */
 comment|/* Create the list. */
@@ -3172,9 +3154,7 @@ expr_stmt|;
 comment|/* Prime it. */
 if|if
 condition|(
-name|CVSroot
-operator|!=
-name|NULL
+name|CVSroot_parsed
 condition|)
 block|{
 name|Node
@@ -3198,14 +3178,16 @@ name|key
 operator|=
 name|xstrdup
 argument_list|(
-name|CVSroot
+name|CVSroot_parsed
+operator|->
+name|original
 argument_list|)
 expr_stmt|;
 name|n
 operator|->
 name|data
 operator|=
-name|NULL
+name|CVSroot_parsed
 expr_stmt|;
 if|if
 condition|(
@@ -3232,7 +3214,7 @@ expr_stmt|;
 block|}
 name|assert
 argument_list|(
-name|current_root
+name|current_parsed_root
 operator|==
 name|NULL
 argument_list|)
@@ -3240,13 +3222,8 @@ expr_stmt|;
 comment|/* If we're running the server, we want to execute this main 	   loop once and only once (we won't be serving multiple roots 	   from this connection, so there's no need to do it more than 	   once).  To get out of the loop, we perform a "break" at the 	   end of things.  */
 while|while
 condition|(
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 name|server_active
 operator|||
-endif|#
-directive|endif
 name|walklist
 argument_list|(
 name|root_directories
@@ -3257,54 +3234,14 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 comment|/* Fiddling with CVSROOT doesn't make sense if we're running 	       in server mode, since the client will send the repository 	       directory after the connection is made. */
 if|if
 condition|(
 operator|!
 name|server_active
 condition|)
-endif|#
-directive|endif
 block|{
 comment|/* Now we're 100% sure that we have a valid CVSROOT 		   variable.  Parse it to see if we're supposed to do 		   remote accesses or use a special access method. */
-if|if
-condition|(
-name|current_parsed_root
-operator|!=
-name|NULL
-condition|)
-name|free_cvsroot_t
-argument_list|(
-name|current_parsed_root
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|current_parsed_root
-operator|=
-name|parse_cvsroot
-argument_list|(
-name|current_root
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|error
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"Bad CVSROOT: `%s'."
-argument_list|,
-name|current_root
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|trace
@@ -3317,13 +3254,12 @@ literal|"%s-> main loop with CVSROOT=%s\n"
 argument_list|,
 name|CLIENT_SERVER_STR
 argument_list|,
-name|current_root
+name|current_parsed_root
+operator|->
+name|original
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Check to see if the repository exists. 		 */
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 if|if
 condition|(
 operator|!
@@ -3331,9 +3267,6 @@ name|current_parsed_root
 operator|->
 name|isremote
 condition|)
-endif|#
-directive|endif
-comment|/* CLIENT_SUPPORT */
 block|{
 name|char
 modifier|*
@@ -3353,7 +3286,7 @@ operator|->
 name|directory
 argument_list|)
 operator|+
-sizeof|sizeof
+name|strlen
 argument_list|(
 name|CVSROOTADM
 argument_list|)
@@ -3361,9 +3294,6 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|path
@@ -3394,7 +3324,7 @@ name|save_errno
 operator|=
 name|errno
 expr_stmt|;
-comment|/* If this is "cvs init", the root need not exist yet.  */
+comment|/* If this is "cvs init", the root need not exist yet. 			 */
 if|if
 condition|(
 name|strcmp
@@ -3403,10 +3333,7 @@ name|cvs_cmd_name
 argument_list|,
 literal|"init"
 argument_list|)
-operator|!=
-literal|0
 condition|)
-block|{
 name|error
 argument_list|(
 literal|1
@@ -3419,7 +3346,6 @@ name|path
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|free
 argument_list|(
 name|path
@@ -3429,11 +3355,10 @@ block|}
 ifdef|#
 directive|ifdef
 name|HAVE_PUTENV
-comment|/* Update the CVSROOT environment variable if necessary. */
-comment|/* FIXME (njc): should we always set this with the CVSROOT from the command line? */
+comment|/* Update the CVSROOT environment variable.  */
 if|if
 condition|(
-name|cvs_update_env
+name|cvsroot_update_env
 condition|)
 block|{
 specifier|static
@@ -3456,17 +3381,14 @@ argument_list|)
 operator|+
 name|strlen
 argument_list|(
-name|CVSroot
+name|current_parsed_root
+operator|->
+name|original
 argument_list|)
 operator|+
-literal|1
-operator|+
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|env
@@ -3475,7 +3397,9 @@ literal|"%s=%s"
 argument_list|,
 name|CVSROOT_ENV
 argument_list|,
-name|CVSroot
+name|current_parsed_root
+operator|->
+name|original
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3510,25 +3434,13 @@ block|}
 comment|/* Parse the CVSROOT/config file, but only for local.  For the 	       server, we parse it after we know $CVSROOT.  For the 	       client, it doesn't get parsed at all, obviously.  The 	       presence of the parse_config call here is not mean to 	       predetermine whether CVSROOT/config overrides things from 	       read_cvsrc and other such places or vice versa.  That sort 	       of thing probably needs more thought.  */
 if|if
 condition|(
-literal|1
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
-operator|&&
 operator|!
 name|server_active
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 operator|&&
 operator|!
 name|current_parsed_root
 operator|->
 name|isremote
-endif|#
-directive|endif
 condition|)
 block|{
 comment|/* If there was an error parsing the config file, parse_config 		   already printed an error.  We keep going.  Why?  Because 		   if we didn't, then there would be no way to check in a new 		   CVSROOT/config file to fix the broken one!  */
@@ -3600,12 +3512,11 @@ operator|,
 name|argv
 operator|)
 expr_stmt|;
-comment|/* Mark this root directory as done.  When the server is                active, current_root will be NULL -- don't try and                remove it from the list. */
+comment|/* Mark this root directory as done.  When the server is                active, our list will be empty -- don't try and                remove it from the list. */
 if|if
 condition|(
-name|current_root
-operator|!=
-name|NULL
+operator|!
+name|server_active
 condition|)
 block|{
 name|Node
@@ -3616,7 +3527,9 @@ name|findnode
 argument_list|(
 name|root_directories
 argument_list|,
-name|current_root
+name|current_parsed_root
+operator|->
+name|original
 argument_list|)
 decl_stmt|;
 name|assert
@@ -3626,31 +3539,33 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|n
+operator|->
+name|data
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|free_cvsroot_t
+argument_list|(
+name|n
+operator|->
+name|data
+argument_list|)
+expr_stmt|;
 name|n
 operator|->
 name|data
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
-literal|1
+name|NULL
 expr_stmt|;
-name|current_root
+name|current_parsed_root
 operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* This will not work yet, since it tries to free (void *) 1. */
-block|dellist (&root_directories);
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 if|if
 condition|(
 name|server_active
@@ -3662,10 +3577,14 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
 block|}
 comment|/* end of loop for cvsroot values */
+name|dellist
+argument_list|(
+operator|&
+name|root_directories
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* end of stuff that gets done if the user DOESN'T ask for help */
 name|Lock_Cleanup
@@ -3690,15 +3609,6 @@ condition|)
 name|free
 argument_list|(
 name|CVSroot_cmdline
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|free_CVSroot
-condition|)
-name|free
-argument_list|(
-name|CVSroot
 argument_list|)
 expr_stmt|;
 if|if
