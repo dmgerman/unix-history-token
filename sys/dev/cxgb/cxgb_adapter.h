@@ -2686,12 +2686,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IFNET_MULTIQUEUE
-end_ifdef
-
 begin_function_decl
 name|int
 name|cxgb_pcpu_enqueue_packet
@@ -2727,37 +2721,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
-name|cxgb_pcpu_get_cookie
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|struct
-name|in6_addr
-modifier|*
-name|lip
-parameter_list|,
-name|uint16_t
-name|lport
-parameter_list|,
-name|struct
-name|in6_addr
-modifier|*
-name|rip
-parameter_list|,
-name|uint16_t
-name|rport
-parameter_list|,
-name|int
-name|ipv6
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|cxgb_pcpu_shutdown_threads
 parameter_list|(
@@ -2780,11 +2743,6 @@ name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int
