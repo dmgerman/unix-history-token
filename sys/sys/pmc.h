@@ -70,7 +70,7 @@ begin_define
 define|#
 directive|define
 name|PMC_VERSION_MAJOR
-value|0x02
+value|0x03
 end_define
 
 begin_define
