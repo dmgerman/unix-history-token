@@ -70,5 +70,16 @@ argument|rintf
 argument_list|)
 end_macro
 
+begin_macro
+name|DECL
+argument_list|(
+argument|long double
+argument_list|,
+argument|nearbyintl
+argument_list|,
+argument|rintl
+argument_list|)
+end_macro
+
 end_unit
 
