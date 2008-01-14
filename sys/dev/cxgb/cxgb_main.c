@@ -4843,7 +4843,7 @@ name|if_snd
 operator|.
 name|ifq_drv_maxlen
 operator|=
-name|TX_ETH_Q_SIZE
+name|IFQ_MAXLEN
 expr_stmt|;
 name|IFQ_SET_MAXLEN
 argument_list|(
