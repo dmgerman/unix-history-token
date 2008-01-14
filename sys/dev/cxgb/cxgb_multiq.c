@@ -838,6 +838,19 @@ name|txq
 operator|->
 name|port
 decl_stmt|;
+if|if
+condition|(
+name|txq
+operator|->
+name|immpkt
+operator|!=
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"immediate packet set"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|mtx_assert
@@ -2860,7 +2873,7 @@ name|cxgb_debug
 condition|)
 name|printf
 argument_list|(
-literal|"deferred coalesce=%lx ring_count=%d mtx_owned=%d\n"
+literal|"deferred coalesce=%jx ring_count=%d mtx_owned=%d\n"
 argument_list|,
 name|sc
 operator|->
