@@ -525,6 +525,9 @@ decl_stmt|,
 name|r
 decl_stmt|;
 name|int
+name|cmp_result
+decl_stmt|;
+name|int
 name|swaptype
 decl_stmt|,
 name|swap_cnt
@@ -807,7 +810,7 @@ operator|<=
 name|pc
 operator|&&
 operator|(
-name|r
+name|cmp_result
 operator|=
 name|CMP
 argument_list|(
@@ -824,7 +827,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|r
+name|cmp_result
 operator|==
 literal|0
 condition|)
@@ -857,7 +860,7 @@ operator|<=
 name|pc
 operator|&&
 operator|(
-name|r
+name|cmp_result
 operator|=
 name|CMP
 argument_list|(
@@ -874,7 +877,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|r
+name|cmp_result
 operator|==
 literal|0
 condition|)
