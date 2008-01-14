@@ -1410,6 +1410,62 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WE_WakePktEnable
+value|(1U<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WE_MagicPktEnable
+value|(1U<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WE_LinkEventEnable
+value|(1U<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WE_WakePolarity
+value|(1U<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WE_WakePktEvent
+value|(1U<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WE_MagicPktEvent
+value|(1U<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WE_LinkEvent
+value|(1U<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WE_WakeOnLanEnable
+value|(1U<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
 name|STGE_Countdown
 value|0x54
 end_define
