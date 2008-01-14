@@ -3,6 +3,12 @@ begin_comment
 comment|/**************************************************************************  Copyright (c) 2007, Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.  2. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DEBUG_BUFRING
+end_define
+
 begin_include
 include|#
 directive|include
@@ -170,7 +176,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/unistd.h>
+file|<sys/syslog.h>
 end_include
 
 begin_include
@@ -553,6 +559,16 @@ name|err
 init|=
 literal|0
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|IFNET_MULTIQUEUE
+name|panic
+argument_list|(
+literal|"not expecting enqueue without multiqueue"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|KASSERT
 argument_list|(
 name|m
@@ -913,6 +929,18 @@ name|IFNET_MULTIQUEUE
 comment|/* 	 * This is terrible from a cache and locking efficiency standpoint 	 * but then again ... so is ifnet. 	 */
 while|while
 condition|(
+operator|(
+operator|(
+name|qs
+operator|->
+name|qs_flags
+operator|&
+name|QS_EXITING
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
 operator|!
 name|IFQ_DRV_IS_EMPTY
 argument_list|(
@@ -1019,6 +1047,20 @@ operator|(
 literal|0
 operator|)
 return|;
+name|buf_ring_scan
+argument_list|(
+operator|&
+name|txq
+operator|->
+name|txq_mr
+argument_list|,
+name|m
+argument_list|,
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|m
@@ -1080,6 +1122,16 @@ literal|1
 operator|)
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|IFNET_MULTIQUEUE
+name|panic
+argument_list|(
+literal|"coalesce not supported yet"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|count
 operator|=
 literal|1
@@ -1175,12 +1227,6 @@ condition|(
 name|count
 operator|==
 name|TX_WR_COUNT_MAX
-operator|||
-operator|(
-name|cxgb_pcpu_tx_coalesce
-operator|==
-literal|0
-operator|)
 condition|)
 break|break;
 name|coalesced
@@ -2211,8 +2257,10 @@ if|if
 condition|(
 name|cxgb_debug
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"cxgb link down\n"
 argument_list|)
 expr_stmt|;
@@ -2340,6 +2388,7 @@ name|flush
 operator|=
 operator|(
 operator|(
+operator|(
 operator|!
 name|buf_ring_empty
 argument_list|(
@@ -2348,6 +2397,20 @@ name|txq
 operator|->
 name|txq_mr
 argument_list|)
+operator|||
+operator|(
+operator|!
+name|IFQ_DRV_IS_EMPTY
+argument_list|(
+operator|&
+name|pi
+operator|->
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
+operator|)
+operator|)
 operator|&&
 operator|!
 name|stopped
@@ -2370,7 +2433,7 @@ if|if
 condition|(
 name|cxgb_debug
 condition|)
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"stopped=%d flush=%d max_desc=%d\n"
 argument_list|,
@@ -2876,13 +2939,6 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|mbuf
-modifier|*
-name|m
-init|=
-name|NULL
-decl_stmt|;
-name|struct
 name|port_info
 modifier|*
 name|p
@@ -2912,47 +2968,11 @@ name|if_snd
 argument_list|)
 condition|)
 return|return;
-name|IFQ_DRV_DEQUEUE
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-if|if
-condition|(
-name|m
-condition|)
-name|KASSERT
-argument_list|(
-name|m
-operator|->
-name|m_type
-operator|==
-name|MT_DATA
-argument_list|,
-operator|(
-literal|"bad mbuf type %d"
-operator|,
-name|m
-operator|->
-name|m_type
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|cxgb_pcpu_start
 argument_list|(
 name|ifp
 argument_list|,
-name|m
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
