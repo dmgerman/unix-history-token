@@ -2729,7 +2729,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|KASSERT(m != NULL&& m->m_flags& M_PKTHDR,			\ 	    ("%s: no mbuf packet header!", __func__))
+value|KASSERT((m) != NULL&& (m)->m_flags& M_PKTHDR,			\ 	    ("%s: no mbuf packet header!", __func__))
 end_define
 
 begin_comment
