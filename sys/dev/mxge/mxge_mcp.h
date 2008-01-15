@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  Copyright (c) 2006-2007, Myricom Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Myricom Inc, nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  $FreeBSD$ ***************************************************************************/
+comment|/*******************************************************************************  Copyright (c) 2006-2008, Myricom Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Myricom Inc, nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  $FreeBSD$ ***************************************************************************/
 end_comment
 
 begin_ifndef
@@ -133,22 +133,13 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* 4 Bytes.  8 Bytes for NDIS drivers. */
+comment|/* 4 Bytes */
 end_comment
 
 begin_struct
 struct|struct
 name|mcp_slot
 block|{
-ifdef|#
-directive|ifdef
-name|MXGEFW_NDIS
-comment|/* Place at the top so it gets written before length.    * The driver polls length.    */
-name|uint32_t
-name|hash
-decl_stmt|;
-endif|#
-directive|endif
 name|uint16_t
 name|checksum
 decl_stmt|;
@@ -172,6 +163,36 @@ ifdef|#
 directive|ifdef
 name|MXGEFW_NDIS
 end_ifdef
+
+begin_comment
+comment|/* 8-byte descriptor, exclusively used by NDIS drivers. */
+end_comment
+
+begin_struct
+struct|struct
+name|mcp_slot_8
+block|{
+comment|/* Place hash value at the top so it gets written before length.    * The driver polls length.    */
+name|uint32_t
+name|hash
+decl_stmt|;
+name|uint16_t
+name|checksum
+decl_stmt|;
+name|uint16_t
+name|length
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mcp_slot_8
+name|mcp_slot_8_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Two bits of length in mcp_slot are used to indicate hash type. */
@@ -680,7 +701,15 @@ name|MXGEFW_CMD_GET_MAX_RSS_QUEUES
 block|,
 name|MXGEFW_CMD_ENABLE_RSS_QUEUES
 block|,
-comment|/* data0 = number of slices n (0, 1, ..., n-1) to enable    * data1 = interrupt mode. 0=share one INTx/MSI, 1=use one MSI-X per queue.    * If all queues share one interrupt, the driver must have set    * RSS_SHARED_INTERRUPT_DMA before enabling queues.    */
+comment|/* data0 = number of slices n (0, 1, ..., n-1) to enable    * data1 = interrupt mode.    * 0=share one INTx/MSI, 1=use one MSI-X per queue.    * If all queues share one interrupt, the driver must have set    * RSS_SHARED_INTERRUPT_DMA before enabling queues.    */
+define|#
+directive|define
+name|MXGEFW_SLICE_INTR_MODE_SHARED
+value|0
+define|#
+directive|define
+name|MXGEFW_SLICE_INTR_MODE_ONE_PER_SLICE
+value|1
 name|MXGEFW_CMD_GET_RSS_SHARED_INTERRUPT_MASK_OFFSET
 block|,
 name|MXGEFW_CMD_SET_RSS_SHARED_INTERRUPT_DMA
@@ -700,13 +729,33 @@ block|,
 comment|/* tell nic that the secret key's been updated */
 name|MXGEFW_CMD_SET_RSS_ENABLE
 block|,
-comment|/* data0 = enable/disable rss    * 0: disable rss.  nic does not distribute receive packets.    * 1: enable rss.  nic distributes receive packets among queues.    * data1 = hash type    * 1: IPV4    * 2: TCP_IPV4    * 3: IPV4 | TCP_IPV4    */
+comment|/* data0 = enable/disable rss    * 0: disable rss.  nic does not distribute receive packets.    * 1: enable rss.  nic distributes receive packets among queues.    * data1 = hash type    * 1: IPV4            (required by RSS)    * 2: TCP_IPV4        (required by RSS)    * 3: IPV4 | TCP_IPV4 (required by RSS)    * 4: source port    */
+define|#
+directive|define
+name|MXGEFW_RSS_HASH_TYPE_IPV4
+value|0x1
+define|#
+directive|define
+name|MXGEFW_RSS_HASH_TYPE_TCP_IPV4
+value|0x2
+define|#
+directive|define
+name|MXGEFW_RSS_HASH_TYPE_SRC_PORT
+value|0x4
 name|MXGEFW_CMD_GET_MAX_TSO6_HDR_SIZE
 block|,
 comment|/* Return data = the max. size of the entire headers of a IPv6 TSO packet.    * If the header size of a IPv6 TSO packet is larger than the specified    * value, then the driver must not use TSO.    * This size restriction only applies to IPv6 TSO.    * For IPv4 TSO, the maximum size of the headers is fixed, and the NIC    * always has enough header buffer to store maximum-sized headers.    */
 name|MXGEFW_CMD_SET_TSO_MODE
 block|,
 comment|/* data0 = TSO mode.    * 0: Linux/FreeBSD style (NIC default)    * 1: NDIS/NetBSD style    */
+define|#
+directive|define
+name|MXGEFW_TSO_MODE_LINUX
+value|0
+define|#
+directive|define
+name|MXGEFW_TSO_MODE_NDIS
+value|1
 name|MXGEFW_CMD_MDIO_READ
 block|,
 comment|/* data0 = dev_addr (PMA/PMD or PCS ...), data1 = register/addr */
@@ -717,7 +766,30 @@ name|MXGEFW_CMD_XFP_I2C_READ
 block|,
 comment|/* Starts to get a fresh copy of one byte or of the whole xfp i2c table, the    * obtained data is cached inside the xaui-xfi chip :    *   data0 : "all" flag : 0 => get one byte, 1=> get 256 bytes,     *   data1 : if (data0 == 0): index of byte to refresh [ not used otherwise ]    * The operation might take ~1ms for a single byte or ~65ms when refreshing all 256 bytes    * During the i2c operation,  MXGEFW_CMD_XFP_I2C_READ or MXGEFW_CMD_XFP_BYTE attempts    *  will return MXGEFW_CMD_ERROR_BUSY    */
 name|MXGEFW_CMD_XFP_BYTE
+block|,
 comment|/* Return the last obtained copy of a given byte in the xfp i2c table    * (copy cached during the last relevant MXGEFW_CMD_XFP_I2C_READ)    *   data0 : index of the desired table entry    *  Return data = the byte stored at the requested index in the table    */
+name|MXGEFW_CMD_GET_VPUMP_OFFSET
+block|,
+comment|/* Return data = NIC memory offset of mcp_vpump_public_global */
+name|MXGEFW_CMD_RESET_VPUMP
+block|,
+comment|/* Resets the VPUMP state */
+name|MXGEFW_CMD_SET_RSS_MCP_SLOT_TYPE
+block|,
+comment|/* data0 = mcp_slot type to use.    * 0 = the default 4B mcp_slot    * 1 = 8B mcp_slot_8    */
+define|#
+directive|define
+name|MXGEFW_RSS_MCP_SLOT_TYPE_MIN
+value|0
+define|#
+directive|define
+name|MXGEFW_RSS_MCP_SLOT_TYPE_WITH_HASH
+value|1
+name|MXGEFW_CMD_SET_THROTTLE_FACTOR
+block|,
+comment|/* set the throttle factor for ethp_z8e      data0 = throttle_factor      throttle_factor = 256 * pcie-raw-speed / tx_speed      tx_speed = 256 * pcie-raw-speed / throttle_factor       For PCI-E x8: pcie-raw-speed == 16Gb/s      For PCI-E x4: pcie-raw-speed == 8Gb/s       ex1: throttle_factor == 0x1a0 (416), tx_speed == 1.23GB/s == 9.846 Gb/s      ex2: throttle_factor == 0x200 (512), tx_speed == 1.0GB/s == 8 Gb/s       with tx_boundary == 2048, max-throttle-factor == 8191 => min-speed == 500Mb/s      with tx_boundary == 4096, max-throttle-factor == 4095 => min-speed == 1Gb/s   */
+name|MXGEFW_CMD_VPUMP_UP
+comment|/* Allocates VPump Connection, Send Request and Zero copy buffer address tables */
 block|}
 enum|;
 end_enum
@@ -881,6 +953,10 @@ ifdef|#
 directive|ifdef
 name|MXGEFW_NDIS
 end_ifdef
+
+begin_comment
+comment|/* Exclusively used by NDIS drivers */
+end_comment
 
 begin_struct
 struct|struct

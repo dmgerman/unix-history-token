@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  Copyright (c) 2007, Myricom Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Myricom Inc, nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
+comment|/******************************************************************************  Copyright (c) 2007-2008, Myricom Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Myricom Inc, nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
 end_comment
 
 begin_include
@@ -51,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -212,9 +218,10 @@ begin_function
 name|void
 name|mxge_lro_flush
 parameter_list|(
-name|mxge_softc_t
+name|struct
+name|mxge_slice_state
 modifier|*
-name|mgp
+name|ss
 parameter_list|,
 name|struct
 name|lro_entry
@@ -222,6 +229,14 @@ modifier|*
 name|lro
 parameter_list|)
 block|{
+name|mxge_softc_t
+modifier|*
+name|mgp
+init|=
+name|ss
+operator|->
+name|sc
+decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -543,7 +558,7 @@ operator|->
 name|m_head
 argument_list|)
 expr_stmt|;
-name|mgp
+name|ss
 operator|->
 name|lro_queued
 operator|+=
@@ -553,7 +568,7 @@ name|append_cnt
 operator|+
 literal|1
 expr_stmt|;
-name|mgp
+name|ss
 operator|->
 name|lro_flushed
 operator|++
@@ -579,7 +594,7 @@ expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|mgp
+name|ss
 operator|->
 name|lro_free
 argument_list|,
@@ -595,9 +610,10 @@ begin_function
 name|int
 name|mxge_lro_rx
 parameter_list|(
-name|mxge_softc_t
+name|struct
+name|mxge_slice_state
 modifier|*
-name|mgp
+name|ss
 parameter_list|,
 name|struct
 name|mbuf
@@ -783,7 +799,7 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|mgp
+name|ss
 operator|->
 name|lro_bad_csum
 operator|++
@@ -1042,7 +1058,7 @@ name|SLIST_FOREACH
 argument_list|(
 argument|lro
 argument_list|,
-argument|&mgp->lro_active
+argument|&ss->lro_active
 argument_list|,
 argument|next
 argument_list|)
@@ -1103,7 +1119,7 @@ comment|/* out of order packet */
 name|SLIST_REMOVE
 argument_list|(
 operator|&
-name|mgp
+name|ss
 operator|->
 name|lro_active
 argument_list|,
@@ -1116,7 +1132,7 @@ argument_list|)
 expr_stmt|;
 name|mxge_lro_flush
 argument_list|(
-name|mgp
+name|ss
 argument_list|,
 name|lro
 argument_list|)
@@ -1388,7 +1404,9 @@ expr_stmt|;
 comment|/* flush packet if required */
 name|device_mtu
 operator|=
-name|mgp
+name|ss
+operator|->
+name|sc
 operator|->
 name|ifp
 operator|->
@@ -1410,7 +1428,7 @@ block|{
 name|SLIST_REMOVE
 argument_list|(
 operator|&
-name|mgp
+name|ss
 operator|->
 name|lro_active
 argument_list|,
@@ -1423,7 +1441,7 @@ argument_list|)
 expr_stmt|;
 name|mxge_lro_flush
 argument_list|(
-name|mgp
+name|ss
 argument_list|,
 name|lro
 argument_list|)
@@ -1439,7 +1457,7 @@ condition|(
 name|SLIST_EMPTY
 argument_list|(
 operator|&
-name|mgp
+name|ss
 operator|->
 name|lro_free
 argument_list|)
@@ -1454,7 +1472,7 @@ operator|=
 name|SLIST_FIRST
 argument_list|(
 operator|&
-name|mgp
+name|ss
 operator|->
 name|lro_free
 argument_list|)
@@ -1462,7 +1480,7 @@ expr_stmt|;
 name|SLIST_REMOVE_HEAD
 argument_list|(
 operator|&
-name|mgp
+name|ss
 operator|->
 name|lro_free
 argument_list|,
@@ -1472,7 +1490,7 @@ expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|mgp
+name|ss
 operator|->
 name|lro_active
 argument_list|,
