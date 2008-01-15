@@ -6185,7 +6185,7 @@ name|cxgb_debug
 condition|)
 name|printf
 argument_list|(
-literal|"uipc_mvec PIO_LEN=%ld\n"
+literal|"uipc_mvec PIO_LEN=%zd\n"
 argument_list|,
 name|PIO_LEN
 argument_list|)

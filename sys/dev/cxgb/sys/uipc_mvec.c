@@ -976,7 +976,7 @@ name|cxgb_debug
 condition|)
 name|printf
 argument_list|(
-literal|"cxgb_sge PIO_LEN=%ld\n"
+literal|"cxgb_sge PIO_LEN=%zd\n"
 argument_list|,
 name|PIO_LEN
 argument_list|)
