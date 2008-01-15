@@ -499,12 +499,35 @@ name|RSPQ_Q_SIZE
 value|1024
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
 name|TX_ETH_Q_SIZE
 value|1024
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TX_ETH_Q_SIZE
+value|64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_enum
 enum|enum
@@ -523,6 +546,24 @@ literal|2
 block|, }
 enum|;
 end_enum
+
+begin_comment
+comment|/*   * work request size in bytes  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WR_LEN
+value|(WR_FLITS * 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIO_LEN
+value|(WR_LEN - sizeof(struct cpl_tx_pkt))
+end_define
 
 begin_comment
 comment|/* careful, the following are set on priv_flags and must not collide with  * IFF_ flags!  */
@@ -960,14 +1001,6 @@ name|bus_dma_segment_t
 name|txq_segs
 index|[
 name|TX_MAX_SEGS
-index|]
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|txq_m_vec
-index|[
-name|TX_WR_COUNT_MAX
 index|]
 decl_stmt|;
 define|#
@@ -2764,26 +2797,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|cxgb_tx_common
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|struct
-name|sge_qset
-modifier|*
-name|qs
-parameter_list|,
-name|uint32_t
-name|txmax
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|t3_free_qset
 parameter_list|(
@@ -2795,26 +2808,6 @@ name|struct
 name|sge_qset
 modifier|*
 name|q
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|cxgb_dequeue_packet
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|sge_txq
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2843,21 +2836,6 @@ name|struct
 name|sge_fl
 modifier|*
 name|fl
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|reclaim_completed_tx
-parameter_list|(
-name|struct
-name|sge_txq
-modifier|*
-name|q
-parameter_list|,
-name|int
-name|reclaim_min
 parameter_list|)
 function_decl|;
 end_function_decl
