@@ -997,12 +997,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|bus_dma_segment_t
-name|txq_segs
-index|[
-name|TX_MAX_SEGS
-index|]
-decl_stmt|;
 define|#
 directive|define
 name|TXQ_NAME_LEN
