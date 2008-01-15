@@ -408,6 +408,12 @@ name|p
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|&&
+operator|!
+name|feof
+argument_list|(
+name|tf
+argument_list|)
 condition|)
 block|{
 name|i
