@@ -171,17 +171,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PTMXM_PREFIX
-value|"ptc/"
-end_define
-
-begin_comment
-comment|/* pts(4) master naming convention */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PTMXS_PREFIX
 value|"pts/"
 end_define
@@ -198,15 +187,8 @@ value|"ptmx"
 end_define
 
 begin_comment
-comment|/*  * The following are range values for pseudo TTY devices.  Pseudo TTYs have a  * name of /dev/[pt]ty[l-sL-S][0-9a-v], yielding 256 combinations per major.  */
+comment|/*  * The following are range values for pseudo TTY devices.  Pseudo TTYs have a  * name of /dev/[pt]ty[l-sL-S][0-9a-v].  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|PTY_MAX
-value|256
-end_define
 
 begin_define
 define|#
