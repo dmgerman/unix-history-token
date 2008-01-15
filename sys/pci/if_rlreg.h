@@ -778,7 +778,7 @@ value|0x0038
 end_define
 
 begin_comment
-comment|/* 16 bits */
+comment|/* 8 bits */
 end_comment
 
 begin_comment
@@ -3388,7 +3388,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Rx/Tx descriptor parameters (8139C+ and 8169 only)  *  * Tx/Rx count must be equal.  Shared code like re_dma_map_desc assumes this.  * Buffers must be a multiple of 8 bytes.  Currently limit to 64 descriptors  * due to the 8139C+.  We need to put the number of descriptors in the ring  * structure and use that value instead.  */
+comment|/*  * Rx/Tx descriptor parameters (8139C+ and 8169 only)  *  * 8139C+  *  Number of descriptors supported : up to 64  *  Descriptor alignment : 256 bytes  *  Tx buffer : At least 4 bytes in length.  *  Rx buffer : At least 8 bytes in length and 8 bytes alignment required.  *    * 8169  *  Number of descriptors supported : up to 1024  *  Descriptor alignment : 256 bytes  *  Tx buffer : At least 4 bytes in length.  *  Rx buffer : At least 8 bytes in length and 8 bytes alignment required.  */
 end_comment
 
 begin_ifndef
@@ -3412,36 +3412,50 @@ end_endif
 begin_define
 define|#
 directive|define
-name|RL_TX_DESC_CNT
+name|RL_8169_TX_DESC_CNT
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_8169_RX_DESC_CNT
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_8139_TX_DESC_CNT
 value|64
 end_define
 
 begin_define
 define|#
 directive|define
-name|RL_TX_DESC_THLD
-value|4
+name|RL_8139_RX_DESC_CNT
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_TX_DESC_CNT
+value|RL_8169_TX_DESC_CNT
 end_define
 
 begin_define
 define|#
 directive|define
 name|RL_RX_DESC_CNT
-value|RL_TX_DESC_CNT
+value|RL_8169_RX_DESC_CNT
 end_define
 
 begin_define
 define|#
 directive|define
-name|RL_RX_LIST_SZ
-value|(RL_RX_DESC_CNT * sizeof(struct rl_desc))
-end_define
-
-begin_define
-define|#
-directive|define
-name|RL_TX_LIST_SZ
-value|(RL_TX_DESC_CNT * sizeof(struct rl_desc))
+name|RL_NTXSEGS
+value|32
 end_define
 
 begin_define
@@ -3461,11 +3475,37 @@ end_define
 begin_define
 define|#
 directive|define
-name|RL_DESC_INC
+name|RL_TX_DESC_NXT
 parameter_list|(
+name|sc
+parameter_list|,
 name|x
 parameter_list|)
-value|(x = (x + 1) % RL_TX_DESC_CNT)
+value|((x + 1)& ((sc)->rl_ldata.rl_tx_desc_cnt - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_TX_DESC_PRV
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+value|((x - 1)& ((sc)->rl_ldata.rl_tx_desc_cnt - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_RX_DESC_NXT
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+value|((x + 1)& ((sc)->rl_ldata.rl_rx_desc_cnt - 1))
 end_define
 
 begin_define
@@ -3589,29 +3629,36 @@ name|RL_JUMBO_MTU
 value|(RL_JUMBO_FRAMELEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|rl_softc
-struct_decl|;
-end_struct_decl
+begin_struct
+struct|struct
+name|rl_txdesc
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|tx_m
+decl_stmt|;
+name|bus_dmamap_t
+name|tx_dmamap
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
-name|rl_dmaload_arg
+name|rl_rxdesc
 block|{
-name|int
-name|rl_idx
-decl_stmt|;
-name|int
-name|rl_maxsegs
-decl_stmt|;
-name|uint32_t
-name|rl_flags
-decl_stmt|;
 name|struct
-name|rl_desc
+name|mbuf
 modifier|*
-name|rl_ring
+name|rx_m
+decl_stmt|;
+name|bus_dmamap_t
+name|rx_dmamap
+decl_stmt|;
+name|bus_size_t
+name|rx_size
 decl_stmt|;
 block|}
 struct|;
@@ -3622,20 +3669,24 @@ struct|struct
 name|rl_list_data
 block|{
 name|struct
-name|mbuf
-modifier|*
-name|rl_tx_mbuf
+name|rl_txdesc
+name|rl_tx_desc
 index|[
 name|RL_TX_DESC_CNT
 index|]
 decl_stmt|;
 name|struct
-name|mbuf
-modifier|*
-name|rl_rx_mbuf
+name|rl_rxdesc
+name|rl_rx_desc
 index|[
 name|RL_RX_DESC_CNT
 index|]
+decl_stmt|;
+name|int
+name|rl_tx_desc_cnt
+decl_stmt|;
+name|int
+name|rl_rx_desc_cnt
 decl_stmt|;
 name|int
 name|rl_tx_prodidx
@@ -3649,22 +3700,17 @@ decl_stmt|;
 name|int
 name|rl_tx_free
 decl_stmt|;
-name|bus_dmamap_t
-name|rl_tx_dmamap
-index|[
-name|RL_TX_DESC_CNT
-index|]
-decl_stmt|;
-name|bus_dmamap_t
-name|rl_rx_dmamap
-index|[
-name|RL_RX_DESC_CNT
-index|]
-decl_stmt|;
 name|bus_dma_tag_t
-name|rl_mtag
+name|rl_tx_mtag
 decl_stmt|;
-comment|/* mbuf mapping tag */
+comment|/* mbuf TX mapping tag */
+name|bus_dma_tag_t
+name|rl_rx_mtag
+decl_stmt|;
+comment|/* mbuf RX mapping tag */
+name|bus_dmamap_t
+name|rl_rx_sparemap
+decl_stmt|;
 name|bus_dma_tag_t
 name|rl_stag
 decl_stmt|;
@@ -3838,10 +3884,6 @@ decl_stmt|;
 name|struct
 name|task
 name|rl_inttask
-decl_stmt|;
-name|struct
-name|mtx
-name|rl_intlock
 decl_stmt|;
 name|int
 name|rl_txstart
