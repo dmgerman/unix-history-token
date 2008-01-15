@@ -916,6 +916,15 @@ modifier|*
 name|ppb_owner
 decl_stmt|;
 comment|/* device which owns the bus */
+name|struct
+name|resource
+modifier|*
+name|irq_res
+decl_stmt|;
+name|void
+modifier|*
+name|intr_cookie
+decl_stmt|;
 block|}
 struct|;
 end_struct
