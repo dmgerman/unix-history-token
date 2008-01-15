@@ -912,15 +912,6 @@ name|br_size
 operator|-
 literal|1
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|mr
-operator|->
-name|br_lock
-argument_list|)
-expr_stmt|;
-comment|/* XXX temporary ? */
 name|cons
 operator|=
 name|mr
@@ -977,15 +968,6 @@ name|mb
 argument_list|()
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|mr
-operator|->
-name|br_lock
-argument_list|)
-expr_stmt|;
-comment|/* XXX temporary ? */
 return|return
 operator|(
 name|m
