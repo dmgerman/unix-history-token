@@ -247,7 +247,7 @@ specifier|static
 name|int
 name|recycle_enable
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -6177,17 +6177,6 @@ name|mi
 operator|.
 name|mi_base
 operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cxgb_debug
-condition|)
-name|printf
-argument_list|(
-literal|"uipc_mvec PIO_LEN=%zd\n"
-argument_list|,
-name|PIO_LEN
 argument_list|)
 expr_stmt|;
 if|if
