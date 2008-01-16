@@ -527,7 +527,9 @@ specifier|const
 name|char
 modifier|*
 name|get_helplist
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i

@@ -85,13 +85,11 @@ begin_function
 name|void
 name|command
 parameter_list|(
-name|cmd
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|cmd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|cmdtab
@@ -671,13 +669,11 @@ name|cmdtab
 modifier|*
 name|lookup
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -838,7 +834,9 @@ end_function
 begin_function
 name|void
 name|status
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|error
 argument_list|(
@@ -858,21 +856,16 @@ begin_function
 name|int
 name|prefix
 parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|s2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -911,7 +904,7 @@ literal|'\0'
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

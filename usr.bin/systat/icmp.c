@@ -183,12 +183,10 @@ begin_function
 name|void
 name|closeicmp
 parameter_list|(
-name|w
-parameter_list|)
 name|WINDOW
 modifier|*
 name|w
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(

@@ -72,7 +72,9 @@ end_include
 begin_function
 name|int
 name|keyboard
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|ch

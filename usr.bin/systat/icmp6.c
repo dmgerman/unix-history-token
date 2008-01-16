@@ -171,12 +171,10 @@ begin_function
 name|void
 name|closeicmp6
 parameter_list|(
-name|w
-parameter_list|)
 name|WINDOW
 modifier|*
 name|w
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(

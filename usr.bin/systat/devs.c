@@ -699,7 +699,6 @@ literal|"drives"
 argument_list|)
 condition|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;

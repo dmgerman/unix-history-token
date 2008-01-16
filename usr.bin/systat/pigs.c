@@ -173,7 +173,9 @@ begin_function
 name|WINDOW
 modifier|*
 name|openpigs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -202,12 +204,10 @@ begin_function
 name|void
 name|closepigs
 parameter_list|(
-name|w
-parameter_list|)
 name|WINDOW
 modifier|*
 name|w
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -237,9 +237,10 @@ end_function
 begin_function
 name|void
 name|showpigs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -476,7 +477,9 @@ end_function
 begin_function
 name|int
 name|initpigs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fixpt_t
 name|ccpu
@@ -604,7 +607,9 @@ end_function
 begin_function
 name|void
 name|fetchpigs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -824,7 +829,9 @@ end_function
 begin_function
 name|void
 name|labelpigs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|wmove
 argument_list|(
@@ -858,21 +865,16 @@ begin_function
 name|int
 name|compar
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|a
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|b
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -907,7 +909,7 @@ else|:
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
