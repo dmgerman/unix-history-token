@@ -9058,11 +9058,6 @@ case|:
 case|case
 name|SIOCGIFADDR
 case|:
-name|PORT_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ifa
@@ -9074,6 +9069,11 @@ operator|==
 name|AF_INET
 condition|)
 block|{
+name|PORT_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_flags
@@ -9103,6 +9103,11 @@ argument_list|,
 name|ifa
 argument_list|)
 expr_stmt|;
+name|PORT_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|error
@@ -9114,11 +9119,6 @@ argument_list|,
 name|command
 argument_list|,
 name|data
-argument_list|)
-expr_stmt|;
-name|PORT_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 break|break;
