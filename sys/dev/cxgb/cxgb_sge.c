@@ -7303,7 +7303,7 @@ operator|&=
 operator|~
 name|M_EXT
 expr_stmt|;
-name|mbufs_outstanding
+name|cxgb_mbufs_outstanding
 operator|--
 expr_stmt|;
 name|m_free
@@ -17486,11 +17486,31 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|mbufs_outstanding
+name|cxgb_mbufs_outstanding
 argument_list|,
 literal|0
 argument_list|,
 literal|"#mbufs in flight in the driver"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"pack_outstanding"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|cxgb_pack_outstanding
+argument_list|,
+literal|0
+argument_list|,
+literal|"#packet in flight in the driver"
 argument_list|)
 expr_stmt|;
 block|}
