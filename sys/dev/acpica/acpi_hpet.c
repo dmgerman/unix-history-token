@@ -77,6 +77,12 @@ directive|include
 file|<dev/acpica/acpivar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/acpica/acpi_hpet.h>
+end_include
+
 begin_expr_stmt
 name|ACPI_SERIAL_DECL
 argument_list|(
@@ -175,61 +181,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|HPET_MEM_WIDTH
-value|0x400
-end_define
-
-begin_comment
-comment|/* Expected memory region size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HPET_OFFSET_INFO
-value|0
-end_define
-
-begin_comment
-comment|/* Location of info in region */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HPET_OFFSET_PERIOD
-value|4
-end_define
-
-begin_comment
-comment|/* Location of period (1/hz) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HPET_OFFSET_ENABLE
-value|0x10
-end_define
-
-begin_comment
-comment|/* Location of enable word */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HPET_OFFSET_VALUE
-value|0xf0
-end_define
-
-begin_comment
-comment|/* Location of actual timer value */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DEV_HPET
 parameter_list|(
 name|x
@@ -297,7 +248,7 @@ name|sc
 operator|->
 name|mem_res
 argument_list|,
-name|HPET_OFFSET_VALUE
+name|HPET_MAIN_COUNTER
 argument_list|)
 operator|)
 return|;
@@ -326,7 +277,7 @@ name|sc
 operator|->
 name|mem_res
 argument_list|,
-name|HPET_OFFSET_ENABLE
+name|HPET_CONFIG
 argument_list|)
 expr_stmt|;
 name|bus_write_4
@@ -335,11 +286,11 @@ name|sc
 operator|->
 name|mem_res
 argument_list|,
-name|HPET_OFFSET_ENABLE
+name|HPET_CONFIG
 argument_list|,
 name|val
 operator||
-literal|1
+name|HPET_CNF_ENABLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -367,7 +318,7 @@ name|sc
 operator|->
 name|mem_res
 argument_list|,
-name|HPET_OFFSET_ENABLE
+name|HPET_CONFIG
 argument_list|)
 expr_stmt|;
 name|bus_write_4
@@ -376,12 +327,12 @@ name|sc
 operator|->
 name|mem_res
 argument_list|,
-name|HPET_OFFSET_ENABLE
+name|HPET_CONFIG
 argument_list|,
 name|val
 operator|&
 operator|~
-literal|1
+name|HPET_CNF_ENABLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -777,7 +728,7 @@ name|sc
 operator|->
 name|mem_res
 argument_list|,
-name|HPET_OFFSET_PERIOD
+name|HPET_PERIOD
 argument_list|)
 expr_stmt|;
 if|if
@@ -841,7 +792,7 @@ name|sc
 operator|->
 name|mem_res
 argument_list|,
-name|HPET_OFFSET_INFO
+name|HPET_CAPABILITIES
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -856,43 +807,35 @@ literal|16
 argument_list|,
 name|val
 operator|&
-literal|0xff
+name|HPET_CAP_REV_ID
 argument_list|,
 operator|(
 name|val
-operator|>>
-literal|18
-operator|)
 operator|&
-literal|0xf
+name|HPET_CAP_NUM_TIM
+operator|)
+operator|>>
+literal|8
 argument_list|,
 name|freq
 argument_list|,
 operator|(
-operator|(
 name|val
-operator|>>
-literal|15
-operator|)
 operator|&
-literal|1
+name|HPET_CAP_LEG_RT
 operator|)
 condition|?
-literal|" leg_route"
+literal|" legacy_route"
 else|:
 literal|""
 argument_list|,
 operator|(
-operator|(
 name|val
-operator|>>
-literal|13
-operator|)
 operator|&
-literal|1
+name|HPET_CAP_COUNT_SIZE
 operator|)
 condition|?
-literal|" count_size"
+literal|" 64-bit"
 else|:
 literal|""
 argument_list|)
@@ -919,7 +862,7 @@ name|sc
 operator|->
 name|mem_res
 argument_list|,
-name|HPET_OFFSET_VALUE
+name|HPET_MAIN_COUNTER
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -935,7 +878,7 @@ name|sc
 operator|->
 name|mem_res
 argument_list|,
-name|HPET_OFFSET_VALUE
+name|HPET_MAIN_COUNTER
 argument_list|)
 expr_stmt|;
 if|if
@@ -1161,7 +1104,7 @@ name|sc
 operator|->
 name|mem_res
 argument_list|,
-name|HPET_OFFSET_VALUE
+name|HPET_MAIN_COUNTER
 argument_list|)
 expr_stmt|;
 for|for
@@ -1185,7 +1128,7 @@ name|sc
 operator|->
 name|mem_res
 argument_list|,
-name|HPET_OFFSET_VALUE
+name|HPET_MAIN_COUNTER
 argument_list|)
 expr_stmt|;
 name|binuptime
@@ -1202,7 +1145,7 @@ name|sc
 operator|->
 name|mem_res
 argument_list|,
-name|HPET_OFFSET_VALUE
+name|HPET_MAIN_COUNTER
 argument_list|)
 expr_stmt|;
 name|bintime_sub
