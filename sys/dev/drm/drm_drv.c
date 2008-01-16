@@ -3753,6 +3753,18 @@ return|;
 block|}
 if|if
 condition|(
+operator|--
+name|priv
+operator|->
+name|refs
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|done
+goto|;
+if|if
+condition|(
 name|dev
 operator|->
 name|driver
@@ -4201,16 +4213,6 @@ directive|endif
 comment|/* __NetBSD__  || __OpenBSD__ */
 if|if
 condition|(
-operator|--
-name|priv
-operator|->
-name|refs
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
 name|dev
 operator|->
 name|driver
@@ -4249,8 +4251,9 @@ argument_list|,
 name|M_DRM
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* ======================================================== 	 * End inline drm_release 	 */
+name|done
+label|:
 name|atomic_inc
 argument_list|(
 operator|&
