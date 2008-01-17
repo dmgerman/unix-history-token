@@ -2405,6 +2405,16 @@ modifier|*
 name|ks
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_destroy_posix_sem
+argument_list|(
+name|ks
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|nsems
 operator|--
 expr_stmt|;
