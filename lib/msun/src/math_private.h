@@ -272,6 +272,71 @@ define|\
 value|do {								\   ieee_float_shape_type sf_u;					\   sf_u.word = (i);						\   (d) = sf_u.value;						\ } while (0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FLT_EVAL_METHOD
+end_ifdef
+
+begin_comment
+comment|/*  * Attempt to get strict C99 semantics for assignment with non-C99 compilers.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|FLT_EVAL_METHOD
+operator|==
+literal|0
+operator|||
+name|__GNUC__
+operator|==
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|STRICT_ASSIGN
+parameter_list|(
+name|type
+parameter_list|,
+name|lval
+parameter_list|,
+name|rval
+parameter_list|)
+value|((lval) = (rval))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STRICT_ASSIGN
+parameter_list|(
+name|type
+parameter_list|,
+name|lval
+parameter_list|,
+name|rval
+parameter_list|)
+value|do {	\ 	volatile type __lval;			\ 						\ 	__lval = (rval);			\ 	(lval) = __lval;			\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Common routine to process the arguments to nan(), nanf(), and nanl().  */
 end_comment
