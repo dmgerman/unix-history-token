@@ -67,11 +67,11 @@ begin_define
 define|#
 directive|define
 name|FLT_EVAL_METHOD
-value|(-1)
+value|0
 end_define
 
 begin_comment
-comment|/* i387 semantics are...interesting */
+comment|/* no promotions */
 end_comment
 
 begin_define
