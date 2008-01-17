@@ -53,6 +53,18 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
 begin_comment
 comment|/*  * Simple program to print out the queue stats on the given queue index.  * See /sys/sys/aac_ioctl.h for the definitions of each queue index.  */
 end_comment
