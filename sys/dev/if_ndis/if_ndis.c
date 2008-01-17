@@ -14959,13 +14959,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|tsleep
+name|pause
 argument_list|(
-operator|&
-name|error
-argument_list|,
-name|PWAIT
-argument_list|,
 literal|"ssidscan"
 argument_list|,
 name|hz
