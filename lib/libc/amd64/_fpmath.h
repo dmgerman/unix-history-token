@@ -52,6 +52,29 @@ decl_stmt|;
 block|}
 name|bits
 struct|;
+struct|struct
+block|{
+name|unsigned
+name|long
+name|man
+range|:
+literal|64
+decl_stmt|;
+name|unsigned
+name|int
+name|expsign
+range|:
+literal|16
+decl_stmt|;
+name|unsigned
+name|long
+name|junk
+range|:
+literal|48
+decl_stmt|;
+block|}
+name|xbits
+struct|;
 block|}
 union|;
 end_union
@@ -96,7 +119,7 @@ name|u
 parameter_list|,
 name|a
 parameter_list|)
-value|do {			\ 	(a)[0] = (uint32_t)(u).bits.manl;		\ 	(a)[1] = (uint32_t)(u).bits.manh;		\ } while(0)
+value|do {			\ 	(a)[0] = (uint32_t)(u).bits.manl;		\ 	(a)[1] = (uint32_t)(u).bits.manh;		\ } while (0)
 end_define
 
 end_unit
