@@ -1067,14 +1067,34 @@ modifier|*
 name|saddr
 decl_stmt|;
 name|struct
+name|ucred
+modifier|*
+name|origcred
+decl_stmt|;
+name|struct
 name|thread
 modifier|*
 name|td
 init|=
-operator|&
-name|thread0
+name|curthread
 decl_stmt|;
-comment|/* only used for socreate and sobind */
+comment|/* 	 * We need to establish the socket using the credentials of 	 * the mountpoint.  Some parts of this process (such as 	 * sobind() and soconnect()) will use the curent thread's 	 * credential instead of the socket credential.  To work 	 * around this, temporarily change the current thread's 	 * credential to that of the mountpoint. 	 * 	 * XXX: It would be better to explicitly pass the correct 	 * credential to sobind() and soconnect(). 	 */
+name|origcred
+operator|=
+name|td
+operator|->
+name|td_ucred
+expr_stmt|;
+name|td
+operator|->
+name|td_ucred
+operator|=
+name|nmp
+operator|->
+name|nm_mountp
+operator|->
+name|mnt_cred
+expr_stmt|;
 if|if
 condition|(
 name|nmp
@@ -2130,6 +2150,13 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
+comment|/* Restore current thread's credentials. */
+name|td
+operator|->
+name|td_ucred
+operator|=
+name|origcred
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2180,6 +2207,13 @@ operator|)
 return|;
 name|bad
 label|:
+comment|/* Restore current thread's credentials. */
+name|td
+operator|->
+name|td_ucred
+operator|=
+name|origcred
+expr_stmt|;
 name|nfs_disconnect
 argument_list|(
 name|nmp
