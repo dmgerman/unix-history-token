@@ -29,6 +29,14 @@ name|kvm
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|kernel
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|kthr
@@ -215,6 +223,18 @@ specifier|const
 name|char
 modifier|*
 name|sym
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|CORE_ADDR
+name|kgdb_parse
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|exp
 parameter_list|)
 function_decl|;
 end_function_decl

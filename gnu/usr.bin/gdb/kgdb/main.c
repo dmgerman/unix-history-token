@@ -286,7 +286,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|kernel
@@ -756,7 +755,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|CORE_ADDR
 name|kgdb_parse
 parameter_list|(
