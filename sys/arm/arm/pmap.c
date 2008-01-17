@@ -14030,6 +14030,8 @@ name|pmap
 argument_list|,
 name|vector_page
 argument_list|,
+name|VM_PROT_READ
+argument_list|,
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|systempage
