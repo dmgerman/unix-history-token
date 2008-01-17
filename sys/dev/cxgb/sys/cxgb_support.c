@@ -130,6 +130,14 @@ name|cxgb_use_16k_clusters
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|cxgb_pcpu_cache_enable
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|buf_stack
@@ -790,6 +798,11 @@ name|cxgb_cache_pcpu
 modifier|*
 name|ccp
 decl_stmt|;
+if|if
+condition|(
+name|cxgb_pcpu_cache_enable
+condition|)
+block|{
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -845,6 +858,7 @@ block|}
 name|critical_exit
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|cl
@@ -894,6 +908,11 @@ name|err
 init|=
 name|ENOSPC
 decl_stmt|;
+if|if
+condition|(
+name|cxgb_pcpu_cache_enable
+condition|)
+block|{
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -953,6 +972,7 @@ block|}
 name|critical_exit
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|err

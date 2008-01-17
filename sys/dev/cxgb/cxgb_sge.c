@@ -236,15 +236,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|bogus_imm
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|recycle_enable
 init|=
 literal|1
@@ -280,6 +271,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|cxgb_use_16k_clusters
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cxgb_pcpu_cache_enable
 decl_stmt|;
 end_decl_stmt
 
@@ -17390,16 +17388,16 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"bogus_imm"
+literal|"pcpu_cache_enable"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|bogus_imm
+name|cxgb_pcpu_cache_enable
 argument_list|,
 literal|0
 argument_list|,
-literal|"#times a bogus immediate response was seen"
+literal|"#enable driver local pcpu caches"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT
