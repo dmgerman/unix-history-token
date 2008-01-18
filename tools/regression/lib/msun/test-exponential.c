@@ -375,8 +375,6 @@ literal|1.0
 argument_list|,
 name|ALL_STD_EXCEPT
 argument_list|,
-name|FE_UNDERFLOW
-operator||
 name|FE_INEXACT
 argument_list|)
 expr_stmt|;
