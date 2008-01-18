@@ -1796,7 +1796,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|proc_linkup
+name|proc_linkup0
 argument_list|(
 operator|&
 name|proc0

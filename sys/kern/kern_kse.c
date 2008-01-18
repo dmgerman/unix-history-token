@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kse.h>
 end_include
 
@@ -212,7 +218,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|thread_alloc_spare
 parameter_list|(
 name|struct
@@ -3016,6 +3022,30 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * For the first call this may not have been set. 	 * Of course nor may it actually be needed. 	 * thread_schedule_upcall() will look for it. 	 */
+if|if
+condition|(
+name|td
+operator|->
+name|td_standin
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|thread_alloc_spare
+argument_list|(
+name|td
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 comment|/*  	 * Even bound LWPs get a mailbox and an upcall to hold it. 	 * XXX This should change. 	 */
 name|newku
 operator|=
@@ -3054,20 +3084,6 @@ sizeof|sizeof
 argument_list|(
 name|stack_t
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* 	 * For the first call this may not have been set. 	 * Of course nor may it actually be needed. 	 * thread_schedule_upcall() will look for it. 	 */
-if|if
-condition|(
-name|td
-operator|->
-name|td_standin
-operator|==
-name|NULL
-condition|)
-name|thread_alloc_spare
-argument_list|(
-name|td
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK
@@ -4259,7 +4275,7 @@ comment|/*  * This function is intended to be used to initialize a spare thread 
 end_comment
 
 begin_function
-name|void
+name|int
 name|thread_alloc_spare
 parameter_list|(
 name|struct
@@ -4279,12 +4295,27 @@ name|td
 operator|->
 name|td_standin
 condition|)
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|spare
 operator|=
 name|thread_alloc
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|spare
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|td
 operator|->
 name|td_standin
@@ -4334,6 +4365,11 @@ name|td_flags
 operator|=
 name|TDF_INMEM
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -5000,11 +5036,64 @@ name|td_standin
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|thread_alloc_spare
 argument_list|(
 name|td
 argument_list|)
+condition|)
+block|{
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|kern_logsigexit
+condition|)
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"pid %d (%s), uid %d: thread_alloc_spare failed\n"
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+operator|->
+name|p_comm
+argument_list|,
+name|td
+operator|->
+name|td_ucred
+condition|?
+name|td
+operator|->
+name|td_ucred
+operator|->
+name|cr_uid
+else|:
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|sigexit
+argument_list|(
+name|td
+argument_list|,
+name|SIGSEGV
+argument_list|)
+expr_stmt|;
+comment|/* XXX ? */
+comment|/* panic("thread_user_enter: thread_alloc_spare failed"); */
+block|}
+block|}
 name|ku
 operator|->
 name|ku_mflags
@@ -5927,6 +6016,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* XXX care of failure ? */
 block|}
 name|ku
 operator|->

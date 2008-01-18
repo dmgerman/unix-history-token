@@ -1122,7 +1122,7 @@ comment|/*  * Create the kernel stack (including pcb for i386) for a new thread.
 end_comment
 
 begin_function
-name|void
+name|int
 name|vm_thread_new
 parameter_list|(
 name|struct
@@ -1183,12 +1183,6 @@ argument_list|,
 name|pages
 argument_list|)
 expr_stmt|;
-name|td
-operator|->
-name|td_kstack_obj
-operator|=
-name|ksobj
-expr_stmt|;
 comment|/* 	 * Get a kernel virtual address for this thread's kstack. 	 */
 name|ks
 operator|=
@@ -1211,11 +1205,23 @@ name|ks
 operator|==
 literal|0
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"vm_thread_new: kstack allocation failed"
+literal|"vm_thread_new: kstack allocation failed\n"
 argument_list|)
 expr_stmt|;
+name|vm_object_deallocate
+argument_list|(
+name|ksobj
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|KSTACK_GUARD_PAGES
@@ -1237,6 +1243,12 @@ operator|*
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|td
+operator|->
+name|td_kstack_obj
+operator|=
+name|ksobj
+expr_stmt|;
 name|td
 operator|->
 name|td_kstack
@@ -1316,6 +1328,11 @@ argument_list|,
 name|pages
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -1460,6 +1477,12 @@ operator|)
 operator|*
 name|PAGE_SIZE
 argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|td_kstack
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -1766,7 +1789,7 @@ comment|/*  * Set up a variable-sized alternate kstack.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|vm_thread_new_altkstack
 parameter_list|(
 name|struct
@@ -1802,13 +1825,16 @@ name|td
 operator|->
 name|td_kstack_pages
 expr_stmt|;
+return|return
+operator|(
 name|vm_thread_new
 argument_list|(
 name|td
 argument_list|,
 name|pages
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -1881,7 +1907,7 @@ comment|/*  * Implement fork's actions on an address space.  * Here we arrange f
 end_comment
 
 begin_function
-name|void
+name|int
 name|vm_forkproc
 parameter_list|(
 name|td
@@ -1889,6 +1915,8 @@ parameter_list|,
 name|p2
 parameter_list|,
 name|td2
+parameter_list|,
+name|vm2
 parameter_list|,
 name|flags
 parameter_list|)
@@ -1907,6 +1935,11 @@ name|thread
 modifier|*
 name|td2
 decl_stmt|;
+name|struct
+name|vmspace
+modifier|*
+name|vm2
+decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
@@ -1919,6 +1952,9 @@ init|=
 name|td
 operator|->
 name|td_proc
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -1954,11 +1990,22 @@ operator|>
 literal|1
 condition|)
 block|{
+name|error
+operator|=
 name|vmspace_unshare
 argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 block|}
 name|cpu_fork
@@ -1972,7 +2019,11 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -2026,12 +2077,7 @@ name|p2
 operator|->
 name|p_vmspace
 operator|=
-name|vmspace_fork
-argument_list|(
-name|p1
-operator|->
-name|p_vmspace
-argument_list|)
+name|vm2
 expr_stmt|;
 if|if
 condition|(
@@ -2061,6 +2107,11 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

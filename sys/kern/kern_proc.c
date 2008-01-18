@@ -746,6 +746,13 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|td
+operator|!=
+name|NULL
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -766,19 +773,6 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|(
-name|td
-operator|!=
-name|NULL
-operator|)
-argument_list|,
-operator|(
-literal|"proc_dtor: bad thread pointer"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
 name|STAILQ_EMPTY
 argument_list|(
 operator|&
@@ -794,7 +788,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Dispose of an alternate kstack, if it exists. 	 * XXX What if there are more than one thread in the proc? 	 *     The first thread in the proc is special and not 	 *     freed, so you gotta do this here. 	 */
+comment|/* Dispose of an alternate kstack, if it exists. 		 * XXX What if there are more than one thread in the proc? 		 *     The first thread in the proc is special and not 		 *     freed, so you gotta do this here. 		 */
 if|if
 condition|(
 operator|(
@@ -822,6 +816,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+block|}
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|process_dtor
@@ -880,11 +875,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 name|p
 operator|=
 operator|(
@@ -908,11 +898,6 @@ name|p
 index|[
 literal|1
 index|]
-expr_stmt|;
-name|td
-operator|=
-name|thread_alloc
-argument_list|()
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -960,6 +945,15 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_threads
+argument_list|)
+expr_stmt|;
+comment|/* all threads in proc */
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|process_init
@@ -973,20 +967,6 @@ name|p_stats
 operator|=
 name|pstats_alloc
 argument_list|()
-expr_stmt|;
-name|proc_linkup
-argument_list|(
-name|p
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-name|sched_newproc
-argument_list|(
-name|p
-argument_list|,
-name|td
-argument_list|)
 expr_stmt|;
 return|return
 operator|(

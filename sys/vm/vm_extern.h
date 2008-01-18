@@ -442,7 +442,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vm_forkproc
 parameter_list|(
 name|struct
@@ -455,6 +455,10 @@ modifier|*
 parameter_list|,
 name|struct
 name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|vmspace
 modifier|*
 parameter_list|,
 name|int
@@ -536,7 +540,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vmspace_exec
 parameter_list|(
 name|struct
@@ -551,7 +555,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vmspace_unshare
 parameter_list|(
 name|struct
@@ -727,7 +731,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vm_thread_new
 parameter_list|(
 name|struct
@@ -742,7 +746,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vm_thread_new_altkstack
 parameter_list|(
 name|struct
