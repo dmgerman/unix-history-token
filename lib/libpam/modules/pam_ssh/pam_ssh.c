@@ -1302,6 +1302,7 @@ name|AuthenticationConnection
 modifier|*
 name|ac
 decl_stmt|;
+specifier|const
 name|struct
 name|pam_ssh_key
 modifier|*
@@ -1313,6 +1314,7 @@ modifier|*
 modifier|*
 name|kfn
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|item
@@ -1568,6 +1570,7 @@ name|char
 modifier|*
 name|user
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|data

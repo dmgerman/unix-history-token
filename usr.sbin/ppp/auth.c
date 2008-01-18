@@ -90,7 +90,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_OPENPAM
+name|OPENPAM
 end_ifdef
 
 begin_include
@@ -390,7 +390,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|_OPENPAM
+name|OPENPAM
 argument_list|)
 end_if
 
@@ -523,7 +523,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(NOPAM)&& !defined(_OPENPAM) */
+comment|/* !defined(NOPAM)&& !defined(OPENPAM) */
 end_comment
 
 begin_function
@@ -622,7 +622,7 @@ init|=
 block|{
 ifdef|#
 directive|ifdef
-name|_OPENPAM
+name|OPENPAM
 operator|&
 name|openpam_nullconv
 block|,
@@ -661,7 +661,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|_OPENPAM
+name|OPENPAM
 if|if
 condition|(
 operator|(

@@ -1150,6 +1150,7 @@ name|ypclnt
 modifier|*
 name|ypclnt
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|yp_domain
