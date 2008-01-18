@@ -2139,11 +2139,16 @@ condition|)
 block|{
 if|if
 condition|(
+call|(
+name|off_t
+call|)
+argument_list|(
 name|a
 operator|->
 name|offset
 operator|+
 name|size
+argument_list|)
 operator|>
 name|a
 operator|->
