@@ -1171,6 +1171,12 @@ operator|=
 name|cpu_ticks
 argument_list|()
 expr_stmt|;
+name|runtime
+operator|=
+name|td
+operator|->
+name|td_runtime
+expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
@@ -1178,9 +1184,7 @@ name|runtime
 operator|=
 name|cputick2usec
 argument_list|(
-name|td
-operator|->
-name|td_runtime
+name|runtime
 operator|+
 name|curtime
 operator|-
