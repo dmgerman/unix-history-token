@@ -2632,7 +2632,30 @@ literal|0
 end_if
 
 begin_endif
-unit|long double	coshl(long double); long double	cosl(long double); long double	erfcl(long double); long double	erfl(long double); long double	exp2l(long double); long double	expl(long double); long double	expm1l(long double);
+unit|long double	coshl(long double); long double	cosl(long double); long double	erfcl(long double); long double	erfl(long double);
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|long
+name|double
+name|exp2l
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|long double	expl(long double); long double	expm1l(long double);
 endif|#
 directive|endif
 end_endif
