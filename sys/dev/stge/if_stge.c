@@ -5851,12 +5851,14 @@ condition|)
 block|{
 name|m
 operator|=
-name|m_defrag
+name|m_collapse
 argument_list|(
 operator|*
 name|m_head
 argument_list|,
 name|M_DONTWAIT
+argument_list|,
+name|STGE_MAXTXSEGS
 argument_list|)
 expr_stmt|;
 if|if
