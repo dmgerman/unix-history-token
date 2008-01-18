@@ -15337,7 +15337,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  array of cache entries */
+comment|/* array of cache entries */
 end_comment
 
 begin_decl_stmt
@@ -15347,7 +15347,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  index/# of entries */
+comment|/* index/# of entries */
 end_comment
 
 begin_endif
