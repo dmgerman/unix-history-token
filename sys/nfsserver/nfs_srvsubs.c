@@ -1647,10 +1647,6 @@ name|nfsrv_destroycache
 argument_list|()
 expr_stmt|;
 comment|/* Free the server request cache */
-name|nfsrv_destroycache
-argument_list|()
-expr_stmt|;
-comment|/* Free the server request cache */
 name|mtx_destroy
 argument_list|(
 operator|&
