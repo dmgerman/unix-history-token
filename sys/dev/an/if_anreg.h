@@ -2186,6 +2186,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|an_pci_probe
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|an_probe
 parameter_list|(
 name|device_t
