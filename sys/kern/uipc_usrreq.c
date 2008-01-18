@@ -4949,9 +4949,6 @@ decl_stmt|;
 name|UNP_GLOBAL_WLOCK_ASSERT
 argument_list|()
 expr_stmt|;
-name|UNP_GLOBAL_WUNLOCK
-argument_list|()
-expr_stmt|;
 name|unp
 operator|=
 name|sotounpcb
@@ -5033,6 +5030,9 @@ name|EALREADY
 operator|)
 return|;
 block|}
+name|UNP_GLOBAL_WUNLOCK
+argument_list|()
+expr_stmt|;
 name|unp
 operator|->
 name|unp_flags
