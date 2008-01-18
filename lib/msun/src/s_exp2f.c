@@ -51,12 +51,6 @@ name|huge
 init|=
 literal|0x1p100f
 decl_stmt|,
-name|twom100
-init|=
-literal|0x1p
-operator|-
-literal|100f
-decl_stmt|,
 name|redux
 init|=
 literal|0x1
@@ -93,6 +87,18 @@ literal|0x1
 literal|.3b2c9cp
 operator|-
 literal|7f
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|float
+name|twom100
+init|=
+literal|0x1p
+operator|-
+literal|100f
 decl_stmt|;
 end_decl_stmt
 
