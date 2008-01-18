@@ -2152,6 +2152,10 @@ condition|)
 block|{
 name|size
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|a
 operator|->
 name|filesize
@@ -2159,6 +2163,7 @@ operator|-
 name|a
 operator|->
 name|offset
+argument_list|)
 expr_stmt|;
 name|archive_set_error
 argument_list|(
