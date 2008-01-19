@@ -2506,13 +2506,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"device     r/s   w/s    kr/s    kw/s wait svc_t  %b  "
+literal|"device     r/s   w/s    kr/s    kw/s wait svc_t  %%b  "
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"device     r/i   w/i    kr/i    kw/i wait svc_t  %b  "
+literal|"device     r/i   w/i    kr/i    kw/i wait svc_t  %%b  "
 argument_list|)
 expr_stmt|;
 if|if
@@ -2825,6 +2825,8 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -2853,6 +2855,16 @@ name|di
 index|]
 operator|.
 name|unit_number
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"asprintf"
 argument_list|)
 expr_stmt|;
 comment|/* 			 * If zflag is set, skip any devices with zero I/O. 			 */
@@ -3021,6 +3033,11 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|devname
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
