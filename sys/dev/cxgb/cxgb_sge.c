@@ -17390,7 +17390,7 @@ name|OID_AUTO
 argument_list|,
 literal|"pcpu_cache_enable"
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|cxgb_pcpu_cache_enable

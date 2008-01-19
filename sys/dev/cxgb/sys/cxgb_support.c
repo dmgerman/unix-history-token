@@ -134,7 +134,7 @@ begin_decl_stmt
 name|int
 name|cxgb_pcpu_cache_enable
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
