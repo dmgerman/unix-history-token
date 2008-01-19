@@ -862,13 +862,6 @@ argument|myprintf((
 literal|"open: vp %p result %d\n"
 argument|, vp, error));
 argument_list|)
-comment|/* Keep a reference until the close comes in. */
-name|vref
-argument_list|(
-operator|*
-name|vpp
-argument_list|)
-expr_stmt|;
 comment|/* Save the vnode pointer for the cache file. */
 if|if
 condition|(
@@ -1179,11 +1172,6 @@ else|else
 name|error
 operator|=
 name|ENODEV
-expr_stmt|;
-name|vrele
-argument_list|(
-name|vp
-argument_list|)
 expr_stmt|;
 name|CODADEBUG
 argument_list|(
