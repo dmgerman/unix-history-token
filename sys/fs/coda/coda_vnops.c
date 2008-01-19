@@ -336,7 +336,8 @@ block|{
 operator|.
 name|vop_default
 operator|=
-name|VOP_PANIC
+operator|&
+name|default_vnodeops
 block|,
 operator|.
 name|vop_lookup
@@ -350,12 +351,6 @@ operator|=
 name|coda_create
 block|,
 comment|/* create */
-operator|.
-name|vop_mknod
-operator|=
-name|VOP_PANIC
-block|,
-comment|/* mknod */
 operator|.
 name|vop_open
 operator|=
@@ -506,18 +501,6 @@ operator|=
 name|coda_pathconf
 block|,
 comment|/* pathconf */
-operator|.
-name|vop_advlock
-operator|=
-name|VOP_NULL
-block|,
-comment|/* advlock */
-operator|.
-name|vop_lease
-operator|=
-name|VOP_NULL
-block|,
-comment|/* lease */
 operator|.
 name|vop_poll
 operator|=
