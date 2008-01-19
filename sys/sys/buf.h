@@ -1264,6 +1264,36 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Check if a buffer lock is recursed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUF_LOCKRECURSED
+parameter_list|(
+name|bp
+parameter_list|)
+define|\
+value|(lockmgr_recursed(&(bp)->b_lock))
+end_define
+
+begin_comment
+comment|/*  * Check if a buffer lock is currently held.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUF_ISLOCKED
+parameter_list|(
+name|bp
+parameter_list|)
+define|\
+value|(lockstatus(&(bp)->b_lock, curthread))
+end_define
+
+begin_comment
 comment|/*  * Free a buffer lock.  */
 end_comment
 
@@ -1275,7 +1305,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|do {						\ 	if (BUF_REFCNT(bp)> 0)			\ 		panic("free locked buf");	\ 	lockdestroy(&(bp)->b_lock);		\ } while (0)
+value|do {						\ 	if (BUF_ISLOCKED(bp))			\ 		panic("free locked buf");	\ 	lockdestroy(&(bp)->b_lock);		\ } while (0)
 end_define
 
 begin_ifdef
@@ -1332,80 +1362,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Find out the number of references to a lock.  */
-end_comment
-
-begin_function_decl
-specifier|static
-name|__inline
-name|int
-name|BUF_REFCNT
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|BUF_REFCNT
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-block|{
-name|int
-name|s
-decl_stmt|,
-name|ret
-decl_stmt|;
-comment|/* 	 * When the system is panicing, the lock manager grants all lock 	 * requests whether or not the lock is available. To avoid "unlocked 	 * buffer" panics after a crash, we just claim that all buffers 	 * are locked when cleaning up after a system panic. 	 */
-if|if
-condition|(
-name|panicstr
-operator|!=
-name|NULL
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
-name|ret
-operator|=
-name|lockcount
-argument_list|(
-operator|&
-operator|(
-name|bp
-operator|)
-operator|->
-name|b_lock
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-name|ret
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Find out the number of waiters on a lock.  */

@@ -2618,7 +2618,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|BUF_REFCNT
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
@@ -2768,7 +2768,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|BUF_REFCNT
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
@@ -3425,12 +3425,11 @@ name|b_flags
 expr_stmt|;
 if|if
 condition|(
-name|BUF_REFCNT
+operator|!
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|panic
 argument_list|(
@@ -3910,12 +3909,10 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|BUF_REFCNT
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|!=
-literal|0
 argument_list|,
 operator|(
 literal|"bdwrite: buffer is not busy"
@@ -4110,12 +4107,10 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|BUF_REFCNT
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|==
-literal|1
 argument_list|,
 operator|(
 literal|"bdirty: bp %p not locked"
@@ -4300,12 +4295,10 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|BUF_REFCNT
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|==
-literal|1
 argument_list|,
 operator|(
 literal|"bundirty: bp %p not locked"
@@ -5271,12 +5264,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|BUF_REFCNT
+name|BUF_LOCKRECURSED
 argument_list|(
 name|bp
 argument_list|)
-operator|>
-literal|1
 condition|)
 block|{
 comment|/* do not release to free list */
@@ -5741,12 +5732,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|BUF_REFCNT
+name|BUF_LOCKRECURSED
 argument_list|(
 name|bp
 argument_list|)
-operator|>
-literal|1
 condition|)
 block|{
 comment|/* do not release to free list */
@@ -10029,12 +10018,10 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|BUF_REFCNT
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|==
-literal|1
 argument_list|,
 operator|(
 literal|"getblk: bp %p not locked"
@@ -10141,12 +10128,10 @@ expr_stmt|;
 comment|/* b_dep cleared by getnewbuf() */
 name|KASSERT
 argument_list|(
-name|BUF_REFCNT
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|==
-literal|1
 argument_list|,
 operator|(
 literal|"geteblk: bp %p not locked"
@@ -10190,12 +10175,11 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|BUF_REFCNT
+operator|!
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|panic
 argument_list|(
@@ -11942,22 +11926,15 @@ name|NULL
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|BUF_REFCNT
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|>
-literal|0
 argument_list|,
 operator|(
-literal|"biodone: bp %p not busy %d"
+literal|"biodone: bp %p not busy"
 operator|,
 name|bp
-operator|,
-name|BUF_REFCNT
-argument_list|(
-name|bp
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12068,22 +12045,15 @@ parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
-name|BUF_REFCNT
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|>
-literal|0
 argument_list|,
 operator|(
-literal|"biodone: bp %p not busy %d"
+literal|"biodone: bp %p not busy"
 operator|,
 name|bp
-operator|,
-name|BUF_REFCNT
-argument_list|(
-name|bp
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -15786,12 +15756,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|lockcount
+name|BUF_ISLOCKED
 argument_list|(
-operator|&
 name|bp
-operator|->
-name|b_lock
 argument_list|)
 condition|)
 block|{

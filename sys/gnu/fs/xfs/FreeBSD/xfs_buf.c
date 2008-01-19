@@ -332,12 +332,10 @@ name|size
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|BUF_REFCNT
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|==
-literal|1
 argument_list|,
 operator|(
 literal|"xfs_buf_get_empty: bp %p not locked"
@@ -407,12 +405,10 @@ condition|)
 block|{
 name|KASSERT
 argument_list|(
-name|BUF_REFCNT
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|==
-literal|1
 argument_list|,
 operator|(
 literal|"xfs_buf_get_empty: bp %p not locked"
@@ -666,7 +662,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (BUF_REFCNT(bp)> 1) 				BUF_UNLOCK(bp); 			else 				brelse(bp);
+block|if (BUF_LOCKRECURSED(bp)) 				BUF_UNLOCK(bp); 			else 				brelse(bp);
 endif|#
 directive|endif
 name|brelse

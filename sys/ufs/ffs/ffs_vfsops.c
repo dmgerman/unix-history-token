@@ -8606,12 +8606,11 @@ name|b_flags
 expr_stmt|;
 if|if
 condition|(
-name|BUF_REFCNT
+operator|!
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|panic
 argument_list|(

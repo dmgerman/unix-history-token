@@ -14690,12 +14690,10 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|BUF_REFCNT
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|>
-literal|0
 argument_list|,
 operator|(
 literal|"nfs_strategy: buffer %p not locked"
@@ -15048,12 +15046,11 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|BUF_REFCNT
+operator|!
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|==
-literal|0
 operator|&&
 operator|(
 name|bp
@@ -16433,12 +16430,11 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|BUF_REFCNT
+operator|!
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|panic
 argument_list|(

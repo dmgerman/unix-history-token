@@ -1081,12 +1081,10 @@ operator|)
 operator|==
 literal|0
 operator|&&
-name|BUF_REFCNT
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|>
-literal|0
 operator|)
 operator|||
 operator|(

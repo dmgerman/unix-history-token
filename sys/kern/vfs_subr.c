@@ -16105,12 +16105,11 @@ condition|)
 return|return;
 if|if
 condition|(
-name|BUF_REFCNT
+operator|!
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|<
-literal|1
 condition|)
 block|{
 if|if

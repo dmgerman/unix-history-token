@@ -833,16 +833,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|XFS_BUF_ISHOLD
-parameter_list|(
-name|x
-parameter_list|)
-value|BUF_REFCNT(x)
-end_define
-
-begin_define
-define|#
-directive|define
 name|XFS_BUF_READ
 parameter_list|(
 name|x
@@ -1270,7 +1260,7 @@ name|XFS_BUF_VALUSEMA
 parameter_list|(
 name|bp
 parameter_list|)
-value|(BUF_REFCNT(bp)? 0 : 1)
+value|(BUF_ISLOCKED(bp) ? 0 : 1)
 end_define
 
 begin_define

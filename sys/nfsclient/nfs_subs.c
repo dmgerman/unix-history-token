@@ -4469,12 +4469,11 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|BUF_REFCNT
+operator|!
+name|BUF_ISLOCKED
 argument_list|(
 name|bp
 argument_list|)
-operator|==
-literal|0
 operator|&&
 operator|(
 name|bp

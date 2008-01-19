@@ -639,6 +639,17 @@ parameter_list|)
 value|_lockmgr((lock), (flags), (mtx), (td), __FILE__, __LINE__)
 end_define
 
+begin_define
+define|#
+directive|define
+name|lockmgr_recursed
+parameter_list|(
+name|lkp
+parameter_list|)
+define|\
+value|((lkp)->lk_exclusivecount> 1)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
