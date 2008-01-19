@@ -491,7 +491,7 @@ comment|/* bmap */
 operator|.
 name|vop_print
 operator|=
-name|VOP_PANIC
+name|VOP_NULL
 block|,
 comment|/* print */
 operator|.
