@@ -374,7 +374,6 @@ comment|/* Prototypes of functions exported within cfs */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|coda_nc_init
 parameter_list|(
@@ -384,7 +383,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|coda_nc_enter
 parameter_list|(
@@ -410,7 +408,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cnode
 modifier|*
@@ -434,7 +431,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|coda_nc_zapParentfid
 parameter_list|(
@@ -448,7 +444,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|coda_nc_zapfid
 parameter_list|(
@@ -462,7 +457,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|coda_nc_zapvnode
 parameter_list|(
@@ -480,7 +474,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|coda_nc_zapfile
 parameter_list|(
@@ -498,7 +491,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|coda_nc_purge_user
 parameter_list|(
@@ -511,7 +503,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|coda_nc_flush
 parameter_list|(
@@ -522,7 +513,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|print_coda_nc
 parameter_list|(
@@ -532,7 +522,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|coda_nc_gather_stats
 parameter_list|(
@@ -542,7 +531,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|coda_nc_resize
 parameter_list|(
@@ -557,7 +545,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|coda_nc_name
 parameter_list|(
@@ -568,6 +555,43 @@ name|cp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Global variables tracking and controlling Coda namecache operation.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|coda_nc_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Set to enable debugging printfs */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|coda_nc_initialized
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Set if cache has been initialized */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|coda_nc_use
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Indicate use of CODA Name Cache */
+end_comment
 
 begin_comment
 comment|/*  * Structure to contain statistics on the cache usage  */

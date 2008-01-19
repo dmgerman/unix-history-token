@@ -92,17 +92,6 @@ value|free((ptr), M_CODA)
 end_define
 
 begin_comment
-comment|/*  * global cache state control  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|coda_nc_use
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Used to select debugging statements throughout the cfs code.  */
 end_comment
 
@@ -110,13 +99,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|codadebug
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|coda_nc_debug
 decl_stmt|;
 end_decl_stmt
 

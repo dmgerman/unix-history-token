@@ -212,37 +212,6 @@ parameter_list|)
 value|(coda_vfsopstats[op].gen_intrn++)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|coda_nc_initialized
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Set if cache has been initialized */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|vc_nb_open
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|coda_vfsopstats_init
