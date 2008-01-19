@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -1406,6 +1412,8 @@ operator|->
 name|ntm_mode
 operator|=
 name|v
+operator|&
+name|ACCESSPERMS
 expr_stmt|;
 name|vfs_flagopt
 argument_list|(
