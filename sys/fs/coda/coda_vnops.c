@@ -5682,6 +5682,27 @@ operator|&=
 operator|~
 name|C_VATTR
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|VOP_LOCK
+argument_list|(
+operator|*
+name|vpp
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|)
+operator|)
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"coda_create: couldn't lock child"
+argument_list|)
+expr_stmt|;
+block|}
 name|CODADEBUG
 argument_list|(
 argument|CODA_MKDIR
