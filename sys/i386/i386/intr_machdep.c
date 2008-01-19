@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ktr.h>
 end_include
 
@@ -47,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -145,8 +151,16 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx
+name|sx
 name|intr_table_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|intrcnt_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -321,7 +335,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|mtx_lock_spin
+name|sx_xlock
 argument_list|(
 operator|&
 name|intr_table_lock
@@ -355,7 +369,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|sx_xunlock
 argument_list|(
 operator|&
 name|intr_table_lock
@@ -463,7 +477,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|mtx_lock_spin
+name|sx_xlock
 argument_list|(
 operator|&
 name|intr_table_lock
@@ -479,7 +493,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|mtx_unlock_spin
+name|sx_xunlock
 argument_list|(
 operator|&
 name|intr_table_lock
@@ -516,7 +530,7 @@ name|is_enabled
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_unlock_spin
+name|sx_xunlock
 argument_list|(
 operator|&
 name|intr_table_lock
@@ -637,15 +651,15 @@ operator|==
 literal|0
 condition|)
 block|{
-name|intrcnt_updatename
-argument_list|(
-name|isrc
-argument_list|)
-expr_stmt|;
-name|mtx_lock_spin
+name|sx_xlock
 argument_list|(
 operator|&
 name|intr_table_lock
+argument_list|)
+expr_stmt|;
+name|intrcnt_updatename
+argument_list|(
+name|isrc
 argument_list|)
 expr_stmt|;
 if|if
@@ -676,12 +690,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|intr_table_lock
-argument_list|)
-expr_stmt|;
 name|isrc
 operator|->
 name|is_pic
@@ -692,13 +700,6 @@ name|isrc
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|intr_table_lock
-argument_list|)
-expr_stmt|;
 name|isrc
 operator|->
 name|is_pic
@@ -706,6 +707,12 @@ operator|->
 name|pic_enable_source
 argument_list|(
 name|isrc
+argument_list|)
+expr_stmt|;
+name|sx_xunlock
+argument_list|(
+operator|&
+name|intr_table_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1146,7 +1153,7 @@ name|pic
 modifier|*
 name|pic
 decl_stmt|;
-name|mtx_lock_spin
+name|sx_xlock
 argument_list|(
 operator|&
 name|intr_table_lock
@@ -1177,7 +1184,7 @@ name|pic
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|sx_xunlock
 argument_list|(
 operator|&
 name|intr_table_lock
@@ -1198,7 +1205,7 @@ name|pic
 modifier|*
 name|pic
 decl_stmt|;
-name|mtx_lock_spin
+name|sx_xlock
 argument_list|(
 operator|&
 name|intr_table_lock
@@ -1229,7 +1236,7 @@ name|pic
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|sx_xunlock
 argument_list|(
 operator|&
 name|intr_table_lock
@@ -1324,7 +1331,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* mtx_assert(&intr_table_lock, MA_OWNED); */
 name|KASSERT
 argument_list|(
 name|is
@@ -1338,6 +1344,12 @@ literal|"%s: isrc with no event"
 operator|,
 name|__func__
 operator|)
+argument_list|)
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|intrcnt_lock
 argument_list|)
 expr_stmt|;
 name|is
@@ -1412,6 +1424,12 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|intrcnt_lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1433,7 +1451,7 @@ block|{
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|intr_table_lock
+name|intrcnt_lock
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1458,7 +1476,7 @@ expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|intr_table_lock
+name|intrcnt_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1492,12 +1510,20 @@ operator|&
 name|pics
 argument_list|)
 expr_stmt|;
-name|mtx_init
+name|sx_init
 argument_list|(
 operator|&
 name|intr_table_lock
 argument_list|,
-literal|"intr table"
+literal|"intr sources"
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|intrcnt_lock
+argument_list|,
+literal|"intrcnt"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1806,7 +1832,7 @@ literal|1
 condition|)
 return|return;
 comment|/* Round-robin assign a CPU to each enabled source. */
-name|mtx_lock_spin
+name|sx_xlock
 argument_list|(
 operator|&
 name|intr_table_lock
@@ -1853,7 +1879,7 @@ name|isrc
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|sx_xunlock
 argument_list|(
 operator|&
 name|intr_table_lock
