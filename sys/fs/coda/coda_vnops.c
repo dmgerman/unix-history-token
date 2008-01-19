@@ -962,6 +962,20 @@ name|error
 operator|)
 return|;
 block|}
+else|else
+block|{
+operator|(
+operator|*
+name|vpp
+operator|)
+operator|->
+name|v_object
+operator|=
+name|vp
+operator|->
+name|v_object
+expr_stmt|;
+block|}
 comment|/* grab (above) does this when it calls newvnode unless it's in the cache*/
 return|return
 operator|(
@@ -3077,6 +3091,12 @@ argument|myprintf((
 literal|"in inactive, %s, vfsp %p\n"
 argument|, 				  coda_f2s(&cp->c_fid), vp->v_mount));
 argument_list|)
+name|vp
+operator|->
+name|v_object
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* If an array has been allocated to hold the symlink, deallocate it */
 if|if
 condition|(
@@ -6731,10 +6751,11 @@ name|v_data
 operator|=
 name|NULL
 expr_stmt|;
-name|vnode_destroy_vobject
-argument_list|(
 name|vp
-argument_list|)
+operator|->
+name|v_object
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
