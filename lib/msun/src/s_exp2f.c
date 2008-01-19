@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<float.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"math.h"
 end_include
 
@@ -217,13 +223,10 @@ decl_stmt|;
 name|float
 name|r
 decl_stmt|,
+name|t
+decl_stmt|,
 name|z
 decl_stmt|;
-specifier|volatile
-name|float
-name|t
-decl_stmt|;
-comment|/* prevent gcc from using too much precision */
 name|uint32_t
 name|hx
 decl_stmt|,
@@ -348,11 +351,16 @@ operator|)
 return|;
 block|}
 comment|/* Reduce x, computing z, i0, and k. */
+name|STRICT_ASSIGN
+argument_list|(
+name|float
+argument_list|,
 name|t
-operator|=
+argument_list|,
 name|x
 operator|+
 name|redux
+argument_list|)
 expr_stmt|;
 name|GET_FLOAT_WORD
 argument_list|(

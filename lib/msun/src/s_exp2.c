@@ -3131,11 +3131,16 @@ operator|)
 return|;
 block|}
 comment|/* Reduce x, computing z, i0, and k. */
+name|STRICT_ASSIGN
+argument_list|(
+name|double
+argument_list|,
 name|t
-operator|=
+argument_list|,
 name|x
 operator|+
 name|redux
+argument_list|)
 expr_stmt|;
 name|GET_LOW_WORD
 argument_list|(
