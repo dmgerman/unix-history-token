@@ -663,6 +663,8 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Destroy old process VM and create a new one (with a new stack) 	 */
+name|error
+operator|=
 name|exec_new_vmspace
 argument_list|(
 name|imgp
@@ -684,6 +686,15 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* 	 * The vm space can be changed by exec_new_vmspace 	 */
 name|vmspace
 operator|=

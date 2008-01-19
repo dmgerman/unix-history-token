@@ -429,6 +429,8 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/*      * Destroy old process VM and create a new one (with a new stack)      */
+name|error
+operator|=
 name|exec_new_vmspace
 argument_list|(
 name|imgp
@@ -437,6 +439,13 @@ operator|&
 name|svr4_sysvec
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|fail
+goto|;
 name|vmspace
 operator|=
 name|imgp

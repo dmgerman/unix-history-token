@@ -4820,7 +4820,7 @@ comment|/*  * Initialize a preallocated and zeroed pmap structure,  * such as on
 end_comment
 
 begin_function
-name|void
+name|int
 name|pmap_pinit
 parameter_list|(
 name|pmap_t
@@ -4980,6 +4980,11 @@ operator|->
 name|pm_stats
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 

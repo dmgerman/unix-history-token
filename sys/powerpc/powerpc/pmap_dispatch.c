@@ -676,7 +676,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|pmap_pinit
 parameter_list|(
 name|pmap_t
@@ -690,6 +690,11 @@ argument_list|,
 name|pmap
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 

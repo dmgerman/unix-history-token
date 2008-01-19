@@ -3296,7 +3296,7 @@ argument_list|,
 name|MSGBUF_SIZE
 argument_list|)
 expr_stmt|;
-name|proc_linkup
+name|proc_linkup0
 argument_list|(
 operator|&
 name|proc0

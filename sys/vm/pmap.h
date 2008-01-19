@@ -344,7 +344,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|pmap_pinit
 parameter_list|(
 name|pmap_t
