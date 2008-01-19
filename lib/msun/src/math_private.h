@@ -324,7 +324,7 @@ name|lval
 parameter_list|,
 name|rval
 parameter_list|)
-value|do {	\ 	volatile type __lval;			\ 						\ 	__lval = (rval);			\ 	(lval) = __lval;			\ } while (0)
+value|do {	\ 	volatile type __lval;			\ 						\ 	if (sizeof(type)>= sizeof(double))	\ 		(lval) = (rval);		\ 	else {					\ 		__lval = (rval);		\ 		(lval) = __lval;		\ 	}					\ } while (0)
 end_define
 
 begin_endif
