@@ -268,7 +268,11 @@ end_comment
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+operator|||
+name|__XSI_VISIBLE
 end_if
 
 begin_define
