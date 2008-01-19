@@ -68,32 +68,6 @@ begin_comment
 comment|/*   * First try -- (first + last letters + length + (int)cp) mod size  * 2nd try -- same, except dir fid.vnode instead of cp  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|oldhash
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CODA_NC_HASH
-parameter_list|(
-name|name
-parameter_list|,
-name|namelen
-parameter_list|,
-name|cp
-parameter_list|)
-define|\
-value|((name[0] + name[namelen-1] + namelen + (int)(intptr_t)(cp))& (coda_nc_hashsize-1))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -108,11 +82,6 @@ parameter_list|)
 define|\
 value|((name[0] + (name[namelen-1]<<4) + namelen + (((int)(intptr_t)cp)>>8))& (coda_nc_hashsize-1))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
