@@ -1181,7 +1181,7 @@ index|]
 expr_stmt|;
 name|STRICT_ASSIGN
 argument_list|(
-name|float
+name|double
 argument_list|,
 name|fw
 argument_list|,
