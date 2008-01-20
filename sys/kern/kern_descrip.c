@@ -11574,6 +11574,16 @@ operator|=
 name|KF_TYPE_MQUEUE
 expr_stmt|;
 break|break;
+case|case
+name|DTYPE_SHM
+case|:
+name|kif
+operator|->
+name|kf_type
+operator|=
+name|KF_TYPE_SHM
+expr_stmt|;
+break|break;
 default|default:
 name|kif
 operator|->

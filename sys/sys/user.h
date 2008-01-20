@@ -972,6 +972,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|KF_TYPE_SHM
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|KF_TYPE_UNKNOWN
 value|255
 end_define
