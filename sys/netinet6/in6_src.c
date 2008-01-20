@@ -503,7 +503,7 @@ parameter_list|)
 value|do {\ 	if ((r)< sizeof(ip6stat.ip6s_sources_rule) / \ 		sizeof(ip6stat.ip6s_sources_rule[0]))
 comment|/* check for safety */
 value|\ 		ip6stat.ip6s_sources_rule[(r)]++; \
-comment|/* printf("in6_selectsrc: replace %s with %s by %d\n", ia_best ? ip6_sprintf(&ia_best->ia_addr.sin6_addr) : "none", ip6_sprintf(&ia->ia_addr.sin6_addr), (r)); */
+comment|/* { \ 	char ip6buf[INET6_ADDRSTRLEN], ip6b[INET6_ADDRSTRLEN]; \ 	printf("in6_selectsrc: replace %s with %s by %d\n", ia_best ? ip6_sprintf(ip6buf,&ia_best->ia_addr.sin6_addr) : "none", ip6_sprintf(ip6b,&ia->ia_addr.sin6_addr), (r)); \ 	} */
 value|\ 	goto replace; \ } while(0)
 end_define
 
@@ -517,7 +517,7 @@ parameter_list|)
 value|do {\ 	if ((r)< sizeof(ip6stat.ip6s_sources_rule) / \ 		sizeof(ip6stat.ip6s_sources_rule[0]))
 comment|/* check for safety */
 value|\ 		ip6stat.ip6s_sources_rule[(r)]++; \
-comment|/* printf("in6_selectsrc: keep %s against %s by %d\n", ia_best ? ip6_sprintf(&ia_best->ia_addr.sin6_addr) : "none", ip6_sprintf(&ia->ia_addr.sin6_addr), (r)); */
+comment|/* { \ 	char ip6buf[INET6_ADDRSTRLEN], ip6b[INET6_ADDRSTRLEN]; \ 	printf("in6_selectsrc: keep %s against %s by %d\n", ia_best ? ip6_sprintf(ip6buf,&ia_best->ia_addr.sin6_addr) : "none", ip6_sprintf(ip6b,&ia->ia_addr.sin6_addr), (r)); \ 	} */
 value|\ 	goto next;
 comment|/* XXX: we can't use 'continue' here */
 value|\ } while(0)
