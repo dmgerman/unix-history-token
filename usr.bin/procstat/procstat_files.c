@@ -792,6 +792,14 @@ literal|"m"
 expr_stmt|;
 break|break;
 case|case
+name|KF_TYPE_SHM
+case|:
+name|str
+operator|=
+literal|"h"
+expr_stmt|;
+break|break;
+case|case
 name|KF_TYPE_NONE
 case|:
 case|case
