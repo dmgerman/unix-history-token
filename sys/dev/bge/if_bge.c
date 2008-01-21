@@ -6120,13 +6120,10 @@ block|}
 comment|/* Configure mbuf pool watermarks */
 if|if
 condition|(
-operator|!
-operator|(
 name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
-operator|)
 condition|)
 block|{
 name|CSR_WRITE_4
