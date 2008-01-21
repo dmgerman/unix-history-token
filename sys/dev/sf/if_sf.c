@@ -219,7 +219,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<pci/if_sfreg.h>
+file|<dev/sf/if_sfreg.h>
 end_include
 
 begin_expr_stmt
