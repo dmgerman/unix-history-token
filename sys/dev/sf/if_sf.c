@@ -8744,7 +8744,7 @@ name|sc
 operator|->
 name|sf_statistics
 operator|.
-name|tx_gfp_stall
+name|sf_tx_gfp_stall
 operator|++
 expr_stmt|;
 ifdef|#
@@ -8778,7 +8778,7 @@ name|sc
 operator|->
 name|sf_statistics
 operator|.
-name|rx_gfp_stall
+name|sf_rx_gfp_stall
 operator|++
 expr_stmt|;
 ifdef|#
