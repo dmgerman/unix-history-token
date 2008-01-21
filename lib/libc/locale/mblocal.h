@@ -37,6 +37,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|_ascii_init
+parameter_list|(
+name|_RuneLocale
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|_UTF8_init
 parameter_list|(
 name|_RuneLocale
