@@ -1399,6 +1399,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CODA_VERBOSE
 name|printf
 argument_list|(
 literal|"coda_rdwr: Internally Opening %p\n"
@@ -1406,6 +1409,8 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
