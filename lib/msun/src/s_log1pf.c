@@ -210,10 +210,10 @@ if|if
 condition|(
 name|ax
 operator|<
-literal|0x31000000
+literal|0x38000000
 condition|)
 block|{
-comment|/* |x|< 2**-29 */
+comment|/* |x|< 2**-15 */
 if|if
 condition|(
 name|two25
@@ -225,9 +225,9 @@ comment|/* raise inexact */
 operator|&&
 name|ax
 operator|<
-literal|0x24800000
+literal|0x33800000
 condition|)
-comment|/* |x|< 2**-54 */
+comment|/* |x|< 2**-24 */
 return|return
 name|x
 return|;
