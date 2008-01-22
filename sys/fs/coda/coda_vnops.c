@@ -336,7 +336,8 @@ block|{
 operator|.
 name|vop_default
 operator|=
-name|VOP_PANIC
+operator|&
+name|default_vnodeops
 block|,
 operator|.
 name|vop_lookup
@@ -350,12 +351,6 @@ operator|=
 name|coda_create
 block|,
 comment|/* create */
-operator|.
-name|vop_mknod
-operator|=
-name|VOP_PANIC
-block|,
-comment|/* mknod */
 operator|.
 name|vop_open
 operator|=
@@ -491,7 +486,7 @@ comment|/* bmap */
 operator|.
 name|vop_print
 operator|=
-name|VOP_PANIC
+name|VOP_NULL
 block|,
 comment|/* print */
 operator|.
@@ -506,18 +501,6 @@ operator|=
 name|coda_pathconf
 block|,
 comment|/* pathconf */
-operator|.
-name|vop_advlock
-operator|=
-name|VOP_NULL
-block|,
-comment|/* advlock */
-operator|.
-name|vop_lease
-operator|=
-name|VOP_NULL
-block|,
-comment|/* lease */
 operator|.
 name|vop_poll
 operator|=
@@ -862,13 +845,6 @@ argument|myprintf((
 literal|"open: vp %p result %d\n"
 argument|, vp, error));
 argument_list|)
-comment|/* Keep a reference until the close comes in. */
-name|vref
-argument_list|(
-operator|*
-name|vpp
-argument_list|)
-expr_stmt|;
 comment|/* Save the vnode pointer for the cache file. */
 if|if
 condition|(
@@ -961,6 +937,20 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
+else|else
+block|{
+operator|(
+operator|*
+name|vpp
+operator|)
+operator|->
+name|v_object
+operator|=
+name|vp
+operator|->
+name|v_object
+expr_stmt|;
 block|}
 comment|/* grab (above) does this when it calls newvnode unless it's in the cache*/
 return|return
@@ -1165,11 +1155,6 @@ else|else
 name|error
 operator|=
 name|ENODEV
-expr_stmt|;
-name|vrele
-argument_list|(
-name|vp
-argument_list|)
 expr_stmt|;
 name|CODADEBUG
 argument_list|(
@@ -1414,6 +1399,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CODA_VERBOSE
 name|printf
 argument_list|(
 literal|"coda_rdwr: Internally Opening %p\n"
@@ -1421,6 +1409,8 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
@@ -3077,6 +3067,12 @@ argument|myprintf((
 literal|"in inactive, %s, vfsp %p\n"
 argument|, 				  coda_f2s(&cp->c_fid), vp->v_mount));
 argument_list|)
+name|vp
+operator|->
+name|v_object
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* If an array has been allocated to hold the symlink, deallocate it */
 if|if
 condition|(
@@ -3787,12 +3783,7 @@ operator|->
 name|a_vpp
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 operator|*
 name|ap
@@ -3800,29 +3791,12 @@ operator|->
 name|a_vpp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
-argument_list|)
-operator|)
-condition|)
-block|{
-name|vn_lock
-argument_list|(
-name|dvp
-argument_list|,
-name|LK_RETRY
 operator||
-name|LK_EXCLUSIVE
+name|LK_RETRY
 argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 block|}
 name|vn_lock
 argument_list|(
@@ -3857,12 +3831,7 @@ operator|)
 condition|)
 block|{
 comment|/* Different, go ahead and lock it. */
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 operator|*
 name|ap
@@ -3870,18 +3839,12 @@ operator|->
 name|a_vpp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|,
 name|td
 argument_list|)
-operator|)
-condition|)
-block|{
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -4276,12 +4239,7 @@ operator|&
 name|LOCKLEAF
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 operator|*
 name|ap
@@ -4289,23 +4247,12 @@ operator|->
 name|a_vpp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|,
 name|td
 argument_list|)
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"coda_create: "
-argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"unlocked parent but couldn't lock child"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -5674,6 +5621,18 @@ operator|&=
 operator|~
 name|C_VATTR
 expr_stmt|;
+name|vn_lock
+argument_list|(
+operator|*
+name|vpp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|CODADEBUG
 argument_list|(
 argument|CODA_MKDIR
@@ -6743,10 +6702,11 @@ name|v_data
 operator|=
 name|NULL
 expr_stmt|;
-name|vnode_destroy_vobject
-argument_list|(
 name|vp
-argument_list|)
+operator|->
+name|v_object
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(

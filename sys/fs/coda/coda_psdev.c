@@ -33,17 +33,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|coda_nc_initialized
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Set if cache has been initialized */
-end_comment
-
 begin_include
 include|#
 directive|include
