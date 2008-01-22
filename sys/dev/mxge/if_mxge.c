@@ -10489,11 +10489,52 @@ name|m
 operator|=
 name|m
 expr_stmt|;
+name|rx
+operator|->
+name|shadow
+index|[
+name|idx
+index|]
+operator|.
+name|addr_low
+operator|=
+name|htobe32
+argument_list|(
+name|MXGE_LOWPART_TO_U32
+argument_list|(
+name|seg
+operator|->
+name|ds_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|rx
+operator|->
+name|shadow
+index|[
+name|idx
+index|]
+operator|.
+name|addr_high
+operator|=
+name|htobe32
+argument_list|(
+name|MXGE_HIGHPART_TO_U32
+argument_list|(
+name|seg
+operator|->
+name|ds_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|MXGE_VIRT_JUMBOS
 for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
 operator|<
@@ -10552,6 +10593,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|done
 label|:
 for|for
@@ -14331,9 +14374,19 @@ comment|/* parent */
 literal|1
 argument_list|,
 comment|/* alignment */
+if|#
+directive|if
+name|MXGE_VIRT_JUMBOS
 literal|4096
 argument_list|,
 comment|/* boundary */
+else|#
+directive|else
+literal|0
+argument_list|,
+comment|/* boundary */
+endif|#
+directive|endif
 name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* low */
@@ -14350,12 +14403,25 @@ operator|*
 literal|4096
 argument_list|,
 comment|/* maxsize */
+if|#
+directive|if
+name|MXGE_VIRT_JUMBOS
 literal|3
 argument_list|,
 comment|/* num segs */
 literal|4096
 argument_list|,
-comment|/* maxsegsize */
+comment|/* maxsegsize*/
+else|#
+directive|else
+literal|1
+argument_list|,
+comment|/* num segs */
+name|MJUM9BYTES
+argument_list|,
+comment|/* maxsegsize*/
+endif|#
+directive|endif
 name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
@@ -15266,6 +15332,9 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
+if|#
+directive|if
+name|MXGE_VIRT_JUMBOS
 comment|/* now we need to use virtually contiguous buffers */
 operator|*
 name|cl_size
@@ -15299,6 +15368,25 @@ name|nbufs
 operator|=
 literal|4
 expr_stmt|;
+else|#
+directive|else
+operator|*
+name|cl_size
+operator|=
+name|MJUM9BYTES
+expr_stmt|;
+operator|*
+name|big_buf_size
+operator|=
+name|MJUM9BYTES
+expr_stmt|;
+operator|*
+name|nbufs
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
