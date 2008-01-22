@@ -7874,6 +7874,48 @@ block|,
 block|{
 literal|"Brazil"
 block|,
+literal|"a.ntp.br"
+block|,
+name|dmenuVarsCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"ntpdate_enable=YES,ntpdate_flags=a.ntp.br"
+block|}
+block|,
+block|{
+literal|"Brazil #2"
+block|,
+literal|"b.ntp.br"
+block|,
+name|dmenuVarsCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"ntpdate_enable=YES,ntpdate_flags=b.ntp.br"
+block|}
+block|,
+block|{
+literal|"Brazil #3"
+block|,
+literal|"c.ntp.br"
+block|,
+name|dmenuVarsCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"ntpdate_enable=YES,ntpdate_flags=c.ntp.br"
+block|}
+block|,
+block|{
+literal|"Brazil #4"
+block|,
 literal|"ntp.cais.rnp.br"
 block|,
 name|dmenuVarsCheck
@@ -7886,35 +7928,7 @@ literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cais.rnp.br"
 block|}
 block|,
 block|{
-literal|"Brazil #2"
-block|,
-literal|"ntp.pop-df.rnp.br"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.pop-df.rnp.br"
-block|}
-block|,
-block|{
-literal|"Brazil #3"
-block|,
-literal|"ntp.ufes.br"
-block|,
-name|dmenuVarsCheck
-block|,
-name|dmenuSetVariables
-block|,
-name|NULL
-block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.ufes.br"
-block|}
-block|,
-block|{
-literal|"Brazil #4"
+literal|"Brazil #5"
 block|,
 literal|"ntp1.pucpr.br"
 block|,
