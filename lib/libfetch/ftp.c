@@ -6231,11 +6231,7 @@ operator|-
 literal|1
 operator|)
 return|;
-name|fclose
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
+comment|/* 	 * When op is "STAT", ftp_request() will return either NULL or 	 * (FILE *)1, never a valid FILE *, so we mustn't fclose(f) before 	 * returning, as it would cause a segfault. 	 */
 return|return
 operator|(
 literal|0
