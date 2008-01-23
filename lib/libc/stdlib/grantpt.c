@@ -171,17 +171,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PTMXM_PREFIX
-value|"ptc/"
-end_define
-
-begin_comment
-comment|/* pts(4) master naming convention */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PTMXS_PREFIX
 value|"pts/"
 end_define
@@ -198,15 +187,8 @@ value|"ptmx"
 end_define
 
 begin_comment
-comment|/*  * The following are range values for pseudo TTY devices.  Pseudo TTYs have a  * name of /dev/[pt]ty[l-sL-S][0-9a-v], yielding 256 combinations per major.  */
+comment|/*  * The following are range values for pseudo TTY devices.  Pseudo TTYs have a  * name of /dev/[pt]ty[l-sL-S][0-9a-v].  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|PTY_MAX
-value|256
-end_define
 
 begin_define
 define|#
@@ -231,20 +213,6 @@ define|#
 directive|define
 name|_PATH_PTCHOWN
 value|"/usr/libexec/pt_chown"
-end_define
-
-begin_comment
-comment|/*  * ISPTM(x) returns 0 for struct stat x if x is not a pty master.  * The bounds checking may be unnecessary but it does eliminate doubt.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISPTM
-parameter_list|(
-name|x
-parameter_list|)
-value|(S_ISCHR((x).st_mode)&& 			\ 			 minor((x).st_rdev)>= 0&&			\ 			 minor((x).st_rdev)< PTY_MAX)
 end_define
 
 begin_if
