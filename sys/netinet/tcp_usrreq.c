@@ -2673,6 +2673,12 @@ literal|"tcp_usr_accept: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
+name|INP_INFO_RLOCK
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 name|INP_LOCK
 argument_list|(
 name|inp
@@ -2732,6 +2738,12 @@ expr_stmt|;
 name|INP_UNLOCK
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+name|INP_INFO_RUNLOCK
+argument_list|(
+operator|&
+name|tcbinfo
 argument_list|)
 expr_stmt|;
 if|if
