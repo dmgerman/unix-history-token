@@ -3548,6 +3548,12 @@ literal|"add"
 block|}
 block|,
 block|{
+name|cmd_boot
+block|,
+literal|"boot"
+block|}
+block|,
+block|{
 name|cmd_create
 block|,
 literal|"create"
