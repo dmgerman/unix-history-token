@@ -6406,10 +6406,10 @@ operator|(
 name|kmem_size
 argument_list|()
 operator|*
-literal|4
+literal|3
 operator|)
 operator|/
-literal|5
+literal|4
 condition|)
 return|return
 operator|(
@@ -12202,7 +12202,7 @@ name|MAX
 argument_list|(
 name|arc_c
 operator|*
-literal|6
+literal|5
 argument_list|,
 name|arc_c_max
 argument_list|)
@@ -12596,7 +12596,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
-comment|/* Warn about ZFS memory requirements. */
+comment|/* Warn about ZFS memory and address space requirements. */
 if|if
 condition|(
 operator|(
@@ -12630,7 +12630,6 @@ literal|"expect unstable behavior.\n"
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 name|kmem_size
