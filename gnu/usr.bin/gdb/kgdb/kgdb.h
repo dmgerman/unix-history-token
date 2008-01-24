@@ -82,6 +82,18 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+name|kgdb_add_kld_cmd
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|kgdb_target
 parameter_list|(
 name|void
