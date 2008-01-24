@@ -1365,6 +1365,14 @@ name|priv_check
 argument_list|(
 name|td
 argument_list|,
+operator|(
+name|cmd
+operator|==
+name|SIOCDIFADDR
+operator|)
+condition|?
+name|PRIV_NET_DELIFADDR
+else|:
 name|PRIV_NET_ADDIFADDR
 argument_list|)
 expr_stmt|;
