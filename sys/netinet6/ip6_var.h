@@ -1566,7 +1566,9 @@ expr|struct
 name|ip6_pktopts
 operator|*
 operator|,
-name|int
+expr|struct
+name|ucred
+operator|*
 operator|,
 name|int
 operator|)

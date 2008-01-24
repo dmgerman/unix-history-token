@@ -3019,6 +3019,15 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 		 * Allow jailed root to set certian IPv4/6 (option) headers. 		 */
+case|case
+name|PRIV_NETINET_SETHDROPTS
+case|:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 		 * Conditionally allow creating raw sockets in jail. 		 */
 case|case
 name|PRIV_NETINET_RAW

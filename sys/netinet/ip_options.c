@@ -3232,6 +3232,7 @@ case|case
 name|IPOPT_SSRR
 case|:
 comment|/* 			 * User process specifies route as: 			 * 			 *	->A->B->C->D 			 * 			 * D must be our final destination (but we can't 			 * check that since we may not have connected yet). 			 * A is first hop destination, which doesn't appear 			 * in actual IP option, but is stored before the 			 * options. 			 */
+comment|/* XXX-BZ PRIV_NETINET_SETHDROPTS? */
 if|if
 condition|(
 name|optlen
