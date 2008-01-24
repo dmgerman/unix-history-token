@@ -18,29 +18,7 @@ comment|/* config.h.in.  Generated from configure.in by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* Autoheader needs me */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PACKAGE
-value|"file"
-end_define
-
-begin_comment
-comment|/* Autoheader needs me */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VERSION
-value|"4.12"
-end_define
-
-begin_comment
-comment|/* Define if builtin ELF support is enabled.  */
+comment|/* Use the builtin ELF recognition code */
 end_comment
 
 begin_define
@@ -51,7 +29,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if ELF core file support is enabled.  */
+comment|/* Recognize ELF core files */
 end_comment
 
 begin_define
@@ -62,51 +40,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if the `long long' type works.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LONG_LONG
-value|1
-end_define
-
-begin_comment
-comment|/* Define if we have "tm_zone" in "struct tm".  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_TM_ZONE
-value|1
-end_define
-
-begin_comment
-comment|/* Define if we have a global "char * []" "tzname" variable.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_TZNAME
-value|1
-end_define
-
-begin_comment
-comment|/* Define if we have "tm_isdst" in "struct tm".  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_TM_ISDST
-value|1
-end_define
-
-begin_comment
-comment|/* Define if we have a global "int" variable "daylight".  */
+comment|/* */
 end_comment
 
 begin_comment
@@ -114,102 +48,14 @@ comment|/* #undef HAVE_DAYLIGHT */
 end_comment
 
 begin_comment
-comment|/* Define if we have a mkstemp */
+comment|/* Define to 1 if you have the<dlfcn.h> header file. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_MKSTEMP
+name|HAVE_DLFCN_H
 value|1
-end_define
-
-begin_comment
-comment|/* Define to `unsigned char' if standard headers don't define.  */
-end_comment
-
-begin_comment
-comment|/* #undef uint8_t */
-end_comment
-
-begin_comment
-comment|/* Define to `unsigned short' if standard headers don't define.  */
-end_comment
-
-begin_comment
-comment|/* #undef uint16_t */
-end_comment
-
-begin_comment
-comment|/* Define to `unsigned int' if standard headers don't define.  */
-end_comment
-
-begin_comment
-comment|/* #undef uint32_t */
-end_comment
-
-begin_comment
-comment|/* Define to `unsigned long long', if available, or `unsigned long', if    standard headers don't define.  */
-end_comment
-
-begin_comment
-comment|/* #undef uint64_t */
-end_comment
-
-begin_comment
-comment|/* Define to `int' if standard headers don't define.  */
-end_comment
-
-begin_comment
-comment|/* #undef int32_t */
-end_comment
-
-begin_comment
-comment|/* FIXME: These have to be added manually because autoheader doesn't know    about AC_CHECK_SIZEOF_INCLUDES.  */
-end_comment
-
-begin_comment
-comment|/* The number of bytes in a uint8_t.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_UINT8_T
-value|1
-end_define
-
-begin_comment
-comment|/* The number of bytes in a uint16_t.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_UINT16_T
-value|2
-end_define
-
-begin_comment
-comment|/* The number of bytes in a uint32_t.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_UINT32_T
-value|4
-end_define
-
-begin_comment
-comment|/* The number of bytes in a uint64_t.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_UINT64_T
-value|8
 end_define
 
 begin_comment
@@ -268,6 +114,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<limits.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIMITS_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<locale.h> header file. */
 end_comment
 
@@ -279,6 +136,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LONG_LONG
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `mbrtowc' function. */
 end_comment
 
@@ -286,6 +154,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_MBRTOWC
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if<wchar.h> declares mbstate_t. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MBSTATE_T
 value|1
 end_define
 
@@ -319,6 +198,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_MMAP
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `snprintf' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SNPRINTF
 value|1
 end_define
 
@@ -391,6 +281,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `strndup' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRNDUP */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `strtoul' function. */
 end_comment
 
@@ -446,6 +344,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/time.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_TIME_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/types.h> header file. */
 end_comment
 
@@ -472,6 +381,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_WAIT_H
+value|1
+end_define
+
+begin_comment
+comment|/* */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TM_ISDST
 value|1
 end_define
 
@@ -542,6 +462,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `vsnprintf' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_VSNPRINTF
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<wchar.h> header file. */
 end_comment
 
@@ -549,6 +480,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_WCHAR_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<wctype.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCTYPE_H
 value|1
 end_define
 
@@ -646,6 +588,50 @@ value|""
 end_define
 
 begin_comment
+comment|/* */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_UINT16_T
+value|2
+end_define
+
+begin_comment
+comment|/* */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_UINT32_T
+value|4
+end_define
+
+begin_comment
+comment|/* */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_UINT64_T
+value|8
+end_define
+
+begin_comment
+comment|/* */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_UINT8_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the ANSI C header files. */
 end_comment
 
@@ -672,7 +658,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.12"
+value|"4.21"
 end_define
 
 begin_comment
@@ -700,6 +686,14 @@ comment|/* #undef const */
 end_comment
 
 begin_comment
+comment|/* */
+end_comment
+
+begin_comment
+comment|/* #undef int32_t */
+end_comment
+
+begin_comment
 comment|/* Define to a type if<wchar.h> does not define. */
 end_comment
 
@@ -721,6 +715,38 @@ end_comment
 
 begin_comment
 comment|/* #undef size_t */
+end_comment
+
+begin_comment
+comment|/* */
+end_comment
+
+begin_comment
+comment|/* #undef uint16_t */
+end_comment
+
+begin_comment
+comment|/* */
+end_comment
+
+begin_comment
+comment|/* #undef uint32_t */
+end_comment
+
+begin_comment
+comment|/* */
+end_comment
+
+begin_comment
+comment|/* #undef uint64_t */
+end_comment
+
+begin_comment
+comment|/* */
+end_comment
+
+begin_comment
+comment|/* #undef uint8_t */
 end_comment
 
 end_unit

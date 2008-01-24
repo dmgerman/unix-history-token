@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in MAGIC must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * $Id: names.h,v 1.25 2004/09/11 19:15:57 christos Exp $  */
+comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in MAGIC must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * $File: names.h,v 1.27 2007/05/08 16:47:03 christos Exp $  */
 end_comment
 
 begin_comment
@@ -573,6 +573,18 @@ block|}
 block|,
 block|{
 literal|"(input,"
+block|,
+name|L_PAS
+block|}
+block|,
+block|{
+literal|"program"
+block|,
+name|L_PAS
+block|}
+block|,
+block|{
+literal|"record"
 block|,
 name|L_PAS
 block|}

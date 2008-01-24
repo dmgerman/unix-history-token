@@ -65,16 +65,6 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_comment
-comment|/* for open() */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -252,7 +242,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: file.c,v 1.95 2004/09/27 15:28:37 christos Exp $"
+literal|"@(#)$File: file.c,v 1.111 2007/05/08 14:44:18 christos Exp $"
 argument_list|)
 end_macro
 
@@ -275,7 +265,7 @@ begin_define
 define|#
 directive|define
 name|SYMLINKFLAG
-value|"L"
+value|"Lh"
 end_define
 
 begin_else
@@ -299,7 +289,7 @@ begin_define
 define|#
 directive|define
 name|USAGE
-value|"Usage: %s [-bcik" SYMLINKFLAG "nNsvz] [-f namefile] [-F separator] [-m magicfiles] file...\n       %s -C -m magicfiles\n"
+value|"Usage: %s [-bcik" SYMLINKFLAG "nNrsvz0] [-e test] [-f namefile] [-F separator] [-m magicfiles] file...\n       %s -C -m magicfiles\n"
 end_define
 
 begin_ifndef
@@ -337,11 +327,16 @@ comment|/* Don't pad output			*/
 name|nobuffer
 init|=
 literal|0
+decl_stmt|,
+comment|/* Do not buffer stdout 		*/
+name|nulsep
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Do not buffer stdout 		*/
+comment|/* Append '\0' to the separator		*/
 end_comment
 
 begin_decl_stmt
@@ -372,6 +367,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|private
+specifier|const
 name|char
 modifier|*
 name|separator
@@ -519,6 +515,8 @@ parameter_list|)
 block|{
 name|int
 name|c
+decl_stmt|,
+name|i
 decl_stmt|;
 name|int
 name|action
@@ -549,17 +547,26 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+specifier|static
+specifier|const
+name|char
+name|hmagic
+index|[]
+init|=
+literal|"/.magic"
+decl_stmt|;
 define|#
 directive|define
 name|OPTSTRING
-value|"bcCdf:F:ikLm:nNprsvz"
+value|"bcCde:f:F:hikLm:nNprsvz0"
 ifdef|#
 directive|ifdef
 name|HAVE_GETOPT_LONG
 name|int
 name|longindex
 decl_stmt|;
-name|private
+specifier|static
+specifier|const
 name|struct
 name|option
 name|long_options
@@ -617,6 +624,16 @@ literal|'d'
 block|}
 block|,
 block|{
+literal|"exclude"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|'e'
+block|}
+block|,
+block|{
 literal|"files-from"
 block|,
 literal|1
@@ -667,6 +684,16 @@ block|,
 literal|0
 block|,
 literal|'L'
+block|}
+block|,
+block|{
+literal|"no-dereference"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'h'
 block|}
 block|,
 endif|#
@@ -765,6 +792,16 @@ literal|'C'
 block|}
 block|,
 block|{
+literal|"print0"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'0'
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -777,9 +814,85 @@ block|, 	}
 decl_stmt|;
 endif|#
 directive|endif
+specifier|static
+specifier|const
+struct|struct
+block|{
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|int
+name|value
+decl_stmt|;
+block|}
+name|nv
+index|[]
+init|=
+block|{
+block|{
+literal|"apptype"
+block|,
+name|MAGIC_NO_CHECK_APPTYPE
+block|}
+block|,
+block|{
+literal|"ascii"
+block|,
+name|MAGIC_NO_CHECK_ASCII
+block|}
+block|,
+block|{
+literal|"compress"
+block|,
+name|MAGIC_NO_CHECK_COMPRESS
+block|}
+block|,
+block|{
+literal|"elf"
+block|,
+name|MAGIC_NO_CHECK_ELF
+block|}
+block|,
+block|{
+literal|"fortran"
+block|,
+name|MAGIC_NO_CHECK_FORTRAN
+block|}
+block|,
+block|{
+literal|"soft"
+block|,
+name|MAGIC_NO_CHECK_SOFT
+block|}
+block|,
+block|{
+literal|"tar"
+block|,
+name|MAGIC_NO_CHECK_TAR
+block|}
+block|,
+block|{
+literal|"tokens"
+block|,
+name|MAGIC_NO_CHECK_TOKENS
+block|}
+block|,
+block|{
+literal|"troff"
+block|,
+name|MAGIC_NO_CHECK_TROFF
+block|}
+block|, 	}
+struct|;
 ifdef|#
 directive|ifdef
 name|LC_CTYPE
+comment|/* makes islower etc work for other langs */
+operator|(
+name|void
+operator|)
 name|setlocale
 argument_list|(
 name|LC_CTYPE
@@ -787,7 +900,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* makes islower etc work for other langs */
 endif|#
 directive|endif
 ifdef|#
@@ -882,7 +994,10 @@ argument_list|(
 name|home
 argument_list|)
 operator|+
-literal|8
+sizeof|sizeof
+argument_list|(
+name|hmagic
+argument_list|)
 argument_list|)
 operator|)
 operator|!=
@@ -906,7 +1021,7 @@ name|strcat
 argument_list|(
 name|usermagic
 argument_list|,
-literal|"/.magic"
+name|hmagic
 argument_list|)
 expr_stmt|;
 if|if
@@ -933,6 +1048,22 @@ name|usermagic
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|S_IFLNK
+name|flags
+operator||=
+name|getenv
+argument_list|(
+literal|"POSIXLY_CORRECT"
+argument_list|)
+condition|?
+name|MAGIC_SYMLINK
+else|:
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|HAVE_GETOPT_LONG
@@ -1005,6 +1136,14 @@ break|break;
 endif|#
 directive|endif
 case|case
+literal|'0'
+case|:
+name|nulsep
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'b'
 case|:
 operator|++
@@ -1035,6 +1174,81 @@ operator||=
 name|MAGIC_DEBUG
 operator||
 name|MAGIC_CHECK
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|nv
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|nv
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|nv
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|optarg
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|i
+operator|==
+sizeof|sizeof
+argument_list|(
+name|nv
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|nv
+index|[
+literal|0
+index|]
+argument_list|)
+condition|)
+name|errflg
+operator|++
+expr_stmt|;
+else|else
+name|flags
+operator||=
+name|nv
+index|[
+name|i
+index|]
+operator|.
+name|value
 expr_stmt|;
 break|break;
 case|case
@@ -1196,6 +1410,15 @@ literal|'L'
 case|:
 name|flags
 operator||=
+name|MAGIC_SYMLINK
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+name|flags
+operator|&=
+operator|~
 name|MAGIC_SYMLINK
 expr_stmt|;
 break|break;
@@ -1431,6 +1654,7 @@ end_function
 begin_function
 name|private
 name|void
+comment|/*ARGSUSED*/
 name|load
 parameter_list|(
 specifier|const
@@ -1445,6 +1669,10 @@ block|{
 if|if
 condition|(
 name|magic
+operator|||
+name|m
+operator|==
+name|NULL
 condition|)
 return|return;
 name|magic
@@ -1554,6 +1782,9 @@ literal|0
 decl_stmt|,
 name|cwid
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -1632,14 +1863,43 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+operator|&&
+name|buf
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+condition|)
+name|buf
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|cwid
 operator|=
 name|file_mbswidth
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1672,12 +1932,31 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|buf
-index|[
-name|file_mbswidth
+name|len
+operator|=
+name|strlen
 argument_list|(
 name|buf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+operator|&&
+name|buf
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+condition|)
+name|buf
+index|[
+name|len
 operator|-
 literal|1
 index|]
@@ -1714,6 +1993,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Called for each input file on the command line (or in a list of files)  */
+end_comment
 
 begin_function
 name|private
@@ -1755,20 +2038,52 @@ operator|&&
 operator|!
 name|bflag
 condition|)
+block|{
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%s%*s "
+literal|"%s"
 argument_list|,
 name|std_in
 condition|?
 literal|"/dev/stdin"
 else|:
 name|inname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nulsep
+condition|)
+operator|(
+name|void
+operator|)
+name|putc
+argument_list|(
+literal|'\0'
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s"
 argument_list|,
 name|separator
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%*s "
 argument_list|,
 call|(
 name|int
@@ -1791,6 +2106,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+block|}
 name|type
 operator|=
 name|magic_file
@@ -1810,6 +2126,9 @@ name|type
 operator|==
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"ERROR: %s\n"
@@ -1821,6 +2140,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -2097,6 +2419,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
 name|puts
 argument_list|(
 literal|"Usage: file [OPTION]... [FILE]...\n"
@@ -2109,6 +2434,9 @@ literal|"  -b, --brief                do not prepend filenames to output lines\n
 literal|"  -c, --checking-printout    print the parsed form of the magic file, use in\n"
 literal|"                               conjunction with -m to debug a new magic file\n"
 literal|"                               before installing it\n"
+literal|"  -e, --exclude              exclude test from the list of test to be\n"
+literal|"                               performed for file. Valid tests are:\n"
+literal|"                               ascii, apptype, elf, compress, soft, tar\n"
 literal|"  -f, --files-from FILE      read the filenames to be examined from FILE\n"
 literal|"  -F, --separator string     use string as separator instead of `:'\n"
 literal|"  -i, --mime                 output mime type strings\n"
@@ -2120,8 +2448,12 @@ literal|"  -p, --preserve-date        preserve access times on files\n"
 literal|"  -r, --raw                  don't translate unprintable chars to \\ooo\n"
 literal|"  -s, --special-files        treat special (block/char devices) files as\n"
 literal|"                             ordinary ones\n"
+literal|"or\n"
 literal|"      --help                 display this help and exit\n"
+literal|"or\n"
 literal|"      --version              output version information and exit\n"
+literal|"or\n"
+literal|"  -C, --compile              compile file specified by -m\n"
 argument_list|)
 expr_stmt|;
 name|exit

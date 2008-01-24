@@ -40,7 +40,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: apptype.c,v 1.6 2003/11/11 20:01:45 christos Exp $"
+literal|"@(#)$File: apptype.c,v 1.7 2007/01/12 17:38:27 christos Exp $"
 argument_list|)
 end_macro
 

@@ -171,7 +171,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: fsmagic.c,v 1.45 2004/11/13 10:19:48 christos Exp $"
+literal|"@(#)$File: fsmagic.c,v 1.47 2007/01/12 17:38:28 christos Exp $"
 argument_list|)
 end_macro
 
@@ -765,6 +765,19 @@ name|S_IFIFO
 case|case
 name|S_IFIFO
 case|:
+if|if
+condition|(
+operator|(
+name|ms
+operator|->
+name|flags
+operator|&
+name|MAGIC_DEVICES
+operator|)
+operator|!=
+literal|0
+condition|)
+break|break;
 if|if
 condition|(
 name|file_printf

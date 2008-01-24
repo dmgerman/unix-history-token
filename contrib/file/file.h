@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$Id: file.h,v 1.64 2004/11/20 23:50:12 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.91 2007/03/25 03:13:47 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -52,6 +52,16 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_comment
+comment|/* For open and flags */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -86,6 +96,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_comment
 comment|/* Do this here and now, because struct stat gets re-defined on solaris */
 end_comment
@@ -95,6 +117,12 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|ENABLE_CONDITIONALS
+end_define
 
 begin_ifndef
 ifndef|#
@@ -177,6 +205,81 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__GNUC_PREREQ__
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__GNUC_PREREQ__
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|((__GNUC__ == (x)&& __GNUC_MINOR__>= (y)) ||			\ 	 (__GNUC__> (x)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__GNUC_PREREQ__
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)< (b)) ? (a) : (b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HOWMANY
 end_ifndef
 
@@ -184,7 +287,7 @@ begin_define
 define|#
 directive|define
 name|HOWMANY
-value|65536
+value|(256 * 1024)
 end_define
 
 begin_comment
@@ -200,7 +303,7 @@ begin_define
 define|#
 directive|define
 name|MAXMAGIS
-value|4096
+value|8192
 end_define
 
 begin_comment
@@ -240,7 +343,7 @@ begin_define
 define|#
 directive|define
 name|VERSIONNO
-value|2
+value|4
 end_define
 
 begin_define
@@ -291,17 +394,22 @@ define|#
 directive|define
 name|INDIR
 value|1
-comment|/* if '>(...)' appears,  */
-define|#
-directive|define
-name|UNSIGNED
-value|2
-comment|/* comparison is unsigned */
+comment|/* if '(...)' appears */
 define|#
 directive|define
 name|OFFADD
+value|2
+comment|/* if '>&' or '>...(&' appears */
+define|#
+directive|define
+name|INDIROFFADD
 value|4
-comment|/* if '>&' appears,  */
+comment|/* if '>&(' appears */
+define|#
+directive|define
+name|UNSIGNED
+value|8
+comment|/* comparison is unsigned */
 comment|/* Word 2 */
 name|uint8_t
 name|reln
@@ -321,12 +429,20 @@ decl_stmt|;
 comment|/* type of indirrection */
 define|#
 directive|define
+name|FILE_INVALID
+value|0
+define|#
+directive|define
 name|FILE_BYTE
 value|1
 define|#
 directive|define
 name|FILE_SHORT
 value|2
+define|#
+directive|define
+name|FILE_DEFAULT
+value|3
 define|#
 directive|define
 name|FILE_LONG
@@ -393,100 +509,88 @@ name|FILE_LESTRING16
 value|19
 define|#
 directive|define
-name|FILE_FORMAT_NAME
+name|FILE_SEARCH
+value|20
+define|#
+directive|define
+name|FILE_MEDATE
+value|21
+define|#
+directive|define
+name|FILE_MELDATE
+value|22
+define|#
+directive|define
+name|FILE_MELONG
+value|23
+define|#
+directive|define
+name|FILE_QUAD
+value|24
+define|#
+directive|define
+name|FILE_LEQUAD
+value|25
+define|#
+directive|define
+name|FILE_BEQUAD
+value|26
+define|#
+directive|define
+name|FILE_QDATE
+value|27
+define|#
+directive|define
+name|FILE_LEQDATE
+value|28
+define|#
+directive|define
+name|FILE_BEQDATE
+value|29
+define|#
+directive|define
+name|FILE_QLDATE
+value|30
+define|#
+directive|define
+name|FILE_LEQLDATE
+value|31
+define|#
+directive|define
+name|FILE_BEQLDATE
+value|32
+define|#
+directive|define
+name|FILE_NAMES_SIZE
+value|33
+comment|/* size of array to contain all names */
+define|#
+directive|define
+name|IS_STRING
+parameter_list|(
+name|t
+parameter_list|)
 define|\
-comment|/* 0 */
-value|"invalid 0",		\
-comment|/* 1 */
-value|"byte",			\
-comment|/* 2 */
-value|"short",		\
-comment|/* 3 */
-value|"invalid 3",		\
-comment|/* 4 */
-value|"long",			\
-comment|/* 5 */
-value|"string",		\
-comment|/* 6 */
-value|"date",			\
-comment|/* 7 */
-value|"beshort",		\
-comment|/* 8 */
-value|"belong",		\
-comment|/* 9 */
-value|"bedate"		\
-comment|/* 10 */
-value|"leshort",		\
-comment|/* 11 */
-value|"lelong",		\
-comment|/* 12 */
-value|"ledate",		\
-comment|/* 13 */
-value|"pstring",		\
-comment|/* 14 */
-value|"ldate",		\
-comment|/* 15 */
-value|"beldate",		\
-comment|/* 16 */
-value|"leldate",		\
-comment|/* 17 */
-value|"regex",		\
-comment|/* 18 */
-value|"bestring16",		\
-comment|/* 19 */
-value|"lestring16",
+value|((t) == FILE_STRING || \ 	 (t) == FILE_PSTRING || \ 	 (t) == FILE_BESTRING16 || \ 	 (t) == FILE_LESTRING16 || \ 	 (t) == FILE_REGEX || \ 	 (t) == FILE_SEARCH || \ 	 (t) == FILE_DEFAULT)
+define|#
+directive|define
+name|FILE_FMT_NONE
+value|0
 define|#
 directive|define
 name|FILE_FMT_NUM
-value|"cduxXi"
+value|1
+comment|/* "cduxXi" */
 define|#
 directive|define
 name|FILE_FMT_STR
-value|"s"
+value|2
+comment|/* "s" */
 define|#
 directive|define
-name|FILE_FORMAT_STRING
-define|\
-comment|/* 0 */
-value|NULL,			\
-comment|/* 1 */
-value|FILE_FMT_NUM,		\
-comment|/* 2 */
-value|FILE_FMT_NUM,		\
-comment|/* 3 */
-value|NULL,			\
-comment|/* 4 */
-value|FILE_FMT_NUM,		\
-comment|/* 5 */
-value|FILE_FMT_STR,		\
-comment|/* 6 */
-value|FILE_FMT_STR,		\
-comment|/* 7 */
-value|FILE_FMT_NUM,		\
-comment|/* 8 */
-value|FILE_FMT_NUM,		\
-comment|/* 9 */
-value|FILE_FMT_STR,		\
-comment|/* 10 */
-value|FILE_FMT_NUM,		\
-comment|/* 11 */
-value|FILE_FMT_NUM,		\
-comment|/* 12 */
-value|FILE_FMT_STR,		\
-comment|/* 13 */
-value|FILE_FMT_STR,		\
-comment|/* 14 */
-value|FILE_FMT_STR,		\
-comment|/* 15 */
-value|FILE_FMT_STR,		\
-comment|/* 16 */
-value|FILE_FMT_STR,		\
-comment|/* 17 */
-value|FILE_FMT_STR,		\
-comment|/* 18 */
-value|FILE_FMT_STR,		\
-comment|/* 19 */
-value|FILE_FMT_STR,
+name|FILE_FMT_QUAD
+value|3
+comment|/* "ll" */
 comment|/* Word 3 */
 name|uint8_t
 name|in_op
@@ -496,12 +600,26 @@ name|uint8_t
 name|mask_op
 decl_stmt|;
 comment|/* operator for mask */
+ifdef|#
+directive|ifdef
+name|ENABLE_CONDITIONALS
+name|uint8_t
+name|cond
+decl_stmt|;
+comment|/* conditional type */
+name|uint8_t
+name|dummy1
+decl_stmt|;
+else|#
+directive|else
 name|uint8_t
 name|dummy1
 decl_stmt|;
 name|uint8_t
 name|dummy2
 decl_stmt|;
+endif|#
+directive|endif
 define|#
 directive|define
 name|FILE_OPS
@@ -540,31 +658,102 @@ name|FILE_OPMODULO
 value|7
 define|#
 directive|define
+name|FILE_OPS_MASK
+value|0x07
+comment|/* mask for above ops */
+define|#
+directive|define
+name|FILE_UNUSED_1
+value|0x08
+define|#
+directive|define
+name|FILE_UNUSED_2
+value|0x10
+define|#
+directive|define
+name|FILE_UNUSED_3
+value|0x20
+define|#
+directive|define
 name|FILE_OPINVERSE
+value|0x40
+define|#
+directive|define
+name|FILE_OPINDIRECT
 value|0x80
+ifdef|#
+directive|ifdef
+name|ENABLE_CONDITIONALS
+define|#
+directive|define
+name|COND_NONE
+value|0
+define|#
+directive|define
+name|COND_IF
+value|1
+define|#
+directive|define
+name|COND_ELIF
+value|2
+define|#
+directive|define
+name|COND_ELSE
+value|3
+endif|#
+directive|endif
+comment|/* ENABLE_CONDITIONALS */
 comment|/* Word 4 */
 name|uint32_t
 name|offset
 decl_stmt|;
 comment|/* offset to magic number */
 comment|/* Word 5 */
-name|uint32_t
+name|int32_t
 name|in_offset
 decl_stmt|;
 comment|/* offset from indirection */
 comment|/* Word 6 */
 name|uint32_t
-name|mask
+name|lineno
 decl_stmt|;
-comment|/* mask before comparison with value */
-comment|/* Word 7 */
+comment|/* line number in magic file */
+comment|/* Word 7,8 */
+union|union
+block|{
+name|uint64_t
+name|_mask
+decl_stmt|;
+comment|/* for use with numeric and date types */
+struct|struct
+block|{
 name|uint32_t
-name|dummy3
+name|_count
 decl_stmt|;
-comment|/* Word 8 */
+comment|/* repeat/line count */
 name|uint32_t
-name|dummp4
+name|_flags
 decl_stmt|;
+comment|/* modifier flags */
+block|}
+name|_s
+struct|;
+comment|/* for use with string types */
+block|}
+name|_u
+union|;
+define|#
+directive|define
+name|num_mask
+value|_u._mask
+define|#
+directive|define
+name|str_count
+value|_u._s._count
+define|#
+directive|define
+name|str_flags
+value|_u._s._flags
 comment|/* Words 9-16 */
 union|union
 name|VALUETYPE
@@ -578,15 +767,8 @@ decl_stmt|;
 name|uint32_t
 name|l
 decl_stmt|;
-name|char
-name|s
-index|[
-name|MAXstring
-index|]
-decl_stmt|;
-name|char
-modifier|*
-name|buf
+name|uint64_t
+name|q
 decl_stmt|;
 name|uint8_t
 name|hs
@@ -602,6 +784,20 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* 4 bytes of a fixed-endian "long" */
+name|uint8_t
+name|hq
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* 8 bytes of a fixed-endian "quad" */
+name|char
+name|s
+index|[
+name|MAXstring
+index|]
+decl_stmt|;
+comment|/* the search string or regex pattern */
 block|}
 name|value
 union|;
@@ -631,29 +827,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|STRING_IGNORE_LOWERCASE
+name|STRING_COMPACT_BLANK
 value|BIT(0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|STRING_COMPACT_BLANK
+name|STRING_COMPACT_OPTIONAL_BLANK
 value|BIT(1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|STRING_COMPACT_OPTIONAL_BLANK
+name|STRING_IGNORE_LOWERCASE
 value|BIT(2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CHAR_IGNORE_LOWERCASE
-value|'c'
+name|STRING_IGNORE_UPPERCASE
+value|BIT(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGEX_OFFSET_START
+value|BIT(4)
 end_define
 
 begin_define
@@ -668,6 +871,34 @@ define|#
 directive|define
 name|CHAR_COMPACT_OPTIONAL_BLANK
 value|'b'
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAR_IGNORE_LOWERCASE
+value|'c'
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAR_IGNORE_UPPERCASE
+value|'C'
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAR_REGEX_OFFSET_START
+value|'s'
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRING_IGNORE_CASE
+value|(STRING_IGNORE_LOWERCASE|STRING_IGNORE_UPPERCASE)
 end_define
 
 begin_comment
@@ -719,10 +950,31 @@ block|{
 name|size_t
 name|len
 decl_stmt|;
+struct|struct
+name|level_info
+block|{
 name|int32_t
-modifier|*
 name|off
 decl_stmt|;
+name|int
+name|got_match
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_CONDITIONALS
+name|int
+name|last_match
+decl_stmt|;
+name|int
+name|last_cond
+decl_stmt|;
+comment|/* used for error checking by parse() */
+endif|#
+directive|endif
+block|}
+modifier|*
+name|li
+struct|;
 block|}
 name|c
 struct|;
@@ -755,6 +1007,9 @@ decl_stmt|;
 block|}
 name|o
 struct|;
+name|uint32_t
+name|offset
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -772,6 +1027,36 @@ decl_stmt|;
 name|size_t
 name|line
 decl_stmt|;
+comment|/* current magic line number */
+comment|/* data for searches */
+struct|struct
+block|{
+specifier|const
+name|char
+modifier|*
+name|s
+decl_stmt|;
+comment|/* start of search in original source */
+name|size_t
+name|s_len
+decl_stmt|;
+comment|/* length of search region */
+name|size_t
+name|offset
+decl_stmt|;
+comment|/* starting offset in source: XXX - should this be off_t? */
+name|size_t
+name|rm_len
+decl_stmt|;
+comment|/* match length */
+block|}
+name|search
+struct|;
+name|union
+name|VALUETYPE
+name|ms_value
+decl_stmt|;
+comment|/* either number or string */
 block|}
 struct|;
 end_struct
@@ -784,6 +1069,7 @@ end_struct_decl
 
 begin_function_decl
 name|protected
+specifier|const
 name|char
 modifier|*
 name|file_fmttime
@@ -802,6 +1088,12 @@ name|file_buffer
 parameter_list|(
 name|struct
 name|magic_set
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|,
 specifier|const
@@ -913,6 +1205,12 @@ name|struct
 name|magic_set
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 specifier|const
 name|unsigned
 name|char
@@ -1002,7 +1300,7 @@ end_function_decl
 
 begin_function_decl
 name|protected
-name|uint32_t
+name|uint64_t
 name|file_signextend
 parameter_list|(
 name|struct
@@ -1013,7 +1311,7 @@ name|struct
 name|magic
 modifier|*
 parameter_list|,
-name|uint32_t
+name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1068,6 +1366,8 @@ parameter_list|(
 name|struct
 name|magic_set
 modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1082,6 +1382,24 @@ name|magic_set
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|void
+name|file_magerror
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
 parameter_list|,
 specifier|const
 name|char
@@ -1165,6 +1483,67 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|protected
+name|ssize_t
+name|sread
+parameter_list|(
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|file_check_mem
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPILE_ONLY
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|file_names
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|size_t
+name|file_nnames
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1228,6 +1607,35 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SNPRINTF
+end_ifndef
+
+begin_function_decl
+name|int
+name|snprintf
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -1259,6 +1667,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1269,11 +1695,6 @@ parameter_list|)
 define|\
 value|static const char *rcsid(const char *p) { \ 	return rcsid(p = id); \ }
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_endif
 endif|#
