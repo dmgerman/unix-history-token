@@ -858,6 +858,18 @@ modifier|*
 name|p_proc
 decl_stmt|;
 comment|/* proc pointer */
+name|struct
+name|aiocblist
+modifier|*
+name|p_aio
+decl_stmt|;
+comment|/* AIO job pointer */
+name|struct
+name|aioliojob
+modifier|*
+name|p_lio
+decl_stmt|;
+comment|/* LIO job pointer */
 block|}
 name|kn_ptr
 union|;
