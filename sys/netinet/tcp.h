@@ -675,11 +675,13 @@ name|u_int32_t
 name|__tcpi_rcv_ssthresh
 decl_stmt|;
 name|u_int32_t
-name|__tcpi_rtt
+name|tcpi_rtt
 decl_stmt|;
+comment|/* Smoothed RTT in usecs. */
 name|u_int32_t
-name|__tcpi_rttvar
+name|tcpi_rttvar
 decl_stmt|;
+comment|/* RTT variance in usecs. */
 name|u_int32_t
 name|tcpi_snd_ssthresh
 decl_stmt|;
