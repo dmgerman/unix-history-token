@@ -299,7 +299,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|_http_new_chunk
+name|http_new_chunk
 parameter_list|(
 name|struct
 name|httpio
@@ -313,7 +313,7 @@ name|p
 decl_stmt|;
 if|if
 condition|(
-name|_fetch_getln
+name|fetch_getln
 argument_list|(
 name|io
 operator|->
@@ -340,8 +340,12 @@ operator|<
 literal|2
 operator|||
 operator|!
-name|ishexnumber
+name|isxdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|io
 operator|->
@@ -372,6 +376,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -391,8 +399,12 @@ break|break;
 if|if
 condition|(
 operator|!
-name|ishexnumber
+name|isxdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -407,6 +419,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -532,7 +548,7 @@ begin_function
 specifier|static
 specifier|inline
 name|int
-name|_http_growbuf
+name|http_growbuf
 parameter_list|(
 name|struct
 name|httpio
@@ -610,7 +626,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|_http_fillbuf
+name|http_fillbuf
 parameter_list|(
 name|struct
 name|httpio
@@ -655,7 +671,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_http_growbuf
+name|http_growbuf
 argument_list|(
 name|io
 argument_list|,
@@ -678,7 +694,7 @@ name|io
 operator|->
 name|buflen
 operator|=
-name|_fetch_read
+name|fetch_read
 argument_list|(
 name|io
 operator|->
@@ -734,7 +750,7 @@ condition|)
 block|{
 switch|switch
 condition|(
-name|_http_new_chunk
+name|http_new_chunk
 argument_list|(
 name|io
 argument_list|)
@@ -788,7 +804,7 @@ name|chunksize
 expr_stmt|;
 if|if
 condition|(
-name|_http_growbuf
+name|http_growbuf
 argument_list|(
 name|io
 argument_list|,
@@ -811,7 +827,7 @@ name|io
 operator|->
 name|buflen
 operator|=
-name|_fetch_read
+name|fetch_read
 argument_list|(
 name|io
 operator|->
@@ -867,7 +883,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|_fetch_read
+name|fetch_read
 argument_list|(
 name|io
 operator|->
@@ -924,7 +940,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|_http_readfn
+name|http_readfn
 parameter_list|(
 name|void
 modifier|*
@@ -1015,7 +1031,7 @@ name|buflen
 condition|)
 if|if
 condition|(
-name|_http_fillbuf
+name|http_fillbuf
 argument_list|(
 name|io
 argument_list|,
@@ -1099,7 +1115,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|_http_writefn
+name|http_writefn
 parameter_list|(
 name|void
 modifier|*
@@ -1128,7 +1144,7 @@ name|v
 decl_stmt|;
 return|return
 operator|(
-name|_fetch_write
+name|fetch_write
 argument_list|(
 name|io
 operator|->
@@ -1150,7 +1166,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|_http_closefn
+name|http_closefn
 parameter_list|(
 name|void
 modifier|*
@@ -1174,7 +1190,7 @@ name|r
 decl_stmt|;
 name|r
 operator|=
-name|_fetch_close
+name|fetch_close
 argument_list|(
 name|io
 operator|->
@@ -1215,7 +1231,7 @@ begin_function
 specifier|static
 name|FILE
 modifier|*
-name|_http_funopen
+name|http_funopen
 parameter_list|(
 name|conn_t
 modifier|*
@@ -1254,7 +1270,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -1281,13 +1297,13 @@ name|funopen
 argument_list|(
 name|io
 argument_list|,
-name|_http_readfn
+name|http_readfn
 argument_list|,
-name|_http_writefn
+name|http_writefn
 argument_list|,
 name|NULL
 argument_list|,
-name|_http_closefn
+name|http_closefn
 argument_list|)
 expr_stmt|;
 if|if
@@ -1297,7 +1313,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 name|free
@@ -1438,7 +1454,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|_http_cmd
+name|http_cmd
 parameter_list|(
 name|conn_t
 modifier|*
@@ -1500,7 +1516,7 @@ name|errno
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -1512,7 +1528,7 @@ return|;
 block|}
 name|r
 operator|=
-name|_fetch_putln
+name|fetch_putln
 argument_list|(
 name|conn
 argument_list|,
@@ -1534,7 +1550,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -1559,7 +1575,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|_http_get_reply
+name|http_get_reply
 parameter_list|(
 name|conn_t
 modifier|*
@@ -1572,7 +1588,7 @@ name|p
 decl_stmt|;
 if|if
 condition|(
-name|_fetch_getln
+name|fetch_getln
 argument_list|(
 name|conn
 argument_list|)
@@ -1675,6 +1691,10 @@ operator|||
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|p
 index|[
 literal|1
@@ -1684,6 +1704,10 @@ operator|||
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|p
 index|[
 literal|2
@@ -1693,6 +1717,10 @@ operator|||
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|p
 index|[
 literal|3
@@ -1758,7 +1786,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|_http_match
+name|http_match
 parameter_list|(
 specifier|const
 name|char
@@ -1817,6 +1845,10 @@ name|hdr
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|hdr
@@ -1839,7 +1871,7 @@ end_comment
 begin_function
 specifier|static
 name|hdr_t
-name|_http_next_header
+name|http_next_header
 parameter_list|(
 name|conn_t
 modifier|*
@@ -1857,7 +1889,7 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|_fetch_getln
+name|fetch_getln
 argument_list|(
 name|conn
 argument_list|)
@@ -1878,6 +1910,10 @@ name|buflen
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|conn
 operator|->
 name|buf
@@ -1944,7 +1980,7 @@ operator|(
 operator|*
 name|p
 operator|=
-name|_http_match
+name|http_match
 argument_list|(
 name|hdr_names
 index|[
@@ -1986,7 +2022,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|_http_parse_mtime
+name|http_parse_mtime
 parameter_list|(
 specifier|const
 name|char
@@ -2130,7 +2166,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|_http_parse_length
+name|http_parse_length
 parameter_list|(
 specifier|const
 name|char
@@ -2156,6 +2192,10 @@ name|p
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -2223,7 +2263,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|_http_parse_range
+name|http_parse_range
 parameter_list|(
 specifier|const
 name|char
@@ -2305,6 +2345,10 @@ name|p
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -2350,6 +2394,10 @@ name|p
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -2400,6 +2448,10 @@ name|p
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -2537,7 +2589,7 @@ begin_function
 specifier|static
 name|char
 modifier|*
-name|_http_base64
+name|http_base64
 parameter_list|(
 specifier|const
 name|char
@@ -2910,7 +2962,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|_http_basic_auth
+name|http_basic_auth
 parameter_list|(
 name|conn_t
 modifier|*
@@ -2991,7 +3043,7 @@ operator|)
 return|;
 name|auth
 operator|=
-name|_http_base64
+name|http_base64
 argument_list|(
 name|upw
 argument_list|)
@@ -3015,7 +3067,7 @@ operator|)
 return|;
 name|r
 operator|=
-name|_http_cmd
+name|http_cmd
 argument_list|(
 name|conn
 argument_list|,
@@ -3046,7 +3098,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|_http_authorize
+name|http_authorize
 parameter_list|(
 name|conn_t
 modifier|*
@@ -3174,7 +3226,7 @@ literal|'\0'
 expr_stmt|;
 name|r
 operator|=
-name|_http_basic_auth
+name|http_basic_auth
 argument_list|(
 name|conn
 argument_list|,
@@ -3217,7 +3269,7 @@ begin_function
 specifier|static
 name|conn_t
 modifier|*
-name|_http_connect
+name|http_connect
 parameter_list|(
 name|struct
 name|url
@@ -3346,7 +3398,7 @@ condition|(
 operator|(
 name|conn
 operator|=
-name|_fetch_connect
+name|fetch_connect
 argument_list|(
 name|URL
 operator|->
@@ -3364,7 +3416,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-comment|/* _fetch_connect() has already set an error code */
+comment|/* fetch_connect() has already set an error code */
 return|return
 operator|(
 name|NULL
@@ -3383,7 +3435,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|_fetch_ssl
+name|fetch_ssl
 argument_list|(
 name|conn
 argument_list|,
@@ -3394,7 +3446,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|_fetch_close
+name|fetch_close
 argument_list|(
 name|conn
 argument_list|)
@@ -3404,7 +3456,7 @@ name|errno
 operator|=
 name|EAUTH
 expr_stmt|;
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -3449,8 +3501,13 @@ specifier|static
 name|struct
 name|url
 modifier|*
-name|_http_get_proxy
+name|http_get_proxy
 parameter_list|(
+name|struct
+name|url
+modifier|*
+name|url
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -3480,6 +3537,20 @@ literal|'d'
 argument_list|)
 operator|!=
 name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+if|if
+condition|(
+name|fetch_no_proxy_match
+argument_list|(
+name|url
+operator|->
+name|host
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -3549,7 +3620,7 @@ name|purl
 operator|->
 name|port
 operator|=
-name|_fetch_default_proxy_port
+name|fetch_default_proxy_port
 argument_list|(
 name|purl
 operator|->
@@ -3591,7 +3662,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|_http_print_html
+name|http_print_html
 parameter_list|(
 name|FILE
 modifier|*
@@ -3649,6 +3720,10 @@ name|len
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|line
 index|[
 name|len
@@ -3855,7 +3930,7 @@ end_comment
 begin_function
 name|FILE
 modifier|*
-name|_http_request
+name|http_request
 parameter_list|(
 name|struct
 name|url
@@ -4059,7 +4134,7 @@ name|url
 operator|->
 name|port
 operator|=
-name|_fetch_default_port
+name|fetch_default_port
 argument_list|(
 name|url
 operator|->
@@ -4098,7 +4173,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|_ftp_request
+name|ftp_request
 argument_list|(
 name|url
 argument_list|,
@@ -4126,7 +4201,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|_ftp_request
+name|ftp_request
 argument_list|(
 name|url
 argument_list|,
@@ -4147,7 +4222,7 @@ condition|(
 operator|(
 name|conn
 operator|=
-name|_http_connect
+name|http_connect
 argument_list|(
 name|url
 argument_list|,
@@ -4212,7 +4287,7 @@ name|url
 operator|->
 name|port
 operator|!=
-name|_fetch_default_port
+name|fetch_default_port
 argument_list|(
 name|url
 operator|->
@@ -4271,7 +4346,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|_fetch_info
+name|fetch_info
 argument_list|(
 literal|"requesting %s://%s%s"
 argument_list|,
@@ -4291,7 +4366,7 @@ condition|(
 name|purl
 condition|)
 block|{
-name|_http_cmd
+name|http_cmd
 argument_list|(
 name|conn
 argument_list|,
@@ -4313,7 +4388,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|_http_cmd
+name|http_cmd
 argument_list|(
 name|conn
 argument_list|,
@@ -4328,7 +4403,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* virtual host */
-name|_http_cmd
+name|http_cmd
 argument_list|(
 name|conn
 argument_list|,
@@ -4355,7 +4430,7 @@ name|purl
 operator|->
 name|pwd
 condition|)
-name|_http_basic_auth
+name|http_basic_auth
 argument_list|(
 name|conn
 argument_list|,
@@ -4389,7 +4464,7 @@ name|p
 operator|!=
 literal|'\0'
 condition|)
-name|_http_authorize
+name|http_authorize
 argument_list|(
 name|conn
 argument_list|,
@@ -4427,7 +4502,7 @@ name|url
 operator|->
 name|pwd
 condition|)
-name|_http_basic_auth
+name|http_basic_auth
 argument_list|(
 name|conn
 argument_list|,
@@ -4461,7 +4536,7 @@ name|p
 operator|!=
 literal|'\0'
 condition|)
-name|_http_authorize
+name|http_authorize
 argument_list|(
 name|conn
 argument_list|,
@@ -4483,7 +4558,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_http_basic_auth
+name|http_basic_auth
 argument_list|(
 name|conn
 argument_list|,
@@ -4501,7 +4576,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|_http_seterr
+name|http_seterr
 argument_list|(
 name|HTTP_NEED_AUTH
 argument_list|)
@@ -4542,7 +4617,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|_http_cmd
+name|http_cmd
 argument_list|(
 name|conn
 argument_list|,
@@ -4560,7 +4635,7 @@ name|doc
 argument_list|)
 expr_stmt|;
 else|else
-name|_http_cmd
+name|http_cmd
 argument_list|(
 name|conn
 argument_list|,
@@ -4588,7 +4663,7 @@ name|p
 operator|!=
 literal|'\0'
 condition|)
-name|_http_cmd
+name|http_cmd
 argument_list|(
 name|conn
 argument_list|,
@@ -4598,7 +4673,7 @@ name|p
 argument_list|)
 expr_stmt|;
 else|else
-name|_http_cmd
+name|http_cmd
 argument_list|(
 name|conn
 argument_list|,
@@ -4617,7 +4692,7 @@ name|offset
 operator|>
 literal|0
 condition|)
-name|_http_cmd
+name|http_cmd
 argument_list|(
 name|conn
 argument_list|,
@@ -4632,14 +4707,14 @@ operator|->
 name|offset
 argument_list|)
 expr_stmt|;
-name|_http_cmd
+name|http_cmd
 argument_list|(
 name|conn
 argument_list|,
 literal|"Connection: close"
 argument_list|)
 expr_stmt|;
-name|_http_cmd
+name|http_cmd
 argument_list|(
 name|conn
 argument_list|,
@@ -4696,7 +4771,7 @@ expr_stmt|;
 comment|/* get reply */
 switch|switch
 condition|(
-name|_http_get_reply
+name|http_get_reply
 argument_list|(
 name|conn
 argument_list|)
@@ -4730,7 +4805,7 @@ name|need_auth
 condition|)
 block|{
 comment|/* 				 * We already sent out authorization code, 				 * so there's nothing more we can do. 				 */
-name|_http_seterr
+name|http_seterr
 argument_list|(
 name|conn
 operator|->
@@ -4746,7 +4821,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|_fetch_info
+name|fetch_info
 argument_list|(
 literal|"server requires authorization"
 argument_list|)
@@ -4756,7 +4831,7 @@ case|case
 name|HTTP_NEED_PROXY_AUTH
 case|:
 comment|/* 			 * If we're talking to a proxy, we already sent 			 * our proxy authorization code, so there's 			 * nothing more we can do. 			 */
-name|_http_seterr
+name|http_seterr
 argument_list|(
 name|conn
 operator|->
@@ -4779,14 +4854,14 @@ case|case
 operator|-
 literal|1
 case|:
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 goto|goto
 name|ouch
 goto|;
 default|default:
-name|_http_seterr
+name|http_seterr
 argument_list|(
 name|conn
 operator|->
@@ -4811,7 +4886,7 @@ condition|(
 operator|(
 name|h
 operator|=
-name|_http_next_header
+name|http_next_header
 argument_list|(
 name|conn
 argument_list|,
@@ -4824,7 +4899,7 @@ block|{
 case|case
 name|hdr_syserror
 case|:
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -4833,7 +4908,7 @@ goto|;
 case|case
 name|hdr_error
 case|:
-name|_http_seterr
+name|http_seterr
 argument_list|(
 name|HTTP_PROTOCOL_ERROR
 argument_list|)
@@ -4844,7 +4919,7 @@ goto|;
 case|case
 name|hdr_content_length
 case|:
-name|_http_parse_length
+name|http_parse_length
 argument_list|(
 name|p
 argument_list|,
@@ -4856,7 +4931,7 @@ break|break;
 case|case
 name|hdr_content_range
 case|:
-name|_http_parse_range
+name|http_parse_range
 argument_list|(
 name|p
 argument_list|,
@@ -4874,7 +4949,7 @@ break|break;
 case|case
 name|hdr_last_modified
 case|:
-name|_http_parse_mtime
+name|http_parse_mtime
 argument_list|(
 name|p
 argument_list|,
@@ -4910,7 +4985,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|_fetch_info
+name|fetch_info
 argument_list|(
 literal|"%d redirect to %s"
 argument_list|,
@@ -5111,7 +5186,7 @@ name|need_auth
 operator|=
 literal|1
 expr_stmt|;
-name|_fetch_close
+name|fetch_close
 argument_list|(
 name|conn
 argument_list|)
@@ -5164,7 +5239,7 @@ break|break;
 block|}
 else|else
 block|{
-name|_http_seterr
+name|http_seterr
 argument_list|(
 name|conn
 operator|->
@@ -5210,7 +5285,7 @@ name|need_auth
 operator|=
 literal|0
 expr_stmt|;
-name|_fetch_close
+name|fetch_close
 argument_list|(
 name|conn
 argument_list|)
@@ -5269,7 +5344,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_http_seterr
+name|http_seterr
 argument_list|(
 name|e
 argument_list|)
@@ -5331,7 +5406,7 @@ operator|!=
 name|length
 condition|)
 block|{
-name|_http_seterr
+name|http_seterr
 argument_list|(
 name|HTTP_PROTOCOL_ERROR
 argument_list|)
@@ -5381,7 +5456,7 @@ operator|!=
 name|size
 condition|)
 block|{
-name|_http_seterr
+name|http_seterr
 argument_list|(
 name|HTTP_PROTOCOL_ERROR
 argument_list|)
@@ -5440,7 +5515,7 @@ operator|->
 name|offset
 condition|)
 block|{
-name|_http_seterr
+name|http_seterr
 argument_list|(
 name|HTTP_PROTOCOL_ERROR
 argument_list|)
@@ -5468,7 +5543,7 @@ condition|(
 operator|(
 name|f
 operator|=
-name|_http_funopen
+name|http_funopen
 argument_list|(
 name|conn
 argument_list|,
@@ -5479,7 +5554,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_fetch_syserr
+name|fetch_syserr
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -5516,7 +5591,7 @@ name|err
 argument_list|)
 condition|)
 block|{
-name|_http_print_html
+name|http_print_html
 argument_list|(
 name|stderr
 argument_list|,
@@ -5566,7 +5641,7 @@ name|conn
 operator|!=
 name|NULL
 condition|)
-name|_fetch_close
+name|fetch_close
 argument_list|(
 name|conn
 argument_list|)
@@ -5610,7 +5685,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|_http_request
+name|http_request
 argument_list|(
 name|URL
 argument_list|,
@@ -5618,8 +5693,10 @@ literal|"GET"
 argument_list|,
 name|us
 argument_list|,
-name|_http_get_proxy
+name|http_get_proxy
 argument_list|(
+name|URL
+argument_list|,
 name|flags
 argument_list|)
 argument_list|,
@@ -5730,7 +5807,7 @@ name|f
 decl_stmt|;
 name|f
 operator|=
-name|_http_request
+name|http_request
 argument_list|(
 name|URL
 argument_list|,
@@ -5738,8 +5815,10 @@ literal|"HEAD"
 argument_list|,
 name|us
 argument_list|,
-name|_http_get_proxy
+name|http_get_proxy
 argument_list|(
+name|URL
+argument_list|,
 name|flags
 argument_list|)
 argument_list|,
