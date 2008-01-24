@@ -451,7 +451,7 @@ block|}
 end_function
 
 begin_function
-name|u_long
+name|uint64_t
 name|kmem_size
 parameter_list|(
 name|void
@@ -460,7 +460,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|u_long
+name|uint64_t
 operator|)
 name|vm_kmem_size
 operator|)
@@ -469,7 +469,7 @@ block|}
 end_function
 
 begin_function
-name|u_long
+name|uint64_t
 name|kmem_used
 parameter_list|(
 name|void
@@ -478,7 +478,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|u_long
+name|uint64_t
 operator|)
 name|kmem_map
 operator|->

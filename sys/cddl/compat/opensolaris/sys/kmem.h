@@ -168,7 +168,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_long
+name|uint64_t
 name|kmem_size
 parameter_list|(
 name|void
@@ -177,7 +177,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_long
+name|uint64_t
 name|kmem_used
 parameter_list|(
 name|void
