@@ -187,12 +187,20 @@ define|\
 value|{0x516e7cba,0x6ecf,0x11d6,0x8f,0xf8,{0x00,0x02,0x2d,0x09,0x71,0x2b}}
 end_define
 
+begin_define
+define|#
+directive|define
+name|GPT_ENT_TYPE_FREEBSD_BOOT
+define|\
+value|{0x83bd6b9d,0x7f41,0x11dc,0xbe,0x0b,{0x00,0x15,0x60,0xb8,0x4f,0x0f}}
+end_define
+
 begin_comment
 comment|/*  * The following are unused but documented here to avoid reuse.  *  * GPT_ENT_TYPE_FREEBSD_UFS2	\  *	{0x516e7cb7,0x6ecf,0x11d6,0x8f,0xf8,{0x00,0x02,0x2d,0x09,0x71,0x2b}}  */
 end_comment
 
 begin_comment
-comment|/*  * Foreign partition types that we're likely to encounter. Note that Linux  * apparently choose to share data partitions with MS. I don't what the  * advantage might be. I can see how sharing swap partitions is advantaous  * though.  */
+comment|/*  * Foreign partition types that we're likely to encounter. Note that Linux  * apparently choose to share data partitions with MS. I don't what the  * advantage might be. I can see how sharing swap partitions is advantageous  * though.  */
 end_comment
 
 begin_define

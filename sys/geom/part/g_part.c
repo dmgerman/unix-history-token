@@ -213,6 +213,12 @@ name|G_PART_ALIAS_FREEBSD
 block|}
 block|,
 block|{
+literal|"freebsd-boot"
+block|,
+name|G_PART_ALIAS_FREEBSD_BOOT
+block|}
+block|,
+block|{
 literal|"freebsd-swap"
 block|,
 name|G_PART_ALIAS_FREEBSD_SWAP

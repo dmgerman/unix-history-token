@@ -129,6 +129,12 @@ parameter_list|)
 block|{
 specifier|static
 name|uuid_t
+name|boot
+init|=
+name|GPT_ENT_TYPE_FREEBSD_BOOT
+decl_stmt|;
+specifier|static
+name|uuid_t
 name|efi_slice
 init|=
 name|GPT_ENT_TYPE_EFI
@@ -214,6 +220,23 @@ condition|)
 return|return
 operator|(
 literal|"EFI System"
+operator|)
+return|;
+if|if
+condition|(
+name|uuid_equal
+argument_list|(
+name|t
+argument_list|,
+operator|&
+name|boot
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|"FreeBSD boot"
 operator|)
 return|;
 if|if
