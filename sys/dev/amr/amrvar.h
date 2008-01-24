@@ -151,6 +151,27 @@ name|AMR_CMD_CLUSTERSIZE
 value|(16 * 1024)
 end_define
 
+begin_typedef
+typedef|typedef
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|amr_command
+argument_list|)
+name|ac_qhead_t
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|STAILQ_ENTRY
+argument_list|(
+argument|amr_command
+argument_list|)
+name|ac_link_t
+expr_stmt|;
+end_typedef
+
 begin_union
 union|union
 name|amr_ccb
@@ -181,12 +202,9 @@ begin_struct
 struct|struct
 name|amr_command
 block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|amr_command
-argument_list|)
+name|ac_link_t
 name|ac_link
-expr_stmt|;
+decl_stmt|;
 name|struct
 name|amr_softc
 modifier|*
@@ -269,6 +287,9 @@ parameter_list|(
 name|ac
 parameter_list|)
 value|((ac)->ac_flags& AMR_CMD_SG64)
+name|u_int
+name|ac_retries
+decl_stmt|;
 name|struct
 name|bio
 modifier|*
@@ -528,13 +549,9 @@ name|bio_queue_head
 name|amr_bioq
 decl_stmt|;
 comment|/* pending I/O with no commands */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|amr_command
-argument_list|)
+name|ac_qhead_t
 name|amr_ready
-expr_stmt|;
+decl_stmt|;
 comment|/* commands ready to be submitted */
 name|struct
 name|amr_command
@@ -547,20 +564,9 @@ decl_stmt|;
 name|int
 name|amr_busyslots
 decl_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|amr_command
-argument_list|)
-name|amr_completed
-expr_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|amr_command
-argument_list|)
+name|ac_qhead_t
 name|amr_freecmds
-expr_stmt|;
+decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1058,6 +1064,25 @@ begin_function
 unit|}  static
 name|__inline
 name|void
+name|amr_init_qhead
+parameter_list|(
+name|ac_qhead_t
+modifier|*
+name|head
+parameter_list|)
+block|{
+name|STAILQ_INIT
+argument_list|(
+name|head
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
 name|amr_enqueue_ready
 parameter_list|(
 name|struct
@@ -1066,7 +1091,7 @@ modifier|*
 name|ac
 parameter_list|)
 block|{
-name|TAILQ_INSERT_TAIL
+name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|ac
@@ -1095,7 +1120,7 @@ modifier|*
 name|ac
 parameter_list|)
 block|{
-name|TAILQ_INSERT_HEAD
+name|STAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|ac
@@ -1132,7 +1157,7 @@ condition|(
 operator|(
 name|ac
 operator|=
-name|TAILQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|sc
@@ -1143,14 +1168,12 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|TAILQ_REMOVE
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|amr_ready
-argument_list|,
-name|ac
 argument_list|,
 name|ac_link
 argument_list|)
@@ -1175,16 +1198,15 @@ name|struct
 name|amr_command
 modifier|*
 name|ac
+parameter_list|,
+name|ac_qhead_t
+modifier|*
+name|head
 parameter_list|)
 block|{
-name|TAILQ_INSERT_TAIL
+name|STAILQ_INSERT_TAIL
 argument_list|(
-operator|&
-name|ac
-operator|->
-name|ac_sc
-operator|->
-name|amr_completed
+name|head
 argument_list|,
 name|ac
 argument_list|,
@@ -1203,6 +1225,8 @@ operator|*
 name|amr_dequeue_completed
 argument_list|(
 argument|struct amr_softc *sc
+argument_list|,
+argument|ac_qhead_t *head
 argument_list|)
 block|{     struct
 name|amr_command
@@ -1214,25 +1238,17 @@ condition|(
 operator|(
 name|ac
 operator|=
-name|TAILQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|amr_completed
+name|head
 argument_list|)
 operator|)
 operator|!=
 name|NULL
 condition|)
-name|TAILQ_REMOVE
+name|STAILQ_REMOVE_HEAD
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|amr_completed
-argument_list|,
-name|ac
+name|head
 argument_list|,
 name|ac_link
 argument_list|)
@@ -1259,7 +1275,7 @@ modifier|*
 name|ac
 parameter_list|)
 block|{
-name|TAILQ_INSERT_TAIL
+name|STAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|ac
@@ -1296,7 +1312,7 @@ condition|(
 operator|(
 name|ac
 operator|=
-name|TAILQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|sc
@@ -1307,14 +1323,12 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|TAILQ_REMOVE
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|amr_freecmds
-argument_list|,
-name|ac
 argument_list|,
 name|ac_link
 argument_list|)
