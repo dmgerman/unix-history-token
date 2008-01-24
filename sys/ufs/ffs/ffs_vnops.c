@@ -1407,8 +1407,6 @@ argument_list|(
 name|vp
 argument_list|)
 argument_list|,
-name|curthread
-argument_list|,
 name|ap
 operator|->
 name|a_file
@@ -1445,8 +1443,6 @@ name|VI_MTX
 argument_list|(
 name|vp
 argument_list|)
-argument_list|,
-name|curthread
 argument_list|,
 name|ap
 operator|->

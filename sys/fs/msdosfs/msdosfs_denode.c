@@ -242,11 +242,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MSDOSFS_DEBUG
@@ -494,10 +489,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* init the fat cache for this denode */
-name|td
-operator|=
-name|curthread
-expr_stmt|;
 name|lockmgr
 argument_list|(
 name|nvp
@@ -507,8 +498,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -555,7 +544,7 @@ name|inode
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|td
+name|curthread
 argument_list|,
 operator|&
 name|xvp

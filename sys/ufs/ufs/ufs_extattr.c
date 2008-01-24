@@ -450,8 +450,6 @@ operator||
 name|LK_CANRECURSE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -485,8 +483,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}

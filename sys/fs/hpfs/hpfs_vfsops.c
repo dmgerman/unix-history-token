@@ -2016,11 +2016,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
@@ -2244,10 +2239,6 @@ name|hpmp
 operator|->
 name|hpm_devvp
 expr_stmt|;
-name|td
-operator|=
-name|curthread
-expr_stmt|;
 name|lockmgr
 argument_list|(
 name|vp
@@ -2257,8 +2248,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2300,7 +2289,7 @@ name|ino
 argument_list|,
 name|flags
 argument_list|,
-name|td
+name|curthread
 argument_list|,
 name|vpp
 argument_list|,

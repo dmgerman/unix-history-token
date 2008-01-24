@@ -148,7 +148,8 @@ name|smp
 parameter_list|,
 name|td
 parameter_list|)
-value|lockmgr(&smp->sm_hashlock, LK_EXCLUSIVE, NULL, td)
+define|\
+value|lockmgr(&smp->sm_hashlock, LK_EXCLUSIVE, NULL)
 end_define
 
 begin_define
@@ -160,7 +161,8 @@ name|smp
 parameter_list|,
 name|td
 parameter_list|)
-value|lockmgr(&smp->sm_hashlock, LK_RELEASE, NULL, td)
+define|\
+value|lockmgr(&smp->sm_hashlock, LK_RELEASE, NULL)
 end_define
 
 begin_decl_stmt
@@ -1509,15 +1511,6 @@ init|=
 name|ap
 operator|->
 name|a_vp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|ap
-operator|->
-name|a_td
 decl_stmt|;
 name|struct
 name|vnode

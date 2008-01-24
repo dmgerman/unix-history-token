@@ -788,8 +788,6 @@ name|VI_MTX
 argument_list|(
 name|vp
 argument_list|)
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

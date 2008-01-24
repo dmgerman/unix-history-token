@@ -411,8 +411,6 @@ operator||
 name|LK_CANRECURSE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 return|;
 block|}
@@ -436,8 +434,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -582,8 +578,6 @@ operator||
 name|LK_CANRECURSE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -619,8 +613,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -646,8 +638,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -862,8 +852,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1448,8 +1436,6 @@ argument_list|,
 name|LK_DRAIN
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|lockdestroy
@@ -2672,8 +2658,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|SLIST_FOREACH
@@ -2727,8 +2711,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2808,8 +2790,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2855,8 +2835,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|refp
@@ -2930,8 +2908,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2976,8 +2952,6 @@ argument_list|,
 name|LK_SHARED
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|SLIST_FOREACH
@@ -3011,8 +2985,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3072,8 +3044,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 for|for
@@ -3153,8 +3123,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return

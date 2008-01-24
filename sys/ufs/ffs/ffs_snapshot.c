@@ -3540,8 +3540,6 @@ name|VI_MTX
 argument_list|(
 name|vp
 argument_list|)
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|lockmgr
@@ -3554,8 +3552,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If this is the first snapshot on this filesystem, then we need 	 * to allocate the space for the list of preallocated snapshot blocks. 	 * This list will be refined below, but this preliminary one will 	 * keep us out of deadlock until the full one is ready. 	 */
@@ -9449,8 +9445,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VI_LOCK
@@ -9503,8 +9497,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|try_free_snapdata
@@ -10223,8 +10215,6 @@ name|VI_MTX
 argument_list|(
 name|devvp
 argument_list|)
-argument_list|,
-name|td
 argument_list|)
 operator|!=
 literal|0
@@ -10668,8 +10658,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -10937,8 +10925,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -11433,8 +11419,6 @@ name|VI_MTX
 argument_list|(
 name|vp
 argument_list|)
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|lockmgr
@@ -11447,8 +11431,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Link it onto the active snapshot list. 		 */
@@ -11932,8 +11914,6 @@ name|VI_MTX
 argument_list|(
 name|devvp
 argument_list|)
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VI_LOCK
@@ -11956,8 +11936,6 @@ name|VI_MTX
 argument_list|(
 name|vp
 argument_list|)
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VI_LOCK
@@ -12005,8 +11983,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|lockmgr
@@ -12019,8 +11995,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -12949,8 +12923,6 @@ name|VI_MTX
 argument_list|(
 name|devvp
 argument_list|)
-argument_list|,
-name|td
 argument_list|)
 operator|!=
 literal|0
@@ -13509,8 +13481,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|td
@@ -14239,8 +14209,6 @@ name|VI_MTX
 argument_list|(
 name|devvp
 argument_list|)
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|lockmgr
@@ -14253,8 +14221,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|lockdestroy

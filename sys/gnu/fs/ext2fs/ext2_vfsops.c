@@ -4823,8 +4823,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error

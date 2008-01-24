@@ -555,14 +555,6 @@ name|vpp
 parameter_list|)
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-comment|/* XXX */
-name|struct
 name|nwnode
 modifier|*
 name|np
@@ -600,8 +592,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|rescan
@@ -644,8 +634,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -658,7 +646,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 condition|)
 goto|goto
@@ -695,8 +683,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -902,8 +888,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Another process can create vnode while we blocked in malloc() or 	 * getnewvnode(). Rescan list again. 	 */
@@ -987,8 +971,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|ASSERT_VOP_LOCKED
@@ -1159,8 +1141,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1182,8 +1162,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1338,8 +1316,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE
@@ -1357,8 +1333,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

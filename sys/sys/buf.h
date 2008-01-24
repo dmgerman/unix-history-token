@@ -1022,8 +1022,6 @@ argument_list|,
 name|locktype
 argument_list|,
 name|interlock
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1168,8 +1166,6 @@ name|locktype
 operator|)
 argument_list|,
 name|interlock
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1251,8 +1247,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|splx

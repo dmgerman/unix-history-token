@@ -1618,8 +1618,6 @@ name|MNT_MTX
 argument_list|(
 name|mp
 argument_list|)
-argument_list|,
-name|td
 argument_list|)
 condition|)
 name|panic
@@ -1664,8 +1662,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vfs_rel

@@ -224,7 +224,7 @@ name|IDMAP_RLOCK
 parameter_list|(
 name|lock
 parameter_list|)
-value|lockmgr(lock, LK_SHARED, NULL, curthread)
+value|lockmgr(lock, LK_SHARED, NULL)
 end_define
 
 begin_define
@@ -234,7 +234,7 @@ name|IDMAP_WLOCK
 parameter_list|(
 name|lock
 parameter_list|)
-value|lockmgr(lock, LK_EXCLUSIVE, NULL, curthread)
+value|lockmgr(lock, LK_EXCLUSIVE, NULL)
 end_define
 
 begin_define
@@ -244,7 +244,7 @@ name|IDMAP_UNLOCK
 parameter_list|(
 name|lock
 parameter_list|)
-value|lockmgr(lock, LK_RELEASE, NULL, curthread)
+value|lockmgr(lock, LK_RELEASE, NULL)
 end_define
 
 begin_decl_stmt

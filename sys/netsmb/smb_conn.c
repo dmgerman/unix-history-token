@@ -389,8 +389,6 @@ argument_list|,
 name|LK_DRAIN
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|smb_co_done
@@ -1173,8 +1171,6 @@ argument_list|,
 name|LK_RELEASE
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|lockdestroy
@@ -1327,15 +1323,6 @@ modifier|*
 name|scred
 parameter_list|)
 block|{
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|scred
-operator|->
-name|scr_td
-decl_stmt|;
 name|SMB_CO_LOCK
 argument_list|(
 name|cp
@@ -1413,8 +1400,6 @@ operator|&
 name|cp
 operator|->
 name|co_interlock
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|smb_co_gone
@@ -1528,15 +1513,6 @@ modifier|*
 name|scred
 parameter_list|)
 block|{
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|scred
-operator|->
-name|scr_td
-decl_stmt|;
 name|SMB_CO_LOCK
 argument_list|(
 name|cp
@@ -1602,8 +1578,6 @@ operator|&
 name|cp
 operator|->
 name|co_interlock
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1629,8 +1603,6 @@ argument_list|,
 name|LK_DRAIN
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|smb_co_gone
@@ -1762,8 +1734,6 @@ operator|&
 name|cp
 operator|->
 name|co_interlock
-argument_list|,
-name|td
 argument_list|)
 return|;
 block|}
@@ -1805,8 +1775,6 @@ operator|&
 name|cp
 operator|->
 name|co_interlock
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}

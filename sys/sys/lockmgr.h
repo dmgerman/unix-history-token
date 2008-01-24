@@ -427,71 +427,6 @@ name|LK_NOPROC
 value|((struct thread *) -1)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LOCKMGR_ASSERT
-parameter_list|(
-name|lkp
-parameter_list|,
-name|what
-parameter_list|,
-name|p
-parameter_list|)
-value|do {				\ 	switch ((what)) {						\ 	case LK_SHARED:							\ 		if (lockstatus((lkp), (p)) == LK_SHARED)		\ 			break;						\
-comment|/* fall into exclusive */
-value|\ 	case LK_EXCLUSIVE:						\ 		if (lockstatus((lkp), (p)) != LK_EXCLUSIVE)		\ 			panic("lock %s %s not held at %s:%d",		\ 			    (lkp)->lk_wmesg, #what, __FILE__,		\ 			    __LINE__);					\ 		break;							\ 	default:							\ 		panic("unknown LOCKMGR_ASSERT at %s:%d", __FILE__,	\ 		    __LINE__);						\ 	}								\ } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* INVARIANTS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOCKMGR_ASSERT
-parameter_list|(
-name|lkp
-parameter_list|,
-name|p
-parameter_list|,
-name|what
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INVARIANTS */
-end_comment
-
-begin_function_decl
-name|void
-name|dumplockinfo
-parameter_list|(
-name|struct
-name|lock
-modifier|*
-name|lkp
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_struct_decl
 struct_decl|struct
 name|thread
@@ -549,11 +484,6 @@ name|struct
 name|mtx
 modifier|*
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|p
-parameter_list|,
 name|char
 modifier|*
 name|file
@@ -603,17 +533,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|lockcount
-parameter_list|(
-name|struct
-name|lock
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|lockwaiters
 parameter_list|(
 name|struct
@@ -633,10 +552,9 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|mtx
-parameter_list|,
-name|td
 parameter_list|)
-value|_lockmgr((lock), (flags), (mtx), (td), __FILE__, __LINE__)
+define|\
+value|_lockmgr((lock), (flags), (mtx), __FILE__, __LINE__)
 end_define
 
 begin_define
