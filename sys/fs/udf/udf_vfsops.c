@@ -2913,6 +2913,11 @@ argument_list|,
 name|sector
 argument_list|)
 expr_stmt|;
+name|vgone
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|vput
 argument_list|(
 name|vp
@@ -2961,6 +2966,11 @@ block|{
 name|printf
 argument_list|(
 literal|"Invalid file entry!\n"
+argument_list|)
+expr_stmt|;
+name|vgone
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|vput
@@ -3033,6 +3043,11 @@ block|{
 name|printf
 argument_list|(
 literal|"Cannot allocate file entry block\n"
+argument_list|)
+expr_stmt|;
+name|vgone
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|vput
