@@ -155,9 +155,6 @@ operator|)
 expr_stmt|;
 name|hz
 operator|=
-operator|(
-name|float
-operator|)
 literal|0.5
 operator|*
 name|z
