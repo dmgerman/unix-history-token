@@ -3338,14 +3338,6 @@ operator|->
 name|td_flags
 operator||=
 name|TDF_TIMEOUT
-operator||
-name|TDF_INTERRUPT
-expr_stmt|;
-name|td
-operator|->
-name|td_intrval
-operator|=
-name|EWOULDBLOCK
 expr_stmt|;
 name|thread_unlock
 argument_list|(
