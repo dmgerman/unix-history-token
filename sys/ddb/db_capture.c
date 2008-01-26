@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -94,7 +100,7 @@ file|<ddb/db_lex.h>
 end_include
 
 begin_comment
-comment|/*  * While it would be desirable to use a small block-sized buffer and dump  * incrementally to disk in fixed-size blocks, it's not possible to enter  * kernel dumper routines without restarting the kernel, which is undesirable  * in the midst of debugging.  Instead, we maintain a large static global  * buffer that we fill from DDB's output routines.  */
+comment|/*  * While it would be desirable to use a small block-sized buffer and dump  * incrementally to disk in fixed-size blocks, it's not possible to enter  * kernel dumper routines without restarting the kernel, which is undesirable  * in the midst of debugging.  Instead, we maintain a large static global  * buffer that we fill from DDB's output routines.  *  * We enforce an invariant at runtime that buffer sizes are even multiples of  * the textdump block size, which is a design choice that we might want to  * reconsider.  */
 end_comment
 
 begin_expr_stmt
@@ -110,6 +116,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DDB_CAPTURE_DEFAULTBUFSIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -117,12 +129,28 @@ name|DDB_CAPTURE_DEFAULTBUFSIZE
 value|48*1024
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DDB_CAPTURE_MAXBUFSIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|DDB_CAPTURE_MAXBUFSIZE
 value|512*1024
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -295,35 +323,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Various compile-time assertions: defaults must be even multiples of  * textdump block size.  We also perform run-time checking of  * user-configurable values.  */
-end_comment
-
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-name|DDB_CAPTURE_DEFAULTBUFSIZE
-operator|%
-name|TEXTDUMP_BLOCKSIZE
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-name|DDB_CAPTURE_MAXBUFSIZE
-operator|%
-name|TEXTDUMP_BLOCKSIZE
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*  * Boot-time allocation of the DDB capture buffer, if any.  */
+comment|/*  * Boot-time allocation of the DDB capture buffer, if any.  Force all buffer  * sizes, including the maximum size, to be rounded to block sizes.  */
 end_comment
 
 begin_function
@@ -345,6 +345,15 @@ operator|&
 name|db_capture_bufsize
 argument_list|)
 expr_stmt|;
+name|db_capture_maxbufsize
+operator|=
+name|roundup
+argument_list|(
+name|db_capture_maxbufsize
+argument_list|,
+name|TEXTDUMP_BLOCKSIZE
+argument_list|)
+expr_stmt|;
 name|db_capture_bufsize
 operator|=
 name|roundup
@@ -358,11 +367,11 @@ if|if
 condition|(
 name|db_capture_bufsize
 operator|>
-name|DDB_CAPTURE_MAXBUFSIZE
+name|db_capture_maxbufsize
 condition|)
 name|db_capture_bufsize
 operator|=
-name|DDB_CAPTURE_MAXBUFSIZE
+name|db_capture_maxbufsize
 expr_stmt|;
 if|if
 condition|(
@@ -470,7 +479,7 @@ if|if
 condition|(
 name|size
 operator|>
-name|DDB_CAPTURE_MAXBUFSIZE
+name|db_capture_maxbufsize
 condition|)
 return|return
 operator|(
@@ -607,7 +616,7 @@ name|KASSERT
 argument_list|(
 name|db_capture_bufsize
 operator|<=
-name|DDB_CAPTURE_MAXBUFSIZE
+name|db_capture_maxbufsize
 argument_list|,
 operator|(
 literal|"sysctl_debug_ddb_capture_maxbufsize: bufsize> maxbufsize"
