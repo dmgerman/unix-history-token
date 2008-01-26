@@ -8975,11 +8975,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|NG_FREE_ITEM
-argument_list|(
-name|item
-argument_list|)
-expr_stmt|;
 comment|/* Prepend protocol number, possibly compressed. */
 if|if
 condition|(
@@ -8998,11 +8993,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
 operator|)
 return|;
+block|}
 comment|/* Clear distribution plan */
 name|bzero
 argument_list|(
@@ -9505,6 +9507,15 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|firstFragment
+condition|)
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -9660,6 +9671,15 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|firstFragment
+condition|)
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
@@ -9669,7 +9689,20 @@ block|}
 comment|/* Send fragment */
 if|if
 condition|(
-operator|(
+name|firstFragment
+condition|)
+block|{
+name|NGI_M
+argument_list|(
+name|item
+argument_list|)
+operator|=
+name|m2
+expr_stmt|;
+comment|/* Reuse original item. */
+block|}
+else|else
+block|{
 name|item
 operator|=
 name|ng_package_data
@@ -9678,7 +9711,11 @@ name|m2
 argument_list|,
 name|NG_NOFLAGS
 argument_list|)
-operator|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|item
 operator|!=
 name|NULL
 condition|)
