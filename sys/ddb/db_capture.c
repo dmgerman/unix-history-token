@@ -144,7 +144,7 @@ begin_define
 define|#
 directive|define
 name|DDB_CAPTURE_MAXBUFSIZE
-value|512*1024
+value|5*1024*1024
 end_define
 
 begin_endif
