@@ -8841,7 +8841,7 @@ modifier|*
 name|m
 decl_stmt|;
 name|int
-name|len
+name|plen
 decl_stmt|;
 name|int
 name|frags
@@ -8871,7 +8871,7 @@ operator|)
 return|;
 block|}
 comment|/* Save length for later stats. */
-name|len
+name|plen
 operator|=
 name|NGI_M
 argument_list|(
@@ -8909,7 +8909,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|len
+name|plen
 argument_list|)
 operator|)
 return|;
@@ -9645,7 +9645,7 @@ argument_list|,
 operator|(
 name|firstFragment
 condition|?
-name|len
+name|plen
 else|:
 literal|0
 operator|)
