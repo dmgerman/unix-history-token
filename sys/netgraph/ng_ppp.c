@@ -1268,6 +1268,9 @@ name|ng_ppp_frag_process
 parameter_list|(
 name|node_p
 name|node
+parameter_list|,
+name|item_p
+name|oitem
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6774,11 +6777,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|NG_FREE_ITEM
-argument_list|(
-name|item
-argument_list|)
-expr_stmt|;
 comment|/* Get a new frag struct from the free queue */
 if|if
 condition|(
@@ -7328,8 +7326,23 @@ operator|=
 name|ng_ppp_frag_process
 argument_list|(
 name|node
+argument_list|,
+name|item
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|priv
+operator|->
+name|rmtx
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|done
 label|:
 name|mtx_unlock
@@ -7338,6 +7351,11 @@ operator|&
 name|priv
 operator|->
 name|rmtx
+argument_list|)
+expr_stmt|;
+name|NG_FREE_ITEM
+argument_list|(
+name|item
 argument_list|)
 expr_stmt|;
 return|return
@@ -8216,6 +8234,9 @@ name|ng_ppp_frag_process
 parameter_list|(
 name|node_p
 name|node
+parameter_list|,
+name|item_p
+name|oitem
 parameter_list|)
 block|{
 specifier|const
@@ -8299,7 +8320,28 @@ continue|continue;
 block|}
 if|if
 condition|(
-operator|(
+name|oitem
+condition|)
+block|{
+comment|/* If original item present - reuse it. */
+name|item
+operator|=
+name|oitem
+expr_stmt|;
+name|oitem
+operator|=
+name|NULL
+expr_stmt|;
+name|NGI_M
+argument_list|(
+name|item
+argument_list|)
+operator|=
+name|m
+expr_stmt|;
+block|}
+else|else
+block|{
 name|item
 operator|=
 name|ng_package_data
@@ -8308,7 +8350,11 @@ name|m
 argument_list|,
 name|NG_NOFLAGS
 argument_list|)
-operator|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|item
 operator|!=
 name|NULL
 condition|)
@@ -8381,6 +8427,16 @@ name|node
 argument_list|)
 condition|)
 do|;
+comment|/* If we haven't reused original item - free it. */
+if|if
+condition|(
+name|oitem
+condition|)
+name|NG_FREE_ITEM
+argument_list|(
+name|oitem
+argument_list|)
+expr_stmt|;
 comment|/* Done */
 return|return
 operator|(
