@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"systat.h"
 end_include
 
@@ -823,8 +829,10 @@ expr|struct
 name|if_stat
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -843,23 +851,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"out of memory"
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|p
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|if_stat
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|SLIST_INSERT_HEAD
@@ -1564,6 +1555,7 @@ name|row
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sysctl
 argument_list|(
 name|name
@@ -1596,6 +1588,13 @@ literal|0
 argument_list|)
 operator|!=
 literal|0
+operator|)
+operator|&&
+operator|(
+name|errno
+operator|!=
+name|ENOENT
+operator|)
 condition|)
 name|IFSTAT_ERR
 argument_list|(
