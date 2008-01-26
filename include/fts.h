@@ -51,11 +51,11 @@ name|int
 name|fts_rfd
 decl_stmt|;
 comment|/* fd for root */
-name|int
+name|size_t
 name|fts_pathlen
 decl_stmt|;
 comment|/* sizeof(path) */
-name|int
+name|size_t
 name|fts_nitems
 decl_stmt|;
 comment|/* elements in the sort array */
@@ -173,40 +173,21 @@ modifier|*
 name|fts_link
 decl_stmt|;
 comment|/* next file in directory */
-union|union
-block|{
-struct|struct
-block|{
 name|long
-name|__fts_number
+name|long
+name|fts_number
 decl_stmt|;
 comment|/* local numeric value */
-name|void
-modifier|*
-name|__fts_pointer
-decl_stmt|;
-comment|/* local address value */
-block|}
-name|__struct_ftsent
-struct|;
-name|int64_t
-name|__fts_bignum
-decl_stmt|;
-block|}
-name|__union_ftsent
-union|;
-define|#
-directive|define
-name|fts_number
-value|__union_ftsent.__struct_ftsent.__fts_number
-define|#
-directive|define
-name|fts_pointer
-value|__union_ftsent.__struct_ftsent.__fts_pointer
 define|#
 directive|define
 name|fts_bignum
-value|__union_ftsent.__fts_bignum
+value|fts_number
+comment|/* XXX non-std, should go away */
+name|void
+modifier|*
+name|fts_pointer
+decl_stmt|;
+comment|/* local address value */
 name|char
 modifier|*
 name|fts_accpath
@@ -225,11 +206,11 @@ name|int
 name|fts_symfd
 decl_stmt|;
 comment|/* fd for symlink */
-name|u_short
+name|size_t
 name|fts_pathlen
 decl_stmt|;
 comment|/* strlen(fts_path) */
-name|u_short
+name|size_t
 name|fts_namelen
 decl_stmt|;
 comment|/* strlen(fts_name) */
@@ -253,7 +234,7 @@ define|#
 directive|define
 name|FTS_ROOTLEVEL
 value|0
-name|short
+name|long
 name|fts_level
 decl_stmt|;
 comment|/* depth (-1 to N) */
@@ -327,10 +308,10 @@ directive|define
 name|FTS_W
 value|14
 comment|/* whiteout object */
-name|u_short
+name|int
 name|fts_info
 decl_stmt|;
-comment|/* user flags for FTSENT structure */
+comment|/* user status for FTSENT structure */
 define|#
 directive|define
 name|FTS_DONTCHDIR
@@ -346,7 +327,7 @@ directive|define
 name|FTS_ISW
 value|0x04
 comment|/* this is a whiteout object */
-name|u_short
+name|unsigned
 name|fts_flags
 decl_stmt|;
 comment|/* private flags for FTSENT structure */
@@ -370,7 +351,7 @@ directive|define
 name|FTS_SKIP
 value|4
 comment|/* discard node */
-name|u_short
+name|int
 name|fts_instr
 decl_stmt|;
 comment|/* fts_set() instructions */
