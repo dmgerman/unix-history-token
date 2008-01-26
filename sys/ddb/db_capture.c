@@ -101,9 +101,9 @@ begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
-name|M_DB_CAPTURE
+name|M_DDB_CAPTURE
 argument_list|,
-literal|"db_capture"
+literal|"ddb_capture"
 argument_list|,
 literal|"DDB capture buffer"
 argument_list|)
@@ -113,21 +113,21 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|DB_CAPTURE_DEFAULTBUFSIZE
+name|DDB_CAPTURE_DEFAULTBUFSIZE
 value|48*1024
 end_define
 
 begin_define
 define|#
 directive|define
-name|DB_CAPTURE_MAXBUFSIZE
+name|DDB_CAPTURE_MAXBUFSIZE
 value|512*1024
 end_define
 
 begin_define
 define|#
 directive|define
-name|DB_CAPTURE_FILENAME
+name|DDB_CAPTURE_FILENAME
 value|"ddb.txt"
 end_define
 
@@ -148,7 +148,7 @@ specifier|static
 name|u_int
 name|db_capture_bufsize
 init|=
-name|DB_CAPTURE_DEFAULTBUFSIZE
+name|DDB_CAPTURE_DEFAULTBUFSIZE
 decl_stmt|;
 end_decl_stmt
 
@@ -157,7 +157,7 @@ specifier|static
 name|u_int
 name|db_capture_maxbufsize
 init|=
-name|DB_CAPTURE_MAXBUFSIZE
+name|DDB_CAPTURE_MAXBUFSIZE
 decl_stmt|;
 end_decl_stmt
 
@@ -301,7 +301,7 @@ end_comment
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
-name|DB_CAPTURE_DEFAULTBUFSIZE
+name|DDB_CAPTURE_DEFAULTBUFSIZE
 operator|%
 name|TEXTDUMP_BLOCKSIZE
 operator|==
@@ -313,7 +313,7 @@ end_expr_stmt
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
-name|DB_CAPTURE_MAXBUFSIZE
+name|DDB_CAPTURE_MAXBUFSIZE
 operator|%
 name|TEXTDUMP_BLOCKSIZE
 operator|==
@@ -358,11 +358,11 @@ if|if
 condition|(
 name|db_capture_bufsize
 operator|>
-name|DB_CAPTURE_MAXBUFSIZE
+name|DDB_CAPTURE_MAXBUFSIZE
 condition|)
 name|db_capture_bufsize
 operator|=
-name|DB_CAPTURE_MAXBUFSIZE
+name|DDB_CAPTURE_MAXBUFSIZE
 expr_stmt|;
 if|if
 condition|(
@@ -376,7 +376,7 @@ name|malloc
 argument_list|(
 name|db_capture_bufsize
 argument_list|,
-name|M_DB_CAPTURE
+name|M_DDB_CAPTURE
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -470,7 +470,7 @@ if|if
 condition|(
 name|size
 operator|>
-name|DB_CAPTURE_MAXBUFSIZE
+name|DDB_CAPTURE_MAXBUFSIZE
 condition|)
 return|return
 operator|(
@@ -497,7 +497,7 @@ name|malloc
 argument_list|(
 name|size
 argument_list|,
-name|M_DB_CAPTURE
+name|M_DDB_CAPTURE
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -571,7 +571,7 @@ name|free
 argument_list|(
 name|db_capture_buf
 argument_list|,
-name|M_DB_CAPTURE
+name|M_DDB_CAPTURE
 argument_list|)
 expr_stmt|;
 name|db_capture_bufoff
@@ -607,7 +607,7 @@ name|KASSERT
 argument_list|(
 name|db_capture_bufsize
 operator|<=
-name|DB_CAPTURE_MAXBUFSIZE
+name|DDB_CAPTURE_MAXBUFSIZE
 argument_list|,
 operator|(
 literal|"sysctl_debug_ddb_capture_maxbufsize: bufsize> maxbufsize"
@@ -1056,7 +1056,7 @@ name|textdump_mkustar
 argument_list|(
 name|textdump_block_buffer
 argument_list|,
-name|DB_CAPTURE_FILENAME
+name|DDB_CAPTURE_FILENAME
 argument_list|,
 name|db_capture_bufoff
 argument_list|)
