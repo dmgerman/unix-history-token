@@ -359,6 +359,12 @@ literal|"K2 Kauai ATA Controller"
 block|}
 block|,
 block|{
+literal|0x0069106b
+block|,
+literal|"Intrepid-2 Kauai ATA Controller"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
