@@ -166,6 +166,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"quotacheck.h"
+end_include
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -286,29 +292,6 @@ parameter_list|)
 define|\
 value|((sblock.fs_magic == FS_UFS1_MAGIC) ? \ 	(dp)->dp1.field : (dp)->dp2.field)
 end_define
-
-begin_struct
-struct|struct
-name|quotaname
-block|{
-name|long
-name|flags
-decl_stmt|;
-name|char
-name|grpqfname
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-name|char
-name|usrqfname
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_define
 define|#
@@ -473,62 +456,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|int
-name|checkfstab
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|void
-modifier|*
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|struct
-name|fstab
-modifier|*
-parameter_list|)
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|struct
-name|quotaname
-modifier|*
-parameter_list|)
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|chkquota
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|struct
-name|quotaname
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|freeinodebuf
 parameter_list|(
@@ -588,7 +515,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|struct
+name|quotaname
 modifier|*
 name|needchk
 parameter_list|(
@@ -705,7 +633,7 @@ decl_stmt|;
 name|struct
 name|quotaname
 modifier|*
-name|auxdata
+name|qnp
 decl_stmt|;
 name|int
 name|i
@@ -936,19 +864,16 @@ name|endpwent
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	 * Setting maxrun (-l) makes no sense without the -a flag. 	 * Historically this was never an error, so we just warn. 	 */
+comment|/* 	 * The maxrun (-l) option is now deprecated. 	 */
 if|if
 condition|(
 name|maxrun
 operator|>
 literal|0
-operator|&&
-operator|!
-name|aflag
 condition|)
 name|warnx
 argument_list|(
-literal|"ignoring -l without -a"
+literal|"the -l option is now deprecated"
 argument_list|)
 expr_stmt|;
 if|if
@@ -958,15 +883,7 @@ condition|)
 name|exit
 argument_list|(
 name|checkfstab
-argument_list|(
-literal|1
-argument_list|,
-name|maxrun
-argument_list|,
-name|needchk
-argument_list|,
-name|chkquota
-argument_list|)
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -1036,7 +953,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|auxdata
+name|qnp
 operator|=
 name|needchk
 argument_list|(
@@ -1072,7 +989,7 @@ name|fs
 operator|->
 name|fs_file
 argument_list|,
-name|auxdata
+name|qnp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1157,7 +1074,8 @@ block|}
 end_function
 
 begin_function
-name|void
+name|struct
+name|quotaname
 modifier|*
 name|needchk
 parameter_list|(
@@ -1419,6 +1337,19 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+if|if
+condition|(
+name|qnp
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"null quota information passed to chkquota()\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
