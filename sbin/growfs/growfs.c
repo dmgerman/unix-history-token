@@ -1235,10 +1235,10 @@ name|sprintf
 argument_list|(
 name|tmpbuf
 argument_list|,
-literal|" %d%s"
+literal|" %jd%s"
 argument_list|,
 operator|(
-name|int
+name|intmax_t
 operator|)
 name|fsbtodb
 argument_list|(
