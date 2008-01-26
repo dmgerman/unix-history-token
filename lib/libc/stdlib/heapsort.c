@@ -227,7 +227,7 @@ end_function_decl
 
 begin_block
 block|{
-name|int
+name|size_t
 name|cnt
 decl_stmt|,
 name|i
