@@ -2435,6 +2435,29 @@ block|}
 end_function
 
 begin_comment
+comment|/**  * @brief Return whether the userland process is running  */
+end_comment
+
+begin_function
+name|boolean_t
+name|devctl_process_running
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|devsoftc
+operator|.
+name|async_proc
+operator|!=
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * @brief Queue data to be read from the devctl device  *  * Generic interface to queue data to the devctl device.  It is  * assumed that @p data is properly formatted.  It is further assumed  * that @p data is allocated using the M_BUS malloc type.  */
 end_comment
 
