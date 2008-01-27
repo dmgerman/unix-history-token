@@ -15,6 +15,12 @@ directive|define
 name|CXGB_TCP_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_USRREQS_OVERLOAD
+end_ifdef
+
 begin_function_decl
 name|struct
 name|tcpcb
@@ -31,6 +37,23 @@ name|errno
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|cxgb_tcp_drop
+value|tcp_drop
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
