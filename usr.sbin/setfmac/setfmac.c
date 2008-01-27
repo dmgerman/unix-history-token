@@ -674,6 +674,9 @@ argument_list|,
 literal|"labeling not supported in "
 literal|"%.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ftsent
 operator|->
 name|fts_pathlen
@@ -693,6 +696,9 @@ name|warnx
 argument_list|(
 literal|"labeling not supported in %.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ftsent
 operator|->
 name|fts_pathlen
@@ -729,6 +735,9 @@ literal|1
 argument_list|,
 literal|"traversing %.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ftsent
 operator|->
 name|fts_pathlen
@@ -749,6 +758,9 @@ name|ftsent
 operator|->
 name|fts_info
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ftsent
 operator|->
 name|fts_pathlen
@@ -2309,6 +2321,9 @@ name|printf
 argument_list|(
 literal|"%.*s matched by "
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ftsent
 operator|->
 name|fts_pathlen
@@ -2589,6 +2604,9 @@ literal|1
 argument_list|,
 literal|"mac_set_link(%.*s, %s)"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ftsent
 operator|->
 name|fts_pathlen
