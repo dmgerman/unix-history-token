@@ -784,7 +784,7 @@ operator|&
 name|BMCR_AUTOEN
 condition|)
 block|{
-comment|/* 		 * The PAR status bits are only valid of autonegotiation 		 * has completed (or it's disabled). 		 */
+comment|/* 		 * The PAR status bits are only valid if autonegotiation 		 * has completed (or it's disabled). 		 */
 if|if
 condition|(
 operator|(
