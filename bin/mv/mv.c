@@ -174,6 +174,17 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_comment
+comment|/* Exit code for a failed exec. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXEC_FAILED
+value|127
+end_define
+
 begin_decl_stmt
 name|int
 name|fflg
@@ -915,6 +926,7 @@ return|;
 block|}
 block|}
 block|}
+comment|/* 	 * Rename on FreeBSD will fail with EISDIR and ENOTDIR, before failing 	 * with EXDEV.  Therefore, copy() doesn't have to perform the checks 	 * specified in the Step 3 of the POSIX mv specification. 	 */
 if|if
 condition|(
 operator|!
@@ -1014,7 +1026,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
 literal|"cannot resolve %s: %s"
 argument_list|,
@@ -1170,6 +1182,9 @@ name|char
 modifier|*
 name|bp
 decl_stmt|;
+name|acl_t
+name|acl
+decl_stmt|;
 name|mode_t
 name|oldmode
 decl_stmt|;
@@ -1179,9 +1194,6 @@ decl_stmt|,
 name|from_fd
 decl_stmt|,
 name|to_fd
-decl_stmt|;
-name|acl_t
-name|acl
 decl_stmt|;
 if|if
 condition|(
@@ -1512,7 +1524,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * POSIX 1003.2c states that if _POSIX_ACL_EXTENDED is in effect 	 * for dest_file, then it's ACLs shall reflect the ACLs of the 	 * source_file. 	 */
+comment|/* 	 * POSIX 1003.2c states that if _POSIX_ACL_EXTENDED is in effect 	 * for dest_file, then its ACLs shall reflect the ACLs of the 	 * source_file. 	 */
 if|if
 condition|(
 name|fpathconf
@@ -1774,6 +1786,10 @@ modifier|*
 name|to
 parameter_list|)
 block|{
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 name|int
 name|pid
 decl_stmt|,
@@ -1781,14 +1797,110 @@ name|status
 decl_stmt|;
 if|if
 condition|(
+name|lstat
+argument_list|(
+name|to
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Destination path exists. */
+if|if
+condition|(
+name|S_ISDIR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|rmdir
+argument_list|(
+name|to
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"rmdir %s"
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|unlink
+argument_list|(
+name|to
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"unlink %s"
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"%s"
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+comment|/* Copy source to destination. */
+if|if
+condition|(
+operator|!
 operator|(
 name|pid
 operator|=
-name|fork
+name|vfork
 argument_list|()
 operator|)
-operator|==
-literal|0
 condition|)
 block|{
 name|execl
@@ -1816,16 +1928,9 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-name|warn
-argument_list|(
-literal|"%s"
-argument_list|,
-name|_PATH_CP
-argument_list|)
-expr_stmt|;
 name|_exit
 argument_list|(
-literal|1
+name|EXEC_FAILED
 argument_list|)
 expr_stmt|;
 block|}
@@ -1847,9 +1952,13 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s: waitpid"
+literal|"%s %s %s: waitpid"
 argument_list|,
 name|_PATH_CP
+argument_list|,
+name|from
+argument_list|,
+name|to
 argument_list|)
 expr_stmt|;
 return|return
@@ -1869,9 +1978,13 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: did not terminate normally"
+literal|"%s %s %s: did not terminate normally"
 argument_list|,
 name|_PATH_CP
+argument_list|,
+name|from
+argument_list|,
+name|to
 argument_list|)
 expr_stmt|;
 return|return
@@ -1880,7 +1993,7 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
+switch|switch
 condition|(
 name|WEXITSTATUS
 argument_list|(
@@ -1888,11 +2001,39 @@ name|status
 argument_list|)
 condition|)
 block|{
+case|case
+literal|0
+case|:
+break|break;
+case|case
+name|EXEC_FAILED
+case|:
 name|warnx
 argument_list|(
-literal|"%s: terminated with %d (non-zero) status"
+literal|"%s %s %s: exec failed"
 argument_list|,
 name|_PATH_CP
+argument_list|,
+name|from
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+default|default:
+name|warnx
+argument_list|(
+literal|"%s %s %s: terminated with %d (non-zero) status"
+argument_list|,
+name|_PATH_CP
+argument_list|,
+name|from
+argument_list|,
+name|to
 argument_list|,
 name|WEXITSTATUS
 argument_list|(
@@ -1906,6 +2047,7 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* Delete the source. */
 if|if
 condition|(
 operator|!
@@ -1936,16 +2078,9 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-name|warn
-argument_list|(
-literal|"%s"
-argument_list|,
-name|_PATH_RM
-argument_list|)
-expr_stmt|;
 name|_exit
 argument_list|(
-literal|1
+name|EXEC_FAILED
 argument_list|)
 expr_stmt|;
 block|}
@@ -1967,9 +2102,11 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s: waitpid"
+literal|"%s %s: waitpid"
 argument_list|,
 name|_PATH_RM
+argument_list|,
+name|from
 argument_list|)
 expr_stmt|;
 return|return
@@ -1989,9 +2126,11 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: did not terminate normally"
+literal|"%s %s: did not terminate normally"
 argument_list|,
 name|_PATH_RM
+argument_list|,
+name|from
 argument_list|)
 expr_stmt|;
 return|return
@@ -2000,7 +2139,7 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
+switch|switch
 condition|(
 name|WEXITSTATUS
 argument_list|(
@@ -2008,11 +2147,35 @@ name|status
 argument_list|)
 condition|)
 block|{
+case|case
+literal|0
+case|:
+break|break;
+case|case
+name|EXEC_FAILED
+case|:
 name|warnx
 argument_list|(
-literal|"%s: terminated with %d (non-zero) status"
+literal|"%s %s: exec failed"
 argument_list|,
 name|_PATH_RM
+argument_list|,
+name|from
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+default|default:
+name|warnx
+argument_list|(
+literal|"%s %s: terminated with %d (non-zero) status"
+argument_list|,
+name|_PATH_RM
+argument_list|,
+name|from
 argument_list|,
 name|WEXITSTATUS
 argument_list|(
