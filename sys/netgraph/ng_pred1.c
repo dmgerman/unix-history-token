@@ -2331,8 +2331,6 @@ argument_list|)
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|bitmask
 decl_stmt|;
 name|u_char
 name|flags
@@ -2365,10 +2363,6 @@ expr_stmt|;
 comment|/* All guesses are wrong initially. */
 for|for
 control|(
-name|bitmask
-operator|=
-literal|1
-operator|,
 name|i
 operator|=
 literal|0
@@ -2381,10 +2375,6 @@ name|len
 condition|;
 name|i
 operator|++
-operator|,
-name|bitmask
-operator|<<=
-literal|1
 control|)
 block|{
 if|if
@@ -2404,7 +2394,11 @@ condition|)
 comment|/* Guess was right - don't output. */
 name|flags
 operator||=
-name|bitmask
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
 expr_stmt|;
 else|else
 block|{
@@ -2494,8 +2488,6 @@ argument_list|)
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|bitmask
 decl_stmt|;
 name|u_char
 name|flags
@@ -2526,10 +2518,6 @@ control|(
 name|i
 operator|=
 literal|0
-operator|,
-name|bitmask
-operator|=
-literal|1
 init|;
 name|i
 operator|<
@@ -2538,8 +2526,8 @@ condition|;
 name|i
 operator|++
 operator|,
-name|bitmask
-operator|<<=
+name|flags
+operator|>>=
 literal|1
 control|)
 block|{
@@ -2559,7 +2547,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|bitmask
+literal|0x01
 condition|)
 comment|/* Guess correct */
 operator|*
