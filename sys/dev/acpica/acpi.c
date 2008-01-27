@@ -9848,6 +9848,36 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* If devd(8) is not running, immediately enter the sleep state. */
+if|if
+condition|(
+name|devctl_process_running
+argument_list|()
+operator|==
+name|FALSE
+condition|)
+block|{
+name|ACPI_UNLOCK
+argument_list|(
+name|acpi
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ACPI_FAILURE
+argument_list|(
+name|acpi_EnterSleepState
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|acpi_next_sstate
+argument_list|)
+argument_list|)
+operator|)
+return|;
+block|}
 comment|/* Now notify devd(8) also. */
 name|acpi_UserNotify
 argument_list|(
