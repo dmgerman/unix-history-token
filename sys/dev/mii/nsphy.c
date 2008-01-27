@@ -454,7 +454,7 @@ name|mii_flags
 operator||=
 name|MIIF_NOISOLATE
 expr_stmt|;
-comment|/* 	 * DP83840A used with HME chips don't advertise their media 	 * capabilities themselves properly so force writing the ANAR 	 * according to the BMSR in mii_phy_setmedia().  	 */
+comment|/* 	 * DP83840A used with HME chips don't advertise their media 	 * capabilities themselves properly so force writing the ANAR 	 * according to the BMSR in mii_phy_setmedia(). 	 */
 if|if
 condition|(
 name|strcmp
@@ -481,7 +481,7 @@ parameter_list|,
 name|c
 parameter_list|)
 value|ifmedia_add(&mii->mii_media, (m), (c), NULL)
-comment|/* 	 * In order for MII loopback to work Am79C971 and greater PCnet 	 * chips additionally need to be placed into external loopback 	 * mode which pcn(4) doesn't do so far.  	 */
+comment|/* 	 * In order for MII loopback to work Am79C971 and greater PCnet 	 * chips additionally need to be placed into external loopback 	 * mode which pcn(4) doesn't do so far. 	 */
 if|if
 condition|(
 name|strcmp
@@ -961,7 +961,7 @@ operator|&
 name|BMCR_AUTOEN
 condition|)
 block|{
-comment|/* 		 * The PAR status bits are only valid of autonegotiation 		 * has completed (or it's disabled). 		 */
+comment|/* 		 * The PAR status bits are only valid if autonegotiation 		 * has completed (or it's disabled). 		 */
 if|if
 condition|(
 operator|(
@@ -1193,7 +1193,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Give it a little time to settle in case we just got power. 	 * The DP83840A data sheet suggests that a soft reset should not 	 * happen within 500us of power being applied. Be conservative. 	 */
+comment|/* 	 * It is best to allow a little time for the reset to settle 	 * in before we start polling the BMCR again.  Notably, the 	 * DP83840A manuals state that there should be a 500us delay 	 * between asserting software reset and attempting MII serial 	 * operations.  Be conservative. 	 */
 name|DELAY
 argument_list|(
 literal|1000
