@@ -11272,7 +11272,7 @@ condition|(
 name|prison
 condition|)
 block|{
-comment|/* 				 * For INADDR_ANY and  LOOPBACK the 				 * prison_ip() call will tranmute the ip 				 * address to the proper valie. 				 */
+comment|/* 				 * For INADDR_ANY and  LOOPBACK the 				 * prison_ip() call will transmute the ip 				 * address to the proper value (i.e. the IP 				 * address owned by the jail). 				 */
 if|if
 condition|(
 name|prison_ip
@@ -11472,13 +11472,6 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* Setup a vrf_id to be the default for the non-bind-all case. */
-name|vrf_id
-operator|=
-name|inp
-operator|->
-name|def_vrf_id
-expr_stmt|;
 name|SCTP_INP_INFO_WLOCK
 argument_list|()
 expr_stmt|;
@@ -11486,6 +11479,13 @@ name|SCTP_INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
+expr_stmt|;
+comment|/* Setup a vrf_id to be the default for the non-bind-all case. */
+name|vrf_id
+operator|=
+name|inp
+operator|->
+name|def_vrf_id
 expr_stmt|;
 comment|/* increase our count due to the unlock we do */
 name|SCTP_INP_INCR_REF
