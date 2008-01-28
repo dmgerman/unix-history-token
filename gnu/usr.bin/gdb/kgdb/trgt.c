@@ -1047,6 +1047,9 @@ argument_list|,
 literal|"Usage: add-kld FILE\n\ Load the symbols from the kernel loadable module FILE."
 argument_list|)
 expr_stmt|;
+name|kgdb_auto_load_klds
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
