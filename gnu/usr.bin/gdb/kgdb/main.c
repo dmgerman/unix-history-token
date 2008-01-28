@@ -271,6 +271,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|quiet
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|verbose
 decl_stmt|;
 end_decl_stmt
@@ -1032,6 +1039,11 @@ name|kgdb_target
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Display the unread portion of the message buffer. This gives the 	 * user a some initial data to work from. 	 */
+if|if
+condition|(
+name|quiet
+condition|)
+return|return;
 name|bufp
 operator|=
 name|kgdb_parse
@@ -1322,8 +1334,6 @@ name|int
 name|a
 decl_stmt|,
 name|ch
-decl_stmt|,
-name|quiet
 decl_stmt|,
 name|writecore
 decl_stmt|;
