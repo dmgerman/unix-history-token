@@ -2799,6 +2799,12 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+else|else
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2857,36 +2863,6 @@ name|netflow_v5_record
 modifier|*
 name|rec
 decl_stmt|;
-if|if
-condition|(
-name|header
-operator|->
-name|count
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* first record */
-name|rec
-operator|=
-operator|&
-name|dgram
-operator|->
-name|r
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|header
-operator|->
-name|count
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* continue filling datagram */
 name|rec
 operator|=
 operator|&
@@ -2904,7 +2880,6 @@ operator|->
 name|count
 operator|++
 expr_stmt|;
-block|}
 name|KASSERT
 argument_list|(
 name|header
