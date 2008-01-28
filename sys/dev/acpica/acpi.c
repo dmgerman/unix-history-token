@@ -9862,9 +9862,9 @@ argument_list|(
 name|acpi
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ACPI_FAILURE
+if|if
+condition|(
+name|ACPI_SUCCESS
 argument_list|(
 name|acpi_EnterSleepState
 argument_list|(
@@ -9875,8 +9875,22 @@ operator|->
 name|acpi_next_sstate
 argument_list|)
 argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+literal|0
 operator|)
 return|;
+block|}
+else|else
+block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 block|}
 comment|/* Now notify devd(8) also. */
 name|acpi_UserNotify
