@@ -14134,6 +14134,12 @@ name|ciss_softc
 modifier|*
 name|sc
 decl_stmt|;
+specifier|static
+name|int
+name|first_time
+init|=
+literal|1
+decl_stmt|;
 name|sc
 operator|=
 name|cr
@@ -14154,13 +14160,25 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|first_time
+operator|==
+literal|1
+condition|)
+block|{
+name|first_time
+operator|=
+literal|0
+expr_stmt|;
 name|ciss_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"SENDING NOP MESSAGE FAILED\n"
+literal|"SENDING NOP MESSAGE FAILED (not logging anymore)\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|ciss_release_request
 argument_list|(
