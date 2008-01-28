@@ -6277,6 +6277,17 @@ if|if
 condition|(
 name|scp
 operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
+name|scp
+operator|==
 name|scp
 operator|->
 name|sc
