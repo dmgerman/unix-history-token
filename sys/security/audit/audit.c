@@ -1962,6 +1962,16 @@ name|ai_auid
 operator|=
 name|AU_DEFAUDITID
 expr_stmt|;
+name|cred
+operator|->
+name|cr_audit
+operator|.
+name|ai_termid
+operator|.
+name|at_type
+operator|=
+name|AU_IPv4
+expr_stmt|;
 block|}
 end_function
 
@@ -1982,6 +1992,16 @@ operator|.
 name|ai_auid
 operator|=
 name|AU_DEFAUDITID
+expr_stmt|;
+name|cred
+operator|->
+name|cr_audit
+operator|.
+name|ai_termid
+operator|.
+name|at_type
+operator|=
+name|AU_IPv4
 expr_stmt|;
 block|}
 end_function
