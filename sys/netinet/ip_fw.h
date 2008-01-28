@@ -651,6 +651,16 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Data structures required by both ipfw(8) and ipfw(4) but not part of the  * management API are protcted by IPFW_INTERNAL.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFW_INTERNAL
+end_ifdef
+
+begin_comment
 comment|/* Server pool support (LSNAT). */
 end_comment
 
@@ -676,6 +686,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Redirect modes id. */
 end_comment
@@ -700,6 +715,12 @@ directive|define
 name|REDIR_PROTO
 value|0x04
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFW_INTERNAL
+end_ifdef
 
 begin_comment
 comment|/* Nat redirect configuration. */
@@ -782,12 +803,23 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|NAT_BUF_LEN
 value|1024
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFW_INTERNAL
+end_ifdef
 
 begin_comment
 comment|/* Nat configuration data struct. */
@@ -846,6 +878,11 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

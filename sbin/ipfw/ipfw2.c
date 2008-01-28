@@ -157,6 +157,16 @@ directive|include
 file|<fcntl.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|IPFW_INTERNAL
+end_define
+
+begin_comment
+comment|/* Access to protected structures in ip_fw.h. */
+end_comment
+
 begin_include
 include|#
 directive|include
