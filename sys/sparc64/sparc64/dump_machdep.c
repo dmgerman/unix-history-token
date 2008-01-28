@@ -401,13 +401,9 @@ condition|)
 block|{
 name|error
 operator|=
-name|di
-operator|->
-name|dumper
+name|dump_write
 argument_list|(
 name|di
-operator|->
-name|priv
 argument_list|,
 name|buffer
 argument_list|,
@@ -470,13 +466,9 @@ operator|)
 return|;
 name|error
 operator|=
-name|di
-operator|->
-name|dumper
+name|dump_write
 argument_list|(
 name|di
-operator|->
-name|priv
 argument_list|,
 name|buffer
 argument_list|,
@@ -694,13 +686,9 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|di
-operator|->
-name|dumper
+name|dump_write
 argument_list|(
 name|di
-operator|->
-name|priv
 argument_list|,
 operator|(
 name|void
@@ -951,13 +939,9 @@ expr_stmt|;
 comment|/* Dump leader */
 name|error
 operator|=
-name|di
-operator|->
-name|dumper
+name|dump_write
 argument_list|(
 name|di
-operator|->
-name|priv
 argument_list|,
 operator|&
 name|kdh
@@ -1145,13 +1129,9 @@ block|}
 comment|/* Dump trailer */
 name|error
 operator|=
-name|di
-operator|->
-name|dumper
+name|dump_write
 argument_list|(
 name|di
-operator|->
-name|priv
 argument_list|,
 operator|&
 name|kdh
@@ -1174,13 +1154,9 @@ goto|goto
 name|fail
 goto|;
 comment|/* Signal completion, signoff and exit stage left. */
-name|di
-operator|->
-name|dumper
+name|dump_write
 argument_list|(
 name|di
-operator|->
-name|priv
 argument_list|,
 name|NULL
 argument_list|,
