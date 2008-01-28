@@ -4302,16 +4302,12 @@ name|error
 operator|)
 return|;
 comment|/* 	 * Relabeling network interfaces requires MLS privilege. 	 */
-name|error
-operator|=
+return|return
+operator|(
 name|mls_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
