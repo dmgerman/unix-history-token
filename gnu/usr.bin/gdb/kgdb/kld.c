@@ -163,8 +163,6 @@ name|kld_suffixes
 index|[]
 init|=
 block|{
-literal|".symbols"
-block|,
 literal|".debug"
 block|,
 literal|""
