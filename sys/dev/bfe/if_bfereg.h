@@ -398,6 +398,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|BFE_MAC_FLOW
+value|0x000000AC
+end_define
+
+begin_comment
+comment|/* MAC Flow Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BFE_FLOW_RX_HIWAT
+value|0x000000ff
+end_define
+
+begin_comment
+comment|/* Onchip FIFO HI Water Mark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BFE_FLOW_PAUSE_ENAB
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Enable Pause Frame Generation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BFE_RCV_LAZY
 value|0x00000100
 end_define
@@ -3801,8 +3834,8 @@ modifier|*
 name|bfe_res
 decl_stmt|;
 name|struct
-name|callout_handle
-name|bfe_stat_ch
+name|callout
+name|bfe_stat_co
 decl_stmt|;
 name|struct
 name|bfe_hw_stats
@@ -3866,6 +3899,9 @@ name|bfe_rx_dma
 decl_stmt|;
 name|u_int32_t
 name|bfe_link
+decl_stmt|;
+name|int
+name|bfe_watchdog_timer
 decl_stmt|;
 name|u_int8_t
 name|bfe_phyaddr
