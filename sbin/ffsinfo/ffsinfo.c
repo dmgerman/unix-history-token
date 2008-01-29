@@ -435,7 +435,10 @@ literal|2
 expr_stmt|;
 name|out_file
 operator|=
+name|strdup
+argument_list|(
 literal|"-"
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
