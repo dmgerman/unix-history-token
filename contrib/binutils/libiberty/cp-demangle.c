@@ -9336,6 +9336,15 @@ argument_list|(
 name|di
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 comment|/* If we have a type we know how to print, we aren't going to 	 print the type name itself.  */
 if|if
 condition|(
