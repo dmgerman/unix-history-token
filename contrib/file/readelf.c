@@ -65,7 +65,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: readelf.c,v 1.63 2007/01/16 14:56:45 ljt Exp $"
+literal|"@(#)$File: readelf.c,v 1.68 2007/12/27 16:13:26 christos Exp $"
 argument_list|)
 end_macro
 
@@ -792,12 +792,12 @@ block|{
 literal|8
 block|,
 comment|/* FreeBSD */
-literal|28
-block|,
-comment|/* Linux 2.0.36 (short name) */
 literal|44
 block|,
 comment|/* Linux (path name) */
+literal|28
+block|,
+comment|/* Linux 2.0.36 (short name) */
 literal|84
 block|,
 comment|/* SunOS 5.x */
@@ -814,12 +814,12 @@ block|{
 literal|16
 block|,
 comment|/* FreeBSD, 64-bit */
-literal|40
-block|,
-comment|/* Linux (tested on core from 2.4.x, short name) */
 literal|56
 block|,
 comment|/* Linux (path name) */
+literal|40
+block|,
+comment|/* Linux (tested on core from 2.4.x, short name) */
 literal|120
 block|,
 comment|/* SunOS 5.x, 64-bit */
@@ -903,6 +903,13 @@ define|#
 directive|define
 name|FLAGS_DID_NOTE
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLAGS_DID_CORE_STYLE
+value|4
 end_define
 
 begin_function
@@ -2703,6 +2710,15 @@ name|os_style
 operator|!=
 operator|-
 literal|1
+operator|&&
+operator|(
+operator|*
+name|flags
+operator|&
+name|FLAGS_DID_CORE_STYLE
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -2725,6 +2741,11 @@ condition|)
 return|return
 name|size
 return|;
+operator|*
+name|flags
+operator||=
+name|FLAGS_DID_CORE_STYLE
+expr_stmt|;
 block|}
 switch|switch
 condition|(
@@ -2813,6 +2834,11 @@ condition|)
 return|return
 name|size
 return|;
+operator|*
+name|flags
+operator||=
+name|FLAGS_DID_CORE
+expr_stmt|;
 return|return
 name|size
 return|;
@@ -2835,7 +2861,7 @@ name|unsigned
 name|char
 name|c
 decl_stmt|;
-comment|/* 			 * Extract the program name.  We assume 			 * it to be 16 characters (that's what it 			 * is in SunOS 5.x and Linux). 			 * 			 * Unfortunately, it's at a different offset 			 * in varous OSes, so try multiple offsets. 			 * If the characters aren't all printable, 			 * reject it. 			 */
+comment|/* 			 * Extract the program name.  We assume 			 * it to be 16 characters (that's what it 			 * is in SunOS 5.x and Linux). 			 * 			 * Unfortunately, it's at a different offset 			 * in various OSes, so try multiple offsets. 			 * If the characters aren't all printable, 			 * reject it. 			 */
 for|for
 control|(
 name|i
@@ -2850,6 +2876,14 @@ name|i
 operator|++
 control|)
 block|{
+name|unsigned
+name|char
+modifier|*
+name|cname
+decl_stmt|,
+modifier|*
+name|cp
+decl_stmt|;
 name|size_t
 name|reloffset
 init|=
@@ -2954,14 +2988,13 @@ goto|;
 block|}
 block|}
 comment|/* 				 * Well, that worked. 				 */
-if|if
-condition|(
-name|file_printf
-argument_list|(
-name|ms
-argument_list|,
-literal|", from '%.16s'"
-argument_list|,
+name|cname
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 operator|&
 name|nbuf
 index|[
@@ -2972,6 +3005,53 @@ argument_list|(
 name|i
 argument_list|)
 index|]
+expr_stmt|;
+for|for
+control|(
+name|cp
+operator|=
+name|cname
+init|;
+operator|*
+name|cp
+operator|&&
+name|isprint
+argument_list|(
+operator|*
+name|cp
+argument_list|)
+condition|;
+name|cp
+operator|++
+control|)
+continue|continue;
+if|if
+condition|(
+name|cp
+operator|>
+name|cname
+condition|)
+name|cp
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|file_printf
+argument_list|(
+name|ms
+argument_list|,
+literal|", from '%.*s'"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|cp
+operator|-
+name|cname
+argument_list|)
+argument_list|,
+name|cname
 argument_list|)
 operator|==
 operator|-
@@ -2980,6 +3060,11 @@ condition|)
 return|return
 name|size
 return|;
+operator|*
+name|flags
+operator||=
+name|FLAGS_DID_CORE
+expr_stmt|;
 return|return
 name|size
 return|;
@@ -2992,11 +3077,6 @@ break|break;
 block|}
 endif|#
 directive|endif
-operator|*
-name|flags
-operator||=
-name|FLAGS_DID_CORE
-expr_stmt|;
 return|return
 name|offset
 return|;
@@ -3969,6 +4049,8 @@ literal|1
 return|;
 block|}
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 if|if
@@ -4187,6 +4269,9 @@ block|{
 name|Elf32_Ehdr
 name|elfhdr
 decl_stmt|;
+name|uint16_t
+name|type
+decl_stmt|;
 if|if
 condition|(
 name|nbytes
@@ -4244,8 +4329,8 @@ index|[
 name|EI_DATA
 index|]
 expr_stmt|;
-if|if
-condition|(
+name|type
+operator|=
 name|getu16
 argument_list|(
 name|swap
@@ -4254,13 +4339,18 @@ name|elfhdr
 operator|.
 name|e_type
 argument_list|)
-operator|==
-name|ET_CORE
+expr_stmt|;
+switch|switch
+condition|(
+name|type
 condition|)
 block|{
 ifdef|#
 directive|ifdef
 name|ELFCORE
+case|case
+name|ET_CORE
+case|:
 if|if
 condition|(
 name|dophn_core
@@ -4319,28 +4409,15 @@ return|return
 operator|-
 literal|1
 return|;
-else|#
-directive|else
-empty_stmt|;
+break|break;
 endif|#
 directive|endif
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|getu16
-argument_list|(
-name|swap
-argument_list|,
-name|elfhdr
-operator|.
-name|e_type
-argument_list|)
-operator|==
+case|case
 name|ET_EXEC
-condition|)
-block|{
+case|:
+case|case
+name|ET_DYN
+case|:
 if|if
 condition|(
 name|dophn_exec
@@ -4399,7 +4476,6 @@ return|return
 operator|-
 literal|1
 return|;
-block|}
 if|if
 condition|(
 name|doshn
@@ -4456,6 +4532,9 @@ return|return
 operator|-
 literal|1
 return|;
+break|break;
+default|default:
+break|break;
 block|}
 return|return
 literal|1

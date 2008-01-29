@@ -304,6 +304,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ET_DYN
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|ET_CORE
 value|4
 end_define
@@ -708,38 +715,6 @@ name|Elf64_Shdr
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* Notes used in ET_CORE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NT_PRSTATUS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|NT_PRFPREG
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|NT_PRPSINFO
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|NT_TASKSTRUCT
-value|4
-end_define
-
 begin_define
 define|#
 directive|define
@@ -791,6 +766,10 @@ name|Elf64_Nhdr
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Notes used in ET_CORE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -816,6 +795,13 @@ begin_define
 define|#
 directive|define
 name|NT_PRXREG
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_TASKSTRUCT
 value|4
 end_define
 
