@@ -1781,6 +1781,11 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
+name|sleepqueue
+modifier|*
+name|sq
+decl_stmt|;
+name|struct
 name|thread
 modifier|*
 name|td
@@ -1813,7 +1818,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* We were removed */
+comment|/*  	 * If we have a sleep queue, then we've already been woken up, so 	 * just return. 	 */
 if|if
 condition|(
 name|td
@@ -1823,6 +1828,51 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_lock
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * If TDF_TIMEOUT is set, then our sleep has been timed out 	 * already but we are still on the sleep queue, so dequeue the 	 * thread and return. 	 */
+if|if
+condition|(
+name|td
+operator|->
+name|td_flags
+operator|&
+name|TDF_TIMEOUT
+condition|)
+block|{
+name|MPASS
+argument_list|(
+name|TD_ON_SLEEPQ
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sq
+operator|=
+name|sleepq_lookup
+argument_list|(
+name|wchan
+argument_list|)
+expr_stmt|;
+name|sleepq_resume_thread
+argument_list|(
+name|sq
+argument_list|,
+name|td
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -3280,7 +3330,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If the thread is on the SLEEPQ but not sleeping and we have it 	 * locked it must be in sleepq_catch_signals().  Let it know we've  	 * timedout here so it can remove itself. 	 */
+comment|/* 	 * If the thread is on the SLEEPQ but isn't sleeping yet, it 	 * can either be on another CPU in between sleepq_add() and 	 * one of the sleepq_*wait*() routines or it can be in 	 * sleepq_catch_signals(). 	 */
 if|if
 condition|(
 name|TD_ON_SLEEPQ
@@ -3294,14 +3344,6 @@ operator|->
 name|td_flags
 operator||=
 name|TDF_TIMEOUT
-operator||
-name|TDF_INTERRUPT
-expr_stmt|;
-name|td
-operator|->
-name|td_intrval
-operator|=
-name|EWOULDBLOCK
 expr_stmt|;
 name|thread_unlock
 argument_list|(
