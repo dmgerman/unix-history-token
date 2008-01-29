@@ -1069,18 +1069,7 @@ argument_list|,
 literal|"Set current thread context"
 argument_list|)
 expr_stmt|;
-name|add_com
-argument_list|(
-literal|"add-kld"
-argument_list|,
-name|class_files
-argument_list|,
-name|kgdb_add_kld_cmd
-argument_list|,
-literal|"Usage: add-kld FILE\n\ Load the symbols from the kernel loadable module FILE."
-argument_list|)
-expr_stmt|;
-name|kgdb_auto_load_klds
+name|kgdb_kld_init
 argument_list|()
 expr_stmt|;
 block|}
