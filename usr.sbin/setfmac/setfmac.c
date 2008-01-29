@@ -671,15 +671,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"labeling not supported in "
-literal|"%.*s"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|ftsent
-operator|->
-name|fts_pathlen
+literal|"labeling not supported in %s"
 argument_list|,
 name|ftsent
 operator|->
@@ -694,14 +686,7 @@ name|qflag
 condition|)
 name|warnx
 argument_list|(
-literal|"labeling not supported in %.*s"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|ftsent
-operator|->
-name|fts_pathlen
+literal|"labeling not supported in %s"
 argument_list|,
 name|ftsent
 operator|->
@@ -733,14 +718,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"traversing %.*s"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|ftsent
-operator|->
-name|fts_pathlen
+literal|"traversing %s"
 argument_list|,
 name|ftsent
 operator|->
@@ -752,18 +730,11 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"CANNOT HAPPEN (%d) traversing %.*s"
+literal|"CANNOT HAPPEN (%d) traversing %s"
 argument_list|,
 name|ftsent
 operator|->
 name|fts_info
-argument_list|,
-operator|(
-name|int
-operator|)
-name|ftsent
-operator|->
-name|fts_pathlen
 argument_list|,
 name|ftsent
 operator|->
@@ -2319,14 +2290,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%.*s matched by "
-argument_list|,
-operator|(
-name|int
-operator|)
-name|ftsent
-operator|->
-name|fts_pathlen
+literal|"%s matched by "
 argument_list|,
 name|ftsent
 operator|->
@@ -2602,14 +2566,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"mac_set_link(%.*s, %s)"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|ftsent
-operator|->
-name|fts_pathlen
+literal|"mac_set_link(%s, %s)"
 argument_list|,
 name|ftsent
 operator|->
