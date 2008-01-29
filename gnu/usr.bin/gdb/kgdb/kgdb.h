@@ -37,6 +37,14 @@ name|kernel
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|bfd
+modifier|*
+name|kern_bfd
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|kthr

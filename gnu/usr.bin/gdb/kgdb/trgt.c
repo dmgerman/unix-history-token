@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<kvm.h>
 end_include
 
@@ -57,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<command.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<exec.h>
 end_include
 
 begin_include
@@ -100,6 +112,13 @@ specifier|static
 name|struct
 name|target_ops
 name|kgdb_trgt_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bfd
+modifier|*
+name|kern_bfd
 decl_stmt|;
 end_decl_stmt
 
@@ -290,31 +309,11 @@ modifier|*
 name|target
 parameter_list|)
 block|{
-name|struct
-name|target_ops
-modifier|*
-name|tb
-decl_stmt|;
-name|tb
-operator|=
-name|find_target_beneath
+name|print_section_info
 argument_list|(
 name|target
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tb
-operator|->
-name|to_files_info
-operator|!=
-name|NULL
-condition|)
-name|tb
-operator|->
-name|to_files_info
-argument_list|(
-name|tb
+argument_list|,
+name|kern_bfd
 argument_list|)
 expr_stmt|;
 block|}
@@ -863,7 +862,7 @@ name|kgdb_trgt_ops
 operator|.
 name|to_longname
 operator|=
-literal|"kernel core files."
+literal|"kernel core files"
 expr_stmt|;
 name|kgdb_trgt_ops
 operator|.
@@ -942,6 +941,40 @@ operator|.
 name|to_xfer_memory
 operator|=
 name|kgdb_trgt_xfer_memory
+expr_stmt|;
+if|if
+condition|(
+name|build_section_table
+argument_list|(
+name|kern_bfd
+argument_list|,
+operator|&
+name|kgdb_trgt_ops
+operator|.
+name|to_sections
+argument_list|,
+operator|&
+name|kgdb_trgt_ops
+operator|.
+name|to_sections_end
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"\"%s\": can't find the file sections: %s"
+argument_list|,
+name|kernel
+argument_list|,
+name|bfd_errmsg
+argument_list|(
+name|bfd_get_error
+argument_list|()
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|add_target
 argument_list|(

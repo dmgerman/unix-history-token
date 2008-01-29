@@ -888,10 +888,6 @@ block|{
 name|CORE_ADDR
 name|bufp
 decl_stmt|;
-name|bfd
-modifier|*
-name|kern_bfd
-decl_stmt|;
 name|int
 name|size
 decl_stmt|,
@@ -1007,11 +1003,6 @@ argument_list|)
 expr_stmt|;
 block|}
 name|set_gdbarch_from_file
-argument_list|(
-name|kern_bfd
-argument_list|)
-expr_stmt|;
-name|bfd_close
 argument_list|(
 name|kern_bfd
 argument_list|)
