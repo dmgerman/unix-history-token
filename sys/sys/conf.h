@@ -1610,6 +1610,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|dump_write
+parameter_list|(
+name|struct
+name|dumperinfo
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|off_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|dumpsys
 parameter_list|(
