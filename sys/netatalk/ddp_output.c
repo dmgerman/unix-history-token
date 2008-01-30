@@ -855,7 +855,7 @@ operator|->
 name|rt_gateway
 argument_list|)
 expr_stmt|;
-comment|/* 	 * There are several places in the kernel where data is added to an 	 * mbuf without ensuring that the mbuf pointer is aligned.  This is 	 * bad for transition routing, since phase 1 and phase 2 packets end 	 * up poorly aligned due to the three byte elap header. 	 */
+comment|/* 	 * There are several places in the kernel where data is added to an 	 * mbuf without ensuring that the mbuf pointer is aligned.  This is 	 * bad for transition routing, since phase 1 and phase 2 packets end 	 * up poorly aligned due to the three byte elap header. 	 * 	 * XXXRW: kern/4184 suggests that an m_pullup() of (m) should take 	 * place here to address possible alignment issues. 	 * 	 * XXXRW: This appears not to handle M_PKTHDR properly, as it doesn't 	 * move the existing header from the old packet to the new one. 	 * Posibly should call M_MOVE_PKTHDR()?  This would also allow 	 * removing mac_mbuf_copy(). 	 */
 if|if
 condition|(
 operator|!
