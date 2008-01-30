@@ -79,12 +79,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAGIC_MIME
+name|MAGIC_MIME_TYPE
 value|0x000010
 end_define
 
 begin_comment
-comment|/* Return a mime string */
+comment|/* Return only the MIME type */
 end_comment
 
 begin_define
@@ -128,7 +128,7 @@ value|0x000100
 end_define
 
 begin_comment
-comment|/* Don't translate unprintable chars */
+comment|/* Don't translate unprint chars */
 end_comment
 
 begin_define
@@ -141,6 +141,24 @@ end_define
 begin_comment
 comment|/* Handle ENOENT etc as real errors */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_MIME_ENCODING
+value|0x000400
+end_define
+
+begin_comment
+comment|/* Return only the MIME encoding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_MIME
+value|(MAGIC_MIME_TYPE|MAGIC_MIME_ENCODING)
+end_define
 
 begin_define
 define|#
@@ -222,23 +240,27 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAGIC_NO_CHECK_FORTRAN
-value|0x080000
-end_define
-
-begin_comment
-comment|/* Don't check ascii/fortran */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MAGIC_NO_CHECK_TOKENS
 value|0x100000
 end_define
 
 begin_comment
 comment|/* Don't check ascii/tokens */
+end_comment
+
+begin_comment
+comment|/* Defined for backwards compatibility; does nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NO_CHECK_FORTRAN
+value|0x000000
+end_define
+
+begin_comment
+comment|/* Don't check ascii/fortran */
 end_comment
 
 begin_ifdef
@@ -281,6 +303,16 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|magic_descriptor
+parameter_list|(
+name|magic_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 specifier|const
