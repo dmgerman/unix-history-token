@@ -129,8 +129,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|long
+name|in_addr_t
 name|route_addr
 decl_stmt|;
 end_decl_stmt
@@ -260,7 +259,7 @@ modifier|*
 name|req
 decl_stmt|;
 block|{
-name|long
+name|in_addr_t
 name|haddr
 decl_stmt|;
 specifier|static
@@ -559,7 +558,10 @@ name|bp_address_u
 operator|.
 name|ip_addr
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+name|in_addr_t
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
