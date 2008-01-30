@@ -209,7 +209,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* Compact the achived log files with gzip. */
+comment|/* Compact the archived log files with gzip. */
 end_comment
 
 begin_define
@@ -220,7 +220,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* Compact the achived log files with bzip2. */
+comment|/* Compact the archived log files with bzip2. */
 end_comment
 
 begin_define
