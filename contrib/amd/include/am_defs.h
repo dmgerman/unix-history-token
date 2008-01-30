@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: am_defs.h,v 1.15.2.16 2004/05/12 15:54:31 ezk Exp $  * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/include/am_defs.h  * $Id: am_defs.h,v 1.15.2.16 2004/05/12 15:54:31 ezk Exp $  * $FreeBSD$  *  */
 end_comment
 
 begin_comment
@@ -137,115 +137,6 @@ end_endif
 
 begin_comment
 comment|/* not STDC_HEADERS */
-end_comment
-
-begin_comment
-comment|/* AIX requires this to be the first thing in the file. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__GNUC__
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|HAVE_ALLOCA_H
-end_if
-
-begin_include
-include|#
-directive|include
-file|<alloca.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not HAVE_ALLOCA_H */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_AIX
-end_ifdef
-
-begin_comment
-comment|/*  * This pragma directive is indented so that pre-ANSI C compilers will  * ignore it, rather than choke on it.  */
-end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|alloca
-end_pragma
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not _AIX */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|alloca
-end_ifndef
-
-begin_comment
-comment|/* predefined by HP cc +Olibcalls */
-end_comment
-
-begin_function_decl
-name|voidp
-name|alloca
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not alloca */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not _AIX */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not HAVE_ALLOCA_H */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not __GNUC__ */
 end_comment
 
 begin_comment
@@ -449,6 +340,31 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_ALL_SOURCE
+end_ifdef
+
+begin_comment
+comment|/*  * AIX 5.2 needs struct sigevent from signal.h to be defined, but I  * don't want to move the inclusion of signal.h this early into this  * file.  Luckily, amd doesn't need the size of this structure in any  * other structure that it uses.  So we sidestep it for now.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|sigevent
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _ALL_SOURCE */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -599,6 +515,31 @@ end_endif
 
 begin_comment
 comment|/* HAVE_SYS_TYPES_H */
+end_comment
+
+begin_comment
+comment|/*  * Actions to take if HAVE_LIMITS_H is defined.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_LIMITS_H_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_LIMITS_H */
 end_comment
 
 begin_comment
@@ -862,6 +803,41 @@ if|#
 directive|if
 name|HAVE_FCNTL_H
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LINUX_LOOP_H
+end_ifdef
+
+begin_comment
+comment|/* so I can mount large files as loop devices */
+end_comment
+
+begin_comment
+comment|/* XXX: need to move these two LARGEFILE defines to a better place */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_LARGEFILE64_SOURCE
+end_define
+
+begin_define
+define|#
+directive|define
+name|__USE_LARGEFILE64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_LINUX_LOOP_H */
+end_comment
 
 begin_include
 include|#
@@ -1473,6 +1449,31 @@ comment|/* HAVE_NET_ERRNO_H */
 end_comment
 
 begin_comment
+comment|/*  * Actions to take if<net/if.h> exists.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NET_IF_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_NET_IF_H */
+end_comment
+
+begin_comment
 comment|/*  * Actions to take if<net/route.h> exists.  */
 end_comment
 
@@ -1615,19 +1616,19 @@ comment|/* HAVE_SYS_MBUF_H */
 end_comment
 
 begin_comment
-comment|/*  * Actions to take if<net/if.h> exists.  */
+comment|/*  * Actions to take if<sys/mman.h> exists.  */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_NET_IF_H
+name|HAVE_SYS_MMAN_H
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|<sys/mman.h>
 end_include
 
 begin_endif
@@ -1636,7 +1637,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_NET_IF_H */
+comment|/* HAVE_SYS_MMAN_H */
 end_comment
 
 begin_comment
@@ -2637,7 +2638,78 @@ comment|/* HAVE_CDFS_CDFSMOUNT_H */
 end_comment
 
 begin_comment
-comment|/*  * Actions to take if<linux/auto_fs.h> exists.  * We really don't want<linux/fs.h> pulled in here  */
+comment|/*  * Actions to take if<linux/loop.h> exists.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LINUX_LOOP_H
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LINUX_POSIX_TYPES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<linux/posix_types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_LINUX_POSIX_TYPES_H */
+end_comment
+
+begin_comment
+comment|/* next dev_t lines needed due to changes in kernel code */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|dev_t
+end_undef
+
+begin_define
+define|#
+directive|define
+name|dev_t
+value|unsigned short
+end_define
+
+begin_comment
+comment|/* compatible with Red Hat and SuSE */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<linux/loop.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_LINUX_LOOP_H */
+end_comment
+
+begin_comment
+comment|/*  * AUTOFS PROTOCOL HEADER FILES:  */
+end_comment
+
+begin_comment
+comment|/*  * Actions to take if<linux/auto_fs[4].h> exists.  * We really don't want<linux/fs.h> pulled in here  */
 end_comment
 
 begin_ifndef
@@ -2664,6 +2736,27 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_LINUX_AUTO_FS4_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<linux/auto_fs4.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not HAVE_LINUX_AUTO_FS4_H */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_LINUX_AUTO_FS_H
 end_ifdef
 
@@ -2681,6 +2774,155 @@ end_endif
 begin_comment
 comment|/* HAVE_LINUX_AUTO_FS_H */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not HAVE_LINUX_AUTO_FS4_H */
+end_comment
+
+begin_comment
+comment|/*  * Actions to take if<sys/fs/autofs.h> exists.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_FS_AUTOFS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/fs/autofs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SYS_FS_AUTOFS_H */
+end_comment
+
+begin_comment
+comment|/*  * Actions to take if<rpcsvc/autofs_prot.h> or<sys/fs/autofs_prot.h> exist.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_RPCSVC_AUTOFS_PROT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<rpcsvc/autofs_prot.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not HAVE_RPCSVC_AUTOFS_PROT_H */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_FS_AUTOFS_PROT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/fs/autofs_prot.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SYS_FS_AUTOFS_PROT_H */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not HAVE_RPCSVC_AUTOFS_PROT_H */
+end_comment
+
+begin_comment
+comment|/*  * Actions to take if<lber.h> exists.  * This header file is required before<ldap.h> can be included.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LBER_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<lber.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_LBER_H */
+end_comment
+
+begin_comment
+comment|/*  * Actions to take if<ldap.h> exists.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LDAP_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ldap.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_LDAP_H */
+end_comment
+
+begin_comment
+comment|/****************************************************************************  ** IMPORTANT!!!							   **  ** We always include am-utils' amu_autofs_prot.h.			   **  ** That is actually defined in "conf/autofs/autofs_${autofs_style}.h"     **  ****************************************************************************/
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<amu_autofs_prot.h>
+end_include
 
 begin_comment
 comment|/*  * NFS PROTOCOL HEADER FILES:  */
@@ -2712,7 +2954,7 @@ comment|/* HAVE_NFS_EXPORT_H */
 end_comment
 
 begin_comment
-comment|/****************************************************************************  ** IMPORTANT!!!							   **  ** We always include am-util's amu_nfs_prot.h.				   **  ** That is actually defined in "conf/nfs_prot/nfs_prot_${host_os_name}.h" **  ****************************************************************************/
+comment|/****************************************************************************  ** IMPORTANT!!!							   **  ** We always include am-utils' amu_nfs_prot.h.				   **  ** That is actually defined in "conf/nfs_prot/nfs_prot_${host_os_name}.h" **  ****************************************************************************/
 end_comment
 
 begin_include
@@ -2937,11 +3179,21 @@ begin_comment
 comment|/* HAVE_SYS_FS_NFS_CLNT_H */
 end_comment
 
+begin_comment
+comment|/* complex rules for linux/nfs_mount.h: broken on so many systems */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|HAVE_LINUX_NFS_MOUNT_H
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LINUX_NFS_H
+end_ifndef
 
 begin_define
 define|#
@@ -2949,11 +3201,41 @@ directive|define
 name|_LINUX_NFS_H
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not _LINUX_NFS_H */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LINUX_NFS2_H
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_LINUX_NFS2_H
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not _LINUX_NFS2_H */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LINUX_NFS3_H
+end_ifndef
 
 begin_define
 define|#
@@ -2961,11 +3243,41 @@ directive|define
 name|_LINUX_NFS3_H
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not _LINUX_NFS3_H */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LINUX_NFS_FS_H
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_LINUX_NFS_FS_H
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not _LINUX_NFS_FS_H */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LINUX_IN_H
+end_ifndef
 
 begin_define
 define|#
@@ -2973,11 +3285,47 @@ directive|define
 name|_LINUX_IN_H
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not _LINUX_IN_H */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__KERNEL__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__KERNEL__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __KERNEL__ */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<linux/nfs_mount.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|__KERNEL__
+end_undef
 
 begin_endif
 endif|#
@@ -3036,56 +3384,6 @@ end_endif
 
 begin_comment
 comment|/* HAVE_HESIOD_H */
-end_comment
-
-begin_comment
-comment|/*  * Actions to take if<lber.h> exists.  * This header file is required before<ldap.h> can be included.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_LBER_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<lber.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_LBER_H */
-end_comment
-
-begin_comment
-comment|/*  * Actions to take if<ldap.h> exists.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_LDAP_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ldap.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_LDAP_H */
 end_comment
 
 begin_comment
@@ -3219,6 +3517,44 @@ directive|ifdef
 name|HAVE_RESOLV_H
 end_ifdef
 
+begin_comment
+comment|/*  * On AIX 5.2, both<resolv.h> and<arpa/nameser_compat.h> define MAXDNAME,  * if compiling with gcc -D_USE_IRS (so that we get extern definitions for  * hstrerror() and others).  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_AIX
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|MAXDNAME
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_USE_IRS
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|MAXDNAME
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(_AIX)&& defined(MAXDNAME)&& defined(_USE_IRS) */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -3332,6 +3668,31 @@ end_endif
 
 begin_comment
 comment|/* HAVE_MSDOSFS_MSDOSFSMOUNT_H */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FS_MSDOSFS_MSDOSFSMOUNT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<fs/msdosfs/msdosfsmount.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_FS_MSDOSFS_MSDOSFSMOUNT_H */
+end_comment
+
+begin_comment
+comment|/*  * Actions to take if<fs/msdosfs/msdosfsmount.h> exists.  */
 end_comment
 
 begin_ifdef
@@ -3879,6 +4240,52 @@ ifdef|#
 directive|ifdef
 name|HAVE_RPCSVC_NIS_H
 end_ifdef
+
+begin_comment
+comment|/*  * Solaris 10 (build 72) defines GROUP_OBJ in<sys/acl.h>, which is included  * in many other header files.<rpcsvc/nis.h> uses GROUP_OBJ inside enum  * zotypes.  So if you're unlucky enough to include both headers, you get a  * compile error because the two symbols conflict.  * A similar conflict arises with Sun cc and the definition of "GROUP".  *  * Temp hack: undefine acl.h's GROUP_OBJ and GROUP because they're not needed  * for am-utils.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GROUP_OBJ
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|GROUP_OBJ
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GROUP_OBJ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GROUP
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|GROUP
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GROUP */
+end_comment
 
 begin_include
 include|#
@@ -4643,6 +5050,31 @@ comment|/* HAVE_SYS_STATFS_H */
 end_comment
 
 begin_comment
+comment|/*  * Actions to take if<sys/statvfs.h> exists.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_STATVFS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/statvfs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SYS_STATVFS_H */
+end_comment
+
+begin_comment
 comment|/*  * Actions to take if<sys/vfs.h> exists.  */
 end_comment
 
@@ -5047,6 +5479,39 @@ end_endif
 
 begin_comment
 comment|/* HAVE_REGEX_H */
+end_comment
+
+begin_comment
+comment|/*  * Actions to take if<tcpd.h> exists.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_TCPD_H
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LIBWRAP
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<tcpd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(HAVE_TCPD_H)&& defined(HAVE_LIBWRAP) */
 end_comment
 
 begin_comment
@@ -5497,6 +5962,71 @@ comment|/* not HAVE_STRUCT_MNTENT */
 end_comment
 
 begin_comment
+comment|/*  * Provide FD_* macros for systems that lack them.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FD_SET
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FD_SET
+parameter_list|(
+name|fd
+parameter_list|,
+name|set
+parameter_list|)
+value|(*(set) |= (1<< (fd)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_ISSET
+parameter_list|(
+name|fd
+parameter_list|,
+name|set
+parameter_list|)
+value|(*(set)& (1<< (fd)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_CLR
+parameter_list|(
+name|fd
+parameter_list|,
+name|set
+parameter_list|)
+value|(*(set)&= ~(1<< (fd)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_ZERO
+parameter_list|(
+name|set
+parameter_list|)
+value|(*(set) = 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not FD_SET */
+end_comment
+
+begin_comment
 comment|/*  * Complete external definitions missing from some systems.  */
 end_comment
 
@@ -5917,6 +6447,59 @@ begin_comment
 comment|/* not HAVE_EXTERN_GETWD */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_TCPD_H
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LIBWRAP
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_EXTERN_HOSTS_CTL
+argument_list|)
+end_if
+
+begin_function_decl
+specifier|extern
+name|int
+name|hosts_ctl
+parameter_list|(
+name|char
+modifier|*
+name|daemon
+parameter_list|,
+name|char
+modifier|*
+name|client_name
+parameter_list|,
+name|char
+modifier|*
+name|client_addr
+parameter_list|,
+name|char
+modifier|*
+name|client_user
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(HAVE_TCPD_H)&& defined(HAVE_LIBWRAP)&& !defined(HAVE_EXTERN_HOSTS_CTL) */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -6093,6 +6676,34 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|HAVE_EXTERN_SLEEP
+end_ifndef
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|int
+name|sleep
+parameter_list|(
+name|unsigned
+name|int
+name|seconds
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not HAVE_EXTERN_SETITIMER */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_EXTERN_STRCASECMP
 end_ifndef
 
@@ -6158,6 +6769,84 @@ end_endif
 
 begin_comment
 comment|/* not HAVE_EXTERN_STRDUP */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_EXTERN_STRLCAT
+end_ifndef
+
+begin_comment
+comment|/*  * define this extern even if function does not exist, for it will  * be filled in by libamu/strlcat.c  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|size_t
+name|strlcat
+parameter_list|(
+name|char
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|src
+parameter_list|,
+name|size_t
+name|siz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not HAVE_EXTERN_STRLCAT */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_EXTERN_STRLCPY
+end_ifndef
+
+begin_comment
+comment|/*  * define this extern even if function does not exist, for it will  * be filled in by libamu/strlcpy.c  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|size_t
+name|strlcpy
+parameter_list|(
+name|char
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|src
+parameter_list|,
+name|size_t
+name|siz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not HAVE_EXTERN_STRLCPY */
 end_comment
 
 begin_if
@@ -6450,6 +7139,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<am_compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<am_xdr_func.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<am_utils.h>
 end_include
 
@@ -6466,16 +7167,6 @@ file|<aux_conf.h>
 end_include
 
 begin_comment
-comment|/* compatibility with old amd, while autoconfiscating it */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<am_compat.h>
-end_include
-
-begin_comment
 comment|/****************************************************************************/
 end_comment
 
@@ -6483,17 +7174,74 @@ begin_comment
 comment|/*  * External definitions that depend on other macros available (or not)  * and those are probably declared in any of the above headers.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_HASMNTOPT
-end_ifndef
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_BAD_HASMNTOPT
+end_ifdef
 
 begin_function_decl
 specifier|extern
 name|char
 modifier|*
-name|hasmntopt
+name|amu_hasmntopt
+parameter_list|(
+name|mntent_t
+modifier|*
+name|mnt
+parameter_list|,
+name|char
+modifier|*
+name|opt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not HAVE_BAD_HASMNTOPT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|amu_hasmntopt
+value|hasmntopt
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not HAVE_BAD_HASMNTOPT */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not HAVE_HASMNTOPT */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|amu_hasmntopt
 parameter_list|(
 name|mntent_t
 modifier|*
@@ -6514,16 +7262,6 @@ end_endif
 begin_comment
 comment|/* not HAVE_HASMNTOPT */
 end_comment
-
-begin_comment
-comment|/*  * include definitions of all possible xdr functions that are otherwise  * not defined elsewhere.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<am_xdr_func.h>
-end_include
 
 begin_endif
 endif|#

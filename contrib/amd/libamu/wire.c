@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: wire.c,v 1.8.2.10 2004/01/06 03:15:24 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/libamu/wire.c  *  */
 end_comment
 
 begin_comment
@@ -234,9 +234,10 @@ name|buf
 operator|=
 name|SALLOC
 argument_list|(
-literal|1024
+name|buf_size
 argument_list|)
 expr_stmt|;
+comment|/* initial allocation (may grow!) */
 if|if
 condition|(
 operator|!
@@ -251,11 +252,13 @@ operator|!
 name|localnets
 condition|)
 block|{
-name|sprintf
+name|xstrlcpy
 argument_list|(
 name|buf
 argument_list|,
-literal|"No networks.\n"
+literal|"No networks\n"
+argument_list|,
+name|buf_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -271,9 +274,12 @@ operator|->
 name|ip_next
 condition|)
 block|{
-name|sprintf
+comment|/* use buf_size for sizeof(buf) because of the realloc() below */
+name|xsnprintf
 argument_list|(
 name|buf
+argument_list|,
+name|buf_size
 argument_list|,
 literal|"Network: wire=\"%s\" (netnumber=%s).\n"
 argument_list|,
@@ -320,9 +326,14 @@ name|i
 operator|++
 control|)
 block|{
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s
+argument_list|)
 argument_list|,
 literal|"Network %d: wire=\"%s\" (netnumber=%s).\n"
 argument_list|,
@@ -365,11 +376,13 @@ name|buf_size
 argument_list|)
 expr_stmt|;
 block|}
-name|strcat
+name|xstrlcat
 argument_list|(
 name|buf
 argument_list|,
 name|s
+argument_list|,
+name|buf_size
 argument_list|)
 expr_stmt|;
 block|}
@@ -778,9 +791,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|netNumberBuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|netNumberBuf
+argument_list|)
 argument_list|,
 literal|"%lu"
 argument_list|,
@@ -805,9 +823,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|netNumberBuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|netNumberBuf
+argument_list|)
 argument_list|,
 literal|"%lu.%lu"
 argument_list|,
@@ -839,9 +862,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|netNumberBuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|netNumberBuf
+argument_list|)
 argument_list|,
 literal|"%lu.%lu.%lu"
 argument_list|,
@@ -870,9 +898,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|netNumberBuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|netNumberBuf
+argument_list|)
 argument_list|,
 literal|"%lu.%lu.%lu.%lu"
 argument_list|,
@@ -978,6 +1011,11 @@ name|inet_dquad
 argument_list|(
 name|buf
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
 name|subnet
 argument_list|)
 expr_stmt|;
@@ -1045,6 +1083,9 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
+name|size_t
+name|l
+parameter_list|,
 name|u_long
 name|addr
 parameter_list|)
@@ -1056,9 +1097,11 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|buf
+argument_list|,
+name|l
 argument_list|,
 literal|"%ld.%ld.%ld.%ld"
 argument_list|,
@@ -1125,18 +1168,6 @@ name|addrlist
 modifier|*
 name|al
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|char
-name|buf
-index|[
-literal|16
-index|]
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 for|for
 control|(
 name|al
@@ -1175,6 +1206,13 @@ return|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+block|{
+name|char
+name|buf
+index|[
+literal|16
+index|]
+decl_stmt|;
 name|plog
 argument_list|(
 name|XLOG_INFO
@@ -1185,10 +1223,16 @@ name|inet_dquad
 argument_list|(
 name|buf
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
 name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* DEBUG */
@@ -1298,17 +1342,16 @@ literal|'/'
 argument_list|)
 expr_stmt|;
 name|maskstr
-operator|++
-expr_stmt|;
-name|maskstr
 index|[
-operator|-
-literal|1
+literal|0
 index|]
 operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* null terminate netstr */
+name|maskstr
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1337,6 +1380,7 @@ literal|'.'
 argument_list|)
 condition|)
 block|{
+comment|/* XXX: inet_addr is obsolste, convert to inet_aton() */
 name|masknum
 operator|=
 name|inet_addr
@@ -1347,8 +1391,8 @@ expr_stmt|;
 if|if
 condition|(
 name|masknum
-operator|<
-literal|0
+operator|==
+name|INADDR_NONE
 condition|)
 comment|/* can be invalid (-1) or all-1s */
 name|masknum
@@ -1477,6 +1521,55 @@ return|return
 name|TRUE
 return|;
 block|}
+block|}
+return|return
+name|FALSE
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Determine whether a IP address (netnum) is one of the local interfaces,  * returns TRUE/FALSE.  * Does not include the loopback interface: caller needs to check that.  */
+end_comment
+
+begin_function
+name|int
+name|is_interface_local
+parameter_list|(
+name|u_long
+name|netnum
+parameter_list|)
+block|{
+name|addrlist
+modifier|*
+name|al
+decl_stmt|;
+for|for
+control|(
+name|al
+operator|=
+name|localnets
+init|;
+name|al
+condition|;
+name|al
+operator|=
+name|al
+operator|->
+name|ip_next
+control|)
+block|{
+if|if
+condition|(
+name|al
+operator|->
+name|ip_addr
+operator|==
+name|netnum
+condition|)
+return|return
+name|TRUE
+return|;
 block|}
 return|return
 name|FALSE
@@ -1636,18 +1729,20 @@ operator|!=
 name|AF_INET
 condition|)
 continue|continue;
-comment|/*      * If the interface is a loopback, or its not running      * then ignore it.      */
+comment|/*      * If the interface is the loopback, or it's not running,      * then ignore it.      */
 if|if
 condition|(
-operator|(
+name|S2IN
+argument_list|(
 name|ifap
 operator|->
-name|ifa_flags
-operator|&
-name|IFF_LOOPBACK
-operator|)
-operator|!=
-literal|0
+name|ifa_addr
+argument_list|)
+operator|==
+name|htonl
+argument_list|(
+name|INADDR_LOOPBACK
+argument_list|)
 condition|)
 continue|continue;
 if|if
@@ -1718,6 +1813,10 @@ if|if
 condition|(
 operator|!
 name|localnets
+operator|||
+name|tail
+operator|==
+name|NULL
 condition|)
 block|{
 name|localnets
@@ -1890,12 +1989,6 @@ index|[
 name|GFBUFLEN
 index|]
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|u_long net;   u_long mask;   u_long subnetshift;   char buf[GFBUFLEN], *s;
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|SIOCGIFFLAGS
@@ -2082,26 +2175,17 @@ operator|<
 literal|0
 condition|)
 continue|continue;
-comment|/*      * If the interface is a loopback, or its not running      * then ignore it.      */
-ifdef|#
-directive|ifdef
-name|IFF_LOOPBACK
+comment|/*      * If the interface is the loopback, or it's not running,      * then ignore it.      */
 if|if
 condition|(
-operator|(
-name|ifr
-operator|->
-name|ifr_flags
-operator|&
-name|IFF_LOOPBACK
-operator|)
-operator|!=
-literal|0
+name|address
+operator|==
+name|htonl
+argument_list|(
+name|INADDR_LOOPBACK
+argument_list|)
 condition|)
 continue|continue;
-endif|#
-directive|endif
-comment|/* IFF_LOOPBACK */
 comment|/*      * Fix for 0.0.0.0 loopback on SunOS 3.X which defines IFF_ROUTE      * instead of IFF_LOOPBACK.      */
 ifdef|#
 directive|ifdef

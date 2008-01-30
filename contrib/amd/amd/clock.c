@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: clock.c,v 1.4.2.4 2004/01/06 03:15:16 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/clock.c  *  */
 end_comment
 
 begin_comment
@@ -41,28 +41,6 @@ file|<amd.h>
 end_include
 
 begin_function_decl
-name|int
-name|timeout
-parameter_list|(
-name|u_int
-name|secs
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|fn
-function_decl|)
-parameter_list|(
-name|voidp
-parameter_list|)
-parameter_list|,
-name|voidp
-name|closure
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|reschedule_timeouts
 parameter_list|(
@@ -92,20 +70,15 @@ modifier|*
 name|c_next
 decl_stmt|;
 comment|/* List of callouts */
-name|void
-function_decl|(
+name|callout_fun
 modifier|*
 name|c_fn
-function_decl|)
-parameter_list|(
-name|voidp
-parameter_list|)
-function_decl|;
-comment|/* Function to call */
-name|voidp
-name|c_closure
 decl_stmt|;
-comment|/* Closure to pass to call */
+comment|/* Function to call */
+name|opaque_t
+name|c_arg
+decl_stmt|;
+comment|/* Argument to pass to call */
 name|time_t
 name|c_time
 decl_stmt|;
@@ -192,9 +165,8 @@ begin_define
 define|#
 directive|define
 name|CID_ALLOC
-parameter_list|(
-name|struct
-define|)	(++callout_id)
+parameter_list|()
+value|(++callout_id)
 end_define
 
 begin_define
@@ -290,7 +262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Schedule a callout.  *  * (*fn)(closure) will be called at clocktime() + secs  */
+comment|/*  * Schedule a callout.  *  * (*fn)(fn_arg) will be called at clocktime(NULL) + secs  */
 end_comment
 
 begin_function
@@ -300,17 +272,12 @@ parameter_list|(
 name|u_int
 name|secs
 parameter_list|,
-name|void
-function_decl|(
+name|callout_fun
 modifier|*
 name|fn
-function_decl|)
-parameter_list|(
-name|voidp
-parameter_list|)
 parameter_list|,
-name|voidp
-name|closure
+name|opaque_t
+name|fn_arg
 parameter_list|)
 block|{
 name|callout
@@ -324,7 +291,9 @@ name|time_t
 name|t
 init|=
 name|clocktime
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 operator|+
 name|secs
 decl_stmt|;
@@ -338,9 +307,9 @@ argument_list|()
 decl_stmt|;
 name|cpnew
 operator|->
-name|c_closure
+name|c_arg
 operator|=
-name|closure
+name|fn_arg
 expr_stmt|;
 name|cpnew
 operator|->
@@ -359,9 +328,7 @@ operator|->
 name|c_id
 operator|=
 name|CID_ALLOC
-argument_list|(
-expr|struct
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -553,9 +520,6 @@ operator|->
 name|c_id
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"rescheduling job %d back %ld seconds"
@@ -576,9 +540,6 @@ name|now
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|next_softclock
 operator|=
 name|cp
@@ -622,7 +583,9 @@ expr_stmt|;
 name|now
 operator|=
 name|clocktime
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 comment|/*      * While there are more callouts waiting...      */
 while|while
@@ -642,26 +605,21 @@ operator|<=
 name|now
 condition|)
 block|{
-comment|/*        * Extract first from list, save fn& closure and        * unlink callout from list and free.        * Finally call function.        *        * The free is done first because        * it is quite common that the        * function will call timeout()        * and try to allocate a callout        */
-name|void
-function_decl|(
+comment|/*        * Extract first from list, save fn& fn_arg and        * unlink callout from list and free.        * Finally call function.        *        * The free is done first because        * it is quite common that the        * function will call timeout()        * and try to allocate a callout        */
+name|callout_fun
 modifier|*
 name|fn
-function_decl|)
-parameter_list|(
-name|voidp
-parameter_list|)
 init|=
 name|cp
 operator|->
 name|c_fn
-function_decl|;
-name|voidp
-name|closure
+decl_stmt|;
+name|opaque_t
+name|fn_arg
 init|=
 name|cp
 operator|->
-name|c_closure
+name|c_arg
 decl_stmt|;
 name|callouts
 operator|.
@@ -681,7 +639,7 @@ modifier|*
 name|fn
 call|)
 argument_list|(
-name|closure
+name|fn_arg
 argument_list|)
 expr_stmt|;
 block|}
