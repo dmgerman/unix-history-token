@@ -2798,6 +2798,12 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+else|else
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
