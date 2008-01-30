@@ -4271,7 +4271,7 @@ else|else
 block|{
 name|i
 operator|=
-name|strcmp
+name|strcoll
 argument_list|(
 name|getsval
 argument_list|(
