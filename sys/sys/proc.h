@@ -3478,6 +3478,37 @@ parameter_list|()
 value|do {					\ 	KASSERT((curthread->td_pflags& TDP_NOSLEEPING),		\ 	    ("nested sleeping ok"));					\ 	curthread->td_pflags&= ~TDP_NOSLEEPING;			\ } while (0)
 end_define
 
+begin_comment
+comment|/*  * Get the current kernel thread stack usage.  * Prefer machine dependent version if present.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GET_STACK_USAGE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_USAGE
+parameter_list|(
+name|total
+parameter_list|,
+name|used
+parameter_list|)
+value|do {				\ 	struct thread	*td = curthread;				\ 	(total) = td->td_kstack_pages * PAGE_SIZE;			\ 	(used) = (char *)td->td_kstack +				\ 	    td->td_kstack_pages * PAGE_SIZE -				\ 	    (char *)&td;						\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GET_STACK_USAGE */
+end_comment
+
 begin_define
 define|#
 directive|define
