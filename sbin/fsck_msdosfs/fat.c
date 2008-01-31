@@ -1664,7 +1664,7 @@ condition|)
 block|{
 name|pwarn
 argument_list|(
-literal|"Cluster %u is marked %s with different indicators, "
+literal|"Cluster %u is marked %s with different indicators\n"
 argument_list|,
 name|cl
 argument_list|,
@@ -1681,7 +1681,7 @@ name|ask
 argument_list|(
 literal|1
 argument_list|,
-literal|"fix"
+literal|"Fix"
 argument_list|)
 condition|)
 block|{
@@ -3549,7 +3549,7 @@ name|ask
 argument_list|(
 literal|1
 argument_list|,
-literal|"fix"
+literal|"Fix"
 argument_list|)
 condition|)
 block|{
@@ -3600,7 +3600,7 @@ name|ask
 argument_list|(
 literal|1
 argument_list|,
-literal|"fix"
+literal|"Fix"
 argument_list|)
 condition|)
 for|for
