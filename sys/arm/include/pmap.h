@@ -180,39 +180,6 @@ block|{
 name|int
 name|pvh_attrs
 decl_stmt|;
-name|u_int
-name|uro_mappings
-decl_stmt|;
-name|u_int
-name|urw_mappings
-decl_stmt|;
-union|union
-block|{
-name|u_short
-name|s_mappings
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* Assume kernel count<= 65535 */
-name|u_int
-name|i_mappings
-decl_stmt|;
-block|}
-name|k_u
-union|;
-define|#
-directive|define
-name|kro_mappings
-value|k_u.s_mappings[0]
-define|#
-directive|define
-name|krw_mappings
-value|k_u.s_mappings[1]
-define|#
-directive|define
-name|k_mappings
-value|k_u.i_mappings
 name|int
 name|pv_list_count
 decl_stmt|;
@@ -235,7 +202,7 @@ parameter_list|(
 name|pg
 parameter_list|)
 define|\
-value|do {									\ 	TAILQ_INIT(&pg->pv_list);					\ 	mtx_init(&(pg)->md_page.pvh_mtx, "MDPAGE Mutex", NULL, MTX_DEV);\ 	(pg)->mdpage.pvh_attrs = 0;					\ 	(pg)->mdpage.uro_mappings = 0;					\ 	(pg)->mdpage.urw_mappings = 0;					\ 	(pg)->mdpage.k_mappings = 0;					\ } while (
+value|do {									\ 	TAILQ_INIT(&pg->pv_list);					\ 	mtx_init(&(pg)->md_page.pvh_mtx, "MDPAGE Mutex", NULL, MTX_DEV);\ 	(pg)->mdpage.pvh_attrs = 0;					\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
@@ -2131,31 +2098,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PVF_UNC
+name|PVF_NC
 value|0x20
 end_define
 
 begin_comment
-comment|/* mapping is 'user' non-cacheable */
+comment|/* mapping is non-cacheable */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PVF_KNC
+name|PVF_MWC
 value|0x40
 end_define
 
 begin_comment
-comment|/* mapping is 'kernel' non-cacheable */
+comment|/* mapping is used multiple times in userland */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|PVF_NC
-value|(PVF_UNC|PVF_KNC)
-end_define
 
 begin_function_decl
 name|void
