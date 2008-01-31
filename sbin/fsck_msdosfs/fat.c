@@ -1726,7 +1726,7 @@ name|ask
 argument_list|(
 literal|0
 argument_list|,
-literal|"use FAT 0's entry"
+literal|"Use FAT 0's entry"
 argument_list|)
 condition|)
 block|{
@@ -1746,7 +1746,7 @@ name|ask
 argument_list|(
 literal|0
 argument_list|,
-literal|"use FAT %d's entry"
+literal|"Use FAT %d's entry"
 argument_list|,
 name|fatnum
 argument_list|)
