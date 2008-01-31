@@ -639,7 +639,7 @@ name|n_inp
 argument_list|,
 name|stcb
 argument_list|,
-name|M_WAITOK
+name|SBL_WAIT
 argument_list|)
 expr_stmt|;
 name|atomic_subtract_int
@@ -1188,7 +1188,7 @@ name|n_inp
 argument_list|,
 name|stcb
 argument_list|,
-name|M_WAITOK
+name|SBL_WAIT
 argument_list|)
 expr_stmt|;
 name|atomic_subtract_int

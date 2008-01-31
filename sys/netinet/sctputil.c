@@ -25171,7 +25171,7 @@ argument_list|,
 operator|(
 name|block_allowed
 condition|?
-name|M_WAITOK
+name|SBL_WAIT
 else|:
 literal|0
 operator|)
