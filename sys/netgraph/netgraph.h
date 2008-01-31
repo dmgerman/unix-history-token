@@ -480,6 +480,17 @@ begin_comment
 comment|/* This is the dead hook.. don't free */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HK_HI_STACK
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Hook has hi stack usage */
+end_comment
+
 begin_comment
 comment|/*  * Public Methods for hook  * If you can't do it with these you probably shouldn;t be doing it.  */
 end_comment
@@ -641,6 +652,16 @@ parameter_list|(
 name|hook
 parameter_list|)
 value|do { hook->hk_flags |= HK_QUEUE; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_NG_HOOK_HI_STACK
+parameter_list|(
+name|hook
+parameter_list|)
+value|do { hook->hk_flags |= HK_HI_STACK; } while (0)
 end_define
 
 begin_comment
@@ -1527,6 +1548,40 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|_ng_hook_hi_stack
+parameter_list|(
+name|hook_p
+name|hook
+parameter_list|,
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+block|{
+name|_chkhook
+argument_list|(
+name|hook
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+name|_NG_HOOK_HI_STACK
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -1661,6 +1716,16 @@ parameter_list|(
 name|hook
 parameter_list|)
 value|_ng_hook_force_queue(hook, _NN_)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_HOOK_HI_STACK
+parameter_list|(
+name|hook
+parameter_list|)
+value|_ng_hook_hi_stack(hook, _NN_)
 end_define
 
 begin_else
@@ -1810,6 +1875,16 @@ parameter_list|(
 name|hook
 parameter_list|)
 value|_NG_HOOK_FORCE_QUEUE(hook)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_HOOK_HI_STACK
+parameter_list|(
+name|hook
+parameter_list|)
+value|_NG_HOOK_HI_STACK(hook)
 end_define
 
 begin_endif
@@ -2080,6 +2155,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NGF_HI_STACK
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* node has hi stack usage */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NGF_TYPE1
 value|0x10000000
 end_define
@@ -2254,6 +2340,17 @@ name|node
 parameter_list|)
 define|\
 value|do{ node->nd_flags |= NGF_FORCE_WRITER; }while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_NG_NODE_HI_STACK
+parameter_list|(
+name|node
+parameter_list|)
+define|\
+value|do{ node->nd_flags |= NGF_HI_STACK; }while (0)
 end_define
 
 begin_define
@@ -3087,6 +3184,40 @@ begin_function
 specifier|static
 name|__inline
 name|void
+name|_ng_node_hi_stack
+parameter_list|(
+name|node_p
+name|node
+parameter_list|,
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+block|{
+name|_chknode
+argument_list|(
+name|node
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+name|_NG_NODE_HI_STACK
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
 name|_ng_node_really_die
 parameter_list|(
 name|node_p
@@ -3312,6 +3443,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|NG_NODE_HI_STACK
+parameter_list|(
+name|node
+parameter_list|)
+value|_ng_node_hi_stack(node, _NN_)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NG_NODE_REALLY_DIE
 parameter_list|(
 name|node
@@ -3469,6 +3610,16 @@ parameter_list|(
 name|node
 parameter_list|)
 value|_NG_NODE_FORCE_WRITER(node)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NODE_HI_STACK
+parameter_list|(
+name|node
+parameter_list|)
+value|_NG_NODE_HI_STACK(node)
 end_define
 
 begin_define
