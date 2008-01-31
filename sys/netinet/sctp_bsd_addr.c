@@ -404,7 +404,7 @@ name|sctppcbinfo
 operator|.
 name|ipi_iterator_wq_mtx
 argument_list|,
-name|PI_NET
+literal|0
 argument_list|,
 literal|"waiting_for_work"
 argument_list|,
