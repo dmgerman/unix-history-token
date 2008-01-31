@@ -7812,26 +7812,12 @@ operator|->
 name|refs
 argument_list|)
 expr_stmt|;
-name|hook
-operator|=
-name|NGI_HOOK
-argument_list|(
-name|item
-argument_list|)
-expr_stmt|;
 name|node
 operator|=
 name|NGI_NODE
 argument_list|(
 name|item
 argument_list|)
-expr_stmt|;
-name|ngq
-operator|=
-operator|&
-name|node
-operator|->
-name|nd_input_queue
 expr_stmt|;
 if|if
 condition|(
@@ -7850,6 +7836,13 @@ argument_list|)
 expr_stmt|;
 comment|/* No address */
 block|}
+name|hook
+operator|=
+name|NGI_HOOK
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|item
@@ -8121,6 +8114,13 @@ block|}
 block|}
 endif|#
 directive|endif
+name|ngq
+operator|=
+operator|&
+name|node
+operator|->
+name|nd_input_queue
+expr_stmt|;
 if|if
 condition|(
 name|queue
@@ -8330,7 +8330,6 @@ operator|->
 name|refs
 argument_list|)
 condition|)
-block|{
 call|(
 modifier|*
 name|item
@@ -8349,7 +8348,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-block|}
 name|NG_FREE_ITEM
 argument_list|(
 name|item
@@ -8535,17 +8533,14 @@ case|:
 if|if
 condition|(
 name|hook
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|NG_HOOK_NOT_VALID
 argument_list|(
 name|hook
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * The hook has been zapped then we can't 				 * use it. Immediately drop its reference. 				 * The message may not need it. 				 */
+comment|/* 			 * The hook has been zapped then we can't use it. 			 * Immediately drop its reference. 			 * The message may not need it. 			 */
 name|NG_HOOK_UNREF
 argument_list|(
 name|hook
@@ -8555,7 +8550,6 @@ name|hook
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 comment|/* 		 * Similarly, if the node is a zombie there is 		 * nothing we can do with it, drop everything. 		 */
 if|if
@@ -8578,25 +8572,16 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
-else|else
-block|{
-comment|/* 			 * Call the appropriate message handler for the object. 			 * It is up to the message handler to free the message. 			 * If it's a generic message, handle it generically, 			 * otherwise call the type's message handler 			 * (if it exists) 			 * XXX (race). Remember that a queued message may 			 * reference a node or hook that has just been 			 * invalidated. It will exist as the queue code 			 * is holding a reference, but.. 			 */
-name|struct
-name|ng_mesg
-modifier|*
-name|msg
-init|=
+comment|/* 		 * Call the appropriate message handler for the object. 		 * It is up to the message handler to free the message. 		 * If it's a generic message, handle it generically, 		 * otherwise call the type's message handler (if it exists). 		 * XXX (race). Remember that a queued message may 		 * reference a node or hook that has just been 		 * invalidated. It will exist as the queue code 		 * is holding a reference, but.. 		 */
+if|if
+condition|(
+operator|(
 name|NGI_MSG
 argument_list|(
 name|item
 argument_list|)
-decl_stmt|;
-comment|/* 			 * check if the generic handler owns it. 			 */
-if|if
-condition|(
-operator|(
-name|msg
 operator|->
 name|header
 operator|.
@@ -8607,7 +8592,10 @@ operator|)
 operator|&&
 operator|(
 operator|(
-name|msg
+name|NGI_MSG
+argument_list|(
+name|item
+argument_list|)
 operator|->
 name|header
 operator|.
@@ -8633,7 +8621,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 * Now see if there is a handler (hook or node specific) 			 * in the target node. If none, silently discard. 			 */
 if|if
 condition|(
 operator|(
@@ -8696,7 +8683,6 @@ argument_list|,
 name|hook
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|NGQF_FN
@@ -8807,13 +8793,11 @@ if|if
 condition|(
 name|hook
 condition|)
-block|{
 name|NG_HOOK_UNREF
 argument_list|(
 name|hook
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|rw
@@ -8856,7 +8840,6 @@ operator|->
 name|refs
 argument_list|)
 condition|)
-block|{
 call|(
 modifier|*
 name|apply
@@ -8871,7 +8854,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
