@@ -5507,7 +5507,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"xptioctl: put \"device pass0\" in "
+literal|"xptioctl: put \"device pass\" in "
 literal|"your kernel config file\n"
 argument_list|)
 expr_stmt|;
