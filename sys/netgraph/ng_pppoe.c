@@ -2260,7 +2260,7 @@ literal|"%20s: matched %p for %d"
 argument_list|,
 name|__func__
 argument_list|,
-name|hook
+name|sp
 argument_list|,
 name|session
 argument_list|)
