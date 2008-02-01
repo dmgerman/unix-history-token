@@ -4197,6 +4197,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 ifdef|#
 directive|ifdef
 name|PC98
@@ -4293,6 +4295,7 @@ operator|->
 name|bios_sect
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|cp
 operator|=
