@@ -3274,28 +3274,7 @@ case|case
 name|PCIY_EXPRESS
 case|:
 comment|/* PCI-express */
-comment|/* 			 * Assume we have a PCI-express chipset if we have 			 * at least one PCI-express root port. 			 */
-name|val
-operator|=
-name|REG
-argument_list|(
-name|ptr
-operator|+
-name|PCIR_EXPRESS_FLAGS
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|val
-operator|&
-name|PCIM_EXP_FLAGS_TYPE
-operator|)
-operator|==
-name|PCIM_EXP_TYPE_ROOT_PORT
-condition|)
+comment|/* 			 * Assume we have a PCI-express chipset if we have 			 * at least one PCI-express device. 			 */
 name|pcie_chipset
 operator|=
 literal|1
