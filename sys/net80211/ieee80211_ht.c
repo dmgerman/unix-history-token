@@ -124,6 +124,10 @@ begin_comment
 comment|/* XXX need max array size */
 end_comment
 
+begin_comment
+comment|/* NB: these are for HT20 w/ long GI */
+end_comment
+
 begin_decl_stmt
 specifier|const
 name|int
@@ -5722,7 +5726,6 @@ name|tap
 operator|->
 name|txa_flags
 operator|&
-operator|~
 name|IEEE80211_AGGR_XCHGPEND
 operator|)
 operator|==
