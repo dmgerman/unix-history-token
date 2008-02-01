@@ -864,6 +864,39 @@ comment|/*  * Macros for sockets and socket buffering.  */
 end_comment
 
 begin_comment
+comment|/*  * Flags to sblock().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBL_WAIT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Wait if not immediately available. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBL_NOINTR
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Force non-interruptible sleep. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBL_VALID
+value|(SBL_WAIT | SBL_NOINTR)
+end_define
+
+begin_comment
 comment|/*  * Do we need to notify the other side when I/O is possible?  */
 end_comment
 
