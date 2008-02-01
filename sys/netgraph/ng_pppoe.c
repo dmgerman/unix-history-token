@@ -2261,6 +2261,12 @@ argument_list|,
 name|__func__
 argument_list|,
 name|sp
+condition|?
+name|sp
+operator|->
+name|hook
+else|:
+name|NULL
 argument_list|,
 name|session
 argument_list|)
