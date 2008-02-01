@@ -8045,6 +8045,7 @@ directive|ifdef
 name|GET_STACK_USAGE
 else|else
 block|{
+comment|/* 		 * Most of netgraph nodes has small stack consumption and 		 * for them it is more then enogh 20% of free stack. 		 * Nodes/hooks with higher stack usage should be marked as 		 * HI_STACK. For them 50% of stack will be guarantied. 		 * XXX: Values 50% (64/128) and 80% (100/128) are completely 		 * empirical. 		 */
 name|size_t
 name|st
 decl_stmt|,
