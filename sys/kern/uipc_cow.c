@@ -487,6 +487,15 @@ name|PAGE_SIZE
 argument_list|,
 name|socow_iodone
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|sf_buf_kva
+argument_list|(
+name|sf
+argument_list|)
+argument_list|,
 name|sf
 argument_list|,
 name|M_RDONLY

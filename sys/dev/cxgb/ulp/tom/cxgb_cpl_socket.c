@@ -1050,7 +1050,16 @@ name|m0
 operator|->
 name|m_ext
 operator|.
-name|ext_args
+name|ext_arg1
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* XXX: probably wrong /phk */
+name|m0
+operator|->
+name|m_ext
+operator|.
+name|ext_arg2
 operator|=
 name|NULL
 expr_stmt|;

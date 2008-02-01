@@ -378,7 +378,12 @@ parameter_list|)
 function_decl|;
 name|void
 modifier|*
-name|ext_args
+name|ext_arg1
+decl_stmt|;
+comment|/* optional argument pointer */
+name|void
+modifier|*
+name|ext_arg2
 decl_stmt|;
 comment|/* optional argument pointer */
 name|u_int
@@ -2506,7 +2511,13 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ext_args
+name|ext_arg1
+operator|=
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg2
 operator|=
 name|NULL
 expr_stmt|;
@@ -2675,14 +2686,16 @@ name|size
 parameter_list|,
 name|free
 parameter_list|,
-name|args
+name|arg1
+parameter_list|,
+name|arg2
 parameter_list|,
 name|flags
 parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|m_extadd((m), (caddr_t)(buf), (size), (free), (args), (flags), (type))
+value|m_extadd((m), (caddr_t)(buf), (size), (free),(arg1),(arg2),(flags), (type))
 end_define
 
 begin_define
@@ -3056,6 +3069,9 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|)
+parameter_list|,
+name|void
+modifier|*
 parameter_list|,
 name|void
 modifier|*

@@ -13111,7 +13111,15 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ext_args
+name|ext_arg1
+operator|=
+name|cl
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg2
 operator|=
 operator|(
 name|void

@@ -2487,6 +2487,8 @@ name|MBUF0_SIZE
 argument_list|,
 name|hatm_mbuf0_free
 argument_list|,
+name|c0
+argument_list|,
 name|sc
 argument_list|,
 name|M_PKTHDR
@@ -2670,6 +2672,8 @@ argument_list|,
 name|MBUF1_SIZE
 argument_list|,
 name|hatm_mbuf1_free
+argument_list|,
+name|c1
 argument_list|,
 name|sc
 argument_list|,

@@ -3240,6 +3240,8 @@ name|LGE_JUMBO_FRAMELEN
 argument_list|,
 name|lge_jfree
 argument_list|,
+name|buf
+argument_list|,
 operator|(
 expr|struct
 name|lge_softc

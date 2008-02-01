@@ -2936,6 +2936,10 @@ name|m_len
 argument_list|,
 name|ndis_return_packet
 argument_list|,
+name|m
+operator|->
+name|m_data
+argument_list|,
 name|p
 argument_list|,
 literal|0

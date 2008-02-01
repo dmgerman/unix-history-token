@@ -2038,6 +2038,8 @@ name|VMBUF_SIZE
 argument_list|,
 name|mbp_ext_free
 argument_list|,
+name|buf
+argument_list|,
 name|sc
 operator|->
 name|vbuf_pool
@@ -2068,6 +2070,8 @@ argument_list|,
 name|SMBUF_SIZE
 argument_list|,
 name|mbp_ext_free
+argument_list|,
+name|buf
 argument_list|,
 name|sc
 operator|->

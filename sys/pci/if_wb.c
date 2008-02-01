@@ -4399,6 +4399,10 @@ name|WB_BUFBYTES
 argument_list|,
 name|wb_bfree
 argument_list|,
+name|c
+operator|->
+name|wb_buf
+argument_list|,
 name|NULL
 argument_list|,
 literal|0

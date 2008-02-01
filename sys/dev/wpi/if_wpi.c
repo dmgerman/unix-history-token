@@ -5506,6 +5506,10 @@ argument_list|,
 name|wpi_free_rbuf
 argument_list|,
 name|rbuf
+operator|->
+name|vaddr
+argument_list|,
+name|rbuf
 argument_list|,
 literal|0
 argument_list|,
@@ -8248,6 +8252,10 @@ argument_list|,
 name|WPI_RBUF_SIZE
 argument_list|,
 name|wpi_free_rbuf
+argument_list|,
+name|rbuf
+operator|->
+name|vaddr
 argument_list|,
 name|rbuf
 argument_list|,

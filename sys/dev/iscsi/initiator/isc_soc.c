@@ -806,6 +806,12 @@ name|l
 argument_list|,
 name|nil_fn
 argument_list|,
+name|pp
+operator|->
+name|ds
+operator|+
+name|off
+argument_list|,
 name|NULL
 argument_list|,
 literal|0

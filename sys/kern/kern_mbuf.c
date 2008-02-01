@@ -1958,12 +1958,29 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ext_args
+name|ext_arg1
 operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: ext_args != NULL"
+literal|"%s: ext_arg1 != NULL"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg2
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: ext_arg2 != NULL"
 operator|,
 name|__func__
 operator|)
@@ -2247,7 +2264,15 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ext_args
+name|ext_arg1
+operator|=
+name|NULL
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg2
 operator|=
 name|NULL
 expr_stmt|;

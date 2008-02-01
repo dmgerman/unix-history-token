@@ -11122,6 +11122,8 @@ name|NFE_JLEN
 argument_list|,
 name|nfe_jfree
 argument_list|,
+name|buf
+argument_list|,
 operator|(
 expr|struct
 name|nfe_softc

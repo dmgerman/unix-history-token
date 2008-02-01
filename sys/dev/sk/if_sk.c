@@ -5155,6 +5155,8 @@ operator|*
 operator|)
 name|sc_if
 argument_list|,
+name|buf
+argument_list|,
 literal|0
 argument_list|,
 name|EXT_NET_DRV

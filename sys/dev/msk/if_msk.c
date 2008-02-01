@@ -4299,6 +4299,8 @@ name|MSK_JLEN
 argument_list|,
 name|msk_jfree
 argument_list|,
+name|buf
+argument_list|,
 operator|(
 expr|struct
 name|msk_if_softc
