@@ -4143,7 +4143,7 @@ name|SBLOCKWAIT
 parameter_list|(
 name|f
 parameter_list|)
-value|(((f)& MSG_DONTWAIT) ? M_NOWAIT : M_WAITOK)
+value|(((f)& MSG_DONTWAIT) ? 0 : SBL_WAIT)
 end_define
 
 begin_function
@@ -8731,6 +8731,12 @@ name|sockbuf
 name|asb
 decl_stmt|;
 comment|/* 	 * XXXRW: This is quite ugly.  Previously, this code made a copy of 	 * the socket buffer, then zero'd the original to clear the buffer 	 * fields.  However, with mutexes in the socket buffer, this causes 	 * problems.  We only clear the zeroable bits of the original; 	 * however, we have to initialize and destroy the mutex in the copy 	 * so that dom_dispose() and sbrelease() can lock t as needed. 	 */
+comment|/* 	 * Dislodge threads currently blocked in receive and wait to acquire 	 * a lock against other simultaneous readers before clearing the 	 * socket buffer.  Don't let our acquire be interrupted by a signal 	 * despite any existing socket disposition on interruptable waiting. 	 */
+name|socantrcvmore
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -8738,23 +8744,9 @@ name|sblock
 argument_list|(
 name|sb
 argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|SOCKBUF_LOCK
-argument_list|(
-name|sb
-argument_list|)
-expr_stmt|;
-name|sb
-operator|->
-name|sb_flags
-operator||=
-name|SB_NOINTR
-expr_stmt|;
-name|socantrcvmore_locked
-argument_list|(
-name|so
+name|SBL_WAIT
+operator||
+name|SBL_NOINTR
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Invalidate/clear most of the sockbuf structure, but leave selinfo 	 * and mutex data unchanged. 	 */

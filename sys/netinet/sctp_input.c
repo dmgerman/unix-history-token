@@ -12531,7 +12531,7 @@ argument_list|,
 operator|*
 name|stcb
 argument_list|,
-name|M_NOWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 name|SCTP_TCB_LOCK

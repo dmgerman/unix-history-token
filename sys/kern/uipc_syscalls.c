@@ -8998,7 +8998,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Protect against multiple writers to the socket. */
+comment|/* 	 * Protect against multiple writers to the socket. 	 * 	 * XXXRW: Historically this has assumed non-interruptibility, so now 	 * we implement that, but possibly shouldn't. 	 */
 operator|(
 name|void
 operator|)
@@ -9009,7 +9009,9 @@ name|so
 operator|->
 name|so_snd
 argument_list|,
-name|M_WAITOK
+name|SBL_WAIT
+operator||
+name|SBL_NOINTR
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Loop through the pages of the file, starting with the requested 	 * offset. Get a file page (do I/O if necessary), map the file page 	 * into an sf_buf, attach an mbuf header to the sf_buf, and queue 	 * it on the socket. 	 * This is done in two loops.  The inner loop turns as many pages 	 * as it can, up to available socket buffer space, without blocking 	 * into mbufs to have it bulk delivered into the socket send buffer. 	 * The outer loop checks the state and available space of the socket 	 * and takes care of the overall progress. 	 */
