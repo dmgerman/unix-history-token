@@ -2307,7 +2307,7 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Move data from hold buffer into user space. 	 * We know the entire buffer is transferred since 	 * we checked above that the read buffer is bpf_bufsize bytes. 	 */
+comment|/* 	 * Move data from hold buffer into user space. 	 * We know the entire buffer is transferred since 	 * we checked above that the read buffer is bpf_bufsize bytes. 	 * 	 * XXXRW: More synchronization needed here: what if a second thread 	 * issues a read on the same fd at the same time?  Don't want this 	 * getting invalidated. 	 */
 name|error
 operator|=
 name|uiomove
