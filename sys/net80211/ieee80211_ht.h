@@ -122,6 +122,11 @@ name|struct
 name|callout
 name|txa_timer
 decl_stmt|;
+name|void
+modifier|*
+name|txa_private
+decl_stmt|;
+comment|/* driver-private storage */
 block|}
 struct|;
 end_struct
