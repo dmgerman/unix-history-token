@@ -632,6 +632,27 @@ name|CPUID2_DCA
 value|0x00040000
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPUID2_SSE41
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_SSE42
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_POPCNT
+value|0x00800000
+end_define
+
 begin_comment
 comment|/*  * Important bits in the AMD extended cpuid flags  */
 end_comment
