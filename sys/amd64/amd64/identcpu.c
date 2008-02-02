@@ -810,8 +810,8 @@ literal|"\020"
 literal|"\001SSE3"
 comment|/* SSE3 */
 literal|"\002<b1>"
-literal|"\003RSVD2"
-comment|/* "Reserved" bit 2 */
+literal|"\003DTES64"
+comment|/* 64-bit Debug Trace */
 literal|"\004MON"
 comment|/* MONITOR/MWAIT Instructions */
 literal|"\005DS_CPL"
@@ -842,7 +842,8 @@ literal|"\023DCA"
 comment|/* Direct Cache Access */
 literal|"\024SSE4.1"
 literal|"\025SSE4.2"
-literal|"\026<b21>"
+literal|"\026x2APIC"
+comment|/* xAPIC Extensions */
 literal|"\027<b22>"
 literal|"\030POPCNT"
 literal|"\031<b24>"

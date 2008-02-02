@@ -551,6 +551,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID2_DTES64
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID2_MON
 value|0x00000008
 end_define
@@ -644,6 +651,13 @@ define|#
 directive|define
 name|CPUID2_SSE42
 value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_X2APIC
+value|0x00200000
 end_define
 
 begin_define
