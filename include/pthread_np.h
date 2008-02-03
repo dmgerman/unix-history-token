@@ -191,6 +191,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pthread_mutex_islocked_np
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+name|mutex
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pthread_single_np
 parameter_list|(
 name|void
