@@ -2826,6 +2826,13 @@ name|SF_MNOWAIT
 value|0x00000002
 end_define
 
+begin_define
+define|#
+directive|define
+name|SF_SYNC
+value|0x00000004
+end_define
+
 begin_endif
 endif|#
 directive|endif
