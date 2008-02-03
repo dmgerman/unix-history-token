@@ -1146,6 +1146,14 @@ decl_stmt|;
 name|uint16_t
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|MFI_FRAME_DATAOUT
+value|0x08
+define|#
+directive|define
+name|MFI_FRAME_DATAIN
+value|0x10
 name|uint16_t
 name|timeout
 decl_stmt|;
