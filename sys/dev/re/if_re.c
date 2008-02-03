@@ -2656,14 +2656,7 @@ name|rxfilt
 operator||=
 name|RL_RXCFG_RX_ALLPHYS
 expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_ALLMULTI
-condition|)
+comment|/* 		 * Unlike other hardwares, we have to explicitly set 		 * RL_RXCFG_RX_MULTI to receive multicast frames in 		 * promiscuous mode. 		 */
 name|rxfilt
 operator||=
 name|RL_RXCFG_RX_MULTI
