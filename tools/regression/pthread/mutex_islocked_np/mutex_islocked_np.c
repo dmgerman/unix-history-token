@@ -50,13 +50,13 @@ name|pthread_mutex_islocked_np
 argument_list|(
 name|mtx
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pthread_mutex_islocked_np() returned zero\n"
+literal|"pthread_mutex_islocked_np() returned non-zero\n"
 literal|"for a mutex held by another thread\n"
 argument_list|)
 expr_stmt|;
