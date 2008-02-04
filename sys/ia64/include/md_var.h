@@ -243,6 +243,20 @@ name|trapframe
 struct_decl|;
 end_struct_decl
 
+begin_struct
+struct|struct
+name|ia64_init_return
+block|{
+name|uint64_t
+name|bspstore
+decl_stmt|;
+name|uint64_t
+name|sp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function_decl
 name|void
 name|busdma_swi
@@ -377,7 +391,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|struct
+name|ia64_init_return
 name|ia64_init
 parameter_list|(
 name|void

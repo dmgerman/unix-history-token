@@ -454,20 +454,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-name|kstack
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_offset_t
-name|proc0kstack
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|u_int64_t
 name|kernel_text
 index|[]
@@ -710,19 +696,6 @@ directive|define
 name|PHYS_AVAIL_ARRAY_END
 value|((sizeof(phys_avail) / sizeof(vm_offset_t)) - 2)
 end_define
-
-begin_function_decl
-name|void
-name|mi_startup
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* XXX should be in a MI header */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -2470,12 +2443,17 @@ block|}
 end_function
 
 begin_function
-name|void
+name|struct
+name|ia64_init_return
 name|ia64_init
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|ia64_init_return
+name|ret
+decl_stmt|;
 name|int
 name|phys_avail_cnt
 decl_stmt|;
@@ -3306,18 +3284,16 @@ name|thread0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Init mapping for kernel stack for proc 0 	 */
-name|proc0kstack
-operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|kstack
-expr_stmt|;
 name|thread0
 operator|.
 name|td_kstack
 operator|=
-name|proc0kstack
+name|pmap_steal_memory
+argument_list|(
+name|KSTACK_PAGES
+operator|*
+name|PAGE_SIZE
+argument_list|)
 expr_stmt|;
 name|thread0
 operator|.
@@ -3406,27 +3382,35 @@ expr_stmt|;
 name|ia64_srlz_d
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Save our current context so that we have a known (maybe even 	 * sane) context as the initial context for new threads that are 	 * forked from us. If any of those threads (including thread0) 	 * does something wrong, we may be lucky and return here where 	 * we're ready for them with a nice panic. 	 */
-if|if
-condition|(
-operator|!
-name|savectx
-argument_list|(
+name|ret
+operator|.
+name|bspstore
+operator|=
 name|thread0
 operator|.
 name|td_pcb
-argument_list|)
-condition|)
-name|mi_startup
-argument_list|()
+operator|->
+name|pcb_special
+operator|.
+name|bspstore
 expr_stmt|;
-comment|/* We should not get here. */
-name|panic
-argument_list|(
-literal|"ia64_init: Whooaa there!"
-argument_list|)
+name|ret
+operator|.
+name|sp
+operator|=
+name|thread0
+operator|.
+name|td_pcb
+operator|->
+name|pcb_special
+operator|.
+name|sp
 expr_stmt|;
-comment|/* NOTREACHED */
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 
