@@ -1768,6 +1768,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|sbrelease_internal
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|sbrelease_locked
 parameter_list|(
 name|struct
