@@ -523,7 +523,16 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* 	 * All lockusers keep their watch request and drop their 	 * own (lu_myreq) request.  Their own request is either 	 * some other lockuser's watch request or is the head of 	 * the lock. 	 */
+if|if
+condition|(
+name|lu
+operator|->
+name|lu_watchreq
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * In this case the lock is active.  All lockusers 		 * keep their watch request and drop their own 		 * (lu_myreq) request.  Their own request is either 		 * some other lockuser's watch request or is the 		 * head of the lock. 		 */
 name|lu
 operator|->
 name|lu_myreq
@@ -532,6 +541,13 @@ name|lu
 operator|->
 name|lu_watchreq
 expr_stmt|;
+name|lu
+operator|->
+name|lu_watchreq
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|lu
@@ -540,6 +556,7 @@ name|lu_myreq
 operator|==
 name|NULL
 condition|)
+comment|/* 		 * Oops, something isn't quite right.  Try to 		 * allocate one. 		 */
 return|return
 operator|(
 name|_lockuser_init
