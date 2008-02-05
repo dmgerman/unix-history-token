@@ -159,7 +159,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_m_collapse
+name|_cxgb_m_collapse
 parameter_list|(
 name|struct
 name|mbuf
@@ -439,7 +439,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|m_collapse
+name|cxgb_m_collapse
 parameter_list|(
 name|struct
 name|mbuf
@@ -494,7 +494,7 @@ operator|)
 return|;
 block|}
 return|return
-name|_m_collapse
+name|_cxgb_m_collapse
 argument_list|(
 name|m
 argument_list|,

@@ -9589,7 +9589,7 @@ name|len
 operator|>
 name|MCLBYTES
 operator|&&
-name|m_collapse
+name|cxgb_m_collapse
 argument_list|(
 name|m
 argument_list|,
@@ -9622,7 +9622,7 @@ name|m
 operator|=
 name|m0
 expr_stmt|;
-name|m_collapse
+name|cxgb_m_collapse
 argument_list|(
 name|m
 argument_list|,

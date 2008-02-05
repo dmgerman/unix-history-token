@@ -1435,7 +1435,7 @@ end_function
 
 begin_function
 name|int
-name|_m_collapse
+name|_cxgb_m_collapse
 parameter_list|(
 name|struct
 name|mbuf
