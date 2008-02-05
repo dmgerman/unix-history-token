@@ -188,6 +188,12 @@ init|=
 name|GPT_ENT_TYPE_FREEBSD_VINUM
 decl_stmt|;
 specifier|static
+name|uuid_t
+name|zfs
+init|=
+name|GPT_ENT_TYPE_FREEBSD_ZFS
+decl_stmt|;
+specifier|static
 name|char
 name|buf
 index|[
@@ -288,6 +294,23 @@ condition|)
 return|return
 operator|(
 literal|"FreeBSD vinum"
+operator|)
+return|;
+if|if
+condition|(
+name|uuid_equal
+argument_list|(
+name|t
+argument_list|,
+operator|&
+name|zfs
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|"FreeBSD ZFS"
 operator|)
 return|;
 if|if
