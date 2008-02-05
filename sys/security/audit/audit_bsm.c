@@ -1463,6 +1463,9 @@ case|case
 name|AUE_BIND
 case|:
 case|case
+name|AUE_LISTEN
+case|:
+case|case
 name|AUE_CONNECT
 case|:
 case|case
