@@ -605,6 +605,7 @@ block|{
 name|int
 name|len
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|dst
