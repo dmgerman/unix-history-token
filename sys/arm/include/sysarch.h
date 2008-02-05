@@ -26,6 +26,43 @@ end_define
 begin_include
 include|#
 directive|include
+file|<machine/armreg.h>
+end_include
+
+begin_comment
+comment|/*  * The ARM_TP_ADDRESS points to a special purpose page, which is used as local  * store for the ARM per-thread data and Restartable Atomic Sequences support.  * Put it just above the "high" vectors' page.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM_TP_ADDRESS
+value|(ARM_VECTORS_HIGH + 0x1000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_RAS_START
+value|(ARM_TP_ADDRESS + 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARM_RAS_END
+value|(ARM_TP_ADDRESS + 8)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -70,17 +107,6 @@ directive|define
 name|ARM_GET_TP
 value|3
 end_define
-
-begin_define
-define|#
-directive|define
-name|ARM_TP_ADDRESS
-value|0xe0000000
-end_define
-
-begin_comment
-comment|/* Magic */
-end_comment
 
 begin_struct
 struct|struct
@@ -147,6 +173,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOCORE */
+end_comment
 
 begin_endif
 endif|#

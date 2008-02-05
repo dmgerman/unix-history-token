@@ -34,6 +34,23 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<machine/sysarch.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|I32_bit
 end_ifndef
 
@@ -86,20 +103,6 @@ define|\
 value|do {						\ 		u_int cpsr_save, tmp;			\ 							\ 		__asm __volatile(			\ 			"mrs  %0, cpsr;"		\ 			"orr  %1, %0, %2;"		\ 			"msr  cpsr_all, %1;"		\ 			: "=r" (cpsr_save), "=r" (tmp)	\ 			: "I" (I32_bit | F32_bit)		\ 		        : "cc" );		\ 		(expr);				\ 		 __asm __volatile(		\ 			"msr  cpsr_all, %0"	\ 			:
 comment|/* no output */
 value|\ 			: "r" (cpsr_save)	\ 			: "cc" );		\ 	} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARM_RAS_START
-value|0xe0000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARM_RAS_END
-value|0xe0000008
 end_define
 
 begin_function
@@ -376,28 +379,26 @@ name|int
 name|done
 decl_stmt|,
 name|ras_start
+init|=
+name|ARM_RAS_START
 decl_stmt|;
 asm|__asm __volatile("1:\n"
 literal|"adr	%1, 1b\n"
-literal|"mov	%0, #0xe0000004\n"
 literal|"str	%1, [%0]\n"
-literal|"mov	%0, #0xe0000008\n"
 literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0]\n"
+literal|"str	%1, [%0, #4]\n"
 literal|"ldr	%1, [%2]\n"
 literal|"cmp	%1, %3\n"
 literal|"streq	%4, [%2]\n"
 literal|"2:\n"
 literal|"mov	%1, #0\n"
-literal|"mov	%0, #0xe0000004\n"
 literal|"str	%1, [%0]\n"
 literal|"mov	%1, #0xffffffff\n"
-literal|"mov	%0, #0xe0000008\n"
-literal|"str	%1, [%0]\n"
+literal|"str	%1, [%0, #4]\n"
 literal|"moveq	%1, #1\n"
 literal|"movne	%1, #0\n"
 operator|:
-literal|"=r"
+literal|"+r"
 operator|(
 name|ras_start
 operator|)
@@ -452,29 +453,27 @@ name|val
 parameter_list|)
 block|{
 name|int
-name|ras_start
-decl_stmt|,
 name|start
+decl_stmt|,
+name|ras_start
+init|=
+name|ARM_RAS_START
 decl_stmt|;
 asm|__asm __volatile("1:\n"
 literal|"adr	%1, 1b\n"
-literal|"mov	%0, #0xe0000004\n"
 literal|"str	%1, [%0]\n"
-literal|"mov	%0, #0xe0000008\n"
 literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0]\n"
+literal|"str	%1, [%0, #4]\n"
 literal|"ldr	%1, [%2]\n"
 literal|"add	%1, %1, %3\n"
 literal|"str	%1, [%2]\n"
 literal|"2:\n"
-literal|"mov	%0, #0xe0000004\n"
 literal|"mov	%1, #0\n"
 literal|"str	%1, [%0]\n"
 literal|"mov	%1, #0xffffffff\n"
-literal|"mov	%0, #0xe0000008\n"
-literal|"str	%1, [%0]\n"
+literal|"str	%1, [%0, #4]\n"
 operator|:
-literal|"=r"
+literal|"+r"
 operator|(
 name|ras_start
 operator|)
@@ -516,29 +515,27 @@ name|val
 parameter_list|)
 block|{
 name|int
-name|ras_start
-decl_stmt|,
 name|start
+decl_stmt|,
+name|ras_start
+init|=
+name|ARM_RAS_START
 decl_stmt|;
 asm|__asm __volatile("1:\n"
 literal|"adr	%1, 1b\n"
-literal|"mov	%0, #0xe0000004\n"
 literal|"str	%1, [%0]\n"
-literal|"mov	%0, #0xe0000008\n"
 literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0]\n"
+literal|"str	%1, [%0, #4]\n"
 literal|"ldr	%1, [%2]\n"
 literal|"sub	%1, %1, %3\n"
 literal|"str	%1, [%2]\n"
 literal|"2:\n"
-literal|"mov	%0, #0xe0000004\n"
 literal|"mov	%1, #0\n"
 literal|"str	%1, [%0]\n"
 literal|"mov	%1, #0xffffffff\n"
-literal|"mov	%0, #0xe0000008\n"
-literal|"str	%1, [%0]\n"
+literal|"str	%1, [%0, #4]\n"
 operator|:
-literal|"=r"
+literal|"+r"
 operator|(
 name|ras_start
 operator|)
@@ -580,29 +577,27 @@ name|setmask
 parameter_list|)
 block|{
 name|int
-name|ras_start
-decl_stmt|,
 name|start
+decl_stmt|,
+name|ras_start
+init|=
+name|ARM_RAS_START
 decl_stmt|;
 asm|__asm __volatile("1:\n"
 literal|"adr	%1, 1b\n"
-literal|"mov	%0, #0xe0000004\n"
 literal|"str	%1, [%0]\n"
-literal|"mov	%0, #0xe0000008\n"
 literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0]\n"
+literal|"str	%1, [%0, #4]\n"
 literal|"ldr	%1, [%2]\n"
 literal|"orr	%1, %1, %3\n"
 literal|"str	%1, [%2]\n"
 literal|"2:\n"
-literal|"mov	%0, #0xe0000004\n"
 literal|"mov	%1, #0\n"
 literal|"str	%1, [%0]\n"
 literal|"mov	%1, #0xffffffff\n"
-literal|"mov	%0, #0xe0000008\n"
-literal|"str	%1, [%0]\n"
+literal|"str	%1, [%0, #4]\n"
 operator|:
-literal|"=r"
+literal|"+r"
 operator|(
 name|ras_start
 operator|)
@@ -644,29 +639,27 @@ name|clearmask
 parameter_list|)
 block|{
 name|int
-name|ras_start
-decl_stmt|,
 name|start
+decl_stmt|,
+name|ras_start
+init|=
+name|ARM_RAS_START
 decl_stmt|;
 asm|__asm __volatile("1:\n"
 literal|"adr	%1, 1b\n"
-literal|"mov	%0, #0xe0000004\n"
 literal|"str	%1, [%0]\n"
-literal|"mov	%0, #0xe0000008\n"
 literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0]\n"
+literal|"str	%1, [%0, #4]\n"
 literal|"ldr	%1, [%2]\n"
 literal|"bic	%1, %1, %3\n"
 literal|"str	%1, [%2]\n"
 literal|"2:\n"
-literal|"mov	%0, #0xe0000004\n"
 literal|"mov	%1, #0\n"
 literal|"str	%1, [%0]\n"
 literal|"mov	%1, #0xffffffff\n"
-literal|"mov	%0, #0xe0000008\n"
-literal|"str	%1, [%0]\n"
+literal|"str	%1, [%0, #4]\n"
 operator|:
-literal|"=r"
+literal|"+r"
 operator|(
 name|ras_start
 operator|)
@@ -708,29 +701,27 @@ name|v
 parameter_list|)
 block|{
 name|uint32_t
-name|ras_start
-decl_stmt|,
 name|start
+decl_stmt|,
+name|ras_start
+init|=
+name|ARM_RAS_START
 decl_stmt|;
 asm|__asm __volatile("1:\n"
 literal|"adr	%1, 1b\n"
-literal|"mov	%0, #0xe0000004\n"
 literal|"str	%1, [%0]\n"
-literal|"mov	%0, #0xe0000008\n"
 literal|"adr	%1, 2f\n"
-literal|"str	%1, [%0]\n"
+literal|"str	%1, [%0, #4]\n"
 literal|"ldr	%1, [%2]\n"
-literal|"add	%0, %1, %3\n"
+literal|"add	%1, %1, %3\n"
 literal|"str	%0, [%2]\n"
 literal|"2:\n"
-literal|"mov	%0, #0xe0000004\n"
 literal|"mov	%3, #0\n"
 literal|"str	%3, [%0]\n"
-literal|"mov	%0, #0xe0000008\n"
 literal|"mov	%3, #0xffffffff\n"
-literal|"str	%3, [%0]\n"
+literal|"str	%3, [%0, #4]\n"
 operator|:
-literal|"=r"
+literal|"+r"
 operator|(
 name|ras_start
 operator|)
