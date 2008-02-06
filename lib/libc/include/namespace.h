@@ -710,6 +710,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|pthread_mutex_isowned_np
+value|_pthread_mutex_isowned_np
+end_define
+
+begin_define
+define|#
+directive|define
 name|pthread_mutex_lock
 value|_pthread_mutex_lock
 end_define
