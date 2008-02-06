@@ -108,36 +108,21 @@ init|=
 literal|1.4426950216e+00
 decl_stmt|,
 comment|/* 0x3fb8aa3b */
+comment|/*  * Domain [-0.34568, 0.34568], range ~[-4.278e-9, 4.447e-9]:  * |x*(exp(x)+1)/(exp(x)-1) - p(x)|< 2**-27.74  */
 name|P1
 init|=
-literal|1.6666667163e-01
+literal|1.6666625440e-1
 decl_stmt|,
-comment|/* 0x3e2aaaab */
+comment|/*  0xaaaa8f.0p-26 */
 name|P2
 init|=
 operator|-
-literal|2.7777778450e-03
-decl_stmt|,
-comment|/* 0xbb360b61 */
-name|P3
-init|=
-literal|6.6137559770e-05
-decl_stmt|,
-comment|/* 0x388ab355 */
-name|P4
-init|=
-operator|-
-literal|1.6533901999e-06
-decl_stmt|,
-comment|/* 0xb5ddea0e */
-name|P5
-init|=
-literal|4.1381369442e-08
+literal|2.7667332906e-3
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 0x3331bb4c */
+comment|/* -0xb55215.0p-32 */
 end_comment
 
 begin_decl_stmt
@@ -410,25 +395,7 @@ name|P1
 operator|+
 name|t
 operator|*
-operator|(
 name|P2
-operator|+
-name|t
-operator|*
-operator|(
-name|P3
-operator|+
-name|t
-operator|*
-operator|(
-name|P4
-operator|+
-name|t
-operator|*
-name|P5
-operator|)
-operator|)
-operator|)
 operator|)
 expr_stmt|;
 if|if
