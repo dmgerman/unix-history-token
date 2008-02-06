@@ -2263,6 +2263,11 @@ name|hookptr
 operator|=
 name|hook
 expr_stmt|;
+name|NG_HOOK_HI_STACK
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
