@@ -460,6 +460,10 @@ literal|10
 operator|+
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -1809,6 +1813,10 @@ name|hdr
 operator|&&
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|str
 operator|++
@@ -1816,6 +1824,10 @@ argument_list|)
 operator|==
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|hdr
 operator|++
