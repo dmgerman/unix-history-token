@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.91 2007/03/25 03:13:47 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.92 2007/11/08 00:31:37 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -561,8 +561,32 @@ name|FILE_BEQLDATE
 value|32
 define|#
 directive|define
-name|FILE_NAMES_SIZE
+name|FILE_FLOAT
 value|33
+define|#
+directive|define
+name|FILE_BEFLOAT
+value|34
+define|#
+directive|define
+name|FILE_LEFLOAT
+value|35
+define|#
+directive|define
+name|FILE_DOUBLE
+value|36
+define|#
+directive|define
+name|FILE_BEDOUBLE
+value|37
+define|#
+directive|define
+name|FILE_LEDOUBLE
+value|38
+define|#
+directive|define
+name|FILE_NAMES_SIZE
+value|39
 comment|/* size of array to contain all names */
 define|#
 directive|define
@@ -591,6 +615,16 @@ directive|define
 name|FILE_FMT_QUAD
 value|3
 comment|/* "ll" */
+define|#
+directive|define
+name|FILE_FMT_FLOAT
+value|4
+comment|/* "eEfFgG" */
+define|#
+directive|define
+name|FILE_FMT_DOUBLE
+value|5
+comment|/* "eEfFgG" */
 comment|/* Word 3 */
 name|uint8_t
 name|in_op
@@ -798,6 +832,12 @@ name|MAXstring
 index|]
 decl_stmt|;
 comment|/* the search string or regex pattern */
+name|float
+name|f
+decl_stmt|;
+name|double
+name|d
+decl_stmt|;
 block|}
 name|value
 union|;
