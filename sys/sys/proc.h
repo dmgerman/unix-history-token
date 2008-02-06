@@ -514,14 +514,18 @@ name|u_char
 name|td_owepreempt
 decl_stmt|;
 comment|/* (k*) Preempt on last critical_exit */
-name|short
-name|td_locks
-decl_stmt|;
-comment|/* (k) Count of non-spin locks. */
 name|u_char
 name|td_tsqueue
 decl_stmt|;
 comment|/* (t) Turnstile queue blocked on. */
+name|short
+name|td_locks
+decl_stmt|;
+comment|/* (k) Count of non-spin locks. */
+name|short
+name|td_rw_rlocks
+decl_stmt|;
+comment|/* (k) count of rwlock read locks. */
 name|struct
 name|turnstile
 modifier|*
