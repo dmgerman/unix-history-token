@@ -312,17 +312,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|_pthread_mutex_isowned_np
-parameter_list|(
-name|pthread_mutex_t
-modifier|*
-name|mutex
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|int
 name|mutex_self_trylock
