@@ -1116,7 +1116,7 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|int
-name|hpt_dbg_level
+name|hptrr_dbg_level
 decl_stmt|;
 end_decl_stmt
 
@@ -1127,7 +1127,7 @@ name|KdPrint
 parameter_list|(
 name|x
 parameter_list|)
-value|do { if (hpt_dbg_level) os_printk x; } while (0)
+value|do { if (hptrr_dbg_level) os_printk x; } while (0)
 end_define
 
 begin_function_decl
