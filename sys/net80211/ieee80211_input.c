@@ -3027,18 +3027,21 @@ name|m1
 operator|!=
 name|NULL
 condition|)
-name|IF_HANDOFF
+block|{
+name|int
+name|error
+decl_stmt|;
+comment|/* XXX does not work well with WME */
+name|IFQ_HANDOFF
 argument_list|(
-operator|&
 name|ifp
-operator|->
-name|if_snd
 argument_list|,
 name|m1
 argument_list|,
-name|ifp
+name|error
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
