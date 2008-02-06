@@ -163,6 +163,15 @@ comment|/**  * devctl hooks.  Typically one should use the devctl_notify  * hook
 end_comment
 
 begin_function_decl
+name|boolean_t
+name|devctl_process_running
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|devctl_notify
 parameter_list|(
