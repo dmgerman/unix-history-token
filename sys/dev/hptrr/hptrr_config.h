@@ -59,6 +59,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|delay_between_spinup
+value|hptrr_delay_between_spinup
+end_define
+
+begin_define
+define|#
+directive|define
 name|dmapool_active
 value|hptrr_dmapool_active
 end_define
@@ -166,6 +173,20 @@ define|#
 directive|define
 name|freelist_reserve_dma
 value|hptrr_freelist_reserve_dma
+end_define
+
+begin_define
+define|#
+directive|define
+name|gautorebuild
+value|hptrr_gautorebuild
+end_define
+
+begin_define
+define|#
+directive|define
+name|grebuildpriority
+value|hptrr_grebuildpriority
 end_define
 
 begin_define
@@ -297,8 +318,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ldm_alloc_cmds_R_5_41_57_40_16
-value|hptrr_ldm_alloc_cmds_R_5_41_57_40_16
+name|ldm_alloc_cmds_R_6_46_69_43_16
+value|hptrr_ldm_alloc_cmds_R_6_46_69_43_16
 end_define
 
 begin_define
@@ -423,6 +444,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ldm_ide_fixstring
+value|hptrr_ldm_ide_fixstring
+end_define
+
+begin_define
+define|#
+directive|define
 name|ldm_idle
 value|hptrr_ldm_idle
 end_define
@@ -493,15 +521,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ldm_register_him_R_5_41_57_40_16
-value|hptrr_ldm_register_him_R_5_41_57_40_16
+name|ldm_register_him_R_6_46_69_43_16
+value|hptrr_ldm_register_him_R_6_46_69_43_16
 end_define
 
 begin_define
 define|#
 directive|define
-name|ldm_register_vdev_class_R_5_41_57_40_16
-value|hptrr_ldm_register_vdev_class_R_5_41_57_40_16
+name|ldm_register_vdev_class_R_6_46_69_43_16
+value|hptrr_ldm_register_vdev_class_R_6_46_69_43_16
 end_define
 
 begin_define
@@ -670,6 +698,13 @@ define|#
 directive|define
 name|os_map_pci_bar
 value|hptrr_os_map_pci_bar
+end_define
+
+begin_define
+define|#
+directive|define
+name|os_max_cache_size
+value|hptrr_os_max_cache_size
 end_define
 
 begin_define

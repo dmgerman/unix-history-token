@@ -10,7 +10,7 @@ file|<dev/hptrr/hptrr_config.h>
 end_include
 
 begin_comment
-comment|/*  * $Id: array.h,v 1.40 2007/03/12 10:05:44 gmm Exp $  * Copyright (C) 2004-2005 HighPoint Technologies, Inc. All rights reserved.  */
+comment|/*  * $Id: array.h,v 1.44 2007/11/01 03:05:27 gmm Exp $  * Copyright (C) 2004-2005 HighPoint Technologies, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|VERMAGIC_ARRAY
-value|40
+value|43
 end_define
 
 begin_if
@@ -309,6 +309,19 @@ decl_stmt|;
 name|HPT_U16
 name|strip_width
 decl_stmt|;
+name|HPT_U8
+name|sector_size_shift
+decl_stmt|;
+comment|/*sector size = 512B<<sector_size_shift*/
+name|HPT_U8
+name|jid
+decl_stmt|;
+name|HPT_U8
+name|reserved
+index|[
+literal|2
+index|]
+decl_stmt|;
 name|HPT_MMASK
 name|outdated_members
 decl_stmt|;
@@ -430,10 +443,10 @@ name|_raw_partition
 modifier|*
 name|next
 decl_stmt|;
-name|HPT_RAW_LBA
+name|__HPT_RAW_LBA
 name|start
 decl_stmt|;
-name|HPT_RAW_LBA
+name|__HPT_RAW_LBA
 name|capacity
 decl_stmt|;
 name|PVDEV
@@ -452,7 +465,7 @@ block|{
 name|PVDEV
 name|raw_disk
 decl_stmt|;
-name|HPT_RAW_LBA
+name|__HPT_RAW_LBA
 name|des_location
 decl_stmt|;
 name|PRAW_PARTITION
