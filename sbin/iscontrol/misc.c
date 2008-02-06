@@ -775,7 +775,7 @@ name|b6
 operator|=
 literal|0
 expr_stmt|;
-comment|// to keep copiler happy.
+comment|// to keep compiler happy.
 for|for
 control|(
 name|i
