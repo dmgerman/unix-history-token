@@ -257,13 +257,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AMR_CONFIG_ENQ3_SOLICITED_NOTIFY
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
 name|AMR_CONFIG_PRODUCT_INFO
 value|0x0e
 end_define
