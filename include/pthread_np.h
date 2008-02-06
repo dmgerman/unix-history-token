@@ -191,7 +191,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pthread_mutex_islocked_np
+name|pthread_mutex_isowned_np
 parameter_list|(
 name|pthread_mutex_t
 modifier|*

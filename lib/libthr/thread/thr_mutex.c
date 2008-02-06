@@ -313,7 +313,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_pthread_mutex_islocked_np
+name|_pthread_mutex_isowned_np
 parameter_list|(
 name|pthread_mutex_t
 modifier|*
@@ -490,9 +490,9 @@ end_expr_stmt
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_pthread_mutex_islocked_np
+name|_pthread_mutex_isowned_np
 argument_list|,
-name|pthread_mutex_islocked_np
+name|pthread_mutex_isowned_np
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3718,7 +3718,7 @@ end_function
 
 begin_function
 name|int
-name|_pthread_mutex_islocked_np
+name|_pthread_mutex_isowned_np
 parameter_list|(
 name|pthread_mutex_t
 modifier|*
