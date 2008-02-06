@@ -42,6 +42,37 @@ block|{ }
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/* Get the current kernel thread stack usage. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_USAGE
+parameter_list|(
+name|total
+parameter_list|,
+name|used
+parameter_list|)
+value|do {				\ 	struct thread	*td = curthread;				\ 	(total) = td->td_kstack_pages * PAGE_SIZE;			\ 	(used) = (char *)td->td_kstack +				\ 	    td->td_kstack_pages * PAGE_SIZE -				\ 	    (char *)&td;						\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
