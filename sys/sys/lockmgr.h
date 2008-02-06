@@ -291,6 +291,28 @@ begin_comment
 comment|/* use lk_timo, else no timeout */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LK_NOWITNESS
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* disable WITNESS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_NODUP
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* enable duplication logging */
+end_comment
+
 begin_comment
 comment|/*  * Nonpersistent external flags.  */
 end_comment
@@ -496,11 +518,17 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|lockmgr_disown
+name|_lockmgr_disown
 parameter_list|(
 name|struct
 name|lock
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -555,6 +583,17 @@ name|mtx
 parameter_list|)
 define|\
 value|_lockmgr((lock), (flags), (mtx), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|lockmgr_disown
+parameter_list|(
+name|lock
+parameter_list|)
+define|\
+value|_lockmgr_disown((lock), __FILE__, __LINE__)
 end_define
 
 begin_define
