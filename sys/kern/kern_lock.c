@@ -1093,10 +1093,6 @@ name|LK_HAVE_EXCL
 expr_stmt|;
 if|if
 condition|(
-name|td
-operator|!=
-name|NULL
-operator|&&
 operator|!
 operator|(
 name|td
