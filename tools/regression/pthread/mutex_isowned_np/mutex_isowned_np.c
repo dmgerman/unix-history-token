@@ -46,7 +46,7 @@ name|arg
 decl_stmt|;
 if|if
 condition|(
-name|pthread_mutex_islocked_np
+name|pthread_mutex_isowned_np
 argument_list|(
 name|mtx
 argument_list|)
@@ -56,7 +56,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pthread_mutex_islocked_np() returned non-zero\n"
+literal|"pthread_mutex_isowned_np() returned non-zero\n"
 literal|"for a mutex held by another thread\n"
 argument_list|)
 expr_stmt|;
@@ -103,7 +103,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pthread_mutex_islocked_np
+name|pthread_mutex_isowned_np
 argument_list|(
 operator|&
 name|mtx
@@ -114,7 +114,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pthread_mutex_islocked_np() returned non-zero\n"
+literal|"pthread_mutex_isowned_np() returned non-zero\n"
 literal|"for a mutex that is not held\n"
 argument_list|)
 expr_stmt|;
@@ -132,7 +132,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pthread_mutex_islocked_np
+name|pthread_mutex_isowned_np
 argument_list|(
 operator|&
 name|mtx
@@ -143,7 +143,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pthread_mutex_islocked_np() returned zero\n"
+literal|"pthread_mutex_isowned_np() returned zero\n"
 literal|"for a mutex we hold ourselves\n"
 argument_list|)
 expr_stmt|;
@@ -181,7 +181,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pthread_mutex_islocked_np
+name|pthread_mutex_isowned_np
 argument_list|(
 operator|&
 name|mtx
@@ -192,7 +192,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pthread_mutex_islocked_np() returned non-zero\n"
+literal|"pthread_mutex_isowned_np() returned non-zero\n"
 literal|"for a mutex that is not held\n"
 argument_list|)
 expr_stmt|;
