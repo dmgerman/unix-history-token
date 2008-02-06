@@ -1695,7 +1695,7 @@ end_function
 
 begin_decl_stmt
 name|int
-name|hpt_dbg_level
+name|hptrr_dbg_level
 init|=
 literal|1
 decl_stmt|;
