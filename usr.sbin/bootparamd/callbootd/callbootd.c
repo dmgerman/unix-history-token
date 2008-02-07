@@ -383,7 +383,7 @@ name|getfile_res
 decl_stmt|,
 name|stat_getfile_res
 decl_stmt|;
-name|long
+name|in_addr_t
 name|the_inet_addr
 decl_stmt|;
 name|CLIENT
