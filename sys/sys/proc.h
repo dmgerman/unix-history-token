@@ -872,6 +872,46 @@ define|\
 value|do {									\ 	struct mtx *__m = (td)->td_lock;				\ 	if (__m !=&blocked_lock)					\ 		mtx_assert(__m, (type));				\ } while (0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|THREAD_LOCKPTR_ASSERT
+parameter_list|(
+name|td
+parameter_list|,
+name|lock
+parameter_list|)
+define|\
+value|do {									\ 	struct mtx *__m = (td)->td_lock;				\ 	KASSERT((__m ==&blocked_lock || __m == (lock)),		\ 	    ("Thread %p lock %p does not match %p", td, __m, (lock)));	\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|THREAD_LOCKPTR_ASSERT
+parameter_list|(
+name|td
+parameter_list|,
+name|lock
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Flags kept in td_flags:  * To change these you MUST have the scheduler lock.  */
 end_comment

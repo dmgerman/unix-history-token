@@ -3275,12 +3275,10 @@ argument_list|(
 name|wchan
 argument_list|)
 expr_stmt|;
-name|MPASS
+name|THREAD_LOCKPTR_ASSERT
 argument_list|(
 name|td
-operator|->
-name|td_lock
-operator|==
+argument_list|,
 operator|&
 name|sc
 operator|->
