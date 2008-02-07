@@ -808,13 +808,6 @@ decl_stmt|;
 name|int
 name|century
 decl_stmt|;
-if|if
-condition|(
-name|fmt
-operator|!=
-name|NULL
-condition|)
-block|{
 name|lt
 operator|=
 name|localtime
@@ -823,6 +816,21 @@ operator|&
 name|tval
 argument_list|)
 expr_stmt|;
+name|lt
+operator|->
+name|tm_isdst
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* divine correct DST */
+if|if
+condition|(
+name|fmt
+operator|!=
+name|NULL
+condition|)
+block|{
 name|t
 operator|=
 name|strptime
@@ -934,14 +942,6 @@ name|badformat
 argument_list|()
 expr_stmt|;
 block|}
-name|lt
-operator|=
-name|localtime
-argument_list|(
-operator|&
-name|tval
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dot
@@ -1209,14 +1209,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* Let mktime() decide whether summer time is in effect. */
-name|lt
-operator|->
-name|tm_isdst
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 comment|/* convert broken-down time to GMT clock time */
 if|if
 condition|(
