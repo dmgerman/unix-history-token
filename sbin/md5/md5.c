@@ -417,7 +417,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* max(MD5_DIGEST_LENGTH, SHA_DIGEST_LENGTH,  	SHA256_DIGEST_LENGTH, RIPEMD160_DIGEST_LENGTH)*2+1 */
+comment|/* max(MD5_DIGEST_LENGTH, SHA_DIGEST_LENGTH, 	SHA256_DIGEST_LENGTH, RIPEMD160_DIGEST_LENGTH)*2+1 */
 end_comment
 
 begin_define
