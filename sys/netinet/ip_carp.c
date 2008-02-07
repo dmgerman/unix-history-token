@@ -8059,7 +8059,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|EINVAL
+name|EEXIST
 expr_stmt|;
 goto|goto
 name|cleanup
