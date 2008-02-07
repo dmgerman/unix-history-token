@@ -2771,12 +2771,12 @@ name|rw
 operator|->
 name|rw_lock
 operator|&
-name|RW_LOCK_READ_WAITERS
+name|RW_LOCK_WRITE_WAITERS
 condition|)
 block|{
 name|queue
 operator|=
-name|TS_SHARED_QUEUE
+name|TS_EXCLUSIVE_QUEUE
 expr_stmt|;
 name|v
 operator||=
@@ -2785,14 +2785,14 @@ name|rw
 operator|->
 name|rw_lock
 operator|&
-name|RW_LOCK_WRITE_WAITERS
+name|RW_LOCK_READ_WAITERS
 operator|)
 expr_stmt|;
 block|}
 else|else
 name|queue
 operator|=
-name|TS_EXCLUSIVE_QUEUE
+name|TS_SHARED_QUEUE
 expr_stmt|;
 comment|/* Wake up all waiters for the specific queue. */
 if|if
