@@ -1401,11 +1401,6 @@ struct|struct
 name|in_ifadown_arg
 block|{
 name|struct
-name|radix_node_head
-modifier|*
-name|rnh
-decl_stmt|;
-name|struct
 name|ifaddr
 modifier|*
 name|ifa
@@ -1542,10 +1537,6 @@ condition|)
 return|return
 literal|1
 return|;
-name|arg
-operator|.
-name|rnh
-operator|=
 name|rnh
 operator|=
 name|rt_tables
