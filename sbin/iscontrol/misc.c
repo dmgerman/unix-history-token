@@ -611,7 +611,9 @@ name|dst
 decl_stmt|,
 modifier|*
 name|ds
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|char
 modifier|*
 name|cp
 decl_stmt|;
@@ -665,10 +667,6 @@ literal|2
 expr_stmt|;
 name|cp
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|md
 expr_stmt|;
 name|sprintf
@@ -771,17 +769,13 @@ literal|2
 expr_stmt|;
 name|cp
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|md
 expr_stmt|;
 name|b6
 operator|=
 literal|0
 expr_stmt|;
-comment|// to keep copiler happy.
+comment|// to keep compiler happy.
 for|for
 control|(
 name|i
