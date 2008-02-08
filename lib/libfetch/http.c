@@ -1065,8 +1065,12 @@ name|l
 operator|=
 name|len
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
+name|buf
+operator|+
+name|pos
+argument_list|,
 name|io
 operator|->
 name|buf
@@ -1074,10 +1078,6 @@ operator|+
 name|io
 operator|->
 name|bufpos
-argument_list|,
-name|buf
-operator|+
-name|pos
 argument_list|,
 name|l
 argument_list|)

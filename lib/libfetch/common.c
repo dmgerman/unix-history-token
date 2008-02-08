@@ -2877,14 +2877,14 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|us
-argument_list|,
 operator|&
 name|tmp
 operator|->
 name|stat
+argument_list|,
+name|us
 argument_list|,
 sizeof|sizeof
 argument_list|(
