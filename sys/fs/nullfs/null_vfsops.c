@@ -330,7 +330,7 @@ name|mp
 operator|->
 name|mnt_vnodecovered
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 condition|)
 block|{
@@ -385,7 +385,7 @@ name|mp
 operator|->
 name|mnt_vnodecovered
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 condition|)
 name|vn_lock
@@ -858,7 +858,7 @@ name|VOP_ISLOCKED
 argument_list|(
 name|vp
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 condition|)
 name|panic

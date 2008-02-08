@@ -2828,10 +2828,6 @@ name|KASSERT
 argument_list|(
 name|td
 operator|==
-name|NULL
-operator|||
-name|td
-operator|==
 name|curthread
 argument_list|,
 operator|(
@@ -2877,10 +2873,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|td
-operator|==
-name|NULL
-operator|||
 name|lkp
 operator|->
 name|lk_lockholder

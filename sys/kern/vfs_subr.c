@@ -7647,7 +7647,7 @@ name|VOP_ISLOCKED
 argument_list|(
 name|vp
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 operator|!=
 literal|0
@@ -9839,7 +9839,7 @@ name|VOP_ISLOCKED
 argument_list|(
 name|vp
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 operator|!=
 name|LK_EXCLUSIVE
@@ -12108,7 +12108,7 @@ name|VOP_ISLOCKED
 argument_list|(
 name|vp
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 condition|)
 name|vprint
@@ -13429,7 +13429,7 @@ name|VOP_ISLOCKED
 argument_list|(
 name|vp
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 operator|==
 literal|0
@@ -15727,7 +15727,7 @@ name|VOP_ISLOCKED
 argument_list|(
 name|vp
 argument_list|,
-name|NULL
+name|curthread
 argument_list|)
 operator|==
 literal|0
