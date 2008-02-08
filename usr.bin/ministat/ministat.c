@@ -2200,9 +2200,6 @@ name|int
 name|flag
 parameter_list|)
 block|{
-name|double
-name|a
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"%c %3d %13.8g %13.8g %13.8g %13.8g %13.8g"
@@ -2282,8 +2279,6 @@ name|t
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|c
 decl_stmt|;
 name|i
 operator|=
@@ -3613,6 +3608,7 @@ name|dataset
 modifier|*
 name|ReadSet
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|n
@@ -3620,6 +3616,7 @@ parameter_list|,
 name|int
 name|column
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|delim
@@ -4070,6 +4067,7 @@ decl_stmt|;
 name|double
 name|a
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|delim
