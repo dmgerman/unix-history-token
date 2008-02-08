@@ -51,6 +51,7 @@ name|procstat_basic
 parameter_list|(
 name|pid_t
 name|pid
+name|__unused
 parameter_list|,
 name|struct
 name|kinfo_proc
