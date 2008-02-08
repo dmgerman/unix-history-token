@@ -1210,7 +1210,7 @@ operator|=
 operator|*
 name|fid
 expr_stmt|;
-comment|/* NOTE:      * NetBSD and Venus internals use the "data" in the low 3 bits.      * Hence, the conversion.      */
+comment|/* NOTE:      * FreeBSD and Venus internals use the "data" in the low 3 bits.      * Hence, the conversion.      */
 name|inp
 operator|->
 name|flags

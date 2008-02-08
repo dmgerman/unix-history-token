@@ -313,7 +313,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Some NetBSD details:  *   *   coda_start is called at the end of the mount syscall.  *   coda_init is called at boot time.  */
+comment|/*  * Some FreeBSD details:  *   *   codadev_modevent is called at boot time or module load time.  */
 end_comment
 
 begin_define
@@ -679,7 +679,7 @@ modifier|*
 name|ap
 parameter_list|)
 block|{
-comment|/*       * NetBSD can pass the O_EXCL flag in mode, even though the check      * has already happened.  Venus defensively assumes that if open      * is passed the EXCL, it must be a bug.  We strip the flag here.      */
+comment|/*       * FreeBSD can pass the O_EXCL flag in mode, even though the check      * has already happened.  Venus defensively assumes that if open      * is passed the EXCL, it must be a bug.  We strip the flag here.      */
 comment|/* true args */
 specifier|register
 name|struct
@@ -2932,7 +2932,7 @@ name|CODA_FSYNC_STATS
 argument_list|)
 expr_stmt|;
 comment|/* Check for fsync on an unmounting object */
-comment|/* The NetBSD kernel, in it's infinite wisdom, can try to fsync      * after an unmount has been initiated.  This is a Bad Thing,      * which we have to avoid.  Not a legitimate failure for stats.      */
+comment|/*      * XXX: Is this comment true on FreeBSD?  It seems likely, since      * unmounting is fairly non-atomic.      *      * The NetBSD kernel, in it's infinite wisdom, can try to fsync      * after an unmount has been initiated.  This is a Bad Thing,      * which we have to avoid.  Not a legitimate failure for stats.      */
 if|if
 condition|(
 name|IS_UNMOUNTING
@@ -3322,7 +3322,7 @@ comment|/*  * Remote filesystem operations having to do with directory manipulat
 end_comment
 
 begin_comment
-comment|/*   * It appears that in NetBSD, lookup is supposed to return the vnode locked  */
+comment|/*   * In FreeBSD, lookup returns the vnode locked.  */
 end_comment
 
 begin_function
@@ -3692,7 +3692,7 @@ block|}
 block|}
 name|exit
 label|:
-comment|/*       * If we are creating, and this was the last name to be looked up,      * and the error was ENOENT, then there really shouldn't be an      * error and we can make the leaf NULL and return success.  Since      * this is supposed to work under Mach as well as NetBSD, we're      * leaving this fn wrapped.  We also must tell lookup/namei that      * we need to save the last component of the name.  (Create will      * have to free the name buffer later...lucky us...)      */
+comment|/*       * If we are creating, and this was the last name to be looked up,      * and the error was ENOENT, then there really shouldn't be an      * error and we can make the leaf NULL and return success.  Since      * this is supposed to work under Mach as well as FreeBSD, we're      * leaving this fn wrapped.  We also must tell lookup/namei that      * we need to save the last component of the name.  (Create will      * have to free the name buffer later...lucky us...)      */
 if|if
 condition|(
 operator|(

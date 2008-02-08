@@ -1083,7 +1083,7 @@ name|mi_started
 operator|=
 literal|1
 expr_stmt|;
-comment|/* On Mach, this is vref.  On NetBSD, VOP_LOCK */
+comment|/* On Mach, this is vref.  On FreeBSD, vref + vn_lock. */
 name|vref
 argument_list|(
 operator|*

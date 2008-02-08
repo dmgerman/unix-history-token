@@ -256,7 +256,7 @@ name|cnode
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* NetBSD vnodes don't have any Pager info in them ('cause there are 	   no external pagers, duh!) */
+comment|/* FreeBSD vnodes don't have any Pager info in them ('cause there are 	   no external pagers, duh!) */
 define|#
 directive|define
 name|VNODE_VM_INFO_INIT
@@ -886,7 +886,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *     First, step through all cnodes and mark them unmounting.  *         NetBSD kernels may try to fsync them now that venus  *         is dead, which would be a bad thing.  *  */
+comment|/*  *     First, step through all cnodes and mark them unmounting.  *         FreeBSD kernels may try to fsync them now that venus  *         is dead, which would be a bad thing.  *  */
 end_comment
 
 begin_function
