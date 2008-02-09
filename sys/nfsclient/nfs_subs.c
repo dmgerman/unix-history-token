@@ -2258,11 +2258,6 @@ name|struct
 name|vnode
 modifier|*
 name|vp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|int
@@ -2277,7 +2272,7 @@ name|VOP_ISLOCKED
 argument_list|(
 name|vp
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 operator|)
 operator|!=
@@ -2329,11 +2324,6 @@ name|struct
 name|vnode
 modifier|*
 name|vp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|,
 name|int
 name|old_lock

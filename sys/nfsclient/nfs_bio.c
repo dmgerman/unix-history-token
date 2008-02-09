@@ -1604,8 +1604,6 @@ operator|=
 name|nfs_upgrade_vnlock
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -1891,8 +1889,6 @@ label|:
 name|nfs_downgrade_vnlock
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|,
 name|old_lock
 argument_list|)
@@ -5976,8 +5972,6 @@ operator|=
 name|nfs_upgrade_vnlock
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now, flush as required. 	 */
@@ -6147,8 +6141,6 @@ label|:
 name|nfs_downgrade_vnlock
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|,
 name|old_lock
 argument_list|)
