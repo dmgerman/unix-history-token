@@ -89,6 +89,7 @@ modifier|*
 name|re
 decl_stmt|;
 comment|/* Regular expression */
+name|unsigned
 name|int
 name|maxbref
 decl_stmt|;
@@ -124,7 +125,7 @@ decl_stmt|;
 struct|struct
 name|trmulti
 block|{
-name|int
+name|size_t
 name|fromlen
 decl_stmt|;
 name|char
@@ -133,7 +134,7 @@ index|[
 name|MB_LEN_MAX
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|tolen
 decl_stmt|;
 name|char

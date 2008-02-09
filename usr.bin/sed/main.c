@@ -918,6 +918,9 @@ case|:
 if|if
 condition|(
 operator|(
+operator|(
+name|size_t
+operator|)
 name|snprintf
 argument_list|(
 name|string_ident

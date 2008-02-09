@@ -1155,6 +1155,9 @@ argument_list|,
 name|psl
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|psl
 operator|||
 name|write
@@ -1667,7 +1670,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%lu: %s: \\%d not defined in the RE"
+literal|"%lu: %s: \\%u not defined in the RE"
 argument_list|,
 name|linenum
 argument_list|,
@@ -2246,6 +2249,9 @@ argument_list|,
 name|psl
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|psl
 operator|||
 name|write
@@ -2796,6 +2802,7 @@ name|col
 decl_stmt|,
 name|width
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -2896,6 +2903,16 @@ operator|=
 literal|60
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|termwidth
+operator|<=
+literal|0
+condition|)
+name|termwidth
+operator|=
+literal|1
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -3168,6 +3185,9 @@ literal|4
 operator|*
 name|clen
 operator|>=
+operator|(
+name|unsigned
+operator|)
 name|termwidth
 condition|)
 block|{

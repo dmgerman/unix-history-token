@@ -2433,6 +2433,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|eval
 operator|=
 name|regcomp
@@ -2443,6 +2444,7 @@ name|re
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
