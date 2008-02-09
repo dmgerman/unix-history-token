@@ -1096,6 +1096,8 @@ operator|*
 name|vpp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|)
 expr_stmt|;
 name|MARK_INT_SAT
@@ -1186,6 +1188,8 @@ operator|*
 name|vpp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|)
 expr_stmt|;
 name|MARK_INT_SAT
@@ -1230,6 +1234,8 @@ operator|*
 name|vpp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|)
 expr_stmt|;
 name|MARK_INT_FAIL

@@ -910,6 +910,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|)
 expr_stmt|;
 name|error
@@ -1084,6 +1086,8 @@ operator|->
 name|c_ovp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|)
 expr_stmt|;
 name|VOP_CLOSE
@@ -1480,6 +1484,8 @@ argument_list|(
 name|cfvp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|)
 expr_stmt|;
 if|if
@@ -6373,6 +6379,8 @@ operator|->
 name|c_ovp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|)
 expr_stmt|;
 name|error
