@@ -1,10 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: info_ldap.c,v 1.9.2.9 2004/01/06 03:15:16 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/info_ldap.c  *  */
 end_comment
 
 begin_comment
 comment|/*  * Get info from LDAP (Lightweight Directory Access Protocol)  * LDAP Home Page: http://www.umich.edu/~rsug/ldap/  */
+end_comment
+
+begin_comment
+comment|/*  * WARNING: as of Linux Fedora Core 5 (which comes with openldap-2.3.9), the  * ldap.h headers deprecate several functions used in this file, such as  * ldap_unbind.  You get compile errors about missing extern definitions.  * Those externs are still in<ldap.h>, but surrounded by an ifdef  * LDAP_DEPRECATED.  I am turning on that ifdef here, under the assumption  * that the functions may be deprecated, but they still work for this  * (older?) version of the LDAP API.  It gets am-utils to compile, but it is  * not clear if it will work perfectly.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LDAP_DEPRECATED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LDAP_DEPRECATED
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not LDAP_DEPRECATED */
 end_comment
 
 begin_ifdef
@@ -257,9 +283,9 @@ specifier|static
 name|int
 name|get_ldap_timestamp
 parameter_list|(
-name|LDAP
+name|ALD
 modifier|*
-name|ld
+name|a
 parameter_list|,
 name|char
 modifier|*
@@ -522,6 +548,178 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Special ldap_unbind function to handle SIGPIPE.  * We first ignore SIGPIPE, in case a remote LDAP server was  * restarted, then we reinstall the handler.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|amu_ldap_unbind
+parameter_list|(
+name|LDAP
+modifier|*
+name|ld
+parameter_list|)
+block|{
+name|int
+name|e
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SIGACTION
+name|struct
+name|sigaction
+name|sa
+decl_stmt|;
+else|#
+directive|else
+comment|/* not HAVE_SIGACTION */
+name|void
+function_decl|(
+modifier|*
+name|handler
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+comment|/* not HAVE_SIGACTION */
+name|dlog
+argument_list|(
+literal|"amu_ldap_unbind()\n"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SIGACTION
+name|sa
+operator|.
+name|sa_handler
+operator|=
+name|SIG_IGN
+expr_stmt|;
+name|sa
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+operator|(
+name|sa
+operator|.
+name|sa_mask
+operator|)
+argument_list|)
+expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+operator|(
+name|sa
+operator|.
+name|sa_mask
+operator|)
+argument_list|,
+name|SIGPIPE
+argument_list|)
+expr_stmt|;
+name|sigaction
+argument_list|(
+name|SIGPIPE
+argument_list|,
+operator|&
+name|sa
+argument_list|,
+operator|&
+name|sa
+argument_list|)
+expr_stmt|;
+comment|/* set IGNORE, and get old action */
+else|#
+directive|else
+comment|/* not HAVE_SIGACTION */
+name|handler
+operator|=
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not HAVE_SIGACTION */
+name|e
+operator|=
+name|ldap_unbind
+argument_list|(
+name|ld
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SIGACTION
+name|sigemptyset
+argument_list|(
+operator|&
+operator|(
+name|sa
+operator|.
+name|sa_mask
+operator|)
+argument_list|)
+expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+operator|(
+name|sa
+operator|.
+name|sa_mask
+operator|)
+argument_list|,
+name|SIGPIPE
+argument_list|)
+expr_stmt|;
+name|sigaction
+argument_list|(
+name|SIGPIPE
+argument_list|,
+operator|&
+name|sa
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* not HAVE_SIGACTION */
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|handler
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not HAVE_SIGACTION */
+return|return
+name|e
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -554,7 +752,7 @@ name|ldap
 operator|!=
 name|NULL
 condition|)
-name|ldap_unbind
+name|amu_ldap_unbind
 argument_list|(
 name|a
 operator|->
@@ -594,6 +792,13 @@ name|CR
 modifier|*
 name|creds
 decl_stmt|;
+name|dlog
+argument_list|(
+literal|"-> amu_ldap_init: map<%s>\n"
+argument_list|,
+name|map
+argument_list|)
+expr_stmt|;
 comment|/*    * XXX: by checking that map_type must be defined, aren't we    * excluding the possibility of automatic searches through all    * map types?    */
 if|if
 condition|(
@@ -613,15 +818,24 @@ name|AMD_LDAP_TYPE
 argument_list|)
 condition|)
 block|{
-return|return
+name|dlog
+argument_list|(
+literal|"amu_ldap_init called with map_type<%s>\n"
+argument_list|,
 operator|(
-name|ENOENT
+name|gopt
+operator|.
+name|map_type
+condition|?
+name|gopt
+operator|.
+name|map_type
+else|:
+literal|"null"
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 else|else
 block|{
 name|dlog
@@ -632,9 +846,6 @@ name|map
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|aldh
 operator|=
 name|ALLOC
@@ -694,6 +905,16 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
+name|XFREE
+argument_list|(
+name|creds
+argument_list|)
+expr_stmt|;
+name|XFREE
+argument_list|(
+name|aldh
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
@@ -730,9 +951,12 @@ name|timestamp
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
+name|aldh
+operator|->
+name|ldap
+operator|=
+name|NULL
+expr_stmt|;
 name|dlog
 argument_list|(
 literal|"Trying for %s:%d\n"
@@ -750,9 +974,6 @@ operator|->
 name|port
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 if|if
 condition|(
 name|amu_ldap_rebind
@@ -782,9 +1003,6 @@ operator|*
 operator|)
 name|aldh
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"Bound to %s:%d\n"
@@ -802,16 +1020,11 @@ operator|->
 name|port
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 if|if
 condition|(
 name|get_ldap_timestamp
 argument_list|(
 name|aldh
-operator|->
-name|ldap
 argument_list|,
 name|map
 argument_list|,
@@ -823,22 +1036,19 @@ operator|(
 name|ENOENT
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"Got timestamp for map %s: %ld\n"
 argument_list|,
 name|map
 argument_list|,
+operator|(
+name|u_long
+operator|)
 operator|*
 name|ts
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 return|return
 operator|(
 literal|0
@@ -877,11 +1087,18 @@ name|time_t
 name|now
 init|=
 name|clocktime
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 decl_stmt|;
 name|int
 name|try
 decl_stmt|;
+name|dlog
+argument_list|(
+literal|"-> amu_ldap_rebind\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|a
@@ -904,18 +1121,12 @@ operator|>
 name|AMD_LDAP_TTL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
-literal|"Reestablishing ldap connection\n"
+literal|"Re-establishing ldap connection\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
-name|ldap_unbind
+name|amu_ldap_unbind
 argument_list|(
 name|a
 operator|->
@@ -928,6 +1139,26 @@ name|timestamp
 operator|=
 name|now
 expr_stmt|;
+name|a
+operator|->
+name|ldap
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Assume all is OK.  If it wasn't we'll be back! */
+name|dlog
+argument_list|(
+literal|"amu_ldap_rebind: timestamp OK\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
 for|for
@@ -1001,6 +1232,66 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|#
+directive|if
+name|LDAP_VERSION_MAX
+operator|>
+name|LDAP_VERSION2
+comment|/* handle LDAPv3 and heigher, if available and amd.conf-igured */
+if|if
+condition|(
+name|gopt
+operator|.
+name|ldap_proto_version
+operator|>
+name|LDAP_VERSION2
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|ldap_set_option
+argument_list|(
+name|ld
+argument_list|,
+name|LDAP_OPT_PROTOCOL_VERSION
+argument_list|,
+operator|&
+name|gopt
+operator|.
+name|ldap_proto_version
+argument_list|)
+condition|)
+block|{
+name|dlog
+argument_list|(
+literal|"amu_ldap_rebind: LDAP protocol version set to %ld\n"
+argument_list|,
+name|gopt
+operator|.
+name|ldap_proto_version
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|plog
+argument_list|(
+name|XLOG_WARNING
+argument_list|,
+literal|"Unable to set ldap protocol version to %ld\n"
+argument_list|,
+name|gopt
+operator|.
+name|ldap_proto_version
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* LDAP_VERSION_MAX> LDAP_VERSION2 */
 if|if
 condition|(
 name|ldap_bind_s
@@ -1053,9 +1344,17 @@ operator|>
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_LDAP_ENABLE_CACHE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_EXTERN_LDAP_ENABLE_CACHE
+argument_list|)
 name|ldap_enable_cache
 argument_list|(
 name|ld
@@ -1071,12 +1370,12 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* HAVE_LDAP_ENABLE_CACHE */
+comment|/* not defined(HAVE_LDAP_ENABLE_CACHE)&& defined(HAVE_EXTERN_LDAP_ENABLE_CACHE) */
 name|plog
 argument_list|(
 name|XLOG_WARNING
 argument_list|,
-literal|"ldap_enable_cache(%ld) does not exist on this system!\n"
+literal|"ldap_enable_cache(%ld) is not available on this system!\n"
 argument_list|,
 name|gopt
 operator|.
@@ -1085,7 +1384,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_LDAP_ENABLE_CACHE */
+comment|/* not defined(HAVE_LDAP_ENABLE_CACHE)&& defined(HAVE_EXTERN_LDAP_ENABLE_CACHE) */
+block|}
 name|a
 operator|->
 name|ldap
@@ -1103,7 +1403,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 name|plog
 argument_list|(
@@ -1133,9 +1432,9 @@ specifier|static
 name|int
 name|get_ldap_timestamp
 parameter_list|(
-name|LDAP
+name|ALD
 modifier|*
-name|ld
+name|a
 parameter_list|,
 name|char
 modifier|*
@@ -1178,10 +1477,19 @@ decl_stmt|;
 name|LDAPMessage
 modifier|*
 name|res
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|entry
 decl_stmt|;
+name|dlog
+argument_list|(
+literal|"-> get_ldap_timestamp: map<%s>\n"
+argument_list|,
+name|map
+argument_list|)
+expr_stmt|;
 name|tv
 operator|.
 name|tv_sec
@@ -1194,18 +1502,20 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|filter
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|filter
+argument_list|)
 argument_list|,
 name|AMD_LDAP_TSFILTER
 argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"Getting timestamp for map %s\n"
@@ -1229,9 +1539,6 @@ operator|.
 name|ldap_base
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 for|for
 control|(
 name|i
@@ -1250,7 +1557,9 @@ name|err
 operator|=
 name|ldap_search_st
 argument_list|(
-name|ld
+name|a
+operator|->
+name|ldap
 argument_list|,
 name|gopt
 operator|.
@@ -1278,17 +1587,80 @@ operator|==
 name|LDAP_SUCCESS
 condition|)
 break|break;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|dlog
+if|if
+condition|(
+name|res
+condition|)
+block|{
+name|ldap_msgfree
 argument_list|(
-literal|"Timestamp search timed out, trying again...\n"
+name|res
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
+name|res
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|plog
+argument_list|(
+name|XLOG_USER
+argument_list|,
+literal|"Timestamp LDAP search attempt %d failed: %s\n"
+argument_list|,
+name|i
+operator|+
+literal|1
+argument_list|,
+name|ldap_err2string
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+name|LDAP_TIMEOUT
+condition|)
+block|{
+name|dlog
+argument_list|(
+literal|"get_ldap_timestamp: unbinding...\n"
+argument_list|)
+expr_stmt|;
+name|amu_ldap_unbind
+argument_list|(
+name|a
+operator|->
+name|ldap
+argument_list|)
+expr_stmt|;
+name|a
+operator|->
+name|ldap
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|amu_ldap_rebind
+argument_list|(
+name|a
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+block|}
+name|dlog
+argument_list|(
+literal|"Timestamp search failed, trying again...\n"
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1314,6 +1686,15 @@ name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+condition|)
+name|ldap_msgfree
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
@@ -1324,7 +1705,9 @@ name|nentries
 operator|=
 name|ldap_count_entries
 argument_list|(
-name|ld
+name|a
+operator|->
+name|ldap
 argument_list|,
 name|res
 argument_list|)
@@ -1365,7 +1748,9 @@ name|entry
 operator|=
 name|ldap_first_entry
 argument_list|(
-name|ld
+name|a
+operator|->
+name|ldap
 argument_list|,
 name|res
 argument_list|)
@@ -1374,7 +1759,9 @@ name|vals
 operator|=
 name|ldap_get_values
 argument_list|(
-name|ld
+name|a
+operator|->
+name|ldap
 argument_list|,
 name|entry
 argument_list|,
@@ -1421,9 +1808,6 @@ name|ENOENT
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"TS value is:%s:\n"
@@ -1434,9 +1818,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 if|if
 condition|(
 name|vals
@@ -1508,6 +1889,9 @@ name|XLOG_USER
 argument_list|,
 literal|"Nonpositive timestamp %ld for map %s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 operator|*
 name|ts
 argument_list|,
@@ -1551,24 +1935,21 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"The timestamp for %s is %ld (err=%d)\n"
 argument_list|,
 name|map
 argument_list|,
+operator|(
+name|u_long
+operator|)
 operator|*
 name|ts
 argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 return|return
 operator|(
 name|err
@@ -1612,6 +1993,20 @@ name|filter
 index|[
 name|MAXPATHLEN
 index|]
+decl_stmt|,
+name|filter2
+index|[
+literal|2
+operator|*
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|f1
+decl_stmt|,
+modifier|*
+name|f2
 decl_stmt|;
 name|struct
 name|timeval
@@ -1638,6 +2033,8 @@ name|entry
 decl_stmt|,
 modifier|*
 name|res
+init|=
+name|NULL
 decl_stmt|;
 name|ALD
 modifier|*
@@ -1653,6 +2050,15 @@ operator|->
 name|map_data
 operator|)
 decl_stmt|;
+name|dlog
+argument_list|(
+literal|"-> amu_ldap_search: map<%s>, key<%s>\n"
+argument_list|,
+name|map
+argument_list|,
+name|key
+argument_list|)
+expr_stmt|;
 name|tv
 operator|.
 name|tv_sec
@@ -1698,9 +2104,14 @@ operator|(
 name|ENOENT
 operator|)
 return|;
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|filter
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|filter
+argument_list|)
 argument_list|,
 name|AMD_LDAP_FILTER
 argument_list|,
@@ -1709,19 +2120,75 @@ argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
+comment|/* "*" is special to ldap_search(); run through the filter escaping it. */
+name|f1
+operator|=
+name|filter
+expr_stmt|;
+name|f2
+operator|=
+name|filter2
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|f1
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|f1
+operator|==
+literal|'*'
+condition|)
+block|{
+operator|*
+name|f2
+operator|++
+operator|=
+literal|'\\'
+expr_stmt|;
+operator|*
+name|f2
+operator|++
+operator|=
+literal|'2'
+expr_stmt|;
+operator|*
+name|f2
+operator|++
+operator|=
+literal|'a'
+expr_stmt|;
+name|f1
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|*
+name|f2
+operator|++
+operator|=
+operator|*
+name|f1
+operator|++
+expr_stmt|;
+block|}
+block|}
+operator|*
+name|f2
+operator|=
+literal|'\0'
+expr_stmt|;
 name|dlog
 argument_list|(
-literal|"Search with filter: %s\n"
+literal|"Search with filter:<%s>\n"
 argument_list|,
-name|filter
+name|filter2
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 for|for
 control|(
 name|i
@@ -1750,7 +2217,7 @@ name|ldap_base
 argument_list|,
 name|LDAP_SCOPE_SUBTREE
 argument_list|,
-name|filter
+name|filter2
 argument_list|,
 literal|0
 argument_list|,
@@ -1770,6 +2237,75 @@ operator|==
 name|LDAP_SUCCESS
 condition|)
 break|break;
+if|if
+condition|(
+name|res
+condition|)
+block|{
+name|ldap_msgfree
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
+name|res
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|plog
+argument_list|(
+name|XLOG_USER
+argument_list|,
+literal|"LDAP search attempt %d failed: %s\n"
+argument_list|,
+name|i
+operator|+
+literal|1
+argument_list|,
+name|ldap_err2string
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+name|LDAP_TIMEOUT
+condition|)
+block|{
+name|dlog
+argument_list|(
+literal|"amu_ldap_search: unbinding...\n"
+argument_list|)
+expr_stmt|;
+name|amu_ldap_unbind
+argument_list|(
+name|a
+operator|->
+name|ldap
+argument_list|)
+expr_stmt|;
+name|a
+operator|->
+name|ldap
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|amu_ldap_rebind
+argument_list|(
+name|a
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+block|}
 block|}
 switch|switch
 condition|(
@@ -1783,17 +2319,15 @@ break|break;
 case|case
 name|LDAP_NO_SUCH_OBJECT
 case|:
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"No object\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
+if|if
+condition|(
+name|res
+condition|)
 name|ldap_msgfree
 argument_list|(
 name|res
@@ -1817,6 +2351,10 @@ name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+condition|)
 name|ldap_msgfree
 argument_list|(
 name|res
@@ -1839,9 +2377,6 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"Search found %d entries\n"
@@ -1849,9 +2384,6 @@ argument_list|,
 name|nentries
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 if|if
 condition|(
 name|nentries
@@ -1935,9 +2467,6 @@ name|EIO
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"Map %s, %s => %s\n"
@@ -1952,9 +2481,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 if|if
 condition|(
 name|vals
@@ -2053,17 +2579,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"LDAP panic: unable to find map data\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 return|return
 operator|(
 name|ENOENT
@@ -2089,8 +2609,6 @@ condition|(
 name|get_ldap_timestamp
 argument_list|(
 name|aldh
-operator|->
-name|ldap
 argument_list|,
 name|map
 argument_list|,

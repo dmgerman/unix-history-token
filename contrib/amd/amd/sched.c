@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: sched.c,v 1.4.2.5 2004/01/06 03:15:16 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/sched.c  *  */
 end_comment
 
 begin_comment
@@ -61,18 +61,19 @@ name|pid
 decl_stmt|;
 comment|/* Process ID of job */
 name|cb_fun
+modifier|*
 name|cb_fun
 decl_stmt|;
 comment|/* Callback function */
-name|voidp
-name|cb_closure
+name|opaque_t
+name|cb_arg
 decl_stmt|;
-comment|/* Closure for callback */
+comment|/* Argument for callback */
 name|int
 name|w
 decl_stmt|;
 comment|/* everyone these days uses int, not a "union wait" */
-name|voidp
+name|wchan_t
 name|wchan
 decl_stmt|;
 comment|/* Wait channel */
@@ -213,9 +214,10 @@ modifier|*
 name|sched_job
 parameter_list|(
 name|cb_fun
+modifier|*
 name|cf
 parameter_list|,
-name|voidp
+name|opaque_t
 name|ca
 parameter_list|)
 block|{
@@ -237,7 +239,7 @@ name|cf
 expr_stmt|;
 name|p
 operator|->
-name|cb_closure
+name|cb_arg
 operator|=
 name|ca
 expr_stmt|;
@@ -268,15 +270,17 @@ name|void
 name|run_task
 parameter_list|(
 name|task_fun
+modifier|*
 name|tf
 parameter_list|,
-name|voidp
+name|opaque_t
 name|ta
 parameter_list|,
 name|cb_fun
+modifier|*
 name|cf
 parameter_list|,
-name|voidp
+name|opaque_t
 name|ca
 parameter_list|)
 block|{
@@ -313,7 +317,7 @@ operator|->
 name|wchan
 operator|=
 operator|(
-name|voidp
+name|wchan_t
 operator|)
 name|p
 expr_stmt|;
@@ -401,7 +405,7 @@ directive|endif
 comment|/* not HAVE_SIGACTION */
 return|return;
 block|}
-comment|/* child code runs here, parent have returned to caller */
+comment|/* child code runs here, parent has returned to caller */
 name|exit
 argument_list|(
 call|(
@@ -429,12 +433,13 @@ name|void
 name|sched_task
 parameter_list|(
 name|cb_fun
+modifier|*
 name|cf
 parameter_list|,
-name|voidp
+name|opaque_t
 name|ca
 parameter_list|,
-name|voidp
+name|wchan_t
 name|wchan
 parameter_list|)
 block|{
@@ -450,23 +455,13 @@ argument_list|,
 name|ca
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
-literal|"SLEEP on %#lx"
+literal|"SLEEP on %p"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|wchan
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|p
 operator|->
 name|wchan
@@ -479,26 +474,13 @@ name|pid
 operator|=
 literal|0
 expr_stmt|;
-name|memset
-argument_list|(
-operator|(
-name|voidp
-operator|)
-operator|&
 name|p
 operator|->
 name|w
-argument_list|,
+operator|=
 literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|p
-operator|->
-name|w
-argument_list|)
-argument_list|)
 expr_stmt|;
+comment|/* was memset (when ->w was union) */
 block|}
 end_function
 
@@ -541,7 +523,7 @@ begin_function
 name|void
 name|wakeup
 parameter_list|(
-name|voidp
+name|wchan_t
 name|wchan
 parameter_list|)
 block|{
@@ -558,7 +540,7 @@ operator|!
 name|foreground
 condition|)
 return|return;
-comment|/*    * Can't user ITER() here because    * wakeupjob() juggles the list.    */
+comment|/*    * Can't use ITER() here because    * wakeupjob() juggles the list.    */
 for|for
 control|(
 name|p
@@ -624,15 +606,54 @@ parameter_list|,
 name|int
 name|term
 parameter_list|,
-name|voidp
-name|cl
+name|wchan_t
+name|wchan
 parameter_list|)
 block|{
 name|wakeup
 argument_list|(
-name|cl
+name|wchan
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|wchan_t
+name|get_mntfs_wchan
+parameter_list|(
+name|mntfs
+modifier|*
+name|mf
+parameter_list|)
+block|{
+if|if
+condition|(
+name|mf
+operator|&&
+name|mf
+operator|->
+name|mf_ops
+operator|&&
+name|mf
+operator|->
+name|mf_ops
+operator|->
+name|get_wchan
+condition|)
+return|return
+name|mf
+operator|->
+name|mf_ops
+operator|->
+name|get_wchan
+argument_list|(
+name|mf
+argument_list|)
+return|;
+return|return
+name|mf
+return|;
 block|}
 end_function
 
@@ -700,12 +721,9 @@ name|cb_fun
 condition|)
 block|{
 comment|/* these two trigraphs will ensure compatibility with strict POSIX.1 */
-call|(
-modifier|*
 name|p
 operator|->
 name|cb_fun
-call|)
 argument_list|(
 name|WIFEXITED
 argument_list|(
@@ -741,7 +759,7 @@ literal|0
 argument_list|,
 name|p
 operator|->
-name|cb_closure
+name|cb_arg
 argument_list|)
 expr_stmt|;
 block|}
@@ -853,9 +871,6 @@ name|w
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 else|else
 name|dlog
 argument_list|(
@@ -869,9 +884,6 @@ name|w
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 for|for
 control|(
 name|p
@@ -932,13 +944,17 @@ break|break;
 block|}
 block|}
 comment|/* end of for loop */
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
-operator|!
 name|p
+operator|==
+name|HEAD
+argument_list|(
+name|pjob
+argument_list|,
+operator|&
+name|proc_wait_list
+argument_list|)
 condition|)
 name|dlog
 argument_list|(
@@ -947,18 +963,15 @@ argument_list|,
 name|pid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
-comment|/*      * Must count down children inside the while loop, otherwise we won't      * count them all, and NumChild (and later backoff) will be set      * incorrectly. SH/RUNIT 940519.      */
+comment|/*      * Must count down children inside the while loop, otherwise we won't      * count them all, and NumChildren (and later backoff) will be set      * incorrectly. SH/RUNIT 940519.      */
 if|if
 condition|(
 operator|--
-name|NumChild
+name|NumChildren
 operator|<
 literal|0
 condition|)
-name|NumChild
+name|NumChildren
 operator|=
 literal|0
 expr_stmt|;

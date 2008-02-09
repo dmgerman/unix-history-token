@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: nfs_start.c,v 1.5.2.7 2004/01/06 03:15:16 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/nfs_start.c  *  */
 end_comment
 
 begin_ifdef
@@ -62,12 +62,16 @@ begin_decl_stmt
 name|SVCXPRT
 modifier|*
 name|nfsxprt
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_short
 name|nfs_port
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -250,13 +254,29 @@ block|}
 block|}
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not DEBUG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|checkup
+parameter_list|()
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* DEBUG */
+comment|/* not DEBUG */
 end_comment
 
 begin_function
@@ -365,11 +385,6 @@ name|select_intr_valid
 operator|=
 literal|1
 expr_stmt|;
-comment|/*      * Invalidate the current clock value      */
-name|clock_valid
-operator|=
-literal|0
-expr_stmt|;
 comment|/*      * Allow interrupts.  If a signal      * occurs, then it will cause a longjmp      * up above.      */
 ifdef|#
 directive|ifdef
@@ -467,7 +482,9 @@ condition|(
 name|do_mapc_reload
 operator|<
 name|clocktime
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 condition|)
 block|{
 name|mapc_reload
@@ -476,9 +493,13 @@ expr_stmt|;
 name|do_mapc_reload
 operator|=
 name|clocktime
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 operator|+
-name|ONE_HOUR
+name|gopt
+operator|.
+name|map_reload_interval
 expr_stmt|;
 block|}
 return|return
@@ -506,9 +527,6 @@ decl_stmt|;
 name|int
 name|nsel
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|FD_SET
 name|fd_set
 name|readfds
 decl_stmt|;
@@ -526,21 +544,6 @@ operator|&
 name|readfds
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* not FD_SET */
-name|int
-name|readfds
-init|=
-operator|(
-literal|1
-operator|<<
-name|fwd_sock
-operator|)
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* not FD_SET */
 name|tvv
 operator|.
 name|tv_sec
@@ -587,9 +590,6 @@ operator|(
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|FD_SET
 if|if
 condition|(
 name|FD_ISSET
@@ -605,27 +605,6 @@ operator|(
 literal|1
 operator|)
 return|;
-else|#
-directive|else
-comment|/* not FD_SET */
-if|if
-condition|(
-name|readfds
-operator|&
-operator|(
-literal|1
-operator|<<
-name|fwd_sock
-operator|)
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
-comment|/* not FD_SET */
 return|return
 operator|(
 literal|0
@@ -676,7 +655,9 @@ comment|/* not HAVE_SIGACTION */
 name|next_softclock
 operator|=
 name|clocktime
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 name|amd_state
 operator|=
@@ -706,12 +687,12 @@ decl_stmt|;
 name|time_t
 name|now
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_SVC_GETREQSET
 name|fd_set
 name|readfds
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SVC_GETREQSET
 name|memmove
 argument_list|(
 operator|&
@@ -726,29 +707,18 @@ name|svc_fdset
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FD_SET
-argument_list|(
-name|fwd_sock
-argument_list|,
-operator|&
-name|readfds
-argument_list|)
-expr_stmt|;
 else|#
 directive|else
 comment|/* not HAVE_SVC_GETREQSET */
-ifdef|#
-directive|ifdef
-name|FD_SET
-name|fd_set
-name|readfds
-decl_stmt|;
 name|FD_ZERO
 argument_list|(
 operator|&
 name|readfds
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_FD_SET_FDS_BITS
 name|readfds
 operator|.
 name|fds_bits
@@ -758,6 +728,19 @@ index|]
 operator|=
 name|svc_fds
 expr_stmt|;
+else|#
+directive|else
+comment|/* not HAVE_FD_SET_FDS_BITS */
+name|readfds
+operator|=
+name|svc_fds
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not HAVE_FD_SET_FDS_BITS */
+endif|#
+directive|endif
+comment|/* not HAVE_SVC_GETREQSET */
 name|FD_SET
 argument_list|(
 name|fwd_sock
@@ -766,40 +749,16 @@ operator|&
 name|readfds
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* not FD_SET */
-name|int
-name|readfds
-init|=
-name|svc_fds
-operator||
-operator|(
-literal|1
-operator|<<
-name|fwd_sock
-operator|)
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* not FD_SET */
-endif|#
-directive|endif
-comment|/* not HAVE_SVC_GETREQSET */
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|checkup
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/*      * If the full timeout code is not called,      * then recompute the time delta manually.      */
 name|now
 operator|=
 name|clocktime
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -848,9 +807,12 @@ name|amd_state
 operator|==
 name|Finishing
 operator|&&
-name|last_used_map
-operator|<
+name|get_exported_ap
+argument_list|(
 literal|0
+argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|flush_mntfs
@@ -862,6 +824,18 @@ name|Quit
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|HAVE_FS_AUTOFS
+name|autofs_add_fdset
+argument_list|(
+operator|&
+name|readfds
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_FS_AUTOFS */
 if|if
 condition|(
 name|tvv
@@ -876,9 +850,6 @@ name|tv_sec
 operator|=
 name|SELECT_MAXWAIT
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tvv
@@ -907,9 +878,6 @@ literal|"Select waits for Godot"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|nsel
 operator|=
 name|do_select
@@ -941,17 +909,11 @@ operator|==
 name|EINTR
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"select interrupted"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 continue|continue;
 block|}
 name|plog
@@ -967,10 +929,7 @@ literal|0
 case|:
 break|break;
 default|default:
-comment|/*        * Read all pending NFS responses at once to avoid having responses.        * queue up as a consequence of retransmissions.        */
-ifdef|#
-directive|ifdef
-name|FD_SET
+comment|/*        * Read all pending NFS responses at once to avoid having responses        * queue up as a consequence of retransmissions.        */
 if|if
 condition|(
 name|FD_ISSET
@@ -990,32 +949,6 @@ operator|&
 name|readfds
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* not FD_SET */
-if|if
-condition|(
-name|readfds
-operator|&
-operator|(
-literal|1
-operator|<<
-name|fwd_sock
-operator|)
-condition|)
-block|{
-name|readfds
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
-name|fwd_sock
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* not FD_SET */
 operator|--
 name|nsel
 expr_stmt|;
@@ -1034,6 +967,26 @@ literal|0
 condition|)
 do|;
 block|}
+ifdef|#
+directive|ifdef
+name|HAVE_FS_AUTOFS
+if|if
+condition|(
+name|nsel
+condition|)
+name|nsel
+operator|=
+name|autofs_handle_fdset
+argument_list|(
+operator|&
+name|readfds
+argument_list|,
+name|nsel
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_FS_AUTOFS */
 if|if
 condition|(
 name|nsel
@@ -1054,7 +1007,7 @@ directive|else
 comment|/* not HAVE_SVC_GETREQSET */
 ifdef|#
 directive|ifdef
-name|FD_SET
+name|HAVE_FD_SET_FDS_BITS
 name|svc_getreq
 argument_list|(
 name|readfds
@@ -1067,7 +1020,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* not FD_SET */
+comment|/* not HAVE_FD_SET_FDS_BITS */
 name|svc_getreq
 argument_list|(
 name|readfds
@@ -1075,7 +1028,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* not FD_SET */
+comment|/* not HAVE_FD_SET_FDS_BITS */
 endif|#
 directive|endif
 comment|/* not HAVE_SVC_GETREQSET */
@@ -1124,6 +1077,9 @@ return|return
 name|amd_state
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|mount_automounter
 parameter_list|(
@@ -1156,9 +1112,6 @@ name|udp_soAMQ
 decl_stmt|,
 name|tcp_soAMQ
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_TRANSPORT_TYPE_TLI
 name|struct
 name|netconfig
 modifier|*
@@ -1167,118 +1120,18 @@ decl_stmt|,
 modifier|*
 name|tcp_amqncp
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* HAVE_TRANSPORT_TYPE_TLI */
-comment|/*    * Create the nfs service for amd    */
-ifdef|#
-directive|ifdef
-name|HAVE_TRANSPORT_TYPE_TLI
-name|ret
-operator|=
-name|create_nfs_service
-argument_list|(
-operator|&
-name|soNFS
-argument_list|,
-operator|&
-name|nfs_port
-argument_list|,
-operator|&
-name|nfsxprt
-argument_list|,
-name|nfs_program_2
-argument_list|)
-expr_stmt|;
+comment|/*    * This must be done first, because it attempts to bind    * to various UDP ports and we don't want anything else    * potentially taking over those ports before we get a chance    * to reserve them.    */
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|gopt
+operator|.
+name|flags
+operator|&
+name|CFM_RESTART_EXISTING_MOUNTS
 condition|)
-return|return
-name|ret
-return|;
-name|ret
-operator|=
-name|create_amq_service
-argument_list|(
-operator|&
-name|udp_soAMQ
-argument_list|,
-operator|&
-name|udp_amqp
-argument_list|,
-operator|&
-name|udp_amqncp
-argument_list|,
-operator|&
-name|tcp_soAMQ
-argument_list|,
-operator|&
-name|tcp_amqp
-argument_list|,
-operator|&
-name|tcp_amqncp
-argument_list|)
+name|restart_automounter_nodes
+argument_list|()
 expr_stmt|;
-else|#
-directive|else
-comment|/* not HAVE_TRANSPORT_TYPE_TLI */
-name|ret
-operator|=
-name|create_nfs_service
-argument_list|(
-operator|&
-name|soNFS
-argument_list|,
-operator|&
-name|nfs_port
-argument_list|,
-operator|&
-name|nfsxprt
-argument_list|,
-name|nfs_program_2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-condition|)
-return|return
-name|ret
-return|;
-name|ret
-operator|=
-name|create_amq_service
-argument_list|(
-operator|&
-name|udp_soAMQ
-argument_list|,
-operator|&
-name|udp_amqp
-argument_list|,
-operator|&
-name|tcp_soAMQ
-argument_list|,
-operator|&
-name|tcp_amqp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* not HAVE_TRANSPORT_TYPE_TLI */
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-condition|)
-return|return
-name|ret
-return|;
 comment|/*    * Start RPC forwarding    */
 if|if
 condition|(
@@ -1306,6 +1159,147 @@ condition|)
 name|restart
 argument_list|()
 expr_stmt|;
+comment|/*    * Create the nfs service for amd    * If nfs_port is already initialized, it means we    * already created the service during restart_automounter_nodes().    */
+if|if
+condition|(
+name|nfs_port
+operator|==
+literal|0
+condition|)
+block|{
+name|ret
+operator|=
+name|create_nfs_service
+argument_list|(
+operator|&
+name|soNFS
+argument_list|,
+operator|&
+name|nfs_port
+argument_list|,
+operator|&
+name|nfsxprt
+argument_list|,
+name|nfs_program_2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+return|return
+name|ret
+return|;
+block|}
+name|xsnprintf
+argument_list|(
+name|pid_fsname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pid_fsname
+argument_list|)
+argument_list|,
+literal|"%s:(pid%ld,port%u)"
+argument_list|,
+name|am_get_hostname
+argument_list|()
+argument_list|,
+operator|(
+name|long
+operator|)
+name|am_mypid
+argument_list|,
+name|nfs_port
+argument_list|)
+expr_stmt|;
+comment|/* security: if user sets -D amq, don't even create listening socket */
+if|if
+condition|(
+operator|!
+name|amuDebug
+argument_list|(
+name|D_AMQ
+argument_list|)
+condition|)
+block|{
+name|ret
+operator|=
+name|create_amq_service
+argument_list|(
+operator|&
+name|udp_soAMQ
+argument_list|,
+operator|&
+name|udp_amqp
+argument_list|,
+operator|&
+name|udp_amqncp
+argument_list|,
+operator|&
+name|tcp_soAMQ
+argument_list|,
+operator|&
+name|tcp_amqp
+argument_list|,
+operator|&
+name|tcp_amqncp
+argument_list|,
+name|gopt
+operator|.
+name|preferred_amq_port
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+return|return
+name|ret
+return|;
+block|}
+ifdef|#
+directive|ifdef
+name|HAVE_FS_AUTOFS
+if|if
+condition|(
+name|amd_use_autofs
+condition|)
+block|{
+comment|/*      * Create the autofs service for amd.      */
+name|ret
+operator|=
+name|create_autofs_service
+argument_list|()
+expr_stmt|;
+comment|/* if autofs service fails it is OK if using a test amd */
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_WARNING
+argument_list|,
+literal|"autofs service registration failed, turning off autofs support"
+argument_list|)
+expr_stmt|;
+name|amd_use_autofs
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_FS_AUTOFS */
 comment|/*    * Mount the top-level auto-mountpoints    */
 name|nmount
 operator|=
@@ -1346,46 +1340,22 @@ return|return
 literal|0
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
+if|if
+condition|(
+operator|!
 name|amuDebug
 argument_list|(
-argument|D_AMQ
+name|D_AMQ
 argument_list|)
+condition|)
 block|{
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/*      * Complete registration of amq (first TCP service then UDP)      */
 name|unregister_amq
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_TRANSPORT_TYPE_TLI
 name|ret
 operator|=
-name|svc_reg
-argument_list|(
-name|tcp_amqp
-argument_list|,
-name|get_amd_program_number
-argument_list|()
-argument_list|,
-name|AMQ_VERSION
-argument_list|,
-name|amq_program_1
-argument_list|,
-name|tcp_amqncp
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* not HAVE_TRANSPORT_TYPE_TLI */
-name|ret
-operator|=
-name|svc_register
+name|amu_svc_register
 argument_list|(
 name|tcp_amqp
 argument_list|,
@@ -1397,11 +1367,10 @@ argument_list|,
 name|amq_program_1
 argument_list|,
 name|IPPROTO_TCP
+argument_list|,
+name|tcp_amqncp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* not HAVE_TRANSPORT_TYPE_TLI */
 if|if
 condition|(
 name|ret
@@ -1423,31 +1392,9 @@ return|return
 literal|3
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|HAVE_TRANSPORT_TYPE_TLI
 name|ret
 operator|=
-name|svc_reg
-argument_list|(
-name|udp_amqp
-argument_list|,
-name|get_amd_program_number
-argument_list|()
-argument_list|,
-name|AMQ_VERSION
-argument_list|,
-name|amq_program_1
-argument_list|,
-name|udp_amqncp
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* not HAVE_TRANSPORT_TYPE_TLI */
-name|ret
-operator|=
-name|svc_register
+name|amu_svc_register
 argument_list|(
 name|udp_amqp
 argument_list|,
@@ -1459,11 +1406,10 @@ argument_list|,
 name|amq_program_1
 argument_list|,
 name|IPPROTO_UDP
+argument_list|,
+name|udp_amqncp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* not HAVE_TRANSPORT_TYPE_TLI */
 if|if
 condition|(
 name|ret
@@ -1485,13 +1431,7 @@ return|return
 literal|4
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 block|}
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/*    * Start timeout_mp rolling    */
 name|reschedule_timeout_mp
 argument_list|()

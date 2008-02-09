@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: stubs.c,v 1.5.2.7 2004/01/06 03:15:23 ezk Exp $  *  * HLFSD was written at Columbia University Computer Science Department, by  * Erez Zadok<ezk@cs.columbia.edu> and Alexander Dupuy<dupuy@cs.columbia.edu>  * It is being distributed under the same terms and conditions as amd does.  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/hlfsd/stubs.c  *  * HLFSD was written at Columbia University Computer Science Department, by  * Erez Zadok<ezk@cs.columbia.edu> and Alexander Dupuy<dupuy@cs.columbia.edu>  * It is being distributed under the same terms and conditions as amd does.  */
 end_comment
 
 begin_ifdef
@@ -459,6 +459,13 @@ name|root
 argument_list|)
 condition|)
 block|{
+if|#
+directive|if
+literal|0
+comment|/*      * XXX: increment mtime of parent directory, causes NFS clients to      * invalidate their cache for that directory.      * Some NFS clients may need this code.      */
+block|if (uid != rootfattr.na_uid) {       clocktime(&rootfattr.na_mtime);       rootfattr.na_uid = uid;     }
+endif|#
+directive|endif
 name|res
 operator|.
 name|ns_status
@@ -499,12 +506,13 @@ operator|.
 name|na_uid
 condition|)
 block|{
+name|clocktime
+argument_list|(
+operator|&
 name|slinkfattr
 operator|.
 name|na_mtime
-operator|.
-name|nt_seconds
-operator|++
+argument_list|)
 expr_stmt|;
 name|slinkfattr
 operator|.
@@ -611,9 +619,6 @@ name|ns_attr_u
 operator|=
 name|un_fattr
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"nfs_getattr: successful search for uid=%ld, gid=%ld"
@@ -629,9 +634,6 @@ operator|)
 name|gid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 block|}
 else|else
 block|{
@@ -904,6 +906,13 @@ operator|)
 operator|)
 condition|)
 block|{
+if|#
+directive|if
+literal|0
+comment|/*      * XXX: increment mtime of parent directory, causes NFS clients to      * invalidate their cache for that directory.      * Some NFS clients may need this code.      */
+block|if (uid != rootfattr.na_uid) { 	clocktime(&rootfattr.na_mtime); 	rootfattr.na_uid = uid;       }
+endif|#
+directive|endif
 name|res
 operator|.
 name|dr_u
@@ -960,12 +969,13 @@ operator|.
 name|na_uid
 condition|)
 block|{
+name|clocktime
+argument_list|(
+operator|&
 name|slinkfattr
 operator|.
 name|na_mtime
-operator|.
-name|nt_seconds
-operator|++
+argument_list|)
 expr_stmt|;
 name|slinkfattr
 operator|.
@@ -1114,7 +1124,7 @@ index|]
 operator|.
 name|uid
 expr_stmt|;
-name|strncpy
+name|xstrlcpy
 argument_list|(
 operator|(
 name|char
@@ -1165,9 +1175,6 @@ name|dr_status
 operator|=
 name|NFS_OK
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"nfs_lookup: successful lookup for uid=%ld, gid=%ld: username=%s"
@@ -1190,9 +1197,6 @@ operator|.
 name|username
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 return|return
 operator|&
 name|res
@@ -1330,24 +1334,12 @@ operator|*
 operator|)
 name|NULL
 return|;
-name|gettimeofday
+name|clocktime
 argument_list|(
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
 operator|&
 name|slinkfattr
 operator|.
 name|na_atime
-argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 name|res
@@ -1561,7 +1553,7 @@ operator|=
 name|userid
 expr_stmt|;
 block|}
-comment|/* I don't think will pass this if -D nofork */
+comment|/* I don't think it will pass this if -D fork */
 if|if
 condition|(
 name|serverpid
@@ -1621,21 +1613,18 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-comment|/*    * If asked for -D nofork, then must return the value,    * NOT exit, or else the main hlfsd server exits.    * Bug where is that status information being collected?    */
-name|amuDebugNo
+comment|/*    * If asked for -D fork, then must return the value,    * NOT exit, or else the main hlfsd server exits.    * Bug: where is that status information being collected?    */
+if|if
+condition|(
+name|amuDebug
 argument_list|(
-argument|D_FORK
+name|D_FORK
 argument_list|)
+condition|)
 return|return
 operator|&
 name|res
 return|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|exit
 argument_list|(
 name|retval
@@ -2050,24 +2039,12 @@ name|root
 argument_list|)
 condition|)
 block|{
-name|gettimeofday
+name|clocktime
 argument_list|(
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
 operator|&
 name|rootfattr
 operator|.
 name|na_atime
-argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 name|res

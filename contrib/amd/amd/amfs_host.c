@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: amfs_host.c,v 1.4.2.7 2004/01/06 03:15:16 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/amfs_host.c  *  */
 end_comment
 
 begin_comment
@@ -56,32 +56,40 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|amfs_host_fmount
-parameter_list|(
-name|mntfs
-modifier|*
-name|mf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|amfs_host_fumount
-parameter_list|(
-name|mntfs
-modifier|*
-name|mf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|amfs_host_init
 parameter_list|(
+name|mntfs
+modifier|*
+name|mf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|amfs_host_mount
+parameter_list|(
+name|am_node
+modifier|*
+name|am
+parameter_list|,
+name|mntfs
+modifier|*
+name|mf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|amfs_host_umount
+parameter_list|(
+name|am_node
+modifier|*
+name|am
+parameter_list|,
 name|mntfs
 modifier|*
 name|mf
@@ -94,9 +102,9 @@ specifier|static
 name|void
 name|amfs_host_umounted
 parameter_list|(
-name|am_node
+name|mntfs
 modifier|*
-name|mp
+name|mf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -116,15 +124,13 @@ name|amfs_host_match
 block|,
 name|amfs_host_init
 block|,
-name|amfs_auto_fmount
+name|amfs_host_mount
 block|,
-name|amfs_host_fmount
+name|amfs_host_umount
 block|,
-name|amfs_auto_fumount
+name|amfs_error_lookup_child
 block|,
-name|amfs_host_fumount
-block|,
-name|amfs_error_lookuppn
+name|amfs_error_mount_child
 block|,
 name|amfs_error_readdir
 block|,
@@ -138,11 +144,23 @@ name|amfs_host_umounted
 block|,
 name|find_nfs_srvr
 block|,
+literal|0
+block|,
+comment|/* amfs_host_get_wchan */
 name|FS_MKMNT
 operator||
 name|FS_BACKGROUND
 operator||
 name|FS_AMQINFO
+block|,
+ifdef|#
+directive|ifdef
+name|HAVE_FS_AUTOFS
+name|AUTOFS_HOST_FS_FLAGS
+block|,
+endif|#
+directive|endif
+comment|/* HAVE_FS_AUTOFS */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -160,14 +178,17 @@ name|char
 modifier|*
 name|mntpt
 parameter_list|,
+name|size_t
+name|l
+parameter_list|,
 specifier|const
 name|exports
 name|ex
 parameter_list|,
 specifier|const
-name|mntfs
+name|char
 modifier|*
-name|mf
+name|mf_mount
 parameter_list|)
 block|{
 if|if
@@ -193,26 +214,24 @@ index|]
 operator|==
 literal|0
 condition|)
-name|strcpy
+name|xstrlcpy
 argument_list|(
 name|mntpt
 argument_list|,
-operator|(
-name|mf
-operator|)
-operator|->
 name|mf_mount
+argument_list|,
+name|l
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|mntpt
 argument_list|,
+name|l
+argument_list|,
 literal|"%s%s"
 argument_list|,
-name|mf
-operator|->
 name|mf_mount
 argument_list|,
 name|ex
@@ -269,14 +288,14 @@ index|]
 operator|==
 literal|0
 condition|)
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|mntpt
 argument_list|,
+name|l
+argument_list|,
 literal|"%s/%c%%"
 argument_list|,
-name|mf
-operator|->
 name|mf_mount
 argument_list|,
 name|ex
@@ -288,14 +307,14 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|xsnprintf
 argument_list|(
 name|mntpt
 argument_list|,
+name|l
+argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|mf
-operator|->
 name|mf_mount
 argument_list|,
 name|ex
@@ -363,12 +382,8 @@ modifier|*
 name|mf
 parameter_list|)
 block|{
-name|fserver
-modifier|*
-name|fs
-decl_stmt|;
 name|u_short
-name|port
+name|mountd_port
 decl_stmt|;
 if|if
 condition|(
@@ -387,32 +402,27 @@ return|return
 name|ENOENT
 return|;
 comment|/*    * This is primarily to schedule a wakeup so that as soon    * as our fileserver is ready, we can continue setting up    * the host filesystem.  If we don't do this, the standard    * amfs_auto code will set up a fileserver structure, but it will    * have to wait for another nfs request from the client to come    * in before finishing.  Our way is faster since we don't have    * to wait for the client to resend its request (which could    * take a second or two).    */
-comment|/*    * First, we find the fileserver for this mntfs and then call    * nfs_srvr_port with our mntfs passed as the wait channel.    * nfs_srvr_port will check some things and then schedule    * it so that when the fileserver is ready, a wakeup is done    * on this mntfs.   amfs_auto_cont() is already sleeping on this mntfs    * so as soon as that wakeup happens amfs_auto_cont() is called and    * this mount is retried.    */
+comment|/*    * First, we find the fileserver for this mntfs and then call    * get_mountd_port with our mntfs passed as the wait channel.    * get_mountd_port will check some things and then schedule    * it so that when the fileserver is ready, a wakeup is done    * on this mntfs.   amfs_cont() is already sleeping on this mntfs    * so as soon as that wakeup happens amfs_cont() is called and    * this mount is retried.    */
 if|if
 condition|(
-operator|(
-name|fs
-operator|=
 name|mf
 operator|->
 name|mf_server
-operator|)
 condition|)
 comment|/*      * We don't really care if there's an error returned.      * Since this is just to help speed things along, the      * error will get handled properly elsewhere.      */
-operator|(
-name|void
-operator|)
-name|nfs_srvr_port
+name|get_mountd_port
 argument_list|(
-name|fs
+name|mf
+operator|->
+name|mf_server
 argument_list|,
 operator|&
-name|port
+name|mountd_port
 argument_list|,
-operator|(
-name|voidp
-operator|)
+name|get_mntfs_wchan
+argument_list|(
 name|mf
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -432,15 +442,11 @@ name|fhp
 parameter_list|,
 name|char
 modifier|*
-name|dir
+name|mntdir
 parameter_list|,
 name|char
 modifier|*
 name|fs_name
-parameter_list|,
-name|char
-modifier|*
-name|opts
 parameter_list|,
 name|mntfs
 modifier|*
@@ -451,27 +457,21 @@ name|struct
 name|stat
 name|stb
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"amfs_host: mounting fs %s on %s\n"
 argument_list|,
 name|fs_name
 argument_list|,
-name|dir
+name|mntdir
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 operator|(
 name|void
 operator|)
 name|mkdirs
 argument_list|(
-name|dir
+name|mntdir
 argument_list|,
 literal|0555
 argument_list|)
@@ -480,7 +480,7 @@ if|if
 condition|(
 name|stat
 argument_list|(
-name|dir
+name|mntdir
 argument_list|,
 operator|&
 name|stb
@@ -505,7 +505,7 @@ name|XLOG_ERROR
 argument_list|,
 literal|"No mount point for %s - skipping"
 argument_list|,
-name|dir
+name|mntdir
 argument_list|)
 expr_stmt|;
 return|return
@@ -517,11 +517,9 @@ name|mount_nfs_fh
 argument_list|(
 name|fhp
 argument_list|,
-name|dir
+name|mntdir
 argument_list|,
 name|fs_name
-argument_list|,
-name|opts
 argument_list|,
 name|mf
 argument_list|)
@@ -617,6 +615,20 @@ name|enum
 name|clnt_stat
 name|clnt_stat
 decl_stmt|;
+name|struct
+name|fhstatus
+name|res
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_FS_NFS3
+name|struct
+name|am_mountres3
+name|res3
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_FS_NFS3 */
 comment|/*    * Pick a number, any number...    */
 name|tv
 operator|.
@@ -630,9 +642,6 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"Fetching fhandle for %s"
@@ -640,9 +649,6 @@ argument_list|,
 name|dir
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/*    * Call the mount daemon on the remote host to    * get the filehandle.  Use NFS version specific call.    */
 name|plog
 argument_list|(
@@ -673,17 +679,13 @@ name|char
 operator|*
 operator|)
 operator|&
-name|fhp
-operator|->
-name|v3
+name|res3
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fhp
-operator|->
-name|v3
+name|res3
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -709,15 +711,13 @@ argument_list|,
 operator|(
 name|XDRPROC_T_TYPE
 operator|)
-name|xdr_mountres3
+name|xdr_am_mountres3
 argument_list|,
 operator|(
 name|SVC_IN_ARG_TYPE
 operator|)
 operator|&
-name|fhp
-operator|->
-name|v3
+name|res3
 argument_list|,
 name|tv
 argument_list|)
@@ -751,29 +751,80 @@ condition|(
 operator|(
 name|errno
 operator|=
-name|fhp
-operator|->
-name|v3
+name|res3
 operator|.
 name|fhs_status
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"fhandle fetch for mount version 3 failed: %m"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 return|return
 name|errno
 return|;
 block|}
+name|memset
+argument_list|(
+operator|(
+name|voidp
+operator|)
+operator|&
+name|fhp
+operator|->
+name|v3
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|am_nfs_fh3
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fhp
+operator|->
+name|v3
+operator|.
+name|am_fh3_length
+operator|=
+name|res3
+operator|.
+name|mountres3_u
+operator|.
+name|mountinfo
+operator|.
+name|fhandle
+operator|.
+name|fhandle3_len
+expr_stmt|;
+name|memmove
+argument_list|(
+name|fhp
+operator|->
+name|v3
+operator|.
+name|am_fh3_data
+argument_list|,
+name|res3
+operator|.
+name|mountres3_u
+operator|.
+name|mountinfo
+operator|.
+name|fhandle
+operator|.
+name|fhandle3_val
+argument_list|,
+name|fhp
+operator|->
+name|v3
+operator|.
+name|am_fh3_length
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -809,9 +860,7 @@ operator|(
 name|SVC_IN_ARG_TYPE
 operator|)
 operator|&
-name|fhp
-operator|->
-name|v2
+name|res
 argument_list|,
 name|tv
 argument_list|)
@@ -842,36 +891,41 @@ block|}
 comment|/* Check status of filehandle */
 if|if
 condition|(
-name|fhp
-operator|->
-name|v2
+name|res
 operator|.
 name|fhs_status
 condition|)
 block|{
 name|errno
 operator|=
-name|fhp
-operator|->
-name|v2
+name|res
 operator|.
 name|fhs_status
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"fhandle fetch for mount version 1 failed: %m"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 return|return
 name|errno
 return|;
 block|}
+name|memmove
+argument_list|(
+operator|&
+name|fhp
+operator|->
+name|v2
+argument_list|,
+operator|&
+name|res
+operator|.
+name|fhs_fh
+argument_list|,
+name|NFS_FHSIZE
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_FS_NFS3
@@ -945,15 +999,15 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Mount the export tree from a host  */
-end_comment
-
 begin_function
 specifier|static
 name|int
-name|amfs_host_fmount
+name|amfs_host_mount
 parameter_list|(
+name|am_node
+modifier|*
+name|am
+parameter_list|,
 name|mntfs
 modifier|*
 name|mf
@@ -1047,6 +1101,27 @@ decl_stmt|;
 name|u_long
 name|mnt_version
 decl_stmt|;
+comment|/*    * WebNFS servers don't necessarily run mountd.    */
+if|if
+condition|(
+name|mf
+operator|->
+name|mf_flags
+operator|&
+name|MFF_WEBNFS
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_ERROR
+argument_list|,
+literal|"amfs_host_mount: cannot support WebNFS"
+argument_list|)
+expr_stmt|;
+return|return
+name|EIO
+return|;
+block|}
 comment|/*    * Read the mount list    */
 name|mlist
 operator|=
@@ -1091,7 +1166,7 @@ name|plog
 argument_list|(
 name|XLOG_INFO
 argument_list|,
-literal|"amfs_host_fmount: NFS version %d"
+literal|"amfs_host_mount: NFS version %d"
 argument_list|,
 operator|(
 name|int
@@ -1118,7 +1193,7 @@ name|NFS_VERSION3
 condition|)
 name|mnt_version
 operator|=
-name|MOUNTVERS3
+name|AM_MOUNTVERS3
 expr_stmt|;
 else|else
 endif|#
@@ -1232,9 +1307,6 @@ name|cl_auth
 operator|=
 name|nfs_auth
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"Fetching export list from %s"
@@ -1242,9 +1314,6 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/*    * Fetch the export list    */
 name|tv2
 operator|.
@@ -1308,7 +1377,7 @@ name|plog
 argument_list|(
 name|XLOG_ERROR
 argument_list|,
-literal|"host_fmount rpc failed: %s"
+literal|"host_mount rpc failed: %s"
 argument_list|,
 name|msg
 argument_list|)
@@ -1386,9 +1455,16 @@ name|make_mntpt
 argument_list|(
 name|mntpt
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mntpt
+argument_list|)
+argument_list|,
 name|ex
 argument_list|,
 name|mf
+operator|->
+name|mf_mount
 argument_list|)
 expr_stmt|;
 if|if
@@ -1498,9 +1574,6 @@ name|ex_dir
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"avoiding dup fhandle requested for %s"
@@ -1513,9 +1586,6 @@ operator|->
 name|ex_dir
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|ep
 index|[
 name|j
@@ -1570,7 +1640,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/*    * Mount each filesystem for which we have a filehandle.    * If any of the mounts succeed then mark "ok" and return    * error code 0 at the end.  If they all fail then return    * the last error code.    */
-name|strncpy
+name|xstrlcpy
 argument_list|(
 name|fs_name
 argument_list|,
@@ -1578,10 +1648,7 @@ name|mf
 operator|->
 name|mf_info
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|fs_name
-argument_list|)
+name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -1608,7 +1675,7 @@ name|plog
 argument_list|(
 name|XLOG_FATAL
 argument_list|,
-literal|"amfs_host_fmount: mf_info has no colon"
+literal|"amfs_host_mount: mf_info has no colon"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1648,22 +1715,41 @@ condition|(
 name|ex
 condition|)
 block|{
-name|strcpy
+comment|/*        * Note: the sizeof space left in rfs_dir is what's left in fs_name        * after strchr() above returned a pointer _inside_ fs_name.  The        * calculation below also takes into account that rfs_dir was        * incremented by the ++ above.        */
+name|xstrlcpy
 argument_list|(
 name|rfs_dir
 argument_list|,
 name|ex
 operator|->
 name|ex_dir
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fs_name
+argument_list|)
+operator|-
+operator|(
+name|rfs_dir
+operator|-
+name|fs_name
+operator|)
 argument_list|)
 expr_stmt|;
 name|make_mntpt
 argument_list|(
 name|mntpt
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mntpt
+argument_list|)
+argument_list|,
 name|ex
 argument_list|,
 name|mf
+operator|->
+name|mf_mount
 argument_list|)
 expr_stmt|;
 if|if
@@ -1679,10 +1765,6 @@ argument_list|,
 name|mntpt
 argument_list|,
 name|fs_name
-argument_list|,
-name|mf
-operator|->
-name|mf_mopts
 argument_list|,
 name|mf
 argument_list|)
@@ -1848,8 +1930,12 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|amfs_host_fumount
+name|amfs_host_umount
 parameter_list|(
+name|am_node
+modifier|*
+name|am
+parameter_list|,
 name|mntfs
 modifier|*
 name|mf
@@ -1861,6 +1947,21 @@ name|ml
 decl_stmt|,
 modifier|*
 name|mprev
+decl_stmt|;
+name|int
+name|unmount_flags
+init|=
+operator|(
+name|mf
+operator|->
+name|mf_flags
+operator|&
+name|MFF_ON_AUTOFS
+operator|)
+condition|?
+name|AMU_UMOUNT_AUTOFS
+else|:
+literal|0
 decl_stmt|;
 name|int
 name|xerror
@@ -1976,9 +2077,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"amfs_host: unmounts %s"
@@ -1986,9 +2084,6 @@ argument_list|,
 name|dir
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 comment|/*        * Unmount "dir"        */
 name|error
 operator|=
@@ -1997,6 +2092,8 @@ argument_list|(
 name|dir
 argument_list|,
 name|mnttab_file_name
+argument_list|,
+name|unmount_flags
 argument_list|)
 expr_stmt|;
 comment|/*        * Keep track of errors        */
@@ -2005,10 +2102,15 @@ condition|(
 name|error
 condition|)
 block|{
+comment|/* 	 * If we have not already set xerror and error is not ENOENT, 	 * then set xerror equal to error and log it. 	 * 'xerror' is the return value for this function. 	 * 	 * We do not want to pass ENOENT as an error because if the 	 * directory does not exists our work is done anyway. 	 */
 if|if
 condition|(
 operator|!
 name|xerror
+operator|&&
+name|error
+operator|!=
+name|ENOENT
 condition|)
 name|xerror
 operator|=
@@ -2071,8 +2173,10 @@ condition|)
 block|{
 name|xerror
 operator|=
-name|amfs_host_fmount
+name|amfs_host_mount
 argument_list|(
+name|am
+argument_list|,
 name|mf
 argument_list|)
 expr_stmt|;
@@ -2104,19 +2208,11 @@ specifier|static
 name|void
 name|amfs_host_umounted
 parameter_list|(
-name|am_node
-modifier|*
-name|mp
-parameter_list|)
-block|{
 name|mntfs
 modifier|*
 name|mf
-init|=
-name|mp
-operator|->
-name|am_mnt
-decl_stmt|;
+parameter_list|)
+block|{
 name|char
 modifier|*
 name|host
@@ -2163,6 +2259,25 @@ operator|->
 name|mf_server
 condition|)
 return|return;
+comment|/*    * WebNFS servers shouldn't ever get here.    */
+if|if
+condition|(
+name|mf
+operator|->
+name|mf_flags
+operator|&
+name|MFF_WEBNFS
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_ERROR
+argument_list|,
+literal|"amfs_host_umounted: cannot support WebNFS"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/*    * Take a copy of the server hostname, address, and NFS version    * to mount version conversion.    */
 name|host
 operator|=
@@ -2212,7 +2327,7 @@ name|NFS_VERSION3
 condition|)
 name|mnt_version
 operator|=
-name|MOUNTVERS3
+name|AM_MOUNTVERS3
 expr_stmt|;
 else|else
 endif|#
@@ -2317,9 +2432,6 @@ name|cl_auth
 operator|=
 name|nfs_auth
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"Unmounting all from %s"
@@ -2327,9 +2439,6 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|clnt_stat
 operator|=
 name|clnt_call

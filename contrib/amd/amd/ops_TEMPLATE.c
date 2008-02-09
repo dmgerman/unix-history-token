@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: ops_TEMPLATE.c,v 1.3.2.5 2004/01/06 03:15:16 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/ops_TEMPLATE.c  *  */
 end_comment
 
 begin_comment
@@ -81,15 +81,7 @@ parameter_list|(
 name|am_node
 modifier|*
 name|mp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|foofs_fmount
-parameter_list|(
+parameter_list|,
 name|mntfs
 modifier|*
 name|mf
@@ -105,15 +97,7 @@ parameter_list|(
 name|am_node
 modifier|*
 name|mp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|foofs_fumount
-parameter_list|(
+parameter_list|,
 name|mntfs
 modifier|*
 name|mf
@@ -165,7 +149,7 @@ name|nfsentry
 modifier|*
 name|ep
 parameter_list|,
-name|int
+name|u_int
 name|count
 parameter_list|)
 function_decl|;
@@ -193,6 +177,10 @@ specifier|static
 name|void
 name|foofs_mounted
 parameter_list|(
+name|am_node
+modifier|*
+name|am
+parameter_list|,
 name|mntfs
 modifier|*
 name|mf
@@ -208,11 +196,16 @@ parameter_list|(
 name|am_node
 modifier|*
 name|mp
+parameter_list|,
+name|mntfs
+modifier|*
+name|mf
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|fserver
 modifier|*
 name|foofs_ffserver
@@ -245,18 +238,15 @@ comment|/* initialize */
 name|foofs_mount
 block|,
 comment|/* mount vnode */
-name|foofs_fmount
-block|,
-comment|/* mount vfs */
 name|foofs_umount
 block|,
 comment|/* unmount vnode */
-name|foofs_fumount
-block|,
-comment|/* unmount VFS */
-name|foofs_lookuppn
+name|foofs_lookup_child
 block|,
 comment|/* lookup path-name */
+name|foofs_mount_child
+block|,
+comment|/* mount path-name */
 name|foofs_readdir
 block|,
 comment|/* read directory */
@@ -272,12 +262,24 @@ comment|/* after-umount extra actions */
 name|foofs_ffserver
 block|,
 comment|/* find a file server */
+name|foofs_get_wchan
+block|,
+comment|/* return the waiting channel */
 name|FS_MKMNT
 operator||
 name|FS_BACKGROUND
 operator||
 name|FS_AMQINFO
-comment|/* flags */
+block|,
+comment|/* nfs_fs_flags */
+ifdef|#
+directive|ifdef
+name|HAVE_FS_AUTOFS
+name|AUTOFS_TEMPLATE_FS_FLAGS
+block|,
+endif|#
+directive|endif
+comment|/* HAVE_FS_AUTOFS */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -588,7 +590,7 @@ name|nfsentry
 modifier|*
 name|ep
 parameter_list|,
-name|int
+name|u_int
 name|count
 parameter_list|)
 block|{
@@ -717,6 +719,7 @@ comment|/*  * Find a file server.  * Returns: fserver of found server, or NULL i
 end_comment
 
 begin_function
+specifier|static
 name|fserver
 modifier|*
 name|foofs_ffserver
@@ -735,6 +738,34 @@ argument_list|)
 expr_stmt|;
 return|return
 name|NULL
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Normally just return mf. Only inherit needs to do special tricks.  */
+end_comment
+
+begin_function
+specifier|static
+name|wchan_t
+modifier|*
+name|foofs_get_wchan
+parameter_list|(
+name|mntfs
+modifier|*
+name|mf
+parameter_list|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_INFO
+argument_list|,
+literal|"entering foofs_get_wchan..."
+argument_list|)
+expr_stmt|;
+return|return
+name|mf
 return|;
 block|}
 end_function

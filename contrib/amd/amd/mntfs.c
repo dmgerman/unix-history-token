@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2004 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: mntfs.c,v 1.5.2.5 2004/01/06 03:15:16 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/mntfs.c  *  */
 end_comment
 
 begin_ifdef
@@ -152,6 +152,14 @@ name|ops
 expr_stmt|;
 name|mf
 operator|->
+name|mf_fsflags
+operator|=
+name|ops
+operator|->
+name|nfs_fs_flags
+expr_stmt|;
+name|mf
+operator|->
 name|mf_fo
 operator|=
 name|mo
@@ -200,6 +208,12 @@ name|strdup
 argument_list|(
 name|remopts
 argument_list|)
+expr_stmt|;
+name|mf
+operator|->
+name|mf_loopdev
+operator|=
+name|NULL
 expr_stmt|;
 name|mf
 operator|->
@@ -352,10 +366,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* find a matching mntfs in our list */
+end_comment
+
 begin_function
 name|mntfs
 modifier|*
-name|find_mntfs
+name|locate_mntfs
 parameter_list|(
 name|am_ops
 modifier|*
@@ -390,19 +408,15 @@ name|mntfs
 modifier|*
 name|mf
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
-literal|"Locating mntfs reference to %s"
+literal|"Locating mntfs reference to (%s,%s)"
 argument_list|,
 name|mp
+argument_list|,
+name|info
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|ITER
 argument_list|(
 argument|mf
@@ -412,6 +426,7 @@ argument_list|,
 argument|&mfhead
 argument_list|)
 block|{
+comment|/*      * For backwards compatibility purposes, we treat already-mounted      * filesystems differently and only require a match of their mount point,      * not of their server info. After all, there is little we can do if      * the user asks us to mount two different things onto the same mount: one      * will always cover the other one.      */
 if|if
 condition|(
 name|STREQ
@@ -422,6 +437,42 @@ name|mf_mount
 argument_list|,
 name|mp
 argument_list|)
+operator|&&
+operator|(
+operator|(
+name|mf
+operator|->
+name|mf_flags
+operator|&
+name|MFF_MOUNTED
+operator|&&
+operator|!
+operator|(
+name|mf
+operator|->
+name|mf_fsflags
+operator|&
+name|FS_DIRECT
+operator|)
+operator|)
+operator|||
+operator|(
+name|STREQ
+argument_list|(
+name|mf
+operator|->
+name|mf_info
+argument_list|,
+name|info
+argument_list|)
+operator|&&
+name|mf
+operator|->
+name|mf_ops
+operator|==
+name|ops
+operator|)
+operator|)
 condition|)
 block|{
 comment|/*        * Handle cases where error ops are involved        */
@@ -444,7 +495,6 @@ operator|&
 name|amfs_error_ops
 condition|)
 continue|continue;
-else|else
 return|return
 name|dup_mntfs
 argument_list|(
@@ -452,21 +502,21 @@ name|mf
 argument_list|)
 return|;
 block|}
-else|else
-block|{
-comment|/* ops !=&amfs_error_ops */
-comment|/* 	 * If the existing ops are amfs_error_ops 	 * then continue... 	 */
-if|if
-condition|(
+name|dlog
+argument_list|(
+literal|"mf->mf_flags = %#x"
+argument_list|,
 name|mf
 operator|->
-name|mf_ops
-operator|==
-operator|&
-name|amfs_error_ops
-condition|)
-continue|continue;
-block|}
+name|mf_flags
+argument_list|)
+expr_stmt|;
+name|mf
+operator|->
+name|mf_fo
+operator|=
+name|mo
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -478,36 +528,11 @@ name|MFF_RESTART
 operator|)
 operator|&&
 name|amd_state
-operator|==
-name|Run
+operator|<
+name|Finishing
 condition|)
 block|{
 comment|/* 	 * Restart a previously mounted filesystem. 	 */
-name|mntfs
-modifier|*
-name|mf2
-init|=
-name|alloc_mntfs
-argument_list|(
-operator|&
-name|amfs_inherit_ops
-argument_list|,
-name|mo
-argument_list|,
-name|mp
-argument_list|,
-name|info
-argument_list|,
-name|auto_opts
-argument_list|,
-name|mopts
-argument_list|,
-name|remopts
-argument_list|)
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"Restarting filesystem %s"
@@ -517,38 +542,49 @@ operator|->
 name|mf_mount
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
-comment|/* 	 * Remember who we are restarting 	 */
-name|mf2
+comment|/* 	 * If we are restarting an amd internal filesystem, 	 * we need to initialize it a bit. 	 * 	 * We know it's internal because it is marked as toplvl. 	 */
+if|if
+condition|(
+name|mf
 operator|->
-name|mf_private
+name|mf_ops
+operator|==
+operator|&
+name|amfs_toplvl_ops
+condition|)
+block|{
+name|mf
+operator|->
+name|mf_ops
 operator|=
-operator|(
-name|voidp
-operator|)
-name|dup_mntfs
+name|ops
+expr_stmt|;
+name|mf
+operator|->
+name|mf_info
+operator|=
+name|strealloc
+argument_list|(
+name|mf
+operator|->
+name|mf_info
+argument_list|,
+name|info
+argument_list|)
+expr_stmt|;
+name|ops
+operator|->
+name|mounted
 argument_list|(
 name|mf
 argument_list|)
 expr_stmt|;
-name|mf2
-operator|->
-name|mf_prfree
-operator|=
-name|free_mntfs
-expr_stmt|;
+comment|/* XXX: not right, but will do for now */
+block|}
 return|return
-name|mf2
+name|mf
 return|;
 block|}
-name|mf
-operator|->
-name|mf_fo
-operator|=
-name|mo
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -648,12 +684,9 @@ operator|->
 name|mf_prfree
 condition|)
 block|{
-call|(
-modifier|*
 name|mf
 operator|->
 name|mf_prfree
-call|)
 argument_list|(
 name|mf
 operator|->
@@ -720,6 +753,78 @@ comment|/* end of "if (STREQ(mf-> ..." */
 block|}
 comment|/* end of ITER */
 return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* find a matching mntfs in our list, create a new one if none is found */
+end_comment
+
+begin_function
+name|mntfs
+modifier|*
+name|find_mntfs
+parameter_list|(
+name|am_ops
+modifier|*
+name|ops
+parameter_list|,
+name|am_opts
+modifier|*
+name|mo
+parameter_list|,
+name|char
+modifier|*
+name|mp
+parameter_list|,
+name|char
+modifier|*
+name|info
+parameter_list|,
+name|char
+modifier|*
+name|auto_opts
+parameter_list|,
+name|char
+modifier|*
+name|mopts
+parameter_list|,
+name|char
+modifier|*
+name|remopts
+parameter_list|)
+block|{
+name|mntfs
+modifier|*
+name|mf
+init|=
+name|locate_mntfs
+argument_list|(
+name|ops
+argument_list|,
+name|mo
+argument_list|,
+name|mp
+argument_list|,
+name|info
+argument_list|,
+name|auto_opts
+argument_list|,
+name|mopts
+argument_list|,
+name|remopts
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|mf
+condition|)
+return|return
+name|mf
+return|;
+return|return
 name|alloc_mntfs
 argument_list|(
 name|ops
@@ -782,9 +887,6 @@ parameter_list|(
 name|mntfs
 modifier|*
 name|mf
-parameter_list|,
-name|int
-name|rmd
 parameter_list|)
 block|{
 if|if
@@ -861,27 +963,6 @@ operator|->
 name|mf_private
 argument_list|)
 expr_stmt|;
-comment|/*    * Clean up any directories that were made    */
-if|if
-condition|(
-name|rmd
-operator|&&
-operator|(
-name|mf
-operator|->
-name|mf_flags
-operator|&
-name|MFF_MKMNT
-operator|)
-condition|)
-name|rmdirs
-argument_list|(
-name|mf
-operator|->
-name|mf_mount
-argument_list|)
-expr_stmt|;
-comment|/* free mf_mount _AFTER_ removing the directories */
 if|if
 condition|(
 name|mf
@@ -961,8 +1042,6 @@ comment|/*    * Free memory    */
 name|uninit_mntfs
 argument_list|(
 name|mf
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 name|XFREE
@@ -1050,16 +1129,43 @@ begin_function
 name|void
 name|free_mntfs
 parameter_list|(
-name|voidp
-name|v
+name|opaque_t
+name|arg
 parameter_list|)
 block|{
 name|mntfs
 modifier|*
 name|mf
 init|=
-name|v
+operator|(
+name|mntfs
+operator|*
+operator|)
+name|arg
 decl_stmt|;
+name|dlog
+argument_list|(
+literal|"free_mntfs<%s> type %s mf_refc %d flags %x"
+argument_list|,
+name|mf
+operator|->
+name|mf_mount
+argument_list|,
+name|mf
+operator|->
+name|mf_ops
+operator|->
+name|fs_type
+argument_list|,
+name|mf
+operator|->
+name|mf_refc
+argument_list|,
+name|mf
+operator|->
+name|mf_flags
+argument_list|)
+expr_stmt|;
 comment|/*    * We shouldn't ever be called to free something that has    * a non-positive refcount.  Something is badly wrong if    * we have been!  Ignore the request for now...    */
 if|if
 condition|(
@@ -1074,7 +1180,44 @@ name|plog
 argument_list|(
 name|XLOG_ERROR
 argument_list|,
-literal|"IGNORING free_mntfs for<%s>: refc %d, flags %x"
+literal|"IGNORING free_mntfs for<%s>: refc %d, flags %x (bug?)"
+argument_list|,
+name|mf
+operator|->
+name|mf_mount
+argument_list|,
+name|mf
+operator|->
+name|mf_refc
+argument_list|,
+name|mf
+operator|->
+name|mf_flags
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* don't discard last reference of a restarted/kept mntfs */
+if|if
+condition|(
+name|mf
+operator|->
+name|mf_refc
+operator|==
+literal|1
+operator|&&
+name|mf
+operator|->
+name|mf_flags
+operator|&
+name|MFF_RSTKEEP
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_ERROR
+argument_list|,
+literal|"IGNORING free_mntfs for<%s>: refc %d, flags %x (restarted)"
 argument_list|,
 name|mf
 operator|->
@@ -1181,16 +1324,11 @@ if|if
 condition|(
 name|mf
 operator|->
-name|mf_ops
-operator|->
-name|fs_flags
+name|mf_fsflags
 operator|&
 name|FS_DISCARD
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|dlog
 argument_list|(
 literal|"Immediately discarding mntfs for %s"
@@ -1200,9 +1338,6 @@ operator|->
 name|mf_mount
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|discard_mntfs
 argument_list|(
 name|mf
@@ -1211,9 +1346,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|mf
@@ -1274,9 +1406,6 @@ operator|->
 name|mf_mount
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|mf
 operator|->
 name|mf_cid
@@ -1350,10 +1479,9 @@ literal|1
 operator|&&
 name|mf
 operator|->
-name|mf_ops
-operator|==
+name|mf_flags
 operator|&
-name|amfs_inherit_ops
+name|MFF_RESTART
 operator|&&
 name|STREQ
 argument_list|(
@@ -1431,13 +1559,6 @@ argument_list|(
 name|mf
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/*    * XXX: EZK IS THIS RIGHT???    * The next "if" statement is what supposedly fixes bgmount() in    * that it will actually use the ops structure of the next mount    * entry, if the previous one failed.    */
-block|if (mf2&&       ops&&       mf2->mf_ops != ops&&       mf2->mf_ops !=&amfs_inherit_ops&&       mf2->mf_ops !=&amfs_toplvl_ops&&       mf2->mf_ops !=&amfs_error_ops) {     plog(XLOG_WARNING, "realloc_mntfs: copy fallback ops \"%s\" over \"%s\"", 	 ops->fs_type, mf2->mf_ops->fs_type);     mf2->mf_ops = ops;   }
-endif|#
-directive|endif
 return|return
 name|mf2
 return|;
