@@ -582,7 +582,7 @@ parameter_list|,
 name|mtx
 parameter_list|)
 define|\
-value|_lockmgr((lock), (flags), (mtx), __FILE__, __LINE__)
+value|_lockmgr((lock), (flags), (mtx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -593,7 +593,7 @@ parameter_list|(
 name|lock
 parameter_list|)
 define|\
-value|_lockmgr_disown((lock), __FILE__, __LINE__)
+value|_lockmgr_disown((lock), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
