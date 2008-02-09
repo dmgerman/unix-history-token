@@ -910,7 +910,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The KERN_PROC_FILE sysctl allows a process to dumpt the file descriptor  * array of another process.  */
+comment|/*  * The KERN_PROC_FILE sysctl allows a process to dump the file descriptor  * array of another process.  */
 end_comment
 
 begin_define
@@ -1052,6 +1052,39 @@ directive|define
 name|KF_VTYPE_UNKNOWN
 value|255
 end_define
+
+begin_define
+define|#
+directive|define
+name|KF_FD_TYPE_CWD
+value|-1
+end_define
+
+begin_comment
+comment|/* Current working directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KF_FD_TYPE_ROOT
+value|-2
+end_define
+
+begin_comment
+comment|/* Root directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KF_FD_TYPE_JAIL
+value|-3
+end_define
+
+begin_comment
+comment|/* Jail directory */
+end_comment
 
 begin_define
 define|#
