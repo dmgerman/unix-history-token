@@ -684,24 +684,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* coda_vfsops.h */
-end_comment
-
-begin_function_decl
-name|struct
-name|mount
-modifier|*
-name|devtomp
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* sigh */
 end_comment
 
