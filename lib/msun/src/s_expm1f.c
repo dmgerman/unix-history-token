@@ -69,38 +69,21 @@ init|=
 literal|1.4426950216e+00
 decl_stmt|,
 comment|/* 0x3fb8aa3b */
-comment|/* scaled coefficients related to expm1 */
+comment|/*  * Domain [-0.34568, 0.34568], range ~[-6.694e-10, 6.696e-10]:  * |6 / x * (1 + 2 * (1 / (exp(x) - 1) - 1 / x)) - q(x)|< 2**-30.04  * Scaled coefficients: Qn_here = 2**n * Qn_for_q (see s_expm1.c):  */
 name|Q1
 init|=
 operator|-
-literal|3.3333335072e-02
+literal|3.3333212137e-2
 decl_stmt|,
-comment|/* 0xbd088889 */
+comment|/* -0x888868.0p-28 */
 name|Q2
 init|=
-literal|1.5873016091e-03
-decl_stmt|,
-comment|/* 0x3ad00d01 */
-name|Q3
-init|=
-operator|-
-literal|7.9365076090e-05
-decl_stmt|,
-comment|/* 0xb8a670cd */
-name|Q4
-init|=
-literal|4.0082177293e-06
-decl_stmt|,
-comment|/* 0x36867e54 */
-name|Q5
-init|=
-operator|-
-literal|2.0109921195e-07
+literal|1.5807170421e-3
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 0xb457edbb */
+comment|/*  0xcf3010.0p-33 */
 end_comment
 
 begin_function
@@ -450,25 +433,7 @@ name|Q1
 operator|+
 name|hxs
 operator|*
-operator|(
 name|Q2
-operator|+
-name|hxs
-operator|*
-operator|(
-name|Q3
-operator|+
-name|hxs
-operator|*
-operator|(
-name|Q4
-operator|+
-name|hxs
-operator|*
-name|Q5
-operator|)
-operator|)
-operator|)
 operator|)
 expr_stmt|;
 name|t
