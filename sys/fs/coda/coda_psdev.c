@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ioccom.h>
 end_include
 
@@ -220,16 +226,6 @@ name|ENTRY
 value|if(coda_psdev_print_entry) myprintf(("Entered %s\n",__func__))
 end_define
 
-begin_function_decl
-name|void
-name|vcodaattach
-parameter_list|(
-name|int
-name|n
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_struct
 struct|struct
 name|vmsg
@@ -288,24 +284,12 @@ value|4
 end_define
 
 begin_comment
-comment|/* vcodaattach: do nothing */
+comment|/* Unused. */
 end_comment
 
 begin_function
-name|void
-name|vcodaattach
-parameter_list|(
-name|n
-parameter_list|)
 name|int
-name|n
-decl_stmt|;
-block|{ }
-end_function
-
-begin_function
-name|int
-name|vc_nb_open
+name|vc_open
 parameter_list|(
 name|dev
 parameter_list|,
@@ -444,7 +428,7 @@ end_function
 
 begin_function
 name|int
-name|vc_nb_close
+name|vc_close
 parameter_list|(
 name|dev
 parameter_list|,
@@ -831,7 +815,7 @@ end_function
 
 begin_function
 name|int
-name|vc_nb_read
+name|vc_read
 parameter_list|(
 name|dev
 parameter_list|,
@@ -976,7 +960,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"vc_nb_read: bad chain"
+literal|"vc_read: bad chain"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1082,7 +1066,7 @@ end_function
 
 begin_function
 name|int
-name|vc_nb_write
+name|vc_write
 parameter_list|(
 name|dev
 parameter_list|,
@@ -1688,7 +1672,7 @@ end_function
 
 begin_function
 name|int
-name|vc_nb_ioctl
+name|vc_ioctl
 parameter_list|(
 name|dev
 parameter_list|,
@@ -1885,7 +1869,7 @@ end_function
 
 begin_function
 name|int
-name|vc_nb_poll
+name|vc_poll
 parameter_list|(
 name|dev
 parameter_list|,

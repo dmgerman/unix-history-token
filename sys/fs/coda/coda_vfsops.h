@@ -96,14 +96,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vfs_quotactl_t
-name|coda_quotactl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vfs_statfs_t
-name|coda_nb_statfs
+name|coda_statfs
 decl_stmt|;
 end_decl_stmt
 
@@ -112,31 +106,6 @@ name|vfs_sync_t
 name|coda_sync
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|vfs_vget_t
-name|coda_vget
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vfs_init_t
-name|coda_init
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-name|getNewVnode
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-modifier|*
-name|vpp
-parameter_list|)
-function_decl|;
-end_function_decl
 
 end_unit
 

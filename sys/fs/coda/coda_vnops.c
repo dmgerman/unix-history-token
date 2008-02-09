@@ -533,60 +533,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* A generic do-nothing.  For lease_check, advlock */
-end_comment
-
-begin_function
-name|int
-name|coda_vop_nop
-parameter_list|(
+begin_function_decl
+specifier|static
 name|void
-modifier|*
-name|anon
-parameter_list|)
-block|{
+name|coda_print_vattr
+parameter_list|(
 name|struct
-name|vnodeop_desc
+name|vattr
 modifier|*
-modifier|*
-name|desc
-init|=
-operator|(
-expr|struct
-name|vnodeop_desc
-operator|*
-operator|*
-operator|)
-name|anon
-decl_stmt|;
-if|if
-condition|(
-name|codadebug
-condition|)
-block|{
-name|myprintf
-argument_list|(
-operator|(
-literal|"Vnode operation %s called, but unsupported\n"
-operator|,
-operator|(
-operator|*
-name|desc
-operator|)
-operator|->
-name|vdesc_name
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
+name|attr
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -2093,7 +2051,7 @@ name|CODADEBUG
 argument_list|(
 argument|CODA_GETATTR
 argument_list|,
-argument|if (!(codadebug& ~CODA_GETATTR)) 		 print_vattr(&cp->c_vattr);
+argument|if (!(codadebug& ~CODA_GETATTR)) 		 coda_print_vattr(&cp->c_vattr);
 argument_list|)
 empty_stmt|;
 operator|*
@@ -2155,7 +2113,7 @@ name|CODADEBUG
 argument_list|(
 argument|CODA_GETATTR
 argument_list|,
-argument|if (!(codadebug& ~CODA_GETATTR)) 		 print_vattr(vap);
+argument|if (!(codadebug& ~CODA_GETATTR)) 		 coda_print_vattr(vap);
 argument_list|)
 empty_stmt|;
 block|{
@@ -2333,7 +2291,7 @@ name|CODA_SETATTR
 argument_list|)
 condition|)
 block|{
-name|print_vattr
+name|coda_print_vattr
 argument_list|(
 name|vap
 argument_list|)
@@ -6187,7 +6145,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read directory entries.  */
+comment|/*  * Read directory entries.  *  * XXXRW: This forwards the operator straight to the cache vnode using  * VOP_READDIR(), rather than calling venus_readdir().  Why?  */
 end_comment
 
 begin_function
@@ -6810,8 +6768,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|print_vattr
+name|coda_print_vattr
 parameter_list|(
 name|struct
 name|vattr
@@ -7098,7 +7057,7 @@ end_comment
 
 begin_function
 name|void
-name|print_cred
+name|coda_print_cred
 parameter_list|(
 name|struct
 name|ucred
