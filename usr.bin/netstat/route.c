@@ -4096,7 +4096,7 @@ name|char
 modifier|*
 name|routename
 parameter_list|(
-name|u_long
+name|in_addr_t
 name|in
 parameter_list|)
 block|{
@@ -4130,10 +4130,6 @@ name|hp
 operator|=
 name|gethostbyaddr
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|in
 argument_list|,
@@ -4221,7 +4217,7 @@ name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"%lu.%lu.%lu.%lu"
+literal|"%u.%u.%u.%u"
 argument_list|,
 name|C
 argument_list|(
@@ -4430,7 +4426,7 @@ name|char
 modifier|*
 name|netname
 parameter_list|(
-name|u_long
+name|in_addr_t
 name|in
 parameter_list|,
 name|u_long
@@ -4554,10 +4550,6 @@ name|inet_ntop
 argument_list|(
 name|AF_INET
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|in
 argument_list|,

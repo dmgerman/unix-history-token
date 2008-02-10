@@ -928,7 +928,7 @@ name|char
 modifier|*
 name|routename
 parameter_list|(
-name|u_long
+name|in_addr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -938,7 +938,7 @@ name|char
 modifier|*
 name|netname
 parameter_list|(
-name|u_long
+name|in_addr_t
 parameter_list|,
 name|u_long
 parameter_list|)
