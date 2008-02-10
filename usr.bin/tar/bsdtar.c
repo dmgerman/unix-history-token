@@ -292,6 +292,44 @@ directive|include
 file|"bsdtar.h"
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_OPTARG
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|optarg
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_OPTIND
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Per POSIX.1-1988, tar defaults to reading/writing archives to/from  * the default tape device for the system.  Pick something reasonable here.  */
 end_comment
@@ -1739,54 +1777,14 @@ break|break;
 case|case
 literal|'l'
 case|:
-comment|/* SUSv2 and GNU conflict badly here */
-if|if
-condition|(
-name|getenv
-argument_list|(
-literal|"POSIXLY_CORRECT"
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* User has asked for POSIX/SUS behavior. */
+comment|/* SUSv2 and GNU tar beginning with 1.16 */
+comment|/* GNU tar 1.13  used -l for --one-file-system */
 name|bsdtar
 operator|->
 name|option_warn_links
 operator|=
 literal|1
 expr_stmt|;
-block|}
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Error: -l has different behaviors in different tar programs.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  For the GNU behavior, use --one-file-system instead.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  For the POSIX behavior, use --check-links instead.\n"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|(
-name|bsdtar
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'m'
@@ -3416,7 +3414,7 @@ name|printf
 argument_list|(
 literal|"bsdtar %s - %s\n"
 argument_list|,
-name|PACKAGE_VERSION
+name|BSDTAR_VERSION_STRING
 argument_list|,
 name|archive_version
 argument_list|()
