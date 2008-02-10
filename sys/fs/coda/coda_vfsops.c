@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   *  	@(#) src/sys/cfs/coda_vfsops.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  */
+comment|/*-  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *  *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *  * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *  * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *  * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *  *  	@(#) src/sys/cfs/coda_vfsops.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*-  * Mach Operating System  * Copyright (c) 1989 Carnegie-Mellon Unive
 end_comment
 
 begin_comment
-comment|/*  * This code was written for the Coda filesystem at Carnegie Mellon  * University.  Contributers include David Steere, James Kistler, and  * M. Satyanarayanan.    */
+comment|/*  * This code was written for the Coda filesystem at Carnegie Mellon  * University.  Contributers include David Steere, James Kistler, and  * M. Satyanarayanan.  */
 end_comment
 
 begin_include
@@ -147,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|ENTRY
-value|if(coda_vfsop_print_entry) myprintf(("Entered %s\n",__func__))
+value|do {							\ 	if (coda_vfsop_print_entry)					\ 		myprintf(("Entered %s\n", __func__));			\ } while (0)
 end_define
 
 begin_decl_stmt
@@ -159,10 +159,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* structure to keep statistics of internally generated/satisfied calls */
+comment|/*  * Structure to keep statistics of internally generated/satisfied calls.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|coda_op_stats
 name|coda_vfsopstats
@@ -219,7 +220,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -284,7 +284,9 @@ literal|0
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -306,7 +308,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * cfs mount vfsop  * Set up mount info record and attach it to vfs struct.  */
+comment|/*  * cfs mount vfsop  *  * Set up mount info record and attach it to vfs struct.  */
 end_comment
 
 begin_comment
@@ -445,7 +447,7 @@ name|EBUSY
 operator|)
 return|;
 block|}
-comment|/* Validate mount device.  Similar to getmdev(). */
+comment|/* 	 * Validate mount device.  Similar to getmdev(). 	 */
 name|NDINIT
 argument_list|(
 operator|&
@@ -544,7 +546,7 @@ argument_list|,
 name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
-comment|/*      * Initialize the mount record and link it to the vfs struct      */
+comment|/* 	 * Initialize the mount record and link it to the vfs struct. 	 */
 name|mi
 operator|=
 name|dev2coda_mntinfo
@@ -599,7 +601,7 @@ name|ENODEV
 operator|)
 return|;
 block|}
-comment|/* No initialization (here) of mi_vcomm! */
+comment|/* 	 * No initialization (here) of mi_vcomm! 	 */
 name|vfsp
 operator|->
 name|mnt_data
@@ -624,7 +626,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX See coda_root() */
-comment|/*      * Make a root vnode to placate the Vnode interface, but don't      * actually make the CODA_ROOT call to venus until the first call      * to coda_root in case a server is down while venus is starting.      */
+comment|/* 	 * Make a root vnode to placate the Vnode interface, but don't 	 * actually make the CODA_ROOT call to venus until the first call to 	 * coda_root in case a server is down while venus is starting. 	 */
 name|cp
 operator|=
 name|make_coda_node
@@ -669,7 +671,7 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* Add vfs and rootvp to chain of vfs hanging off mntinfo */
+comment|/* 	 * Add vfs and rootvp to chain of vfs hanging off mntinfo. 	 */
 name|mi
 operator|->
 name|mi_vfsp
@@ -689,14 +691,14 @@ argument_list|,
 name|from
 argument_list|)
 expr_stmt|;
-comment|/* error is currently guaranteed to be zero, but in case some        code changes... */
+comment|/* 	 * Error is currently guaranteed to be zero, but in case some code 	 * changes... 	 */
 name|CODADEBUG
 argument_list|(
 literal|1
 argument_list|,
 argument|myprintf((
-literal|"coda_omount returned %d\n"
-argument|,error));
+literal|"coda_mount returned %d\n"
+argument|, error));
 argument_list|)
 empty_stmt|;
 if|if
@@ -726,25 +728,19 @@ begin_function
 name|int
 name|coda_unmount
 parameter_list|(
-name|vfsp
-parameter_list|,
-name|mntflags
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|vfsp
-decl_stmt|;
+parameter_list|,
 name|int
 name|mntflags
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|coda_mntinfo
@@ -799,7 +795,7 @@ operator|==
 name|vfsp
 condition|)
 block|{
-comment|/* We found the victim */
+comment|/* 		 * We found the victim. 		 */
 if|if
 condition|(
 operator|!
@@ -904,9 +900,9 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* I'm going to take this out to allow lookups to go through. I'm 	 * not sure it's important anyway. -- DCS 2/2/94 	 */
+comment|/* 		 * I'm going to take this out to allow lookups to go through. 		 * I'm not sure it's important anyway. -- DCS 2/2/94 		 */
 comment|/* vfsp->VFS_DATA = NULL; */
-comment|/* No more vfsp's to hold onto */
+comment|/* 		 * No more vfsp's to hold onto. 		 */
 name|mi
 operator|->
 name|mi_vfsp
@@ -943,40 +939,32 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * find root of cfs  */
+comment|/*  * Find root of cfs.  */
 end_comment
 
 begin_function
 name|int
 name|coda_root
 parameter_list|(
-name|vfsp
-parameter_list|,
-name|flags
-parameter_list|,
-name|vpp
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|vfsp
-decl_stmt|;
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
 modifier|*
 name|vpp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|coda_mntinfo
@@ -1036,7 +1024,7 @@ operator|->
 name|mi_vfsp
 condition|)
 block|{
-comment|/* 	 * Cache the root across calls. We only need to pass the request 	 * on to Venus if the root vnode is the dummy we installed in 	 * coda_omount() with all c_fid members zeroed. 	 * 	 * XXX In addition, we assume that the first call to coda_root() 	 * is from vfs_omount() 	 * (before the call to checkdirs()) and return the dummy root 	 * node to avoid a deadlock. This bug is fixed in the Coda CVS 	 * repository but not in any released versions as of 6 Mar 2003. 	 */
+comment|/* 		 * Cache the root across calls.  We only need to pass the 		 * request on to Venus if the root vnode is the dummy we 		 * installed in coda_mount() with all c_fid members zeroed. 		 * 		 * XXX In addition, we assume that the first call to 		 * coda_root() is from vfs_mount() (before the call to 		 * checkdirs()) and return the dummy root node to avoid a 		 * deadlock.  This bug is fixed in the Coda CVS repository 		 * but not in any released versions as of 6 Mar 2003. 		 */
 if|if
 condition|(
 name|memcmp
@@ -1069,7 +1057,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Found valid root. */
+comment|/* 			 * Found valid root. 			 */
 operator|*
 name|vpp
 operator|=
@@ -1083,7 +1071,7 @@ name|mi_started
 operator|=
 literal|1
 expr_stmt|;
-comment|/* On Mach, this is vref.  On FreeBSD, vref + vn_lock. */
+comment|/* 			 * On Mach, this is vref.  On FreeBSD, vref + 			 * vn_lock. 			 */
 name|vref
 argument_list|(
 operator|*
@@ -1137,7 +1125,7 @@ operator|!
 name|error
 condition|)
 block|{
-comment|/* 	 * Save the new rootfid in the cnode, and rehash the cnode into the 	 * cnode hash with the new fid key. 	 */
+comment|/* 		 * Save the new rootfid in the cnode, and rehash the cnode 		 * into the cnode hash with the new fid key. 		 */
 name|coda_unsave
 argument_list|(
 name|VTOC
@@ -1197,9 +1185,6 @@ argument_list|(
 name|CODA_ROOT_STATS
 argument_list|)
 expr_stmt|;
-goto|goto
-name|exit
-goto|;
 block|}
 elseif|else
 if|if
@@ -1213,8 +1198,7 @@ operator|==
 name|EINTR
 condition|)
 block|{
-comment|/* Gross hack here! */
-comment|/* 	 * If Venus fails to respond to the CODA_ROOT call, coda_call returns 	 * ENODEV. Return the uninitialized root vnode to allow vfs 	 * operations such as unmount to continue. Without this hack, 	 * there is no way to do an unmount if Venus dies before a  	 * successful CODA_ROOT call is done. All vnode operations  	 * will fail. 	 */
+comment|/* 		 * Gross hack here! 		 * 		 * If Venus fails to respond to the CODA_ROOT call, coda_call 		 * returns ENODEV. Return the uninitialized root vnode to 		 * allow vfs operations such as unmount to continue.  Without 		 * this hack, there is no way to do an unmount if Venus dies 		 * before a successful CODA_ROOT call is done.  All vnode 		 * operations will fail. 		 */
 operator|*
 name|vpp
 operator|=
@@ -1247,9 +1231,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-goto|goto
-name|exit
-goto|;
 block|}
 else|else
 block|{
@@ -1259,7 +1240,7 @@ argument|CODA_ROOT
 argument_list|,
 argument|myprintf((
 literal|"error %d in CODA_ROOT\n"
-argument|, error));
+argument|, 		    error));
 argument_list|)
 empty_stmt|;
 name|MARK_INT_FAIL
@@ -1267,12 +1248,7 @@ argument_list|(
 name|CODA_ROOT_STATS
 argument_list|)
 expr_stmt|;
-goto|goto
-name|exit
-goto|;
 block|}
-name|exit
-label|:
 return|return
 operator|(
 name|error
@@ -1289,28 +1265,21 @@ begin_function
 name|int
 name|coda_statfs
 parameter_list|(
-name|vfsp
-parameter_list|,
-name|sbp
-parameter_list|,
-name|td
-parameter_list|)
-specifier|register
 name|struct
 name|mount
 modifier|*
 name|vfsp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|statfs
 modifier|*
 name|sbp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|ENTRY
 expr_stmt|;
@@ -1339,8 +1308,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* XXX - what to do about f_flags, others? --bnoble */
-comment|/* Below This is what AFS does     	#define CODA_SFS_SIZ 0x895440      */
+comment|/* 	 * XXX - what to do about f_flags, others? --bnoble 	 * 	 * We just make up free space counts that are sufficiently large. 	 */
 name|sbp
 operator|->
 name|f_flags
@@ -1416,25 +1384,19 @@ begin_function
 name|int
 name|coda_sync
 parameter_list|(
-name|vfsp
-parameter_list|,
-name|waitfor
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|vfsp
-decl_stmt|;
+parameter_list|,
 name|int
 name|waitfor
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|ENTRY
 expr_stmt|;
@@ -1457,57 +1419,44 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * fhtovp is now what vget used to be in 4.3-derived systems.  For  * some silly reason, vget is now keyed by a 32 bit ino_t, rather than  * a type-specific fid.    *  * XXX: coda_fhtovp is currently not hooked up, so no NFS export for Coda.  * We leave it here in the hopes that someone will find it someday and hook  * it up.  Among other things, it will need some reworking to match the  * vfs_fhtovp_t prototype.  */
+comment|/*  * fhtovp is now what vget used to be in 4.3-derived systems.  For some silly  * reason, vget is now keyed by a 32 bit ino_t, rather than a type-specific  * fid.  *  * XXX: coda_fhtovp is currently not hooked up, so no NFS export for Coda.  * We leave it here in the hopes that someone will find it someday and hook  * it up.  Among other things, it will need some reworking to match the  * vfs_fhtovp_t prototype.  */
 end_comment
 
 begin_function
 name|int
 name|coda_fhtovp
 parameter_list|(
-name|vfsp
-parameter_list|,
-name|fhp
-parameter_list|,
-name|nam
-parameter_list|,
-name|vpp
-parameter_list|,
-name|exflagsp
-parameter_list|,
-name|creadanonp
-parameter_list|)
-specifier|register
 name|struct
 name|mount
 modifier|*
 name|vfsp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|fid
 modifier|*
 name|fhp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|nam
-decl_stmt|;
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
 modifier|*
 name|vpp
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|exflagsp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ucred
 modifier|*
 modifier|*
 name|creadanonp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|cfid
@@ -1526,7 +1475,7 @@ name|cnode
 modifier|*
 name|cp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|error
@@ -1561,7 +1510,7 @@ argument_list|(
 name|CODA_VGET_STATS
 argument_list|)
 expr_stmt|;
-comment|/* Check for vget of control object. */
+comment|/* 	 * Check for vget of control object. 	 */
 if|if
 condition|(
 name|IS_CTL_FID
@@ -1634,15 +1583,11 @@ argument|myprintf((
 literal|"vget error %d\n"
 argument|,error));
 argument_list|)
+empty_stmt|;
 operator|*
 name|vpp
 operator|=
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -1652,9 +1597,11 @@ argument_list|(
 argument|CODA_VGET
 argument_list|,
 argument|myprintf((
-literal|"vget: %s type %d result %d\n"
-argument|, 			coda_f2s(&VFid), vtype, error));
+literal|"vget: %s type %d result "
+literal|"%d\n"
+argument|, coda_f2s(&VFid), vtype, error));
 argument_list|)
+empty_stmt|;
 name|cp
 operator|=
 name|make_coda_node

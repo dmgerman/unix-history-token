@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/coda/coda_psdev.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  */
+comment|/*-  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *  *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *  * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *  * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *  * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *  * 	@(#) src/sys/coda/coda_psdev.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  */
 end_comment
 
 begin_comment
@@ -12,11 +12,11 @@ comment|/*  * This code was written for the Coda filesystem at Carnegie Mellon  
 end_comment
 
 begin_comment
-comment|/*   * These routines define the psuedo device for communication between  * Coda's Venus and Minicache in Mach 2.6. They used to be in cfs_subr.c,   * but I moved them to make it easier to port the Minicache without   * porting coda. -- DCS 10/12/94  */
+comment|/*  * These routines define the psuedo device for communication between Coda's  * Venus and Minicache in Mach 2.6. They used to be in cfs_subr.c, but I  * moved them to make it easier to port the Minicache without porting coda.  * -- DCS 10/12/94  */
 end_comment
 
 begin_comment
-comment|/* These routines are the device entry points for Venus. */
+comment|/*  * These routines are the device entry points for Venus.  */
 end_comment
 
 begin_include
@@ -145,6 +145,10 @@ directive|include
 file|<fs/coda/coda_psdev.h>
 end_include
 
+begin_comment
+comment|/*  * Variables to determine how Coda sleeps and whether or not it is  * interruptible when it does sleep waiting for Venus.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -223,7 +227,7 @@ begin_define
 define|#
 directive|define
 name|ENTRY
-value|if(coda_psdev_print_entry) myprintf(("Entered %s\n",__func__))
+value|do {							\ 	if (coda_psdev_print_entry)					\ 		myprintf(("Entered %s\n", __func__));			\ } while (0)
 end_define
 
 begin_struct
@@ -250,7 +254,7 @@ decl_stmt|;
 name|u_short
 name|vm_opcode
 decl_stmt|;
-comment|/* copied from data to save ptr lookup */
+comment|/* Copied from data to save ptr deref */
 name|int
 name|vm_unique
 decl_stmt|;
@@ -291,30 +295,22 @@ begin_function
 name|int
 name|vc_open
 parameter_list|(
-name|dev
-parameter_list|,
-name|flag
-parameter_list|,
-name|mode
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|cdev
 modifier|*
 name|dev
-decl_stmt|;
+parameter_list|,
 name|int
 name|flag
-decl_stmt|;
+parameter_list|,
 name|int
 name|mode
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vcomm
@@ -430,38 +426,28 @@ begin_function
 name|int
 name|vc_close
 parameter_list|(
-name|dev
-parameter_list|,
-name|flag
-parameter_list|,
-name|mode
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|cdev
 modifier|*
 name|dev
-decl_stmt|;
+parameter_list|,
 name|int
 name|flag
-decl_stmt|;
+parameter_list|,
 name|int
 name|mode
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|vcomm
 modifier|*
 name|vcp
 decl_stmt|;
-specifier|register
 name|struct
 name|vmsg
 modifier|*
@@ -517,26 +503,29 @@ literal|"Coda: closing unopened cfs device"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* prevent future operations on this vfs from succeeding by auto-      * unmounting any vfs mounted via this device. This frees user or      * sysadm from having to remember where all mount points are located.      * Put this before WAKEUPs to avoid queuing new messages between      * the WAKEUP and the unmount (which can happen if we're unlucky)      */
+comment|/* 	 * Prevent future operations on this vfs from succeeding by 	 * auto-unmounting any vfs mounted via this device.  This frees user 	 * or sysadm from having to remember where all mount points are 	 * located.  Put this before WAKEUPs to avoid queuing new messages 	 * between the WAKEUP and the unmount (which can happen if we're 	 * unlucky). 	 */
 if|if
 condition|(
-operator|!
 name|mi
 operator|->
 name|mi_rootvp
+operator|==
+name|NULL
 condition|)
 block|{
-comment|/* just a simple open/close w no mount */
+comment|/* 		 * Just a simple open/close with no mount. 		 */
 name|MARK_VC_CLOSED
 argument_list|(
 name|vcp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-comment|/* Let unmount know this is for real */
+comment|/* 	 * Let unmount know this is for real. 	 */
 name|VTOC
 argument_list|(
 name|mi
@@ -555,11 +544,11 @@ operator|->
 name|mi_vfsp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Wakeup clients so they can return. 	 */
 name|outstanding_upcalls
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Wakeup clients so they can return. */
 for|for
 control|(
 name|vmp
@@ -605,7 +594,7 @@ operator|->
 name|vm_chain
 argument_list|)
 expr_stmt|;
-comment|/* Free signal request messages and don't wakeup cause 	   no one is waiting. */
+comment|/* 		 * Free signal request messages and don't wakeup cause no one 		 * is waiting. 		 */
 if|if
 condition|(
 name|vmp
@@ -734,6 +723,8 @@ argument_list|,
 name|outstanding_upcalls
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -749,28 +740,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CODA_VERBOSE
 name|printf
 argument_list|(
 literal|"postsleep: outstanding_upcalls = %d\n"
 argument_list|,
 name|outstanding_upcalls
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|tsleep
-argument_list|(
-operator|&
-name|outstanding_upcalls
-argument_list|,
-name|coda_call_sleep
-argument_list|,
-literal|"coda_umount"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -808,7 +785,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -817,33 +796,25 @@ begin_function
 name|int
 name|vc_read
 parameter_list|(
-name|dev
-parameter_list|,
-name|uiop
-parameter_list|,
-name|flag
-parameter_list|)
 name|struct
 name|cdev
 modifier|*
 name|dev
-decl_stmt|;
+parameter_list|,
 name|struct
 name|uio
 modifier|*
 name|uiop
-decl_stmt|;
+parameter_list|,
 name|int
 name|flag
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|vcomm
 modifier|*
 name|vcp
 decl_stmt|;
-specifier|register
 name|struct
 name|vmsg
 modifier|*
@@ -866,7 +837,7 @@ argument_list|)
 operator|->
 name|mi_vcomm
 expr_stmt|;
-comment|/* Get message at head of request queue. */
+comment|/* 	 * Get message at head of request queue. 	 */
 if|if
 condition|(
 name|EMPTY
@@ -896,7 +867,7 @@ operator|->
 name|vc_requests
 argument_list|)
 expr_stmt|;
-comment|/* Move the input args into userspace */
+comment|/* 	 * Move the input args into userspace. 	 */
 name|uiop
 operator|->
 name|uio_rw
@@ -972,7 +943,7 @@ operator|->
 name|vm_chain
 argument_list|)
 expr_stmt|;
-comment|/* If request was a signal, free up the message and don't        enqueue it in the reply queue. */
+comment|/* 	 * If request was a signal, free up the message and don't enqueue it 	 * in the reply queue. 	 */
 if|if
 condition|(
 name|vmp
@@ -1068,33 +1039,25 @@ begin_function
 name|int
 name|vc_write
 parameter_list|(
-name|dev
-parameter_list|,
-name|uiop
-parameter_list|,
-name|flag
-parameter_list|)
 name|struct
 name|cdev
 modifier|*
 name|dev
-decl_stmt|;
+parameter_list|,
 name|struct
 name|uio
 modifier|*
 name|uiop
-decl_stmt|;
+parameter_list|,
 name|int
 name|flag
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|vcomm
 modifier|*
 name|vcp
 decl_stmt|;
-specifier|register
 name|struct
 name|vmsg
 modifier|*
@@ -1134,7 +1097,7 @@ argument_list|)
 operator|->
 name|mi_vcomm
 expr_stmt|;
-comment|/* Peek at the opcode, unique without transfering the data. */
+comment|/* 	 * Peek at the opcode, unique without transfering the data. 	 */
 name|uiop
 operator|->
 name|uio_rw
@@ -1221,7 +1184,7 @@ name|union
 name|outputArgs
 name|pbuf
 decl_stmt|;
-comment|/* get the rest of the data. */
+comment|/* 		 * Get the rest of the data. 		 */
 name|uiop
 operator|->
 name|uio_rw
@@ -1269,7 +1232,8 @@ block|{
 name|myprintf
 argument_list|(
 operator|(
-literal|"vcwrite: error (%d) on uiomove (Op %ld seq %ld)\n"
+literal|"vcwrite: error (%d) on uiomove (Op %ld "
+literal|"seq %ld)\n"
 operator|,
 name|error
 operator|,
@@ -1286,6 +1250,7 @@ operator|)
 return|;
 block|}
 return|return
+operator|(
 name|handleDownCall
 argument_list|(
 name|opcode
@@ -1293,9 +1258,10 @@ argument_list|,
 operator|&
 name|pbuf
 argument_list|)
+operator|)
 return|;
 block|}
-comment|/* Look for the message on the (waiting for) reply queue. */
+comment|/* 	 * Look for the message on the (waiting for) reply queue. 	 */
 for|for
 control|(
 name|vmp
@@ -1380,7 +1346,7 @@ name|ESRCH
 operator|)
 return|;
 block|}
-comment|/* Remove the message from the reply queue */
+comment|/* 	 * Remove the message from the reply queue. 	 */
 name|REMQUE
 argument_list|(
 name|vmp
@@ -1388,7 +1354,7 @@ operator|->
 name|vm_chain
 argument_list|)
 expr_stmt|;
-comment|/* move data into response buffer. */
+comment|/* 	 * Move data into response buffer. 	 */
 name|out
 operator|=
 operator|(
@@ -1400,8 +1366,7 @@ name|vmp
 operator|->
 name|vm_data
 expr_stmt|;
-comment|/* Don't need to copy opcode and uniquifier. */
-comment|/* get the rest of the data. */
+comment|/* 	 * Don't need to copy opcode and uniquifier. 	 * 	 * Get the rest of the data. 	 */
 if|if
 condition|(
 name|vmp
@@ -1428,6 +1393,7 @@ name|uio_resid
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Notify caller of the error. 		 */
 name|wakeup
 argument_list|(
 operator|&
@@ -1436,13 +1402,13 @@ operator|->
 name|vm_sleep
 argument_list|)
 expr_stmt|;
-comment|/* Notify caller of the error. */
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
 block|}
+comment|/* 	 * Save the value. 	 */
 name|buf
 index|[
 literal|0
@@ -1452,7 +1418,6 @@ name|uiop
 operator|->
 name|uio_resid
 expr_stmt|;
-comment|/* Save this value. */
 name|uiop
 operator|->
 name|uio_rw
@@ -1511,8 +1476,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* I don't think these are used, but just in case. */
-comment|/* XXX - aren't these two already correct? -bnoble */
+comment|/* 	 * I don't think these are used, but just in case. 	 * 	 * XXX - aren't these two already correct? -bnoble 	 */
 name|out
 operator|->
 name|opcode
@@ -1613,6 +1577,7 @@ operator|!
 name|error
 condition|)
 block|{
+comment|/* 				 * XXX: Since the whole driver runs with 				 * Giant, don't actually need to acquire it 				 * explicitly here yet. 				 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1674,35 +1639,25 @@ begin_function
 name|int
 name|vc_ioctl
 parameter_list|(
-name|dev
-parameter_list|,
-name|cmd
-parameter_list|,
-name|addr
-parameter_list|,
-name|flag
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|cdev
 modifier|*
 name|dev
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 name|flag
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|td
-decl_stmt|;
+name|t
+parameter_list|)
 block|{
 name|ENTRY
 expr_stmt|;
@@ -1743,7 +1698,6 @@ name|IS_DOWNCALL
 argument_list|)
 operator|)
 return|;
-break|break;
 block|}
 case|case
 name|CODASTATS
@@ -1763,14 +1717,11 @@ operator|)
 return|;
 block|}
 else|else
-block|{
 return|return
 operator|(
 name|ENODEV
 operator|)
 return|;
-block|}
-break|break;
 case|case
 name|CODAPRINT
 case|:
@@ -1789,14 +1740,11 @@ operator|)
 return|;
 block|}
 else|else
-block|{
 return|return
 operator|(
 name|ENODEV
 operator|)
 return|;
-block|}
-break|break;
 case|case
 name|CIOC_KERNEL_VERSION
 case|:
@@ -1823,9 +1771,10 @@ operator|=
 name|coda_kernel_version
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-break|break;
 case|case
 literal|1
 case|:
@@ -1844,25 +1793,29 @@ operator|)
 name|addr
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 else|else
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 default|default:
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
-break|break;
-default|default :
+default|default:
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-break|break;
 block|}
 block|}
 end_function
@@ -1871,27 +1824,20 @@ begin_function
 name|int
 name|vc_poll
 parameter_list|(
-name|dev
-parameter_list|,
-name|events
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|cdev
 modifier|*
 name|dev
-decl_stmt|;
+parameter_list|,
 name|int
 name|events
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|vcomm
 modifier|*
@@ -1976,7 +1922,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Statistics  */
+comment|/*  * Statistics.  */
 end_comment
 
 begin_decl_stmt
@@ -1987,36 +1933,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Key question: whether to sleep interuptably or uninteruptably when  * waiting for Venus.  The former seems better (cause you can ^C a  * job), but then GNU-EMACS completion breaks. Use tsleep with no  * timeout, and no longjmp happens. But, when sleeping  * "uninterruptibly", we don't get told if it returns abnormally  * (e.g. kill -9).    */
+comment|/*  * Key question: whether to sleep interuptably or uninteruptably when waiting  * for Venus.  The former seems better (cause you can ^C a job), but then  * GNU-EMACS completion breaks.  Use tsleep with no timeout, and no longjmp  * happens.  But, when sleeping "uninterruptibly", we don't get told if it  * returns abnormally (e.g. kill -9).  */
 end_comment
 
 begin_function
 name|int
 name|coda_call
 parameter_list|(
-name|mntinfo
-parameter_list|,
-name|inSize
-parameter_list|,
-name|outSize
-parameter_list|,
-name|buffer
-parameter_list|)
 name|struct
 name|coda_mntinfo
 modifier|*
 name|mntinfo
-decl_stmt|;
+parameter_list|,
 name|int
 name|inSize
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|outSize
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|buffer
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vcomm
@@ -2061,18 +1999,16 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Unlikely, but could be a race condition with a dying warden. 	 */
 if|if
 condition|(
 name|mntinfo
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* Unlikely, but could be a race condition with a dying warden */
 return|return
 name|ENODEV
 return|;
-block|}
 name|vcp
 operator|=
 operator|&
@@ -2144,7 +2080,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Format the request message. */
+comment|/* 	 * Format the request message. 	 */
 end_comment
 
 begin_expr_stmt
@@ -2246,7 +2182,7 @@ expr_stmt|;
 end_if
 
 begin_comment
-comment|/* Fill in the common input args. */
+comment|/* 	 * Fill in the common input args. 	 */
 end_comment
 
 begin_expr_stmt
@@ -2268,7 +2204,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Append msg to request queue and poke Venus. */
+comment|/* 	 * Append msg to request queue and poke Venus. 	 */
 end_comment
 
 begin_expr_stmt
@@ -2301,11 +2237,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* We can be interrupted while we wait for Venus to process 	 * our request.  If the interrupt occurs before Venus has read 	 * the request, we dequeue and return. If it occurs after the 	 * read but before the reply, we dequeue, send a signal 	 * message, and return. If it occurs after the reply we ignore 	 * it. In no case do we want to restart the syscall.  If it 	 * was interrupted by a venus shutdown (vcclose), return 	 * ENODEV.  */
-end_comment
-
-begin_comment
-comment|/* Ignore return, We have to check anyway */
+comment|/* 	 * We can be interrupted while we wait for Venus to process our 	 * request.  If the interrupt occurs before Venus has read the 	 * request, we dequeue and return. If it occurs after the read but 	 * before the reply, we dequeue, send a signal message, and return. 	 * If it occurs after the reply we ignore it.  In no case do we want 	 * to restart the syscall.  If it was interrupted by a venus shutdown 	 * (vcclose), return ENODEV. 	 * 	 * Ignore return, we have to check anyway. 	 */
 end_comment
 
 begin_ifdef
@@ -2315,7 +2247,7 @@ name|CTL_C
 end_ifdef
 
 begin_comment
-comment|/* This is work in progress.  Setting coda_pcatch lets tsleep reawaken 	   on a ^c or ^z.  The problem is that emacs sets certain interrupts 	   as SA_RESTART.  This means that we should exit sleep handle the 	   "signal" and then go to sleep again.  Mostly this is done by letting 	   the syscall complete and be restarted.  We are not idempotent and  	   can not do this.  A better solution is necessary. 	 */
+comment|/* 	 * This is work in progress.  Setting coda_pcatch lets tsleep 	 * reawaken on a ^c or ^z.  The problem is that emacs sets certain 	 * interrupts as SA_RESTART.  This means that we should exit sleep 	 * handle the "signal" and then go to sleep again.  Mostly this is 	 * done by letting the syscall complete and be restarted.  We are not 	 * idempotent and can not do this.  A better solution is necessary. 	 */
 end_comment
 
 begin_expr_stmt
@@ -2444,7 +2376,8 @@ directive|ifdef
 name|CODA_VERBOSE
 name|printf
 argument_list|(
-literal|"coda_call: tsleep returns %d SIGIO, cnt %d\n"
+literal|"coda_call: tsleep returns %d SIGIO, "
+literal|"cnt %d\n"
 argument_list|,
 name|error
 argument_list|,
@@ -2496,7 +2429,8 @@ directive|ifdef
 name|CODA_VERBOSE
 name|printf
 argument_list|(
-literal|"coda_call: tsleep returns %d SIGALRM, cnt %d\n"
+literal|"coda_call: tsleep returns "
+literal|"%d SIGALRM, cnt %d\n"
 argument_list|,
 name|error
 argument_list|,
@@ -2513,7 +2447,8 @@ directive|ifdef
 name|CODA_VERBOSE
 name|printf
 argument_list|(
-literal|"coda_call: tsleep returns %d, cnt %d\n"
+literal|"coda_call: tsleep returns "
+literal|"%d, cnt %d\n"
 argument_list|,
 name|error
 argument_list|,
@@ -2542,7 +2477,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"coda_call: siglist = %p, sigmask = %p, mask %p\n"
+literal|"coda_call: siglist = %p, "
+literal|"sigmask = %p, mask %p\n"
 argument_list|,
 name|td
 operator|->
@@ -2584,7 +2520,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"coda_call: new mask, siglist = %p, sigmask = %p, mask %p\n"
+literal|"coda_call: new mask, "
+literal|"siglist = %p, sigmask = %p, "
+literal|"mask %p\n"
 argument_list|,
 name|td
 operator|->
@@ -2684,8 +2622,7 @@ name|vcp
 argument_list|)
 condition|)
 block|{
-comment|/* Venus is still alive */
-comment|/* Op went through, interrupt or not... */
+comment|/* 		 * Venus is still alive. 		 * 		 * Op went through, interrupt or not... 		 */
 if|if
 condition|(
 name|vmp
@@ -2739,7 +2676,8 @@ directive|endif
 name|myprintf
 argument_list|(
 operator|(
-literal|"interrupted before read: op = %d.%d, flags = %x\n"
+literal|"interrupted before read: op = "
+literal|"%d.%d, flags = %x\n"
 operator|,
 name|vmp
 operator|->
@@ -2769,8 +2707,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* (!(vmp->vm_flags& VM_WRITE)) means interrupted after                    upcall started */
-comment|/* Interrupted after start of upcall, send venus a signal */
+comment|/* 			 * (!(vmp->vm_flags& VM_WRITE)) means interrupted 			 * after upcall started. 			 * 			 * Interrupted after start of upcall, send venus a 			 * signal. 			 */
 name|struct
 name|coda_in_hdr
 modifier|*
@@ -2799,7 +2736,8 @@ directive|endif
 name|myprintf
 argument_list|(
 operator|(
-literal|"Sending Venus a signal: op = %d.%d, flags = %x\n"
+literal|"Sending Venus a signal: op = "
+literal|"%d.%d, flags = %x\n"
 operator|,
 name|vmp
 operator|->
@@ -2926,7 +2864,8 @@ condition|)
 name|myprintf
 argument_list|(
 operator|(
-literal|"coda_call: enqueing signal msg (%d, %d)\n"
+literal|"coda_call: enqueing signal msg "
+literal|"(%d, %d)\n"
 operator|,
 name|svmp
 operator|->
@@ -2938,7 +2877,7 @@ name|vm_unique
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* insert at head of queue! */
+comment|/* 			 * Insert at head of queue! 			 */
 name|INSQUE
 argument_list|(
 name|svmp

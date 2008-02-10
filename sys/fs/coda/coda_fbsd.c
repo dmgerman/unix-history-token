@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/coda/coda_fbsd.cr,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  */
+comment|/*-  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *  *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *  * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *  * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *  * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *  * 	@(#) src/sys/coda/coda_fbsd.cr,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  */
 end_comment
 
 begin_include
@@ -186,23 +186,8 @@ name|coda_mnttbl
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|int
-name|vcdebug
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|VCDEBUG
-value|if (vcdebug) printf
-end_define
-
 begin_comment
-comment|/* for DEVFS, using bpf& tun drivers as examples*/
+comment|/*  * For DEVFS, using bpf& tun drivers as examples.  *  * XXX: Why use a cloned interface, aren't we really just interested in  * having a single /dev/cfs0?  It's not clear the coda module knows what to  * do with more than one.  */
 end_comment
 
 begin_function_decl
@@ -287,6 +272,7 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
+comment|/* 		 * XXXRW: At the very least, a busy check should occur here 		 * to prevent untimely unload.  Much more serious collection 		 * of allocated memory needs to take place; right now we leak 		 * like a sieve. 		 */
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|dev_clone
@@ -340,7 +326,9 @@ operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -379,46 +367,36 @@ specifier|static
 name|void
 name|coda_fbsd_clone
 parameter_list|(
-name|arg
-parameter_list|,
-name|cred
-parameter_list|,
-name|name
-parameter_list|,
-name|namelen
-parameter_list|,
-name|dev
-parameter_list|)
 name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ucred
 modifier|*
 name|cred
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|namelen
-decl_stmt|;
+parameter_list|,
 name|struct
 name|cdev
 modifier|*
 modifier|*
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
-name|int
-name|u
-decl_stmt|;
 name|struct
 name|coda_mntinfo
 modifier|*
 name|mnt
+decl_stmt|;
+name|int
+name|u
 decl_stmt|;
 if|if
 condition|(
@@ -547,11 +525,15 @@ operator|==
 name|dev
 condition|)
 return|return
+operator|(
 name|mnt
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function

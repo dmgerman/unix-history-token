@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/coda/cnode.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $   * $FreeBSD$  *   */
+comment|/*-  *  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *  *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *  * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *  * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *  * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *  * 	@(#) src/sys/coda/cnode.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  * $FreeBSD$  *  */
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * tmp below since we need struct queue  */
+comment|/*  * tmp below since we need struct queue.  */
 end_comment
 
 begin_include
@@ -54,7 +54,7 @@ file|<fs/coda/coda_kernel.h>
 end_include
 
 begin_comment
-comment|/*  * Cnode lookup stuff.  * NOTE: CODA_CACHESIZE must be a power of 2 for cfshash to work!  */
+comment|/*  * Cnode lookup stuff.  *  * NOTE: CODA_CACHESIZE must be a power of 2 for cfshash to work!  */
 end_comment
 
 begin_define
@@ -75,8 +75,7 @@ name|cast
 parameter_list|,
 name|size
 parameter_list|)
-define|\
-value|do {                                                                      \     ptr = (cast)malloc((unsigned long) size, M_CODA, M_WAITOK);            \     if (ptr == 0) {                                                       \ 	panic("kernel malloc returns 0 at %s:%d\n", __FILE__, __LINE__);  \     }                                                                     \ } while (0)
+value|do {				\ 	ptr = (cast)malloc((unsigned long) size, M_CODA, M_WAITOK);	\ 	if (ptr == NULL)						\ 		panic("kernel malloc returns 0 at %s:%d\n", __FILE__,	\ 		    __LINE__);						\ } while (0)
 end_define
 
 begin_define
@@ -149,7 +148,7 @@ name|N
 parameter_list|,
 name|STMT
 parameter_list|)
-value|{ if (codadebug& CODADBGMSK(N)) { STMT } }
+value|do {						\ 	if (codadebug& CODADBGMSK(N)) {				\ 		STMT							\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -159,8 +158,7 @@ name|myprintf
 parameter_list|(
 name|args
 parameter_list|)
-define|\
-value|do {                            \     if (coda_printf_delay)       \ 	DELAY(coda_printf_delay);\     printf args ;               \ } while (0)
+value|do {						\ 	if (coda_printf_delay)						\ 		DELAY(coda_printf_delay);				\ 	printf args ;							\ } while (0)
 end_define
 
 begin_struct
@@ -426,7 +424,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * CODA structure to hold mount/filesystem information  */
+comment|/*  * CODA structure to hold mount/filesystem information.  */
 end_comment
 
 begin_struct
@@ -480,7 +478,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vfs pointer to mount info  */
+comment|/*  * vfs pointer to mount info.  */
 end_comment
 
 begin_define
@@ -500,11 +498,11 @@ name|CODA_MOUNTED
 parameter_list|(
 name|vfsp
 parameter_list|)
-value|(vftomi((vfsp)) != (struct coda_mntinfo *)0)
+value|(vftomi((vfsp)) != NULL)
 end_define
 
 begin_comment
-comment|/*  * vnode pointer to mount info  */
+comment|/*  * vnode pointer to mount info.  */
 end_comment
 
 begin_define
@@ -518,7 +516,7 @@ value|((struct coda_mntinfo *)(vp->v_mount->mnt_data))
 end_define
 
 begin_comment
-comment|/*  * Used for identifying usage of "Control" object  */
+comment|/*  * Used for identifying usage of "Control" object.  */
 end_comment
 
 begin_decl_stmt
@@ -551,11 +549,11 @@ name|name
 parameter_list|,
 name|l
 parameter_list|)
-value|((l == CODA_CONTROLLEN) \&& ((vp) == vtomi((vp))->mi_rootvp)    \&& strncmp(name, CODA_CONTROL, l) == 0)
+value|((l == CODA_CONTROLLEN)		\&& ((vp) == vtomi((vp))->mi_rootvp)&&				\     strncmp(name, CODA_CONTROL, l) == 0)
 end_define
 
 begin_comment
-comment|/*   * An enum to tell us whether something that will remove a reference  * to a cnode was a downcall or not  */
+comment|/*  * An enum to tell us whether something that will remove a reference to a  * cnode was a downcall or not.  */
 end_comment
 
 begin_enum

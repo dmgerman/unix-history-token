@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/coda_venus.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  */
+comment|/*-  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *  *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *  * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *  * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *  * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *  * 	@(#) src/sys/cfs/coda_venus.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  */
 end_comment
 
 begin_include
@@ -103,7 +103,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|struct coda_in_hdr *inp;				\     struct name ## _out *outp;				\     int name ## _size = sizeof (struct coda_in_hdr);	\     int Isize = sizeof (struct coda_in_hdr);		\     int Osize = sizeof (struct name ## _out);		\     int error
+value|struct coda_in_hdr *inp;					\ 	struct name ## _out *outp;					\ 	int name ## _size = sizeof (struct coda_in_hdr);		\ 	int Isize = sizeof (struct coda_in_hdr);			\ 	int Osize = sizeof (struct name ## _out);			\ 	int error
 end_define
 
 begin_define
@@ -114,7 +114,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|struct name ## _in *inp;				\     struct name ## _out *outp;				\     int name ## _size = sizeof (struct name ## _in);	\     int Isize = sizeof (struct name ## _in);		\     int Osize = sizeof (struct name ## _out);		\     int error
+value|struct name ## _in *inp;					\ 	struct name ## _out *outp;					\ 	int name ## _size = sizeof (struct name ## _in);		\ 	int Isize = sizeof (struct name ## _in);			\ 	int Osize = sizeof (struct name ## _out);			\ 	int error
 end_define
 
 begin_define
@@ -125,7 +125,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|struct name ## _in *inp;				\     struct coda_out_hdr *outp;				\     int name ## _size = sizeof (struct name ## _in);	\     int Isize = sizeof (struct name ## _in);		\     int Osize = sizeof (struct coda_out_hdr);		\     int error
+value|struct name ## _in *inp;					\ 	struct coda_out_hdr *outp;					\ 	int name ## _size = sizeof (struct name ## _in);		\ 	int Isize = sizeof (struct name ## _in);			\ 	int Osize = sizeof (struct coda_out_hdr);			\ 	int error
 end_define
 
 begin_define
@@ -136,7 +136,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|if (Osize> name ## _size)				\     	name ## _size = Osize;				\     CODA_ALLOC(inp, struct coda_in_hdr *, name ## _size);\     outp = (struct name ## _out *) inp
+value|if (Osize> name ## _size)					\ 		name ## _size = Osize;					\ 	CODA_ALLOC(inp, struct coda_in_hdr *, name ## _size);		\ 	outp = (struct name ## _out *) inp
 end_define
 
 begin_define
@@ -147,7 +147,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|if (Osize> name ## _size)				\     	name ## _size = Osize;				\     CODA_ALLOC(inp, struct name ## _in *, name ## _size);\     outp = (struct name ## _out *) inp
+value|if (Osize> name ## _size)					\ 		name ## _size = Osize;					\ 	CODA_ALLOC(inp, struct name ## _in *, name ## _size);		\ 	outp = (struct name ## _out *) inp
 end_define
 
 begin_define
@@ -158,7 +158,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|if (Osize> name ## _size)				\     	name ## _size = Osize;				\     CODA_ALLOC(inp, struct name ## _in *, name ## _size);\     outp = (struct coda_out_hdr *) inp
+value|if (Osize> name ## _size)					\ 		name ## _size = Osize;					\ 	CODA_ALLOC(inp, struct name ## _in *, name ## _size);		\ 	outp = (struct coda_out_hdr *) inp
 end_define
 
 begin_define
@@ -173,7 +173,7 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|bcopy(name, (char *)inp + (int)inp->struc, len); \     ((char*)inp + (int)inp->struc)[len++] = 0; \     Isize += len
+value|bcopy(name, (char *)inp + (int)inp->struc, len);		\ 	((char*)inp + (int)inp->struc)[len++] = 0;			\ 	Isize += len
 end_define
 
 begin_ifdef
@@ -195,8 +195,7 @@ name|ident
 parameter_list|,
 name|p
 parameter_list|)
-define|\
-value|(in)->opcode = (op); \ 	  sx_slock(&proctree_lock); \ 	  (in)->pid = p ? p->p_pid : -1; \           (in)->pgid = p ? p->p_pgid : -1; \           (in)->sid = (p&& p->p_session&& p->p_session->s_leader) ? (p->p_session->s_leader->p_pid) : -1; \ 	  sx_sunlock(&proctree_lock); \           if (ident != NOCRED) {                              \ 	      (in)->cred.cr_uid = ident->cr_uid;              \ 	      (in)->cred.cr_groupid = ident->cr_gid;          \           } else {                                            \ 	      bzero(&((in)->cred),sizeof(struct coda_cred));  \ 	      (in)->cred.cr_uid = -1;                         \ 	      (in)->cred.cr_groupid = -1;                     \           }
+value|do {					\ 	(in)->opcode = (op);						\ 	sx_slock(&proctree_lock);					\ 	(in)->pid = p ? p->p_pid : -1;					\ 	(in)->pgid = p ? p->p_pgid : -1;				\ 	(in)->sid = (p&& p->p_session&& p->p_session->s_leader) ?	\ 	    (p->p_session->s_leader->p_pid) : -1;			\ 	sx_sunlock(&proctree_lock);					\ 	if (ident != NOCRED) {						\ 		(in)->cred.cr_uid = ident->cr_uid;			\ 		(in)->cred.cr_groupid = ident->cr_gid;			\ 	} else {							\ 		bzero(&((in)->cred),sizeof(struct coda_cred));		\ 		(in)->cred.cr_uid = -1;					\ 		(in)->cred.cr_groupid = -1;				\ 	}								\ } while (0)
 end_define
 
 begin_else
@@ -217,8 +216,7 @@ name|ident
 parameter_list|,
 name|p
 parameter_list|)
-define|\
-value|(in)->opcode = (op);                          \ 	  (in)->pid = p ? p->p_pid : -1;                \           (in)->pgid = p ? p->p_pgid : -1;              \           if (ident != NOCRED) {                        \ 	      (in)->uid = ident->cr_uid;              	\           } else {                                      \ 	      (in)->uid = -1;                           \           }
+value|do {					\ 	(in)->opcode = (op);						\ 	(in)->pid = p ? p->p_pid : -1;					\ 	(in)->pgid = p ? p->p_pgid : -1;				\ 	if (ident != NOCRED)						\ 		(in)->uid = ident->cr_uid;				\ 	else								\ 		(in)->uid = -1;						\ } while (0)
 end_define
 
 begin_endif
@@ -235,8 +233,7 @@ name|to
 parameter_list|,
 name|from
 parameter_list|)
-define|\
-value|do { 						\ 	  to = 0;					\ 	  if (from& FREAD)   to |= C_O_READ; 		\ 	  if (from& FWRITE)  to |= C_O_WRITE; 		\ 	  if (from& O_TRUNC) to |= C_O_TRUNC; 		\ 	  if (from& O_EXCL)  to |= C_O_EXCL; 		\ 	  if (from& O_CREAT) to |= C_O_CREAT;		\     } while (0)
+value|do { 					\ 	to = 0;								\ 	if (from& FREAD)   to |= C_O_READ; 				\ 	if (from& FWRITE)  to |= C_O_WRITE; 				\ 	if (from& O_TRUNC) to |= C_O_TRUNC; 				\ 	if (from& O_EXCL)  to |= C_O_EXCL; 				\ 	if (from& O_CREAT) to |= C_O_CREAT;				\ } while (0)
 end_define
 
 begin_define
@@ -248,8 +245,7 @@ name|top
 parameter_list|,
 name|fromp
 parameter_list|)
-define|\
-value|do { \ 		(top)->va_type = (fromp)->va_type; \ 		(top)->va_mode = (fromp)->va_mode; \ 		(top)->va_nlink = (fromp)->va_nlink; \ 		(top)->va_uid = (fromp)->va_uid; \ 		(top)->va_gid = (fromp)->va_gid; \ 		(top)->va_fsid = VNOVAL; \ 		(top)->va_fileid = (fromp)->va_fileid; \ 		(top)->va_size = (fromp)->va_size; \ 		(top)->va_blocksize = (fromp)->va_blocksize; \ 		(top)->va_atime = (fromp)->va_atime; \ 		(top)->va_mtime = (fromp)->va_mtime; \ 		(top)->va_ctime = (fromp)->va_ctime; \ 		(top)->va_gen = (fromp)->va_gen; \ 		(top)->va_flags = (fromp)->va_flags; \ 		(top)->va_rdev = (fromp)->va_rdev; \ 		(top)->va_bytes = (fromp)->va_bytes; \ 		(top)->va_filerev = (fromp)->va_filerev; \ 		(top)->va_vaflags = VNOVAL; \ 		(top)->va_spare = VNOVAL; \ 	} while (0)
+value|do {					\ 	(top)->va_type = (fromp)->va_type;				\ 	(top)->va_mode = (fromp)->va_mode;				\ 	(top)->va_nlink = (fromp)->va_nlink;				\ 	(top)->va_uid = (fromp)->va_uid;				\ 	(top)->va_gid = (fromp)->va_gid;				\ 	(top)->va_fsid = VNOVAL;					\ 	(top)->va_fileid = (fromp)->va_fileid;				\ 	(top)->va_size = (fromp)->va_size;				\ 	(top)->va_blocksize = (fromp)->va_blocksize;			\ 	(top)->va_atime = (fromp)->va_atime;				\ 	(top)->va_mtime = (fromp)->va_mtime;				\ 	(top)->va_ctime = (fromp)->va_ctime;				\ 	(top)->va_gen = (fromp)->va_gen;				\ 	(top)->va_flags = (fromp)->va_flags;				\ 	(top)->va_rdev = (fromp)->va_rdev;				\ 	(top)->va_bytes = (fromp)->va_bytes;				\ 	(top)->va_filerev = (fromp)->va_filerev;			\ 	(top)->va_vaflags = VNOVAL;					\ 	(top)->va_spare = VNOVAL;					\ } while (0)
 end_define
 
 begin_define
@@ -261,8 +257,7 @@ name|top
 parameter_list|,
 name|fromp
 parameter_list|)
-define|\
-value|do { \ 		(top)->va_type = (fromp)->va_type; \ 		(top)->va_mode = (fromp)->va_mode; \ 		(top)->va_nlink = (fromp)->va_nlink; \ 		(top)->va_uid = (fromp)->va_uid; \ 		(top)->va_gid = (fromp)->va_gid; \ 		(top)->va_fileid = (fromp)->va_fileid; \ 		(top)->va_size = (fromp)->va_size; \ 		(top)->va_blocksize = (fromp)->va_blocksize; \ 		(top)->va_atime = (fromp)->va_atime; \ 		(top)->va_mtime = (fromp)->va_mtime; \ 		(top)->va_ctime = (fromp)->va_ctime; \ 		(top)->va_gen = (fromp)->va_gen; \ 		(top)->va_flags = (fromp)->va_flags; \ 		(top)->va_rdev = (fromp)->va_rdev; \ 		(top)->va_bytes = (fromp)->va_bytes; \ 		(top)->va_filerev = (fromp)->va_filerev; \ 	} while (0)
+value|do {					\ 	(top)->va_type = (fromp)->va_type;				\ 	(top)->va_mode = (fromp)->va_mode;				\ 	(top)->va_nlink = (fromp)->va_nlink;				\ 	(top)->va_uid = (fromp)->va_uid;				\ 	(top)->va_gid = (fromp)->va_gid;				\ 	(top)->va_fileid = (fromp)->va_fileid;				\ 	(top)->va_size = (fromp)->va_size;				\ 	(top)->va_blocksize = (fromp)->va_blocksize;			\ 	(top)->va_atime = (fromp)->va_atime;				\ 	(top)->va_mtime = (fromp)->va_mtime;				\ 	(top)->va_ctime = (fromp)->va_ctime;				\ 	(top)->va_gen = (fromp)->va_gen;				\ 	(top)->va_flags = (fromp)->va_flags;				\ 	(top)->va_rdev = (fromp)->va_rdev;				\ 	(top)->va_bytes = (fromp)->va_bytes;				\ 	(top)->va_filerev = (fromp)->va_filerev;			\ } while (0)
 end_define
 
 begin_decl_stmt
@@ -359,7 +354,9 @@ name|coda_root_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -484,7 +481,9 @@ name|coda_open_by_fd_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -590,13 +589,15 @@ name|coda_close_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * these two calls will not exist!!!  the container file is read/written  * directly.  */
+comment|/*  * These two calls will not exist!!!  The container file is read/written  * directly.  */
 end_comment
 
 begin_function
@@ -618,7 +619,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|/*  * this is a bit sad too.  the ioctl's are for the control file, not for  * normal files.  */
+comment|/*  * This is a bit sad too.  the ioctl's are for the control file, not for  * normal files.  */
 end_comment
 
 begin_function
@@ -705,7 +706,7 @@ operator|=
 operator|*
 name|fid
 expr_stmt|;
-comment|/* command was mutated by increasing its size field to reflect the        * path and follow args. we need to subtract that out before sending      * the command to venus.      */
+comment|/* 	 * Command was mutated by increasing its size field to reflect the 	 * path and follow args. we need to subtract that out before sending 	 * the command to venus. 	 */
 name|inp
 operator|->
 name|cmd
@@ -864,7 +865,7 @@ operator|)
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* copy out the out buffer. */
+comment|/* 	 * Copy out the out buffer. 	 */
 if|if
 condition|(
 operator|!
@@ -883,14 +884,11 @@ name|vi
 operator|.
 name|out_size
 condition|)
-block|{
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
 else|else
-block|{
 name|error
 operator|=
 name|copyout
@@ -922,7 +920,6 @@ name|out_size
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|CODA_FREE
 argument_list|(
 name|inp
@@ -931,7 +928,9 @@ name|coda_ioctl_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -977,7 +976,7 @@ name|coda_getattr
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* send the open to venus. */
+comment|/* 	 * Send the open to venus. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -1022,7 +1021,6 @@ condition|(
 operator|!
 name|error
 condition|)
-block|{
 name|CNV_VV2V_ATTR
 argument_list|(
 name|vap
@@ -1033,7 +1031,6 @@ operator|->
 name|attr
 argument_list|)
 expr_stmt|;
-block|}
 name|CODA_FREE
 argument_list|(
 name|inp
@@ -1042,7 +1039,9 @@ name|coda_getattr_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1087,7 +1086,7 @@ name|coda_setattr
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* send the open to venus. */
+comment|/* 	 * Send the open to venus. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -1145,7 +1144,9 @@ name|coda_setattr_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1188,7 +1189,7 @@ name|coda_access
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* send the open to venus. */
+comment|/* 	 * Send the open to venus. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -1210,7 +1211,7 @@ operator|=
 operator|*
 name|fid
 expr_stmt|;
-comment|/* NOTE:      * FreeBSD and Venus internals use the "data" in the low 3 bits.      * Hence, the conversion.      */
+comment|/* 	 * NOTE: FreeBSD and Venus internals use the "data" in the low 3 	 * bits.  Hence, the conversion. 	 */
 name|inp
 operator|->
 name|flags
@@ -1245,7 +1246,9 @@ name|coda_access_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1299,7 +1302,7 @@ name|coda_readlink
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* send the open to venus. */
+comment|/* 	 * Send the open to venus. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -1400,7 +1403,9 @@ name|coda_readlink_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1435,7 +1440,7 @@ name|coda_fsync
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* send the open to venus. */
+comment|/* 	 * Send the open to venus. 	 * 	 * XXX: should be cached mount cred. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -1450,7 +1455,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* XXX: should be cached mount cred */
 name|inp
 operator|->
 name|Fid
@@ -1484,7 +1488,9 @@ name|coda_fsync_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1547,7 +1553,7 @@ name|coda_lookup
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* send the open to venus. */
+comment|/* 	 * Send the open to venus. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -1569,7 +1575,7 @@ operator|=
 operator|*
 name|fid
 expr_stmt|;
-comment|/* NOTE:      * Between version 1 and version 2 we have added an extra flag field      * to this structure.  But because the string was at the end and because      * of the wierd way we represent strings by having the slot point to      * where the string characters are in the "heap", we can just slip the      * flag parameter in after the string slot pointer and veni that don't      * know better won't see this new flag field ...      * Otherwise we'd need two different venus_lookup functions.      */
+comment|/* 	 * NOTE: Between version 1 and version 2 we have added an extra flag 	 * field to this structure.  But because the string was at the end 	 * and because of the wierd way we represent strings by having the 	 * slot point to where the string characters are in the "heap", we 	 * can just slip the flag parameter in after the string slot pointer 	 * and veni that don't know better won't see this new flag field ... 	 * Otherwise we'd need two different venus_lookup functions. 	 */
 name|inp
 operator|->
 name|name
@@ -1640,7 +1646,9 @@ name|coda_lookup_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1715,7 +1723,7 @@ name|coda_create
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* send the open to venus. */
+comment|/* 	 * Send the open to venus. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -1829,7 +1837,9 @@ name|coda_create_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1883,7 +1893,7 @@ name|coda_remove
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* send the open to venus. */
+comment|/* 	 * Send the open to venus. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -1947,7 +1957,9 @@ name|coda_remove_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2005,7 +2017,7 @@ name|coda_link
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* send the open to venus. */
+comment|/* 	 * Send the open to venus. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -2076,7 +2088,9 @@ name|coda_link_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2146,7 +2160,7 @@ name|coda_rename
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* send the open to venus. */
+comment|/* 	 * Send the open to venus. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -2233,7 +2247,9 @@ name|coda_rename_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2302,7 +2318,7 @@ name|coda_mkdir
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* send the open to venus. */
+comment|/* 	 * Send the open to venus. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -2400,7 +2416,9 @@ name|coda_mkdir_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2454,7 +2472,7 @@ name|coda_rmdir
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* send the open to venus. */
+comment|/* 	 *  Send the open to venus. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -2518,7 +2536,9 @@ name|coda_rmdir_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2589,7 +2609,7 @@ name|coda_symlink
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* send the open to venus. */
+comment|/* 	 * Send the open to venus. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -2679,7 +2699,9 @@ name|coda_symlink_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2742,7 +2764,7 @@ name|coda_readdir
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* send the open to venus. */
+comment|/* 	 * Send the open to venus. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -2842,7 +2864,9 @@ name|coda_readdir_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2891,7 +2915,7 @@ name|coda_vget
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
-comment|/* Send the open to Venus. */
+comment|/* 	 * Send the open to Venus. 	 */
 name|INIT_IN
 argument_list|(
 operator|&
@@ -2960,7 +2984,9 @@ name|coda_vget_size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function

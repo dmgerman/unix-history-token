@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   *  	@(#) src/sys/coda/coda_vnops.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  */
+comment|/*-  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *  *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *  * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *  * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *  * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *  *  	@(#) src/sys/coda/coda_vnops.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  */
 end_comment
 
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1990 Carnegie-Mellon University  * Copyright (c) 1989 Carnegie-Mellon University  * All rights reserved.  The CMU software License Agreement specifies  * the terms and conditions for use and redistribution.  */
+comment|/*  * Mach Operating System  * Copyright (c) 1990 Carnegie-Mellon University  * Copyright (c) 1989 Carnegie-Mellon University  * All rights reserved.  The CMU software License Agreement specifies  * the terms and conditions for use and redistribution.  */
 end_comment
 
 begin_comment
-comment|/*  * This code was written for the Coda filesystem at Carnegie Mellon  * University.  Contributers include David Steere, James Kistler, and  * M. Satyanarayanan.    */
+comment|/*  * This code was written for the Coda filesystem at Carnegie Mellon  * University.  Contributers include David Steere, James Kistler, and  * M. Satyanarayanan.  */
 end_comment
 
 begin_include
@@ -186,10 +186,11 @@ file|<fs/coda/coda_pioctl.h>
 end_include
 
 begin_comment
-comment|/*   * These flags select various performance enhancements.  */
+comment|/*  * These flags select various performance enhancements.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|coda_attr_cache
 init|=
@@ -198,10 +199,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Set to cache attributes in the kernel */
+comment|/* Set to cache attributes. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|coda_symlink_cache
 init|=
@@ -210,10 +212,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Set to cache symbolic link information */
+comment|/* Set to cache symbolic links. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|coda_access_cache
 init|=
@@ -222,14 +225,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Set to handle some access checks directly */
+comment|/* Set to cache some access checks. */
 end_comment
 
 begin_comment
-comment|/* structure to keep track of vfs calls */
+comment|/*  * Structure to keep track of vfs calls.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|coda_op_stats
 name|coda_vnodeopstats
@@ -280,7 +284,7 @@ value|(coda_vnodeopstats[op].gen_intrn++)
 end_define
 
 begin_comment
-comment|/* What we are delaying for in printf */
+comment|/*  * What we are delaying for in printf.  */
 end_comment
 
 begin_decl_stmt
@@ -292,7 +296,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* in microseconds */
+comment|/* In microseconds */
 end_comment
 
 begin_decl_stmt
@@ -313,18 +317,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Some FreeBSD details:  *   *   codadev_modevent is called at boot time or module load time.  */
+comment|/*  * Some FreeBSD details:  *  * codadev_modevent is called at boot time or module load time.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ENTRY
-value|if(coda_vnop_print_entry) myprintf(("Entered %s\n",__func__))
+value|do {							\ 	if (coda_vnop_print_entry)					\ 		myprintf(("Entered %s\n", __func__));			\ } while (0)
 end_define
 
 begin_comment
-comment|/* Definition of the vnode operation vector */
+comment|/*  * Definition of the vnode operation vector.  */
 end_comment
 
 begin_decl_stmt
@@ -526,7 +530,8 @@ block|,
 if|#
 directive|if
 literal|0
-block|missing     .vop_cachedlookup =	ufs_lookup,     .vop_whiteout =	ufs_whiteout,
+comment|/* missing */
+block|.vop_cachedlookup = ufs_lookup, 	.vop_whiteout =	ufs_whiteout,
 endif|#
 directive|endif
 block|}
@@ -553,7 +558,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -618,13 +622,15 @@ literal|0
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*   * coda_open calls Venus which returns an open file descriptor the cache  * file holding the data. We get the vnode while we are still in the  * context of the venus process in coda_psdev.c. This vnode is then  * passed back to the caller and opened.  */
+comment|/*  * coda_open calls Venus which returns an open file descriptor the cache file  * holding the data.  We get the vnode while we are still in the context of  * the venus process in coda_psdev.c.  This vnode is then passed back to the  * caller and opened.  */
 end_comment
 
 begin_function
@@ -637,9 +643,8 @@ modifier|*
 name|ap
 parameter_list|)
 block|{
-comment|/*       * FreeBSD can pass the O_EXCL flag in mode, even though the check      * has already happened.  Venus defensively assumes that if open      * is passed the EXCL, it must be a bug.  We strip the flag here.      */
+comment|/* 	 * FreeBSD can pass the O_EXCL flag in mode, even though the check 	 * has already happened.  Venus defensively assumes that if open is 	 * passed the EXCL, it must be a bug.  We strip the flag here. 	 */
 comment|/* true args */
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -708,7 +713,7 @@ argument_list|(
 name|CODA_OPEN_STATS
 argument_list|)
 expr_stmt|;
-comment|/* Check for open of control file. */
+comment|/* 	 * Check for open of control file. 	 */
 if|if
 condition|(
 name|IS_CTL_VP
@@ -801,9 +806,10 @@ argument|CODA_OPEN
 argument_list|,
 argument|myprintf((
 literal|"open: vp %p result %d\n"
-argument|, vp, error));
+argument|, vp, 	    error));
 argument_list|)
-comment|/* Save the vnode pointer for the cache file. */
+empty_stmt|;
+comment|/* 	 * Save the vnode pointer for the cache file. 	 */
 if|if
 condition|(
 name|cp
@@ -832,7 +838,7 @@ name|vp
 condition|)
 name|panic
 argument_list|(
-literal|"coda_open:  cp->c_ovp != ITOV(ip)"
+literal|"coda_open: cp->c_ovp != ITOV(ip)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -841,7 +847,7 @@ operator|->
 name|c_ocount
 operator|++
 expr_stmt|;
-comment|/* Flush the attribute cached if writing the file. */
+comment|/* 	 * Flush the attribute cached if writing the file. 	 */
 if|if
 condition|(
 name|flag
@@ -862,7 +868,7 @@ operator|~
 name|C_VATTR
 expr_stmt|;
 block|}
-comment|/* Open the cache file. */
+comment|/* 	 * Open the cache file. 	 */
 name|vn_lock
 argument_list|(
 name|vp
@@ -912,8 +918,6 @@ name|error
 operator|)
 return|;
 block|}
-else|else
-block|{
 operator|(
 operator|*
 name|vpp
@@ -925,7 +929,6 @@ name|vp
 operator|->
 name|v_object
 expr_stmt|;
-block|}
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -933,10 +936,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* grab (above) does this when it calls newvnode unless it's in the cache*/
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -1010,7 +1012,7 @@ argument_list|(
 name|CODA_CLOSE_STATS
 argument_list|)
 expr_stmt|;
-comment|/* Check for close of control file. */
+comment|/* 	 * Check for close of control file. 	 */
 if|if
 condition|(
 name|IS_CTL_VP
@@ -1048,6 +1050,7 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
+comment|/* Do errors matter here? */
 name|VOP_CLOSE
 argument_list|(
 name|cp
@@ -1061,7 +1064,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* Do errors matter here? */
 name|vput
 argument_list|(
 name|cp
@@ -1100,13 +1102,13 @@ name|c_ovp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * File was opened for write. 	 */
 if|if
 condition|(
 name|flag
 operator|&
 name|FWRITE
 condition|)
-comment|/* file was opened for write */
 operator|--
 name|cp
 operator|->
@@ -1156,6 +1158,7 @@ argument|myprintf((
 literal|"close: result %d\n"
 argument|,error));
 argument_list|)
+empty_stmt|;
 return|return
 operator|(
 name|error
@@ -1329,9 +1332,10 @@ argument|CODA_RDWR
 argument_list|,
 argument|myprintf((
 literal|"coda_rdwr(%d, %p, %d, %lld, %d)\n"
-argument|, rw,  			      (void *)uiop->uio_iov->iov_base, uiop->uio_resid,  			      (long long)uiop->uio_offset, uiop->uio_segflg));
+argument|, 	    rw, (void *)uiop->uio_iov->iov_base, uiop->uio_resid, 	    (long long)uiop->uio_offset, uiop->uio_segflg));
 argument_list|)
-comment|/* Check for rdwr of control object. */
+empty_stmt|;
+comment|/* 	 * Check for rdwr of control object. 	 */
 if|if
 condition|(
 name|IS_CTL_VP
@@ -1351,7 +1355,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/*       * If file is not already open this must be a page {read,write} request      * and we should open it internally.      */
+comment|/* 	 * If file is not already open this must be a page {read,write} 	 * request and we should open it internally. 	 */
 if|if
 condition|(
 name|cfvp
@@ -1410,7 +1414,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"coda_rdwr: VOP_OPEN on container failed %d\n"
+literal|"coda_rdwr: VOP_OPEN on container failed "
+literal|"%d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1428,15 +1433,17 @@ operator|->
 name|c_ovp
 expr_stmt|;
 block|}
-comment|/* Have UFS handle the call. */
+comment|/* 	 * Have UFS handle the call. 	 */
 name|CODADEBUG
 argument_list|(
 argument|CODA_RDWR
 argument_list|,
 argument|myprintf((
-literal|"indirect rdwr: fid = %s, refcnt = %d\n"
-argument|, 			     coda_f2s(&cp->c_fid), CTOV(cp)->v_usecount));
+literal|"indirect rdwr: fid = %s, refcnt = "
+literal|"%d\n"
+argument|, coda_f2s(&cp->c_fid), CTOV(cp)->v_usecount));
 argument_list|)
+empty_stmt|;
 name|vn_lock
 argument_list|(
 name|cfvp
@@ -1482,7 +1489,7 @@ argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
-comment|/* ufs_write updates the vnode_pager_setsize for the vnode/object */
+comment|/* 		 * ufs_write updates the vnode_pager_setsize for the 		 * vnode/object. 		 * 		 * XXX: Since we now share vm objects between layers, this is 		 * probably unnecessary. 		 */
 block|{
 name|struct
 name|vattr
@@ -1504,7 +1511,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|vnode_pager_setsize
 argument_list|(
 name|vp
@@ -1514,7 +1520,6 @@ operator|.
 name|va_size
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|VOP_UNLOCK
@@ -1539,7 +1544,7 @@ argument_list|(
 name|CODA_RDWR_STATS
 argument_list|)
 expr_stmt|;
-comment|/* Do an internal close if necessary. */
+comment|/* 	 * Do an internal close if necessary. 	 */
 if|if
 condition|(
 name|opened_internally
@@ -1573,7 +1578,7 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Invalidate cached attributes if writing. */
+comment|/* 	 * Invalidate cached attributes if writing. 	 */
 if|if
 condition|(
 name|rw
@@ -1692,8 +1697,8 @@ argument|myprintf((
 literal|"in coda_ioctl on %s\n"
 argument|, iap->path));
 argument_list|)
-comment|/* Don't check for operation on a dying object, for ctlvp it        shouldn't matter */
-comment|/* Must be control object to succeed. */
+empty_stmt|;
+comment|/* 	 * Don't check for operation on a dying object, for ctlvp it 	 * shouldn't matter. 	 * 	 * Must be control object to succeed. 	 */
 if|if
 condition|(
 operator|!
@@ -1713,17 +1718,18 @@ argument_list|(
 argument|CODA_IOCTL
 argument_list|,
 argument|myprintf((
-literal|"coda_ioctl error: vp != ctlvp"
+literal|"coda_ioctl error: vp != "
+literal|"ctlvp"
 argument|));
 argument_list|)
+empty_stmt|;
 return|return
 operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
 block|}
-comment|/* Look up the pathname. */
-comment|/* Should we use the name cache here? It would get it from        lookupname sooner or later anyway, right? */
+comment|/* 	 * Look up the pathname. 	 * 	 * Should we use the name cache here? It would get it from lookupname 	 * sooner or later anyway, right? 	 */
 name|NDINIT
 argument_list|(
 operator|&
@@ -1779,16 +1785,18 @@ argument_list|(
 argument|CODA_IOCTL
 argument_list|,
 argument|myprintf((
-literal|"coda_ioctl error: lookup returns %d\n"
-argument|, 				   error));
+literal|"coda_ioctl error: lookup "
+literal|"returns %d\n"
+argument|, error));
 argument_list|)
+empty_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
-comment|/*       * Make sure this is a coda style cnode, but it may be a      * different vfsp       */
+comment|/* 	 * Make sure this is a coda style cnode, but it may be a different 	 * vfsp. 	 */
 if|if
 condition|(
 name|tvp
@@ -1823,8 +1831,9 @@ argument|CODA_IOCTL
 argument_list|,
 argument|myprintf((
 literal|"coda_ioctl error: %s not a coda object\n"
-argument|,  			iap->path));
+argument|, 		    iap->path));
 argument_list|)
+empty_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -1906,8 +1915,9 @@ argument|CODA_IOCTL
 argument_list|,
 argument|myprintf((
 literal|"Ioctl returns %d \n"
-argument|, error));
+argument|, 		    error));
 argument_list|)
+empty_stmt|;
 name|vrele
 argument_list|(
 name|tvp
@@ -1930,7 +1940,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * To reduce the cost of a user-level venus;we cache attributes in  * the kernel.  Each cnode has storage allocated for an attribute. If  * c_vattr is valid, return a reference to it. Otherwise, get the  * attributes from venus and store them in the cnode.  There is some  * question if this method is a security leak. But I think that in  * order to make this call, the user must have done a lookup and  * opened the file, and therefore should already have access.    */
+comment|/*  * To reduce the cost of a user-level venus;we cache attributes in the  * kernel.  Each cnode has storage allocated for an attribute.  If c_vattr is  * valid, return a reference to it.  Otherwise, get the attributes from venus  * and store them in the cnode.  There is some question if this method is a  * security leak.  But I think that in order to make this call, the user must  * have done a lookup and opened the file, and therefore should already have  * access.  */
 end_comment
 
 begin_function
@@ -1991,8 +2001,15 @@ operator|->
 name|a_td
 decl_stmt|;
 comment|/* locals */
+name|struct
+name|vnode
+modifier|*
+name|convp
+decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|size
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
@@ -2007,9 +2024,11 @@ name|cp
 argument_list|)
 condition|)
 return|return
+operator|(
 name|ENODEV
+operator|)
 return|;
-comment|/* Check for getattr of control object. */
+comment|/* 	 * Check for getattr of control object. 	 */
 if|if
 condition|(
 name|IS_CTL_VP
@@ -2029,7 +2048,7 @@ name|ENOENT
 operator|)
 return|;
 block|}
-comment|/* Check to see if the attributes have already been cached */
+comment|/* 	 * Check to see if the attributes have already been cached. 	 */
 if|if
 condition|(
 name|VALID_VATTR
@@ -2042,16 +2061,16 @@ name|CODADEBUG
 argument_list|(
 argument|CODA_GETATTR
 argument_list|,
-argument|{ myprintf((
+argument|myprintf((
 literal|"attr cache hit: %s\n"
-argument|, 					coda_f2s(&cp->c_fid)));}
+argument|, 		    coda_f2s(&cp->c_fid)));
 argument_list|)
 empty_stmt|;
 name|CODADEBUG
 argument_list|(
 argument|CODA_GETATTR
 argument_list|,
-argument|if (!(codadebug& ~CODA_GETATTR)) 		 coda_print_vattr(&cp->c_vattr);
+argument|if (!(codadebug& ~CODA_GETATTR)) 		    coda_print_vattr(&cp->c_vattr);
 argument_list|)
 empty_stmt|;
 operator|*
@@ -2106,45 +2125,37 @@ argument_list|(
 argument|CODA_GETATTR
 argument_list|,
 argument|myprintf((
-literal|"getattr miss %s: result %d\n"
-argument|, 				     coda_f2s(&cp->c_fid), error));
+literal|"getattr miss %s: result "
+literal|"%d\n"
+argument|, coda_f2s(&cp->c_fid), error));
 argument_list|)
+empty_stmt|;
 name|CODADEBUG
 argument_list|(
 argument|CODA_GETATTR
 argument_list|,
-argument|if (!(codadebug& ~CODA_GETATTR)) 		 coda_print_vattr(vap);
+argument|if (!(codadebug& ~CODA_GETATTR)) 		    coda_print_vattr(vap);
 argument_list|)
 empty_stmt|;
-block|{
-name|int
+comment|/* 		 * XXX: Since we now share vm objects between layers, this is 		 * probably unnecessary. 		 */
 name|size
-init|=
+operator|=
 name|vap
 operator|->
 name|va_size
-decl_stmt|;
-name|struct
-name|vnode
-modifier|*
+expr_stmt|;
 name|convp
-init|=
+operator|=
 name|cp
 operator|->
 name|c_ovp
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|convp
 operator|!=
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
-block|{
 name|vnode_pager_setsize
 argument_list|(
 name|convp
@@ -2152,9 +2163,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-comment|/* If not open for write, store attributes in cnode */
+comment|/* 		 * If not open for write, store attributes in cnode. 		 */
 if|if
 condition|(
 operator|(
@@ -2204,7 +2213,6 @@ name|ap
 parameter_list|)
 block|{
 comment|/* true args */
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -2224,7 +2232,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|vattr
 modifier|*
@@ -2253,15 +2260,22 @@ operator|->
 name|a_td
 decl_stmt|;
 comment|/* locals */
+name|struct
+name|vnode
+modifier|*
+name|convp
+decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|size
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
 name|CODA_SETATTR_STATS
 argument_list|)
 expr_stmt|;
-comment|/* Check for setattr of control object. */
+comment|/* 	 * Check for setattr of control object. 	 */
 if|if
 condition|(
 name|IS_CTL_VP
@@ -2290,13 +2304,11 @@ argument_list|(
 name|CODA_SETATTR
 argument_list|)
 condition|)
-block|{
 name|coda_print_vattr
 argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
-block|}
 name|error
 operator|=
 name|venus_setattr
@@ -2332,23 +2344,19 @@ operator|&=
 operator|~
 name|C_VATTR
 expr_stmt|;
-block|{
-name|int
+comment|/* 	 * XXX: Since we now share vm objects between layers, this is 	 * probably unnecessary. 	 * 	 * XXX: Shouldn't we only be doing this "set" if C_VATTR remains 	 * valid after venus_setattr()? 	 */
 name|size
-init|=
+operator|=
 name|vap
 operator|->
 name|va_size
-decl_stmt|;
-name|struct
-name|vnode
-modifier|*
+expr_stmt|;
 name|convp
-init|=
+operator|=
 name|cp
 operator|->
 name|c_ovp
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|size
@@ -2357,14 +2365,8 @@ name|VNOVAL
 operator|&&
 name|convp
 operator|!=
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
-block|{
 name|vnode_pager_setsize
 argument_list|(
 name|convp
@@ -2372,8 +2374,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 name|CODADEBUG
 argument_list|(
 argument|CODA_SETATTR
@@ -2382,6 +2382,7 @@ argument|myprintf((
 literal|"setattr %d\n"
 argument|, error));
 argument_list|)
+empty_stmt|;
 return|return
 operator|(
 name|error
@@ -2454,7 +2455,7 @@ argument_list|(
 name|CODA_ACCESS_STATS
 argument_list|)
 expr_stmt|;
-comment|/* Check for access of control object.  Only read access is        allowed on it. */
+comment|/* 	 * Check for access of control object.  Only read access is allowed 	 * on it. 	 */
 if|if
 condition|(
 name|IS_CTL_VP
@@ -2463,7 +2464,7 @@ name|vp
 argument_list|)
 condition|)
 block|{
-comment|/* bogus hack - all will be marked as successes */
+comment|/* 		 * Bogus hack - all will be marked as successes. 		 */
 name|MARK_INT_SAT
 argument_list|(
 name|CODA_ACCESS_STATS
@@ -2496,7 +2497,7 @@ name|EACCES
 operator|)
 return|;
 block|}
-comment|/*      * if the file is a directory, and we are checking exec (eg lookup)       * access, and the file is in the namecache, then the user must have       * lookup access to it.      */
+comment|/* 	 * if the file is a directory, and we are checking exec (eg lookup) 	 * access, and the file is in the namecache, then the user must have 	 * lookup access to it. 	 */
 if|if
 condition|(
 name|coda_access_cache
@@ -2543,7 +2544,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* it was in the cache */
 block|}
 block|}
 block|}
@@ -2653,7 +2653,7 @@ argument_list|(
 name|CODA_READLINK_STATS
 argument_list|)
 expr_stmt|;
-comment|/* Check for readlink of control object. */
+comment|/* 	 * Check for readlink of control object. 	 */
 if|if
 condition|(
 name|IS_CTL_VP
@@ -2687,7 +2687,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* symlink was cached */
+comment|/* 		 * Symlink was cached. 		 */
 name|uiop
 operator|->
 name|uio_rw
@@ -2828,8 +2828,9 @@ argument|CODA_READLINK
 argument_list|,
 argument|myprintf((
 literal|"in readlink result %d\n"
-argument|,error));
+argument|, 	    error));
 argument_list|)
+empty_stmt|;
 return|return
 operator|(
 name|error
@@ -2895,8 +2896,7 @@ argument_list|(
 name|CODA_FSYNC_STATS
 argument_list|)
 expr_stmt|;
-comment|/* Check for fsync on an unmounting object */
-comment|/*      * XXX: Is this comment true on FreeBSD?  It seems likely, since      * unmounting is fairly non-atomic.      *      * The NetBSD kernel, in it's infinite wisdom, can try to fsync      * after an unmount has been initiated.  This is a Bad Thing,      * which we have to avoid.  Not a legitimate failure for stats.      */
+comment|/* 	 * Check for fsync on an unmounting object. 	 * 	 * XXX: Is this comment true on FreeBSD?  It seems likely, since 	 * unmounting is fairly non-atomic. 	 * 	 * The NetBSD kernel, in it's infinite wisdom, can try to fsync after 	 * an unmount has been initiated.  This is a Bad Thing, which we have 	 * to avoid.  Not a legitimate failure for stats. 	 */
 if|if
 condition|(
 name|IS_UNMOUNTING
@@ -2904,14 +2904,12 @@ argument_list|(
 name|cp
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|ENODEV
 operator|)
 return|;
-block|}
-comment|/* Check for fsync of control object. */
+comment|/* 	 * Check for fsync of control object. 	 */
 if|if
 condition|(
 name|IS_CTL_VP
@@ -2934,6 +2932,8 @@ block|}
 if|if
 condition|(
 name|convp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|vn_lock
@@ -2962,9 +2962,14 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * We see fsyncs with usecount == 1 then usecount == 0.      * For now we ignore them.      */
-comment|/*     VI_LOCK(vp);     if (!vp->v_usecount) {     	printf("coda_fsync on vnode %p with %d usecount.  c_flags = %x (%x)\n", 		vp, vp->v_usecount, cp->c_flags, cp->c_flags&C_PURGING);     }     VI_UNLOCK(vp);     */
-comment|/*      * We can expect fsync on any vnode at all if venus is purging it.      * Venus can't very well answer the fsync request, now can it?      * Hopefully, it won't have to, because hopefully, venus preserves      * the (possibly untrue) invariant that it never purges an open      * vnode.  Hopefully.      */
+comment|/* 	 * We see fsyncs with usecount == 1 then usecount == 0.  For now we 	 * ignore them. 	 */
+if|#
+directive|if
+literal|0
+block|VI_LOCK(vp); 	if (!vp->v_usecount) { 		printf("coda_fsync on vnode %p with %d usecount.  " 		    "c_flags = %x (%x)\n", vp, vp->v_usecount, cp->c_flags, 		    cp->c_flags&C_PURGING); 	} 	VI_UNLOCK(vp);
+endif|#
+directive|endif
+comment|/* 	 * We can expect fsync on any vnode at all if venus is purging it. 	 * Venus can't very well answer the fsync request, now can it? 	 * Hopefully, it won't have to, because hopefully, venus preserves 	 * the (possibly untrue) invariant that it never purges an open 	 * vnode.  Hopefully. 	 */
 if|if
 condition|(
 name|cp
@@ -2973,16 +2978,16 @@ name|c_flags
 operator|&
 name|C_PURGING
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-comment|/* needs research */
+comment|/* XXX: needs research */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|error
 operator|=
@@ -3009,7 +3014,7 @@ argument|CODA_FSYNC
 argument_list|,
 argument|myprintf((
 literal|"in fsync result %d\n"
-argument|,error));
+argument|, error));
 argument_list|)
 empty_stmt|;
 return|return
@@ -3030,7 +3035,7 @@ modifier|*
 name|ap
 parameter_list|)
 block|{
-comment|/* XXX - at the moment, inactive doesn't look at cred, and doesn't        have a proc pointer.  Oops. */
+comment|/* 	 * XXX - at the moment, inactive doesn't look at cred, and doesn't 	 * have a proc pointer.  Oops. 	 */
 comment|/* true args */
 name|struct
 name|vnode
@@ -3079,7 +3084,7 @@ name|curthread
 decl_stmt|;
 comment|/* upcall decl */
 comment|/* locals */
-comment|/* We don't need to send inactive to venus - DCS */
+comment|/* 	 * We don't need to send inactive to venus - DCS. 	 */
 name|MARK_ENTRY
 argument_list|(
 name|CODA_INACTIVE_STATS
@@ -3091,15 +3096,16 @@ argument|CODA_INACTIVE
 argument_list|,
 argument|myprintf((
 literal|"in inactive, %s, vfsp %p\n"
-argument|, 				  coda_f2s(&cp->c_fid), vp->v_mount));
+argument|, 	    coda_f2s(&cp->c_fid), vp->v_mount));
 argument_list|)
+empty_stmt|;
 name|vp
 operator|->
 name|v_object
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* If an array has been allocated to hold the symlink, deallocate it */
+comment|/* 	 * If an array has been allocated to hold the symlink, deallocate it. 	 */
 if|if
 condition|(
 operator|(
@@ -3152,7 +3158,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Remove it from the table so it can't be found. */
+comment|/* 	 * Remove it from the table so it can't be found. 	 */
 name|coda_unsave
 argument_list|(
 name|cp
@@ -3179,7 +3185,8 @@ block|{
 name|myprintf
 argument_list|(
 operator|(
-literal|"Help! vfsp->vfs_data was NULL, but vnode %p wasn't dying\n"
+literal|"Help! vfsp->vfs_data was NULL, but vnode %p "
+literal|"wasn't dying\n"
 operator|,
 name|vp
 operator|)
@@ -3226,7 +3233,8 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"coda_inactive: cp->ovp != NULL use %d: vp %p, cp %p\n"
+literal|"coda_inactive: cp->ovp != NULL use %d: vp "
+literal|"%p, cp %p\n"
 argument_list|,
 name|vrefcnt
 argument_list|(
@@ -3256,13 +3264,11 @@ name|cp
 argument_list|)
 argument_list|)
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"coda_inactive: nonzero reference count"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cp
@@ -3271,13 +3277,11 @@ name|c_ovp
 operator|!=
 name|NULL
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"coda_inactive:  cp->ovp != NULL"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|vgone
@@ -3304,7 +3308,7 @@ comment|/*  * Remote filesystem operations having to do with directory manipulat
 end_comment
 
 begin_comment
-comment|/*   * In FreeBSD, lookup returns the vnode locked.  */
+comment|/*  * In FreeBSD, lookup returns the vnode locked.  */
 end_comment
 
 begin_function
@@ -3347,7 +3351,7 @@ name|ap
 operator|->
 name|a_vpp
 decl_stmt|;
-comment|/*       * It looks as though ap->a_cnp->ni_cnd->cn_nameptr holds the rest      * of the string to xlate, and that we must try to get at least      * ap->a_cnp->ni_cnd->cn_namelen of those characters to macth.  I      * could be wrong.       */
+comment|/* 	 * It looks as though ap->a_cnp->ni_cnd->cn_nameptr holds the rest of 	 * the string to xlate, and that we must try to get at least 	 * ap->a_cnp->ni_cnd->cn_namelen of those characters to macth.  I 	 * could be wrong. 	 */
 name|struct
 name|componentname
 modifier|*
@@ -3419,10 +3423,10 @@ argument|CODA_LOOKUP
 argument_list|,
 argument|myprintf((
 literal|"lookup: %s in %s\n"
-argument|, 				   nm, coda_f2s(&dcp->c_fid)));
+argument|, nm, 	    coda_f2s(&dcp->c_fid)));
 argument_list|)
 empty_stmt|;
-comment|/* Check for lookup of control object. */
+comment|/* 	 * Check for lookup of control object. 	 */
 if|if
 condition|(
 name|IS_CTL_NAME
@@ -3474,19 +3478,15 @@ argument_list|(
 argument|CODA_LOOKUP
 argument_list|,
 argument|myprintf((
-literal|"name too long: lookup, %s (%s)\n"
-argument|, 					 coda_f2s(&dcp->c_fid), nm));
+literal|"name too long: lookup, "
+literal|"%s (%s)\n"
+argument|, coda_f2s(&dcp->c_fid), nm));
 argument_list|)
 empty_stmt|;
 operator|*
 name|vpp
 operator|=
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 name|error
 operator|=
@@ -3496,8 +3496,7 @@ goto|goto
 name|exit
 goto|;
 block|}
-comment|/* First try to look the file up in the cfs name cache */
-comment|/* lock the parent vnode? */
+comment|/* 	 * First try to look the file up in the cfs name cache. 	 * 	 * XXX: lock the parent vnode? 	 */
 name|cp
 operator|=
 name|coda_nc_lookup
@@ -3536,12 +3535,13 @@ argument|CODA_LOOKUP
 argument_list|,
 argument|myprintf((
 literal|"lookup result %d vpp %p\n"
-argument|,error,*vpp));
+argument|, 		    error,*vpp));
 argument_list|)
+empty_stmt|;
 block|}
 else|else
 block|{
-comment|/* The name wasn't cached, so we need to contact Venus */
+comment|/* 		 * The name wasn't cached, so we need to contact Venus. 		 */
 name|error
 operator|=
 name|venus_lookup
@@ -3588,18 +3588,15 @@ argument_list|(
 argument|CODA_LOOKUP
 argument_list|,
 argument|myprintf((
-literal|"lookup error on %s (%s)%d\n"
-argument|, 					     coda_f2s(&dcp->c_fid), nm, error));
+literal|"lookup error on "
+literal|"%s (%s)%d\n"
+argument|, coda_f2s(&dcp->c_fid), nm, 			    error));
 argument_list|)
+empty_stmt|;
 operator|*
 name|vpp
 operator|=
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -3614,9 +3611,11 @@ argument_list|(
 argument|CODA_LOOKUP
 argument_list|,
 argument|myprintf((
-literal|"lookup: %s type %o result %d\n"
-argument|, 			       coda_f2s(&VFid), vtype, error));
+literal|"lookup: %s type %o "
+literal|"result %d\n"
+argument|, coda_f2s(&VFid), vtype, error));
 argument_list|)
+empty_stmt|;
 name|cp
 operator|=
 name|make_coda_node
@@ -3639,8 +3638,7 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* enter the new vnode in the Name Cache only if the top bit isn't set */
-comment|/* And don't enter a new vnode for an invalid one! */
+comment|/* 			 * Enter the new vnode in the Name Cache only if the 			 * top bit isn't set. 			 * 			 * And don't enter a new vnode for an invalid one! 			 */
 if|if
 condition|(
 operator|!
@@ -3674,7 +3672,7 @@ block|}
 block|}
 name|exit
 label|:
-comment|/*       * If we are creating, and this was the last name to be looked up,      * and the error was ENOENT, then there really shouldn't be an      * error and we can make the leaf NULL and return success.  Since      * this is supposed to work under Mach as well as FreeBSD, we're      * leaving this fn wrapped.  We also must tell lookup/namei that      * we need to save the last component of the name.  (Create will      * have to free the name buffer later...lucky us...)      */
+comment|/* 	 * If we are creating, and this was the last name to be looked up, 	 * and the error was ENOENT, then there really shouldn't be an error 	 * and we can make the leaf NULL and return success.  Since this is 	 * supposed to work under Mach as well as FreeBSD, we're leaving this 	 * fn wrapped.  We also must tell lookup/namei that we need to save 	 * the last component of the name.  (Create will have to free the 	 * name buffer later...lucky us...). 	 */
 if|if
 condition|(
 operator|(
@@ -3728,7 +3726,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/*       * If we are removing, and we are at the last element, and we      * found it, then we need to keep the name around so that the      * removal will go ahead as planned.  Unfortunately, this will      * probably also lock the to-be-removed vnode, which may or may      * not be a good idea.  I'll have to look at the bits of      * coda_remove to make sure.  We'll only save the name if we did in      * fact find the name, otherwise coda_remove won't have a chance      * to free the pathname.        */
+comment|/* 	 * If we are removing, and we are at the last element, and we found 	 * it, then we need to keep the name around so that the removal will 	 * go ahead as planned.  Unfortunately, this will probably also lock 	 * the to-be-removed vnode, which may or may not be a good idea. 	 * I'll have to look at the bits of coda_remove to make sure.  We'll 	 * only save the name if we did in fact find the name, otherwise 	 * coda_remove won't have a chance to free the pathname. 	 */
 if|if
 condition|(
 operator|(
@@ -3750,15 +3748,13 @@ operator|&&
 operator|!
 name|error
 condition|)
-block|{
 name|cnp
 operator|->
 name|cn_flags
 operator||=
 name|SAVENAME
 expr_stmt|;
-block|}
-comment|/*       * If the lookup went well, we need to (potentially?) unlock the      * parent, and lock the child.  We are only responsible for      * checking to see if the parent is supposed to be unlocked before      * we return.  We must always lock the child (provided there is      * one, and (the parent isn't locked or it isn't the same as the      * parent.)  Simple, huh?  We can never leave the parent locked unless      * we are ISLASTCN      */
+comment|/* 	 * If the lookup went well, we need to (potentially?) unlock the 	 * parent, and lock the child.  We are only responsible for checking 	 * to see if the parent is supposed to be unlocked before we return. 	 * We must always lock the child (provided there is one, and (the 	 * parent isn't locked or it isn't the same as the parent.)  Simple, 	 * huh?  We can never leave the parent locked unless we are ISLASTCN. 	 */
 if|if
 condition|(
 operator|!
@@ -3780,25 +3776,14 @@ operator|&
 name|ISDOTDOT
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|error
-operator|=
 name|VOP_UNLOCK
 argument_list|(
 name|dvp
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-condition|)
-block|{
-return|return
-name|error
-return|;
-block|}
-comment|/*  	     * The parent is unlocked.  As long as there is a child, 	     * lock it without bothering to check anything else.  	     */
+expr_stmt|;
+comment|/* 			 * The parent is unlocked.  As long as there is a 			 * child, lock it without bothering to check anything 			 * else. 			 */
 if|if
 condition|(
 operator|*
@@ -3806,7 +3791,6 @@ name|ap
 operator|->
 name|a_vpp
 condition|)
-block|{
 name|vn_lock
 argument_list|(
 operator|*
@@ -3819,7 +3803,6 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-block|}
 name|vn_lock
 argument_list|(
 name|dvp
@@ -3832,7 +3815,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* The parent is locked, and may be the same as the child */
+comment|/* 			 * The parent is locked, and may be the same as the 			 * child.  If different, go ahead and lock it. 			 */
 if|if
 condition|(
 operator|*
@@ -3849,8 +3832,6 @@ operator|!=
 name|dvp
 operator|)
 condition|)
-block|{
-comment|/* Different, go ahead and lock it. */
 name|vn_lock
 argument_list|(
 operator|*
@@ -3865,11 +3846,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 else|else
 block|{
-comment|/* If the lookup failed, we need to ensure that the leaf is NULL */
-comment|/* Don't change any locking? */
+comment|/* 		 * If the lookup failed, we need to ensure that the leaf is 		 * NULL. 		 * 		 * Don't change any locking? 		 */
 operator|*
 name|ap
 operator|->
@@ -4017,9 +3996,7 @@ argument_list|(
 name|CODA_CREATE_STATS
 argument_list|)
 expr_stmt|;
-comment|/* All creates are exclusive XXX */
-comment|/* I'm assuming the 'mode' argument is the file mode bits XXX */
-comment|/* Check for create of control object. */
+comment|/* 	 * All creates are exclusive XXX. 	 * 	 * I'm assuming the 'mode' argument is the file mode bits XXX. 	 * 	 * Check for create of control object. 	 */
 if|if
 condition|(
 name|IS_CTL_NAME
@@ -4096,8 +4073,7 @@ operator|!
 name|error
 condition|)
 block|{
-comment|/* If this is an exclusive create, panic if the file already exists. */
-comment|/* Venus should have detected the file and reported EEXIST. */
+comment|/* 		 * If this is an exclusive create, panic if the file already 		 * exists. 		 * 		 * Venus should have detected the file and reported EEXIST. 		 */
 if|if
 condition|(
 operator|(
@@ -4145,7 +4121,7 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* Update va to reflect the new attributes. */
+comment|/* 		 * Update va to reflect the new attributes. 		 */
 operator|(
 operator|*
 name|va
@@ -4153,7 +4129,7 @@ operator|)
 operator|=
 name|attr
 expr_stmt|;
-comment|/* Update the attribute cache and mark it as valid */
+comment|/* 		 * Update the attribute cache and mark it as valid. 		 */
 if|if
 condition|(
 name|coda_attr_cache
@@ -4180,7 +4156,7 @@ operator||=
 name|C_VATTR
 expr_stmt|;
 block|}
-comment|/* Invalidate the parent's attr cache, the modification time has changed */
+comment|/* 		 * Invalidate the parent's attr cache, the modification time 		 * has changed. 		 */
 name|VTOC
 argument_list|(
 name|dvp
@@ -4191,7 +4167,7 @@ operator|&=
 operator|~
 name|C_VATTR
 expr_stmt|;
-comment|/* enter the new vnode in the Name Cache */
+comment|/* 		 * Enter the new vnode in the Name Cache. 		 */
 name|coda_nc_enter
 argument_list|(
 name|VTOC
@@ -4218,8 +4194,9 @@ argument|CODA_CREATE
 argument_list|,
 argument|myprintf((
 literal|"create: %s, result %d\n"
-argument|, 			   coda_f2s(&VFid), error));
+argument|, 		    coda_f2s(&VFid), error));
 argument_list|)
+empty_stmt|;
 block|}
 else|else
 block|{
@@ -4239,8 +4216,9 @@ argument|CODA_CREATE
 argument_list|,
 argument|myprintf((
 literal|"create error %d\n"
-argument|, error));
+argument|, 		    error));
 argument_list|)
+empty_stmt|;
 block|}
 if|if
 condition|(
@@ -4256,7 +4234,6 @@ name|cn_flags
 operator|&
 name|LOCKLEAF
 condition|)
-block|{
 name|vn_lock
 argument_list|(
 operator|*
@@ -4269,18 +4246,15 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|OLD_DIAGNOSTIC
 else|else
-block|{
 name|printf
 argument_list|(
 literal|"coda_create: LOCKLEAF not set!\n"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -4385,12 +4359,10 @@ argument|CODA_REMOVE
 argument_list|,
 argument|myprintf((
 literal|"remove: %s in %s\n"
-argument|, 				     nm, coda_f2s(&cp->c_fid)));
+argument|, nm, 	    coda_f2s(&cp->c_fid)));
 argument_list|)
 empty_stmt|;
-comment|/* Remove the file's entry from the CODA Name Cache */
-comment|/* We're being conservative here, it might be that this person      * doesn't really have sufficient access to delete the file      * but we feel zapping the entry won't really hurt anyone -- dcs      */
-comment|/* I'm gonna go out on a limb here. If a file and a hardlink to it      * exist, and one is removed, the link count on the other will be      * off by 1. We could either invalidate the attrs if cached, or      * fix them. I'll try to fix them. DCS 11/8/94      */
+comment|/* 	 * Remove the file's entry from the CODA Name Cache. 	 * 	 * We're being conservative here, it might be that this person 	 * doesn't really have sufficient access to delete the file but we 	 * feel zapping the entry won't really hurt anyone -- dcs. 	 * 	 * I'm gonna go out on a limb here.  If a file and a hardlink to it 	 * exist, and one is removed, the link count on the other will be off 	 * by 1. We could either invalidate the attrs if cached, orfix them. 	 * I'll try to fix them. DCS 11/8/94 	 */
 name|tp
 operator|=
 name|coda_nc_lookup
@@ -4410,6 +4382,8 @@ expr_stmt|;
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -4420,7 +4394,6 @@ name|tp
 argument_list|)
 condition|)
 block|{
-comment|/* If attrs are cached */
 if|if
 condition|(
 name|tp
@@ -4431,8 +4404,6 @@ name|va_nlink
 operator|>
 literal|1
 condition|)
-block|{
-comment|/* If it's a hard link */
 name|tp
 operator|->
 name|c_vattr
@@ -4440,7 +4411,6 @@ operator|.
 name|va_nlink
 operator|--
 expr_stmt|;
-block|}
 block|}
 name|coda_nc_zapfile
 argument_list|(
@@ -4454,9 +4424,8 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* No need to flush it if it doesn't exist! */
 block|}
-comment|/* Invalidate the parent's attr cache, the modification time has changed */
+comment|/* 	 * Invalidate the parent's attr cache, the modification time has 	 * changed. 	 */
 name|VTOC
 argument_list|(
 name|dvp
@@ -4467,7 +4436,7 @@ operator|&=
 operator|~
 name|C_VATTR
 expr_stmt|;
-comment|/* Check for remove of control object. */
+comment|/* 	 * Check for remove of control object. 	 */
 if|if
 condition|(
 name|IS_CTL_NAME
@@ -4524,6 +4493,7 @@ argument|myprintf((
 literal|"in remove result %d\n"
 argument|,error));
 argument_list|)
+empty_stmt|;
 return|return
 operator|(
 name|error
@@ -4715,7 +4685,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Check for link to/from control object. */
+comment|/* 	 * Check for link to/from control object. 	 */
 if|if
 condition|(
 name|IS_CTL_NAME
@@ -4774,7 +4744,7 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
-comment|/* Invalidate the parent's attr cache, the modification time has changed */
+comment|/* 	 * Invalidate the parent's attr cache, the modification time has 	 * changed. 	 */
 name|VTOC
 argument_list|(
 name|tdvp
@@ -4803,6 +4773,7 @@ argument|myprintf((
 literal|"in link result %d\n"
 argument|,error));
 argument_list|)
+empty_stmt|;
 return|return
 operator|(
 name|error
@@ -4937,7 +4908,7 @@ argument_list|(
 name|CODA_RENAME_STATS
 argument_list|)
 expr_stmt|;
-comment|/* Hmmm.  The vnodes are already looked up.  Perhaps they are locked?        This could be Bad. XXX */
+comment|/* 	 * Hmmm.  The vnodes are already looked up.  Perhaps they are locked? 	 * This could be Bad. XXX 	 */
 ifdef|#
 directive|ifdef
 name|OLD_DIAGNOSTIC
@@ -4963,16 +4934,14 @@ operator|->
 name|cn_thread
 operator|)
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"coda_rename: component names don't agree"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
-comment|/* Check for rename involving control object. */
+comment|/* 	 * Check for rename involving control object. 	 */
 if|if
 condition|(
 name|IS_CTL_NAME
@@ -5005,7 +4974,7 @@ name|EACCES
 operator|)
 return|;
 block|}
-comment|/* Problem with moving directories -- need to flush entry for .. */
+comment|/* 	 * Problem with moving directories -- need to flush entry for .. 	 */
 if|if
 condition|(
 name|odvp
@@ -5061,7 +5030,6 @@ operator|==
 name|VDIR
 operator|)
 condition|)
-comment|/* If it's a directory */
 name|coda_nc_zapfile
 argument_list|(
 name|VTOC
@@ -5076,7 +5044,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Remove the entries for both source and target files */
+comment|/* 	 * Remove the entries for both source and target files. 	 */
 name|coda_nc_zapfile
 argument_list|(
 name|VTOC
@@ -5101,7 +5069,7 @@ argument_list|,
 name|tlen
 argument_list|)
 expr_stmt|;
-comment|/* Invalidate the parent's attr cache, the modification time has changed */
+comment|/* 	 * Invalidate the parent's attr cache, the modification time has 	 * changed. 	 */
 name|VTOC
 argument_list|(
 name|odvp
@@ -5210,7 +5178,8 @@ argument|myprintf((
 literal|"in rename result %d\n"
 argument|,error));
 argument_list|)
-comment|/* XXX - do we need to call cache pureg on the moved vnode? */
+empty_stmt|;
+comment|/* 	 * XXX - do we need to call cache pureg on the moved vnode? 	 */
 name|cache_purge
 argument_list|(
 name|ap
@@ -5218,7 +5187,7 @@ operator|->
 name|a_fvp
 argument_list|)
 expr_stmt|;
-comment|/* Release parents first, then children. */
+comment|/* 	 * Release parents first, then children. 	 */
 name|vrele
 argument_list|(
 name|odvp
@@ -5318,7 +5287,6 @@ name|ap
 operator|->
 name|a_cnp
 decl_stmt|;
-specifier|register
 name|struct
 name|vattr
 modifier|*
@@ -5393,7 +5361,7 @@ argument_list|(
 name|CODA_MKDIR_STATS
 argument_list|)
 expr_stmt|;
-comment|/* Check for mkdir of target object. */
+comment|/* 	 * Check for mkdir of target object. 	 */
 if|if
 condition|(
 name|IS_CTL_NAME
@@ -5535,7 +5503,7 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* enter the new vnode in the Name Cache */
+comment|/* 		 * Enter the new vnode in the Name Cache. 		 */
 name|coda_nc_enter
 argument_list|(
 name|VTOC
@@ -5556,7 +5524,7 @@ name|vpp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* as a side effect, enter "." and ".." for the directory */
+comment|/* 		 * As a side effect, enter "." and ".." for the directory. 		 */
 name|coda_nc_enter
 argument_list|(
 name|VTOC
@@ -5603,6 +5571,7 @@ condition|(
 name|coda_attr_cache
 condition|)
 block|{
+comment|/* 			 * Update the attr cache and mark as valid. 			 */
 name|VTOC
 argument_list|(
 operator|*
@@ -5613,7 +5582,6 @@ name|c_vattr
 operator|=
 name|ova
 expr_stmt|;
-comment|/* update the attr cache */
 name|VTOC
 argument_list|(
 operator|*
@@ -5624,9 +5592,8 @@ name|c_flags
 operator||=
 name|C_VATTR
 expr_stmt|;
-comment|/* Valid attributes in cnode */
 block|}
-comment|/* Invalidate the parent's attr cache, the modification time has changed */
+comment|/* 		 * Invalidate the parent's attr cache, the modification time 		 * has changed. 		 */
 name|VTOC
 argument_list|(
 name|dvp
@@ -5653,20 +5620,16 @@ argument|CODA_MKDIR
 argument_list|,
 argument|myprintf((
 literal|"mkdir: %s result %d\n"
-argument|, 					 coda_f2s(&VFid), error));
+argument|, 		    coda_f2s(&VFid), error));
 argument_list|)
+empty_stmt|;
 block|}
 else|else
 block|{
 operator|*
 name|vpp
 operator|=
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 name|CODADEBUG
 argument_list|(
@@ -5676,6 +5639,7 @@ argument|myprintf((
 literal|"mkdir error %d\n"
 argument|,error));
 argument_list|)
+empty_stmt|;
 block|}
 return|return
 operator|(
@@ -5772,7 +5736,7 @@ argument_list|(
 name|CODA_RMDIR_STATS
 argument_list|)
 expr_stmt|;
-comment|/* Check for rmdir of control object. */
+comment|/* 	 * Check for rmdir of control object. 	 */
 if|if
 condition|(
 name|IS_CTL_NAME
@@ -5796,8 +5760,7 @@ name|ENOENT
 operator|)
 return|;
 block|}
-comment|/* We're being conservative here, it might be that this person      * doesn't really have sufficient access to delete the file      * but we feel zapping the entry won't really hurt anyone -- dcs      */
-comment|/*      * As a side effect of the rmdir, remove any entries for children of      * the directory, especially "." and "..".      */
+comment|/* 	 * We're being conservative here, it might be that this person 	 * doesn't really have sufficient access to delete the file but we 	 * feel zapping the entry won't really hurt anyone -- dcs 	 * 	 * As a side effect of the rmdir, remove any entries for children of 	 * the directory, especially "." and "..". 	 */
 name|cp
 operator|=
 name|coda_nc_lookup
@@ -5827,7 +5790,7 @@ argument_list|,
 name|NOT_DOWNCALL
 argument_list|)
 expr_stmt|;
-comment|/* Remove the file's entry from the CODA Name Cache */
+comment|/* 	 * Remove the file's entry from the CODA Name Cache. 	 */
 name|coda_nc_zapfile
 argument_list|(
 name|dcp
@@ -5837,7 +5800,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Invalidate the parent's attr cache, the modification time has changed */
+comment|/* 	 * Invalidate the parent's attr cache, the modification time has 	 * changed. 	 */
 name|dcp
 operator|->
 name|c_flags
@@ -5878,6 +5841,7 @@ argument|myprintf((
 literal|"in rmdir result %d\n"
 argument|, error));
 argument_list|)
+empty_stmt|;
 return|return
 operator|(
 name|error
@@ -5974,7 +5938,7 @@ comment|/* locals */
 name|int
 name|error
 decl_stmt|;
-comment|/*       * XXX I'm assuming the following things about coda_symlink's      * arguments:       *       t(foo) is the new name/parent/etc being created.      *       lname is the contents of the new symlink.       */
+comment|/*- 	 * XXX I'm assuming the following things about coda_symlink's 	 * arguments: 	 *       t(foo) is the new name/parent/etc being created. 	 *       lname is the contents of the new symlink. 	 */
 name|char
 modifier|*
 name|nm
@@ -5998,13 +5962,13 @@ argument_list|(
 name|path
 argument_list|)
 decl_stmt|;
-comment|/*       * Here's the strategy for the moment: perform the symlink, then      * do a lookup to grab the resulting vnode.  I know this requires      * two communications with Venus for a new sybolic link, but      * that's the way the ball bounces.  I don't yet want to change      * the way the Mach symlink works.  When Mach support is      * deprecated, we should change symlink so that the common case      * returns the resultant vnode in a vpp argument.      */
+comment|/* 	 * Here's the strategy for the moment: perform the symlink, then do a 	 * lookup to grab the resulting vnode.  I know this requires two 	 * communications with Venus for a new sybolic link, but that's the 	 * way the ball bounces.  I don't yet want to change the way the Mach 	 * symlink works.  When Mach support is deprecated, we should change 	 * symlink so that the common case returns the resultant vnode in a 	 * vpp argument. 	 */
 name|MARK_ENTRY
 argument_list|(
 name|CODA_SYMLINK_STATS
 argument_list|)
 expr_stmt|;
-comment|/* Check for symlink of control object. */
+comment|/* 	 * Check for symlink of control object. 	 */
 if|if
 condition|(
 name|IS_CTL_NAME
@@ -6101,7 +6065,7 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
-comment|/* Invalidate the parent's attr cache, the modification time has changed */
+comment|/* 	 * Invalidate the parent's attr cache, the modification time has 	 * changed. 	 */
 name|tdcp
 operator|->
 name|c_flags
@@ -6136,6 +6100,7 @@ argument|myprintf((
 literal|"in symlink result %d\n"
 argument|,error));
 argument_list|)
+empty_stmt|;
 return|return
 operator|(
 name|error
@@ -6145,7 +6110,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read directory entries.  *  * XXXRW: This forwards the operator straight to the cache vnode using  * VOP_READDIR(), rather than calling venus_readdir().  Why?  */
+comment|/*  * Read directory entries.  *  * XXX: This forwards the operator straight to the cache vnode using  * VOP_READDIR(), rather than calling venus_readdir().  Why?  */
 end_comment
 
 begin_function
@@ -6178,7 +6143,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|uio
 modifier|*
@@ -6240,6 +6204,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|opened_internally
+init|=
+literal|0
+decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
 name|CODA_READDIR_STATS
@@ -6251,9 +6220,10 @@ argument|CODA_READDIR
 argument_list|,
 argument|myprintf((
 literal|"coda_readdir(%p, %d, %lld, %d)\n"
-argument|, 				      (void *)uiop->uio_iov->iov_base, 				      uiop->uio_resid, 				      (long long)uiop->uio_offset, 				      uiop->uio_segflg));
+argument|, 	    (void *)uiop->uio_iov->iov_base, uiop->uio_resid, 	    (long long)uiop->uio_offset, uiop->uio_segflg));
 argument_list|)
-comment|/* Check for readdir of control object. */
+empty_stmt|;
+comment|/* 	 * Check for readdir of control object. 	 */
 if|if
 condition|(
 name|IS_CTL_VP
@@ -6273,13 +6243,7 @@ name|ENOENT
 operator|)
 return|;
 block|}
-block|{
-comment|/* If directory is not already open do an "internal open" on it. */
-name|int
-name|opened_internally
-init|=
-literal|0
-decl_stmt|;
+comment|/* 	 * If directory is not already open do an "internal open" on it. 	 * 	 * XXX: Why would this happen?  For files, there's memory mapping, 	 * execution, and other kernel access paths such as ktrace.  For 	 * directories, it is less clear. 	 */
 if|if
 condition|(
 name|cp
@@ -6327,7 +6291,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"coda_readdir: VOP_OPEN on container failed %d\n"
+literal|"coda_readdir: VOP_OPEN on container failed "
+literal|"%d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -6339,15 +6304,17 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* Have UFS handle the call. */
+comment|/* 	 * Have UFS handle the call. 	 */
 name|CODADEBUG
 argument_list|(
 argument|CODA_READDIR
 argument_list|,
 argument|myprintf((
-literal|"indirect readdir: fid = %s, refcnt = %d\n"
+literal|"indirect readdir: fid = %s, "
+literal|"refcnt = %d\n"
 argument|, coda_f2s(&cp->c_fid), vp->v_usecount));
 argument_list|)
+empty_stmt|;
 name|vn_lock
 argument_list|(
 name|cp
@@ -6402,7 +6369,7 @@ argument_list|(
 name|CODA_READDIR_STATS
 argument_list|)
 expr_stmt|;
-comment|/* Do an "internal close" if necessary. */
+comment|/* 	 * Do an "internal close" if necessary. 	 */
 if|if
 condition|(
 name|opened_internally
@@ -6427,7 +6394,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -6469,7 +6435,7 @@ argument_list|)
 decl_stmt|;
 comment|/* upcall decl */
 comment|/* locals */
-comment|/*  * Forced unmount/flush will let vnodes with non zero use be destroyed!  */
+comment|/* 	 * Forced unmount/flush will let vnodes with non-zero use be 	 * destroyed! 	 */
 name|ENTRY
 expr_stmt|;
 if|if
@@ -6502,7 +6468,8 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"coda_reclaim: c_ovp not void: vp %p, cp %p\n"
+literal|"coda_reclaim: c_ovp not void: vp "
+literal|"%p, cp %p\n"
 argument_list|,
 name|vp
 argument_list|,
@@ -6543,13 +6510,11 @@ argument_list|)
 operator|->
 name|c_ovp
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"coda_reclaim: c_ovp not void"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -6649,7 +6614,6 @@ if|if
 condition|(
 name|coda_lockdebug
 condition|)
-block|{
 name|myprintf
 argument_list|(
 operator|(
@@ -6665,7 +6629,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|vop_stdlock
@@ -6715,7 +6678,6 @@ if|if
 condition|(
 name|coda_lockdebug
 condition|)
-block|{
 name|myprintf
 argument_list|(
 operator|(
@@ -6731,7 +6693,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|vop_stdunlock
@@ -7052,7 +7013,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* How to print a ucred */
+comment|/*  * How to print a ucred.  */
 end_comment
 
 begin_function
@@ -7125,7 +7086,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a vnode for the given fid.  * If no cnode exists for this fid create one and put it  * in a table hashed by coda_f2i().  If the cnode for  * this fid is already in the table return it (ref count is  * incremented by coda_find.  The cnode will be flushed from the  * table when coda_inactive calls coda_unsave.  */
+comment|/*  * Return a vnode for the given fid.  If no cnode exists for this fid create  * one and put it in a table hashed by coda_f2i().  If the cnode for this fid  * is already in the table return it (ref count is incremented by coda_find.  * The cnode will be flushed from the table when coda_inactive calls  * coda_unsave.  */
 end_comment
 
 begin_function
@@ -7205,7 +7166,6 @@ if|if
 condition|(
 name|err
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"coda: getnewvnode returned error %d\n"
@@ -7213,7 +7173,7 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* 		 * XXX: Too early for mpsafe fs. 		 */
 name|err
 operator|=
 name|insmntque1
@@ -7227,7 +7187,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* XXX: Too early for mpsafe fs */
 if|if
 condition|(
 name|err
@@ -7266,7 +7225,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|vref
 argument_list|(
 name|CTOV
@@ -7275,9 +7233,10 @@ name|cp
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
+operator|(
 name|cp
+operator|)
 return|;
 block|}
 end_function
