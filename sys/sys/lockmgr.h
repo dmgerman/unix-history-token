@@ -45,7 +45,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/_lock.h>
+file|<sys/lock.h>
 end_include
 
 begin_struct_decl
