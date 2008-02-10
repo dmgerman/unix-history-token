@@ -131,7 +131,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	}
+block|,     }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -184,7 +184,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	}
+block|,     }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -228,7 +228,51 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	}
+block|,     }
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|bios_oem
+name|bios_pcengines_55
+init|=
+block|{
+block|{
+literal|0xf9000
+block|,
+literal|0xfa000
+block|}
+block|,
+block|{
+block|{
+literal|"PC Engines ALIX"
+block|,
+literal|0
+block|,
+literal|28
+block|}
+block|,
+comment|/* PC Engines ALIX */
+block|{
+literal|"tinyBIOS"
+block|,
+literal|0
+block|,
+literal|28
+block|}
+block|,
+comment|/* tinyBIOS V1.4a (C)1997-2005 */
+block|{
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,     }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -273,7 +317,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	}
+block|,     }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -463,6 +507,22 @@ argument_list|(
 literal|0x5140000c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bit
+operator|>=
+literal|16
+condition|)
+block|{
+name|a
+operator|+=
+literal|0x80
+expr_stmt|;
+name|bit
+operator|-=
+literal|16
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|onoff
@@ -1014,6 +1074,10 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Geode CBA@ 0x%x\n"
@@ -1036,6 +1100,10 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Geode rev: %02x %02x\n"
@@ -1105,6 +1173,10 @@ operator|&=
 operator|~
 literal|0x1f
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Geode GPIO@ = %x\n"
@@ -1121,7 +1193,8 @@ name|bios_soekris
 argument_list|,
 name|bios_oem
 argument_list|,
-name|BIOS_OEM_MAXLEN
+sizeof|sizeof
+name|bios_oem
 argument_list|)
 operator|>
 literal|0
@@ -1154,7 +1227,8 @@ name|bios_pcengines
 argument_list|,
 name|bios_oem
 argument_list|,
-name|BIOS_OEM_MAXLEN
+sizeof|sizeof
+name|bios_oem
 argument_list|)
 operator|>
 literal|0
@@ -1223,10 +1297,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|strlen
-argument_list|(
+operator|*
 name|bios_oem
-argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -1248,7 +1320,8 @@ name|bios_advantech
 argument_list|,
 name|bios_oem
 argument_list|,
-name|BIOS_OEM_MAXLEN
+sizeof|sizeof
+name|bios_oem
 argument_list|)
 operator|>
 literal|0
@@ -1286,19 +1359,13 @@ name|bios_soekris_55
 argument_list|,
 name|bios_oem
 argument_list|,
-name|BIOS_OEM_MAXLEN
+sizeof|sizeof
+name|bios_oem
 argument_list|)
 operator|>
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Geode LX: %s\n"
-argument_list|,
-name|bios_oem
-argument_list|)
-expr_stmt|;
 name|led1b
 operator|=
 literal|6
@@ -1316,6 +1383,100 @@ literal|"error"
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|bios_oem_strings
+argument_list|(
+operator|&
+name|bios_pcengines_55
+argument_list|,
+name|bios_oem
+argument_list|,
+sizeof|sizeof
+name|bios_oem
+argument_list|)
+operator|>
+literal|0
+condition|)
+block|{
+name|led1b
+operator|=
+operator|-
+literal|6
+expr_stmt|;
+name|led2b
+operator|=
+operator|-
+literal|25
+expr_stmt|;
+name|led3b
+operator|=
+operator|-
+literal|27
+expr_stmt|;
+name|led1
+operator|=
+name|led_create
+argument_list|(
+name|cs5536_led_func
+argument_list|,
+operator|&
+name|led1b
+argument_list|,
+literal|"led1"
+argument_list|)
+expr_stmt|;
+name|led2
+operator|=
+name|led_create
+argument_list|(
+name|cs5536_led_func
+argument_list|,
+operator|&
+name|led2b
+argument_list|,
+literal|"led2"
+argument_list|)
+expr_stmt|;
+name|led3
+operator|=
+name|led_create
+argument_list|(
+name|cs5536_led_func
+argument_list|,
+operator|&
+name|led3b
+argument_list|,
+literal|"led3"
+argument_list|)
+expr_stmt|;
+comment|/* 		 	* Turn on first LED so we don't make 			* people think their box just died. 		 	*/
+name|cs5536_led_func
+argument_list|(
+operator|&
+name|led1b
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+name|bios_oem
+condition|)
+name|printf
+argument_list|(
+literal|"Geode LX: %s\n"
+argument_list|,
+name|bios_oem
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"MFGPT bar: %jx\n"
