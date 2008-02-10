@@ -197,11 +197,9 @@ case|:
 comment|/* == SHT_SUNW_versym */
 return|return
 operator|(
-operator|-
-literal|1
+name|ELF_T_HALF
 operator|)
 return|;
-comment|/* XXX */
 case|case
 name|SHT_SUNW_move
 case|:
