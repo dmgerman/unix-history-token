@@ -638,7 +638,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|u_long
+name|in_addr_t
 parameter_list|,
 name|u_long
 parameter_list|)
@@ -4278,7 +4278,7 @@ name|char
 modifier|*
 name|dst
 parameter_list|,
-name|u_long
+name|in_addr_t
 name|addr
 name|__unused
 parameter_list|,
@@ -4458,7 +4458,7 @@ name|np
 init|=
 literal|0
 decl_stmt|;
-name|u_long
+name|in_addr_t
 name|i
 decl_stmt|;
 name|i
