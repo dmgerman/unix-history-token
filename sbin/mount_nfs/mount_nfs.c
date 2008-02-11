@@ -612,7 +612,7 @@ expr|struct
 name|sockaddr_in
 argument_list|)
 block|,
-name|SOCK_DGRAM
+name|SOCK_STREAM
 block|,
 literal|0
 block|,

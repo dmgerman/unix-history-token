@@ -953,7 +953,7 @@ name|root_args
 operator|.
 name|sotype
 operator|=
-name|SOCK_DGRAM
+name|SOCK_STREAM
 expr_stmt|;
 name|nd
 operator|->
@@ -962,6 +962,8 @@ operator|.
 name|flags
 operator|=
 operator|(
+name|NFSMNT_NFSV3
+operator||
 name|NFSMNT_WSIZE
 operator||
 name|NFSMNT_RSIZE
