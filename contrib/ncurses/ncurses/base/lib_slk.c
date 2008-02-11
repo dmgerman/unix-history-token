@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_slk.c,v 1.30 2005/01/08 21:56:36 tom Exp $"
+literal|"$Id: lib_slk.c,v 1.31 2008/01/12 20:21:00 tom Exp $"
 argument_list|)
 end_macro
 
@@ -63,7 +63,7 @@ comment|/* one more than format specified in slk_init() */
 end_comment
 
 begin_comment
-comment|/*  * Paint the info line for the PC style SLK emulation.  *  */
+comment|/*  * Paint the info line for the PC style SLK emulation.  */
 end_comment
 
 begin_function
@@ -355,7 +355,9 @@ name|num_labels
 else|:
 name|MAX_SKEY
 argument_list|(
-name|_nc_slk_format
+name|_nc_globals
+operator|.
+name|slk_format
 argument_list|)
 operator|)
 expr_stmt|;
@@ -378,7 +380,9 @@ name|label_height
 else|:
 name|MAX_SKEY_LEN
 argument_list|(
-name|_nc_slk_format
+name|_nc_globals
+operator|.
+name|slk_format
 argument_list|)
 operator|)
 expr_stmt|;
@@ -398,13 +402,17 @@ name|maxlab
 operator|<
 name|MAX_SKEY
 argument_list|(
-name|_nc_slk_format
+name|_nc_globals
+operator|.
+name|slk_format
 argument_list|)
 operator|)
 condition|?
 name|MAX_SKEY
 argument_list|(
-name|_nc_slk_format
+name|_nc_globals
+operator|.
+name|slk_format
 argument_list|)
 else|:
 name|SP
@@ -641,7 +649,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|_nc_slk_format
+name|_nc_globals
+operator|.
+name|slk_format
 operator|>=
 literal|3
 condition|)
@@ -740,7 +750,9 @@ else|else
 block|{
 if|if
 condition|(
-name|_nc_slk_format
+name|_nc_globals
+operator|.
+name|slk_format
 operator|==
 literal|2
 condition|)
@@ -828,7 +840,9 @@ else|else
 block|{
 if|if
 condition|(
-name|_nc_slk_format
+name|_nc_globals
+operator|.
+name|slk_format
 operator|==
 literal|1
 condition|)
@@ -964,9 +978,13 @@ name|SP
 operator|->
 name|slk_format
 operator|=
-name|_nc_slk_format
+name|_nc_globals
+operator|.
+name|slk_format
 expr_stmt|;
-name|_nc_slk_format
+name|_nc_globals
+operator|.
+name|slk_format
 operator|=
 literal|0
 expr_stmt|;

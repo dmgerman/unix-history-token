@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_data.c,v 1.34 2007/10/20 21:49:10 tom Exp $"
+literal|"$Id: lib_data.c,v 1.39 2008/01/13 01:21:59 tom Exp $"
 argument_list|)
 end_macro
 
@@ -379,6 +379,9 @@ comment|/* first_name */
 name|NULL
 block|,
 comment|/* keyname_table */
+literal|0
+block|,
+comment|/* slk_format */
 name|NULL
 block|,
 comment|/* safeprint_buf */
@@ -485,16 +488,16 @@ comment|/* TRACE */
 ifdef|#
 directive|ifdef
 name|USE_PTHREADS
-name|PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
+name|PTHREAD_MUTEX_INITIALIZER
 block|,
 comment|/* mutex_set_SP */
-name|PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
+name|PTHREAD_MUTEX_INITIALIZER
 block|,
 comment|/* mutex_use_screen */
-name|PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
+name|PTHREAD_MUTEX_INITIALIZER
 block|,
 comment|/* mutex_use_window */
-name|PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
+name|PTHREAD_MUTEX_INITIALIZER
 block|,
 comment|/* mutex_windowlist */
 name|PTHREAD_MUTEX_INITIALIZER
@@ -537,7 +540,7 @@ begin_define
 define|#
 directive|define
 name|RIPOFF_0
-value|{ 0,0 }
+value|{ 0,0,0 }
 end_define
 
 begin_define
@@ -651,6 +654,100 @@ end_expr_stmt
 
 begin_comment
 comment|/* *INDENT-ON* */
+end_comment
+
+begin_comment
+comment|/******************************************************************************/
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_PTHREADS
+end_ifdef
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_mutex_lock
+argument_list|(
+argument|pthread_mutex_t *obj
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|pthread_mutex_lock
+argument_list|(
+name|obj
+argument_list|)
+return|;
+block|}
+end_block
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_mutex_trylock
+argument_list|(
+argument|pthread_mutex_t *obj
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|pthread_mutex_trylock
+argument_list|(
+name|obj
+argument_list|)
+return|;
+block|}
+end_block
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_mutex_unlock
+argument_list|(
+argument|pthread_mutex_t *obj
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|pthread_mutex_unlock
+argument_list|(
+name|obj
+argument_list|)
+return|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_PTHREADS */
 end_comment
 
 end_unit
