@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_set_term.c,v 1.100 2007/09/08 21:23:43 tom Exp $"
+literal|"$Id: lib_set_term.c,v 1.103 2008/02/03 20:31:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -758,20 +758,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|ripoff_sp
-value|_nc_prescreen.rsp
-end_define
-
-begin_define
-define|#
-directive|define
-name|ripoff_stack
-value|_nc_prescreen.rippedoff
-end_define
-
 begin_comment
 comment|/* OS-independent screen initializations */
 end_comment
@@ -800,6 +786,10 @@ end_macro
 
 begin_block
 block|{
+name|char
+modifier|*
+name|env
+decl_stmt|;
 name|int
 name|bottom_stolen
 init|=
@@ -1917,14 +1907,13 @@ name|_nc_locale_breaks_acs
 argument_list|()
 operator|)
 expr_stmt|;
-block|{
-name|char
-modifier|*
+endif|#
+directive|endif
 name|env
-init|=
+operator|=
 name|_nc_get_locale
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 name|SP
 operator|->
 name|_legacy_coding
@@ -1953,9 +1942,17 @@ literal|"POSIX"
 argument_list|)
 operator|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
+name|T
+argument_list|(
+operator|(
+literal|"legacy-coding %d"
+operator|,
+name|SP
+operator|->
+name|_legacy_coding
+operator|)
+argument_list|)
+expr_stmt|;
 name|_nc_idcok
 operator|=
 name|TRUE
@@ -2230,6 +2227,13 @@ if|if
 condition|(
 name|w
 condition|)
+block|{
+name|rop
+operator|->
+name|win
+operator|=
+name|w
+expr_stmt|;
 name|rop
 operator|->
 name|hook
@@ -2239,12 +2243,15 @@ argument_list|,
 name|scolumns
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|returnCode
 argument_list|(
 name|ERR
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|rop
@@ -2464,6 +2471,9 @@ end_macro
 
 begin_block
 block|{
+name|START_TRACE
+argument_list|()
+expr_stmt|;
 name|T
 argument_list|(
 operator|(
