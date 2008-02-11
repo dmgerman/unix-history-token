@@ -1848,6 +1848,25 @@ operator|=
 name|bytes_written
 expr_stmt|;
 block|}
+comment|/* If there's nothing to do, we're done. */
+if|if
+condition|(
+operator|!
+name|finishing
+operator|&&
+name|state
+operator|->
+name|stream
+operator|.
+name|avail_in
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
 name|ret
 operator|=
 name|deflate
@@ -1915,7 +1934,10 @@ name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"GZip compression failed"
+literal|"GZip compression failed:"
+literal|" deflate() call returned status %d"
+argument_list|,
+name|ret
 argument_list|)
 expr_stmt|;
 return|return

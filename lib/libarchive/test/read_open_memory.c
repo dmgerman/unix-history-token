@@ -391,7 +391,7 @@ operator|*
 operator|)
 name|client_data
 decl_stmt|;
-name|ssize_t
+name|size_t
 name|size
 decl_stmt|;
 operator|(

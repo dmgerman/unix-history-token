@@ -21,13 +21,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<archive.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<archive_entry.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -58,6 +52,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -204,49 +204,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * ARCHIVE_VERSION_STAMP first appeared in 1.9 and libarchive 2.2.4.  * We can approximate it for earlier versions, though.  * This is used to disable tests of features not present in the current  * version.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ARCHIVE_VERSION_STAMP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ARCHIVE_VERSION_STAMP
-define|\
-value|(ARCHIVE_API_VERSION * 1000000 + ARCHIVE_API_FEATURE * 1000)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * "list.h" is simply created by "grep DEFINE_TEST"; it has  * a line like  *      DEFINE_TEST(test_function)  * for each test.  * Include it here with a suitable DEFINE_TEST to declare all of the  * test functions.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFINE_TEST
-parameter_list|(
-name|name
-parameter_list|)
-value|void name(void);
-end_define
-
-begin_include
-include|#
-directive|include
-file|"list.h"
-end_include
-
-begin_comment
 comment|/*  * Redefine DEFINE_TEST for use in defining the test functions.  */
 end_comment
 
@@ -263,7 +220,7 @@ name|DEFINE_TEST
 parameter_list|(
 name|name
 parameter_list|)
-value|void name(void)
+value|void name(void); void name(void)
 end_define
 
 begin_comment
@@ -281,37 +238,8 @@ value|test_assert(__FILE__, __LINE__, (e), #e, NULL)
 end_define
 
 begin_comment
-comment|/* As above, but reports any archive_error found in variable 'a' */
+comment|/* Assert two integers are the same.  Reports value of each one if not. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|assertA
-parameter_list|(
-name|e
-parameter_list|)
-value|test_assert(__FILE__, __LINE__, (e), #e, (a))
-end_define
-
-begin_comment
-comment|/* Asserts that two integers are the same.  Reports value of each one if not. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|assertEqualIntA
-parameter_list|(
-name|a
-parameter_list|,
-name|v1
-parameter_list|,
-name|v2
-parameter_list|)
-define|\
-value|test_assert_equal_int(__FILE__, __LINE__, (v1), #v1, (v2), #v2, (a))
-end_define
 
 begin_define
 define|#
@@ -327,23 +255,8 @@ value|test_assert_equal_int(__FILE__, __LINE__, (v1), #v1, (v2), #v2, NULL)
 end_define
 
 begin_comment
-comment|/* Asserts that two strings are the same.  Reports value of each one if not. */
+comment|/* Assert two strings are the same.  Reports value of each one if not. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|assertEqualStringA
-parameter_list|(
-name|a
-parameter_list|,
-name|v1
-parameter_list|,
-name|v2
-parameter_list|)
-define|\
-value|test_assert_equal_string(__FILE__, __LINE__, (v1), #v1, (v2), #v2, (a))
-end_define
 
 begin_define
 define|#
@@ -376,6 +289,49 @@ value|test_assert_equal_wstring(__FILE__, __LINE__, (v1), #v1, (v2), #v2, NULL)
 end_define
 
 begin_comment
+comment|/* As above, but raw blocks of bytes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|assertEqualMem
+parameter_list|(
+name|v1
+parameter_list|,
+name|v2
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|test_assert_equal_mem(__FILE__, __LINE__, (v1), #v1, (v2), #v2, (l), #l, NULL)
+end_define
+
+begin_comment
+comment|/* Assert two files are the same; allow printf-style expansion of second name.  * See below for comments about variable arguments here...  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|assertEqualFile
+define|\
+value|test_setup(__FILE__, __LINE__);test_assert_equal_file
+end_define
+
+begin_comment
+comment|/* Assert that a file is empty; supports printf-style arguments. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|assertEmptyFile
+define|\
+value|test_setup(__FILE__, __LINE__);test_assert_empty_file
+end_define
+
+begin_comment
 comment|/*  * This would be simple with C99 variadic macros, but I don't want to  * require that.  Instead, I insert a function call before each  * skipping() call to pass the file and line information down.  Crude,  * but effective.  */
 end_comment
 
@@ -384,7 +340,7 @@ define|#
 directive|define
 name|skipping
 define|\
-value|skipping_setup(__FILE__, __LINE__);test_skipping
+value|test_setup(__FILE__, __LINE__);test_skipping
 end_define
 
 begin_comment
@@ -407,7 +363,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|skipping_setup
+name|test_setup
 parameter_list|(
 specifier|const
 name|char
@@ -448,9 +404,38 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|struct
-name|archive
+name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_assert_empty_file
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|test_assert_equal_file
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -477,8 +462,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|struct
-name|archive
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -512,8 +496,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|struct
-name|archive
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -547,12 +530,124 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|struct
-name|archive
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|test_assert_equal_mem
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Like sprintf, then system() */
+end_comment
+
+begin_function_decl
+name|int
+name|systemf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Suck file into string allocated via malloc(). Call free() when done. */
+end_comment
+
+begin_comment
+comment|/* Supports printf-style args: slurpfile(NULL, "%s/myfile", refdir); */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|slurpfile
+parameter_list|(
+name|size_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Global vars  */
+end_comment
+
+begin_comment
+comment|/* Directory holding reference files. */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|refdir
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Special interfaces for libarchive test harness.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"archive.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"archive_entry.h"
+end_include
 
 begin_comment
 comment|/* Special customized read-from-memory interface. */
@@ -576,23 +671,72 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|read_open_memory
+begin_comment
+comment|/*  * ARCHIVE_VERSION_STAMP first appeared in 1.9 and libarchive 2.2.4.  * We can approximate it for earlier versions, though.  * This is used to disable tests of features not present in the current  * version.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ARCHIVE_VERSION_STAMP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_VERSION_STAMP
+define|\
+value|(ARCHIVE_API_VERSION * 1000000 + ARCHIVE_API_FEATURE * 1000)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Versions of above that accept an archive argument for additional info. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|assertA
 parameter_list|(
-name|struct
-name|archive
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|,
-name|size_t
+name|e
 parameter_list|)
-function_decl|;
-end_function_decl
+value|test_assert(__FILE__, __LINE__, (e), #e, (a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|assertEqualIntA
+parameter_list|(
+name|a
+parameter_list|,
+name|v1
+parameter_list|,
+name|v2
+parameter_list|)
+define|\
+value|test_assert_equal_int(__FILE__, __LINE__, (v1), #v1, (v2), #v2, (a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|assertEqualStringA
+parameter_list|(
+name|a
+parameter_list|,
+name|v1
+parameter_list|,
+name|v2
+parameter_list|)
+define|\
+value|test_assert_equal_string(__FILE__, __LINE__, (v1), #v1, (v2), #v2, (a))
+end_define
 
 end_unit
 

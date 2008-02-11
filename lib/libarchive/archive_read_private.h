@@ -542,6 +542,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|const
+name|void
+modifier|*
+name|__archive_read_ahead
+parameter_list|(
+name|struct
+name|archive_read
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

@@ -136,9 +136,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|PACKAGE_NAME
-literal|" "
-name|PACKAGE_VERSION
+name|ARCHIVE_LIBRARY_VERSION
 operator|)
 return|;
 block|}

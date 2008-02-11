@@ -231,6 +231,17 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
+comment|/* 	 * A touchy API design issue: archive_write_data() does (as of 	 * 2.4.12) enforce the entry size as a limit on the data 	 * written to the file.  This was not enforced prior to 	 * 2.4.12.  The change was prompted by the refined 	 * hardlink-restore semantics introduced at that time.  In 	 * short, libarchive needs to know whether a "hardlink entry" 	 * is going to overwrite the contents so that it can know 	 * whether or not to open the file for writing.  This implies 	 * that there is a fundamental semantic difference between an 	 * entry with a zero size and one with a non-zero size in the 	 * case of hardlinks and treating the hardlink case 	 * differently from the regular file case is just asking for 	 * trouble.  So, a zero size must always mean that no data 	 * will be accepted, which is consistent with the file size in 	 * the entry being a maximum size. 	 */
+name|archive_entry_set_size
+argument_list|(
+name|ae
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|data
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|assertEqualIntA
 argument_list|(
 name|ad
@@ -460,6 +471,14 @@ argument_list|(
 literal|"%s"
 argument_list|,
 name|msg
+argument_list|)
+expr_stmt|;
+comment|/* 	 * See above for an explanation why this next call 	 * is necessary. 	 */
+name|archive_entry_set_size
+argument_list|(
+name|ae
+argument_list|,
+name|datasize
 argument_list|)
 expr_stmt|;
 name|assertEqualIntA

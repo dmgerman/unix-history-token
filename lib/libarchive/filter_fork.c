@@ -41,6 +41,21 @@ directive|include
 file|<poll.h>
 end_include
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_SYS_POLL_H
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<sys/poll.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif

@@ -1278,6 +1278,7 @@ operator|=
 name|archive_entry_new
 argument_list|()
 expr_stmt|;
+comment|/* nlink = 1 here for GNU cpio compat. */
 name|archive_entry_set_nlink
 argument_list|(
 name|trailer
