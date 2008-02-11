@@ -206,7 +206,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * exp2f(x): compute the base 2 exponential of x  *  * Accuracy: Peak error< 0.501 ulp; location of peak: -0.030110927.  *  * Method: (equally-spaced tables)  *  *   Reduce x:  *     x = 2**k + y, for integer k and |y|<= 1/2.  *     Thus we have exp2f(x) = 2**k * exp2(y).  *  *   Reduce y:  *     y = i/TBLSIZE + z for integer i near y * TBLSIZE.  *     Thus we have exp2(y) = exp2(i/TBLSIZE) * exp2(z),  *     with |z|<= 2**-(TBLSIZE+1).  *  *   We compute exp2(i/TBLSIZE) via table lookup and exp2(z) via a  *   degree-4 minimax polynomial with maximum error under 1.4 * 2**-33.  *   Using double precision in the final calculation avoids roundoff error.  *  *   This method is due to Tang, but I do not use his suggested parameters:  *  *	Tang, P.  Table-driven Implementation of the Exponential Function  *	in IEEE Floating-Point Arithmetic.  TOMS 15(2), 144-157 (1989).  */
+comment|/*  * exp2f(x): compute the base 2 exponential of x  *  * Accuracy: Peak error< 0.501 ulp; location of peak: -0.030110927.  *  * Method: (equally-spaced tables)  *  *   Reduce x:  *     x = 2**k + y, for integer k and |y|<= 1/2.  *     Thus we have exp2f(x) = 2**k * exp2(y).  *  *   Reduce y:  *     y = i/TBLSIZE + z for integer i near y * TBLSIZE.  *     Thus we have exp2(y) = exp2(i/TBLSIZE) * exp2(z),  *     with |z|<= 2**-(TBLSIZE+1).  *  *   We compute exp2(i/TBLSIZE) via table lookup and exp2(z) via a  *   degree-4 minimax polynomial with maximum error under 1.4 * 2**-33.  *   Using double precision for everything except the reduction makes  *   roundoff error insignificant and simplifies the scaling step.  *  *   This method is due to Tang, but I do not use his suggested parameters:  *  *	Tang, P.  Table-driven Implementation of the Exponential Function  *	in IEEE Floating-Point Arithmetic.  TOMS 15(2), 144-157 (1989).  */
 end_comment
 
 begin_function
@@ -221,11 +221,11 @@ name|double
 name|tv
 decl_stmt|,
 name|twopk
+decl_stmt|,
+name|z
 decl_stmt|;
 name|float
 name|t
-decl_stmt|,
-name|z
 decl_stmt|;
 name|uint32_t
 name|hx
