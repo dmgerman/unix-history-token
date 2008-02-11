@@ -1329,7 +1329,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"Can't find PV for chunk %d"
+literal|"Can't find PV for chunk %zu"
 operator|,
 name|chunk_index
 operator|)
