@@ -11557,7 +11557,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|int
+name|size_t
 name|count
 decl_stmt|;
 block|}
@@ -11585,7 +11585,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|readlink_args
-comment|/* { 		char *path; 		char *buf; 		int count; 	} */
+comment|/* { 		char *path; 		char *buf; 		size_t count; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -11642,7 +11642,7 @@ name|enum
 name|uio_seg
 name|bufseg
 parameter_list|,
-name|int
+name|size_t
 name|count
 parameter_list|)
 block|{

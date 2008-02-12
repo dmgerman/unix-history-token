@@ -1289,7 +1289,7 @@ name|enum
 name|uio_seg
 name|bufseg
 parameter_list|,
-name|int
+name|size_t
 name|count
 parameter_list|)
 function_decl|;

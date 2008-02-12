@@ -2732,7 +2732,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|ssize_t
 name|readlink
 parameter_list|(
 specifier|const
@@ -2742,7 +2742,7 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
