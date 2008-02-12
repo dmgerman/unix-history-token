@@ -2833,6 +2833,7 @@ condition|(
 name|cmd
 condition|)
 block|{
+comment|/* 	 * It is possible that kern_shmctl is being called from the Linux ABI 	 * layer, in which case, we will need to implement IPC_INFO.  It should 	 * be noted that other shmctl calls will be funneled through here for 	 * Linix binaries as well. 	 * 	 * NB: The Linux ABI layer will convert this data to structure(s) more 	 * consistent with the Linux ABI. 	 */
 case|case
 name|IPC_INFO
 case|:
@@ -3353,6 +3354,32 @@ decl_stmt|;
 name|size_t
 name|bufsz
 decl_stmt|;
+comment|/* 	 * The only reason IPC_INFO, SHM_INFO, SHM_STAT exists is to support 	 * Linux binaries.  If we see the call come through the FreeBSD ABI, 	 * return an error back to the user since we do not to support this. 	 */
+if|if
+condition|(
+name|uap
+operator|->
+name|cmd
+operator|==
+name|IPC_INFO
+operator|||
+name|uap
+operator|->
+name|cmd
+operator|==
+name|SHM_INFO
+operator|||
+name|uap
+operator|->
+name|cmd
+operator|==
+name|SHM_STAT
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* IPC_SET needs to copyin the buffer before calling kern_shmctl */
 if|if
 condition|(
@@ -3429,15 +3456,6 @@ operator|->
 name|cmd
 condition|)
 block|{
-case|case
-name|IPC_INFO
-case|:
-case|case
-name|SHM_INFO
-case|:
-case|case
-name|SHM_STAT
-case|:
 case|case
 name|IPC_STAT
 case|:

@@ -308,6 +308,10 @@ directive|if
 name|__BSD_VISIBLE
 end_if
 
+begin_comment
+comment|/*  * For Linux compatability.  */
+end_comment
+
 begin_define
 define|#
 directive|define
