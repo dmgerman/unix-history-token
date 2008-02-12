@@ -3551,7 +3551,7 @@ expr_stmt|;
 if|if
 condition|(
 name|cpu_quirks
-operator|&&
+operator|&
 name|CPU_QUIRK_NO_C3
 condition|)
 block|{
