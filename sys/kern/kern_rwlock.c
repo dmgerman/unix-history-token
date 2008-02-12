@@ -3138,11 +3138,7 @@ argument_list|,
 name|TS_EXCLUSIVE_LOCK
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|ts
-condition|)
+else|else
 name|turnstile_disown
 argument_list|(
 name|ts
