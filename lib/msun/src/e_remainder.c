@@ -7,26 +7,19 @@ begin_comment
 comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* __ieee754_remainder(x,p)  * Return :                    * 	returns  x REM p  =  x - [x/p]*p as if in infinite   * 	precise arithmetic, where [x/p] is the (infinite bit)   *	integer nearest x/p (in half way case choose the even one).  * Method :   *	Based on fmod() return x-[x/p]chopped*p exactlp.  */
@@ -171,12 +164,20 @@ operator|)
 condition|)
 return|return
 operator|(
+operator|(
+name|long
+name|double
+operator|)
 name|x
 operator|*
 name|p
 operator|)
 operator|/
 operator|(
+operator|(
+name|long
+name|double
+operator|)
 name|x
 operator|*
 name|p
@@ -308,6 +309,20 @@ name|hx
 argument_list|,
 name|x
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|hx
+operator|&
+literal|0x7fffffff
+operator|)
+operator|==
+literal|0
+condition|)
+name|hx
+operator|=
+literal|0
 expr_stmt|;
 name|SET_HIGH_WORD
 argument_list|(
