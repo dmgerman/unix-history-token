@@ -1974,7 +1974,7 @@ operator|->
 name|buf
 expr_stmt|;
 comment|/* char * */
-name|iarg
+name|uarg
 index|[
 literal|2
 index|]
@@ -1983,7 +1983,7 @@ name|p
 operator|->
 name|count
 expr_stmt|;
-comment|/* int */
+comment|/* size_t */
 operator|*
 name|n_args
 operator|=
