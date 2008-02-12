@@ -553,7 +553,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Code to abuse the crashdump map to map in the tables for the early  * probe.  We cheat and make the following assumptions about how we  * use this KVA: page 0 is used to map in the first page of each table  * found via the RSDT or XSDT and pages 1 to n are used to map in the  * RSDT or XSDT.  The offset is in pages; the length is in bytes.  */
+comment|/*  * Code to abuse the crashdump map to map in the tables for the early  * probe.  We cheat and make the following assumptions about how we  * use this KVA: pages 0 and 1 are used to map in the header of each  * table found via the RSDT or XSDT and pages 2 to n are used to map  * in the RSDT or XSDT.  We have to use 2 pages for the table headers  * in case a header spans a page boundary.  The offset is in pages;  * the length is in bytes.  */
 end_comment
 
 begin_function
@@ -1107,7 +1107,7 @@ name|rsdp
 operator|->
 name|XsdtPhysicalAddress
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|XSDT_SIG
 argument_list|)
@@ -1194,7 +1194,7 @@ name|rsdp
 operator|->
 name|RsdtPhysicalAddress
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|RSDT_SIG
 argument_list|)
