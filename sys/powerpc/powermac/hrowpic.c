@@ -194,6 +194,18 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|hrowpic_ipi
+parameter_list|(
+name|device_t
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|hrowpic_mask
 parameter_list|(
 name|device_t
@@ -257,6 +269,13 @@ argument_list|(
 name|pic_eoi
 argument_list|,
 name|hrowpic_eoi
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|pic_ipi
+argument_list|,
+name|hrowpic_ipi
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -629,6 +648,8 @@ expr_stmt|;
 name|powerpc_register_pic
 argument_list|(
 name|dev
+argument_list|,
+literal|64
 argument_list|)
 expr_stmt|;
 return|return
@@ -981,6 +1002,22 @@ literal|0x1f
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|hrowpic_ipi
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_int
+name|irq
+parameter_list|)
+block|{
+comment|/* No SMP support. */
 block|}
 end_function
 

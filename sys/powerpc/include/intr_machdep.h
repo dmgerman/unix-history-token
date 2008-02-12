@@ -35,11 +35,19 @@ name|trapframe
 struct_decl|;
 end_struct_decl
 
+begin_decl_stmt
+name|driver_filter_t
+name|powerpc_ipi_handler
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|powerpc_register_pic
 parameter_list|(
 name|device_t
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

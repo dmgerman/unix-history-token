@@ -201,6 +201,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|pic_ipi
+argument_list|,
+name|openpic_ipi
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|pic_mask
 argument_list|,
 name|openpic_mask

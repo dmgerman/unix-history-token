@@ -15,7 +15,72 @@ value|0x40000
 end_define
 
 begin_comment
-comment|/*  * GLOBAL/TIMER register (IDU base + 0x1000)  */
+comment|/*  * Per Processor Registers [private access] (0x00000 - 0x00fff)  */
+end_comment
+
+begin_comment
+comment|/* IPI dispatch command reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENPIC_IPI_DISPATCH
+parameter_list|(
+name|ipi
+parameter_list|)
+value|(0x40 + (ipi) * 0x10)
+end_define
+
+begin_comment
+comment|/* current task priority reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENPIC_TPR
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPENPIC_TPR_MASK
+value|0x0000000f
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPENPIC_WHOAMI
+value|0x90
+end_define
+
+begin_comment
+comment|/* interrupt acknowledge reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENPIC_IACK
+value|0xa0
+end_define
+
+begin_comment
+comment|/* end of interrupt reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENPIC_EOI
+value|0xb0
+end_define
+
+begin_comment
+comment|/*  * Global registers (0x01000-0x0ffff)  */
 end_comment
 
 begin_comment
@@ -169,7 +234,65 @@ value|0x10e0
 end_define
 
 begin_comment
-comment|/*  * INTERRUPT SOURCE register (IDU base + 0x10000)  */
+comment|/* Timer registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENPIC_TIMERS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPENPIC_TFREQ
+value|0x10f0
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPENPIC_TCNT
+parameter_list|(
+name|t
+parameter_list|)
+value|(0x1100 + (t) * 0x40)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPENPIC_TBASE
+parameter_list|(
+name|t
+parameter_list|)
+value|(0x1110 + (t) * 0x40)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPENPIC_TVEC
+parameter_list|(
+name|t
+parameter_list|)
+value|(0x1120 + (t) * 0x40)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPENPIC_TDST
+parameter_list|(
+name|t
+parameter_list|)
+value|(0x1130 + (t) * 0x40)
+end_define
+
+begin_comment
+comment|/*  * Interrupt Source Configuration Registers (0x10000 - 0x1ffff)  */
 end_comment
 
 begin_comment
@@ -286,72 +409,74 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * PROCESSOR register (IDU base + 0x20000)  */
-end_comment
-
-begin_comment
-comment|/* IPI command reg */
+comment|/*  * Per Processor Registers [global access] (0x20000 - 0x3ffff)  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|OPENPIC_IPI
+name|OPENPIC_PCPU_BASE
+parameter_list|(
+name|cpu
+parameter_list|)
+value|(0x20000 + (cpu) * 0x1000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPENPIC_PCPU_IPI_DISPATCH
 parameter_list|(
 name|cpu
 parameter_list|,
 name|ipi
 parameter_list|)
-value|(0x20040 + (cpu) * 0x1000 + (ipi))
+define|\
+value|(OPENPIC_PCPU_BASE(cpu) + OPENPIC_IPI_DISPATCH(ipi))
 end_define
-
-begin_comment
-comment|/* current task priority reg */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|OPENPIC_CPU_PRIORITY
+name|OPENPIC_PCPU_TPR
 parameter_list|(
 name|cpu
 parameter_list|)
-value|(0x20080 + (cpu) * 0x1000)
+define|\
+value|(OPENPIC_PCPU_BASE(cpu) + OPENPIC_TPR)
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPENPIC_CPU_PRIORITY_MASK
-value|0x0000000f
-end_define
-
-begin_comment
-comment|/* interrupt acknowledge reg */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OPENPIC_IACK
+name|OPENPIC_PCPU_WHOAMI
 parameter_list|(
 name|cpu
 parameter_list|)
-value|(0x200a0 + (cpu) * 0x1000)
+define|\
+value|(OPENPIC_PCPU_BASE(cpu) + OPENPIC_WHOAMI)
 end_define
-
-begin_comment
-comment|/* end of interrupt reg */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|OPENPIC_EOI
+name|OPENPIC_PCPU_IACK
 parameter_list|(
 name|cpu
 parameter_list|)
-value|(0x200b0 + (cpu) * 0x1000)
+define|\
+value|(OPENPIC_PCPU_BASE(cpu) + OPENPIC_IACK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPENPIC_PCPU_EOI
+parameter_list|(
+name|cpu
+parameter_list|)
+define|\
+value|(OPENPIC_PCPU_BASE(cpu) + OPENPIC_EOI)
 end_define
 
 end_unit

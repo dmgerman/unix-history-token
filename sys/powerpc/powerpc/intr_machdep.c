@@ -337,6 +337,9 @@ name|powerpc_register_pic
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|u_int
+name|ipi
 parameter_list|)
 block|{
 name|pic
