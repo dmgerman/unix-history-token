@@ -1040,6 +1040,9 @@ literal|1000000
 expr_stmt|;
 do|do
 block|{
+name|cpu_spinwait
+argument_list|()
+expr_stmt|;
 name|now
 operator|=
 name|rdtsc
