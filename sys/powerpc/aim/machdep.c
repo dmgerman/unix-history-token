@@ -392,16 +392,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pcpu
-name|__pcpu
-index|[
-name|MAXCPU
-index|]
+name|pcpu0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|trapframe
 name|frame0
@@ -881,20 +880,6 @@ argument_list|,
 name|SHUTDOWN_PRI_LAST
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-comment|/* 	 * OK, enough kmem_alloc/malloc state should be up, lets get on with it! 	 */
-name|mp_start
-argument_list|()
-expr_stmt|;
-comment|/* fire up the secondaries */
-name|mp_announce
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* SMP */
 block|}
 end_function
 
@@ -1144,10 +1129,7 @@ comment|/* 	 * Set up per-cpu data. 	 */
 name|pc
 operator|=
 operator|&
-name|__pcpu
-index|[
-literal|0
-index|]
+name|pcpu0
 expr_stmt|;
 name|pcpu_init
 argument_list|(

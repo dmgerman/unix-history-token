@@ -184,17 +184,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|pcpu
-name|__pcpu
-index|[
-name|MAXCPU
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|pmap
 name|ofw_pmap
 decl_stmt|;
