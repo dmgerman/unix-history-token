@@ -1583,14 +1583,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 * For now, we flush the entire namecache, but this is 		 * undesirable.  Once we have an access control cache, we 		 * should just flush that instead. 		 */
-name|cache_purgevfs
-argument_list|(
-name|mnt
-operator|->
-name|mi_vfsp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2059,14 +2051,6 @@ condition|)
 block|{
 comment|/* 			 * Remove the cnode from the hash table, replace the 			 * fid, and reinsert. 			 */
 name|vref
-argument_list|(
-name|CTOV
-argument_list|(
-name|cp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|cache_purge
 argument_list|(
 name|CTOV
 argument_list|(
