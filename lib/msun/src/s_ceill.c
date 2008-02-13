@@ -212,6 +212,7 @@ name|bits
 operator|.
 name|sign
 condition|?
+operator|-
 literal|0.0
 else|:
 literal|1.0
