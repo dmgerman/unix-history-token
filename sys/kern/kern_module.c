@@ -1815,6 +1815,16 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|kernel
+argument_list|,
+name|__FreeBSD_version
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
