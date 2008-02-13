@@ -881,12 +881,89 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FS_FILECORE
+value|16
+end_define
+
+begin_comment
+comment|/* Acorn Filecore Filing System */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_EXT2FS
+value|17
+end_define
+
+begin_comment
+comment|/* ext2fs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_NTFS
+value|18
+end_define
+
+begin_comment
+comment|/* Windows/NT file system */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_CCD
+value|20
+end_define
+
+begin_comment
+comment|/* concatenated disk component */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FS_JFS2
 value|21
 end_define
 
 begin_comment
 comment|/* IBM JFS2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_UDF
+value|24
+end_define
+
+begin_comment
+comment|/* UDF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_EFS
+value|26
+end_define
+
+begin_comment
+comment|/* SGI's Extent File system */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_ZFS
+value|27
+end_define
+
+begin_comment
+comment|/* Sun's ZFS */
 end_comment
 
 begin_ifdef
@@ -936,15 +1013,28 @@ literal|"vinum"
 block|,
 literal|"raid"
 block|,
-literal|"?"
+literal|"Filecore"
+block|,
+literal|"EXT2FS"
+block|,
+literal|"NTFS"
 block|,
 literal|"?"
 block|,
-literal|"?"
-block|,
-literal|"?"
+literal|"ccd"
 block|,
 literal|"jfs"
+block|,
+literal|"?"
+block|,
+literal|"?"
+block|,
+literal|"UDF"
+block|,
+literal|"?"
+literal|"EFS"
+block|,
+literal|"ZFS"
 block|,
 name|NULL
 block|}
