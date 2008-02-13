@@ -1734,9 +1734,11 @@ condition|)
 return|return
 operator|(
 name|x
+operator|+
+name|x
 operator|)
 return|;
-comment|/* x is NaN or +Inf */
+comment|/* x is +Inf or NaN */
 else|else
 return|return
 operator|(
