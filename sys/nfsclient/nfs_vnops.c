@@ -14688,18 +14688,9 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|BUF_ISLOCKED
+name|BUF_ASSERT_HELD
 argument_list|(
 name|bp
-argument_list|)
-argument_list|,
-operator|(
-literal|"nfs_strategy: buffer %p not locked"
-operator|,
-name|bp
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -16428,17 +16419,9 @@ literal|0
 block|int retv = 1; 	off_t off;
 endif|#
 directive|endif
-if|if
-condition|(
-operator|!
-name|BUF_ISLOCKED
+name|BUF_ASSERT_HELD
 argument_list|(
 name|bp
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"bwrite: buffer is not locked???"
 argument_list|)
 expr_stmt|;
 if|if

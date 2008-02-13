@@ -409,6 +409,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LA_MASKASSERT
+value|0x000000ff
+end_define
+
+begin_comment
+comment|/* Mask for witness defined asserts. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LA_UNLOCKED
 value|0x00000000
 end_define

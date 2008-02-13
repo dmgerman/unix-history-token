@@ -2618,18 +2618,6 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|BUF_ISLOCKED
-argument_list|(
-name|bp
-argument_list|)
-argument_list|,
-operator|(
-literal|"bremfree: buf must be locked."
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
 operator|(
 name|bp
 operator|->
@@ -2660,6 +2648,11 @@ literal|"bremfree: buffer %p not on a queue."
 operator|,
 name|bp
 operator|)
+argument_list|)
+expr_stmt|;
+name|BUF_ASSERT_HELD
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 name|bp
@@ -2768,20 +2761,6 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|BUF_ISLOCKED
-argument_list|(
-name|bp
-argument_list|)
-argument_list|,
-operator|(
-literal|"bremfreel: buffer %p not locked."
-operator|,
-name|bp
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
 name|bp
 operator|->
 name|b_qindex
@@ -2793,6 +2772,11 @@ literal|"bremfreel: buffer %p not on a queue."
 operator|,
 name|bp
 operator|)
+argument_list|)
+expr_stmt|;
+name|BUF_ASSERT_HELD
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -3423,17 +3407,9 @@ name|bp
 operator|->
 name|b_flags
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|BUF_ISLOCKED
+name|BUF_ASSERT_HELD
 argument_list|(
 name|bp
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"bufwrite: buffer is not busy???"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3907,16 +3883,9 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|BUF_ISLOCKED
+name|BUF_ASSERT_HELD
 argument_list|(
 name|bp
-argument_list|)
-argument_list|,
-operator|(
-literal|"bdwrite: buffer is not busy"
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4107,20 +4076,6 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|BUF_ISLOCKED
-argument_list|(
-name|bp
-argument_list|)
-argument_list|,
-operator|(
-literal|"bdirty: bp %p not locked"
-operator|,
-name|bp
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
 name|bp
 operator|->
 name|b_bufobj
@@ -4157,6 +4112,11 @@ name|bp
 operator|->
 name|b_qindex
 operator|)
+argument_list|)
+expr_stmt|;
+name|BUF_ASSERT_HELD
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 name|bp
@@ -4293,18 +4253,9 @@ name|b_qindex
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|BUF_ISLOCKED
+name|BUF_ASSERT_HELD
 argument_list|(
 name|bp
-argument_list|)
-argument_list|,
-operator|(
-literal|"bundirty: bp %p not locked"
-operator|,
-name|bp
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -10016,18 +9967,9 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|BUF_ISLOCKED
+name|BUF_ASSERT_HELD
 argument_list|(
 name|bp
-argument_list|)
-argument_list|,
-operator|(
-literal|"getblk: bp %p not locked"
-operator|,
-name|bp
-operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -10126,18 +10068,9 @@ operator||=
 name|B_INVAL
 expr_stmt|;
 comment|/* b_dep cleared by getnewbuf() */
-name|KASSERT
-argument_list|(
-name|BUF_ISLOCKED
+name|BUF_ASSERT_HELD
 argument_list|(
 name|bp
-argument_list|)
-argument_list|,
-operator|(
-literal|"geteblk: bp %p not locked"
-operator|,
-name|bp
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -10173,17 +10106,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|BUF_ISLOCKED
+name|BUF_ASSERT_HELD
 argument_list|(
 name|bp
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"allocbuf: buffer not busy"
 argument_list|)
 expr_stmt|;
 if|if
@@ -11926,20 +11851,6 @@ name|NULL
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|BUF_ISLOCKED
-argument_list|(
-name|bp
-argument_list|)
-argument_list|,
-operator|(
-literal|"biodone: bp %p not busy"
-operator|,
-name|bp
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
 operator|!
 operator|(
 name|bp
@@ -11954,6 +11865,11 @@ literal|"biodone: bp %p already done"
 operator|,
 name|bp
 operator|)
+argument_list|)
+expr_stmt|;
+name|BUF_ASSERT_HELD
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 name|runningbufwakeup
@@ -12043,18 +11959,9 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|KASSERT
-argument_list|(
-name|BUF_ISLOCKED
+name|BUF_ASSERT_HELD
 argument_list|(
 name|bp
-argument_list|)
-argument_list|,
-operator|(
-literal|"biodone: bp %p not busy"
-operator|,
-name|bp
-operator|)
 argument_list|)
 expr_stmt|;
 if|if

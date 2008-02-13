@@ -330,18 +330,9 @@ name|b_bcount
 operator|=
 name|size
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|BUF_ISLOCKED
+name|BUF_ASSERT_HELD
 argument_list|(
 name|bp
-argument_list|)
-argument_list|,
-operator|(
-literal|"xfs_buf_get_empty: bp %p not locked"
-operator|,
-name|bp
-operator|)
 argument_list|)
 expr_stmt|;
 name|xfs_buf_set_target
@@ -403,18 +394,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-name|BUF_ISLOCKED
+name|BUF_ASSERT_HELD
 argument_list|(
 name|bp
-argument_list|)
-argument_list|,
-operator|(
-literal|"xfs_buf_get_empty: bp %p not locked"
-operator|,
-name|bp
-operator|)
 argument_list|)
 expr_stmt|;
 name|xfs_buf_set_target
