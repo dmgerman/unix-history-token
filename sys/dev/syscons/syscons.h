@@ -1997,7 +1997,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|mtx_init(&(sc)->video_mtx, "syscons video lock", NULL,MTX_SPIN);
+value|mtx_init(&(sc)->video_mtx, "syscons video lock", NULL,	\ 		    MTX_SPIN | MTX_RECURSE);
 end_define
 
 begin_define
