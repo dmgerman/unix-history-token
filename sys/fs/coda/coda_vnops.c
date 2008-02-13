@@ -209,21 +209,18 @@ begin_comment
 comment|/* Set to cache symbolic links. */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_decl_stmt
+specifier|static
+name|int
+name|coda_access_cache
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-unit|static int coda_access_cache = 1;
 comment|/* Set to cache some access checks. */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Structure to keep track of vfs calls.  */
@@ -2345,7 +2342,11 @@ operator|->
 name|c_flags
 operator|&=
 operator|~
+operator|(
 name|C_VATTR
+operator||
+name|C_ACCCACHE
+operator|)
 expr_stmt|;
 comment|/* 	 * XXX: Since we now share vm objects between layers, this is 	 * probably unnecessary. 	 * 	 * XXX: Shouldn't we only be doing this "set" if C_VATTR remains 	 * valid after venus_setattr()? 	 */
 name|size
@@ -2450,6 +2451,9 @@ operator|->
 name|a_td
 decl_stmt|;
 comment|/* locals */
+name|int
+name|error
+decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
 name|CODA_ACCESS_STATS
@@ -2497,9 +2501,50 @@ name|EACCES
 operator|)
 return|;
 block|}
-comment|/* 	 * XXXRW: We should add an actual access cache here, similar to the 	 * one found in NFS, the Linux Coda module, etc. 	 * 	 * In principle it could be as simple as caching the uid and granted 	 * access mode (as in NFS), but we also need invalidation.  The Coda 	 * module on Linux does this using a global generation number which 	 * is bumped on an access control cache flush, whereas NFS does it 	 * with a timeout. 	 */
+comment|/* 	 * We maintain a one-entry LRU positive access cache with each cnode. 	 * In principle we could also track negative results, and for more 	 * than one uid, but we don't yet.  Venus is responsible for 	 * invalidating this cache as required. 	 */
+if|if
+condition|(
+name|coda_access_cache
+operator|&&
+name|VALID_ACCCACHE
+argument_list|(
+name|cp
+argument_list|)
+operator|&&
+operator|(
+name|cred
+operator|->
+name|cr_uid
+operator|==
+name|cp
+operator|->
+name|c_cached_uid
+operator|)
+operator|&&
+operator|(
+name|mode
+operator|&
+name|cp
+operator|->
+name|c_cached_mode
+operator|)
+operator|==
+name|mode
+condition|)
+block|{
+name|MARK_INT_SAT
+argument_list|(
+name|CODA_ACCESS_STATS
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|error
+operator|=
 name|venus_access
 argument_list|(
 name|vtomi
@@ -2520,6 +2565,60 @@ name|td
 operator|->
 name|td_proc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
+name|coda_access_cache
+condition|)
+block|{
+comment|/*- 		 * When we have a new successful request, we consider three 		 * cases: 		 * 		 * - No initialized access cache, in which case cache the 		 *   result. 		 * - Cached result for a different user, in which case we 		 *   replace the entry. 		 * - Cached result for the same user, in which case we add 		 *   any newly granted rights to the cached mode. 		 * 		 * XXXRW: If we ever move to something more interesting than 		 * uid-based token lookup, we'll need to change this. 		 */
+name|cp
+operator|->
+name|c_flags
+operator||=
+name|C_ACCCACHE
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|c_cached_uid
+operator|!=
+name|cred
+operator|->
+name|cr_uid
+condition|)
+block|{
+name|cp
+operator|->
+name|c_cached_mode
+operator|=
+name|mode
+expr_stmt|;
+name|cp
+operator|->
+name|c_cached_uid
+operator|=
+name|cred
+operator|->
+name|cr_uid
+expr_stmt|;
+block|}
+else|else
+name|cp
+operator|->
+name|c_cached_mode
+operator||=
+name|mode
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -4347,7 +4446,11 @@ operator|->
 name|c_flags
 operator|&=
 operator|~
+operator|(
 name|C_VATTR
+operator||
+name|C_ACCCACHE
+operator|)
 expr_stmt|;
 name|error
 operator|=
@@ -4690,6 +4793,24 @@ comment|/* true args */
 name|struct
 name|vnode
 modifier|*
+name|fvp
+init|=
+name|ap
+operator|->
+name|a_fvp
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|tvp
+init|=
+name|ap
+operator|->
+name|a_tvp
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
 name|odvp
 init|=
 name|ap
@@ -4879,7 +5000,7 @@ argument_list|(
 name|ndvp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Invalidate the parent's attr cache, the modification time has 	 * changed. 	 */
+comment|/* 	 * Invalidate parent directories as modification times have changed. 	 * Invalidate access cache on renamed file as rights may have 	 * changed. 	 */
 name|VTOC
 argument_list|(
 name|odvp
@@ -4899,6 +5020,16 @@ name|c_flags
 operator|&=
 operator|~
 name|C_VATTR
+expr_stmt|;
+name|VTOC
+argument_list|(
+name|fvp
+argument_list|)
+operator|->
+name|c_flags
+operator|&=
+operator|~
+name|C_ACCCACHE
 expr_stmt|;
 if|if
 condition|(
@@ -4989,12 +5120,15 @@ literal|"in rename result %d\n"
 argument|,error));
 argument_list|)
 empty_stmt|;
-comment|/* 	 * XXX - do we need to call cache pureg on the moved vnode? 	 */
+comment|/* 	 * Update namecache to reflect that the names of various objects may 	 * have changed (or gone away entirely). 	 */
 name|cache_purge
 argument_list|(
-name|ap
-operator|->
-name|a_fvp
+name|fvp
+argument_list|)
+expr_stmt|;
+name|cache_purge
+argument_list|(
+name|tvp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Release parents first, then children. 	 */
@@ -5005,16 +5139,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_tvp
+name|tvp
 condition|)
 block|{
 if|if
 condition|(
-name|ap
-operator|->
-name|a_tvp
+name|tvp
 operator|==
 name|ndvp
 condition|)
@@ -5031,9 +5161,7 @@ argument_list|)
 expr_stmt|;
 name|vput
 argument_list|(
-name|ap
-operator|->
-name|a_tvp
+name|tvp
 argument_list|)
 expr_stmt|;
 block|}
@@ -5045,9 +5173,7 @@ argument_list|)
 expr_stmt|;
 name|vrele
 argument_list|(
-name|ap
-operator|->
-name|a_fvp
+name|fvp
 argument_list|)
 expr_stmt|;
 return|return
