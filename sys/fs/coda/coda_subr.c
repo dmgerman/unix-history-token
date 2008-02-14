@@ -2049,7 +2049,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Remove the cnode from the hash table, replace the 			 * fid, and reinsert. 			 */
+comment|/* 			 * Remove the cnode from the hash table, replace the 			 * fid, and reinsert.  Clear the attribute cache as 			 * the "inode number" may have changed (it's just a 			 * hash of the fid, and the fid is changing). 			 */
 name|vref
 argument_list|(
 name|CTOV
@@ -2072,6 +2072,13 @@ operator|->
 name|coda_replace
 operator|.
 name|NewFid
+expr_stmt|;
+name|cp
+operator|->
+name|c_flags
+operator|&=
+operator|~
+name|C_VATTR
 expr_stmt|;
 name|coda_save
 argument_list|(
