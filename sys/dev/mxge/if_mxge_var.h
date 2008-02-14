@@ -693,7 +693,7 @@ modifier|*
 name|pdev
 decl_stmt|;
 name|int
-name|msi_enabled
+name|legacy_irq
 decl_stmt|;
 name|int
 name|link_state
