@@ -4204,7 +4204,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* This gives us our maximum stack size */
+comment|/* 		 * This gives us our maximum stack size and a new BOS. 		 * If we're using VM_STACK, then mmap will just map 		 * the top SGROWSIZ bytes, and let the stack grow down 		 * to the limit at BOS.  If we're not using VM_STACK 		 * we map the full stack, since we don't have a way 		 * to autogrow it. 		 */
 if|if
 condition|(
 name|linux_args
@@ -4215,6 +4215,21 @@ name|STACK_SIZE
 operator|-
 name|GUARD_SIZE
 condition|)
+block|{
+name|bsd_args
+operator|.
+name|addr
+operator|=
+operator|(
+name|caddr_t
+operator|)
+name|PTRIN
+argument_list|(
+name|linux_args
+operator|->
+name|addr
+argument_list|)
+expr_stmt|;
 name|bsd_args
 operator|.
 name|len
@@ -4223,16 +4238,9 @@ name|linux_args
 operator|->
 name|len
 expr_stmt|;
+block|}
 else|else
-name|bsd_args
-operator|.
-name|len
-operator|=
-name|STACK_SIZE
-operator|-
-name|GUARD_SIZE
-expr_stmt|;
-comment|/* 		 * This gives us a new BOS.  If we're using VM_STACK, then 		 * mmap will just map the top SGROWSIZ bytes, and let 		 * the stack grow down to the limit at BOS.  If we're 		 * not using VM_STACK we map the full stack, since we 		 * don't have a way to autogrow it. 		 */
+block|{
 name|bsd_args
 operator|.
 name|addr
@@ -4247,10 +4255,25 @@ operator|->
 name|addr
 argument_list|)
 operator|-
+operator|(
+name|STACK_SIZE
+operator|-
+name|GUARD_SIZE
+operator|-
+name|linux_args
+operator|->
+name|len
+operator|)
+expr_stmt|;
 name|bsd_args
 operator|.
 name|len
+operator|=
+name|STACK_SIZE
+operator|-
+name|GUARD_SIZE
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
