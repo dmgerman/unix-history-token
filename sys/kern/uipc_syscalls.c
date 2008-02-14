@@ -8664,6 +8664,15 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VREG
+condition|)
+block|{
 name|obj
 operator|=
 name|vp
@@ -8677,7 +8686,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Temporarily increase the backing VM object's reference 		 * count so that a forced reclamation of its vnode does not 		 * immediately destroy it. 		 */
+comment|/* 			 * Temporarily increase the backing VM 			 * object's reference count so that a forced 			 * reclamation of its vnode does not 			 * immediately destroy it. 			 */
 name|VM_OBJECT_LOCK
 argument_list|(
 name|obj
@@ -8718,6 +8727,7 @@ name|obj
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 block|}
 name|VOP_UNLOCK
