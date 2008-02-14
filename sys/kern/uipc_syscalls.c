@@ -8076,6 +8076,8 @@ name|struct
 name|vm_object
 modifier|*
 name|obj
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|socket
@@ -8186,6 +8188,14 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VREG
+condition|)
 name|obj
 operator|=
 name|vp
