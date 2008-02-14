@@ -176,14 +176,15 @@ decl_stmt|,
 comment|/* 0x3f76384f =2/(3ln2) */
 name|cp_h
 init|=
-literal|9.6179199219e-01
+literal|9.6191406250e-01
 decl_stmt|,
-comment|/* 0x3f763800 =head of cp */
+comment|/* 0x3f764000 =12b cp */
 name|cp_l
 init|=
-literal|4.7017383622e-06
+operator|-
+literal|1.1736857402e-04
 decl_stmt|,
-comment|/* 0x369dc3a0 =tail of cp_h */
+comment|/* 0xb8f623c6 =tail of cp_h */
 name|ivln2
 init|=
 literal|1.4426950216e+00
