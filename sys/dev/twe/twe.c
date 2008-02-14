@@ -7009,7 +7009,7 @@ name|twe_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"PCI parity error: Reseat card, move card or buggy device present."
+literal|"PCI parity error: Reseat card, move card or buggy device present.\n"
 argument_list|)
 expr_stmt|;
 name|twe_clear_pci_parity_error
