@@ -3765,14 +3765,9 @@ operator|*
 name|mutex
 operator|)
 operator|->
-name|m_lock
-operator|.
 name|m_owner
 operator|==
-name|TID
-argument_list|(
 name|curthread
-argument_list|)
 operator|)
 return|;
 block|}
