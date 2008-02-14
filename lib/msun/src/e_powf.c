@@ -7,26 +7,19 @@ begin_comment
 comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -314,7 +307,7 @@ condition|)
 return|return
 name|one
 return|;
-comment|/* +-NaN return x+y */
+comment|/* y!=zero: result is NaN if either arg is NaN */
 if|if
 condition|(
 name|ix
@@ -326,9 +319,17 @@ operator|>
 literal|0x7f800000
 condition|)
 return|return
+operator|(
 name|x
 operator|+
+literal|0.0F
+operator|)
+operator|+
+operator|(
 name|y
+operator|+
+literal|0.0F
+operator|)
 return|;
 comment|/* determine if y is an odd int when x< 0      * yisint = 0	... y is not an integer      * yisint = 1	... y is an odd int      * yisint = 2	... y is an even int      */
 name|yisint
