@@ -9572,7 +9572,7 @@ name|txd
 operator|->
 name|tx_dmamap
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|error
 operator|=
@@ -9690,7 +9690,7 @@ name|rxd
 operator|->
 name|rx_dmamap
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|error
 operator|=
@@ -10142,7 +10142,7 @@ name|jrxd
 operator|->
 name|rx_dmamap
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|error
 operator|=
@@ -10327,7 +10327,7 @@ name|sk_cdata
 operator|.
 name|sk_tx_ring_map
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|bus_dma_tag_destroy
 argument_list|(
@@ -10429,7 +10429,7 @@ name|sk_cdata
 operator|.
 name|sk_rx_ring_map
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|bus_dma_tag_destroy
 argument_list|(
@@ -10509,7 +10509,7 @@ name|txd
 operator|->
 name|tx_dmamap
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -10591,7 +10591,7 @@ name|rxd
 operator|->
 name|rx_dmamap
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -10625,7 +10625,7 @@ name|sk_cdata
 operator|.
 name|sk_rx_sparemap
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|bus_dma_tag_destroy
@@ -10779,7 +10779,7 @@ name|sk_cdata
 operator|.
 name|sk_jumbo_rx_ring_map
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|bus_dma_tag_destroy
 argument_list|(
@@ -10859,7 +10859,7 @@ name|jrxd
 operator|->
 name|rx_dmamap
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -10893,7 +10893,7 @@ name|sk_cdata
 operator|.
 name|sk_jumbo_rx_sparemap
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|bus_dma_tag_destroy
