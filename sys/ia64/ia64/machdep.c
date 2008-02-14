@@ -406,6 +406,17 @@ directive|include
 file|<i386/include/specialreg.h>
 end_include
 
+begin_comment
+comment|/* XXX fc.i kluge (quick fix) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ia64_icache_sync_kluge
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|u_int64_t
 name|processor_frequency
@@ -1013,6 +1024,11 @@ break|break;
 case|case
 literal|0x20
 case|:
+comment|/* XXX fc.i kluge (quick fix) */
+name|ia64_icache_sync_kluge
+operator|=
+literal|1
+expr_stmt|;
 name|family_name
 operator|=
 literal|"Itanium 2"

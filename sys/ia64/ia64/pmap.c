@@ -139,6 +139,16 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXX fc.i kluge (quick fix) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ia64_icache_sync_kluge
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -4833,6 +4843,9 @@ name|boolean_t
 name|managed
 parameter_list|)
 block|{
+name|vm_offset_t
+name|lim
+decl_stmt|;
 name|pte
 operator|->
 name|pte
@@ -4906,6 +4919,32 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
+comment|/* XXX fc.i kluge (quick fix) */
+if|if
+condition|(
+name|ia64_icache_sync_kluge
+condition|)
+block|{
+name|lim
+operator|=
+name|va
+operator|+
+name|PAGE_SIZE
+expr_stmt|;
+while|while
+condition|(
+name|va
+operator|<
+name|lim
+condition|)
+block|{
+asm|__asm __volatile("fc.i %0" :: "r"(va));
+name|va
+operator|+=
+literal|32
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
