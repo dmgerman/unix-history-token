@@ -1133,7 +1133,7 @@ name|int
 name|nhostsbak
 decl_stmt|;
 name|int
-name|checkbind
+name|bound
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -1616,9 +1616,9 @@ literal|1
 return|;
 block|}
 comment|/* 	     * Bind to specific IPs if asked to 	     */
-name|checkbind
+name|bound
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -2017,8 +2017,9 @@ expr_stmt|;
 continue|continue;
 block|}
 else|else
-name|checkbind
-operator|++
+name|bound
+operator|=
+literal|1
 expr_stmt|;
 operator|(
 name|void
@@ -2237,7 +2238,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|checkbind
+name|bound
 condition|)
 return|return
 literal|1
