@@ -2183,7 +2183,7 @@ block|}
 comment|/* 			 * Check for "Connection: close" or 			 * "Connection: Keep-Alive" header 			 */
 if|if
 condition|(
-name|strncmp
+name|strncasecmp
 argument_list|(
 name|hln
 argument_list|,
@@ -2201,7 +2201,7 @@ literal|11
 expr_stmt|;
 if|if
 condition|(
-name|strstr
+name|strcasestr
 argument_list|(
 name|hln
 argument_list|,
@@ -2216,7 +2216,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|strstr
+name|strcasestr
 argument_list|(
 name|hln
 argument_list|,
@@ -2235,7 +2235,7 @@ block|}
 comment|/* Check for "Content-Length:" header */
 if|if
 condition|(
-name|strncmp
+name|strncasecmp
 argument_list|(
 name|hln
 argument_list|,
@@ -2320,7 +2320,7 @@ block|}
 comment|/* Check for "Transfer-Encoding: chunked" header */
 if|if
 condition|(
-name|strncmp
+name|strncasecmp
 argument_list|(
 name|hln
 argument_list|,
@@ -2338,7 +2338,7 @@ literal|18
 expr_stmt|;
 if|if
 condition|(
-name|strstr
+name|strcasestr
 argument_list|(
 name|hln
 argument_list|,
