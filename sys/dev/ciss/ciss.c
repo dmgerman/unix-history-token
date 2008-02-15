@@ -1442,6 +1442,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|ciss_nop_message_heartbeat
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ciss.nop_message_heartbeat"
+argument_list|,
+operator|&
+name|ciss_nop_message_heartbeat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/************************************************************************  * CISS adapters amazingly don't have a defined programming interface  * value.  (One could say some very despairing things about PCI and  * people just not getting the general idea.)  So we are forced to  * stick with matching against subvendor/subdevice, and thus have to  * be updated for every new CISS adapter that appears.  */
 end_comment
@@ -13970,6 +13991,10 @@ block|}
 comment|/*      * Send the NOP message and wait for a response.      */
 if|if
 condition|(
+name|ciss_nop_message_heartbeat
+operator|!=
+literal|0
+operator|&&
 operator|(
 name|error
 operator|=
