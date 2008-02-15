@@ -143,11 +143,9 @@ begin_comment
 comment|/*  * Variables to determine how Coda sleeps and whether or not it is  * interruptible when it does sleep waiting for Venus.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CTL_C
-end_define
+begin_comment
+comment|/* #define	CTL_C */
+end_comment
 
 begin_ifdef
 ifdef|#
