@@ -1396,7 +1396,7 @@ name|v_vnlock
 expr_stmt|;
 name|result
 operator|=
-name|_lockmgr
+name|_lockmgr_args
 argument_list|(
 name|lkp
 argument_list|,
@@ -1406,6 +1406,12 @@ name|VI_MTX
 argument_list|(
 name|vp
 argument_list|)
+argument_list|,
+name|LK_WMESG_DEFAULT
+argument_list|,
+name|LK_PRIO_DEFAULT
+argument_list|,
+name|LK_TIMO_DEFAULT
 argument_list|,
 name|ap
 operator|->
@@ -1433,7 +1439,7 @@ comment|/* 			 * Apparent success, except that the vnode 			 * mutated between s
 operator|(
 name|void
 operator|)
-name|_lockmgr
+name|_lockmgr_args
 argument_list|(
 name|lkp
 argument_list|,
@@ -1443,6 +1449,12 @@ name|VI_MTX
 argument_list|(
 name|vp
 argument_list|)
+argument_list|,
+name|LK_WMESG_DEFAULT
+argument_list|,
+name|LK_PRIO_DEFAULT
+argument_list|,
+name|LK_TIMO_DEFAULT
 argument_list|,
 name|ap
 operator|->

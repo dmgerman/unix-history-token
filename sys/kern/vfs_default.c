@@ -719,7 +719,7 @@ name|a_vp
 decl_stmt|;
 return|return
 operator|(
-name|_lockmgr
+name|_lockmgr_args
 argument_list|(
 name|vp
 operator|->
@@ -733,6 +733,12 @@ name|VI_MTX
 argument_list|(
 name|vp
 argument_list|)
+argument_list|,
+name|LK_WMESG_DEFAULT
+argument_list|,
+name|LK_PRIO_DEFAULT
+argument_list|,
+name|LK_TIMO_DEFAULT
 argument_list|,
 name|ap
 operator|->

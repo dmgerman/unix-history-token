@@ -401,19 +401,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LK_INTERNAL
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* The internal lock is already held */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LK_DESTROYED
-value|0x00400000
+value|0x00200000
 end_define
 
 begin_comment
@@ -436,6 +425,31 @@ define|#
 directive|define
 name|LK_WAIT_NONZERO
 value|0x02000000
+end_define
+
+begin_comment
+comment|/*  * Default values for lockmgr_args().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_WMESG_DEFAULT
+value|(NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LK_PRIO_DEFAULT
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LK_TIMO_DEFAULT
+value|(0)
 end_define
 
 begin_comment
@@ -590,7 +604,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_lockmgr
+name|_lockmgr_args
 parameter_list|(
 name|struct
 name|lock
@@ -602,6 +616,17 @@ parameter_list|,
 name|struct
 name|mtx
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|wmesg
+parameter_list|,
+name|int
+name|prio
+parameter_list|,
+name|int
+name|timo
 parameter_list|,
 name|char
 modifier|*
@@ -718,7 +743,7 @@ parameter_list|,
 name|mtx
 parameter_list|)
 define|\
-value|_lockmgr((lock), (flags), (mtx), LOCK_FILE, LOCK_LINE)
+value|_lockmgr_args((lock), (flags), (mtx), LK_WMESG_DEFAULT,		\ 	    LK_PRIO_DEFAULT, LK_TIMO_DEFAULT, LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -730,6 +755,27 @@ name|lock
 parameter_list|)
 define|\
 value|_lockmgr_disown((lock), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|lockmgr_args
+parameter_list|(
+name|lock
+parameter_list|,
+name|flags
+parameter_list|,
+name|mtx
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|prio
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|_lockmgr_args((lock), (flags), (mtx), (wmesg), (prio), (timo),	\ 	    LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
