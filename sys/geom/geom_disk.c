@@ -790,6 +790,14 @@ name|d_sectorsize
 expr_stmt|;
 name|di
 operator|.
+name|maxiosize
+operator|=
+name|dp
+operator|->
+name|d_maxsize
+expr_stmt|;
+name|di
+operator|.
 name|mediaoffset
 operator|=
 name|gkd

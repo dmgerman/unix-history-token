@@ -1586,6 +1586,10 @@ name|u_int
 name|blocksize
 decl_stmt|;
 comment|/* Size of block in bytes. */
+name|u_int
+name|maxiosize
+decl_stmt|;
+comment|/* Max size allowed for an individual I/O */
 name|off_t
 name|mediaoffset
 decl_stmt|;

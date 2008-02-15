@@ -835,6 +835,9 @@ name|error
 decl_stmt|,
 name|twiddle
 decl_stmt|;
+name|u_int
+name|maxdumppgs
+decl_stmt|;
 name|error
 operator|=
 literal|0
@@ -867,6 +870,25 @@ name|mdp
 operator|->
 name|md_start
 expr_stmt|;
+name|maxdumppgs
+operator|=
+name|di
+operator|->
+name|maxiosize
+operator|/
+name|PAGE_SIZE
+expr_stmt|;
+if|if
+condition|(
+name|maxdumppgs
+operator|==
+literal|0
+condition|)
+comment|/* seatbelt */
+name|maxdumppgs
+operator|=
+literal|1
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"  chunk %d: %ldMB (%ld pages)"
@@ -894,11 +916,11 @@ if|if
 condition|(
 name|chunk
 operator|>
-name|MAXDUMPPGS
+name|maxdumppgs
 condition|)
 name|chunk
 operator|=
-name|MAXDUMPPGS
+name|maxdumppgs
 expr_stmt|;
 name|sz
 operator|=
