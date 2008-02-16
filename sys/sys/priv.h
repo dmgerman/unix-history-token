@@ -2427,6 +2427,21 @@ value|615
 end_define
 
 begin_comment
+comment|/*  * DDB(4) privileges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_DDB_CAPTURE
+value|620
+end_define
+
+begin_comment
+comment|/* Allow reading of DDB capture log. */
+end_comment
+
+begin_comment
 comment|/*  * Track end of privilege list.  */
 end_comment
 
@@ -2434,7 +2449,7 @@ begin_define
 define|#
 directive|define
 name|_PRIV_HIGHEST
-value|616
+value|621
 end_define
 
 begin_comment
