@@ -2442,6 +2442,21 @@ comment|/* Allow reading of DDB capture log. */
 end_comment
 
 begin_comment
+comment|/*  * Arla/nnpfs privileges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NNPFS_DEBUG
+value|630
+end_define
+
+begin_comment
+comment|/* Perforn ARLA_VIOC_NNPFSDEBUG. */
+end_comment
+
+begin_comment
 comment|/*  * Track end of privilege list.  */
 end_comment
 
@@ -2449,7 +2464,7 @@ begin_define
 define|#
 directive|define
 name|_PRIV_HIGHEST
-value|621
+value|631
 end_define
 
 begin_comment
