@@ -1461,6 +1461,17 @@ begin_comment
 comment|/* Can unmount(). */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_VFS_STAT
+value|344
+end_define
+
+begin_comment
+comment|/* Override vnode MAC stat perm. */
+end_comment
+
 begin_comment
 comment|/*  * Virtual memory privileges.  */
 end_comment
