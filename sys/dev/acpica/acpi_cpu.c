@@ -2753,6 +2753,13 @@ operator|.
 name|C3Latency
 operator|<=
 literal|1000
+operator|&&
+operator|!
+operator|(
+name|cpu_quirks
+operator|&
+name|CPU_QUIRK_NO_C3
+operator|)
 condition|)
 block|{
 name|gas
