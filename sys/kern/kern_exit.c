@@ -404,19 +404,12 @@ decl_stmt|;
 name|int
 name|locked
 decl_stmt|;
-comment|/* 	 * Drop Giant if caller has it.  Eventually we should warn about 	 * being called with Giant held. 	 */
-while|while
-condition|(
-name|mtx_owned
+name|mtx_assert
 argument_list|(
 operator|&
 name|Giant
-argument_list|)
-condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
+argument_list|,
+name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 name|p
