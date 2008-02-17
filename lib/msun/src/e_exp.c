@@ -68,11 +68,6 @@ name|huge
 init|=
 literal|1.0e+300
 decl_stmt|,
-name|twom1000
-init|=
-literal|9.33263618503218878990e-302
-decl_stmt|,
-comment|/* 2**-1000=0x01700000,0*/
 name|o_threshold
 init|=
 literal|7.09782712893383973096e+02
@@ -147,6 +142,20 @@ end_decl_stmt
 
 begin_comment
 comment|/* 0x3E663769, 0x72BEA4D0 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|double
+name|twom1000
+init|=
+literal|9.33263618503218878990e-302
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 2**-1000=0x01700000,0*/
 end_comment
 
 begin_function
