@@ -541,7 +541,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"1..2\n"
+literal|"1..3\n"
 argument_list|)
 expr_stmt|;
 name|run_generic_tests
