@@ -4145,7 +4145,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function gets called ever 16 seconds on only one designated  * CPU in the system from hardclock() via tc_ticktock().  *  * Whenever the real time clock is stepped we get called with reset=1  * to make sure we handle suspend/resume and similar events correctly.  */
+comment|/*  * This function gets called every 16 seconds on only one designated  * CPU in the system from hardclock() via tc_ticktock().  *  * Whenever the real time clock is stepped we get called with reset=1  * to make sure we handle suspend/resume and similar events correctly.  */
 end_comment
 
 begin_function
