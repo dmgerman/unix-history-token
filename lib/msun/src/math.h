@@ -2632,7 +2632,30 @@ literal|0
 end_if
 
 begin_endif
-unit|long double	coshl(long double); long double	cosl(long double); long double	erfcl(long double); long double	erfl(long double);
+unit|long double	coshl(long double);
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|long
+name|double
+name|cosl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|long double	erfcl(long double); long double	erfl(long double);
 endif|#
 directive|endif
 end_endif
@@ -3062,7 +3085,53 @@ literal|0
 end_if
 
 begin_endif
-unit|long double	sinhl(long double); long double	sinl(long double); long double	sqrtl(long double); long double	tanhl(long double); long double	tanl(long double); long double	tgammal(long double);
+unit|long double	sinhl(long double);
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|long
+name|double
+name|sinl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|long double	sqrtl(long double); long double	tanhl(long double);
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|long
+name|double
+name|tanl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|long double	tgammal(long double);
 endif|#
 directive|endif
 end_endif
