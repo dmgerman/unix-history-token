@@ -2802,16 +2802,6 @@ literal|2
 expr_stmt|;
 name|cpi
 operator|->
-name|xport_specific
-operator|.
-name|spi
-operator|.
-name|ppr_options
-operator|=
-name|SID_SPI_CLOCK_ST
-expr_stmt|;
-name|cpi
-operator|->
 name|transport_version
 operator|=
 literal|4
@@ -2825,6 +2815,10 @@ operator|.
 name|ppr_options
 operator|=
 name|SID_SPI_CLOCK_DT_ST
+operator||
+name|SID_SPI_IUS
+operator||
+name|SID_SPI_QAS
 expr_stmt|;
 name|cpi
 operator|->
