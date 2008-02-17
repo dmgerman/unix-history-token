@@ -2798,12 +2798,6 @@ name|cpi
 operator|->
 name|transport_version
 operator|=
-literal|2
-expr_stmt|;
-name|cpi
-operator|->
-name|transport_version
-operator|=
 literal|4
 expr_stmt|;
 name|cpi
