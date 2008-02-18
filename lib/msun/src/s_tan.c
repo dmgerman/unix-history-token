@@ -7,26 +7,19 @@ begin_comment
 comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* tan(x)  * Return tangent function of x.  *  * kernel function:  *	__kernel_tan		... tangent function on [-pi/4,pi/4]  *	__ieee754_rem_pio2	... argument reduction routine  *  * Method.  *      Let S,C and T denote the sin, cos and tan respectively on  *	[-PI/4, +PI/4]. Reduce the argument x to y1+y2 = x-k*pi/2  *	in [-pi/4 , +pi/4], and let n = k mod 4.  *	We have  *  *          n        sin(x)      cos(x)        tan(x)  *     ----------------------------------------------------------  *	    0	       S	   C		 T  *	    1	       C	  -S		-1/T  *	    2	      -S	  -C		 T  *	    3	      -C	   S		-1/T  *     ----------------------------------------------------------  *  * Special cases:  *      Let trig be any of sin, cos, or tan.  *      trig(+-INF)  is NaN, with signals;  *      trig(NaN)    is that NaN;  *  * Accuracy:  *	TRIG(x) returns trig(x) nearly rounded  */
@@ -44,10 +37,22 @@ directive|include
 file|"math.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|INLINE_REM_PIO2
+end_define
+
 begin_include
 include|#
 directive|include
 file|"math_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"e_rem_pio2.c"
 end_include
 
 begin_function
