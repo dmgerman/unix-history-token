@@ -1727,9 +1727,14 @@ condition|(
 name|hflag
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"   "
+argument_list|)
+expr_stmt|;
 name|prthumanval
 argument_list|(
-literal|7
+literal|4
 argument_list|,
 name|dbtob
 argument_list|(
@@ -1743,7 +1748,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%c"
+literal|"%c  "
 argument_list|,
 operator|(
 name|msgb
@@ -1762,7 +1767,7 @@ argument_list|)
 expr_stmt|;
 name|prthumanval
 argument_list|(
-literal|6
+literal|4
 argument_list|,
 name|dbtob
 argument_list|(
@@ -1774,9 +1779,14 @@ name|dqb_bsoftlimit
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"   "
+argument_list|)
+expr_stmt|;
 name|prthumanval
 argument_list|(
-literal|7
+literal|4
 argument_list|,
 name|dbtob
 argument_list|(
