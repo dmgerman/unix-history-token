@@ -2173,6 +2173,15 @@ end_function_decl
 
 begin_function_decl
 name|float
+name|tgammaf
+parameter_list|(
+name|float
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|float
 name|acoshf
 parameter_list|(
 name|float
