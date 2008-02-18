@@ -182,13 +182,13 @@ decl_stmt|,
 comment|/*  0xdd0dd0dd0dc13ba2.0p-68 */
 name|pio4
 init|=
-literal|0.785398163397448309628
+literal|0.785398163397448309628L
 decl_stmt|,
 comment|/*  0xc90fdaa22168c235.0p-64 */
 name|pio4lo
 init|=
 operator|-
-literal|1.25413940316708300586e-20
+literal|1.25413940316708300586e-20L
 decl_stmt|;
 end_decl_stmt
 
