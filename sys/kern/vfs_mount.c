@@ -8221,6 +8221,8 @@ name|error
 operator|=
 name|kernel_vmount
 argument_list|(
+name|MNT_RDONLY
+operator||
 name|MNT_ROOTFS
 argument_list|,
 literal|"fstype"
@@ -8234,10 +8236,6 @@ argument_list|,
 literal|"from"
 argument_list|,
 name|path
-argument_list|,
-literal|"ro"
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|)
