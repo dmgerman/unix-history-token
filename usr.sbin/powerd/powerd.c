@@ -1937,7 +1937,8 @@ literal|"a:b:i:n:p:P:r:v"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
