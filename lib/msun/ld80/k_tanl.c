@@ -178,25 +178,19 @@ comment|/*  0x88888888888893c3.0p-66 */
 name|T7
 init|=
 literal|0.0539682539682504975744L
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+decl_stmt|,
 comment|/*  0xdd0dd0dd0dc13ba2.0p-68 */
-end_comment
-
-begin_expr_stmt
 name|pio4
-operator|=
+init|=
 literal|0.785398163397448309628
-operator|,
+decl_stmt|,
 comment|/*  0xc90fdaa22168c235.0p-64 */
 name|pio4lo
-operator|=
+init|=
 operator|-
 literal|1.25413940316708300586e-20
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* -0xece675d1fc8f8cbb.0p-130 */
