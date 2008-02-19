@@ -7,26 +7,19 @@ begin_comment
 comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * __kernel_cos( x,  y )  * kernel cos function on [-pi/4, pi/4], pi/4 ~ 0.785398164  * Input x is assumed to be bounded by ~pi/4 in magnitude.  * Input y is the tail of x.   *  * Algorithm  *	1. Since cos(-x) = cos(x), we need only to consider positive x.  *	2. if x< 2^-27 (hx<0x3e400000 0), return 1 with inexact if x!=0.  *	3. cos(x) is approximated by a polynomial of degree 14 on  *	   [0,pi/4]  *		  	                 4            14  *	   	cos(x) ~ 1 - x*x/2 + C1*x + ... + C6*x  *	   where the remez error is  *	  * 	|              2     4     6     8     10    12     14 |     -58  * 	|cos(x)-(1-.5*x +C1*x +C2*x +C3*x +C4*x +C5*x  +C6*x  )|<= 2  * 	|    					               |   *   * 	               4     6     8     10    12     14   *	4. let r = C1*x +C2*x +C3*x +C4*x +C5*x  +C6*x  , then  *	       cos(x) ~ 1 - x*x/2 + r  *	   since cos(x+y) ~ cos(x) - sin(x)*y   *			  ~ cos(x) - x*y,  *	   a correction term is necessary in cos(x) and hence  *		cos(x+y) = 1 - (x*x/2 - (r - x*y))  *	   For better accuracy, rearrange to  *		cos(x+y) ~ w + (tmp + (r-x*y))  *	   where w = 1 - x*x/2 and tmp is a tiny correction term  *	   (1 - x*x/2 == w + tmp exactly in infinite precision).  *	   The exactness of w + tmp in infinite precision depends on w  *	   and tmp having the same precision as x.  If they have extra  *	   precision due to compiler bugs, then the extra precision is  *	   only good provided it is retained in all terms of the final  *	   expression for cos().  Retention happens in all cases tested  *	   under FreeBSD, so don't pessimize things by forcibly clipping  *	   any extra precision in w.  */
@@ -117,6 +110,12 @@ name|x
 operator|*
 name|x
 expr_stmt|;
+name|w
+operator|=
+name|z
+operator|*
+name|z
+expr_stmt|;
 name|r
 operator|=
 name|z
@@ -131,10 +130,13 @@ name|C2
 operator|+
 name|z
 operator|*
-operator|(
 name|C3
+operator|)
+operator|)
 operator|+
-name|z
+name|w
+operator|*
+name|w
 operator|*
 operator|(
 name|C4
@@ -147,9 +149,6 @@ operator|+
 name|z
 operator|*
 name|C6
-operator|)
-operator|)
-operator|)
 operator|)
 operator|)
 expr_stmt|;

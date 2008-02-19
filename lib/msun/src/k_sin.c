@@ -7,26 +7,19 @@ begin_comment
 comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* __kernel_sin( x, y, iy)  * kernel sin function on ~[-pi/4, pi/4] (except on -0), pi/4 ~ 0.7854  * Input x is assumed to be bounded by ~pi/4 in magnitude.  * Input y is the tail of x.  * Input iy indicates whether y is 0. (if iy=0, y assume to be 0).   *  * Algorithm  *	1. Since sin(-x) = -sin(x), we need only to consider positive x.   *	2. Callers must return sin(-0) = -0 without calling here since our  *	   odd polynomial is not evaluated in a way that preserves -0.  *	   Callers may do the optimization sin(x) ~ x for tiny x.  *	3. sin(x) is approximated by a polynomial of degree 13 on  *	   [0,pi/4]  *		  	         3            13  *	   	sin(x) ~ x + S1*x + ... + S6*x  *	   where  *	  * 	|sin(x)         2     4     6     8     10     12  |     -58  * 	|----- - (1+S1*x +S2*x +S3*x +S4*x +S5*x  +S6*x   )|<= 2  * 	|  x 					           |   *   *	4. sin(x+y) = sin(x) + sin'(x')*y  *		    ~ sin(x) + (1-x*x/2)*y  *	   For better accuracy, let   *		     3      2      2      2      2  *		r = x *(S2+x *(S3+x *(S4+x *(S5+x *S6))))  *	   then                   3    2  *		sin(x) = x + (S1*x + (x *(r-y/2)+y))  */
@@ -111,6 +104,8 @@ decl_stmt|,
 name|r
 decl_stmt|,
 name|v
+decl_stmt|,
+name|w
 decl_stmt|;
 name|z
 operator|=
@@ -118,11 +113,11 @@ name|x
 operator|*
 name|x
 expr_stmt|;
-name|v
+name|w
 operator|=
 name|z
 operator|*
-name|x
+name|z
 expr_stmt|;
 name|r
 operator|=
@@ -135,10 +130,12 @@ name|S3
 operator|+
 name|z
 operator|*
-operator|(
 name|S4
+operator|)
 operator|+
 name|z
+operator|*
+name|w
 operator|*
 operator|(
 name|S5
@@ -147,8 +144,12 @@ name|z
 operator|*
 name|S6
 operator|)
-operator|)
-operator|)
+expr_stmt|;
+name|v
+operator|=
+name|z
+operator|*
+name|x
 expr_stmt|;
 if|if
 condition|(
