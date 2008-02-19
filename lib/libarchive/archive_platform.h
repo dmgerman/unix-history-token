@@ -19,14 +19,32 @@ directive|define
 name|ARCHIVE_PLATFORM_H_INCLUDED
 end_define
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config_windows.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"archive_windows.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|PLATFORM_CONFIG_H
 argument_list|)
-end_if
+end_elif
 
 begin_comment
 comment|/* Use hand-built config.h in environments that need it. */
