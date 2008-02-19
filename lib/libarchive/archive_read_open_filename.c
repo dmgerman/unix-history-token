@@ -125,6 +125,24 @@ directive|include
 file|"archive.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|read_file_data
@@ -571,6 +589,8 @@ operator|->
 name|filename
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_BINARY
 argument_list|)
 expr_stmt|;
 else|else
