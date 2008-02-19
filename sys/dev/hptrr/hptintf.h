@@ -136,20 +136,8 @@ name|AT_RAID6
 value|4
 define|#
 directive|define
-name|AT_RAID3
-value|5
-define|#
-directive|define
-name|AT_RAID4
-value|6
-define|#
-directive|define
 name|AT_JBOD
 value|7
-define|#
-directive|define
-name|AT_RAID1E
-value|8
 comment|/*  * physical device type  */
 define|#
 directive|define
@@ -308,17 +296,12 @@ define|#
 directive|define
 name|DEVICE_FLAG_SATA
 value|0x00000010
-comment|/* SATA or SAS device */
+comment|/* S-ATA device */
 define|#
 directive|define
 name|DEVICE_FLAG_ON_PM_PORT
 value|0x00000020
 comment|/* PM port */
-define|#
-directive|define
-name|DEVICE_FLAG_SAS
-value|0x00000040
-comment|/* SAS device */
 define|#
 directive|define
 name|DEVICE_FLAG_UNINITIALIZED
@@ -738,10 +721,6 @@ name|HPT_IOCTL_CALC_MAX_CAPACITY_V2
 value|HPT_CTL_CODE(58)
 define|#
 directive|define
-name|HPT_IOCTL_SCSI_PASSTHROUGH
-value|HPT_CTL_CODE(59)
-define|#
-directive|define
 name|HPT_IOCTL_GET_CONTROLLER_IDS
 value|HPT_CTL_CODE(100)
 define|#
@@ -822,42 +801,6 @@ define|#
 directive|define
 name|CHIP_TYPE_ICH5R
 value|16
-define|#
-directive|define
-name|CHIP_TYPE_MV50XX
-value|20
-define|#
-directive|define
-name|CHIP_TYPE_MV60X1
-value|21
-define|#
-directive|define
-name|CHIP_TYPE_MV60X2
-value|22
-define|#
-directive|define
-name|CHIP_TYPE_MV70X2
-value|23
-define|#
-directive|define
-name|CHIP_TYPE_MV5182
-value|24
-define|#
-directive|define
-name|CHIP_TYPE_IOP331
-value|31
-define|#
-directive|define
-name|CHIP_TYPE_IOP333
-value|32
-define|#
-directive|define
-name|CHIP_TYPE_IOP341
-value|33
-define|#
-directive|define
-name|CHIP_TYPE_IOP348
-value|34
 comment|/*  * Chip Flags  */
 define|#
 directive|define
@@ -938,12 +881,7 @@ name|__BIG_ENDIAN_BITFIELD
 name|HPT_U8
 name|reserved
 range|:
-literal|3
-decl_stmt|;
-name|HPT_U8
-name|SupportVariableSectorSize
-range|:
-literal|1
+literal|4
 decl_stmt|;
 name|HPT_U8
 name|SupportHotSwap
@@ -990,14 +928,9 @@ range|:
 literal|1
 decl_stmt|;
 name|HPT_U8
-name|SupportVariableSectorSize
-range|:
-literal|1
-decl_stmt|;
-name|HPT_U8
 name|reserved
 range|:
-literal|3
+literal|4
 decl_stmt|;
 endif|#
 directive|endif
@@ -1180,10 +1113,6 @@ define|#
 directive|define
 name|CEXF_SerialNumber
 value|0x80
-define|#
-directive|define
-name|CEXF_BatteryTemperature
-value|0x100
 typedef|typedef
 struct|struct
 name|_CONTROLLER_INFO_V3
@@ -1261,15 +1190,9 @@ literal|32
 index|]
 decl_stmt|;
 name|HPT_U8
-name|BatteryMBInstalled
-decl_stmt|;
-name|HPT_U8
-name|BatteryTemperature
-decl_stmt|;
-name|HPT_U8
 name|reserve
 index|[
-literal|86
+literal|88
 index|]
 decl_stmt|;
 block|}
@@ -1442,7 +1365,7 @@ name|nDisk
 decl_stmt|;
 comment|/* member count: Number of ID in Members[] */
 name|HPT_U8
-name|SubArrayType
+name|reserved
 decl_stmt|;
 name|HPT_U32
 name|Flags
@@ -1516,7 +1439,7 @@ name|nDisk
 decl_stmt|;
 comment|/* member count: Number of ID in Members[] */
 name|HPT_U8
-name|SubArrayType
+name|reserved
 decl_stmt|;
 name|HPT_U32
 name|Flags
@@ -1597,7 +1520,7 @@ name|nDisk
 decl_stmt|;
 comment|/* member count: Number of ID in Members[] */
 name|HPT_U8
-name|SubArrayType
+name|reserved
 decl_stmt|;
 name|HPT_U32
 name|Flags
@@ -1711,7 +1634,7 @@ name|nDisk
 decl_stmt|;
 comment|/* member count: Number of ID in Members[] */
 name|HPT_U8
-name|SubArrayType
+name|reserved
 decl_stmt|;
 name|HPT_U32
 name|Flags
@@ -1738,14 +1661,10 @@ name|HPT_U32
 name|Signature
 decl_stmt|;
 comment|/* persistent identification*/
-name|HPT_U8
-name|SectorSizeShift
-decl_stmt|;
-comment|/*sector size = 512B<<SectorSizeShift*/
-name|HPT_U8
+name|HPT_U32
 name|reserved2
 index|[
-literal|7
+literal|2
 index|]
 decl_stmt|;
 name|HPT_U64
@@ -1925,10 +1844,6 @@ name|HPT_U16
 name|MinorRevision
 decl_stmt|;
 block|}
-name|__attribute__
-typedef|((
-name|packed
-typedef|))
 name|IDENTIFY_DATA2
 operator|,
 typedef|*
@@ -2716,10 +2631,6 @@ index|]
 decl_stmt|;
 comment|/* array description */
 block|}
-name|__attribute__
-typedef|((
-name|packed
-typedef|))
 name|ALTERABLE_ARRAY_INFO
 operator|,
 typedef|*
@@ -2738,10 +2649,6 @@ name|DeviceModeSetting
 decl_stmt|;
 comment|/* 0-4 PIO 0-4, 5-7 MW DMA0-2, 8-13 UDMA0-5 */
 block|}
-name|__attribute__
-typedef|((
-name|packed
-typedef|))
 name|ALTERABLE_DEVICE_INFO
 operator|,
 typedef|*
@@ -2788,10 +2695,6 @@ index|]
 decl_stmt|;
 comment|/* pad to 64 bytes */
 block|}
-name|__attribute__
-typedef|((
-name|packed
-typedef|))
 name|ALTERABLE_DEVICE_INFO_V2
 operator|,
 typedef|*
@@ -3046,13 +2949,9 @@ comment|/*CREATE_ARRAY_PARAMS_V3_REVISION*/
 name|HPT_U8
 name|reserved
 index|[
-literal|6
+literal|7
 index|]
 decl_stmt|;
-name|HPT_U8
-name|SectorSizeShift
-decl_stmt|;
-comment|/*sector size = 512B<<SectorSizeShift*/
 name|HPT_U8
 name|ArrayType
 decl_stmt|;
@@ -3295,18 +3194,6 @@ define|#
 directive|define
 name|ET_SECTOR_REPAIR_SUCCESS
 value|25
-define|#
-directive|define
-name|ET_ERASE_FAIL
-value|26
-define|#
-directive|define
-name|ET_ERASE_SUCCESS
-value|27
-define|#
-directive|define
-name|ET_CONTINUE_REBUILD_ON_ERROR
-value|28
 comment|/*  * event structure  */
 typedef|typedef
 struct|struct
@@ -3417,67 +3304,6 @@ name|IDE_PASS_THROUGH_HEADER
 operator|,
 typedef|*
 name|PIDE_PASS_THROUGH_HEADER
-typedef|;
-typedef|typedef
-struct|struct
-name|_HPT_SCSI_PASSTHROUGH_IN
-block|{
-name|DEVICEID
-name|idDisk
-decl_stmt|;
-name|HPT_U8
-name|protocol
-decl_stmt|;
-name|HPT_U8
-name|reserve1
-decl_stmt|;
-name|HPT_U8
-name|reserve2
-decl_stmt|;
-name|HPT_U8
-name|cdbLength
-decl_stmt|;
-name|HPT_U8
-name|cdb
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|HPT_U32
-name|dataLength
-decl_stmt|;
-comment|/* data follows, if any */
-block|}
-name|HPT_SCSI_PASSTHROUGH_IN
-operator|,
-typedef|*
-name|PHPT_SCSI_PASSTHROUGH_IN
-typedef|;
-typedef|typedef
-struct|struct
-name|_HPT_SCSI_PASSTHROUGH_OUT
-block|{
-name|HPT_U8
-name|scsiStatus
-decl_stmt|;
-name|HPT_U8
-name|reserve1
-decl_stmt|;
-name|HPT_U8
-name|reserve2
-decl_stmt|;
-name|HPT_U8
-name|reserve3
-decl_stmt|;
-name|HPT_U32
-name|dataLength
-decl_stmt|;
-comment|/* data/sense follows if any */
-block|}
-name|HPT_SCSI_PASSTHROUGH_OUT
-operator|,
-typedef|*
-name|PHPT_SCSI_PASSTHROUGH_OUT
 typedef|;
 comment|/*  * device io packet format  */
 typedef|typedef
@@ -4032,29 +3858,12 @@ name|DEVICEID
 name|idDisk
 parameter_list|)
 function_decl|;
-comment|/* hpt_ide_pass_through  *  send a ATA passthrough command to a device.  * Version compatibility: v1.0.0.3 or later  * Parameters:  *   p - IDE_PASS_THROUGH header pointer  * Returns:  *   0  Success  */
+comment|/* hpt_ide_pass_through  *  directly access controller's command and control registers.  *  Can only call it on physical devices.  * Version compatibility: v1.0.0.3 or later  * Parameters:  *   p - IDE_PASS_THROUGH header pointer  * Returns:  *   0  Success  */
 name|int
 name|hpt_ide_pass_through
 parameter_list|(
 name|PIDE_PASS_THROUGH_HEADER
 name|p
-parameter_list|)
-function_decl|;
-comment|/* hpt_scsi_passthrough  *  send a SCSI passthrough command to a device.  * Version compatibility: v2.0.0.0 or later  * Parameters:  *   in  - HPT_SCSI_PASSTHROUGH_IN header pointer  *   out - PHPT_SCSI_PASSTHROUGH_OUT header pointer  *   insize, outsize - in/out buffer size  * Returns:  *   0  Success  */
-name|int
-name|hpt_scsi_passthrough
-parameter_list|(
-name|PHPT_SCSI_PASSTHROUGH_IN
-name|in
-parameter_list|,
-name|HPT_U32
-name|insize
-parameter_list|,
-name|PHPT_SCSI_PASSTHROUGH_OUT
-name|out
-parameter_list|,
-name|HPT_U32
-name|outsize
 parameter_list|)
 function_decl|;
 comment|/* hpt_verify_data_block  *   verify data block on RAID1 or RAID5.  * Version compatibility: v1.0.0.3 or later  * Parameters:  *   idArray - Array ID  *   Lba - block number (on each array member, not logical block!)  *   nSectors - Sectors for each member (RAID 5 will ignore this parameter)  * Returns:  *   0  Success  *   1  Data compare error  *   2  I/O error  */

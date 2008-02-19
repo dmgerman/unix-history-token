@@ -10,7 +10,7 @@ file|<dev/hptrr/hptrr_config.h>
 end_include
 
 begin_comment
-comment|/* $Id: osm_bsd.c,v 1.27 2007/11/22 07:35:49 gmm Exp $  *  * HighPoint RAID Driver for FreeBSD  * Copyright (C) 2005 HighPoint Technologies, Inc. All Rights Reserved.  */
+comment|/* $Id: osm_bsd.c,v 1.26 2007/02/28 03:53:47 gmm Exp $  *  * HighPoint RAID Driver for FreeBSD  * Copyright (C) 2005 HighPoint Technologies, Inc. All Rights Reserved.  */
 end_comment
 
 begin_include
@@ -1551,6 +1551,8 @@ name|mIsArray
 argument_list|(
 name|vd
 operator|->
+name|Class
+operator|->
 name|type
 argument_list|)
 operator|&&
@@ -1678,6 +1680,8 @@ condition|(
 name|mIsArray
 argument_list|(
 name|vd
+operator|->
+name|Class
 operator|->
 name|type
 argument_list|)
@@ -5690,6 +5694,12 @@ decl_stmt|;
 name|PHBA
 name|hba
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SUPPORT_ALL
+comment|/*	ldm_fix_him() */
+endif|#
+directive|endif
 comment|/* Clear the config hook */
 name|config_intrhook_disestablish
 argument_list|(
@@ -5734,10 +5744,6 @@ operator|!
 name|i
 condition|)
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
 name|os_printk
 argument_list|(
 literal|"no controller detected."
@@ -6707,10 +6713,6 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
 name|os_printk
 argument_list|(
 literal|"%s %s"
