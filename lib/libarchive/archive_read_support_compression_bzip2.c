@@ -537,7 +537,10 @@ expr_stmt|;
 comment|/* UNUSED */
 name|archive_set_error
 argument_list|(
+operator|&
 name|a
+operator|->
+name|archive
 argument_list|,
 operator|-
 literal|1
