@@ -7,26 +7,19 @@ begin_comment
 comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* __ieee754_rem_pio2f(x,y)  *  * return the remainder of x rem pi/2 in y[0]+y[1]  * use double precision internally  * use __kernel_rem_pio2() for large x  */
@@ -52,21 +45,11 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-name|zero
-init|=
-literal|0.00000000000000000000e+00
-decl_stmt|,
-comment|/* 0x00000000, 0x00000000 */
 name|half
 init|=
 literal|5.00000000000000000000e-01
 decl_stmt|,
 comment|/* 0x3FE00000, 0x00000000 */
-name|two24
-init|=
-literal|1.67772160000000000000e+07
-decl_stmt|,
-comment|/* 0x41700000, 0x00000000 */
 name|invpio2
 init|=
 literal|6.36619772367581382433e-01
@@ -88,7 +71,7 @@ comment|/* 0x3DD0B461, 0x1A626331 */
 end_comment
 
 begin_function
-name|int32_t
+name|int
 name|__ieee754_rem_pio2f
 parameter_list|(
 name|float
