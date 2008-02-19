@@ -5515,9 +5515,23 @@ argument_list|)
 operator|)
 return|;
 comment|/* Re-convert. */
-else|#
-directive|else
-comment|/* 	 * If you don't have tm_gmtoff, let's try resetting the timezone 	 * (yecch!). 	 */
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_SETENV
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_UNSETENV
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_TZSET
+argument_list|)
+comment|/* No timegm() and no tm_gmtoff, let's try forcing mktime() to UTC. */
 name|time_t
 name|ret
 decl_stmt|;
@@ -5525,6 +5539,7 @@ name|char
 modifier|*
 name|tz
 decl_stmt|;
+comment|/* Reset the timezone, remember the old one. */
 name|tz
 operator|=
 name|getenv
@@ -5551,6 +5566,7 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
+comment|/* Restore the previous timezone. */
 if|if
 condition|(
 name|tz
@@ -5575,6 +5591,17 @@ argument_list|()
 expr_stmt|;
 return|return
 name|ret
+return|;
+else|#
+directive|else
+comment|/*<sigh> We have no choice but to use localtime instead of UTC. */
+return|return
+operator|(
+name|mktime
+argument_list|(
+name|t
+argument_list|)
+operator|)
 return|;
 endif|#
 directive|endif
