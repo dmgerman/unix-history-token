@@ -1030,10 +1030,6 @@ condition|(
 operator|(
 name|c
 operator|!=
-name|EOF
-operator|&&
-name|c
-operator|!=
 operator|-
 literal|1
 operator|)

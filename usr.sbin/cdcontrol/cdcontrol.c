@@ -1210,7 +1210,8 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|EOF
+operator|-
+literal|1
 case|:
 break|break;
 case|case

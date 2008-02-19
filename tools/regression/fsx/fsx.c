@@ -4626,7 +4626,8 @@ literal|"b:c:dl:m:no:p:qr:s:t:w:D:LN:OP:RS:W"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
