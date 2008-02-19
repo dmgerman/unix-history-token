@@ -11,12 +11,23 @@ begin_comment
 comment|/*  * The goal of this file (and the matching test.c) is to  * simplify the very repetitive test-*.c test programs.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_FILE_OFFSET_BITS
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_FILE_OFFSET_BITS
 value|64
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -54,11 +65,22 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -389,7 +411,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|test_assert
 parameter_list|(
 specifier|const
