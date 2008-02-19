@@ -11273,6 +11273,12 @@ name|ti_init
 expr_stmt|;
 name|ifp
 operator|->
+name|if_baudrate
+operator|=
+literal|1000000000
+expr_stmt|;
+name|ifp
+operator|->
 name|if_mtu
 operator|=
 name|ETHERMTU
