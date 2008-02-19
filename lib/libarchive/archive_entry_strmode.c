@@ -269,7 +269,7 @@ if|if
 condition|(
 name|mode
 operator|&
-name|S_IXUSR
+literal|0100
 condition|)
 name|bp
 index|[
@@ -298,7 +298,7 @@ if|if
 condition|(
 name|mode
 operator|&
-name|S_IXGRP
+literal|0010
 condition|)
 name|bp
 index|[
@@ -327,7 +327,7 @@ if|if
 condition|(
 name|mode
 operator|&
-name|S_IXOTH
+literal|0001
 condition|)
 name|bp
 index|[
