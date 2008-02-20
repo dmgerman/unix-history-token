@@ -2775,11 +2775,17 @@ name|tz_requested
 operator|!=
 name|TZ_ACTIVE_NONE
 operator|&&
+operator|(
+name|newactive
+operator|==
+name|TZ_ACTIVE_NONE
+operator|||
 name|sc
 operator|->
 name|tz_requested
 operator|<
 name|newactive
+operator|)
 condition|)
 name|newactive
 operator|=
