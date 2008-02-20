@@ -2647,7 +2647,7 @@ name|sunx
 operator|.
 name|sun_family
 operator|=
-name|AF_UNIX
+name|AF_LOCAL
 expr_stmt|;
 operator|(
 name|void
@@ -2676,7 +2676,7 @@ name|s
 operator|=
 name|socket
 argument_list|(
-name|AF_UNIX
+name|PF_LOCAL
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,
@@ -10518,7 +10518,9 @@ name|f
 operator|->
 name|f_un
 operator|.
-name|f_fname
+name|f_pipe
+operator|.
+name|f_pname
 argument_list|,
 name|p
 operator|+
@@ -10530,7 +10532,9 @@ name|f
 operator|->
 name|f_un
 operator|.
-name|f_fname
+name|f_pipe
+operator|.
+name|f_pname
 argument_list|)
 argument_list|)
 expr_stmt|;
