@@ -2364,7 +2364,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|cam_periph_lock
+name|cam_periph_unlock
 argument_list|(
 name|periph
 argument_list|)
@@ -2518,7 +2518,7 @@ index|]
 operator|.
 name|enctype
 expr_stmt|;
-name|cam_periph_lock
+name|cam_periph_unlock
 argument_list|(
 name|periph
 argument_list|)
@@ -2551,7 +2551,7 @@ block|{
 break|break;
 block|}
 block|}
-name|cam_periph_lock
+name|cam_periph_unlock
 argument_list|(
 name|periph
 argument_list|)
