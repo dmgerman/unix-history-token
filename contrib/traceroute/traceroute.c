@@ -392,6 +392,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"as.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"traceroute.h"
 end_include
 
@@ -859,6 +865,32 @@ end_decl_stmt
 begin_comment
 comment|/* print addresses numerically */
 end_comment
+
+begin_decl_stmt
+name|int
+name|as_path
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* print as numbers for each hop */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|as_server
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|asn
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -1978,7 +2010,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"edDFInrSvxf:g:i:M:m:P:p:q:s:t:w:z:"
+literal|"aA:edDFInrSvxf:g:i:M:m:P:p:q:s:t:w:z:"
 argument_list|)
 operator|)
 operator|!=
@@ -1989,6 +2021,26 @@ condition|(
 name|op
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+name|as_path
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'A'
+case|:
+name|as_path
+operator|=
+literal|1
+expr_stmt|;
+name|as_server
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 case|case
 literal|'d'
 case|:
@@ -3808,6 +3860,49 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|as_path
+condition|)
+block|{
+name|asn
+operator|=
+name|as_setup
+argument_list|(
+name|as_server
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|asn
+operator|==
+name|NULL
+condition|)
+block|{
+name|Fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: as_setup failed, AS# lookups"
+literal|" disabled\n"
+argument_list|,
+name|prog
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|as_path
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
 if|#
 directive|if
 name|defined
@@ -4666,6 +4761,15 @@ operator|)
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|as_path
+condition|)
+name|as_shutdown
+argument_list|(
+name|asn
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -6730,6 +6834,25 @@ name|hlen
 expr_stmt|;
 if|if
 condition|(
+name|as_path
+condition|)
+name|Printf
+argument_list|(
+literal|" [AS%d]"
+argument_list|,
+name|as_lookup
+argument_list|(
+name|asn
+argument_list|,
+operator|&
+name|from
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|nflag
 condition|)
 name|Printf
@@ -8479,9 +8602,9 @@ name|Fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-dDeFInrSvx] [-f first_ttl] [-g gateway] [-i iface]\n"
+literal|"Usage: %s [-adDeFInrSvx] [-f first_ttl] [-g gateway] [-i iface]\n"
 literal|"\t[-m max_ttl] [-p port] [-P proto] [-q nqueries] [-s src_addr]\n"
-literal|"\t[-t tos] [-w waittime] [-z pausemsecs] host [packetlen]\n"
+literal|"\t[-t tos] [-w waittime] [-A as_server] [-z pausemsecs] host [packetlen]\n"
 argument_list|,
 name|prog
 argument_list|)
