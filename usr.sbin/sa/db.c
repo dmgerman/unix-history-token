@@ -211,7 +211,7 @@ literal|0
 argument_list|,
 name|DB_BTREE
 argument_list|,
-name|NULL
+name|bti
 argument_list|)
 operator|)
 operator|==
