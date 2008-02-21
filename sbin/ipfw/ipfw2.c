@@ -29798,6 +29798,15 @@ name|data
 operator|=
 name|NULL
 expr_stmt|;
+name|frule
+operator|=
+literal|0
+expr_stmt|;
+name|lrule
+operator|=
+literal|65535
+expr_stmt|;
+comment|/* max ipfw rule number */
 name|ac
 operator|--
 expr_stmt|;
@@ -30055,13 +30064,6 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|do_rule
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
 name|frule
 operator|<=
 name|n
@@ -30073,10 +30075,7 @@ operator|>=
 name|n
 operator|->
 name|id
-operator|)
 condition|)
-continue|continue;
-block|}
 name|print_nat_config
 argument_list|(
 operator|&
