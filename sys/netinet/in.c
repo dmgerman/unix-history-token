@@ -4690,12 +4690,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|if_delmulti_ent
-argument_list|(
-name|ifma
-argument_list|)
-expr_stmt|;
-comment|/* We don't need another reference */
 name|IN_MULTI_UNLOCK
 argument_list|()
 expr_stmt|;
