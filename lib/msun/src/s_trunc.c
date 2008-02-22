@@ -70,8 +70,6 @@ name|j0
 decl_stmt|;
 name|u_int32_t
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 name|EXTRACT_WORDS
 argument_list|(

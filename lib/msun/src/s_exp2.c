@@ -3001,8 +3001,6 @@ decl_stmt|;
 name|uint32_t
 name|hx
 decl_stmt|,
-name|hr
-decl_stmt|,
 name|ix
 decl_stmt|,
 name|lx
