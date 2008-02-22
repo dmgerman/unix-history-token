@@ -7,26 +7,19 @@ begin_comment
 comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* __ieee754_cosh(x)  * Method :   * mathematically cosh(x) if defined to be (exp(x)+exp(-x))/2  *	1. Replace x by |x| (cosh(x) = cosh(-x)).   *	2.   *		                                        [ exp(x) - 1 ]^2   *	    0<= x<= ln2/2  :  cosh(x) := 1 + -------------------  *			       			           2*exp(x)  *  *		                                  exp(x) +  1/exp(x)  *	    ln2/2<= x<= 22     :  cosh(x) := -------------------  *			       			          2  *	    22<= x<= lnovft :  cosh(x) := exp(x)/2   *	    lnovft<= x<= ln2ovft:  cosh(x) := exp(x/2)/2 * exp(x/2)  *	    ln2ovft<  x	    :  cosh(x) := huge*huge (overflow)  *  * Special cases:  *	cosh(x) is |x| if x is +INF, -INF, or NaN.  *	only cosh(0)=1 is exact for finite x.  */

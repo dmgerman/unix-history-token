@@ -7,26 +7,19 @@ begin_comment
 comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* __ieee754_acos(x)  * Method :                    *	acos(x)  = pi/2 - asin(x)  *	acos(-x) = pi/2 + asin(x)  * For |x|<=0.5  *	acos(x) = pi/2 - (x + x*x^2*R(x^2))	(see asin.c)  * For x>0.5  * 	acos(x) = pi/2 - (pi/2 - 2asin(sqrt((1-x)/2)))  *		= 2asin(sqrt((1-x)/2))    *		= 2s + 2s*z*R(z) 	...z=(1-x)/2, s=sqrt(z)  *		= 2f + (2c + 2s*z*R(z))  *     where f=hi part of s, and c = (z-f*f)/(s+f) is the correction term  *     for f so that f+c ~ sqrt(z).  * For x<-0.5  *	acos(x) = pi - 2asin(sqrt((1-|x|)/2))  *		= pi - 0.5*(s+s*z*R(z)), where z=(1-|x|)/2,s=sqrt(z)  *  * Special cases:  *	if x is NaN, return x itself;  *	if |x|>1, return NaN with invalid signal.  *  * Function needed: sqrt  */

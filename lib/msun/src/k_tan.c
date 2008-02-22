@@ -11,26 +11,19 @@ begin_comment
 comment|/* INDENT OFF */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* __kernel_tan( x, y, k )  * kernel tan function on ~[-pi/4, pi/4] (except on -0), pi/4 ~ 0.7854  * Input x is assumed to be bounded by ~pi/4 in magnitude.  * Input y is the tail of x.  * Input k indicates whether tan (if k = 1) or -1/tan (if k = -1) is returned.  *  * Algorithm  *	1. Since tan(-x) = -tan(x), we need only to consider positive x.  *	2. Callers must return tan(-0) = -0 without calling here since our  *	   odd polynomial is not evaluated in a way that preserves -0.  *	   Callers may do the optimization tan(x) ~ x for tiny x.  *	3. tan(x) is approximated by a odd polynomial of degree 27 on  *	   [0,0.67434]  *		  	         3             27  *	   	tan(x) ~ x + T1*x + ... + T13*x  *	   where  *  * 	        |tan(x)         2     4            26   |     -59.2  * 	        |----- - (1+T1*x +T2*x +.... +T13*x    )|<= 2  * 	        |  x 					|  *  *	   Note: tan(x+y) = tan(x) + tan'(x)*y  *		          ~ tan(x) + (1+x*x)*y  *	   Therefore, for better accuracy in computing tan(x+y), let  *		     3      2      2       2       2  *		r = x *(T2+x *(T3+x *(...+x *(T12+x *T13))))  *	   then  *		 		    3    2  *		tan(x+y) = x + (T1*x + (x *(r+y)+y))  *  *      4. For x in [0.67434,pi/4],  let y = pi/4 - x, then  *		tan(x) = tan(pi/4-y) = (1-tan(y))/(1+tan(y))  *		       = 1 - 2*(tan(y) - (tan(y)^2)/(1+tan(y)))  */

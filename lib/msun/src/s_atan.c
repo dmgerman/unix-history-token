@@ -7,26 +7,19 @@ begin_comment
 comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* atan(x)  * Method  *   1. Reduce x to positive by atan(x) = -atan(-x).  *   2. According to the integer k=4t+0.25 chopped, t=x, the argument  *      is further reduced to one of the following intervals and the  *      arctangent of t is evaluated by the corresponding formula:  *  *      [0,7/16]      atan(x) = t-t^3*(a1+t^2*(a2+...(a10+t^2*a11)...)  *      [7/16,11/16]  atan(x) = atan(1/2) + atan( (t-0.5)/(1+t/2) )  *      [11/16.19/16] atan(x) = atan( 1 ) + atan( (t-1)/(1+t) )  *      [19/16,39/16] atan(x) = atan(3/2) + atan( (t-1.5)/(1+1.5t) )  *      [39/16,INF]   atan(x) = atan(INF) + atan( -1/t )  *  * Constants:  * The hexadecimal values are the intended ones for the following  * constants. The decimal values may be used, provided that the  * compiler will convert from decimal to binary accurately enough  * to produce the hexadecimal values shown.  */
