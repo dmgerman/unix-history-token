@@ -35,6 +35,29 @@ directive|include
 file|"fpmath.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|LDBL_MAX_EXP
+operator|!=
+literal|0x4000
+end_if
+
+begin_comment
+comment|/* We also require the usual bias, min exp and expsign packing. */
+end_comment
+
+begin_error
+error|#
+directive|error
+literal|"Unsupported long double format"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -117,7 +140,12 @@ name|union
 name|IEEEl2bits
 name|u
 decl_stmt|;
-name|short
+name|uint32_t
+name|expsign
+decl_stmt|;
+name|int
+name|ex
+decl_stmt|,
 name|sign
 decl_stmt|;
 name|u
@@ -126,13 +154,23 @@ name|e
 operator|=
 name|x
 expr_stmt|;
-if|if
-condition|(
+name|expsign
+operator|=
 name|u
 operator|.
-name|bits
+name|xbits
 operator|.
-name|exp
+name|expsign
+expr_stmt|;
+name|ex
+operator|=
+name|expsign
+operator|&
+literal|0x7fff
+expr_stmt|;
+if|if
+condition|(
+name|ex
 operator|>=
 name|BIAS
 operator|+
@@ -143,11 +181,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|u
-operator|.
-name|bits
-operator|.
-name|exp
+name|ex
 operator|==
 name|BIAS
 operator|+
@@ -170,11 +204,9 @@ comment|/* finite and already an integer */
 block|}
 name|sign
 operator|=
-name|u
-operator|.
-name|bits
-operator|.
-name|sign
+name|expsign
+operator|>>
+literal|15
 expr_stmt|;
 comment|/* 	 * The following code assumes that intermediate results are 	 * evaluated in long double precision. If they are evaluated in 	 * greater precision, double rounding may occur, and if they are 	 * evaluated in less precision (as on i386), results will be 	 * wildly incorrect. 	 */
 name|x
@@ -194,11 +226,7 @@ expr_stmt|;
 comment|/* 	 * If the result is +-0, then it must have the same sign as x, but 	 * the above calculation doesn't always give this.  Fix up the sign. 	 */
 if|if
 condition|(
-name|u
-operator|.
-name|bits
-operator|.
-name|exp
+name|ex
 operator|<
 name|BIAS
 operator|&&
