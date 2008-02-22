@@ -338,6 +338,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|BCE_DWORD_PRINTFB
+define|\
+value|"\020"					\ 	"\40b31"				\ 	"\37b30"				\ 	"\36b29"				\ 	"\35b28"				\ 	"\34b27"				\ 	"\33b26"				\ 	"\32b25"				\ 	"\31b24"				\ 	"\30b23"				\ 	"\27b22"				\ 	"\26b21"				\ 	"\25b20"				\ 	"\24b19"				\ 	"\23b18"				\ 	"\22b17"				\ 	"\21b16"				\ 	"\20b15"				\ 	"\17b14"				\ 	"\16b13"				\ 	"\15b12"				\ 	"\14b11"				\ 	"\13b10"				\ 	"\12b9"					\ 	"\11b8"					\ 	"\10b7"					\ 	"\07b6"					\ 	"\06b5"					\ 	"\05b4"					\ 	"\04b3"					\ 	"\03b2"					\ 	"\02b1"					\ 	"\01b0"
+end_define
+
 begin_comment
 comment|/****************************************************************************/
 end_comment
@@ -863,6 +871,22 @@ name|BCE_DEBUG
 end_ifdef
 
 begin_comment
+comment|/*   * Calculate the time delta between two reads   * of the 25MHz free running clock.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_TIME_DELTA
+parameter_list|(
+name|start
+parameter_list|,
+name|end
+parameter_list|)
+value|(start> end ? (start - end) : \ 	(~start + end + 1))
+end_define
+
+begin_comment
 comment|/* Print a message based on the logging level and code path. */
 end_comment
 
@@ -885,7 +909,7 @@ value|if (BCE_LOG_MSG(level)) {							\ 		device_printf(sc->bce_dev, format, ## 
 end_define
 
 begin_comment
-comment|/* Runs a particular command based on the logging level and code path. */
+comment|/* Runs a particular command when debugging is enabled. */
 end_comment
 
 begin_define
@@ -893,13 +917,29 @@ define|#
 directive|define
 name|DBRUN
 parameter_list|(
-name|m
+name|args
+modifier|...
+parameter_list|)
+define|\
+value|do {						\ 		args;					\ 	} while (0)
+end_define
+
+begin_comment
+comment|/* Runs a particular command based on the logging level and code path. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBRUNMSG
+parameter_list|(
+name|msg
 parameter_list|,
 name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (BCE_LOG_MSG(m)) { \ 		args; \ 	}
+value|if (BCE_LOG_MSG(msg)) {		\ 		args;					\ 	}
 end_define
 
 begin_comment
@@ -917,7 +957,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (BCE_MSG_LEVEL(level)) { \ 		args; \ 	}
+value|if (BCE_MSG_LEVEL(level)) { \ 		args;					\ 	}
 end_define
 
 begin_comment
@@ -935,7 +975,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (BCE_CODE_PATH(cp)) { \ 		args; \ 	}
+value|if (BCE_CODE_PATH(cp)) { 	\ 		args; 					\ 	}
 end_define
 
 begin_comment
@@ -953,7 +993,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (cond) { \ 		args; \ 	}
+value|if (cond) {					\ 		args;					\ 	}
 end_define
 
 begin_comment
@@ -1058,7 +1098,17 @@ define|#
 directive|define
 name|DBRUN
 parameter_list|(
-name|m
+name|args
+modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBRUNMSG
+parameter_list|(
+name|msg
 parameter_list|,
 name|args
 modifier|...
@@ -3999,6 +4049,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|CTX_RD
+parameter_list|(
+name|sc
+parameter_list|,
+name|cid_addr
+parameter_list|,
+name|offset
+parameter_list|)
+value|bce_ctx_rd(sc, cid_addr, offset)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCE_SETBIT
 parameter_list|(
 name|sc
@@ -4866,6 +4930,10 @@ name|L2_FHDR_STATUS_UDP_DATAGRAM
 value|(1<<15)
 define|#
 directive|define
+name|L2_FHDR_STATUS_SPLIT
+value|(1<<16)
+define|#
+directive|define
 name|L2_FHDR_ERRORS_BAD_CRC
 value|(1<<17)
 define|#
@@ -4936,6 +5004,14 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|BCE_L2FHDR_PRINTFB
+define|\
+value|"\20"					\ 	"\40UDP_XSUM_ERR"		\ 	"\37b30"				\ 	"\36b29"				\ 	"\35TCP_XSUM_ERR"		\ 	"\34b27"				\ 	"\33b26"				\ 	"\32b25"				\ 	"\31b24"				\ 	"\30b23"				\ 	"\27b22"				\ 	"\26GIANT_ERR"			\ 	"\25SHORT_ERR"			\ 	"\24ALIGN_ERR"			\ 	"\23PHY_ERR"			\ 	"\22CRC_ERR"			\ 	"\21SPLIT"				\ 	"\20UDP"				\ 	"\17TCP"				\ 	"\16IP"					\ 	"\15b12"				\ 	"\14b11"				\ 	"\13b10"				\ 	"\12b09"				\ 	"\11RSS"				\ 	"\10SNAP"				\ 	"\07VLAN"				\ 	"\06P4"					\ 	"\05P3"					\ 	"\04P2"
+end_define
 
 begin_comment
 comment|/*  *  l2_context definition  */
@@ -5116,6 +5192,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCE_L2CTX_LO_WATER_MARK_DEFAULT
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_L2CTX_LO_WATER_MARK_SCALE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_L2CTX_LO_WATER_MARK_DIS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_L2CTX_HI_WATER_MARK_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_L2CTX_HI_WATER_MARK_SCALE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_L2CTX_WATER_MARKS_MSK
+value|0x000000ff
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCE_L2CTX_CTX_TYPE_SIZE_L2
 value|((0x20/20)<<16)
 end_define
@@ -5181,6 +5299,71 @@ define|#
 directive|define
 name|BCE_L2CTX_NX_BDIDX
 value|0x00000018
+end_define
+
+begin_comment
+comment|/* Page Buffer Descriptor Index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_L2CTX_HOST_PG_BDIDX
+value|0x00000044
+end_define
+
+begin_comment
+comment|/* SKB and Page Buffer Size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_L2CTX_PG_BUF_SIZE
+value|0x00000048
+end_define
+
+begin_comment
+comment|/* Page Chain BD Context */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_L2CTX_RBDC_KEY
+value|0x0000004c
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_L2CTX_RBDC_JUMBO_KEY
+value|0x3ffe
+end_define
+
+begin_comment
+comment|/* Page Chain Next BD Host Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_L2CTX_NX_PG_BDHADDR_HI
+value|0x00000050
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_L2CTX_NX_PG_BDHADDR_LO
+value|0x00000054
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_L2CTX_NX_PG_BDIDX
+value|0x00000058
 end_define
 
 begin_comment
@@ -17326,6 +17509,87 @@ value|0x000019fc
 end_define
 
 begin_comment
+comment|/*  *  timer_reg definition  *  offset: 0x4400  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_TIMER_COMMAND
+value|0x00004400
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TIMER_COMMAND_ENABLED
+value|(1L<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TIMER_STATUS
+value|0x00004404
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TIMER_STATUS_CMP_FTQ_WAIT
+value|(1L<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TIMER_STATUS_POLL_PASS_CNT
+value|(1L<<8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TIMER_STATUS_TMR1_CNT
+value|(1L<<9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TIMER_STATUS_TMR2_CNT
+value|(1L<<10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TIMER_STATUS_TMR3_CNT
+value|(1L<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TIMER_STATUS_TMR4_CNT
+value|(1L<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TIMER_STATUS_TMR5_CNT
+value|(1L<<13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TIMER_25MHZ_FREE_RUN
+value|0x00004448
+end_define
+
+begin_comment
 comment|/*  *  rbuf_reg definition  *  offset: 0x200000  */
 end_comment
 
@@ -25953,6 +26217,72 @@ begin_comment
 comment|/****************************************************************************/
 end_comment
 
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Begin firmware definitions.                                              */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* The following definitions refer to pre-defined locations in processor    */
+end_comment
+
+begin_comment
+comment|/* memory space which allows the driver to enable particular functionality  */
+end_comment
+
+begin_comment
+comment|/* within the firmware or read specfic information about the running        */
+end_comment
+
+begin_comment
+comment|/* firmware.                                                                */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/*   * Perfect match control register.  * 0 = Default.  All received unicst packets matching MAC address   *     BCE_EMAC_MAC_MATCH[0:1,8:9,10:11,12:13,14:15] are sent to receive queue  *     0, all other perfect match registers are reserved.  * 1 = All received unicast packets matching MAC address   *     BCE_EMAC_MAC_MATCH[0:1] are mapped to receive queue 0,  *     BCE_EMAC_MAC_MATCH[2:3] is mapped to receive queue 1, etc.  * 2 = All received unicast packets matching any BCE_EMAC_MAC_MATCH[] register  *     are sent to receive queue 0.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_RXP_PM_CTRL
+value|0x0e00d0
+end_define
+
+begin_comment
+comment|/*  * This firmware statistic records the number of frames that  * were dropped because there were no buffers available in the  * receive chain.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_COM_NO_BUFFERS
+value|0x120084
+end_define
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* End firmware definitions.                                                */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -26242,6 +26572,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCM_PAGE_MASK
+value|(BCM_PAGE_SIZE - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCM_PAGES
+parameter_list|(
+name|x
+parameter_list|)
+value|((((x) + BCM_PAGE_SIZE - 1)& BCM_PAGE_MASK)>> BCM_PAGE_BITS)
+end_define
+
+begin_comment
+comment|/*   * Page count must remain a power of 2 for all   * of the math to work correctly.   */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TX_PAGES
 value|2
 end_define
@@ -26280,6 +26631,50 @@ directive|define
 name|MAX_TX_BD
 value|(TOTAL_TX_BD - 1)
 end_define
+
+begin_define
+define|#
+directive|define
+name|NEXT_TX_BD
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& USABLE_TX_BD_PER_PAGE) ==	\ 		(USABLE_TX_BD_PER_PAGE - 1)) ?					  	\ 		(x) + 2 : (x) + 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_CHAIN_IDX
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& MAX_TX_BD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_PAGE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& ~USABLE_TX_BD_PER_PAGE)>> (BCM_PAGE_BITS - 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_IDX
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& USABLE_TX_BD_PER_PAGE)
+end_define
+
+begin_comment
+comment|/*   * Page count must remain a power of 2 for all   * of the math to work correctly.   */
+end_comment
 
 begin_define
 define|#
@@ -26326,46 +26721,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NEXT_TX_BD
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& USABLE_TX_BD_PER_PAGE) ==	\ 		(USABLE_TX_BD_PER_PAGE - 1)) ?					  	\ 		(x) + 2 : (x) + 1
-end_define
-
-begin_define
-define|#
-directive|define
-name|TX_CHAIN_IDX
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& MAX_TX_BD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TX_PAGE
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& ~USABLE_TX_BD_PER_PAGE)>> 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TX_IDX
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& USABLE_TX_BD_PER_PAGE)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NEXT_RX_BD
 parameter_list|(
 name|x
@@ -26390,7 +26745,7 @@ name|RX_PAGE
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)& ~USABLE_RX_BD_PER_PAGE)>> 8)
+value|(((x)& ~USABLE_RX_BD_PER_PAGE)>> (BCM_PAGE_BITS - 4))
 end_define
 
 begin_define
@@ -26401,6 +26756,92 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)& USABLE_RX_BD_PER_PAGE)
+end_define
+
+begin_comment
+comment|/*  * To accomodate jumbo frames, the page chain should  * be 4 times larger than the receive chain.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_PAGES
+value|(RX_PAGES * 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOTAL_PG_BD_PER_PAGE
+value|(BCM_PAGE_SIZE / sizeof(struct rx_bd))
+end_define
+
+begin_define
+define|#
+directive|define
+name|USABLE_PG_BD_PER_PAGE
+value|(TOTAL_PG_BD_PER_PAGE - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOTAL_PG_BD
+value|(TOTAL_PG_BD_PER_PAGE * PG_PAGES)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USABLE_PG_BD
+value|(USABLE_PG_BD_PER_PAGE * PG_PAGES)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_PG_BD
+value|(TOTAL_PG_BD - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEXT_PG_BD
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& USABLE_PG_BD_PER_PAGE) ==	\ 		(USABLE_PG_BD_PER_PAGE - 1)) ?					\ 		(x) + 2 : (x) + 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_CHAIN_IDX
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& MAX_PG_BD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_PAGE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& ~USABLE_PG_BD_PER_PAGE)>> (BCM_PAGE_BITS - 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_IDX
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& USABLE_PG_BD_PER_PAGE)
 end_define
 
 begin_comment
@@ -27027,6 +27468,13 @@ name|BCE_RX_CHAIN_PAGE_SZ
 value|BCM_PAGE_SIZE
 end_define
 
+begin_define
+define|#
+directive|define
+name|BCE_PG_CHAIN_PAGE_SZ
+value|BCM_PAGE_SIZE
+end_define
+
 begin_struct
 struct|struct
 name|bce_softc
@@ -27291,6 +27739,12 @@ name|u32
 name|tx_prod_bseq
 decl_stmt|;
 comment|/* Counts the bytes used.  */
+name|u16
+name|pg_prod
+decl_stmt|;
+name|u16
+name|pg_cons
+decl_stmt|;
 name|int
 name|bce_link
 decl_stmt|;
@@ -27311,7 +27765,10 @@ name|u32
 name|max_frame_size
 decl_stmt|;
 name|int
-name|mbuf_alloc_size
+name|rx_bd_mbuf_alloc_size
+decl_stmt|;
+name|int
+name|pg_bd_mbuf_alloc_size
 decl_stmt|;
 comment|/* Receive mode settings (i.e promiscuous, multicast, etc.). */
 name|u32
@@ -27378,6 +27835,30 @@ index|[
 name|RX_PAGES
 index|]
 decl_stmt|;
+comment|/* H/W maintained page buffer descriptor chain structure. */
+name|bus_dma_tag_t
+name|pg_bd_chain_tag
+decl_stmt|;
+name|bus_dmamap_t
+name|pg_bd_chain_map
+index|[
+name|PG_PAGES
+index|]
+decl_stmt|;
+name|struct
+name|rx_bd
+modifier|*
+name|pg_bd_chain
+index|[
+name|PG_PAGES
+index|]
+decl_stmt|;
+name|bus_addr_t
+name|pg_bd_chain_paddr
+index|[
+name|PG_PAGES
+index|]
+decl_stmt|;
 comment|/* H/W maintained status block. */
 name|bus_dma_tag_t
 name|status_tag
@@ -27429,6 +27910,9 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|tx_mbuf_tag
 decl_stmt|;
+name|bus_dma_tag_t
+name|pg_mbuf_tag
+decl_stmt|;
 comment|/* S/W maintained mbuf TX chain structure. */
 name|bus_dmamap_t
 name|tx_mbuf_map
@@ -27459,7 +27943,22 @@ index|[
 name|TOTAL_RX_BD
 index|]
 decl_stmt|;
-comment|/* Track the number of rx_bd and tx_bd's in use. */
+comment|/* S/W maintained mbuf page chain structure. */
+name|bus_dmamap_t
+name|pg_mbuf_map
+index|[
+name|TOTAL_PG_BD
+index|]
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|pg_mbuf_ptr
+index|[
+name|TOTAL_PG_BD
+index|]
+decl_stmt|;
+comment|/* Track the number of buffer descriptors in use. */
 name|u16
 name|free_rx_bd
 decl_stmt|;
@@ -27471,6 +27970,12 @@ name|used_tx_bd
 decl_stmt|;
 name|u16
 name|max_tx_bd
+decl_stmt|;
+name|u16
+name|free_pg_bd
+decl_stmt|;
+name|u16
+name|max_pg_bd
 decl_stmt|;
 comment|/* Provides access to hardware statistics through sysctl. */
 name|u64
@@ -27652,19 +28157,13 @@ directive|ifdef
 name|BCE_DEBUG
 comment|/* Track the number of enqueued mbufs. */
 name|int
-name|tx_mbuf_alloc
+name|debug_tx_mbuf_alloc
 decl_stmt|;
 name|int
-name|rx_mbuf_alloc
+name|debug_rx_mbuf_alloc
 decl_stmt|;
-comment|/* Track the distribution buffer segments. */
-name|u32
-name|rx_mbuf_segs
-index|[
-name|BCE_MAX_SEGMENTS
-operator|+
-literal|1
-index|]
+name|int
+name|debug_pg_mbuf_alloc
 decl_stmt|;
 comment|/* Track how many and what type of interrupts are generated. */
 name|u32
@@ -27679,6 +28178,13 @@ decl_stmt|;
 name|u32
 name|tx_interrupts
 decl_stmt|;
+comment|/* Track interrupt time (25MHz clock). */
+name|u64
+name|rx_intr_time
+decl_stmt|;
+name|u64
+name|tx_intr_time
+decl_stmt|;
 name|u32
 name|rx_low_watermark
 decl_stmt|;
@@ -27688,6 +28194,14 @@ name|rx_empty_count
 decl_stmt|;
 comment|/* Number of times the RX chain was empty. */
 name|u32
+name|pg_low_watermark
+decl_stmt|;
+comment|/* Lowest number of pages free. */
+name|u32
+name|pg_empty_count
+decl_stmt|;
+comment|/* Number of times the page chain was empty. */
+name|u32
 name|tx_hi_watermark
 decl_stmt|;
 comment|/* Greatest number of tx_bd's used. */
@@ -27695,10 +28209,10 @@ name|u32
 name|tx_full_count
 decl_stmt|;
 comment|/* Number of times the TX chain was full. */
+comment|/* Simulated mbuf allocation failure counter. */
 name|u32
-name|mbuf_sim_alloc_failed
+name|debug_mbuf_sim_alloc_failed
 decl_stmt|;
-comment|/* Mbuf simulated allocation failure counter. */
 name|u32
 name|l2fhdr_status_errors
 decl_stmt|;
