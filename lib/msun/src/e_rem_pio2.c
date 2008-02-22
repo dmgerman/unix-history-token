@@ -637,9 +637,6 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_EFFICIENT_IRINT
 comment|/* Use a specialized rint() to get fn.  Assume round-to-nearest. */
 name|STRICT_ASSIGN
 argument_list|(
@@ -662,6 +659,9 @@ operator|-
 literal|0x1
 literal|.8p52
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_EFFICIENT_IRINT
 name|n
 operator|=
 name|irint
@@ -673,23 +673,10 @@ else|#
 directive|else
 name|n
 operator|=
-call|(
-name|int32_t
-call|)
-argument_list|(
-name|t
-operator|*
-name|invpio2
-operator|+
-name|half
-argument_list|)
-expr_stmt|;
-name|fn
-operator|=
 operator|(
-name|double
+name|int32_t
 operator|)
-name|n
+name|fn
 expr_stmt|;
 endif|#
 directive|endif
