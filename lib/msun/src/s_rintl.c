@@ -123,12 +123,32 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 		 * The biased exponent is greater than the number of digits 		 * in the mantissa, so x is inf, NaN, or an integer. 		 */
+if|if
+condition|(
+name|u
+operator|.
+name|bits
+operator|.
+name|exp
+operator|==
+name|BIAS
+operator|+
+name|LDBL_MAX_EXP
+condition|)
+return|return
+operator|(
+name|x
+operator|+
+name|x
+operator|)
+return|;
+comment|/* Inf, NaN, or unsupported format */
 return|return
 operator|(
 name|x
 operator|)
 return|;
+comment|/* finite and already an integer */
 block|}
 name|sign
 operator|=
