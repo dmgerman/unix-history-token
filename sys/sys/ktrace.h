@@ -374,6 +374,29 @@ value|7
 end_define
 
 begin_comment
+comment|/*  * KTR_STRUCT - misc. structs  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_STRUCT
+value|8
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|stat
+struct_decl|;
+end_struct_decl
+
+begin_comment
 comment|/*  * KTR_DROP - If this bit is set in ktr_type, then at least one event  * between the previous record and this record was dropped.  */
 end_comment
 
@@ -442,6 +465,13 @@ define|#
 directive|define
 name|KTRFAC_USER
 value|(1<<KTR_USER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_STRUCT
+value|(1<<KTR_STRUCT)
 end_define
 
 begin_comment
@@ -600,6 +630,46 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|ktrstruct
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ktrsockaddr
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|ktrstruct("sockaddr", 8, (s), ((struct sockaddr *)(s))->sa_len)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ktrstat
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|ktrstruct("stat", 4, (s), sizeof(struct stat))
+end_define
 
 begin_else
 else|#

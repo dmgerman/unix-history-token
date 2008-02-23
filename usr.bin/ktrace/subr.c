@@ -194,6 +194,14 @@ name|KTRFAC_PSIG
 expr_stmt|;
 break|break;
 case|case
+literal|'t'
+case|:
+name|facs
+operator||=
+name|KTRFAC_STRUCT
+expr_stmt|;
+break|break;
+case|case
 literal|'u'
 case|:
 name|facs
