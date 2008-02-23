@@ -1192,9 +1192,6 @@ argument|unsigned int *
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|kdb_backtrace
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|CPL_RET_BUF_DONE
