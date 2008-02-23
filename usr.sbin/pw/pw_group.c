@@ -1223,7 +1223,6 @@ operator|!=
 operator|-
 literal|1
 condition|)
-block|{
 name|members
 index|[
 name|i
@@ -1237,7 +1236,6 @@ index|[
 name|k
 index|]
 expr_stmt|;
-block|}
 name|k
 operator|++
 expr_stmt|;
