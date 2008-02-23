@@ -486,14 +486,14 @@ block|,
 name|RSS_HASH_2_TUPLE
 init|=
 literal|1
-operator|<<
-literal|0
 block|,
 name|RSS_HASH_4_TUPLE
 init|=
-literal|1
-operator|<<
-literal|1
+literal|2
+block|,
+name|RSS_HASH_TCPV6
+init|=
+literal|3
 block|}
 enum|;
 end_enum
@@ -4985,6 +4985,40 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> S_DDP_OFFSET)& M_DDP_OFFSET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_DDP_DACK_MODE
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_DDP_DACK_MODE
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_DDP_DACK_MODE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_DDP_DACK_MODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_DDP_DACK_MODE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> S_DDP_DACK_MODE)& M_DDP_DACK_MODE)
 end_define
 
 begin_define

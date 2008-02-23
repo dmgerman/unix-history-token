@@ -634,11 +634,6 @@ name|m
 argument_list|)
 return|;
 block|}
-name|printf
-argument_list|(
-literal|"send slow\n"
-argument_list|)
-expr_stmt|;
 return|return
 name|t3_l2t_send_slow
 argument_list|(

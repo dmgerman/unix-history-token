@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/limits.h>
 end_include
 
@@ -69,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
 end_include
 
 begin_include
@@ -372,6 +384,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|cxgb_register_listeners
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Handlers for each CPL opcode  */
 end_comment
@@ -381,7 +403,7 @@ specifier|static
 name|cxgb_cpl_handler_func
 name|tom_cpl_handlers
 index|[
-name|NUM_CPL_CMDS
+literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -409,6 +431,12 @@ block|}
 block|,
 block|{
 name|TOE_ID_CHELSIO_T3B
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|TOE_ID_CHELSIO_T3C
 block|,
 literal|0
 block|}
@@ -597,6 +625,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -633,22 +663,21 @@ modifier|*
 name|toep
 parameter_list|)
 block|{
-name|bzero
-argument_list|(
-name|toep
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|toep
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|toep
 operator|->
 name|tp_refcount
 operator|=
 literal|1
+expr_stmt|;
+name|cv_init
+argument_list|(
+operator|&
+name|toep
+operator|->
+name|tp_cv
+argument_list|,
+literal|"toep cv"
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -695,11 +724,6 @@ operator|==
 literal|1
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"doing final toepcb free\n"
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|toep
@@ -738,11 +762,6 @@ modifier|*
 name|t
 parameter_list|)
 block|{
-name|printf
-argument_list|(
-literal|"t3cdev_add\n"
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -765,6 +784,63 @@ operator|&
 name|cxgb_list_lock
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|cdev2type
+parameter_list|(
+name|struct
+name|t3cdev
+modifier|*
+name|cdev
+parameter_list|)
+block|{
+name|int
+name|type
+init|=
+literal|0
+decl_stmt|;
+switch|switch
+condition|(
+name|cdev
+operator|->
+name|type
+condition|)
+block|{
+case|case
+name|T3A
+case|:
+name|type
+operator|=
+name|TOE_ID_CHELSIO_T3
+expr_stmt|;
+break|break;
+case|case
+name|T3B
+case|:
+name|type
+operator|=
+name|TOE_ID_CHELSIO_T3B
+expr_stmt|;
+break|break;
+case|case
+name|T3C
+case|:
+name|type
+operator|=
+name|TOE_ID_CHELSIO_T3C
+expr_stmt|;
+break|break;
+block|}
+return|return
+operator|(
+name|type
+operator|)
+return|;
 block|}
 end_function
 
@@ -805,13 +881,6 @@ name|adap_ports
 modifier|*
 name|port_info
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"%s called\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|)
-expr_stmt|;
 name|t
 operator|=
 name|malloc
@@ -928,17 +997,10 @@ name|tdev
 operator|->
 name|tod_ttid
 operator|=
-operator|(
+name|cdev2type
+argument_list|(
 name|cdev
-operator|->
-name|type
-operator|==
-name|T3A
-condition|?
-name|TOE_ID_CHELSIO_T3
-else|:
-name|TOE_ID_CHELSIO_T3B
-operator|)
+argument_list|)
 expr_stmt|;
 name|tdev
 operator|->
@@ -973,15 +1035,6 @@ name|tdev
 argument_list|)
 operator|=
 name|t
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"nports=%d\n"
-argument_list|,
-name|port_info
-operator|->
-name|nports
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1018,9 +1071,11 @@ argument_list|)
 operator|=
 name|tdev
 expr_stmt|;
-name|printf
+name|CTR1
 argument_list|(
-literal|"enabling toe on %p\n"
+name|KTR_TOM
+argument_list|,
+literal|"enabling toe on %p"
 argument_list|,
 name|ifp
 argument_list|)
@@ -1055,6 +1110,9 @@ name|activate_offload
 argument_list|(
 name|tdev
 argument_list|)
+expr_stmt|;
+name|cxgb_register_listeners
+argument_list|()
 expr_stmt|;
 return|return;
 name|out_free_all
@@ -1123,6 +1181,8 @@ name|cdev
 operator|->
 name|name
 argument_list|,
+literal|0xFF
+operator|&
 operator|*
 name|mtod
 argument_list|(
@@ -1131,6 +1191,9 @@ argument_list|,
 argument|unsigned int *
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|kdb_backtrace
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1162,7 +1225,7 @@ if|if
 condition|(
 name|opcode
 operator|<
-name|NUM_CPL_CMDS
+literal|256
 condition|)
 name|tom_cpl_handlers
 index|[
@@ -1382,7 +1445,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_CPL_CMDS
+literal|256
 condition|;
 operator|++
 name|i
@@ -1470,6 +1533,17 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_TOM
+argument_list|,
+literal|"t3_toe_attach dev=%p entry=%p"
+argument_list|,
+name|dev
+argument_list|,
+name|entry
 argument_list|)
 expr_stmt|;
 comment|/* Adjust TOE activation for this module */
@@ -1585,9 +1659,6 @@ name|rx_page_info
 operator|.
 name|page_size
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* OK if this fails, we just can't do DDP */
 name|t
 operator|->
@@ -1611,27 +1682,45 @@ name|t
 operator|->
 name|ppod_map
 operator|=
-name|t3_alloc_mem
+name|malloc
 argument_list|(
 name|t
 operator|->
 name|nppods
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|spin_lock_init(&t->ppod_map_lock); 	tom_proc_init(dev);
-ifdef|#
-directive|ifdef
-name|CONFIG_SYSCTL
-block|t->sysctl = t3_sysctl_register(dev,&t->conf);
-endif|#
-directive|endif
-endif|#
-directive|endif
+name|mtx_init
+argument_list|(
+operator|&
+name|t
+operator|->
+name|ppod_map_lock
+argument_list|,
+literal|"ppod map"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|t3_sysctl_register
+argument_list|(
+name|cdev
+operator|->
+name|adapter
+argument_list|,
+operator|&
+name|t
+operator|->
+name|conf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1764,21 +1853,6 @@ name|t_state
 operator|==
 name|TCPS_LISTEN
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"stopping listen on port=%d\n"
-argument_list|,
-name|ntohs
-argument_list|(
-name|tp
-operator|->
-name|t_inpcb
-operator|->
-name|inp_lport
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|t3_listen_stop
 argument_list|(
 operator|&
@@ -1793,7 +1867,6 @@ operator|->
 name|cdev
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|mtx_unlock
 argument_list|(
@@ -1877,12 +1950,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|struct socket *sock; 	err = sock_create_kern(PF_INET, SOCK_STREAM, IPPROTO_TCP,&sock); 	if (err< 0) { 		printk(KERN_ERR "Could not create TCP socket, error %d\n", err); 		return err; 	}  	t3_def_state_change = sock->sk->sk_state_change; 	t3_def_data_ready = sock->sk->sk_data_ready; 	t3_def_error_report = sock->sk->sk_error_report; 	sock_release(sock);
-endif|#
-directive|endif
 name|init_cpl_handlers
 argument_list|()
 expr_stmt|;
@@ -1893,10 +1960,19 @@ argument_list|()
 operator|<
 literal|0
 condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Unable to initialize cpl io ops\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|t3_init_socket_ops
 argument_list|()
 expr_stmt|;
@@ -1981,13 +2057,6 @@ name|cxgb_list
 argument_list|)
 expr_stmt|;
 comment|/* Register to offloading devices */
-name|printf
-argument_list|(
-literal|"setting add to %p\n"
-argument_list|,
-name|t3c_tom_add
-argument_list|)
-expr_stmt|;
 name|t3c_tom_client
 operator|.
 name|add
@@ -1999,9 +2068,6 @@ argument_list|(
 operator|&
 name|t3c_tom_client
 argument_list|)
-expr_stmt|;
-name|cxgb_register_listeners
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -2040,11 +2106,6 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|printf
-argument_list|(
-literal|"wheeeeee ...\n"
-argument_list|)
-expr_stmt|;
 name|t3_tom_init
 argument_list|()
 expr_stmt|;

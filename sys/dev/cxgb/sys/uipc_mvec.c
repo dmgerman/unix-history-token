@@ -2159,13 +2159,13 @@ name|mi
 operator|->
 name|mi_ext
 operator|.
-name|ext_buf
+name|ext_arg1
 operator|,
 name|mi
 operator|->
 name|mi_ext
 operator|.
-name|ext_args
+name|ext_arg2
 operator|)
 expr_stmt|;
 break|break;

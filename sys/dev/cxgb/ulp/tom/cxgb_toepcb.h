@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/cxgb/sys/mbufq.h>
 end_include
 
@@ -124,6 +130,9 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|tp_tx_dmat
 decl_stmt|;
+name|bus_dma_tag_t
+name|tp_rx_dmat
+decl_stmt|;
 name|bus_dmamap_t
 name|tp_dmamap
 decl_stmt|;
@@ -144,6 +153,10 @@ decl_stmt|;
 name|struct
 name|ddp_state
 name|tp_ddp_state
+decl_stmt|;
+name|struct
+name|cv
+name|tp_cv
 decl_stmt|;
 block|}
 struct|;
@@ -251,6 +264,7 @@ name|mbuf
 modifier|*
 name|peek_wr
 parameter_list|(
+specifier|const
 name|struct
 name|toepcb
 modifier|*
@@ -298,6 +312,19 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|wr_queue_walk
+parameter_list|(
+name|toep
+parameter_list|,
+name|m
+parameter_list|)
+define|\
+value|for (m = peek_wr(toep); m; m = m->m_nextpkt)
+end_define
 
 begin_endif
 endif|#

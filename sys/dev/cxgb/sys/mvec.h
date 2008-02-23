@@ -15,6 +15,12 @@ directive|define
 name|_MVEC_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
 begin_function_decl
 name|int
 name|cxgb_cache_init
@@ -122,6 +128,28 @@ begin_comment
 comment|/* mbuf immediate data area is used for cluster ptrs */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_DDP
+value|0x200000
+end_define
+
+begin_comment
+comment|/* direct data placement mbuf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_PHYS
+value|10
+end_define
+
+begin_comment
+comment|/* physical/bus address  */
+end_comment
+
 begin_comment
 comment|/*  * duplication from mbuf.h - can't use directly because  * m_ext is a define  */
 end_comment
@@ -150,7 +178,12 @@ parameter_list|)
 function_decl|;
 name|void
 modifier|*
-name|ext_args
+name|ext_arg1
+decl_stmt|;
+comment|/* optional argument pointer */
+name|void
+modifier|*
+name|ext_arg2
 decl_stmt|;
 comment|/* optional argument pointer */
 name|u_int
@@ -205,6 +238,61 @@ directive|define
 name|EXT_JMPIOVEC
 value|10
 end_define
+
+begin_define
+define|#
+directive|define
+name|m_cur_offset
+value|m_ext.ext_size
+end_define
+
+begin_comment
+comment|/* override to provide ddp offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|m_seq
+value|m_pkthdr.csum_data
+end_define
+
+begin_comment
+comment|/* stored sequence */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|m_ddp_gl
+value|m_ext.ext_buf
+end_define
+
+begin_comment
+comment|/* ddp list	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|m_ddp_flags
+value|m_pkthdr.csum_flags
+end_define
+
+begin_comment
+comment|/* ddp flags	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|m_ulp_mode
+value|m_pkthdr.tso_segsz
+end_define
+
+begin_comment
+comment|/* upper level protocol	*/
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -818,24 +906,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|mi_collapse_sge
-parameter_list|(
-name|struct
-name|mbuf_iovec
-modifier|*
-name|mi
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-name|seg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|mcl_alloc
@@ -867,6 +937,68 @@ name|idx
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|mi_collapse_sge
+parameter_list|(
+name|struct
+name|mbuf_iovec
+modifier|*
+name|mi
+parameter_list|,
+name|bus_dma_segment_t
+modifier|*
+name|seg
+parameter_list|)
+block|{
+name|mi
+operator|->
+name|mi_flags
+operator|=
+literal|0
+expr_stmt|;
+name|mi
+operator|->
+name|mi_base
+operator|=
+operator|(
+name|caddr_t
+operator|)
+name|seg
+operator|->
+name|ds_addr
+expr_stmt|;
+name|mi
+operator|->
+name|mi_len
+operator|=
+name|seg
+operator|->
+name|ds_len
+expr_stmt|;
+name|mi
+operator|->
+name|mi_size
+operator|=
+literal|0
+expr_stmt|;
+name|mi
+operator|->
+name|mi_type
+operator|=
+name|EXT_PHYS
+expr_stmt|;
+name|mi
+operator|->
+name|mi_refcnt
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -1260,6 +1392,9 @@ operator|=
 name|zone_jumbo16
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|PACKET_ZONE
 case|case
 name|EXT_PACKET
 case|:
@@ -1268,6 +1403,8 @@ operator|=
 name|zone_pack
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|panic
 argument_list|(

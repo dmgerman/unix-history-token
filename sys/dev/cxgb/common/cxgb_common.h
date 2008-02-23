@@ -300,11 +300,11 @@ enum|enum
 block|{
 name|FW_VERSION_MAJOR
 init|=
-literal|4
+literal|5
 block|,
 name|FW_VERSION_MINOR
 init|=
-literal|7
+literal|0
 block|,
 name|FW_VERSION_MICRO
 init|=
@@ -561,7 +561,7 @@ begin_struct
 struct|struct
 name|port_type_info
 block|{
-name|void
+name|int
 function_decl|(
 modifier|*
 name|phy_prep
@@ -586,15 +586,6 @@ modifier|*
 name|ops
 parameter_list|)
 function_decl|;
-name|unsigned
-name|int
-name|caps
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|desc
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1850,18 +1841,6 @@ begin_struct
 struct|struct
 name|cphy_ops
 block|{
-name|void
-function_decl|(
-modifier|*
-name|destroy
-function_decl|)
-parameter_list|(
-name|struct
-name|cphy
-modifier|*
-name|phy
-parameter_list|)
-function_decl|;
 name|int
 function_decl|(
 modifier|*
@@ -2063,11 +2042,22 @@ name|int
 name|addr
 decl_stmt|;
 comment|/* PHY address */
+name|unsigned
+name|int
+name|caps
+decl_stmt|;
+comment|/* PHY capabilities */
 name|adapter_t
 modifier|*
 name|adapter
 decl_stmt|;
 comment|/* associated adapter */
+specifier|const
+name|char
+modifier|*
+name|desc
+decl_stmt|;
+comment|/* PHY description */
 name|unsigned
 name|long
 name|fifo_errors
@@ -2260,6 +2250,15 @@ name|struct
 name|mdio_ops
 modifier|*
 name|mdio_ops
+parameter_list|,
+name|unsigned
+name|int
+name|caps
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|desc
 parameter_list|)
 block|{
 name|phy
@@ -2273,6 +2272,18 @@ operator|->
 name|addr
 operator|=
 name|phy_addr
+expr_stmt|;
+name|phy
+operator|->
+name|caps
+operator|=
+name|caps
+expr_stmt|;
+name|phy
+operator|->
+name|desc
+operator|=
+name|desc
 expr_stmt|;
 name|phy
 operator|->
@@ -3043,6 +3054,10 @@ parameter_list|(
 name|adapter_t
 modifier|*
 name|adapter
+parameter_list|,
+name|int
+modifier|*
+name|must_load
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3090,6 +3105,25 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|t3_load_boot
+parameter_list|(
+name|adapter_t
+modifier|*
+name|adapter
+parameter_list|,
+name|u8
+modifier|*
+name|boot_data
+parameter_list|,
+name|unsigned
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|t3_get_fw_version
 parameter_list|(
 name|adapter_t
@@ -3110,6 +3144,10 @@ parameter_list|(
 name|adapter_t
 modifier|*
 name|adapter
+parameter_list|,
+name|int
+modifier|*
+name|must_load
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4435,6 +4473,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|t3_phy_advertise_fiber
+parameter_list|(
+name|struct
+name|cphy
+modifier|*
+name|phy
+parameter_list|,
+name|unsigned
+name|int
+name|advert
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|struct
 name|mac_stats
@@ -4450,7 +4504,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|t3_mv88e1xxx_phy_prep
 parameter_list|(
 name|struct
@@ -4475,7 +4529,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|t3_vsc8211_phy_prep
 parameter_list|(
 name|struct
@@ -4500,7 +4554,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|t3_ael1002_phy_prep
 parameter_list|(
 name|struct
@@ -4525,7 +4579,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|t3_ael1006_phy_prep
 parameter_list|(
 name|struct
@@ -4550,7 +4604,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|t3_qt2045_phy_prep
 parameter_list|(
 name|struct
@@ -4575,7 +4629,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|t3_xaui_direct_phy_prep
 parameter_list|(
 name|struct

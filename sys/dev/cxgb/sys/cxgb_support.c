@@ -1458,5 +1458,34 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|buf_ring_free
+parameter_list|(
+name|struct
+name|buf_ring
+modifier|*
+name|br
+parameter_list|)
+block|{
+name|free
+argument_list|(
+name|br
+operator|->
+name|br_ring
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|br
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

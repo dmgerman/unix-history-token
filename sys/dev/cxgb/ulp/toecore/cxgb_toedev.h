@@ -39,6 +39,8 @@ block|,
 name|TOE_ID_CHELSIO_T3
 block|,
 name|TOE_ID_CHELSIO_T3B
+block|,
+name|TOE_ID_CHELSIO_T3C
 block|, }
 enum|;
 end_enum

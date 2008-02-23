@@ -274,6 +274,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|KTR_CXGB
+value|KTR_SPARE2
+end_define
+
+begin_function_decl
+name|void
+name|cxgb_log_tcb
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|sc
+parameter_list|,
+name|unsigned
+name|int
+name|tid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
 name|MT_DONTFREE
 value|128
 end_define
@@ -1521,6 +1544,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1552,7 +1581,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|device_printf(adap->dev, fmt, ##__VA_ARGS__);
+value|log(LOG_ERR, fmt, ##__VA_ARGS__)
 end_define
 
 begin_define
@@ -1566,7 +1595,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|device_printf(adap->dev, fmt, ##__VA_ARGS__)
+value|log(LOG_WARNING, fmt, ##__VA_ARGS__)
 end_define
 
 begin_define
@@ -1580,7 +1609,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|device_printf(adap->dev, fmt, ##__VA_ARGS__)
+value|log(LOG_ALERT, fmt, ##__VA_ARGS__)
 end_define
 
 begin_define
@@ -1732,7 +1761,14 @@ begin_define
 define|#
 directive|define
 name|ADVERTISE_PAUSE_ASYM
-value|0x0800
+value|ANAR_X_PAUSE_ASYM
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADVERTISE_PAUSE
+value|ANAR_X_PAUSE_SYM
 end_define
 
 begin_define
@@ -1775,6 +1811,34 @@ define|#
 directive|define
 name|ADVERTISE_100HALF
 value|ANAR_TX
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADVERTISE_1000XHALF
+value|ANAR_X_HD
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADVERTISE_1000XFULL
+value|ANAR_X_FD
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADVERTISE_1000XPSE_ASYM
+value|ANAR_X_PAUSE_ASYM
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADVERTISE_1000XPAUSE
+value|ANAR_X_PAUSE_SYM
 end_define
 
 begin_comment
@@ -1891,6 +1955,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|le16_to_cpu
+parameter_list|(
+name|x
+parameter_list|)
+value|le16toh(x)
+end_define
+
+begin_define
+define|#
+directive|define
 name|cpu_to_le32
 parameter_list|(
 name|x
@@ -1914,6 +1988,12 @@ directive|define
 name|simple_strtoul
 value|strtoul
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINUX_TYPES_DEFINED
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -1991,6 +2071,11 @@ name|uint64_t
 name|__be64
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

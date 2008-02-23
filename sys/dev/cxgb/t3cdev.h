@@ -51,6 +51,8 @@ init|=
 literal|0
 block|,
 name|T3B
+block|,
+name|T3C
 block|}
 enum|;
 end_enum

@@ -335,6 +335,7 @@ name|mbuf
 modifier|*
 name|mbufq_peek
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf_head
 modifier|*

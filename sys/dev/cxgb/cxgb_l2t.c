@@ -715,8 +715,10 @@ name|e
 operator|->
 name|addr
 expr_stmt|;
-name|printf
+name|CTR2
 argument_list|(
+name|KTR_CXGB
+argument_list|,
 literal|"send slow on rt=%p eaddr=0x%08x\n"
 argument_list|,
 name|rt
@@ -852,21 +854,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"enqueueing arp request\n"
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Only the first packet added to the arpq should kick off 		 * resolution.  However, because the m_gethdr below can fail, 		 * we allow each packet added to the arpq to retry resolution 		 * as a way of recovering from transient memory exhaustion. 		 * A better way would be to use a work request to retry L2T 		 * entries when there's no memory. 		 */
-name|printf
-argument_list|(
-literal|"doing arpresolve on 0x%x \n"
-argument_list|,
-name|e
-operator|->
-name|addr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|arpresolve
@@ -895,8 +883,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|CTR6
 argument_list|(
+name|KTR_CXGB
+argument_list|,
 literal|"mac=%x:%x:%x:%x:%x:%x\n"
 argument_list|,
 name|e
@@ -1000,12 +990,6 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|printf
-argument_list|(
-literal|"arpresolve returned non-zero\n"
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 literal|0
@@ -1859,11 +1843,6 @@ condition|(
 name|e
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"initializing new entry\n"
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2199,11 +2178,6 @@ name|llinfo_arp
 modifier|*
 name|la
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"t3_l2t_update called with arp info\n"
-argument_list|)
-expr_stmt|;
 name|rw_rlock
 argument_list|(
 operator|&
@@ -2268,9 +2242,11 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|printf
+name|CTR1
 argument_list|(
-literal|"addr=0x%08x not found\n"
+name|KTR_CXGB
+argument_list|,
+literal|"t3_l2t_update: addr=0x%08x not found"
 argument_list|,
 name|addr
 argument_list|)
@@ -2672,6 +2648,45 @@ modifier|*
 name|d
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
+name|rw_destroy
+argument_list|(
+operator|&
+name|d
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|d
+operator|->
+name|nentries
+condition|;
+operator|++
+name|i
+control|)
+name|mtx_destroy
+argument_list|(
+operator|&
+name|d
+operator|->
+name|l2tab
+index|[
+name|i
+index|]
+operator|.
+name|lock
+argument_list|)
+expr_stmt|;
 name|cxgb_free_mem
 argument_list|(
 name|d

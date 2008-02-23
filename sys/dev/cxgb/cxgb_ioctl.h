@@ -225,6 +225,9 @@ name|int32_t
 name|polling
 decl_stmt|;
 name|int32_t
+name|lro
+decl_stmt|;
+name|int32_t
 name|cong_thres
 decl_stmt|;
 name|int32_t
@@ -805,6 +808,13 @@ define|#
 directive|define
 name|CHELSIO_DEVUP
 value|_IO('f', CH_DEVUP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_GET_TCB
+value|_IOWR('f', CH_GET_TCB, struct ch_tcb)
 end_define
 
 begin_endif

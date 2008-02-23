@@ -416,6 +416,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|t3_sysctl_register
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|sc
+parameter_list|,
+specifier|const
+name|struct
+name|tom_tunables
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 specifier|static
 name|__inline

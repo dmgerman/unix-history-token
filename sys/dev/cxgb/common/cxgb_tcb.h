@@ -3868,18 +3868,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|S_TF_DDP_PSH_NO_INVALIDATE
+name|S_TF_DDP_PSH_NO_INVALIDATE0
 value|29
 end_define
 
 begin_define
 define|#
 directive|define
-name|V_TF_DDP_PSH_NO_INVALIDATE
+name|V_TF_DDP_PSH_NO_INVALIDATE0
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< S_TF_DDP_PSH_NO_INVALIDATE)
+value|((x)<< S_TF_DDP_PSH_NO_INVALIDATE0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_TF_DDP_PSH_NO_INVALIDATE1
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_TF_DDP_PSH_NO_INVALIDATE1
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_TF_DDP_PSH_NO_INVALIDATE1)
 end_define
 
 begin_endif
