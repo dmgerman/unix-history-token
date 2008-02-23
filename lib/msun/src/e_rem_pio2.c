@@ -4,7 +4,7 @@ comment|/* @(#)e_rem_pio2.c 1.4 95/01/18 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  *  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  *  * Optimized by Bruce D. Evans.  */
 end_comment
 
 begin_include
@@ -630,13 +630,6 @@ block|{
 comment|/* |x| ~<= 2^19*(pi/2), medium size */
 name|medium
 label|:
-name|t
-operator|=
-name|fabs
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 comment|/* Use a specialized rint() to get fn.  Assume round-to-nearest. */
 name|STRICT_ASSIGN
 argument_list|(
@@ -644,7 +637,7 @@ name|double
 argument_list|,
 name|fn
 argument_list|,
-name|t
+name|x
 operator|*
 name|invpio2
 operator|+
@@ -682,7 +675,7 @@ endif|#
 directive|endif
 name|r
 operator|=
-name|t
+name|x
 operator|-
 name|fn
 operator|*
@@ -880,41 +873,6 @@ operator|)
 operator|-
 name|w
 expr_stmt|;
-if|if
-condition|(
-name|hx
-operator|<
-literal|0
-condition|)
-block|{
-name|y
-index|[
-literal|0
-index|]
-operator|=
-operator|-
-name|y
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|y
-index|[
-literal|1
-index|]
-operator|=
-operator|-
-name|y
-index|[
-literal|1
-index|]
-expr_stmt|;
-return|return
-operator|-
-name|n
-return|;
-block|}
-else|else
 return|return
 name|n
 return|;
