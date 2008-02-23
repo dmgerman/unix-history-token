@@ -1,167 +1,98 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994, 1995, 1996 Carnegie-Mellon University.  * All rights reserved.  *  * Author: Chris G. Demetriou  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (C) 2006-2008 Semihalf, Marian Balakowicz<m8@semihalf.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MACHINE_BOOTINFO_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_MACHINE_BOOTINFO_H_
+end_define
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LOCORE
+argument_list|)
+end_if
+
 begin_comment
-comment|/*  * The boot program passes a pointer (in the boot environment virtual  * address address space; "BEVA") to a bootinfo to the kernel using  * the following convention:  *  *	a0 contains first free page frame number  *	a1 contains page number of current level 1 page table  *	if a2 contains BOOTINFO_MAGIC and a4 is nonzero:  *		a3 contains pointer (BEVA) to bootinfo  *		a4 contains bootinfo version number  *	if a2 contains BOOTINFO_MAGIC and a4 contains 0 (backward compat):  *		a3 contains pointer (BEVA) to bootinfo version  *		    (u_long), then the bootinfo  */
+comment|/* Platform hardware spec, received from loader(8) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BOOTINFO_MAGIC
-value|0xdeadbeeffeedface
+name|BI_VERSION
+value|1
 end_define
 
 begin_struct
 struct|struct
-name|bootinfo_v1
+name|bi_mem_region
 block|{
-name|u_long
-name|ssym
+name|vm_paddr_t
+name|mem_base
 decl_stmt|;
-comment|/* 0: start of kernel sym table	*/
-name|u_long
-name|esym
+name|vm_size_t
+name|mem_size
 decl_stmt|;
-comment|/* 8: end of kernel sym table	*/
-name|char
-name|boot_flags
-index|[
-literal|64
-index|]
-decl_stmt|;
-comment|/* 16: boot flags		*/
-name|char
-name|booted_kernel
-index|[
-literal|64
-index|]
-decl_stmt|;
-comment|/* 80: name of booted kernel	*/
-name|void
-modifier|*
-name|hwrpb
-decl_stmt|;
-comment|/* 144: hwrpb pointer (BEVA)	*/
-name|u_long
-name|hwrpbsize
-decl_stmt|;
-comment|/* 152: size of hwrpb data	*/
-name|int
-function_decl|(
-modifier|*
-name|cngetc
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-comment|/* 160: console getc pointer	*/
-name|void
-function_decl|(
-modifier|*
-name|cnputc
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-comment|/* 168: console putc pointer	*/
-name|void
-function_decl|(
-modifier|*
-name|cnpollc
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-comment|/* 176: console pollc pointer	*/
-name|u_long
-name|pad
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* 184: rsvd for future use	*/
-name|char
-modifier|*
-name|envp
-decl_stmt|;
-comment|/* 232:	start of environment	*/
-name|u_long
-name|kernend
-decl_stmt|;
-comment|/* 240: end of kernel		*/
-name|u_long
-name|modptr
-decl_stmt|;
-comment|/* 248: FreeBSD module base	*/
-comment|/* 256: total size		*/
 block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Kernel-internal structure used to hold important bits of boot  * information.  NOT to be used by boot blocks.  *  * Note that not all of the fields from the bootinfo struct(s)  * passed by the boot blocks aren't here (because they're not currently  * used by the kernel!).  Fields here which aren't supplied by the  * bootinfo structure passed by the boot blocks are supposed to be  * filled in at startup with sane contents.  */
-end_comment
+begin_struct
+struct|struct
+name|bi_eth_addr
+block|{
+name|u_int8_t
+name|mac_addr
+index|[
+literal|6
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
-name|bootinfo_kernel
+name|bootinfo
 block|{
-name|u_long
-name|ssym
+name|u_int32_t
+name|bi_version
 decl_stmt|;
-comment|/* start of syms */
-name|u_long
-name|esym
+name|vm_offset_t
+name|bi_bar_base
 decl_stmt|;
-comment|/* end of syms */
-name|u_long
-name|modptr
+name|u_int32_t
+name|bi_cpu_clk
 decl_stmt|;
-comment|/* FreeBSD module pointer */
-name|u_long
-name|kernend
+name|u_int32_t
+name|bi_bus_clk
 decl_stmt|;
-comment|/* "end of kernel" from boot code */
-name|char
-modifier|*
-name|envp
+name|u_int8_t
+name|bi_mem_reg_no
 decl_stmt|;
-comment|/* "end of kernel" from boot code */
-name|u_long
-name|hwrpb_phys
+name|u_int8_t
+name|bi_eth_addr_no
 decl_stmt|;
-comment|/* hwrpb physical address */
-name|u_long
-name|hwrpb_size
-decl_stmt|;
-comment|/* size of hwrpb data */
-name|char
-name|boot_flags
+name|u_int8_t
+name|bi_data
 index|[
-literal|64
+literal|1
 index|]
 decl_stmt|;
-comment|/* boot flags */
-name|char
-name|booted_kernel
-index|[
-literal|64
-index|]
-decl_stmt|;
-comment|/* name of booted kernel */
-name|char
-name|booted_dev
-index|[
-literal|64
-index|]
-decl_stmt|;
-comment|/* name of booted device */
+comment|/* 	 * The bi_data container is allocated in run time and has the 	 * following layout: 	 * 	 * - bi_mem_reg_no elements of struct bi_mem_region 	 * - bi_eth_addr_no elements of struct bi_eth_addr 	 */
 block|}
 struct|;
 end_struct
@@ -169,10 +100,25 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|struct
-name|bootinfo_kernel
+name|bootinfo
+modifier|*
 name|bootinfo
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MACHINE_BOOTINFO_H_ */
+end_comment
 
 end_unit
 

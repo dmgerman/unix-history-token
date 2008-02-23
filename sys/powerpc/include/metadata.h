@@ -36,6 +36,13 @@ name|MODINFOMD_KERNEND
 value|0x1003
 end_define
 
+begin_define
+define|#
+directive|define
+name|MODINFOMD_BOOTINFO
+value|0x1004
+end_define
+
 begin_endif
 endif|#
 directive|endif
