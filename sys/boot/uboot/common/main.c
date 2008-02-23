@@ -26,19 +26,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"api_public.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bootstrap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"libuboot.h"
+file|"glue.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"api_public.h"
+file|"libuboot.h"
 end_include
 
 begin_decl_stmt
@@ -168,25 +174,6 @@ name|_end
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
-name|syscall_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|struct
-name|sys_info
-modifier|*
-name|ub_get_sys_info
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
@@ -397,6 +384,9 @@ name|sys_info
 modifier|*
 name|si
 decl_stmt|;
+name|uint64_t
+name|size
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -411,6 +401,10 @@ condition|)
 return|return
 literal|0
 return|;
+name|size
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -448,7 +442,8 @@ index|]
 operator|.
 name|size
 condition|)
-return|return
+name|size
+operator|+=
 operator|(
 name|si
 operator|->
@@ -459,9 +454,11 @@ index|]
 operator|.
 name|size
 operator|)
-return|;
+expr_stmt|;
 return|return
-literal|0
+operator|(
+name|size
+operator|)
 return|;
 block|}
 end_function
