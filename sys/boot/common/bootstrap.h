@@ -1136,6 +1136,20 @@ name|ELF_RELOC_RELA
 value|2
 end_define
 
+begin_comment
+comment|/* Relocation offset for some architectures */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|u_int64_t
+name|__elfN
+parameter_list|(
+name|relocation_offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct_decl
 struct_decl|struct
 name|elf_file

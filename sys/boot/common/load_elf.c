@@ -366,6 +366,17 @@ literal|"elf module"
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|u_int64_t
+name|__elfN
+parameter_list|(
+name|relocation_offset
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Attempt to load the file (file) as an ELF module.  It will be stored at  * (dest), and a pointer to a module structure describing the loaded object  * will be saved in (result).  */
 end_comment
@@ -1206,6 +1217,60 @@ expr_stmt|;
 comment|/* i386 relocates after locore */
 endif|#
 directive|endif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+comment|/* 	 * On the purely virtual memory machines like e500, the kernel is 	 * linked against its final VA range, which is most often not 	 * available at the loader stage, but only after kernel initializes 	 * and completes its VM settings. In such cases we cannot use p_vaddr 	 * field directly to load ELF segments, but put them at some 	 * 'load-time' locations. 	 */
+if|if
+condition|(
+name|off
+operator|&
+literal|0xf0000000u
+condition|)
+block|{
+name|off
+operator|=
+operator|-
+operator|(
+name|off
+operator|&
+literal|0xf0000000u
+operator|)
+expr_stmt|;
+comment|/* 	     * XXX the physical load address should not be hardcoded. Note 	     * that the Book-E kernel assumes that it's loaded at a 16MB 	     * boundary for now... 	     */
+name|off
+operator|+=
+literal|0x01000000
+expr_stmt|;
+name|ehdr
+operator|->
+name|e_entry
+operator|+=
+name|off
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ELF_VERBOSE
+name|printf
+argument_list|(
+literal|"Converted entry 0x%08x\n"
+argument_list|,
+name|ehdr
+operator|->
+name|e_entry
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+else|else
+name|off
+operator|=
+literal|0
+expr_stmt|;
 else|#
 directive|else
 name|off
@@ -1215,6 +1280,13 @@ expr_stmt|;
 comment|/* other archs use direct mapped kernels */
 endif|#
 directive|endif
+name|__elfN
+argument_list|(
+name|relocation_offset
+argument_list|)
+operator|=
+name|off
+expr_stmt|;
 block|}
 name|ef
 operator|->
