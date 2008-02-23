@@ -185,6 +185,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|__cmpdi2
+parameter_list|(
+name|quad_t
+name|a
+parameter_list|,
+name|quad_t
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|quad_t
 name|__divdi3
 parameter_list|(
