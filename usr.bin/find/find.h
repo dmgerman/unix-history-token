@@ -315,6 +315,17 @@ begin_comment
 comment|/* one of -newer?B */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|F_LINK
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* lname or ilname */
+end_comment
+
 begin_comment
 comment|/* node definition */
 end_comment

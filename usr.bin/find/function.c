@@ -1925,7 +1925,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * always_true --  *  *	Always true, used for -maxdepth, -mindepth, -xdev and -follow  */
+comment|/*  * always_true --  *  *	Always true, used for -maxdepth, -mindepth, -xdev, -follow, and -true  */
 end_comment
 
 begin_function
@@ -4532,6 +4532,96 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * -samefile FN  *  *	True if the file has the same inode (eg hard link) FN  */
+end_comment
+
+begin_comment
+comment|/* f_samefile is just f_inum */
+end_comment
+
+begin_function
+name|PLAN
+modifier|*
+name|c_samefile
+parameter_list|(
+name|OPTION
+modifier|*
+name|option
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+modifier|*
+name|argvp
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|fn
+decl_stmt|;
+name|PLAN
+modifier|*
+name|new
+decl_stmt|;
+name|struct
+name|stat
+name|sb
+decl_stmt|;
+name|fn
+operator|=
+name|nextarg
+argument_list|(
+name|option
+argument_list|,
+name|argvp
+argument_list|)
+expr_stmt|;
+name|ftsoptions
+operator|&=
+operator|~
+name|FTS_NOSTAT
+expr_stmt|;
+name|new
+operator|=
+name|palloc
+argument_list|(
+name|option
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|fn
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|fn
+argument_list|)
+expr_stmt|;
+name|new
+operator|->
+name|i_data
+operator|=
+name|sb
+operator|.
+name|st_ino
+expr_stmt|;
+return|return
+name|new
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * -links n functions --  *  *	True if the file has n links.  */
 end_comment
 
@@ -4726,6 +4816,29 @@ modifier|*
 name|entry
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|(
+name|plan
+operator|->
+name|flags
+operator|&
+name|F_LINK
+operator|)
+operator|&&
+operator|!
+name|S_ISLNK
+argument_list|(
+name|entry
+operator|->
+name|fts_statp
+operator|->
+name|st_mode
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 return|return
 operator|!
 name|fnmatch
@@ -4797,6 +4910,19 @@ operator|->
 name|c_data
 operator|=
 name|pattern
+expr_stmt|;
+if|if
+condition|(
+name|new
+operator|->
+name|flags
+operator|&
+name|F_LINK
+condition|)
+name|ftsoptions
+operator|&=
+operator|~
+name|FTS_NOSTAT
 expr_stmt|;
 return|return
 name|new
@@ -5942,7 +6068,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* c_simple covers c_prune, c_openparen, c_closeparen, c_not, c_or */
+comment|/* c_simple covers c_prune, c_openparen, c_closeparen, c_not, c_or, c_true, c_false */
 end_comment
 
 begin_function
@@ -6989,6 +7115,66 @@ end_function
 
 begin_comment
 comment|/* c_or == c_simple */
+end_comment
+
+begin_comment
+comment|/*  * -false  *  *	Always false.  */
+end_comment
+
+begin_function
+name|int
+name|f_false
+parameter_list|(
+name|PLAN
+modifier|*
+name|plan
+name|__unused
+parameter_list|,
+name|FTSENT
+modifier|*
+name|entry
+name|__unused
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* c_false == c_simple */
+end_comment
+
+begin_comment
+comment|/*  * -quit  *  *	Exits the program  */
+end_comment
+
+begin_function
+name|int
+name|f_quit
+parameter_list|(
+name|PLAN
+modifier|*
+name|plan
+name|__unused
+parameter_list|,
+name|FTSENT
+modifier|*
+name|entry
+name|__unused
+parameter_list|)
+block|{
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* c_quit == c_simple */
 end_comment
 
 end_unit

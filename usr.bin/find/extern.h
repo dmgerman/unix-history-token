@@ -315,6 +315,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|creat_f
+name|c_samefile
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|creat_f
 name|c_simple
 decl_stmt|;
 end_decl_stmt
@@ -400,6 +406,12 @@ end_decl_stmt
 begin_decl_stmt
 name|exec_f
 name|f_expr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|exec_f
+name|f_false
 decl_stmt|;
 end_decl_stmt
 
@@ -508,6 +520,12 @@ end_decl_stmt
 begin_decl_stmt
 name|exec_f
 name|f_prune
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|exec_f
+name|f_quit
 decl_stmt|;
 end_decl_stmt
 
