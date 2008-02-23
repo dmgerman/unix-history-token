@@ -236,12 +236,10 @@ operator|==
 literal|'-'
 operator|)
 condition|)
-block|{
 name|active
 operator|=
 literal|1
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -372,6 +370,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|getenv
@@ -395,6 +394,7 @@ index|]
 operator|.
 name|mask
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -603,7 +603,7 @@ name|a
 parameter_list|,
 name|c
 parameter_list|)
-value|{			\     u_int32_t	x = (v);			\     if (c)					\         archsw.arch_copyin(&x, a, sizeof(x));	\     a += sizeof(x);				\ }
+value|{			\     u_int32_t	x = (v);			\     if (c)					\ 	archsw.arch_copyin(&x, a, sizeof(x));	\     a += sizeof(x);				\ }
 end_define
 
 begin_define
@@ -619,7 +619,7 @@ name|s
 parameter_list|,
 name|c
 parameter_list|)
-value|{			\     COPY32(t, a, c);				\     COPY32(strlen(s) + 1, a, c)			\     if (c)					\         archsw.arch_copyin(s, a, strlen(s) + 1);\     a += roundup(strlen(s) + 1, sizeof(u_long));\ }
+value|{			\     COPY32(t, a, c);				\     COPY32(strlen(s) + 1, a, c)			\     if (c)					\ 	archsw.arch_copyin(s, a, strlen(s) + 1);\     a += roundup(strlen(s) + 1, sizeof(u_long));\ }
 end_define
 
 begin_define
@@ -677,7 +677,7 @@ name|s
 parameter_list|,
 name|c
 parameter_list|)
-value|{			\     COPY32(t, a, c);				\     COPY32(sizeof(s), a, c);			\     if (c)					\         archsw.arch_copyin(&s, a, sizeof(s));	\     a += roundup(sizeof(s), sizeof(u_long));	\ }
+value|{			\     COPY32(t, a, c);				\     COPY32(sizeof(s), a, c);			\     if (c)					\ 	archsw.arch_copyin(&s, a, sizeof(s));	\     a += roundup(sizeof(s), sizeof(u_long));	\ }
 end_define
 
 begin_define
@@ -719,7 +719,7 @@ name|mm
 parameter_list|,
 name|c
 parameter_list|)
-value|{		\     COPY32(MODINFO_METADATA | mm->md_type, a, c);\     COPY32(mm->md_size, a, c);			\     if (c)					\         archsw.arch_copyin(mm->md_data, a, mm->md_size);\     a += roundup(mm->md_size, sizeof(u_long));	\ }
+value|{		\     COPY32(MODINFO_METADATA | mm->md_type, a, c);\     COPY32(mm->md_size, a, c);			\     if (c)					\ 	archsw.arch_copyin(mm->md_data, a, mm->md_size);\     a += roundup(mm->md_size, sizeof(u_long));	\ }
 end_define
 
 begin_define
@@ -796,7 +796,7 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-comment|/* this field must come first */
+comment|/* this field must be first */
 name|MOD_TYPE
 argument_list|(
 name|addr
@@ -877,7 +877,6 @@ operator|&
 name|MODINFOMD_NOCOPY
 operator|)
 condition|)
-block|{
 name|MOD_METADATA
 argument_list|(
 name|addr
@@ -887,7 +886,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|MOD_END
@@ -1462,7 +1460,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* This metadata addreses must be converted for kernel after relocation */
+comment|/* 	 * These metadata addreses must be converted for kernel after 	 * relocation. 	 */
 name|uint32_t
 name|mdt
 index|[]
@@ -1484,7 +1482,7 @@ argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
-comment|/*       * Allow the environment variable 'rootdev' to override the supplied device       * This should perhaps go to MI code and/or have $rootdev tested/set by      * MI code before launching the kernel.      */
+comment|/* 	 * Allow the environment variable 'rootdev' to override the supplied 	 * device. This should perhaps go to MI code and/or have $rootdev 	 * tested/set by MI code before launching the kernel. 	 */
 name|rootdevname
 operator|=
 name|getenv
