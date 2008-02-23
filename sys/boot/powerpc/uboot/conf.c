@@ -148,7 +148,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|LOADER_NET_SUPPORT
+name|LOADER_NFS_SUPPORT
 argument_list|)
 operator|&
 name|nfs_fsops
