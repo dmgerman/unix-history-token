@@ -10245,9 +10245,12 @@ block|}
 comment|/* Quit outer loop on error or when we're done. */
 if|if
 condition|(
-name|error
-operator|||
 name|done
+condition|)
+break|break;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|done
