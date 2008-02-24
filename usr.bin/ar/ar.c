@@ -297,6 +297,17 @@ literal|"ranlib"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|bsdar
+operator|->
+name|progname
+argument_list|,
+literal|"bsdranlib"
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 while|while
