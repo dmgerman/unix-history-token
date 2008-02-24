@@ -1435,13 +1435,10 @@ name|error
 operator|)
 return|;
 block|}
+name|VN_LOCK_AREC
+argument_list|(
 name|vp
-operator|->
-name|v_vnlock
-operator|->
-name|lk_flags
-operator||=
-name|LK_CANRECURSE
+argument_list|)
 expr_stmt|;
 name|vn_lock
 argument_list|(

@@ -1638,6 +1638,26 @@ parameter_list|)
 value|(&(vp)->v_interlock)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VN_LOCK_AREC
+parameter_list|(
+name|vp
+parameter_list|)
+value|((vp)->v_vnlock->lk_flags |= LK_CANRECURSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VN_LOCK_ASHARE
+parameter_list|(
+name|vp
+parameter_list|)
+value|((vp)->v_vnlock->lk_flags&= ~LK_NOSHARE)
+end_define
+
 begin_endif
 endif|#
 directive|endif

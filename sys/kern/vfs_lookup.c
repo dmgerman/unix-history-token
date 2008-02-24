@@ -239,14 +239,10 @@ argument_list|(
 literal|"nameiinit: getnewvnode"
 argument_list|)
 expr_stmt|;
+name|VN_LOCK_ASHARE
+argument_list|(
 name|vp_crossmp
-operator|->
-name|v_vnlock
-operator|->
-name|lk_flags
-operator|&=
-operator|~
-name|LK_NOSHARE
+argument_list|)
 expr_stmt|;
 block|}
 end_function

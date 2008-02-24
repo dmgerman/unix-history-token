@@ -2577,6 +2577,26 @@ parameter_list|)
 value|mtx_unlock(lk)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BUF_AREC
+parameter_list|(
+name|bp
+parameter_list|)
+value|((bp)->b_lock.lk_flags |= LK_CANRECURSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUF_NOREC
+parameter_list|(
+name|bp
+parameter_list|)
+value|((bp)->b_lock.lk_flags&= ~LK_CANRECURSE)
+end_define
+
 begin_comment
 comment|/*  * Worklist queue management.  * These routines require that the lock be held.  */
 end_comment
@@ -23969,13 +23989,10 @@ return|;
 name|loop
 label|:
 comment|/* While syncing snapshots, we must allow recursive lookups */
+name|BUF_AREC
+argument_list|(
 name|bp
-operator|->
-name|b_lock
-operator|.
-name|lk_flags
-operator||=
-name|LK_CANRECURSE
+argument_list|)
 expr_stmt|;
 name|ACQUIRE_LOCK
 argument_list|(
@@ -24550,14 +24567,10 @@ argument_list|(
 literal|"softdep_sync_metadata: zero error"
 argument_list|)
 expr_stmt|;
+name|BUF_NOREC
+argument_list|(
 name|bp
-operator|->
-name|b_lock
-operator|.
-name|lk_flags
-operator|&=
-operator|~
-name|LK_CANRECURSE
+argument_list|)
 expr_stmt|;
 name|bawrite
 argument_list|(
@@ -24622,14 +24635,10 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|BUF_NOREC
+argument_list|(
 name|bp
-operator|->
-name|b_lock
-operator|.
-name|lk_flags
-operator|&=
-operator|~
-name|LK_CANRECURSE
+argument_list|)
 expr_stmt|;
 name|bawrite
 argument_list|(
