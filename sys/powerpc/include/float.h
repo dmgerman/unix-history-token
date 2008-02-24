@@ -22,6 +22,12 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SOFT_FLOAT
+end_ifndef
+
 begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
@@ -40,6 +46,30 @@ end_macro
 begin_define
 define|#
 directive|define
+name|FLT_ROUNDS
+value|__flt_rounds()
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FLT_ROUNDS
+value|-1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
 name|FLT_RADIX
 value|2
 end_define
@@ -47,13 +77,6 @@ end_define
 begin_comment
 comment|/* b */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|FLT_ROUNDS
-value|__flt_rounds()
-end_define
 
 begin_if
 if|#

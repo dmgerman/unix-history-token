@@ -33,6 +33,12 @@ directive|include
 file|<machine/float.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SOFT_FLOAT
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -87,6 +93,11 @@ index|]
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

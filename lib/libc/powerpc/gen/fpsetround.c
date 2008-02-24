@@ -33,6 +33,12 @@ directive|include
 file|<ieeefp.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SOFT_FLOAT
+end_ifndef
+
 begin_function
 name|fp_rnd_t
 name|fpsetround
@@ -97,6 +103,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

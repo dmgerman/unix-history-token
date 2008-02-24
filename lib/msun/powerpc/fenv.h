@@ -269,6 +269,12 @@ name|_ENABLE_MASK
 value|((FE_DIVBYZERO | FE_INEXACT | FE_INVALID | \ 			 FE_OVERFLOW | FE_UNDERFLOW)>> _FPUSW_SHIFT)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SOFT_FLOAT
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -288,6 +294,34 @@ name|__env
 parameter_list|)
 value|__asm __volatile("mtfsf 255,%0" : : "f" (__env))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__mffs
+parameter_list|(
+name|__env
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__mtfsf
+parameter_list|(
+name|__env
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_union
 union|union
