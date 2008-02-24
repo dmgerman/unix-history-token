@@ -31,12 +31,6 @@ directive|include
 file|"opt_ddb.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
 begin_include
 include|#
 directive|include
