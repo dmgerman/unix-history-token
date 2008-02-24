@@ -13415,7 +13415,7 @@ modifier|*
 name|parent
 parameter_list|)
 block|{
-name|UNIMPLEMENTED
+name|CXGB_UNIMPLEMENTED
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -13594,7 +13594,7 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|UNIMPLEMENTED
+name|CXGB_UNIMPLEMENTED
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -14381,7 +14381,7 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|UNIMPLEMENTED
+name|CXGB_UNIMPLEMENTED
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -17070,7 +17070,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * No entry  		 */
-name|UNIMPLEMENTED
+name|CXGB_UNIMPLEMENTED
 argument_list|()
 expr_stmt|;
 block|}
@@ -17082,7 +17082,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Couldn't create the socket 		 */
-name|UNIMPLEMENTED
+name|CXGB_UNIMPLEMENTED
 argument_list|()
 expr_stmt|;
 block|}

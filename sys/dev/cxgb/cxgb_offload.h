@@ -1189,7 +1189,7 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|UNIMPLEMENTED
+name|CXGB_UNIMPLEMENTED
 parameter_list|()
 value|panic("IMPLEMENT: %s:%s:%d", __FUNCTION__, __FILE__, __LINE__)
 end_define
