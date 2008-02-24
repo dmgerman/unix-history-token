@@ -750,7 +750,7 @@ comment|/* TCP_SIGNATURE */
 end_comment
 
 begin_comment
-comment|/*  * Structure to hold TCP options that are only used during segment  * processing (in tcp_input), but not held in the tcpcb.  * It's basically used to reduce the number of parameters  * to tcp_dooptions and tcp_addoptions.  * The binary order of the to_flags is relevant for packing of the  * options in tcp_addoptions.  */
+comment|/*  * Structure to hold TCP options that are only used during segment  * processing (in tcp_input), but not held in the tcpcb.  * It's basically used to reduce the number of parameters  * to tcp_dooptions and tcp_addoptions.  * The binary order of the to_flags is relevant for packing of the  * options in tcp_addoptions.  * SACK should be kept after TS; some broken cable modem / router  * devices were found in the field that ignore SYN-ACKs with  * SACK before TS.  */
 end_comment
 
 begin_struct
@@ -773,19 +773,19 @@ value|0x0002
 comment|/* window scaling */
 define|#
 directive|define
-name|TOF_SACKPERM
-value|0x0004
-comment|/* SACK permitted */
-define|#
-directive|define
 name|TOF_TS
 value|0x0010
 comment|/* timestamp */
 define|#
 directive|define
 name|TOF_SIGNATURE
-value|0x0040
+value|0x0020
 comment|/* TCP-MD5 signature option (RFC2385) */
+define|#
+directive|define
+name|TOF_SACKPERM
+value|0x0040
+comment|/* SACK permitted */
 define|#
 directive|define
 name|TOF_SACK
