@@ -61,12 +61,6 @@ directive|include
 file|<powerpc/fpu/fpu_emu.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<powerpc/fpu/fpu_extern.h>
-end_include
-
 begin_comment
 comment|/*  * Shift the given number right rsh bits.  Any bits that `fall off' will get  * shoved into the sticky field; we return the resulting sticky.  Note that  * shifting NaNs is legal (this will never shift all bits out); a NaN's  * sticky field is ignored anyway.  */
 end_comment

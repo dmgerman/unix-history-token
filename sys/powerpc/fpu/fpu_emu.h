@@ -405,6 +405,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|fpu_norm
+parameter_list|(
+name|struct
+name|fpn
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Shift a number right some number of bits, taking care of round/sticky.  * Note that the result is probably not a well-formed number (it will lack  * the normal 1-bit mant[0]&FP_1).  */
 end_comment

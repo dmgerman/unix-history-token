@@ -67,12 +67,6 @@ directive|include
 file|<powerpc/fpu/fpu_emu.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<powerpc/fpu/fpu_extern.h>
-end_include
-
 begin_function
 name|struct
 name|fpn

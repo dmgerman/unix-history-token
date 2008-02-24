@@ -1201,7 +1201,7 @@ argument_list|(
 name|FPE_INSN
 argument_list|,
 operator|(
-literal|"reg %d has %lx reg %d has %lx\n"
+literal|"reg %d has %x reg %d has %x\n"
 operator|,
 name|ra
 operator|,
@@ -1410,7 +1410,7 @@ argument_list|(
 name|FPE_INSN
 argument_list|,
 operator|(
-literal|"reg %d has %lx reg %d has %lx\n"
+literal|"reg %d has %x reg %d has %x\n"
 operator|,
 name|ra
 operator|,
@@ -1531,7 +1531,7 @@ argument_list|(
 name|FPE_INSN
 argument_list|,
 operator|(
-literal|"reg %d has %lx displ %lx\n"
+literal|"reg %d has %x displ %x\n"
 operator|,
 name|ra
 operator|,
