@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ucom.c,v 1.40 2001/11/13 06:24:54 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2001-2003, 2005 Shunsuke Akiyama<akiyama@jp.FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2003, 2005, 2008  *	Shunsuke Akiyama<akiyama@jp.FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -277,6 +277,21 @@ end_endif
 
 begin_function_decl
 specifier|static
+name|int
+name|ucom_modevent
+parameter_list|(
+name|module_t
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|ucom_cleanup
 parameter_list|(
@@ -477,7 +492,7 @@ init|=
 block|{
 literal|"ucom"
 block|,
-name|NULL
+name|ucom_modevent
 block|,
 name|NULL
 block|}
@@ -523,6 +538,51 @@ name|UCOM_MODVER
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+specifier|static
+name|int
+name|ucom_modevent
+parameter_list|(
+name|module_t
+name|mod
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|MOD_LOAD
+case|:
+break|break;
+case|case
+name|MOD_UNLOAD
+case|:
+break|break;
+default|default:
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+break|break;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|int
