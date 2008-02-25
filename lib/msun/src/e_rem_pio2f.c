@@ -103,7 +103,7 @@ index|]
 decl_stmt|,
 name|ty
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 name|float
@@ -302,7 +302,7 @@ name|e0
 argument_list|,
 literal|1
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|y

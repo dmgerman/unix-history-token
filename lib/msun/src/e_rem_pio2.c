@@ -1031,7 +1031,7 @@ name|e0
 argument_list|,
 name|nx
 argument_list|,
-literal|2
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
