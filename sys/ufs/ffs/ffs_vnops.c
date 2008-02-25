@@ -956,7 +956,7 @@ argument_list|(
 literal|"ffs_fsync: not dirty"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If this is a synchronous flush request, or it is not a 		 * file or device, start the write on this buffer immediatly. 		 */
+comment|/* 		 * If this is a synchronous flush request, or it is not a 		 * file or device, start the write on this buffer immediately. 		 */
 if|if
 condition|(
 name|wait
