@@ -703,7 +703,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_lock1_args
-comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 		char *file; 		int line; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		char *file; 		int line; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -765,7 +765,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_unlock_args
-comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -815,7 +815,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_islocked_args
-comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -829,10 +829,6 @@ operator|->
 name|a_vp
 operator|->
 name|v_vnlock
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 operator|)
 return|;

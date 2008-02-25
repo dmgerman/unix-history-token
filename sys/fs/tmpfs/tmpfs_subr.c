@@ -1427,8 +1427,6 @@ name|VOP_ISLOCKED
 argument_list|(
 operator|*
 name|vpp
-argument_list|,
-name|td
 argument_list|)
 argument_list|)
 argument_list|)
@@ -1590,10 +1588,6 @@ argument_list|(
 name|VOP_ISLOCKED
 argument_list|(
 name|dvp
-argument_list|,
-name|cnp
-operator|->
-name|cn_thread
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3440,8 +3434,6 @@ argument_list|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
-argument_list|,
-name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3649,8 +3641,6 @@ argument_list|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
-argument_list|,
-name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3704,8 +3694,6 @@ argument_list|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
-argument_list|,
-name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3868,8 +3856,6 @@ argument_list|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
-argument_list|,
-name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3932,8 +3918,6 @@ argument_list|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
-argument_list|,
-name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4172,8 +4156,6 @@ argument_list|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
-argument_list|,
-name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4227,8 +4209,6 @@ argument_list|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
-argument_list|,
-name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4326,8 +4306,6 @@ argument_list|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
-argument_list|,
-name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4396,8 +4374,6 @@ argument_list|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
-argument_list|,
-name|l
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4595,8 +4571,6 @@ argument_list|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
-argument_list|,
-name|l
 argument_list|)
 argument_list|)
 expr_stmt|;

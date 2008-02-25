@@ -712,10 +712,6 @@ parameter_list|(
 name|struct
 name|lock
 modifier|*
-parameter_list|,
-name|struct
-name|thread
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

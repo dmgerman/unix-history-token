@@ -1745,8 +1745,6 @@ operator|=
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK

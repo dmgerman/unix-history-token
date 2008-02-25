@@ -1647,8 +1647,6 @@ operator|&
 name|cp
 operator|->
 name|co_lock
-argument_list|,
-name|td
 argument_list|)
 return|;
 block|}

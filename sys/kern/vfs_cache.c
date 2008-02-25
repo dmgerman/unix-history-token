@@ -1565,11 +1565,6 @@ name|namecache
 modifier|*
 name|ncp
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 name|u_int32_t
 name|hash
 decl_stmt|;
@@ -1597,12 +1592,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|td
-operator|=
-name|cnp
-operator|->
-name|cn_thread
-expr_stmt|;
 name|retry
 label|:
 name|CACHE_LOCK
@@ -2061,8 +2050,6 @@ name|VOP_ISLOCKED
 argument_list|(
 operator|*
 name|vpp
-argument_list|,
-name|td
 argument_list|)
 condition|)
 return|return
@@ -2114,8 +2101,6 @@ operator|=
 name|VOP_ISLOCKED
 argument_list|(
 name|dvp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -2148,7 +2133,9 @@ name|cn_lkflags
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|td
+name|cnp
+operator|->
+name|cn_thread
 argument_list|)
 expr_stmt|;
 if|if

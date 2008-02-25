@@ -2294,8 +2294,6 @@ operator|=
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
-argument_list|,
-name|curthread
 argument_list|)
 operator|)
 operator|!=

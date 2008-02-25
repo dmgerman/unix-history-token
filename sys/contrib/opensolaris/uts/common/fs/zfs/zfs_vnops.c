@@ -4227,8 +4227,6 @@ operator|=
 name|VOP_ISLOCKED
 argument_list|(
 name|dvp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -4424,10 +4422,6 @@ parameter_list|,
 name|cred_t
 modifier|*
 name|cr
-parameter_list|,
-name|kthread_t
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|znode_t
@@ -13194,10 +13188,6 @@ argument_list|,
 name|cnp
 operator|->
 name|cn_cred
-argument_list|,
-name|cnp
-operator|->
-name|cn_thread
 argument_list|)
 operator|)
 return|;

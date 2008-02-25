@@ -2430,8 +2430,6 @@ operator|&&
 name|VOP_ISLOCKED
 argument_list|(
 name|dp
-argument_list|,
-name|td
 argument_list|)
 operator|==
 name|LK_SHARED
@@ -3457,8 +3455,6 @@ operator|&&
 name|VOP_ISLOCKED
 argument_list|(
 name|dp
-argument_list|,
-name|td
 argument_list|)
 operator|!=
 name|LK_EXCLUSIVE

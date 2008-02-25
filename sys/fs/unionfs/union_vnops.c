@@ -1207,8 +1207,6 @@ operator|!=
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|)
 condition|)
 block|{
@@ -2419,8 +2417,6 @@ argument_list|(
 name|ap
 operator|->
 name|a_vp
-argument_list|,
-name|td
 argument_list|)
 operator|!=
 name|LK_EXCLUSIVE
@@ -6878,8 +6874,6 @@ argument_list|(
 name|ap
 operator|->
 name|a_vp
-argument_list|,
-name|td
 argument_list|)
 operator|!=
 name|LK_EXCLUSIVE

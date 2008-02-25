@@ -885,8 +885,6 @@ operator|&
 name|conn
 operator|->
 name|nc_lock
-argument_list|,
-name|curthread
 argument_list|)
 operator|==
 name|LK_EXCLUSIVE

@@ -1073,7 +1073,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|(lockstatus(&(bp)->b_lock, curthread))
+value|(lockstatus(&(bp)->b_lock))
 end_define
 
 begin_comment

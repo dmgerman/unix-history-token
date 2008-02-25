@@ -1045,7 +1045,7 @@ name|lks
 operator|=
 name|LK_EXCLUSIVE
 expr_stmt|;
-comment|/*lockstatus(vp->v_vnlock, td);*/
+comment|/* lockstatus(vp->v_vnlock); */
 if|if
 condition|(
 name|lks

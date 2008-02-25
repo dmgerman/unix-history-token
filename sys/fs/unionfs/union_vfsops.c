@@ -1993,8 +1993,6 @@ argument_list|,
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|)
 argument_list|)
 expr_stmt|;
