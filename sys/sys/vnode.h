@@ -3101,7 +3101,8 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 name|base
 parameter_list|,
 name|int
@@ -3152,7 +3153,8 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 name|base
 parameter_list|,
 name|size_t

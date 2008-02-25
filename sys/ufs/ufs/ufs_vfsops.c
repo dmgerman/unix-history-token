@@ -260,7 +260,8 @@ decl_stmt|;
 name|uid_t
 name|id
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 name|arg
 decl_stmt|;
 name|struct

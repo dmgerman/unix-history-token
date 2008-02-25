@@ -643,7 +643,8 @@ name|u_long
 parameter_list|,
 name|int
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -693,7 +694,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -714,7 +716,8 @@ name|u_long
 parameter_list|,
 name|int
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -735,7 +738,8 @@ name|u_long
 parameter_list|,
 name|int
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
