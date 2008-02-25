@@ -3980,7 +3980,7 @@ name|ar
 operator|->
 name|ar_event
 operator|=
-name|msgctl_to_event
+name|audit_msgctl_to_event
 argument_list|(
 name|ar
 operator|->
@@ -4450,7 +4450,7 @@ name|ar
 operator|->
 name|ar_event
 operator|=
-name|semctl_to_event
+name|audit_semctl_to_event
 argument_list|(
 name|ar
 operator|->

@@ -976,7 +976,7 @@ end_comment
 
 begin_function
 name|int
-name|msgctl_to_event
+name|audit_msgctl_to_event
 parameter_list|(
 name|int
 name|cmd
@@ -1028,7 +1028,7 @@ end_comment
 
 begin_function
 name|int
-name|semctl_to_event
+name|audit_semctl_to_event
 parameter_list|(
 name|int
 name|cmd
@@ -1313,7 +1313,7 @@ end_comment
 
 begin_function
 name|void
-name|canon_path
+name|audit_canon_path
 parameter_list|(
 name|struct
 name|thread
@@ -1365,7 +1365,7 @@ name|WARN_SLEEPOK
 argument_list|,
 name|NULL
 argument_list|,
-literal|"canon_path() at %s:%d"
+literal|"audit_canon_path() at %s:%d"
 argument_list|,
 name|__FILE__
 argument_list|,
