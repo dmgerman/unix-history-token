@@ -1463,6 +1463,11 @@ argument_list|,
 name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
+name|NG_NODE_UNREF
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
