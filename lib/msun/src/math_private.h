@@ -1042,7 +1042,7 @@ name|__ieee754_rem_pio2f
 parameter_list|(
 name|float
 parameter_list|,
-name|float
+name|double
 modifier|*
 parameter_list|)
 function_decl|;
