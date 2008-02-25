@@ -4282,7 +4282,7 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|(
@@ -4598,7 +4598,7 @@ case|:
 comment|/* create a new directory whiteout */
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|(
@@ -4696,7 +4696,7 @@ case|:
 comment|/* remove an existing directory whiteout */
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|dvp
@@ -4870,7 +4870,7 @@ name|ioflag
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|(
@@ -6515,7 +6515,7 @@ name|blkoff
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|(
@@ -10292,7 +10292,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|(
