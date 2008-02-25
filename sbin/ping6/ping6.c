@@ -2168,19 +2168,19 @@ name|interval
 operator|.
 name|tv_usec
 operator|<
-literal|10000
+literal|1
 condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"too small interval, raised to 0.01"
+literal|"too small interval, raised to .000001"
 argument_list|)
 expr_stmt|;
 name|interval
 operator|.
 name|tv_usec
 operator|=
-literal|10000
+literal|1
 expr_stmt|;
 block|}
 name|options
