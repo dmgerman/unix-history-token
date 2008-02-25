@@ -5590,7 +5590,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"overwrting valid entry mi_base==%p"
+literal|"overwriting valid entry mi_base==%p"
 operator|,
 name|txsd
 operator|->
@@ -6084,7 +6084,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"overwrting valid entry mi_base==%p"
+literal|"overwriting valid entry mi_base==%p"
 operator|,
 name|txsd
 operator|->
