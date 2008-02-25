@@ -831,6 +831,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|acpi_tz_cooling_unit
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -989,19 +999,11 @@ name|tz_cooling_updated
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/*      * Always attempt to enable passive cooling for tz0.  Users can enable      * it for other zones manually for now.      *      * XXX We need to test if multiple zones conflict with each other      * since cpufreq currently sets all CPUs to the given frequency whereas      * it's possible for different thermal zones to specify independent      * settings for multiple CPUs.      */
 name|sc
 operator|->
 name|tz_cooling_enabled
 operator|=
-operator|(
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0
-operator|)
+name|FALSE
 expr_stmt|;
 comment|/*      * Parse the current state of the thermal zone and build control      * structures.  We don't need to worry about interference with the      * control thread since we haven't fully attached this device yet.      */
 if|if
@@ -1689,20 +1691,29 @@ name|out
 goto|;
 block|}
 block|}
-comment|/* Create a thread to handle passive cooling for each zone if enabled. */
+comment|/*      * Create a thread to handle passive cooling for 1st zone which      * has _PSV, _TSP, _TC1 and _TC2.  Users can enable it for other      * zones manually for now.      *      * XXX We enable only one zone to avoid multiple zones conflict      * with each other since cpufreq currently sets all CPUs to the      * given frequency whereas it's possible for different thermal      * zones to specify independent settings for multiple CPUs.      */
+if|if
+condition|(
+name|acpi_tz_cooling_unit
+operator|<
+literal|0
+operator|&&
+name|acpi_tz_cooling_is_available
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|tz_cooling_enabled
+operator|=
+name|TRUE
+expr_stmt|;
 if|if
 condition|(
 name|sc
 operator|->
 name|tz_cooling_enabled
-condition|)
-block|{
-if|if
-condition|(
-name|acpi_tz_cooling_is_available
-argument_list|(
-name|sc
-argument_list|)
 condition|)
 block|{
 name|error
@@ -1729,13 +1740,12 @@ goto|goto
 name|out
 goto|;
 block|}
-block|}
-else|else
-name|sc
-operator|->
-name|tz_cooling_enabled
+name|acpi_tz_cooling_unit
 operator|=
-name|FALSE
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Flag the event handler for a manual invocation by our timeout.      * We defer it like this so that the rest of the subsystem has time      * to come up.  Don't bother evaluating/printing the temperature at      * this point; on many systems it'll be bogus until the EC is running.      */
