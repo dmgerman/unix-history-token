@@ -271,6 +271,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|quiet
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|verbose
 decl_stmt|;
 end_decl_stmt
@@ -286,7 +293,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|kernel
@@ -756,7 +762,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|CORE_ADDR
 name|kgdb_parse
 parameter_list|(
@@ -883,10 +888,6 @@ block|{
 name|CORE_ADDR
 name|bufp
 decl_stmt|;
-name|bfd
-modifier|*
-name|kern_bfd
-decl_stmt|;
 name|int
 name|size
 decl_stmt|,
@@ -1006,11 +1007,6 @@ argument_list|(
 name|kern_bfd
 argument_list|)
 expr_stmt|;
-name|bfd_close
-argument_list|(
-name|kern_bfd
-argument_list|)
-expr_stmt|;
 name|symbol_file_add_main
 argument_list|(
 name|kernel
@@ -1034,6 +1030,11 @@ name|kgdb_target
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Display the unread portion of the message buffer. This gives the 	 * user a some initial data to work from. 	 */
+if|if
+condition|(
+name|quiet
+condition|)
+return|return;
 name|bufp
 operator|=
 name|kgdb_parse
@@ -1324,8 +1325,6 @@ name|int
 name|a
 decl_stmt|,
 name|ch
-decl_stmt|,
-name|quiet
 decl_stmt|,
 name|writecore
 decl_stmt|;
