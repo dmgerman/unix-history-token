@@ -76,7 +76,17 @@ begin_comment
 comment|/* 0x3DD0B461, 0x1A626331 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INLINE_REM_PIO2F
+end_ifdef
+
 begin_function
+specifier|extern
+specifier|inline
+endif|#
+directive|endif
 name|int
 name|__ieee754_rem_pio2f
 parameter_list|(

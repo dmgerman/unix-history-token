@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<float.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"math.h"
 end_include
 
@@ -39,10 +45,22 @@ directive|define
 name|INLINE_KERNEL_SINDF
 end_define
 
+begin_define
+define|#
+directive|define
+name|INLINE_REM_PIO2F
+end_define
+
 begin_include
 include|#
 directive|include
 file|"math_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"e_rem_pio2f.c"
 end_include
 
 begin_include
