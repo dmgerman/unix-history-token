@@ -14796,6 +14796,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/*      * This is needed for at least A4Tech X-7xx mice - they do not go      * straight to Explorer mode, but need to be set to Intelli mode      * first.      */
+name|enable_msintelli
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* the special sequence to enable the extra buttons and the roller. */
 for|for
 control|(
