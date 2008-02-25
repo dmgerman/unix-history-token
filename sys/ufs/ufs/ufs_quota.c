@@ -181,7 +181,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_DQUOT
 argument_list|,
-literal|"UFS quota"
+literal|"ufs_quota"
 argument_list|,
 literal|"UFS quota entries"
 argument_list|)
@@ -356,15 +356,17 @@ name|struct
 name|vnode
 modifier|*
 name|vp
-init|=
-name|ITOV
-argument_list|(
-name|ip
-argument_list|)
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|vp
+operator|=
+name|ITOV
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Disk quotas must be turned off for system files.  Currently 	 * snapshot and quota files. 	 */
 if|if
 condition|(
@@ -2134,11 +2136,6 @@ name|struct
 name|ufsmount
 modifier|*
 name|ump
-init|=
-name|VFSTOUFS
-argument_list|(
-name|mp
-argument_list|)
 decl_stmt|;
 name|struct
 name|vnode
@@ -2188,6 +2185,13 @@ operator|(
 name|error
 operator|)
 return|;
+name|ump
+operator|=
+name|VFSTOUFS
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|vpp
 operator|=
 operator|&
@@ -2689,11 +2693,6 @@ name|struct
 name|ufsmount
 modifier|*
 name|ump
-init|=
-name|VFSTOUFS
-argument_list|(
-name|mp
-argument_list|)
 decl_stmt|;
 name|struct
 name|dquot
@@ -2708,6 +2707,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|ump
+operator|=
+name|VFSTOUFS
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|suser_cred
@@ -3292,11 +3298,6 @@ name|struct
 name|ufsmount
 modifier|*
 name|ump
-init|=
-name|VFSTOUFS
-argument_list|(
-name|mp
-argument_list|)
 decl_stmt|;
 name|struct
 name|dqblk
@@ -3350,6 +3351,13 @@ operator|(
 name|error
 operator|)
 return|;
+name|ump
+operator|=
+name|VFSTOUFS
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|dqget
@@ -3689,11 +3697,6 @@ name|struct
 name|ufsmount
 modifier|*
 name|ump
-init|=
-name|VFSTOUFS
-argument_list|(
-name|mp
-argument_list|)
 decl_stmt|;
 name|struct
 name|dquot
@@ -3752,6 +3755,13 @@ operator|(
 name|error
 operator|)
 return|;
+name|ump
+operator|=
+name|VFSTOUFS
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|dqget

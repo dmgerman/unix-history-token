@@ -256,7 +256,7 @@ file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/*  * The following structure records disk usage for a user or group on a  * filesystem. There is one allocated for each quota that exists on any  * filesystem for the current user or group. A cache is kept of recently  * used entries.  */
+comment|/*  * The following structure records disk usage for a user or group on a  * filesystem. There is one allocated for each quota that exists on any  * filesystem for the current user or group. A cache is kept of recently  * used entries.  * (h) protected by dqhlock  */
 end_comment
 
 begin_struct
@@ -269,14 +269,19 @@ argument|dquot
 argument_list|)
 name|dq_hash
 expr_stmt|;
-comment|/* hash list */
+comment|/* (h) hash list */
 name|TAILQ_ENTRY
 argument_list|(
 argument|dquot
 argument_list|)
 name|dq_freelist
 expr_stmt|;
-comment|/* free list */
+comment|/* (h) free list */
+name|struct
+name|mtx
+name|dq_lock
+decl_stmt|;
+comment|/* lock for concurrency */
 name|u_int16_t
 name|dq_flags
 decl_stmt|;
@@ -288,7 +293,7 @@ comment|/* quota type of this dquot */
 name|u_int32_t
 name|dq_cnt
 decl_stmt|;
-comment|/* count of active references */
+comment|/* (h) count of active references */
 name|u_int32_t
 name|dq_id
 decl_stmt|;
@@ -298,7 +303,7 @@ name|ufsmount
 modifier|*
 name|dq_ump
 decl_stmt|;
-comment|/* filesystem that this is taken from */
+comment|/* (h) filesystem that this is 					   taken from */
 name|struct
 name|dqblk
 name|dq_dqb

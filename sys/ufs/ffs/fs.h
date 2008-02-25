@@ -1059,6 +1059,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FS_GJOURNAL
+value|0x40
+end_define
+
+begin_comment
+comment|/* reserved for FreeBSD 7.0 and later */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FS_FLAGS_UPDATED
 value|0x80
 end_define

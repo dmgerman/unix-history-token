@@ -27,7 +27,7 @@ value|((ino_t)2)
 end_define
 
 begin_comment
-comment|/*  * The Whiteout inode# is a dummy non-zero inode number which will  * never be allocated to a real file.  It is used as a place holder  * in the directory entry which has been tagged as a DT_W entry.  * See the comments about ROOTINO above.  */
+comment|/*  * The Whiteout inode# is a dummy non-zero inode number which will  * never be allocated to a real file.  It is used as a place holder  * in the directory entry which has been tagged as a DT_WHT entry.  * See the comments about ROOTINO above.  */
 end_comment
 
 begin_define
@@ -310,7 +310,7 @@ comment|/*  16: File byte count. */
 name|u_int64_t
 name|di_blocks
 decl_stmt|;
-comment|/*  24: Bytes actually held. */
+comment|/*  24: Blocks actually held. */
 name|ufs_time_t
 name|di_atime
 decl_stmt|;

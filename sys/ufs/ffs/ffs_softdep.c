@@ -471,7 +471,7 @@ decl_stmt|;
 block|{
 name|panic
 argument_list|(
-literal|"softdep_setup_allocdirect called"
+literal|"softdep_setup_allocext called"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1664,7 +1664,7 @@ value|((unsigned)(type)< D_LAST ? memtype[type]->ks_shortdesc : "???")
 end_define
 
 begin_comment
-comment|/*  * End system adaptaion definitions.  */
+comment|/*  * End system adaptation definitions.  */
 end_comment
 
 begin_comment
