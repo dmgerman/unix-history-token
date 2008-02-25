@@ -2443,6 +2443,19 @@ argument_list|,
 literal|"VIA C7 Esther"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|via_common
+goto|;
+case|case
+literal|0x6d0
+case|:
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"VIA C7 Eden"
+argument_list|)
+expr_stmt|;
 name|via_common
 label|:
 name|do_cpuid
