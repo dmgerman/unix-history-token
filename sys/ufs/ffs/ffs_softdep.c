@@ -6994,7 +6994,7 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"softdep_setup_inomapdep: found inode "
+literal|"softdep_setup_inomapdep: dependency for new inode "
 literal|"already exists"
 argument_list|)
 expr_stmt|;
