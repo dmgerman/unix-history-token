@@ -5526,7 +5526,7 @@ name|u8
 operator|&
 literal|0x80
 condition|)
-name|PRINT_RATE
+name|PRINT_HT_RATE
 argument_list|(
 literal|""
 argument_list|,
@@ -5538,7 +5538,7 @@ literal|" Mb/s "
 argument_list|)
 expr_stmt|;
 else|else
-name|PRINT_HT_RATE
+name|PRINT_RATE
 argument_list|(
 literal|""
 argument_list|,
