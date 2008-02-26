@@ -19776,6 +19776,19 @@ break|break;
 case|case
 name|TOK_IF
 case|:
+if|if
+condition|(
+name|ac
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"missing option"
+argument_list|)
+expr_stmt|;
 name|set_addr_dynamic
 argument_list|(
 name|av
