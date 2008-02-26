@@ -703,6 +703,7 @@ operator|->
 name|vrf_addr_hash
 operator|=
 name|NULL
+expr_stmt|;
 block|}
 name|LIST_REMOVE
 argument_list|(
