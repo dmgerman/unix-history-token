@@ -992,7 +992,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ixp425_attach: failed to set up IRQ rman"
+literal|"ixp425_attach: failed to set up memory rman"
 argument_list|)
 expr_stmt|;
 name|BUS_ADD_CHILD
