@@ -1226,7 +1226,7 @@ literal|"EM732X"
 block|,
 literal|"MP3 Player*"
 block|,
-literal|"1.0"
+literal|"1.00"
 block|}
 block|,
 comment|/*quirks*/
