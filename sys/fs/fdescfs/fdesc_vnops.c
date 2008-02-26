@@ -492,7 +492,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-literal|"fdesc"
+literal|"fdescfs"
 argument_list|,
 name|mp
 argument_list|,
