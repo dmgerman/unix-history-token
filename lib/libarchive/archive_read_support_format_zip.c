@@ -1305,7 +1305,7 @@ name|zip
 operator|->
 name|flags
 operator|=
-name|le16dec
+name|archive_le16dec
 argument_list|(
 name|p
 operator|->
@@ -1316,7 +1316,7 @@ name|zip
 operator|->
 name|compression
 operator|=
-name|le16dec
+name|archive_le16dec
 argument_list|(
 name|p
 operator|->
@@ -1405,7 +1405,7 @@ name|zip
 operator|->
 name|crc32
 operator|=
-name|le32dec
+name|archive_le32dec
 argument_list|(
 name|p
 operator|->
@@ -1416,7 +1416,7 @@ name|zip
 operator|->
 name|filename_length
 operator|=
-name|le16dec
+name|archive_le16dec
 argument_list|(
 name|p
 operator|->
@@ -1427,7 +1427,7 @@ name|zip
 operator|->
 name|extra_length
 operator|=
-name|le16dec
+name|archive_le16dec
 argument_list|(
 name|p
 operator|->
@@ -1438,7 +1438,7 @@ name|zip
 operator|->
 name|uncompressed_size
 operator|=
-name|le32dec
+name|archive_le32dec
 argument_list|(
 name|p
 operator|->
@@ -1449,7 +1449,7 @@ name|zip
 operator|->
 name|compressed_size
 operator|=
-name|le32dec
+name|archive_le32dec
 argument_list|(
 name|p
 operator|->
@@ -2128,7 +2128,7 @@ name|zip
 operator|->
 name|crc32
 operator|=
-name|le32dec
+name|archive_le32dec
 argument_list|(
 name|p
 operator|+
@@ -2139,7 +2139,7 @@ name|zip
 operator|->
 name|compressed_size
 operator|=
-name|le32dec
+name|archive_le32dec
 argument_list|(
 name|p
 operator|+
@@ -2150,7 +2150,7 @@ name|zip
 operator|->
 name|uncompressed_size
 operator|=
-name|le32dec
+name|archive_le32dec
 argument_list|(
 name|p
 operator|+
@@ -3479,7 +3479,7 @@ name|unsigned
 name|short
 name|headerid
 init|=
-name|le16dec
+name|archive_le16dec
 argument_list|(
 name|p
 operator|+
@@ -3490,7 +3490,7 @@ name|unsigned
 name|short
 name|datasize
 init|=
-name|le16dec
+name|archive_le16dec
 argument_list|(
 name|p
 operator|+
@@ -3549,7 +3549,7 @@ name|zip
 operator|->
 name|uncompressed_size
 operator|=
-name|le64dec
+name|archive_le64dec
 argument_list|(
 name|p
 operator|+
@@ -3566,7 +3566,7 @@ name|zip
 operator|->
 name|compressed_size
 operator|=
-name|le64dec
+name|archive_le64dec
 argument_list|(
 name|p
 operator|+
@@ -3620,7 +3620,7 @@ name|zip
 operator|->
 name|mtime
 argument_list|,
-name|le32dec
+name|archive_le32dec
 argument_list|(
 name|p
 operator|+
@@ -3641,7 +3641,7 @@ name|zip
 operator|->
 name|mtime
 operator|=
-name|le32dec
+name|archive_le32dec
 argument_list|(
 name|p
 operator|+
@@ -3675,7 +3675,7 @@ name|zip
 operator|->
 name|atime
 operator|=
-name|le32dec
+name|archive_le32dec
 argument_list|(
 name|p
 operator|+
@@ -3709,7 +3709,7 @@ name|zip
 operator|->
 name|ctime
 operator|=
-name|le32dec
+name|archive_le32dec
 argument_list|(
 name|p
 operator|+
@@ -3740,14 +3740,14 @@ name|stderr
 argument_list|,
 literal|"uid %d gid %d\n"
 argument_list|,
-name|le16dec
+name|archive_le16dec
 argument_list|(
 name|p
 operator|+
 name|offset
 argument_list|)
 argument_list|,
-name|le16dec
+name|archive_le16dec
 argument_list|(
 name|p
 operator|+
@@ -3769,7 +3769,7 @@ name|zip
 operator|->
 name|uid
 operator|=
-name|le16dec
+name|archive_le16dec
 argument_list|(
 name|p
 operator|+
@@ -3786,7 +3786,7 @@ name|zip
 operator|->
 name|gid
 operator|=
-name|le16dec
+name|archive_le16dec
 argument_list|(
 name|p
 operator|+
