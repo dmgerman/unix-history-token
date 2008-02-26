@@ -969,6 +969,13 @@ block|,
 name|USB_PRODUCT_ANYDATA_ADU_E100X
 block|}
 block|,
+comment|/* Axesstel MV100H */
+block|{
+name|USB_VENDOR_AXESSTEL
+block|,
+name|USB_PRODUCT_AXESSTEL_DATAMODEM
+block|}
+block|,
 comment|/* BELKIN F5U103 */
 block|{
 name|USB_VENDOR_BELKIN
