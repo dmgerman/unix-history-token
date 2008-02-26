@@ -1264,6 +1264,17 @@ decl_stmt|;
 comment|/* 	 * check for "." 	 */
 if|if
 condition|(
+name|dirp
+operator|->
+name|d_ino
+operator|>
+name|maxino
+condition|)
+goto|goto
+name|chk2
+goto|;
+if|if
+condition|(
 name|idesc
 operator|->
 name|id_entryno
