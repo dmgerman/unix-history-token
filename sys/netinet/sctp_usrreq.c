@@ -19747,6 +19747,11 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|SCTP_INP_INCR_REF
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|SCTP_ASOC_CREATE_LOCK
 argument_list|(
 name|inp
@@ -19755,11 +19760,6 @@ expr_stmt|;
 name|create_lock_on
 operator|=
 literal|1
-expr_stmt|;
-name|SCTP_INP_INCR_REF
-argument_list|(
-name|inp
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -20030,7 +20030,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|SCTP_TCB_LOCK
+name|SCTP_TCB_UNLOCK
 argument_list|(
 name|stcb
 argument_list|)
