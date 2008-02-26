@@ -4751,6 +4751,13 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+name|CAM_SIM_UNLOCK
+argument_list|(
+name|bus
+operator|->
+name|sim
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 comment|/* Ensure all of our fields are correct */
