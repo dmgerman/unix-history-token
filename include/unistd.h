@@ -2738,9 +2738,11 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|size_t
 parameter_list|)
