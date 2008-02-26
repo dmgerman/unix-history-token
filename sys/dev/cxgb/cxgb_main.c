@@ -2022,14 +2022,14 @@ begin_define
 define|#
 directive|define
 name|TPEEPROM_NAME
-value|"t3%ctpe%d%d%d"
+value|"t3b_tp_eeprom"
 end_define
 
 begin_define
 define|#
 directive|define
 name|TPSRAM_NAME
-value|"t3%cps%d%d%d"
+value|"t3b_protocol_sram"
 end_define
 
 begin_function
@@ -7943,12 +7943,6 @@ name|tpeeprom
 decl_stmt|;
 endif|#
 directive|endif
-name|char
-name|buf
-index|[
-literal|64
-index|]
-decl_stmt|;
 name|uint32_t
 name|version
 decl_stmt|;
@@ -8008,31 +8002,11 @@ argument_list|(
 name|adap
 argument_list|)
 expr_stmt|;
-name|snprintf
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-name|TPEEPROM_NAME
-argument_list|,
-name|rev
-argument_list|,
-name|TP_VERSION_MAJOR
-argument_list|,
-name|TP_VERSION_MINOR
-argument_list|,
-name|TP_VERSION_MICRO
-argument_list|)
-expr_stmt|;
 name|tpeeprom
 operator|=
 name|firmware_get
 argument_list|(
-name|buf
+name|TPEEPROM_NAME
 argument_list|)
 expr_stmt|;
 if|if
@@ -8050,7 +8024,7 @@ name|dev
 argument_list|,
 literal|"could not load TP EEPROM: unable to load %s\n"
 argument_list|,
-name|buf
+name|TPEEPROM_NAME
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8100,7 +8074,7 @@ name|dev
 argument_list|,
 literal|"%s length is wrong len=%d expected=%d\n"
 argument_list|,
-name|buf
+name|TPEEPROM_NAME
 argument_list|,
 name|len
 argument_list|,
@@ -8206,12 +8180,6 @@ name|tpsram
 decl_stmt|;
 endif|#
 directive|endif
-name|char
-name|buf
-index|[
-literal|64
-index|]
-decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -8238,31 +8206,11 @@ argument_list|(
 name|adap
 argument_list|)
 expr_stmt|;
-name|snprintf
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-name|TPSRAM_NAME
-argument_list|,
-name|rev
-argument_list|,
-name|TP_VERSION_MAJOR
-argument_list|,
-name|TP_VERSION_MINOR
-argument_list|,
-name|TP_VERSION_MICRO
-argument_list|)
-expr_stmt|;
 name|tpsram
 operator|=
 name|firmware_get
 argument_list|(
-name|buf
+name|TPSRAM_NAME
 argument_list|)
 expr_stmt|;
 if|if
@@ -8278,9 +8226,7 @@ name|adap
 operator|->
 name|dev
 argument_list|,
-literal|"could not load TP SRAM: unable to load %s\n"
-argument_list|,
-name|buf
+literal|"could not load TP SRAM\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8296,9 +8242,7 @@ name|adap
 operator|->
 name|dev
 argument_list|,
-literal|"updating TP SRAM with %s\n"
-argument_list|,
-name|buf
+literal|"updating TP SRAM\n"
 argument_list|)
 expr_stmt|;
 name|ret
