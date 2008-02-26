@@ -7838,7 +7838,7 @@ operator|&
 name|NGQF_RW
 operator|)
 operator|==
-name|NGQRW_W
+name|NGQF_WRITER
 operator|)
 operator|||
 operator|(
