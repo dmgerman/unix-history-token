@@ -2127,8 +2127,7 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-name|void
-modifier|*
+name|caddr_t
 name|fname
 decl_stmt|;
 block|{
@@ -3077,8 +3076,7 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-name|void
-modifier|*
+name|caddr_t
 name|addr
 decl_stmt|;
 block|{
@@ -3216,6 +3214,9 @@ name|error
 operator|=
 name|copyout
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|dq
 operator|->
@@ -3279,8 +3280,7 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-name|void
-modifier|*
+name|caddr_t
 name|addr
 decl_stmt|;
 block|{
@@ -3332,6 +3332,9 @@ name|copyin
 argument_list|(
 name|addr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|newlim
 argument_list|,
@@ -3683,8 +3686,7 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-name|void
-modifier|*
+name|caddr_t
 name|addr
 decl_stmt|;
 block|{
@@ -3736,6 +3738,9 @@ name|copyin
 argument_list|(
 name|addr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|usage
 argument_list|,
@@ -4789,6 +4794,9 @@ name|aiov
 operator|.
 name|iov_base
 operator|=
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|dq
 operator|->
@@ -4889,6 +4897,9 @@ literal|0
 condition|)
 name|bzero
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|dq
 operator|->
@@ -5420,6 +5431,9 @@ name|aiov
 operator|.
 name|iov_base
 operator|=
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|dq
 operator|->

@@ -637,6 +637,9 @@ name|copyin
 argument_list|(
 name|data
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|args
 argument_list|,
@@ -2183,8 +2186,7 @@ decl_stmt|;
 name|uid_t
 name|uid
 decl_stmt|;
-name|void
-modifier|*
+name|caddr_t
 name|arg
 decl_stmt|;
 name|struct

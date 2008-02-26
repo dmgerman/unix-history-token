@@ -2227,8 +2227,7 @@ parameter_list|,
 name|uid_t
 name|uid
 parameter_list|,
-name|void
-modifier|*
+name|caddr_t
 name|arg
 parameter_list|,
 name|struct

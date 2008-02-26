@@ -1661,8 +1661,7 @@ decl_stmt|;
 name|uid_t
 name|uid
 decl_stmt|;
-name|void
-modifier|*
+name|caddr_t
 name|arg
 decl_stmt|;
 name|struct

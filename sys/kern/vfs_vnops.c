@@ -1463,8 +1463,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|void
-modifier|*
+name|caddr_t
 name|base
 decl_stmt|;
 name|int
@@ -1888,8 +1887,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|void
-modifier|*
+name|caddr_t
 name|base
 decl_stmt|;
 name|size_t
@@ -2029,13 +2027,7 @@ operator|+=
 name|chunk
 expr_stmt|;
 name|base
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|base
-operator|+
+operator|+=
 name|chunk
 expr_stmt|;
 name|uio_yield
@@ -3974,6 +3966,9 @@ name|VOP_ADVLOCK
 argument_list|(
 name|vp
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|fp
 argument_list|,
 name|F_UNLCK
