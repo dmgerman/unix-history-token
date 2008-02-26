@@ -1106,6 +1106,51 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * The driver uses an auto-queue algorithm by default.  * To disable it and force a single queue-set per port, use singleq = 1.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|force_fw_update
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.cxgb.force_fw_update"
+argument_list|,
+operator|&
+name|force_fw_update
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_cxgb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|force_fw_update
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|force_fw_update
+argument_list|,
+literal|0
+argument_list|,
+literal|"update firmware even if up to date"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|int
 name|cxgb_use_16k_clusters
@@ -1970,7 +2015,7 @@ begin_define
 define|#
 directive|define
 name|FW_FNAME
-value|"t3fw%d%d%d"
+value|"cxgb_t3fw"
 end_define
 
 begin_define
@@ -1997,12 +2042,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|char
-name|buf
-index|[
-literal|32
-index|]
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|FIRMWARE_LATEST
@@ -2024,38 +2063,16 @@ directive|endif
 name|int
 name|status
 decl_stmt|;
-name|snprintf
-argument_list|(
-operator|&
-name|buf
-index|[
-literal|0
-index|]
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-name|FW_FNAME
-argument_list|,
-name|FW_VERSION_MAJOR
-argument_list|,
-name|FW_VERSION_MINOR
-argument_list|,
-name|FW_VERSION_MICRO
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+operator|(
 name|fw
 operator|=
 name|firmware_get
 argument_list|(
-name|buf
+name|FW_FNAME
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fw
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -2068,7 +2085,7 @@ name|dev
 argument_list|,
 literal|"Could not find firmware image %s\n"
 argument_list|,
-name|buf
+name|FW_FNAME
 argument_list|)
 expr_stmt|;
 return|return
@@ -2084,9 +2101,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"updating firmware on card with %s\n"
-argument_list|,
-name|buf
+literal|"updating firmware on card\n"
 argument_list|)
 expr_stmt|;
 name|status
@@ -3024,6 +3039,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|t3_check_fw_version
 argument_list|(
 name|sc
@@ -3035,6 +3051,9 @@ operator|!=
 literal|0
 operator|&&
 name|must_load
+operator|)
+operator|||
+name|force_fw_update
 condition|)
 block|{
 comment|/* 		 * Warn user that a firmware update will be attempted in init. 		 */
@@ -14506,6 +14525,22 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|if_cxgb
+argument_list|,
+name|cxgb_t3fw
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
