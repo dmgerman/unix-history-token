@@ -855,6 +855,36 @@ name|wantfd
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * File descriptors are a full int, but _file is only a short. 	 * If we get a valid file descriptor that is greater than 	 * SHRT_MAX, then the fd will get sign-extended into an 	 * invalid file descriptor.  Handle this case by failing the 	 * open. 	 */
+if|if
+condition|(
+name|f
+operator|>
+name|SHRT_MAX
+condition|)
+block|{
+name|fp
+operator|->
+name|_flags
+operator|=
+literal|0
+expr_stmt|;
+comment|/* set it free */
+name|FUNLOCKFILE
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|EMFILE
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|fp
 operator|->
 name|_flags
