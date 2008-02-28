@@ -63,17 +63,17 @@ decl_stmt|,
 comment|/* 0x3FE45F30, 0x6DC9C883 */
 name|pio2_1
 init|=
-literal|1.57079632673412561417e+00
+literal|1.57079631090164184570e+00
 decl_stmt|,
-comment|/* 0x3FF921FB, 0x54400000 */
+comment|/* 0x3FF921FB, 0x50000000 */
 name|pio2_1t
 init|=
-literal|6.07710050650619224932e-11
+literal|1.58932547735281966916e-08
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 0x3DD0B461, 0x1A626331 */
+comment|/* 0x3E5110b4, 0x611A6263 */
 end_comment
 
 begin_ifdef
@@ -145,11 +145,11 @@ comment|/* 33+53 bit pi is good enough for medium size */
 if|if
 condition|(
 name|ix
-operator|<=
-literal|0x49490f80
+operator|<
+literal|0x4dc90fdb
 condition|)
 block|{
-comment|/* |x| ~<= 2^19*(pi/2), medium size */
+comment|/* |x| ~< 2^28*(pi/2), medium size */
 comment|/* Use a specialized rint() to get fn.  Assume round-to-nearest. */
 name|STRICT_ASSIGN
 argument_list|(

@@ -628,11 +628,11 @@ block|}
 if|if
 condition|(
 name|ix
-operator|<=
+operator|<
 literal|0x413921fb
 condition|)
 block|{
-comment|/* |x| ~<= 2^19*(pi/2), medium size */
+comment|/* |x| ~< 2^20*(pi/2), medium size */
 name|medium
 label|:
 comment|/* Use a specialized rint() to get fn.  Assume round-to-nearest. */
