@@ -776,6 +776,15 @@ name|strcmp
 argument_list|(
 name|cpu_vendor
 argument_list|,
+literal|"CentaurHauls"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|cpu_vendor
+argument_list|,
 literal|"Geode by NSC"
 argument_list|)
 operator|==
@@ -2436,6 +2445,9 @@ goto|;
 case|case
 literal|0x6a0
 case|:
+case|case
+literal|0x6d0
+case|:
 name|strcpy
 argument_list|(
 name|cpu_model
@@ -2446,16 +2458,6 @@ expr_stmt|;
 goto|goto
 name|via_common
 goto|;
-case|case
-literal|0x6d0
-case|:
-name|strcpy
-argument_list|(
-name|cpu_model
-argument_list|,
-literal|"VIA C7 Eden"
-argument_list|)
-expr_stmt|;
 name|via_common
 label|:
 name|do_cpuid
