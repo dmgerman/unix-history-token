@@ -389,7 +389,7 @@ literal|"V:C:qn:g:h:H:M:opNPY"
 block|,
 literal|"V:C:qn:g:Y"
 block|,
-literal|"V:C:qn:g:l:h:H:FM:m:NPY"
+literal|"V:C:qn:d:g:l:h:H:FM:m:NPY"
 block|,
 literal|"V:C:qn:g:FPa"
 block|,
@@ -1450,6 +1450,7 @@ literal|"\t-n name        group name\n"
 literal|"\t-g gid         group id\n"
 literal|"\t-M usr1,usr2   replaces users as group members\n"
 literal|"\t-m usr1,usr2   add users as group members\n"
+literal|"\t-d usr1,usr2   delete users as group members\n"
 literal|"\t-l name        new group name\n"
 literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
