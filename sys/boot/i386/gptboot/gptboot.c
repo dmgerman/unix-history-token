@@ -605,6 +605,11 @@ name|cmd
 index|[
 literal|512
 index|]
+decl_stmt|,
+name|cmddup
+index|[
+literal|512
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1325,6 +1330,18 @@ operator|*
 name|cmd
 condition|)
 block|{
+name|memcpy
+argument_list|(
+name|cmddup
+argument_list|,
+name|cmd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmd
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|parse
@@ -1348,7 +1365,7 @@ literal|"%s: %s"
 argument_list|,
 name|PATH_CONFIG
 argument_list|,
-name|cmd
+name|cmddup
 argument_list|)
 expr_stmt|;
 comment|/* Do not process this command twice */
