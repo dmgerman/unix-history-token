@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002 - 2005 Tony Finch<dot@dotat.at>.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by Dave Yost.  * It was rewritten to support ANSI C by Tony Finch. The original version of  * unifdef carried the following copyright notice. None of its code remains  * in this version (though some of the names remain).  *  * Copyright (c) 1985, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2002 - 2008 Tony Finch<dot@dotat.at>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * This code is derived from software contributed to Berkeley by Dave Yost.  * It was rewritten to support ANSI C by Tony Finch. The original version  * of unifdef carried the 4-clause BSD copyright licence. None of its code  * remains in this version (though some of the names remain) so it now  * carries a more liberal licence.  */
 end_comment
 
 begin_include
@@ -58,7 +62,7 @@ name|__IDSTRING
 argument_list|(
 name|dotat
 argument_list|,
-literal|"$dotat: things/unifdef.c,v 1.171 2005/03/08 12:38:48 fanf2 Exp $"
+literal|"$dotat: things/unifdef.c,v 1.176 2008/02/29 12:44:25 fanf2 Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3264,17 +3268,69 @@ operator|=
 name|LS_DIRTY
 expr_stmt|;
 block|}
-comment|/* skipcomment should have changed the state */
+comment|/* skipcomment normally changes the state, except 		   if the last line of the file lacks a newline */
 if|if
 condition|(
 name|linestate
 operator|==
 name|LS_HASH
 condition|)
+block|{
+name|size_t
+name|len
+init|=
+name|cp
+operator|-
+name|tline
+decl_stmt|;
+if|if
+condition|(
+name|fgets
+argument_list|(
+name|tline
+operator|+
+name|len
+argument_list|,
+name|MAXLINE
+operator|-
+name|len
+argument_list|,
+name|input
+argument_list|)
+operator|!=
+name|NULL
+condition|)
 name|abort
 argument_list|()
 expr_stmt|;
 comment|/* bug */
+comment|/* append the missing newline */
+name|tline
+index|[
+name|len
+operator|+
+literal|0
+index|]
+operator|=
+literal|'\n'
+expr_stmt|;
+name|tline
+index|[
+name|len
+operator|+
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|cp
+operator|++
+expr_stmt|;
+name|linestate
+operator|=
+name|LS_START
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -3700,6 +3756,9 @@ decl_stmt|;
 name|int
 name|sym
 decl_stmt|;
+name|bool
+name|defparen
+decl_stmt|;
 name|cp
 operator|=
 name|skipcomment
@@ -3905,22 +3964,31 @@ if|if
 condition|(
 operator|*
 name|cp
-operator|++
-operator|!=
+operator|==
 literal|'('
 condition|)
-return|return
-operator|(
-name|LT_IF
-operator|)
-return|;
+block|{
 name|cp
 operator|=
 name|skipcomment
 argument_list|(
 name|cp
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
+name|defparen
+operator|=
+name|true
+expr_stmt|;
+block|}
+else|else
+block|{
+name|defparen
+operator|=
+name|false
+expr_stmt|;
+block|}
 name|sym
 operator|=
 name|findsym
@@ -3967,6 +4035,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|defparen
+operator|&&
 operator|*
 name|cp
 operator|++
@@ -4380,6 +4450,8 @@ name|ret
 decl_stmt|;
 name|int
 name|val
+init|=
+literal|0
 decl_stmt|;
 name|debug
 argument_list|(
