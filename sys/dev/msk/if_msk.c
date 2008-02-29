@@ -18822,7 +18822,7 @@ argument_list|,
 name|GMR_FS_ANY_ERR
 argument_list|)
 expr_stmt|;
-comment|/* Set Rx FIFO flush threshold to 64 bytes. */
+comment|/* 	 * Set Rx FIFO flush threshold to 64 bytes + 1 FIFO word 	 * due to hardware hang on receipt of pause frames. 	 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -18837,6 +18837,8 @@ name|RX_GMF_FL_THR
 argument_list|)
 argument_list|,
 name|RX_GMF_FL_THR_DEF
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Configure Tx MAC FIFO. */
