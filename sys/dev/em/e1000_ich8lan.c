@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/*******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
 begin_comment
@@ -22,18 +22,6 @@ include|#
 directive|include
 file|"e1000_ich8lan.h"
 end_include
-
-begin_function_decl
-name|void
-name|e1000_init_function_pointers_ich8lan
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|STATIC
@@ -517,6 +505,26 @@ name|struct
 name|e1000_hw
 modifier|*
 name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|STATIC
+name|s32
+name|e1000_read_flash_byte_ich8lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|offset
+parameter_list|,
+name|u8
+modifier|*
+name|data
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1013,6 +1021,53 @@ name|power_down_phy
 operator|=
 name|e1000_power_down_phy_copper_ich8lan
 expr_stmt|;
+comment|/* 	 * We may need to do this twice - once for IGP and if that fails, 	 * we'll set BM func pointers and try again 	 */
+name|ret_val
+operator|=
+name|e1000_determine_phy_address
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+block|{
+name|func
+operator|->
+name|write_phy_reg
+operator|=
+name|e1000_write_phy_reg_bm
+expr_stmt|;
+name|func
+operator|->
+name|read_phy_reg
+operator|=
+name|e1000_read_phy_reg_bm
+expr_stmt|;
+name|ret_val
+operator|=
+name|e1000_determine_phy_address
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"Cannot determine PHY address. Erroring out\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+block|}
 name|phy
 operator|->
 name|id
@@ -1104,6 +1159,40 @@ operator|->
 name|autoneg_mask
 operator|=
 name|E1000_ALL_NOT_GIG
+expr_stmt|;
+break|break;
+case|case
+name|BME1000_E_PHY_ID
+case|:
+name|phy
+operator|->
+name|type
+operator|=
+name|e1000_phy_bm
+expr_stmt|;
+name|phy
+operator|->
+name|autoneg_mask
+operator|=
+name|AUTONEG_ADVERTISE_SPEED_DEFAULT
+expr_stmt|;
+name|func
+operator|->
+name|read_phy_reg
+operator|=
+name|e1000_read_phy_reg_bm
+expr_stmt|;
+name|func
+operator|->
+name|write_phy_reg
+operator|=
+name|e1000_write_phy_reg_bm
+expr_stmt|;
+name|func
+operator|->
+name|commit_phy
+operator|=
+name|e1000_phy_sw_reset_generic
 expr_stmt|;
 break|break;
 default|default:
@@ -2681,6 +2770,9 @@ break|break;
 case|case
 name|e1000_phy_igp_3
 case|:
+case|case
+name|e1000_phy_bm
+case|:
 name|ret_val
 operator|=
 name|e1000_get_phy_info_igp
@@ -2912,7 +3004,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_polarity_ife_ich8lan - Check cable polarity for IFE PHY  *  @hw: pointer to the HW structure  *  *  Polarity is determined on the polarity reveral feature being enabled.  *  This function is only called by other family-specific  *  routines.  **/
+comment|/**  *  e1000_check_polarity_ife_ich8lan - Check cable polarity for IFE PHY  *  @hw: pointer to the HW structure  *  *  Polarity is determined on the polarity reversal feature being enabled.  *  This function is only called by other family-specific  *  routines.  **/
 end_comment
 
 begin_function
@@ -3610,6 +3702,54 @@ name|ret_val
 init|=
 name|E1000_SUCCESS
 decl_stmt|;
+name|struct
+name|e1000_nvm_info
+modifier|*
+name|nvm
+init|=
+operator|&
+name|hw
+operator|->
+name|nvm
+decl_stmt|;
+comment|/* flash bank size is in words */
+name|u32
+name|bank1_offset
+init|=
+name|nvm
+operator|->
+name|flash_bank_size
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u16
+argument_list|)
+decl_stmt|;
+name|u32
+name|act_offset
+init|=
+name|E1000_ICH_NVM_SIG_WORD
+operator|*
+literal|2
+operator|+
+literal|1
+decl_stmt|;
+name|u8
+name|bank_high_byte
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|!=
+name|e1000_ich10lan
+condition|)
+block|{
 if|if
 condition|(
 name|E1000_READ_REG
@@ -3632,6 +3772,106 @@ name|bank
 operator|=
 literal|0
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|hw
+operator|->
+name|dev_spec
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Make sure the signature for bank 0 is valid, 		 * if not check for bank1 		 */
+name|e1000_read_flash_byte_ich8lan
+argument_list|(
+name|hw
+argument_list|,
+name|act_offset
+argument_list|,
+operator|&
+name|bank_high_byte
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bank_high_byte
+operator|&
+literal|0xC0
+operator|)
+operator|==
+literal|0x80
+condition|)
+block|{
+operator|*
+name|bank
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * find if segment 1 is valid by verifying 			 * bit 15:14 = 10b in word 0x13 			 */
+name|e1000_read_flash_byte_ich8lan
+argument_list|(
+name|hw
+argument_list|,
+name|act_offset
+operator|+
+name|bank1_offset
+argument_list|,
+operator|&
+name|bank_high_byte
+argument_list|)
+expr_stmt|;
+comment|/* bank1 has a valid signature equivalent to SEC1V */
+if|if
+condition|(
+operator|(
+name|bank_high_byte
+operator|&
+literal|0xC0
+operator|)
+operator|==
+literal|0x80
+condition|)
+block|{
+operator|*
+name|bank
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"ERROR: EEPROM not present\n"
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+operator|-
+name|E1000_ERR_NVM
+expr_stmt|;
+block|}
+block|}
+block|}
+else|else
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"DEV SPEC is NULL\n"
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+operator|-
+name|E1000_ERR_NVM
+expr_stmt|;
+block|}
 return|return
 name|ret_val
 return|;
@@ -4014,7 +4254,7 @@ operator|.
 name|regval
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Either we should have a hardware SPI cycle in progress 	 * bit to check against, in order to start a new cycle or 	 * FDONE bit should be changed in the hardware so that it 	 * is 1 after harware reset, which can then be used as an 	 * indication whether a cycle is in progress or has been 	 * completed. 	 */
+comment|/* 	 * Either we should have a hardware SPI cycle in progress 	 * bit to check against, in order to start a new cycle or 	 * FDONE bit should be changed in the hardware so that it 	 * is 1 after hardware reset, which can then be used as an 	 * indication whether a cycle is in progress or has been 	 * completed. 	 */
 if|if
 condition|(
 name|hsfsts
@@ -4349,6 +4589,75 @@ literal|2
 argument_list|,
 name|data
 argument_list|)
+expr_stmt|;
+name|out
+label|:
+return|return
+name|ret_val
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_read_flash_byte_ich8lan - Read byte from flash  *  @hw: pointer to the HW structure  *  @offset: The offset of the byte to read.  *  @data: Pointer to a byte to store the value read.  *  *  Reads a single byte from the NVM using the flash access registers.  **/
+end_comment
+
+begin_function
+name|STATIC
+name|s32
+name|e1000_read_flash_byte_ich8lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|offset
+parameter_list|,
+name|u8
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|s32
+name|ret_val
+init|=
+name|E1000_SUCCESS
+decl_stmt|;
+name|u16
+name|word
+init|=
+literal|0
+decl_stmt|;
+name|ret_val
+operator|=
+name|e1000_read_flash_data_ich8lan
+argument_list|(
+name|hw
+argument_list|,
+name|offset
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|word
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+operator|*
+name|data
+operator|=
+operator|(
+name|u8
+operator|)
+name|word
 expr_stmt|;
 name|out
 label|:
@@ -4850,7 +5159,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_update_nvm_checksum_ich8lan - Update the checksum for NVM  *  @hw: pointer to the HW structure  *  *  The NVM checksum is updated by calling the generic update_nvm_checksum,  *  which writes the checksum to the shadow ram.  The changes in the shadow  *  ram are then committed to the EEPROM by processing each bank at a time  *  checking for the modified bit and writing only the pending changes.  *  After a succesful commit, the shadow ram is cleared and is ready for  *  future writes.  **/
+comment|/**  *  e1000_update_nvm_checksum_ich8lan - Update the checksum for NVM  *  @hw: pointer to the HW structure  *  *  The NVM checksum is updated by calling the generic update_nvm_checksum,  *  which writes the checksum to the shadow ram.  The changes in the shadow  *  ram are then committed to the EEPROM by processing each bank at a time  *  checking for the modified bit and writing only the pending changes.  *  After a successful commit, the shadow ram is cleared and is ready for  *  future writes.  **/
 end_comment
 
 begin_function
@@ -5326,7 +5635,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_validate_nvm_checksum_ich8lan - Validate EEPROM checksum  *  @hw: pointer to the HW structure  *  *  Check to see if checksum needs to be fixed by reading bit 6 in word 0x19.  *  If the bit is 0, that the EEPROM had been modified, but the checksum was not  *  calculated, in which case we need to calculate the checksum and set bit 6.  **/
+comment|/**  *  e1000_validate_nvm_checksum_ich8lan - Validate EEPROM checksum  *  @hw: pointer to the HW structure  *  *  Check to see if checksum needs to be fixed by reading bit 6 in word 0x19.  *  If the bit is 0, that the EEPROM had been modified, but the checksum was  *  not calculated, in which case we need to calculate the checksum and set  *  bit 6.  **/
 end_comment
 
 begin_function
@@ -6651,7 +6960,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_hw_ich8lan - Initialize the hardware  *  @hw: pointer to the HW structure  *  *  Prepares the hardware for transmit and receive by doing the following:  *   - initialize hardware bits  *   - initialize LED identification  *   - setup receive address registers  *   - setup flow control  *   - setup transmit discriptors  *   - clear statistics  **/
+comment|/**  *  e1000_init_hw_ich8lan - Initialize the hardware  *  @hw: pointer to the HW structure  *  *  Prepares the hardware for transmit and receive by doing the following:  *   - initialize hardware bits  *   - initialize LED identification  *   - setup receive address registers  *   - setup flow control  *   - setup transmit descriptors  *   - clear statistics  **/
 end_comment
 
 begin_function
@@ -7541,6 +7850,33 @@ goto|goto
 name|out
 goto|;
 block|}
+elseif|else
+if|if
+condition|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|type
+operator|==
+name|e1000_phy_bm
+condition|)
+block|{
+name|ret_val
+operator|=
+name|e1000_copper_link_setup_m88
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 name|hw
@@ -7647,7 +7983,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_link_up_info_ich8lan - Get current link speed and duplex  *  @hw: pointer to the HW structure  *  @speed: pointer to store current link speed  *  @duplex: pointer to store the current link duplex  *  *  Calls the generic get_speed_and_duplex to retreive the current link  *  information and then calls the Kumeran lock loss workaround for links at  *  gigabit speeds.  **/
+comment|/**  *  e1000_get_link_up_info_ich8lan - Get current link speed and duplex  *  @hw: pointer to the HW structure  *  @speed: pointer to store current link speed  *  @duplex: pointer to store the current link duplex  *  *  Calls the generic get_speed_and_duplex to retrieve the current link  *  information and then calls the Kumeran lock loss workaround for links at  *  gigabit speeds.  **/
 end_comment
 
 begin_function
@@ -7966,7 +8302,7 @@ argument_list|,
 name|phy_ctrl
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Call gig speed drop workaround on Giga disable before accessing 	 * any PHY registers 	 */
+comment|/* 	 * Call gig speed drop workaround on Gig disable before accessing 	 * any PHY registers 	 */
 name|e1000_gig_downshift_workaround_ich8lan
 argument_list|(
 name|hw
@@ -7987,7 +8323,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_kmrn_lock_loss_workaound_ich8lan - Set Kumeran workaround state  *  @hw: pointer to the HW structure  *  @state: boolean value used to set the current Kumaran workaround state  *  *  If ICH8, set the current Kumeran workaround state (enabled - TRUE  *  /disabled - FALSE).  **/
+comment|/**  *  e1000_set_kmrn_lock_loss_workaround_ich8lan - Set Kumeran workaround state  *  @hw: pointer to the HW structure  *  @state: boolean value used to set the current Kumeran workaround state  *  *  If ICH8, set the current Kumeran workaround state (enabled - TRUE  *  /disabled - FALSE).  **/
 end_comment
 
 begin_function
@@ -8144,7 +8480,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Call gig speed drop workaround on Giga disable before 		 * accessing any PHY registers 		 */
+comment|/* 		 * Call gig speed drop workaround on Gig disable before 		 * accessing any PHY registers 		 */
 if|if
 condition|(
 name|hw
@@ -8250,7 +8586,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_gig_downshift_workaround_ich8lan - WoL from S5 stops working  *  @hw: pointer to the HW structure  *  *  Steps to take when dropping from 1Gb/s (eg. link cable removal (LSC),  *  LPLU, Giga disable, MDIC PHY reset):  *    1) Set Kumeran Near-end loopback  *    2) Clear Kumeran Near-end loopback  *  Should only be called for ICH8[m] devices with IGP_3 Phy.  **/
+comment|/**  *  e1000_gig_downshift_workaround_ich8lan - WoL from S5 stops working  *  @hw: pointer to the HW structure  *  *  Steps to take when dropping from 1Gb/s (eg. link cable removal (LSC),  *  LPLU, Gig disable, MDIC PHY reset):  *    1) Set Kumeran Near-end loopback  *    2) Clear Kumeran Near-end loopback  *  Should only be called for ICH8[m] devices with IGP_3 Phy.  **/
 end_comment
 
 begin_function
@@ -8365,6 +8701,95 @@ block|}
 end_function
 
 begin_comment
+comment|/**  *  e1000_disable_gig_wol_ich8lan - disable gig during WoL  *  @hw: pointer to the HW structure  *  *  During S0 to Sx transition, it is possible the link remains at gig  *  instead of negotiating to a lower speed.  Before going to Sx, set  *  'LPLU Enabled' and 'Gig Disable' to force link speed negotiation  *  to a lower speed.  *  *  Should only be called for ICH9m and ICH10 devices.  **/
+end_comment
+
+begin_function
+name|void
+name|e1000_disable_gig_wol_ich8lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|u32
+name|phy_ctrl
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_ich10lan
+operator|)
+operator|||
+operator|(
+operator|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_ich9lan
+operator|)
+operator|&&
+operator|(
+operator|(
+name|hw
+operator|->
+name|device_id
+operator|==
+name|E1000_DEV_ID_ICH9_IGP_M
+operator|)
+operator|||
+operator|(
+name|hw
+operator|->
+name|device_id
+operator|==
+name|E1000_DEV_ID_ICH9_IGP_M_AMT
+operator|)
+operator|)
+operator|)
+condition|)
+block|{
+name|phy_ctrl
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_PHY_CTRL
+argument_list|)
+expr_stmt|;
+name|phy_ctrl
+operator||=
+name|E1000_PHY_CTRL_D0A_LPLU
+operator||
+name|E1000_PHY_CTRL_GBE_DISABLE
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_PHY_CTRL
+argument_list|,
+name|phy_ctrl
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+end_function
+
+begin_comment
 comment|/**  *  e1000_cleanup_led_ich8lan - Restore the default LED operation  *  @hw: pointer to the HW structure  *  *  Return the LED back to the default configuration.  **/
 end_comment
 
@@ -8431,7 +8856,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_on_ich8lan - Turn LED's on  *  @hw: pointer to the HW structure  *  *  Turn on the LED's.  **/
+comment|/**  *  e1000_led_on_ich8lan - Turn LEDs on  *  @hw: pointer to the HW structure  *  *  Turn on the LEDs.  **/
 end_comment
 
 begin_function
@@ -8501,7 +8926,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_off_ich8lan - Turn LED's off  *  @hw: pointer to the HW structure  *  *  Turn off the LED's.  **/
+comment|/**  *  e1000_led_off_ich8lan - Turn LEDs off  *  @hw: pointer to the HW structure  *  *  Turn off the LEDs.  **/
 end_comment
 
 begin_function
@@ -8590,12 +9015,28 @@ name|ret_val
 init|=
 name|E1000_SUCCESS
 decl_stmt|;
+name|u32
+name|bank
+init|=
+literal|0
+decl_stmt|;
 name|e1000_get_cfg_done_generic
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
 comment|/* If EEPROM is not marked present, init the IGP 3 PHY manually */
+if|if
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|!=
+name|e1000_ich10lan
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -8629,6 +9070,33 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|e1000_valid_nvm_bank_detect_ich8lan
+argument_list|(
+name|hw
+argument_list|,
+operator|&
+name|bank
+argument_list|)
+condition|)
+block|{
+comment|/* Maybe we should do a basic Boazman config */
+name|DEBUGOUT
+argument_list|(
+literal|"EEPROM not present\n"
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+operator|-
+name|E1000_ERR_CONFIG
+expr_stmt|;
+block|}
 block|}
 return|return
 name|ret_val

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/*******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
 begin_comment
@@ -22,18 +22,6 @@ include|#
 directive|include
 file|"e1000_82571.h"
 end_include
-
-begin_function_decl
-name|void
-name|e1000_init_function_pointers_82571
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|STATIC
@@ -748,6 +736,94 @@ name|out
 goto|;
 block|}
 break|break;
+case|case
+name|e1000_82574
+case|:
+name|phy
+operator|->
+name|type
+operator|=
+name|e1000_phy_bm
+expr_stmt|;
+name|func
+operator|->
+name|get_cfg_done
+operator|=
+name|e1000_get_cfg_done_generic
+expr_stmt|;
+name|func
+operator|->
+name|get_phy_info
+operator|=
+name|e1000_get_phy_info_m88
+expr_stmt|;
+name|func
+operator|->
+name|commit_phy
+operator|=
+name|e1000_phy_sw_reset_generic
+expr_stmt|;
+name|func
+operator|->
+name|force_speed_duplex
+operator|=
+name|e1000_phy_force_speed_duplex_m88
+expr_stmt|;
+name|func
+operator|->
+name|get_cable_length
+operator|=
+name|e1000_get_cable_length_m88
+expr_stmt|;
+name|func
+operator|->
+name|read_phy_reg
+operator|=
+name|e1000_read_phy_reg_bm2
+expr_stmt|;
+name|func
+operator|->
+name|write_phy_reg
+operator|=
+name|e1000_write_phy_reg_bm2
+expr_stmt|;
+comment|/* This uses above function pointers */
+name|ret_val
+operator|=
+name|e1000_get_phy_id_82571
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+comment|/* Verify PHY ID */
+if|if
+condition|(
+name|phy
+operator|->
+name|id
+operator|!=
+name|BME1000_E_PHY_ID_R2
+condition|)
+block|{
+name|ret_val
+operator|=
+operator|-
+name|E1000_ERR_PHY
+expr_stmt|;
+name|DEBUGOUT1
+argument_list|(
+literal|"PHY ID unknown: type = 0x%08x\n"
+argument_list|,
+name|phy
+operator|->
+name|id
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+break|break;
 default|default:
 name|ret_val
 operator|=
@@ -910,6 +986,9 @@ block|{
 case|case
 name|e1000_82573
 case|:
+case|case
+name|e1000_82574
+case|:
 if|if
 condition|(
 operator|(
@@ -1014,19 +1093,7 @@ name|func
 operator|->
 name|read_nvm
 operator|=
-operator|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-operator|==
-name|e1000_82573
-operator|)
-condition|?
 name|e1000_read_nvm_eerd
-else|:
-name|e1000_read_nvm_spi
 expr_stmt|;
 name|func
 operator|->
@@ -1522,6 +1589,11 @@ name|ret_val
 init|=
 name|E1000_SUCCESS
 decl_stmt|;
+name|u16
+name|phy_id
+init|=
+literal|0
+decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_get_phy_id_82571"
@@ -1561,6 +1633,91 @@ name|hw
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|e1000_82574
+case|:
+name|ret_val
+operator|=
+name|e1000_read_phy_reg
+argument_list|(
+name|hw
+argument_list|,
+name|PHY_ID1
+argument_list|,
+operator|&
+name|phy_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+name|phy
+operator|->
+name|id
+operator|=
+call|(
+name|u32
+call|)
+argument_list|(
+name|phy_id
+operator|<<
+literal|16
+argument_list|)
+expr_stmt|;
+name|usec_delay
+argument_list|(
+literal|20
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+name|e1000_read_phy_reg
+argument_list|(
+name|hw
+argument_list|,
+name|PHY_ID2
+argument_list|,
+operator|&
+name|phy_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+name|phy
+operator|->
+name|id
+operator||=
+call|(
+name|u32
+call|)
+argument_list|(
+name|phy_id
+argument_list|)
+expr_stmt|;
+name|phy
+operator|->
+name|revision
+operator|=
+call|(
+name|u32
+call|)
+argument_list|(
+name|phy_id
+operator|&
+operator|~
+name|PHY_REVISION_MASK
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|ret_val
 operator|=
@@ -1569,6 +1726,8 @@ name|E1000_ERR_PHY
 expr_stmt|;
 break|break;
 block|}
+name|out
+label|:
 return|return
 name|ret_val
 return|;
@@ -1580,6 +1739,7 @@ comment|/**  *  e1000_get_hw_semaphore_82571 - Acquire hardware semaphore  *  @h
 end_comment
 
 begin_function
+specifier|static
 name|s32
 name|e1000_get_hw_semaphore_82571
 parameter_list|(
@@ -1712,6 +1872,7 @@ comment|/**  *  e1000_put_hw_semaphore_82571 - Release hardware semaphore  *  @h
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|e1000_put_hw_semaphore_82571
 parameter_list|(
@@ -1801,6 +1962,14 @@ operator|.
 name|type
 operator|!=
 name|e1000_82573
+operator|&&
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|!=
+name|e1000_82574
 condition|)
 name|ret_val
 operator|=
@@ -1860,7 +2029,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_nvm_82571 - Write to EEPROM using appropriate interface  *  @hw: pointer to the HW structure  *  @offset: offset within the EEPROM to be written to  *  @words: number of words to write  *  @data: 16 bit word(s) to be written to the EEPROM  *  *  For non-82573 silicon, write data to EEPROM at offset using SPI interface.  *  *  If e1000_update_nvm_checksum is not called after this function, the  *  EEPROM will most likley contain an invalid checksum.  **/
+comment|/**  *  e1000_write_nvm_82571 - Write to EEPROM using appropriate interface  *  @hw: pointer to the HW structure  *  @offset: offset within the EEPROM to be written to  *  @words: number of words to write  *  @data: 16 bit word(s) to be written to the EEPROM  *  *  For non-82573 silicon, write data to EEPROM at offset using SPI interface.  *  *  If e1000_update_nvm_checksum is not called after this function, the  *  EEPROM will most likely contain an invalid checksum.  **/
 end_comment
 
 begin_function
@@ -1905,6 +2074,9 @@ condition|)
 block|{
 case|case
 name|e1000_82573
+case|:
+case|case
+name|e1000_82574
 case|:
 name|ret_val
 operator|=
@@ -2232,7 +2404,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_nvm_eewr_82571 - Write to EEPROM for 82573 silicon  *  @hw: pointer to the HW structure  *  @offset: offset within the EEPROM to be written to  *  @words: number of words to write  *  @data: 16 bit word(s) to be written to the EEPROM  *  *  After checking for invalid values, poll the EEPROM to ensure the previous  *  command has completed before trying to write the next word.  After write  *  poll for completion.  *  *  If e1000_update_nvm_checksum is not called after this function, the  *  EEPROM will most likley contain an invalid checksum.  **/
+comment|/**  *  e1000_write_nvm_eewr_82571 - Write to EEPROM for 82573 silicon  *  @hw: pointer to the HW structure  *  @offset: offset within the EEPROM to be written to  *  @words: number of words to write  *  @data: 16 bit word(s) to be written to the EEPROM  *  *  After checking for invalid values, poll the EEPROM to ensure the previous  *  command has completed before trying to write the next word.  After write  *  poll for completion.  *  *  If e1000_update_nvm_checksum is not called after this function, the  *  EEPROM will most likely contain an invalid checksum.  **/
 end_comment
 
 begin_function
@@ -2856,6 +3028,14 @@ operator|.
 name|type
 operator|==
 name|e1000_82573
+operator|||
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_82574
 condition|)
 block|{
 name|extcnf_ctrl
@@ -3013,6 +3193,14 @@ operator|.
 name|type
 operator|==
 name|e1000_82573
+operator|||
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_82574
 condition|)
 name|msec_delay
 argument_list|(
@@ -3249,6 +3437,12 @@ operator|->
 name|type
 operator|!=
 name|e1000_82573
+operator|&&
+name|mac
+operator|->
+name|type
+operator|!=
+name|e1000_82574
 condition|)
 block|{
 name|reg_data
@@ -3637,6 +3831,14 @@ operator|.
 name|type
 operator|==
 name|e1000_82573
+operator|||
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_82574
 condition|)
 block|{
 name|reg
@@ -3677,6 +3879,14 @@ operator|.
 name|type
 operator|==
 name|e1000_82573
+operator|||
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_82574
 condition|)
 block|{
 name|reg
@@ -3768,6 +3978,14 @@ operator|.
 name|type
 operator|==
 name|e1000_82573
+operator|||
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_82574
 condition|)
 block|{
 if|if
@@ -3948,6 +4166,14 @@ operator|.
 name|type
 operator|==
 name|e1000_82573
+operator|||
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_82574
 condition|)
 name|hw
 operator|->
@@ -4036,6 +4262,9 @@ condition|)
 block|{
 case|case
 name|e1000_phy_m88
+case|:
+case|case
+name|e1000_phy_bm
 case|:
 name|ret_val
 operator|=
@@ -4152,7 +4381,7 @@ case|:
 case|case
 name|e1000_82572
 case|:
-comment|/* 		 * If SerDes loopback mode is entered, there is no form 		 * of reset to take the adapter out of that mode.  So we 		 * have to explicitly take the adapter out of loopback 		 * mode.  This prevents drivers from twidling their thumbs 		 * if another tool failed to take it out of loopback mode. 		 */
+comment|/* 		 * If SerDes loopback mode is entered, there is no form 		 * of reset to take the adapter out of that mode.  So we 		 * have to explicitly take the adapter out of loopback 		 * mode.  This prevents drivers from twiddling their thumbs 		 * if another tool failed to take it out of loopback mode. 		 */
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -4231,6 +4460,7 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
 name|hw
 operator|->
 name|mac
@@ -4238,6 +4468,15 @@ operator|.
 name|type
 operator|==
 name|e1000_82573
+operator|||
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_82574
+operator|)
 operator|&&
 operator|*
 name|data
@@ -4276,7 +4515,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_laa_state_82571 - Get locally administered address state  *  @hw: pointer to the HW structure  *  *  Retrieve and return the current locally administed address state.  **/
+comment|/**  *  e1000_get_laa_state_82571 - Get locally administered address state  *  @hw: pointer to the HW structure  *  *  Retrieve and return the current locally administered address state.  **/
 end_comment
 
 begin_function
@@ -4343,7 +4582,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_laa_state_82571 - Set locally administered address state  *  @hw: pointer to the HW structure  *  @state: enable/disable locally administered address  *  *  Enable/Disable the current locally administed address state.  **/
+comment|/**  *  e1000_set_laa_state_82571 - Set locally administered address state  *  @hw: pointer to the HW structure  *  @state: enable/disable locally administered address  *  *  Enable/Disable the current locally administered address state.  **/
 end_comment
 
 begin_function

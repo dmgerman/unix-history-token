@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/*******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
 begin_comment
@@ -22,18 +22,6 @@ include|#
 directive|include
 file|"e1000_82541.h"
 end_include
-
-begin_function_decl
-name|void
-name|e1000_init_function_pointers_82541
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|STATIC
@@ -2042,7 +2030,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_phy_hw_reset_82541 - PHY hardware reset  *  @hw: pointer to the HW structure  *  *  Verify the reset block is not blocking us from resetting.  Acquire  *  semaphore (if necessary) and read/set/write the device control reset  *  bit in the PHY.  Wait the appropriate delay time for the device to  *  reset and relase the semaphore (if necessary).  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_phy_hw_reset_82541 - PHY hardware reset  *  @hw: pointer to the HW structure  *  *  Verify the reset block is not blocking us from resetting.  Acquire  *  semaphore (if necessary) and read/set/write the device control reset  *  bit in the PHY.  Wait the appropriate delay time for the device to  *  reset and release the semaphore (if necessary).  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
@@ -3252,7 +3240,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_cable_length_igp_82541 - Determine cable length for igp PHY  *  @hw: pointer to the HW structure  *  *  The automatic gain control (agc) normalizes the amplitude of the  *  received signal, adjusting for the attenuation produced by the  *  cable.  By reading the AGC registers, which reperesent the  *  cobination of course and fine gain value, the value can be put  *  into a lookup table to obtain the approximate cable length  *  for each channel.  This is a function pointer entry point called by the  *  api module.  **/
+comment|/**  *  e1000_get_cable_length_igp_82541 - Determine cable length for igp PHY  *  @hw: pointer to the HW structure  *  *  The automatic gain control (agc) normalizes the amplitude of the  *  received signal, adjusting for the attenuation produced by the  *  cable.  By reading the AGC registers, which represent the  *  combination of coarse and fine gain value, the value can be put  *  into a lookup table to obtain the approximate cable length  *  for each channel.  This is a function pointer entry point called by the  *  api module.  **/
 end_comment
 
 begin_function

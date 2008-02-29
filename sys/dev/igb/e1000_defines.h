@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_ifndef
@@ -228,61 +228,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_WUFC_IGNORE_TCO_BM
-value|0x00000800
-end_define
-
-begin_comment
-comment|/* Ignore WakeOn TCO packets */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX0_BM
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 0 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX1_BM
-value|0x00002000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 1 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX2_BM
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 2 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX3_BM
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* Flexible Filter 3 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_WUFC_IGNORE_TCO
 value|0x00008000
 end_define
@@ -333,39 +278,6 @@ end_define
 
 begin_comment
 comment|/* Flexible Filter 3 Enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_ALL_FILTERS_BM
-value|0x0000F0FF
-end_define
-
-begin_comment
-comment|/* Mask for all wakeup filters */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX_OFFSET_BM
-value|12
-end_define
-
-begin_comment
-comment|/* Offset to the Flexible Filters bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_WUFC_FLX_FILTERS_BM
-value|0x0000F000
-end_define
-
-begin_comment
-comment|/* Mask for the 4 flexible filters */
 end_comment
 
 begin_define
@@ -459,41 +371,6 @@ define|#
 directive|define
 name|E1000_WUS_IPV6
 value|E1000_WUFC_IPV6
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX0_BM
-value|E1000_WUFC_FLX0_BM
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX1_BM
-value|E1000_WUFC_FLX1_BM
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX2_BM
-value|E1000_WUFC_FLX2_BM
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX3_BM
-value|E1000_WUFC_FLX3_BM
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_WUS_FLX_FILTERS_BM
-value|E1000_WUFC_FLX_FILTERS_BM
 end_define
 
 begin_define
@@ -991,13 +868,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_EXT_LSECCK
-value|0x00001000
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_I2CCMD_REG_ADDR_SHIFT
 value|16
 end_define
@@ -1397,48 +1267,6 @@ define|#
 directive|define
 name|E1000_RXDEXT_STATERR_RXE
 value|0x80000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECH
-value|0x01000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_MASK
-value|0x60000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_NO_ERROR
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_NO_SA_MATCH
-value|0x20000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_REPLAY_DETECT
-value|0x40000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_BAD_SIG
-value|0x60000000
 end_define
 
 begin_comment
@@ -4099,28 +3927,6 @@ begin_comment
 comment|/* Extended desc bits for Linksec and timesync */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|E1000_TXD_CMD_LINKSEC
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* Apply LinkSec on packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_EXTCMD_TSTAMP
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* IEEE1588 Timestamp packet */
-end_comment
-
 begin_comment
 comment|/* Transmit Control */
 end_comment
@@ -4498,24 +4304,6 @@ begin_comment
 comment|/* Default values for the transmit IPG register */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_82542_SUPPORT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_82542_TIPG_IPGT
-value|10
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -4551,24 +4339,6 @@ name|E1000_TIPG_IPGR2_MASK
 value|0x3FF00000
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_82542_SUPPORT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_82542_TIPG_IPGR1
-value|2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -4582,24 +4352,6 @@ directive|define
 name|E1000_TIPG_IPGR1_SHIFT
 value|10
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_82542_SUPPORT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_82542_TIPG_IPGR2
-value|10
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -5273,61 +5025,6 @@ begin_comment
 comment|/* ME hardware reset occurs */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|E1000_ICR_RXQ0
-value|0x00100000
-end_define
-
-begin_comment
-comment|/* Rx Queue 0 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_RXQ1
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* Rx Queue 1 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_TXQ0
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* Tx Queue 0 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_TXQ1
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* Tx Queue 1 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_OTHER
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* Other Interrupts */
-end_comment
-
 begin_comment
 comment|/* Extended Interrupt Cause Read */
 end_comment
@@ -5792,61 +5489,6 @@ directive|define
 name|E1000_IMS_EPRST
 value|E1000_ICR_EPRST
 end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_RXQ0
-value|E1000_ICR_RXQ0
-end_define
-
-begin_comment
-comment|/* Rx Queue 0 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_RXQ1
-value|E1000_ICR_RXQ1
-end_define
-
-begin_comment
-comment|/* Rx Queue 1 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_TXQ0
-value|E1000_ICR_TXQ0
-end_define
-
-begin_comment
-comment|/* Tx Queue 0 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_TXQ1
-value|E1000_ICR_TXQ1
-end_define
-
-begin_comment
-comment|/* Tx Queue 1 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_OTHER
-value|E1000_ICR_OTHER
-end_define
-
-begin_comment
-comment|/* Other Interrupts */
-end_comment
 
 begin_comment
 comment|/* Extended Interrupt Mask Set */
@@ -9170,20 +8812,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BME1000_E_PHY_ID
-value|0x01410CB0
-end_define
-
-begin_define
-define|#
-directive|define
-name|BME1000_E_PHY_ID_R2
-value|0x01410CB1
-end_define
-
-begin_define
-define|#
-directive|define
 name|M88_VENDOR
 value|0x0141
 end_define
@@ -9823,21 +9451,6 @@ value|0x0E00
 end_define
 
 begin_comment
-comment|/* BME1000 PHY Specific Control Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BME1000_PSCR_ENABLE_DOWNSHIFT
-value|0x0800
-end_define
-
-begin_comment
-comment|/* 1 = enable downshift */
-end_comment
-
-begin_comment
 comment|/*  * Bits...  * 15-5: page  * 4-0: register offset  */
 end_comment
 
@@ -10313,15 +9926,6 @@ define|#
 directive|define
 name|E1000_GEN_POLL_TIMEOUT
 value|640
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNREFERENCED_PARAMETER
-parameter_list|(
-name|_p
-parameter_list|)
 end_define
 
 begin_endif

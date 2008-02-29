@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/*******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
 begin_comment
@@ -22,18 +22,6 @@ include|#
 directive|include
 file|"e1000_82543.h"
 end_include
-
-begin_function_decl
-name|void
-name|e1000_init_function_pointers_82543
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|STATIC
@@ -1228,7 +1216,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_tbi_compatibility_enabled_82543 - Returns TBI compat status  *  @hw: pointer to the HW structure  *  *  Returns the curent status of 10-bit Interface (TBI) compatibility  *  (enabled/disabled).  **/
+comment|/**  *  e1000_tbi_compatibility_enabled_82543 - Returns TBI compat status  *  @hw: pointer to the HW structure  *  *  Returns the current status of 10-bit Interface (TBI) compatibility  *  (enabled/disabled).  **/
 end_comment
 
 begin_function
@@ -1423,7 +1411,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_tbi_sbp_enabled_82543 - Returns TBI SBP status  *  @hw: pointer to the HW structure  *  *  Returns the curent status of 10-bit Interface (TBI) store bad packet (SBP)  *  (enabled/disabled).  **/
+comment|/**  *  e1000_tbi_sbp_enabled_82543 - Returns TBI SBP status  *  @hw: pointer to the HW structure  *  *  Returns the current status of 10-bit Interface (TBI) store bad packet (SBP)  *  (enabled/disabled).  **/
 end_comment
 
 begin_function
@@ -2223,7 +2211,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_lower_mdi_clk_82543 - Lower Management Data Input clock  *  @hw: pointer to the HW structure  *  @ctrl: pointer to the control register  *  *  Lower the management data input clock by clearing the MDC bit in the control  *  register.  **/
+comment|/**  *  e1000_lower_mdi_clk_82543 - Lower Management Data Input clock  *  @hw: pointer to the HW structure  *  @ctrl: pointer to the control register  *  *  Lower the management data input clock by clearing the MDC bit in the  *  control register.  **/
 end_comment
 
 begin_function
@@ -2623,7 +2611,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_polarity_reversal_workaround_82543 - Workaround polarity reversal  *  @hw: pointer to the HW structure  *  *  When forcing link to 10 Full or 10 Half, the PHY can reverse the polarity  *  inadvertantly.  To workaround the issue, we disable the transmitter on  *  the PHY until we have established the link partner's link parameters.  **/
+comment|/**  *  e1000_polarity_reversal_workaround_82543 - Workaround polarity reversal  *  @hw: pointer to the HW structure  *  *  When forcing link to 10 Full or 10 Half, the PHY can reverse the polarity  *  inadvertently.  To workaround the issue, we disable the transmitter on  *  the PHY until we have established the link partner's link parameters.  **/
 end_comment
 
 begin_function
@@ -3872,7 +3860,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For these adapters, the SW defineable pin 1 is cleared when the 	 * optics detect a signal.  If we have a signal, then poll for a 	 * "Link-Up" indication. 	 */
+comment|/* 	 * For these adapters, the SW definable pin 1 is cleared when the 	 * optics detect a signal.  If we have a signal, then poll for a 	 * "Link-Up" indication. 	 */
 if|if
 condition|(
 operator|!
@@ -5005,7 +4993,7 @@ operator|==
 name|e1000_media_type_copper
 condition|)
 block|{
-comment|/* Clear SW-defineable Pin 0 to turn on the LED */
+comment|/* Clear SW-definable Pin 0 to turn on the LED */
 name|ctrl
 operator|&=
 operator|~
@@ -5092,7 +5080,7 @@ operator|==
 name|e1000_media_type_copper
 condition|)
 block|{
-comment|/* Set SW-defineable Pin 0 to turn off the LED */
+comment|/* Set SW-definable Pin 0 to turn off the LED */
 name|ctrl
 operator||=
 name|E1000_CTRL_SWDPIN0
