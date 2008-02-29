@@ -62,7 +62,7 @@ name|__IDSTRING
 argument_list|(
 name|dotat
 argument_list|,
-literal|"$dotat: things/unifdef.c,v 1.176 2008/02/29 12:44:25 fanf2 Exp $"
+literal|"$dotat: things/unifdef.c,v 1.177 2008/02/29 13:17:37 fanf2 Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3268,7 +3268,7 @@ operator|=
 name|LS_DIRTY
 expr_stmt|;
 block|}
-comment|/* skipcomment normally changes the state, except 		   if the last line of the file lacks a newline */
+comment|/* skipcomment normally changes the state, except 		   if the last line of the file lacks a newline, or 		   if there is too much whitespace in a directive */
 if|if
 condition|(
 name|linestate
@@ -3297,13 +3297,10 @@ name|len
 argument_list|,
 name|input
 argument_list|)
-operator|!=
+operator|==
 name|NULL
 condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* bug */
+block|{
 comment|/* append the missing newline */
 name|tline
 index|[
@@ -3330,6 +3327,14 @@ name|linestate
 operator|=
 name|LS_START
 expr_stmt|;
+block|}
+else|else
+block|{
+name|linestate
+operator|=
+name|LS_DIRTY
+expr_stmt|;
+block|}
 block|}
 block|}
 if|if
