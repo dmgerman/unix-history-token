@@ -74,6 +74,20 @@ begin_comment
 comment|/* Maximum length of the process name. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LINUX_MREMAP_MAYMOVE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_MREMAP_FIXED
+value|2
+end_define
+
 begin_endif
 endif|#
 directive|endif
