@@ -68,6 +68,10 @@ name|environ
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Print entire environ array.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -92,7 +96,6 @@ name|environPtr
 operator|!=
 name|NULL
 condition|;
-operator|*
 name|environPtr
 operator|++
 control|)
@@ -107,6 +110,10 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Print usage.  */
+end_comment
 
 begin_function
 specifier|static
@@ -144,6 +151,45 @@ name|basename
 argument_list|(
 name|program
 argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Print the return value of a call along with errno upon error else zero.  * Also, use the eol string based upon whether running in test mode or not.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|print_rtrn_errno
+parameter_list|(
+name|int
+name|rtrnVal
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|eol
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%d %d%s"
+argument_list|,
+name|rtrnVal
+argument_list|,
+name|rtrnVal
+operator|!=
+literal|0
+condition|?
+name|errno
+else|:
+literal|0
+argument_list|,
+name|eol
 argument_list|)
 expr_stmt|;
 return|return;
@@ -210,6 +256,7 @@ name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* The entire program is basically executed from this loop. */
 while|while
 condition|(
 operator|(
@@ -262,10 +309,6 @@ break|break;
 case|case
 literal|'D'
 case|:
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 name|dump_environ
 argument_list|()
 expr_stmt|;
@@ -273,29 +316,6 @@ break|break;
 case|case
 literal|'G'
 case|:
-name|value
-operator|=
-name|getenv
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s%s"
-argument_list|,
-name|value
-operator|==
-name|NULL
-condition|?
-literal|""
-else|:
-name|value
-argument_list|,
-name|eol
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 literal|'g'
 case|:
@@ -303,7 +323,13 @@ name|value
 operator|=
 name|getenv
 argument_list|(
+name|arg
+operator|==
+literal|'g'
+condition|?
 name|optarg
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 name|printf
@@ -325,20 +351,12 @@ break|break;
 case|case
 literal|'p'
 case|:
-name|errno
-operator|=
-literal|0
-expr_stmt|;
-name|printf
+name|print_rtrn_errno
 argument_list|(
-literal|"%d %d%s"
-argument_list|,
 name|putenv
 argument_list|(
 name|optarg
 argument_list|)
-argument_list|,
-name|errno
 argument_list|,
 name|eol
 argument_list|)
@@ -355,14 +373,8 @@ break|break;
 case|case
 literal|'S'
 case|:
-name|errno
-operator|=
-literal|0
-expr_stmt|;
-name|printf
+name|print_rtrn_errno
 argument_list|(
-literal|"%d %d%s"
-argument_list|,
 name|setenv
 argument_list|(
 name|NULL
@@ -378,8 +390,6 @@ index|]
 argument_list|)
 argument_list|)
 argument_list|,
-name|errno
-argument_list|,
 name|eol
 argument_list|)
 expr_stmt|;
@@ -391,14 +401,8 @@ break|break;
 case|case
 literal|'s'
 case|:
-name|errno
-operator|=
-literal|0
-expr_stmt|;
-name|printf
+name|print_rtrn_errno
 argument_list|(
-literal|"%d %d%s"
-argument_list|,
 name|setenv
 argument_list|(
 name|optarg
@@ -419,8 +423,6 @@ index|]
 argument_list|)
 argument_list|)
 argument_list|,
-name|errno
-argument_list|,
 name|eol
 argument_list|)
 expr_stmt|;
@@ -440,34 +442,21 @@ break|break;
 case|case
 literal|'U'
 case|:
-name|printf
-argument_list|(
-literal|"%d %d%s"
-argument_list|,
-name|unsetenv
-argument_list|(
-name|NULL
-argument_list|)
-argument_list|,
-name|errno
-argument_list|,
-name|eol
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 literal|'u'
 case|:
-name|printf
+name|print_rtrn_errno
 argument_list|(
-literal|"%d %d%s"
-argument_list|,
 name|unsetenv
 argument_list|(
+name|arg
+operator|==
+literal|'u'
+condition|?
 name|optarg
+else|:
+name|NULL
 argument_list|)
-argument_list|,
-name|errno
 argument_list|,
 name|eol
 argument_list|)
@@ -492,7 +481,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|// Output a closing newline in test mode.
+comment|/* Output a closing newline in test mode. */
 if|if
 condition|(
 name|eol
