@@ -45,7 +45,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/_lock.h>
 end_include
 
 begin_struct_decl
@@ -229,7 +229,7 @@ begin_define
 define|#
 directive|define
 name|LK_EXTFLG_MASK
-value|0x00000ff0
+value|0x0000fff0
 end_define
 
 begin_comment
@@ -313,6 +313,35 @@ begin_comment
 comment|/* enable duplication logging */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LK_NOPROFILE
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* disable lock profiling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_QUIET
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* disable lock operations tracking */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_FUNC_MASK
+value|(LK_NODUP | LK_NOPROFILE | LK_NOWITNESS | LK_QUIET)
+end_define
+
 begin_comment
 comment|/*  * Nonpersistent external flags.  */
 end_comment
@@ -321,7 +350,7 @@ begin_define
 define|#
 directive|define
 name|LK_RETRY
-value|0x00001000
+value|0x00010000
 end_define
 
 begin_comment
@@ -332,100 +361,12 @@ begin_define
 define|#
 directive|define
 name|LK_INTERLOCK
-value|0x00002000
+value|0x00020000
 end_define
 
 begin_comment
 comment|/* 				    * unlock passed mutex after getting 				    * lk_interlock 				    */
 end_comment
-
-begin_comment
-comment|/*  * Internal lock flags.  *  * These flags are used internally to the lock manager.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LK_WANT_UPGRADE
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* waiting for share-to-excl upgrade */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LK_WANT_EXCL
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* exclusive lock sought */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LK_HAVE_EXCL
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* exclusive lock obtained */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LK_WAITDRAIN
-value|0x00080000
-end_define
-
-begin_comment
-comment|/* process waiting for lock to drain */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LK_DRAINING
-value|0x00100000
-end_define
-
-begin_comment
-comment|/* lock is being drained */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LK_DESTROYED
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* lock is destroyed */
-end_comment
-
-begin_comment
-comment|/*  * Internal state flags corresponding to lk_sharecount, and lk_waitcount  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LK_SHARE_NONZERO
-value|0x01000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|LK_WAIT_NONZERO
-value|0x02000000
-end_define
 
 begin_comment
 comment|/*  * Default values for lockmgr_args().  */
@@ -451,6 +392,111 @@ directive|define
 name|LK_TIMO_DEFAULT
 value|(0)
 end_define
+
+begin_comment
+comment|/*  * Internal lock flags.  *  * These flags are used internally to the lock manager.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_WANT_UPGRADE
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* waiting for share-to-excl upgrade */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_WANT_EXCL
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* exclusive lock sought */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_HAVE_EXCL
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* exclusive lock obtained */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_WAITDRAIN
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* process waiting for lock to drain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_DRAINING
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* lock is being drained */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_DESTROYED
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* lock is destroyed */
+end_comment
+
+begin_comment
+comment|/*  * Internal state flags corresponding to lk_sharecount, and lk_waitcount  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_SHARE_NONZERO
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LK_WAIT_NONZERO
+value|0x20000000
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCK_FILE
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"LOCK_FILE not defined, include<sys/lock.h> before<sys/lockmgr.h>"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Assertion flags.  */
@@ -708,17 +754,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|lockstatus
-parameter_list|(
-name|struct
-name|lock
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|lockwaiters
 parameter_list|(
 name|struct
 name|lock

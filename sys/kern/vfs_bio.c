@@ -2349,6 +2349,12 @@ name|b_xflags
 operator|=
 literal|0
 expr_stmt|;
+name|bp
+operator|->
+name|b_waiters
+operator|=
+literal|0
+expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -4662,6 +4668,9 @@ name|bp
 operator|->
 name|b_vp
 condition|)
+operator|(
+name|void
+operator|)
 name|brelvp
 argument_list|(
 name|bp
@@ -5207,6 +5216,9 @@ name|b_vp
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|brelvp
 argument_list|(
 name|bp
@@ -5542,6 +5554,9 @@ name|bp
 operator|->
 name|b_vp
 condition|)
+operator|(
+name|void
+operator|)
 name|brelvp
 argument_list|(
 name|bp
@@ -6236,6 +6251,9 @@ name|bp
 operator|->
 name|b_vp
 condition|)
+operator|(
+name|void
+operator|)
 name|brelvp
 argument_list|(
 name|bp
@@ -6719,6 +6737,11 @@ decl_stmt|;
 name|int
 name|nqindex
 decl_stmt|;
+name|int
+name|waiters
+init|=
+literal|0
+decl_stmt|;
 specifier|static
 name|int
 name|flushingbufs
@@ -7131,6 +7154,8 @@ name|bp
 operator|->
 name|b_vp
 condition|)
+name|waiters
+operator|=
 name|brelvp
 argument_list|(
 name|bp
@@ -7435,10 +7460,7 @@ name|qindex
 operator|==
 name|QUEUE_CLEAN
 operator|&&
-name|BUF_LOCKWAITERS
-argument_list|(
-name|bp
-argument_list|)
+name|waiters
 operator|>
 literal|0
 condition|)

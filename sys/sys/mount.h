@@ -36,13 +36,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/lockmgr.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/_lock.h>
+file|<sys/lockmgr.h>
 end_include
 
 begin_include
