@@ -4685,7 +4685,7 @@ break|break;
 case|case
 name|LOCAL_CREDS
 case|:
-comment|/* Unocked read. */
+comment|/* Unlocked read. */
 name|optval
 operator|=
 name|unp
@@ -4717,7 +4717,7 @@ break|break;
 case|case
 name|LOCAL_CONNWAIT
 case|:
-comment|/* Unocked read. */
+comment|/* Unlocked read. */
 name|optval
 operator|=
 name|unp
