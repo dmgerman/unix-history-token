@@ -3332,9 +3332,6 @@ name|copyin
 argument_list|(
 name|addr
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|newlim
 argument_list|,
@@ -3738,9 +3735,6 @@ name|copyin
 argument_list|(
 name|addr
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|usage
 argument_list|,
@@ -4794,9 +4788,6 @@ name|aiov
 operator|.
 name|iov_base
 operator|=
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|dq
 operator|->
@@ -4897,9 +4888,6 @@ literal|0
 condition|)
 name|bzero
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|dq
 operator|->
@@ -5431,9 +5419,6 @@ name|aiov
 operator|.
 name|iov_base
 operator|=
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|dq
 operator|->
