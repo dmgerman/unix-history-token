@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Pseudo-teletype Driver  * (Actually two drivers, requiring two entries in 'cdevsw')  */
+comment|/*  * Pseudo-teletype Driver  * (Actually two drivers, requiring two entries in 'cdevsw')  *  * XXX: This driver is currently disabled in FreeBSD 7.x due to reference  * count issues that prevent allocated but unused pty/pts devices from being  * garbage collected.  */
 end_comment
 
 begin_include
