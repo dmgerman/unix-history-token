@@ -1083,7 +1083,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|send_trigger
+name|audit_send_trigger
 parameter_list|(
 name|unsigned
 name|int
