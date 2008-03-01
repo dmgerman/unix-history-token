@@ -588,7 +588,7 @@ end_comment
 
 begin_function
 name|au_event_t
-name|ctlname_to_sysctlevent
+name|audit_ctlname_to_sysctlevent
 parameter_list|(
 name|int
 name|name
@@ -775,7 +775,7 @@ end_comment
 
 begin_function
 name|au_event_t
-name|flags_and_error_to_openevent
+name|audit_flags_and_error_to_openevent
 parameter_list|(
 name|int
 name|oflags
