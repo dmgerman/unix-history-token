@@ -2780,7 +2780,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/*  	 * Refresh PID associated with this descriptor. 	 */
+comment|/* 	 * Refresh PID associated with this descriptor. 	 */
 name|d
 operator|->
 name|bd_pid
@@ -4444,7 +4444,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/*  	 * Refresh PID associated with this descriptor. 	 */
+comment|/* 	 * Refresh PID associated with this descriptor. 	 */
 name|d
 operator|->
 name|bd_pid
