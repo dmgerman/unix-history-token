@@ -615,11 +615,6 @@ name|vm_map
 decl_stmt|;
 comment|/* VM address map */
 name|struct
-name|pmap
-name|vm_pmap
-decl_stmt|;
-comment|/* private physical map */
-name|struct
 name|shmmap_state
 modifier|*
 name|vm_shm
@@ -657,6 +652,12 @@ name|int
 name|vm_refcnt
 decl_stmt|;
 comment|/* number of references */
+comment|/* 	 * Keep the PMAP last, so that CPU-specific variations of that 	 * structure on a single architecture don't result in offset 	 * variations of the machine-independent fields in the vmspace. 	 */
+name|struct
+name|pmap
+name|vm_pmap
+decl_stmt|;
+comment|/* private physical map */
 block|}
 struct|;
 end_struct
