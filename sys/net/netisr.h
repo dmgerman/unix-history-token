@@ -16,11 +16,7 @@ name|_NET_NETISR_H_
 end_define
 
 begin_comment
-comment|/*  * The networking code runs off software interrupts.  *  * You can switch into the network by doing splnet() and return by splx().  * The software interrupt level for the network is higher than the software  * level for the clock (so you can enter the network in routines called  * at timeout time).  */
-end_comment
-
-begin_comment
-comment|/*  * Each ``pup-level-1'' input queue has a bit in a ``netisr'' status  * word which is used to de-multiplex a single software  * interrupt used for scheduling the network code to calls  * on the lowest level routine of each protocol.  */
+comment|/*  * The netisr (network interrupt service routine) provides a deferred  * execution evironment in which (generally inbound) network processing can  * take place.  Protocols register handlers and, optionally, packet queues;  * when packets are delivered to the queue, the protocol handler will be  * executed directly, or via deferred dispatch depending on the  * circumstances.  *  * Historically, this was implemented by the BSD software ISR facility; it is  * now implemented via a software ithread (SWI).  */
 end_comment
 
 begin_define
