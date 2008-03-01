@@ -8730,8 +8730,7 @@ name|struct
 name|sockbuf
 name|asb
 decl_stmt|;
-comment|/* 	 * XXXRW: This is quite ugly.  Previously, this code made a copy of 	 * the socket buffer, then zero'd the original to clear the buffer 	 * fields.  However, with mutexes in the socket buffer, this causes 	 * problems.  We only clear the zeroable bits of the original; 	 * however, we have to initialize and destroy the mutex in the copy 	 * so that dom_dispose() and sbrelease() can lock t as needed. 	 */
-comment|/* 	 * Dislodge threads currently blocked in receive and wait to acquire 	 * a lock against other simultaneous readers before clearing the 	 * socket buffer.  Don't let our acquire be interrupted by a signal 	 * despite any existing socket disposition on interruptable waiting. 	 */
+comment|/* 	 * In order to avoid calling dom_dispose with the socket buffer mutex 	 * held, and in order to generally avoid holding the lock for a long 	 * time, we make a copy of the socket buffer and clear the original 	 * (except locks, state).  The new socket buffer copy won't have 	 * initialized locks so we can only call routines that won't use or 	 * assert those locks. 	 * 	 * Dislodge threads currently blocked in receive and wait to acquire 	 * a lock against other simultaneous readers before clearing the 	 * socket buffer.  Don't let our acquire be interrupted by a signal 	 * despite any existing socket disposition on interruptable waiting. 	 */
 name|socantrcvmore
 argument_list|(
 name|so
@@ -8828,14 +8827,7 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-name|SOCKBUF_LOCK_INIT
-argument_list|(
-operator|&
-name|asb
-argument_list|,
-literal|"so_rcv"
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Dispose of special rights and flush the socket buffer.  Don't call 	 * any unsafe routines (that rely on locks being initialized) on asb. 	 */
 if|if
 condition|(
 name|pr
@@ -8866,18 +8858,12 @@ operator|.
 name|sb_mb
 argument_list|)
 expr_stmt|;
-name|sbrelease
+name|sbrelease_internal
 argument_list|(
 operator|&
 name|asb
 argument_list|,
 name|so
-argument_list|)
-expr_stmt|;
-name|SOCKBUF_LOCK_DESTROY
-argument_list|(
-operator|&
-name|asb
 argument_list|)
 expr_stmt|;
 block|}

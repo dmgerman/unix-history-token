@@ -207,24 +207,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|sbrelease_internal
-parameter_list|(
-name|struct
-name|sockbuf
-modifier|*
-name|sb
-parameter_list|,
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Socantsendmore indicates that no more data will be sent on the socket; it  * would normally be applied to a socket when the user informs the system  * that no more data is to be sent, by the protocol code (in case  * PRU_SHUTDOWN).  Socantrcvmore indicates that no more data will be  * received, and will normally be applied to the socket by a protocol when it  * detects that the peer will send no more data.  Data queued for reading in  * the socket may yet be read.  */
 end_comment
@@ -1261,7 +1243,6 @@ comment|/*  * Free mbufs held by a socket, and reserved mbuf space.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|sbrelease_internal
 parameter_list|(
