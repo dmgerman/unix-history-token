@@ -5905,6 +5905,7 @@ name|eicr
 operator|&
 name|E1000_EIMS_OTHER
 condition|)
+block|{
 name|icr
 operator|=
 name|E1000_READ_REG
@@ -5929,6 +5930,7 @@ condition|)
 goto|goto
 name|spurious
 goto|;
+block|}
 name|taskqueue_enqueue
 argument_list|(
 name|taskqueue_fast
