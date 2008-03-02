@@ -3151,7 +3151,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * To modify the permissions on a file, must possess VADMIN 	 * for that file. 	 */
+comment|/* 	 * To modify the ownership of a file, must possess VADMIN for that 	 * file. 	 */
 if|if
 condition|(
 operator|(
@@ -3411,7 +3411,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * To change the owner of a file, or change the group of a file 	 * to a group of which we are not a member, the caller must 	 * have privilege. 	 */
+comment|/* 	 * To change the owner of a file, or change the group of a file to a 	 * group of which we are not a member, the caller must have 	 * privilege. 	 */
 if|if
 condition|(
 operator|(
@@ -5342,7 +5342,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * If ".." must be changed (ie the directory gets a new 	 * parent) then the source directory must not be in the 	 * directory heirarchy above the target, as this would 	 * orphan everything below the source directory. Also 	 * the user must have write permission in the source so 	 * as to be able to change "..". We must repeat the call 	 * to namei, as the parent directory is unlocked by the 	 * call to checkpath(). 	 */
+comment|/* 	 * If ".." must be changed (ie the directory gets a new 	 * parent) then the source directory must not be in the 	 * directory hierarchy above the target, as this would 	 * orphan everything below the source directory. Also 	 * the user must have write permission in the source so 	 * as to be able to change "..". We must repeat the call 	 * to namei, as the parent directory is unlocked by the 	 * call to checkpath(). 	 */
 name|error
 operator|=
 name|VOP_ACCESS
@@ -8492,7 +8492,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_readdir_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		int *ncookies; 		u_long **a_cookies; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		int *a_ncookies; 		u_long **a_cookies; 	} */
 modifier|*
 name|ap
 decl_stmt|;
