@@ -4728,6 +4728,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|sc
+operator|->
+name|vnode
+operator|=
+name|NULL
+expr_stmt|;
 name|vn_lock
 argument_list|(
 name|nd
