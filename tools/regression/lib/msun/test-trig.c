@@ -95,7 +95,7 @@ name|exceptmask
 parameter_list|,
 name|excepts
 parameter_list|)
-value|do {		\ 	volatile long double _d = x;					\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert(fpequal((func)(_d), (result)));				 \ 	assert(((func), fetestexcept(exceptmask) == (excepts)));	\ } while (0)
+value|do {		\ 	volatile long double _d = x;					\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert(fpequal((func)(_d), (result)));				\ 	assert(((func), fetestexcept(exceptmask) == (excepts)));	\ } while (0)
 end_define
 
 begin_define
@@ -113,7 +113,25 @@ name|exceptmask
 parameter_list|,
 name|excepts
 parameter_list|)
-value|do {		\ 		test(prefix, x, (double)result, exceptmask, excepts);	\ 	test(prefix##f, x, (float)result, exceptmask, excepts);		\ 	test(prefix##l, x, result, exceptmask, excepts);		\ } while (0)
+value|do {		\ 	test(prefix, x, (double)result, exceptmask, excepts);		\ 	test(prefix##f, x, (float)result, exceptmask, excepts);		\ 	test(prefix##l, x, result, exceptmask, excepts);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|testdf
+parameter_list|(
+name|prefix
+parameter_list|,
+name|x
+parameter_list|,
+name|result
+parameter_list|,
+name|exceptmask
+parameter_list|,
+name|excepts
+parameter_list|)
+value|do {		\ 	test(prefix, x, (double)result, exceptmask, excepts);		\ 	test(prefix##f, x, (float)result, exceptmask, excepts);		\ } while (0)
 end_define
 
 begin_comment
@@ -1246,7 +1264,24 @@ name|FE_INEXACT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * These tests should pass for f32, d64, and ld80 as long as 	 * the error is<= 0.75 ulp (round to nearest) 	 */
-name|testall
+if|#
+directive|if
+name|LDBL_MANT_DIG
+operator|<=
+literal|64
+define|#
+directive|define
+name|testacc
+value|testall
+else|#
+directive|else
+define|#
+directive|define
+name|testacc
+value|testdf
+endif|#
+directive|endif
+name|testacc
 argument_list|(
 name|sin
 argument_list|,
@@ -1259,7 +1294,7 @@ argument_list|,
 name|FE_INEXACT
 argument_list|)
 expr_stmt|;
-name|testall
+name|testacc
 argument_list|(
 name|sin
 argument_list|,
@@ -1274,7 +1309,7 @@ argument_list|,
 name|FE_INEXACT
 argument_list|)
 expr_stmt|;
-name|testall
+name|testacc
 argument_list|(
 name|cos
 argument_list|,
@@ -1287,7 +1322,7 @@ argument_list|,
 name|FE_INEXACT
 argument_list|)
 expr_stmt|;
-name|testall
+name|testacc
 argument_list|(
 name|cos
 argument_list|,
@@ -1301,7 +1336,7 @@ argument_list|,
 name|FE_INEXACT
 argument_list|)
 expr_stmt|;
-name|testall
+name|testacc
 argument_list|(
 name|tan
 argument_list|,
@@ -1316,7 +1351,7 @@ argument_list|,
 name|FE_INEXACT
 argument_list|)
 expr_stmt|;
-name|testall
+name|testacc
 argument_list|(
 name|tan
 argument_list|,
