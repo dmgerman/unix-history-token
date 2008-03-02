@@ -62,7 +62,7 @@ name|__IDSTRING
 argument_list|(
 name|dotat
 argument_list|,
-literal|"$dotat: things/unifdef.c,v 1.177 2008/02/29 13:17:37 fanf2 Exp $"
+literal|"$dotat: things/unifdef.c,v 1.178 2008/03/02 22:23:32 fanf2 Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5104,7 +5104,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look for the symbol in the symbol table. If is is found, we return  * the symbol table index, else we return -1.  */
+comment|/*  * Look for the symbol in the symbol table. If it is found, we return  * the symbol table index, else we return -1.  */
 end_comment
 
 begin_function
