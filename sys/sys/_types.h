@@ -280,6 +280,39 @@ begin_comment
 comment|/* microseconds (unsigned) */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|int
+name|__cpuwhich_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* which parameter for cpuset. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|__cpulevel_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* level parameter for cpuset. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|__cpusetid_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* cpuset identifier. */
+end_comment
+
 begin_comment
 comment|/*  * Unusual type definitions.  */
 end_comment
