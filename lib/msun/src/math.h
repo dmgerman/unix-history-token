@@ -3110,6 +3110,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|long
+name|double
+name|sqrtl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
@@ -3117,7 +3128,7 @@ literal|0
 end_if
 
 begin_endif
-unit|long double	sqrtl(long double); long double	tanhl(long double);
+unit|long double	tanhl(long double);
 endif|#
 directive|endif
 end_endif
