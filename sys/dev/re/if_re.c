@@ -8431,6 +8431,9 @@ name|sc
 operator|->
 name|rl_ifp
 expr_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|RL_LOCK
 argument_list|(
 name|sc
@@ -8475,6 +8478,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 ifdef|#
@@ -8493,6 +8499,9 @@ name|RL_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -8612,6 +8621,9 @@ name|RL_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -9341,10 +9353,16 @@ name|ifp
 operator|=
 name|arg
 expr_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|re_start
 argument_list|(
 name|ifp
 argument_list|)
+expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
