@@ -1460,6 +1460,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|size
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|buff
 operator|=
@@ -1520,6 +1527,12 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+block|}
+else|else
+name|buff
+operator|=
+name|NULL
+expr_stmt|;
 name|obj
 operator|=
 name|malloc
@@ -2496,7 +2509,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * Archive string table is padded by a "\n" as the normal members. 	 * The differece is that the size of archive string table counts 	 * in the pad bit, while normal members' size fileds do not. 	 */
+comment|/* 	 * Archive string table is padded by a "\n" as the normal members. 	 * The difference is that the size of archive string table counts 	 * in the pad bit, while normal members' size fileds do not. 	 */
 if|if
 condition|(
 name|bsdar
@@ -2525,7 +2538,7 @@ index|]
 operator|=
 literal|'\n'
 expr_stmt|;
-comment|/* 	 * If there is a symbol table, calculate the size of pseudo members, 	 * covert previously stored relative offsets to absolute ones, and 	 * then make them Big Endian. 	 * 	 * absolute_offset = htobe32(relative_offset + size_of_pseudo_members) 	 */
+comment|/* 	 * If there is a symbol table, calculate the size of pseudo members, 	 * convert previously stored relative offsets to absolute ones, and 	 * then make them Big Endian. 	 * 	 * absolute_offset = htobe32(relative_offset + size_of_pseudo_members) 	 */
 if|if
 condition|(
 name|bsdar
@@ -3727,7 +3740,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * The space required for holding one member name in as table includes: 	 * strlen(name) + (1 for '/') + (1 for '\n') + (possibly 1 for padding). 	 */
-if|if
+while|while
 condition|(
 name|bsdar
 operator|->
@@ -4034,7 +4047,7 @@ name|s_cnt
 operator|++
 expr_stmt|;
 comment|/* 	 * The space required for holding one symbol name in sn table includes: 	 * strlen(name) + (1 for '\n') + (possibly 1 for padding). 	 */
-if|if
+while|while
 condition|(
 name|bsdar
 operator|->
