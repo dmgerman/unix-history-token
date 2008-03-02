@@ -5403,6 +5403,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|sched_affinity
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{ }
+end_function
+
 begin_define
 define|#
 directive|define

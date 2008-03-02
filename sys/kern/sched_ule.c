@@ -10113,6 +10113,18 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|sched_affinity
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{ }
+end_function
+
 begin_comment
 comment|/*  * Bind a thread to a target cpu.  */
 end_comment
