@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -2309,6 +2315,17 @@ name|td_lock
 operator|=
 operator|&
 name|sched_lock
+expr_stmt|;
+name|childtd
+operator|->
+name|td_cpuset
+operator|=
+name|cpuset_ref
+argument_list|(
+name|td
+operator|->
+name|td_cpuset
+argument_list|)
 expr_stmt|;
 name|sched_newthread
 argument_list|(
