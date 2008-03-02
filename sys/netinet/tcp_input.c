@@ -10766,12 +10766,6 @@ operator|=
 name|tcp_mssdflt
 expr_stmt|;
 block|}
-name|so
-operator|=
-name|inp
-operator|->
-name|inp_socket
-expr_stmt|;
 comment|/* 	 * No route to sender, stay with default mss and return. 	 */
 if|if
 condition|(
@@ -10789,19 +10783,12 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* 			 * Offer == 0 means that there was no MSS on the SYN 			 * segment, in this case we use tcp_mssdflt. 			 */
+comment|/* 			 * Offer == 0 means that there was no MSS on the SYN 			 * segment, in this case we use tcp_mssdflt as 			 * already assigned to t_maxopd above. 			 */
 name|offer
 operator|=
-ifdef|#
-directive|ifdef
-name|INET6
-name|isipv6
-condition|?
-name|tcp_v6mssdflt
-else|:
-endif|#
-directive|endif
-name|tcp_mssdflt
+name|tp
+operator|->
+name|t_maxopd
 expr_stmt|;
 break|break;
 case|case
@@ -10992,12 +10979,6 @@ name|mss
 operator|-=
 name|TCPOLEN_TSTAMP_APPA
 expr_stmt|;
-name|tp
-operator|->
-name|t_maxseg
-operator|=
-name|mss
-expr_stmt|;
 if|#
 directive|if
 operator|(
@@ -11051,6 +11032,12 @@ operator|=
 name|mss
 expr_stmt|;
 comment|/* 	 * If there's a pipesize, change the socket buffer to that size, 	 * don't change if sb_hiwat is different than default (then it 	 * has been changed on purpose with setsockopt). 	 * Make the socket buffers an integral number of mss units; 	 * if the mss is larger than the socket buffer, decrease the mss. 	 */
+name|so
+operator|=
+name|inp
+operator|->
+name|inp_socket
+expr_stmt|;
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
