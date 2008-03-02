@@ -20,7 +20,7 @@ typedef|typedef
 name|int
 name|faultbuf
 index|[
-literal|23
+literal|25
 index|]
 typedef|;
 end_typedef
@@ -48,22 +48,12 @@ name|register_t
 name|pcb_lr
 decl_stmt|;
 comment|/* link register */
-name|register_t
-name|pcb_usr
-decl_stmt|;
-comment|/* USER_SR segment register */
 name|struct
 name|pmap
 modifier|*
 name|pcb_pm
 decl_stmt|;
 comment|/* pmap of our vmspace */
-name|struct
-name|pmap
-modifier|*
-name|pcb_pmreal
-decl_stmt|;
-comment|/* real address of above */
 name|faultbuf
 modifier|*
 name|pcb_onfault
@@ -99,6 +89,31 @@ name|int
 name|pcb_fpcpu
 decl_stmt|;
 comment|/* which CPU had our FPU 							stuff. */
+union|union
+block|{
+struct|struct
+block|{
+name|register_t
+name|usr
+decl_stmt|;
+comment|/* USER_SR segment */
+block|}
+name|aim
+struct|;
+struct|struct
+block|{
+name|register_t
+name|ctr
+decl_stmt|;
+name|register_t
+name|xer
+decl_stmt|;
+block|}
+name|booke
+struct|;
+block|}
+name|pcb_cpu
+union|;
 block|}
 struct|;
 end_struct

@@ -464,7 +464,11 @@ name|fork_trampoline
 expr_stmt|;
 name|pcb
 operator|->
-name|pcb_usr
+name|pcb_cpu
+operator|.
+name|aim
+operator|.
+name|usr
 operator|=
 name|kernel_pmap
 operator|->
@@ -1062,7 +1066,11 @@ name|fork_trampoline
 expr_stmt|;
 name|pcb2
 operator|->
-name|pcb_usr
+name|pcb_cpu
+operator|.
+name|aim
+operator|.
+name|usr
 operator|=
 name|kernel_pmap
 operator|->
