@@ -200,6 +200,24 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* global data in identcpu.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cpu_cores
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cpu_logical
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* IPI handlers */
 end_comment
 
@@ -359,15 +377,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|mp_grab_cpu_hlt
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mp_topology
 parameter_list|(
 name|void
 parameter_list|)

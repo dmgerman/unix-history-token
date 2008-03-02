@@ -325,6 +325,22 @@ function_decl|;
 end_function_decl
 
 begin_function
+name|struct
+name|cpu_group
+modifier|*
+name|cpu_topo
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|smp_topo_none
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|ia64_ap_startup
 parameter_list|(

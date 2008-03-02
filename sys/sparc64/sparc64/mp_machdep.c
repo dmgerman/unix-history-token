@@ -776,6 +776,22 @@ block|}
 end_function
 
 begin_function
+name|struct
+name|cpu_group
+modifier|*
+name|cpu_topo
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|smp_topo_none
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|sun4u_startcpu

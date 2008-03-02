@@ -41,54 +41,184 @@ begin_struct
 struct|struct
 name|cpu_group
 block|{
-name|cpumask_t
-name|cg_mask
+name|struct
+name|cpu_group
+modifier|*
+name|cg_parent
 decl_stmt|;
-comment|/* Mask of cpus in this group. */
-name|int
-name|cg_count
-decl_stmt|;
-comment|/* Count of cpus in this group. */
-name|int
-name|cg_children
-decl_stmt|;
-comment|/* Number of children groups. */
+comment|/* Our parent group. */
 name|struct
 name|cpu_group
 modifier|*
 name|cg_child
 decl_stmt|;
-comment|/* Optional child group. */
+comment|/* Optional children groups. */
+name|cpumask_t
+name|cg_mask
+decl_stmt|;
+comment|/* Mask of cpus in this group. */
+name|int8_t
+name|cg_count
+decl_stmt|;
+comment|/* Count of cpus in this group. */
+name|int8_t
+name|cg_children
+decl_stmt|;
+comment|/* Number of children groups. */
+name|int8_t
+name|cg_level
+decl_stmt|;
+comment|/* Shared cache level. */
+name|int8_t
+name|cg_flags
+decl_stmt|;
+comment|/* Traversal modifiers. */
 block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|cpu_top
-block|{
-name|int
-name|ct_count
-decl_stmt|;
-comment|/* Count of groups. */
+begin_comment
+comment|/*  * Defines common resources for CPUs in the group.  The highest level  * resource should be used when multiple are shared.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CG_SHARE_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CG_SHARE_L1
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CG_SHARE_L2
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CG_SHARE_L3
+value|3
+end_define
+
+begin_comment
+comment|/*  * Behavior modifiers for load balancing and affinity.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CG_FLAG_HTT
+value|0x01
+end_define
+
+begin_comment
+comment|/* Schedule the alternate core last. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CG_FLAG_THREAD
+value|0x02
+end_define
+
+begin_comment
+comment|/* New age htt, less crippled. */
+end_comment
+
+begin_comment
+comment|/*  * Convenience routines for building topologies.  */
+end_comment
+
+begin_function_decl
 name|struct
 name|cpu_group
 modifier|*
-name|ct_group
-decl_stmt|;
-comment|/* Array of pointers to cpu groups. */
-block|}
-struct|;
-end_struct
+name|smp_topo
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-specifier|extern
+begin_function_decl
 name|struct
-name|cpu_top
+name|cpu_group
 modifier|*
-name|smp_topology
-decl_stmt|;
-end_decl_stmt
+name|smp_topo_none
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|cpu_group
+modifier|*
+name|smp_topo_1level
+parameter_list|(
+name|int
+name|l1share
+parameter_list|,
+name|int
+name|l1count
+parameter_list|,
+name|int
+name|l1flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|cpu_group
+modifier|*
+name|smp_topo_2level
+parameter_list|(
+name|int
+name|l2share
+parameter_list|,
+name|int
+name|l2count
+parameter_list|,
+name|int
+name|l1share
+parameter_list|,
+name|int
+name|l1count
+parameter_list|,
+name|int
+name|l1flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|cpu_group
+modifier|*
+name|smp_topo_find
+parameter_list|(
+name|struct
+name|cpu_group
+modifier|*
+name|top
+parameter_list|,
+name|int
+name|cpu
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -228,6 +358,17 @@ struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
+
+begin_function_decl
+name|struct
+name|cpu_group
+modifier|*
+name|cpu_topo
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

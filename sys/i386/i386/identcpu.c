@@ -680,6 +680,18 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+name|int
+name|cpu_cores
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|cpu_logical
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -3295,6 +3307,16 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+name|cpu_cores
+operator|=
+name|cmp
+expr_stmt|;
+name|cpu_logical
+operator|=
+name|htt
+operator|/
+name|cmp
+expr_stmt|;
 if|if
 condition|(
 name|cmp
@@ -3322,9 +3344,7 @@ name|printf
 argument_list|(
 literal|"\n  Logical CPUs per core: %d"
 argument_list|,
-name|htt
-operator|/
-name|cmp
+name|cpu_logical
 argument_list|)
 expr_stmt|;
 block|}
