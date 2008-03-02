@@ -76,7 +76,7 @@ name|bits
 operator|.
 name|manh
 operator||=
-literal|1
+literal|1ULL
 operator|<<
 literal|47
 expr_stmt|;
