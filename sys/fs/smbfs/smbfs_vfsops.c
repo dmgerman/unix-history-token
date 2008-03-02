@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netsmb/smb.h>
 end_include
 
@@ -1066,20 +1072,14 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|lockinit
+name|sx_init
 argument_list|(
 operator|&
 name|smp
 operator|->
 name|sm_hashlock
 argument_list|,
-name|PVFS
-argument_list|,
 literal|"smbfsh"
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|smp
@@ -1557,7 +1557,7 @@ argument_list|,
 name|M_SMBFSHASH
 argument_list|)
 expr_stmt|;
-name|lockdestroy
+name|sx_destroy
 argument_list|(
 operator|&
 name|smp
@@ -1775,7 +1775,7 @@ argument_list|,
 name|M_SMBFSHASH
 argument_list|)
 expr_stmt|;
-name|lockdestroy
+name|sx_destroy
 argument_list|(
 operator|&
 name|smp
