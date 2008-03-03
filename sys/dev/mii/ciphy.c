@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Driver for the Cicada CS8201 10/100/1000 copper PHY.  */
+comment|/*  * Driver for the Cicada CS8201/CS8204 10/100/1000 copper PHY.  */
 end_comment
 
 begin_include
@@ -306,6 +306,13 @@ argument_list|(
 name|CICADA
 argument_list|,
 name|CS8201B
+argument_list|)
+block|,
+name|MII_PHY_DESC
+argument_list|(
+name|CICADA
+argument_list|,
+name|CS8204
 argument_list|)
 block|,
 name|MII_PHY_DESC
@@ -1444,6 +1451,9 @@ condition|(
 name|model
 condition|)
 block|{
+case|case
+name|MII_MODEL_CICADA_CS8204
+case|:
 case|case
 name|MII_MODEL_CICADA_CS8201
 case|:
