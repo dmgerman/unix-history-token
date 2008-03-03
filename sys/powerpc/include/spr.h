@@ -303,6 +303,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_DECAR
+value|0x036
+end_define
+
+begin_comment
+comment|/* ..8 Decrementer auto reload */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_EIE
 value|0x050
 end_define
@@ -2559,17 +2570,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPR_DBCR1
-value|0x3bd
-end_define
-
-begin_comment
-comment|/* 4.. Debug Control Register 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SPR_PMC3
 value|0x3bd
 end_define
@@ -2642,94 +2642,6 @@ end_define
 
 begin_comment
 comment|/* .68 Secondary Hash Address Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_ESR
-value|0x3d4
-end_define
-
-begin_comment
-comment|/* 4.. Exception Syndrome Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ESR_MCI
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* Machine check - instruction */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ESR_PIL
-value|0x08000000
-end_define
-
-begin_comment
-comment|/* Program interrupt - illegal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ESR_PPR
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* Program interrupt - privileged */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ESR_PTR
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* Program interrupt - trap */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ESR_DST
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* Data storage interrupt - store fault */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ESR_DIZ
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* Data/instruction storage interrupt - zone fault */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ESR_U0F
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* Data storage interrupt - U0 fault */
 end_comment
 
 begin_define
@@ -2820,6 +2732,15 @@ begin_comment
 comment|/* .6. Required Physical Address Register */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AIM
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -2830,6 +2751,53 @@ end_define
 begin_comment
 comment|/* 4.. Timer Status Register */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_TCR
+value|0x3da
+end_define
+
+begin_comment
+comment|/* 4.. Timer Control Register */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|E500
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SPR_TSR
+value|0x150
+end_define
+
+begin_comment
+comment|/* ..8 Timer Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_TCR
+value|0x154
+end_define
+
+begin_comment
+comment|/* ..8 Timer Control Register */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2922,23 +2890,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TSR_DIS
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Decrementer Interrupt Status */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TSR_FIS
 value|0x04000000
 end_define
 
 begin_comment
 comment|/* FIT Interrupt Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_TCR
-value|0x3da
-end_define
-
-begin_comment
-comment|/* 4.. Timer Control Register */
 end_comment
 
 begin_define
@@ -3076,6 +3044,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TCR_DIE
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Pecrementer Interrupt Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TCR_FP_MASK
 value|0x03000000
 end_define
@@ -3182,6 +3161,37 @@ end_define
 begin_comment
 comment|/* 4.. Save/Restore Register 3 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_HID0
+value|0x3f0
+end_define
+
+begin_comment
+comment|/* ..8 Hardware Implementation Register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_HID1
+value|0x3f1
+end_define
+
+begin_comment
+comment|/* ..8 Hardware Implementation Register 1 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AIM
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -3362,28 +3372,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPR_HID0
-value|0x3f0
-end_define
-
-begin_comment
-comment|/* ..8 Hardware Implementation Register 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_HID1
-value|0x3f1
-end_define
-
-begin_comment
-comment|/* ..8 Hardware Implementation Register 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SPR_DBCR0
 value|0x3f2
 end_define
@@ -3391,6 +3379,339 @@ end_define
 begin_comment
 comment|/* 4.. Debug Control Register 0 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_DBCR1
+value|0x3bd
+end_define
+
+begin_comment
+comment|/* 4.. Debug Control Register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_IAC1
+value|0x3f4
+end_define
+
+begin_comment
+comment|/* 4.. Instruction Address Compare 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_IAC2
+value|0x3f5
+end_define
+
+begin_comment
+comment|/* 4.. Instruction Address Compare 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_DAC1
+value|0x3f6
+end_define
+
+begin_comment
+comment|/* 4.. Data Address Compare 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_DAC2
+value|0x3f7
+end_define
+
+begin_comment
+comment|/* 4.. Data Address Compare 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_PIR
+value|0x3ff
+end_define
+
+begin_comment
+comment|/* .6. Processor Identification Register */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|E500
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SPR_DBSR
+value|0x130
+end_define
+
+begin_comment
+comment|/* ..8 Debug Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_IDE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Imprecise debug event. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_UDE
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Unconditional debug event. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_MRR
+value|0x30000000
+end_define
+
+begin_comment
+comment|/* Most recent Reset (mask). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_ICMP
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Instr. complete debug event. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_BRT
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Branch taken debug event. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_IRPT
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Interrupt taken debug event. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_TRAP
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Trap instr. debug event. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_IAC1
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Instr. address compare #1. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_IAC2
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Instr. address compare #2. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_IAC3
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* Instr. address compare #3. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_IAC4
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Instr. address compare #4. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_DAC1R
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Data addr. read compare #1. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_DAC1W
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Data addr. write compare #1. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_DAC2R
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Data addr. read compare #2. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_DAC2W
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Data addr. write compare #2. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBSR_RET
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Return debug event. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_DBCR0
+value|0x134
+end_define
+
+begin_comment
+comment|/* ..8 Debug Control Register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_DBCR1
+value|0x135
+end_define
+
+begin_comment
+comment|/* ..8 Debug Control Register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_IAC1
+value|0x138
+end_define
+
+begin_comment
+comment|/* ..8 Instruction Address Compare 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_IAC2
+value|0x139
+end_define
+
+begin_comment
+comment|/* ..8 Instruction Address Compare 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_DAC1
+value|0x13c
+end_define
+
+begin_comment
+comment|/* ..8 Data Address Compare 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_DAC2
+value|0x13d
+end_define
+
+begin_comment
+comment|/* ..8 Data Address Compare 2 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3659,45 +3980,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPR_IAC1
-value|0x3f4
-end_define
-
-begin_comment
-comment|/* 4.. Instruction Address Compare 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_IAC2
-value|0x3f5
-end_define
-
-begin_comment
-comment|/* 4.. Instruction Address Compare 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SPR_DABR
 value|0x3f5
 end_define
 
 begin_comment
 comment|/* .6. Data Address Breakpoint Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_DAC1
-value|0x3f6
-end_define
-
-begin_comment
-comment|/* 4.. Data Address Compare 1 */
 end_comment
 
 begin_define
@@ -3808,17 +4096,6 @@ end_define
 
 begin_comment
 comment|/* 12-31: must be zero */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPR_DAC2
-value|0x3f7
-end_define
-
-begin_comment
-comment|/* 4.. Data Address Compare 2 */
 end_comment
 
 begin_define
@@ -4375,17 +4652,6 @@ begin_comment
 comment|/* .6. Floating-Point Exception Cause Register */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SPR_PIR
-value|0x3ff
-end_define
-
-begin_comment
-comment|/* .6. Processor Identification Register */
-end_comment
-
 begin_comment
 comment|/* Time Base Register declarations */
 end_comment
@@ -4398,7 +4664,7 @@ value|0x10c
 end_define
 
 begin_comment
-comment|/* 468 Time Base Lower */
+comment|/* 468 Time Base Lower - read */
 end_comment
 
 begin_define
@@ -4409,7 +4675,29 @@ value|0x10d
 end_define
 
 begin_comment
-comment|/* 468 Time Base Upper */
+comment|/* 468 Time Base Upper - read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TBR_TBWL
+value|0x11c
+end_define
+
+begin_comment
+comment|/* 468 Time Base Lower - supervisor, write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TBR_TBWU
+value|0x11d
+end_define
+
+begin_comment
+comment|/* 468 Time Base Upper - supervisor, write */
 end_comment
 
 begin_comment
@@ -4485,6 +4773,773 @@ end_define
 begin_comment
 comment|/* Instructions dispatched */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AIM
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SPR_ESR
+value|0x3d4
+end_define
+
+begin_comment
+comment|/* 4.. Exception Syndrome Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_MCI
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Machine check - instruction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_PIL
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Program interrupt - illegal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_PPR
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Program interrupt - privileged */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_PTR
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Program interrupt - trap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_ST
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Store operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_DST
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Data storage interrupt - store fault */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_DIZ
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Data/instruction storage interrupt - zone fault */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_U0F
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Data storage interrupt - U0 fault */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|E500
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SPR_ESR
+value|0x003e
+end_define
+
+begin_comment
+comment|/* ..8 Exception Syndrome Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_PIL
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Program interrupt - illegal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_PPR
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Program interrupt - privileged */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_PTR
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Program interrupt - trap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_ST
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Store operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_DLK
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* Data storage, D cache locking */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_ILK
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Data storage, I cache locking */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_BO
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Data/instruction storage, byte ordering */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESR_SPE
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* SPE exception bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_CSRR0
+value|0x03a
+end_define
+
+begin_comment
+comment|/* ..8 58 Critical SRR0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_CSRR1
+value|0x03b
+end_define
+
+begin_comment
+comment|/* ..8 59 Critical SRR1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MCSRR0
+value|0x23a
+end_define
+
+begin_comment
+comment|/* ..8 570 Machine check SRR0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MCSRR1
+value|0x23b
+end_define
+
+begin_comment
+comment|/* ..8 571 Machine check SRR1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_SVR
+value|0x3ff
+end_define
+
+begin_comment
+comment|/* ..8 1023 System Version Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_PID0
+value|0x030
+end_define
+
+begin_comment
+comment|/* ..8 Process ID Register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_PID1
+value|0x279
+end_define
+
+begin_comment
+comment|/* ..8 Process ID Register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_PID2
+value|0x27a
+end_define
+
+begin_comment
+comment|/* ..8 Process ID Register 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_TLB0CFG
+value|0x2B0
+end_define
+
+begin_comment
+comment|/* ..8 TLB 0 Config Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_TLB1CFG
+value|0x2B1
+end_define
+
+begin_comment
+comment|/* ..8 TLB 1 Config Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLBCFG_ASSOC_MASK
+value|0xff000000
+end_define
+
+begin_comment
+comment|/* Associativity of TLB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLBCFG_ASSOC_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBCFG_NENTRY_MASK
+value|0x00000fff
+end_define
+
+begin_comment
+comment|/* Number of entries in TLB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_IVPR
+value|0x03f
+end_define
+
+begin_comment
+comment|/* ..8 Interrupt Vector Prefix Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR0
+value|0x190
+end_define
+
+begin_comment
+comment|/* ..8 Critical input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR1
+value|0x191
+end_define
+
+begin_comment
+comment|/* ..8 Machine check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR2
+value|0x192
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR3
+value|0x193
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR4
+value|0x194
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR5
+value|0x195
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR6
+value|0x196
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR7
+value|0x197
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR8
+value|0x198
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR9
+value|0x199
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR10
+value|0x19a
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR11
+value|0x19b
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR12
+value|0x19c
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR13
+value|0x19d
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR14
+value|0x19e
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR15
+value|0x19f
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR32
+value|0x210
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR33
+value|0x211
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR34
+value|0x212
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_IVOR35
+value|0x213
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR_MAS0
+value|0x270
+end_define
+
+begin_comment
+comment|/* ..8 MMU Assist Register 0 Book-E/e500 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MAS1
+value|0x271
+end_define
+
+begin_comment
+comment|/* ..8 MMU Assist Register 1 Book-E/e500 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MAS2
+value|0x272
+end_define
+
+begin_comment
+comment|/* ..8 MMU Assist Register 2 Book-E/e500 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MAS3
+value|0x273
+end_define
+
+begin_comment
+comment|/* ..8 MMU Assist Register 3 Book-E/e500 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MAS4
+value|0x274
+end_define
+
+begin_comment
+comment|/* ..8 MMU Assist Register 4 Book-E/e500 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MAS5
+value|0x275
+end_define
+
+begin_comment
+comment|/* ..8 MMU Assist Register 5 Book-E */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MAS6
+value|0x276
+end_define
+
+begin_comment
+comment|/* ..8 MMU Assist Register 6 Book-E/e500 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MAS7
+value|0x3B0
+end_define
+
+begin_comment
+comment|/* ..8 MMU Assist Register 7 Book-E/e500 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_L1CSR0
+value|0x3F2
+end_define
+
+begin_comment
+comment|/* ..8 L1 Cache Control and Status Register 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1CSR0_DCPE
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Data Cache Parity Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1CSR0_DCLFR
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Data Cache Lock Bits Flash Reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1CSR0_DCFI
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Data Cache Flash Invalidate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1CSR0_DCE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Data Cache Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_L1CSR1
+value|0x3F3
+end_define
+
+begin_comment
+comment|/* ..8 L1 Cache Control and Status Register 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1CSR1_ICPE
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Instruction Cache Parity Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1CSR1_ICLFR
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Instruction Cache Lock Bits Flash Reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1CSR1_ICFI
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Instruction Cache Flash Invalidate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1CSR1_ICE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Instruction Cache Enable */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* #elif defined(E500) */
+end_comment
+
+begin_comment
+comment|/*  * Definitions for system version register.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SVR_MPC8533
+value|0x803c0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR_MPC8533E
+value|0x80340010
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR_MPC8541
+value|0x80720011
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR_MPC8541E
+value|0x807a0011
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR_MPC8555
+value|0x80710011
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR_MPC8555E
+value|0x80790011
+end_define
 
 begin_endif
 endif|#

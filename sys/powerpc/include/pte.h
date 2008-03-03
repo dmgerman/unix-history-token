@@ -15,6 +15,15 @@ directive|define
 name|_MACHINE_PTE_H_
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AIM
+argument_list|)
+end_if
+
 begin_comment
 comment|/*  * Page Table Entries  */
 end_comment
@@ -665,6 +674,490 @@ end_endif
 
 begin_comment
 comment|/* LOCORE */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/tlb.h>
+end_include
+
+begin_comment
+comment|/*  * 1st level - page table directory (pdir)  *  * pdir consists of 1024 entries, each being a pointer to  * second level entity, i.e. the actual page table (ptbl).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDIR_SHIFT
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDIR_SIZE
+value|(1<< PDIR_SHIFT)
+end_define
+
+begin_comment
+comment|/* va range mapped by pdir */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDIR_MASK
+value|(~(PDIR_SIZE - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDIR_NENTRIES
+value|1024
+end_define
+
+begin_comment
+comment|/* number of page tables in pdir */
+end_comment
+
+begin_comment
+comment|/* Returns pdir entry number for given va */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDIR_IDX
+parameter_list|(
+name|va
+parameter_list|)
+value|((va)>> PDIR_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDIR_ENTRY_SHIFT
+value|2
+end_define
+
+begin_comment
+comment|/* entry size is 2^2 = 4 bytes */
+end_comment
+
+begin_comment
+comment|/*  * 2nd level - page table (ptbl)  *  * Page table covers 1024 page table entries. Page  * table entry (pte) is 32 bit wide and defines mapping  * for a single page.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTBL_SHIFT
+value|PAGE_SHIFT
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTBL_SIZE
+value|PAGE_SIZE
+end_define
+
+begin_comment
+comment|/* va range mapped by ptbl entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTBL_MASK
+value|((PDIR_SIZE - 1)& ~PAGE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTBL_NENTRIES
+value|1024
+end_define
+
+begin_comment
+comment|/* number of pages mapped by ptbl */
+end_comment
+
+begin_comment
+comment|/* Returns ptbl entry number for given va */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTBL_IDX
+parameter_list|(
+name|va
+parameter_list|)
+value|(((va)& PTBL_MASK)>> PTBL_SHIFT)
+end_define
+
+begin_comment
+comment|/* Size of ptbl in pages, 1024 entries, each sizeof(struct pte_entry). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTBL_PAGES
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTBL_ENTRY_SHIFT
+value|3
+end_define
+
+begin_comment
+comment|/* entry size is 2^3 = 8 bytes */
+end_comment
+
+begin_comment
+comment|/*  * Flags for pte_remove() routine.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTBL_HOLD
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* do not unhold ptbl pages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTBL_UNHOLD
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* unhold and attempt to free ptbl pages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTBL_HOLD_FLAG
+parameter_list|(
+name|pmap
+parameter_list|)
+value|(((pmap) == kernel_pmap) ? PTBL_HOLD : PTBL_UNHOLD)
+end_define
+
+begin_comment
+comment|/*  * Page Table Entry definitions and macros.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_struct
+struct|struct
+name|pte_entry
+block|{
+name|vm_offset_t
+name|rpn
+decl_stmt|;
+name|u_int32_t
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|pte_entry
+name|pte_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* RPN mask, TLB0 4K pages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTE_PA_MASK
+value|PAGE_MASK
+end_define
+
+begin_comment
+comment|/* PTE bits assigned to MAS2, MAS3 flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTE_W
+value|MAS2_W
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_I
+value|MAS2_I
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_M
+value|MAS2_M
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_G
+value|MAS2_G
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_MAS2_MASK
+value|(MAS2_G | MAS2_M | MAS2_I | MAS2_W)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_MAS3_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_UX
+value|(MAS3_UX<< PTE_MAS3_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_SX
+value|(MAS3_SX<< PTE_MAS3_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_UW
+value|(MAS3_UW<< PTE_MAS3_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_SW
+value|(MAS3_SW<< PTE_MAS3_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_UR
+value|(MAS3_UR<< PTE_MAS3_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_SR
+value|(MAS3_SR<< PTE_MAS3_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_MAS3_MASK
+value|((MAS3_UX | MAS3_SX | MAS3_UW	\ 			| MAS3_SW | MAS3_UR | MAS3_SR)<< PTE_MAS3_SHIFT)
+end_define
+
+begin_comment
+comment|/* Other PTE flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTE_VALID
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTE_MODIFIED
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Modified */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTE_WIRED
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Wired */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTE_MANAGED
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Managed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTE_FAKE
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Ficticious */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTE_REFERENCED
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Referenced */
+end_comment
+
+begin_comment
+comment|/* Macro argument must of pte_t type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTE_PA
+parameter_list|(
+name|pte
+parameter_list|)
+value|((pte)->rpn& ~PTE_PA_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_ISVALID
+parameter_list|(
+name|pte
+parameter_list|)
+value|((pte)->flags& PTE_VALID)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_ISWIRED
+parameter_list|(
+name|pte
+parameter_list|)
+value|((pte)->flags& PTE_WIRED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_ISMANAGED
+parameter_list|(
+name|pte
+parameter_list|)
+value|((pte)->flags& PTE_MANAGED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_ISFAKE
+parameter_list|(
+name|pte
+parameter_list|)
+value|((pte)->flags& PTE_FAKE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_ISMODIFIED
+parameter_list|(
+name|pte
+parameter_list|)
+value|((pte)->flags& PTE_MODIFIED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_ISREFERENCED
+parameter_list|(
+name|pte
+parameter_list|)
+value|((pte)->flags& PTE_REFERENCED)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* #elif defined(E500) */
 end_comment
 
 begin_endif

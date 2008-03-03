@@ -15,6 +15,218 @@ directive|define
 name|_MACHINE_PSL_H_
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|E500
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * Machine State Register (MSR) - e500 core  *  * The PowerPC e500 does not implement the following bits:  *  * FP, FE0, FE1 - reserved, always cleared, setting has no effect.  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_UCLE
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* User mode cache lock enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_SPE
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* SPE enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_WE
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Wait state enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_CE
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Critical interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_EE
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* External interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_PR
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* User mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_FP
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Floating point available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_ME
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Machine check interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_FE0
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* Floating point exception mode 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_UBLE
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* BTB lock enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_DE
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Debug interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_FE1
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Floating point exception mode 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_IS
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Instruction address space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_DS
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Data address space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_PMM
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Performance monitor mark */
+end_comment
+
+begin_comment
+comment|/* Initial kernel MSR, use IS=1 ad DS=1. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_KERNSET_INIT
+value|(PSL_IS | PSL_DS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSL_KERNSET
+value|(PSL_CE | PSL_ME | PSL_EE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSL_USERSET
+value|(PSL_KERNSET | PSL_PR)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* if defined(E500) */
+end_comment
+
 begin_comment
 comment|/*  * Machine State Register (MSR)  *  * The PowerPC 601 does not implement the following bits:  *  *	VEC, POW, ILE, BE, RI, LE[*]  *  * [*] Little-endian mode on the 601 is implemented in the HID0 register.  */
 end_comment
@@ -299,6 +511,15 @@ directive|define
 name|PSL_USERSTATIC
 value|(PSL_USERSET | PSL_IP | 0x87c0008c)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* if defined(E500) */
+end_comment
 
 begin_endif
 endif|#

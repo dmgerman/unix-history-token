@@ -166,18 +166,18 @@ value|20
 end_define
 
 begin_comment
-comment|/*  * Use the direct-mapped BAT registers for UMA small allocs. This  * takes pressure off the small amount of available KVA.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMA_MD_SMALL_ALLOC
-end_define
-
-begin_comment
 comment|/*  * Would like to have MAX addresses = 0, but this doesn't (currently) work  */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LOCORE
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -193,12 +193,64 @@ name|VM_MAXUSER_ADDRESS
 value|((vm_offset_t)0x7ffff000)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VM_MIN_ADDRESS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAXUSER_ADDRESS
+value|0x7ffff000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOCORE */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|VM_MAX_ADDRESS
 value|VM_MAXUSER_ADDRESS
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AIM
+argument_list|)
+end_if
+
+begin_comment
+comment|/* AIM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERNBASE
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* start of kernel virtual */
+end_comment
 
 begin_define
 define|#
@@ -214,15 +266,71 @@ name|VM_MAX_KERNEL_ADDRESS
 value|(VM_MIN_KERNEL_ADDRESS + 2*SEGMENT_LENGTH - 1)
 end_define
 
+begin_comment
+comment|/*  * Use the direct-mapped BAT registers for UMA small allocs. This  * takes pressure off the small amount of available KVA.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_MD_SMALL_ALLOC
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * Kernel CCSRBAR location. We make this the reset location.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCSRBAR_VA
+value|0xfef00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCSRBAR_SIZE
+value|0x00100000
+end_define
+
 begin_define
 define|#
 directive|define
 name|KERNBASE
-value|0x100000
+value|0xc0000000
 end_define
 
 begin_comment
 comment|/* start of kernel virtual */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_MIN_KERNEL_ADDRESS
+value|KERNBASE
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_KERNEL_ADDRESS
+value|CCSRBAR_VA
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AIM/E500 */
 end_comment
 
 begin_comment
@@ -247,6 +355,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LOCORE
+argument_list|)
+end_if
+
 begin_struct
 struct|struct
 name|pmap_physseg
@@ -263,6 +381,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
