@@ -613,7 +613,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: find [-H | -L | -P] [-EXdsx] [-f file] [file ...] [expression]\n"
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: find [-H | -L | -P] [-EXdsx] [-f path] path ... [expression]"
+argument_list|,
+literal|"       find [-H | -L | -P] [-EXdsx] -f path [path ...] [expression]"
 argument_list|)
 expr_stmt|;
 name|exit
