@@ -106,6 +106,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MMU_TYPE_BOOKE
+value|"mmu_booke"
+end_define
+
+begin_comment
+comment|/* Book-E MMU specification */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MMU_TYPE_OEA
 value|"mmu_oea"
 end_define

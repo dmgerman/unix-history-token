@@ -1984,6 +1984,18 @@ block|}
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__powerpc__
+block|{
+literal|"tlb0"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+endif|#
+directive|endif
 comment|/* 	 * leaf locks 	 */
 block|{
 literal|"icu"
