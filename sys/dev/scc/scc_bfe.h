@@ -270,6 +270,14 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|scc_class
+name|scc_quicc_class
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|scc_class
 name|scc_sab82532_class
 decl_stmt|;
 end_decl_stmt

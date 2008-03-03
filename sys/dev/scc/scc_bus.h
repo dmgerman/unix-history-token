@@ -87,6 +87,13 @@ name|SCC_CLASS_Z8530
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCC_CLASS_QUICC
+value|2
+end_define
+
 begin_comment
 comment|/* The possible modes supported by the SCC. */
 end_comment

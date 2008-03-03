@@ -350,6 +350,17 @@ name|cl
 condition|)
 block|{
 case|case
+name|SCC_CLASS_QUICC
+case|:
+name|sc
+operator|->
+name|sc_class
+operator|=
+operator|&
+name|uart_quicc_class
+expr_stmt|;
+break|break;
+case|case
 name|SCC_CLASS_SAB82532
 case|:
 name|sc
