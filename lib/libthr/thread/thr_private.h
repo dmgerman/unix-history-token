@@ -1051,6 +1051,14 @@ comment|/* Thread temporary signal mask. */
 name|sigset_t
 name|sigmask
 decl_stmt|;
+comment|/* Thread is in SIGCANCEL handler. */
+name|int
+name|in_sigcancel_handler
+decl_stmt|;
+comment|/* New thread should unblock SIGCANCEL. */
+name|int
+name|unblock_sigcancel
+decl_stmt|;
 comment|/* Thread state: */
 name|enum
 name|pthread_state
