@@ -296,19 +296,19 @@ begin_decl_stmt
 name|int
 name|ipport_firstauto
 init|=
-name|IPPORT_HIFIRSTAUTO
+name|IPPORT_EPHEMERALFIRST
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 49152 */
+comment|/* 10000 */
 end_comment
 
 begin_decl_stmt
 name|int
 name|ipport_lastauto
 init|=
-name|IPPORT_HILASTAUTO
+name|IPPORT_EPHEMERALLAST
 decl_stmt|;
 end_decl_stmt
 
@@ -2040,6 +2040,8 @@ name|u_short
 name|first
 decl_stmt|,
 name|last
+decl_stmt|,
+name|aux
 decl_stmt|;
 name|int
 name|count
@@ -2208,7 +2210,7 @@ condition|)
 name|ipport_tcpallocs
 operator|++
 expr_stmt|;
-comment|/* 		 * Simple check to ensure all ports are not used up causing 		 * a deadlock here. 		 * 		 * We split the two cases (up and down) so that the direction 		 * is not being tested on each round of the loop. 		 */
+comment|/* 		 * Simple check to ensure all ports are not used up causing 		 * a deadlock here. 		 */
 if|if
 condition|(
 name|first
@@ -2216,96 +2218,19 @@ operator|>
 name|last
 condition|)
 block|{
-comment|/* 			 * counting down 			 */
-if|if
-condition|(
-name|dorandom
-condition|)
-operator|*
-name|lastport
+name|aux
 operator|=
 name|first
-operator|-
-operator|(
-name|arc4random
-argument_list|()
-operator|%
-operator|(
-name|first
-operator|-
-name|last
-operator|)
-operator|)
 expr_stmt|;
-name|count
-operator|=
 name|first
-operator|-
+operator|=
 name|last
 expr_stmt|;
-do|do
-block|{
-if|if
-condition|(
-name|count
-operator|--
-operator|<
-literal|0
-condition|)
-comment|/* completely used? */
-return|return
-operator|(
-name|EADDRNOTAVAIL
-operator|)
-return|;
-operator|--
-operator|*
-name|lastport
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|lastport
-operator|>
-name|first
-operator|||
-operator|*
-name|lastport
-operator|<
 name|last
-condition|)
-operator|*
-name|lastport
 operator|=
-name|first
-expr_stmt|;
-name|lport
-operator|=
-name|htons
-argument_list|(
-operator|*
-name|lastport
-argument_list|)
+name|aux
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|in_pcblookup_local
-argument_list|(
-name|pcbinfo
-argument_list|,
-name|laddr
-argument_list|,
-name|lport
-argument_list|,
-name|wild
-argument_list|)
-condition|)
-do|;
-block|}
-else|else
-block|{
-comment|/* 			 * counting up 			 */
 if|if
 condition|(
 name|dorandom
@@ -2391,7 +2316,6 @@ name|wild
 argument_list|)
 condition|)
 do|;
-block|}
 block|}
 if|if
 condition|(
