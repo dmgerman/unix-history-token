@@ -180,7 +180,7 @@ name|NG_NAT_REDIRECT_PORT_TYPE_INFO
 parameter_list|(
 name|desctype
 parameter_list|)
-value|{		\ 	  { "local_addr",&ng_parse_ipaddr_type	},	\ 	  { "alias_addr",&ng_parse_ipaddr_type	},	\ 	  { "remote_addr",&ng_parse_ipaddr_type	},	\ 	  { "local_port",&ng_parse_uint16_type	},	\ 	  { "alias_port",&ng_parse_uint16_type	},	\ 	  { "remote_port",&ng_parse_uint16_type	},	\ 	  { "udp",&ng_parse_uint8_type	},	\ 	  { "description",	(desctype)		},	\ 	  { NULL }						\ }
+value|{		\ 	  { "local_addr",&ng_parse_ipaddr_type	},	\ 	  { "alias_addr",&ng_parse_ipaddr_type	},	\ 	  { "remote_addr",&ng_parse_ipaddr_type	},	\ 	  { "local_port",&ng_parse_uint16_type	},	\ 	  { "alias_port",&ng_parse_uint16_type	},	\ 	  { "remote_port",&ng_parse_uint16_type	},	\ 	  { "proto",&ng_parse_uint8_type	},	\ 	  { "description",	(desctype)		},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment
