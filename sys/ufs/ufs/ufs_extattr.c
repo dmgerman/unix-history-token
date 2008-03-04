@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -414,7 +420,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Per-FS attribute lock protecting attribute operations.  * XXX Right now there is a lot of lock contention due to having a single  * lock per-FS; really, this should be far more fine-grained.  */
+comment|/*  * Per-FS attribute lock protecting attribute operations.  *  * XXXRW: Perhaps something more fine-grained would be appropriate, but at  * the end of the day we're going to contend on the vnode lock for the  * backing file anyway.  */
 end_comment
 
 begin_function
@@ -433,8 +439,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-comment|/* Ideally, LK_CANRECURSE would not be used, here. */
-name|lockmgr
+name|sx_xlock
 argument_list|(
 operator|&
 name|ump
@@ -442,14 +447,6 @@ operator|->
 name|um_extattr
 operator|.
 name|uepm_lock
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-operator||
-name|LK_CANRECURSE
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -471,7 +468,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|lockmgr
+name|sx_xunlock
 argument_list|(
 operator|&
 name|ump
@@ -479,10 +476,6 @@ operator|->
 name|um_extattr
 operator|.
 name|uepm_lock
-argument_list|,
-name|LK_RELEASE
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -569,6 +562,18 @@ name|ufs_extattr_list_entry
 modifier|*
 name|search_attribute
 decl_stmt|;
+name|sx_assert
+argument_list|(
+operator|&
+name|ump
+operator|->
+name|um_extattr
+operator|.
+name|uepm_lock
+argument_list|,
+name|SA_XLOCKED
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|search_attribute
@@ -665,21 +670,14 @@ operator|->
 name|uepm_list
 argument_list|)
 expr_stmt|;
-comment|/* XXX is PVFS right, here? */
-name|lockinit
+name|sx_init
 argument_list|(
 operator|&
 name|uepm
 operator|->
 name|uepm_lock
 argument_list|,
-name|PVFS
-argument_list|,
-literal|"extattr"
-argument_list|,
-literal|0
-argument_list|,
-literal|0
+literal|"ufs_extattr_sx"
 argument_list|)
 expr_stmt|;
 name|uepm
@@ -744,7 +742,7 @@ operator|&=
 operator|~
 name|UFS_EXTATTR_UEPM_INITIALIZED
 expr_stmt|;
-name|lockdestroy
+name|sx_destroy
 argument_list|(
 operator|&
 name|uepm
