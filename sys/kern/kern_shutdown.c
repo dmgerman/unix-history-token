@@ -1050,6 +1050,9 @@ operator|&
 name|dumper
 argument_list|)
 expr_stmt|;
+name|dumping
+operator|--
+expr_stmt|;
 block|}
 end_function
 
