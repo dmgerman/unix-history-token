@@ -3981,6 +3981,9 @@ return|;
 block|}
 else|else
 block|{
+ifndef|#
+directive|ifndef
+name|WITHOUT_OLD_JOKE
 if|if
 condition|(
 name|strcmp
@@ -4003,6 +4006,8 @@ literal|"Not war."
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 call|(
 modifier|*
 name|abortProc
