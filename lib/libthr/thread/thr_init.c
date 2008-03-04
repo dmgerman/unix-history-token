@@ -298,6 +298,16 @@ operator|.
 name|guardsize_attr
 operator|=
 literal|0
+block|,
+operator|.
+name|cpusetsize
+operator|=
+literal|0
+block|,
+operator|.
+name|cpuset
+operator|=
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -675,6 +675,13 @@ decl_stmt|;
 name|size_t
 name|guardsize_attr
 decl_stmt|;
+name|cpuset_t
+modifier|*
+name|cpuset
+decl_stmt|;
+name|size_t
+name|cpusetsize
+decl_stmt|;
 block|}
 struct|;
 end_struct

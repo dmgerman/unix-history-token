@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pthread_np.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"un-namespace.h"
 end_include
 
@@ -244,6 +250,7 @@ operator|=
 name|_pthread_attr_default
 expr_stmt|;
 else|else
+block|{
 name|new_thread
 operator|->
 name|attr
@@ -254,6 +261,23 @@ operator|*
 name|attr
 operator|)
 expr_stmt|;
+name|new_thread
+operator|->
+name|attr
+operator|.
+name|cpuset
+operator|=
+name|NULL
+expr_stmt|;
+name|new_thread
+operator|->
+name|attr
+operator|.
+name|cpusetsize
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|new_thread
