@@ -136,29 +136,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* List of all active nodes */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|ng_node
-argument_list|)
-name|ng_nodelist
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|ng_nodelist_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Mutex to protect topology events. */
 end_comment
 
@@ -175,6 +152,18 @@ ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
 end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|ng_nodelist_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* protects global node/hook lists */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -534,7 +523,7 @@ begin_define
 define|#
 directive|define
 name|NG_ID_HASH_SIZE
-value|32
+value|128
 end_define
 
 begin_comment
@@ -588,6 +577,52 @@ name|node
 parameter_list|)
 define|\
 value|do { 								\ 		mtx_assert(&ng_idhash_mtx, MA_OWNED);			\ 		LIST_FOREACH(node,&ng_ID_hash[NG_IDHASH_FN(ID)],	\ 						nd_idnodes) {		\ 			if (NG_NODE_IS_VALID(node)			\&& (NG_NODE_ID(node) == ID)) {			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NAME_HASH_SIZE
+value|128
+end_define
+
+begin_comment
+comment|/* most systems wont need even this many */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|ng_node
+argument_list|)
+name|ng_name_hash
+index|[
+name|NG_NAME_HASH_SIZE
+index|]
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|ng_namehash_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NG_NAMEHASH
+parameter_list|(
+name|NAME
+parameter_list|,
+name|HASH
+parameter_list|)
+define|\
+value|do {						\ 		u_char	h = 0;				\ 		const u_char	*c;			\ 		for (c = (const u_char*)(NAME); *c; c++)\ 			h += *c;			\ 		(HASH) = h % (NG_NAME_HASH_SIZE);	\ 	} while (0)
 end_define
 
 begin_comment
@@ -2459,17 +2494,20 @@ operator|->
 name|nd_hooks
 argument_list|)
 expr_stmt|;
-comment|/* Link us into the node linked list */
+comment|/* Link us into the name hash. */
 name|mtx_lock
 argument_list|(
 operator|&
-name|ng_nodelist_mtx
+name|ng_namehash_mtx
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|ng_nodelist
+name|ng_name_hash
+index|[
+literal|0
+index|]
 argument_list|,
 name|node
 argument_list|,
@@ -2479,7 +2517,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ng_nodelist_mtx
+name|ng_namehash_mtx
 argument_list|)
 expr_stmt|;
 comment|/* get an ID and put us in the hash chain */
@@ -2851,7 +2889,7 @@ comment|/* we were the last */
 name|mtx_lock
 argument_list|(
 operator|&
-name|ng_nodelist_mtx
+name|ng_namehash_mtx
 argument_list|)
 expr_stmt|;
 name|node
@@ -2872,7 +2910,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ng_nodelist_mtx
+name|ng_namehash_mtx
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -3016,6 +3054,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|hash
 decl_stmt|;
 name|node_p
 name|node2
@@ -3147,6 +3187,46 @@ argument_list|,
 name|NG_NODESIZ
 argument_list|)
 expr_stmt|;
+comment|/* Update name hash. */
+name|NG_NAMEHASH
+argument_list|(
+name|name
+argument_list|,
+name|hash
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|ng_namehash_mtx
+argument_list|)
+expr_stmt|;
+name|LIST_REMOVE
+argument_list|(
+name|node
+argument_list|,
+name|nd_nodes
+argument_list|)
+expr_stmt|;
+name|LIST_INSERT_HEAD
+argument_list|(
+operator|&
+name|ng_name_hash
+index|[
+name|hash
+index|]
+argument_list|,
+name|node
+argument_list|,
+name|nd_nodes
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_namehash_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3177,6 +3257,9 @@ name|node
 decl_stmt|;
 name|ng_ID_t
 name|temp
+decl_stmt|;
+name|int
+name|hash
 decl_stmt|;
 comment|/* "." means "this node" */
 if|if
@@ -3227,17 +3310,24 @@ operator|)
 return|;
 block|}
 comment|/* Find node by name */
+name|NG_NAMEHASH
+argument_list|(
+name|name
+argument_list|,
+name|hash
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ng_nodelist_mtx
+name|ng_namehash_mtx
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|node
 argument_list|,
-argument|&ng_nodelist
+argument|&ng_name_hash[hash]
 argument_list|,
 argument|nd_nodes
 argument_list|)
@@ -3245,11 +3335,6 @@ block|{
 if|if
 condition|(
 name|NG_NODE_IS_VALID
-argument_list|(
-name|node
-argument_list|)
-operator|&&
-name|NG_NODE_HAS_NAME
 argument_list|(
 name|node
 argument_list|)
@@ -3284,7 +3369,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ng_nodelist_mtx
+name|ng_namehash_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -9722,19 +9807,35 @@ name|int
 name|num
 init|=
 literal|0
+decl_stmt|,
+name|i
 decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ng_nodelist_mtx
+name|ng_namehash_mtx
 argument_list|)
 expr_stmt|;
 comment|/* Count number of nodes */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NG_NAME_HASH_SIZE
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|LIST_FOREACH
 argument_list|(
 argument|node
 argument_list|,
-argument|&ng_nodelist
+argument|&ng_name_hash[i]
 argument_list|,
 argument|nd_nodes
 argument_list|)
@@ -9761,10 +9862,11 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ng_nodelist_mtx
+name|ng_namehash_mtx
 argument_list|)
 expr_stmt|;
 comment|/* Get response struct */
@@ -9827,14 +9929,28 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ng_nodelist_mtx
+name|ng_namehash_mtx
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NG_NAME_HASH_SIZE
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|LIST_FOREACH
 argument_list|(
 argument|node
 argument_list|,
-argument|&ng_nodelist
+argument|&ng_name_hash[i]
 argument_list|,
 argument|nd_nodes
 argument_list|)
@@ -9890,11 +10006,9 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: number of %s changed\n"
+literal|"%s: number of nodes changed\n"
 argument_list|,
 name|__func__
-argument_list|,
-literal|"nodes"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9954,10 +10068,11 @@ name|numnames
 operator|++
 expr_stmt|;
 block|}
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ng_nodelist_mtx
+name|ng_namehash_mtx
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11707,9 +11822,9 @@ expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
-name|ng_nodelist_mtx
+name|ng_idhash_mtx
 argument_list|,
-literal|"netgraph nodelist mutex"
+literal|"netgraph idhash mutex"
 argument_list|,
 name|NULL
 argument_list|,
@@ -11719,9 +11834,9 @@ expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
-name|ng_idhash_mtx
+name|ng_namehash_mtx
 argument_list|,
-literal|"netgraph idhash mutex"
+literal|"netgraph namehash mutex"
 argument_list|,
 name|NULL
 argument_list|,
@@ -11743,6 +11858,18 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
+name|mtx_init
+argument_list|(
+operator|&
+name|ng_nodelist_mtx
+argument_list|,
+literal|"netgraph nodelist mutex"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
