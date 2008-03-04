@@ -95,6 +95,10 @@ directive|include
 file|"pic_if.h"
 end_include
 
+begin_comment
+comment|/*  * OpenPIC attachment to ocpbus  */
+end_comment
+
 begin_function_decl
 specifier|static
 name|int
@@ -104,31 +108,6 @@ name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_struct
-struct|struct
-name|openpic_ocpbus_softc
-block|{
-name|struct
-name|openpic_softc
-name|osc
-decl_stmt|;
-name|int
-name|sc_rrid
-decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|sc_memr
-decl_stmt|;
-comment|/* mem resource */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * OpenPIC attachment to ocpbus  */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -176,6 +155,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|pic_ipi
+argument_list|,
+name|openpic_ipi
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|pic_mask
 argument_list|,
 name|openpic_mask
@@ -210,7 +196,7 @@ block|,
 expr|sizeof
 operator|(
 expr|struct
-name|openpic_ocpbus_softc
+name|openpic_softc
 operator|)
 block|}
 decl_stmt|;
