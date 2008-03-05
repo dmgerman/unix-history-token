@@ -308,8 +308,7 @@ expr_stmt|;
 name|curthread
 operator|->
 name|in_sigcancel_handler
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 name|_thr_ast
 argument_list|(
@@ -319,8 +318,7 @@ expr_stmt|;
 name|curthread
 operator|->
 name|in_sigcancel_handler
-operator|=
-literal|0
+operator|--
 expr_stmt|;
 block|}
 end_function
