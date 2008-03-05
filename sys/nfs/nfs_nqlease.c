@@ -2336,7 +2336,8 @@ decl_stmt|,
 name|cp
 decl_stmt|;
 name|u_int32_t
-name|xid
+modifier|*
+name|xidp
 decl_stmt|,
 modifier|*
 name|tl
@@ -2704,7 +2705,7 @@ operator|&
 name|mheadend
 argument_list|,
 operator|&
-name|xid
+name|xidp
 argument_list|)
 expr_stmt|;
 comment|/* 			 * For stream protocols, prepend a Sun RPC 			 * Record Mark. 			 */
@@ -4610,7 +4611,8 @@ name|caddr_t
 name|bpos
 decl_stmt|;
 name|u_int32_t
-name|xid
+modifier|*
+name|xidp
 decl_stmt|;
 name|int
 name|error
@@ -4745,7 +4747,7 @@ operator|&
 name|mheadend
 argument_list|,
 operator|&
-name|xid
+name|xidp
 argument_list|)
 expr_stmt|;
 if|if

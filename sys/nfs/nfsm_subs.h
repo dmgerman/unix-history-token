@@ -35,6 +35,15 @@ begin_comment
 comment|/*  * First define what the actual subs. return  */
 end_comment
 
+begin_function_decl
+name|u_int32_t
+name|nfs_xid_gen
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|mbuf
@@ -114,7 +123,8 @@ name|mbp
 operator|,
 name|u_int32_t
 operator|*
-name|xidp
+operator|*
+name|xidpp
 operator|)
 argument_list|)
 decl_stmt|;

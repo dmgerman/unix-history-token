@@ -4332,7 +4332,8 @@ decl_stmt|,
 name|verf_type
 decl_stmt|;
 name|u_int32_t
-name|xid
+modifier|*
+name|xidp
 decl_stmt|;
 name|u_quad_t
 name|frev
@@ -4665,7 +4666,7 @@ operator|&
 name|mheadend
 argument_list|,
 operator|&
-name|xid
+name|xidp
 argument_list|)
 expr_stmt|;
 if|if
@@ -4733,7 +4734,8 @@ name|rep
 operator|->
 name|r_xid
 operator|=
-name|xid
+operator|*
+name|xidp
 expr_stmt|;
 name|tryagain
 label|:
@@ -5438,6 +5440,20 @@ literal|7
 condition|)
 name|trylater_cnt
 operator|++
+expr_stmt|;
+comment|/* 				 * Generate a new RPC XID before retrying the request 				 * on an NFSv3 JUKEBOX error. If we don't do this, the 				 * duplicate request cache on the server will simply  				 * replay the cached reply from the dupreq cache, and 				 * the client request hangs in this loop forever. 				 */
+name|rep
+operator|->
+name|r_xid
+operator|=
+operator|*
+name|xidp
+operator|=
+name|txdr_unsigned
+argument_list|(
+name|nfs_xid_gen
+argument_list|()
+argument_list|)
 expr_stmt|;
 goto|goto
 name|tryagain
