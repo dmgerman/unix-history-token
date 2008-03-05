@@ -248,6 +248,7 @@ comment|/* And other global data */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_int32_t
 name|nfs_xid
 init|=
@@ -325,6 +326,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mtx
 name|nfs_xid_mtx
@@ -401,6 +403,60 @@ name|nfsnode
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+name|u_int32_t
+name|nfs_xid_gen
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uint32_t
+name|xid
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|nfs_xid_mtx
+argument_list|)
+expr_stmt|;
+comment|/* Get a pretty random xid to start with */
+if|if
+condition|(
+operator|!
+name|nfs_xid
+condition|)
+name|nfs_xid
+operator|=
+name|random
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Skip zero xid if it should ever happen. 	 */
+if|if
+condition|(
+operator|++
+name|nfs_xid
+operator|==
+literal|0
+condition|)
+name|nfs_xid
+operator|++
+expr_stmt|;
+name|xid
+operator|=
+name|nfs_xid
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|nfs_xid_mtx
+argument_list|)
+expr_stmt|;
+return|return
+name|xid
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Create the header for an rpc request packet  * The hsiz is the size of the rest of the nfs request header.  * (just used to decide if a cluster is a good idea)  */
@@ -644,34 +700,6 @@ operator|*
 name|NFSX_UNSIGNED
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|nfs_xid_mtx
-argument_list|)
-expr_stmt|;
-comment|/* Get a pretty random xid to start with */
-if|if
-condition|(
-operator|!
-name|nfs_xid
-condition|)
-name|nfs_xid
-operator|=
-name|random
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Skip zero xid if it should ever happen. 	 */
-if|if
-condition|(
-operator|++
-name|nfs_xid
-operator|==
-literal|0
-condition|)
-name|nfs_xid
-operator|++
-expr_stmt|;
 operator|*
 name|xidpp
 operator|=
@@ -683,13 +711,8 @@ operator|++
 operator|=
 name|txdr_unsigned
 argument_list|(
-name|nfs_xid
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|nfs_xid_mtx
+name|nfs_xid_gen
+argument_list|()
 argument_list|)
 expr_stmt|;
 operator|*
