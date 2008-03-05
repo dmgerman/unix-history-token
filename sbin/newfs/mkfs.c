@@ -2913,8 +2913,10 @@ condition|(
 operator|(
 name|iobuf
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|iobufsize
 argument_list|)
 operator|)
@@ -2933,13 +2935,6 @@ literal|38
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
-argument_list|(
-name|iobuf
-argument_list|,
-name|iobufsize
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Make a copy of the superblock into the buffer that we will be 	 * writing out in each cylinder group. 	 */
 name|bcopy
 argument_list|(
