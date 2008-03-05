@@ -229,6 +229,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|long
 name|double
 name|__double_t
 typedef|;
@@ -236,6 +237,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|long
 name|double
 name|__float_t
 typedef|;
