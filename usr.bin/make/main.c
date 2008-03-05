@@ -4420,7 +4420,7 @@ argument_list|(
 literal|".depend"
 argument_list|)
 expr_stmt|;
-comment|/* Install all the flags into the MAKE envariable. */
+comment|/* Install all the flags into the MAKEFLAGS envariable. */
 if|if
 condition|(
 operator|(
