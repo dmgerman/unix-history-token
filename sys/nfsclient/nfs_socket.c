@@ -210,13 +210,6 @@ value|0
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|u_int32_t
-name|nfs_xid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|nfs_realign_test
@@ -5653,16 +5646,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|++
-name|nfs_xid
-operator|==
-literal|0
-condition|)
-name|nfs_xid
-operator|++
-expr_stmt|;
 name|rep
 operator|->
 name|r_xid
@@ -5672,7 +5655,8 @@ name|xidp
 operator|=
 name|txdr_unsigned
 argument_list|(
-name|nfs_xid
+name|nfs_xid_gen
+argument_list|()
 argument_list|)
 expr_stmt|;
 goto|goto

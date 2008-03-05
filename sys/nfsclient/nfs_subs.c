@@ -238,6 +238,7 @@ comment|/* And other global data */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_int32_t
 name|nfs_xid
 init|=
@@ -391,6 +392,43 @@ name|nfsnode
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+name|u_int32_t
+name|nfs_xid_gen
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Get a pretty random xid to start with */
+if|if
+condition|(
+operator|!
+name|nfs_xid
+condition|)
+name|nfs_xid
+operator|=
+name|random
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Skip zero xid if it should ever happen. 	 */
+if|if
+condition|(
+operator|++
+name|nfs_xid
+operator|==
+literal|0
+condition|)
+name|nfs_xid
+operator|++
+expr_stmt|;
+return|return
+operator|(
+name|nfs_xid
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Create the header for an rpc request packet  * The hsiz is the size of the rest of the nfs request header.  * (just used to decide if a cluster is a good idea)  */
@@ -634,28 +672,6 @@ operator|*
 name|NFSX_UNSIGNED
 argument_list|)
 expr_stmt|;
-comment|/* Get a pretty random xid to start with */
-if|if
-condition|(
-operator|!
-name|nfs_xid
-condition|)
-name|nfs_xid
-operator|=
-name|random
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Skip zero xid if it should ever happen. 	 */
-if|if
-condition|(
-operator|++
-name|nfs_xid
-operator|==
-literal|0
-condition|)
-name|nfs_xid
-operator|++
-expr_stmt|;
 operator|*
 name|xidpp
 operator|=
@@ -667,7 +683,8 @@ operator|++
 operator|=
 name|txdr_unsigned
 argument_list|(
-name|nfs_xid
+name|nfs_xid_gen
+argument_list|()
 argument_list|)
 expr_stmt|;
 operator|*
