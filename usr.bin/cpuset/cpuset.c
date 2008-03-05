@@ -441,7 +441,7 @@ name|errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"Malformed cpu list %s"
+literal|"Malformed cpu-list %s"
 argument_list|,
 name|list
 argument_list|)
@@ -589,7 +589,10 @@ name|which
 argument_list|,
 name|id
 argument_list|,
-name|CPU_SETSIZE
+sizeof|sizeof
+argument_list|(
+name|mask
+argument_list|)
 argument_list|,
 operator|&
 name|mask
@@ -1084,7 +1087,10 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-name|CPU_SETSIZE
+sizeof|sizeof
+argument_list|(
+name|mask
+argument_list|)
 argument_list|,
 operator|&
 name|mask
@@ -1226,7 +1232,10 @@ name|which
 argument_list|,
 name|id
 argument_list|,
-name|CPU_SETSIZE
+sizeof|sizeof
+argument_list|(
+name|mask
+argument_list|)
 argument_list|,
 operator|&
 name|mask
@@ -1261,21 +1270,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cpuset [-l cpu list] [-i | -s setid] cmd ...\n"
+literal|"usage: cpuset [-l cpu-list] [-i | -s setid] cmd ...\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       cpuset [-l cpu list] [-s setid] -p pid\n"
+literal|"       cpuset [-l cpu-list] [-s setid] -p pid\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       cpuset [-cr] [-l cpu list] [-p pid | -t tid | -s setid]\n"
+literal|"       cpuset [-cr] [-l cpu-list] [-p pid | -t tid | -s setid]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

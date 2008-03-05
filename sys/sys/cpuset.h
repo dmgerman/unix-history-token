@@ -165,6 +165,10 @@ parameter_list|)
 value|do {				\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		(p)->__bits[__i] = 0;			\ } while (0)
 end_define
 
+begin_comment
+comment|/* Is p empty. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -173,6 +177,38 @@ parameter_list|(
 name|p
 parameter_list|)
 value|__extension__ ({			\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		if ((p)->__bits[__i])			\ 			break;				\ 	__i == _NCPUWORDS;				\ })
+end_define
+
+begin_comment
+comment|/* Is c a subset of p. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_SUBSET
+parameter_list|(
+name|p
+parameter_list|,
+name|c
+parameter_list|)
+value|__extension__ ({		\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		if (((c)->__bits[__i]&			\ 		    (p)->__bits[__i]) !=		\ 		    (c)->__bits[__i])			\ 			break;				\ 	__i == _NCPUWORDS;				\ })
+end_define
+
+begin_comment
+comment|/* Are there any common bits between b& c? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_OVERLAP
+parameter_list|(
+name|p
+parameter_list|,
+name|c
+parameter_list|)
+value|__extension__ ({		\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		if (((c)->__bits[__i]&			\ 		    (p)->__bits[__i]) != 0)		\ 			break;				\ 	__i != _NCPUWORDS;				\ })
 end_define
 
 begin_define
