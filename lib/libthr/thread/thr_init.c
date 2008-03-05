@@ -267,7 +267,7 @@ block|,
 operator|.
 name|sched_inherit
 operator|=
-literal|0
+name|PTHREAD_INHERIT_SCHED
 block|,
 operator|.
 name|prio

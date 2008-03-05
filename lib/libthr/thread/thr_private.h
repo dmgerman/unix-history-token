@@ -1059,6 +1059,10 @@ comment|/* New thread should unblock SIGCANCEL. */
 name|int
 name|unblock_sigcancel
 decl_stmt|;
+comment|/* Force new thread to exit. */
+name|int
+name|force_exit
+decl_stmt|;
 comment|/* Thread state: */
 name|enum
 name|pthread_state
@@ -2445,6 +2449,35 @@ name|int
 name|_sched_yield
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_getaffinity_np
+parameter_list|(
+name|pthread_t
+parameter_list|,
+name|size_t
+parameter_list|,
+name|cpuset_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pthread_setaffinity_np
+parameter_list|(
+name|pthread_t
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|cpuset_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
