@@ -2160,7 +2160,7 @@ operator|&
 name|td
 argument_list|,
 operator|&
-name|nset
+name|set
 argument_list|)
 expr_stmt|;
 if|if
