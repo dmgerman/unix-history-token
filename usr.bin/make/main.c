@@ -4450,6 +4450,16 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+else|else
+name|setenv
+argument_list|(
+literal|"MAKEFLAGS"
+argument_list|,
+literal|""
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * For compatibility, look at the directories in the VPATH variable 	 * and add them to the search path, if the variable is defined. The 	 * variable's value is in the same format as the PATH envariable, i.e. 	 *<directory>:<directory>:<directory>... 	 */
 if|if
 condition|(
