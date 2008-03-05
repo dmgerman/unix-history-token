@@ -1473,12 +1473,6 @@ name|mntp
 operator|->
 name|f_flags
 expr_stmt|;
-comment|/* 			 * XXX: Need to kick out MNT_ROOTFS until we fix 			 * nmount(). 			 */
-name|fflags
-operator|&=
-operator|~
-name|MNT_ROOTFS
-expr_stmt|;
 name|fflags
 operator|=
 name|fflags
@@ -2458,12 +2452,6 @@ operator|&
 name|MNT_RDONLY
 condition|)
 block|{
-comment|/* 		 * XXX: Need to kick out MNT_ROOTFS until we fix 		 * nmount(). 		 */
-name|fflags
-operator|&=
-operator|~
-name|MNT_ROOTFS
-expr_stmt|;
 name|fflags
 operator|=
 name|fflags
