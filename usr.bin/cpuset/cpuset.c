@@ -981,6 +981,13 @@ name|EXIT_SUCCESS
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|iflag
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 comment|/* 	 * The user wants to run a command with a set and possibly cpumask. 	 */
 if|if
 condition|(
@@ -996,15 +1003,6 @@ operator||
 name|tflag
 operator|||
 name|cflag
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|sflag
-operator|&&
-name|iflag
 condition|)
 name|usage
 argument_list|()
@@ -1033,19 +1031,8 @@ argument_list|,
 literal|"setid"
 argument_list|)
 expr_stmt|;
-name|which
-operator|=
-name|CPU_WHICH_PID
-expr_stmt|;
-name|level
-operator|=
-name|CPU_LEVEL_WHICH
-expr_stmt|;
 block|}
-if|if
-condition|(
-name|iflag
-condition|)
+else|else
 block|{
 if|if
 condition|(
@@ -1062,14 +1049,6 @@ argument_list|,
 literal|"newid"
 argument_list|)
 expr_stmt|;
-name|which
-operator|=
-name|CPU_WHICH_CPUSET
-expr_stmt|;
-name|level
-operator|=
-name|CPU_LEVEL_WHICH
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1080,9 +1059,9 @@ if|if
 condition|(
 name|cpuset_setaffinity
 argument_list|(
-name|level
+name|CPU_LEVEL_CPUSET
 argument_list|,
-name|which
+name|CPU_WHICH_PID
 argument_list|,
 operator|-
 literal|1
@@ -1136,13 +1115,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * We're modifying something that presently exists. 	 */
-if|if
-condition|(
-name|iflag
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1270,7 +1242,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cpuset [-l cpu-list] [-i | -s setid] cmd ...\n"
+literal|"usage: cpuset [-l cpu-list] [-s setid] cmd ...\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
