@@ -2235,10 +2235,10 @@ name|cpusetsize
 argument_list|,
 literal|0
 argument_list|,
-name|cpusetsize
-operator|-
 name|attr
 operator|->
+name|cpusetsize
+operator|-
 name|cpusetsize
 argument_list|)
 expr_stmt|;
