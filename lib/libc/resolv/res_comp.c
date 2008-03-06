@@ -373,6 +373,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|underscorechar
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == 0x5f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|periodchar
 parameter_list|(
 name|c
@@ -427,7 +437,7 @@ name|middlechar
 parameter_list|(
 name|c
 parameter_list|)
-value|(borderchar(c) || hyphenchar(c))
+value|(borderchar(c) || hyphenchar(c) || underscorechar(c))
 end_define
 
 begin_define
