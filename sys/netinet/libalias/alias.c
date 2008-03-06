@@ -332,9 +332,7 @@ specifier|static
 name|void
 name|TcpMonitorIn
 parameter_list|(
-name|struct
-name|ip
-modifier|*
+name|u_char
 parameter_list|,
 name|struct
 name|alias_link
@@ -348,9 +346,7 @@ specifier|static
 name|void
 name|TcpMonitorOut
 parameter_list|(
-name|struct
-name|ip
-modifier|*
+name|u_char
 parameter_list|,
 name|struct
 name|alias_link
@@ -364,10 +360,8 @@ specifier|static
 name|void
 name|TcpMonitorIn
 parameter_list|(
-name|struct
-name|ip
-modifier|*
-name|pip
+name|u_char
+name|th_flags
 parameter_list|,
 name|struct
 name|alias_link
@@ -375,23 +369,6 @@ modifier|*
 name|lnk
 parameter_list|)
 block|{
-name|struct
-name|tcphdr
-modifier|*
-name|tc
-decl_stmt|;
-name|tc
-operator|=
-operator|(
-expr|struct
-name|tcphdr
-operator|*
-operator|)
-name|ip_next
-argument_list|(
-name|pip
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|GetStateIn
@@ -405,8 +382,6 @@ name|ALIAS_TCP_STATE_NOT_CONNECTED
 case|:
 if|if
 condition|(
-name|tc
-operator|->
 name|th_flags
 operator|&
 name|TH_RST
@@ -421,8 +396,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|tc
-operator|->
 name|th_flags
 operator|&
 name|TH_SYN
@@ -440,8 +413,6 @@ name|ALIAS_TCP_STATE_CONNECTED
 case|:
 if|if
 condition|(
-name|tc
-operator|->
 name|th_flags
 operator|&
 operator|(
@@ -467,10 +438,8 @@ specifier|static
 name|void
 name|TcpMonitorOut
 parameter_list|(
-name|struct
-name|ip
-modifier|*
-name|pip
+name|u_char
+name|th_flags
 parameter_list|,
 name|struct
 name|alias_link
@@ -478,23 +447,6 @@ modifier|*
 name|lnk
 parameter_list|)
 block|{
-name|struct
-name|tcphdr
-modifier|*
-name|tc
-decl_stmt|;
-name|tc
-operator|=
-operator|(
-expr|struct
-name|tcphdr
-operator|*
-operator|)
-name|ip_next
-argument_list|(
-name|pip
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|GetStateOut
@@ -508,8 +460,6 @@ name|ALIAS_TCP_STATE_NOT_CONNECTED
 case|:
 if|if
 condition|(
-name|tc
-operator|->
 name|th_flags
 operator|&
 name|TH_RST
@@ -524,8 +474,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|tc
-operator|->
 name|th_flags
 operator|&
 name|TH_SYN
@@ -543,8 +491,6 @@ name|ALIAS_TCP_STATE_CONNECTED
 case|:
 if|if
 condition|(
-name|tc
-operator|->
 name|th_flags
 operator|&
 operator|(
@@ -2450,6 +2396,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// XXX ip free
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2566,6 +2516,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// XXX ip free
+end_comment
 
 begin_function
 specifier|static
@@ -3592,11 +3546,25 @@ block|{
 name|int
 name|delta
 decl_stmt|;
+name|tc
+operator|=
+operator|(
+expr|struct
+name|tcphdr
+operator|*
+operator|)
+name|ip_next
+argument_list|(
+name|pip
+argument_list|)
+expr_stmt|;
 name|delta
 operator|=
 name|GetDeltaAckIn
 argument_list|(
-name|pip
+name|tc
+operator|->
+name|th_ack
 argument_list|,
 name|lnk
 argument_list|)
@@ -3729,9 +3697,23 @@ name|ip_sum
 argument_list|)
 expr_stmt|;
 comment|/* Monitor TCP connection state */
-name|TcpMonitorIn
+name|tc
+operator|=
+operator|(
+expr|struct
+name|tcphdr
+operator|*
+operator|)
+name|ip_next
 argument_list|(
 name|pip
+argument_list|)
+expr_stmt|;
+name|TcpMonitorIn
+argument_list|(
+name|tc
+operator|->
+name|th_flags
 argument_list|,
 name|lnk
 argument_list|)
@@ -3828,13 +3810,27 @@ name|ProxyCheck
 argument_list|(
 name|la
 argument_list|,
-name|pip
-argument_list|,
 operator|&
 name|proxy_server_address
 argument_list|,
 operator|&
 name|proxy_server_port
+argument_list|,
+name|pip
+operator|->
+name|ip_src
+argument_list|,
+name|pip
+operator|->
+name|ip_dst
+argument_list|,
+name|tc
+operator|->
+name|th_dport
+argument_list|,
+name|pip
+operator|->
+name|ip_p
 argument_list|)
 expr_stmt|;
 else|else
@@ -4133,9 +4129,23 @@ name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Monitor TCP connection state */
-name|TcpMonitorOut
+name|tc
+operator|=
+operator|(
+expr|struct
+name|tcphdr
+operator|*
+operator|)
+name|ip_next
 argument_list|(
 name|pip
+argument_list|)
+expr_stmt|;
+name|TcpMonitorOut
+argument_list|(
+name|tc
+operator|->
+name|th_flags
 argument_list|,
 name|lnk
 argument_list|)
@@ -4209,11 +4219,25 @@ block|{
 name|int
 name|delta
 decl_stmt|;
+name|tc
+operator|=
+operator|(
+expr|struct
+name|tcphdr
+operator|*
+operator|)
+name|ip_next
+argument_list|(
+name|pip
+argument_list|)
+expr_stmt|;
 name|delta
 operator|=
 name|GetDeltaSeqOut
 argument_list|(
-name|pip
+name|tc
+operator|->
+name|th_seq
 argument_list|,
 name|lnk
 argument_list|)
@@ -4362,6 +4386,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// XXX ip free
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -4464,6 +4492,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// XXX ip free
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -4534,6 +4566,10 @@ end_function
 
 begin_comment
 comment|/* Outside World Access  	PacketAliasSaveFragment() 	PacketAliasGetFragment() 	PacketAliasFragmentIn() 	PacketAliasIn() 	PacketAliasOut() 	PacketUnaliasOut()  (prototypes in alias.h) */
+end_comment
+
+begin_comment
+comment|// XXX ip free
 end_comment
 
 begin_function
@@ -4627,6 +4663,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// XXX ip free
+end_comment
 
 begin_function
 name|char
@@ -4734,6 +4774,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// XXX ip free
+end_comment
 
 begin_function
 name|void
