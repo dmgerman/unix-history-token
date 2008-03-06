@@ -180,9 +180,6 @@ block|{
 name|int
 name|pvh_attrs
 decl_stmt|;
-name|int
-name|pv_list_count
-decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -284,10 +281,6 @@ modifier|*
 name|pm_pdir
 decl_stmt|;
 comment|/* KVA of page directory */
-name|int
-name|pm_count
-decl_stmt|;
-comment|/* reference count */
 name|int
 name|pm_active
 decl_stmt|;
