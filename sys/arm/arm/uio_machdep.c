@@ -355,9 +355,16 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|sf_buf_free
+argument_list|(
+name|sf
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 break|break;
 case|case
 name|UIO_SYSSPACE
