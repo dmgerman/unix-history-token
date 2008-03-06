@@ -123,50 +123,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFE_JSLOTS
-value|((NFE_JUMBO_RX_RING_COUNT * 3) / 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFE_JRAWLEN
-value|(NFE_JUMBO_FRAMELEN + ETHER_ALIGN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFE_JLEN
-define|\
-value|(NFE_JRAWLEN + (sizeof(uint64_t) - (NFE_JRAWLEN % sizeof(uint64_t))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFE_JPAGESZ
-value|PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFE_RESID
-define|\
-value|(NFE_JPAGESZ - (NFE_JLEN * NFE_JSLOTS) % NFE_JPAGESZ)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFE_JMEM
-value|((NFE_JLEN * NFE_JSLOTS) + NFE_RESID)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NFE_MAX_SCATTER
 value|32
 end_define
