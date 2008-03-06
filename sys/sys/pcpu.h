@@ -189,8 +189,6 @@ name|pc_ktr_buf
 decl_stmt|;
 endif|#
 directive|endif
-name|PCPU_MD_FIELDS
-expr_stmt|;
 name|struct
 name|vmmeter
 name|pc_cnt
@@ -213,6 +211,9 @@ name|struct
 name|rm_queue
 name|pc_rm_queue
 decl_stmt|;
+comment|/* 	 * Keep MD fields last, so that CPU-specific variations on a 	 * single architecture don't result in offset variations of 	 * the machine-independent fields of the pcpu. Even though 	 * the pcpu structure is private to the kernel, some ports 	 * (e.g. lsof, part of gtop) define _KERNEL and include this 	 * header. While strictly speaking this is wrong, there's no 	 * reason not to keep the offsets of the MI fields contants. 	 * If only to make kernel debugging easier... 	 */
+name|PCPU_MD_FIELDS
+expr_stmt|;
 block|}
 struct|;
 end_struct
