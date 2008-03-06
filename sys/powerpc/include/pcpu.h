@@ -386,6 +386,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Catch-all for ports (e.g. lsof, used by gtop)  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PCPU_MD_FIELDS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCPU_MD_FIELDS
+define|\
+value|int		pc_md_placeholder
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
