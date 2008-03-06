@@ -3676,6 +3676,11 @@ argument_list|(
 name|ttd
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|CPU_WHICH_CPUSET
