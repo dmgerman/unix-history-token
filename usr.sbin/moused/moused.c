@@ -13809,6 +13809,9 @@ name|debug
 argument_list|(
 literal|"ts:  %ld %ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ts
 operator|.
 name|tv_sec
@@ -13902,6 +13905,9 @@ name|debug
 argument_list|(
 literal|"  :  %ld %ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bstate
 index|[
 name|i
