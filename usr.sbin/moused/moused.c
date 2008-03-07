@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -13807,10 +13813,10 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"ts:  %ld %ld"
+literal|"ts:  %jd %ld"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|ts
 operator|.
@@ -13903,10 +13909,10 @@ block|{
 comment|/* the button is down */
 name|debug
 argument_list|(
-literal|"  :  %ld %ld"
+literal|"  :  %jd %ld"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|bstate
 index|[
