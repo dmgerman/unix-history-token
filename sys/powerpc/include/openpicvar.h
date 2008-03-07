@@ -97,6 +97,23 @@ end_comment
 
 begin_function_decl
 name|void
+name|openpic_config
+parameter_list|(
+name|device_t
+parameter_list|,
+name|u_int
+parameter_list|,
+name|enum
+name|intr_trigger
+parameter_list|,
+name|enum
+name|intr_polarity
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|openpic_dispatch
 parameter_list|(
 name|device_t

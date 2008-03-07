@@ -111,6 +111,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|powerpc_config_intr
+parameter_list|(
+name|int
+parameter_list|,
+name|enum
+name|intr_trigger
+parameter_list|,
+name|enum
+name|intr_polarity
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
