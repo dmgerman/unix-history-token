@@ -1161,6 +1161,17 @@ block|{
 if|if
 condition|(
 name|lsize
+operator|<
+literal|2
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|lsize
 operator|!=
 name|db_lhistlsize
 condition|)
@@ -1202,7 +1213,10 @@ operator|=
 name|lstart
 operator|+
 name|lsize
+operator|-
+literal|2
 expr_stmt|;
+comment|/* Will append NL and NUL. */
 name|db_lc
 operator|=
 name|lstart
