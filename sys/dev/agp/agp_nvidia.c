@@ -1688,6 +1688,8 @@ name|ag_virtual
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|pages
 decl_stmt|;
 name|sc
 operator|=
@@ -1816,6 +1818,21 @@ operator|->
 name|ag_virtual
 expr_stmt|;
 comment|/* Flush TLB entries. */
+name|pages
+operator|=
+name|sc
+operator|->
+name|gatt
+operator|->
+name|ag_entries
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+operator|/
+name|PAGE_SIZE
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1824,9 +1841,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|32
-operator|+
-literal|1
+name|pages
 condition|;
 name|i
 operator|++
@@ -1853,9 +1868,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|32
-operator|+
-literal|1
+name|pages
 condition|;
 name|i
 operator|++
