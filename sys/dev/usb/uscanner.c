@@ -1295,6 +1295,16 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+block|{
+name|USB_VENDOR_EPSON
+block|,
+name|USB_PRODUCT_EPSON_CX5400
+block|}
+block|,
+literal|0
+block|}
+block|,
 comment|/* UMAX */
 block|{
 block|{
