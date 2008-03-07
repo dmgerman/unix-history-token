@@ -2010,6 +2010,8 @@ argument_list|,
 name|_kse_lock_wait
 argument_list|,
 name|_kse_lock_wakeup
+argument_list|,
+name|calloc
 argument_list|)
 operator|!=
 literal|0
@@ -2031,6 +2033,8 @@ argument_list|,
 name|_thr_lock_wait
 argument_list|,
 name|_thr_lock_wakeup
+argument_list|,
+name|calloc
 argument_list|)
 operator|!=
 literal|0
@@ -2052,6 +2056,8 @@ argument_list|,
 name|_thr_lock_wait
 argument_list|,
 name|_thr_lock_wakeup
+argument_list|,
+name|calloc
 argument_list|)
 operator|!=
 literal|0
@@ -2073,6 +2079,8 @@ argument_list|,
 name|_thr_lock_wait
 argument_list|,
 name|_thr_lock_wakeup
+argument_list|,
+name|calloc
 argument_list|)
 operator|!=
 literal|0
