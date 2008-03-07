@@ -2664,6 +2664,9 @@ comment|/* fall through. */
 case|case
 literal|0x6a0
 case|:
+case|case
+literal|0x6d0
+case|:
 name|init_via
 argument_list|()
 expr_stmt|;
