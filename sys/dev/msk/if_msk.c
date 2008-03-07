@@ -7749,20 +7749,7 @@ name|IFCAP_VLAN_MTU
 operator||
 name|IFCAP_VLAN_HWTAGGING
 expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_capabilities
-operator|&
-name|IFCAP_HWCSUM
-condition|)
-name|ifp
-operator|->
-name|if_capabilities
-operator||=
-name|IFCAP_VLAN_HWCSUM
-expr_stmt|;
+comment|/* 	 * Due to Tx checksum offload hardware bugs, msk(4) manually 	 * computes checksum for short frames. For VLAN tagged frames 	 * this workaround does not work so disable checksum offload 	 * for VLAN interface. 	 */
 name|ifp
 operator|->
 name|if_capenable
