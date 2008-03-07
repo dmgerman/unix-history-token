@@ -4057,21 +4057,6 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_NEEDSGIANT
-condition|)
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"if_start running deferred for Giant\n"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

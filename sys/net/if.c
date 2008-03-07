@@ -2785,7 +2785,22 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"using obsoleted if_watchdog interface\n"
+literal|"WARNING: using obsoleted if_watchdog interface\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_NEEDSGIANT
+condition|)
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"WARNING: using obsoleted IFF_NEEDSGIANT flag\n"
 argument_list|)
 expr_stmt|;
 block|}
