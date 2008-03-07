@@ -77,6 +77,13 @@ name|ns_per_tick
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|powerpc_pow_enabled
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if

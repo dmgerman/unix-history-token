@@ -300,6 +300,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/hid.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/kdb.h>
 end_include
 
@@ -3421,15 +3427,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* TODO: Insert code to halt (until next interrupt) */
+name|uint32_t
+name|msr
+decl_stmt|;
+name|msr
+operator|=
+name|mfmsr
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
 if|if
 condition|(
 operator|(
-name|mfmsr
-argument_list|()
+name|msr
 operator|&
 name|PSL_EE
 operator|)
@@ -3463,6 +3475,23 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|powerpc_pow_enabled
+condition|)
+block|{
+asm|__asm __volatile("sync");
+name|mtmsr
+argument_list|(
+name|msr
+operator||
+name|PSL_POW
+argument_list|)
+expr_stmt|;
+name|isync
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 

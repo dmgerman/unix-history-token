@@ -67,6 +67,12 @@ directive|include
 file|<machine/spr.h>
 end_include
 
+begin_decl_stmt
+name|int
+name|powerpc_pow_enabled
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|cputab
@@ -675,15 +681,10 @@ name|HID0_DOZE
 operator||
 name|HID0_DPM
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
-name|powersave
+name|powerpc_pow_enabled
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|MPC7448
@@ -767,16 +768,10 @@ name|HID0_NAP
 operator||
 name|HID0_DPM
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
-name|powersave
+name|powerpc_pow_enabled
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-comment|/* but don't use it */
-endif|#
-directive|endif
 break|break;
 default|default:
 comment|/* No power-saving mode is available. */
