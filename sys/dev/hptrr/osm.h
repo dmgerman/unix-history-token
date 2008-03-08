@@ -10,7 +10,7 @@ file|<dev/hptrr/hptrr_config.h>
 end_include
 
 begin_comment
-comment|/*  * $Id: osm.h,v 1.5 2005/08/18 05:17:43 gmm Exp $  * Copyright (C) 2005 HighPoint Technologies, Inc. All rights reserved.  */
+comment|/*  * $Id: osm.h,v 1.7 2007/12/10 02:13:52 xxj Exp $  * Copyright (C) 2005 HighPoint Technologies, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|VERMAGIC_OSM
-value|5
+value|6
 end_define
 
 begin_define
@@ -46,6 +46,13 @@ name|os_max_sg_descriptors
 value|18
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|os_max_cache_size
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -55,17 +62,6 @@ end_define
 
 begin_comment
 comment|/* PAGE_SIZE (i386/x86_64) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|os_max_cache_size
-value|0x800000
-end_define
-
-begin_comment
-comment|/* 8MB */
 end_comment
 
 begin_define
@@ -219,7 +215,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|HPT_U32
+name|HPT_U64
 name|HPT_RAW_LBA
 typedef|;
 end_typedef
@@ -235,7 +231,7 @@ begin_define
 define|#
 directive|define
 name|MAX_RAW_LBA_VALUE
-value|0xfffffffful
+value|MAX_LBA_VALUE
 end_define
 
 begin_define
@@ -245,7 +241,7 @@ name|RAW_LBA
 parameter_list|(
 name|x
 parameter_list|)
-value|((HPT_U32)(x))
+value|(x)
 end_define
 
 begin_define
@@ -1111,16 +1107,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|DBG
-end_ifdef
+end_if
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|hpt_dbg_level
+name|hptrr_dbg_level
 decl_stmt|;
 end_decl_stmt
 
@@ -1131,7 +1127,7 @@ name|KdPrint
 parameter_list|(
 name|x
 parameter_list|)
-value|do { if (hpt_dbg_level) os_printk x; } while (0)
+value|do { if (hptrr_dbg_level) os_printk x; } while (0)
 end_define
 
 begin_function_decl

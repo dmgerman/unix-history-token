@@ -215,7 +215,7 @@ name|char
 name|driver_name_long
 index|[]
 init|=
-literal|"HPT RocketRAID controller driver"
+literal|"RocketRAID 17xx/2xxx SATA controller driver"
 decl_stmt|;
 end_decl_stmt
 
@@ -224,7 +224,7 @@ name|char
 name|driver_ver
 index|[]
 init|=
-literal|"v1.1 ("
+literal|"v1.2 ("
 name|__DATE__
 literal|" "
 name|__TIME__
@@ -237,6 +237,14 @@ name|int
 name|osm_max_targets
 init|=
 literal|0xff
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|os_max_cache_size
+init|=
+literal|0x1000000
 decl_stmt|;
 end_decl_stmt
 

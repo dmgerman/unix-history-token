@@ -827,8 +827,8 @@ name|head
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DBG
 name|list
 operator|->
@@ -1041,8 +1041,8 @@ name|head
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DBG
 name|list
 operator|->
@@ -1642,11 +1642,11 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|DBG
-end_ifdef
+end_if
 
 begin_function
 name|void
@@ -1695,7 +1695,7 @@ end_function
 
 begin_decl_stmt
 name|int
-name|hpt_dbg_level
+name|hptrr_dbg_level
 init|=
 literal|1
 decl_stmt|;
