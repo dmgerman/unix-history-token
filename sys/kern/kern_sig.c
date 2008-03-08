@@ -14528,6 +14528,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|AUDIT
