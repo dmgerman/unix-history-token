@@ -208,8 +208,8 @@ name|freelist
 modifier|*
 name|next
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DBG
 name|char
 modifier|*

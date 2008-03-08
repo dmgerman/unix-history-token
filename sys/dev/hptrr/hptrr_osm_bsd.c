@@ -1174,8 +1174,8 @@ operator|->
 name|next
 control|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DBG
 if|if
 condition|(
@@ -1293,8 +1293,8 @@ name|order
 decl_stmt|,
 name|size
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DBG
 if|if
 condition|(
