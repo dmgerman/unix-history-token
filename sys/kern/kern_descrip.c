@@ -1877,6 +1877,31 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|F_DUP2FD
+case|:
+name|tmp
+operator|=
+name|arg
+expr_stmt|;
+name|error
+operator|=
+name|do_dup
+argument_list|(
+name|td
+argument_list|,
+name|DUP_FIXED
+argument_list|,
+name|fd
+argument_list|,
+name|tmp
+argument_list|,
+name|td
+operator|->
+name|td_retval
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|F_GETFD
 case|:
 name|FILEDESC_SLOCK
@@ -3135,7 +3160,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common code for dup, dup2, and fcntl(F_DUPFD).  */
+comment|/*  * Common code for dup, dup2, fcntl(F_DUPFD) and fcntl(F_DUP2FD).  */
 end_comment
 
 begin_function

@@ -732,6 +732,17 @@ begin_comment
 comment|/* F_SETLK; wait if blocked */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|F_DUP2FD
+value|10
+end_define
+
+begin_comment
+comment|/* duplicate file descriptor to arg */
+end_comment
+
 begin_comment
 comment|/* file descriptor flags (F_GETFD, F_SETFD) */
 end_comment
