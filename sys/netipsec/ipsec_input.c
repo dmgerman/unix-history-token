@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/pfil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -2182,7 +2188,7 @@ argument_list|(
 operator|&
 name|m
 argument_list|,
-literal|1
+name|PFIL_IN
 argument_list|)
 operator|)
 operator|!=
