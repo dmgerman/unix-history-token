@@ -22,22 +22,8 @@ value|{ "fbsd_dynamic_linker", FBSD_DYNAMIC_LINKER }
 end_define
 
 begin_comment
-comment|/* FreeBSD needs the platform name (sparc64) defined.    Emacs needs to know if the arch is 64 or 32-bits.  */
+comment|/* FreeBSD needs the platform name (sparc64) defined.    Emacs needs to know if the arch is 64 or 32-bits.    This also selects which targets are available via -mcpu.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_CPU64_DEFAULT_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU64_DEFAULT_SPEC
-define|\
-value|"-D__sparc64__ -D__sparc_v9__ -D__sparcv9 -D__sparc__ -D__arch64__"
-end_define
 
 begin_undef
 undef|#
@@ -51,7 +37,7 @@ directive|define
 name|FBSD_TARGET_CPU_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do						\     {						\       builtin_define ("__LP64__");		\     }						\   while (0)
+value|do						\     {						\       builtin_define ("__LP64__");		\       builtin_define ("__sparc64__");		\       builtin_define ("__sparc_v9__");		\       builtin_define ("__sparcv9");		\       builtin_define ("__sparc__");		\       builtin_define ("__arch64__");		\     }						\   while (0)
 end_define
 
 begin_define
