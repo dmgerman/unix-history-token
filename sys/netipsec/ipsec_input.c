@@ -306,7 +306,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * ipsec_common_input gets called when an IPsec-protected packet  * is received by IPv4 or IPv6.  It's job is to find the right SA  # and call the appropriate transform.  The transform callback  * takes care of further processing (like ingress filtering).  */
+comment|/*  * ipsec_common_input gets called when an IPsec-protected packet  * is received by IPv4 or IPv6.  It's job is to find the right SA  * and call the appropriate transform.  The transform callback  * takes care of further processing (like ingress filtering).  */
 end_comment
 
 begin_function
