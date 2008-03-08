@@ -2561,7 +2561,7 @@ argument_list|(
 argument|KEYDEBUG_IPSEC_DATA
 argument_list|,
 argument|printf(
-literal|"%s: applyed SP\n"
+literal|"%s: applied SP\n"
 argument|, __func__); 		kdebug_secpolicy(sp)
 argument_list|)
 empty_stmt|;
@@ -3211,7 +3211,7 @@ argument_list|(
 argument|KEYDEBUG_IPSEC_DATA
 argument_list|,
 argument|printf(
-literal|"%s: applyed SP\n"
+literal|"%s: applied SP\n"
 argument|, __func__); 		kdebug_secpolicy(sp)
 argument_list|)
 empty_stmt|;
