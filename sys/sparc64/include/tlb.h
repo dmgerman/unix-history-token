@@ -173,6 +173,17 @@ name|TLB_DEMAP_TYPE_CONTEXT
 value|(1)
 end_define
 
+begin_comment
+comment|/* US-III and greater only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLB_DEMAP_TYPE_ALL
+value|(2)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -215,6 +226,13 @@ define|#
 directive|define
 name|TLB_DEMAP_CONTEXT
 value|(TLB_DEMAP_TYPE(TLB_DEMAP_TYPE_CONTEXT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLB_DEMAP_ALL
+value|(TLB_DEMAP_TYPE(TLB_DEMAP_TYPE_ALL))
 end_define
 
 begin_define
@@ -364,6 +382,16 @@ end_define
 begin_typedef
 typedef|typedef
 name|void
+name|tlb_flush_nonlocked_t
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
 name|tlb_flush_user_t
 parameter_list|(
 name|void
@@ -445,14 +473,34 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+name|tlb_flush_nonlocked_t
+name|cheetah_tlb_flush_nonlocked
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|tlb_flush_user_t
 name|cheetah_tlb_flush_user
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|tlb_flush_nonlocked_t
+name|spitfire_tlb_flush_nonlocked
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|tlb_flush_user_t
 name|spitfire_tlb_flush_user
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tlb_flush_nonlocked_t
+modifier|*
+name|tlb_flush_nonlocked
 decl_stmt|;
 end_decl_stmt
 

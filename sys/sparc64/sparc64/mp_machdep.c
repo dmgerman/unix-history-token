@@ -785,8 +785,10 @@ name|void
 parameter_list|)
 block|{
 return|return
+operator|(
 name|smp_topo_none
 argument_list|()
+operator|)
 return|;
 block|}
 end_function
@@ -1682,6 +1684,10 @@ operator|&
 name|cpu_start_args
 expr_stmt|;
 name|pmap_map_tsb
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Flush all non-locked TLB entries possibly left over by the 	 * firmware. 	 */
+name|tlb_flush_nonlocked
 argument_list|()
 expr_stmt|;
 name|cpu_setregs
