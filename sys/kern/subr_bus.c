@@ -6877,6 +6877,20 @@ operator|>
 name|pri
 condition|)
 block|{
+comment|/* 				 * Probes that return BUS_PROBE_NOWILDCARD 				 * or lower only match when they are set 				 * in stone by the parent bus. 				 */
+if|if
+condition|(
+name|result
+operator|<=
+name|BUS_PROBE_NOWILDCARD
+operator|&&
+name|child
+operator|->
+name|flags
+operator|&
+name|DF_WILDCARD
+condition|)
+continue|continue;
 name|best
 operator|=
 name|dl
