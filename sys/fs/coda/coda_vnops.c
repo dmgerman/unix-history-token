@@ -905,6 +905,15 @@ name|C_VATTR
 expr_stmt|;
 block|}
 comment|/* Open the cache file. */
+name|vn_lock
+argument_list|(
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|VOP_OPEN
@@ -925,6 +934,15 @@ condition|(
 name|error
 condition|)
 block|{
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"coda_open: VOP_OPEN on container failed %d\n"
@@ -952,6 +970,15 @@ operator|->
 name|v_object
 expr_stmt|;
 block|}
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* grab (above) does this when it calls newvnode unless it's in the cache*/
 return|return
 operator|(
@@ -1056,6 +1083,17 @@ operator|->
 name|c_ovp
 condition|)
 block|{
+name|vn_lock
+argument_list|(
+name|cp
+operator|->
+name|c_ovp
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|VOP_CLOSE
 argument_list|(
 name|cp
@@ -1070,7 +1108,7 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* Do errors matter here? */
-name|vrele
+name|vput
 argument_list|(
 name|cp
 operator|->
@@ -1445,6 +1483,15 @@ argument|myprintf((
 literal|"indirect rdwr: fid = %s, refcnt = %d\n"
 argument|, 			     coda_f2s(&cp->c_fid), CTOV(cp)->v_usecount));
 argument_list|)
+name|vn_lock
+argument_list|(
+name|cfvp
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rw
@@ -1516,6 +1563,15 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|VOP_UNLOCK
+argument_list|(
+name|cfvp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -6334,6 +6390,17 @@ argument|myprintf((
 literal|"indirect readdir: fid = %s, refcnt = %d\n"
 argument|, coda_f2s(&cp->c_fid), vp->v_usecount));
 argument_list|)
+name|vn_lock
+argument_list|(
+name|cp
+operator|->
+name|c_ovp
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|VOP_READDIR
@@ -6351,6 +6418,17 @@ argument_list|,
 name|ncookies
 argument_list|,
 name|cookies
+argument_list|)
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|cp
+operator|->
+name|c_ovp
+argument_list|,
+literal|0
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
