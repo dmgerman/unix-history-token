@@ -4647,6 +4647,16 @@ ifdef|#
 directive|ifdef
 name|UFS_EXTATTR_AUTOSTART
 comment|/* 	 * 	 * Auto-starting does the following: 	 *	- check for /.attribute in the fs, and extattr_start if so 	 *	- for each file in .attribute, enable that file with 	 * 	  an attribute of the same name. 	 * Not clear how to report errors -- probably eat them. 	 * This would all happen while the filesystem was busy/not 	 * available, so would effectively be "atomic". 	 */
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_iosize
+operator|=
+name|fs
+operator|->
+name|fs_bsize
+expr_stmt|;
 operator|(
 name|void
 operator|)
