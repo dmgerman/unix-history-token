@@ -331,7 +331,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-comment|/* NetBSD only */
 block|{
 name|struct
 name|vcomm

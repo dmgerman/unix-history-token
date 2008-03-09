@@ -12,7 +12,7 @@ comment|/*  * This code was written for the Coda filesystem at Carnegie Mellon  
 end_comment
 
 begin_comment
-comment|/* NetBSD interfaces to the vnodeops */
+comment|/* FreeBSD interfaces to the vnodeops */
 end_comment
 
 begin_decl_stmt
