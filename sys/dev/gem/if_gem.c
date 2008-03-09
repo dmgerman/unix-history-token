@@ -1746,7 +1746,7 @@ name|sc_miibus
 argument_list|)
 expr_stmt|;
 comment|/* 	 * From this point forward, the attachment cannot fail.  A failure 	 * before this point releases all resources that may have been 	 * allocated. 	 */
-comment|/* Get RX FIFO size */
+comment|/* Get RX FIFO size. */
 name|sc
 operator|->
 name|sc_rxfifosize
@@ -1765,7 +1765,7 @@ argument_list|,
 name|GEM_RX_FIFO_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* Get TX FIFO size */
+comment|/* Get TX FIFO size. */
 name|v
 operator|=
 name|bus_read_4
@@ -3220,7 +3220,7 @@ argument_list|,
 name|GEM_MAC_LATE_COLL_CNT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * then clear the hardware counters. 	 */
+comment|/* 	 * Then clear the hardware counters. 	 */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -3883,7 +3883,7 @@ argument_list|,
 literal|"cannot disable RX DMA\n"
 argument_list|)
 expr_stmt|;
-comment|/* Finally, reset the ERX */
+comment|/* Finally, reset the ERX. */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -4331,7 +4331,7 @@ argument_list|,
 literal|"cannot disable TX DMA\n"
 argument_list|)
 expr_stmt|;
-comment|/* Finally, reset the ETX */
+comment|/* Finally, reset the ETX. */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -4481,10 +4481,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * disable transmitter.  */
-end_comment
 
 begin_function
 specifier|static
@@ -5749,6 +5745,22 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* If nsegs is wrong then the stack is corrupt. */
+name|KASSERT
+argument_list|(
+name|nsegs
+operator|<=
+name|GEM_NTXSEGS
+argument_list|,
+operator|(
+literal|"%s: too many DMA segments (%d)"
+operator|,
+name|__func__
+operator|,
+name|nsegs
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nsegs
@@ -8500,17 +8512,6 @@ argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|nsegs
-operator|==
-literal|1
-argument_list|,
-operator|(
-literal|"Too many segments returned!"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -8543,6 +8544,21 @@ operator|)
 return|;
 block|}
 comment|/* If nsegs is wrong then the stack is corrupt. */
+name|KASSERT
+argument_list|(
+name|nsegs
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"%s: too many DMA segments (%d)"
+operator|,
+name|__func__
+operator|,
+name|nsegs
+operator|)
+argument_list|)
+expr_stmt|;
 name|rxs
 operator|->
 name|rxs_mbuf
@@ -9300,7 +9316,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* Configure the MIF in frame mode */
+comment|/* Configure the MIF in frame mode. */
 name|bus_write_4
 argument_list|(
 name|sc
