@@ -4260,6 +4260,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|seq
+operator|->
+name|inproc
+operator|=
+literal|0
+expr_stmt|;
 name|priv
 operator|->
 name|stats
