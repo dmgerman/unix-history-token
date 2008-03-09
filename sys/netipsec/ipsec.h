@@ -1427,8 +1427,10 @@ operator|,
 name|size_t
 name|len
 operator|,
-name|int
-name|priv
+expr|struct
+name|ucred
+operator|*
+name|cred
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1370,8 +1370,10 @@ operator|,
 name|size_t
 name|len
 operator|,
-name|int
-name|priv
+expr|struct
+name|ucred
+operator|*
+name|cred
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5541,7 +5543,7 @@ name|request
 parameter_list|,
 name|len
 parameter_list|,
-name|priv
+name|cred
 parameter_list|)
 name|struct
 name|secpolicy
@@ -5558,8 +5560,10 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|int
-name|priv
+name|struct
+name|ucred
+modifier|*
+name|cred
 decl_stmt|;
 block|{
 name|struct
@@ -5649,9 +5653,9 @@ return|;
 comment|/* check privileged socket */
 if|if
 condition|(
-name|priv
-operator|==
-literal|0
+name|cred
+operator|!=
+name|NULL
 operator|&&
 name|xpl
 operator|->
@@ -5659,9 +5663,26 @@ name|sadb_x_policy_type
 operator|==
 name|IPSEC_POLICY_BYPASS
 condition|)
+block|{
+name|error
+operator|=
+name|priv_check_cred
+argument_list|(
+name|cred
+argument_list|,
+name|PRIV_NETINET_IPSEC
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
 return|return
 name|EACCES
 return|;
+block|}
 comment|/* allocation new SP entry */
 if|if
 condition|(
@@ -5817,7 +5838,7 @@ name|request
 parameter_list|,
 name|len
 parameter_list|,
-name|priv
+name|cred
 parameter_list|)
 name|struct
 name|inpcb
@@ -5833,8 +5854,10 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|int
-name|priv
+name|struct
+name|ucred
+modifier|*
+name|cred
 decl_stmt|;
 block|{
 name|struct
@@ -5949,7 +5972,7 @@ name|request
 argument_list|,
 name|len
 argument_list|,
-name|priv
+name|cred
 argument_list|)
 return|;
 block|}
@@ -6226,7 +6249,7 @@ name|request
 parameter_list|,
 name|len
 parameter_list|,
-name|priv
+name|cred
 parameter_list|)
 name|struct
 name|in6pcb
@@ -6242,8 +6265,10 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|int
-name|priv
+name|struct
+name|ucred
+modifier|*
+name|cred
 decl_stmt|;
 block|{
 name|struct
@@ -6358,7 +6383,7 @@ name|request
 argument_list|,
 name|len
 argument_list|,
-name|priv
+name|cred
 argument_list|)
 return|;
 block|}
