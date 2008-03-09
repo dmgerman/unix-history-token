@@ -1798,11 +1798,7 @@ name|mt
 operator|->
 name|flags
 operator|&
-operator|(
-name|PG_FICTITIOUS
-operator||
 name|PG_UNMANAGED
-operator|)
 operator|)
 operator|||
 name|mt
