@@ -236,6 +236,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Most platforms map firmware geom to actual, but some don't.  If  * not overridden, default to nothing.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ad_firmware_geom_adjust
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ad_firmware_geom_adjust
+parameter_list|(
+name|dev
+parameter_list|,
+name|disk
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* local vars */
 end_comment
 
@@ -838,6 +864,15 @@ name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ad_firmware_geom_adjust
+argument_list|(
+name|dev
+argument_list|,
+name|adp
+operator|->
+name|disk
 argument_list|)
 expr_stmt|;
 name|bus_generic_attach
