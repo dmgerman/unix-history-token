@@ -940,7 +940,7 @@ name|db_putnchars
 argument_list|(
 name|BACKUP
 argument_list|,
-name|db_le
+name|db_lc
 operator|-
 name|db_lbuf_start
 argument_list|)
