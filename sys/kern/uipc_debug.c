@@ -1769,7 +1769,30 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"sb_cc: %d   "
+literal|"sb_sndptr: %p   "
+argument_list|,
+name|sb
+operator|->
+name|sb_sndptr
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"sb_sndptroff: %u\n"
+argument_list|,
+name|sb
+operator|->
+name|sb_sndptroff
+argument_list|)
+expr_stmt|;
+name|db_print_indent
+argument_list|(
+name|indent
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"sb_cc: %u   "
 argument_list|,
 name|sb
 operator|->
@@ -1778,7 +1801,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"sb_hiwat: %d   "
+literal|"sb_hiwat: %u   "
 argument_list|,
 name|sb
 operator|->
@@ -1787,7 +1810,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"sb_mbcnt: %d   "
+literal|"sb_mbcnt: %u   "
 argument_list|,
 name|sb
 operator|->
@@ -1796,7 +1819,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"sb_mbmax: %d\n"
+literal|"sb_mbmax: %u\n"
 argument_list|,
 name|sb
 operator|->
@@ -1810,7 +1833,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"sb_ctl: %d   "
+literal|"sb_ctl: %u   "
 argument_list|,
 name|sb
 operator|->
