@@ -1428,7 +1428,11 @@ operator|->
 name|op
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
 block|}
 return|return
 operator|(
