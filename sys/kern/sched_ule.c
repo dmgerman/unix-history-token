@@ -285,6 +285,10 @@ name|ts_cpu
 decl_stmt|;
 comment|/* CPU that we have affinity for. */
 name|int
+name|ts_rltick
+decl_stmt|;
+comment|/* Real last tick, for affinity. */
+name|int
 name|ts_slice
 decl_stmt|;
 comment|/* Ticks of slice remaining. */
@@ -296,7 +300,6 @@ name|u_int
 name|ts_runtime
 decl_stmt|;
 comment|/* Number of ticks we were running */
-comment|/* The following variables are only used for pctcpu calculation */
 name|int
 name|ts_ltick
 decl_stmt|;
@@ -309,10 +312,6 @@ name|int
 name|ts_ticks
 decl_stmt|;
 comment|/* Tick count */
-name|int
-name|ts_rltick
-decl_stmt|;
-comment|/* Real last tick, for affinity. */
 block|}
 struct|;
 end_struct
@@ -556,6 +555,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|sched_slice
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -626,17 +627,46 @@ begin_struct
 struct|struct
 name|tdq
 block|{
+comment|/* Ordered to improve efficiency of cpu_search() and switch(). */
+name|struct
+name|mtx
+name|tdq_lock
+decl_stmt|;
+comment|/* run queue lock. */
 name|struct
 name|cpu_group
 modifier|*
 name|tdq_cg
 decl_stmt|;
 comment|/* Pointer to cpu topology. */
-name|struct
-name|mtx
-name|tdq_lock
+name|int
+name|tdq_load
 decl_stmt|;
-comment|/* run queue lock. */
+comment|/* Aggregate load. */
+name|int
+name|tdq_sysload
+decl_stmt|;
+comment|/* For loadavg, !ITHD load. */
+name|int
+name|tdq_transferable
+decl_stmt|;
+comment|/* Transferable thread count. */
+name|u_char
+name|tdq_lowpri
+decl_stmt|;
+comment|/* Lowest priority thread. */
+name|u_char
+name|tdq_ipipending
+decl_stmt|;
+comment|/* IPI pending. */
+name|u_char
+name|tdq_idx
+decl_stmt|;
+comment|/* Current insert index. */
+name|u_char
+name|tdq_ridx
+decl_stmt|;
+comment|/* Current removal index. */
 name|struct
 name|runq
 name|tdq_realtime
@@ -652,34 +682,6 @@ name|runq
 name|tdq_idle
 decl_stmt|;
 comment|/* Queue of IDLE threads. */
-name|int
-name|tdq_load
-decl_stmt|;
-comment|/* Aggregate load. */
-name|int
-name|tdq_sysload
-decl_stmt|;
-comment|/* For loadavg, !ITHD load. */
-name|u_char
-name|tdq_idx
-decl_stmt|;
-comment|/* Current insert index. */
-name|u_char
-name|tdq_ridx
-decl_stmt|;
-comment|/* Current removal index. */
-name|u_char
-name|tdq_lowpri
-decl_stmt|;
-comment|/* Lowest priority thread. */
-name|u_char
-name|tdq_ipipending
-decl_stmt|;
-comment|/* IPI pending. */
-name|int
-name|tdq_transferable
-decl_stmt|;
-comment|/* Transferable thread count. */
 name|char
 name|tdq_name
 index|[
@@ -1869,6 +1871,13 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|TD_SET_RUNQ
+argument_list|(
+name|ts
+operator|->
+name|ts_thread
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|THREAD_CAN_MIGRATE
@@ -2038,6 +2047,82 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Pick the run queue based on priority.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|tdq_runq_pick
+parameter_list|(
+name|struct
+name|tdq
+modifier|*
+name|tdq
+parameter_list|,
+name|struct
+name|td_sched
+modifier|*
+name|ts
+parameter_list|)
+block|{
+name|int
+name|pri
+decl_stmt|;
+name|pri
+operator|=
+name|ts
+operator|->
+name|ts_thread
+operator|->
+name|td_priority
+expr_stmt|;
+if|if
+condition|(
+name|pri
+operator|<=
+name|PRI_MAX_REALTIME
+condition|)
+name|ts
+operator|->
+name|ts_runq
+operator|=
+operator|&
+name|tdq
+operator|->
+name|tdq_realtime
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pri
+operator|<=
+name|PRI_MAX_TIMESHARE
+condition|)
+name|ts
+operator|->
+name|ts_runq
+operator|=
+operator|&
+name|tdq
+operator|->
+name|tdq_timeshare
+expr_stmt|;
+else|else
+name|ts
+operator|->
+name|ts_runq
+operator|=
+operator|&
+name|tdq
+operator|->
+name|tdq_idle
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*   * Remove a thread from a run-queue.  This typically happens when a thread  * is selected to run.  Running threads are not on the queue and the  * transferable count does not reflect them.  */
 end_comment
 
@@ -2152,24 +2237,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 		 * For timeshare threads we update the priority here so 		 * the priority reflects the time we've been sleeping. 		 */
 name|ts
 operator|->
 name|ts_ltick
 operator|=
 name|ticks
-expr_stmt|;
-name|sched_pctcpu_update
-argument_list|(
-name|ts
-argument_list|)
-expr_stmt|;
-name|sched_priority
-argument_list|(
-name|ts
-operator|->
-name|ts_thread
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -6509,6 +6581,12 @@ operator|=
 operator|&
 name|thread0
 expr_stmt|;
+name|td_sched0
+operator|.
+name|ts_slice
+operator|=
+name|sched_slice
+expr_stmt|;
 block|}
 end_function
 
@@ -6664,6 +6742,14 @@ name|td_sched
 modifier|*
 name|ts
 decl_stmt|;
+name|struct
+name|tdq
+modifier|*
+name|tdq
+decl_stmt|;
+name|int
+name|oldpri
+decl_stmt|;
 name|CTR6
 argument_list|(
 name|KTR_SCHED
@@ -6744,24 +6830,8 @@ argument_list|,
 name|SRQ_BORROWING
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-elseif|else
-if|if
-condition|(
-name|TD_IS_RUNNING
-argument_list|(
-name|td
-argument_list|)
-condition|)
-block|{
-name|struct
-name|tdq
-modifier|*
-name|tdq
-decl_stmt|;
-name|int
-name|oldpri
-decl_stmt|;
 name|tdq
 operator|=
 name|TDQ_CPU
@@ -6783,6 +6853,21 @@ name|td_priority
 operator|=
 name|prio
 expr_stmt|;
+name|tdq_runq_pick
+argument_list|(
+name|tdq
+argument_list|,
+name|ts
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TD_IS_RUNNING
+argument_list|(
+name|td
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 name|prio
@@ -6814,13 +6899,6 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|td
-operator|->
-name|td_priority
-operator|=
-name|prio
-expr_stmt|;
 block|}
 end_function
 
@@ -7370,6 +7448,15 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
+name|tdq_load_rem
+argument_list|(
+name|tdq
+argument_list|,
+name|td
+operator|->
+name|td_sched
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Do the lock dance required to avoid LOR.  We grab an extra 	 * spinlock nesting to prevent preemption while we're 	 * not holding either run-queue lock. 	 */
 name|spinlock_enter
 argument_list|()
@@ -7643,13 +7730,6 @@ name|tdq
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|tdq_load_rem
-argument_list|(
-name|tdq
-argument_list|,
-name|ts
-argument_list|)
-expr_stmt|;
 name|srqflag
 operator|=
 operator|(
@@ -7676,11 +7756,11 @@ name|ts_cpu
 operator|==
 name|cpuid
 condition|)
-name|tdq_add
+name|tdq_runq_add
 argument_list|(
 name|tdq
 argument_list|,
-name|td
+name|ts
 argument_list|,
 name|srqflag
 argument_list|)
@@ -8106,11 +8186,6 @@ expr_stmt|;
 name|sched_pctcpu_update
 argument_list|(
 name|ts
-argument_list|)
-expr_stmt|;
-name|sched_priority
-argument_list|(
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -8928,6 +9003,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|sched_priority
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * We used up one time slice. 	 */
 if|if
@@ -8940,11 +9020,12 @@ operator|>
 literal|0
 condition|)
 return|return;
-comment|/* 	 * We're out of time, recompute priorities and requeue. 	 */
-name|sched_priority
-argument_list|(
-name|td
-argument_list|)
+comment|/* 	 * We're out of time, force a requeue at userret(). 	 */
+name|ts
+operator|->
+name|ts_slice
+operator|=
+name|sched_slice
 expr_stmt|;
 name|td
 operator|->
@@ -9270,7 +9351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a thread to a thread queue.  Initializes priority, slice, runq, and  * add it to the appropriate queue.  This is the internal function called  * when the tdq is predetermined.  */
+comment|/*  * Add a thread to a thread queue.  Select the appropriate runq and add the  * thread to it.  This is the internal function called when the tdq is  * predetermined.  */
 end_comment
 
 begin_function
@@ -9295,9 +9376,6 @@ name|struct
 name|td_sched
 modifier|*
 name|ts
-decl_stmt|;
-name|int
-name|class
 decl_stmt|;
 name|TDQ_LOCK_ASSERT
 argument_list|(
@@ -9359,80 +9437,6 @@ name|td
 operator|->
 name|td_sched
 expr_stmt|;
-name|class
-operator|=
-name|PRI_BASE
-argument_list|(
-name|td
-operator|->
-name|td_pri_class
-argument_list|)
-expr_stmt|;
-name|TD_SET_RUNQ
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ts
-operator|->
-name|ts_slice
-operator|==
-literal|0
-condition|)
-name|ts
-operator|->
-name|ts_slice
-operator|=
-name|sched_slice
-expr_stmt|;
-comment|/* 	 * Pick the run queue based on priority. 	 */
-if|if
-condition|(
-name|td
-operator|->
-name|td_priority
-operator|<=
-name|PRI_MAX_REALTIME
-condition|)
-name|ts
-operator|->
-name|ts_runq
-operator|=
-operator|&
-name|tdq
-operator|->
-name|tdq_realtime
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|td
-operator|->
-name|td_priority
-operator|<=
-name|PRI_MAX_TIMESHARE
-condition|)
-name|ts
-operator|->
-name|ts_runq
-operator|=
-operator|&
-name|tdq
-operator|->
-name|tdq_timeshare
-expr_stmt|;
-else|else
-name|ts
-operator|->
-name|ts_runq
-operator|=
-operator|&
-name|tdq
-operator|->
-name|tdq_idle
-expr_stmt|;
 if|if
 condition|(
 name|td
@@ -9450,6 +9454,13 @@ operator|=
 name|td
 operator|->
 name|td_priority
+expr_stmt|;
+name|tdq_runq_pick
+argument_list|(
+name|tdq
+argument_list|,
+name|ts
+argument_list|)
 expr_stmt|;
 name|tdq_runq_add
 argument_list|(
@@ -9488,11 +9499,6 @@ name|flags
 parameter_list|)
 block|{
 name|struct
-name|td_sched
-modifier|*
-name|ts
-decl_stmt|;
-name|struct
 name|tdq
 modifier|*
 name|tdq
@@ -9500,8 +9506,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-name|int
-name|cpuid
+name|struct
+name|td_sched
+modifier|*
+name|ts
 decl_stmt|;
 name|int
 name|cpu
@@ -9538,12 +9546,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|ts
-operator|=
-name|td
-operator|->
-name|td_sched
-expr_stmt|;
 comment|/* 	 * Recalculate the priority before we select the target cpu or 	 * run-queue. 	 */
 if|if
 condition|(
@@ -9564,14 +9566,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-name|cpuid
-operator|=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Pick the destination cpu and if it isn't ours transfer to the 	 * target cpu. 	 */
+name|ts
+operator|=
+name|td
+operator|->
+name|td_sched
+expr_stmt|;
 name|cpu
 operator|=
 name|sched_pickcpu
@@ -9605,7 +9606,10 @@ if|if
 condition|(
 name|cpu
 operator|!=
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 condition|)
 block|{
 name|tdq_notify
