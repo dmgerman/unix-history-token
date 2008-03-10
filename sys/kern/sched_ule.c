@@ -5857,6 +5857,14 @@ name|TDQ_SELF
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|tdq_runq_pick
+argument_list|(
+name|tdq
+argument_list|,
+operator|&
+name|td_sched0
+argument_list|)
+expr_stmt|;
 name|tdq_load_add
 argument_list|(
 name|tdq
