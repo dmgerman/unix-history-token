@@ -206,12 +206,6 @@ directive|include
 file|"opt_ffs.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_quota.h"
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
