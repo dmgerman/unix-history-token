@@ -135,6 +135,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WPI_UCODE_SET
+value|0x058
+end_define
+
+begin_define
+define|#
+directive|define
 name|WPI_UCODE_CLR
 value|0x05c
 end_define
@@ -914,6 +921,10 @@ define|#
 directive|define
 name|WPI_START_SCAN
 value|130
+define|#
+directive|define
+name|WPI_SCAN_RESULTS
+value|131
 define|#
 directive|define
 name|WPI_STOP_SCAN
