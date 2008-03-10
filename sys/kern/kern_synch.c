@@ -1366,6 +1366,35 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|kdb_switch
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|thread_unlock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|kdb_backtrace
+argument_list|()
+expr_stmt|;
+name|kdb_reenter
+argument_list|()
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"%s: did not reenter debugger"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * The machine independent parts of context switching.  */
 end_comment
@@ -1535,26 +1564,9 @@ if|if
 condition|(
 name|kdb_active
 condition|)
-block|{
-name|thread_unlock
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-name|kdb_backtrace
+name|kdb_switch
 argument_list|()
 expr_stmt|;
-name|kdb_reenter
-argument_list|()
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"%s: did not reenter debugger"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|flags
