@@ -150,12 +150,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vop_bmap_t
-name|coda_bmap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vop_strategy_t
 name|coda_strategy
 decl_stmt|;
