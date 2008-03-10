@@ -2989,6 +2989,18 @@ if|if
 condition|(
 name|convp
 condition|)
+block|{
+name|vn_lock
+argument_list|(
+name|convp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|VOP_FSYNC
 argument_list|(
 name|convp
@@ -2998,9 +3010,19 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|convp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * We see fsyncs with usecount == 1 then usecount == 0.      * For now we ignore them.      */
 comment|/*     VI_LOCK(vp);     if (!vp->v_usecount) {     	printf("coda_fsync on vnode %p with %d usecount.  c_flags = %x (%x)\n", 		vp, vp->v_usecount, cp->c_flags, cp->c_flags&C_PURGING);     }     VI_UNLOCK(vp);     */
-comment|/*      * We can expect fsync on any vnode at all if venus is pruging it.      * Venus can't very well answer the fsync request, now can it?      * Hopefully, it won't have to, because hopefully, venus preserves      * the (possibly untrue) invariant that it never purges an open      * vnode.  Hopefully.      */
+comment|/*      * We can expect fsync on any vnode at all if venus is purging it.      * Venus can't very well answer the fsync request, now can it?      * Hopefully, it won't have to, because hopefully, venus preserves      * the (possibly untrue) invariant that it never purges an open      * vnode.  Hopefully.      */
 if|if
 condition|(
 name|cp
