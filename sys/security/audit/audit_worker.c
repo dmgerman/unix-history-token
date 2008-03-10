@@ -453,7 +453,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * XXXAUDIT: Check math and block size calculations here. 		 */
 name|temp
 operator|=
 name|mnt_stat
