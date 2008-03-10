@@ -2499,7 +2499,7 @@ if|if
 condition|(
 name|sig
 operator|<
-literal|0
+literal|1
 operator|||
 name|sig
 operator|>
