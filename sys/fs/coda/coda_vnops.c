@@ -910,6 +910,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|,
 name|td
 argument_list|)
@@ -1090,6 +1092,8 @@ operator|->
 name|c_ovp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|,
 name|td
 argument_list|)
@@ -1488,6 +1492,8 @@ argument_list|(
 name|cfvp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|,
 name|td
 argument_list|)
@@ -6397,6 +6403,8 @@ operator|->
 name|c_ovp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|,
 name|td
 argument_list|)
