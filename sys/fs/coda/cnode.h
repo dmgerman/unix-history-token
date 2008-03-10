@@ -213,7 +213,7 @@ name|cnode
 modifier|*
 name|c_next
 decl_stmt|;
-comment|/* links if on NetBSD machine */
+comment|/* links if on FreeBSD machine */
 block|}
 struct|;
 end_struct

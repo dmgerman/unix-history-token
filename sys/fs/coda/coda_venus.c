@@ -2684,6 +2684,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXX: Unused.  */
+end_comment
+
 begin_function
 name|int
 name|venus_readdir

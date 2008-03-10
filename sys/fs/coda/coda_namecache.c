@@ -683,12 +683,12 @@ operator|->
 name|cr_gid
 argument_list|)
 expr_stmt|;
-name|print_cred
+name|coda_print_cred
 argument_list|(
 name|cred
 argument_list|)
 expr_stmt|;
-name|print_cred
+name|coda_print_cred
 argument_list|(
 name|cncp
 operator|->
@@ -1683,7 +1683,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Remove all entries which match the fid and the cred  */
+comment|/*   * Remove all entries which match the fid and the cred  *  * XXX: This is unused.  */
 end_comment
 
 begin_function

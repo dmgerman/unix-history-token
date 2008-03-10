@@ -1293,7 +1293,7 @@ end_comment
 
 begin_function
 name|int
-name|coda_nb_statfs
+name|coda_statfs
 parameter_list|(
 name|vfsp
 parameter_list|,
@@ -1346,7 +1346,7 @@ operator|)
 return|;
 block|}
 comment|/* XXX - what to do about f_flags, others? --bnoble */
-comment|/* Below This is what AFS does     	#define NB_SFS_SIZ 0x895440      */
+comment|/* Below This is what AFS does     	#define CODA_SFS_SIZ 0x895440      */
 name|sbp
 operator|->
 name|f_flags
@@ -1369,37 +1369,37 @@ expr_stmt|;
 comment|/* XXX */
 define|#
 directive|define
-name|NB_SFS_SIZ
+name|CODA_SFS_SIZ
 value|0x8AB75D
 name|sbp
 operator|->
 name|f_blocks
 operator|=
-name|NB_SFS_SIZ
+name|CODA_SFS_SIZ
 expr_stmt|;
 name|sbp
 operator|->
 name|f_bfree
 operator|=
-name|NB_SFS_SIZ
+name|CODA_SFS_SIZ
 expr_stmt|;
 name|sbp
 operator|->
 name|f_bavail
 operator|=
-name|NB_SFS_SIZ
+name|CODA_SFS_SIZ
 expr_stmt|;
 name|sbp
 operator|->
 name|f_files
 operator|=
-name|NB_SFS_SIZ
+name|CODA_SFS_SIZ
 expr_stmt|;
 name|sbp
 operator|->
 name|f_ffree
 operator|=
-name|NB_SFS_SIZ
+name|CODA_SFS_SIZ
 expr_stmt|;
 name|MARK_INT_SAT
 argument_list|(
@@ -1463,7 +1463,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * fhtovp is now what vget used to be in 4.3-derived systems.  For  * some silly reason, vget is now keyed by a 32 bit ino_t, rather than  * a type-specific fid.    */
+comment|/*   * fhtovp is now what vget used to be in 4.3-derived systems.  For  * some silly reason, vget is now keyed by a 32 bit ino_t, rather than  * a type-specific fid.    *  * XXX: coda_fhtovp is currently not hooked up, so no NFS export for Coda.  * We leave it here in the hopes that someone will find it someday and hook  * it up.  Among other things, it will need some reworking to match the  * vfs_fhtovp_t prototype.  */
 end_comment
 
 begin_function
@@ -1690,109 +1690,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * To allow for greater ease of use, some vnodes may be orphaned when  * Venus dies.  Certain operations should still be allowed to go  * through, but without propagating ophan-ness.  So this function will  * get a new vnode for the file from the current run of Venus.  */
-end_comment
-
-begin_function
-name|int
-name|getNewVnode
-parameter_list|(
-name|vpp
-parameter_list|)
-name|struct
-name|vnode
-modifier|*
-modifier|*
-name|vpp
-decl_stmt|;
-block|{
-name|struct
-name|cfid
-name|cfid
-decl_stmt|;
-name|struct
-name|coda_mntinfo
-modifier|*
-name|mi
-init|=
-name|vftomi
-argument_list|(
-operator|(
-operator|*
-name|vpp
-operator|)
-operator|->
-name|v_mount
-argument_list|)
-decl_stmt|;
-name|ENTRY
-expr_stmt|;
-name|cfid
-operator|.
-name|cfid_len
-operator|=
-operator|(
-name|short
-operator|)
-sizeof|sizeof
-argument_list|(
-name|CodaFid
-argument_list|)
-expr_stmt|;
-name|cfid
-operator|.
-name|cfid_fid
-operator|=
-name|VTOC
-argument_list|(
-operator|*
-name|vpp
-argument_list|)
-operator|->
-name|c_fid
-expr_stmt|;
-comment|/* Structure assignment. */
-comment|/* XXX ? */
-comment|/* We're guessing that if set, the 1st element on the list is a      * valid vnode to use. If not, return ENODEV as venus is dead.      */
-if|if
-condition|(
-name|mi
-operator|->
-name|mi_vfsp
-operator|==
-name|NULL
-condition|)
-return|return
-name|ENODEV
-return|;
-return|return
-name|coda_fhtovp
-argument_list|(
-name|mi
-operator|->
-name|mi_vfsp
-argument_list|,
-operator|(
-expr|struct
-name|fid
-operator|*
-operator|)
-operator|&
-name|cfid
-argument_list|,
-name|NULL
-argument_list|,
-name|vpp
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-return|;
-block|}
-end_function
-
 begin_decl_stmt
 name|struct
 name|vfsops
@@ -1812,7 +1709,7 @@ block|,
 operator|.
 name|vfs_statfs
 operator|=
-name|coda_nb_statfs
+name|coda_statfs
 block|,
 operator|.
 name|vfs_sync

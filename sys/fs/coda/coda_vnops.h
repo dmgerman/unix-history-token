@@ -189,16 +189,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|coda_vop_nop
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|vop_pathconf_t
 name|coda_pathconf
@@ -262,19 +252,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|print_vattr
-parameter_list|(
-name|struct
-name|vattr
-modifier|*
-name|attr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|print_cred
+name|coda_print_cred
 parameter_list|(
 name|struct
 name|ucred
