@@ -1320,7 +1320,11 @@ decl_stmt|;
 block|{
 name|ENTRY
 expr_stmt|;
-comment|/*  MARK_ENTRY(CODA_STATFS_STATS); */
+name|MARK_ENTRY
+argument_list|(
+name|CODA_STATFS_STATS
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1330,7 +1334,11 @@ name|vfsp
 argument_list|)
 condition|)
 block|{
-comment|/*	MARK_INT_FAIL(CODA_STATFS_STATS);*/
+name|MARK_INT_FAIL
+argument_list|(
+name|CODA_STATFS_STATS
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -1393,7 +1401,11 @@ name|f_ffree
 operator|=
 name|NB_SFS_SIZ
 expr_stmt|;
-comment|/*  MARK_INT_SAT(CODA_STATFS_STATS); */
+name|MARK_INT_SAT
+argument_list|(
+name|CODA_STATFS_STATS
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
