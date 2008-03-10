@@ -1457,6 +1457,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|2
+case|:
+comment|/* No topology, all cpus are equal. */
+name|top
+operator|=
+name|smp_topo_none
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
 literal|3
 case|:
 comment|/* Dual core with shared L2.  */
