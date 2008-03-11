@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/sh.h,v 3.133 2005/03/25 18:46:41 kim Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/sh.h,v 3.146 2006/07/03 22:59:01 mitr Exp $ */
 end_comment
 
 begin_comment
@@ -33,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_ifdef
@@ -245,7 +251,7 @@ begin_define
 define|#
 directive|define
 name|force_read
-value|read
+value|xread
 end_define
 
 begin_endif
@@ -313,36 +319,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|POSIXSIGS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BSDSIGS
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|BSDSIGS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|SHORT_STRINGS
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIDE_STRINGS
 end_ifdef
 
 begin_include
@@ -350,12 +336,6 @@ include|#
 directive|include
 file|<wchar.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WIDE_STRINGS
-end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -552,42 +532,6 @@ name|a
 parameter_list|)
 value|(strsave(a))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|SIZEOF_WCHAR_T
-operator|>=
-literal|4
-end_if
-
-begin_typedef
-typedef|typedef
-name|wchar_t
-name|NLSChar
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Assumes sizeof (int)>= 4, unlike some parts of tcsh */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|NLSChar
-typedef|;
-end_typedef
 
 begin_endif
 endif|#
@@ -1767,12 +1711,6 @@ begin_comment
 comment|/* glibc || sgi */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -1781,6 +1719,12 @@ end_endif
 begin_comment
 comment|/* POSIX&& !WINNT_NATIVE */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
 
 begin_if
 if|#
@@ -1909,12 +1853,6 @@ end_if
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|COHERENT
-argument_list|)
-operator|&&
 operator|!
 name|defined
 argument_list|(
@@ -2059,12 +1997,6 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|COHERENT
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
 name|supermax
 argument_list|)
 operator|&&
@@ -2093,7 +2025,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MINIX&& !COHERENT&& !supermax&& !WINNT_NATIVE&& !defined(IRIS4D) */
+comment|/* !_MINIX&& !supermax&& !WINNT_NATIVE&& !defined(IRIS4D) */
 end_comment
 
 begin_if
@@ -2153,62 +2085,11 @@ directive|include
 file|<setjmp.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PROTOTYPES
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MINIX
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"mi.varargs.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _MINIX */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -2306,11 +2187,6 @@ name|defined
 argument_list|(
 name|OREO
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COHERENT
-argument_list|)
 end_if
 
 begin_include
@@ -2329,7 +2205,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* hpux || sgi || OREO || COHERENT */
+comment|/* hpux || sgi || OREO */
 end_comment
 
 begin_ifndef
@@ -2588,11 +2464,30 @@ name|sgi
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|INET6
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __CYGWIN__ */
+end_comment
 
 begin_endif
 endif|#
@@ -2635,66 +2530,6 @@ end_endif
 begin_comment
 comment|/* REMOTEHOST */
 end_comment
-
-begin_comment
-comment|/*  * ANSIisms... These must be *after* the system include and   * *before* our includes, so that BSDreno has time to define __P  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|__P
-end_undef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__P
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PROTOTYPES
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|__P
-parameter_list|(
-name|a
-parameter_list|)
-value|a
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__P
-parameter_list|(
-name|a
-parameter_list|)
-value|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -2848,21 +2683,12 @@ directive|include
 file|"sh.types.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__NetBSD__
-end_ifndef
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WINNT_NATIVE
-end_ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_GETPGRP
+end_if
 
 begin_ifndef
 ifndef|#
@@ -2870,36 +2696,30 @@ directive|ifndef
 name|GETPGRP_VOID
 end_ifndef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|pid_t
 name|getpgrp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|pid_t
 name|getpgrp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -2910,30 +2730,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !WINNT_NATIVE */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_typedef
-typedef|typedef
-name|RETSIGTYPE
-argument_list|(
-argument|*signalfun_t
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-expr_stmt|;
-end_typedef
 
 begin_ifndef
 ifndef|#
@@ -3035,137 +2831,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MDEBUG
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|memalign_t
-name|DebugMalloc
-name|__P
-argument_list|(
-operator|(
-name|unsigned
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|memalign_t
-name|DebugRealloc
-name|__P
-argument_list|(
-operator|(
-name|ptr_t
-operator|,
-name|unsigned
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|memalign_t
-name|DebugCalloc
-name|__P
-argument_list|(
-operator|(
-name|unsigned
-operator|,
-name|unsigned
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|DebugFree
-name|__P
-argument_list|(
-operator|(
-name|ptr_t
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|xmalloc
-parameter_list|(
-name|i
-parameter_list|)
-value|DebugMalloc(i, __FILE__, __LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|xrealloc
-parameter_list|(
-name|p
-parameter_list|,
-name|i
-parameter_list|)
-value|((p) ? DebugRealloc(p, i, __FILE__, __LINE__) : \ 			      DebugMalloc(i, __FILE__, __LINE__))
-end_define
-
-begin_define
-define|#
-directive|define
-name|xcalloc
-parameter_list|(
-name|n
-parameter_list|,
-name|s
-parameter_list|)
-value|DebugCalloc(n, s, __FILE__, __LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|xfree
-parameter_list|(
-name|p
-parameter_list|)
-value|if (p) DebugFree(p, __FILE__, __LINE__)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|SYSMALLOC
 end_ifdef
 
@@ -3207,10 +2872,7 @@ begin_define
 define|#
 directive|define
 name|xfree
-parameter_list|(
-name|p
-parameter_list|)
-value|sfree(p)
+value|sfree
 end_define
 
 begin_else
@@ -3256,10 +2918,7 @@ begin_define
 define|#
 directive|define
 name|xfree
-parameter_list|(
-name|p
-parameter_list|)
-value|free(p)
+value|free
 end_define
 
 begin_endif
@@ -3269,15 +2928,6 @@ end_endif
 
 begin_comment
 comment|/* SYSMALLOC */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MDEBUG */
 end_comment
 
 begin_include
@@ -3312,37 +2962,6 @@ end_include
 
 begin_comment
 comment|/*  * C shell  *  * Bill Joy, UC Berkeley  * October, 1978; May 1980  *  * Jim Kulp, IIASA, Laxenburg Austria  * April, 1980  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAXNAMLEN
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_D_NAME_MAX
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MAXNAMLEN
-value|_D_NAME_MAX
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MAXNAMLEN */
 end_comment
 
 begin_ifdef
@@ -3393,9 +3012,22 @@ directive|ifndef
 name|MAXHOSTNAMELEN
 end_ifndef
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HOST_NAME_MAX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAXHOSTNAMELEN
+value|(HOST_NAME_MAX + 1)
+end_define
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|SCO
@@ -3406,7 +3038,7 @@ name|SYSVREL
 operator|>
 literal|3
 operator|)
-end_if
+end_elif
 
 begin_include
 include|#
@@ -3717,18 +3349,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
-name|timflg
-name|IZERO
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Time the next waited for command */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
 name|havhash
 name|IZERO
 decl_stmt|;
@@ -3858,17 +3478,18 @@ begin_comment
 comment|/* Currently parsing a heredoc */
 end_comment
 
+begin_comment
+comment|/* We received a window change event */
+end_comment
+
 begin_decl_stmt
 name|EXTERN
-name|int
+specifier|volatile
+name|sig_atomic_t
 name|windowchg
 name|IZERO
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* We received a window change event */
-end_comment
 
 begin_if
 if|#
@@ -3994,6 +3615,10 @@ name|exitset
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Temp name for<< shell files in /tmp, for xfree() */
+end_comment
+
 begin_decl_stmt
 name|EXTERN
 name|Char
@@ -4002,10 +3627,6 @@ name|shtemp
 name|IZERO
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Temp name for<< shell files in /tmp */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -4148,7 +3769,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|long
+name|time_t
 name|seconds0
 decl_stmt|;
 end_decl_stmt
@@ -4202,7 +3823,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
+name|pid_t
 name|backpid
 decl_stmt|;
 end_decl_stmt
@@ -4265,31 +3886,25 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|Char
-name|PromptBuf
-index|[
-name|INBUFSIZE
-operator|*
-literal|2
-index|]
+modifier|*
+name|Prompt
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* buffer for the actual printed prompt. 					 * this must be large enough to contain 					 * the input line and the prompt, in 					 * case a correction occurred... 					 */
+comment|/* The actual printed prompt or NULL */
 end_comment
 
 begin_decl_stmt
 name|EXTERN
 name|Char
-name|RPromptBuf
-index|[
-name|INBUFSIZE
-index|]
+modifier|*
+name|RPrompt
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* buffer for right-hand side prompt */
+comment|/* Right-hand side prompt or NULL */
 end_comment
 
 begin_comment
@@ -4379,119 +3994,6 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_STRUCT_ASSIGNMENT
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIGSETJMP
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|sigjmp_buf
-name|jmp_buf_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* bugfix by Jak Kirman @ Brown U.: remove the (void) cast here, see sh.c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|setexit
-parameter_list|()
-value|sigsetjmp(reslab)
-end_define
-
-begin_define
-define|#
-directive|define
-name|reset
-parameter_list|()
-value|siglongjmp(reslab, 1)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|jmp_buf
-name|jmp_buf_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* bugfix by Jak Kirman @ Brown U.: remove the (void) cast here, see sh.c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|setexit
-parameter_list|()
-value|setjmp(reslab)
-end_define
-
-begin_define
-define|#
-directive|define
-name|reset
-parameter_list|()
-value|longjmp(reslab, 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|getexit
-parameter_list|(
-name|a
-parameter_list|)
-value|(void) memmove((ptr_t)&(a), (ptr_t)&reslab, sizeof(reslab))
-end_define
-
-begin_define
-define|#
-directive|define
-name|resexit
-parameter_list|(
-name|a
-parameter_list|)
-value|(void) memmove((ptr_t)&reslab, (ptr_t)&(a), sizeof(reslab))
-end_define
-
-begin_define
-define|#
-directive|define
-name|cpybin
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(void) memmove((ptr_t)&(a), (ptr_t)&(b), sizeof(Bin))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|SIGSETJMP
 end_ifdef
 
@@ -4518,7 +4020,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|reset
+name|_reset
 parameter_list|()
 value|siglongjmp(reslab.j, 1)
 end_define
@@ -4551,7 +4053,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|reset
+name|_reset
 parameter_list|()
 value|longjmp(reslab.j, 1)
 end_define
@@ -4593,15 +4095,6 @@ parameter_list|)
 value|(void) ((a) = (b))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NO_STRUCT_ASSIGNMENT */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|jmp_buf_t
@@ -4623,7 +4116,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|signalfun_t
+name|struct
+name|sigaction
 name|parintr
 decl_stmt|;
 end_decl_stmt
@@ -4634,7 +4128,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|signalfun_t
+name|struct
+name|sigaction
 name|parterm
 decl_stmt|;
 end_decl_stmt
@@ -4998,7 +4493,7 @@ comment|/* If set only 7 bits expected in characters */
 end_comment
 
 begin_comment
-comment|/*  * Each level of input has a buffered input structure.  * There are one or more blocks of buffered input for each level,  * exactly one if the input is seekable and tell is available.  * In other cases, the shell buffers enough blocks to keep all loops  * in the buffer.  */
+comment|/*  * Each level of input has a buffered input structure.  * There are one or more blocks of buffered input for each level,  * exactly one if the input is seekable and tell is available.  * In other cases, the shell buffers enough blocks to keep all loops  * in the buffer.  *  * If (WIDE_STRINGS&& cantell), fbobp is always a byte offset, but  * (fseekp - fbobp) and (feobp - fbobp) are character offsets (usable for  * fbuf indexing).  *  * If (!cantell), all offsets are character offsets; if (!WIDE_STRINGS), there  * is no difference between byte and character offsets.  */
 end_comment
 
 begin_macro
@@ -5087,6 +4582,7 @@ block|{
 name|off_t
 name|_f_seek
 decl_stmt|;
+comment|/* A byte offset if (cantell) */
 name|Char
 modifier|*
 name|_c_seek
@@ -5255,12 +4751,23 @@ comment|/*  * Labuf implements a general buffer for lookahead during lexical ope
 end_comment
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|Strbuf
+name|labuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|EXTERN
-name|Char
-modifier|*
+name|size_t
 name|lap
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* N/A if == labuf.len, index into labuf.s otherwise */
+end_comment
 
 begin_comment
 comment|/*  * Parser structure  *  * Each command is parsed to a tree of command structures and  * flags are set bottom up during this process, to be propagated down  * as needed during the semantics/exeuction pass (sh.sem.c).  */
@@ -5675,22 +5182,20 @@ end_else
 begin_typedef
 typedef|typedef
 name|void
-argument_list|(
-argument|*bfunc_t
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|bfunc_t
+function_decl|)
+parameter_list|(
 name|Char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|command
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_endif
@@ -5704,6 +5209,7 @@ end_comment
 
 begin_struct
 specifier|extern
+specifier|const
 struct|struct
 name|biltins
 block|{
@@ -6014,28 +5520,6 @@ begin_comment
 comment|/*  * Filename/command name expansion variables  */
 end_comment
 
-begin_decl_stmt
-name|EXTERN
-name|int
-name|gflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* After tglob -> is globbing needed? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXVARLEN
-value|256
-end_define
-
-begin_comment
-comment|/* Maximum number of char in a variable name */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -6063,6 +5547,24 @@ directive|ifndef
 name|MAXPATHLEN
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PATH_MAX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAXPATHLEN
+value|PATH_MAX
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -6075,30 +5577,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* MAXPATHLEN */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXNAMLEN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAXNAMLEN
-value|512
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* MAXNAMLEN */
+comment|/* MAXPATHLEN */
 end_comment
 
 begin_ifndef
@@ -6145,86 +5630,6 @@ end_endif
 
 begin_comment
 comment|/* !HAVENOLIMIT */
-end_comment
-
-begin_comment
-comment|/*  * Variables for filename expansion  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|Char
-modifier|*
-modifier|*
-name|gargv
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Pointer to the (stack) arglist */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|gargc
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number args in gargv */
-end_comment
-
-begin_comment
-comment|/*  * Variables for command expansion.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|Char
-modifier|*
-modifier|*
-name|pargv
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Pointer to the argv list space */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|Char
-modifier|*
-name|pargs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Pointer to start current word */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|long
-name|pnleft
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of chars left in pargs */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|Char
-modifier|*
-name|pargcp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Current index into pargs */
 end_comment
 
 begin_comment
@@ -6564,6 +5969,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|Strnsave
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|strnsave(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
 name|Strsave
 parameter_list|(
 name|a
@@ -6630,7 +6047,7 @@ name|short2str
 parameter_list|(
 name|a
 parameter_list|)
-value|strip(a)
+value|caching_strip(a)
 end_define
 
 begin_else
@@ -6900,6 +6317,18 @@ parameter_list|,
 name|b
 parameter_list|)
 value|s_strspl(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strnsave
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|s_strnsave(a, b)
 end_define
 
 begin_define
@@ -7258,6 +6687,27 @@ name|NoNLSRebind
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_ENVIRON
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -7351,56 +6801,47 @@ name|nl_catd
 typedef|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 specifier|const
 name|char
 modifier|*
 name|catgets
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|nl_catd
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|nl_catd
 name|catopen
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|catclose
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|nl_catd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -7478,11 +6919,19 @@ name|catd
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_ICONV
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_NL_LANGINFO
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -7514,7 +6963,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|catgets(catd, b, c, d)
+value|xcatgets(catd, b, c, d)
 end_define
 
 begin_endif

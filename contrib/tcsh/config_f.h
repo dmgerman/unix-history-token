@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/config_f.h,v 3.32 2005/03/04 13:46:04 christos Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/config_f.h,v 3.40 2006/08/28 14:53:04 mitr Exp $ */
 end_comment
 
 begin_comment
@@ -45,9 +45,19 @@ argument_list|(
 name|SHORT_STRINGS
 argument_list|)
 operator|&&
+name|defined
+argument_list|(
+name|NLS
+argument_list|)
+operator|&&
 name|SIZEOF_WCHAR_T
 operator|>=
 literal|4
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_MBRTOWC
+argument_list|)
 operator|&&
 operator|!
 name|defined
@@ -74,24 +84,33 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * NLS:		Use Native Language System  *		Routines like setlocale() are needed  *		if you don't have<locale.h>, you don't want  *		to define this.  */
+comment|/*  * NLS_CATALOGS:Use Native Language System catalogs for  *		international messages.  *		Routines like catopen() are needed  *		if you don't have<nl_types.h>, you don't want  *		to define this.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NLS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_CATGETS
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|NLS
+name|NLS_CATALOGS
 end_define
 
-begin_comment
-comment|/*  * NLS_CATALOGS:Use Native Language System catalogs for  *		international messages.  *		Routines like catopen() are needed  *		if you don't have<nl_types.h>, you don't want  *		to define this.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NLS_CATALOGS
-end_undef
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * LOGINFIRST   Source ~/.login before ~/.cshrc  */
@@ -263,6 +282,11 @@ operator|||
 name|defined
 argument_list|(
 name|__MVS__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__linux__
 argument_list|)
 end_if
 

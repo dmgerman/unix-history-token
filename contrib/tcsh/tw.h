@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/tw.h,v 3.24 2004/11/23 02:10:50 christos Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/tw.h,v 3.25 2006/01/12 18:15:25 christos Exp $ */
 end_comment
 
 begin_comment
@@ -272,31 +272,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|FILSIZ
-value|BUFSIZE
-end_define
-
-begin_comment
-comment|/* Max reasonable file name length */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ESC
 value|CTL_ESC('\033')
-end_define
-
-begin_define
-define|#
-directive|define
-name|equal
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(strcmp(a, b) == 0)
 end_define
 
 begin_define
