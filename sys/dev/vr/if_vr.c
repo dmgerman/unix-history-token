@@ -197,7 +197,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<pci/if_vrreg.h>
+file|<dev/vr/if_vrreg.h>
 end_include
 
 begin_expr_stmt
