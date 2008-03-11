@@ -7740,7 +7740,7 @@ argument_list|(
 name|sc_if
 argument_list|)
 expr_stmt|;
-comment|/* VLAN capability setup */
+comment|/* 	 * VLAN capability setup  	 * Due to Tx checksum offload hardware bugs, msk(4) manually 	 * computes checksum for short frames. For VLAN tagged frames 	 * this workaround does not work so disable checksum offload 	 * for VLAN interface. 	 */
 name|ifp
 operator|->
 name|if_capabilities
@@ -7749,7 +7749,6 @@ name|IFCAP_VLAN_MTU
 operator||
 name|IFCAP_VLAN_HWTAGGING
 expr_stmt|;
-comment|/* 	 * Due to Tx checksum offload hardware bugs, msk(4) manually 	 * computes checksum for short frames. For VLAN tagged frames 	 * this workaround does not work so disable checksum offload 	 * for VLAN interface. 	 */
 name|ifp
 operator|->
 name|if_capenable
