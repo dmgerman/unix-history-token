@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * For now we want the safety net that DEBUG flags provide.  */
+comment|/*  * For now we want the safety net that the DEBUG flag provides.  */
 end_comment
 
 begin_ifndef
@@ -5034,7 +5034,7 @@ name|EBUSY
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"softdep_waitidle: Failed to flush worklist for %p"
+literal|"softdep_waitidle: Failed to flush worklist for %p\n"
 argument_list|,
 name|mp
 argument_list|)
