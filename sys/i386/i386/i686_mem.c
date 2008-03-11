@@ -1038,7 +1038,7 @@ name|i686_mtrr2mrt
 argument_list|(
 name|msrv
 operator|&
-literal|0xff
+name|MTRR_PHYSBASE_TYPE
 argument_list|)
 expr_stmt|;
 name|mrd
@@ -1047,7 +1047,7 @@ name|mr_base
 operator|=
 name|msrv
 operator|&
-literal|0x0000000ffffff000LL
+name|MTRR_PHYSBASE_PHYSBASE
 expr_stmt|;
 name|msrv
 operator|=
@@ -1065,7 +1065,7 @@ operator|=
 operator|(
 name|msrv
 operator|&
-literal|0x800
+name|MTRR_PHYSMASK_VALID
 operator|)
 condition|?
 operator|(
@@ -1095,10 +1095,14 @@ operator|~
 operator|(
 name|msrv
 operator|&
-literal|0x0000000ffffff000LL
+name|MTRR_PHYSMASK_PHYSMASK
 operator|)
 operator|&
-literal|0x0000000fffffffffLL
+operator|(
+name|MTRR_PHYSMASK_PHYSMASK
+operator||
+literal|0xfffLL
+operator|)
 operator|)
 operator|+
 literal|1
@@ -1425,7 +1429,7 @@ name|MSR_MTRRdefType
 argument_list|)
 operator|&
 operator|~
-literal|0x800
+name|MTRR_DEF_ENABLE
 argument_list|)
 expr_stmt|;
 comment|/* disable MTRRs (E = 0) */
@@ -1761,7 +1765,7 @@ name|mrd
 operator|->
 name|mr_base
 operator|&
-literal|0x0000000ffffff000LL
+name|MTRR_PHYSBASE_PHYSBASE
 expr_stmt|;
 name|msrv
 operator||=
@@ -1801,7 +1805,7 @@ condition|)
 block|{
 name|msrv
 operator|=
-literal|0x800
+name|MTRR_PHYSMASK_VALID
 operator||
 operator|(
 operator|~
@@ -1813,7 +1817,7 @@ operator|-
 literal|1
 operator|)
 operator|&
-literal|0x0000000ffffff000LL
+name|MTRR_PHYSMASK_PHYSMASK
 operator|)
 expr_stmt|;
 block|}
@@ -1847,7 +1851,7 @@ argument_list|(
 name|MSR_MTRRdefType
 argument_list|)
 operator||
-literal|0x800
+name|MTRR_DEF_ENABLE
 argument_list|)
 expr_stmt|;
 comment|/* restore MTRR state */
@@ -2728,7 +2732,7 @@ operator|!
 operator|(
 name|mtrrdef
 operator|&
-literal|0x800
+name|MTRR_DEF_ENABLE
 operator|)
 condition|)
 block|{
@@ -2747,7 +2751,7 @@ name|nmdesc
 operator|=
 name|mtrrcap
 operator|&
-literal|0xff
+name|MTRR_CAP_VCNT
 expr_stmt|;
 if|if
 condition|(
@@ -2764,13 +2768,13 @@ condition|(
 operator|(
 name|mtrrcap
 operator|&
-literal|0x100
+name|MTRR_CAP_FIXED
 operator|)
 operator|&&
 operator|(
 name|mtrrdef
 operator|&
-literal|0x400
+name|MTRR_DEF_FIXED_ENABLE
 operator|)
 condition|)
 block|{
