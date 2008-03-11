@@ -1153,7 +1153,7 @@ break|break;
 case|case
 literal|'q'
 case|:
-name|ar_mode_r
+name|ar_mode_q
 argument_list|(
 name|bsdar
 argument_list|)
@@ -1394,6 +1394,16 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\tar -p [-Tv] archive [file ...]\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\tar -q [-Tcjsvz] archive file ...\n"
 argument_list|)
 expr_stmt|;
 operator|(

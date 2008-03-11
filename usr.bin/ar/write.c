@@ -396,6 +396,26 @@ end_function
 
 begin_function
 name|void
+name|ar_mode_q
+parameter_list|(
+name|struct
+name|bsdar
+modifier|*
+name|bsdar
+parameter_list|)
+block|{
+name|write_archive
+argument_list|(
+name|bsdar
+argument_list|,
+literal|'q'
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|ar_mode_r
 parameter_list|(
 name|struct
@@ -1232,6 +1252,10 @@ condition|(
 name|mode
 operator|!=
 literal|'r'
+operator|&&
+name|mode
+operator|!=
+literal|'q'
 condition|)
 block|{
 name|bsdar_warnc
@@ -1694,6 +1718,16 @@ condition|)
 goto|goto
 name|write_objs
 goto|;
+comment|/* 	 * For mode 'q', we don't need to adjust existing members either. 	 * Also, -a, -b and -i are ignored in this mode. New members are 	 * always inserted at tail. 	 */
+if|if
+condition|(
+name|mode
+operator|==
+literal|'q'
+condition|)
+goto|goto
+name|new_archive
+goto|;
 comment|/* 	 * Try to find the position member specified by user. 	 */
 if|if
 condition|(
@@ -2002,7 +2036,7 @@ block|}
 block|}
 name|new_archive
 label|:
-comment|/* 	 * When operating in mode 'r', directly add those user specified 	 * objects which do not exist in current archive. 	 */
+comment|/* 	 * When operating in mode 'r', directly add those user specified 	 * objects which do not exist in current archive. When operating 	 * in mode 'q', all objects specified in command line args are 	 * appended to the archive, without comparing with existing ones. 	 */
 for|for
 control|(
 name|i
@@ -2036,9 +2070,15 @@ name|av
 operator|!=
 name|NULL
 operator|&&
+operator|(
 name|mode
 operator|==
 literal|'r'
+operator|||
+name|mode
+operator|==
+literal|'q'
+operator|)
 condition|)
 block|{
 name|nobj

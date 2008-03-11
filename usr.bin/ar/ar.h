@@ -417,6 +417,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ar_mode_q
+parameter_list|(
+name|struct
+name|bsdar
+modifier|*
+name|bsdar
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ar_mode_r
 parameter_list|(
 name|struct
