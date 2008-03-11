@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/coda/coda_namecache.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $   * $FreeBSD$  *   */
+comment|/*-  *  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *  *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *  * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *  * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *  * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *  * 	@(#) src/sys/coda/coda_namecache.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  * $FreeBSD$  *  */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ name|_CODA_NC_HEADER_
 end_define
 
 begin_comment
-comment|/*  * Coda constants  */
+comment|/*  * Coda constants.  */
 end_comment
 
 begin_define
@@ -35,7 +35,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* longest name stored in cache */
+comment|/* Longest name stored in cache */
 end_comment
 
 begin_define
@@ -61,11 +61,7 @@ comment|/* Must be multiple of 2 */
 end_comment
 
 begin_comment
-comment|/*  * Hash function for the primary hash.  */
-end_comment
-
-begin_comment
-comment|/*   * First try -- (first + last letters + length + (int)cp) mod size  * 2nd try -- same, except dir fid.vnode instead of cp  */
+comment|/*  * Hash function for the primary hash.  *  * First try -- (first + last letters + length + (int)cp) mod size  * 2nd try -- same, except dir fid.vnode instead of cp  */
 end_comment
 
 begin_define
@@ -80,7 +76,7 @@ parameter_list|,
 name|cp
 parameter_list|)
 define|\
-value|((name[0] + (name[namelen-1]<<4) + namelen + (((int)(intptr_t)cp)>>8))& (coda_nc_hashsize-1))
+value|((name[0] + (name[namelen-1]<<4) + namelen +			\ 	    (((int)(intptr_t)cp)>>8))& (coda_nc_hashsize-1))
 end_define
 
 begin_define
@@ -97,11 +93,11 @@ parameter_list|,
 name|dcp
 parameter_list|)
 define|\
-value|((namelen == cp->namelen)&& (dcp == cp->dcp)&& \ 		 (bcmp(cp->name,name,namelen) == 0))
+value|((namelen == cp->namelen)&& (dcp == cp->dcp)&&		\ 	    (bcmp(cp->name,name,namelen) == 0))
 end_define
 
 begin_comment
-comment|/*  * Functions to modify the hash and lru chains.  * insque and remque assume that the pointers are the first thing  * in the list node, thus the trickery for lru.  */
+comment|/*  * Functions to modify the hash and LRU chains.  insque and remque assume  * that the pointers are the first thing in the list node, thus the trickery  * for LRU.  */
 end_comment
 
 begin_define
@@ -185,7 +181,7 @@ name|LRU_PART
 parameter_list|(
 name|cncp
 parameter_list|)
-value|(struct coda_cache *) \ 				((char *)cncp + (2*sizeof(struct coda_cache *)))
+value|(struct coda_cache *) ((char *)cncp + \ 			    (2*sizeof(struct coda_cache *)))
 end_define
 
 begin_define
@@ -195,7 +191,7 @@ name|LRU_TOP
 parameter_list|(
 name|cncp
 parameter_list|)
-value|(struct coda_cache *) \ 			((char *)cncp - (2*sizeof(struct coda_cache *)))
+value|(struct coda_cache *) ((char *)cncp - \ 			    (2*sizeof(struct coda_cache *)))
 end_define
 
 begin_define
@@ -205,18 +201,18 @@ name|DATA_PART
 parameter_list|(
 name|cncp
 parameter_list|)
-value|(struct coda_cache *) \ 			((char *)cncp + (4*sizeof(struct coda_cache *)))
+value|(struct coda_cache *) ((char *)cncp + \ 			    (4*sizeof(struct coda_cache *)))
 end_define
 
 begin_define
 define|#
 directive|define
 name|DATA_SIZE
-value|(sizeof(struct coda_cache)-(4*sizeof(struct coda_cache *)))
+value|(sizeof(struct coda_cache) - \ 			    (4*sizeof(struct coda_cache *)))
 end_define
 
 begin_comment
-comment|/*  * Structure for an element in the CODA Name Cache.  * NOTE: I use the position of arguments and their size in the  * implementation of the functions CODA_NC_LRUINS, CODA_NC_LRUREM, and  * DATA_PART.  */
+comment|/*  * Structure for an element in the CODA Name Cache.  *  * NOTE: I use the position of arguments and their size in the implementation  * of the functions CODA_NC_LRUINS, CODA_NC_LRUREM, and DATA_PART.  */
 end_comment
 
 begin_struct
@@ -274,11 +270,14 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Start of an LRU chain -- notice position of pointers.  */
+end_comment
+
 begin_struct
 struct|struct
 name|coda_lru
 block|{
-comment|/* Start of LRU chain */
 name|char
 modifier|*
 name|dummy1
@@ -286,7 +285,6 @@ decl_stmt|,
 modifier|*
 name|dummy2
 decl_stmt|;
-comment|/* place holders */
 name|struct
 name|coda_cache
 modifier|*
@@ -295,16 +293,18 @@ decl_stmt|,
 modifier|*
 name|lru_prev
 decl_stmt|;
-comment|/* position of pointers is important */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Start of Hash chain -- notice position of pointers -- chain pointers must  * be first.  */
+end_comment
 
 begin_struct
 struct|struct
 name|coda_hash
 block|{
-comment|/* Start of Hash chain */
 name|struct
 name|coda_cache
 modifier|*
@@ -313,17 +313,16 @@ decl_stmt|,
 modifier|*
 name|hash_prev
 decl_stmt|;
-comment|/* NOTE: chain pointers must be first */
 name|int
 name|length
 decl_stmt|;
-comment|/* used for tuning purposes */
+comment|/* Used for tuning purposes. */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*   * Symbols to aid in debugging the namecache code. Assumes the existence  * of the variable coda_nc_debug, which is defined in cfs_namecache.c  */
+comment|/*  * Symbols to aid in debugging the namecache code. Assumes the existence of  * the variable coda_nc_debug, which is defined in cfs_namecache.c  */
 end_comment
 
 begin_define
@@ -335,11 +334,11 @@ name|N
 parameter_list|,
 name|STMT
 parameter_list|)
-value|{ if (coda_nc_debug& (1<<N)) { STMT } }
+value|do {					\ 	if (coda_nc_debug& (1<< N)) {					\ 		STMT							\ 	}								\ } while (0)
 end_define
 
 begin_comment
-comment|/* Prototypes of functions exported within cfs */
+comment|/*  * Prototypes of functions exported within cfs.  */
 end_comment
 
 begin_function_decl
@@ -563,65 +562,65 @@ comment|/* Indicate use of CODA Name Cache */
 end_comment
 
 begin_comment
-comment|/*  * Structure to contain statistics on the cache usage  */
+comment|/*  * Structure to contain statistics on the cache usage.  */
 end_comment
 
 begin_struct
 struct|struct
 name|coda_nc_statistics
 block|{
-name|unsigned
+name|u_int
 name|hits
 decl_stmt|;
-name|unsigned
+name|u_int
 name|misses
 decl_stmt|;
-name|unsigned
+name|u_int
 name|enters
 decl_stmt|;
-name|unsigned
+name|u_int
 name|dbl_enters
 decl_stmt|;
-name|unsigned
+name|u_int
 name|long_name_enters
 decl_stmt|;
-name|unsigned
+name|u_int
 name|long_name_lookups
 decl_stmt|;
-name|unsigned
+name|u_int
 name|long_remove
 decl_stmt|;
-name|unsigned
+name|u_int
 name|lru_rm
 decl_stmt|;
-name|unsigned
+name|u_int
 name|zapPfids
 decl_stmt|;
-name|unsigned
+name|u_int
 name|zapFids
 decl_stmt|;
-name|unsigned
+name|u_int
 name|zapFile
 decl_stmt|;
-name|unsigned
+name|u_int
 name|zapUsers
 decl_stmt|;
-name|unsigned
+name|u_int
 name|Flushes
 decl_stmt|;
-name|unsigned
+name|u_int
 name|Sum_bucket_len
 decl_stmt|;
-name|unsigned
+name|u_int
 name|Sum2_bucket_len
 decl_stmt|;
-name|unsigned
+name|u_int
 name|Max_bucket_len
 decl_stmt|;
-name|unsigned
+name|u_int
 name|Num_zero_len
 decl_stmt|;
-name|unsigned
+name|u_int
 name|Search_len
 decl_stmt|;
 block|}
@@ -723,6 +722,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_CODA_NC_HEADER_ */
+end_comment
 
 end_unit
 

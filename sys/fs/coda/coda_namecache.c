@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/coda/coda_namecache.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  */
+comment|/*-  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *  *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *  * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *  * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *  * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *  * 	@(#) src/sys/coda/coda_namecache.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  */
 end_comment
 
 begin_comment
@@ -12,11 +12,11 @@ comment|/*  * This code was written for the Coda filesystem at Carnegie Mellon U
 end_comment
 
 begin_comment
-comment|/*  * This module contains the routines to implement the CODA name cache. The  * purpose of this cache is to reduce the cost of translating pathnames   * into Vice FIDs. Each entry in the cache contains the name of the file,  * the vnode (FID) of the parent directory, and the cred structure of the  * user accessing the file.  *  * The first time a file is accessed, it is looked up by the local Venus  * which first insures that the user has access to the file. In addition  * we are guaranteed that Venus will invalidate any name cache entries in  * case the user no longer should be able to access the file. For these  * reasons we do not need to keep access list information as well as a  * cred structure for each entry.  *  * The table can be accessed through the routines cnc_init(), cnc_enter(),  * cnc_lookup(), cnc_rmfidcred(), cnc_rmfid(), cnc_rmcred(), and cnc_purge().  * There are several other routines which aid in the implementation of the  * hash table.  */
+comment|/*  * This module contains the routines to implement the CODA name cache.  The  * purpose of this cache is to reduce the cost of translating pathnames into  * Vice FIDs. Each entry in the cache contains the name of the file, the  * vnode (FID) of the parent directory, and the cred structure of the user  * accessing the file.  *  * The first time a file is accessed, it is looked up by the local Venus  * which first ensures that the user has access to the file. In addition we  * are guaranteed that Venus will invalidate any name cache entries in case  * the user no longer should be able to access the file. For these reasons we  * do not need to keep access list information as well as a cred structure  * for each entry.  *  * The table can be accessed through the routines coda_nc_init(),  * coda_nc_enter(), coda_nc_lookup(), coda_nc_rmfidcred(), coda_nc_rmfid(),  * coda_nc_rmcred(), and coda_nc_purge().  There are several other routines  * which aid in the implementation of the hash table.  */
 end_comment
 
 begin_comment
-comment|/*  * NOTES: rvb@cs  * 1.	The name cache holds a reference to every vnode in it.  Hence files can not be  *	 closed or made inactive until they are released.  * 2.	coda_nc_name(cp) was added to get a name for a cnode pointer for debugging.  * 3.	coda_nc_find() has debug code to detect when entries are stored with different  *	 credentials.  We don't understand yet, if/how entries are NOT EQ but still  *	 EQUAL  * 4.	I wonder if this name cache could be replace by the vnode name cache.  *	The latter has no zapping functions, so probably not.  */
+comment|/*-  * NOTES: rvb@cs  * 1.	The name cache holds a reference to every vnode in it.  Hence files  *	can not be closed or made inactive until they are released.  * 2.	coda_nc_name(cp) was added to get a name for a cnode pointer for  *	debugging.  * 3.	coda_nc_find() has debug code to detect when entries are stored with  *	different credentials.  We don't understand yet, if/how entries are  *	NOT EQ but still EQUAL.  * 4.	I wonder if this name cache could be replace by the vnode name cache.  *	The latter has no zapping functions, so probably not.  */
 end_comment
 
 begin_include
@@ -123,7 +123,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * Declaration of the name cache data structure.  */
+comment|/*  * Declaration of the name cache data structure.  */
 end_comment
 
 begin_decl_stmt
@@ -209,7 +209,7 @@ comment|/* Keep various stats */
 end_comment
 
 begin_comment
-comment|/*   * for testing purposes  */
+comment|/*  * For testing purposes.  */
 end_comment
 
 begin_decl_stmt
@@ -221,7 +221,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Entry points for the CODA Name Cache  */
+comment|/*  * Entry points for the CODA Name Cache.  */
 end_comment
 
 begin_function_decl
@@ -273,7 +273,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*    * Initialize the cache, the LRU structure and the Hash structure(s)  */
+comment|/*  * Initialize the cache, the LRU structure and the Hash structure(s).  */
 end_comment
 
 begin_define
@@ -287,7 +287,7 @@ begin_define
 define|#
 directive|define
 name|TOTAL_HASH_SIZE
-value|(sizeof(struct coda_hash)  * coda_nc_hashsize)
+value|(sizeof(struct coda_hash) * coda_nc_hashsize)
 end_define
 
 begin_decl_stmt
@@ -312,7 +312,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* zero the statistics structure */
 name|bzero
 argument_list|(
 operator|&
@@ -382,6 +381,7 @@ operator|&
 name|coda_nc_lru
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize the heap. 	 */
 for|for
 control|(
 name|i
@@ -396,7 +396,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* initialize the heap */
 name|CODA_NC_LRUINS
 argument_list|(
 operator|&
@@ -432,14 +431,10 @@ index|]
 operator|.
 name|dcp
 operator|=
-operator|(
-expr|struct
-name|cnode
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 block|}
+comment|/* 	 * Initialize the hashtable. 	 */
 for|for
 control|(
 name|i
@@ -453,8 +448,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-comment|/* initialize the hashtable */
 name|CODA_NC_HSHNUL
 argument_list|(
 operator|(
@@ -469,7 +462,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|coda_nc_initialized
 operator|++
 expr_stmt|;
@@ -477,7 +469,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Auxillary routines -- shouldn't be entry points  */
+comment|/*  * Auxillary routines -- shouldn't be entry points.  */
 end_comment
 
 begin_function
@@ -487,39 +479,28 @@ name|coda_cache
 modifier|*
 name|coda_nc_find
 parameter_list|(
-name|dcp
-parameter_list|,
-name|name
-parameter_list|,
-name|namelen
-parameter_list|,
-name|cred
-parameter_list|,
-name|hash
-parameter_list|)
 name|struct
 name|cnode
 modifier|*
 name|dcp
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|namelen
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ucred
 modifier|*
 name|cred
-decl_stmt|;
+parameter_list|,
 name|int
 name|hash
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/*  	 * hash to find the appropriate bucket, look through the chain 	 * for the right entry (especially right cred, unless cred == 0)  	 */
 name|struct
 name|coda_cache
 modifier|*
@@ -530,14 +511,17 @@ name|count
 init|=
 literal|1
 decl_stmt|;
+comment|/* 	 * Hash to find the appropriate bucket, look through the chain for 	 * the right entry (especially right cred, unless cred == 0). 	 */
 name|CODA_NC_DEBUG
 argument_list|(
 argument|CODA_NC_FIND
 argument_list|,
 argument|myprintf((
-literal|"coda_nc_find(dcp %p, name %s, len %d, cred %p, hash %d\n"
-argument|, 			   dcp, name, namelen, cred, hash));
+literal|"coda_nc_find(dcp %p, name %s, "
+literal|"len %d, cred %p, hash %d\n"
+argument|, dcp, name, namelen, cred, hash));
 argument_list|)
+empty_stmt|;
 for|for
 control|(
 name|cncp
@@ -604,7 +588,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* compare cr_uid instead */
+comment|/* Compare cr_uid instead. */
 name|coda_nc_stat
 operator|.
 name|Search_len
@@ -637,7 +621,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"coda_nc_find: name %s, new cred = %p, cred = %p\n"
+literal|"coda_nc_find: name %s, new cred = %p, "
+literal|"cred = %p\n"
 argument_list|,
 name|name
 argument_list|,
@@ -650,7 +635,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"nref %d, nuid %d, ngid %d // oref %d, ocred %d, ogid %d\n"
+literal|"nref %d, nuid %d, ngid %d // oref %d, "
+literal|"ocred %d, ogid %d\n"
 argument_list|,
 name|cred
 operator|->
@@ -701,58 +687,43 @@ directive|endif
 block|}
 return|return
 operator|(
-operator|(
-expr|struct
-name|coda_cache
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Enter a new (dir cnode, name) pair into the cache, updating the  * LRU and Hash as needed.  */
+comment|/*  * Enter a new (dir cnode, name) pair into the cache, updating the LRU and  * Hash as needed.  */
 end_comment
 
 begin_function
 name|void
 name|coda_nc_enter
 parameter_list|(
-name|dcp
-parameter_list|,
-name|name
-parameter_list|,
-name|namelen
-parameter_list|,
-name|cred
-parameter_list|,
-name|cp
-parameter_list|)
 name|struct
 name|cnode
 modifier|*
 name|dcp
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|namelen
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ucred
 modifier|*
 name|cred
-decl_stmt|;
+parameter_list|,
 name|struct
 name|cnode
 modifier|*
 name|cp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|coda_cache
@@ -768,16 +739,17 @@ name|coda_nc_use
 operator|==
 literal|0
 condition|)
-comment|/* Cache is off */
 return|return;
 name|CODA_NC_DEBUG
 argument_list|(
 argument|CODA_NC_ENTER
 argument_list|,
 argument|myprintf((
-literal|"Enter: dcp %p cp %p name %s cred %p \n"
-argument|, 		       dcp, cp, name, cred));
+literal|"Enter: dcp %p cp %p name %s "
+literal|"cred %p \n"
+argument|, dcp, cp, name, cred));
 argument_list|)
+empty_stmt|;
 if|if
 condition|(
 name|namelen
@@ -791,14 +763,14 @@ argument|CODA_NC_ENTER
 argument_list|,
 argument|myprintf((
 literal|"long name enter %s\n"
-argument|,name));
+argument|, 		    name));
 argument_list|)
+empty_stmt|;
 name|coda_nc_stat
 operator|.
 name|long_name_enters
 operator|++
 expr_stmt|;
-comment|/* record stats */
 return|return;
 block|}
 name|hash
@@ -831,20 +803,15 @@ if|if
 condition|(
 name|cncp
 operator|!=
-operator|(
-expr|struct
-name|coda_cache
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 block|{
+comment|/* 		 * Duplicate entry. 		 */
 name|coda_nc_stat
 operator|.
 name|dbl_enters
 operator|++
 expr_stmt|;
-comment|/* duplicate entry */
 return|return;
 block|}
 name|coda_nc_stat
@@ -852,8 +819,7 @@ operator|.
 name|enters
 operator|++
 expr_stmt|;
-comment|/* record the enters statistic */
-comment|/* Grab the next element in the lru chain */
+comment|/* 	 * Grab the next element in the LRU chain. 	 */
 name|cncp
 operator|=
 name|CODA_NC_LRUGET
@@ -861,12 +827,12 @@ argument_list|(
 name|coda_nc_lru
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Remove it from the lists. 	 */
 name|CODA_NC_LRUREM
 argument_list|(
 name|cncp
 argument_list|)
 expr_stmt|;
-comment|/* remove it from the lists */
 if|if
 condition|(
 name|CODA_NC_VALID
@@ -875,7 +841,7 @@ name|cncp
 argument_list|)
 condition|)
 block|{
-comment|/* Seems really ugly, but we have to decrement the appropriate 	   hash bucket length here, so we have to find the hash bucket 	   */
+comment|/* 		 * Seems really ugly, but we have to decrement the 		 * appropriate hash bucket length here, so we have to find 		 * the hash bucket. 		 */
 name|coda_nc_hash
 index|[
 name|CODA_NC_HASH
@@ -902,7 +868,7 @@ operator|.
 name|lru_rm
 operator|++
 expr_stmt|;
-comment|/* zapped a valid entry */
+comment|/* Zapped a valid entry. */
 name|CODA_NC_HSHREM
 argument_list|(
 name|cncp
@@ -936,7 +902,7 @@ name|cred
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Put a hold on the current vnodes and fill in the cache entry.      */
+comment|/* 	 * Put a hold on the current vnodes and fill in the cache entry. 	 */
 name|vref
 argument_list|(
 name|CTOV
@@ -994,7 +960,7 @@ operator|)
 name|namelen
 argument_list|)
 expr_stmt|;
-comment|/* Insert into the lru and hash chains. */
+comment|/* 	 * Insert into the lru and hash chains. 	 */
 name|CODA_NC_LRUINS
 argument_list|(
 name|cncp
@@ -1022,18 +988,19 @@ operator|.
 name|length
 operator|++
 expr_stmt|;
-comment|/* Used for tuning */
+comment|/* Used for tuning. */
 name|CODA_NC_DEBUG
 argument_list|(
 argument|CODA_NC_PRINTCODA_NC
 argument_list|,
 argument|print_coda_nc();
 argument_list|)
+empty_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Find the (dir cnode, name) pair in the cache, if it's cred  * matches the input, return it, otherwise return 0  */
+comment|/*  * Find the (dir cnode, name) pair in the cache, if its cred matches the  * input, return it, otherwise return NULL.  */
 end_comment
 
 begin_function
@@ -1042,40 +1009,32 @@ name|cnode
 modifier|*
 name|coda_nc_lookup
 parameter_list|(
-name|dcp
-parameter_list|,
-name|name
-parameter_list|,
-name|namelen
-parameter_list|,
-name|cred
-parameter_list|)
 name|struct
 name|cnode
 modifier|*
 name|dcp
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|namelen
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ucred
 modifier|*
 name|cred
-decl_stmt|;
+parameter_list|)
 block|{
-name|int
-name|hash
-decl_stmt|;
 name|struct
 name|coda_cache
 modifier|*
 name|cncp
+decl_stmt|;
+name|int
+name|hash
 decl_stmt|;
 if|if
 condition|(
@@ -1083,15 +1042,9 @@ name|coda_nc_use
 operator|==
 literal|0
 condition|)
-comment|/* Cache is off */
 return|return
 operator|(
-operator|(
-expr|struct
-name|cnode
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -1106,27 +1059,23 @@ argument_list|(
 argument|CODA_NC_LOOKUP
 argument_list|,
 argument|myprintf((
-literal|"long name lookup %s\n"
+literal|"long name lookup "
+literal|"%s\n"
 argument|,name));
 argument_list|)
+empty_stmt|;
 name|coda_nc_stat
 operator|.
 name|long_name_lookups
 operator|++
 expr_stmt|;
-comment|/* record stats */
 return|return
 operator|(
-operator|(
-expr|struct
-name|cnode
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
-comment|/* Use the hash function to locate the starting point, 	   then the search routine to go down the list looking for 	   the correct cred.  	 */
+comment|/* 	 * Use the hash function to locate the starting point, then the 	 * search routine to go down the list looking for the correct cred.  	 */
 name|hash
 operator|=
 name|CODA_NC_HASH
@@ -1157,12 +1106,7 @@ if|if
 condition|(
 name|cncp
 operator|==
-operator|(
-expr|struct
-name|coda_cache
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 block|{
 name|coda_nc_stat
@@ -1170,15 +1114,9 @@ operator|.
 name|misses
 operator|++
 expr_stmt|;
-comment|/* record miss */
 return|return
 operator|(
-operator|(
-expr|struct
-name|cnode
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -1187,7 +1125,7 @@ operator|.
 name|hits
 operator|++
 expr_stmt|;
-comment|/* put this entry at the end of the LRU */
+comment|/* 	 * Put this entry at the end of the LRU. 	 */
 name|CODA_NC_LRUREM
 argument_list|(
 name|cncp
@@ -1201,8 +1139,7 @@ operator|&
 name|coda_nc_lru
 argument_list|)
 expr_stmt|;
-comment|/* move it to the front of the hash chain */
-comment|/* don't need to change the hash bucket length */
+comment|/* 	 * Move it to the front of the hash chain; don't need to change the 	 * hash bucket length. 	 */
 name|CODA_NC_HSHREM
 argument_list|(
 name|cncp
@@ -1224,9 +1161,11 @@ argument_list|(
 argument|CODA_NC_LOOKUP
 argument_list|,
 argument|printf(
-literal|"lookup: dcp %p, name %s, cred %p = cp %p\n"
-argument|, 			dcp, name, cred, cncp->cp);
+literal|"lookup: dcp %p, name %s, cred "
+literal|"%p = cp %p\n"
+argument|, dcp, name, cred, cncp->cp);
 argument_list|)
+empty_stmt|;
 return|return
 operator|(
 name|cncp
@@ -1242,29 +1181,27 @@ specifier|static
 name|void
 name|coda_nc_remove
 parameter_list|(
-name|cncp
-parameter_list|,
-name|dcstat
-parameter_list|)
 name|struct
 name|coda_cache
 modifier|*
 name|cncp
-decl_stmt|;
+parameter_list|,
 name|enum
 name|dc_status
 name|dcstat
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/*  	 * remove an entry -- vrele(cncp->dcp, cp), crfree(cred), 	 * remove it from it's hash chain, and 	 * place it at the head of the lru list. 	 */
+comment|/* 	 * Remove an entry -- vrele(cncp->dcp, cp), crfree(cred), remove it 	 * from it's hash chain, and place it at the head of the lru list. 	 */
 name|CODA_NC_DEBUG
 argument_list|(
 argument|CODA_NC_REMOVE
 argument_list|,
 argument|myprintf((
-literal|"coda_nc_remove %s from parent %s\n"
-argument|, 			      cncp->name, coda_f2s(&cncp->dcp->c_fid)));
+literal|"coda_nc_remove %s from "
+literal|"parent %s\n"
+argument|, cncp->name, coda_f2s(&cncp->dcp->c_fid)));
 argument_list|)
+empty_stmt|;
 name|CODA_NC_HSHREM
 argument_list|(
 name|cncp
@@ -1275,7 +1212,7 @@ argument_list|(
 name|cncp
 argument_list|)
 expr_stmt|;
-comment|/* have it be a null chain */
+comment|/* Have it be a null chain. */
 if|if
 condition|(
 operator|(
@@ -1298,7 +1235,6 @@ operator|==
 literal|1
 operator|)
 condition|)
-block|{
 name|cncp
 operator|->
 name|dcp
@@ -1307,7 +1243,6 @@ name|c_flags
 operator||=
 name|C_PURGING
 expr_stmt|;
-block|}
 name|vrele
 argument_list|(
 name|CTOV
@@ -1340,7 +1275,6 @@ operator|==
 literal|1
 operator|)
 condition|)
-block|{
 name|cncp
 operator|->
 name|cp
@@ -1349,7 +1283,6 @@ name|c_flags
 operator||=
 name|C_PURGING
 expr_stmt|;
-block|}
 name|vrele
 argument_list|(
 name|CTOV
@@ -1377,8 +1310,7 @@ argument_list|,
 name|DATA_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* Put the null entry just after the least-recently-used entry */
-comment|/* LRU_TOP adjusts the pointer to point to the top of the structure. */
+comment|/* 	 * Put the null entry just after the least-recently-used entry. 	 * LRU_TOP adjusts the pointer to point to the top of the structure. 	 */
 name|CODA_NC_LRUREM
 argument_list|(
 name|cncp
@@ -1407,20 +1339,15 @@ begin_function
 name|void
 name|coda_nc_zapParentfid
 parameter_list|(
-name|fid
-parameter_list|,
-name|dcstat
-parameter_list|)
 name|CodaFid
 modifier|*
 name|fid
-decl_stmt|;
+parameter_list|,
 name|enum
 name|dc_status
 name|dcstat
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* To get to a specific fid, we might either have another hashing 	   function or do a sequential search through the cache for the 	   appropriate entries. The later may be acceptable since I don't 	   think callbacks or whatever Case 1 covers are frequent occurences. 	 */
 name|struct
 name|coda_cache
 modifier|*
@@ -1432,13 +1359,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * To get to a specific fid, we might either have another hashing 	 * function or do a sequential search through the cache for the 	 * appropriate entries. The later may be acceptable since I don't 	 * think callbacks or whatever Case 1 covers are frequent occurences. 	 */
 if|if
 condition|(
 name|coda_nc_use
 operator|==
 literal|0
 condition|)
-comment|/* Cache is off */
 return|return;
 name|CODA_NC_DEBUG
 argument_list|(
@@ -1446,8 +1373,9 @@ argument|CODA_NC_ZAPPFID
 argument_list|,
 argument|myprintf((
 literal|"ZapParent: fid %s\n"
-argument|, coda_f2s(fid)));
+argument|, 	    coda_f2s(fid)));
 argument_list|)
+empty_stmt|;
 name|coda_nc_stat
 operator|.
 name|zapPfids
@@ -1520,6 +1448,7 @@ name|fid
 argument_list|)
 condition|)
 block|{
+comment|/* Used for tuning. */
 name|coda_nc_hash
 index|[
 name|i
@@ -1528,7 +1457,6 @@ operator|.
 name|length
 operator|--
 expr_stmt|;
-comment|/* Used for tuning */
 name|coda_nc_remove
 argument_list|(
 name|cncp
@@ -1543,27 +1471,22 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove all entries which have the same fid as the input  */
+comment|/*  * Remove all entries which have the same fid as the input.  */
 end_comment
 
 begin_function
 name|void
 name|coda_nc_zapfid
 parameter_list|(
-name|fid
-parameter_list|,
-name|dcstat
-parameter_list|)
 name|CodaFid
 modifier|*
 name|fid
-decl_stmt|;
+parameter_list|,
 name|enum
 name|dc_status
 name|dcstat
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* See comment for zapParentfid. This routine will be used 	   if attributes are being cached.  	 */
 name|struct
 name|coda_cache
 modifier|*
@@ -1575,13 +1498,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * See comment for zapParentfid. This routine will be used if 	 * attributes are being cached. 	 */
 if|if
 condition|(
 name|coda_nc_use
 operator|==
 literal|0
 condition|)
-comment|/* Cache is off */
 return|return;
 name|CODA_NC_DEBUG
 argument_list|(
@@ -1589,8 +1512,9 @@ argument|CODA_NC_ZAPFID
 argument_list|,
 argument|myprintf((
 literal|"Zapfid: fid %s\n"
-argument|, coda_f2s(fid)));
+argument|, 	    coda_f2s(fid)));
 argument_list|)
+empty_stmt|;
 name|coda_nc_stat
 operator|.
 name|zapFids
@@ -1660,6 +1584,7 @@ name|fid
 argument_list|)
 condition|)
 block|{
+comment|/* Used for tuning. */
 name|coda_nc_hash
 index|[
 name|i
@@ -1668,7 +1593,6 @@ operator|.
 name|length
 operator|--
 expr_stmt|;
-comment|/* Used for tuning */
 name|coda_nc_remove
 argument_list|(
 name|cncp
@@ -1683,82 +1607,70 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Remove all entries which match the fid and the cred  *  * XXX: This is unused.  */
+comment|/*  * Remove all entries which match the fid and the cred.  *  * XXX: This is unused.  */
 end_comment
 
 begin_function
 name|void
 name|coda_nc_zapvnode
 parameter_list|(
-name|fid
-parameter_list|,
-name|cred
-parameter_list|,
-name|dcstat
-parameter_list|)
 name|CodaFid
 modifier|*
 name|fid
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ucred
 modifier|*
 name|cred
-decl_stmt|;
+parameter_list|,
 name|enum
 name|dc_status
-name|dcstat
-decl_stmt|;
+name|dcsta
+parameter_list|)
 block|{
-comment|/* See comment for zapfid. I don't think that one would ever 	   want to zap a file with a specific cred from the kernel. 	   We'll leave this one unimplemented. 	 */
+comment|/* 	 * See comment for zapfid.  I don't think that one would ever want to 	 * zap a file with a specific cred from the kernel.  We'll leave this 	 * one unimplemented. 	 */
 if|if
 condition|(
 name|coda_nc_use
 operator|==
 literal|0
 condition|)
-comment|/* Cache is off */
 return|return;
 name|CODA_NC_DEBUG
 argument_list|(
 argument|CODA_NC_ZAPVNODE
 argument_list|,
 argument|myprintf((
-literal|"Zapvnode: fid %s cred %p\n"
-argument|, 				coda_f2s(fid), cred));
+literal|"Zapvnode: fid %s cred "
+literal|"%p\n"
+argument|, coda_f2s(fid), cred));
 argument_list|)
+empty_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Remove all entries which have the (dir vnode, name) pair  */
+comment|/*  * Remove all entries which have the (dir vnode, name) pair.  */
 end_comment
 
 begin_function
 name|void
 name|coda_nc_zapfile
 parameter_list|(
-name|dcp
-parameter_list|,
-name|name
-parameter_list|,
-name|namelen
-parameter_list|)
 name|struct
 name|cnode
 modifier|*
 name|dcp
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|namelen
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* use the hash function to locate the file, then zap all  	   entries of it regardless of the cred. 	 */
 name|struct
 name|coda_cache
 modifier|*
@@ -1767,22 +1679,23 @@ decl_stmt|;
 name|int
 name|hash
 decl_stmt|;
+comment|/* 	 * use the hash function to locate the file, then zap all entries of 	 * it regardless of the cred. 	 */
 if|if
 condition|(
 name|coda_nc_use
 operator|==
 literal|0
 condition|)
-comment|/* Cache is off */
 return|return;
 name|CODA_NC_DEBUG
 argument_list|(
 argument|CODA_NC_ZAPFILE
 argument_list|,
 argument|myprintf((
-literal|"Zapfile: dcp %p name %s \n"
-argument|, 			  dcp, name));
+literal|"Zapfile: dcp %p name %s\n"
+argument|, 	    dcp, name));
 argument_list|)
+empty_stmt|;
 if|if
 condition|(
 name|namelen
@@ -1795,7 +1708,6 @@ operator|.
 name|long_remove
 operator|++
 expr_stmt|;
-comment|/* record stats */
 return|return;
 block|}
 name|coda_nc_stat
@@ -1834,6 +1746,7 @@ condition|(
 name|cncp
 condition|)
 block|{
+comment|/* Used for tuning. */
 name|coda_nc_hash
 index|[
 name|hash
@@ -1842,7 +1755,6 @@ operator|.
 name|length
 operator|--
 expr_stmt|;
-comment|/* Used for tuning */
 name|coda_nc_remove
 argument_list|(
 name|cncp
@@ -1870,26 +1782,21 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Remove all the entries for a particular user. Used when tokens expire.  * A user is determined by his/her effective user id (id_uid).  */
+comment|/*  * Remove all the entries for a particular user.  Used when tokens expire.  A  * user is determined by his/her effective user id (id_uid).  */
 end_comment
 
 begin_function
 name|void
 name|coda_nc_purge_user
 parameter_list|(
-name|uid
-parameter_list|,
-name|dcstat
-parameter_list|)
 name|uid_t
 name|uid
-decl_stmt|;
+parameter_list|,
 name|enum
 name|dc_status
 name|dcstat
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/*  	 * I think the best approach is to go through the entire cache 	 * via HASH or whatever and zap all entries which match the 	 * input cred. Or just flush the whole cache.  It might be 	 * best to go through on basis of LRU since cache will almost 	 * always be full and LRU is more straightforward.   	 */
 name|struct
 name|coda_cache
 modifier|*
@@ -1901,13 +1808,13 @@ decl_stmt|;
 name|int
 name|hash
 decl_stmt|;
+comment|/* 	 * I think the best approach is to go through the entire cache via 	 * HASH or whatever and zap all entries which match the input cred. 	 * Or just flush the whole cache.  It might be best to go through on 	 * basis of LRU since cache will almost always be full and LRU is 	 * more straightforward. 	 */
 if|if
 condition|(
 name|coda_nc_use
 operator|==
 literal|0
 condition|)
-comment|/* Cache is off */
 return|return;
 name|CODA_NC_DEBUG
 argument_list|(
@@ -1915,8 +1822,9 @@ argument|CODA_NC_PURGEUSER
 argument_list|,
 argument|myprintf((
 literal|"ZapDude: uid %x\n"
-argument|, uid));
+argument|, 	    uid));
 argument_list|)
+empty_stmt|;
 name|coda_nc_stat
 operator|.
 name|zapUsers
@@ -1978,7 +1886,7 @@ name|uid
 operator|)
 condition|)
 block|{
-comment|/* Seems really ugly, but we have to decrement the appropriate 			   hash bucket length here, so we have to find the hash bucket 			   */
+comment|/* 			 * Seems really ugly, but we have to decrement the 			 * appropriate hash bucket length here, so we have to 			 * find the hash bucket. 			 */
 name|hash
 operator|=
 name|CODA_NC_HASH
@@ -1996,6 +1904,7 @@ operator|->
 name|dcp
 argument_list|)
 expr_stmt|;
+comment|/* For performance tuning. */
 name|coda_nc_hash
 index|[
 name|hash
@@ -2004,7 +1913,6 @@ operator|.
 name|length
 operator|--
 expr_stmt|;
-comment|/* For performance tuning */
 name|coda_nc_remove
 argument_list|(
 name|cncp
@@ -2018,22 +1926,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Flush the entire name cache. In response to a flush of the Venus cache.  */
+comment|/*  * Flush the entire name cache.  In response to a flush of the Venus cache.  */
 end_comment
 
 begin_function
 name|void
 name|coda_nc_flush
 parameter_list|(
-name|dcstat
-parameter_list|)
 name|enum
 name|dc_status
 name|dcstat
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* One option is to deallocate the current name cache and 	   call init to start again. Or just deallocate, then rebuild. 	   Or again, we could just go through the array and zero the  	   appropriate fields.  	 */
-comment|/*  	 * Go through the whole lru chain and kill everything as we go. 	 * I don't use remove since that would rebuild the lru chain 	 * as it went and that seemed unneccesary. 	 */
 name|struct
 name|coda_cache
 modifier|*
@@ -2042,13 +1946,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * One option is to deallocate the current name cache and call init 	 * to start again.  Or just deallocate, then rebuild.  Or again, we 	 * could just go through the array and zero the appropriate fields. 	 */
+comment|/* 	 * Go through the whole lru chain and kill everything as we go.  I 	 * don't use remove since that would rebuild the LRU chain as it went 	 * and that seemed unneccesary. 	 */
 if|if
 condition|(
 name|coda_nc_use
 operator|==
 literal|0
 condition|)
-comment|/* Cache is off */
 return|return;
 name|coda_nc_stat
 operator|.
@@ -2096,7 +2001,7 @@ argument_list|(
 name|cncp
 argument_list|)
 expr_stmt|;
-comment|/* only zero valid nodes */
+comment|/* Only zero valid nodes. */
 name|CODA_NC_HSHNUL
 argument_list|(
 name|cncp
@@ -2124,7 +2029,6 @@ operator|==
 literal|1
 operator|)
 condition|)
-block|{
 name|cncp
 operator|->
 name|dcp
@@ -2133,7 +2037,6 @@ name|c_flags
 operator||=
 name|C_PURGING
 expr_stmt|;
-block|}
 name|vrele
 argument_list|(
 name|CTOV
@@ -2168,10 +2071,7 @@ operator|->
 name|v_vflag
 operator|&
 name|VV_TEXT
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|coda_vmflush
 argument_list|(
 name|cncp
@@ -2184,10 +2084,11 @@ argument_list|(
 argument|CODA_FLUSH
 argument_list|,
 argument|myprintf((
-literal|"coda_nc_flush: %s busy\n"
-argument|, 				 coda_f2s(&cncp->cp->c_fid)));
+literal|"coda_nc_"
+literal|"flush: %s busy\n"
+argument|, coda_f2s(&cncp->cp->c_fid)));
 argument_list|)
-block|}
+empty_stmt|;
 if|if
 condition|(
 operator|(
@@ -2210,7 +2111,6 @@ operator|==
 literal|1
 operator|)
 condition|)
-block|{
 name|cncp
 operator|->
 name|cp
@@ -2219,7 +2119,6 @@ name|c_flags
 operator||=
 name|C_PURGING
 expr_stmt|;
-block|}
 name|vrele
 argument_list|(
 name|CTOV
@@ -2275,11 +2174,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Debugging routines  */
+comment|/*  * Debugging routines.  */
 end_comment
 
 begin_comment
-comment|/*   * This routine should print out all the hash chains to the console.  */
+comment|/*  * This routine should print out all the hash chains to the console.  */
 end_comment
 
 begin_function
@@ -2430,7 +2329,6 @@ index|]
 operator|.
 name|length
 condition|)
-block|{
 name|sum
 operator|+=
 name|coda_nc_hash
@@ -2440,13 +2338,10 @@ index|]
 operator|.
 name|length
 expr_stmt|;
-block|}
 else|else
-block|{
 name|zeros
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|coda_nc_hash
@@ -2468,7 +2363,7 @@ operator|.
 name|length
 expr_stmt|;
 block|}
-comment|/* 	 * When computing the Arithmetic mean, only count slots which  	 * are not empty in the distribution. 	 */
+comment|/* 	 * When computing the Arithmetic mean, only count slots which are not 	 * empty in the distribution. 	 */
 name|coda_nc_stat
 operator|.
 name|Sum_bucket_len
@@ -2574,22 +2469,18 @@ begin_function
 name|int
 name|coda_nc_resize
 parameter_list|(
-name|hashsize
-parameter_list|,
-name|heapsize
-parameter_list|,
-name|dcstat
-parameter_list|)
 name|int
 name|hashsize
-decl_stmt|,
+parameter_list|,
+name|int
 name|heapsize
-decl_stmt|;
+parameter_list|,
 name|enum
 name|dc_status
 name|dcstat
-decl_stmt|;
+parameter_list|)
 block|{
+comment|/* 	 * Check for illegal hash or cache sizes. 	 */
 if|if
 condition|(
 operator|(
@@ -2604,26 +2495,22 @@ operator|%
 literal|2
 operator|)
 condition|)
-block|{
-comment|/* Illegal hash or cache sizes */
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
+comment|/* 	 * Turn off the cache and free any cnodes in the cache. 	 */
 name|coda_nc_use
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Turn the cache off */
 name|coda_nc_flush
 argument_list|(
 name|dcstat
 argument_list|)
 expr_stmt|;
-comment|/* free any cnodes in the cache */
-comment|/* WARNING: free must happen *before* size is reset */
+comment|/* 	 * WARNING: free must happen *before* size is reset. 	 */
 name|CODA_FREE
 argument_list|(
 name|coda_nc_heap
@@ -2638,6 +2525,7 @@ argument_list|,
 name|TOTAL_HASH_SIZE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Set up a cache with the new size and turn the cache back on. 	 */
 name|coda_nc_hashsize
 operator|=
 name|hashsize
@@ -2649,12 +2537,10 @@ expr_stmt|;
 name|coda_nc_init
 argument_list|()
 expr_stmt|;
-comment|/* Set up a cache with the new size */
 name|coda_nc_use
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Turn the cache back on */
 return|return
 operator|(
 literal|0
@@ -2670,6 +2556,7 @@ name|DEBUG
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|char
 name|coda_nc_name_buf
 index|[
@@ -2707,7 +2594,6 @@ name|coda_nc_use
 operator|==
 literal|0
 condition|)
-comment|/* Cache is off */
 return|return;
 for|for
 control|(

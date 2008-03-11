@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/coda/coda_subr.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  */
+comment|/*-  *             Coda: an Experimental Distributed File System  *                              Release 3.1  *  *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *  * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *  * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *  * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *  * 	@(#) src/sys/coda/coda_subr.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * This code was written for the Coda filesystem at Carnegie Mellon  
 end_comment
 
 begin_comment
-comment|/* NOTES: rvb  * 1.	Added coda_unmounting to mark all cnodes as being UNMOUNTING.  This has to  *	 be done before dounmount is called.  Because some of the routines that  *	 dounmount calls before coda_unmounted might try to force flushes to venus.  *	 The vnode pager does this.  * 2.	coda_unmounting marks all cnodes scanning coda_cache.  * 3.	cfs_checkunmounting (under DEBUG) checks all cnodes by chasing the vnodes  *	 under the /coda mount point.  * 4.	coda_cacheprint (under DEBUG) prints names with vnode/cnode address  */
+comment|/*-  * NOTES: rvb  * 1.	Added coda_unmounting to mark all cnodes as being UNMOUNTING.  This  *	has to be done before dounmount is called.  Because some of the  *	routines that dounmount calls before coda_unmounted might try to  *	force flushes to venus.  The vnode pager does this.  * 2.	coda_unmounting marks all cnodes scanning coda_cache.  * 3.	cfs_checkunmounting (under DEBUG) checks all cnodes by chasing the  *	vnodes under the /coda mount point.  * 4.	coda_cacheprint (under DEBUG) prints names with vnode/cnode address.  */
 end_comment
 
 begin_include
@@ -90,6 +90,7 @@ file|<fs/coda/coda_namecache.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|coda_active
 init|=
@@ -98,6 +99,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|coda_reuse
 init|=
@@ -106,6 +108,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|coda_new
 init|=
@@ -114,6 +117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cnode
 modifier|*
@@ -124,6 +128,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cnode
 modifier|*
@@ -157,7 +162,6 @@ name|coda_hash
 parameter_list|(
 name|fid
 parameter_list|)
-define|\
 value|(((fid)->Volume + (fid)->Vnode)& (CODA_CACHESIZE-1))
 end_define
 
@@ -222,6 +226,8 @@ decl_stmt|;
 if|if
 condition|(
 name|coda_freelist
+operator|!=
+name|NULL
 condition|)
 block|{
 name|cp
@@ -256,7 +262,7 @@ name|cnode
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* FreeBSD vnodes don't have any Pager info in them ('cause there are 	   no external pagers, duh!) */
+comment|/* 		 * FreeBSD vnodes don't have any Pager info in them ('cause 		 * there are no external pagers, duh!). 		 */
 define|#
 directive|define
 name|VNODE_VM_INFO_INIT
@@ -303,14 +309,11 @@ begin_function
 name|void
 name|coda_free
 parameter_list|(
-name|cp
-parameter_list|)
-specifier|register
 name|struct
 name|cnode
 modifier|*
 name|cp
-decl_stmt|;
+parameter_list|)
 block|{
 name|CNODE_NEXT
 argument_list|(
@@ -327,20 +330,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Put a cnode in the hash table  */
+comment|/*  * Put a cnode in the hash table.  */
 end_comment
 
 begin_function
 name|void
 name|coda_save
 parameter_list|(
-name|cp
-parameter_list|)
 name|struct
 name|cnode
 modifier|*
 name|cp
-decl_stmt|;
+parameter_list|)
 block|{
 name|CNODE_NEXT
 argument_list|(
@@ -375,20 +376,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove a cnode from the hash table  */
+comment|/*  * Remove a cnode from the hash table.  */
 end_comment
 
 begin_function
 name|void
 name|coda_unsave
 parameter_list|(
-name|cp
-parameter_list|)
 name|struct
 name|cnode
 modifier|*
 name|cp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|cnode
@@ -435,7 +434,6 @@ name|ptrprev
 operator|==
 name|NULL
 condition|)
-block|{
 name|coda_cache
 index|[
 name|coda_hash
@@ -452,9 +450,7 @@ argument_list|(
 name|ptr
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|CNODE_NEXT
 argument_list|(
 name|ptrprev
@@ -465,7 +461,6 @@ argument_list|(
 name|ptr
 argument_list|)
 expr_stmt|;
-block|}
 name|CNODE_NEXT
 argument_list|(
 name|cp
@@ -496,7 +491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lookup a cnode by fid. If the cnode is dying, it is bogus so skip it.  * NOTE: this allows multiple cnodes with same fid -- dcs 1/25/95  */
+comment|/*  * Lookup a cnode by fid. If the cnode is dying, it is bogus so skip it.  *  * NOTE: this allows multiple cnodes with same fid -- dcs 1/25/95  */
 end_comment
 
 begin_function
@@ -505,12 +500,10 @@ name|cnode
 modifier|*
 name|coda_find
 parameter_list|(
-name|fid
-parameter_list|)
 name|CodaFid
 modifier|*
 name|fid
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|cnode
@@ -581,26 +574,22 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * coda_kill is called as a side effect to vcopen. To prevent any  * cnodes left around from an earlier run of a venus or warden from  * causing problems with the new instance, mark any outstanding cnodes  * as dying. Future operations on these cnodes should fail (excepting  * coda_inactive of course!). Since multiple venii/wardens can be  * running, only kill the cnodes for a particular entry in the  * coda_mnttbl. -- DCS 12/1/94 */
+comment|/*  * coda_kill is called as a side effect to vcopen.  To prevent any cnodes  * left around from an earlier run of a venus or warden from causing problems  * with the new instance, mark any outstanding cnodes as dying.  Future  * operations on these cnodes should fail (excepting coda_inactive of  * course!).  Since multiple venii/wardens can be running, only kill the  * cnodes for a particular entry in the coda_mnttbl. -- DCS 12/1/94  */
 end_comment
 
 begin_function
 name|int
 name|coda_kill
 parameter_list|(
-name|whoIam
-parameter_list|,
-name|dcstat
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|whoIam
-decl_stmt|;
+parameter_list|,
 name|enum
 name|dc_status
 name|dcstat
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|hash
@@ -614,8 +603,7 @@ name|cnode
 modifier|*
 name|cp
 decl_stmt|;
-comment|/*  	 * Algorithm is as follows:  	 *     Second, flush whatever vnodes we can from the name cache. 	 *  	 *     Finally, step through whatever is left and mark them dying. 	 *        This prevents any operation at all. 	 */
-comment|/* This is slightly overkill, but should work. Eventually it'd be 	 * nice to only flush those entries from the namecache that 	 * reference a vnode in this vfs.  */
+comment|/*- 	 * Algorithm is as follows: 	 *     Second, flush whatever vnodes we can from the name cache. 	 * 	 *     Finally, step through whatever is left and mark them dying. 	 *        This prevents any operation at all. 	 * 	 * This is slightly overkill, but should work.  Eventually it'd be 	 * nice to only flush those entries from the namecache that reference 	 * a vnode in this vfs. 	 */
 name|coda_nc_flush
 argument_list|(
 name|dcstat
@@ -693,33 +681,34 @@ argument_list|(
 argument|CODA_FLUSH
 argument_list|,
 argument|myprintf((
-literal|"Live cnode fid %s flags %d count %d\n"
-argument|, 						    coda_f2s(&cp->c_fid), 						    cp->c_flags, 						    vrefcnt(CTOV(cp))));
+literal|"Live cnode "
+literal|"fid %s flags %d count %d\n"
+argument|, 				    coda_f2s(&cp->c_fid), cp->c_flags, 				    vrefcnt(CTOV(cp))));
 argument_list|)
 empty_stmt|;
 block|}
 block|}
 block|}
 return|return
+operator|(
 name|count
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * There are two reasons why a cnode may be in use, it may be in the  * name cache or it may be executing.    */
+comment|/*  * There are two reasons why a cnode may be in use, it may be in the name  * cache or it may be executing.  */
 end_comment
 
 begin_function
 name|void
 name|coda_flush
 parameter_list|(
-name|dcstat
-parameter_list|)
 name|enum
 name|dc_status
 name|dcstat
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|hash
@@ -742,12 +731,12 @@ name|CODA_FLUSH
 index|]
 operator|++
 expr_stmt|;
+comment|/* 	 * Flush files from the name cache. 	 */
 name|coda_nc_flush
 argument_list|(
 name|dcstat
 argument_list|)
 expr_stmt|;
-comment|/* flush files from the name cache */
 for|for
 control|(
 name|hash
@@ -783,6 +772,7 @@ name|cp
 argument_list|)
 control|)
 block|{
+comment|/* 			 * Only files that can be executed need to be flushed 			 * from the VM. 			 * 			 * NOTE: Currently this doesn't do anything, but 			 * perhaps it should? 			 */
 if|if
 condition|(
 operator|!
@@ -793,7 +783,6 @@ operator|->
 name|c_fid
 argument_list|)
 condition|)
-comment|/* only files can be executed */
 name|coda_vmflush
 argument_list|(
 name|cp
@@ -805,7 +794,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * As a debugging measure, print out any cnodes that lived through a  * name cache flush.    */
+comment|/*  * As a debugging measure, print out any cnodes that lived through a name  * cache flush.  */
 end_comment
 
 begin_function
@@ -857,7 +846,6 @@ argument_list|(
 name|cp
 argument_list|)
 control|)
-block|{
 name|myprintf
 argument_list|(
 operator|(
@@ -882,24 +870,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 end_function
 
 begin_comment
-comment|/*  *     First, step through all cnodes and mark them unmounting.  *         FreeBSD kernels may try to fsync them now that venus  *         is dead, which would be a bad thing.  *  */
+comment|/*  * First, step through all cnodes and mark them unmounting.  FreeBSD kernels  * may try to fsync them now that venus is dead, which would be a bad thing.  */
 end_comment
 
 begin_function
 name|void
 name|coda_unmounting
 parameter_list|(
-name|whoIam
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|whoIam
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|hash
@@ -971,7 +956,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"coda_unmounting: Unlocking %p\n"
+literal|"coda_unmounting: Unlocking "
+literal|"%p\n"
 argument_list|,
 name|cp
 argument_list|)
@@ -1018,13 +1004,11 @@ begin_function
 name|void
 name|coda_checkunmounting
 parameter_list|(
-name|mp
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vnode
@@ -1142,13 +1126,11 @@ begin_function
 name|void
 name|coda_cacheprint
 parameter_list|(
-name|whoIam
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|whoIam
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|hash
@@ -1279,30 +1261,26 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * There are 6 cases where invalidations occur. The semantics of each  * is listed here.  *  * CODA_FLUSH     -- flush all entries from the name cache and the cnode cache.  * CODA_PURGEUSER -- flush all entries from the name cache for a specific user  *                  This call is a result of token expiration.  *  * The next two are the result of callbacks on a file or directory.  * CODA_ZAPDIR    -- flush the attributes for the dir from its cnode.  *                  Zap all children of this directory from the namecache.  * CODA_ZAPFILE   -- flush the attributes for a file.  *  * The fifth is a result of Venus detecting an inconsistent file.  * CODA_PURGEFID  -- flush the attribute for the file  *                  If it is a dir (odd vnode), purge its   *                  children from the namecache  *                  remove the file from the namecache.  *  * The sixth allows Venus to replace local fids with global ones  * during reintegration.  *  * CODA_REPLACE -- replace one CodaFid with another throughout the name cache   */
+comment|/*-  * There are 6 cases where invalidations occur.  The semantics of each is  * listed here:  *  * CODA_FLUSH     -- Flush all entries from the name cache and the cnode  *                   cache.  *  * CODA_PURGEUSER -- Flush all entries from the name cache for a specific  *                   user.   This call is a result of token expiration.  *  * The next two are the result of callbacks on a file or directory:  *  * CODA_ZAPDIR    -- Flush the attributes for the dir from its cnode.  Zap  *                   all children of this directory from the namecache.  *  * CODA_ZAPFILE   -- Flush the attributes for a file.  *  * The fifth is a result of Venus detecting an inconsistent file:  *  * CODA_PURGEFID  -- Flush the attribute for the file; if it is a dir (odd  *                   vnode), purge its children from the namecache; remove  *                   the file from the namecache.  *  * The sixth allows Venus to replace local fids with global ones during  * reintegration.  *  * CODA_REPLACE   -- Replace one CodaFid with another throughout the name  *                   cache.  */
 end_comment
 
 begin_function
 name|int
 name|handleDownCall
 parameter_list|(
-name|opcode
-parameter_list|,
-name|out
-parameter_list|)
 name|int
 name|opcode
-decl_stmt|;
+parameter_list|,
 name|union
 name|outputArgs
 modifier|*
 name|out
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error
 decl_stmt|;
-comment|/* Handle invalidate requests. */
+comment|/* 	 * Handle invalidate requests. 	 */
 switch|switch
 condition|(
 name|opcode
@@ -1317,13 +1295,14 @@ argument_list|(
 name|IS_DOWNCALL
 argument_list|)
 expr_stmt|;
+comment|/* Print any remaining cnodes. */
 name|CODADEBUG
 argument_list|(
 argument|CODA_FLUSH
 argument_list|,
 argument|coda_testflush();
 argument_list|)
-comment|/* print remaining cnodes */
+empty_stmt|;
 return|return
 operator|(
 literal|0
@@ -1347,7 +1326,7 @@ name|CODA_PURGEUSER
 index|]
 operator|++
 expr_stmt|;
-comment|/* XXX - need to prevent fsync's */
+comment|/* XXX - need to prevent fsync's. */
 ifdef|#
 directive|ifdef
 name|CODA_COMPAT_5
@@ -1478,8 +1457,9 @@ argument_list|(
 argument|CODA_ZAPFILE
 argument_list|,
 argument|myprintf((
-literal|"zapfile: fid = %s, refcnt = %d, error = %d\n"
-argument|, 				  coda_f2s(&cp->c_fid), CTOV(cp)->v_usecount -
+literal|"zapfile: fid = %s, refcnt = %d, error = "
+literal|"%d\n"
+argument|, coda_f2s(&cp->c_fid), 			    CTOV(cp)->v_usecount -
 literal|1
 argument|, error));
 argument_list|)
@@ -1496,14 +1476,12 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-block|{
 name|cp
 operator|->
 name|c_flags
 operator||=
 name|C_PURGING
 expr_stmt|;
-block|}
 name|vrele
 argument_list|(
 name|CTOV
@@ -1592,8 +1570,9 @@ argument_list|(
 argument|CODA_ZAPDIR
 argument_list|,
 argument|myprintf((
-literal|"zapdir: fid = %s, refcnt = %d\n"
-argument|, 		  coda_f2s(&cp->c_fid), CTOV(cp)->v_usecount -
+literal|"zapdir: fid = %s, "
+literal|"refcnt = %d\n"
+argument|, coda_f2s(&cp->c_fid), 			    CTOV(cp)->v_usecount -
 literal|1
 argument|));
 argument_list|)
@@ -1610,14 +1589,12 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-block|{
 name|cp
 operator|->
 name|c_flags
 operator||=
 name|C_PURGING
 expr_stmt|;
-block|}
 name|vrele
 argument_list|(
 name|CTOV
@@ -1697,8 +1674,6 @@ operator|.
 name|Fid
 argument_list|)
 condition|)
-block|{
-comment|/* Vnode is a directory */
 name|coda_nc_zapParentfid
 argument_list|(
 operator|&
@@ -1711,7 +1686,6 @@ argument_list|,
 name|IS_DOWNCALL
 argument_list|)
 expr_stmt|;
-block|}
 name|cp
 operator|->
 name|c_flags
@@ -1766,7 +1740,6 @@ operator|&
 name|VV_TEXT
 operator|)
 condition|)
-block|{
 name|error
 operator|=
 name|coda_vmflush
@@ -1774,14 +1747,14 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-block|}
 name|CODADEBUG
 argument_list|(
 argument|CODA_PURGEFID
 argument_list|,
 argument|myprintf((
-literal|"purgefid: fid = %s, refcnt = %d, error = %d\n"
-argument|, 			 coda_f2s(&cp->c_fid), CTOV(cp)->v_usecount -
+literal|"purgefid: fid "
+literal|"= %s, refcnt = %d, error = %d\n"
+argument|, 			    coda_f2s(&cp->c_fid), 			    CTOV(cp)->v_usecount -
 literal|1
 argument|, error));
 argument_list|)
@@ -1798,14 +1771,12 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-block|{
 name|cp
 operator|->
 name|c_flags
 operator||=
 name|C_PURGING
 expr_stmt|;
-block|}
 name|vrele
 argument_list|(
 name|CTOV
@@ -1864,7 +1835,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* remove the cnode from the hash table, replace the fid, and reinsert */
+comment|/* 			 * Remove the cnode from the hash table, replace the 			 * fid, and reinsert. 			 */
 name|vref
 argument_list|(
 name|CTOV
@@ -1898,9 +1869,11 @@ argument_list|(
 argument|CODA_REPLACE
 argument_list|,
 argument|myprintf((
-literal|"replace: oldfid = %s, newfid = %s, cp = %p\n"
-argument|, 			coda_f2s(&out->coda_replace.OldFid), 			coda_f2s(&cp->c_fid), cp));
+literal|"replace: oldfid "
+literal|"= %s, newfid = %s, cp = %p\n"
+argument|, 			    coda_f2s(&out->coda_replace.OldFid), 			    coda_f2s(&cp->c_fid), cp));
 argument_list|)
+empty_stmt|;
 name|vrele
 argument_list|(
 name|CTOV
@@ -1935,30 +1908,26 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* coda_grab_vnode: lives in either cfs_mach.c or cfs_nbsd.c */
-end_comment
-
 begin_function
 name|int
 name|coda_vmflush
 parameter_list|(
-name|cp
-parameter_list|)
 name|struct
 name|cnode
 modifier|*
 name|cp
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*   * kernel-internal debugging switches  */
+comment|/*  * Kernel-internal debugging switches.  */
 end_comment
 
 begin_function
@@ -2024,7 +1993,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Utilities used by both client and server  * Standard levels:  * 0) no debugging  * 1) hard failures  * 2) soft failures  * 3) current test software  * 4) main procedure entry points  * 5) main procedure exit points  * 6) utility procedure entry points  * 7) utility procedure exit points  * 8) obscure procedure entry points  * 9) obscure procedure exit points  * 10) random stuff  * 11) all<= 1  * 12) all<= 2  * 13) all<= 3  * ...  */
+comment|/*-  * Utilities used by both client and server  * Standard levels:  * 0) no debugging  * 1) hard failures  * 2) soft failures  * 3) current test software  * 4) main procedure entry points  * 5) main procedure exit points  * 6) utility procedure entry points  * 7) utility procedure exit points  * 8) obscure procedure entry points  * 9) obscure procedure exit points  * 10) random stuff  * 11) all<= 1  * 12) all<= 2  * 13) all<= 3  * ...  */
 end_comment
 
 end_unit
