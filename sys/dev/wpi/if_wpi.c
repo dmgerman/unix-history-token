@@ -9556,6 +9556,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|ismcast
 condition|)
 block|{
