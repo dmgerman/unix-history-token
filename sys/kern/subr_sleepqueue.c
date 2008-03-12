@@ -380,6 +380,9 @@ parameter_list|(
 name|void
 modifier|*
 name|wchan
+parameter_list|,
+name|int
+name|pri
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -481,6 +484,9 @@ parameter_list|(
 name|void
 modifier|*
 name|wchan
+parameter_list|,
+name|int
+name|pri
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1444,6 +1450,9 @@ parameter_list|(
 name|void
 modifier|*
 name|wchan
+parameter_list|,
+name|int
+name|pri
 parameter_list|)
 block|{
 name|struct
@@ -1677,6 +1686,8 @@ block|{
 name|sleepq_switch
 argument_list|(
 name|wchan
+argument_list|,
+name|pri
 argument_list|)
 expr_stmt|;
 return|return
@@ -1730,8 +1741,7 @@ name|sq
 argument_list|,
 name|td
 argument_list|,
-operator|-
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1775,6 +1785,9 @@ parameter_list|(
 name|void
 modifier|*
 name|wchan
+parameter_list|,
+name|int
+name|pri
 parameter_list|)
 block|{
 name|struct
@@ -1871,8 +1884,7 @@ name|sq
 argument_list|,
 name|td
 argument_list|,
-operator|-
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
@@ -1885,16 +1897,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|thread_lock_set
-argument_list|(
-name|td
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_lock
-argument_list|)
-expr_stmt|;
 name|MPASS
 argument_list|(
 name|td
@@ -1907,6 +1909,18 @@ expr_stmt|;
 name|sched_sleep
 argument_list|(
 name|td
+argument_list|,
+name|pri
+argument_list|)
+expr_stmt|;
+name|thread_lock_set
+argument_list|(
+name|td
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_lock
 argument_list|)
 expr_stmt|;
 name|TD_SET_SLEEPING
@@ -2187,6 +2201,9 @@ parameter_list|(
 name|void
 modifier|*
 name|wchan
+parameter_list|,
+name|int
+name|pri
 parameter_list|)
 block|{
 name|struct
@@ -2218,6 +2235,8 @@ expr_stmt|;
 name|sleepq_switch
 argument_list|(
 name|wchan
+argument_list|,
+name|pri
 argument_list|)
 expr_stmt|;
 name|thread_unlock
@@ -2239,6 +2258,9 @@ parameter_list|(
 name|void
 modifier|*
 name|wchan
+parameter_list|,
+name|int
+name|pri
 parameter_list|)
 block|{
 name|int
@@ -2252,6 +2274,8 @@ operator|=
 name|sleepq_catch_signals
 argument_list|(
 name|wchan
+argument_list|,
+name|pri
 argument_list|)
 expr_stmt|;
 name|rval
@@ -2292,6 +2316,9 @@ parameter_list|(
 name|void
 modifier|*
 name|wchan
+parameter_list|,
+name|int
+name|pri
 parameter_list|)
 block|{
 name|struct
@@ -2326,6 +2353,8 @@ expr_stmt|;
 name|sleepq_switch
 argument_list|(
 name|wchan
+argument_list|,
+name|pri
 argument_list|)
 expr_stmt|;
 name|rval
@@ -2357,6 +2386,9 @@ parameter_list|(
 name|void
 modifier|*
 name|wchan
+parameter_list|,
+name|int
+name|pri
 parameter_list|)
 block|{
 name|int
@@ -2371,6 +2403,8 @@ operator|=
 name|sleepq_catch_signals
 argument_list|(
 name|wchan
+argument_list|,
+name|pri
 argument_list|)
 expr_stmt|;
 name|rvalt
@@ -2646,8 +2680,7 @@ name|MPASS
 argument_list|(
 name|pri
 operator|==
-operator|-
-literal|1
+literal|0
 operator|||
 operator|(
 name|pri
@@ -2664,8 +2697,7 @@ if|if
 condition|(
 name|pri
 operator|!=
-operator|-
-literal|1
+literal|0
 operator|&&
 name|td
 operator|->
@@ -3094,14 +3126,7 @@ name|sq
 operator|==
 name|NULL
 condition|)
-block|{
-name|sleepq_release
-argument_list|(
-name|wchan
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|KASSERT
 argument_list|(
 name|sq
@@ -3170,11 +3195,6 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-name|sleepq_release
-argument_list|(
-name|wchan
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3313,8 +3333,7 @@ name|sq
 argument_list|,
 name|td
 argument_list|,
-operator|-
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|thread_unlock
@@ -3491,8 +3510,7 @@ name|sq
 argument_list|,
 name|td
 argument_list|,
-operator|-
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|thread_unlock
@@ -3665,8 +3683,7 @@ name|sq
 argument_list|,
 name|td
 argument_list|,
-operator|-
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

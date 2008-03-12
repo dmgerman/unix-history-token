@@ -619,6 +619,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|int
+name|static_boost
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * tdq - per processor runqs and statistics.  All fields are protected by the  * tdq_lock.  The load and lowpri may be accessed without to avoid excess  * locking in sched_pickcpu();  */
 end_comment
@@ -8027,6 +8036,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|prio
 parameter_list|)
 block|{
 name|THREAD_LOCK_ASSERT
@@ -8041,6 +8053,36 @@ operator|->
 name|td_slptick
 operator|=
 name|ticks
+expr_stmt|;
+if|if
+condition|(
+name|TD_IS_SUSPENDED
+argument_list|(
+name|td
+argument_list|)
+operator|||
+name|prio
+operator|<=
+name|PSOCK
+condition|)
+name|td
+operator|->
+name|td_flags
+operator||=
+name|TDF_CANSWAP
+expr_stmt|;
+if|if
+condition|(
+name|static_boost
+operator|&&
+name|prio
+condition|)
+name|sched_prio
+argument_list|(
+name|td
+argument_list|,
+name|prio
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -8079,6 +8121,13 @@ operator|=
 name|td
 operator|->
 name|td_sched
+expr_stmt|;
+name|td
+operator|->
+name|td_flags
+operator|&=
+operator|~
+name|TDF_CANSWAP
 expr_stmt|;
 comment|/* 	 * If we slept for more than a tick update our interactivity and 	 * priority. 	 */
 name|slptick
@@ -10724,6 +10773,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Min priority for preemption, lower priorities have greater precedence"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_sched
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|static_boost
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|static_boost
+argument_list|,
+literal|0
+argument_list|,
+literal|"Controls whether static kernel priorities are assigned to sleeping threads."
 argument_list|)
 expr_stmt|;
 end_expr_stmt

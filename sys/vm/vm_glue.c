@@ -3235,14 +3235,6 @@ block|}
 comment|/* 				 * Do not swapout a process if it is 				 * waiting on a critical event of some 				 * kind or there is a thread whose 				 * pageable memory may be accessed. 				 * 				 * This could be refined to support 				 * swapping out a thread. 				 */
 if|if
 condition|(
-operator|(
-name|td
-operator|->
-name|td_priority
-operator|)
-operator|<
-name|PSOCK
-operator|||
 operator|!
 name|thread_safetoswapout
 argument_list|(

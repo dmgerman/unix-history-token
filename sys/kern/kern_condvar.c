@@ -403,6 +403,8 @@ expr_stmt|;
 name|sleepq_wait
 argument_list|(
 name|cvp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -614,6 +616,8 @@ expr_stmt|;
 name|sleepq_wait
 argument_list|(
 name|cvp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -840,6 +844,8 @@ operator|=
 name|sleepq_wait_sig
 argument_list|(
 name|cvp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1086,6 +1092,8 @@ operator|=
 name|sleepq_timedwait
 argument_list|(
 name|cvp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1345,6 +1353,8 @@ operator|=
 name|sleepq_timedwait_sig
 argument_list|(
 name|cvp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1434,8 +1444,7 @@ name|cvp
 argument_list|,
 name|SLEEPQ_CONDVAR
 argument_list|,
-operator|-
-literal|1
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1466,6 +1475,18 @@ name|int
 name|pri
 parameter_list|)
 block|{
+comment|/* 	 * XXX sleepq_broadcast pri argument changed from -1 meaning 	 * no pri to 0 meaning no pri. 	 */
+if|if
+condition|(
+name|pri
+operator|==
+operator|-
+literal|1
+condition|)
+name|pri
+operator|=
+literal|0
+expr_stmt|;
 name|sleepq_lock
 argument_list|(
 name|cvp
@@ -1498,7 +1519,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-else|else
 name|sleepq_release
 argument_list|(
 name|cvp

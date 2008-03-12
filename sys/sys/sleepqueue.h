@@ -295,6 +295,9 @@ parameter_list|(
 name|void
 modifier|*
 name|wchan
+parameter_list|,
+name|int
+name|pri
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -306,6 +309,9 @@ parameter_list|(
 name|void
 modifier|*
 name|wchan
+parameter_list|,
+name|int
+name|pri
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -317,6 +323,9 @@ parameter_list|(
 name|void
 modifier|*
 name|wchan
+parameter_list|,
+name|int
+name|pri
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -328,6 +337,9 @@ parameter_list|(
 name|void
 modifier|*
 name|wchan
+parameter_list|,
+name|int
+name|pri
 parameter_list|)
 function_decl|;
 end_function_decl

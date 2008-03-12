@@ -463,7 +463,6 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-comment|/* XXXKSE almost completely broken */
 name|struct
 name|proc
 modifier|*
@@ -606,7 +605,6 @@ argument_list|,
 argument|td
 argument_list|)
 block|{
-comment|/* Need new statistics  XXX */
 name|thread_lock
 argument_list|(
 name|td
@@ -622,29 +620,18 @@ block|{
 case|case
 name|TDS_INHIBITED
 case|:
-comment|/* 					 * XXX stats no longer synchronized. 					 */
 if|if
 condition|(
-name|TD_ON_LOCK
+name|TD_IS_SWAPPED
 argument_list|(
 name|td
 argument_list|)
-operator|||
-operator|(
-name|td
-operator|->
-name|td_inhibitors
-operator|==
-name|TDI_SWAPPED
-operator|)
 condition|)
-block|{
 name|total
 operator|.
 name|t_sw
 operator|++
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -652,20 +639,7 @@ name|TD_IS_SLEEPING
 argument_list|(
 name|td
 argument_list|)
-operator|||
-name|TD_AWAITING_INTR
-argument_list|(
-name|td
-argument_list|)
-operator|||
-name|TD_IS_SUSPENDED
-argument_list|(
-name|td
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|td
 operator|->
 name|td_priority
@@ -683,7 +657,6 @@ operator|.
 name|t_sl
 operator|++
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|TDS_CAN_RUN

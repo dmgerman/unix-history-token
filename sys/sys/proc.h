@@ -997,12 +997,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSEDx40
+name|TDF_CANSWAP
 value|0x00000040
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* Thread can be swapped. */
 end_comment
 
 begin_define
@@ -3511,7 +3511,7 @@ name|thread_safetoswapout
 parameter_list|(
 name|td
 parameter_list|)
-value|(TD_IS_SLEEPING(td) || TD_IS_SUSPENDED(td))
+value|((td)->td_flags& TDF_CANSWAP)
 end_define
 
 begin_comment

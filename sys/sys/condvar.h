@@ -298,7 +298,7 @@ name|cv_broadcast
 parameter_list|(
 name|cvp
 parameter_list|)
-value|cv_broadcastpri(cvp, -1)
+value|cv_broadcastpri(cvp, 0)
 end_define
 
 begin_define
