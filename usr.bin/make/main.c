@@ -438,6 +438,16 @@ end_comment
 
 begin_decl_stmt
 name|Boolean
+name|mfAutoDeps
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* .MAKEFILEDEPS target seen */
+end_comment
+
+begin_decl_stmt
+name|Boolean
 name|beSilent
 decl_stmt|;
 end_decl_stmt
@@ -4617,6 +4627,8 @@ if|if
 condition|(
 operator|!
 name|is_posix
+operator|&&
+name|mfAutoDeps
 condition|)
 block|{
 comment|/* 			 * Check if any of the makefiles are out-of-date. 			 */
