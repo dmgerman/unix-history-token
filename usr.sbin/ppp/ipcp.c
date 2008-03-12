@@ -563,6 +563,15 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|libalias
+modifier|*
+name|la
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|fsm_callbacks
@@ -5809,8 +5818,10 @@ name|bundle
 operator|->
 name|NatEnabled
 condition|)
-name|PacketAliasSetAddress
+name|LibAliasSetAddress
 argument_list|(
+name|la
+argument_list|,
 name|ipcp
 operator|->
 name|my_ip

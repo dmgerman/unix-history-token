@@ -1124,6 +1124,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|libalias
+modifier|*
+name|la
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 specifier|const
@@ -18712,8 +18721,10 @@ name|state
 operator|==
 name|ST_OPENED
 condition|)
-name|PacketAliasSetAddress
+name|LibAliasSetAddress
 argument_list|(
+name|la
+argument_list|,
 name|arg
 operator|->
 name|bundle
@@ -18853,8 +18864,10 @@ operator|->
 name|NatEnabled
 condition|)
 block|{
-name|PacketAliasSetMode
+name|LibAliasSetMode
 argument_list|(
+name|la
+argument_list|,
 name|param
 argument_list|,
 name|param
@@ -18901,8 +18914,10 @@ operator|->
 name|NatEnabled
 condition|)
 block|{
-name|PacketAliasSetMode
+name|LibAliasSetMode
 argument_list|(
+name|la
+argument_list|,
 literal|0
 argument_list|,
 name|param

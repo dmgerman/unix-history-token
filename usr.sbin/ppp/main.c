@@ -452,6 +452,14 @@ name|SignalPrompt
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|libalias
+modifier|*
+name|la
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|Cleanup
@@ -1453,8 +1461,12 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NONAT
-name|PacketAliasInit
-argument_list|()
+name|la
+operator|=
+name|LibAliasInit
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
