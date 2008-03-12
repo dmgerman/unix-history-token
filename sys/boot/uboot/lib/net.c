@@ -400,7 +400,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 name|printf
 argument_list|(
@@ -408,7 +410,9 @@ literal|"net_match: could not match network device\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -476,12 +480,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"net_probe: no network devices found, maybe not\ 			enumerated yet..?\n"
+literal|"net_probe: no network devices found, maybe not\ 		    enumerated yet..?\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|#
@@ -506,7 +512,9 @@ operator|=
 name|i
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -704,7 +712,9 @@ operator|-
 literal|1
 expr_stmt|;
 return|return
+operator|(
 name|rv
+operator|)
 return|;
 block|}
 end_function
@@ -885,12 +895,16 @@ endif|#
 directive|endif
 block|}
 return|return
+operator|(
 name|length
+operator|)
 return|;
 block|}
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
