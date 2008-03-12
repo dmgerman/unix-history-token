@@ -7632,7 +7632,7 @@ operator|=
 name|NULL
 expr_stmt|;
 operator|*
-name|name
+name|value
 operator|=
 name|NULL
 expr_stmt|;
