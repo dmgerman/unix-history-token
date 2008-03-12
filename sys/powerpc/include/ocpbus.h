@@ -36,6 +36,13 @@ name|OCPBUS_IVAR_HWUNIT
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|OCPBUS_IVAR_MACADDR
+value|4
+end_define
+
 begin_comment
 comment|/* Device types. */
 end_comment
