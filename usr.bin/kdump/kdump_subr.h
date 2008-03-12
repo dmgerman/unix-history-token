@@ -339,15 +339,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ksethrcmdname
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|extattrctlname
 parameter_list|(
 name|int
