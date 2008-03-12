@@ -1001,8 +1001,6 @@ operator||
 name|rflag
 operator||
 name|tflag
-operator|||
-name|cflag
 condition|)
 name|usage
 argument_list|()
@@ -1059,7 +1057,7 @@ if|if
 condition|(
 name|cpuset_setaffinity
 argument_list|(
-name|CPU_LEVEL_CPUSET
+name|level
 argument_list|,
 name|CPU_WHICH_PID
 argument_list|,
