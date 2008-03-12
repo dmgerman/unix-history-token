@@ -3443,9 +3443,8 @@ argument_list|()
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|pmap_get_pde_pte
 argument_list|(
 name|pmap
@@ -3458,7 +3457,14 @@ argument_list|,
 operator|&
 name|ptep
 argument_list|)
-expr_stmt|;
+operator|==
+name|FALSE
+condition|)
+return|return
+operator|(
+name|EFAULT
+operator|)
+return|;
 if|if
 condition|(
 name|__predict_false
@@ -4187,7 +4193,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
