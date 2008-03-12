@@ -5254,7 +5254,7 @@ operator|&
 name|_MC_FLAGS_ASYNC_CONTEXT
 condition|)
 block|{
-comment|/* 		 * We can get an async context passed to us while we 		 * entered the kernel through a syscall: sigreturn(2) 		 * and kse_switchin(2) both take contexts that could 		 * previously be the result of a trap or interrupt. 		 * Hence, we cannot assert that the trapframe is not 		 * a syscall frame, but we can assert that it's at 		 * least an expected syscall. 		 */
+comment|/* 		 * We can get an async context passed to us while we 		 * entered the kernel through a syscall: sigreturn(2) 		 * takes contexts that could previously be the result of 		 * a trap or interrupt. 		 * Hence, we cannot assert that the trapframe is not 		 * a syscall frame, but we can assert that it's at 		 * least an expected syscall. 		 */
 if|if
 condition|(
 name|tf
@@ -5273,14 +5273,6 @@ operator|.
 name|gr15
 operator|==
 name|SYS_sigreturn
-operator|||
-name|tf
-operator|->
-name|tf_scratch
-operator|.
-name|gr15
-operator|==
-name|SYS_kse_switchin
 argument_list|,
 operator|(
 literal|"foo"
