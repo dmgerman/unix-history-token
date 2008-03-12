@@ -2123,18 +2123,6 @@ name|ki_ocomm
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|proc
-operator|.
-name|p_flag
-operator|&
-name|P_SA
-operator|)
-condition|)
-block|{
 name|kp
 operator|->
 name|ki_pctcpu
@@ -2147,18 +2135,6 @@ name|ki_rqindex
 operator|=
 literal|0
 expr_stmt|;
-block|}
-else|else
-block|{
-name|kp
-operator|->
-name|ki_tdflags
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* All the rest are 0 for now */
-block|}
 block|}
 else|else
 block|{
