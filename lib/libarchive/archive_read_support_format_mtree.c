@@ -146,6 +146,24 @@ directive|include
 file|"archive_string.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|mtree_entry
@@ -1772,6 +1790,8 @@ operator|.
 name|s
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_BINARY
 argument_list|)
 expr_stmt|;
 if|if
@@ -1823,6 +1843,8 @@ operator|.
 name|s
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_BINARY
 argument_list|)
 expr_stmt|;
 comment|/* But don't fail if it's not there. */

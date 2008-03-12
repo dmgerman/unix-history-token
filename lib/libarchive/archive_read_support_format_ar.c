@@ -1161,20 +1161,11 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|archive_entry_set_mode
+name|archive_entry_set_filetype
 argument_list|(
 name|entry
 argument_list|,
-name|S_IFREG
-operator||
-operator|(
-name|archive_entry_mode
-argument_list|(
-name|entry
-argument_list|)
-operator|&
-literal|0777
-operator|)
+name|AE_IFREG
 argument_list|)
 expr_stmt|;
 comment|/* Get the size of the filename table. */
@@ -1683,20 +1674,11 @@ name|h
 argument_list|)
 expr_stmt|;
 comment|/* Force the file type to a regular file. */
-name|archive_entry_set_mode
+name|archive_entry_set_filetype
 argument_list|(
 name|entry
 argument_list|,
-name|S_IFREG
-operator||
-operator|(
-name|archive_entry_mode
-argument_list|(
-name|entry
-argument_list|)
-operator|&
-literal|0777
-operator|)
+name|AE_IFREG
 argument_list|)
 expr_stmt|;
 return|return

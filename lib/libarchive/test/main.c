@@ -14,14 +14,16 @@ name|PROGRAM
 value|"LIBARCHIVE"
 end_define
 
-begin_comment
-comment|/*  * Various utility routines useful for test programs.  * Each test program is linked against this file.  */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -867,7 +869,7 @@ comment|/* Generic assert() just displays the failed condition. */
 end_comment
 
 begin_function
-name|void
+name|int
 name|test_assert
 parameter_list|(
 specifier|const
@@ -906,7 +908,11 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|value
+operator|)
+return|;
 block|}
 name|failures
 operator|++
@@ -920,7 +926,11 @@ argument_list|,
 name|line
 argument_list|)
 condition|)
-return|return;
+return|return
+operator|(
+name|value
+operator|)
+return|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -946,6 +956,11 @@ argument_list|(
 name|extra
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|value
+operator|)
+return|;
 block|}
 end_function
 
@@ -2622,6 +2637,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Explicitly reset the locale before each test. */
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|"C"
+argument_list|)
+expr_stmt|;
 comment|/* Run the actual test. */
 operator|(
 operator|*

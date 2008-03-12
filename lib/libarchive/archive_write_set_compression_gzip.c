@@ -377,6 +377,34 @@ name|ret
 operator|)
 return|;
 block|}
+comment|/* 	 * The next check is a temporary workaround until the gzip 	 * code can be overhauled some.  The code should not require 	 * that compressed_buffer_size == bytes_per_block.  Removing 	 * this assumption will allow us to compress larger chunks at 	 * a time, which should improve overall performance 	 * marginally.  As a minor side-effect, such a cleanup would 	 * allow us to support truly arbitrary block sizes. 	 */
+if|if
+condition|(
+name|a
+operator|->
+name|bytes_per_block
+operator|<
+literal|10
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|EINVAL
+argument_list|,
+literal|"GZip compressor requires a minimum 10 byte block size"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 name|state
 operator|=
 operator|(
@@ -431,6 +459,7 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * See comment above.  We should set compressed_buffer_size to 	 * max(bytes_per_block, 65536), but the code can't handle that yet. 	 */
 name|state
 operator|->
 name|compressed_buffer_size
