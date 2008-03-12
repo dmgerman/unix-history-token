@@ -4926,7 +4926,6 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-comment|/* XXXKSE */
 comment|/* Get file attributes */
 name|error
 operator|=

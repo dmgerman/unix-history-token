@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kse.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -1281,7 +1275,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* XXXKSE  XXXSMP  not SMP SAFE.. what locks do we have? */
 comment|/* if (pcb->pcb_ext->ext_refcount-- == 1) ?? */
 comment|/* 		 * XXX do we need to move the TSS off the allocated pages 		 * before freeing them?  (not done here) 		 */
 name|kmem_free
@@ -1452,7 +1445,7 @@ name|td
 operator|->
 name|td_pcb
 expr_stmt|;
-comment|/* 	 * Copy the upcall pcb.  This loads kernel regs. 	 * Those not loaded individually below get their default 	 * values here. 	 * 	 * XXXKSE It might be a good idea to simply skip this as 	 * the values of the other registers may be unimportant. 	 * This would remove any requirement for knowing the KSE 	 * at this time (see the matching comment below for 	 * more analysis) (need a good safe default). 	 */
+comment|/* 	 * Copy the upcall pcb.  This loads kernel regs. 	 * Those not loaded individually below get their default 	 * values here. 	 */
 name|bcopy
 argument_list|(
 name|td0
@@ -1479,7 +1472,7 @@ operator||
 name|PCB_NPXINITDONE
 operator|)
 expr_stmt|;
-comment|/* 	 * Create a new fresh stack for the new thread. 	 * The -16 is so we can expand the trapframe if we go to vm86. 	 * Don't forget to set this stack value into whatever supplies 	 * the address for the fault handlers. 	 * The contexts are filled in at the time we actually DO the 	 * upcall as only then do we know which KSE we got. 	 */
+comment|/* 	 * Create a new fresh stack for the new thread. 	 */
 name|bcopy
 argument_list|(
 name|td0
@@ -1617,7 +1610,7 @@ operator|=
 name|rgs
 argument_list|()
 expr_stmt|;
-comment|/* 	 * If we didn't copy the pcb, we'd need to do the following registers: 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_gs:	cloned above.  XXXKSE ??? 	 * pcb2->pcb_ext:	cleared below. 	 */
+comment|/* 	 * If we didn't copy the pcb, we'd need to do the following registers: 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_gs:	cloned above. 	 * pcb2->pcb_ext:	cleared below. 	 */
 name|pcb2
 operator|->
 name|pcb_ext

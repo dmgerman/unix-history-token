@@ -2916,7 +2916,7 @@ operator|=
 comment|/* p->p_addr; */
 literal|0
 expr_stmt|;
-comment|/* XXXKSE */
+comment|/* XXX */
 name|kp
 operator|->
 name|ki_args
@@ -3973,7 +3973,7 @@ operator|==
 name|PRS_NORMAL
 condition|)
 block|{
-comment|/*  XXXKSE very approximate */
+comment|/* approximate. */
 if|if
 condition|(
 name|TD_ON_RUNQ

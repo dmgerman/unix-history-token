@@ -1376,7 +1376,7 @@ operator|~
 name|TSF_DIDRUN
 expr_stmt|;
 block|}
-comment|/* 			 * ts_pctcpu is only for ps and ttyinfo(). 			 * Do it per td_sched, and add them up at the end? 			 * XXXKSE 			 */
+comment|/* 			 * ts_pctcpu is only for ps and ttyinfo(). 			 */
 name|ts
 operator|->
 name|ts_pctcpu

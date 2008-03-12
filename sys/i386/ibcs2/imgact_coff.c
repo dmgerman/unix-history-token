@@ -1992,7 +1992,6 @@ argument_list|,
 name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE only 1:1 in coff */
 name|error
 operator|=
 name|coff_load_file

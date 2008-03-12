@@ -763,7 +763,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * KSE functions  */
+comment|/*  * Threading functions  */
 end_comment
 
 begin_function

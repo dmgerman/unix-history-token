@@ -8619,31 +8619,6 @@ operator|->
 name|td_priority
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KSE
-comment|/* 	 * KSE forks and exits so often that this penalty causes short-lived 	 * threads to always be non-interactive.  This causes mozilla to 	 * crawl under load. 	 */
-if|if
-condition|(
-operator|(
-name|td
-operator|->
-name|td_pflags
-operator|&
-name|TDP_SA
-operator|)
-operator|&&
-name|td
-operator|->
-name|td_proc
-operator|==
-name|child
-operator|->
-name|td_proc
-condition|)
-return|return;
-endif|#
-directive|endif
 comment|/* 	 * Give the child's runtime to the parent without returning the 	 * sleep time as a penalty to the parent.  This causes shells that 	 * launch expensive things to mark their children as expensive. 	 */
 name|thread_lock
 argument_list|(

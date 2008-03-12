@@ -11978,7 +11978,6 @@ name|curthread
 operator|->
 name|td_proc
 condition|)
-comment|/* XXXKSE ? */
 name|pmap_activate
 argument_list|(
 name|curthread
@@ -12080,7 +12079,6 @@ name|curthread
 operator|->
 name|td_proc
 condition|)
-comment|/* XXXKSE ? */
 name|pmap_activate
 argument_list|(
 name|curthread

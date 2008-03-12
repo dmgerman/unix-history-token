@@ -1148,19 +1148,19 @@ comment|/* 377 = afs_syscall */
 literal|"nmount"
 block|,
 comment|/* 378 = nmount */
-literal|"kse_exit"
+literal|"#379"
 block|,
 comment|/* 379 = kse_exit */
-literal|"kse_wakeup"
+literal|"#380"
 block|,
 comment|/* 380 = kse_wakeup */
-literal|"kse_create"
+literal|"#381"
 block|,
 comment|/* 381 = kse_create */
-literal|"kse_thr_interrupt"
+literal|"#382"
 block|,
 comment|/* 382 = kse_thr_interrupt */
-literal|"kse_release"
+literal|"#383"
 block|,
 comment|/* 383 = kse_release */
 literal|"#384"

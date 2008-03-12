@@ -449,12 +449,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|kse
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|socket
 struct_decl|;
 end_struct_decl

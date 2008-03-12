@@ -1258,18 +1258,6 @@ operator|==
 name|imgp
 operator|->
 name|proc
-operator|&&
-operator|(
-name|curthread
-operator|->
-name|td_proc
-operator|->
-name|p_flag
-operator|&
-name|P_SA
-operator|)
-operator|==
-literal|0
 argument_list|,
 operator|(
 literal|"unsafe elf_linux_fixup(), should be curproc"

@@ -1113,23 +1113,6 @@ literal|0
 comment|/* granularity */
 block|}
 decl_stmt|;
-if|if
-condition|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_flag
-operator|&
-name|P_SA
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-comment|/* XXXKSE */
-comment|/* XXXKSE  All the code below only works in 1:1   needs changing */
 name|ext
 operator|=
 operator|(

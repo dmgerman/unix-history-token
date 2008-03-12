@@ -106,10 +106,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * KSE Groups contain scheduling priority information.  They record the  * behavior of groups of KSEs and threads.  */
-end_comment
-
 begin_function_decl
 name|void
 name|sched_class

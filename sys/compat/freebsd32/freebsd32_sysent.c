@@ -8039,7 +8039,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kse_exit
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -8052,16 +8052,13 @@ block|}
 block|,
 comment|/* 379 = kse_exit */
 block|{
-name|AS
-argument_list|(
-name|kse_wakeup_args
-argument_list|)
+literal|0
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kse_wakeup
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -8074,16 +8071,13 @@ block|}
 block|,
 comment|/* 380 = kse_wakeup */
 block|{
-name|AS
-argument_list|(
-name|kse_create_args
-argument_list|)
+literal|0
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kse_create
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -8096,16 +8090,13 @@ block|}
 block|,
 comment|/* 381 = kse_create */
 block|{
-name|AS
-argument_list|(
-name|kse_thr_interrupt_args
-argument_list|)
+literal|0
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kse_thr_interrupt
+name|nosys
 block|,
 name|AUE_NULL
 block|,
@@ -8124,7 +8115,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kse_release
+name|nosys
 block|,
 name|AUE_NULL
 block|,

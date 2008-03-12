@@ -258,7 +258,6 @@ name|EPERM
 operator|)
 return|;
 block|}
-comment|/* XXXKSE: */
 name|td2
 operator|=
 name|FIRST_THREAD_IN_PROC

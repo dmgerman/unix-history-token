@@ -330,27 +330,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|KSE
-comment|/* 	 * Do special thread processing, e.g. upcall tweaking and such. 	 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_SA
-condition|)
-name|thread_userret
-argument_list|(
-name|td
-argument_list|,
-name|frame
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Charge system time if profiling. 	 */
 if|if
 condition|(
@@ -529,34 +508,6 @@ name|td_pticks
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KSE
-if|if
-condition|(
-operator|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_SA
-operator|)
-operator|&&
-operator|(
-name|td
-operator|->
-name|td_mailbox
-operator|==
-name|NULL
-operator|)
-condition|)
-name|thread_user_enter
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * This updates the td_flag's for the checks below in one 	 * "atomic" operation with turning off the astpending flag. 	 * If another AST is triggered while we are handling the 	 * AST's saved in flags, the astpending flag will be set and 	 * ast() will be called again. 	 */
 name|thread_lock
 argument_list|(
@@ -581,8 +532,6 @@ name|TDF_NEEDSIGCHK
 operator||
 name|TDF_NEEDRESCHED
 operator||
-name|TDF_INTERRUPT
-operator||
 name|TDF_ALRMPEND
 operator||
 name|TDF_PROFPEND
@@ -602,7 +551,6 @@ operator|.
 name|v_trap
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXXKSE While the fact that we owe a user profiling 	 * tick is stored per thread in this code, the statistics 	 * themselves are still stored per process. 	 * This should probably change, by which I mean that 	 * possibly the location of both might change. 	 */
 if|if
 condition|(
 name|td

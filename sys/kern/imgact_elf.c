@@ -2283,20 +2283,6 @@ name|i
 decl_stmt|,
 name|numsegs
 decl_stmt|;
-if|if
-condition|(
-name|curthread
-operator|->
-name|td_proc
-operator|!=
-name|p
-condition|)
-name|panic
-argument_list|(
-literal|"elf_load_file - thread"
-argument_list|)
-expr_stmt|;
-comment|/* XXXKSE DIAGNOSTIC */
 name|tempdata
 operator|=
 name|malloc
@@ -2370,7 +2356,6 @@ name|execlabel
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXXKSE */
 name|NDINIT
 argument_list|(
 name|nd
@@ -5065,7 +5050,6 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
 if|if
 condition|(
 name|error
@@ -5667,7 +5651,6 @@ name|td
 argument_list|)
 operator|)
 return|;
-comment|/* XXXKSE */
 block|}
 end_function
 

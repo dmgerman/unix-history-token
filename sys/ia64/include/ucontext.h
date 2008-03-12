@@ -44,11 +44,6 @@ name|_MC_FLAGS_HIGHFP_VALID
 value|0x0002
 define|#
 directive|define
-name|_MC_FLAGS_KSE_SET_MBOX
-value|0x0004
-comment|/* Undocumented. Has to go. */
-define|#
-directive|define
 name|_MC_FLAGS_SYSCALL_CONTEXT
 value|0x0008
 name|unsigned

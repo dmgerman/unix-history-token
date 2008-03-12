@@ -2325,7 +2325,7 @@ name|CTR4
 argument_list|(
 name|KTR_RUNQ
 argument_list|,
-literal|"runq_choose_from: pri=%d kse=%p idx=%d rqh=%p"
+literal|"runq_choose_from: pri=%d td_sched=%p idx=%d rqh=%p"
 argument_list|,
 name|pri
 argument_list|,

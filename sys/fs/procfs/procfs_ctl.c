@@ -688,7 +688,6 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
 endif|#
 directive|endif
 comment|/* 	 * Don't deliver any signal by default. 	 * To continue with a signal, just send 	 * the signal name to the ctl file 	 */
@@ -865,7 +864,6 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -1251,7 +1249,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* This is very broken XXXKSE: */
 if|if
 condition|(
 name|TRACE_WAIT_P
@@ -1275,7 +1272,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FIX_SSTEP
-comment|/* XXXKSE: */
 name|FIX_SSTEP
 argument_list|(
 name|FIRST_THREAD_IN_PROC
@@ -1286,7 +1282,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* XXXKSE: */
 name|p
 operator|->
 name|p_flag

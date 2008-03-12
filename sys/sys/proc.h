@@ -389,10 +389,6 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Here we define the two structures used for process information.  *  * The first is the thread. It might be thought of as a "Kernel  * Schedulable Entity Context".  * This structure contains all the information as to where a thread of  * execution is now, or was when it was suspended, why it was suspended,  * and anything else that will be needed to restart it when it is  * rescheduled. It includes a scheduler specific substructure that is different  * for each scheduler.  *  * M:N notes.  * It is important to remember that when using M:N threading,   * a particular thread structure may only exist as long as  * the system call or kernel entrance (e.g. by pagefault)  * which it is currently executing. It should therefore NEVER be referenced  * by pointers in long lived structures that live longer than a single  * request. If several threads complete their work at the same time,  * they will all rewind their stacks to the user boundary, report their  * completion state, and all but one will be freed. That last one will  * be kept to provide a kernel stack and pcb for the NEXT syscall or kernel  * entrance (basically to save freeing and then re-allocating it).  The existing  * thread keeps a cached spare thread available to allow it to quickly  * get one when it needs a new one. There is also a system  * cache of free threads. Threads have priority and partake in priority  * inheritance schemes.  *  * The second is the proc (process) which owns all the resources of a process  * other than CPU cycles, which are parceled out to the threads.  */
-end_comment
-
-begin_comment
 comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * Thread context.  Processes may have multiple threads.  */
 end_comment
 
@@ -477,7 +473,7 @@ define|#
 directive|define
 name|td_siglist
 value|td_sigqueue.sq_signals
-comment|/* Cleared during fork1() or thread_schedule_upcall(). */
+comment|/* Cleared during fork1() */
 define|#
 directive|define
 name|td_startzero
@@ -573,29 +569,11 @@ name|td_pinned
 decl_stmt|;
 comment|/* (k) Temporary cpu pin count. */
 name|struct
-name|kse_thr_mailbox
-modifier|*
-name|td_mailbox
-decl_stmt|;
-comment|/* (*) Userland mailbox address. */
-name|struct
 name|ucred
 modifier|*
 name|td_ucred
 decl_stmt|;
 comment|/* (k) Reference to credentials. */
-name|struct
-name|thread
-modifier|*
-name|td_standin
-decl_stmt|;
-comment|/* (k + a) Use this for an upcall. */
-name|struct
-name|kse_upcall
-modifier|*
-name|td_upcall
-decl_stmt|;
-comment|/* (k + t) Upcall structure. */
 name|u_int
 name|td_estcpu
 decl_stmt|;
@@ -644,7 +622,7 @@ comment|/* (k) Statclock hits (sys), for UTS. */
 name|int
 name|td_intrval
 decl_stmt|;
-comment|/* (t) Return value of TDF_INTERRUPT. */
+comment|/* (t) Return value for sleepq. */
 name|sigset_t
 name|td_oldsigmask
 decl_stmt|;
@@ -662,10 +640,6 @@ name|stack_t
 name|td_sigstk
 decl_stmt|;
 comment|/* (k) Stack ptr and on-stack flag. */
-name|int
-name|td_kflags
-decl_stmt|;
-comment|/* (c) Flags for KSE threading. */
 name|int
 name|td_xsig
 decl_stmt|;
@@ -1074,12 +1048,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_INTERRUPT
+name|TDF_UNUSED2000
 value|0x00002000
 end_define
 
 begin_comment
-comment|/* Thread is marked as interrupted. */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -1309,12 +1283,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UPCALLING
+name|TDP_UNUSED8
 value|0x00000008
 end_define
 
 begin_comment
-comment|/* This thread is doing an upcall. */
+comment|/* available */
 end_comment
 
 begin_define
@@ -1353,12 +1327,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_SA
+name|TDP_UNUSED80
 value|0x00000080
 end_define
 
 begin_comment
-comment|/* A scheduler activation based thread. */
+comment|/* available. */
 end_comment
 
 begin_define
@@ -1397,12 +1371,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_CAN_UNBIND
+name|TDP_UNUSED800
 value|0x00000800
 end_define
 
 begin_comment
-comment|/* Only temporarily bound. */
+comment|/* available. */
 end_comment
 
 begin_define
@@ -1585,54 +1559,6 @@ begin_comment
 comment|/* Awaiting interrupt. */
 end_comment
 
-begin_comment
-comment|/*  * flags (in kflags) related to M:N threading.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDK_KSEREL
-value|0x0001
-end_define
-
-begin_comment
-comment|/* Blocked in msleep on p->p_completed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDK_KSERELSIG
-value|0x0002
-end_define
-
-begin_comment
-comment|/* Blocked in msleep on p->p_siglist. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDK_WAKEUP
-value|0x0004
-end_define
-
-begin_comment
-comment|/* Thread has been woken by kse_wakeup. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TD_CAN_UNBIND
-parameter_list|(
-name|td
-parameter_list|)
-define|\
-value|(((td)->td_pflags& TDP_CAN_UNBIND)&&	\      ((td)->td_upcall != NULL))
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1743,27 +1669,6 @@ parameter_list|)
 value|((td)->td_flags& TDF_UPIBLOCKED)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|TD_IS_IDLETHREAD
-parameter_list|(
-name|td
-parameter_list|)
-value|((td) == pcpu(idlethread))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -1773,11 +1678,6 @@ name|td
 parameter_list|)
 value|((td)->td_flags& TDF_IDLETD)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1944,83 +1844,6 @@ value|(td)->td_state = TDS_CAN_RUN
 end_define
 
 begin_comment
-comment|/*  * An upcall is used when returning to userland.  If a thread does not have  * an upcall on return to userland the thread exports its context and exits.  */
-end_comment
-
-begin_struct
-struct|struct
-name|kse_upcall
-block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|kse_upcall
-argument_list|)
-name|ku_link
-expr_stmt|;
-comment|/* List of upcalls in proc. */
-name|struct
-name|proc
-modifier|*
-name|ku_proc
-decl_stmt|;
-comment|/* Associated proc. */
-name|struct
-name|thread
-modifier|*
-name|ku_owner
-decl_stmt|;
-comment|/* Owning thread. */
-name|int
-name|ku_flags
-decl_stmt|;
-comment|/* KUF_* flags. */
-name|struct
-name|kse_mailbox
-modifier|*
-name|ku_mailbox
-decl_stmt|;
-comment|/* Userland mailbox address. */
-name|stack_t
-name|ku_stack
-decl_stmt|;
-comment|/* Userland upcall stack. */
-name|void
-modifier|*
-name|ku_func
-decl_stmt|;
-comment|/* Userland upcall function. */
-name|unsigned
-name|int
-name|ku_mflags
-decl_stmt|;
-comment|/* Cached upcall mbox flags. */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|KUF_DOUPCALL
-value|0x00001
-end_define
-
-begin_comment
-comment|/* Do upcall now; don't wait. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KUF_EXITING
-value|0x00002
-end_define
-
-begin_comment
-comment|/* Upcall structure is exiting. */
-end_comment
-
-begin_comment
 comment|/*  * XXX: Does this belong in resource.h or resourcevar.h instead?  * Resource usage extension.  The times in rusage structs in the kernel are  * never up to date.  The actual times are kept as runtimes and tick counts  * (with control info in the "previous" times), and are converted when  * userland asks for rusage info.  Backwards compatibility prevents putting  * this directly in the user-visible rusage struct.  *  * Locking: (cj) means (j) for p_rux and (c) for p_crux.  */
 end_comment
 
@@ -2061,7 +1884,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The old fashionned process. May have multiple threads.  *  Starts off with a single embedded THREAD.  */
+comment|/*  * Process structure.  */
 end_comment
 
 begin_struct
@@ -2083,14 +1906,6 @@ argument_list|)
 name|p_threads
 expr_stmt|;
 comment|/* (j) all threads. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|kse_upcall
-argument_list|)
-name|p_upcalls
-expr_stmt|;
-comment|/* (j) All upcalls in the proc. */
 name|struct
 name|mtx
 name|p_slock
@@ -2114,7 +1929,6 @@ modifier|*
 name|p_fdtol
 decl_stmt|;
 comment|/* (b) Tracking node */
-comment|/* Accumulated stats for all threads? */
 name|struct
 name|pstats
 modifier|*
@@ -2365,28 +2179,6 @@ modifier|*
 name|p_itimers
 decl_stmt|;
 comment|/* (c) POSIX interval timers. */
-name|int
-name|p_numupcalls
-decl_stmt|;
-comment|/* (j) Num upcalls. */
-name|int
-name|p_upsleeps
-decl_stmt|;
-comment|/* (c) Num threads in kse_release(). */
-name|struct
-name|kse_thr_mailbox
-modifier|*
-name|p_completed
-decl_stmt|;
-comment|/* (c) Completed thread mboxes. */
-name|int
-name|p_nextupcall
-decl_stmt|;
-comment|/* (n) Next upcall time. */
-name|int
-name|p_upquantum
-decl_stmt|;
-comment|/* (n) Quantum to schedule an upcall. */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -2751,12 +2543,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_SA
+name|P_UNUSED8000
 value|0x08000
 end_define
 
 begin_comment
-comment|/* Using scheduler activations. */
+comment|/* available. */
 end_comment
 
 begin_define
@@ -3086,10 +2878,6 @@ name|SINGLE_BOUNDARY
 value|2
 end_define
 
-begin_comment
-comment|/* XXXKSE: Missing values for thread_suspend_check(). */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3164,23 +2952,6 @@ parameter_list|)
 define|\
 value|TAILQ_FOREACH((td),&(p)->p_threads, td_plist)
 end_define
-
-begin_define
-define|#
-directive|define
-name|FOREACH_UPCALL_IN_PROC
-parameter_list|(
-name|p
-parameter_list|,
-name|ku
-parameter_list|)
-define|\
-value|TAILQ_FOREACH((ku),&(p)->p_upcalls, ku_link)
-end_define
-
-begin_comment
-comment|/* XXXKSE the following lines should probably only be used in 1:1 code: */
-end_comment
 
 begin_define
 define|#
@@ -4565,62 +4336,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* New in KSE. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KSE
-end_ifdef
-
-begin_function_decl
-name|void
-name|kse_unlink
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|kseinit
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|upcall_reap
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|upcall_remove
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|void
 name|cpu_set_upcall
@@ -4756,18 +4471,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|thread_continued
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|void
 name|thread_exit
@@ -4777,21 +4480,6 @@ argument_list|)
 name|__dead2
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|int
-name|thread_export_context
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|willexit
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -4832,21 +4520,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|thread_signal_add
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|ksiginfo_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|thread_single
 parameter_list|(
@@ -4873,16 +4546,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|thread_statclock
-parameter_list|(
-name|int
-name|user
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4972,28 +4635,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|thread
-modifier|*
-name|thread_switchout
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|newtd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|thread_unlink
 parameter_list|(
@@ -5032,35 +4673,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|thread_unthread
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|thread_userret
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|trapframe
-modifier|*
-name|frame
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|thread_user_enter
 parameter_list|(
 name|struct
 name|thread

@@ -560,7 +560,6 @@ argument_list|(
 name|targetp
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
 block|}
 name|e
 operator|=
@@ -899,7 +898,6 @@ argument_list|(
 name|targetp
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
 block|}
 name|e
 operator|=

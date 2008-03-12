@@ -411,25 +411,6 @@ literal|"noflags"
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|KSE
-if|if
-condition|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_SA
-condition|)
-name|wmesg
-operator|=
-literal|"-kse- "
-expr_stmt|;
-else|else
-endif|#
-directive|endif
-block|{
 name|tdfirst
 operator|=
 name|FIRST_THREAD_IN_PROC
@@ -475,7 +456,6 @@ name|wmesg
 operator|=
 literal|"nochan"
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|p

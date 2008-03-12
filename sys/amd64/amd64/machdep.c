@@ -5890,7 +5890,6 @@ name|pcb_flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXXKSE */
 name|thread0
 operator|.
 name|td_pcb

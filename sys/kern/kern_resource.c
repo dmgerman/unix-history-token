@@ -1761,7 +1761,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Return OUR priority if no pid specified, 		 * or if one is, report the highest priority 		 * in the process.  There isn't much more you can do as  		 * there is only room to return a single priority. 		 * XXXKSE: maybe need a new interface to report  		 * priorities of multiple system scope threads. 		 * Note: specifying our own pid is not the same 		 * as leaving it zero. 		 */
+comment|/* 		 * Return OUR priority if no pid specified, 		 * or if one is, report the highest priority 		 * in the process.  There isn't much more you can do as  		 * there is only room to return a single priority. 		 * Note: specifying our own pid is not the same 		 * as leaving it zero. 		 */
 if|if
 condition|(
 name|uap

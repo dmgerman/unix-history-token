@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kse.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -862,7 +856,7 @@ name|td
 operator|->
 name|td_pcb
 expr_stmt|;
-comment|/* 	 * Copy the upcall pcb.  This loads kernel regs. 	 * Those not loaded individually below get their default 	 * values here. 	 * 	 * XXXKSE It might be a good idea to simply skip this as 	 * the values of the other registers may be unimportant. 	 * This would remove any requirement for knowing the KSE 	 * at this time (see the matching comment below for 	 * more analysis) (need a good safe default). 	 */
+comment|/* 	 * Copy the upcall pcb.  This loads kernel regs. 	 * Those not loaded individually below get their default 	 * values here. 	 */
 name|bcopy
 argument_list|(
 name|td0
@@ -885,7 +879,7 @@ operator|&=
 operator|~
 name|PCB_FPUINITDONE
 expr_stmt|;
-comment|/* 	 * Create a new fresh stack for the new thread. 	 * Don't forget to set this stack value into whatever supplies 	 * the address for the fault handlers. 	 * The contexts are filled in at the time we actually DO the 	 * upcall as only then do we know which KSE we got. 	 */
+comment|/* 	 * Create a new fresh stack for the new thread. 	 */
 name|bcopy
 argument_list|(
 name|td0

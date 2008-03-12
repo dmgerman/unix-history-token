@@ -3138,7 +3138,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"fork_exit: new thread %p (kse %p, pid %d, %s)"
+literal|"fork_exit: new thread %p (td_sched %p, pid %d, %s)"
 argument_list|,
 name|td
 argument_list|,

@@ -75,10 +75,6 @@ directive|include
 file|<sys/proc.h>
 end_include
 
-begin_comment
-comment|/* XXXKSE */
-end_comment
-
 begin_include
 include|#
 directive|include

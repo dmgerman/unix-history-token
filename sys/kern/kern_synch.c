@@ -1629,7 +1629,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"mi_switch: old thread %ld (kse %p, pid %ld, %s)"
+literal|"mi_switch: old thread %ld (td_sched %p, pid %ld, %s)"
 argument_list|,
 name|td
 operator|->
@@ -1743,41 +1743,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * We call thread_switchout after the KTR_SCHED prints above so kse 	 * selecting a new thread to run does not show up as a preemption. 	 */
-ifdef|#
-directive|ifdef
-name|KSE
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|SW_VOL
-operator|)
-operator|&&
-operator|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_flag
-operator|&
-name|P_SA
-operator|)
-condition|)
-name|newtd
-operator|=
-name|thread_switchout
-argument_list|(
-name|td
-argument_list|,
-name|flags
-argument_list|,
-name|newtd
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sched_switch
 argument_list|(
 name|td
@@ -1808,7 +1773,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"mi_switch: new thread %ld (kse %p, pid %ld, %s)"
+literal|"mi_switch: new thread %ld (td_sched %p, pid %ld, %s)"
 argument_list|,
 name|td
 operator|->
@@ -1994,7 +1959,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compute a tenex style load average of a quantity on  * 1, 5 and 15 minute intervals.  * XXXKSE   Needs complete rewrite when correct info is available.  * Completely Bogus.. only works with 1:1 (but compiles ok now :-)  */
+comment|/*  * Compute a tenex style load average of a quantity on  * 1, 5 and 15 minute intervals.  */
 end_comment
 
 begin_function
