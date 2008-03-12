@@ -39,9 +39,9 @@ parameter_list|)
 block|{
 name|char
 name|name
-index|[
-literal|1024
-index|]
+index|[]
+init|=
+literal|"test_compat_gtar_1.tgz"
 decl_stmt|;
 name|struct
 name|archive_entry
@@ -89,13 +89,9 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|extract_reference_file
 argument_list|(
 name|name
-argument_list|,
-literal|"%s/test_compat_gtar_1.tgz"
-argument_list|,
-name|refdir
 argument_list|)
 expr_stmt|;
 name|assertEqualIntA

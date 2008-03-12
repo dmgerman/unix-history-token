@@ -988,12 +988,6 @@ modifier|*
 name|ac
 parameter_list|)
 block|{
-name|char
-name|path
-index|[
-literal|512
-index|]
-decl_stmt|;
 name|struct
 name|archive_entry
 modifier|*
@@ -1017,14 +1011,8 @@ name|archive
 modifier|*
 name|a
 decl_stmt|;
-name|sprintf
+name|extract_reference_file
 argument_list|(
-name|path
-argument_list|,
-literal|"%s/%s"
-argument_list|,
-name|refdir
-argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -1064,7 +1052,7 @@ name|failure
 argument_list|(
 literal|"Can't open %s"
 argument_list|,
-name|path
+name|name
 argument_list|)
 expr_stmt|;
 name|assert
@@ -1075,7 +1063,7 @@ name|archive_read_open_filename
 argument_list|(
 name|a
 argument_list|,
-name|path
+name|name
 argument_list|,
 literal|3
 argument_list|)
