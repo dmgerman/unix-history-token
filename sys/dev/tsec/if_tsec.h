@@ -212,6 +212,14 @@ decl_stmt|;
 name|int
 name|tsec_if_flags
 decl_stmt|;
+comment|/* Watchdog related */
+name|struct
+name|callout
+name|wd_callout
+decl_stmt|;
+name|int
+name|wd_timer
+decl_stmt|;
 comment|/* TX maps */
 name|bus_dmamap_t
 name|tx_map_data
