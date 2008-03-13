@@ -1467,6 +1467,12 @@ name|au_trigger
 argument_list|)
 operator|)
 return|;
+default|default:
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 block|}
 comment|/* 	 * Copy data back to userspace for the GET comands. 	 */
 switch|switch
