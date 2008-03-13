@@ -541,6 +541,7 @@ name|id_t
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|cpuset_t
 modifier|*
 parameter_list|)
