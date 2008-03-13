@@ -956,12 +956,6 @@ name|mode_t
 name|vc_mode
 decl_stmt|;
 comment|/* access mode */
-name|struct
-name|tnode
-modifier|*
-name|vc_tnode
-decl_stmt|;
-comment|/* backing object */
 name|u_short
 name|vc_smbuid
 decl_stmt|;
