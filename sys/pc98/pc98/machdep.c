@@ -2041,7 +2041,11 @@ operator|->
 name|tf_eflags
 operator|&=
 operator|~
+operator|(
 name|PSL_T
+operator||
+name|PSL_D
+operator|)
 expr_stmt|;
 name|regs
 operator|->
@@ -2778,7 +2782,11 @@ operator|->
 name|tf_eflags
 operator|&=
 operator|~
+operator|(
 name|PSL_T
+operator||
+name|PSL_D
+operator|)
 expr_stmt|;
 name|regs
 operator|->
@@ -3609,7 +3617,11 @@ operator|->
 name|tf_eflags
 operator|&=
 operator|~
+operator|(
 name|PSL_T
+operator||
+name|PSL_D
+operator|)
 expr_stmt|;
 name|regs
 operator|->

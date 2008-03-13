@@ -2332,6 +2332,8 @@ operator|(
 name|PSL_T
 operator||
 name|PSL_VM
+operator||
+name|PSL_D
 operator|)
 expr_stmt|;
 name|regs
@@ -3006,6 +3008,8 @@ operator|(
 name|PSL_T
 operator||
 name|PSL_VM
+operator||
+name|PSL_D
 operator|)
 expr_stmt|;
 name|regs

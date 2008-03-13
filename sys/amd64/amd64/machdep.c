@@ -1685,7 +1685,11 @@ operator|->
 name|tf_rflags
 operator|&=
 operator|~
+operator|(
 name|PSL_T
+operator||
+name|PSL_D
+operator|)
 expr_stmt|;
 name|regs
 operator|->
