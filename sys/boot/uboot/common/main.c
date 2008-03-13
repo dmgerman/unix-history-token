@@ -470,8 +470,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|i
+name|char
+modifier|*
+modifier|*
+name|bargv
 decl_stmt|;
 name|char
 modifier|*
@@ -479,11 +481,8 @@ name|ch
 decl_stmt|;
 name|int
 name|bargc
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|bargv
+decl_stmt|,
+name|i
 decl_stmt|;
 name|struct
 name|api_signature

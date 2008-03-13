@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/disklabel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stand.h>
 end_include
 
@@ -27,12 +33,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/disklabel.h>
 end_include
 
 begin_include
@@ -73,7 +73,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*   * Point (dev) at an allocated device specifier for the device matching the  * path in (devspec). If it contains an explicit device specification,  * use that.  If not, use the default device.  */
+comment|/*  * Point (dev) at an allocated device specifier for the device matching the  * path in (devspec). If it contains an explicit device specification,  * use that.  If not, use the default device.  */
 end_comment
 
 begin_function
@@ -114,7 +114,7 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
-comment|/*      * If it looks like this is just a path and no      * device, go with the current device.      */
+comment|/* 	 * If it looks like this is just a path and no 	 * device, go with the current device. 	 */
 if|if
 condition|(
 operator|(
@@ -183,7 +183,7 @@ name|rv
 operator|)
 return|;
 block|}
-comment|/*      * Try to parse the device name off the beginning of the devspec      */
+comment|/* 	 * Try to parse the device name off the beginning of the devspec. 	 */
 return|return
 operator|(
 name|uboot_parsedev
@@ -200,7 +200,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Point (dev) at an allocated device specifier matching the string version  * at the beginning of (devspec).  Return a pointer to the remaining  * text in (path).  *  * In all cases, the beginning of (devspec) is compared to the names  * of known devices in the device switch, and then any following text  * is parsed according to the rules applied to the device type.  *  * For disk-type devices, the syntax is:  *  * disk<unit>[s<slice>][<partition>]:  *   */
+comment|/*  * Point (dev) at an allocated device specifier matching the string version  * at the beginning of (devspec).  Return a pointer to the remaining  * text in (path).  *  * In all cases, the beginning of (devspec) is compared to the names  * of known devices in the device switch, and then any following text  * is parsed according to the rules applied to the device type.  *  * For disk-type devices, the syntax is:  *  * disk<unit>[s<slice>][<partition>]:  *  */
 end_comment
 
 begin_function
@@ -236,6 +236,15 @@ name|devsw
 modifier|*
 name|dv
 decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|np
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -246,15 +255,6 @@ decl_stmt|,
 name|partition
 decl_stmt|,
 name|err
-decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|np
 decl_stmt|;
 comment|/* minimum length check */
 if|if
@@ -411,6 +411,7 @@ literal|':'
 operator|)
 condition|)
 block|{
+comment|/* next comes the unit number */
 name|unit
 operator|=
 name|strtol
@@ -423,7 +424,6 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* next comes the unit number */
 if|if
 condition|(
 name|cp
@@ -495,6 +495,7 @@ literal|':'
 operator|)
 condition|)
 block|{
+comment|/* get a partition number */
 name|partition
 operator|=
 operator|*
@@ -502,7 +503,6 @@ name|cp
 operator|-
 literal|'a'
 expr_stmt|;
-comment|/* get a partition number */
 if|if
 condition|(
 operator|(
@@ -621,6 +621,7 @@ literal|':'
 operator|)
 condition|)
 block|{
+comment|/* get unit number if present */
 name|unit
 operator|=
 name|strtol
@@ -633,7 +634,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* get unit number if present */
 if|if
 condition|(
 name|cp
@@ -794,6 +794,10 @@ operator|*
 operator|)
 name|vdev
 decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 specifier|static
 name|char
 name|buf
@@ -802,10 +806,6 @@ literal|128
 index|]
 decl_stmt|;
 comment|/* XXX device length constant? */
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 switch|switch
 condition|(
 name|dev
@@ -949,7 +949,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set currdev to suit the value being supplied in (value)  */
+comment|/*  * Set currdev to suit the value being supplied in (value).  */
 end_comment
 
 begin_function

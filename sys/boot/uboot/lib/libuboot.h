@@ -58,7 +58,6 @@ value|32
 end_define
 
 begin_function_decl
-specifier|extern
 name|int
 name|uboot_getdev
 parameter_list|(
@@ -82,7 +81,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|uboot_fmtdev
@@ -95,7 +93,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|uboot_setcurrdev
 parameter_list|(
@@ -218,7 +215,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|reboot
 parameter_list|(

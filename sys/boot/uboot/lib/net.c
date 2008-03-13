@@ -247,7 +247,7 @@ name|net_ifs
 index|[]
 init|=
 block|{
-comment|/*	dif_unit	dif_nsel	dif_stats	dif_private	*/
+comment|/*	dif_unit	dif_nsel	dif_stats	dif_private */
 block|{
 literal|0
 block|,
@@ -432,13 +432,13 @@ modifier|*
 name|machdep_hint
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|struct
 name|device_info
 modifier|*
 name|di
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 for|for
 control|(
@@ -480,7 +480,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"net_probe: no network devices found, maybe not\ 		    enumerated yet..?\n"
+literal|"net_probe: no network devices found, maybe not"
+literal|" enumerated yet..?\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -924,11 +925,6 @@ modifier|*
 name|machdep_hint
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|,
-name|err
-decl_stmt|;
 name|struct
 name|netif
 modifier|*
@@ -947,6 +943,11 @@ name|struct
 name|device_info
 modifier|*
 name|di
+decl_stmt|;
+name|int
+name|err
+decl_stmt|,
+name|i
 decl_stmt|;
 name|sc
 operator|=
@@ -1123,9 +1124,6 @@ modifier|*
 name|nif
 parameter_list|)
 block|{
-name|int
-name|err
-decl_stmt|;
 name|struct
 name|uboot_softc
 modifier|*
@@ -1134,6 +1132,9 @@ init|=
 name|nif
 operator|->
 name|nif_devdata
+decl_stmt|;
+name|int
+name|err
 decl_stmt|;
 if|if
 condition|(

@@ -338,7 +338,9 @@ parameter_list|(
 name|int
 name|verbose
 parameter_list|)
-block|{  }
+block|{
+return|return;
+block|}
 end_function
 
 end_unit
