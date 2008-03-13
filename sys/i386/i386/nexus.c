@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/nexusvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/resource.h>
 end_include
 
@@ -204,18 +210,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
-name|nexus_device
-block|{
-name|struct
-name|resource_list
-name|nx_resources
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -227,7 +221,6 @@ value|((struct nexus_device *)device_get_ivars(dev))
 end_define
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|rman
 name|irq_rman
@@ -849,22 +842,19 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|driver_t
+begin_expr_stmt
+name|DEFINE_CLASS_0
+argument_list|(
+name|nexus
+argument_list|,
 name|nexus_driver
-init|=
-block|{
-literal|"nexus"
-block|,
+argument_list|,
 name|nexus_methods
-block|,
+argument_list|,
 literal|1
-block|,
-comment|/* no softc */
-block|}
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -900,15 +890,30 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|int
-name|irq
-decl_stmt|;
 name|device_quiet
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
 comment|/* suppress attach message for neatness */
+return|return
+operator|(
+name|BUS_PROBE_GENERIC
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|nexus_init_resources
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|irq
+decl_stmt|;
 comment|/* 	 * XXX working notes: 	 * 	 * - IRQ resource creation should be moved to the PIC/APIC driver. 	 * - DRQ resource creation should be moved to the DMAC driver. 	 * - The above should be sorted to probe earlier than any child busses. 	 * 	 * - Leave I/O and memory creation here, as child probes may need them. 	 *   (especially eg. ACPI) 	 */
 comment|/* 	 * IRQ's are on the mainboard on old systems, but on the ISA part 	 * of PCI->ISA bridges.  There would be multiple sets of IRQs on 	 * multi-ISA-bus systems.  PCI interrupts are routed to the ISA 	 * component, so in a way, PCI can be a partial child of an ISA bus(!). 	 * APIC interrupts are global though. 	 */
 name|irq_rman
@@ -947,7 +952,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"nexus_probe irq_rman"
+literal|"nexus_init_resources irq_rman"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We search for regions of existing IRQs and add those to the IRQ 	 * resource manager. 	 */
@@ -989,7 +994,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"nexus_probe irq_rman add"
+literal|"nexus_init_resources irq_rman add"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * ISA DMA on PCI systems is implemented in the ISA part of each 	 * PCI->ISA bridge and the channels can be duplicated if there are 	 * multiple bridges.  (eg: laptops with docking stations) 	 */
@@ -1055,7 +1060,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"nexus_probe drq_rman"
+literal|"nexus_init_resources drq_rman"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * However, IO ports and Memory truely are global at this level, 	 * as are APIC interrupts (however many IO APICS there turn out 	 * to be on large systems..) 	 */
@@ -1103,7 +1108,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"nexus_probe port_rman"
+literal|"nexus_init_resources port_rman"
 argument_list|)
 expr_stmt|;
 name|mem_rman
@@ -1152,12 +1157,9 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"nexus_probe mem_rman"
+literal|"nexus_init_resources mem_rman"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -1170,9 +1172,33 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|nexus_init_resources
+argument_list|()
+expr_stmt|;
 name|bus_generic_probe
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Explicitly add the legacy0 device here.  Other platform 	 * types (such as ACPI), use their own nexus(4) subclass 	 * driver to override this routine and add their own root bus. 	 */
+if|if
+condition|(
+name|BUS_ADD_CHILD
+argument_list|(
+name|dev
+argument_list|,
+literal|10
+argument_list|,
+literal|"legacy"
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"legacy: could not attach"
 argument_list|)
 expr_stmt|;
 name|bus_generic_attach

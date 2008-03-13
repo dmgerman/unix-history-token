@@ -1679,6 +1679,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|int
+name|acpi_identify
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|acpi_config_intr
 parameter_list|(
