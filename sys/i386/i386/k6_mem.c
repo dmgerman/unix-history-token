@@ -880,6 +880,7 @@ operator|<
 literal|0x80
 operator|||
 operator|(
+operator|(
 name|cpu_id
 operator|&
 literal|0xf0
@@ -894,6 +895,7 @@ literal|0xf
 operator|)
 operator|<=
 literal|0x7
+operator|)
 condition|)
 return|return;
 name|mem_range_softc
