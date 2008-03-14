@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -2318,10 +2324,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|current_cpu
-decl_stmt|,
-name|num_cpus
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -2375,8 +2377,8 @@ expr_stmt|;
 if|if
 condition|(
 name|current_cpu
-operator|>=
-name|num_cpus
+operator|>
+name|mp_maxid
 condition|)
 name|current_cpu
 operator|=
@@ -2447,9 +2449,6 @@ operator|<<
 name|cpu
 operator|)
 expr_stmt|;
-name|num_cpus
-operator|++
-expr_stmt|;
 block|}
 end_function
 
@@ -2479,8 +2478,8 @@ decl_stmt|;
 comment|/* Don't bother on UP. */
 if|if
 condition|(
-name|num_cpus
-operator|<=
+name|mp_ncpus
+operator|==
 literal|1
 condition|)
 return|return;
