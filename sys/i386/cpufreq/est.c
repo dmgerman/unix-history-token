@@ -7663,6 +7663,10 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|count
+operator|=
+name|MAX_SETTINGS
+expr_stmt|;
 name|error
 operator|=
 name|CPUFREQ_DRV_SETTINGS
