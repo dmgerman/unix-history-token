@@ -55,6 +55,11 @@ begin_function_decl
 name|void
 name|coda_flush
 parameter_list|(
+name|struct
+name|coda_mntinfo
+modifier|*
+name|mnt
+parameter_list|,
 name|enum
 name|dc_status
 name|dcstat

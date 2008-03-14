@@ -612,6 +612,11 @@ begin_function_decl
 name|int
 name|handleDownCall
 parameter_list|(
+name|struct
+name|coda_mntinfo
+modifier|*
+name|mnt
+parameter_list|,
 name|int
 name|opcode
 parameter_list|,

@@ -94,7 +94,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vop_lookup_t
+name|vop_cachedlookup_t
 name|coda_lookup
 decl_stmt|;
 end_decl_stmt
