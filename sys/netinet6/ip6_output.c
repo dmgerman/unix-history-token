@@ -1420,6 +1420,17 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+name|EJUSTRETURN
+condition|)
+block|{
+comment|/* 		 * We had a SP with a level of 'use' and no SA. We 		 * will just continue to process the packet without 		 * IPsec processing. 		 */
+empty_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|error
 condition|)
 block|{
 comment|/* mbuf is already reclaimed in ipsec6_output_trans. */
@@ -2092,6 +2103,17 @@ name|state
 operator|.
 name|dst
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|EJUSTRETURN
+condition|)
+block|{
+comment|/* 			 * We had a SP with a level of 'use' and no SA. We 			 * will just continue to process the packet without 			 * IPsec processing. 			 */
+empty_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|error
