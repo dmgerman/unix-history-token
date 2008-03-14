@@ -2602,6 +2602,7 @@ value|for ((cpu) = 0; (cpu)< sizeof((mask)) * 8; (cpu)++)	\ 		if ((mask)& 1<< (c
 end_define
 
 begin_function_decl
+specifier|static
 name|__inline
 name|int
 name|cpu_search
@@ -2844,7 +2845,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|cpu_search
 parameter_list|(
