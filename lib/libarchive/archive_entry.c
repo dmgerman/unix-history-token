@@ -1787,6 +1787,17 @@ modifier|*
 name|entry
 parameter_list|)
 block|{
+if|if
+condition|(
+name|entry
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|aes_clean
 argument_list|(
 operator|&
