@@ -59,7 +59,7 @@ comment|/*  * Description of an archive entry.  *  * Basically, a "struct stat" 
 struct_decl|struct
 name|archive_entry
 struct_decl|;
-comment|/*  * File-type constants.  These are returned from archive_entry_filetype().  */
+comment|/*  * File-type constants.  These are returned from archive_entry_filetype()  * and passed to archive_entry_set_filetype().  *  * These values match S_XXX defines on every platform I've checked,  * including Windows, AIX, Linux, Solaris, and BSD.  They're  * (re)defined here because platforms generally don't define the ones  * they don't support.  For example, Windows doesn't define S_IFLNK or  * S_IFBLK.  Instead of having a mass of conditional logic and system  * checks to define any S_XXX values that aren't supported locally,  * I've just defined a new set of such constants so that  * libarchive-based applications can manipulate and identify archive  * entries properly even if the hosting platform can't store them on  * disk.  *  * These values are also used directly within some portable formats,  * such as cpio.  If you find a platform that varies from these, the  * correct solution is to leave these alone and translate from these  * portable values to platform-native values when entries are read from  * or written to disk.  */
 define|#
 directive|define
 name|AE_IFMT
@@ -205,12 +205,12 @@ parameter_list|,
 name|unsigned
 name|long
 modifier|*
-name|set
+comment|/* set */
 parameter_list|,
 name|unsigned
 name|long
 modifier|*
-name|clear
+comment|/* clear */
 parameter_list|)
 function_decl|;
 specifier|const
@@ -497,11 +497,11 @@ modifier|*
 parameter_list|,
 name|unsigned
 name|long
-name|set
+comment|/* set */
 parameter_list|,
 name|unsigned
 name|long
-name|clear
+comment|/* clear */
 parameter_list|)
 function_decl|;
 comment|/* Returns pointer to start of first invalid token, or NULL if none. */
@@ -851,7 +851,7 @@ name|stat
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/*  * ACL routines.  This used to simply store and return text-format ACL  * strings, but that proved insufficient for a number of reasons:  *   = clients need control over uname/uid and gname/gid mappings  *   = there are many different ACL text formats  *   = would like to be able to read/convert archives containing ACLs  *     on platforms that lack ACL libraries  */
+comment|/*  * ACL routines.  This used to simply store and return text-format ACL  * strings, but that proved insufficient for a number of reasons:  *   = clients need control over uname/uid and gname/gid mappings  *   = there are many different ACL text formats  *   = would like to be able to read/convert archives containing ACLs  *     on platforms that lack ACL libraries  *  *  This last point, in particular, forces me to implement a reasonably  *  complete set of ACL support routines.  *  *  TODO: Extend this to support NFSv4/NTFS permissions.  That should  *  allow full ACL support on Mac OS, in particular, which uses  *  POSIX.1e-style interfaces to manipulate NFSv4/NTFS permissions.  */
 comment|/*  * Permission bits mimic POSIX.1e.  Note that I've not followed POSIX.1e's  * "permset"/"perm" abstract type nonsense.  A permset is just a simple  * bitmap, following long-standing Unix tradition.  */
 define|#
 directive|define
@@ -922,21 +922,21 @@ name|archive_entry
 modifier|*
 parameter_list|,
 name|int
-name|type
+comment|/* type */
 parameter_list|,
 name|int
-name|permset
+comment|/* permset */
 parameter_list|,
 name|int
-name|tag
+comment|/* tag */
 parameter_list|,
 name|int
-name|qual
+comment|/* qual */
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|name
+comment|/* name */
 parameter_list|)
 function_decl|;
 name|void
@@ -947,21 +947,21 @@ name|archive_entry
 modifier|*
 parameter_list|,
 name|int
-name|type
+comment|/* type */
 parameter_list|,
 name|int
-name|permset
+comment|/* permset */
 parameter_list|,
 name|int
-name|tag
+comment|/* tag */
 parameter_list|,
 name|int
-name|qual
+comment|/* qual */
 parameter_list|,
 specifier|const
 name|wchar_t
 modifier|*
-name|name
+comment|/* name */
 parameter_list|)
 function_decl|;
 comment|/*  * To retrieve the ACL, first "reset", then repeatedly ask for the  * "next" entry.  The want_type parameter allows you to request only  * access entries or only default entries.  */
@@ -973,7 +973,7 @@ name|archive_entry
 modifier|*
 parameter_list|,
 name|int
-name|want_type
+comment|/* want_type */
 parameter_list|)
 function_decl|;
 name|int
@@ -984,29 +984,29 @@ name|archive_entry
 modifier|*
 parameter_list|,
 name|int
-name|want_type
+comment|/* want_type */
 parameter_list|,
 name|int
 modifier|*
-name|type
+comment|/* type */
 parameter_list|,
 name|int
 modifier|*
-name|permset
+comment|/* permset */
 parameter_list|,
 name|int
 modifier|*
-name|tag
+comment|/* tag */
 parameter_list|,
 name|int
 modifier|*
-name|qual
+comment|/* qual */
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
-name|name
+comment|/* name */
 parameter_list|)
 function_decl|;
 name|int
@@ -1017,29 +1017,29 @@ name|archive_entry
 modifier|*
 parameter_list|,
 name|int
-name|want_type
+comment|/* want_type */
 parameter_list|,
 name|int
 modifier|*
-name|type
+comment|/* type */
 parameter_list|,
 name|int
 modifier|*
-name|permset
+comment|/* permset */
 parameter_list|,
 name|int
 modifier|*
-name|tag
+comment|/* tag */
 parameter_list|,
 name|int
 modifier|*
-name|qual
+comment|/* qual */
 parameter_list|,
 specifier|const
 name|wchar_t
 modifier|*
 modifier|*
-name|name
+comment|/* name */
 parameter_list|)
 function_decl|;
 comment|/*  * Construct a text-format ACL.  The flags argument is a bitmask that  * can include any of the following:  *  * ARCHIVE_ENTRY_ACL_TYPE_ACCESS - Include access entries.  * ARCHIVE_ENTRY_ACL_TYPE_DEFAULT - Include default entries.  * ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID - Include extra numeric ID field in  *    each ACL entry.  (As used by 'star'.)  * ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT - Include "default:" before each  *    default ACL entry.  */
@@ -1061,7 +1061,7 @@ name|archive_entry
 modifier|*
 parameter_list|,
 name|int
-name|flags
+comment|/* flags */
 parameter_list|)
 function_decl|;
 comment|/* Return a count of entries matching 'want_type' */
@@ -1073,10 +1073,10 @@ name|archive_entry
 modifier|*
 parameter_list|,
 name|int
-name|want_type
+comment|/* want_type */
 parameter_list|)
 function_decl|;
-comment|/*  * Private ACL parser.  This is private because it handles some  * very weird formats that clients should not be messing with.  * Clients should only deal with their platform-native formats.  * Because of the need to support many formats cleanly, new arguments  * are likely to get added on a regular basis.  Clients who try to use  * this interface are likely to be surprised when it changes.  *  * You were warned!  */
+comment|/*  * Private ACL parser.  This is private because it handles some  * very weird formats that clients should not be messing with.  * Clients should only deal with their platform-native formats.  * Because of the need to support many formats cleanly, new arguments  * are likely to get added on a regular basis.  Clients who try to use  * this interface are likely to be surprised when it changes.  *  * You were warned!  *  * TODO: Move this declaration out of the public header and into  * a private header.  Warnings above are silly.  */
 name|int
 name|__archive_entry_acl_parse_w
 parameter_list|(
@@ -1089,7 +1089,7 @@ name|wchar_t
 modifier|*
 parameter_list|,
 name|int
-name|type
+comment|/* type */
 parameter_list|)
 function_decl|;
 comment|/*  * extended attributes  */
@@ -1111,15 +1111,15 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|name
+comment|/* name */
 parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|value
+comment|/* value */
 parameter_list|,
 name|size_t
-name|size
+comment|/* size */
 parameter_list|)
 function_decl|;
 comment|/*  * To retrieve the xattr list, first "reset", then repeatedly ask for the  * "next" entry.  */
@@ -1150,13 +1150,13 @@ specifier|const
 name|char
 modifier|*
 modifier|*
-name|name
+comment|/* name */
 parameter_list|,
 specifier|const
 name|void
 modifier|*
 modifier|*
-name|value
+comment|/* value */
 parameter_list|,
 name|size_t
 modifier|*
