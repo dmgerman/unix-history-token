@@ -3811,13 +3811,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|ARCHIVE_BYTES_PER_RECORD
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
-name|p
-argument_list|)
+literal|512
 condition|;
 name|i
 operator|++
