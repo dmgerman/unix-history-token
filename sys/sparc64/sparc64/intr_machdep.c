@@ -1326,6 +1326,8 @@ name|ic
 operator|->
 name|ic_disable
 argument_list|,
+name|NULL
+argument_list|,
 literal|"vec%d:"
 argument_list|,
 name|vec
@@ -1333,6 +1335,8 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|NULL
+operator|,
 literal|"vec%d:"
 operator|,
 name|vec

@@ -313,6 +313,8 @@ name|intr_eoi_src
 argument_list|,
 name|intr_disab_eoi_src
 argument_list|,
+name|NULL
+argument_list|,
 literal|"intr%d:"
 argument_list|,
 name|irq
@@ -346,6 +348,8 @@ operator|*
 argument_list|)
 operator|)
 name|arm_unmask_irq
+argument_list|,
+name|NULL
 argument_list|,
 literal|"intr%d:"
 argument_list|,

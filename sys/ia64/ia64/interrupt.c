@@ -1685,6 +1685,8 @@ name|ia64_intr_mask
 argument_list|,
 endif|#
 directive|endif
+name|NULL
+argument_list|,
 literal|"irq%u:"
 argument_list|,
 name|irq

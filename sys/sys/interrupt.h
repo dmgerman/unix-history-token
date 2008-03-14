@@ -216,6 +216,18 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|ie_assign_cpu
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|u_char
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|INTR_FILTER
@@ -256,6 +268,10 @@ name|struct
 name|timeval
 name|ie_warntm
 decl_stmt|;
+name|u_char
+name|ie_cpu
+decl_stmt|;
+comment|/* CPU this event is bound to. */
 block|}
 struct|;
 end_struct
@@ -581,6 +597,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|intr_event_bind
+parameter_list|(
+name|struct
+name|intr_event
+modifier|*
+name|ie
+parameter_list|,
+name|u_char
+name|cpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -614,6 +645,18 @@ name|void
 modifier|*
 parameter_list|)
 parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|assign_cpu
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|u_char
+parameter_list|)
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -623,9 +666,9 @@ modifier|...
 parameter_list|)
 function_decl|__printflike
 parameter_list|(
-function_decl|5
-operator|,
 function_decl|6
+operator|,
+function_decl|7
 end_function_decl
 
 begin_empty_stmt
@@ -685,6 +728,18 @@ name|void
 modifier|*
 parameter_list|)
 parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|assign_cpu
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|u_char
+parameter_list|)
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -694,9 +749,9 @@ modifier|...
 parameter_list|)
 function_decl|__printflike
 parameter_list|(
-function_decl|7
-operator|,
 function_decl|8
+operator|,
+function_decl|9
 end_function_decl
 
 begin_empty_stmt
