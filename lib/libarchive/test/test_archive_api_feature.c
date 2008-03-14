@@ -26,6 +26,68 @@ end_macro
 
 begin_block
 block|{
+name|char
+name|buff
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* This is the (hopefully) final versioning API. */
+name|assertEqualInt
+argument_list|(
+name|ARCHIVE_VERSION_NUMBER
+argument_list|,
+name|archive_version_number
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|buff
+argument_list|,
+literal|"libarchive %d.%d.%d"
+argument_list|,
+name|archive_version_number
+argument_list|()
+operator|/
+literal|1000000
+argument_list|,
+operator|(
+name|archive_version_number
+argument_list|()
+operator|/
+literal|1000
+operator|)
+operator|%
+literal|1000
+argument_list|,
+name|archive_version_number
+argument_list|()
+operator|%
+literal|1000
+argument_list|)
+expr_stmt|;
+name|assertEqualString
+argument_list|(
+name|buff
+argument_list|,
+name|archive_version_string
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* This is all scheduled to disappear in libarchive 3.0 */
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|3000000
+name|assertEqualInt
+argument_list|(
+name|ARCHIVE_VERSION_STAMP
+argument_list|,
+name|ARCHIVE_VERSION_NUMBER
+argument_list|)
+expr_stmt|;
 name|assertEqualInt
 argument_list|(
 name|ARCHIVE_API_FEATURE
@@ -93,6 +155,8 @@ name|archive_version
 argument_list|()
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
