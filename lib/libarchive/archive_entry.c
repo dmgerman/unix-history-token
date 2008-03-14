@@ -1278,6 +1278,9 @@ modifier|*
 name|aes
 parameter_list|)
 block|{
+name|int
+name|r
+decl_stmt|;
 if|if
 condition|(
 name|aes
@@ -1366,6 +1369,8 @@ argument_list|,
 literal|"No memory for aes_get_wcs()"
 argument_list|)
 expr_stmt|;
+name|r
+operator|=
 name|mbstowcs
 argument_list|(
 name|aes
@@ -1388,6 +1393,33 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* Conversion failed, don't lie to our clients. */
+name|free
+argument_list|(
+name|aes
+operator|->
+name|aes_wcs_alloc
+argument_list|)
+expr_stmt|;
+name|aes
+operator|->
+name|aes_wcs
+operator|=
+name|aes
+operator|->
+name|aes_wcs_alloc
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
