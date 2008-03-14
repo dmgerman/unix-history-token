@@ -206,6 +206,14 @@ name|u_short
 name|c_symlen
 decl_stmt|;
 comment|/* length of symbolic link */
+name|uid_t
+name|c_cached_uid
+decl_stmt|;
+comment|/* cached uid */
+name|mode_t
+name|c_cached_mode
+decl_stmt|;
+comment|/* cached access mode */
 name|struct
 name|cnode
 modifier|*
@@ -260,6 +268,17 @@ end_define
 
 begin_comment
 comment|/* Validity of symlink pointer in the Code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C_ACCCACHE
+value|0x04
+end_define
+
+begin_comment
+comment|/* Validity of access cache */
 end_comment
 
 begin_define
@@ -324,6 +343,16 @@ parameter_list|(
 name|cp
 parameter_list|)
 value|((cp->c_flags)& C_SYMLINK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VALID_ACCCACHE
+parameter_list|(
+name|cp
+parameter_list|)
+value|((cp->c_flags)& C_ACCCACHE)
 end_define
 
 begin_define
