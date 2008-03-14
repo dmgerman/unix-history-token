@@ -33506,7 +33506,7 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Fast IPsec: Initialized Security Association Processing.\n"
+literal|"IPsec: Initialized Security Association Processing.\n"
 argument_list|)
 expr_stmt|;
 return|return;
