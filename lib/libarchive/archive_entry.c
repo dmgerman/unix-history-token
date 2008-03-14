@@ -5691,7 +5691,7 @@ block|{
 name|int
 name|count
 decl_stmt|;
-name|int
+name|size_t
 name|length
 decl_stmt|;
 specifier|const
