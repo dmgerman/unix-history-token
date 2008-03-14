@@ -52,17 +52,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ip6_ipsec_mtu
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|ip6_ipsec_output
 parameter_list|(
 name|struct
@@ -93,6 +82,18 @@ name|sp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|int	ip6_ipsec_mtu(struct mbuf *);
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
