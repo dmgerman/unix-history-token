@@ -661,6 +661,16 @@ name|OPTION_CHECK_LINKS
 block|}
 block|,
 block|{
+literal|"compress"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'Z'
+block|}
+block|,
+block|{
 literal|"confirmation"
 block|,
 name|no_argument
