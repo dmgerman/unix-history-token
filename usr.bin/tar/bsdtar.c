@@ -1073,6 +1073,16 @@ name|OPTION_TOTALS
 block|}
 block|,
 block|{
+literal|"uncompress"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'Z'
+block|}
+block|,
+block|{
 literal|"unlink"
 block|,
 name|no_argument
