@@ -2708,6 +2708,7 @@ argument_list|,
 literal|"cr"
 argument_list|)
 expr_stmt|;
+comment|/* Check other parameters only permitted in certain modes. */
 if|if
 condition|(
 name|bsdtar
