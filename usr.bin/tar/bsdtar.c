@@ -841,6 +841,16 @@ literal|'w'
 block|}
 block|,
 block|{
+literal|"insecure"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'P'
+block|}
+block|,
+block|{
 literal|"keep-old-files"
 block|,
 name|no_argument
