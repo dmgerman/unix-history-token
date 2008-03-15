@@ -3143,9 +3143,17 @@ operator|!=
 name|NOCPU
 argument_list|,
 operator|(
-literal|"%s: running thread has no CPU"
+literal|"%s: running thread has no CPU pid: %d, tid %d"
 operator|,
 name|__func__
+operator|,
+name|p
+operator|->
+name|p_pid
+operator|,
+name|td
+operator|->
+name|td_tid
 operator|)
 argument_list|)
 expr_stmt|;
