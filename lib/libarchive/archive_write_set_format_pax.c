@@ -4852,7 +4852,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The ustar header for the pax extended attributes must have a  * reasonable name:  SUSv3 requires 'dirname'/PaxHeader.'pid'/'filename'  * where 'pid' is the PID of the archiving process.  *  * Joerg Schilling has argued that this is unnecessary because, in  * practice, if the pax extended attributes get extracted as regular  * files, noone is going to bother reading those attributes to  * manually restore them.  Based on this, 'star' uses  * /tmp/PaxHeader/'basename' as the ustar header name.  This is a  * tempting argument, in part because it's simpler than the SUSv3  * recommendation, but I'm not entirely convinced.  I'm also  * uncomfortable with the fact that "/tmp" is a Unix-ism.  *  * The following routine leverages build_ustar_entry_name() above and  * so is simpler than you might think.  It just needs to provide the  * additional path element and handle a few pathological cases).  */
+comment|/*  * The ustar header for the pax extended attributes must have a  * reasonable name:  SUSv3 requires 'dirname'/PaxHeader.'pid'/'filename'  * where 'pid' is the PID of the archiving process.  Unfortunately,  * that makes testing a pain since the output varies for each run,  * so I'm sticking with the simpler 'dirname'/PaxHeader/'filename'  * for now.  (Someday, I'll make this settable.  Then I can use the  * SUS recommendation as default and test harnesses can override it  * to get predictable results.)  *  * Joerg Schilling has argued that this is unnecessary because, in  * practice, if the pax extended attributes get extracted as regular  * files, noone is going to bother reading those attributes to  * manually restore them.  Based on this, 'star' uses  * /tmp/PaxHeader/'basename' as the ustar header name.  This is a  * tempting argument, in part because it's simpler than the SUSv3  * recommendation, but I'm not entirely convinced.  I'm also  * uncomfortable with the fact that "/tmp" is a Unix-ism.  *  * The following routine leverages build_ustar_entry_name() above and  * so is simpler than you might think.  It just needs to provide the  * additional path element and handle a few pathological cases).  */
 end_comment
 
 begin_function
@@ -5031,6 +5031,9 @@ comment|/* 	 * TODO: Push this string into the 'pax' structure to avoid 	 * reco
 if|#
 directive|if
 name|HAVE_GETPID
+operator|&&
+literal|0
+comment|/* Disable this for now; see above comment. */
 name|sprintf
 argument_list|(
 name|buff
@@ -5044,7 +5047,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* If the platform can't fetch the pid, don't include it. */
-name|strpcy
+name|strcpy
 argument_list|(
 name|buff
 argument_list|,
