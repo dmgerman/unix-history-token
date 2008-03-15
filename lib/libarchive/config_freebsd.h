@@ -205,6 +205,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_GETPID
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_GRP_H
 value|1
 end_define
