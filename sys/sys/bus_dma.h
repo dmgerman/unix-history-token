@@ -146,17 +146,6 @@ name|BUS_DMA_NOCACHE
 value|0x200
 end_define
 
-begin_define
-define|#
-directive|define
-name|BUS_DMA_ISA
-value|0x400
-end_define
-
-begin_comment
-comment|/* map memory for AXP ISA dma */
-end_comment
-
 begin_comment
 comment|/* Forwards needed by prototypes below. */
 end_comment

@@ -324,7 +324,7 @@ comment|/*maxsegz*/
 literal|0x3ffff
 argument_list|,
 comment|/*flags*/
-name|BUS_DMA_ISA
+literal|0
 argument_list|,
 comment|/*lockfunc*/
 name|busdma_lock_mutex
