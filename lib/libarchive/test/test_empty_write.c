@@ -147,6 +147,11 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
 comment|/* THE TEST: write zero bytes to this entry. */
 comment|/* This used to crash. */
 name|assertEqualIntA
@@ -302,6 +307,11 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
 comment|/* THE TEST: write zero bytes to this entry. */
 name|assertEqualIntA
 argument_list|(
@@ -454,6 +464,11 @@ name|a
 argument_list|,
 name|ae
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
 argument_list|)
 expr_stmt|;
 comment|/* THE TEST: write zero bytes to this entry. */
