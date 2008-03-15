@@ -526,6 +526,8 @@ name|OPTION_CHECK_LINKS
 init|=
 literal|1
 block|,
+name|OPTION_CHROOT
+block|,
 name|OPTION_EXCLUDE
 block|,
 name|OPTION_FAST_READ
@@ -658,6 +660,16 @@ block|,
 name|NULL
 block|,
 name|OPTION_CHECK_LINKS
+block|}
+block|,
+block|{
+literal|"chroot"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_CHROOT
 block|}
 block|,
 block|{
@@ -1541,6 +1553,17 @@ comment|/* GNU tar */
 name|bsdtar
 operator|->
 name|option_warn_links
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_CHROOT
+case|:
+comment|/* NetBSD */
+name|bsdtar
+operator|->
+name|option_chroot
 operator|=
 literal|1
 expr_stmt|;

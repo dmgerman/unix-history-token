@@ -108,6 +108,10 @@ name|option_absolute_paths
 decl_stmt|;
 comment|/* -P */
 name|char
+name|option_chroot
+decl_stmt|;
+comment|/* --chroot */
+name|char
 name|option_dont_traverse_mounts
 decl_stmt|;
 comment|/* --one-file-system */
