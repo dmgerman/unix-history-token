@@ -2947,6 +2947,9 @@ name|offset
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|off_t
+operator|)
 name|mtree
 operator|->
 name|buffsize
@@ -3043,9 +3046,6 @@ expr_stmt|;
 operator|*
 name|size
 operator|=
-operator|(
-name|size_t
-operator|)
 name|bytes_read
 expr_stmt|;
 return|return
