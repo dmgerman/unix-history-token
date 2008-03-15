@@ -1088,7 +1088,7 @@ argument_list|,
 name|recmask
 argument_list|,
 name|Sflag
-operator||
+operator|||
 name|sflag
 argument_list|)
 expr_stmt|;
