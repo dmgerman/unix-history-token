@@ -2657,37 +2657,6 @@ argument_list|,
 literal|"cr"
 argument_list|)
 expr_stmt|;
-comment|/* Check other parameters only permitted in certain modes. */
-if|if
-condition|(
-name|bsdtar
-operator|->
-name|create_compression
-operator|==
-literal|'Z'
-operator|&&
-name|bsdtar
-operator|->
-name|mode
-operator|==
-literal|'c'
-condition|)
-block|{
-name|bsdtar_warnc
-argument_list|(
-name|bsdtar
-argument_list|,
-literal|0
-argument_list|,
-literal|".Z compression not supported"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|(
-name|bsdtar
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|bsdtar
