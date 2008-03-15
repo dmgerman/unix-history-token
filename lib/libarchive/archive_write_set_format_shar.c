@@ -540,12 +540,16 @@ name|archive_write_shar_finish_entry
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_SHAR_BASE
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"shar"
@@ -622,12 +626,16 @@ name|archive_write_shar_data_uuencode
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_SHAR_DUMP
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"shar dump"

@@ -143,15 +143,6 @@ function_decl|;
 block|}
 name|compressor
 struct|;
-comment|/* 	 * Again, write support is considerably simpler because there's 	 * no need for an auction. 	 */
-name|int
-name|archive_format
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|archive_format_name
-decl_stmt|;
 comment|/* 	 * Pointers to format-specific functions for writing.  They're 	 * initialized by archive_write_set_format_XXX() calls. 	 */
 name|void
 modifier|*
