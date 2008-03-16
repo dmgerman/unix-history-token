@@ -17,28 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OLD_JOKE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|OLD_JOKE
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OLD_JOKE */
-end_comment
-
 begin_comment
 comment|/*-  * job.c --  *	handle the creation etc. of our child processes.  *  * Interface:  *	Job_Make	Start the creation of the given target.  *  *	Job_CatchChildren  *			Check for and handle the termination of any children.  *			This must be called reasonably frequently to keep the  *			whole make going at a decent clip, since job table  *			entries aren't removed until their process is caught  *			this way. Its single argument is TRUE if the function  *			should block waiting for a child to terminate.  *  *	Job_CatchOutput	Print any output our children have produced. Should  *			also be called fairly frequently to keep the user  *			informed of what's going on. If no output is waiting,  *			it will block for a time given by the SEL_* constants,  *			below, or until output is ready.  *  *	Job_Init	Called to intialize this module. in addition, any  *			commands attached to the .BEGIN target are executed  *			before this function returns. Hence, the makefile must  *			have been parsed before this function is called.  *  *	Job_Full	Return TRUE if the job table is filled.  *  *	Job_Empty	Return TRUE if the job table is completely empty.  *  *	Job_Finish	Perform any final processing which needs doing. This  *			includes the execution of any commands which have  *			been/were attached to the .END target. It should only  *			be called when the job table is empty.  *  *	Job_AbortAll	Abort all currently running jobs. It doesn't handle  *			output or do anything for the jobs, just kills them.  *			It should only be called in an emergency, as it were.  *  *	Job_CheckCommands  *			Verify that the commands for a target are ok. Provide  *			them if necessary and possible.  *  *	Job_Touch	Update a target without really updating it.  *  *	Job_Wait	Wait for all currently-running jobs to finish.  *  * compat.c --  *	The routines in this file implement the full-compatibility  *	mode of PMake. Most of the special functionality of PMake  *	is available in this mode. Things not supported:  *	    - different shells.  *	    - friendly variable substitution.  *  * Interface:  *	Compat_Run	    Initialize things for this module and recreate  *			    thems as need creatin'  */
 end_comment
@@ -4003,9 +3981,9 @@ return|;
 block|}
 else|else
 block|{
-if|#
-directive|if
-name|OLD_JOKE
+ifndef|#
+directive|ifndef
+name|WITHOUT_OLD_JOKE
 if|if
 condition|(
 name|strcmp
