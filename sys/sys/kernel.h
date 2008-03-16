@@ -654,7 +654,7 @@ parameter_list|,
 name|ident
 parameter_list|)
 define|\
-value|static struct sysinit uniquifier ## _sys_init = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		(ident)						\ 	};							\ 	DATA_SET(sysinit_set,uniquifier ## _sys_init);
+value|static struct sysinit uniquifier ## _sys_init = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		(ident)						\ 	};							\ 	DATA_SET(sysinit_set,uniquifier ## _sys_init)
 end_define
 
 begin_define
