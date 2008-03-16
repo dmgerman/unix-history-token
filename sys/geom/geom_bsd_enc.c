@@ -724,7 +724,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|MAXPARTITIONS
+name|d
+operator|->
+name|d_npartitions
 condition|;
 name|i
 operator|++
