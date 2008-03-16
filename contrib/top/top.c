@@ -1722,6 +1722,8 @@ name|machine_init
 argument_list|(
 operator|&
 name|statics
+argument_list|,
+name|do_unames
 argument_list|)
 operator|==
 operator|-
