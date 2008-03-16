@@ -3156,11 +3156,7 @@ name|msgDebug
 argument_list|(
 literal|"wait for %s returned status of %d!\n"
 argument_list|,
-name|USE_GZIP
-condition|?
-literal|"gunzip"
-else|:
-literal|"bunzip2"
+name|UNZIPPER
 argument_list|,
 name|i
 argument_list|)
@@ -3933,11 +3929,7 @@ name|msgDebug
 argument_list|(
 literal|"wait for %s returned status of %d!\n"
 argument_list|,
-name|USE_GZIP
-condition|?
-literal|"gunzip"
-else|:
-literal|"bunzip2"
+name|UNZIPPER
 argument_list|,
 name|i
 argument_list|)
