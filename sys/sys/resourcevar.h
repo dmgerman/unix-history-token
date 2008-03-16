@@ -149,7 +149,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Per uid resource consumption  *  * Locking guide:  * (a) Constant from inception  * (b) Locked by ui_mtxp  * (c) Locked by global uihashtbl_mtx  */
+comment|/*-  * Per uid resource consumption  *  * Locking guide:  * (a) Constant from inception  * (b) Lockless, updated using atomics  * (c) Locked by global uihashtbl_mtx  */
 end_comment
 
 begin_struct
@@ -163,7 +163,7 @@ argument_list|)
 name|ui_hash
 expr_stmt|;
 comment|/* (c) hash chain of uidinfos */
-name|rlim_t
+name|long
 name|ui_sbsize
 decl_stmt|;
 comment|/* (b) socket buffer space consumed */
@@ -179,35 +179,9 @@ name|u_int
 name|ui_ref
 decl_stmt|;
 comment|/* (b) reference count */
-name|struct
-name|mtx
-modifier|*
-name|ui_mtxp
-decl_stmt|;
-comment|/* protect all counts/limits */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|UIDINFO_LOCK
-parameter_list|(
-name|ui
-parameter_list|)
-value|mtx_lock((ui)->ui_mtxp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UIDINFO_UNLOCK
-parameter_list|(
-name|ui
-parameter_list|)
-value|mtx_unlock((ui)->ui_mtxp)
-end_define
 
 begin_struct_decl
 struct_decl|struct
@@ -319,7 +293,7 @@ parameter_list|,
 name|int
 name|diff
 parameter_list|,
-name|int
+name|rlim_t
 name|maxval
 parameter_list|)
 function_decl|;
