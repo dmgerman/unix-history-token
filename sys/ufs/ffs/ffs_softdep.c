@@ -3614,20 +3614,22 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|sdproc
+name|sdproc
 argument_list|,
-argument|SI_SUB_KTHREAD_UPDATE
+name|SI_SUB_KTHREAD_UPDATE
 argument_list|,
-argument|SI_ORDER_ANY
+name|SI_ORDER_ANY
 argument_list|,
-argument|kproc_start
+name|kproc_start
 argument_list|,
-argument|&softdep_kp
+operator|&
+name|softdep_kp
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

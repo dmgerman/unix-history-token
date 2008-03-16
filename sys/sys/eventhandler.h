@@ -193,7 +193,7 @@ parameter_list|,
 name|priority
 parameter_list|)
 define|\
-value|static eventhandler_tag name ## _tag;				\ 	static void name ## _evh_init(void *ctx)			\ 	{								\ 		name ## _tag = EVENTHANDLER_REGISTER(name, func, ctx,	\ 		    priority);						\ 	}								\ 	SYSINIT(name ## _evh_init, SI_SUB_CONFIGURE, SI_ORDER_ANY,	\ 	    name ## _evh_init, arg)					\ 	struct __hack
+value|static eventhandler_tag name ## _tag;				\ 	static void name ## _evh_init(void *ctx)			\ 	{								\ 		name ## _tag = EVENTHANDLER_REGISTER(name, func, ctx,	\ 		    priority);						\ 	}								\ 	SYSINIT(name ## _evh_init, SI_SUB_CONFIGURE, SI_ORDER_ANY,	\ 	    name ## _evh_init, arg);					\ 	struct __hack
 end_define
 
 begin_define

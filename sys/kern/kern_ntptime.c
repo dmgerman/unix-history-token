@@ -2399,20 +2399,21 @@ comment|/* PPS_SYNC */
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|ntpclocks
+name|ntpclocks
 argument_list|,
-argument|SI_SUB_CLOCKS
+name|SI_SUB_CLOCKS
 argument_list|,
-argument|SI_ORDER_MIDDLE
+name|SI_ORDER_MIDDLE
 argument_list|,
-argument|ntp_init
+name|ntp_init
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * hardupdate() - local clock update  *  * This routine is called by ntp_adjtime() to update the local clock  * phase and frequency. The implementation is of an adaptive-parameter,  * hybrid phase/frequency-lock loop (PLL/FLL). The routine computes new  * time and frequency offset estimates for each call. If the kernel PPS  * discipline code is configured (PPS_SYNC), the PPS signal itself  * determines the new time offset, instead of the calling argument.  * Presumably, calls to ntp_adjtime() occur only when the caller  * believes the local clock is valid within some bound (+-128 ms with  * NTP). If the caller's time is far different than the PPS time, an  * argument will ensue, and it's not clear who will lose.  *  * For uncompensated quartz crystal oscillators and nominal update  * intervals less than 256 s, operation should be in phase-lock mode,  * where the loop is disciplined to phase. For update intervals greater  * than 1024 s, operation should be in frequency-lock mode, where the  * loop is disciplined to frequency. Between 256 s and 1024 s, the mode  * is selected by the STA_MODE status bit.  */

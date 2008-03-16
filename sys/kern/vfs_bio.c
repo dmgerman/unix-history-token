@@ -7880,20 +7880,22 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|bufdaemon
+name|bufdaemon
 argument_list|,
-argument|SI_SUB_KTHREAD_BUF
+name|SI_SUB_KTHREAD_BUF
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|kproc_start
+name|kproc_start
 argument_list|,
-argument|&buf_kp
+operator|&
+name|buf_kp
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

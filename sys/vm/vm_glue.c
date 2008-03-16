@@ -219,20 +219,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|vm_limits
+name|vm_limits
 argument_list|,
-argument|SI_SUB_VM_CONF
+name|SI_SUB_VM_CONF
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|vm_init_limits
+name|vm_init_limits
 argument_list|,
-argument|&proc0
+operator|&
+name|proc0
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * THIS MUST BE THE LAST INITIALIZATION ITEM!!!  *  * Note: run scheduling should be divorced from the vm system.  */
@@ -249,20 +251,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|scheduler
+name|scheduler
 argument_list|,
-argument|SI_SUB_RUN_SCHEDULER
+name|SI_SUB_RUN_SCHEDULER
 argument_list|,
-argument|SI_ORDER_ANY
+name|SI_ORDER_ANY
 argument_list|,
-argument|scheduler
+name|scheduler
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#

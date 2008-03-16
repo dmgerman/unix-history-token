@@ -259,20 +259,22 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|pagedaemon
+name|pagedaemon
 argument_list|,
-argument|SI_SUB_KTHREAD_PAGE
+name|SI_SUB_KTHREAD_PAGE
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|kproc_start
+name|kproc_start
 argument_list|,
-argument|&page_kp
+operator|&
+name|page_kp
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_if
 if|#
@@ -324,20 +326,22 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|vmdaemon
+name|vmdaemon
 argument_list|,
-argument|SI_SUB_KTHREAD_VM
+name|SI_SUB_KTHREAD_VM
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|kproc_start
+name|kproc_start
 argument_list|,
-argument|&vm_kp
+operator|&
+name|vm_kp
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

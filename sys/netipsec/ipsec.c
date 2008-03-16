@@ -9295,20 +9295,21 @@ comment|/* NB: disallow free */
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|ipsec
+name|ipsec
 argument_list|,
-argument|SI_SUB_PROTO_DOMAIN
+name|SI_SUB_PROTO_DOMAIN
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|ipsec_attach
+name|ipsec_attach
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* XXX this stuff doesn't belong here... */

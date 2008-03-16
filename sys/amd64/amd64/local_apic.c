@@ -4531,21 +4531,23 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|apic_init
+name|apic_init
 argument_list|,
-argument|SI_SUB_TUNABLES -
+name|SI_SUB_TUNABLES
+operator|-
 literal|1
 argument_list|,
-argument|SI_ORDER_SECOND
+name|SI_ORDER_SECOND
 argument_list|,
-argument|apic_init
+name|apic_init
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Setup the local APIC.  We have to do this prior to starting up the APs  * in the SMP case.  */
@@ -4599,20 +4601,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|apic_setup_local
+name|apic_setup_local
 argument_list|,
-argument|SI_SUB_CPU
+name|SI_SUB_CPU
 argument_list|,
-argument|SI_ORDER_SECOND
+name|SI_ORDER_SECOND
 argument_list|,
-argument|apic_setup_local
+name|apic_setup_local
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Setup the I/O APICs.  */
@@ -4691,20 +4694,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|apic_setup_io
+name|apic_setup_io
 argument_list|,
-argument|SI_SUB_INTR
+name|SI_SUB_INTR
 argument_list|,
-argument|SI_ORDER_SECOND
+name|SI_ORDER_SECOND
 argument_list|,
-argument|apic_setup_io
+name|apic_setup_io
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#

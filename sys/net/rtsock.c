@@ -620,20 +620,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|rtsock
+name|rtsock
 argument_list|,
-argument|SI_SUB_PROTO_DOMAIN
+name|SI_SUB_PROTO_DOMAIN
 argument_list|,
-argument|SI_ORDER_THIRD
+name|SI_ORDER_THIRD
 argument_list|,
-argument|rts_init
+name|rts_init
 argument_list|,
 literal|0
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

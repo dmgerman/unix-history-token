@@ -2601,20 +2601,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|witness_init
+name|witness_init
 argument_list|,
-argument|SI_SUB_WITNESS
+name|SI_SUB_WITNESS
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|witness_initialize
+name|witness_initialize
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

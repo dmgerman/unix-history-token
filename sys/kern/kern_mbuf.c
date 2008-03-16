@@ -958,20 +958,21 @@ begin_comment
 comment|/*  * Initialize FreeBSD Network buffer allocation.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|mbuf
+name|mbuf
 argument_list|,
-argument|SI_SUB_MBUF
+name|SI_SUB_MBUF
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|mbuf_init
+name|mbuf_init
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

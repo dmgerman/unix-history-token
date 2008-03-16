@@ -571,20 +571,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|cpu_mp_setmaxid
+name|cpu_mp_setmaxid
 argument_list|,
-argument|SI_SUB_TUNABLES
+name|SI_SUB_TUNABLES
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|mp_setmaxid
+name|mp_setmaxid
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Call the MD SMP initialization code.  */
@@ -654,20 +655,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|cpu_mp
+name|cpu_mp
 argument_list|,
-argument|SI_SUB_CPU
+name|SI_SUB_CPU
 argument_list|,
-argument|SI_ORDER_THIRD
+name|SI_ORDER_THIRD
 argument_list|,
-argument|mp_start
+name|mp_start
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -2418,20 +2420,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|cpu_mp_setvariables
+name|cpu_mp_setvariables
 argument_list|,
-argument|SI_SUB_TUNABLES
+name|SI_SUB_TUNABLES
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|mp_setvariables_for_up
+name|mp_setvariables_for_up
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

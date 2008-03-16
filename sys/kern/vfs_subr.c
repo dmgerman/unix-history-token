@@ -1444,20 +1444,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|vfs
+name|vfs
 argument_list|,
-argument|SI_SUB_VFS
+name|SI_SUB_VFS
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|vntblinit
+name|vntblinit
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Mark a mount point as busy. Used to synchronize access and to delay  * unmounting. Interlock is not released on failure.  */
@@ -3338,20 +3339,22 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|vnlru
+name|vnlru
 argument_list|,
-argument|SI_SUB_KTHREAD_UPDATE
+name|SI_SUB_KTHREAD_UPDATE
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|kproc_start
+name|kproc_start
 argument_list|,
-argument|&vnlru_kp
+operator|&
+name|vnlru_kp
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Routines having to do with the management of the vnode table.  */
@@ -7483,20 +7486,22 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|syncer
+name|syncer
 argument_list|,
-argument|SI_SUB_KTHREAD_UPDATE
+name|SI_SUB_KTHREAD_UPDATE
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|kproc_start
+name|kproc_start
 argument_list|,
-argument|&up_kp
+operator|&
+name|up_kp
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

@@ -1020,20 +1020,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|audit_init
+name|audit_init
 argument_list|,
-argument|SI_SUB_AUDIT
+name|SI_SUB_AUDIT
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|audit_init
+name|audit_init
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Drain the audit queue and close the log at shutdown.  Note that this can  * be called both from the system shutdown path and also from audit  * configuration syscalls, so 'arg' and 'howto' are ignored.  */

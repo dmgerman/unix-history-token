@@ -125,20 +125,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|kmem
+name|kmem
 argument_list|,
-argument|SI_SUB_KPROF
+name|SI_SUB_KPROF
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|kmstartup
+name|kmstartup
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -2680,20 +2681,21 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|tcov_init
+name|tcov_init
 argument_list|,
-argument|SI_SUB_KPROF
+name|SI_SUB_KPROF
 argument_list|,
-argument|SI_ORDER_SECOND
+name|SI_ORDER_SECOND
 argument_list|,
-argument|tcov_init
+name|tcov_init
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * GCC contains magic to recognize calls to for instance execve() and  * puts in calls to this function to preserve the profile counters.  * XXX: Put zinging punchline here.  */

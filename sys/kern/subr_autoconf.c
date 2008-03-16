@@ -207,20 +207,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|intr_config_hooks
+name|intr_config_hooks
 argument_list|,
-argument|SI_SUB_INT_CONFIG_HOOKS
+name|SI_SUB_INT_CONFIG_HOOKS
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|run_interrupt_driven_config_hooks
+name|run_interrupt_driven_config_hooks
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Register a hook that will be called after "cold"  * autoconfiguration is complete and interrupts can  * be used to complete initialization.  */

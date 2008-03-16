@@ -106,20 +106,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|idle_setup
+name|idle_setup
 argument_list|,
-argument|SI_SUB_SCHED_IDLE
+name|SI_SUB_SCHED_IDLE
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|idle_setup
+name|idle_setup
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Set up per-cpu idle process contexts.  The AP's shouldn't be running or  * accessing their idle processes at this point, so don't bother with  * locking.  */

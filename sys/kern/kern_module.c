@@ -318,20 +318,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|module
+name|module
 argument_list|,
-argument|SI_SUB_KLD
+name|SI_SUB_KLD
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|module_init
+name|module_init
 argument_list|,
 literal|0
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

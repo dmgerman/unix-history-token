@@ -306,7 +306,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|MODULE_DEPEND(name, kernel, __FreeBSD_version,			\ 	    __FreeBSD_version, MODULE_KERNEL_MAXVER);			\ 	MODULE_METADATA(_md_##name, MDT_MODULE,&data, #name);		\ 	SYSINIT(name##module, sub, order, module_register_init,&data)	\ 	struct __hack
+value|MODULE_DEPEND(name, kernel, __FreeBSD_version,			\ 	    __FreeBSD_version, MODULE_KERNEL_MAXVER);			\ 	MODULE_METADATA(_md_##name, MDT_MODULE,&data, #name);		\ 	SYSINIT(name##module, sub, order, module_register_init,&data);	\ 	struct __hack
 end_define
 
 begin_define

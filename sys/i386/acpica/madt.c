@@ -1817,21 +1817,23 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|madt_register
+name|madt_register
 argument_list|,
-argument|SI_SUB_CPU -
+name|SI_SUB_CPU
+operator|-
 literal|1
 argument_list|,
-argument|SI_ORDER_SECOND
+name|SI_ORDER_SECOND
 argument_list|,
-argument|madt_register
+name|madt_register
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Call the handler routine for each entry in the MADT table.  */
@@ -3497,20 +3499,21 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|madt_set_ids
+name|madt_set_ids
 argument_list|,
-argument|SI_SUB_CPU
+name|SI_SUB_CPU
 argument_list|,
-argument|SI_ORDER_ANY
+name|SI_ORDER_ANY
 argument_list|,
-argument|madt_set_ids
+name|madt_set_ids
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

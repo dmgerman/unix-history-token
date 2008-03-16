@@ -1401,35 +1401,38 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|aldthread
+name|aldthread
 argument_list|,
-argument|SI_SUB_KTHREAD_IDLE
+name|SI_SUB_KTHREAD_IDLE
 argument_list|,
-argument|SI_ORDER_ANY
+name|SI_ORDER_ANY
 argument_list|,
-argument|kproc_start
+name|kproc_start
 argument_list|,
-argument|&ald_kp
+operator|&
+name|ald_kp
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|ald
+name|ald
 argument_list|,
-argument|SI_SUB_LOCK
+name|SI_SUB_LOCK
 argument_list|,
-argument|SI_ORDER_ANY
+name|SI_ORDER_ANY
 argument_list|,
-argument|ald_startup
+name|ald_startup
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* User visible queue functions */

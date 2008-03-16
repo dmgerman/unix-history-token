@@ -1404,20 +1404,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|sched_setup
+name|sched_setup
 argument_list|,
-argument|SI_SUB_RUN_QUEUE
+name|SI_SUB_RUN_QUEUE
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|sched_setup
+name|sched_setup
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -1431,20 +1432,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|sched_initticks
+name|sched_initticks
 argument_list|,
-argument|SI_SUB_CLOCKS
+name|SI_SUB_CLOCKS
 argument_list|,
-argument|SI_ORDER_THIRD
+name|SI_ORDER_THIRD
 argument_list|,
-argument|sched_initticks
+name|sched_initticks
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Print the threads waiting on a run-queue.  */

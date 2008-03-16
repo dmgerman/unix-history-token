@@ -614,20 +614,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|linker
+name|linker
 argument_list|,
-argument|SI_SUB_KLD
+name|SI_SUB_KLD
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|linker_init
+name|linker_init
 argument_list|,
 literal|0
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -646,20 +647,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|linker_class
+name|linker_class
 argument_list|,
-argument|SI_SUB_KLD
+name|SI_SUB_KLD
 argument_list|,
-argument|SI_ORDER_ANY
+name|SI_ORDER_ANY
 argument_list|,
-argument|linker_stop_class_add
+name|linker_stop_class_add
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -1563,20 +1565,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|linker_kernel
+name|linker_kernel
 argument_list|,
-argument|SI_SUB_KLD
+name|SI_SUB_KLD
 argument_list|,
-argument|SI_ORDER_ANY
+name|SI_ORDER_ANY
 argument_list|,
-argument|linker_init_kernel_modules
+name|linker_init_kernel_modules
 argument_list|,
 literal|0
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -7049,20 +7052,21 @@ comment|/* woohoo! we made it! */
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|preload
+name|preload
 argument_list|,
-argument|SI_SUB_KLD
+name|SI_SUB_KLD
 argument_list|,
-argument|SI_ORDER_MIDDLE
+name|SI_ORDER_MIDDLE
 argument_list|,
-argument|linker_preload
+name|linker_preload
 argument_list|,
 literal|0
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Search for a not-loaded module by name.  *  * Modules may be found in the following locations:  *  * - preloaded (result is just the module name) - on disk (result is full path  * to module)  *  * If the module name is qualified in any way (contains path, etc.) the we  * simply return a copy of it.  *  * The search path can be manipulated via sysctl.  Note that we use the ';'  * character as a separator to be consistent with the bootloader.  */

@@ -1791,20 +1791,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|cpu_rootconf
+name|cpu_rootconf
 argument_list|,
-argument|SI_SUB_ROOT_CONF
+name|SI_SUB_ROOT_CONF
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|nfs_rootconf
+name|nfs_rootconf
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

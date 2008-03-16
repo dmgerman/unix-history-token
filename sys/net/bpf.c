@@ -7538,20 +7538,21 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|bpfdev
+name|bpfdev
 argument_list|,
-argument|SI_SUB_DRIVERS
+name|SI_SUB_DRIVERS
 argument_list|,
-argument|SI_ORDER_MIDDLE
+name|SI_ORDER_MIDDLE
 argument_list|,
-argument|bpf_drvinit
+name|bpf_drvinit
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#

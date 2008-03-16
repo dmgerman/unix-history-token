@@ -381,20 +381,21 @@ begin_comment
 comment|/*  * This ensures that there is at least one entry so that the sysinit_set  * symbol is not undefined.  A sybsystem ID of SI_SUB_DUMMY is never  * executed.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|placeholder
+name|placeholder
 argument_list|,
-argument|SI_SUB_DUMMY
+name|SI_SUB_DUMMY
 argument_list|,
-argument|SI_ORDER_ANY
+name|SI_ORDER_ANY
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * The sysinit table itself.  Items are checked off as the are run.  * If we want to register new sysinit types, add them to newsysinit.  */
@@ -1129,50 +1130,53 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|announce
+name|announce
 argument_list|,
-argument|SI_SUB_COPYRIGHT
+name|SI_SUB_COPYRIGHT
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|print_caddr_t
+name|print_caddr_t
 argument_list|,
-argument|copyright
+name|copyright
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|trademark
+name|trademark
 argument_list|,
-argument|SI_SUB_COPYRIGHT
+name|SI_SUB_COPYRIGHT
 argument_list|,
-argument|SI_ORDER_SECOND
+name|SI_ORDER_SECOND
 argument_list|,
-argument|print_caddr_t
+name|print_caddr_t
 argument_list|,
-argument|trademark
+name|trademark
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|version
+name|version
 argument_list|,
-argument|SI_SUB_COPYRIGHT
+name|SI_SUB_COPYRIGHT
 argument_list|,
-argument|SI_ORDER_THIRD
+name|SI_ORDER_THIRD
 argument_list|,
-argument|print_caddr_t
+name|print_caddr_t
 argument_list|,
-argument|version
+name|version
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -1190,37 +1194,41 @@ literal|"WARNING: WITNESS option enabled, expect reduced performance.\n"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|witwarn
+name|witwarn
 argument_list|,
-argument|SI_SUB_COPYRIGHT
+name|SI_SUB_COPYRIGHT
 argument_list|,
-argument|SI_ORDER_THIRD +
+name|SI_ORDER_THIRD
+operator|+
 literal|1
 argument_list|,
-argument|print_caddr_t
+name|print_caddr_t
 argument_list|,
-argument|wit_warn
+name|wit_warn
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|witwarn2
+name|witwarn2
 argument_list|,
-argument|SI_SUB_RUN_SCHEDULER
+name|SI_SUB_RUN_SCHEDULER
 argument_list|,
-argument|SI_ORDER_THIRD +
+name|SI_ORDER_THIRD
+operator|+
 literal|1
 argument_list|,
-argument|print_caddr_t
+name|print_caddr_t
 argument_list|,
-argument|wit_warn
+name|wit_warn
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -1243,37 +1251,41 @@ literal|"WARNING: DIAGNOSTIC option enabled, expect reduced performance.\n"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|diagwarn
+name|diagwarn
 argument_list|,
-argument|SI_SUB_COPYRIGHT
+name|SI_SUB_COPYRIGHT
 argument_list|,
-argument|SI_ORDER_THIRD +
+name|SI_ORDER_THIRD
+operator|+
 literal|2
 argument_list|,
-argument|print_caddr_t
+name|print_caddr_t
 argument_list|,
-argument|diag_warn
+name|diag_warn
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|diagwarn2
+name|diagwarn2
 argument_list|,
-argument|SI_SUB_RUN_SCHEDULER
+name|SI_SUB_RUN_SCHEDULER
 argument_list|,
-argument|SI_ORDER_THIRD +
+name|SI_ORDER_THIRD
+operator|+
 literal|2
 argument_list|,
-argument|print_caddr_t
+name|print_caddr_t
 argument_list|,
-argument|diag_warn
+name|diag_warn
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -1303,20 +1315,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|boot_verbose
+name|boot_verbose
 argument_list|,
-argument|SI_SUB_TUNABLES
+name|SI_SUB_TUNABLES
 argument_list|,
-argument|SI_ORDER_ANY
+name|SI_ORDER_ANY
 argument_list|,
-argument|set_boot_verbose
+name|set_boot_verbose
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -2142,20 +2155,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|p0init
+name|p0init
 argument_list|,
-argument|SI_SUB_INTRINSIC
+name|SI_SUB_INTRINSIC
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|proc0_init
+name|proc0_init
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* ARGSUSED*/
@@ -2320,20 +2334,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|p0post
+name|p0post
 argument_list|,
-argument|SI_SUB_INTRINSIC_POST
+name|SI_SUB_INTRINSIC_POST
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|proc0_post
+name|proc0_post
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  ***************************************************************************  ****  **** The following SYSINIT's and glue code should be moved to the  **** respective files on a per subsystem basis.  ****  ***************************************************************************  */
@@ -3214,20 +3229,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|init
+name|init
 argument_list|,
-argument|SI_SUB_CREATE_INIT
+name|SI_SUB_CREATE_INIT
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|create_init
+name|create_init
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Make it runnable now.  */
@@ -3282,20 +3298,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|kickinit
+name|kickinit
 argument_list|,
-argument|SI_SUB_KTHREAD_INIT
+name|SI_SUB_KTHREAD_INIT
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|kick_init
+name|kick_init
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

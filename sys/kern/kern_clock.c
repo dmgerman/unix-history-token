@@ -250,20 +250,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|clocks
+name|clocks
 argument_list|,
-argument|SI_SUB_CLOCKS
+name|SI_SUB_CLOCKS
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|initclocks
+name|initclocks
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Spin-lock protecting profiling statistics. */

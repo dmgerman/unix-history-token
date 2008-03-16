@@ -1174,7 +1174,7 @@ comment|/* XXX: There should be a non-static version of this. */
 end_comment
 
 begin_endif
-unit|static void printf_caddr_t(void *data) { 	printf("%s", (char *)data); } static char preempt_warning[] =     "WARNING: Kernel preemption is disabled, expect reduced performance.\n"; SYSINIT(preempt_warning, SI_SUB_COPYRIGHT, SI_ORDER_ANY, printf_caddr_t,     preempt_warning)
+unit|static void printf_caddr_t(void *data) { 	printf("%s", (char *)data); } static char preempt_warning[] =     "WARNING: Kernel preemption is disabled, expect reduced performance.\n"; SYSINIT(preempt_warning, SI_SUB_COPYRIGHT, SI_ORDER_ANY, printf_caddr_t,     preempt_warning);
 endif|#
 directive|endif
 end_endif
