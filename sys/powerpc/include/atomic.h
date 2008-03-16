@@ -1492,6 +1492,19 @@ name|atomic_fetchadd_int
 value|atomic_fetchadd_32
 end_define
 
+begin_define
+define|#
+directive|define
+name|atomic_fetchadd_long
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|(u_long)atomic_fetchadd_32((volatile u_int *)(p), (u_int)(v))
+end_define
+
 begin_endif
 endif|#
 directive|endif
