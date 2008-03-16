@@ -4734,14 +4734,14 @@ name|p
 argument_list|(
 name|icps_tooshort
 argument_list|,
-literal|"\t%lu message%s< minimum length\n"
+literal|"\t%lu message%s less than the minimum length\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icps_checksum
 argument_list|,
-literal|"\t%lu bad checksum%s\n"
+literal|"\t%lu message%s with bad checksum\n"
 argument_list|)
 expr_stmt|;
 name|p
