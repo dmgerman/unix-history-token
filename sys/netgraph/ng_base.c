@@ -13496,15 +13496,6 @@ argument_list|(
 name|hook
 argument_list|)
 operator|||
-operator|(
-name|NG_HOOK_PEER
-argument_list|(
-name|hook
-argument_list|)
-operator|==
-name|NULL
-operator|)
-operator|||
 name|NG_HOOK_NOT_VALID
 argument_list|(
 name|NG_HOOK_PEER
