@@ -70,6 +70,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -173,6 +185,18 @@ comment|/* Byte count to split on. */
 end_comment
 
 begin_decl_stmt
+name|off_t
+name|chunks
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Chunks count to split into. */
+end_comment
+
+begin_decl_stmt
 name|long
 name|numlines
 decl_stmt|;
@@ -261,6 +285,7 @@ comment|/* File name suffix length. */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|newfile
 parameter_list|(
@@ -270,6 +295,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|split1
 parameter_list|(
@@ -279,8 +305,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|split2
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|split3
 parameter_list|(
 name|void
 parameter_list|)
@@ -344,7 +381,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0123456789a:b:l:p:"
+literal|"0123456789a:b:l:n:p:"
 argument_list|)
 operator|)
 operator|!=
@@ -695,6 +732,61 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'n'
+case|:
+comment|/* Chunks. */
+if|if
+condition|(
+operator|!
+name|isdigit
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+name|optarg
+index|[
+literal|0
+index|]
+argument_list|)
+operator|||
+operator|(
+name|chunks
+operator|=
+operator|(
+name|size_t
+operator|)
+name|strtoul
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|10
+argument_list|)
+operator|)
+operator|==
+literal|0
+operator|||
+operator|*
+name|ep
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"%s: illegal number of chunks"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
 literal|'p'
 case|:
 comment|/* pattern matching. */
@@ -882,6 +974,10 @@ operator|||
 name|bytecnt
 operator|!=
 literal|0
+operator|||
+name|chunks
+operator|!=
+literal|0
 operator|)
 condition|)
 name|usage
@@ -903,6 +999,19 @@ condition|(
 name|bytecnt
 operator|!=
 literal|0
+operator|||
+name|chunks
+operator|!=
+literal|0
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|bytecnt
+operator|&&
+name|chunks
 condition|)
 name|usage
 argument_list|()
@@ -925,6 +1034,21 @@ name|bytecnt
 condition|)
 block|{
 name|split1
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|chunks
+condition|)
+block|{
+name|split3
 argument_list|()
 expr_stmt|;
 name|exit
@@ -959,6 +1083,7 @@ comment|/*  * split1 --  *	Split the input by bytes.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|split1
 parameter_list|(
@@ -977,6 +1102,13 @@ name|dist
 decl_stmt|,
 name|len
 decl_stmt|;
+name|int
+name|nfiles
+decl_stmt|;
+name|nfiles
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|bcnt
@@ -1027,9 +1159,27 @@ condition|(
 operator|!
 name|file_open
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|chunks
+operator|||
+operator|(
+name|nfiles
+operator|<
+name|chunks
+operator|)
+condition|)
+block|{
 name|newfile
 argument_list|()
 expr_stmt|;
+name|nfiles
+operator|++
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|bcnt
@@ -1090,9 +1240,25 @@ operator|+=
 name|bytecnt
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|chunks
+operator|||
+operator|(
+name|nfiles
+operator|<
+name|chunks
+operator|)
+condition|)
+block|{
 name|newfile
 argument_list|()
 expr_stmt|;
+name|nfiles
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|write
@@ -1121,9 +1287,25 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|chunks
+operator|||
+operator|(
+name|nfiles
+operator|<
+name|chunks
+operator|)
+condition|)
+block|{
 name|newfile
 argument_list|()
 expr_stmt|;
+name|nfiles
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|write
@@ -1191,6 +1373,7 @@ comment|/*  * split2 --  *	Split the input by lines.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|split2
 parameter_list|(
@@ -1392,10 +1575,89 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * split3 --  *	Split the input into specified number of chunks  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|split3
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|stat
+name|sb
+decl_stmt|;
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|ifd
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"stat"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+if|if
+condition|(
+name|chunks
+operator|>
+name|sb
+operator|.
+name|st_size
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"can't split into more than %d files"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|sb
+operator|.
+name|st_size
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+name|bytecnt
+operator|=
+name|sb
+operator|.
+name|st_size
+operator|/
+name|chunks
+expr_stmt|;
+name|split1
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * newfile --  *	Open a new output file.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|newfile
 parameter_list|(
@@ -1624,6 +1886,7 @@ name|stderr
 argument_list|,
 literal|"usage: split [-l line_count] [-a suffix_length] [file [prefix]]\n"
 literal|"       split -b byte_count[K|k|M|m|G|g] [-a suffix_length] [file [prefix]]\n"
+literal|"       split -n chunk_count [-a suffix_length] [file [prefix]]\n"
 literal|"       split -p pattern [-a suffix_length] [file [prefix]]\n"
 argument_list|)
 expr_stmt|;
