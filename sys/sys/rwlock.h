@@ -657,6 +657,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|rw_unlock
+parameter_list|(
+name|rw
+parameter_list|)
+value|do {						\ 	if (rw_wowned(rw))						\ 		rw_wunlock(rw);						\ 	else								\ 		rw_runlock(rw);						\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|rw_sleep
 parameter_list|(
 name|chan
