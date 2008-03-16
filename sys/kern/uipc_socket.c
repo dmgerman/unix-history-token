@@ -786,6 +786,11 @@ operator|)
 operator|/
 literal|10
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|maxfiles_change
+argument_list|)
+expr_stmt|;
 block|}
 name|EVENTHANDLER_INVOKE
 argument_list|(
