@@ -1757,7 +1757,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Return OUR priority if no pid specified, 		 * or if one is, report the highest priority 		 * in the process.  There isn't much more you can do as  		 * there is only room to return a single priority. 		 * Note: specifying our own pid is not the same 		 * as leaving it zero. 		 */
+comment|/* 		 * Return OUR priority if no pid specified, 		 * or if one is, report the highest priority 		 * in the process.  There isn't much more you can do as 		 * there is only room to return a single priority. 		 * Note: specifying our own pid is not the same 		 * as leaving it zero. 		 */
 if|if
 condition|(
 name|uap
@@ -4055,7 +4055,7 @@ operator|->
 name|rux_tu
 condition|)
 block|{
-comment|/*  		 * When we calibrate the cputicker, it is not uncommon to 		 * see the presumably fixed frequency increase slightly over 		 * time as a result of thermal stabilization and NTP 		 * discipline (of the reference clock).  We therefore ignore 		 * a bit of backwards slop because we  expect to catch up  		 * shortly.  We use a 3 microsecond limit to catch low 		 * counts and a 1% limit for high counts. 		 */
+comment|/* 		 * When we calibrate the cputicker, it is not uncommon to 		 * see the presumably fixed frequency increase slightly over 		 * time as a result of thermal stabilization and NTP 		 * discipline (of the reference clock).  We therefore ignore 		 * a bit of backwards slop because we  expect to catch up 		 * shortly.  We use a 3 microsecond limit to catch low 		 * counts and a 1% limit for high counts. 		 */
 name|uu
 operator|=
 name|ruxp
