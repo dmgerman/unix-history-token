@@ -65,7 +65,7 @@ parameter_list|,
 name|type_magic
 parameter_list|)
 define|\
-value|do {								\ 		(to) = (from);						\ 		if ((to) != NULL)					\ 			CHECK_OBJ((to), (type_magic));			\ 	} while (0);
+value|do {								\ 		(to) = (from);						\ 		if ((to) != NULL)					\ 			CHECK_OBJ((to), (type_magic));			\ 	} while (0)
 end_define
 
 begin_define
@@ -80,7 +80,7 @@ parameter_list|,
 name|type_magic
 parameter_list|)
 define|\
-value|do {								\ 		(to) = (from);						\ 		assert((to) != NULL);					\ 		CHECK_OBJ((to), (type_magic));				\ 	} while (0);
+value|do {								\ 		(to) = (from);						\ 		assert((to) != NULL);					\ 		CHECK_OBJ((to), (type_magic));				\ 	} while (0)
 end_define
 
 end_unit
