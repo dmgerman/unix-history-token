@@ -380,7 +380,7 @@ name|INIT_QUEUE
 argument_list|(
 name|vcp
 operator|->
-name|vc_replys
+name|vc_replies
 argument_list|)
 expr_stmt|;
 name|MARK_VC_OPEN
@@ -649,7 +649,7 @@ name|GETNEXT
 argument_list|(
 name|vcp
 operator|->
-name|vc_replys
+name|vc_replies
 argument_list|)
 init|;
 operator|!
@@ -659,7 +659,7 @@ name|vmp
 argument_list|,
 name|vcp
 operator|->
-name|vc_replys
+name|vc_replies
 argument_list|)
 condition|;
 name|vmp
@@ -982,7 +982,7 @@ name|vm_chain
 argument_list|,
 name|vcp
 operator|->
-name|vc_replys
+name|vc_replies
 argument_list|)
 expr_stmt|;
 return|return
@@ -1238,7 +1238,7 @@ name|GETNEXT
 argument_list|(
 name|vcp
 operator|->
-name|vc_replys
+name|vc_replies
 argument_list|)
 init|;
 operator|!
@@ -1248,7 +1248,7 @@ name|vmp
 argument_list|,
 name|vcp
 operator|->
-name|vc_replys
+name|vc_replies
 argument_list|)
 condition|;
 name|vmp
@@ -1284,7 +1284,7 @@ name|vmp
 argument_list|,
 name|vcp
 operator|->
-name|vc_replys
+name|vc_replies
 argument_list|)
 condition|)
 block|{

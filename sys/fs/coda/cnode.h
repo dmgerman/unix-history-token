@@ -382,7 +382,7 @@ name|vc_requests
 decl_stmt|;
 name|struct
 name|queue
-name|vc_replys
+name|vc_replies
 decl_stmt|;
 block|}
 struct|;
