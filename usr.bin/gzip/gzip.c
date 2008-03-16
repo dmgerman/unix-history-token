@@ -5048,33 +5048,6 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-comment|/* only try flags if they exist already */
-if|if
-condition|(
-name|sb
-operator|.
-name|st_flags
-operator|!=
-literal|0
-operator|&&
-name|fchflags
-argument_list|(
-name|fd
-argument_list|,
-name|sb
-operator|.
-name|st_flags
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|maybe_warn
-argument_list|(
-literal|"couldn't fchflags: %s"
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
 name|TIMESPEC_TO_TIMEVAL
 argument_list|(
 operator|&
@@ -5117,6 +5090,33 @@ condition|)
 name|maybe_warn
 argument_list|(
 literal|"couldn't utimes: %s"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+comment|/* only try flags if they exist already */
+if|if
+condition|(
+name|sb
+operator|.
+name|st_flags
+operator|!=
+literal|0
+operator|&&
+name|fchflags
+argument_list|(
+name|fd
+argument_list|,
+name|sb
+operator|.
+name|st_flags
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|maybe_warn
+argument_list|(
+literal|"couldn't fchflags: %s"
 argument_list|,
 name|file
 argument_list|)
