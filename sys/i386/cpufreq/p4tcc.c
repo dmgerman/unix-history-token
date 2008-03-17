@@ -573,7 +573,7 @@ switch|switch
 condition|(
 name|cpu_id
 operator|&
-literal|0xf
+literal|0xff
 condition|)
 block|{
 case|case
