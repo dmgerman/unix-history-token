@@ -709,7 +709,7 @@ modifier|*
 name|ses_objmap
 decl_stmt|;
 comment|/* objects */
-name|u_int32_t
+name|uint32_t
 name|ses_nobjects
 decl_stmt|;
 comment|/* number of objects */
@@ -717,7 +717,7 @@ name|ses_encstat
 name|ses_encstat
 decl_stmt|;
 comment|/* overall status */
-name|u_int8_t
+name|uint8_t
 name|ses_flags
 decl_stmt|;
 name|union
@@ -833,7 +833,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|struct
 name|cam_path
@@ -870,9 +870,9 @@ name|union
 name|ccb
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1116,7 +1116,7 @@ name|void
 modifier|*
 name|callback_arg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|code
 parameter_list|,
 name|struct
@@ -1368,17 +1368,13 @@ return|;
 block|}
 name|softc
 operator|=
-name|malloc
+name|SES_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ses_softc
 argument_list|)
-argument_list|,
-name|M_SCSISES
-argument_list|,
-name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2153,10 +2149,10 @@ name|ccb
 modifier|*
 name|ccb
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cflags
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|sflags
 parameter_list|)
 block|{
@@ -2249,8 +2245,6 @@ name|ses_objstat
 name|objs
 decl_stmt|;
 name|ses_object
-name|obj
-decl_stmt|,
 modifier|*
 name|uobj
 decl_stmt|;
@@ -2339,7 +2333,7 @@ name|periph
 operator|->
 name|softc
 expr_stmt|;
-comment|/* 	 * Now check to see whether we're initialized or not. 	 */
+comment|/* 	 * Now check to see whether we're initialized or not. 	 * This actually should never fail as we're not supposed 	 * to get past ses_open w/o successfully initializing 	 * things. 	 */
 if|if
 condition|(
 operator|(
@@ -2388,7 +2382,7 @@ name|cmd
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If this command can change the device's state, 	 * we must have the device open for writing. 	 */
+comment|/* 	 * If this command can change the device's state, 	 * we must have the device open for writing. 	 * 	 * For commands that get information about the 	 * device- we don't need to lock the peripheral 	 * if we aren't running a command. The number 	 * of objects and the contents will stay stable 	 * after the first open that does initialization. 	 * The periph also can't go away while a user 	 * process has it open. 	 */
 switch|switch
 condition|(
 name|cmd
@@ -2457,12 +2451,6 @@ break|break;
 case|case
 name|SESIOC_GETOBJMAP
 case|:
-comment|/* 		 * XXX Dropping the lock while copying multiple segments is 		 * bogus. 		 */
-name|cam_periph_lock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|uobj
@@ -2481,18 +2469,18 @@ name|ses_nobjects
 condition|;
 name|i
 operator|++
-operator|,
-name|uobj
-operator|++
 control|)
 block|{
-name|obj
+name|ses_object
+name|kobj
+decl_stmt|;
+name|kobj
 operator|.
 name|obj_id
 operator|=
 name|i
 expr_stmt|;
-name|obj
+name|kobj
 operator|.
 name|subencid
 operator|=
@@ -2505,7 +2493,7 @@ index|]
 operator|.
 name|subenclosure
 expr_stmt|;
-name|obj
+name|kobj
 operator|.
 name|object_type
 operator|=
@@ -2518,29 +2506,23 @@ index|]
 operator|.
 name|enctype
 expr_stmt|;
-name|cam_periph_unlock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|copyout
 argument_list|(
 operator|&
-name|obj
+name|kobj
 argument_list|,
+operator|&
 name|uobj
+index|[
+name|i
+index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ses_object
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|cam_periph_lock
-argument_list|(
-name|periph
 argument_list|)
 expr_stmt|;
 if|if
@@ -2551,11 +2533,6 @@ block|{
 break|break;
 block|}
 block|}
-name|cam_periph_unlock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|SESIOC_GETENCSTAT
