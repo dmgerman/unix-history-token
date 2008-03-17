@@ -93,6 +93,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -190,6 +196,13 @@ directive|define
 name|IRC_CONTROL_PORT_NUMBER_2
 value|6668
 end_define
+
+begin_decl_stmt
+name|char
+modifier|*
+name|newpacket
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Local defines */
@@ -337,6 +350,18 @@ modifier|*
 name|ah
 parameter_list|)
 block|{
+name|newpacket
+operator|=
+name|malloc
+argument_list|(
+name|IP_MAXPACKET
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|newpacket
+condition|)
+block|{
 name|AliasHandleIrcOut
 argument_list|(
 name|la
@@ -352,6 +377,12 @@ operator|->
 name|maxpktsize
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|newpacket
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -709,20 +740,12 @@ comment|/* Handle CTCP commands - the buffer may have to be copied */
 name|lFOUND_CTCP
 label|:
 block|{
-name|char
-name|newpacket
-index|[
-literal|65536
-index|]
-decl_stmt|;
-comment|/* Estimate of maximum packet size 					 * :) */
 name|unsigned
 name|int
 name|copyat
 init|=
 name|i
 decl_stmt|;
-comment|/* Same */
 name|unsigned
 name|int
 name|iCopy
