@@ -543,9 +543,6 @@ name|struct
 name|cf_setting
 name|set
 decl_stmt|;
-name|unsigned
-name|cpu_match
-decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -572,114 +569,27 @@ name|auto_mode
 operator|=
 name|TRUE
 expr_stmt|;
-name|cpu_match
-operator|=
-name|cpu_id
-operator|&
-literal|0xfff
-expr_stmt|;
-name|cpu_match
-operator||=
-operator|(
-name|cpu_procinfo
-operator|&
-literal|0xff
-operator|)
-operator|<<
-literal|12
-expr_stmt|;
 switch|switch
 condition|(
-name|cpu_match
+name|cpu_id
+operator|&
+literal|0xff
 condition|)
 block|{
 case|case
-literal|0x0ef22
-case|:
-comment|/* Xeon MP O50(A0) */
-case|case
-literal|0x0ef25
-case|:
-comment|/* Xeon MP O50(B0) */
-case|case
-literal|0x0ef26
-case|:
-comment|/* Xeon MP O50(C0) */
-case|case
-literal|0x0bf22
-case|:
-comment|/* Xeon MP O50(A0) */
-case|case
-literal|0x0bf25
-case|:
-comment|/* Xeon MP O50(B0) */
-case|case
-literal|0x0bf26
-case|:
-comment|/* Xeon MP O50(C0) */
-case|case
-literal|0x0ef29
-case|:
-comment|/* P4 Mobile/533 Z19(D1) */
-case|case
-literal|0x0ff29
-case|:
-comment|/* P4 Mobile/533 Z19(D1) */
-case|case
-literal|0x0ef24
-case|:
-comment|/* Xeon P44(B0) */
-case|case
-literal|0x0ef25
-case|:
-comment|/* Xeon P44(M0) */
-case|case
-literal|0x0ef27
-case|:
-comment|/* Xeon P44(C1) */
-case|case
-literal|0x0ef29
-case|:
-comment|/* Xeon P44(L0+D1) */
-case|case
-literal|0x12695
-case|:
-comment|/* Celeron W7(B-1) */
-case|case
-literal|0x0d
-case|case
-literal|0xf22
-case|:
-comment|/* O50(A0) */
-case|case
-literal|0xf24
-case|:
-comment|/* P44 */
-case|case
-literal|0xf25
-case|:
-comment|/* P44 O50(B0)*/
-case|case
-literal|0xf26
-case|:
-comment|/* O50(C0)*/
-case|case
-literal|0xf27
-case|:
-comment|/* P44 */
-case|case
-literal|0xf29
-case|:
-comment|/* P44 Z19(D1) */
-name|sc
-operator|->
-name|set_count
-operator|-=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 literal|0x22
+case|:
+case|case
+literal|0x24
+case|:
+case|case
+literal|0x25
+case|:
+case|case
+literal|0x27
+case|:
+case|case
+literal|0x29
 case|:
 comment|/* 		 * These CPU models hang when set to 12.5%. 		 * See Errata O50, P44, and Z21. 		 */
 name|sc
