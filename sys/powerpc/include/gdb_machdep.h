@@ -18,8 +18,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|PPC_GDB_NREGS4
+value|(32 + 7 + 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPC_GDB_NREGS8
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPC_GDB_NREGS16
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|GDB_NREGS
-value|153
+value|(PPC_GDB_NREGS4 + PPC_GDB_NREGS8 + PPC_GDB_NREGS16)
 end_define
 
 begin_define
@@ -33,7 +54,7 @@ begin_define
 define|#
 directive|define
 name|GDB_BUFSZ
-value|(GDB_NREGS*4)
+value|(PPC_GDB_NREGS4 * 8 +	\ 			 PPC_GDB_NREGS8 * 16 +	\ 			 PPC_GDB_NREGS16 * 32)
 end_define
 
 begin_function
@@ -46,12 +67,39 @@ name|int
 name|regnum
 parameter_list|)
 block|{
+if|if
+condition|(
+name|regnum
+operator|>=
+literal|32
+operator|&&
+name|regnum
+operator|<=
+literal|63
+condition|)
 return|return
 operator|(
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+literal|8
+operator|)
+return|;
+if|if
+condition|(
+name|regnum
+operator|>=
+literal|71
+operator|&&
+name|regnum
+operator|<=
+literal|102
+condition|)
+return|return
+operator|(
+literal|16
+operator|)
+return|;
+return|return
+operator|(
+literal|4
 operator|)
 return|;
 block|}
