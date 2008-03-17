@@ -1370,14 +1370,7 @@ block|{
 literal|"uidinfo hash"
 block|,
 operator|&
-name|lock_class_mtx_sleep
-block|}
-block|,
-block|{
-literal|"uidinfo struct"
-block|,
-operator|&
-name|lock_class_mtx_sleep
+name|lock_class_rw
 block|}
 block|,
 ifdef|#
