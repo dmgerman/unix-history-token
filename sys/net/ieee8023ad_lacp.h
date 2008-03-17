@@ -848,7 +848,7 @@ name|LACP_LOCK_INIT
 parameter_list|(
 name|_lsc
 parameter_list|)
-value|mtx_init(&(_lsc)->lsc_mtx, \ 					    "lacp mtx", NULL, MTX_DEF);
+value|mtx_init(&(_lsc)->lsc_mtx, \ 					    "lacp mtx", NULL, MTX_DEF)
 end_define
 
 begin_define
@@ -858,7 +858,7 @@ name|LACP_LOCK_DESTROY
 parameter_list|(
 name|_lsc
 parameter_list|)
-value|mtx_destroy(&(_lsc)->lsc_mtx);
+value|mtx_destroy(&(_lsc)->lsc_mtx)
 end_define
 
 begin_define
