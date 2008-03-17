@@ -3014,10 +3014,6 @@ name|buflen
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|int
-modifier|*
-name|nb
 parameter_list|)
 block|{
 name|vm_offset_t
@@ -3028,12 +3024,6 @@ name|vendaddr
 decl_stmt|;
 name|bus_addr_t
 name|paddr
-decl_stmt|;
-name|int
-name|needbounce
-init|=
-operator|*
-name|nb
 decl_stmt|;
 if|if
 condition|(
@@ -3144,17 +3134,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|needbounce
-operator|=
-literal|1
-expr_stmt|;
 name|map
 operator|->
 name|pagesneeded
 operator|++
 expr_stmt|;
-block|}
 name|vaddr
 operator|+=
 name|PAGE_SIZE
@@ -3269,11 +3253,6 @@ name|bounce_lock
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
-name|nb
-operator|=
-name|needbounce
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3365,11 +3344,6 @@ name|pt_entry_t
 modifier|*
 name|ptep
 decl_stmt|;
-name|int
-name|needbounce
-init|=
-literal|0
-decl_stmt|;
 name|lastaddr
 operator|=
 operator|*
@@ -3412,9 +3386,6 @@ argument_list|,
 name|buflen
 argument_list|,
 name|flags
-argument_list|,
-operator|&
-name|needbounce
 argument_list|)
 expr_stmt|;
 if|if
@@ -3849,10 +3820,6 @@ block|}
 comment|/* 		 * Insert chunk into a segment, coalescing with 		 * the previous segment if possible. 		 */
 if|if
 condition|(
-name|needbounce
-operator|==
-literal|0
-operator|&&
 name|seg
 operator|>=
 literal|0
