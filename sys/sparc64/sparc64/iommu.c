@@ -26,7 +26,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * UltraSPARC IOMMU support; used by both the PCI and SBus code.  *  * TODO:  * - Support sub-page boundaries.  * - Fix alignment handling for small allocations (the possible page offset  *   of malloc()ed memory is not handled at all). Revise interaction of  *   alignment with the load_mbuf and load_uio functions.  * - Handle lowaddr and highaddr in some way, and try to work out a way  *   for filter callbacks to work. Currently, only lowaddr is honored  *   in that no addresses above it are considered at all.  * - Implement BUS_DMA_ALLOCNOW in bus_dma_tag_create as far as possible.  * - Check the possible return values and callback error arguments;  *   the callback currently gets called in error conditions where it should  *   not be.  * - When running out of DVMA space, return EINPROGRESS in the non-  *   BUS_DMA_NOWAIT case and delay the callback until sufficient space  *   becomes available.  * - Use the streaming cache unless BUS_DMA_COHERENT is specified; do not  *   flush the streaming cache when coherent mappings are synced.  */
+comment|/*  * UltraSPARC IOMMU support; used by both the PCI and SBus code.  *  * TODO:  * - Support sub-page boundaries.  * - Fix alignment handling for small allocations (the possible page offset  *   of malloc()ed memory is not handled at all).  Revise interaction of  *   alignment with the load_mbuf and load_uio functions.  * - Handle lowaddr and highaddr in some way, and try to work out a way  *   for filter callbacks to work.  Currently, only lowaddr is honored  *   in that no addresses above it are considered at all.  * - Implement BUS_DMA_ALLOCNOW in bus_dma_tag_create as far as possible.  * - Check the possible return values and callback error arguments;  *   the callback currently gets called in error conditions where it should  *   not be.  * - When running out of DVMA space, return EINPROGRESS in the non-  *   BUS_DMA_NOWAIT case and delay the callback until sufficient space  *   becomes available.  * - Use the streaming cache unless BUS_DMA_COHERENT is specified; do not  *   flush the streaming cache when coherent mappings are synced.  */
 end_comment
 
 begin_include
@@ -244,7 +244,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|bus_space_read_8((is)->is_bustag, (is)->is_bushandle, 		\ 	    (is)->reg + (off))
+value|bus_space_read_8((is)->is_bustag, (is)->is_bushandle,		\ 	    (is)->reg + (off))
 end_define
 
 begin_define
@@ -261,7 +261,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|bus_space_write_8((is)->is_bustag, (is)->is_bushandle, 		\ 	    (is)->reg + (off), (v))
+value|bus_space_write_8((is)->is_bustag, (is)->is_bushandle,		\ 	    (is)->reg + (off), (v))
 end_define
 
 begin_define
@@ -424,7 +424,7 @@ value|mtx_unlock(&is->is_mtx)
 end_define
 
 begin_comment
-comment|/* Flush a page from the TLB. No locking required, since this is atomic. */
+comment|/* Flush a page from the TLB.  No locking required, since this is atomic. */
 end_comment
 
 begin_function
@@ -457,7 +457,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Flush a page from the streaming buffer. No locking required, since this is  * atomic.  */
+comment|/*  * Flush a page from the streaming buffer.  No locking required, since this  * is atomic.  */
 end_comment
 
 begin_function
@@ -520,7 +520,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Flush an address from the streaming buffer(s); this is an asynchronous  * operation. To make sure that it has completed, iommu_strbuf_sync() needs  * to be called. No locking required.  */
+comment|/*  * Flush an address from the streaming buffer(s); this is an asynchronous  * operation.  To make sure that it has completed, iommu_strbuf_sync() needs  * to be called.  No locking required.  */
 end_comment
 
 begin_function
@@ -1177,7 +1177,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Enter a mapping into the TSB. No locking required, since each TSB slot is  * uniquely assigned to a single map.  */
+comment|/*  * Enter a mapping into the TSB.  No locking required, since each TSB slot is  * uniquely assigned to a single map.  */
 end_comment
 
 begin_function
@@ -1215,7 +1215,9 @@ operator|->
 name|is_dvmabase
 argument_list|,
 operator|(
-literal|"iommu_enter: va %#lx not in DVMA space"
+literal|"%s: va %#lx not in DVMA space"
+operator|,
+name|__func__
 operator|,
 name|va
 operator|)
@@ -1230,7 +1232,9 @@ operator|->
 name|is_pmaxaddr
 argument_list|,
 operator|(
-literal|"iommu_enter: XXX: physical address too large (%#lx)"
+literal|"%s: XXX: physical address too large (%#lx)"
+operator|,
+name|__func__
 operator|,
 name|pa
 operator|)
@@ -1301,7 +1305,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove mappings created by iommu_enter. Flush the streaming buffer, but do  * not synchronize it. Returns whether a streaming buffer flush was performed.  */
+comment|/*  * Remove mappings created by iommu_enter().  Flush the streaming buffer,  * but do not synchronize it.  Returns whether a streaming buffer flush  * was performed.  */
 end_comment
 
 begin_function
@@ -1347,7 +1351,9 @@ operator|->
 name|is_dvmabase
 argument_list|,
 operator|(
-literal|"iommu_remove: va 0x%lx not in DVMA space"
+literal|"%s: va 0x%lx not in DVMA space"
+operator|,
+name|__func__
 operator|,
 operator|(
 name|u_long
@@ -1365,7 +1371,9 @@ operator|>=
 name|va
 argument_list|,
 operator|(
-literal|"iommu_remove: va 0x%lx + len 0x%lx wraps"
+literal|"%s: va 0x%lx + len 0x%lx wraps"
+operator|,
+name|__func__
 operator|,
 operator|(
 name|long
@@ -1583,7 +1591,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Streaming buffer flushes: 	 * 	 *   1 Tell strbuf to flush by storing va to strbuf_pgflush.  If 	 *     we're not on a cache line boundary (64-bits): 	 *   2 Store 0 in flag 	 *   3 Store pointer to flag in flushsync 	 *   4 wait till flushsync becomes 0x1 	 * 	 * If it takes more than .5 sec, something 	 * went wrong. 	 */
+comment|/* 	 * Streaming buffer flushes: 	 * 	 *   1 Tell strbuf to flush by storing va to strbuf_pgflush.  If 	 *     we're not on a cache line boundary (64-bits): 	 *   2 Store 0 in flag 	 *   3 Store pointer to flag in flushsync 	 *   4 wait till flushsync becomes 0x1 	 * 	 * If it takes more than .5 sec, something went wrong. 	 */
 operator|*
 name|is
 operator|->
@@ -1678,7 +1686,7 @@ name|tv_sec
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * 0.5s is the recommended timeout from the U2S manual. The actual 	 * time required should be smaller by at least a factor of 1000. 	 * We have no choice but to busy-wait. 	 */
+comment|/* 	 * 0.5s is the recommended timeout from the U2S manual.  The actual 	 * time required should be smaller by at least a factor of 1000. 	 * We have no choice but to busy-wait. 	 */
 name|end
 operator|.
 name|tv_usec
@@ -1815,7 +1823,7 @@ name|bus_size_t
 name|size
 parameter_list|)
 block|{
-comment|/* 	 * This cannot be enabled yet, as many driver are still missing 	 * bus_dmamap_sync() calls. As soon as there is a BUS_DMA_STREAMING 	 * flag, this should be reenabled conditionally on it. 	 */
+comment|/* 	 * This cannot be enabled yet, as many driver are still missing 	 * bus_dmamap_sync() calls.  As soon as there is a BUS_DMA_STREAMING 	 * flag, this should be reenabled conditionally on it. 	 */
 ifdef|#
 directive|ifdef
 name|notyet
@@ -1854,7 +1862,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate DVMA virtual memory for a map. The map may not be on a queue, so  * that it can be freely modified.  */
+comment|/*  * Allocate DVMA virtual memory for a map.  The map may not be on a queue,  * so that it can be freely modified.  */
 end_comment
 
 begin_function
@@ -1900,7 +1908,9 @@ operator|->
 name|dm_onq
 argument_list|,
 operator|(
-literal|"iommu_dvma_valloc: map on queue!"
+literal|"%s: map on queue!"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2166,7 +2176,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"iommu_dvma_vfree_res: resource busy!"
+literal|"%s: resource busy!"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2441,7 +2453,9 @@ operator|->
 name|dm_onq
 argument_list|,
 operator|(
-literal|"iommu_dvma_vfindseg: map on queue!"
+literal|"%s: map on queue!"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2735,7 +2749,9 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"iommu_dvma_vallocseg: allocation failed unexpectedly!"
+literal|"%s: allocation failed unexpectedly!"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2900,7 +2916,7 @@ name|dm_flags
 operator||=
 name|DMF_COHERENT
 expr_stmt|;
-comment|/* 	 * Try to preallocate DVMA space. If this fails, it is retried at load 	 * time. 	 */
+comment|/* 	 * Try to preallocate DVMA space.  If this fails, it is retried at 	 * load time. 	 */
 name|iommu_dvma_valloc
 argument_list|(
 name|dt
@@ -3071,7 +3087,7 @@ name|dm_flags
 operator||=
 name|DMF_COHERENT
 expr_stmt|;
-comment|/* 	 * Preallocate DVMA space; if this fails now, it is retried at load 	 * time. Through bus_dmamap_load_mbuf() and bus_dmamap_load_uio(), it 	 * is possible to have multiple discontiguous segments in a single map, 	 * which is handled by allocating additional resources, instead of 	 * increasing the size, to avoid fragmentation. 	 * Clamp preallocation to IOMMU_MAX_PRE. In some situations we can 	 * handle more; that case is handled by reallocating at map load time. 	 */
+comment|/* 	 * Preallocate DVMA space; if this fails now, it is retried at load 	 * time.  Through bus_dmamap_load_mbuf() and bus_dmamap_load_uio(), 	 * it is possible to have multiple discontiguous segments in a single 	 * map, which is handled by allocating additional resources, instead 	 * of increasing the size, to avoid fragmentation. 	 * Clamp preallocation to IOMMU_MAX_PRE.  In some situations we can 	 * handle more; that case is handled by reallocating at map load time. 	 */
 name|totsz
 operator|=
 name|ulmin
@@ -3138,8 +3154,10 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"iommu_dvmamap_create: bogus preallocation size "
-literal|", nsegments = %d, maxpre = %d, maxsize = %lu"
+literal|"%s: bogus preallocation size , nsegments = %d, "
+literal|"maxpre = %d, maxsize = %lu"
+operator|,
+name|__func__
 operator|,
 name|dt
 operator|->
@@ -3366,7 +3384,9 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"iommu_dvmamap_load_buffer: buflen == 0!"
+literal|"%s: buflen == 0!"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3627,7 +3647,7 @@ operator|(
 name|EFBIG
 operator|)
 return|;
-comment|/* 			 * No extra alignment here - the common practice in the 			 * busdma code seems to be that only the first segment 			 * needs to satisfy the alignment constraints (and that 			 * only for bus_dmamem_alloc()ed maps). It is assumed 			 * that such tags have maxsegsize>= maxsize. 			 */
+comment|/* 			 * No extra alignment here - the common practice in 			 * the busdma code seems to be that only the first 			 * segment needs to satisfy the alignment constraints 			 * (and that only for bus_dmamem_alloc()ed maps). 			 * It is assumed that such tags have maxsegsize>= 			 * maxsize. 			 */
 name|esize
 operator|=
 name|ulmin
@@ -4413,9 +4433,19 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
+name|IS_UNLOCK
+argument_list|(
+name|is
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
+name|IS_UNLOCK
+argument_list|(
+name|is
+argument_list|)
+expr_stmt|;
 name|map
 operator|->
 name|dm_flags
@@ -4427,11 +4457,6 @@ operator|*
 name|nsegs
 expr_stmt|;
 block|}
-name|IS_UNLOCK
-argument_list|(
-name|is
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4981,7 +5006,7 @@ name|r
 operator|->
 name|dr_used
 expr_stmt|;
-comment|/* if we have a streaming buffer, flush it here first */
+comment|/* 			 * If we have a streaming buffer, flush it here 			 * first. 			 */
 while|while
 condition|(
 name|len
