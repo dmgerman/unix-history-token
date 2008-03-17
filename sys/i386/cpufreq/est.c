@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/specialreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<contrib/dev/acpica/acpi.h>
 end_include
 
@@ -7074,12 +7080,6 @@ block|{
 name|device_t
 name|child
 decl_stmt|;
-name|u_int
-name|p
-index|[
-literal|4
-index|]
-decl_stmt|;
 comment|/* Make sure we're not being doubly invoked. */
 if|if
 condition|(
@@ -7124,26 +7124,15 @@ literal|0
 operator|)
 condition|)
 return|return;
-comment|/* 	 * Read capability bits and check if the CPU supports EST. 	 * This is indicated by bit 7 of ECX. 	 */
-name|do_cpuid
-argument_list|(
-literal|1
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Check if the CPU supports EST. 	 */
 if|if
 condition|(
+operator|!
 operator|(
-name|p
-index|[
-literal|2
-index|]
+name|cpu_feature2
 operator|&
-literal|0x80
+name|CPUID2_EST
 operator|)
-operator|==
-literal|0
 condition|)
 return|return;
 comment|/* 	 * We add a child for each CPU since settings must be performed 	 * on each CPU in the SMP case. 	 */
@@ -7416,33 +7405,12 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|est_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|acpi_settings
-condition|)
-name|free
-argument_list|(
-name|sc
-operator|->
-name|freq_list
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|struct est_softc *sc;  	sc = device_get_softc(dev); 	if (sc->acpi_settings) 		free(sc->freq_list, M_DEVBUF);
+endif|#
+directive|endif
 return|return
 operator|(
 name|ENXIO
