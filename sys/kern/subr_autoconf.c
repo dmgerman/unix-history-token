@@ -147,15 +147,6 @@ argument_list|,
 argument|next_entry
 argument_list|)
 block|{
-name|next_entry
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|hook_entry
-argument_list|,
-name|ich_links
-argument_list|)
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
