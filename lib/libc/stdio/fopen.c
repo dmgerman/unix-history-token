@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -85,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -195,6 +207,29 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* release */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+comment|/* 	 * File descriptors are a full int, but _file is only a short. 	 * If we get a valid file descriptor that is greater than 	 * SHRT_MAX, then the fd will get sign-extended into an 	 * invalid file descriptor.  Handle this case by failing the 	 * open. 	 */
+if|if
+condition|(
+name|f
+operator|>
+name|SHRT_MAX
+condition|)
+block|{
+name|_close
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|EMFILE
+expr_stmt|;
 return|return
 operator|(
 name|NULL

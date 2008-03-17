@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"un-namespace.h"
 end_include
 
@@ -145,6 +151,24 @@ operator|=
 name|getdtablesize
 argument_list|()
 expr_stmt|;
+comment|/* 	 * File descriptors are a full int, but _file is only a short. 	 * If we get a valid file descriptor that is greater than 	 * SHRT_MAX, then the fd will get sign-extended into an 	 * invalid file descriptor.  Handle this case by failing the 	 * open. 	 */
+if|if
+condition|(
+name|fd
+operator|>
+name|SHRT_MAX
+condition|)
+block|{
+name|errno
+operator|=
+name|EMFILE
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|(
