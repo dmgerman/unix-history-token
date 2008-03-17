@@ -14682,7 +14682,14 @@ goto|goto
 name|done
 goto|;
 block|}
-else|else
+if|if
+condition|(
+name|cmd
+operator|->
+name|arg1
+operator|!=
+name|IP_FW_TABLEARG
+condition|)
 operator|(
 operator|(
 name|ipfw_insn_nat
