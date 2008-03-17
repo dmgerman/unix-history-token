@@ -497,6 +497,12 @@ block|,
 block|{
 name|BCOM_VENDORID
 block|,
+name|BCOM_DEVICEID_BCM5722
+block|}
+block|,
+block|{
+name|BCOM_VENDORID
+block|,
 name|BCOM_DEVICEID_BCM5750
 block|}
 block|,
@@ -1028,6 +1034,12 @@ block|{
 name|BGE_CHIPID_BCM5755_A2
 block|,
 literal|"BCM5755 A2"
+block|}
+block|,
+block|{
+name|BGE_CHIPID_BCM5722_A0
+block|,
+literal|"BCM5722 A0"
 block|}
 block|,
 comment|/* 5754 and 5787 share the same ASIC ID */
@@ -10993,12 +11005,22 @@ name|bge_asicrev
 operator|==
 name|BGE_ASICREV_BCM5787
 condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_chipid
+operator|!=
+name|BGE_CHIPID_BCM5722_A0
+condition|)
 name|sc
 operator|->
 name|bge_flags
 operator||=
 name|BGE_FLAG_JITTER_BUG
 expr_stmt|;
+block|}
 else|else
 name|sc
 operator|->
