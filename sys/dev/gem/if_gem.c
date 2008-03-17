@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2001 Eduardo Horvath.  * Copyright (c) 2001-2003 Thomas Moestl  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR  ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: NetBSD: gem.c,v 1.21 2002/06/01 23:50:58 lukem Exp  */
+comment|/*-  * Copyright (C) 2001 Eduardo Horvath.  * Copyright (c) 2001-2003 Thomas Moestl  * Copyright (c) 2007 Marius Strobl<marius@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR  ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: NetBSD: gem.c,v 1.21 2002/06/01 23:50:58 lukem Exp  */
 end_comment
 
 begin_include
@@ -297,7 +297,7 @@ value|10000
 end_define
 
 begin_comment
-comment|/*  * The GEM hardware support basic TCP/UDP checksum offloading. However,  * the hardware doesn't compensate the checksum for UDP datagram which  * can yield to 0x0. As a safe guard, UDP checksum offload is disabled  * by default. It can be reactivated by setting special link option  * link0 with ifconfig(8).  */
+comment|/*  * The GEM hardware support basic TCP/UDP checksum offloading.  However,  * the hardware doesn't compensate the checksum for UDP datagram which  * can yield to 0x0.  As a safe guard, UDP checksum offload is disabled  * by default.  It can be reactivated by setting special link option  * link0 with ifconfig(8).  */
 end_comment
 
 begin_define
@@ -309,38 +309,16 @@ end_define
 
 begin_function_decl
 specifier|static
-name|void
-name|gem_start
+name|int
+name|gem_add_rxbuf
 parameter_list|(
 name|struct
-name|ifnet
+name|gem_softc
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|gem_start_locked
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|gem_stop
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
+name|sc
 parameter_list|,
 name|int
+name|idx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -348,15 +326,21 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|gem_ioctl
+name|gem_bitwait
 parameter_list|(
 name|struct
-name|ifnet
+name|gem_softc
 modifier|*
+name|sc
 parameter_list|,
-name|u_long
+name|bus_addr_t
+name|r
 parameter_list|,
-name|caddr_t
+name|uint32_t
+name|clr
+parameter_list|,
+name|uint32_t
+name|set
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -368,128 +352,17 @@ name|gem_cddma_callback
 parameter_list|(
 name|void
 modifier|*
+name|xsc
 parameter_list|,
 name|bus_dma_segment_t
 modifier|*
+name|segs
 parameter_list|,
 name|int
+name|nsegs
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|__inline
-name|void
-name|gem_txcksum
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|uint64_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|__inline
-name|void
-name|gem_rxcksum
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|uint64_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|gem_tick
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|gem_watchdog
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|gem_init
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|gem_init_locked
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|gem_init_regs
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|u_int
-name|gem_ringsize
-parameter_list|(
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|gem_meminit
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
+name|error
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -504,10 +377,112 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
+name|m0
 parameter_list|,
 name|int
+name|how
 parameter_list|,
 name|int
+name|maxfrags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|gem_disable_rx
+parameter_list|(
+name|struct
+name|gem_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|gem_disable_tx
+parameter_list|(
+name|struct
+name|gem_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|gem_eint
+parameter_list|(
+name|struct
+name|gem_softc
+modifier|*
+name|sc
+parameter_list|,
+name|u_int
+name|status
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|gem_init
+parameter_list|(
+name|void
+modifier|*
+name|xsc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|gem_init_locked
+parameter_list|(
+name|struct
+name|gem_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|gem_init_regs
+parameter_list|(
+name|struct
+name|gem_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|gem_ioctl
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|u_long
+name|cmd
+parameter_list|,
+name|caddr_t
+name|data
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -520,11 +495,26 @@ parameter_list|(
 name|struct
 name|gem_softc
 modifier|*
+name|sc
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 modifier|*
+name|m_head
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|gem_meminit
+parameter_list|(
+name|struct
+name|gem_softc
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -537,24 +527,7 @@ parameter_list|(
 name|struct
 name|gem_softc
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|gem_bitwait
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
-parameter_list|,
-name|bus_addr_t
-parameter_list|,
-name|u_int32_t
-parameter_list|,
-name|u_int32_t
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -567,6 +540,7 @@ parameter_list|(
 name|struct
 name|gem_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -579,6 +553,7 @@ parameter_list|(
 name|struct
 name|gem_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -604,99 +579,18 @@ parameter_list|(
 name|struct
 name|gem_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|gem_disable_rx
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|gem_disable_tx
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|gem_rxdrain
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|gem_add_rxbuf
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|gem_setladrf
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|gem_get
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|gem_eint
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
-parameter_list|,
 name|u_int
+name|gem_ringsize
+parameter_list|(
+name|u_int
+name|sz
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -709,6 +603,7 @@ parameter_list|(
 name|struct
 name|gem_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -726,6 +621,7 @@ name|gem_rint_timeout
 parameter_list|(
 name|void
 modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -737,12 +633,146 @@ end_endif
 
 begin_function_decl
 specifier|static
+name|__inline
+name|void
+name|gem_rxcksum
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|uint64_t
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|gem_rxdrain
+parameter_list|(
+name|struct
+name|gem_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|gem_setladrf
+parameter_list|(
+name|struct
+name|gem_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|gem_start
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|gem_start_locked
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|gem_stop
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|int
+name|disable
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|gem_tick
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|gem_tint
 parameter_list|(
 name|struct
 name|gem_softc
 modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|gem_txcksum
+parameter_list|(
+name|struct
+name|gem_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|uint64_t
+modifier|*
+name|cflags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|gem_watchdog
+parameter_list|(
+name|struct
+name|gem_softc
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -811,40 +841,32 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|GEM_NSEGS
-value|GEM_NTXDESC
-end_define
-
-begin_comment
-comment|/*  * gem_attach:  *  *	Attach a Gem interface to the system.  */
-end_comment
-
 begin_function
 name|int
 name|gem_attach
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
+name|struct
+name|gem_txsoft
+modifier|*
+name|txs
+decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|error
+decl_stmt|,
+name|i
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|v
 decl_stmt|;
 name|ifp
@@ -1109,7 +1131,7 @@ condition|)
 goto|goto
 name|fail_ttag
 goto|;
-comment|/* 	 * Allocate the control data structures, and create and load the 	 * DMA map for it. 	 */
+comment|/* 	 * Allocate the control data structures, create and load the 	 * DMA map for it. 	 */
 if|if
 condition|(
 operator|(
@@ -1151,8 +1173,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"unable to allocate control data,"
-literal|" error = %d\n"
+literal|"unable to allocate control data, error = %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1215,8 +1236,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"unable to load control data DMA "
-literal|"map, error = %d\n"
+literal|"unable to load control data DMA map, error = %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1261,11 +1281,6 @@ name|i
 operator|++
 control|)
 block|{
-name|struct
-name|gem_txsoft
-modifier|*
-name|txs
-decl_stmt|;
 name|txs
 operator|=
 operator|&
@@ -1317,8 +1332,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"unable to create tx DMA map "
-literal|"%d, error = %d\n"
+literal|"unable to create TX DMA map %d, error = %d\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1391,8 +1405,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"unable to create rx DMA map "
-literal|"%d, error = %d\n"
+literal|"unable to create RX DMA map %d, error = %d\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1961,7 +1974,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|sc
@@ -1991,7 +2003,6 @@ operator|.
 name|rxs_dmamap
 argument_list|)
 expr_stmt|;
-block|}
 name|fail_txd
 label|:
 for|for
@@ -2007,7 +2018,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|sc
@@ -2037,7 +2047,6 @@ operator|.
 name|txs_dmamap
 argument_list|)
 expr_stmt|;
-block|}
 name|bus_dmamap_unload
 argument_list|(
 name|sc
@@ -2121,13 +2130,11 @@ begin_function
 name|void
 name|gem_detach
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -2213,7 +2220,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|sc
@@ -2243,7 +2249,6 @@ operator|.
 name|rxs_dmamap
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -2257,7 +2262,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|sc
@@ -2287,7 +2291,6 @@ operator|.
 name|txs_dmamap
 argument_list|)
 expr_stmt|;
-block|}
 name|GEM_CDSYNC
 argument_list|(
 name|sc
@@ -2363,13 +2366,11 @@ begin_function
 name|void
 name|gem_suspend
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -2404,13 +2405,11 @@ begin_function
 name|void
 name|gem_resume
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -2476,24 +2475,24 @@ modifier|*
 name|cflags
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|ip
+modifier|*
+name|ip
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
 name|uint64_t
 name|offset
 decl_stmt|,
 name|offset2
-decl_stmt|;
-name|char
-modifier|*
-name|p
 decl_stmt|;
 name|m0
 operator|=
@@ -2551,7 +2550,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* checksum will be corrupted */
+comment|/* Checksum will be corrupted. */
 name|m
 operator|=
 name|m0
@@ -2594,7 +2593,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* checksum will be corrupted */
+comment|/* Checksum will be corrupted. */
 name|m
 operator|=
 name|m0
@@ -2633,7 +2632,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* checksum will be corrupted */
+comment|/* Checksum will be corrupted. */
 name|m
 operator|=
 name|m0
@@ -2760,6 +2759,10 @@ name|udphdr
 modifier|*
 name|uh
 decl_stmt|;
+name|uint16_t
+modifier|*
+name|opts
+decl_stmt|;
 name|int32_t
 name|hlen
 decl_stmt|,
@@ -2767,14 +2770,11 @@ name|len
 decl_stmt|,
 name|pktlen
 decl_stmt|;
-name|uint16_t
-name|cksum
-decl_stmt|,
-modifier|*
-name|opts
-decl_stmt|;
 name|uint32_t
 name|temp32
+decl_stmt|;
+name|uint16_t
+name|cksum
 decl_stmt|;
 name|pktlen
 operator|=
@@ -2911,7 +2911,7 @@ name|IP_OFFMASK
 argument_list|)
 condition|)
 return|return;
-comment|/* can't handle fragmented packet */
+comment|/* Cannot handle fragmented packet. */
 switch|switch
 condition|(
 name|ip
@@ -3097,39 +3097,26 @@ specifier|static
 name|void
 name|gem_cddma_callback
 parameter_list|(
-name|xsc
-parameter_list|,
-name|segs
-parameter_list|,
-name|nsegs
-parameter_list|,
-name|error
-parameter_list|)
 name|void
 modifier|*
 name|xsc
-decl_stmt|;
+parameter_list|,
 name|bus_dma_segment_t
 modifier|*
 name|segs
-decl_stmt|;
+parameter_list|,
 name|int
 name|nsegs
-decl_stmt|;
+parameter_list|,
 name|int
 name|error
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|gem_softc
-operator|*
-operator|)
 name|xsc
 decl_stmt|;
 if|if
@@ -3145,8 +3132,6 @@ name|nsegs
 operator|!=
 literal|1
 condition|)
-block|{
-comment|/* can't happen... */
 name|panic
 argument_list|(
 literal|"%s: bad control buffer segment count"
@@ -3154,7 +3139,6 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-block|}
 name|sc
 operator|->
 name|sc_cddma
@@ -3174,12 +3158,10 @@ specifier|static
 name|void
 name|gem_tick
 parameter_list|(
-name|arg
-parameter_list|)
 name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
@@ -3206,7 +3188,7 @@ name|sc
 operator|->
 name|sc_ifp
 expr_stmt|;
-comment|/* 	 * Unload collision counters 	 */
+comment|/* 	 * Unload collision counters. 	 */
 name|ifp
 operator|->
 name|if_collisions
@@ -3355,33 +3337,25 @@ specifier|static
 name|int
 name|gem_bitwait
 parameter_list|(
-name|sc
-parameter_list|,
-name|r
-parameter_list|,
-name|clr
-parameter_list|,
-name|set
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|bus_addr_t
 name|r
-decl_stmt|;
-name|u_int32_t
+parameter_list|,
+name|uint32_t
 name|clr
-decl_stmt|;
-name|u_int32_t
+parameter_list|,
+name|uint32_t
 name|set
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|reg
 decl_stmt|;
 for|for
@@ -3489,7 +3463,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Do a full reset */
+comment|/* Do a full reset. */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -3550,22 +3524,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * gem_rxdrain:  *  *	Drain the receive queue.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|gem_rxdrain
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_rxsoft
@@ -3650,38 +3618,25 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*  * Reset the whole thing.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|gem_stop
 parameter_list|(
-name|ifp
-parameter_list|,
-name|disable
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|int
 name|disable
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|gem_softc
-operator|*
-operator|)
 name|ifp
 operator|->
 name|if_softc
@@ -3733,7 +3688,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* XXX - Should we reset these instead? */
+comment|/* XXX should we reset these instead? */
 name|gem_disable_tx
 argument_list|(
 name|sc
@@ -3879,22 +3834,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Reset the receiver  */
-end_comment
-
 begin_function
 specifier|static
 name|int
 name|gem_reset_rx
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* 	 * Resetting while DMA is in progress can cause a bus hang, so we 	 * disable DMA first. 	 */
 name|gem_disable_rx
@@ -4178,7 +4127,7 @@ argument_list|,
 name|gem_ringsize
 argument_list|(
 name|GEM_NRXDESC
-comment|/*XXX*/
+comment|/* XXX */
 argument_list|)
 operator||
 operator|(
@@ -4333,22 +4282,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Reset the transmitter  */
-end_comment
-
 begin_function
 specifier|static
 name|int
 name|gem_reset_tx
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* 	 * Resetting while DMA is in progress can cause a bus hang, so we 	 * disable DMA first. 	 */
 name|gem_disable_tx
@@ -4480,27 +4423,20 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * disable receiver.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
 name|gem_disable_rx
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|cfg
 decl_stmt|;
-comment|/* Flip the enable bit */
 name|cfg
 operator|=
 name|bus_read_4
@@ -4576,18 +4512,15 @@ specifier|static
 name|int
 name|gem_disable_tx
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|cfg
 decl_stmt|;
-comment|/* Flip the enable bit */
 name|cfg
 operator|=
 name|bus_read_4
@@ -4654,10 +4587,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Initialize interface.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -4677,9 +4606,9 @@ modifier|*
 name|rxs
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|error
+decl_stmt|,
+name|i
 decl_stmt|;
 comment|/* 	 * Initialize the transmit descriptor ring. 	 */
 for|for
@@ -4793,16 +4722,15 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"unable to "
-literal|"allocate or map rx buffer %d, error = "
-literal|"%d\n"
+literal|"unable to allocate or map RX buffer %d, "
+literal|"error = %d\n"
 argument_list|,
 name|i
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/* 				 * XXX Should attempt to run with fewer receive 				 * XXX buffers instead of just failing. 				 */
+comment|/* 				 * XXX we should attempt to run with fewer 				 * receive buffers instead of just failing. 				 */
 name|gem_rxdrain
 argument_list|(
 name|sc
@@ -4857,11 +4785,9 @@ specifier|static
 name|u_int
 name|gem_ringsize
 parameter_list|(
-name|sz
-parameter_list|)
 name|u_int
 name|sz
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -4964,23 +4890,16 @@ specifier|static
 name|void
 name|gem_init
 parameter_list|(
-name|xsc
-parameter_list|)
 name|void
 modifier|*
 name|xsc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|gem_softc
-operator|*
-operator|)
 name|xsc
 decl_stmt|;
 name|GEM_LOCK
@@ -5010,13 +4929,11 @@ specifier|static
 name|void
 name|gem_init_locked
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -5027,7 +4944,7 @@ name|sc
 operator|->
 name|sc_ifp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|v
 decl_stmt|;
 name|GEM_LOCK_ASSERT
@@ -5058,8 +4975,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Initialization sequence. The numbered steps below correspond 	 * to the sequence outlined in section 6.3.5.1 in the Ethernet 	 * Channel Engine manual (part of the PCIO manual). 	 * See also the STP2002-STQ document from Sun Microsystems. 	 */
-comment|/* step 1& 2. Reset the Ethernet Channel */
+comment|/* 	 * Initialization sequence.  The numbered steps below correspond 	 * to the sequence outlined in section 6.3.5.1 in the Ethernet 	 * Channel Engine manual (part of the PCIO manual). 	 * See also the STP2002-STQ document from Sun Microsystems. 	 */
+comment|/* step 1& 2.  Reset the Ethernet Channel. */
 name|gem_stop
 argument_list|(
 name|sc
@@ -5095,13 +5012,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Re-initialize the MIF */
+comment|/* Re-initialize the MIF. */
 name|gem_mifinit
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* step 3. Setup data structures in host memory */
+comment|/* step 3.  Setup data structures in host memory. */
 if|if
 condition|(
 name|gem_meminit
@@ -5112,19 +5029,19 @@ operator|!=
 literal|0
 condition|)
 return|return;
-comment|/* step 4. TX MAC registers& counters */
+comment|/* step 4.  TX MAC registers& counters */
 name|gem_init_regs
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* step 5. RX MAC registers& counters */
+comment|/* step 5.  RX MAC registers& counters */
 name|gem_setladrf
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* step 6& 7. Program Descriptor Ring Base Addresses */
+comment|/* step 6& 7.  Program Descriptor Ring Base Addresses. */
 comment|/* NOTE: we use only 32-bit DMA addresses here. */
 name|bus_write_4
 argument_list|(
@@ -5199,7 +5116,7 @@ name|CTR3
 argument_list|(
 name|KTR_GEM
 argument_list|,
-literal|"loading rx ring %lx, tx ring %lx, cddma %lx"
+literal|"loading RX ring %lx, TX ring %lx, cddma %lx"
 argument_list|,
 name|GEM_CDRXADDR
 argument_list|(
@@ -5222,7 +5139,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* step 8. Global Configuration& Interrupt Mask */
+comment|/* step 8.  Global Configuration& Interrupt Mask */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -5339,14 +5256,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* step 9. ETX Configuration: use mostly default values */
-comment|/* Enable DMA */
+comment|/* step 9.  ETX Configuration: use mostly default values. */
+comment|/* Enable DMA. */
 name|v
 operator|=
 name|gem_ringsize
 argument_list|(
 name|GEM_NTXDESC
-comment|/*XXX*/
+comment|/* XXX */
 argument_list|)
 expr_stmt|;
 name|bus_write_4
@@ -5375,17 +5292,17 @@ name|GEM_TX_CONFIG_TXFIFO_TH
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* step 10. ERX Configuration */
+comment|/* step 10.  ERX Configuration */
 comment|/* Encode Receive Descriptor ring size. */
 name|v
 operator|=
 name|gem_ringsize
 argument_list|(
 name|GEM_NRXDESC
-comment|/*XXX*/
+comment|/* XXX */
 argument_list|)
 expr_stmt|;
-comment|/* Rx TCP/UDP checksum offset */
+comment|/* RX TCP/UDP checksum offset */
 name|v
 operator||=
 operator|(
@@ -5402,7 +5319,7 @@ operator|<<
 name|GEM_RX_CONFIG_CXM_START_SHFT
 operator|)
 expr_stmt|;
-comment|/* Enable DMA */
+comment|/* Enable DMA. */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -5486,8 +5403,8 @@ literal|12
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* step 11. Configure Media */
-comment|/* step 12. RX_MAC Configuration Register */
+comment|/* step 11.  Configure Media. */
+comment|/* step 12.  RX_MAC Configuration Register */
 name|v
 operator|=
 name|bus_read_4
@@ -5573,8 +5490,8 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-comment|/* step 14. Issue Transmit Pending command */
-comment|/* step 15.  Give the reciever a swift kick */
+comment|/* step 14.  Issue Transmit Pending command. */
+comment|/* step 15.  Give the reciever a swift kick. */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -5651,7 +5568,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * It's copy of ath_defrag(ath(4)).  *  * Defragment an mbuf chain, returning at most maxfrags separate  * mbufs+clusters.  If this is not possible NULL is returned and  * the original mbuf chain is left in it's present (potentially  * modified) state.  We use two techniques: collapsing consecutive  * mbufs and replacing consecutive mbufs by a cluster.  */
+comment|/*  * This is a copy of ath_defrag(ath(4)).  *  * Defragment an mbuf chain, returning at most maxfrags separate  * mbufs+clusters.  If this is not possible NULL is returned and  * the original mbuf chain is left in it's present (potentially  * modified) state.  We use two techniques: collapsing consecutive  * mbufs and replacing consecutive mbufs by a cluster.  */
 end_comment
 
 begin_function
@@ -5661,23 +5578,17 @@ name|mbuf
 modifier|*
 name|gem_defrag
 parameter_list|(
-name|m0
-parameter_list|,
-name|how
-parameter_list|,
-name|maxfrags
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m0
-decl_stmt|;
+parameter_list|,
 name|int
 name|how
-decl_stmt|;
+parameter_list|,
 name|int
 name|maxfrags
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -5857,7 +5768,7 @@ name|m0
 operator|->
 name|m_next
 expr_stmt|;
-comment|/* NB: not the first mbuf */
+comment|/* NB: not the first mbuf. */
 while|while
 condition|(
 operator|(
@@ -6007,7 +5918,9 @@ name|maxfrags
 condition|)
 comment|/* +1 cl -2 mbufs */
 return|return
+operator|(
 name|m0
+operator|)
 return|;
 comment|/* 			 * Still not there, try the normal collapse 			 * again before we allocate another cluster. 			 */
 goto|goto
@@ -6038,27 +5951,18 @@ specifier|static
 name|int
 name|gem_load_txmbuf
 parameter_list|(
-name|sc
-parameter_list|,
-name|m_head
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 modifier|*
 name|m_head
-decl_stmt|;
+parameter_list|)
 block|{
-name|struct
-name|gem_txsoft
-modifier|*
-name|txs
-decl_stmt|;
 name|bus_dma_segment_t
 name|txsegs
 index|[
@@ -6066,14 +5970,19 @@ name|GEM_NTXSEGS
 index|]
 decl_stmt|;
 name|struct
+name|gem_txsoft
+modifier|*
+name|txs
+decl_stmt|;
+name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
 name|uint64_t
-name|flags
-decl_stmt|,
 name|cflags
+decl_stmt|,
+name|flags
 decl_stmt|;
 name|int
 name|error
@@ -6264,7 +6173,7 @@ name|EIO
 operator|)
 return|;
 block|}
-comment|/* 	 * Ensure we have enough descriptors free to describe 	 * the packet.  Note, we always reserve one descriptor 	 * at the end of the ring as a termination point, to 	 * prevent wrap-around. 	 */
+comment|/* 	 * Ensure we have enough descriptors free to describe 	 * the packet.  Note, we always reserve one descriptor 	 * at the end of the ring as a termination point, in 	 * order to prevent wrap-around. 	 */
 if|if
 condition|(
 name|nsegs
@@ -6383,8 +6292,7 @@ name|CTR6
 argument_list|(
 name|KTR_GEM
 argument_list|,
-literal|"%s: mapping seg %d (txd %d), len "
-literal|"%lx, addr %#lx (%#lx)"
+literal|"%s: mapping seg %d (txd %d), len %lx, addr %#lx (%#lx)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6496,7 +6404,7 @@ operator|=
 name|nexttx
 expr_stmt|;
 block|}
-comment|/* set EOP on the last descriptor */
+comment|/* Set EOP on the last descriptor. */
 ifdef|#
 directive|ifdef
 name|GEM_DEBUG
@@ -6504,7 +6412,7 @@ name|CTR3
 argument_list|(
 name|KTR_GEM
 argument_list|,
-literal|"%s: end of packet at seg %d, tx %d"
+literal|"%s: end of packet at segment %d, TX %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6533,7 +6441,7 @@ argument_list|,
 name|GEM_TD_END_OF_PACKET
 argument_list|)
 expr_stmt|;
-comment|/* Lastly set SOP on the first descriptor */
+comment|/* Lastly set SOP on the first descriptor. */
 ifdef|#
 directive|ifdef
 name|GEM_DEBUG
@@ -6541,7 +6449,7 @@ name|CTR3
 argument_list|(
 name|KTR_GEM
 argument_list|,
-literal|"%s: start of packet at seg %d, tx %d"
+literal|"%s: start of packet at segment %d, TX %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6717,13 +6625,11 @@ specifier|static
 name|void
 name|gem_init_regs
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|u_char
@@ -6737,7 +6643,7 @@ operator|->
 name|sc_ifp
 argument_list|)
 decl_stmt|;
-comment|/* These regs are not cleared on reset */
+comment|/* These registers are not cleared on reset. */
 if|if
 condition|(
 operator|(
@@ -6751,7 +6657,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Wooo.  Magic values. */
+comment|/* magic values */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -6808,7 +6714,7 @@ argument_list|,
 name|ETHER_MIN_LEN
 argument_list|)
 expr_stmt|;
-comment|/* Max frame and max burst size */
+comment|/* max frame and max burst size */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -6875,7 +6781,7 @@ argument_list|,
 literal|0x10
 argument_list|)
 expr_stmt|;
-comment|/* Dunno.... */
+comment|/* dunno... */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -6920,7 +6826,7 @@ operator|&
 literal|0x3ff
 argument_list|)
 expr_stmt|;
-comment|/* Secondary MAC addr set to 0:0:0:0:0:0 */
+comment|/* secondary MAC address: 0:0:0:0:0:0 */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -6963,7 +6869,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* MAC control addr set to 01:80:c2:00:00:01 */
+comment|/* MAC control address: 01:80:c2:00:00:01 */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -7006,7 +6912,7 @@ argument_list|,
 literal|0x0180
 argument_list|)
 expr_stmt|;
-comment|/* MAC filter addr set to 0:0:0:0:0:0 */
+comment|/* MAC filter address: 0:0:0:0:0:0 */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -7084,7 +6990,7 @@ operator||=
 name|GEM_INITED
 expr_stmt|;
 block|}
-comment|/* Counters need to be zeroed */
+comment|/* Counters need to be zeroed. */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -7254,7 +7160,7 @@ argument_list|,
 literal|0x1BF0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set the internal arbitration to "infinite" bursts of the 	 * maximum length of 31 * 64 bytes so DMA transfers aren't 	 * split up in cache line size chunks. This greatly improves 	 * especially RX performance. 	 * Enable silicon bug workarounds for the Apple variants. 	 */
+comment|/* 	 * Set the internal arbitration to "infinite" bursts of the 	 * maximum length of 31 * 64 bytes so DMA transfers aren't 	 * split up in cache line size chunks.  This greatly improves 	 * especially RX performance. 	 * Enable silicon bug workarounds for the Apple variants. 	 */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -7286,7 +7192,7 @@ literal|0
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set the station address. 	 */
+comment|/* Set the station address. */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -7388,24 +7294,17 @@ specifier|static
 name|void
 name|gem_start
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|gem_softc
-operator|*
-operator|)
 name|ifp
 operator|->
 name|if_softc
@@ -7433,24 +7332,17 @@ specifier|static
 name|void
 name|gem_start_locked
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|gem_softc
-operator|*
-operator|)
 name|ifp
 operator|->
 name|if_softc
@@ -7462,8 +7354,6 @@ name|m
 decl_stmt|;
 name|int
 name|ntx
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -7521,6 +7411,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|ntx
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -7607,7 +7501,7 @@ name|CTR3
 argument_list|(
 name|KTR_GEM
 argument_list|,
-literal|"%s: %s: kicking tx %d"
+literal|"%s: %s: kicking TX %d"
 argument_list|,
 name|device_get_name
 argument_list|(
@@ -7722,22 +7616,16 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*  * Transmit interrupt.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|gem_tint
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -7755,15 +7643,15 @@ name|txs
 decl_stmt|;
 name|int
 name|txlast
-decl_stmt|;
-name|int
+decl_stmt|,
 name|progress
-init|=
-literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|GEM_DEBUG
+name|int
+name|i
+decl_stmt|;
 name|CTR2
 argument_list|(
 name|KTR_GEM
@@ -7782,7 +7670,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Go through our Tx list and free mbufs for those 	 * frames that have been transmitted. 	 */
+comment|/* 	 * Go through our TX list and free mbufs for those 	 * frames that have been transmitted. 	 */
+name|progress
+operator|=
+literal|0
+expr_stmt|;
 name|GEM_CDSYNC
 argument_list|(
 name|sc
@@ -7812,16 +7704,17 @@ directive|ifdef
 name|GEM_DEBUG
 if|if
 condition|(
+operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
 name|IFF_DEBUG
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"    txsoft %p transmit chain:\n"
@@ -7912,7 +7805,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 		 * In theory, we could harvest some descriptors before 		 * the ring is empty, but that's a bit complicated. 		 * 		 * GEM_TX_COMPLETION points to the last descriptor 		 * processed +1. 		 */
+comment|/* 		 * In theory, we could harvest some descriptors before 		 * the ring is empty, but that's a bit complicated. 		 * 		 * GEM_TX_COMPLETION points to the last descriptor 		 * processed + 1. 		 */
 name|txlast
 operator|=
 name|bus_read_4
@@ -7985,7 +7878,7 @@ break|break;
 block|}
 else|else
 block|{
-comment|/* Ick -- this command wraps */
+comment|/* Ick -- this command wraps. */
 if|if
 condition|(
 operator|(
@@ -8013,7 +7906,7 @@ name|CTR1
 argument_list|(
 name|KTR_GEM
 argument_list|,
-literal|"%s: releasing a desc"
+literal|"%s: releasing a descriptor"
 argument_list|,
 name|__func__
 argument_list|)
@@ -8114,8 +8007,7 @@ name|CTR4
 argument_list|(
 name|KTR_GEM
 argument_list|,
-literal|"%s: GEM_TX_STATE_MACHINE %x "
-literal|"GEM_TX_DATA_PTR %llx "
+literal|"%s: GEM_TX_STATE_MACHINE %x GEM_TX_DATA_PTR %llx "
 literal|"GEM_TX_COMPLETION %x"
 argument_list|,
 name|__func__
@@ -8200,7 +8092,7 @@ name|sc_txwin
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Freed some descriptors, so reset IFF_DRV_OACTIVE and restart. */
+comment|/* 		 * We freed some descriptors, so reset IFF_DRV_OACTIVE 		 * and restart. 		 */
 name|ifp
 operator|->
 name|if_drv_flags
@@ -8286,23 +8178,16 @@ specifier|static
 name|void
 name|gem_rint_timeout
 parameter_list|(
-name|arg
-parameter_list|)
 name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|gem_softc
-operator|*
-operator|)
 name|arg
 decl_stmt|;
 name|GEM_LOCK_ASSERT
@@ -8325,22 +8210,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Receive interrupt.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|gem_rint
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -8356,10 +8235,10 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|rxstat
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rxcomp
 decl_stmt|;
 ifdef|#
@@ -8490,7 +8369,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|GEM_RINT_TIMEOUT
-comment|/* 			 * The descriptor is still marked as owned, although 			 * it is supposed to have completed. This has been 			 * observed on some machines. Just exiting here 			 * might leave the packet sitting around until another 			 * one arrives to trigger a new interrupt, which is 			 * generally undesirable, so set up a timeout. 			 */
+comment|/* 			 * The descriptor is still marked as owned, although 			 * it is supposed to have completed.  This has been 			 * observed on some machines.  Just exiting here 			 * might leave the packet sitting around until another 			 * one arrives to trigger a new interrupt, which is 			 * generally undesirable, so set up a timeout. 			 */
 name|callout_reset
 argument_list|(
 operator|&
@@ -8558,11 +8437,15 @@ directive|ifdef
 name|GEM_DEBUG
 if|if
 condition|(
+operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
 name|IFF_DEBUG
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
@@ -8673,7 +8556,7 @@ expr_stmt|;
 block|}
 name|kickit
 label|:
-comment|/* 		 * Update the RX kick register. This register has to point 		 * to the descriptor after the last valid one (before the 		 * current batch) and must be incremented in multiples of 		 * 4 (because the DMA engine fetches/updates descriptors 		 * in batches of 4). 		 */
+comment|/* 		 * Update the RX kick register.  This register has to point 		 * to the descriptor after the last valid one (before the 		 * current batch) and must be incremented in multiples of 		 * 4 (because the DMA engine fetches/updates descriptors 		 * in batches of 4). 		 */
 name|sc
 operator|->
 name|sc_rxptr
@@ -8857,27 +8740,19 @@ directive|endif
 block|}
 end_function
 
-begin_comment
-comment|/*  * gem_add_rxbuf:  *  *	Add a receive buffer to the indicated descriptor.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
 name|gem_add_rxbuf
 parameter_list|(
-name|sc
-parameter_list|,
-name|idx
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|idx
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_rxsoft
@@ -8949,7 +8824,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|GEM_DEBUG
-comment|/* bzero the packet to check dma */
+comment|/* Bzero the packet to check DMA. */
 name|memset
 argument_list|(
 name|m
@@ -9025,7 +8900,6 @@ argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
-comment|/* If nsegs is wrong then the stack is corrupt. */
 name|KASSERT
 argument_list|(
 name|nsegs
@@ -9050,8 +8924,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"can't load rx DMA map %d, error = "
-literal|"%d\n"
+literal|"cannot load RS DMA map %d, error = %d\n"
 argument_list|,
 name|idx
 argument_list|,
@@ -9069,6 +8942,7 @@ name|error
 operator|)
 return|;
 block|}
+comment|/* If nsegs is wrong then the stack is corrupt. */
 name|rxs
 operator|->
 name|rxs_mbuf
@@ -9119,18 +8993,14 @@ specifier|static
 name|void
 name|gem_eint
 parameter_list|(
-name|sc
-parameter_list|,
-name|status
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|sc
 operator|->
@@ -9177,23 +9047,16 @@ begin_function
 name|void
 name|gem_intr
 parameter_list|(
-name|v
-parameter_list|)
 name|void
 modifier|*
 name|v
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|gem_softc
-operator|*
-operator|)
 name|v
 decl_stmt|;
 name|uint32_t
@@ -9511,6 +9374,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|status2
 operator|&
 operator|~
@@ -9519,6 +9383,9 @@ name|GEM_MAC_TX_XMIT_DONE
 operator||
 name|GEM_MAC_TX_DEFER_EXP
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|device_printf
 argument_list|(
@@ -9526,13 +9393,14 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"MAC tx fault, status %x\n"
+literal|"MAC TX fault, status %x\n"
 argument_list|,
 name|status2
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|status2
 operator|&
 operator|(
@@ -9540,6 +9408,9 @@ name|GEM_MAC_TX_UNDERRUN
 operator||
 name|GEM_MAC_TX_PKT_TOO_LONG
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|gem_init_locked
 argument_list|(
@@ -9568,12 +9439,16 @@ argument_list|,
 name|GEM_MAC_RX_STATUS
 argument_list|)
 expr_stmt|;
-comment|/* 		 * At least with GEM_SUN_GEM and some GEM_SUN_ERI 		 * revisions GEM_MAC_RX_OVERFLOW happen often due to a 		 * silicon bug so handle them silently. Moreover, it's 		 * likely that the receiver has hung so we reset it. 		 */
+comment|/* 		 * At least with GEM_SUN_GEM and some GEM_SUN_ERI 		 * revisions GEM_MAC_RX_OVERFLOW happen often due to a 		 * silicon bug so handle them silently.  Moreover, it's 		 * likely that the receiver has hung so we reset it. 		 */
 if|if
 condition|(
+operator|(
 name|status2
 operator|&
 name|GEM_MAC_RX_OVERFLOW
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|sc
@@ -9592,6 +9467,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|status2
 operator|&
 operator|~
@@ -9600,6 +9476,9 @@ name|GEM_MAC_RX_DONE
 operator||
 name|GEM_MAC_RX_FRAME_CNT
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|device_printf
 argument_list|(
@@ -9607,7 +9486,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"MAC rx fault, status %x\n"
+literal|"MAC RX fault, status %x\n"
 argument_list|,
 name|status2
 argument_list|)
@@ -9626,13 +9505,11 @@ specifier|static
 name|int
 name|gem_watchdog
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|GEM_LOCK_ASSERT
 argument_list|(
@@ -9648,8 +9525,7 @@ name|CTR4
 argument_list|(
 name|KTR_GEM
 argument_list|,
-literal|"%s: GEM_RX_CONFIG %x GEM_MAC_RX_STATUS %x "
-literal|"GEM_MAC_RX_CONFIG %x"
+literal|"%s: GEM_RX_CONFIG %x GEM_MAC_RX_STATUS %x GEM_MAC_RX_CONFIG %x"
 argument_list|,
 name|__func__
 argument_list|,
@@ -9694,8 +9570,7 @@ name|CTR4
 argument_list|(
 name|KTR_GEM
 argument_list|,
-literal|"%s: GEM_TX_CONFIG %x GEM_MAC_TX_STATUS %x "
-literal|"GEM_MAC_TX_CONFIG %x"
+literal|"%s: GEM_TX_CONFIG %x GEM_MAC_TX_STATUS %x GEM_MAC_TX_CONFIG %x"
 argument_list|,
 name|__func__
 argument_list|,
@@ -9814,22 +9689,16 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Initialize the MII Management Interface  */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|gem_mifinit
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Configure the MIF in frame mode */
 name|bus_write_4
@@ -9870,35 +9739,25 @@ begin_function
 name|int
 name|gem_mii_readreg
 parameter_list|(
-name|dev
-parameter_list|,
-name|phy
-parameter_list|,
-name|reg
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|,
 name|int
 name|phy
-decl_stmt|,
+parameter_list|,
+name|int
 name|reg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|v
 decl_stmt|;
 ifdef|#
@@ -9917,6 +9776,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -10044,7 +9910,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* Construct the frame command */
+comment|/* Construct the frame command. */
 name|v
 operator|=
 name|GEM_MIF_FRAME_READ
@@ -10128,7 +9994,9 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"mii_read timeout\n"
+literal|"%s: timed out\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -10143,39 +10011,28 @@ begin_function
 name|int
 name|gem_mii_writereg
 parameter_list|(
-name|dev
-parameter_list|,
-name|phy
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|,
 name|int
 name|phy
-decl_stmt|,
+parameter_list|,
+name|int
 name|reg
-decl_stmt|,
+parameter_list|,
+name|int
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|v
 decl_stmt|;
 ifdef|#
@@ -10196,6 +10053,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -10380,7 +10244,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Construct the frame command */
+comment|/* Construct the frame command. */
 name|v
 operator|=
 name|GEM_MIF_FRAME_WRITE
@@ -10468,7 +10332,9 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"mii_write timeout\n"
+literal|"%s: timed out\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -10483,21 +10349,14 @@ begin_function
 name|void
 name|gem_mii_statchg
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|int
 name|gigabit
@@ -10509,6 +10368,13 @@ name|txcfg
 decl_stmt|,
 name|v
 decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|GEM_DEBUG
@@ -10517,7 +10383,9 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|sc_ifflags
+name|sc_ifp
+operator|->
+name|if_flags
 operator|&
 name|IFF_DEBUG
 operator|)
@@ -11132,13 +11000,11 @@ begin_function
 name|int
 name|gem_mediachange
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
@@ -11152,7 +11018,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* XXX Add support for serial media. */
+comment|/* XXX add support for serial media. */
 name|GEM_LOCK
 argument_list|(
 name|sc
@@ -11184,20 +11050,16 @@ begin_function
 name|void
 name|gem_mediastatus
 parameter_list|(
-name|ifp
-parameter_list|,
-name|ifmr
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ifmediareq
 modifier|*
 name|ifmr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
@@ -11268,32 +11130,22 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Process an ioctl request.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
 name|gem_ioctl
 parameter_list|(
-name|ifp
-parameter_list|,
-name|cmd
-parameter_list|,
-name|data
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
@@ -11318,9 +11170,11 @@ name|data
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -11336,11 +11190,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
 name|IFF_UP
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -11387,15 +11245,18 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
+operator|(
 name|ifp
 operator|->
 name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
+operator|)
+operator|!=
+literal|0
 condition|)
 name|gem_stop
 argument_list|(
@@ -11404,7 +11265,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -11583,22 +11443,16 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Set up the logical address filter.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|gem_setladrf
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -11614,20 +11468,19 @@ name|ifmultiaddr
 modifier|*
 name|inm
 decl_stmt|;
-name|u_int32_t
-name|crc
+name|int
+name|i
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hash
 index|[
 literal|16
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
+name|crc
+decl_stmt|,
 name|v
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|GEM_LOCK_ASSERT
 argument_list|(
@@ -11636,7 +11489,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* Get current RX configuration */
+comment|/* Get the current RX configuration. */
 name|v
 operator|=
 name|bus_read_4
@@ -11758,8 +11611,8 @@ goto|goto
 name|chipit
 goto|;
 block|}
-comment|/* 	 * Set up multicast address filter by passing all multicast addresses 	 * through a crc generator, and then using the high order 8 bits as an 	 * index into the 256 bit logical address filter.  The high order 4 	 * bits selects the word, while the other 4 bits select the bit within 	 * the word (where bit 0 is the MSB). 	 */
-comment|/* Clear hash table */
+comment|/* 	 * Set up multicast address filter by passing all multicast 	 * addresses through a crc generator, and then using the high 	 * order 8 bits as an index into the 256 bit logical address 	 * filter.  The high order 4 bits selects the word, while the 	 * other 4 bits select the bit within the word (where bit 0 	 * is the MSB). 	 */
+comment|/* Clear the hash table. */
 name|memset
 argument_list|(
 name|hash
@@ -11816,7 +11669,7 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
-comment|/* Just want the 8 most significant bits. */
+comment|/* We just want the 8 most significant bits. */
 name|crc
 operator|>>=
 literal|24
@@ -11851,7 +11704,7 @@ name|v
 operator||=
 name|GEM_MAC_RX_HASH_FILTER
 expr_stmt|;
-comment|/* Now load the hash table into the chip (if we are using it) */
+comment|/* Now load the hash table into the chip (if we are using it). */
 for|for
 control|(
 name|i
@@ -11865,7 +11718,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|bus_write_4
 argument_list|(
 name|sc
@@ -11891,7 +11743,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|chipit
 label|:
 name|bus_write_4

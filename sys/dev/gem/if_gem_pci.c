@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2001 Eduardo Horvath.  * All rights reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR  ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: NetBSD: if_gem_pci.c,v 1.7 2001/10/18 15:09:15 thorpej Exp  */
+comment|/*-  * Copyright (C) 2001 Eduardo Horvath.  * Copyright (c) 2007 Marius Strobl<marius@FreeBSD.org>  * All rights reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR  ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: NetBSD: if_gem_pci.c,v 1.7 2001/10/18 15:09:15 thorpej Exp  */
 end_comment
 
 begin_include
@@ -169,19 +169,10 @@ end_include
 begin_function_decl
 specifier|static
 name|int
-name|gem_pci_probe
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|gem_pci_attach
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -192,6 +183,7 @@ name|int
 name|gem_pci_detach
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -199,9 +191,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|gem_pci_suspend
+name|gem_pci_probe
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -212,6 +205,18 @@ name|int
 name|gem_pci_resume
 parameter_list|(
 name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|gem_pci_suspend
+parameter_list|(
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -484,11 +489,9 @@ specifier|static
 name|int
 name|gem_pci_probe
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -598,11 +601,9 @@ specifier|static
 name|int
 name|gem_pci_attach
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
@@ -719,7 +720,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Some Sun GEMs/ERIs do have their intpin register bogusly set to 0, 	 * although it should be 1. correct that. 	 */
+comment|/* 	 * Some Sun GEMs/ERIs do have their intpin register bogusly set to 0, 	 * although it should be 1.  Correct that. 	 */
 if|if
 condition|(
 name|pci_get_intpin
@@ -748,7 +749,6 @@ name|sc_flags
 operator||=
 name|GEM_PCI
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|bus_alloc_resources
@@ -1065,7 +1065,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * Read PCI VPD. 	 * SUNW,pci-gem cards have a single large resource VPD-R tag 	 * containing one NA. The VPD used is not in PCI 2.2 standard 	 * format however. The length in the resource header is in big 	 * endian and the end tag is non-standard (0x79) and followed 	 * by an all-zero "checksum" byte. Sun calls this a "Fresh 	 * Choice Ethernet" VPD... 	 */
+comment|/* 	 * Read PCI VPD. 	 * SUNW,pci-gem cards have a single large resource VPD-R tag 	 * containing one NA.  The VPD used is not in PCI 2.2 standard 	 * format however.  The length in the resource header is in big 	 * endian and the end tag is non-standard (0x79) and followed 	 * by an all-zero "checksum" byte.  Sun calls this a "Fresh 	 * Choice Ethernet" VPD... 	 */
 if|if
 condition|(
 name|PCI_VPDRES_ISLARGE
@@ -1216,7 +1216,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * call the main configure 	 */
 if|if
 condition|(
 name|gem_attach
@@ -1231,7 +1230,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not be configured\n"
+literal|"could not be attached\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1322,22 +1321,22 @@ specifier|static
 name|int
 name|gem_pci_detach
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|sc
+operator|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|bus_teardown_intr
 argument_list|(
 name|dev
@@ -1388,22 +1387,22 @@ specifier|static
 name|int
 name|gem_pci_suspend
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|sc
+operator|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|gem_suspend
 argument_list|(
 name|sc
@@ -1422,22 +1421,22 @@ specifier|static
 name|int
 name|gem_pci_resume
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gem_softc
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|sc
+operator|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|gem_resume
 argument_list|(
 name|sc
