@@ -14515,16 +14515,6 @@ name|sc
 argument_list|,
 name|ZYD_MAC_SNIFFER
 argument_list|,
-operator|(
-name|ic
-operator|->
-name|ic_opmode
-operator|==
-name|IEEE80211_M_MONITOR
-operator|)
-condition|?
-literal|1
-else|:
 literal|0
 argument_list|)
 expr_stmt|;
