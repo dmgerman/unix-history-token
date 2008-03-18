@@ -44,16 +44,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * tmp below since we need struct queue.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<fs/coda/coda_kernel.h>
-end_include
-
-begin_comment
 comment|/*  * Cnode lookup stuff.  *  * NOTE: CODA_CACHESIZE must be a power of 2 for cfshash to work!  */
 end_comment
 
@@ -376,13 +366,22 @@ name|struct
 name|selinfo
 name|vc_selproc
 decl_stmt|;
-name|struct
-name|queue
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|vmsg
+argument_list|)
 name|vc_requests
-decl_stmt|;
-name|struct
-name|queue
+expr_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|vmsg
+argument_list|)
 name|vc_replies
+expr_stmt|;
+name|int
+name|vc_open
 decl_stmt|;
 block|}
 struct|;
@@ -395,7 +394,7 @@ name|VC_OPEN
 parameter_list|(
 name|vcp
 parameter_list|)
-value|((vcp)->vc_requests.forw != NULL)
+value|((vcp)->vc_open == 1)
 end_define
 
 begin_define
@@ -405,7 +404,7 @@ name|MARK_VC_CLOSED
 parameter_list|(
 name|vcp
 parameter_list|)
-value|(vcp)->vc_requests.forw = NULL;
+value|(vcp)->vc_open = 0
 end_define
 
 begin_define
@@ -415,11 +414,8 @@ name|MARK_VC_OPEN
 parameter_list|(
 name|vcp
 parameter_list|)
+value|(vcp)->vc_open = 1
 end_define
-
-begin_comment
-comment|/* MT */
-end_comment
 
 begin_struct
 struct|struct
