@@ -19481,7 +19481,7 @@ name|INET6
 literal|"(+ipv6) "
 endif|#
 directive|endif
-literal|"initialized, divert %s, "
+literal|"initialized, divert %s, nat %s, "
 literal|"rule-based forwarding "
 ifdef|#
 directive|ifdef
