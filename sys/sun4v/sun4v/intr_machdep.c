@@ -1528,6 +1528,10 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
 literal|"vec%d:"
 argument_list|,
 name|vec
