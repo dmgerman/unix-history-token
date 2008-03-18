@@ -3189,7 +3189,7 @@ name|INT
 argument_list|,
 literal|1
 argument_list|,
-literal|"cpu=%d tf=0x%p um=%d"
+literal|"cpu=%d tf=%p um=%d"
 argument_list|,
 name|cpu
 argument_list|,
