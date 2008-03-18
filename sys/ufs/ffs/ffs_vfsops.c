@@ -4640,6 +4640,22 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Initialize filesystem stat information in mount struct. 	 */
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_kern_flag
+operator||=
+name|MNTK_MPSAFE
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UFS_EXTATTR
@@ -4673,22 +4689,6 @@ comment|/* !UFS_EXTATTR_AUTOSTART */
 endif|#
 directive|endif
 comment|/* !UFS_EXTATTR */
-name|MNT_ILOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_kern_flag
-operator||=
-name|MNTK_MPSAFE
-expr_stmt|;
-name|MNT_IUNLOCK
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
