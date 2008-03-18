@@ -153,6 +153,38 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|newpacket
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|char
+name|newpacket
+index|[
+name|IP_MAXPACKET
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Local defines */
 end_comment
@@ -329,13 +361,6 @@ comment|/* Handle CTCP commands - the buffer may have to be copied */
 name|lFOUND_CTCP
 label|:
 block|{
-name|char
-name|newpacket
-index|[
-literal|65536
-index|]
-decl_stmt|;
-comment|/* Estimate of maximum packet size 					 * :) */
 name|unsigned
 name|int
 name|copyat
