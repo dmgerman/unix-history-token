@@ -1640,6 +1640,52 @@ index|[
 literal|0
 index|]
 argument_list|,
+literal|"blackhole"
+argument_list|,
+literal|9
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|flags
+operator||=
+name|RTF_BLACKHOLE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"reject"
+argument_list|,
+literal|6
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|flags
+operator||=
+name|RTF_REJECT
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
 literal|"trail"
 argument_list|,
 literal|5
@@ -3288,9 +3334,9 @@ literal|"       arp -d hostname [pub]"
 argument_list|,
 literal|"       arp -d [-i interface] -a"
 argument_list|,
-literal|"       arp -s hostname ether_addr [temp] [pub [only]]"
+literal|"       arp -s hostname ether_addr [temp] [reject] [blackhole] [pub [only]]"
 argument_list|,
-literal|"       arp -S hostname ether_addr [temp] [pub [only]]"
+literal|"       arp -S hostname ether_addr [temp] [reject] [blackhole] [pub [only]]"
 argument_list|,
 literal|"       arp -f filename"
 argument_list|)
