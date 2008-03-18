@@ -7,58 +7,11 @@ begin_comment
 comment|/*-  * Copyright (c) 2006,2007  *	Damien Bergamini<damien.bergamini@free.fr>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>
-literal|700000
-operator|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net80211/ieee80211_amrr.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<dev/wpi/ieee80211_amrr.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DMA mapping */
-end_comment
-
-begin_struct
-struct|struct
-name|wpi_mapping
-block|{
-name|int
-name|nsegs
-decl_stmt|;
-name|bus_dma_segment_t
-name|segs
-index|[
-name|WPI_MAX_SCATTER
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -152,9 +105,19 @@ decl_stmt|;
 name|bus_addr_t
 name|paddr
 decl_stmt|;
+comment|/* aligned p address */
+name|bus_addr_t
+name|paddr_start
+decl_stmt|;
+comment|/* possibly unaligned p start*/
 name|caddr_t
 name|vaddr
 decl_stmt|;
+comment|/* aligned v address */
+name|caddr_t
+name|vaddr_start
+decl_stmt|;
+comment|/* possibly unaligned v start */
 name|bus_size_t
 name|size
 decl_stmt|;
@@ -236,41 +199,13 @@ name|WPI_RBUF_COUNT
 value|( WPI_RX_RING_COUNT + 16 )
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|wpi_softc
-struct_decl|;
-end_struct_decl
-
-begin_struct
-struct|struct
-name|wpi_rbuf
-block|{
-name|struct
-name|wpi_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|bus_addr_t
-name|paddr
-decl_stmt|;
-name|caddr_t
-name|vaddr
-decl_stmt|;
-name|SLIST_ENTRY
-argument_list|(
-argument|wpi_rbuf
-argument_list|)
-name|next
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|wpi_rx_data
 block|{
+name|bus_dmamap_t
+name|map
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -288,10 +223,6 @@ name|struct
 name|wpi_dma_info
 name|desc_dma
 decl_stmt|;
-name|struct
-name|wpi_dma_info
-name|buf_dma
-decl_stmt|;
 name|uint32_t
 modifier|*
 name|desc
@@ -303,20 +234,9 @@ index|[
 name|WPI_RX_RING_COUNT
 index|]
 decl_stmt|;
-name|struct
-name|wpi_rbuf
-name|rbuf
-index|[
-name|WPI_RBUF_COUNT
-index|]
+name|bus_dma_tag_t
+name|data_dmat
 decl_stmt|;
-name|SLIST_HEAD
-argument_list|(
-argument_list|,
-argument|wpi_rbuf
-argument_list|)
-name|freelist
-expr_stmt|;
 name|int
 name|cur
 decl_stmt|;
@@ -477,14 +397,6 @@ define|#
 directive|define
 name|WPI_FLAG_AUTH
 value|(1<< 3)
-comment|/* Flags indicating the state of the firmware */
-name|uint32_t
-name|fw_state
-decl_stmt|;
-define|#
-directive|define
-name|WPI_FW_IDLE
-value|(1<< 0 )
 comment|/* shared area */
 name|struct
 name|wpi_dma_info
@@ -523,8 +435,10 @@ name|struct
 name|callout
 name|watchdog_to
 decl_stmt|;
-name|int
-name|watchdog_cnt
+comment|/* Hardware switch polling timer */
+name|struct
+name|callout
+name|hwswitch_to
 decl_stmt|;
 name|struct
 name|resource
@@ -562,6 +476,9 @@ decl_stmt|;
 name|int
 name|sc_tx_timer
 decl_stmt|;
+name|int
+name|sc_scan_timer
+decl_stmt|;
 name|struct
 name|bpf_if
 modifier|*
@@ -596,10 +513,6 @@ decl_stmt|;
 comment|/* command queue related variables */
 define|#
 directive|define
-name|WPI_CMD_MAXOPS
-value|10
-define|#
-directive|define
 name|WPI_SCAN_START
 value|(1<<0)
 define|#
@@ -620,10 +533,41 @@ name|WPI_AUTH
 value|(1<<4)
 define|#
 directive|define
-name|WPI_SCAN_NEXT
+name|WPI_RUN
 value|(1<<5)
+define|#
+directive|define
+name|WPI_SCAN_NEXT
+value|(1<<6)
+define|#
+directive|define
+name|WPI_RESTART
+value|(1<<7)
+define|#
+directive|define
+name|WPI_RF_RESTART
+value|(1<<8)
+define|#
+directive|define
+name|WPI_CMD_MAXOPS
+value|10
+comment|/* command queuing request type */
+define|#
+directive|define
+name|WPI_QUEUE_NORMAL
+value|0
+define|#
+directive|define
+name|WPI_QUEUE_CLEAR
+value|1
 name|int
 name|sc_cmd
+index|[
+name|WPI_CMD_MAXOPS
+index|]
+decl_stmt|;
+name|int
+name|sc_cmd_arg
 index|[
 name|WPI_CMD_MAXOPS
 index|]
@@ -722,18 +666,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|WPI_LOCK_DECL
-value|int     __waslocked = 0
-end_define
-
-begin_define
-define|#
-directive|define
 name|WPI_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|do {\       if (!(__waslocked = mtx_owned(&(_sc)->sc_mtx)))  \                 mtx_lock(&(_sc)->sc_mtx);                \ }    while(0)
+value|mtx_lock(&(_sc)->sc_mtx)
 end_define
 
 begin_define
@@ -743,7 +680,27 @@ name|WPI_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|do {                    \     if (!__waslocked)                       \     mtx_unlock(&(_sc)->sc_mtx);      \ } while (0)
+value|mtx_unlock(&(_sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_LOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->sc_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_LOCK_OWNED
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_owned(&(_sc)->sc_mtx)
 end_define
 
 begin_define
@@ -764,7 +721,7 @@ parameter_list|(
 name|_sc
 parameter_list|)
 define|\
-value|mtx_init(&(_sc)->sc_cmdlock, device_get_nameunit((_sc)->sc_dev), NULL, MTX_DEF);
+value|mtx_init(&(_sc)->sc_cmdlock, device_get_nameunit((_sc)->sc_dev), \ 	    NULL, MTX_DEF)
 end_define
 
 begin_define
@@ -796,49 +753,6 @@ name|_sc
 parameter_list|)
 value|mtx_unlock(&(_sc)->sc_cmdlock)
 end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INVARIANTS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INVARIANT_SUPPORT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|WPI_LOCK_ASSERT
-parameter_list|(
-name|sc
-parameter_list|)
-value|mtx_assert(&(sc)->sc_mtx, MA_OWNED)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|WPI_LOCK_ASSERT
-parameter_list|(
-name|sc
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
