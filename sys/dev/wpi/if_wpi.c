@@ -10739,7 +10739,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* XXX use ath_defrag */
+comment|/* XXX use m_collapse */
 name|mnew
 operator|=
 name|m_defrag
