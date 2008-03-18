@@ -426,6 +426,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|t3_set_dack_mss
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|int
+name|on
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|t3_set_keepalive
 parameter_list|(
 name|struct

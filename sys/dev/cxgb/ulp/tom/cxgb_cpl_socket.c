@@ -4289,6 +4289,10 @@ name|nomoredata
 expr_stmt|;
 if|if
 condition|(
+name|copied
+operator|>=
+name|target
+operator|&&
 operator|(
 name|so
 operator|->
@@ -4750,8 +4754,6 @@ operator|(
 name|flags
 operator|&
 operator|(
-name|MSG_WAITALL
-operator||
 name|MSG_OOB
 operator||
 name|MSG_PEEK
