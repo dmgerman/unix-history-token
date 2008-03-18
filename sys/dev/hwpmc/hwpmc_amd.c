@@ -1459,6 +1459,21 @@ name|pm_perfctr
 argument_list|)
 expr_stmt|;
 comment|/* RDMSR serializes */
+name|PMCDBG
+argument_list|(
+name|MDP
+argument_list|,
+name|REA
+argument_list|,
+literal|2
+argument_list|,
+literal|"amd-read (pre-munge) id=%d -> %jd"
+argument_list|,
+name|ri
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|PMC_IS_SAMPLING_MODE
@@ -1466,15 +1481,34 @@ argument_list|(
 name|mode
 argument_list|)
 condition|)
-operator|*
-name|v
+block|{
+comment|/* Sign extend 48 bit value to 64 bits. */
+name|tmp
+operator|=
+call|(
+name|pmc_value_t
+call|)
+argument_list|(
+operator|(
+operator|(
+name|int64_t
+operator|)
+name|tmp
+operator|<<
+literal|16
+operator|)
+operator|>>
+literal|16
+argument_list|)
+expr_stmt|;
+name|tmp
 operator|=
 name|AMD_PERFCTR_VALUE_TO_RELOAD_COUNT
 argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
-else|else
+block|}
 operator|*
 name|v
 operator|=
@@ -1488,7 +1522,7 @@ name|REA
 argument_list|,
 literal|2
 argument_list|,
-literal|"amd-read id=%d -> %jd"
+literal|"amd-read (post-munge) id=%d -> %jd"
 argument_list|,
 name|ri
 argument_list|,
