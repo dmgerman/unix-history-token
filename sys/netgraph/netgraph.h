@@ -3756,6 +3756,9 @@ decl_stmt|;
 name|int
 name|refs
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3832,9 +3835,8 @@ name|ng_apply_info
 modifier|*
 name|apply
 decl_stmt|;
-name|void
-modifier|*
-name|PAD1
+name|uintptr_t
+name|depth
 decl_stmt|;
 ifdef|#
 directive|ifdef
