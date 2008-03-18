@@ -1105,6 +1105,25 @@ modifier|*
 name|curthread
 parameter_list|)
 block|{
+name|sigset_t
+name|set
+decl_stmt|;
+if|if
+condition|(
+name|curthread
+operator|->
+name|attr
+operator|.
+name|suspend
+operator|==
+name|THR_CREATE_SUSPENDED
+condition|)
+name|set
+operator|=
+name|curthread
+operator|->
+name|sigmask
+expr_stmt|;
 comment|/* 	 * This is used as a serialization point to allow parent 	 * to report 'new thread' event to debugger or tweak new thread's 	 * attributes before the new thread does real-world work. 	 */
 name|THR_LOCK
 argument_list|(
@@ -1149,7 +1168,7 @@ argument_list|,
 name|SIGCANCEL
 argument_list|)
 expr_stmt|;
-name|sigprocmask
+name|__sys_sigprocmask
 argument_list|(
 name|SIG_UNBLOCK
 argument_list|,
@@ -1171,20 +1190,15 @@ operator|==
 name|THR_CREATE_SUSPENDED
 condition|)
 block|{
-name|sigset_t
-name|set
-init|=
-name|curthread
-operator|->
-name|sigmask
-decl_stmt|;
-name|_thr_ast
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* Done in THR_UNLOCK() */
+block|_thr_ast(curthread);
+endif|#
+directive|endif
 comment|/* 		 * Parent thread have stored signal mask for us, 		 * we should restore it now. 		 */
-name|sigprocmask
+name|__sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,

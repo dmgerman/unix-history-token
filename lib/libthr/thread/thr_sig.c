@@ -391,6 +391,13 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+if|if
+condition|(
+name|curthread
+operator|->
+name|force_exit
+condition|)
+return|return;
 name|err
 operator|=
 name|errno
