@@ -1407,6 +1407,26 @@ operator|.
 name|st_mtime
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|existence_error
+argument_list|(
+name|errno
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot lstat %s"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 comment|/* If it's a symlink, return whichever is the newest mtime of        the link and its target, for safety.     */
 if|if
 condition|(
@@ -1435,6 +1455,26 @@ operator|.
 name|st_mtime
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|existence_error
+argument_list|(
+name|errno
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot stat %s"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mtime

@@ -627,7 +627,7 @@ modifier|*
 name|finfo
 decl_stmt|;
 block|{
-comment|/* This is a pretty hideous hack, but the gist of it is that recurse.c        won't call notify_check unless there is a fileproc, so we can't just        pass NULL for fileproc.  */
+comment|/* This is a pretty hideous hack, but the gist of it is that recurse.c        won't call cvs_notify_check unless there is a fileproc, so we        can't just pass NULL for fileproc.  */
 return|return
 literal|0
 return|;
@@ -4255,7 +4255,7 @@ end_comment
 
 begin_function
 name|void
-name|notify_check
+name|cvs_notify_check
 parameter_list|(
 name|repository
 parameter_list|,

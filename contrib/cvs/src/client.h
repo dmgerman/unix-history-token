@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1994-2005 The Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  */
+comment|/*  * Copyright (C) 1994-2008 The Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  */
 end_comment
 
 begin_comment
@@ -226,7 +226,7 @@ name|CLIENT_SUPPORT
 end_ifdef
 
 begin_comment
-comment|/*  * Flag variable for seeing whether the server has been started yet.  * As of this writing, only edit.c:notify_check() uses it.  */
+comment|/*  * Flag variable for seeing whether the server has been started yet.  * As of this writing, only edit.c:cvs_notify_check() uses it.  */
 end_comment
 
 begin_decl_stmt

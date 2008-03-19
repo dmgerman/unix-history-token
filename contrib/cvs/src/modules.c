@@ -379,6 +379,8 @@ name|char
 modifier|*
 modifier|*
 name|modargv
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
