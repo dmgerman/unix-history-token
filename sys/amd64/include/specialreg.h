@@ -1485,7 +1485,7 @@ begin_define
 define|#
 directive|define
 name|MTRR_PHYSBASE_PHYSBASE
-value|0x000000fffffff000UL
+value|0x000ffffffffff000UL
 end_define
 
 begin_define
@@ -1499,7 +1499,7 @@ begin_define
 define|#
 directive|define
 name|MTRR_PHYSMASK_PHYSMASK
-value|0x000000fffffff000UL
+value|0x000ffffffffff000UL
 end_define
 
 begin_define
