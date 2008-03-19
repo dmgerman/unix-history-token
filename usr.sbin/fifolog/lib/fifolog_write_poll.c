@@ -309,6 +309,13 @@ operator|->
 name|ff
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|f
+operator|->
+name|ff
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|f
@@ -1602,6 +1609,10 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|p
+operator|=
+name|ptr
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -1615,6 +1626,8 @@ name|strlen
 argument_list|(
 name|ptr
 argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 name|l
 operator|=
@@ -1623,10 +1636,6 @@ operator|+
 name|len
 expr_stmt|;
 comment|/* id */
-name|p
-operator|=
-name|ptr
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1636,10 +1645,6 @@ name|len
 operator|<=
 literal|255
 argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|ptr
 expr_stmt|;
 name|id
 operator||=
@@ -1680,7 +1685,7 @@ operator|->
 name|ibufsize
 argument_list|)
 expr_stmt|;
-comment|/* Wait until there is sufficient space without the lock */
+comment|/* Return if there is not enough space */
 if|if
 condition|(
 name|f
