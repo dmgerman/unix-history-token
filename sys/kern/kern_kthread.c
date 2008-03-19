@@ -1127,11 +1127,6 @@ operator|->
 name|td_sigmask
 expr_stmt|;
 comment|/* XXX dubious */
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|thread_link
 argument_list|(
 name|newtd
@@ -1160,11 +1155,6 @@ expr_stmt|;
 name|thread_unlock
 argument_list|(
 name|oldtd
-argument_list|)
-expr_stmt|;
-name|PROC_SUNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK

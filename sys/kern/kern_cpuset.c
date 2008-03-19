@@ -1340,11 +1340,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
@@ -1360,11 +1355,6 @@ operator|==
 name|id
 condition|)
 break|break;
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|td
@@ -1709,11 +1699,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|nfree
@@ -1728,11 +1713,6 @@ operator|=
 name|p
 operator|->
 name|p_numthreads
-expr_stmt|;
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
@@ -1772,13 +1752,6 @@ expr_stmt|;
 block|}
 block|}
 name|PROC_LOCK_ASSERT
-argument_list|(
-name|p
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|PROC_SLOCK_ASSERT
 argument_list|(
 name|p
 argument_list|,
@@ -1891,7 +1864,7 @@ goto|goto
 name|unlock_out
 goto|;
 block|}
-comment|/* 	 * Replace each thread's cpuset while using deferred release.  We 	 * must do this because the PROC_SLOCK has to be held while traversing 	 * the thread list and this limits the type of operations allowed. 	 */
+comment|/* 	 * Replace each thread's cpuset while using deferred release.  We 	 * must do this because the thread lock must be held while operating 	 * on the thread and this limits the type of operations allowed. 	 */
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
@@ -2027,11 +2000,6 @@ expr_stmt|;
 block|}
 name|unlock_out
 label|:
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -3289,11 +3257,6 @@ break|break;
 case|case
 name|CPU_WHICH_PID
 case|:
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
@@ -3324,11 +3287,6 @@ name|ttd
 argument_list|)
 expr_stmt|;
 block|}
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|CPU_WHICH_CPUSET

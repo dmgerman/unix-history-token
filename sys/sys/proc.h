@@ -1905,7 +1905,7 @@ argument|thread
 argument_list|)
 name|p_threads
 expr_stmt|;
-comment|/* (j) all threads. */
+comment|/* (c) all threads. */
 name|struct
 name|mtx
 name|p_slock
@@ -2048,7 +2048,7 @@ comment|/* (b) Address space. */
 name|u_int
 name|p_swtick
 decl_stmt|;
-comment|/* (j) Tick when swapped in or out. */
+comment|/* (c) Tick when swapped in or out. */
 name|struct
 name|itimerval
 name|p_realtimer
@@ -2232,7 +2232,7 @@ name|signed
 name|char
 name|p_nice
 decl_stmt|;
-comment|/* (c + j) Process "nice" value. */
+comment|/* (c) Process "nice" value. */
 comment|/* End area that is copied on creation. */
 define|#
 directive|define
@@ -2250,7 +2250,7 @@ comment|/* (c) Knotes attached to this proc. */
 name|int
 name|p_numthreads
 decl_stmt|;
-comment|/* (j) Number of threads. */
+comment|/* (c) Number of threads. */
 name|struct
 name|mdproc
 name|p_md

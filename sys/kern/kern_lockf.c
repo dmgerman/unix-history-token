@@ -1146,7 +1146,7 @@ name|nproc
 operator|=
 name|NULL
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_LOCK
 argument_list|(
 name|wproc
 argument_list|)
@@ -1241,14 +1241,14 @@ operator|->
 name|lf_id
 condition|)
 block|{
-name|PROC_SUNLOCK
-argument_list|(
-name|wproc
-argument_list|)
-expr_stmt|;
 name|thread_unlock
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|wproc
 argument_list|)
 expr_stmt|;
 name|lock
@@ -1276,7 +1276,7 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-name|PROC_SUNLOCK
+name|PROC_UNLOCK
 argument_list|(
 name|wproc
 argument_list|)

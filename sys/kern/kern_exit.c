@@ -1775,13 +1775,6 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
-argument_list|(
-name|p
-operator|->
-name|p_pptr
-argument_list|)
-expr_stmt|;
 name|sched_exit
 argument_list|(
 name|p
@@ -1789,13 +1782,6 @@ operator|->
 name|p_pptr
 argument_list|,
 name|td
-argument_list|)
-expr_stmt|;
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-operator|->
-name|p_pptr
 argument_list|)
 expr_stmt|;
 name|PROC_SLOCK

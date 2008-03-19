@@ -1396,17 +1396,7 @@ operator|>
 literal|1
 condition|)
 block|{
-name|thread_lock
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 name|thread_unlink
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-name|thread_unlock
 argument_list|(
 name|td
 argument_list|)
@@ -1678,7 +1668,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|/* 	 * XXX This can't be enabled because it's called for proc0 before 	 * it's spinlock has been created. 	 * PROC_SLOCK_ASSERT(p, MA_OWNED); 	 */
+comment|/* 	 * XXX This can't be enabled because it's called for proc0 before 	 * its lock has been created. 	 * PROC_LOCK_ASSERT(p, MA_OWNED); 	 */
 name|td
 operator|->
 name|td_state
@@ -1838,7 +1828,7 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-name|PROC_SLOCK_ASSERT
+name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
 argument_list|,
@@ -3281,11 +3271,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
@@ -3303,11 +3288,6 @@ name|tid
 condition|)
 break|break;
 block|}
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|td

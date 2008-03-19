@@ -13012,7 +13012,7 @@ name|pick
 operator|=
 name|p
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_LOCK
 argument_list|(
 name|pick
 argument_list|)
@@ -13219,7 +13219,7 @@ name|p_vmspace
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_UNLOCK
 argument_list|(
 name|pick
 argument_list|)
@@ -13709,7 +13709,7 @@ literal|1
 operator|)
 return|;
 comment|/* 	 * Fetch various stats about these processes.  After we drop the 	 * lock the information could be stale but the race is unimportant. 	 */
-name|PROC_SLOCK
+name|PROC_LOCK
 argument_list|(
 name|p1
 argument_list|)
@@ -13724,12 +13724,12 @@ operator|&
 name|esta
 argument_list|)
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_UNLOCK
 argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_LOCK
 argument_list|(
 name|p2
 argument_list|)
@@ -13744,7 +13744,7 @@ operator|&
 name|estb
 argument_list|)
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_UNLOCK
 argument_list|(
 name|p2
 argument_list|)

@@ -1293,7 +1293,7 @@ argument_list|(
 argument|p
 argument_list|)
 block|{
-name|PROC_SLOCK
+name|PROC_LOCK
 argument_list|(
 name|p
 argument_list|)
@@ -1573,7 +1573,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* end of thread loop */
-name|PROC_SUNLOCK
+name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2155,7 +2155,7 @@ operator|->
 name|td_priority
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK_ASSERT
+name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
 argument_list|,
@@ -2357,13 +2357,6 @@ modifier|*
 name|td
 decl_stmt|;
 name|PROC_LOCK_ASSERT
-argument_list|(
-name|p
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|PROC_SLOCK_ASSERT
 argument_list|(
 name|p
 argument_list|,

@@ -4225,11 +4225,6 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 			 * If the process is in a non-running type state, 			 * don't touch it.  Check all the threads individually. 			 */
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|breakout
 operator|=
 literal|0
@@ -4284,11 +4279,6 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|breakout
@@ -4406,21 +4396,11 @@ argument_list|,
 literal|"out of swap space"
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
-argument_list|(
-name|bigproc
-argument_list|)
-expr_stmt|;
 name|sched_nice
 argument_list|(
 name|bigproc
 argument_list|,
 name|PRIO_MIN
-argument_list|)
-expr_stmt|;
-name|PROC_SUNLOCK
-argument_list|(
-name|bigproc
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
@@ -5548,11 +5528,6 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 			 * if the process is in a non-running type state, 			 * don't touch it. 			 */
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|breakout
 operator|=
 literal|0
@@ -5607,11 +5582,6 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|breakout

@@ -1852,11 +1852,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
@@ -1874,11 +1869,6 @@ name|pid
 condition|)
 break|break;
 block|}
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|td2
@@ -2833,11 +2823,6 @@ name|td_xsig
 operator|=
 name|data
 expr_stmt|;
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|req
@@ -2877,6 +2862,11 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 			 * unsuspend all threads, to not let a thread run, 			 * you should use PT_SUSPEND to suspend it before 			 * continuing process. 			 */
+name|PROC_SLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_flag
@@ -3585,11 +3575,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
@@ -3615,11 +3600,6 @@ operator|->
 name|td_tid
 expr_stmt|;
 block|}
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p

@@ -7979,13 +7979,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK_ASSERT
-argument_list|(
-name|p
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|p
 operator|->
 name|p_nice
@@ -8562,7 +8555,7 @@ operator|->
 name|td_priority
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK_ASSERT
+name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
 argument_list|,

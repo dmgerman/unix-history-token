@@ -2081,11 +2081,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|saved_nice
 operator|=
 name|p
@@ -2097,11 +2092,6 @@ argument_list|(
 name|p
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|PROC_SUNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
@@ -4618,11 +4608,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|sched_nice
 argument_list|(
 name|td
@@ -4630,11 +4615,6 @@ operator|->
 name|td_proc
 argument_list|,
 name|saved_nice
-argument_list|)
-expr_stmt|;
-name|PROC_SUNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
