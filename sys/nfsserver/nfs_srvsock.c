@@ -2996,6 +2996,9 @@ name|slp
 operator|->
 name|ns_frag
 expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -3009,9 +3012,12 @@ name|nr_link
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
