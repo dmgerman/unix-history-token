@@ -627,24 +627,33 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Don't allow "CVS" as any directory in module path.      *      * Could abstract this to valid_module_path, but I don't think we'll need      * to call it from anywhere else.      */
-if|if
+comment|/* for each "CVS" in path... */
+name|cp
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+while|while
 condition|(
 operator|(
 name|cp
 operator|=
 name|strstr
 argument_list|(
-name|argv
-index|[
-literal|0
-index|]
+name|cp
 argument_list|,
 literal|"CVS"
 argument_list|)
 operator|)
-operator|&&
-comment|/* path contains "CVS" AND ... */
-operator|(
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+comment|/* /^CVS/ OR m#/CVS#... */
 operator|(
 name|cp
 operator|==
@@ -652,7 +661,6 @@ name|argv
 index|[
 literal|0
 index|]
-operator|)
 operator|||
 name|ISDIRSEP
 argument_list|(
@@ -664,9 +672,8 @@ literal|1
 operator|)
 argument_list|)
 operator|)
+comment|/* ...AND /CVS$/ OR m#CVS/# */
 operator|&&
-comment|/* /^CVS/ OR m#/CVS# AND ... */
-operator|(
 operator|(
 operator|*
 operator|(
@@ -676,7 +683,6 @@ literal|3
 operator|)
 operator|==
 literal|'\0'
-operator|)
 operator|||
 name|ISDIRSEP
 argument_list|(
@@ -688,7 +694,6 @@ literal|3
 operator|)
 argument_list|)
 operator|)
-comment|/* /CVS$/ OR m#CVS/# */
 condition|)
 block|{
 name|error
@@ -708,6 +713,11 @@ literal|0
 argument_list|,
 literal|"as a directory in a path or as a file name."
 argument_list|)
+expr_stmt|;
+block|}
+name|cp
+operator|+=
+literal|3
 expr_stmt|;
 block|}
 for|for
@@ -7128,7 +7138,7 @@ name|ierrno
 argument_list|,
 literal|"ERROR: cannot chdir to %s"
 argument_list|,
-name|repository
+name|dir
 argument_list|)
 expr_stmt|;
 name|error
@@ -7139,7 +7149,7 @@ name|ierrno
 argument_list|,
 literal|"ERROR: cannot chdir to %s"
 argument_list|,
-name|repository
+name|dir
 argument_list|)
 expr_stmt|;
 name|err
