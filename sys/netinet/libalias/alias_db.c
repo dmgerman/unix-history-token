@@ -753,6 +753,8 @@ operator|=
 name|malloc
 argument_list|(
 name|IP_MAXPACKET
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
