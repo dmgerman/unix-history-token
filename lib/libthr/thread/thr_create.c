@@ -1002,10 +1002,8 @@ name|tlflags
 operator||=
 name|TLFLAGS_DETACHED
 expr_stmt|;
-name|_thr_ref_delete_unlocked
+name|THR_GCLIST_ADD
 argument_list|(
-name|curthread
-argument_list|,
 name|new_thread
 argument_list|)
 expr_stmt|;
