@@ -381,13 +381,7 @@ begin_define
 define|#
 directive|define
 name|atomic_fetchadd_long
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|(u_long)atomic_add_int((volatile u_int *)(p), (u_int)(v))
+value|atomic_add_long
 end_define
 
 begin_undef
