@@ -1351,17 +1351,6 @@ value|50
 end_define
 
 begin_comment
-comment|/* FreeBSD.org default is to use ssh.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RSH_DFLT
-value|"ssh"
-end_define
-
-begin_comment
 comment|/* The type of an entnode.  */
 end_comment
 
@@ -6147,6 +6136,20 @@ name|PROTO
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|free_cvs_password
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+name|str
 operator|)
 argument_list|)
 decl_stmt|;
