@@ -857,16 +857,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|EVENTHANDLER_DECLARE
-argument_list|(
-name|maxfiles_change
-argument_list|,
-name|uma_zone_chfn
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_typedef
 typedef|typedef
 name|void
