@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (c) 1995, Cyclic Software, Bloomington, IN, USA  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with CVS.  *   * Allow user to log in for an authenticating server.  *  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (c) 1995, Cyclic Software, Bloomington, IN, USA  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with CVS.  *   * Allow user to log in for an authenticating server.  */
 end_comment
 
 begin_include
