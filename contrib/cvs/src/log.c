@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Print Log Information  *   * Prints the RCS "log" (rlog) information for the specified files.  With no  * argument, prints the log information for all the files in the directory  * (recursive by default).  *  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1986-2008 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Print Log Information  *   * Prints the RCS "log" (rlog) information for the specified files.  With no  * argument, prints the log information for all the files in the directory  * (recursive by default).  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -143,7 +143,7 @@ comment|/* Nonzero if the -N option was seen, meaning that tag information      
 name|int
 name|notags
 decl_stmt|;
-comment|/* Nonzero if the -b option was seen, meaning that only revisions        on the default branch should be printed.  */
+comment|/* Nonzero if the -b option was seen, meaning that revisions        on the default branch should be printed.  */
 name|int
 name|default_branch
 decl_stmt|;
@@ -644,7 +644,7 @@ literal|"    [-w[logins]] [files...]\n"
 block|,
 literal|"\t-l\tLocal directory only, no recursion.\n"
 block|,
-literal|"\t-b\tOnly list revisions on the default branch.\n"
+literal|"\t-b\tList revisions on the default branch.\n"
 block|,
 literal|"\t-h\tOnly print header.\n"
 block|,
@@ -653,6 +653,8 @@ block|,
 literal|"\t-t\tOnly print header and descriptive text.\n"
 block|,
 literal|"\t-N\tDo not list tags.\n"
+block|,
+literal|"\t-n\tList tags (default).\n"
 block|,
 literal|"\t-S\tDo not print name/header if no revisions selected.  -d, -r,\n"
 block|,
