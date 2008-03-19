@@ -2244,6 +2244,13 @@ name|uint16_t
 name|psm
 decl_stmt|;
 comment|/* HBO */
+name|uint16_t
+name|security_description
+decl_stmt|;
+comment|/* HBO */
+name|uint16_t
+name|reserved2
+decl_stmt|;
 block|}
 struct|;
 end_struct
