@@ -5408,11 +5408,6 @@ name|ui_hash
 argument_list|)
 expr_stmt|;
 block|}
-name|uihold
-argument_list|(
-name|uip
-argument_list|)
-expr_stmt|;
 block|}
 name|uihold
 argument_list|(
