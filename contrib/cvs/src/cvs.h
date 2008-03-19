@@ -6059,6 +6059,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|free_cvs_password
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+name|str
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|get_cvs_port_number
 name|PROTO

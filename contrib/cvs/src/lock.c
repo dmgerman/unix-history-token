@@ -526,6 +526,8 @@ name|short_repos
 decl_stmt|;
 name|mode_t
 name|save_umask
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|saved_umask

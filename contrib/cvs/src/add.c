@@ -363,10 +363,13 @@ literal|0
 operator|||
 name|fncmp
 argument_list|(
+name|last_component
+argument_list|(
 name|argv
 index|[
 name|i
 index|]
+argument_list|)
 argument_list|,
 name|CVSADM
 argument_list|)

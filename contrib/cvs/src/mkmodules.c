@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS kit.  */
+comment|/*  * Copyright (C) 1986-2008 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS kit.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
 
 begin_include
 include|#
@@ -660,8 +666,6 @@ literal|"#\n"
 block|,
 literal|"# Where \"options\" are composed of:\n"
 block|,
-literal|"#	-i prog		Run \"prog\" on \"cvs commit\" from top-level of module.\n"
-block|,
 literal|"#	-o prog		Run \"prog\" on \"cvs checkout\" of module.\n"
 block|,
 literal|"#	-e prog		Run \"prog\" on \"cvs export\" of module.\n"
@@ -718,6 +722,20 @@ block|{
 literal|"# Set this to \"no\" if pserver shouldn't check system users/passwords\n"
 block|,
 literal|"#SystemAuth=yes\n"
+block|,
+literal|"\n"
+block|,
+literal|"# Set `IgnoreUnknownConfigKeys' to `yes' to ignore unknown config\n"
+block|,
+literal|"# keys which are supported in a future version of CVS.\n"
+block|,
+literal|"# This option is intended to be useful as a transition for read-only\n"
+block|,
+literal|"# mirror sites when sites may need to be updated later than the\n"
+block|,
+literal|"# primary CVS repository.\n"
+block|,
+literal|"#IgnoreUnknownConfigKeys=no\n"
 block|,
 literal|"\n"
 block|,
@@ -3301,6 +3319,151 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Walk PATH backwards to the root directory looking for the root of a  * repository.  */
+end_comment
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|in_repository
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|cp
+init|=
+name|xstrdup
+argument_list|(
+name|path
+argument_list|)
+decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+if|if
+condition|(
+name|isdir
+argument_list|(
+name|cp
+argument_list|)
+condition|)
+block|{
+name|int
+name|foundit
+decl_stmt|;
+name|char
+modifier|*
+name|adm
+init|=
+name|xmalloc
+argument_list|(
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|CVSROOTADM
+argument_list|)
+operator|+
+literal|2
+argument_list|)
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|adm
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|cp
+argument_list|,
+name|CVSROOTADM
+argument_list|)
+expr_stmt|;
+name|foundit
+operator|=
+name|isdir
+argument_list|(
+name|adm
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|adm
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|foundit
+condition|)
+return|return
+name|cp
+return|;
+block|}
+comment|/* If last_component() returns the empty string, then cp either 	 * points at the system root or is the empty string itself. 	 */
+if|if
+condition|(
+operator|!
+operator|*
+name|last_component
+argument_list|(
+name|cp
+argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"."
+argument_list|)
+operator|||
+name|last_component
+argument_list|(
+name|cp
+argument_list|)
+operator|==
+name|cp
+condition|)
+break|break;
+name|cp
+index|[
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
+operator|-
+name|strlen
+argument_list|(
+name|last_component
+argument_list|(
+name|cp
+argument_list|)
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
@@ -3360,12 +3523,22 @@ name|err
 init|=
 literal|0
 decl_stmt|;
+name|char
+modifier|*
+name|root_dir
+decl_stmt|;
 specifier|const
 name|struct
 name|admin_file
 modifier|*
 name|fileptr
 decl_stmt|;
+name|assert
+argument_list|(
+operator|!
+name|server_active
+argument_list|)
+expr_stmt|;
 name|umask
 argument_list|(
 name|cvsumask
@@ -3414,6 +3587,44 @@ block|}
 endif|#
 directive|endif
 comment|/* CLIENT_SUPPORT */
+name|root_dir
+operator|=
+name|in_repository
+argument_list|(
+name|current_parsed_root
+operator|->
+name|directory
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|root_dir
+operator|&&
+name|strcmp
+argument_list|(
+name|root_dir
+argument_list|,
+name|current_parsed_root
+operator|->
+name|directory
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Cannot initialize repository under existing CVSROOT: `%s'"
+argument_list|,
+name|root_dir
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|root_dir
+argument_list|)
+expr_stmt|;
 comment|/* Note: we do *not* create parent directories as needed like the        old cvsinit.sh script did.  Few utilities do that, and a        non-existent parent directory is as likely to be a typo as something        which needs to be created.  */
 name|mkdir_if_needed
 argument_list|(

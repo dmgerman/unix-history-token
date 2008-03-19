@@ -3186,7 +3186,7 @@ decl_stmt|;
 name|size_t
 name|buflen
 init|=
-literal|128
+name|BUFSIZ
 decl_stmt|;
 comment|/* Get the name of the file to which `from' is linked. */
 while|while

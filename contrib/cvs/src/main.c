@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1986-2006 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2006 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License  * as specified in the README file that comes with the CVS source distribution.  *  * This is the main C driver for the CVS system.  *  * Credit to Dick Grune, Vrije Universiteit, Amsterdam, for writing  * the shell-script CVS system that this is based on.  *  */
+comment|/*  * Copyright (C) 1986-2008 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2006 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License  * as specified in the README file that comes with the CVS source distribution.  *  * This is the main C driver for the CVS system.  *  * Credit to Dick Grune, Vrije Universiteit, Amsterdam, for writing  * the shell-script CVS system that this is based on.  *  */
 end_comment
 
 begin_include
@@ -308,7 +308,7 @@ literal|"annotate"
 block|,
 literal|"ann"
 block|,
-name|NULL
+literal|"blame"
 block|,
 name|annotate
 block|,

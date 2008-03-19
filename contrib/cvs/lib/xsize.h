@@ -38,8 +38,20 @@ end_include
 begin_if
 if|#
 directive|if
-name|HAVE_STDINT_H
+name|HAVE_INTTYPES_H
 end_if
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|HAVE_STDINT_H
+end_elif
 
 begin_include
 include|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Poritons Copyright (c) 1992, Mark D. Baushke  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Name of Root  *   * Determine the path to the CVSROOT and set "Root" accordingly.  */
+comment|/*  * Copyright (C) 1986-2008 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Poritons Copyright (c) 1992, Mark D. Baushke  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Name of Root  *   * Determine the path to the CVSROOT and set "Root" accordingly.  */
 end_comment
 
 begin_include
@@ -664,6 +664,17 @@ name|int
 name|root_allow_size
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|int
+name|root_allow_used
+parameter_list|()
+block|{
+return|return
+name|root_allow_count
+return|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -1462,6 +1473,24 @@ operator|->
 name|method
 operator|=
 name|ext_method
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|method
+argument_list|,
+literal|"extssh"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|newroot
+operator|->
+name|method
+operator|=
+name|extssh_method
 expr_stmt|;
 elseif|else
 if|if
@@ -2279,6 +2308,9 @@ name|server_method
 case|:
 case|case
 name|ext_method
+case|:
+case|case
+name|extssh_method
 case|:
 name|no_port
 operator|=
