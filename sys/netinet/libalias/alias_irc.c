@@ -197,6 +197,13 @@ name|IRC_CONTROL_PORT_NUMBER_2
 value|6668
 end_define
 
+begin_define
+define|#
+directive|define
+name|PKTSIZE
+value|(IP_MAXPACKET + 1)
+end_define
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -354,7 +361,7 @@ name|newpacket
 operator|=
 name|malloc
 argument_list|(
-name|IP_MAXPACKET
+name|PKTSIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -773,10 +780,7 @@ name|dlen
 operator|||
 name|iCopy
 operator|>=
-sizeof|sizeof
-argument_list|(
-name|newpacket
-argument_list|)
+name|PKTSIZE
 condition|)
 goto|goto
 name|lPACKET_DONE
@@ -875,10 +879,7 @@ name|iCopy
 operator|+
 literal|4
 operator|>
-sizeof|sizeof
-argument_list|(
-name|newpacket
-argument_list|)
+name|PKTSIZE
 condition|)
 goto|goto
 name|lPACKET_DONE
@@ -990,10 +991,7 @@ name|dlen
 operator|||
 name|iCopy
 operator|>=
-sizeof|sizeof
-argument_list|(
-name|newpacket
-argument_list|)
+name|PKTSIZE
 condition|)
 block|{
 name|DBprintf
@@ -1019,10 +1017,7 @@ name|dlen
 operator|&&
 name|iCopy
 operator|<
-sizeof|sizeof
-argument_list|(
-name|newpacket
-argument_list|)
+name|PKTSIZE
 condition|)
 name|newpacket
 index|[
@@ -1111,10 +1106,7 @@ name|dlen
 operator|||
 name|iCopy
 operator|>=
-sizeof|sizeof
-argument_list|(
-name|newpacket
-argument_list|)
+name|PKTSIZE
 condition|)
 block|{
 name|DBprintf
@@ -1140,10 +1132,7 @@ name|dlen
 operator|&&
 name|iCopy
 operator|<
-sizeof|sizeof
-argument_list|(
-name|newpacket
-argument_list|)
+name|PKTSIZE
 condition|)
 name|newpacket
 index|[
@@ -1582,10 +1571,7 @@ index|[
 name|iCopy
 index|]
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|newpacket
-argument_list|)
+name|PKTSIZE
 operator|-
 name|iCopy
 argument_list|,
@@ -1628,10 +1614,7 @@ operator|+=
 name|n
 operator|)
 operator|>=
-sizeof|sizeof
-argument_list|(
-name|newpacket
-argument_list|)
+name|PKTSIZE
 condition|)
 block|{
 comment|/* Truncated/fit exactly 										 * - bad news */
@@ -1663,10 +1646,7 @@ index|[
 name|iCopy
 index|]
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|newpacket
-argument_list|)
+name|PKTSIZE
 operator|-
 name|iCopy
 argument_list|,
@@ -1731,10 +1711,7 @@ name|dlen
 operator|&&
 name|iCopy
 operator|<
-sizeof|sizeof
-argument_list|(
-name|newpacket
-argument_list|)
+name|PKTSIZE
 condition|;
 name|i
 operator|++
@@ -1784,10 +1761,7 @@ name|dlen
 operator|&&
 name|iCopy
 operator|<
-sizeof|sizeof
-argument_list|(
-name|newpacket
-argument_list|)
+name|PKTSIZE
 condition|;
 name|i
 operator|++
