@@ -1127,6 +1127,12 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+if|if
+condition|(
+name|td
+operator|->
+name|td_cpuset
+condition|)
 name|cpuset_rel
 argument_list|(
 name|td
