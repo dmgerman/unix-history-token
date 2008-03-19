@@ -2184,7 +2184,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|vm_pageq_requeue
+name|vm_page_requeue
 argument_list|(
 name|p
 argument_list|)
@@ -2223,7 +2223,7 @@ name|act_count
 operator|+=
 name|ACT_ADVANCE
 expr_stmt|;
-name|vm_pageq_requeue
+name|vm_page_requeue
 argument_list|(
 name|p
 argument_list|)
@@ -2883,7 +2883,7 @@ operator|->
 name|hold_count
 condition|)
 block|{
-name|vm_pageq_requeue
+name|vm_page_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -3191,7 +3191,7 @@ argument_list|,
 name|PG_WINATCFLS
 argument_list|)
 expr_stmt|;
-name|vm_pageq_requeue
+name|vm_page_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -3295,7 +3295,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|vm_pageq_requeue
+name|vm_page_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -3531,7 +3531,7 @@ operator|->
 name|hold_count
 condition|)
 block|{
-name|vm_pageq_requeue
+name|vm_page_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -3823,7 +3823,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|vm_pageq_requeue
+name|vm_page_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -3926,7 +3926,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|vm_pageq_requeue
+name|vm_page_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -4012,7 +4012,7 @@ block|}
 block|}
 else|else
 block|{
-name|vm_pageq_requeue
+name|vm_page_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -4692,7 +4692,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|vm_pageq_requeue
+name|vm_page_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -4762,7 +4762,7 @@ name|act_count
 operator|=
 name|ACT_MAX
 expr_stmt|;
-name|vm_pageq_requeue
+name|vm_page_requeue
 argument_list|(
 name|m
 argument_list|)
@@ -4806,7 +4806,7 @@ argument_list|,
 name|ACT_DECLINE
 argument_list|)
 expr_stmt|;
-name|vm_pageq_requeue
+name|vm_page_requeue
 argument_list|(
 name|m
 argument_list|)

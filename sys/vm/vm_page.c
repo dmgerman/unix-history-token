@@ -4278,12 +4278,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_pageq_requeue:  *  *	If the given page is contained within a page queue, move it to the tail  *	of that queue.  *  *	The page queues must be locked.  */
+comment|/*  *	vm_page_requeue:  *  *	If the given page is contained within a page queue, move it to the tail  *	of that queue.  *  *	The page queues must be locked.  */
 end_comment
 
 begin_function
 name|void
-name|vm_pageq_requeue
+name|vm_page_requeue
 parameter_list|(
 name|vm_page_t
 name|m

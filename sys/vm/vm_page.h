@@ -1055,16 +1055,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_pageq_requeue
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vm_page_activate
 parameter_list|(
 name|vm_page_t
@@ -1222,6 +1212,16 @@ parameter_list|,
 name|vm_object_t
 parameter_list|,
 name|vm_pindex_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_requeue
+parameter_list|(
+name|vm_page_t
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
