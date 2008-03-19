@@ -5060,7 +5060,6 @@ name|uap
 operator|->
 name|nfds
 expr_stmt|;
-comment|/* 	 * This is kinda bogus.  We have fd limits, but that is not 	 * really related to the size of the pollfd array.  Make sure 	 * we let the process use at least FD_SETSIZE entries and at 	 * least enough for the current limits.  We want to be reasonably 	 * safe, but not overly restrictive. 	 */
 if|if
 condition|(
 name|nfds
