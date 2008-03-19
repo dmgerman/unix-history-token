@@ -130,11 +130,11 @@ parameter_list|)
 define|\
 value|((!(base& ((1<< 12) - 1)))&&
 comment|/* base is multiple of 4k */
-value|\      ((len)>= (1<< 12))&&
+value|\ 	    ((len)>= (1<< 12))&&
 comment|/* length is>= 4k */
-value|\      powerof2((len))&&
+value|\ 	    powerof2((len))&&
 comment|/* ... and power of two */
-value|\      !((base)& ((len) - 1)))
+value|\ 	    !((base)& ((len) - 1)))
 end_define
 
 begin_comment
@@ -150,6 +150,7 @@ name|curr
 parameter_list|,
 name|new
 parameter_list|)
+define|\
 value|(((curr)& ~MDF_ATTRMASK) | ((new)& MDF_ATTRMASK))
 end_define
 
@@ -499,19 +500,23 @@ operator|>=
 name|MTRRTOMRTLEN
 condition|)
 return|return
+operator|(
 name|MDF_UNKNOWN
+operator|)
 return|;
 return|return
+operator|(
 name|amd64_mtrrtomrt
 index|[
 name|val
 index|]
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*   * amd64 MTRR conflicts. Writeback and uncachable may overlap.  */
+comment|/*  * amd64 MTRR conflicts. Writeback and uncachable may overlap.  */
 end_comment
 
 begin_function
@@ -549,7 +554,9 @@ name|MDF_UNKNOWN
 operator|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -578,10 +585,14 @@ name|MDF_UNCACHEABLE
 operator|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -676,7 +687,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fetch the current mtrr settings from the current CPU (assumed to all  * be in sync in the SMP case).  Note that if we are here, we assume  * that MTRRs are enabled, and we may or may not have fixed MTRRs.  */
+comment|/*  * Fetch the current mtrr settings from the current CPU (assumed to  * all be in sync in the SMP case).  Note that if we are here, we  * assume that MTRRs are enabled, and we may or may not have fixed  * MTRRs.  */
 end_comment
 
 begin_function
@@ -711,7 +722,7 @@ name|sc
 operator|->
 name|mr_desc
 expr_stmt|;
-comment|/* Get fixed-range MTRRs */
+comment|/* Get fixed-range MTRRs. */
 if|if
 condition|(
 name|sc
@@ -1019,7 +1030,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Get remainder which must be variable MTRRs */
+comment|/* Get remainder which must be variable MTRRs. */
 name|msr
 operator|=
 name|MSR_MTRRVarBase
@@ -1071,7 +1082,7 @@ name|amd64_mtrr2mrt
 argument_list|(
 name|msrv
 operator|&
-literal|0xff
+name|MTRR_PHYSBASE_TYPE
 argument_list|)
 expr_stmt|;
 name|mrd
@@ -1080,7 +1091,7 @@ name|mr_base
 operator|=
 name|msrv
 operator|&
-literal|0x000000fffffff000L
+name|MTRR_PHYSBASE_PHYSBASE
 expr_stmt|;
 name|msrv
 operator|=
@@ -1098,7 +1109,7 @@ operator|=
 operator|(
 name|msrv
 operator|&
-literal|0x800
+name|MTRR_PHYSMASK_VALID
 operator|)
 condition|?
 operator|(
@@ -1128,10 +1139,14 @@ operator|~
 operator|(
 name|msrv
 operator|&
-literal|0x000000fffffff000L
+name|MTRR_PHYSMASK_PHYSMASK
 operator|)
 operator|&
-literal|0x000000ffffffffffL
+operator|(
+name|MTRR_PHYSMASK_PHYSMASK
+operator||
+literal|0xfffL
+operator|)
 operator|)
 operator|+
 literal|1
@@ -1156,7 +1171,7 @@ name|mr_flags
 operator||=
 name|MDF_BOGUS
 expr_stmt|;
-comment|/* If unclaimed and active, must be the BIOS */
+comment|/* If unclaimed and active, must be the BIOS. */
 if|if
 condition|(
 operator|(
@@ -1289,14 +1304,18 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 name|oldval
 operator|&
 literal|0xff
+operator|)
 return|;
 return|return
+operator|(
 name|val
 operator|&
 literal|0xff
+operator|)
 return|;
 block|}
 end_function
@@ -1319,7 +1338,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/*      * We should use ipi_all_but_self() to call other CPUs into a       * locking gate, then call a target function to do this work.      * The "proper" solution involves a generalised locking gate      * implementation, not ready yet.      */
+comment|/* 	 * We should use ipi_all_but_self() to call other CPUs into a 	 * locking gate, then call a target function to do this work. 	 * The "proper" solution involves a generalised locking gate 	 * implementation, not ready yet. 	 */
 name|smp_rendezvous
 argument_list|(
 name|NULL
@@ -1328,10 +1347,6 @@ name|amd64_mrstoreone
 argument_list|,
 name|NULL
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|sc
 argument_list|)
 expr_stmt|;
@@ -1343,10 +1358,6 @@ expr_stmt|;
 comment|/* disable interrupts */
 name|amd64_mrstoreone
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|sc
 argument_list|)
 expr_stmt|;
@@ -1359,7 +1370,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update the current CPU's MTRRs with those represented in the  * descriptor list.  Note that we do this wholesale rather than  * just stuffing one entry; this is simpler (but slower, of course).  */
+comment|/*  * Update the current CPU's MTRRs with those represented in the  * descriptor list.  Note that we do this wholesale rather than just  * stuffing one entry; this is simpler (but slower, of course).  */
 end_comment
 
 begin_function
@@ -1377,11 +1388,6 @@ name|mem_range_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|mem_range_softc
-operator|*
-operator|)
 name|arg
 decl_stmt|;
 name|struct
@@ -1410,12 +1416,12 @@ name|sc
 operator|->
 name|mr_desc
 expr_stmt|;
+comment|/* Disable PGE. */
 name|cr4save
 operator|=
 name|rcr4
 argument_list|()
 expr_stmt|;
-comment|/* save cr4 */
 if|if
 condition|(
 name|cr4save
@@ -1430,6 +1436,7 @@ operator|~
 name|CR4_PGE
 argument_list|)
 expr_stmt|;
+comment|/* Disable caches (CD = 1, NW = 0). */
 name|load_cr0
 argument_list|(
 operator|(
@@ -1443,11 +1450,11 @@ operator||
 name|CR0_CD
 argument_list|)
 expr_stmt|;
-comment|/* disable caches (CD = 1, NW = 0) */
+comment|/* Flushes caches and TLBs. */
 name|wbinvd
 argument_list|()
 expr_stmt|;
-comment|/* flush caches, TLBs */
+comment|/* Disable MTRRs (E = 0). */
 name|wrmsr
 argument_list|(
 name|MSR_MTRRdefType
@@ -1458,11 +1465,10 @@ name|MSR_MTRRdefType
 argument_list|)
 operator|&
 operator|~
-literal|0x800
+name|MTRR_DEF_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* disable MTRRs (E = 0) */
-comment|/* Set fixed-range MTRRs */
+comment|/* Set fixed-range MTRRs. */
 if|if
 condition|(
 name|sc
@@ -1743,7 +1749,7 @@ literal|8
 expr_stmt|;
 block|}
 block|}
-comment|/* Set remainder which must be variable MTRRs */
+comment|/* Set remainder which must be variable MTRRs. */
 name|msr
 operator|=
 name|MSR_MTRRVarBase
@@ -1794,7 +1800,7 @@ name|mrd
 operator|->
 name|mr_base
 operator|&
-literal|0x000000fffffff000L
+name|MTRR_PHYSBASE_PHYSBASE
 expr_stmt|;
 name|msrv
 operator||=
@@ -1834,7 +1840,7 @@ condition|)
 block|{
 name|msrv
 operator|=
-literal|0x800
+name|MTRR_PHYSMASK_VALID
 operator||
 operator|(
 operator|~
@@ -1846,7 +1852,7 @@ operator|-
 literal|1
 operator|)
 operator|&
-literal|0x000000fffffff000L
+name|MTRR_PHYSMASK_PHYSMASK
 operator|)
 expr_stmt|;
 block|}
@@ -1867,10 +1873,11 @@ name|msrv
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Flush caches, TLBs. */
 name|wbinvd
 argument_list|()
 expr_stmt|;
-comment|/* flush caches, TLBs */
+comment|/* Enable MTRRs. */
 name|wrmsr
 argument_list|(
 name|MSR_MTRRdefType
@@ -1880,10 +1887,10 @@ argument_list|(
 name|MSR_MTRRdefType
 argument_list|)
 operator||
-literal|0x800
+name|MTRR_DEF_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* restore MTRR state */
+comment|/* Enable caches (CD = 0, NW = 0). */
 name|load_cr0
 argument_list|(
 name|rcr0
@@ -1897,13 +1904,12 @@ name|CR0_NW
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* enable caches CD = 0 and NW = 0 */
+comment|/* Restore PGE. */
 name|load_cr4
 argument_list|(
 name|cr4save
 argument_list|)
 expr_stmt|;
-comment|/* restore cr4 */
 block|}
 end_function
 
@@ -2001,7 +2007,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try to satisfy the given range request by manipulating the fixed MTRRs that  * cover low memory.  *  * Note that we try to be generous here; we'll bloat the range out to the   * next higher/lower boundary to avoid the consumer having to know too much  * about the mechanisms here.  *  * XXX note that this will have to be updated when we start supporting "busy" ranges.  */
+comment|/*  * Try to satisfy the given range request by manipulating the fixed  * MTRRs that cover low memory.  *  * Note that we try to be generous here; we'll bloat the range out to  * the next higher/lower boundary to avoid the consumer having to know  * too much about the mechanisms here.  *  * XXX note that this will have to be updated when we start supporting  * "busy" ranges.  */
 end_comment
 
 begin_function
@@ -2035,7 +2041,7 @@ decl_stmt|,
 modifier|*
 name|curr_md
 decl_stmt|;
-comment|/* range check */
+comment|/* Range check. */
 if|if
 condition|(
 operator|(
@@ -2083,7 +2089,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* check we aren't doing something risky */
+comment|/* Check that we aren't doing something risky. */
 if|if
 condition|(
 operator|!
@@ -2127,7 +2133,7 @@ name|EACCES
 operator|)
 return|;
 block|}
-comment|/* set flags, clear set-by-firmware flag */
+comment|/* Set flags, clear set-by-firmware flag. */
 for|for
 control|(
 name|curr_md
@@ -2222,7 +2228,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/*       * Scan the currently active variable descriptors, look for       * one we exactly match (straight takeover) and for possible      * accidental overlaps.      * Keep track of the first empty variable descriptor in case we      * can't perform a takeover.      */
+comment|/* 	 * Scan the currently active variable descriptors, look for 	 * one we exactly match (straight takeover) and for possible 	 * accidental overlaps. 	 * 	 * Keep track of the first empty variable descriptor in case 	 * we can't perform a takeover. 	 */
 name|i
 operator|=
 operator|(
@@ -2278,7 +2284,7 @@ operator|&
 name|MDF_ACTIVE
 condition|)
 block|{
-comment|/* exact match? */
+comment|/* Exact match? */
 if|if
 condition|(
 operator|(
@@ -2302,7 +2308,7 @@ name|mr_len
 operator|)
 condition|)
 block|{
-comment|/* whoops, owned by someone */
+comment|/* Whoops, owned by someone. */
 if|if
 condition|(
 name|curr_md
@@ -2316,7 +2322,7 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-comment|/* check we aren't doing something risky */
+comment|/* Check that we aren't doing something risky */
 if|if
 condition|(
 operator|!
@@ -2345,14 +2351,14 @@ operator|(
 name|EACCES
 operator|)
 return|;
-comment|/* Ok, just hijack this entry */
+comment|/* Ok, just hijack this entry. */
 name|free_md
 operator|=
 name|curr_md
 expr_stmt|;
 break|break;
 block|}
-comment|/* non-exact overlap ? */
+comment|/* Non-exact overlap? */
 if|if
 condition|(
 name|mroverlap
@@ -2363,7 +2369,7 @@ name|mrd
 argument_list|)
 condition|)
 block|{
-comment|/* between conflicting region types? */
+comment|/* Between conflicting region types? */
 if|if
 condition|(
 name|amd64_mtrrconflict
@@ -2398,7 +2404,7 @@ name|curr_md
 expr_stmt|;
 block|}
 block|}
-comment|/* got somewhere to put it? */
+comment|/* Got somewhere to put it? */
 if|if
 condition|(
 name|free_md
@@ -2410,7 +2416,7 @@ operator|(
 name|ENOSPC
 operator|)
 return|;
-comment|/* Set up new descriptor */
+comment|/* Set up new descriptor. */
 name|free_md
 operator|->
 name|mr_base
@@ -2467,7 +2473,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle requests to set memory range attributes by manipulating MTRRs.  *  */
+comment|/*  * Handle requests to set memory range attributes by manipulating MTRRs.  */
 end_comment
 
 begin_function
@@ -2509,7 +2515,7 @@ block|{
 case|case
 name|MEMRANGE_SET_UPDATE
 case|:
-comment|/* make sure that what's being asked for is even possible at all */
+comment|/* 		 * Make sure that what's being asked for is even 		 * possible at all. 		 */
 if|if
 condition|(
 operator|!
@@ -2543,7 +2549,7 @@ define|#
 directive|define
 name|FIXTOP
 value|((MTRR_N64K * 0x10000) + (MTRR_N16K * 0x4000) + (MTRR_N4K * 0x1000))
-comment|/* are the "low memory" conditions applicable? */
+comment|/* Are the "low memory" conditions applicable? */
 if|if
 condition|(
 operator|(
@@ -2594,7 +2600,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* it's time to play with variable MTRRs */
+comment|/* It's time to play with variable MTRRs. */
 if|if
 condition|(
 operator|(
@@ -2692,18 +2698,18 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
-comment|/* update the hardware */
+comment|/* Update the hardware. */
 name|amd64_mrstore
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Refetch to see where we're at. */
 name|amd64_mrfetch
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* refetch to see where we're at */
 return|return
 operator|(
 literal|0
@@ -2713,7 +2719,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Work out how many ranges we support, initialise storage for them,   * fetch the initial settings.  */
+comment|/*  * Work out how many ranges we support, initialise storage for them,  * and fetch the initial settings.  */
 end_comment
 
 begin_function
@@ -2733,12 +2739,11 @@ modifier|*
 name|mrd
 decl_stmt|;
 name|int
+name|i
+decl_stmt|,
 name|nmdesc
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|mtrrcap
 operator|=
@@ -2754,14 +2759,14 @@ argument_list|(
 name|MSR_MTRRdefType
 argument_list|)
 expr_stmt|;
-comment|/* For now, bail out if MTRRs are not enabled */
+comment|/* For now, bail out if MTRRs are not enabled. */
 if|if
 condition|(
 operator|!
 operator|(
 name|mtrrdef
 operator|&
-literal|0x800
+name|MTRR_DEF_ENABLE
 operator|)
 condition|)
 block|{
@@ -2780,21 +2785,21 @@ name|nmdesc
 operator|=
 name|mtrrcap
 operator|&
-literal|0xff
+name|MTRR_CAP_VCNT
 expr_stmt|;
-comment|/* If fixed MTRRs supported and enabled */
+comment|/* If fixed MTRRs supported and enabled. */
 if|if
 condition|(
 operator|(
 name|mtrrcap
 operator|&
-literal|0x100
+name|MTRR_CAP_FIXED
 operator|)
 operator|&&
 operator|(
 name|mtrrdef
 operator|&
-literal|0x400
+name|MTRR_DEF_FIXED_ENABLE
 operator|)
 condition|)
 block|{
@@ -2817,11 +2822,6 @@ name|sc
 operator|->
 name|mr_desc
 operator|=
-operator|(
-expr|struct
-name|mem_range_desc
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|nmdesc
@@ -2851,7 +2851,7 @@ name|sc
 operator|->
 name|mr_desc
 expr_stmt|;
-comment|/* Populate the fixed MTRR entries' base/length */
+comment|/* Populate the fixed MTRR entries' base/length. */
 if|if
 condition|(
 name|sc
@@ -2992,7 +2992,7 @@ name|MDF_FIXACTIVE
 expr_stmt|;
 block|}
 block|}
-comment|/*       * Get current settings, anything set now is considered to have       * been set by the firmware. (XXX has something already played here?)      */
+comment|/* 	 * Get current settings, anything set now is considered to 	 * have been set by the firmware. (XXX has something already 	 * played here?) 	 */
 name|amd64_mrfetch
 argument_list|(
 name|sc
@@ -3058,14 +3058,9 @@ parameter_list|)
 block|{
 name|amd64_mrstoreone
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* set MTRRs to match BSP */
 name|wrmsr
 argument_list|(
 name|MSR_MTRRdefType
@@ -3073,7 +3068,6 @@ argument_list|,
 name|mtrrdef
 argument_list|)
 expr_stmt|;
-comment|/* set MTRR behaviour to match BSP */
 block|}
 end_function
 
@@ -3156,20 +3150,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|amd64memdev
+name|amd64memdev
 argument_list|,
-argument|SI_SUB_DRIVERS
+name|SI_SUB_DRIVERS
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|amd64_mem_drvinit
+name|amd64_mem_drvinit
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

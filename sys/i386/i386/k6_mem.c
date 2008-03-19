@@ -219,7 +219,9 @@ operator|~
 literal|0xfffe0000
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -238,7 +240,9 @@ name|mr_len
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -256,7 +260,9 @@ name|MDF_FORCE
 operator|)
 condition|)
 return|return
+operator|(
 name|EOPNOTSUPP
+operator|)
 return|;
 for|for
 control|(
@@ -331,7 +337,9 @@ name|uc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -595,7 +603,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 for|for
 control|(
@@ -669,11 +679,15 @@ operator|->
 name|mr_len
 condition|)
 return|return
+operator|(
 name|EEXIST
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|ENOSPC
+operator|)
 return|;
 case|case
 name|MEMRANGE_SET_REMOVE
@@ -752,11 +766,15 @@ name|out
 goto|;
 block|}
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 default|default:
 return|return
+operator|(
 name|EOPNOTSUPP
+operator|)
 return|;
 block|}
 name|out
@@ -811,7 +829,9 @@ name|enable_intr
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -882,20 +902,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|k6memdev
+name|k6memdev
 argument_list|,
-argument|SI_SUB_DRIVERS
+name|SI_SUB_DRIVERS
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|k6_mem_drvinit
+name|k6_mem_drvinit
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
