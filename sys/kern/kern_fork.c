@@ -1108,13 +1108,6 @@ argument_list|,
 name|td2
 argument_list|)
 expr_stmt|;
-name|sched_newproc
-argument_list|(
-name|newproc
-argument_list|,
-name|td2
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 name|td2
