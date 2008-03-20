@@ -504,11 +504,6 @@ operator|->
 name|td_tid
 argument_list|)
 expr_stmt|;
-name|sched_newthread
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -581,11 +576,6 @@ name|td
 index|[
 literal|1
 index|]
-expr_stmt|;
-name|sched_newthread
-argument_list|(
-name|td
-argument_list|)
 expr_stmt|;
 name|umtx_thread_init
 argument_list|(
