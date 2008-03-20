@@ -2426,12 +2426,6 @@ operator|->
 name|tdq_load
 argument_list|)
 expr_stmt|;
-name|ts
-operator|->
-name|ts_runq
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 end_function
 
@@ -8194,7 +8188,6 @@ name|td_sched
 modifier|*
 name|ts2
 decl_stmt|;
-comment|/* 	 * Initialize child. 	 */
 name|THREAD_LOCK_ASSERT
 argument_list|(
 name|td
@@ -8202,10 +8195,18 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|sched_newthread
-argument_list|(
+comment|/* 	 * Initialize child. 	 */
+name|ts
+operator|=
+name|td
+operator|->
+name|td_sched
+expr_stmt|;
+name|ts2
+operator|=
 name|child
-argument_list|)
+operator|->
+name|td_sched
 expr_stmt|;
 name|child
 operator|->
@@ -8228,17 +8229,11 @@ operator|->
 name|td_cpuset
 argument_list|)
 expr_stmt|;
-name|ts
-operator|=
-name|td
-operator|->
-name|td_sched
-expr_stmt|;
 name|ts2
+operator|->
+name|ts_thread
 operator|=
 name|child
-operator|->
-name|td_sched
 expr_stmt|;
 name|ts2
 operator|->
@@ -8250,9 +8245,9 @@ name|ts_cpu
 expr_stmt|;
 name|ts2
 operator|->
-name|ts_runq
+name|ts_flags
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 comment|/* 	 * Grab our parents cpu estimation information and priority. 	 */
 name|ts2
