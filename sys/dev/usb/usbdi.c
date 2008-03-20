@@ -1865,6 +1865,8 @@ name|dmap
 operator|->
 name|map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
