@@ -824,6 +824,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|URQ_BITS
+value|"\20\1REQUEST\5AUTO_DMABUF\6DEV_DMABUF"
+end_define
+
 begin_function_decl
 name|void
 name|usbd_init

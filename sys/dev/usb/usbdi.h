@@ -235,6 +235,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USBD_BITS
+value|"\20\1NO_COPY\2SYNCHRONOUS\4FORCE_SHORT_XFER"
+end_define
+
+begin_define
+define|#
+directive|define
 name|USBD_NO_TIMEOUT
 value|0
 end_define
