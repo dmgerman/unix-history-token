@@ -172,6 +172,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FSACTL_LNX_SEND_RAW_SRB
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2067, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FSACTL_LNX_GET_COMM_PERF_DATA
 value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2084, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
 end_define
@@ -251,6 +258,13 @@ define|#
 directive|define
 name|FSACTL_LNX_AIF_THREAD
 value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2127, \ 					METHOD_NEITHER, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_SEND_LARGE_FIB
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2138, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
 end_define
 
 begin_comment
@@ -349,6 +363,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FSACTL_SEND_RAW_SRB
+value|_IO('8', 19)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FSACTL_GET_COMM_PERF_DATA
 value|_IO('8', 36)
 end_define
@@ -428,6 +449,13 @@ define|#
 directive|define
 name|FSACTL_AIF_THREAD
 value|_IO('8', 79)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_SEND_LARGE_FIB
+value|_IO('8', 90)
 end_define
 
 begin_define
