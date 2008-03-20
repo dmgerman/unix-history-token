@@ -4527,17 +4527,6 @@ name|INET
 case|case
 name|AF_INET
 case|:
-if|if
-condition|(
-operator|!
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DRV_RUNNING
-operator|)
-condition|)
 name|ifp
 operator|->
 name|if_init
