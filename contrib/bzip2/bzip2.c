@@ -12,7 +12,7 @@ comment|/*-----------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/* ------------------------------------------------------------------    This file is part of bzip2/libbzip2, a program and library for    lossless, block-sorting data compression.     bzip2/libbzip2 version 1.0.4 of 20 December 2006    Copyright (C) 1996-2006 Julian Seward<jseward@bzip.org>     Please read the WARNING, DISCLAIMER and PATENTS sections in the     README file.     This program is released under the terms of the license contained    in the file LICENSE.    ------------------------------------------------------------------ */
+comment|/* ------------------------------------------------------------------    This file is part of bzip2/libbzip2, a program and library for    lossless, block-sorting data compression.     bzip2/libbzip2 version 1.0.5 of 10 December 2007    Copyright (C) 1996-2007 Julian Seward<jseward@bzip.org>     Please read the WARNING, DISCLAIMER and PATENTS sections in the     README file.     This program is released under the terms of the license contained    in the file LICENSE.    ------------------------------------------------------------------ */
 end_comment
 
 begin_comment
@@ -6692,11 +6692,11 @@ argument_list|,
 literal|"bzip2, a block-sorting file compressor.  "
 literal|"Version %s.\n"
 literal|"   \n"
-literal|"   Copyright (C) 1996-2006 by Julian Seward.\n"
+literal|"   Copyright (C) 1996-2007 by Julian Seward.\n"
 literal|"   \n"
 literal|"   This program is free software; you can redistribute it and/or modify\n"
 literal|"   it under the terms set out in the LICENSE file, which is included\n"
-literal|"   in the bzip2-1.0.4 source distribution.\n"
+literal|"   in the bzip2-1.0.5 source distribution.\n"
 literal|"   \n"
 literal|"   This program is distributed in the hope that it will be useful,\n"
 literal|"   but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
