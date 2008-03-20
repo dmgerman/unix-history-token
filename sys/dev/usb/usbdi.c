@@ -1289,13 +1289,36 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"usbd_transfer: xfer=%p, flags=%d, pipe=%p, running=%d\n"
+literal|"%s: xfer=%p, flags=0x%b, rqflags=0x%b, "
+literal|"length=%d, buffer=%p, allocbuf=%p, pipe=%p, running=%d\n"
+operator|,
+name|__func__
 operator|,
 name|xfer
 operator|,
 name|xfer
 operator|->
 name|flags
+operator|,
+name|USBD_BITS
+operator|,
+name|xfer
+operator|->
+name|rqflags
+operator|,
+name|URQ_BITS
+operator|,
+name|xfer
+operator|->
+name|length
+operator|,
+name|xfer
+operator|->
+name|buffer
+operator|,
+name|xfer
+operator|->
+name|allocbuf
 operator|,
 name|pipe
 operator|,
@@ -4364,8 +4387,9 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"usb_transfer_complete: pipe=%p xfer=%p status=%d "
-literal|"actlen=%d\n"
+literal|"%s: pipe=%p xfer=%p status=%d actlen=%d\n"
+operator|,
+name|__func__
 operator|,
 name|pipe
 operator|,
@@ -4378,6 +4402,37 @@ operator|,
 name|xfer
 operator|->
 name|actlen
+operator|)
+argument_list|)
+expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+operator|(
+literal|"%s: flags=0x%b, rqflags=0x%b, length=%d, buffer=%p\n"
+operator|,
+name|__func__
+operator|,
+name|xfer
+operator|->
+name|flags
+operator|,
+name|USBD_BITS
+operator|,
+name|xfer
+operator|->
+name|rqflags
+operator|,
+name|URQ_BITS
+operator|,
+name|xfer
+operator|->
+name|length
+operator|,
+name|xfer
+operator|->
+name|buffer
 operator|)
 argument_list|)
 expr_stmt|;
