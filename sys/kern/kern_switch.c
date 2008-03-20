@@ -23,12 +23,6 @@ directive|include
 file|"opt_sched.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KERN_SWITCH_INCLUDE
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -89,46 +83,17 @@ directive|include
 file|<sys/sched.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* KERN_SWITCH_INCLUDE */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|&&
-operator|(
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/smp.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
 
 begin_include
 include|#
@@ -1383,9 +1348,9 @@ modifier|*
 name|rq
 parameter_list|,
 name|struct
-name|td_sched
+name|thread
 modifier|*
-name|ts
+name|td
 parameter_list|,
 name|int
 name|flags
@@ -1401,17 +1366,15 @@ name|pri
 decl_stmt|;
 name|pri
 operator|=
-name|ts
-operator|->
-name|ts_thread
+name|td
 operator|->
 name|td_priority
 operator|/
 name|RQ_PPQ
 expr_stmt|;
-name|ts
+name|td
 operator|->
-name|ts_rqindex
+name|td_rqindex
 operator|=
 name|pri
 expr_stmt|;
@@ -1432,21 +1395,15 @@ index|[
 name|pri
 index|]
 expr_stmt|;
-name|CTR5
+name|CTR4
 argument_list|(
 name|KTR_RUNQ
 argument_list|,
-literal|"runq_add: td=%p ts=%p pri=%d %d rqh=%p"
+literal|"runq_add: td=%p pri=%d %d rqh=%p"
 argument_list|,
-name|ts
-operator|->
-name|ts_thread
+name|td
 argument_list|,
-name|ts
-argument_list|,
-name|ts
-operator|->
-name|ts_thread
+name|td
 operator|->
 name|td_priority
 argument_list|,
@@ -1466,9 +1423,9 @@ name|TAILQ_INSERT_HEAD
 argument_list|(
 name|rqh
 argument_list|,
-name|ts
+name|td
 argument_list|,
-name|ts_procq
+name|td_runq
 argument_list|)
 expr_stmt|;
 block|}
@@ -1478,9 +1435,9 @@ name|TAILQ_INSERT_TAIL
 argument_list|(
 name|rqh
 argument_list|,
-name|ts
+name|td
 argument_list|,
-name|ts_procq
+name|td_runq
 argument_list|)
 expr_stmt|;
 block|}
@@ -1497,9 +1454,9 @@ modifier|*
 name|rq
 parameter_list|,
 name|struct
-name|td_sched
+name|thread
 modifier|*
-name|ts
+name|td
 parameter_list|,
 name|u_char
 name|pri
@@ -1526,9 +1483,9 @@ name|pri
 operator|)
 argument_list|)
 expr_stmt|;
-name|ts
+name|td
 operator|->
-name|ts_rqindex
+name|td_rqindex
 operator|=
 name|pri
 expr_stmt|;
@@ -1549,21 +1506,15 @@ index|[
 name|pri
 index|]
 expr_stmt|;
-name|CTR5
+name|CTR4
 argument_list|(
 name|KTR_RUNQ
 argument_list|,
-literal|"runq_add_pri: td=%p ke=%p pri=%d idx=%d rqh=%p"
+literal|"runq_add_pri: td=%p pri=%d idx=%d rqh=%p"
 argument_list|,
-name|ts
-operator|->
-name|ts_thread
+name|td
 argument_list|,
-name|ts
-argument_list|,
-name|ts
-operator|->
-name|ts_thread
+name|td
 operator|->
 name|td_priority
 argument_list|,
@@ -1583,9 +1534,9 @@ name|TAILQ_INSERT_HEAD
 argument_list|(
 name|rqh
 argument_list|,
-name|ts
+name|td
 argument_list|,
-name|ts_procq
+name|td_runq
 argument_list|)
 expr_stmt|;
 block|}
@@ -1595,9 +1546,9 @@ name|TAILQ_INSERT_TAIL
 argument_list|(
 name|rqh
 argument_list|,
-name|ts
+name|td
 argument_list|,
-name|ts_procq
+name|td_runq
 argument_list|)
 expr_stmt|;
 block|}
@@ -1699,7 +1650,7 @@ end_comment
 
 begin_function
 name|struct
-name|td_sched
+name|thread
 modifier|*
 name|runq_choose_fuzz
 parameter_list|(
@@ -1718,9 +1669,9 @@ modifier|*
 name|rqh
 decl_stmt|;
 name|struct
-name|td_sched
+name|thread
 modifier|*
-name|ts
+name|td
 decl_stmt|;
 name|int
 name|pri
@@ -1773,13 +1724,13 @@ name|cpuid
 argument_list|)
 decl_stmt|;
 name|struct
-name|td_sched
+name|thread
 modifier|*
-name|ts2
+name|td2
 decl_stmt|;
-name|ts2
+name|td2
 operator|=
-name|ts
+name|td
 operator|=
 name|TAILQ_FIRST
 argument_list|(
@@ -1791,39 +1742,37 @@ condition|(
 name|count
 operator|--
 operator|&&
-name|ts2
+name|td2
 condition|)
 block|{
 if|if
 condition|(
-name|ts
-operator|->
-name|ts_thread
+name|td
 operator|->
 name|td_lastcpu
 operator|==
 name|cpu
 condition|)
 block|{
-name|ts
+name|td
 operator|=
-name|ts2
+name|td2
 expr_stmt|;
 break|break;
 block|}
-name|ts2
+name|td2
 operator|=
 name|TAILQ_NEXT
 argument_list|(
-name|ts2
+name|td2
 argument_list|,
-name|ts_procq
+name|td_runq
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 else|else
-name|ts
+name|td
 operator|=
 name|TAILQ_FIRST
 argument_list|(
@@ -1832,7 +1781,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|ts
+name|td
 operator|!=
 name|NULL
 argument_list|,
@@ -1845,18 +1794,18 @@ name|CTR3
 argument_list|(
 name|KTR_RUNQ
 argument_list|,
-literal|"runq_choose_fuzz: pri=%d td_sched=%p rqh=%p"
+literal|"runq_choose_fuzz: pri=%d thread=%p rqh=%p"
 argument_list|,
 name|pri
 argument_list|,
-name|ts
+name|td
 argument_list|,
 name|rqh
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ts
+name|td
 operator|)
 return|;
 block|}
@@ -1883,7 +1832,7 @@ end_comment
 
 begin_function
 name|struct
-name|td_sched
+name|thread
 modifier|*
 name|runq_choose
 parameter_list|(
@@ -1899,9 +1848,9 @@ modifier|*
 name|rqh
 decl_stmt|;
 name|struct
-name|td_sched
+name|thread
 modifier|*
-name|ts
+name|td
 decl_stmt|;
 name|int
 name|pri
@@ -1931,7 +1880,7 @@ index|[
 name|pri
 index|]
 expr_stmt|;
-name|ts
+name|td
 operator|=
 name|TAILQ_FIRST
 argument_list|(
@@ -1940,12 +1889,12 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|ts
+name|td
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"runq_choose: no proc on busy queue"
+literal|"runq_choose: no thread on busy queue"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1953,18 +1902,18 @@ name|CTR3
 argument_list|(
 name|KTR_RUNQ
 argument_list|,
-literal|"runq_choose: pri=%d td_sched=%p rqh=%p"
+literal|"runq_choose: pri=%d thread=%p rqh=%p"
 argument_list|,
 name|pri
 argument_list|,
-name|ts
+name|td
 argument_list|,
 name|rqh
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ts
+name|td
 operator|)
 return|;
 block|}
@@ -1972,7 +1921,7 @@ name|CTR1
 argument_list|(
 name|KTR_RUNQ
 argument_list|,
-literal|"runq_choose: idleproc pri=%d"
+literal|"runq_choose: idlethread pri=%d"
 argument_list|,
 name|pri
 argument_list|)
@@ -1987,7 +1936,7 @@ end_function
 
 begin_function
 name|struct
-name|td_sched
+name|thread
 modifier|*
 name|runq_choose_from
 parameter_list|(
@@ -2006,9 +1955,9 @@ modifier|*
 name|rqh
 decl_stmt|;
 name|struct
-name|td_sched
+name|thread
 modifier|*
-name|ts
+name|td
 decl_stmt|;
 name|int
 name|pri
@@ -2040,7 +1989,7 @@ index|[
 name|pri
 index|]
 expr_stmt|;
-name|ts
+name|td
 operator|=
 name|TAILQ_FIRST
 argument_list|(
@@ -2049,12 +1998,12 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|ts
+name|td
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"runq_choose: no proc on busy queue"
+literal|"runq_choose: no thread on busy queue"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2062,22 +2011,22 @@ name|CTR4
 argument_list|(
 name|KTR_RUNQ
 argument_list|,
-literal|"runq_choose_from: pri=%d td_sched=%p idx=%d rqh=%p"
+literal|"runq_choose_from: pri=%d thread=%p idx=%d rqh=%p"
 argument_list|,
 name|pri
 argument_list|,
-name|ts
+name|td
 argument_list|,
-name|ts
+name|td
 operator|->
-name|ts_rqindex
+name|td_rqindex
 argument_list|,
 name|rqh
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ts
+name|td
 operator|)
 return|;
 block|}
@@ -2085,7 +2034,7 @@ name|CTR1
 argument_list|(
 name|KTR_RUNQ
 argument_list|,
-literal|"runq_choose_from: idleproc pri=%d"
+literal|"runq_choose_from: idlethread pri=%d"
 argument_list|,
 name|pri
 argument_list|)
@@ -2112,16 +2061,16 @@ modifier|*
 name|rq
 parameter_list|,
 name|struct
-name|td_sched
+name|thread
 modifier|*
-name|ts
+name|td
 parameter_list|)
 block|{
 name|runq_remove_idx
 argument_list|(
 name|rq
 argument_list|,
-name|ts
+name|td
 argument_list|,
 name|NULL
 argument_list|)
@@ -2139,9 +2088,9 @@ modifier|*
 name|rq
 parameter_list|,
 name|struct
-name|td_sched
+name|thread
 modifier|*
-name|ts
+name|td
 parameter_list|,
 name|u_char
 modifier|*
@@ -2158,9 +2107,7 @@ name|pri
 decl_stmt|;
 name|KASSERT
 argument_list|(
-name|ts
-operator|->
-name|ts_thread
+name|td
 operator|->
 name|td_flags
 operator|&
@@ -2173,9 +2120,9 @@ argument_list|)
 expr_stmt|;
 name|pri
 operator|=
-name|ts
+name|td
 operator|->
-name|ts_rqindex
+name|td_rqindex
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -2200,21 +2147,15 @@ index|[
 name|pri
 index|]
 expr_stmt|;
-name|CTR5
+name|CTR4
 argument_list|(
 name|KTR_RUNQ
 argument_list|,
-literal|"runq_remove_idx: td=%p, ts=%p pri=%d %d rqh=%p"
+literal|"runq_remove_idx: td=%p, pri=%d %d rqh=%p"
 argument_list|,
-name|ts
-operator|->
-name|ts_thread
+name|td
 argument_list|,
-name|ts
-argument_list|,
-name|ts
-operator|->
-name|ts_thread
+name|td
 operator|->
 name|td_priority
 argument_list|,
@@ -2223,50 +2164,13 @@ argument_list|,
 name|rqh
 argument_list|)
 expr_stmt|;
-block|{
-name|struct
-name|td_sched
-modifier|*
-name|nts
-decl_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|nts
-argument_list|,
-argument|rqh
-argument_list|,
-argument|ts_procq
-argument_list|)
-if|if
-condition|(
-name|nts
-operator|==
-name|ts
-condition|)
-break|break;
-if|if
-condition|(
-name|ts
-operator|!=
-name|nts
-condition|)
-name|panic
-argument_list|(
-literal|"runq_remove_idx: ts %p not on rqindex %d"
-argument_list|,
-name|ts
-argument_list|,
-name|pri
-argument_list|)
-expr_stmt|;
-block|}
 name|TAILQ_REMOVE
 argument_list|(
 name|rqh
 argument_list|,
-name|ts
+name|td
 argument_list|,
-name|ts_procq
+name|td_runq
 argument_list|)
 expr_stmt|;
 if|if
@@ -2316,15 +2220,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KERN_SWITCH_INCLUDE */
-end_comment
 
 end_unit
 

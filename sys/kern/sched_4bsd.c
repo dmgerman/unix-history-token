@@ -222,27 +222,10 @@ begin_struct
 struct|struct
 name|td_sched
 block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|td_sched
-argument_list|)
-name|ts_procq
-expr_stmt|;
-comment|/* (j/z) Run queue. */
-name|struct
-name|thread
-modifier|*
-name|ts_thread
-decl_stmt|;
-comment|/* (*) Active associated thread. */
 name|fixpt_t
 name|ts_pctcpu
 decl_stmt|;
 comment|/* (j) %cpu during p_swtime. */
-name|u_char
-name|ts_rqindex
-decl_stmt|;
-comment|/* (j) Run queue index. */
 name|int
 name|ts_cpticks
 decl_stmt|;
@@ -279,59 +262,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_EXIT
+name|TDF_BOUND
 value|TDF_SCHED1
 end_define
 
 begin_comment
-comment|/* thread is being killed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDF_BOUND
-value|TDF_SCHED2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ts_flags
-value|ts_thread->td_flags
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSF_DIDRUN
-value|TDF_DIDRUN
-end_define
-
-begin_comment
-comment|/* thread actually ran. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TSF_EXIT
-value|TDF_EXIT
-end_define
-
-begin_comment
-comment|/* thread is being killed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TSF_BOUND
-value|TDF_BOUND
-end_define
-
-begin_comment
-comment|/* stuck to one CPU */
+comment|/* Bound to one CPU. */
 end_comment
 
 begin_define
@@ -1226,29 +1162,6 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
-name|ctd
-operator|->
-name|td_sched
-operator|!=
-name|NULL
-operator|&&
-name|ctd
-operator|->
-name|td_sched
-operator|->
-name|ts_thread
-operator|==
-name|ctd
-operator|)
-argument_list|,
-operator|(
-literal|"thread has no (or wrong) sched-private part."
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
 name|td
 operator|->
 name|td_inhibitors
@@ -1631,12 +1544,12 @@ name|awake
 operator|=
 literal|1
 expr_stmt|;
-name|ts
+name|td
 operator|->
-name|ts_flags
+name|td_flags
 operator|&=
 operator|~
-name|TSF_DIDRUN
+name|TDF_DIDRUN
 expr_stmt|;
 block|}
 elseif|else
@@ -1652,28 +1565,28 @@ name|awake
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Do not clear TSF_DIDRUN */
+comment|/* Do not clear TDF_DIDRUN */
 block|}
 elseif|else
 if|if
 condition|(
-name|ts
+name|td
 operator|->
-name|ts_flags
+name|td_flags
 operator|&
-name|TSF_DIDRUN
+name|TDF_DIDRUN
 condition|)
 block|{
 name|awake
 operator|=
 literal|1
 expr_stmt|;
-name|ts
+name|td
 operator|->
-name|ts_flags
+name|td_flags
 operator|&=
 operator|~
-name|TSF_DIDRUN
+name|TDF_DIDRUN
 expr_stmt|;
 block|}
 comment|/* 			 * ts_pctcpu is only for ps and ttyinfo(). 			 */
@@ -2223,13 +2136,6 @@ operator|=
 operator|&
 name|sched_lock
 expr_stmt|;
-name|td_sched0
-operator|.
-name|ts_thread
-operator|=
-operator|&
-name|thread0
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -2649,12 +2555,6 @@ name|ts
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ts
-operator|->
-name|ts_thread
-operator|=
-name|childtd
-expr_stmt|;
 block|}
 end_function
 
@@ -2823,9 +2723,7 @@ argument_list|)
 operator|&&
 name|td
 operator|->
-name|td_sched
-operator|->
-name|ts_rqindex
+name|td_rqindex
 operator|!=
 operator|(
 name|prio
@@ -3484,11 +3382,9 @@ argument_list|)
 expr_stmt|;
 name|newtd
 operator|->
-name|td_sched
-operator|->
-name|ts_flags
+name|td_flags
 operator||=
-name|TSF_DIDRUN
+name|TDF_DIDRUN
 expr_stmt|;
 name|TD_SET_RUNNING
 argument_list|(
@@ -4462,12 +4358,12 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|ts
+name|td
 operator|)
 operator|->
-name|ts_flags
+name|td_flags
 operator|&
-name|TSF_BOUND
+name|TDF_BOUND
 condition|)
 block|{
 comment|/* Find CPU from bound runq */
@@ -4672,7 +4568,7 @@ name|ts
 operator|->
 name|ts_runq
 argument_list|,
-name|ts
+name|td
 argument_list|,
 name|flags
 argument_list|)
@@ -4872,7 +4768,7 @@ name|ts
 operator|->
 name|ts_runq
 argument_list|,
-name|ts
+name|td
 argument_list|,
 name|flags
 argument_list|)
@@ -4994,7 +4890,7 @@ name|ts
 operator|->
 name|ts_runq
 argument_list|,
-name|ts
+name|td
 argument_list|)
 expr_stmt|;
 name|TD_SET_CAN_RUN
@@ -5019,9 +4915,9 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|td_sched
+name|thread
 modifier|*
-name|ts
+name|td
 decl_stmt|;
 name|struct
 name|runq
@@ -5040,16 +4936,16 @@ ifdef|#
 directive|ifdef
 name|SMP
 name|struct
-name|td_sched
+name|thread
 modifier|*
-name|kecpu
+name|tdcpu
 decl_stmt|;
 name|rq
 operator|=
 operator|&
 name|runq
 expr_stmt|;
-name|ts
+name|td
 operator|=
 name|runq_choose_fuzz
 argument_list|(
@@ -5059,7 +4955,7 @@ argument_list|,
 name|runq_fuzz
 argument_list|)
 expr_stmt|;
-name|kecpu
+name|tdcpu
 operator|=
 name|runq_choose
 argument_list|(
@@ -5075,24 +4971,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ts
+name|td
 operator|==
 name|NULL
 operator|||
 operator|(
-name|kecpu
+name|tdcpu
 operator|!=
 name|NULL
 operator|&&
-name|kecpu
-operator|->
-name|ts_thread
+name|tdcpu
 operator|->
 name|td_priority
 operator|<
-name|ts
-operator|->
-name|ts_thread
+name|td
 operator|->
 name|td_priority
 operator|)
@@ -5102,9 +4994,9 @@ name|CTR2
 argument_list|(
 name|KTR_RUNQ
 argument_list|,
-literal|"choosing td_sched %p from pcpu runq %d"
+literal|"choosing td %p from pcpu runq %d"
 argument_list|,
-name|kecpu
+name|tdcpu
 argument_list|,
 name|PCPU_GET
 argument_list|(
@@ -5112,9 +5004,9 @@ name|cpuid
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ts
+name|td
 operator|=
-name|kecpu
+name|tdcpu
 expr_stmt|;
 name|rq
 operator|=
@@ -5136,7 +5028,7 @@ name|KTR_RUNQ
 argument_list|,
 literal|"choosing td_sched %p from main runq"
 argument_list|,
-name|ts
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -5147,7 +5039,7 @@ operator|=
 operator|&
 name|runq
 expr_stmt|;
-name|ts
+name|td
 operator|=
 name|runq_choose
 argument_list|(
@@ -5159,27 +5051,25 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|ts
+name|td
 condition|)
 block|{
 name|runq_remove
 argument_list|(
 name|rq
 argument_list|,
-name|ts
+name|td
 argument_list|)
 expr_stmt|;
-name|ts
+name|td
 operator|->
-name|ts_flags
+name|td_flags
 operator||=
-name|TSF_DIDRUN
+name|TDF_DIDRUN
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|ts
-operator|->
-name|ts_thread
+name|td
 operator|->
 name|td_flags
 operator|&
@@ -5192,9 +5082,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ts
-operator|->
-name|ts_thread
+name|td
 operator|)
 return|;
 block|}
@@ -5368,11 +5256,11 @@ name|td
 operator|->
 name|td_sched
 expr_stmt|;
-name|ts
+name|td
 operator|->
-name|ts_flags
+name|td_flags
 operator||=
-name|TSF_BOUND
+name|TDF_BOUND
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -5428,12 +5316,10 @@ argument_list|)
 expr_stmt|;
 name|td
 operator|->
-name|td_sched
-operator|->
-name|ts_flags
+name|td_flags
 operator|&=
 operator|~
-name|TSF_BOUND
+name|TDF_BOUND
 expr_stmt|;
 block|}
 end_function
@@ -5459,11 +5345,9 @@ return|return
 operator|(
 name|td
 operator|->
-name|td_sched
-operator|->
-name|ts_flags
+name|td_flags
 operator|&
-name|TSF_BOUND
+name|TDF_BOUND
 operator|)
 return|;
 block|}
@@ -5834,19 +5718,6 @@ name|td
 parameter_list|)
 block|{ }
 end_function
-
-begin_define
-define|#
-directive|define
-name|KERN_SWITCH_INCLUDE
-value|1
-end_define
-
-begin_include
-include|#
-directive|include
-file|"kern/kern_switch.c"
-end_include
 
 end_unit
 

@@ -416,7 +416,13 @@ argument_list|)
 name|td_plist
 expr_stmt|;
 comment|/* (*) All threads in this proc. */
-comment|/* The two queues below should someday be merged. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|thread
+argument_list|)
+name|td_runq
+expr_stmt|;
+comment|/* (t) Run queue. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
@@ -670,6 +676,10 @@ define|#
 directive|define
 name|td_startcopy
 value|td_endzero
+name|u_char
+name|td_rqindex
+decl_stmt|;
+comment|/* (t) Run queue index. */
 name|u_char
 name|td_base_pri
 decl_stmt|;

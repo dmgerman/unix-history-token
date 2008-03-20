@@ -23,7 +23,7 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
-name|td_sched
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -62,7 +62,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|rqhead
 argument_list|,
-name|td_sched
+name|thread
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -117,7 +117,7 @@ name|runq
 modifier|*
 parameter_list|,
 name|struct
-name|td_sched
+name|thread
 modifier|*
 parameter_list|,
 name|int
@@ -134,7 +134,7 @@ name|runq
 modifier|*
 parameter_list|,
 name|struct
-name|td_sched
+name|thread
 modifier|*
 parameter_list|,
 name|u_char
@@ -157,7 +157,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|td_sched
+name|thread
 modifier|*
 name|runq_choose
 parameter_list|(
@@ -170,7 +170,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|td_sched
+name|thread
 modifier|*
 name|runq_choose_from
 parameter_list|(
@@ -185,7 +185,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|td_sched
+name|thread
 modifier|*
 name|runq_choose_fuzz
 parameter_list|(
@@ -218,7 +218,7 @@ name|runq
 modifier|*
 parameter_list|,
 name|struct
-name|td_sched
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -233,7 +233,7 @@ name|runq
 modifier|*
 parameter_list|,
 name|struct
-name|td_sched
+name|thread
 modifier|*
 parameter_list|,
 name|u_char
