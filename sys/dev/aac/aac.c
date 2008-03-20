@@ -9749,7 +9749,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|aac_fib
+name|aac_fib_header
 argument_list|)
 operator|+
 name|datasize
@@ -16509,7 +16509,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|aac_vmioctl
+name|aac_vmi_businf_resp
 argument_list|)
 argument_list|)
 expr_stmt|;
