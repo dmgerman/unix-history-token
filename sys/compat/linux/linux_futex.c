@@ -554,6 +554,20 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/*  	 * Our implementation provides only privates futexes. Most of the apps 	 * should use private futexes but don't claim so. Therefore we treat 	 * all futexes as private by clearing the FUTEX_PRIVATE_FLAG. It works 	 * in most cases (ie. when futexes are not shared on file descriptor 	 * or between different processes.). 	 */
+name|args
+operator|->
+name|op
+operator|=
+operator|(
+name|args
+operator|->
+name|op
+operator|&
+operator|~
+name|LINUX_FUTEX_PRIVATE_FLAG
+operator|)
+expr_stmt|;
 switch|switch
 condition|(
 name|args
@@ -1172,7 +1186,9 @@ break|break;
 case|case
 name|LINUX_FUTEX_FD
 case|:
-comment|/* XXX: Linux plans to remove this operation */
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"linux_sys_futex: unimplemented op %d\n"
@@ -1182,7 +1198,13 @@ operator|->
 name|op
 argument_list|)
 expr_stmt|;
-break|break;
+endif|#
+directive|endif
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
 case|case
 name|LINUX_FUTEX_WAKE_OP
 case|:
@@ -1418,6 +1440,33 @@ expr_stmt|;
 name|FUTEX_SYSTEM_UNLOCK
 expr_stmt|;
 break|break;
+case|case
+name|LINUX_FUTEX_LOCK_PI
+case|:
+comment|/* not yet implemented */
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+case|case
+name|LINUX_FUTEX_UNLOCK_PI
+case|:
+comment|/* not yet implemented */
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+case|case
+name|LINUX_FUTEX_TRYLOCK_PI
+case|:
+comment|/* not yet implemented */
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
 default|default:
 name|printf
 argument_list|(
