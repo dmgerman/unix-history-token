@@ -16,7 +16,7 @@ comment|/*-------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/* ------------------------------------------------------------------    This file is part of bzip2/libbzip2, a program and library for    lossless, block-sorting data compression.     bzip2/libbzip2 version 1.0.4 of 20 December 2006    Copyright (C) 1996-2006 Julian Seward<jseward@bzip.org>     Please read the WARNING, DISCLAIMER and PATENTS sections in the     README file.     This program is released under the terms of the license contained    in the file LICENSE.    ------------------------------------------------------------------ */
+comment|/* ------------------------------------------------------------------    This file is part of bzip2/libbzip2, a program and library for    lossless, block-sorting data compression.     bzip2/libbzip2 version 1.0.5 of 10 December 2007    Copyright (C) 1996-2007 Julian Seward<jseward@bzip.org>     Please read the WARNING, DISCLAIMER and PATENTS sections in the     README file.     This program is released under the terms of the license contained    in the file LICENSE.    ------------------------------------------------------------------ */
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ literal|"when you were using some program which uses libbzip2 as a\n"
 literal|"component, you should also report this bug to the author(s)\n"
 literal|"of that program.  Please make an effort to report this bug;\n"
 literal|"timely and accurate bug reports eventually lead to higher\n"
-literal|"quality software.  Thanks.  Julian Seward, 15 February 2005.\n\n"
+literal|"quality software.  Thanks.  Julian Seward, 10 December 2007.\n\n"
 argument_list|,
 name|errcode
 argument_list|,
@@ -2893,6 +2893,13 @@ operator|->
 name|strm
 operator|->
 name|avail_out
+decl_stmt|;
+name|Int32
+name|ro_blockSize100k
+init|=
+name|s
+operator|->
+name|blockSize100k
 decl_stmt|;
 comment|/* end restore */
 name|UInt32
