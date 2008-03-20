@@ -184,6 +184,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|td_sched
+modifier|*
+name|runq_choose_fuzz
+parameter_list|(
+name|struct
+name|runq
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|runq_init
 parameter_list|(
