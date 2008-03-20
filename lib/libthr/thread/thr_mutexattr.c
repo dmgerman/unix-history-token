@@ -528,6 +528,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 
