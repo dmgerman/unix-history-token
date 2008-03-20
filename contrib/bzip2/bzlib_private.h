@@ -16,7 +16,7 @@ comment|/*-------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/* ------------------------------------------------------------------    This file is part of bzip2/libbzip2, a program and library for    lossless, block-sorting data compression.     bzip2/libbzip2 version 1.0.4 of 20 December 2006    Copyright (C) 1996-2006 Julian Seward<jseward@bzip.org>     Please read the WARNING, DISCLAIMER and PATENTS sections in the     README file.     This program is released under the terms of the license contained    in the file LICENSE.    ------------------------------------------------------------------ */
+comment|/* ------------------------------------------------------------------    This file is part of bzip2/libbzip2, a program and library for    lossless, block-sorting data compression.     bzip2/libbzip2 version 1.0.5 of 10 December 2007    Copyright (C) 1996-2007 Julian Seward<jseward@bzip.org>     Please read the WARNING, DISCLAIMER and PATENTS sections in the     README file.     This program is released under the terms of the license contained    in the file LICENSE.    ------------------------------------------------------------------ */
 end_comment
 
 begin_ifndef
@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|BZ_VERSION
-value|"1.0.4, 20-Dec-2006"
+value|"1.0.5, 10-Dec-2007"
 end_define
 
 begin_typedef
@@ -1637,7 +1637,9 @@ parameter_list|(
 name|cccc
 parameter_list|)
 define|\
-value|s->tPos = s->tt[s->tPos];                 \     cccc = (UChar)(s->tPos& 0xff);           \     s->tPos>>= 8;
+comment|/* c_tPos is unsigned, hence test< 0 is pointless. */
+define|\
+value|if (s->tPos>= (UInt32)100000 * (UInt32)s->blockSize100k) return True; \     s->tPos = s->tt[s->tPos];                 \     cccc = (UChar)(s->tPos& 0xff);           \     s->tPos>>= 8;
 end_define
 
 begin_define
@@ -1648,7 +1650,9 @@ parameter_list|(
 name|cccc
 parameter_list|)
 define|\
-value|c_tPos = c_tt[c_tPos];                    \     cccc = (UChar)(c_tPos& 0xff);            \     c_tPos>>= 8;
+comment|/* c_tPos is unsigned, hence test< 0 is pointless. */
+define|\
+value|if (c_tPos>= (UInt32)100000 * (UInt32)ro_blockSize100k) return True; \     c_tPos = c_tt[c_tPos];                    \     cccc = (UChar)(c_tPos& 0xff);            \     c_tPos>>= 8;
 end_define
 
 begin_define
@@ -1707,7 +1711,9 @@ parameter_list|(
 name|cccc
 parameter_list|)
 define|\
-value|cccc = BZ2_indexIntoF ( s->tPos, s->cftab );    \       s->tPos = GET_LL(s->tPos);
+comment|/* c_tPos is unsigned, hence test< 0 is pointless. */
+define|\
+value|if (s->tPos>= (UInt32)100000 * (UInt32)s->blockSize100k) return True; \     cccc = BZ2_indexIntoF ( s->tPos, s->cftab );    \     s->tPos = GET_LL(s->tPos);
 end_define
 
 begin_comment
