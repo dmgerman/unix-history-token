@@ -736,7 +736,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* temporarily here */
+comment|/*  * Fixup scheduler state for proc0 and thread0  */
 end_comment
 
 begin_function_decl
@@ -744,35 +744,6 @@ name|void
 name|schedinit
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sched_newproc
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sched_newthread
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
