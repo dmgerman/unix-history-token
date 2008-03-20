@@ -855,9 +855,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: ktrace [-aCcdi] [-f trfile] [-g pgrp | -p pid] [-t cnisuw]"
+literal|"usage: ktrace [-aCcdi] [-f trfile] [-g pgrp | -p pid] [-t cnistuw]"
 argument_list|,
-literal|"       ktrace [-adi] [-f trfile] [-t cnisuw] command"
+literal|"       ktrace [-adi] [-f trfile] [-t cnistuw] command"
 argument_list|)
 expr_stmt|;
 name|exit
