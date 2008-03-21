@@ -1261,7 +1261,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX valid return */
 name|IPSEC_ASSERT
 argument_list|(
 name|ipsec_get_reqlevel
@@ -1292,24 +1291,16 @@ name|isr
 operator|->
 name|next
 expr_stmt|;
+comment|/* 		 * If isr is NULL, we found a 'use' policy w/o SA. 		 * Return w/o error and w/o isr so we can drop out 		 * and continue w/o IPsec processing. 		 */
 if|if
 condition|(
 name|isr
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/*XXXstatistic??*/
-operator|*
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-comment|/*XXX*/
 return|return
 name|isr
 return|;
-block|}
 name|IPSECREQUEST_LOCK
 argument_list|(
 name|isr
@@ -1573,9 +1564,20 @@ name|isr
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
 goto|goto
 name|bad
 goto|;
+return|return
+name|EJUSTRETURN
+return|;
+block|}
 name|sav
 operator|=
 name|isr
@@ -2640,11 +2642,18 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|notdef
 comment|/* XXX should notification be done for all errors ? */
-comment|/* 		 * Notify the fact that the packet is discarded 		 * to ourselves. I believe this is better than 		 * just silently discarding. (jinmei@kame.net) 		 * XXX: should we restrict the error to TCP packets? 		 * XXX: should we directly notify sockets via 		 *      pfctlinputs? 		 */
+comment|/* 			 * Notify the fact that the packet is discarded 			 * to ourselves. I believe this is better than 			 * just silently discarding. (jinmei@kame.net) 			 * XXX: should we restrict the error to TCP packets? 			 * XXX: should we directly notify sockets via 			 *      pfctlinputs? 			 */
 name|icmp6_error
 argument_list|(
 name|m
@@ -2666,6 +2675,10 @@ directive|endif
 goto|goto
 name|bad
 goto|;
+block|}
+return|return
+name|EJUSTRETURN
+return|;
 block|}
 name|error
 operator|=
@@ -3310,9 +3323,20 @@ name|isr
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
 goto|goto
 name|bad
 goto|;
+return|return
+name|EJUSTRETURN
+return|;
+block|}
 comment|/* 	 * There may be the case that SA status will be changed when 	 * we are refering to one. So calling splsoftnet(). 	 */
 if|if
 condition|(
