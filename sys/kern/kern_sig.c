@@ -11210,6 +11210,14 @@ argument_list|(
 name|td2
 argument_list|)
 expr_stmt|;
+name|td2
+operator|->
+name|td_flags
+operator||=
+name|TDF_ASTPENDING
+operator||
+name|TDF_NEEDSUSPCHK
+expr_stmt|;
 if|if
 condition|(
 operator|(

@@ -2109,6 +2109,8 @@ operator|->
 name|td_flags
 operator||=
 name|TDF_ASTPENDING
+operator||
+name|TDF_NEEDSUSPCHK
 expr_stmt|;
 if|if
 condition|(
@@ -2816,6 +2818,13 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|td
+operator|->
+name|td_flags
+operator|&=
+operator|~
+name|TDF_NEEDSUSPCHK
+expr_stmt|;
 name|TD_SET_SUSPENDED
 argument_list|(
 name|td
@@ -2914,6 +2923,13 @@ name|p
 operator|->
 name|p_suspcount
 operator|++
+expr_stmt|;
+name|td
+operator|->
+name|td_flags
+operator|&=
+operator|~
+name|TDF_NEEDSUSPCHK
 expr_stmt|;
 name|TD_SET_SUSPENDED
 argument_list|(

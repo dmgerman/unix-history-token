@@ -304,32 +304,6 @@ condition|)
 name|g_waitidle
 argument_list|()
 expr_stmt|;
-comment|/* 	 * We need to check to see if we have to exit or wait due to a 	 * single threading requirement or some other STOP condition. 	 * Don't bother doing all the work if the stop bits are not set 	 * at this time.. If we miss it, we miss it.. no big deal. 	 */
-if|if
-condition|(
-name|P_SHOULDSTOP
-argument_list|(
-name|p
-argument_list|)
-condition|)
-block|{
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|thread_suspend_check
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Can suspend or kill */
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Charge system time if profiling. 	 */
 if|if
 condition|(
@@ -529,6 +503,8 @@ operator|(
 name|TDF_ASTPENDING
 operator||
 name|TDF_NEEDSIGCHK
+operator||
+name|TDF_NEEDSUSPCHK
 operator||
 name|TDF_NEEDRESCHED
 operator||
@@ -921,6 +897,30 @@ operator|->
 name|p_sigacts
 operator|->
 name|ps_mtx
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * We need to check to see if we have to exit or wait due to a 	 * single threading requirement or some other STOP condition. 	 */
+if|if
+condition|(
+name|flags
+operator|&
+name|TDF_NEEDSUSPCHK
+condition|)
+block|{
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|thread_suspend_check
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK

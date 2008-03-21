@@ -1080,12 +1080,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED15
+name|TDF_NEEDSUSPCHK
 value|0x00008000
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* Thread may need to suspend. */
 end_comment
 
 begin_define

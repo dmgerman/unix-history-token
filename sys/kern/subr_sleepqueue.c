@@ -1556,7 +1556,11 @@ name|td
 operator|->
 name|td_flags
 operator|&
+operator|(
 name|TDF_NEEDSIGCHK
+operator||
+name|TDF_NEEDSUSPCHK
+operator|)
 operator|)
 operator|==
 literal|0
