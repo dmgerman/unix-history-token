@@ -4653,7 +4653,7 @@ name|vm_page_count_severe
 argument_list|()
 condition|)
 block|{
-comment|/* 		 * XXX This lock may not be necessary since BKGRDINPROG 		 * cannot be set while we hold the buf lock, it can only be 		 * cleared if it is already pending. 		 */
+comment|/* 		 * The locking of the BO_LOCK is not necessary since 		 * BKGRDINPROG cannot be set while we hold the buf 		 * lock, it can only be cleared if it is already 		 * pending. 		 */
 if|if
 condition|(
 name|bp
@@ -4661,13 +4661,6 @@ operator|->
 name|b_vp
 condition|)
 block|{
-name|BO_LOCK
-argument_list|(
-name|bp
-operator|->
-name|b_bufobj
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4684,13 +4677,6 @@ operator|->
 name|b_flags
 operator||=
 name|B_RELBUF
-expr_stmt|;
-name|BO_UNLOCK
-argument_list|(
-name|bp
-operator|->
-name|b_bufobj
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -5804,34 +5790,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * XXX This lock may not be necessary since BKGRDINPROG 		 * cannot be set while we hold the buf lock, it can only be 		 * cleared if it is already pending. 		 */
-name|BO_LOCK
-argument_list|(
-name|bp
-operator|->
-name|b_bufobj
-argument_list|)
-expr_stmt|;
+comment|/* 		 * The locking of the BO_LOCK for checking of the 		 * BV_BKGRDINPROG is not necessary since the 		 * BV_BKGRDINPROG cannot be set while we hold the buf 		 * lock, it can only be cleared if it is already 		 * pending. 		 */
 if|if
 condition|(
 operator|!
 name|vm_page_count_severe
 argument_list|()
 operator|||
+operator|(
 name|bp
 operator|->
 name|b_vflags
 operator|&
 name|BV_BKGRDINPROG
+operator|)
 condition|)
 block|{
-name|BO_UNLOCK
-argument_list|(
-name|bp
-operator|->
-name|b_bufobj
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_qindex
@@ -5855,13 +5829,6 @@ block|}
 else|else
 block|{
 comment|/* 			 * We are too low on memory, we have to try to free 			 * the buffer (most importantly: the wired pages 			 * making up its backing store) *now*. 			 */
-name|BO_UNLOCK
-argument_list|(
-name|bp
-operator|->
-name|b_bufobj
-argument_list|)
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
