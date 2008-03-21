@@ -1466,7 +1466,11 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"ip6_output (ipsec): error code %d\n"
+literal|"[%s:%d] (ipsec): error code %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|__LINE__
 argument_list|,
 name|error
 argument_list|)
@@ -2143,7 +2147,11 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"ip6_output (ipsec): error code %d\n"
+literal|"[%s:%d] (ipsec): error code %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|__LINE__
 argument_list|,
 name|error
 argument_list|)
