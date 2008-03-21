@@ -904,6 +904,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* force to resolve errno() PLT */
+name|__error
+argument_list|()
+expr_stmt|;
 name|li
 operator|.
 name|lock_create
