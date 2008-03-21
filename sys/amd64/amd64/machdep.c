@@ -3975,7 +3975,7 @@ name|smap
 operator|->
 name|type
 operator|!=
-literal|0x01
+name|SMAP_TYPE_MEMORY
 condition|)
 continue|continue;
 if|if
