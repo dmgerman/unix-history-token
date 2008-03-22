@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<proc_service.h>
 end_include
 
@@ -1696,6 +1702,16 @@ directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|__ta_ops
+argument_list|,
+name|libc_r_db_ops
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
