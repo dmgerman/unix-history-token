@@ -1990,6 +1990,15 @@ if|if
 condition|(
 name|uap
 operator|->
+name|nargs
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|uap
+operator|->
 name|args
 operator|==
 name|NULL
@@ -2027,6 +2036,7 @@ condition|)
 goto|goto
 name|out
 goto|;
+block|}
 comment|/* 	 * Limit size of 'reason' string to 128. Will fit even when 	 * maximal number of arguments was chosen to be logged. 	 */
 if|if
 condition|(
@@ -2075,6 +2085,8 @@ condition|(
 name|uap
 operator|->
 name|nargs
+operator|>
+literal|0
 condition|)
 block|{
 name|sbuf_printf
