@@ -113,6 +113,15 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+name|_start
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|__start
 parameter_list|(
 name|void
