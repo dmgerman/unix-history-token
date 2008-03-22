@@ -370,6 +370,13 @@ begin_comment
 comment|/* FreeBSD-specific. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CLOCK_THREAD_CPUTIME_ID
+value|14
+end_define
+
 begin_endif
 endif|#
 directive|endif

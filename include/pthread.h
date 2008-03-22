@@ -900,6 +900,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pthread_getcpuclockid
+parameter_list|(
+name|pthread_t
+parameter_list|,
+name|clockid_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pthread_join
 parameter_list|(
 name|pthread_t
