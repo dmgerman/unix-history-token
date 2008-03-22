@@ -304,23 +304,17 @@ specifier|static
 name|void
 name|bprintf
 parameter_list|(
-name|fp
-parameter_list|,
-name|b
-parameter_list|,
-name|s
-parameter_list|)
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|,
 name|int
 name|b
-decl_stmt|;
-name|u_char
+parameter_list|,
+name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -489,18 +483,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
 name|routename
 parameter_list|(
-name|sa
-parameter_list|)
 name|struct
 name|sockaddr
 modifier|*
 name|sa
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1366,10 +1359,6 @@ name|if_announcemsghdr
 modifier|*
 name|ifan
 decl_stmt|;
-name|char
-modifier|*
-name|state
-decl_stmt|;
 name|time_t
 name|now
 init|=
@@ -1453,33 +1442,35 @@ block|{
 case|case
 name|LINK_STATE_DOWN
 case|:
-name|state
-operator|=
-literal|"down"
+name|printf
+argument_list|(
+literal|"link: down, flags:"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|LINK_STATE_UP
 case|:
-name|state
-operator|=
-literal|"up"
+name|printf
+argument_list|(
+literal|"link: up, flags:"
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|state
-operator|=
-literal|"unknown"
+name|printf
+argument_list|(
+literal|"link: unknown<%d>, flags:"
+argument_list|,
+name|ifm
+operator|->
+name|ifm_data
+operator|.
+name|ifi_link_state
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|printf
-argument_list|(
-literal|"link: %s, flags:"
-argument_list|,
-name|state
-argument_list|)
-expr_stmt|;
 name|bprintf
 argument_list|(
 name|stdout
@@ -1596,9 +1587,13 @@ name|rtm
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%.19s RTM_IEEE80211: "
+literal|"%.19s RTM_IEEE80211: if# %d, "
 argument_list|,
 name|cnow
+argument_list|,
+name|ifan
+operator|->
+name|ifan_index
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1828,11 +1823,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"if# %d, what: #%d"
-argument_list|,
-name|ifan
-operator|->
-name|ifan_index
+literal|"what: #%d"
 argument_list|,
 name|ifan
 operator|->
