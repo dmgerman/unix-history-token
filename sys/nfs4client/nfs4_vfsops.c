@@ -3584,6 +3584,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+comment|/* XXX racy bv_cnt check. */
 if|if
 condition|(
 name|VOP_ISLOCKED

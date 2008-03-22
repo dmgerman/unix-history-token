@@ -39,6 +39,18 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|bufobj
@@ -250,7 +262,6 @@ name|bufobj
 block|{
 name|struct
 name|mtx
-modifier|*
 name|bo_mtx
 decl_stmt|;
 comment|/* Mutex which protects "i" things */
@@ -350,12 +361,21 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BO_MTX
+parameter_list|(
+name|bo
+parameter_list|)
+value|(&(bo)->bo_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BO_LOCK
 parameter_list|(
 name|bo
 parameter_list|)
-define|\
-value|do { \ 		KASSERT((bo)->bo_mtx != NULL, ("No lock in bufobj")); \ 		mtx_lock((bo)->bo_mtx); \ 	} while (0)
+value|mtx_lock(BO_MTX((bo)))
 end_define
 
 begin_define
@@ -365,18 +385,7 @@ name|BO_UNLOCK
 parameter_list|(
 name|bo
 parameter_list|)
-define|\
-value|do { \ 		KASSERT((bo)->bo_mtx != NULL, ("No lock in bufobj")); \ 		mtx_unlock((bo)->bo_mtx); \ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BO_MTX
-parameter_list|(
-name|bo
-parameter_list|)
-value|((bo)->bo_mtx)
+value|mtx_unlock(BO_MTX((bo)))
 end_define
 
 begin_define
@@ -386,7 +395,7 @@ name|ASSERT_BO_LOCKED
 parameter_list|(
 name|bo
 parameter_list|)
-value|mtx_assert(bo->bo_mtx, MA_OWNED)
+value|mtx_assert(BO_MTX((bo)), MA_OWNED)
 end_define
 
 begin_define
@@ -396,7 +405,7 @@ name|ASSERT_BO_UNLOCKED
 parameter_list|(
 name|bo
 parameter_list|)
-value|mtx_assert(bo->bo_mtx, MA_NOTOWNED)
+value|mtx_assert(BO_MTX((bo)), MA_NOTOWNED)
 end_define
 
 begin_function_decl

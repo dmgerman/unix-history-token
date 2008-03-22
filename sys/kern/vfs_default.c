@@ -1186,9 +1186,16 @@ init|=
 literal|1000
 decl_stmt|;
 comment|/* large, arbitrarily chosen */
-name|VI_LOCK
-argument_list|(
+name|bo
+operator|=
+operator|&
 name|vp
+operator|->
+name|v_bufobj
+expr_stmt|;
+name|BO_LOCK
+argument_list|(
+name|bo
 argument_list|)
 expr_stmt|;
 name|loop1
@@ -1198,7 +1205,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|bp
 argument_list|,
-argument|&vp->v_bufobj.bo_dirty.bv_hd
+argument|&bo->bo_dirty.bv_hd
 argument_list|,
 argument|b_bobufs
 argument_list|)
@@ -1224,7 +1231,7 @@ name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|bp
 argument_list|,
-argument|&vp->v_bufobj.bo_dirty.bv_hd
+argument|&bo->bo_dirty.bv_hd
 argument_list|,
 argument|b_bobufs
 argument_list|,
@@ -1264,9 +1271,9 @@ name|NULL
 argument_list|)
 condition|)
 continue|continue;
-name|VI_UNLOCK
+name|BO_UNLOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1275,10 +1282,7 @@ name|bp
 operator|->
 name|b_bufobj
 operator|==
-operator|&
-name|vp
-operator|->
-name|v_bufobj
+name|bo
 argument_list|,
 operator|(
 literal|"bp %p wrong b_bufobj %p should be %p"
@@ -1289,10 +1293,7 @@ name|bp
 operator|->
 name|b_bufobj
 operator|,
-operator|&
-name|vp
-operator|->
-name|v_bufobj
+name|bo
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1351,9 +1352,9 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-name|VI_LOCK
+name|BO_LOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1370,13 +1371,6 @@ operator|==
 name|MNT_WAIT
 condition|)
 block|{
-name|bo
-operator|=
-operator|&
-name|vp
-operator|->
-name|v_bufobj
-expr_stmt|;
 name|bufobj_wwait
 argument_list|(
 name|bo
@@ -1439,9 +1433,9 @@ name|EAGAIN
 expr_stmt|;
 block|}
 block|}
-name|VI_UNLOCK
+name|BO_UNLOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 if|if
@@ -1781,11 +1775,7 @@ argument_list|,
 argument|mvp
 argument_list|)
 block|{
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
+comment|/* bv_cnt is an acceptable race here. */
 if|if
 condition|(
 name|vp
@@ -1798,14 +1788,12 @@ name|bv_cnt
 operator|==
 literal|0
 condition|)
-block|{
-name|VI_UNLOCK
+continue|continue;
+name|VI_LOCK
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-continue|continue;
-block|}
 name|MNT_IUNLOCK
 argument_list|(
 name|mp

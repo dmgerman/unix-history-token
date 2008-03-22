@@ -6572,17 +6572,17 @@ name|ump
 operator|->
 name|um_devvp
 expr_stmt|;
-name|VI_LOCK
-argument_list|(
-name|devvp
-argument_list|)
-expr_stmt|;
 name|bo
 operator|=
 operator|&
 name|devvp
 operator|->
 name|v_bufobj
+expr_stmt|;
+name|BO_LOCK
+argument_list|(
+name|bo
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6607,6 +6607,11 @@ literal|0
 operator|)
 condition|)
 block|{
+name|BO_UNLOCK
+argument_list|(
+name|bo
+argument_list|)
+expr_stmt|;
 name|vn_lock
 argument_list|(
 name|devvp
@@ -6614,8 +6619,6 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
-operator||
-name|LK_INTERLOCK
 argument_list|)
 expr_stmt|;
 if|if
@@ -6727,9 +6730,9 @@ literal|1
 expr_stmt|;
 block|}
 else|else
-name|VI_UNLOCK
+name|BO_UNLOCK
 argument_list|(
-name|devvp
+name|bo
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Write back modified superblock. 	 */

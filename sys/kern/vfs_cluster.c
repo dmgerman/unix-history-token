@@ -375,6 +375,11 @@ decl_stmt|,
 modifier|*
 name|reqbp
 decl_stmt|;
+name|struct
+name|bufobj
+modifier|*
+name|bo
+decl_stmt|;
 name|daddr_t
 name|blkno
 decl_stmt|,
@@ -396,6 +401,13 @@ decl_stmt|;
 name|error
 operator|=
 literal|0
+expr_stmt|;
+name|bo
+operator|=
+operator|&
+name|vp
+operator|->
+name|v_bufobj
 expr_stmt|;
 comment|/* 	 * Try to limit the amount of read-ahead by a few 	 * ad-hoc parameters.  This needs work!!! 	 */
 name|racluster
@@ -535,9 +547,9 @@ operator|&=
 operator|~
 name|B_RAM
 expr_stmt|;
-name|VI_LOCK
+name|BO_LOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 for|for
@@ -642,9 +654,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|VI_UNLOCK
+name|BO_UNLOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 if|if
@@ -1283,6 +1295,11 @@ name|fbp
 decl_stmt|;
 block|{
 name|struct
+name|bufobj
+modifier|*
+name|bo
+decl_stmt|;
+name|struct
 name|buf
 modifier|*
 name|bp
@@ -1592,6 +1609,13 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
+name|bo
+operator|=
+operator|&
+name|vp
+operator|->
+name|v_bufobj
+expr_stmt|;
 for|for
 control|(
 name|bn
@@ -1673,9 +1697,9 @@ name|NULL
 condition|)
 break|break;
 comment|/* 			 * Stop scanning if the buffer is fully valid 			 * (marked B_CACHE), or locked (may be doing a 			 * background write), or if the buffer is not 			 * VMIO backed.  The clustering code can only deal 			 * with VMIO-backed buffers. 			 */
-name|VI_LOCK
+name|BO_LOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 if|if
@@ -1707,9 +1731,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|VI_UNLOCK
+name|BO_UNLOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 name|bqrelse
@@ -1719,9 +1743,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|VI_UNLOCK
+name|BO_UNLOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 comment|/* 			 * The buffer must be completely invalid in order to 			 * take part in the cluster.  If it is partially valid 			 * then we stop. 			 */
@@ -3158,6 +3182,11 @@ decl_stmt|,
 modifier|*
 name|tbp
 decl_stmt|;
+name|struct
+name|bufobj
+modifier|*
+name|bo
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -3176,6 +3205,13 @@ argument_list|(
 name|size
 argument_list|)
 decl_stmt|;
+name|bo
+operator|=
+operator|&
+name|vp
+operator|->
+name|v_bufobj
+expr_stmt|;
 while|while
 condition|(
 name|len
@@ -3184,9 +3220,9 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * If the buffer is not delayed-write (i.e. dirty), or it 		 * is delayed-write but either locked or inval, it cannot 		 * partake in the clustered write. 		 */
-name|VI_LOCK
+name|BO_LOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 if|if
@@ -3216,9 +3252,9 @@ name|BV_BKGRDINPROG
 operator|)
 condition|)
 block|{
-name|VI_UNLOCK
+name|BO_UNLOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 operator|++
@@ -3241,9 +3277,9 @@ name|LK_NOWAIT
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|VI_MTX
+name|BO_MTX
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 argument_list|)
 condition|)
@@ -3562,9 +3598,9 @@ condition|)
 block|{
 comment|/* If not the first buffer */
 comment|/* 				 * If the adjacent data is not even in core it 				 * can't need to be written. 				 */
-name|VI_LOCK
+name|BO_LOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 if|if
@@ -3574,10 +3610,7 @@ name|tbp
 operator|=
 name|gbincore
 argument_list|(
-operator|&
-name|vp
-operator|->
-name|v_bufobj
+name|bo
 argument_list|,
 name|start_lbn
 argument_list|)
@@ -3594,9 +3627,9 @@ name|BV_BKGRDINPROG
 operator|)
 condition|)
 block|{
-name|VI_UNLOCK
+name|BO_UNLOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3614,9 +3647,9 @@ name|LK_NOWAIT
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|VI_MTX
+name|BO_MTX
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 argument_list|)
 condition|)

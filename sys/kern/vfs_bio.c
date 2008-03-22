@@ -6353,6 +6353,11 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+name|struct
+name|bufobj
+modifier|*
+name|bo
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -6387,6 +6392,13 @@ decl_stmt|;
 name|int
 name|maxcl
 decl_stmt|;
+name|bo
+operator|=
+operator|&
+name|vp
+operator|->
+name|v_bufobj
+expr_stmt|;
 comment|/* 	 * right now we support clustered writing only to regular files.  If 	 * we find a clusterable block we could be in the middle of a cluster 	 * rather then at the beginning. 	 */
 if|if
 condition|(
@@ -6438,9 +6450,9 @@ name|MAXPHYS
 operator|/
 name|size
 expr_stmt|;
-name|VI_LOCK
+name|BO_LOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 for|for
@@ -6535,9 +6547,9 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|VI_UNLOCK
+name|BO_UNLOCK
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 expr_stmt|;
 operator|--
@@ -9326,9 +9338,9 @@ name|bp
 argument_list|,
 name|lockflags
 argument_list|,
-name|VI_MTX
+name|BO_MTX
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 argument_list|,
 literal|"getblk"
