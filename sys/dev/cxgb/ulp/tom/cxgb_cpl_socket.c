@@ -1604,7 +1604,7 @@ name|t_inpcb
 operator|->
 name|inp_mtx
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|toep
 operator|->
@@ -2957,7 +2957,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|inp
 argument_list|)
@@ -2969,7 +2969,7 @@ argument_list|,
 name|copied_unacked
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|inp
 argument_list|)
@@ -3177,7 +3177,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|inp
 argument_list|)
@@ -3189,7 +3189,7 @@ argument_list|,
 name|copied_unacked
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|inp
 argument_list|)
@@ -4331,7 +4331,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|inp
 argument_list|)
@@ -4343,7 +4343,7 @@ argument_list|,
 name|copied_unacked
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|inp
 argument_list|)
@@ -4628,7 +4628,7 @@ condition|(
 name|copied_unacked
 condition|)
 block|{
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|inp
 argument_list|)
@@ -4640,7 +4640,7 @@ argument_list|,
 name|copied_unacked
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|inp
 argument_list|)

@@ -1021,7 +1021,7 @@ name|TCPS_SYN_SENT
 argument_list|)
 condition|)
 block|{
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|tp
 operator|->
@@ -1039,7 +1039,7 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|// defer
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -1267,7 +1267,7 @@ name|tx_data_wr
 modifier|*
 name|req
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|tp
 operator|->
@@ -1629,7 +1629,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|tp
 operator|->
@@ -2613,7 +2613,7 @@ name|unsigned
 name|int
 name|tid
 decl_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|inp
 argument_list|)
@@ -2655,7 +2655,7 @@ operator|&
 name|TP_FIN_SENT
 condition|)
 block|{
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|inp
 argument_list|)
@@ -2759,7 +2759,7 @@ operator|->
 name|tp_write_seq
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|inp
 argument_list|)
@@ -3631,7 +3631,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|tp
 operator|->
@@ -4048,7 +4048,7 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|tp
 operator|->
@@ -4091,6 +4091,13 @@ name|INP_INFO_WLOCK
 argument_list|(
 operator|&
 name|tcbinfo
+argument_list|)
+expr_stmt|;
+name|inp_wlock_assert
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
 argument_list|)
 expr_stmt|;
 name|toep
@@ -5012,7 +5019,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|tp
 operator|->
@@ -5590,7 +5597,7 @@ condition|(
 name|tp
 condition|)
 block|{
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|tp
 operator|->
@@ -6783,7 +6790,7 @@ condition|(
 name|tp
 condition|)
 block|{
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|tp
 operator|->
@@ -6871,7 +6878,7 @@ name|tp_tp
 operator|->
 name|t_inpcb
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|inp
 argument_list|)
@@ -6947,7 +6954,7 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|inp
 argument_list|)
@@ -7148,7 +7155,7 @@ argument_list|(
 name|toep
 argument_list|)
 decl_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|inp
 argument_list|)
@@ -7188,7 +7195,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|inp
 argument_list|)
@@ -7342,7 +7349,7 @@ condition|)
 goto|goto
 name|free_tid
 goto|;
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|inp
 argument_list|)
@@ -7562,7 +7569,7 @@ condition|(
 name|tp
 condition|)
 block|{
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|tp
 operator|->
@@ -8144,7 +8151,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|inp
 argument_list|)
@@ -8173,7 +8180,7 @@ operator|&=
 operator|~
 name|TF_NODELAY
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|inp
 argument_list|)
@@ -8418,7 +8425,7 @@ name|toep
 operator|->
 name|tp_tp
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|tp
 operator|->
@@ -9138,7 +9145,7 @@ name|CPL_RET_BUF_DONE
 operator|)
 return|;
 block|}
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|toep
 operator|->
@@ -9154,7 +9161,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|toep
 operator|->
@@ -9246,7 +9253,7 @@ operator|==
 name|rcv_nxt
 condition|)
 return|return;
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|tp
 operator|->
@@ -9559,7 +9566,7 @@ operator|->
 name|len
 argument_list|)
 decl_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|tp
 operator|->
@@ -9584,7 +9591,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -9679,7 +9686,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -9907,7 +9914,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -10191,7 +10198,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|tp
 operator|->
@@ -10216,7 +10223,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -10465,7 +10472,7 @@ name|m
 operator|->
 name|m_seq
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -10985,7 +10992,7 @@ name|nomoredata
 init|=
 literal|0
 decl_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|tp
 operator|->
@@ -11020,7 +11027,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|inp
 argument_list|)
@@ -11182,7 +11189,7 @@ expr_stmt|;
 comment|/* changes valid memory past CPL */
 endif|#
 directive|endif
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -11485,7 +11492,7 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|tp
 operator|->
@@ -11632,7 +11639,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|tp
 operator|->
@@ -11961,7 +11968,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|tp
 operator|->
@@ -11999,7 +12006,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -12160,7 +12167,7 @@ if|if
 condition|(
 name|tp
 condition|)
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -12418,7 +12425,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|tp
 operator|->
@@ -12610,7 +12617,7 @@ if|if
 condition|(
 name|tp
 condition|)
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -12760,7 +12767,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|tp
 operator|->
@@ -12869,7 +12876,7 @@ if|if
 condition|(
 name|tp
 condition|)
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -13637,7 +13644,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|childtp
 operator|->
@@ -13668,7 +13675,7 @@ if|if
 condition|(
 name|childtp
 condition|)
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|childtp
 operator|->
@@ -13900,7 +13907,7 @@ name|tp
 operator|->
 name|t_toe
 decl_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|tp
 operator|->
@@ -14055,7 +14062,7 @@ if|if
 condition|(
 name|tp
 condition|)
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -14074,7 +14081,7 @@ expr_stmt|;
 return|return;
 name|skip
 label|:
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -15249,7 +15256,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|inp
 argument_list|)
@@ -16490,7 +16497,7 @@ name|tp
 operator|->
 name|t_toe
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|tp
 operator|->
@@ -17209,7 +17216,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|tp
 operator|->
@@ -17369,7 +17376,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -17529,7 +17536,7 @@ argument_list|(
 literal|"fixup_and_send_ofo\n"
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|inp_wlock_assert
 argument_list|(
 name|tp
 operator|->
@@ -17973,7 +17980,7 @@ argument_list|(
 name|tdev
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|tp
 operator|->
@@ -18032,7 +18039,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -18155,7 +18162,7 @@ argument_list|,
 name|credits
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|tp
 operator|->
@@ -18619,7 +18626,7 @@ argument_list|)
 expr_stmt|;
 name|out_free
 label|:
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
@@ -18807,7 +18814,7 @@ operator|&
 name|TF_TOE
 condition|)
 block|{
-name|INP_LOCK
+name|inp_wlock
 argument_list|(
 name|tp
 operator|->
@@ -18819,7 +18826,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|inp_wunlock
 argument_list|(
 name|tp
 operator|->
