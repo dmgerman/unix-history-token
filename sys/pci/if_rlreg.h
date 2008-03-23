@@ -2209,6 +2209,13 @@ name|RL_CFG2_AUXPWR
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|RL_CFG2_MSI
+value|0x20
+end_define
+
 begin_comment
 comment|/*  * Config 3 register  */
 end_comment
