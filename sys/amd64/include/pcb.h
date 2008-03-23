@@ -68,6 +68,9 @@ decl_stmt|;
 name|register_t
 name|pcb_gsbase
 decl_stmt|;
+name|u_long
+name|pcb_flags
+decl_stmt|;
 name|u_int32_t
 name|pcb_ds
 decl_stmt|;
@@ -101,9 +104,6 @@ decl_stmt|;
 name|struct
 name|savefpu
 name|pcb_save
-decl_stmt|;
-name|u_long
-name|pcb_flags
 decl_stmt|;
 define|#
 directive|define
