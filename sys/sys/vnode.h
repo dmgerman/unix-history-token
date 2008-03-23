@@ -226,6 +226,10 @@ modifier|*
 name|vu_fifoinfo
 decl_stmt|;
 comment|/* v fifo (VFIFO) */
+name|int
+name|vu_yield
+decl_stmt|;
+comment|/*   yield count (VMARKER) */
 block|}
 name|v_un
 union|;
@@ -381,6 +385,13 @@ define|#
 directive|define
 name|v_fifoinfo
 value|v_un.vu_fifoinfo
+end_define
+
+begin_define
+define|#
+directive|define
+name|v_yield
+value|v_un.vu_yield
 end_define
 
 begin_comment
