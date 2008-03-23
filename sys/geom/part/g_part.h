@@ -111,19 +111,15 @@ decl_stmt|;
 name|int
 name|gps_maxent
 decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|g_part_scheme
+argument_list|)
+name|scheme_list
+expr_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|G_PART_SCHEME_DECLARE
-parameter_list|(
-name|s
-parameter_list|)
-value|DATA_SET(g_part_scheme_set, s)
-end_define
 
 begin_struct
 struct|struct
@@ -461,6 +457,32 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|g_part_modevent
+parameter_list|(
+name|module_t
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|g_part_scheme
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|G_PART_SCHEME_DECLARE
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|static int name##_modevent(module_t mod, int tp, void *d)	\     {								\ 	return (g_part_modevent(mod, tp, d));			\     }								\     static moduledata_t name##_mod = {				\ 	#name,							\ 	name##_modevent,					\&name##_scheme						\     };								\     DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_FIRST)
+end_define
 
 begin_endif
 endif|#

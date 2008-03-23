@@ -560,7 +560,7 @@ end_decl_stmt
 begin_expr_stmt
 name|G_PART_SCHEME_DECLARE
 argument_list|(
-name|g_part_gpt_scheme
+name|g_part_gpt
 argument_list|)
 expr_stmt|;
 end_expr_stmt
