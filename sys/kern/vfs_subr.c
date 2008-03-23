@@ -5859,9 +5859,9 @@ name|LK_SLEEPFAIL
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|VI_MTX
+name|BO_MTX
 argument_list|(
-name|vp
+name|bo
 argument_list|)
 argument_list|)
 operator|==
