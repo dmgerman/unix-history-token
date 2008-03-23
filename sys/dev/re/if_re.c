@@ -293,7 +293,7 @@ specifier|static
 name|int
 name|msi_disable
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
