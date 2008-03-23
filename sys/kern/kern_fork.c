@@ -1043,6 +1043,10 @@ name|error
 operator|)
 return|;
 block|}
+name|vm2
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Allocate new proc. */
 name|newproc
 operator|=
@@ -1171,11 +1175,6 @@ name|fail1
 goto|;
 block|}
 block|}
-else|else
-name|vm2
-operator|=
-name|NULL
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -2988,6 +2987,17 @@ endif|#
 directive|endif
 name|fail1
 label|:
+if|if
+condition|(
+name|vm2
+operator|!=
+name|NULL
+condition|)
+name|vmspace_free
+argument_list|(
+name|vm2
+argument_list|)
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|proc_zone
