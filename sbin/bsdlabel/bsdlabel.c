@@ -2295,7 +2295,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fetch disklabel for disk.  * Use ioctl to get label unless -r flag is given.  */
+comment|/*  * Fetch disklabel for disk.  */
 end_comment
 
 begin_function
