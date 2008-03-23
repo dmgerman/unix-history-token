@@ -4135,7 +4135,7 @@ expr|struct
 name|rl_desc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate the parent bus DMA tag appropriate for PCI. 	 */
+comment|/* 	 * Allocate the parent bus DMA tag appropriate for PCI. 	 * In order to use DAC, RL_CPLUSCMD_PCI_DAC bit of RL_CPLUS_CMD 	 * register should be set. However some RealTek chips are known 	 * to be buggy on DAC handling, therefore disable DAC by limiting 	 * DMA address space to 32bit. PCIe variants of RealTek chips 	 * may not have the limitation but I took safer path. 	 */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -4149,7 +4149,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-name|BUS_SPACE_MAXADDR
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 name|BUS_SPACE_MAXADDR
 argument_list|,
