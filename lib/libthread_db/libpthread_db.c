@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kse.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ptrace.h>
 end_include
 
@@ -87,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"libpthread_db.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"kse.h"
 end_include
 
 begin_define
