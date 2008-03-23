@@ -398,6 +398,16 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
+name|TDP_KTHREAD
+argument_list|,
+name|TDP_KTHREAD
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
 name|V_TRAP
 argument_list|,
 name|offsetof
