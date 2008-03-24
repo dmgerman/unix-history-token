@@ -98,13 +98,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/bpfdesc.h>
+file|<net/bpf_jitter.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<net/bpf_zerocopy.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/bpfdesc.h>
 end_include
 
 begin_include
