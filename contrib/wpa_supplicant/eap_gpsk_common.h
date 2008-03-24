@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|EAP_GPSK_VENDOR_IETF
-value|0x000000
+value|0x00000000
 end_define
 
 begin_define
@@ -171,13 +171,13 @@ block|{
 name|u8
 name|vendor
 index|[
-literal|3
+literal|4
 index|]
 decl_stmt|;
 name|u8
 name|specifier
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 block|}

@@ -20479,7 +20479,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * wpa_sm_set_assoc_wpa_ie_default - Generate own WPA/RSN IE from configuration  * @sm: Pointer to WPA state machine data from wpa_sm_init()  * @wpa_ie: Pointer to buffer for WPA/RSN IE  * @wpa_ie_len: Pointer to the length of the wpa_ie buffer  * Returns: 0 on success, -1 on failure  *  * Inform WPA state machine about the WPA/RSN IE used in (Re)Association  * Request frame. The IE will be used to override the default value generated  * with wpa_sm_set_assoc_wpa_ie_default().  */
+comment|/**  * wpa_sm_set_assoc_wpa_ie_default - Generate own WPA/RSN IE from configuration  * @sm: Pointer to WPA state machine data from wpa_sm_init()  * @wpa_ie: Pointer to buffer for WPA/RSN IE  * @wpa_ie_len: Pointer to the length of the wpa_ie buffer  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
