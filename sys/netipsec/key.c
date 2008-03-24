@@ -16212,7 +16212,7 @@ name|key_setlifetime
 argument_list|(
 name|sav
 operator|->
-name|lft_h
+name|lft_s
 argument_list|,
 name|SADB_EXT_LIFETIME_SOFT
 argument_list|)
