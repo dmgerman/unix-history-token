@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -377,6 +383,50 @@ name|ID_ALL
 value|(ID_PORT | ID_IF | ID_TYPE | ID_MODEL)
 end_define
 
+begin_comment
+comment|/* Operations on timespecs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tsclr
+parameter_list|(
+name|tvp
+parameter_list|)
+value|((tvp)->tv_sec = (tvp)->tv_nsec = 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|tscmp
+parameter_list|(
+name|tvp
+parameter_list|,
+name|uvp
+parameter_list|,
+name|cmp
+parameter_list|)
+define|\
+value|(((tvp)->tv_sec == (uvp)->tv_sec) ?				\ 	    ((tvp)->tv_nsec cmp (uvp)->tv_nsec) :			\ 	    ((tvp)->tv_sec cmp (uvp)->tv_sec))
+end_define
+
+begin_define
+define|#
+directive|define
+name|tssub
+parameter_list|(
+name|tvp
+parameter_list|,
+name|uvp
+parameter_list|,
+name|vvp
+parameter_list|)
+define|\
+value|do {								\ 		(vvp)->tv_sec = (tvp)->tv_sec - (uvp)->tv_sec;		\ 		(vvp)->tv_nsec = (tvp)->tv_nsec - (uvp)->tv_nsec;	\ 		if ((vvp)->tv_nsec< 0) {				\ 			(vvp)->tv_sec--;				\ 			(vvp)->tv_nsec += 1000000000;			\ 		}							\ 	} while (0)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -445,6 +495,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -472,6 +523,7 @@ name|int
 name|revision
 decl_stmt|;
 comment|/* PnP revision, 100 for 1.00 */
+specifier|const
 name|char
 modifier|*
 name|eisaid
@@ -482,6 +534,7 @@ modifier|*
 name|serial
 decl_stmt|;
 comment|/* serial No, optional */
+specifier|const
 name|char
 modifier|*
 name|class
@@ -571,6 +624,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|pidfile
@@ -648,42 +702,56 @@ block|{
 literal|"serial"
 block|,
 name|MOUSE_IF_SERIAL
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"bus"
 block|,
 name|MOUSE_IF_BUS
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"inport"
 block|,
 name|MOUSE_IF_INPORT
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"ps/2"
 block|,
 name|MOUSE_IF_PS2
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"sysmouse"
 block|,
 name|MOUSE_IF_SYSMOUSE
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"usb"
 block|,
 name|MOUSE_IF_USB
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|NULL
 block|,
 name|MOUSE_IF_UNKNOWN
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -695,6 +763,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|rnames
@@ -764,90 +833,120 @@ block|{
 literal|"NetScroll"
 block|,
 name|MOUSE_MODEL_NETSCROLL
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"NetMouse/NetScroll Optical"
 block|,
 name|MOUSE_MODEL_NET
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"GlidePoint"
 block|,
 name|MOUSE_MODEL_GLIDEPOINT
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"ThinkingMouse"
 block|,
 name|MOUSE_MODEL_THINK
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"IntelliMouse"
 block|,
 name|MOUSE_MODEL_INTELLI
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"EasyScroll/SmartScroll"
 block|,
 name|MOUSE_MODEL_EASYSCROLL
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"MouseMan+"
 block|,
 name|MOUSE_MODEL_MOUSEMANPLUS
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"Kidspad"
 block|,
 name|MOUSE_MODEL_KIDSPAD
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"VersaPad"
 block|,
 name|MOUSE_MODEL_VERSAPAD
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"IntelliMouse Explorer"
 block|,
 name|MOUSE_MODEL_EXPLORER
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"4D Mouse"
 block|,
 name|MOUSE_MODEL_4D
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"4D+ Mouse"
 block|,
 name|MOUSE_MODEL_4DPLUS
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"Synaptics Touchpad"
 block|,
 name|MOUSE_MODEL_SYNAPTICS
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"generic"
 block|,
 name|MOUSE_MODEL_GENERIC
+block|,
+literal|0
 block|}
 block|,
 block|{
 name|NULL
 block|,
 name|MOUSE_MODEL_UNKNOWN
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -1562,6 +1661,7 @@ block|{
 name|int
 name|flags
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|portname
@@ -1800,8 +1900,8 @@ name|count
 decl_stmt|;
 comment|/* 0: up, 1: single click, 2: double click,... */
 name|struct
-name|timeval
-name|tv
+name|timespec
+name|ts
 decl_stmt|;
 comment|/* timestamp on the last button event */
 block|}
@@ -2268,8 +2368,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|timeval
-name|mouse_button_state_tv
+name|timespec
+name|mouse_button_state_ts
 decl_stmt|;
 end_decl_stmt
 
@@ -2286,6 +2386,20 @@ name|jmp_buf
 name|env
 decl_stmt|;
 end_decl_stmt
+
+begin_struct
+struct|struct
+name|drift_xy
+block|{
+name|int
+name|x
+decl_stmt|;
+name|int
+name|y
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|static
@@ -2316,16 +2430,16 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|timeval
-name|drift_time_tv
+name|timespec
+name|drift_time_ts
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|timeval
-name|drift_2time_tv
+name|timespec
+name|drift_2time_ts
 decl_stmt|;
 end_decl_stmt
 
@@ -2349,8 +2463,8 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|timeval
-name|drift_after_tv
+name|timespec
+name|drift_after_ts
 decl_stmt|;
 end_decl_stmt
 
@@ -2366,15 +2480,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|timeval
-name|drift_current_tv
+name|timespec
+name|drift_current_ts
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|timeval
+name|timespec
 name|drift_tmp
 decl_stmt|;
 end_decl_stmt
@@ -2382,7 +2496,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|timeval
+name|timespec
 name|drift_last_activity
 init|=
 block|{
@@ -2393,36 +2507,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-specifier|static
-struct|struct
-name|drift_xy
-block|{
-name|int
-name|x
-decl_stmt|;
-name|int
-name|y
-decl_stmt|;
-block|}
-name|drift_last
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* steps in last drift_time */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
-name|timeval
+name|timespec
 name|drift_since
 init|=
 block|{
@@ -2432,6 +2520,24 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|drift_xy
+name|drift_last
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* steps in last drift_time */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2448,7 +2554,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* steps in previous drift_time */
+comment|/* steps in prev. drift_time */
 end_comment
 
 begin_comment
@@ -2586,6 +2692,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|r_if
@@ -2598,6 +2705,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|r_name
@@ -2610,6 +2718,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|r_model
@@ -2817,6 +2926,7 @@ name|symtab_t
 modifier|*
 name|tab
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s
@@ -2829,6 +2939,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|gettokenname
@@ -2847,7 +2958,9 @@ begin_function_decl
 specifier|static
 name|void
 name|mremote_serversetup
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2922,6 +3035,7 @@ decl_stmt|;
 name|int
 name|j
 decl_stmt|;
+specifier|static
 name|int
 name|retry
 decl_stmt|;
@@ -3991,7 +4105,7 @@ argument_list|,
 name|drift_after
 argument_list|)
 expr_stmt|;
-name|drift_time_tv
+name|drift_time_ts
 operator|.
 name|tv_sec
 operator|=
@@ -3999,9 +4113,9 @@ name|drift_time
 operator|/
 literal|1000
 expr_stmt|;
-name|drift_time_tv
+name|drift_time_ts
 operator|.
-name|tv_usec
+name|tv_nsec
 operator|=
 operator|(
 name|drift_time
@@ -4009,9 +4123,9 @@ operator|%
 literal|1000
 operator|)
 operator|*
-literal|1000
+literal|1000000
 expr_stmt|;
-name|drift_2time_tv
+name|drift_2time_ts
 operator|.
 name|tv_sec
 operator|=
@@ -4023,9 +4137,9 @@ operator|)
 operator|/
 literal|1000
 expr_stmt|;
-name|drift_2time_tv
+name|drift_2time_ts
 operator|.
-name|tv_usec
+name|tv_nsec
 operator|=
 operator|(
 name|drift_time
@@ -4033,9 +4147,9 @@ operator|%
 literal|1000
 operator|)
 operator|*
-literal|1000
+literal|1000000
 expr_stmt|;
-name|drift_after_tv
+name|drift_after_ts
 operator|.
 name|tv_sec
 operator|=
@@ -4043,9 +4157,9 @@ name|drift_after
 operator|/
 literal|1000
 expr_stmt|;
-name|drift_after_tv
+name|drift_after_ts
 operator|.
-name|tv_usec
+name|tv_nsec
 operator|=
 operator|(
 name|drift_after
@@ -4053,7 +4167,7 @@ operator|%
 literal|1000
 operator|)
 operator|*
-literal|1000
+literal|1000000
 expr_stmt|;
 break|break;
 case|case
@@ -4103,6 +4217,8 @@ name|rnames
 index|[
 name|i
 index|]
+operator|!=
+name|NULL
 condition|;
 name|i
 operator|++
@@ -4156,8 +4272,10 @@ name|rnames
 index|[
 name|i
 index|]
+operator|==
+name|NULL
 condition|)
-break|break;
+block|{
 name|warnx
 argument_list|(
 literal|"no such mouse type `%s'"
@@ -4168,6 +4286,8 @@ expr_stmt|;
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
+break|break;
 case|case
 literal|'V'
 case|:
@@ -5421,12 +5541,12 @@ name|mouse_button_state
 operator|=
 name|S0
 expr_stmt|;
-name|gettimeofday
+name|clock_gettime
 argument_list|(
-operator|&
-name|mouse_button_state_tv
+name|CLOCK_MONOTONIC_FAST
 argument_list|,
-name|NULL
+operator|&
+name|mouse_button_state_ts
 argument_list|)
 expr_stmt|;
 name|mouse_move_delayed
@@ -5461,9 +5581,9 @@ index|[
 name|i
 index|]
 operator|.
-name|tv
+name|ts
 operator|=
-name|mouse_button_state_tv
+name|mouse_button_state_ts
 expr_stmt|;
 block|}
 for|for
@@ -5474,6 +5594,10 @@ literal|0
 init|;
 name|i
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|zstate
@@ -5485,6 +5609,7 @@ name|zstate
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 condition|;
 operator|++
@@ -5505,9 +5630,9 @@ index|[
 name|i
 index|]
 operator|.
-name|tv
+name|ts
 operator|=
-name|mouse_button_state_tv
+name|mouse_button_state_ts
 expr_stmt|;
 block|}
 comment|/* choose which ioctl command to use */
@@ -5939,7 +6064,7 @@ operator|==
 name|SCROLL_SCROLLING
 condition|)
 block|{
-comment|/*  			 * We were scrolling, someone let go of button 2. 			 * Now turn autoscroll off. 			 */
+comment|/* 			 * We were scrolling, someone let go of button 2. 			 * Now turn autoscroll off. 			 */
 name|scroll_state
 operator|=
 name|SCROLL_NOTSCROLLING
@@ -6172,7 +6297,7 @@ name|HVirtualScroll
 operator|)
 condition|)
 block|{
-comment|/*  		 * If *only* the middle button is pressed AND we are moving 		 * the stick/trackpoint/nipple, scroll! 		 */
+comment|/* 		 * If *only* the middle button is pressed AND we are moving 		 * the stick/trackpoint/nipple, scroll! 		 */
 if|if
 condition|(
 name|scroll_state
@@ -6357,9 +6482,13 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|flags
-operator|!=
+operator|&
 name|MOUSE_POSCHANGED
+operator|)
+operator|==
+literal|0
 operator|||
 name|action
 operator|.
@@ -6371,15 +6500,15 @@ name|dz
 condition|)
 name|drift_last_activity
 operator|=
-name|drift_current_tv
+name|drift_current_ts
 expr_stmt|;
 else|else
 block|{
 comment|/* X or/and Y movement only - possibly drift */
-name|timersub
+name|tssub
 argument_list|(
 operator|&
-name|drift_current_tv
+name|drift_current_ts
 argument_list|,
 operator|&
 name|drift_last_activity
@@ -6390,22 +6519,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|timercmp
+name|tscmp
 argument_list|(
 operator|&
 name|drift_tmp
 argument_list|,
 operator|&
-name|drift_after_tv
+name|drift_after_ts
 argument_list|,
 operator|>
 argument_list|)
 condition|)
 block|{
-name|timersub
+name|tssub
 argument_list|(
 operator|&
-name|drift_current_tv
+name|drift_current_ts
 argument_list|,
 operator|&
 name|drift_since
@@ -6416,13 +6545,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|timercmp
+name|tscmp
 argument_list|(
 operator|&
 name|drift_tmp
 argument_list|,
 operator|&
-name|drift_time_tv
+name|drift_time_ts
 argument_list|,
 operator|<
 argument_list|)
@@ -6450,13 +6579,13 @@ block|{
 comment|/* discard old accumulated steps (drift) */
 if|if
 condition|(
-name|timercmp
+name|tscmp
 argument_list|(
 operator|&
 name|drift_tmp
 argument_list|,
 operator|&
-name|drift_2time_tv
+name|drift_2time_ts
 argument_list|,
 operator|>
 argument_list|)
@@ -6494,7 +6623,7 @@ name|dy
 expr_stmt|;
 name|drift_since
 operator|=
-name|drift_current_tv
+name|drift_current_ts
 expr_stmt|;
 block|}
 if|if
@@ -6542,7 +6671,7 @@ operator|.
 name|y
 expr_stmt|;
 comment|/* and reset accumulators */
-name|timerclear
+name|tsclr
 argument_list|(
 operator|&
 name|drift_since
@@ -6561,7 +6690,7 @@ expr_stmt|;
 comment|/* drift_previous will be cleared at next movement*/
 name|drift_last_activity
 operator|=
-name|drift_current_tv
+name|drift_current_ts
 expr_stmt|;
 block|}
 else|else
@@ -7021,6 +7150,7 @@ specifier|static
 name|void
 name|hup
 parameter_list|(
+name|__unused
 name|int
 name|sig
 parameter_list|)
@@ -7040,6 +7170,7 @@ specifier|static
 name|void
 name|cleanup
 parameter_list|(
+name|__unused
 name|int
 name|sig
 parameter_list|)
@@ -7070,6 +7201,7 @@ specifier|static
 name|void
 name|pause_mouse
 parameter_list|(
+name|__unused
 name|int
 name|sig
 parameter_list|)
@@ -7810,7 +7942,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|rodent
 operator|.
 name|mode
@@ -7818,15 +7949,17 @@ operator|.
 name|protocol
 operator|==
 name|MOUSE_PROTO_UNKNOWN
-operator|)
 operator|||
-operator|(
 name|rodent
 operator|.
 name|mode
 operator|.
 name|protocol
 operator|>=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|proto
@@ -7839,7 +7972,7 @@ index|[
 literal|0
 index|]
 argument_list|)
-operator|)
+argument_list|)
 condition|)
 block|{
 name|logwarnx
@@ -7854,7 +7987,9 @@ name|protocol
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|MOUSE_PROTO_UNKNOWN
+operator|)
 return|;
 block|}
 else|else
@@ -8022,9 +8157,11 @@ operator|&
 name|NoPnP
 condition|)
 return|return
+operator|(
 name|rodent
 operator|.
 name|rtype
+operator|)
 return|;
 if|if
 condition|(
@@ -8053,9 +8190,11 @@ name|len
 argument_list|)
 condition|)
 return|return
+operator|(
 name|rodent
 operator|.
 name|rtype
+operator|)
 return|;
 name|debug
 argument_list|(
@@ -8307,15 +8446,18 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rodent
 operator|.
 name|rtype
+operator|)
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|r_if
@@ -8324,35 +8466,22 @@ name|int
 name|iftype
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|s
-decl_stmt|;
-name|s
-operator|=
+return|return
+operator|(
 name|gettokenname
 argument_list|(
 name|rifs
 argument_list|,
 name|iftype
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|s
-operator|==
-name|NULL
 operator|)
-condition|?
-literal|"unknown"
-else|:
-name|s
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|r_name
@@ -8361,17 +8490,25 @@ name|int
 name|type
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|unknown
+init|=
+literal|"unknown"
+decl_stmt|;
 return|return
-operator|(
 operator|(
 name|type
 operator|==
 name|MOUSE_PROTO_UNKNOWN
-operator|)
 operator|||
-operator|(
 name|type
-operator|>
+operator|>=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|rnames
@@ -8384,23 +8521,22 @@ index|[
 literal|0
 index|]
 argument_list|)
-operator|-
-literal|1
-operator|)
-operator|)
+argument_list|)
 condition|?
-literal|"unknown"
+name|unknown
 else|:
 name|rnames
 index|[
 name|type
 index|]
+operator|)
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|r_model
@@ -8409,29 +8545,15 @@ name|int
 name|model
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|s
-decl_stmt|;
-name|s
-operator|=
+return|return
+operator|(
 name|gettokenname
 argument_list|(
 name|rmodels
 argument_list|,
 name|model
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|s
-operator|==
-name|NULL
 operator|)
-condition|?
-literal|"unknown"
-else|:
-name|s
 return|;
 block|}
 end_function
@@ -8455,6 +8577,7 @@ comment|/* scrach buffer */
 name|fd_set
 name|fds
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
@@ -9928,12 +10051,14 @@ operator|==
 name|MOUSE_PROTO_KIDSPAD
 condition|)
 return|return
+operator|(
 name|kidspad
 argument_list|(
 name|rBuf
 argument_list|,
 name|act
 argument_list|)
+operator|)
 return|;
 if|if
 condition|(
@@ -9944,12 +10069,14 @@ operator|==
 name|MOUSE_PROTO_GTCO_DIGIPAD
 condition|)
 return|return
+operator|(
 name|gtco_digipad
 argument_list|(
 name|rBuf
 argument_list|,
 name|act
 argument_list|)
+operator|)
 return|;
 comment|/*      * Hack for resyncing: We check here for a package that is:      *  a) illegal (detected by wrong data-package header)      *  b) invalid (0x80 == -128 and that might be wrong for MouseSystems)      *  c) bad header-package      *      * NOTE: b) is a voilation of the MouseSystems-Protocol, since values of      *       -128 are allowed, but since they are very seldom we can easily      *       use them as package-header with no button pressed.      * NOTE/2: On a PS/2 mouse any byte is valid as a data byte. Furthermore,      *         0x80 is not valid as a header byte. For a PS/2 mouse we skip      *         checking data bytes.      *         For resyncing a PS/2 mouse we require the two most significant      *         bits in the header byte to be 0. These are the overflow bits,      *         and in case of an overflow we actually lose sync. Overflows      *         are very rare, however, and we quickly gain sync again after      *         an overflow condition. This is the best we can do. (Actually,      *         we could use bit 0x08 in the header byte for resyncing, since      *         that bit is supposed to be always on, but nobody told      *         Microsoft...)      */
 if|if
@@ -10012,7 +10139,9 @@ literal|1
 index|]
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* is there an extra data byte? */
 if|if
@@ -10064,7 +10193,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 switch|switch
@@ -10333,9 +10464,11 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|act
 operator|->
 name|flags
+operator|)
 return|;
 block|}
 if|if
@@ -10369,7 +10502,9 @@ literal|4
 index|]
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/*      * assembly full package      */
 name|debug
@@ -10622,7 +10757,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|act
@@ -12445,7 +12582,9 @@ block|}
 break|break;
 default|default:
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/*      * We don't reset pBufP here yet, as there may be an additional data      * byte in some protocols. See above.      */
@@ -12485,9 +12624,11 @@ name|button
 operator|)
 expr_stmt|;
 return|return
+operator|(
 name|act
 operator|->
 name|flags
+operator|)
 return|;
 block|}
 end_function
@@ -12700,12 +12841,12 @@ if|if
 condition|(
 name|changed
 condition|)
-name|gettimeofday
+name|clock_gettime
 argument_list|(
-operator|&
-name|mouse_button_state_tv
+name|CLOCK_MONOTONIC_FAST
 argument_list|,
-name|NULL
+operator|&
+name|mouse_button_state_ts
 argument_list|)
 expr_stmt|;
 name|mouse_button_state
@@ -12802,7 +12943,9 @@ name|flags
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|changed
+operator|)
 return|;
 block|}
 end_function
@@ -12908,7 +13051,9 @@ operator|++
 name|s
 expr_stmt|;
 return|return
+operator|(
 name|s
+operator|)
 return|;
 block|}
 end_function
@@ -12984,7 +13129,9 @@ literal|'='
 operator|)
 condition|)
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 name|lbutton
 operator|=
@@ -13041,7 +13188,9 @@ operator|)
 operator|)
 condition|)
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 name|pbutton
 operator|=
@@ -13065,7 +13214,9 @@ name|MOUSE_MAXBUTTON
 operator|)
 condition|)
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 if|if
 condition|(
@@ -13082,7 +13233,9 @@ name|MOUSE_MAXBUTTON
 operator|)
 condition|)
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 name|p2l
 index|[
@@ -13116,7 +13269,9 @@ index|]
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -13569,20 +13724,20 @@ name|act
 parameter_list|)
 block|{
 name|struct
-name|timeval
-name|tv
+name|timespec
+name|ts
 decl_stmt|;
 name|struct
-name|timeval
-name|tv1
+name|timespec
+name|ts1
 decl_stmt|;
 name|struct
-name|timeval
-name|tv2
+name|timespec
+name|ts2
 decl_stmt|;
 name|struct
-name|timeval
-name|tv3
+name|timespec
+name|ts3
 decl_stmt|;
 name|int
 name|button
@@ -13607,20 +13762,20 @@ literal|0
 block|if (mask == 0) 	return;
 endif|#
 directive|endif
-name|gettimeofday
+name|clock_gettime
 argument_list|(
-operator|&
-name|tv1
+name|CLOCK_MONOTONIC_FAST
 argument_list|,
-name|NULL
+operator|&
+name|ts1
 argument_list|)
 expr_stmt|;
-name|drift_current_tv
+name|drift_current_ts
 operator|=
-name|tv1
+name|ts1
 expr_stmt|;
 comment|/* double click threshold */
-name|tv2
+name|ts2
 operator|.
 name|tv_sec
 operator|=
@@ -13630,9 +13785,9 @@ name|clickthreshold
 operator|/
 literal|1000
 expr_stmt|;
-name|tv2
+name|ts2
 operator|.
-name|tv_usec
+name|tv_nsec
 operator|=
 operator|(
 name|rodent
@@ -13642,35 +13797,38 @@ operator|%
 literal|1000
 operator|)
 operator|*
-literal|1000
+literal|1000000
 expr_stmt|;
-name|timersub
+name|tssub
 argument_list|(
 operator|&
-name|tv1
+name|ts1
 argument_list|,
 operator|&
-name|tv2
+name|ts2
 argument_list|,
 operator|&
-name|tv
+name|ts
 argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"tv:  %ld %ld"
+literal|"ts:  %jd %ld"
 argument_list|,
-name|tv
+operator|(
+name|intmax_t
+operator|)
+name|ts
 operator|.
 name|tv_sec
 argument_list|,
-name|tv
+name|ts
 operator|.
-name|tv_usec
+name|tv_nsec
 argument_list|)
 expr_stmt|;
 comment|/* 3 button emulation timeout */
-name|tv2
+name|ts2
 operator|.
 name|tv_sec
 operator|=
@@ -13680,9 +13838,9 @@ name|button2timeout
 operator|/
 literal|1000
 expr_stmt|;
-name|tv2
+name|ts2
 operator|.
-name|tv_usec
+name|tv_nsec
 operator|=
 operator|(
 name|rodent
@@ -13692,18 +13850,18 @@ operator|%
 literal|1000
 operator|)
 operator|*
-literal|1000
+literal|1000000
 expr_stmt|;
-name|timersub
+name|tssub
 argument_list|(
 operator|&
-name|tv1
+name|ts1
 argument_list|,
 operator|&
-name|tv2
+name|ts2
 argument_list|,
 operator|&
-name|tv3
+name|ts3
 argument_list|)
 expr_stmt|;
 name|button
@@ -13751,14 +13909,17 @@ block|{
 comment|/* the button is down */
 name|debug
 argument_list|(
-literal|"  :  %ld %ld"
+literal|"  :  %jd %ld"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bstate
 index|[
 name|i
 index|]
 operator|.
-name|tv
+name|ts
 operator|.
 name|tv_sec
 argument_list|,
@@ -13767,17 +13928,17 @@ index|[
 name|i
 index|]
 operator|.
-name|tv
+name|ts
 operator|.
-name|tv_usec
+name|tv_nsec
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|timercmp
+name|tscmp
 argument_list|(
 operator|&
-name|tv
+name|ts
 argument_list|,
 operator|&
 name|bstate
@@ -13785,7 +13946,7 @@ index|[
 name|i
 index|]
 operator|.
-name|tv
+name|ts
 argument_list|,
 operator|>
 argument_list|)
@@ -13817,9 +13978,9 @@ index|[
 name|i
 index|]
 operator|.
-name|tv
+name|ts
 operator|=
-name|tv1
+name|ts1
 expr_stmt|;
 block|}
 else|else
@@ -13830,9 +13991,9 @@ index|[
 name|i
 index|]
 operator|.
-name|tv
+name|ts
 operator|=
-name|tv1
+name|ts1
 expr_stmt|;
 block|}
 block|}
@@ -13850,10 +14011,10 @@ block|{
 comment|/* the button has been down */
 if|if
 condition|(
-name|timercmp
+name|tscmp
 argument_list|(
 operator|&
-name|tv3
+name|ts3
 argument_list|,
 operator|&
 name|bstate
@@ -13861,7 +14022,7 @@ index|[
 name|i
 index|]
 operator|.
-name|tv
+name|ts
 argument_list|,
 operator|>
 argument_list|)
@@ -13881,9 +14042,9 @@ index|[
 name|i
 index|]
 operator|.
-name|tv
+name|ts
 operator|=
-name|tv1
+name|ts1
 expr_stmt|;
 name|act
 operator|->
@@ -13928,16 +14089,16 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|timeval
-name|tv
+name|timespec
+name|ts
 decl_stmt|;
 name|struct
-name|timeval
-name|tv1
+name|timespec
+name|ts1
 decl_stmt|;
 name|struct
-name|timeval
-name|tv2
+name|timespec
+name|ts2
 decl_stmt|;
 if|if
 condition|(
@@ -13949,17 +14110,19 @@ operator|.
 name|timeout
 condition|)
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
-name|gettimeofday
+name|clock_gettime
 argument_list|(
-operator|&
-name|tv1
+name|CLOCK_MONOTONIC_FAST
 argument_list|,
-name|NULL
+operator|&
+name|ts1
 argument_list|)
 expr_stmt|;
-name|tv2
+name|ts2
 operator|.
 name|tv_sec
 operator|=
@@ -13969,9 +14132,9 @@ name|button2timeout
 operator|/
 literal|1000
 expr_stmt|;
-name|tv2
+name|ts2
 operator|.
-name|tv_usec
+name|tv_nsec
 operator|=
 operator|(
 name|rodent
@@ -13981,31 +14144,33 @@ operator|%
 literal|1000
 operator|)
 operator|*
-literal|1000
+literal|1000000
 expr_stmt|;
-name|timersub
+name|tssub
 argument_list|(
 operator|&
-name|tv1
+name|ts1
 argument_list|,
 operator|&
-name|tv2
+name|ts2
 argument_list|,
 operator|&
-name|tv
+name|ts
 argument_list|)
 expr_stmt|;
 return|return
-name|timercmp
+operator|(
+name|tscmp
 argument_list|(
 operator|&
-name|tv
+name|ts
 argument_list|,
 operator|&
-name|mouse_button_state_tv
+name|mouse_button_state_ts
 argument_list|,
 operator|>
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -14235,6 +14400,7 @@ name|struct
 name|termios
 name|tty
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|c
@@ -14692,7 +14858,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 comment|/* port setup, 1st phase (2.1.3) */
 name|setmousespeed
@@ -14847,7 +15015,9 @@ literal|"pnpwakeup1(): valid response in first phase."
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 comment|/* port setup, 2nd phase (2.1.5) */
@@ -14966,11 +15136,15 @@ literal|"pnpwakeup1(): valid response in second phase."
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 end_function
@@ -15147,11 +15321,15 @@ literal|"pnpwakeup2(): valid response."
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 end_function
@@ -15214,7 +15392,9 @@ name|i
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* collect PnP COM device ID (2.1.7) */
@@ -15467,7 +15647,9 @@ operator|==
 name|c
 condition|)
 return|return
+operator|(
 name|i
+operator|)
 return|;
 comment|/* a valid PnP string */
 comment|/*      * According to PnP spec, we should set DTR = 1 and RTS = 0 while      * in idle state.  But, `moused' shall leave the modem control lines      * as they are. See above.      */
@@ -15624,7 +15806,9 @@ condition|)
 block|{
 default|default:
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 case|case
 literal|'M'
@@ -15688,7 +15872,9 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 comment|/* PnP mice */
@@ -16243,13 +16429,15 @@ if|#
 directive|if
 literal|0
 comment|/* 	     * I found some mice do not comply with the PnP COM device 	     * spec regarding checksum... XXX 	     */
-block|logwarnx("PnP checksum error", 0); 	    return FALSE;
+block|logwarnx("PnP checksum error", 0); 	    return (FALSE);
 endif|#
 directive|endif
 block|}
 block|}
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -16316,7 +16504,9 @@ literal|0
 condition|)
 comment|/* this is not a mouse! */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 if|if
 condition|(
@@ -16351,7 +16541,9 @@ operator|!=
 name|MOUSE_PROTO_UNKNOWN
 condition|)
 return|return
+operator|(
 name|t
+operator|)
 return|;
 block|}
 comment|/*      * The 'Compatible drivers' field may contain more than one      * ID separated by ','.      */
@@ -16364,7 +16556,9 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 for|for
 control|(
@@ -16442,12 +16636,16 @@ operator|!=
 name|MOUSE_PROTO_UNKNOWN
 condition|)
 return|return
+operator|(
 name|t
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -16466,6 +16664,7 @@ name|symtab_t
 modifier|*
 name|tab
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s
@@ -16517,17 +16716,20 @@ condition|)
 break|break;
 block|}
 return|return
+operator|(
 operator|&
 name|tab
 index|[
 name|i
 index|]
+operator|)
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|gettokenname
@@ -16540,6 +16742,14 @@ name|int
 name|val
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|char
+name|unknown
+index|[]
+init|=
+literal|"unknown"
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -16574,16 +16784,20 @@ operator|==
 name|val
 condition|)
 return|return
+operator|(
 name|tab
 index|[
 name|i
 index|]
 operator|.
 name|name
+operator|)
 return|;
 block|}
 return|return
-name|NULL
+operator|(
+name|unknown
+operator|)
 return|;
 block|}
 end_function
@@ -16658,7 +16872,7 @@ name|S_IDLE
 decl_stmt|;
 specifier|static
 name|struct
-name|timeval
+name|timespec
 name|old
 decl_stmt|,
 name|now
@@ -16722,7 +16936,9 @@ name|rxc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* invalid code, no action */
 block|}
@@ -16741,7 +16957,9 @@ operator|<
 literal|5
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|buflen
 operator|=
@@ -16846,12 +17064,12 @@ name|dz
 operator|=
 literal|0
 expr_stmt|;
-name|gettimeofday
+name|clock_gettime
 argument_list|(
+name|CLOCK_MONOTONIC_FAST
+argument_list|,
 operator|&
 name|now
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -17009,9 +17227,11 @@ literal|0
 index|]
 expr_stmt|;
 return|return
+operator|(
 name|act
 operator|->
 name|flags
+operator|)
 return|;
 block|}
 end_function
@@ -17141,7 +17361,9 @@ name|rxc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* invalid code, no action */
 block|}
@@ -17160,7 +17382,9 @@ operator|<
 literal|5
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|buflen
 operator|=
@@ -17374,6 +17598,7 @@ index|]
 operator|&
 literal|0x04
 condition|)
+block|{
 comment|/* tip pressed/yellow */
 name|act
 operator|->
@@ -17381,6 +17606,7 @@ name|button
 operator||=
 name|MOUSE_BUTTON1DOWN
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|buf
@@ -17390,6 +17616,7 @@ index|]
 operator|&
 literal|0x08
 condition|)
+block|{
 comment|/* grey/white */
 name|act
 operator|->
@@ -17397,6 +17624,7 @@ name|button
 operator||=
 name|MOUSE_BUTTON2DOWN
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|buf
@@ -17406,6 +17634,7 @@ index|]
 operator|&
 literal|0x10
 condition|)
+block|{
 comment|/* black/green */
 name|act
 operator|->
@@ -17413,6 +17642,7 @@ name|button
 operator||=
 name|MOUSE_BUTTON3DOWN
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|buf
@@ -17422,6 +17652,7 @@ index|]
 operator|&
 literal|0x20
 condition|)
+block|{
 comment|/* tip+grey/blue */
 name|act
 operator|->
@@ -17429,6 +17660,7 @@ name|button
 operator||=
 name|MOUSE_BUTTON4DOWN
 expr_stmt|;
+block|}
 name|act
 operator|->
 name|flags
@@ -17444,9 +17676,11 @@ literal|0
 index|]
 expr_stmt|;
 return|return
+operator|(
 name|act
 operator|->
 name|flags
+operator|)
 return|;
 block|}
 end_function
@@ -17455,7 +17689,9 @@ begin_function
 specifier|static
 name|void
 name|mremote_serversetup
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|sockaddr_un
@@ -17597,9 +17833,10 @@ name|struct
 name|sockaddr_un
 name|ad
 decl_stmt|;
-name|int
+name|socklen_t
 name|ad_len
-decl_stmt|,
+decl_stmt|;
+name|int
 name|fd
 decl_stmt|;
 if|if
