@@ -183,6 +183,12 @@ name|char
 modifier|*
 name|wpa_debug_file_path
 decl_stmt|;
+comment|/** 	 * wpa_debug_syslog - Enable log output through syslog 	 */
+specifier|const
+name|char
+modifier|*
+name|wpa_debug_syslog
+decl_stmt|;
 block|}
 struct|;
 end_struct
