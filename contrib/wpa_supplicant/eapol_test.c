@@ -1081,10 +1081,14 @@ block|{
 comment|/* struct wpa_supplicant *wpa_s = ctx; */
 name|printf
 argument_list|(
-literal|"WPA: eapol_test_eapol_send(type=%d len=%d)\n"
+literal|"WPA: eapol_test_eapol_send(type=%d len=%lu)\n"
 argument_list|,
 name|type
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -5270,6 +5274,26 @@ argument_list|)
 expr_stmt|;
 name|eloop_run
 argument_list|()
+expr_stmt|;
+name|eloop_cancel_timeout
+argument_list|(
+name|eapol_test_timeout
+argument_list|,
+operator|&
+name|eapol_test
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|eloop_cancel_timeout
+argument_list|(
+name|eapol_sm_reauth
+argument_list|,
+operator|&
+name|eapol_test
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

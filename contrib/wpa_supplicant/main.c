@@ -145,11 +145,12 @@ name|printf
 argument_list|(
 literal|"%s\n\n%s\n"
 literal|"usage:\n"
-literal|"  wpa_supplicant [-BddehLqquvwW] [-P<pid file>] "
+literal|"  wpa_supplicant [-BddhKLqqtuvwW] [-P<pid file>] "
 literal|"[-g<global ctrl>] \\\n"
 literal|"        -i<ifname> -c<config file> [-C<ctrl>] [-D<driver>] "
 literal|"[-p<driver_param>] \\\n"
-literal|"        [-b<br_ifname> [-N -i<ifname> -c<conf> [-C<ctrl>] "
+literal|"        [-b<br_ifname>] [-f<debug file>] \\\n"
+literal|"        [-N -i<ifname> -c<conf> [-C<ctrl>] "
 literal|"[-D<driver>] \\\n"
 literal|"        [-p<driver_param>] [-b<br_ifname>] ...]\n"
 literal|"\n"
@@ -208,6 +209,13 @@ literal|"  -C = ctrl_interface parameter (only used if -c is not)\n"
 literal|"  -i = interface name\n"
 literal|"  -d = increase debugging verbosity (-dd even more)\n"
 literal|"  -D = driver name\n"
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_FILE
+literal|"  -f = log output to debug file instead of stdout\n"
+endif|#
+directive|endif
+comment|/* CONFIG_DEBUG_FILE */
 literal|"  -g = global ctrl_interface\n"
 literal|"  -K = include keys (passwords, etc.) in debug output\n"
 literal|"  -t = include timestamp in debug messages\n"
@@ -455,7 +463,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Bc:C:D:dg:hi:KLNp:P:qtuvwW"
+literal|"b:Bc:C:D:df:g:hi:KLNp:P:qtuvwW"
 argument_list|)
 expr_stmt|;
 if|if
@@ -547,6 +555,22 @@ break|break;
 endif|#
 directive|endif
 comment|/* CONFIG_NO_STDOUT_DEBUG */
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_FILE
+case|case
+literal|'f'
+case|:
+name|params
+operator|.
+name|wpa_debug_file_path
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* CONFIG_DEBUG_FILE */
 case|case
 literal|'g'
 case|:

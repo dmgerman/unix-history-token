@@ -3855,10 +3855,16 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"SCARD: record read returned unexpected "
-literal|"length %d (expected %d)"
+literal|"length %ld (expected %ld)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blen
 argument_list|,
+operator|(
+name|long
+operator|)
 name|len
 operator|+
 literal|2
@@ -4078,10 +4084,16 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"SCARD: file read returned unexpected "
-literal|"length %d (expected %d)"
+literal|"length %ld (expected %ld)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blen
 argument_list|,
+operator|(
+name|long
+operator|)
 name|len
 operator|+
 literal|2
@@ -4448,8 +4460,11 @@ argument_list|(
 name|MSG_WARNING
 argument_list|,
 literal|"SCARD: too short (GSM) EF-IMSI "
-literal|"header (len=%d)"
+literal|"header (len=%ld)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blen
 argument_list|)
 expr_stmt|;
@@ -4530,8 +4545,11 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"SCARD: invalid IMSI file length=%d"
+literal|"SCARD: invalid IMSI file length=%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blen
 argument_list|)
 expr_stmt|;
@@ -4556,10 +4574,16 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"SCARD: IMSI file length=%d imsilen=%d"
+literal|"SCARD: IMSI file length=%ld imsilen=%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blen
 argument_list|,
+operator|(
+name|long
+operator|)
 name|imsilen
 argument_list|)
 expr_stmt|;
@@ -4983,8 +5007,11 @@ argument_list|(
 name|MSG_WARNING
 argument_list|,
 literal|"SCARD: unexpected response for GSM "
-literal|"auth request (len=%d resp=%02x %02x)"
+literal|"auth request (len=%ld resp=%02x %02x)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|len
 argument_list|,
 name|resp
@@ -5074,8 +5101,11 @@ argument_list|(
 name|MSG_WARNING
 argument_list|,
 literal|"SCARD: unexpected data "
-literal|"length for GSM auth (len=%d, expected 14)"
+literal|"length for GSM auth (len=%ld, expected 14)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -5127,9 +5157,12 @@ argument_list|(
 name|MSG_WARNING
 argument_list|,
 literal|"SCARD: unexpected data "
-literal|"length for USIM auth (len=%d, "
+literal|"length for USIM auth (len=%ld, "
 literal|"expected 16)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -5535,8 +5568,11 @@ argument_list|(
 name|MSG_WARNING
 argument_list|,
 literal|"SCARD: unexpected response for UMTS "
-literal|"auth request (len=%d resp=%02x %02x)"
+literal|"auth request (len=%ld resp=%02x %02x)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|len
 argument_list|,
 name|resp

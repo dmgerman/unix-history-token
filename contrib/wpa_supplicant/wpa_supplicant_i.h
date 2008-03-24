@@ -177,9 +177,11 @@ comment|/** 	 * dbus_ctrl_interface - Enable the DBus control interface 	 */
 name|int
 name|dbus_ctrl_interface
 decl_stmt|;
-comment|/** 	 * wpa_debug_use_file - Write debug to a file (instead of stdout) 	 */
-name|int
-name|wpa_debug_use_file
+comment|/** 	 * wpa_debug_file_path - Path of debug file or %NULL to use stdout 	 */
+specifier|const
+name|char
+modifier|*
+name|wpa_debug_file_path
 decl_stmt|;
 block|}
 struct|;

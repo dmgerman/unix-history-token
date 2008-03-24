@@ -1993,6 +1993,13 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|ssid
+operator|->
+name|ssid_len
+operator|!=
+literal|0
+operator|&&
+operator|(
 name|bss
 operator|->
 name|ssid_len
@@ -2017,6 +2024,7 @@ name|ssid_len
 argument_list|)
 operator|!=
 literal|0
+operator|)
 condition|)
 block|{
 name|wpa_printf
@@ -2105,7 +2113,8 @@ operator||
 name|WPA_KEY_MGMT_PSK
 operator|)
 operator|)
-operator|||
+operator|&&
+operator|(
 name|bss
 operator|->
 name|wpa_ie_len
@@ -2117,6 +2126,7 @@ operator|->
 name|rsn_ie_len
 operator|!=
 literal|0
+operator|)
 condition|)
 block|{
 name|wpa_printf
@@ -2302,6 +2312,10 @@ operator|->
 name|ap_scan
 operator|==
 literal|2
+operator|||
+name|wpa_s
+operator|->
+name|disconnected
 condition|)
 return|return;
 name|results
