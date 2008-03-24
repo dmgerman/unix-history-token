@@ -2750,11 +2750,6 @@ index|[
 name|DC_TX_LIST_CNT
 index|]
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|dc_tx_mapping
-decl_stmt|;
 name|bus_dmamap_t
 name|dc_rx_map
 index|[
@@ -2776,9 +2771,6 @@ name|dc_pad
 index|[
 name|DC_MIN_FRAMELEN
 index|]
-decl_stmt|;
-name|int
-name|dc_tx_err
 decl_stmt|;
 name|int
 name|dc_tx_first
@@ -3866,6 +3858,7 @@ name|resource
 modifier|*
 name|dc_res
 decl_stmt|;
+specifier|const
 name|struct
 name|dc_type
 modifier|*
