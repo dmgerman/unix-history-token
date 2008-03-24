@@ -894,6 +894,7 @@ name|struct
 name|inpcb
 modifier|*
 name|inp
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -908,6 +909,7 @@ name|struct
 name|inpcb
 modifier|*
 name|inp
+name|__unused
 parameter_list|)
 block|{ }
 end_function
