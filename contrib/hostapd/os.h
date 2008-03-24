@@ -101,7 +101,7 @@ value|do { \ 	(res)->sec = (a)->sec - (b)->sec; \ 	(res)->usec = (a)->usec - (b)
 end_define
 
 begin_comment
-comment|/**  * os_mktime - Convert broken-down time into seconds since 1970-01-01  * @year: Four digit year  * @month: Month (1 .. 12)  * @day: Day of month (1 .. 31)  * @hour: Hour (0 .. 23)  * @min: Minute (0 .. 59)  * @sec: Second (0 .. 60)  * @t: Buffer for returning calendar time representation (seconds since  * 1970-01-01 00:00:00)  * Returns: 0 on success, -1 on failure  */
+comment|/**  * os_mktime - Convert broken-down time into seconds since 1970-01-01  * @year: Four digit year  * @month: Month (1 .. 12)  * @day: Day of month (1 .. 31)  * @hour: Hour (0 .. 23)  * @min: Minute (0 .. 59)  * @sec: Second (0 .. 60)  * @t: Buffer for returning calendar time representation (seconds since  * 1970-01-01 00:00:00)  * Returns: 0 on success, -1 on failure  *  * Note: The result is in seconds from Epoch, i.e., in UTC, not in local time  * which is used by POSIX mktime().  */
 end_comment
 
 begin_function_decl

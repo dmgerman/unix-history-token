@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / RADIUS authentication server  * Copyright (c) 2005-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd / RADIUS authentication server  * Copyright (c) 2005-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -1636,6 +1636,39 @@ block|}
 block|}
 if|if
 condition|(
+name|radius_msg_copy_attr
+argument_list|(
+name|msg
+argument_list|,
+name|request
+argument_list|,
+name|RADIUS_ATTR_PROXY_STATE
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|RADIUS_DEBUG
+argument_list|(
+literal|"Failed to copy Proxy-State attribute(s)"
+argument_list|)
+expr_stmt|;
+name|radius_msg_free
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
+name|os_free
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
 name|radius_msg_finish_srv
 argument_list|(
 name|msg
@@ -1822,6 +1855,40 @@ argument_list|(
 literal|"Failed to add EAP-Message attribute"
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|radius_msg_copy_attr
+argument_list|(
+name|msg
+argument_list|,
+name|request
+argument_list|,
+name|RADIUS_ATTR_PROXY_STATE
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|RADIUS_DEBUG
+argument_list|(
+literal|"Failed to copy Proxy-State attribute(s)"
+argument_list|)
+expr_stmt|;
+name|radius_msg_free
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
+name|os_free
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 if|if
 condition|(

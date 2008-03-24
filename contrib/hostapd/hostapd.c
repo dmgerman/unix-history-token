@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / Initialization and configuration  * Copyright (c) 2002-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd / Initialization and configuration  * Copyright (c) 2002-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -7178,7 +7178,7 @@ name|VERSION_STR
 literal|"\n"
 literal|"User space daemon for IEEE 802.11 AP management,\n"
 literal|"IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator\n"
-literal|"Copyright (c) 2002-2007, Jouni Malinen<j@w1.fi> "
+literal|"Copyright (c) 2002-2008, Jouni Malinen<j@w1.fi> "
 literal|"and contributors\n"
 argument_list|)
 expr_stmt|;
