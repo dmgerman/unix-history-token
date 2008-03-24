@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_ddb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -100,68 +94,35 @@ file|<ddb/db_lex.h>
 end_include
 
 begin_comment
-comment|/*  * While it would be desirable to use a small block-sized buffer and dump  * incrementally to disk in fixed-size blocks, it's not possible to enter  * kernel dumper routines without restarting the kernel, which is undesirable  * in the midst of debugging.  Instead, we maintain a large static global  * buffer that we fill from DDB's output routines.  *  * We enforce an invariant at runtime that buffer sizes are even multiples of  * the textdump block size, which is a design choice that we might want to  * reconsider.  */
+comment|/*  * While it would be desirable to use a small block-sized buffer and dump  * incrementally to disk in fixed-size blocks, it's not possible to enter  * kernel dumper routines without restarting the kernel, which is undesirable  * in the midst of debugging.  Instead, we maintain a large static global  * buffer that we fill from DDB's output routines.  */
 end_comment
 
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
-name|M_DDB_CAPTURE
+name|M_DB_CAPTURE
 argument_list|,
-literal|"ddb_capture"
+literal|"db_capture"
 argument_list|,
 literal|"DDB capture buffer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DDB_CAPTURE_DEFAULTBUFSIZE
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|DDB_CAPTURE_DEFAULTBUFSIZE
+name|DB_CAPTURE_DEFAULTBUFSIZE
 value|48*1024
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DDB_CAPTURE_MAXBUFSIZE
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|DDB_CAPTURE_MAXBUFSIZE
-value|5*1024*1024
+name|DB_CAPTURE_MAXBUFSIZE
+value|512*1024
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|DDB_CAPTURE_FILENAME
-value|"ddb.txt"
-end_define
-
-begin_comment
-comment|/* Captured DDB output. */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -176,7 +137,7 @@ specifier|static
 name|u_int
 name|db_capture_bufsize
 init|=
-name|DDB_CAPTURE_DEFAULTBUFSIZE
+name|DB_CAPTURE_DEFAULTBUFSIZE
 decl_stmt|;
 end_decl_stmt
 
@@ -185,7 +146,7 @@ specifier|static
 name|u_int
 name|db_capture_maxbufsize
 init|=
-name|DDB_CAPTURE_MAXBUFSIZE
+name|DB_CAPTURE_MAXBUFSIZE
 decl_stmt|;
 end_decl_stmt
 
@@ -202,17 +163,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Next location to write in buffer. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|db_capture_bufpadding
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Amount of zero padding. */
 end_comment
 
 begin_decl_stmt
@@ -323,7 +273,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Boot-time allocation of the DDB capture buffer, if any.  Force all buffer  * sizes, including the maximum size, to be rounded to block sizes.  */
+comment|/*  * Boot-time allocation of the DDB capture buffer, if any.  */
 end_comment
 
 begin_function
@@ -345,33 +295,15 @@ operator|&
 name|db_capture_bufsize
 argument_list|)
 expr_stmt|;
-name|db_capture_maxbufsize
-operator|=
-name|roundup
-argument_list|(
-name|db_capture_maxbufsize
-argument_list|,
-name|TEXTDUMP_BLOCKSIZE
-argument_list|)
-expr_stmt|;
-name|db_capture_bufsize
-operator|=
-name|roundup
-argument_list|(
-name|db_capture_bufsize
-argument_list|,
-name|TEXTDUMP_BLOCKSIZE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|db_capture_bufsize
 operator|>
-name|db_capture_maxbufsize
+name|DB_CAPTURE_MAXBUFSIZE
 condition|)
 name|db_capture_bufsize
 operator|=
-name|db_capture_maxbufsize
+name|DB_CAPTURE_MAXBUFSIZE
 expr_stmt|;
 if|if
 condition|(
@@ -385,7 +317,7 @@ name|malloc
 argument_list|(
 name|db_capture_bufsize
 argument_list|,
-name|M_DDB_CAPTURE
+name|M_DB_CAPTURE
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -466,20 +398,11 @@ operator|(
 name|error
 operator|)
 return|;
-name|size
-operator|=
-name|roundup
-argument_list|(
-name|size
-argument_list|,
-name|TEXTDUMP_BLOCKSIZE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|size
 operator|>
-name|db_capture_maxbufsize
+name|DB_CAPTURE_MAXBUFSIZE
 condition|)
 return|return
 operator|(
@@ -506,7 +429,7 @@ name|malloc
 argument_list|(
 name|size
 argument_list|,
-name|M_DDB_CAPTURE
+name|M_DB_CAPTURE
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -580,7 +503,7 @@ name|free
 argument_list|(
 name|db_capture_buf
 argument_list|,
-name|M_DDB_CAPTURE
+name|M_DB_CAPTURE
 argument_list|)
 expr_stmt|;
 name|db_capture_bufoff
@@ -616,7 +539,7 @@ name|KASSERT
 argument_list|(
 name|db_capture_bufsize
 operator|<=
-name|db_capture_maxbufsize
+name|DB_CAPTURE_MAXBUFSIZE
 argument_list|,
 operator|(
 literal|"sysctl_debug_ddb_capture_maxbufsize: bufsize> maxbufsize"
@@ -898,52 +821,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Zero out any bytes left in the last block of the DDB capture buffer.  This  * is run shortly before writing the blocks to disk, rather than when output  * capture is stopped, in order to avoid injecting nul's into the middle of  * output.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|db_capture_zeropad
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int
-name|len
-decl_stmt|;
-name|len
-operator|=
-name|min
-argument_list|(
-name|TEXTDUMP_BLOCKSIZE
-argument_list|,
-operator|(
-name|db_capture_bufsize
-operator|-
-name|db_capture_bufoff
-operator|)
-operator|%
-name|TEXTDUMP_BLOCKSIZE
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|db_capture_buf
-operator|+
-name|db_capture_bufoff
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-name|db_capture_bufpadding
-operator|=
-name|len
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Reset capture state, which flushes buffers.  */
 end_comment
 
@@ -960,10 +837,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|db_capture_bufoff
-operator|=
-literal|0
-expr_stmt|;
-name|db_capture_bufpadding
 operator|=
 literal|0
 expr_stmt|;
@@ -1002,7 +875,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Terminate DDB output capture--real work is deferred to db_capture_dump,  * which executes outside of the DDB context.  We don't zero pad here because  * capture may be started again before the dump takes place.  */
+comment|/*  * Terminate DDB output capture.  */
 end_comment
 
 begin_function
@@ -1028,91 +901,6 @@ expr_stmt|;
 return|return;
 block|}
 name|db_capture_inprogress
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Dump DDB(4) captured output (and resets capture buffers).  */
-end_comment
-
-begin_function
-name|void
-name|db_capture_dump
-parameter_list|(
-name|struct
-name|dumperinfo
-modifier|*
-name|di
-parameter_list|)
-block|{
-name|u_int
-name|offset
-decl_stmt|;
-if|if
-condition|(
-name|db_capture_bufoff
-operator|==
-literal|0
-condition|)
-return|return;
-name|db_capture_zeropad
-argument_list|()
-expr_stmt|;
-name|textdump_mkustar
-argument_list|(
-name|textdump_block_buffer
-argument_list|,
-name|DDB_CAPTURE_FILENAME
-argument_list|,
-name|db_capture_bufoff
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|textdump_writenextblock
-argument_list|(
-name|di
-argument_list|,
-name|textdump_block_buffer
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|offset
-operator|=
-literal|0
-init|;
-name|offset
-operator|<
-name|db_capture_bufoff
-operator|+
-name|db_capture_bufpadding
-condition|;
-name|offset
-operator|+=
-name|TEXTDUMP_BLOCKSIZE
-control|)
-operator|(
-name|void
-operator|)
-name|textdump_writenextblock
-argument_list|(
-name|di
-argument_list|,
-name|db_capture_buf
-operator|+
-name|offset
-argument_list|)
-expr_stmt|;
-name|db_capture_bufoff
-operator|=
-literal|0
-expr_stmt|;
-name|db_capture_bufpadding
 operator|=
 literal|0
 expr_stmt|;

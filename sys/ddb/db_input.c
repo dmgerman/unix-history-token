@@ -1235,6 +1235,15 @@ argument_list|()
 argument_list|)
 condition|)
 continue|continue;
+name|db_capture_write
+argument_list|(
+name|lstart
+argument_list|,
+name|db_le
+operator|-
+name|db_lbuf_start
+argument_list|)
+expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"\n"
