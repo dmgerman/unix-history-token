@@ -52,7 +52,7 @@ name|IS_I965G
 parameter_list|(
 name|dev
 parameter_list|)
-value|(dev->pci_device == 0x2972 || \ 			dev->pci_device == 0x2982 || \ 			dev->pci_device == 0x2992 || \ 			dev->pci_device == 0x29A2)
+value|(dev->pci_device == 0x2972 || \ 			dev->pci_device == 0x2982 || \ 			dev->pci_device == 0x2992 || \ 			dev->pci_device == 0x29A2 || \ 			dev->pci_device == 0x2A12 )
 end_define
 
 begin_comment
