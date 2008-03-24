@@ -228,6 +228,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|profile_attr_create_t
+name|common_profile_create_service_availability
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|profile_attr_create_t
 name|rfcomm_profile_create_protocol_descriptor_list
 decl_stmt|;
 end_decl_stmt
