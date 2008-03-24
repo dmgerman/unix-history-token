@@ -102,6 +102,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|int
 name|bus_type_asi
 index|[]
@@ -110,6 +111,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|int
 name|bus_stream_asi
 index|[]
