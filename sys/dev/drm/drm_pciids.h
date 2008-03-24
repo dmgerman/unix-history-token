@@ -108,7 +108,7 @@ define|#
 directive|define
 name|i915_PCI_IDS
 define|\
-value|{0x8086, 0x3577, 0, "Intel i830M GMCH"}, \ 	{0x8086, 0x2562, 0, "Intel i845G GMCH"}, \ 	{0x8086, 0x3582, 0, "Intel i852GM/i855GM GMCH"}, \ 	{0x8086, 0x2572, 0, "Intel i865G GMCH"}, \ 	{0x8086, 0x2582, 0, "Intel i915G"}, \ 	{0x8086, 0x2592, 0, "Intel i915GM"}, \ 	{0x8086, 0x2772, 0, "Intel i945G"}, \ 	{0x8086, 0x27A2, 0, "Intel i945GM"}, \ 	{0x8086, 0x2972, 0, "Intel i946GZ"}, \ 	{0x8086, 0x2982, 0, "Intel i965G"}, \ 	{0x8086, 0x2992, 0, "Intel i965Q"}, \ 	{0x8086, 0x29A2, 0, "Intel i965G"}, \ 	{0x8086, 0x2A02, 0, "Intel i965GM"}, \ 	{0, 0, 0, NULL}
+value|{0x8086, 0x3577, 0, "Intel i830M GMCH"}, \ 	{0x8086, 0x2562, 0, "Intel i845G GMCH"}, \ 	{0x8086, 0x3582, 0, "Intel i852GM/i855GM GMCH"}, \ 	{0x8086, 0x2572, 0, "Intel i865G GMCH"}, \ 	{0x8086, 0x2582, 0, "Intel i915G"}, \ 	{0x8086, 0x2592, 0, "Intel i915GM"}, \ 	{0x8086, 0x2772, 0, "Intel i945G"}, \ 	{0x8086, 0x27A2, 0, "Intel i945GM"}, \ 	{0x8086, 0x2972, 0, "Intel i946GZ"}, \ 	{0x8086, 0x2982, 0, "Intel i965G"}, \ 	{0x8086, 0x2992, 0, "Intel i965Q"}, \ 	{0x8086, 0x29A2, 0, "Intel i965G"}, \ 	{0x8086, 0x2A02, 0, "Intel i965GM"}, \ 	{0x8086, 0x2A12, 0, "Intel i965GME"}, \ 	{0, 0, 0, NULL}
 end_define
 
 begin_define
