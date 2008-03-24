@@ -492,6 +492,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%5s %6s %7s %9s %9s %9s %5s %5s %s\n"
@@ -545,6 +548,26 @@ control|)
 block|{
 if|if
 condition|(
+name|d
+operator|->
+name|bd_structsize
+operator|!=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|d
+argument_list|)
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"bpf_stats_extended: version mismatch"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|ifname
 operator|&&
 name|strcmp
@@ -575,9 +598,12 @@ operator|->
 name|bd_pid
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"%5d %6s %7s %9lu %9lu %9lu %5d %5d %s\n"
+literal|"%5d %6s %7s %9ju %9ju %9ju %5d %5d %s\n"
 argument_list|,
 name|d
 operator|->
