@@ -158,6 +158,58 @@ name|BPF_MINOR_VERSION
 value|1
 end_define
 
+begin_comment
+comment|/*  * Historically, BPF has supported a single buffering model, first using mbuf  * clusters in kernel, and later using malloc(9) buffers in kernel.  We now  * support multiple buffering modes, which may be queried and set using  * BIOCGETBUFMODE and BIOCSETBUFMODE.  So as to avoid handling the complexity  * of changing modes while sniffing packets, the mode becomes fixed once an  * interface has been attached to the BPF descriptor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BPF_BUFMODE_BUFFER
+value|1
+end_define
+
+begin_comment
+comment|/* Kernel buffers with read(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BPF_BUFMODE_ZBUF
+value|2
+end_define
+
+begin_comment
+comment|/* Zero-copy buffers. */
+end_comment
+
+begin_comment
+comment|/*-  * Struct used by BIOCSETZBUF, BIOCROTZBUF: describes up to two zero-copy  * buffer as used by BPF.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bpf_zbuf
+block|{
+name|void
+modifier|*
+name|bz_bufa
+decl_stmt|;
+comment|/* Location of 'a' zero-copy buffer. */
+name|void
+modifier|*
+name|bz_bufb
+decl_stmt|;
+comment|/* Location of 'b' zero-copy buffer. */
+name|size_t
+name|bz_buflen
+decl_stmt|;
+comment|/* Size of zero-copy buffers. */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -326,6 +378,41 @@ name|BIOCFEEDBACK
 value|_IOW('B',124, u_int)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BIOCGETBUFMODE
+value|_IOR('B',125, u_int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIOCSETBUFMODE
+value|_IOW('B',126, u_int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIOCGETZMAX
+value|_IOR('B',127, size_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIOCROTZBUF
+value|_IOR('B',128, struct bpf_zbuf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIOCSETZBUF
+value|_IOW('B',129, struct bpf_zbuf)
+end_define
+
 begin_comment
 comment|/* Obsolete */
 end_comment
@@ -414,6 +501,39 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * When using zero-copy BPF buffers, a shared memory header is present  * allowing the kernel BPF implementation and user process to synchronize  * without using system calls.  This structure defines that header.  When  * accessing these fields, appropriate atomic operation and memory barriers  * are required in order not to see stale or out-of-order data; see bpf(4)  * for reference code to access these fields from userspace.  *  * The layout of this structure is critical, and must not be changed; if must  * fit in a single page on all architectures.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bpf_zbuf_header
+block|{
+specifier|volatile
+name|u_int
+name|bzh_kernel_gen
+decl_stmt|;
+comment|/* Kernel generation number. */
+specifier|volatile
+name|u_int
+name|bzh_kernel_len
+decl_stmt|;
+comment|/* Length of data in the buffer. */
+specifier|volatile
+name|u_int
+name|bzh_user_gen
+decl_stmt|;
+comment|/* User generation number. */
+name|u_int
+name|_bzh_pad
+index|[
+literal|5
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Data-link level type codes.  */
@@ -2066,6 +2186,58 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_DECLARE
+end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_BPF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_DECL
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_bpf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Rotate the packet buffers in descriptor d.  Move the store buffer into the  * hold slot, and the free buffer ino the store slot.  Zero the length of the  * new store buffer.  Descriptor lock should be held.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ROTATE_BUFFERS
+parameter_list|(
+name|d
+parameter_list|)
+value|do {					\ 	(d)->bd_hbuf = (d)->bd_sbuf;					\ 	(d)->bd_hlen = (d)->bd_slen;					\ 	(d)->bd_sbuf = (d)->bd_fbuf;					\ 	(d)->bd_slen = 0;						\ 	(d)->bd_fbuf = NULL;						\ 	bpf_bufheld(d);							\ } while (0)
+end_define
+
 begin_comment
 comment|/*  * Descriptor associated with each attached hardware interface.  */
 end_comment
@@ -2111,6 +2283,18 @@ comment|/* mutex for interface */
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|void
+name|bpf_bufheld
+parameter_list|(
+name|struct
+name|bpf_d
+modifier|*
+name|d
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

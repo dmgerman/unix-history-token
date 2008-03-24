@@ -49,6 +49,12 @@ begin_comment
 comment|/*  * Descriptor associated with each open bpf file.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|zbuf
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|bpf_d
@@ -60,7 +66,7 @@ argument_list|)
 name|bd_next
 expr_stmt|;
 comment|/* Linked list of descriptors */
-comment|/* 	 * Buffer slots: two malloc buffers store the incoming packets. 	 *   The model has three slots.  Sbuf is always occupied. 	 *   sbuf (store) - Receive interrupt puts packets here. 	 *   hbuf (hold) - When sbuf is full, put buffer here and 	 *                 wakeup read (replace sbuf with fbuf). 	 *   fbuf (free) - When read is done, put buffer here. 	 * On receiving, if sbuf is full and fbuf is 0, packet is dropped. 	 */
+comment|/* 	 * Buffer slots: two memory buffers store the incoming packets. 	 *   The model has three slots.  Sbuf is always occupied. 	 *   sbuf (store) - Receive interrupt puts packets here. 	 *   hbuf (hold) - When sbuf is full, put buffer here and 	 *                 wakeup read (replace sbuf with fbuf). 	 *   fbuf (free) - When read is done, put buffer here. 	 * On receiving, if sbuf is full and fbuf is 0, packet is dropped. 	 */
 name|caddr_t
 name|bd_sbuf
 decl_stmt|;
@@ -117,11 +123,11 @@ decl_stmt|;
 comment|/* binary filter code */
 endif|#
 directive|endif
-name|u_long
+name|u_int64_t
 name|bd_rcount
 decl_stmt|;
 comment|/* number of packets received */
-name|u_long
+name|u_int64_t
 name|bd_dcount
 decl_stmt|;
 comment|/* number of packets dropped */
@@ -184,7 +190,7 @@ modifier|*
 name|bd_label
 decl_stmt|;
 comment|/* MAC label for descriptor */
-name|u_long
+name|u_int64_t
 name|bd_fcount
 decl_stmt|;
 comment|/* number of packets which matched filter */
@@ -196,6 +202,26 @@ name|int
 name|bd_locked
 decl_stmt|;
 comment|/* true if descriptor is locked */
+name|u_int
+name|bd_bufmode
+decl_stmt|;
+comment|/* Current buffer mode. */
+name|u_int64_t
+name|bd_wcount
+decl_stmt|;
+comment|/* number of packets written */
+name|u_int64_t
+name|bd_wfcount
+decl_stmt|;
+comment|/* number of packets that matched write filter */
+name|u_int64_t
+name|bd_wdcount
+decl_stmt|;
+comment|/* number of packets dropped during a write */
+name|u_int64_t
+name|bd_zcopy
+decl_stmt|;
+comment|/* number of zero copy operations */
 block|}
 struct|;
 end_struct
@@ -268,21 +294,6 @@ value|mtx_assert(&(bd)->bd_mtx, MA_OWNED);
 end_define
 
 begin_comment
-comment|/* Test whether a BPF is ready for read(). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|bpf_ready
-parameter_list|(
-name|bd
-parameter_list|)
-define|\
-value|((bd)->bd_hlen != 0 ||					 \ 	 (((bd)->bd_immediate || (bd)->bd_state == BPF_TIMED_OUT)&& \ 	  (bd)->bd_slen != 0))
-end_define
-
-begin_comment
 comment|/*  * External representation of the bpf descriptor  */
 end_comment
 
@@ -290,11 +301,21 @@ begin_struct
 struct|struct
 name|xbpf_d
 block|{
+name|u_int
+name|bd_structsize
+decl_stmt|;
+comment|/* Size of this structure. */
 name|u_char
 name|bd_promisc
 decl_stmt|;
 name|u_char
 name|bd_immediate
+decl_stmt|;
+name|u_char
+name|__bd_pad
+index|[
+literal|6
+index|]
 decl_stmt|;
 name|int
 name|bd_hdrcmplt
@@ -308,13 +329,13 @@ decl_stmt|;
 name|int
 name|bd_async
 decl_stmt|;
-name|u_long
+name|u_int64_t
 name|bd_rcount
 decl_stmt|;
-name|u_long
+name|u_int64_t
 name|bd_dcount
 decl_stmt|;
-name|u_long
+name|u_int64_t
 name|bd_fcount
 decl_stmt|;
 name|int
@@ -340,6 +361,28 @@ index|]
 decl_stmt|;
 name|int
 name|bd_locked
+decl_stmt|;
+name|u_int64_t
+name|bd_wcount
+decl_stmt|;
+name|u_int64_t
+name|bd_wfcount
+decl_stmt|;
+name|u_int64_t
+name|bd_wdcount
+decl_stmt|;
+name|u_int64_t
+name|bd_zcopy
+decl_stmt|;
+name|int
+name|bd_bufmode
+decl_stmt|;
+comment|/* 	 * Allocate 4 64 bit unsigned integers for future expansion so we do 	 * not have to worry about breaking the ABI. 	 */
+name|u_int64_t
+name|bd_spare
+index|[
+literal|4
+index|]
 decl_stmt|;
 block|}
 struct|;
