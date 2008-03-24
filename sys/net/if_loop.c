@@ -133,12 +133,6 @@ directive|include
 file|<net/bpf.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/bpfdesc.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
