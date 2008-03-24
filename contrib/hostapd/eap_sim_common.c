@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP peer: EAP-SIM/AKA shared routines  * Copyright (c) 2004-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP peer: EAP-SIM/AKA shared routines  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -630,6 +630,34 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+while|while
+condition|(
+name|identity_len
+operator|>
+literal|0
+operator|&&
+name|identity
+index|[
+name|identity_len
+operator|-
+literal|1
+index|]
+operator|==
+literal|0
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"EAP-SIM: Workaround - drop null "
+literal|"character from the end of identity"
+argument_list|)
+expr_stmt|;
+name|identity_len
+operator|--
+expr_stmt|;
+block|}
 name|addr
 index|[
 literal|0
@@ -1434,6 +1462,28 @@ operator|*
 literal|4
 argument_list|,
 name|end
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|pos
+index|[
+literal|1
+index|]
+operator|==
+literal|0
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"EAP-SIM: Attribute underflow"
 argument_list|)
 expr_stmt|;
 return|return

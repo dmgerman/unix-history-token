@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / EAP-GPSK (draft-ietf-emu-eap-gpsk-03.txt) server  * Copyright (c) 2006-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd / EAP-GPSK (draft-ietf-emu-eap-gpsk-08.txt) server  * Copyright (c) 2006-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -56,7 +56,7 @@ name|EAP_GPSK_RAND_LEN
 index|]
 decl_stmt|;
 name|u8
-name|rand_client
+name|rand_peer
 index|[
 name|EAP_GPSK_RAND_LEN
 index|]
@@ -93,10 +93,10 @@ name|pk_len
 decl_stmt|;
 name|u8
 modifier|*
-name|id_client
+name|id_peer
 decl_stmt|;
 name|size_t
-name|id_client_len
+name|id_peer_len
 decl_stmt|;
 name|u8
 modifier|*
@@ -315,7 +315,7 @@ name|EAP_GPSK_CIPHER_AES
 argument_list|)
 condition|)
 block|{
-name|WPA_PUT_BE24
+name|WPA_PUT_BE32
 argument_list|(
 name|data
 operator|->
@@ -331,7 +331,7 @@ argument_list|,
 name|EAP_GPSK_VENDOR_IETF
 argument_list|)
 expr_stmt|;
-name|WPA_PUT_BE24
+name|WPA_PUT_BE16
 argument_list|(
 name|data
 operator|->
@@ -363,7 +363,7 @@ name|EAP_GPSK_CIPHER_SHA256
 argument_list|)
 condition|)
 block|{
-name|WPA_PUT_BE24
+name|WPA_PUT_BE32
 argument_list|(
 name|data
 operator|->
@@ -379,7 +379,7 @@ argument_list|,
 name|EAP_GPSK_VENDOR_IETF
 argument_list|)
 expr_stmt|;
-name|WPA_PUT_BE24
+name|WPA_PUT_BE16
 argument_list|(
 name|data
 operator|->
@@ -440,7 +440,7 @@ name|free
 argument_list|(
 name|data
 operator|->
-name|id_client
+name|id_peer
 argument_list|)
 expr_stmt|;
 name|free
@@ -788,6 +788,12 @@ literal|2
 operator|*
 name|EAP_GPSK_RAND_LEN
 operator|+
+literal|2
+operator|+
+name|data
+operator|->
+name|id_server_len
+operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -860,7 +866,7 @@ name|pos
 argument_list|,
 name|data
 operator|->
-name|rand_client
+name|rand_peer
 argument_list|,
 name|EAP_GPSK_RAND_LEN
 argument_list|)
@@ -884,6 +890,44 @@ name|pos
 operator|+=
 name|EAP_GPSK_RAND_LEN
 expr_stmt|;
+name|WPA_PUT_BE16
+argument_list|(
+name|pos
+argument_list|,
+name|data
+operator|->
+name|id_server_len
+argument_list|)
+expr_stmt|;
+name|pos
+operator|+=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|data
+operator|->
+name|id_server
+condition|)
+name|memcpy
+argument_list|(
+name|pos
+argument_list|,
+name|data
+operator|->
+name|id_server
+argument_list|,
+name|data
+operator|->
+name|id_server_len
+argument_list|)
+expr_stmt|;
+name|pos
+operator|+=
+name|data
+operator|->
+name|id_server_len
+expr_stmt|;
 name|csuite
 operator|=
 operator|(
@@ -893,7 +937,7 @@ operator|*
 operator|)
 name|pos
 expr_stmt|;
-name|WPA_PUT_BE24
+name|WPA_PUT_BE32
 argument_list|(
 name|csuite
 operator|->
@@ -904,7 +948,7 @@ operator|->
 name|vendor
 argument_list|)
 expr_stmt|;
-name|WPA_PUT_BE24
+name|WPA_PUT_BE16
 argument_list|(
 name|csuite
 operator|->
@@ -1316,7 +1360,7 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"EAP-GPSK: Too short message for "
-literal|"ID_Client length"
+literal|"ID_Peer length"
 argument_list|)
 expr_stmt|;
 name|eap_gpsk_state
@@ -1353,7 +1397,7 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"EAP-GPSK: Too short message for "
-literal|"ID_Client"
+literal|"ID_Peer"
 argument_list|)
 expr_stmt|;
 name|eap_gpsk_state
@@ -1369,12 +1413,12 @@ name|free
 argument_list|(
 name|data
 operator|->
-name|id_client
+name|id_peer
 argument_list|)
 expr_stmt|;
 name|data
 operator|->
-name|id_client
+name|id_peer
 operator|=
 name|malloc
 argument_list|(
@@ -1385,7 +1429,7 @@ if|if
 condition|(
 name|data
 operator|->
-name|id_client
+name|id_peer
 operator|==
 name|NULL
 condition|)
@@ -1395,7 +1439,7 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"EAP-GPSK: Not enough memory to store "
-literal|"%d-octet ID_Client"
+literal|"%d-octet ID_Peer"
 argument_list|,
 name|alen
 argument_list|)
@@ -1406,7 +1450,7 @@ name|memcpy
 argument_list|(
 name|data
 operator|->
-name|id_client
+name|id_peer
 argument_list|,
 name|pos
 argument_list|,
@@ -1415,7 +1459,7 @@ argument_list|)
 expr_stmt|;
 name|data
 operator|->
-name|id_client_len
+name|id_peer_len
 operator|=
 name|alen
 expr_stmt|;
@@ -1423,15 +1467,15 @@ name|wpa_hexdump_ascii
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"EAP-GPSK: ID_Client"
+literal|"EAP-GPSK: ID_Peer"
 argument_list|,
 name|data
 operator|->
-name|id_client
+name|id_peer
 argument_list|,
 name|data
 operator|->
-name|id_client_len
+name|id_peer_len
 argument_list|)
 expr_stmt|;
 name|pos
@@ -1558,7 +1602,7 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"EAP-GPSK: Too short message for "
-literal|"RAND_Client"
+literal|"RAND_Peer"
 argument_list|)
 expr_stmt|;
 name|eap_gpsk_state
@@ -1574,7 +1618,7 @@ name|memcpy
 argument_list|(
 name|data
 operator|->
-name|rand_client
+name|rand_peer
 argument_list|,
 name|pos
 argument_list|,
@@ -1585,11 +1629,11 @@ name|wpa_hexdump
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"EAP-GPSK: RAND_Client"
+literal|"EAP-GPSK: RAND_Peer"
 argument_list|,
 name|data
 operator|->
-name|rand_client
+name|rand_peer
 argument_list|,
 name|EAP_GPSK_RAND_LEN
 argument_list|)
@@ -1897,14 +1941,14 @@ argument_list|,
 literal|"EAP-GPSK: Peer selected unsupported "
 literal|"ciphersuite %d:%d"
 argument_list|,
-name|WPA_GET_BE24
+name|WPA_GET_BE32
 argument_list|(
 name|csuite
 operator|->
 name|vendor
 argument_list|)
 argument_list|,
-name|WPA_GET_BE24
+name|WPA_GET_BE16
 argument_list|(
 name|csuite
 operator|->
@@ -1925,7 +1969,7 @@ name|data
 operator|->
 name|vendor
 operator|=
-name|WPA_GET_BE24
+name|WPA_GET_BE32
 argument_list|(
 name|csuite
 operator|->
@@ -1936,7 +1980,7 @@ name|data
 operator|->
 name|specifier
 operator|=
-name|WPA_GET_BE24
+name|WPA_GET_BE16
 argument_list|(
 name|csuite
 operator|->
@@ -2104,7 +2148,7 @@ name|specifier
 argument_list|,
 name|data
 operator|->
-name|rand_client
+name|rand_peer
 argument_list|,
 name|data
 operator|->
@@ -2112,11 +2156,11 @@ name|rand_server
 argument_list|,
 name|data
 operator|->
-name|id_client
+name|id_peer
 argument_list|,
 name|data
 operator|->
-name|id_client_len
+name|id_peer_len
 argument_list|,
 name|data
 operator|->

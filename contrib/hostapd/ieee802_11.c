@@ -7511,7 +7511,7 @@ name|mgmt
 operator|->
 name|u
 operator|.
-name|reassoc_req
+name|reassoc_resp
 argument_list|)
 else|:
 sizeof|sizeof
@@ -7520,7 +7520,7 @@ name|mgmt
 operator|->
 name|u
 operator|.
-name|assoc_req
+name|assoc_resp
 argument_list|)
 operator|)
 condition|)

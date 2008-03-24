@@ -8299,6 +8299,15 @@ modifier|*
 name|hapd
 parameter_list|)
 block|{
+name|eloop_cancel_timeout
+argument_list|(
+name|ieee802_1x_rekey
+argument_list|,
+name|hapd
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|hapd

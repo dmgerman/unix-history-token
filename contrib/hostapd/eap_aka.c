@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / EAP-AKA (RFC 4187)  * Copyright (c) 2005-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd / EAP-AKA (RFC 4187)  * Copyright (c) 2005-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -490,6 +490,30 @@ argument_list|(
 name|msg
 argument_list|,
 name|EAP_SIM_AT_PERMANENT_ID_REQ
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * RFC 4187, Chap. 4.1.4 recommends that identity from EAP is 		 * ignored and the AKA/Identity is used to request the 		 * identity. 		 */
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"   AT_ANY_ID_REQ"
+argument_list|)
+expr_stmt|;
+name|eap_sim_msg_add
+argument_list|(
+name|msg
+argument_list|,
+name|EAP_SIM_AT_ANY_ID_REQ
 argument_list|,
 literal|0
 argument_list|,
@@ -2082,6 +2106,42 @@ operator|=
 name|METHOD_PENDING_NONE
 expr_stmt|;
 block|}
+name|identity_len
+operator|=
+name|sm
+operator|->
+name|identity_len
+expr_stmt|;
+while|while
+condition|(
+name|identity_len
+operator|>
+literal|0
+operator|&&
+name|sm
+operator|->
+name|identity
+index|[
+name|identity_len
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"EAP-AKA: Workaround - drop last null "
+literal|"character from identity"
+argument_list|)
+expr_stmt|;
+name|identity_len
+operator|--
+expr_stmt|;
+block|}
 name|wpa_hexdump_ascii
 argument_list|(
 name|MSG_DEBUG
@@ -2092,8 +2152,6 @@ name|sm
 operator|->
 name|identity
 argument_list|,
-name|sm
-operator|->
 name|identity_len
 argument_list|)
 expr_stmt|;
@@ -2103,8 +2161,6 @@ name|sm
 operator|->
 name|identity
 argument_list|,
-name|sm
-operator|->
 name|identity_len
 argument_list|,
 name|data
