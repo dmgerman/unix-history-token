@@ -5615,7 +5615,7 @@ end_ifdef
 
 begin_function
 name|void
-name|inp_wlock_assert
+name|inp_lock_assert
 parameter_list|(
 name|struct
 name|inpcb
@@ -5633,7 +5633,7 @@ end_function
 
 begin_function
 name|void
-name|inp_wunlock_assert
+name|inp_unlock_assert
 parameter_list|(
 name|struct
 name|inpcb

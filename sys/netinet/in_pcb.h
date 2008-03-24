@@ -803,6 +803,12 @@ parameter_list|)
 value|mtx_assert(&(inp)->inp_mtx, MA_NOTOWNED)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * These locking functions are for inpcb consumers outside of sys/netinet,   * more specifically, they were added for the benefit of TOE drivers. The  * macros are reserved for use by the stack.  */
 end_comment
@@ -859,7 +865,7 @@ end_ifdef
 
 begin_function_decl
 name|void
-name|inp_wlock_assert
+name|inp_lock_assert
 parameter_list|(
 name|struct
 name|inpcb
@@ -870,7 +876,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|inp_wunlock_assert
+name|inp_unlock_assert
 parameter_list|(
 name|struct
 name|inpcb
@@ -888,7 +894,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|inp_wlock_assert
+name|inp_lock_assert
 parameter_list|(
 name|struct
 name|inpcb
@@ -903,7 +909,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|inp_wunlock_assert
+name|inp_unlock_assert
 parameter_list|(
 name|struct
 name|inpcb
@@ -918,6 +924,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_define
 define|#

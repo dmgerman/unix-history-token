@@ -1267,7 +1267,7 @@ name|tx_data_wr
 modifier|*
 name|req
 decl_stmt|;
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
@@ -1629,7 +1629,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
@@ -3631,7 +3631,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
@@ -4048,7 +4048,7 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
@@ -4087,7 +4087,7 @@ modifier|*
 name|toep
 decl_stmt|;
 comment|/* 	 * XXX how do we handle teardown in the SYN_SENT state? 	 * 	 */
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
@@ -5007,7 +5007,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
@@ -5585,7 +5585,7 @@ condition|(
 name|tp
 condition|)
 block|{
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
@@ -6778,7 +6778,7 @@ condition|(
 name|tp
 condition|)
 block|{
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
@@ -7325,7 +7325,7 @@ condition|)
 goto|goto
 name|free_tid
 goto|;
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|inp
 argument_list|)
@@ -7545,7 +7545,7 @@ condition|(
 name|tp
 condition|)
 block|{
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
@@ -8401,7 +8401,7 @@ name|toep
 operator|->
 name|tp_tp
 expr_stmt|;
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
@@ -9229,7 +9229,7 @@ operator|==
 name|rcv_nxt
 condition|)
 return|return;
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
@@ -11468,7 +11468,7 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
@@ -11615,7 +11615,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
@@ -16481,7 +16481,7 @@ name|tp
 operator|->
 name|t_toe
 decl_stmt|;
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
@@ -17520,7 +17520,7 @@ argument_list|(
 literal|"fixup_and_send_ofo\n"
 argument_list|)
 expr_stmt|;
-name|inp_wlock_assert
+name|inp_lock_assert
 argument_list|(
 name|tp
 operator|->
