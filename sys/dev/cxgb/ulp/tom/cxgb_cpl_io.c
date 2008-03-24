@@ -4087,12 +4087,6 @@ modifier|*
 name|toep
 decl_stmt|;
 comment|/* 	 * XXX how do we handle teardown in the SYN_SENT state? 	 * 	 */
-name|INP_INFO_WLOCK
-argument_list|(
-operator|&
-name|tcbinfo
-argument_list|)
-expr_stmt|;
 name|inp_wlock_assert
 argument_list|(
 name|tp
@@ -4125,12 +4119,6 @@ operator|->
 name|t_toe
 operator|=
 name|NULL
-expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|tcbinfo
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -6853,12 +6841,6 @@ name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-name|INP_INFO_WLOCK
-argument_list|(
-operator|&
-name|tcbinfo
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|toep
@@ -6961,12 +6943,6 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|tcbinfo
-argument_list|)
-expr_stmt|;
 name|m_free
 argument_list|(
 name|m
@@ -12131,6 +12107,10 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|tp
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 break|break;
 default|default:
@@ -12471,6 +12451,10 @@ name|enter_timewait
 argument_list|(
 name|so
 argument_list|)
+expr_stmt|;
+name|tp
+operator|=
+name|NULL
 expr_stmt|;
 name|soisdisconnected
 argument_list|(
