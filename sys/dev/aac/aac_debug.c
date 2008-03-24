@@ -93,6 +93,14 @@ directive|ifdef
 name|AAC_DEBUG
 end_ifdef
 
+begin_decl_stmt
+name|int
+name|aac_debug_enable
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|aac_printstate0
