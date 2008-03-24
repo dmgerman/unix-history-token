@@ -145,7 +145,7 @@ name|printf
 argument_list|(
 literal|"%s\n\n%s\n"
 literal|"usage:\n"
-literal|"  wpa_supplicant [-BddhKLqqtuvwW] [-P<pid file>] "
+literal|"  wpa_supplicant [-BddhKLqqstuvwW] [-P<pid file>] "
 literal|"[-g<global ctrl>] \\\n"
 literal|"        -i<ifname> -c<config file> [-C<ctrl>] [-D<driver>] "
 literal|"[-p<driver_param>] \\\n"
@@ -228,6 +228,13 @@ argument_list|(
 literal|"  -p = driver parameters\n"
 literal|"  -P = PID file\n"
 literal|"  -q = decrease debugging verbosity (-qq even less)\n"
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_SYSLOG
+literal|"  -s = log output to syslog instead of stdout\n"
+endif|#
+directive|endif
+comment|/* CONFIG_DEBUG_SYSLOG */
 ifdef|#
 directive|ifdef
 name|CONFIG_CTRL_IFACE_DBUS
@@ -463,7 +470,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Bc:C:D:df:g:hi:KLNp:P:qtuvwW"
+literal|"b:Bc:C:D:df:g:hi:KLNp:P:qstuvwW"
 argument_list|)
 expr_stmt|;
 if|if
@@ -665,6 +672,21 @@ name|wpa_debug_level
 operator|++
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_SYSLOG
+case|case
+literal|'s'
+case|:
+name|params
+operator|.
+name|wpa_debug_syslog
+operator|++
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* CONFIG_DEBUG_SYSLOG */
 case|case
 literal|'t'
 case|:
