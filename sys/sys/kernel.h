@@ -310,6 +310,11 @@ init|=
 literal|0x2300000
 block|,
 comment|/* config VM, set limits*/
+name|SI_SUB_DDB_SERVICES
+init|=
+literal|0x2380000
+block|,
+comment|/* capture, scripting, etc. */
 name|SI_SUB_RUN_QUEUE
 init|=
 literal|0x2400000
