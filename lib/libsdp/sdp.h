@@ -2145,18 +2145,28 @@ begin_struct
 struct|struct
 name|sdp_nap_profile
 block|{
+name|uint8_t
+name|reserved
+decl_stmt|;
+name|uint8_t
+name|load_factor
+decl_stmt|;
+name|uint16_t
+name|psm
+decl_stmt|;
+comment|/* HBO */
 name|uint16_t
 name|security_description
 decl_stmt|;
-comment|/* HBO: NAP/GN */
+comment|/* HBO */
 name|uint16_t
 name|net_access_type
 decl_stmt|;
-comment|/* HBO: NAP */
+comment|/* HBO */
 name|uint32_t
 name|max_net_access_rate
 decl_stmt|;
-comment|/* HBO: NAP */
+comment|/* HBO */
 block|}
 struct|;
 end_struct
@@ -2178,14 +2188,35 @@ name|sdp_nap_profile_p
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* Reuse struct sdp_nap_profile for GN */
-end_comment
+begin_struct
+struct|struct
+name|sdp_gn_profile
+block|{
+name|uint8_t
+name|reserved
+decl_stmt|;
+name|uint8_t
+name|load_factor
+decl_stmt|;
+name|uint16_t
+name|psm
+decl_stmt|;
+comment|/* HBO */
+name|uint16_t
+name|security_description
+decl_stmt|;
+comment|/* HBO */
+name|uint16_t
+name|reserved2
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_typedef
 typedef|typedef
 name|struct
-name|sdp_nap_profile
+name|sdp_gn_profile
 name|sdp_gn_profile_t
 typedef|;
 end_typedef
@@ -2193,20 +2224,41 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
-name|sdp_nap_profile
+name|sdp_gn_profile
 modifier|*
 name|sdp_gn_profile_p
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* Reuse struct sdp_nap_profile for PANU */
-end_comment
+begin_struct
+struct|struct
+name|sdp_panu_profile
+block|{
+name|uint8_t
+name|reserved
+decl_stmt|;
+name|uint8_t
+name|load_factor
+decl_stmt|;
+name|uint16_t
+name|psm
+decl_stmt|;
+comment|/* HBO */
+name|uint16_t
+name|security_description
+decl_stmt|;
+comment|/* HBO */
+name|uint16_t
+name|reserved2
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_typedef
 typedef|typedef
 name|struct
-name|sdp_nap_profile
+name|sdp_panu_profile
 name|sdp_panu_profile_t
 typedef|;
 end_typedef
@@ -2214,7 +2266,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
-name|sdp_nap_profile
+name|sdp_panu_profile
 modifier|*
 name|sdp_panu_profile_p
 typedef|;
