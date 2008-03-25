@@ -766,7 +766,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|)
 expr_stmt|;
 name|NFSD_LOCK
@@ -1424,7 +1424,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|)
 expr_stmt|;
 name|NFSD_LOCK

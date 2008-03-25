@@ -3565,7 +3565,7 @@ name|sopt
 operator|->
 name|sopt_td
 condition|?
-name|M_TRYWAIT
+name|M_WAIT
 else|:
 name|M_DONTWAIT
 argument_list|,

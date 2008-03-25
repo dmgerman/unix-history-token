@@ -3473,7 +3473,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|)
 expr_stmt|;
 name|rpcstats
@@ -5093,7 +5093,7 @@ name|m
 argument_list|,
 name|RPCX_UNSIGNED
 argument_list|,
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|)
 expr_stmt|;
 operator|*
@@ -5324,7 +5324,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|)
 argument_list|,
 name|task
@@ -7459,7 +7459,7 @@ name|MGET
 argument_list|(
 name|n
 argument_list|,
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -7477,7 +7477,7 @@ name|MCLGET
 argument_list|(
 name|n
 argument_list|,
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -7760,7 +7760,7 @@ name|MGETHDR
 argument_list|(
 name|mb
 argument_list|,
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -7778,7 +7778,7 @@ name|MCLGET
 argument_list|(
 name|mb
 argument_list|,
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -8194,7 +8194,7 @@ name|MGET
 argument_list|(
 name|mp2
 argument_list|,
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|,
 name|MT_DATA
 argument_list|)

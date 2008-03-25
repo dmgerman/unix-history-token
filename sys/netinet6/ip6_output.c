@@ -10836,7 +10836,7 @@ name|mp
 operator|=
 name|m_get
 argument_list|(
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)

@@ -3186,16 +3186,9 @@ expr|struct
 name|llc
 argument_list|)
 argument_list|,
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-return|return;
 name|llc
 operator|=
 name|mtod

@@ -2484,7 +2484,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make a copy of an mbuf chain starting "off0" bytes from the beginning,  * continuing for "len" bytes.  If len is M_COPYALL, copy to end of mbuf.  * The wait parameter is a choice of M_TRYWAIT/M_DONTWAIT from caller.  * Note that the copy is read-only, because clusters are not copied,  * only their reference counts are incremented.  */
+comment|/*  * Make a copy of an mbuf chain starting "off0" bytes from the beginning,  * continuing for "len" bytes.  If len is M_COPYALL, copy to end of mbuf.  * The wait parameter is a choice of M_WAIT/M_DONTWAIT from caller.  * Note that the copy is read-only, because clusters are not copied,  * only their reference counts are incremented.  */
 end_comment
 
 begin_function

@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|KB_F_WAIT
-value|M_TRYWAIT
+value|M_WAIT
 end_define
 
 begin_define

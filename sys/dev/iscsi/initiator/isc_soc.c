@@ -366,7 +366,7 @@ name|MGETHDR
 argument_list|(
 name|mh
 argument_list|,
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -769,7 +769,7 @@ name|MGET
 argument_list|(
 name|md
 argument_list|,
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -932,7 +932,7 @@ name|MGET
 argument_list|(
 name|me
 argument_list|,
-name|M_TRYWAIT
+name|M_WAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
