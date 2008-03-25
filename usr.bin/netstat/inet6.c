@@ -3827,7 +3827,7 @@ name|sprintf
 argument_list|(
 name|cp
 argument_list|,
-literal|"%.8s"
+literal|"%.15s"
 argument_list|,
 name|sp
 condition|?
