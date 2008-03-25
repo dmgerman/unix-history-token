@@ -1951,9 +1951,11 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|size_t
 name|_get_kern_cpuset_size
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -1968,7 +1970,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|len
@@ -2130,7 +2132,7 @@ operator|->
 name|cpusetsize
 condition|)
 block|{
-name|int
+name|size_t
 name|kern_size
 init|=
 name|_get_kern_cpuset_size
@@ -2143,7 +2145,7 @@ operator|>
 name|kern_size
 condition|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -2391,7 +2393,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|int
+name|size_t
 name|kern_size
 init|=
 name|_get_kern_cpuset_size
