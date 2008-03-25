@@ -8359,7 +8359,7 @@ operator|.
 name|mask
 operator|=
 operator|(
-name|long
+name|cpuset_t
 operator|*
 operator|)
 name|args
@@ -8488,7 +8488,7 @@ operator|.
 name|mask
 operator|=
 operator|(
-name|long
+name|cpuset_t
 operator|*
 operator|)
 name|args
