@@ -113,6 +113,35 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * At least one non-optional show-command must be implemented using  * DB_SHOW_ALL_COMMAND() so that db_show_all_cmd_set gets created.  * Here is one.  */
+end_comment
+
+begin_macro
+name|DB_SHOW_ALL_COMMAND
+argument_list|(
+argument|procs
+argument_list|,
+argument|db_procs_cmd
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|db_ps
+argument_list|(
+name|addr
+argument_list|,
+name|have_addr
+argument_list|,
+name|count
+argument_list|,
+name|modif
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
 comment|/*  * Layout:  * - column counts  * - header  * - single-threaded process  * - multi-threaded process  * - thread in a MT process  *  *          1         2         3         4         5         6         7  * 1234567890123456789012345678901234567890123456789012345678901234567890  *   pid  ppid  pgrp   uid   state   wmesg     wchan    cmd  *<pid><ppi><pgi><uid><stat>< wmesg>< wchan><name>  *<pid><ppi><pgi><uid><stat>  (threaded)<command>  *<tid><stat>< wmesg>< wchan><name>  *  * For machines with 64-bit pointers, we expand the wchan field 8 more  * characters.  */
 end_comment
 
