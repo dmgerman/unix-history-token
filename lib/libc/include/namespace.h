@@ -297,6 +297,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|pthread_attr_getaffinity_np
+value|_pthread_attr_getaffinity_np
+end_define
+
+begin_define
+define|#
+directive|define
 name|pthread_attr_getdetachstate
 value|_pthread_attr_getdetachstate
 end_define
@@ -362,6 +369,13 @@ define|#
 directive|define
 name|pthread_attr_init
 value|_pthread_attr_init
+end_define
+
+begin_define
+define|#
+directive|define
+name|pthread_attr_setaffinity_np
+value|_pthread_attr_setaffinity_np
 end_define
 
 begin_define
@@ -621,6 +635,13 @@ define|#
 directive|define
 name|pthread_getconcurrency
 value|_pthread_getconcurrency
+end_define
+
+begin_define
+define|#
+directive|define
+name|pthread_getcpuclockid
+value|_pthread_getcpuclockid
 end_define
 
 begin_define
