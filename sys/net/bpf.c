@@ -6610,6 +6610,12 @@ expr_stmt|;
 comment|/* 	 * Detect whether user space has released a buffer back to us, and if 	 * so, move it from being a hold buffer to a free buffer.  This may 	 * not be the best place to do it (for example, we might only want to 	 * run this check if we need the space), but for now it's a reliable 	 * spot to do it. 	 */
 if|if
 condition|(
+name|d
+operator|->
+name|bd_fbuf
+operator|==
+name|NULL
+operator|&&
 name|bpf_canfreebuf
 argument_list|(
 name|d
