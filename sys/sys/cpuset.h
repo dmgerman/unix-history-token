@@ -521,7 +521,7 @@ name|cpuwhich_t
 parameter_list|,
 name|id_t
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 name|cpuset_t
 modifier|*
@@ -539,7 +539,7 @@ name|cpuwhich_t
 parameter_list|,
 name|id_t
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 specifier|const
 name|cpuset_t
