@@ -15484,7 +15484,7 @@ operator|->
 name|id
 expr_stmt|;
 comment|/* id_t */
-name|iarg
+name|uarg
 index|[
 literal|3
 index|]
@@ -15493,7 +15493,7 @@ name|p
 operator|->
 name|cpusetsize
 expr_stmt|;
-comment|/* int */
+comment|/* size_t */
 name|uarg
 index|[
 literal|4
@@ -15506,7 +15506,7 @@ name|p
 operator|->
 name|mask
 expr_stmt|;
-comment|/* long * */
+comment|/* cpuset_t * */
 operator|*
 name|n_args
 operator|=
@@ -15556,7 +15556,7 @@ operator|->
 name|id
 expr_stmt|;
 comment|/* id_t */
-name|iarg
+name|uarg
 index|[
 literal|3
 index|]
@@ -15565,7 +15565,7 @@ name|p
 operator|->
 name|cpusetsize
 expr_stmt|;
-comment|/* int */
+comment|/* size_t */
 name|uarg
 index|[
 literal|4
@@ -15578,7 +15578,7 @@ name|p
 operator|->
 name|mask
 expr_stmt|;
-comment|/* long * */
+comment|/* const cpuset_t * */
 operator|*
 name|n_args
 operator|=
