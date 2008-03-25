@@ -472,18 +472,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|if_purgemaddrs
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|ifconf
 parameter_list|(
@@ -3190,7 +3178,6 @@ comment|/*  * Remove any multicast network addresses from an interface.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|if_purgemaddrs
 parameter_list|(
