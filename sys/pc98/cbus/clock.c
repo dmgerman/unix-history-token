@@ -279,22 +279,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|pscnt
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|psdiv
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|statclock_disable
 decl_stmt|;
 end_decl_stmt
