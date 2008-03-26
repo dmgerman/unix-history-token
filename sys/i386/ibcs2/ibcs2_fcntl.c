@@ -408,7 +408,9 @@ name|iflp
 operator|->
 name|l_sysid
 operator|=
-literal|0
+name|flp
+operator|->
+name|l_sysid
 expr_stmt|;
 name|iflp
 operator|->
@@ -581,6 +583,14 @@ operator|=
 name|iflp
 operator|->
 name|l_whence
+expr_stmt|;
+name|flp
+operator|->
+name|l_sysid
+operator|=
+name|iflp
+operator|->
+name|l_sysid
 expr_stmt|;
 block|}
 end_function

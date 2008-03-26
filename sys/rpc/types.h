@@ -51,35 +51,35 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint32_t
 name|rpcprog_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint32_t
 name|rpcvers_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint32_t
 name|rpcproc_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint32_t
 name|rpcprot_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint32_t
 name|rpcport_t
 typedef|;
 end_typedef
@@ -134,6 +134,58 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SYS_MALLOC_H_
+end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_RPC
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|mem_alloc
+parameter_list|(
+name|bsize
+parameter_list|)
+value|malloc(bsize, M_RPC,  M_WAITOK|M_ZERO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mem_free
+parameter_list|(
+name|ptr
+parameter_list|,
+name|bsize
+parameter_list|)
+value|free(ptr, M_RPC)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -156,17 +208,33 @@ parameter_list|)
 value|free(ptr)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<sys/time.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-end_ifndef
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<rpc/netconfig.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
