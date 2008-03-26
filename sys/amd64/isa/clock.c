@@ -64,18 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
@@ -100,31 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/timetc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/limits.h>
 end_include
 
 begin_include
@@ -154,12 +124,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/power.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/clock.h>
 end_include
 
@@ -167,12 +131,6 @@ begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/frame.h>
 end_include
 
 begin_include
@@ -190,19 +148,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/apicvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/specialreg.h>
 end_include
 
 begin_include
