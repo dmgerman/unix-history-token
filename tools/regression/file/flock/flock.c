@@ -90,13 +90,9 @@ begin_if
 if|#
 directive|if
 name|__FreeBSD_version
-operator|>
-literal|800010
+operator|>=
+literal|800028
 end_if
-
-begin_comment
-comment|/* XXX change before committing to cvs */
-end_comment
 
 begin_define
 define|#
