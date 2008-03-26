@@ -2181,6 +2181,11 @@ block|{
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
+name|g_free
+argument_list|(
+name|vhdr
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|bcopy
@@ -2196,6 +2201,11 @@ argument_list|(
 operator|*
 name|vhdr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|g_free
+argument_list|(
+name|vhdr
 argument_list|)
 expr_stmt|;
 comment|/* This is a new drive. */
