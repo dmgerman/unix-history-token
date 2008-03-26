@@ -42,14 +42,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|timer_freq
+name|i8254_freq
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|timer0_max_count
+name|i8254_max_count
 decl_stmt|;
 end_decl_stmt
 

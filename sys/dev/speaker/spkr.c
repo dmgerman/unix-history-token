@@ -344,7 +344,7 @@ condition|)
 return|return;
 name|divisor
 operator|=
-name|timer_freq
+name|i8254_freq
 operator|/
 name|thz
 expr_stmt|;

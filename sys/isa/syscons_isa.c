@@ -1191,7 +1191,7 @@ return|;
 comment|/* set pitch */
 name|spkr_set_pitch
 argument_list|(
-name|timer_freq
+name|i8254_freq
 operator|/
 name|herz
 argument_list|)

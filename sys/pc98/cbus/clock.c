@@ -268,7 +268,7 @@ name|TIMER_DIV
 parameter_list|(
 name|x
 parameter_list|)
-value|((timer_freq + (x) / 2) / (x))
+value|((i8254_freq + (x) / 2) / (x))
 end_define
 
 begin_decl_stmt
@@ -303,21 +303,33 @@ end_endif
 
 begin_decl_stmt
 name|u_int
-name|timer_freq
+name|i8254_freq
 init|=
 name|TIMER_FREQ
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.i8254.freq"
+argument_list|,
+operator|&
+name|i8254_freq
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|int
-name|timer0_max_count
+name|i8254_max_count
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
-name|timer0_real_max_count
+name|i8254_real_max_count
 decl_stmt|;
 end_decl_stmt
 
@@ -505,7 +517,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|set_timer_freq
+name|set_i8254_freq
 parameter_list|(
 name|u_int
 name|freq
@@ -583,7 +595,7 @@ else|else
 block|{
 name|i8254_offset
 operator|+=
-name|timer0_max_count
+name|i8254_max_count
 expr_stmt|;
 name|i8254_lastcount
 operator|=
@@ -868,7 +880,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wait "n" microseconds.  * Relies on timer 1 counting down from (timer_freq / hz)  * Note: timer had better have been programmed before this is first used!  */
+comment|/*  * Wait "n" microseconds.  * Relies on timer 1 counting down from (i8254_freq / hz)  * Note: timer had better have been programmed before this is first used!  */
 end_comment
 
 begin_function
@@ -980,7 +992,7 @@ operator|-=
 literal|0
 expr_stmt|;
 comment|/* XXX actually guess no initial overhead */
-comment|/* 	 * Calculate (n * (timer_freq / 1e6)) without using floating point 	 * and without any avoidable overflows. 	 */
+comment|/* 	 * Calculate (n * (i8254_freq / 1e6)) without using floating point 	 * and without any avoidable overflows. 	 */
 if|if
 condition|(
 name|n
@@ -1034,7 +1046,7 @@ operator|(
 name|long
 name|long
 operator|)
-name|timer_freq
+name|i8254_freq
 operator|+
 literal|999999
 operator|)
@@ -1077,7 +1089,7 @@ literal|0
 condition|)
 name|tick
 operator|=
-name|timer0_max_count
+name|i8254_max_count
 expr_stmt|;
 block|}
 else|else
@@ -1115,9 +1127,9 @@ condition|)
 block|{
 name|delta
 operator|+=
-name|timer0_max_count
+name|i8254_max_count
 expr_stmt|;
-comment|/* 			 * Guard against timer0_max_count being wrong. 			 * This shouldn't happen in normal operation, 			 * but it may happen if set_timer_freq() is 			 * traced. 			 */
+comment|/* 			 * Guard against i8254_max_count being wrong. 			 * This shouldn't happen in normal operation, 			 * but it may happen if set_i8254_freq() is 			 * traced. 			 */
 if|if
 condition|(
 name|delta
@@ -1407,7 +1419,7 @@ literal|0
 operator|||
 name|prev_count
 operator|>
-name|timer0_max_count
+name|i8254_max_count
 condition|)
 goto|goto
 name|fail
@@ -1446,7 +1458,7 @@ literal|0
 operator|||
 name|count
 operator|>
-name|timer0_max_count
+name|i8254_max_count
 condition|)
 goto|goto
 name|fail
@@ -1464,7 +1476,7 @@ operator|-
 operator|(
 name|count
 operator|-
-name|timer0_max_count
+name|i8254_max_count
 operator|)
 expr_stmt|;
 else|else
@@ -1549,12 +1561,12 @@ name|printf
 argument_list|(
 literal|"failed, using default i8254 clock of %u Hz\n"
 argument_list|,
-name|timer_freq
+name|i8254_freq
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|timer_freq
+name|i8254_freq
 operator|)
 return|;
 block|}
@@ -1563,7 +1575,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|set_timer_freq
+name|set_i8254_freq
 parameter_list|(
 name|u_int
 name|freq
@@ -1573,7 +1585,7 @@ name|intr_freq
 parameter_list|)
 block|{
 name|int
-name|new_timer0_real_max_count
+name|new_i8254_real_max_count
 decl_stmt|;
 name|i8254_timecounter
 operator|.
@@ -1587,7 +1599,7 @@ operator|&
 name|clock_lock
 argument_list|)
 expr_stmt|;
-name|timer_freq
+name|i8254_freq
 operator|=
 name|freq
 expr_stmt|;
@@ -1595,12 +1607,12 @@ if|if
 condition|(
 name|using_lapic_timer
 condition|)
-name|new_timer0_real_max_count
+name|new_i8254_real_max_count
 operator|=
 literal|0x10000
 expr_stmt|;
 else|else
-name|new_timer0_real_max_count
+name|new_i8254_real_max_count
 operator|=
 name|TIMER_DIV
 argument_list|(
@@ -1609,29 +1621,29 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|new_timer0_real_max_count
+name|new_i8254_real_max_count
 operator|!=
-name|timer0_real_max_count
+name|i8254_real_max_count
 condition|)
 block|{
-name|timer0_real_max_count
+name|i8254_real_max_count
 operator|=
-name|new_timer0_real_max_count
+name|new_i8254_real_max_count
 expr_stmt|;
 if|if
 condition|(
-name|timer0_real_max_count
+name|i8254_real_max_count
 operator|==
 literal|0x10000
 condition|)
-name|timer0_max_count
+name|i8254_max_count
 operator|=
 literal|0xffff
 expr_stmt|;
 else|else
-name|timer0_max_count
+name|i8254_max_count
 operator|=
-name|timer0_real_max_count
+name|i8254_real_max_count
 expr_stmt|;
 name|outb
 argument_list|(
@@ -1648,7 +1660,7 @@ name|outb
 argument_list|(
 name|TIMER_CNTR0
 argument_list|,
-name|timer0_real_max_count
+name|i8254_real_max_count
 operator|&
 literal|0xff
 argument_list|)
@@ -1657,7 +1669,7 @@ name|outb
 argument_list|(
 name|TIMER_CNTR0
 argument_list|,
-name|timer0_real_max_count
+name|i8254_real_max_count
 operator|>>
 literal|8
 argument_list|)
@@ -1701,7 +1713,7 @@ name|outb
 argument_list|(
 name|TIMER_CNTR0
 argument_list|,
-name|timer0_real_max_count
+name|i8254_real_max_count
 operator|&
 literal|0xff
 argument_list|)
@@ -1710,7 +1722,7 @@ name|outb
 argument_list|(
 name|TIMER_CNTR0
 argument_list|,
-name|timer0_real_max_count
+name|i8254_real_max_count
 operator|>>
 literal|8
 argument_list|)
@@ -1738,7 +1750,7 @@ block|{
 name|i8254_restore
 argument_list|()
 expr_stmt|;
-comment|/* restore timer_freq and hz */
+comment|/* restore i8254_freq and hz */
 block|}
 end_function
 
@@ -1773,20 +1785,20 @@ name|pc98_machine_type
 operator|&
 name|M_8M
 condition|)
-name|timer_freq
+name|i8254_freq
 operator|=
 literal|1996800L
 expr_stmt|;
 comment|/* 1.9968 MHz */
 else|else
-name|timer_freq
+name|i8254_freq
 operator|=
 literal|2457600L
 expr_stmt|;
 comment|/* 2.4576 MHz */
-name|set_timer_freq
+name|set_i8254_freq
 argument_list|(
-name|timer_freq
+name|i8254_freq
 argument_list|,
 name|hz
 argument_list|)
@@ -1841,13 +1853,13 @@ name|delta
 operator|=
 name|freq
 operator|>
-name|timer_freq
+name|i8254_freq
 condition|?
 name|freq
 operator|-
-name|timer_freq
+name|i8254_freq
 else|:
-name|timer_freq
+name|i8254_freq
 operator|-
 name|freq
 expr_stmt|;
@@ -1855,7 +1867,7 @@ if|if
 condition|(
 name|delta
 operator|<
-name|timer_freq
+name|i8254_freq
 operator|/
 literal|100
 condition|)
@@ -1874,11 +1886,11 @@ argument_list|)
 expr_stmt|;
 name|freq
 operator|=
-name|timer_freq
+name|i8254_freq
 expr_stmt|;
 endif|#
 directive|endif
-name|timer_freq
+name|i8254_freq
 operator|=
 name|freq
 expr_stmt|;
@@ -1895,13 +1907,13 @@ literal|"%d Hz differs from default of %d Hz by more than 1%%\n"
 argument_list|,
 name|freq
 argument_list|,
-name|timer_freq
+name|i8254_freq
 argument_list|)
 expr_stmt|;
 block|}
-name|set_timer_freq
+name|set_i8254_freq
 argument_list|(
-name|timer_freq
+name|i8254_freq
 argument_list|,
 name|hz
 argument_list|)
@@ -2693,9 +2705,9 @@ name|tc_counter_mask
 operator|=
 literal|0xffff
 expr_stmt|;
-name|set_timer_freq
+name|set_i8254_freq
 argument_list|(
-name|timer_freq
+name|i8254_freq
 argument_list|,
 name|hz
 argument_list|)
@@ -2742,7 +2754,7 @@ decl_stmt|;
 comment|/* 	 * Use `i8254' instead of `timer' in external names because `timer' 	 * is is too generic.  Should use it everywhere. 	 */
 name|freq
 operator|=
-name|timer_freq
+name|i8254_freq
 expr_stmt|;
 name|error
 operator|=
@@ -2770,7 +2782,7 @@ name|newptr
 operator|!=
 name|NULL
 condition|)
-name|set_timer_freq
+name|set_i8254_freq
 argument_list|(
 name|freq
 argument_list|,
@@ -2827,7 +2839,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|timer0_max_count
+name|i8254_max_count
 operator|-
 name|getit
 argument_list|()
@@ -2895,7 +2907,7 @@ argument_list|)
 expr_stmt|;
 name|count
 operator|=
-name|timer0_max_count
+name|i8254_max_count
 operator|-
 operator|(
 operator|(
@@ -2936,7 +2948,7 @@ operator|)
 operator|&&
 name|count
 operator|<
-name|timer0_max_count
+name|i8254_max_count
 operator|/
 literal|2u
 operator|)
@@ -2961,7 +2973,7 @@ literal|1
 expr_stmt|;
 name|i8254_offset
 operator|+=
-name|timer0_max_count
+name|i8254_max_count
 expr_stmt|;
 block|}
 name|i8254_lastcount

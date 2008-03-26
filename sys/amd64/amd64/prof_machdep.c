@@ -568,7 +568,7 @@ operator|(
 name|delta
 operator|+
 operator|(
-name|timer0_max_count
+name|i8254_max_count
 operator|<<
 name|CPUTIME_CLOCK_I8254_SHIFT
 operator|)
@@ -885,7 +885,7 @@ name|gp
 operator|->
 name|profrate
 operator|=
-name|timer_freq
+name|i8254_freq
 operator|<<
 name|CPUTIME_CLOCK_I8254_SHIFT
 expr_stmt|;
