@@ -1542,7 +1542,7 @@ comment|/*  * Device Interface  */
 end_comment
 
 begin_comment
-comment|/*  * Initialise the controller and softc  */
+comment|/*  * Initialize the controller and softc  */
 end_comment
 
 begin_function
@@ -1565,7 +1565,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialise per-controller queues. 	 */
+comment|/* 	 * Initialize per-controller queues. 	 */
 name|aac_initq_free
 argument_list|(
 name|sc
@@ -1586,7 +1586,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialise command-completion task. 	 */
+comment|/* 	 * Initialize command-completion task. 	 */
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -1697,7 +1697,7 @@ name|aac_aifq_tail
 operator|=
 name|AAC_AIFQ_LENGTH
 expr_stmt|;
-comment|/* 	 * Initialise the adapter. 	 */
+comment|/* 	 * Initialize the adapter. 	 */
 if|if
 condition|(
 operator|(
@@ -2448,7 +2448,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a device to respresent a new container  */
+comment|/*  * Create a device to represent a new container  */
 end_comment
 
 begin_function
@@ -5914,7 +5914,7 @@ argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
-comment|/* (re)initialise the command/FIB */
+comment|/* (re)initialize the command/FIB */
 name|cm
 operator|->
 name|cm_sgtable
@@ -5983,7 +5983,7 @@ name|cm_sc
 operator|->
 name|aac_max_fib_size
 expr_stmt|;
-comment|/* 	 * These are duplicated in aac_start to cover the case where an 	 * intermediate stage may have destroyed them.  They're left 	 * initialised here for debugging purposes only. 	 */
+comment|/* 	 * These are duplicated in aac_start to cover the case where an 	 * intermediate stage may have destroyed them.  They're left 	 * initialized here for debugging purposes only. 	 */
 name|cm
 operator|->
 name|cm_fib
@@ -6121,7 +6121,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate and initialise commands/FIBs for this adapter.  */
+comment|/*  * Allocate and initialize commands/FIBs for this adapter.  */
 end_comment
 
 begin_function
@@ -6289,7 +6289,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* initialise constant fields in the command structure */
+comment|/* initialize constant fields in the command structure */
 name|bzero
 argument_list|(
 name|fm
@@ -7377,7 +7377,7 @@ comment|/*  * Hardware Interface  */
 end_comment
 
 begin_comment
-comment|/*  * Initialise the adapter.  */
+comment|/*  * Initialize the adapter.  */
 end_comment
 
 begin_function
@@ -8896,7 +8896,7 @@ name|sc
 operator|->
 name|aac_max_fib_size
 expr_stmt|;
-comment|/* 	 * Initialise FIB queues.  Note that it appears that the layout of the 	 * indexes and the segmentation of the entries may be mandated by the 	 * adapter, which is only told about the base of the queue index fields. 	 * 	 * The initial values of the indices are assumed to inform the adapter 	 * of the sizes of the respective queues, and theoretically it could 	 * work out the entire layout of the queue structures from this.  We 	 * take the easy route and just lay this area out like everyone else 	 * does. 	 * 	 * The Linux driver uses a much more complex scheme whereby several 	 * header records are kept for each queue.  We use a couple of generic 	 * list manipulation functions which 'know' the size of each list by 	 * virtue of a table. 	 */
+comment|/* 	 * Initialize FIB queues.  Note that it appears that the layout of the 	 * indexes and the segmentation of the entries may be mandated by the 	 * adapter, which is only told about the base of the queue index fields. 	 * 	 * The initial values of the indices are assumed to inform the adapter 	 * of the sizes of the respective queues, and theoretically it could 	 * work out the entire layout of the queue structures from this.  We 	 * take the easy route and just lay this area out like everyone else 	 * does. 	 * 	 * The Linux driver uses a much more complex scheme whereby several 	 * header records are kept for each queue.  We use a couple of generic 	 * list manipulation functions which 'know' the size of each list by 	 * virtue of a table. 	 */
 name|qoffset
 operator|=
 name|offsetof
