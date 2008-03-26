@@ -2002,7 +2002,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"Could not create AIF thread\n"
+literal|"Could not create AIF thread"
 argument_list|)
 expr_stmt|;
 comment|/* Register the shutdown method to only be called post-dump */
@@ -2230,7 +2230,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"error probing container %d"
+literal|"Error probing container %d\n"
 argument_list|,
 name|cid
 argument_list|)
@@ -2535,7 +2535,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"Out of memory?!\n"
+literal|"Out of memory?!"
 argument_list|)
 expr_stmt|;
 name|fwprintf
@@ -3625,7 +3625,7 @@ name|AAC_AIFFLAGS_RUNNING
 condition|)
 name|panic
 argument_list|(
-literal|"Cannot shutdown AIF thread\n"
+literal|"Cannot shutdown AIF thread"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4627,7 +4627,7 @@ condition|)
 name|panic
 argument_list|(
 literal|"aac_startio: unexpected error %d from "
-literal|"busdma\n"
+literal|"busdma"
 argument_list|,
 name|error
 argument_list|)
@@ -8090,7 +8090,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"FATAL: controller kernel panic\n"
+literal|"FATAL: controller kernel panic"
 argument_list|)
 expr_stmt|;
 return|return
