@@ -50,17 +50,6 @@ name|wall_cmos_clock
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|sysbeep
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

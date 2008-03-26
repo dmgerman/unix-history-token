@@ -1737,6 +1737,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|sysbeep
+parameter_list|(
+name|int
+name|hertz
+parameter_list|,
+name|int
+name|period
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Cyclic clock function type definition used to hook the cyclic   * subsystem into the appropriate timer interrupt.  */
 end_comment

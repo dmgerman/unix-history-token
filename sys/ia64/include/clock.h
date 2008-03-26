@@ -42,19 +42,6 @@ name|itc_frequency
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|sysbeep
-parameter_list|(
-name|int
-name|pitch
-parameter_list|,
-name|int
-name|period
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

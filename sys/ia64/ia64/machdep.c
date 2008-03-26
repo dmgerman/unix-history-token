@@ -6764,24 +6764,5 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
-name|sysbeep
-parameter_list|(
-name|int
-name|pitch
-parameter_list|,
-name|int
-name|period
-parameter_list|)
-block|{
-return|return
-operator|(
-name|ENODEV
-operator|)
-return|;
-block|}
-end_function
-
 end_unit
 

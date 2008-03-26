@@ -656,28 +656,5 @@ parameter_list|)
 block|{  }
 end_function
 
-begin_comment
-comment|/*  * XXX Needed by syscons  */
-end_comment
-
-begin_function
-name|int
-name|sysbeep
-parameter_list|(
-name|int
-name|pitch
-parameter_list|,
-name|int
-name|period
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 end_unit
 

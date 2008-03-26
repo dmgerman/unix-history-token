@@ -108,25 +108,5 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_function
-name|int
-name|sysbeep
-parameter_list|(
-name|int
-name|pitch
-parameter_list|,
-name|int
-name|period
-parameter_list|)
-block|{
-comment|/* 	 * XXX: function exists to enable RAID drivers to compile at the moment. 	 */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 end_unit
 

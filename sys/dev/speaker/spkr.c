@@ -326,10 +326,6 @@ decl_stmt|,
 name|centisecs
 decl_stmt|;
 block|{
-name|unsigned
-name|int
-name|divisor
-decl_stmt|;
 name|int
 name|sps
 decl_stmt|,
@@ -342,12 +338,6 @@ operator|<=
 literal|0
 condition|)
 return|return;
-name|divisor
-operator|=
-name|i8254_freq
-operator|/
-name|thz
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -394,9 +384,9 @@ expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|spkr_set_pitch
+name|timer_spkr_setfreq
 argument_list|(
-name|divisor
+name|thz
 argument_list|)
 expr_stmt|;
 name|enable_intr

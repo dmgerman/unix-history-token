@@ -70,35 +70,6 @@ name|TIMER_MODE
 value|(IO_TIMER1 + TIMER_REG_MODE * 2)
 end_define
 
-begin_define
-define|#
-directive|define
-name|timer_spkr_acquire
-parameter_list|()
-define|\
-value|acquire_timer1(TIMER_SEL1 | TIMER_SQWAVE | TIMER_16BIT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|timer_spkr_release
-parameter_list|()
-define|\
-value|release_timer1()
-end_define
-
-begin_define
-define|#
-directive|define
-name|spkr_set_pitch
-parameter_list|(
-name|pitch
-parameter_list|)
-define|\
-value|do { \ 		outb(TIMER_CNTR1, (pitch)& 0xff); \ 		outb(TIMER_CNTR1, (pitch)>> 8); \ 	} while(0)
-end_define
-
 begin_endif
 endif|#
 directive|endif

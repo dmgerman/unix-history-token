@@ -1449,8 +1449,6 @@ argument_list|)
 expr_stmt|;
 name|sysbeep
 argument_list|(
-name|TIMER_FREQ
-operator|/
 literal|880
 argument_list|,
 name|hz
@@ -2100,8 +2098,6 @@ argument_list|)
 expr_stmt|;
 name|sysbeep
 argument_list|(
-name|TIMER_FREQ
-operator|/
 literal|880
 argument_list|,
 name|hz

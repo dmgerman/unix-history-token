@@ -19566,6 +19566,8 @@ literal|2
 expr_stmt|;
 name|sysbeep
 argument_list|(
+literal|1193182
+operator|/
 name|pitch
 argument_list|,
 name|duration

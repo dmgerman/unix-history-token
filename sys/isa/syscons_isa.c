@@ -1189,10 +1189,8 @@ return|return
 name|EBUSY
 return|;
 comment|/* set pitch */
-name|spkr_set_pitch
+name|timer_spkr_setfreq
 argument_list|(
-name|i8254_freq
-operator|/
 name|herz
 argument_list|)
 expr_stmt|;
