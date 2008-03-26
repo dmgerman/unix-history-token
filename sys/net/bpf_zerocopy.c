@@ -1877,6 +1877,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
+comment|/* 	 * Point BPF descriptor at buffers; initialize sbuf as zba so that 	 * it is always filled first in the sequence, per bpf(4). 	 */
 name|d
 operator|->
 name|bd_fbuf
