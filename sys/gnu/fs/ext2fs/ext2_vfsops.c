@@ -427,7 +427,7 @@ literal|"export"
 block|,
 literal|"acls"
 block|,
-literal|"exec"
+literal|"noexec"
 block|,
 literal|"noatime"
 block|,
