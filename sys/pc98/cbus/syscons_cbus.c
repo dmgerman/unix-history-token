@@ -66,18 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ppireg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/timerreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pc98/pc98/pc98_machdep.h>
 end_include
 
@@ -920,11 +908,6 @@ condition|(
 name|herz
 condition|)
 block|{
-comment|/* enable counter 1 */
-name|ppi_spkr_on
-argument_list|()
-expr_stmt|;
-comment|/* set command for counter 1, 2 byte write */
 if|if
 condition|(
 name|timer_spkr_acquire
@@ -933,7 +916,6 @@ condition|)
 return|return
 name|EBUSY
 return|;
-comment|/* set pitch */
 name|timer_spkr_setfreq
 argument_list|(
 name|herz
@@ -942,10 +924,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* disable counter 1 */
-name|ppi_spkr_off
-argument_list|()
-expr_stmt|;
 name|timer_spkr_release
 argument_list|()
 expr_stmt|;

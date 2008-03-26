@@ -106,18 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ppireg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/timerreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pc/bios.h>
 end_include
 
@@ -1167,19 +1155,13 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
+name|HAS_TIMER_SPKR
 argument_list|)
 if|if
 condition|(
 name|herz
 condition|)
 block|{
-comment|/* set command for counter 2, 2 byte write */
 if|if
 condition|(
 name|timer_spkr_acquire
@@ -1188,23 +1170,14 @@ condition|)
 return|return
 name|EBUSY
 return|;
-comment|/* set pitch */
 name|timer_spkr_setfreq
 argument_list|(
 name|herz
 argument_list|)
 expr_stmt|;
-comment|/* enable counter 2 output to speaker */
-name|ppi_spkr_on
-argument_list|()
-expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* disable counter 2 output to speaker */
-name|ppi_spkr_off
-argument_list|()
-expr_stmt|;
 name|timer_spkr_release
 argument_list|()
 expr_stmt|;
