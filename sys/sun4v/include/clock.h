@@ -36,20 +36,6 @@ name|tick_MHz
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|adjkerntz
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|wall_cmos_clock
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
