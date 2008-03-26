@@ -7650,7 +7650,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/* if error&& bits != 6 at this point, we are in in trouble... XXX */
+comment|/* if error&& bits != 6 at this point, we are in trouble... XXX */
 return|return
 name|error
 return|;

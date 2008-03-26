@@ -275,7 +275,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * Build a block of characters containing the message.  * It is sent blank filled and in a single block to  * try to keep the message in one piece if the recipient  * in in vi at the time  */
+comment|/*  * Build a block of characters containing the message.  * It is sent blank filled and in a single block to  * try to keep the message in one piece if the recipient  * in vi at the time  */
 end_comment
 
 begin_function
