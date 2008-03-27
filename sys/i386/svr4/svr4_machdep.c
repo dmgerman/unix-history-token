@@ -2113,6 +2113,8 @@ operator||
 name|PSL_VM
 operator||
 name|PSL_AC
+operator||
+name|PSL_D
 operator|)
 expr_stmt|;
 name|tf
@@ -2177,7 +2179,11 @@ operator|->
 name|tf_eflags
 operator|&=
 operator|~
+operator|(
 name|PSL_T
+operator||
+name|PSL_D
+operator|)
 expr_stmt|;
 name|tf
 operator|->
