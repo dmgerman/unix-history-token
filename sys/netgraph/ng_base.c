@@ -7008,23 +7008,6 @@ argument_list|,
 name|add_arg
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If we see more doable work, make sure we are 		 * on the work queue. 		 */
-if|if
-condition|(
-name|NEXT_QUEUED_ITEM_CAN_PROCEED
-argument_list|(
-name|ngq
-argument_list|)
-condition|)
-block|{
-name|ng_setisr
-argument_list|(
-name|ngq
-operator|->
-name|q_node
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|CTR6
 argument_list|(
@@ -12922,7 +12905,7 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We have the node. We also take over the reference 		 * that the list had on it. 		 * Now process as much as you can, until it won't 		 * let you have another item off the queue. 		 * All this time, keep the reference 		 * that lets us be sure that the node still exists. 		 * Let the reference go at the last minute. 		 * ng_dequeue will put us back on the worklist 		 * if there is more too do. This may be of use if there 		 * are Multiple Processors and multiple Net threads in the 		 * future. 		 */
+comment|/* 		 * We have the node. We also take over the reference 		 * that the list had on it. 		 * Now process as much as you can, until it won't 		 * let you have another item off the queue. 		 * All this time, keep the reference 		 * that lets us be sure that the node still exists. 		 * Let the reference go at the last minute. 		 */
 for|for
 control|(
 init|;
