@@ -111,11 +111,19 @@ name|MID_MACHINE
 value|MID_SPARC64
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SMP
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -142,7 +150,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SMP */
+comment|/* SMP || KLD_MODULE */
 end_comment
 
 begin_define
