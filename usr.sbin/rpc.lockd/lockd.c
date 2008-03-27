@@ -3404,7 +3404,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"usage: rpc.lockd [-k] [-d<debuglevel>]"
+literal|"usage: rpc.lockd [-d<debuglevel>]"
 literal|" [-g<grace period>] [-h<bindip>] [-p<port>]"
 argument_list|)
 expr_stmt|;
