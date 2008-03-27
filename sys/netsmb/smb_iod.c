@@ -2903,6 +2903,12 @@ name|iod
 init|=
 name|arg
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Here we assume that the thread structure will be the same 	 * for an entire kthread (kproc, to be more precise) life. 	 */
 name|iod
 operator|->
@@ -2977,6 +2983,12 @@ name|iod_sleeptimo
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|kproc_exit
 argument_list|(
 literal|0
