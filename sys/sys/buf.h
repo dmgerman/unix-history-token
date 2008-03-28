@@ -932,33 +932,11 @@ begin_comment
 comment|/*  *  * Get a lock sleeping non-interruptably until it becomes available.  */
 end_comment
 
-begin_function_decl
-specifier|static
-name|__inline
-name|int
-name|BUF_LOCK
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|,
-name|int
-name|locktype
-parameter_list|,
-name|struct
-name|mtx
-modifier|*
-name|interlock
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|__inline
 name|int
-name|BUF_LOCK
+name|_BUF_LOCK
 parameter_list|(
 name|struct
 name|buf
@@ -972,6 +950,14 @@ name|struct
 name|mtx
 modifier|*
 name|interlock
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 name|int
@@ -990,7 +976,7 @@ operator|++
 expr_stmt|;
 name|res
 operator|=
-name|lockmgr
+name|_lockmgr_args
 argument_list|(
 operator|&
 name|bp
@@ -1000,6 +986,16 @@ argument_list|,
 name|locktype
 argument_list|,
 name|interlock
+argument_list|,
+name|LK_WMESG_DEFAULT
+argument_list|,
+name|LK_PRIO_DEFAULT
+argument_list|,
+name|LK_TIMO_DEFAULT
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 if|if
@@ -1025,44 +1021,11 @@ begin_comment
 comment|/*  * Get a lock sleeping with specified interruptably and timeout.  */
 end_comment
 
-begin_function_decl
-specifier|static
-name|__inline
-name|int
-name|BUF_TIMELOCK
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|,
-name|int
-name|locktype
-parameter_list|,
-name|struct
-name|mtx
-modifier|*
-name|interlock
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|wmesg
-parameter_list|,
-name|int
-name|catch
-parameter_list|,
-name|int
-name|timo
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|__inline
 name|int
-name|BUF_TIMELOCK
+name|_BUF_TIMELOCK
 parameter_list|(
 name|struct
 name|buf
@@ -1087,6 +1050,14 @@ name|catch
 parameter_list|,
 name|int
 name|timo
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 name|int
@@ -1105,7 +1076,7 @@ operator|++
 expr_stmt|;
 name|res
 operator|=
-name|lockmgr_args
+name|_lockmgr_args
 argument_list|(
 operator|&
 name|bp
@@ -1129,6 +1100,10 @@ operator||
 name|catch
 argument_list|,
 name|timo
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 if|if
@@ -1154,79 +1129,15 @@ begin_comment
 comment|/*  * Release a lock. Only the acquiring process may free the lock unless  * it has been handed off to biodone.  */
 end_comment
 
-begin_function_decl
-specifier|static
-name|__inline
-name|void
+begin_define
+define|#
+directive|define
 name|BUF_UNLOCK
 parameter_list|(
-name|struct
-name|buf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|BUF_UNLOCK
-parameter_list|(
-name|struct
-name|buf
-modifier|*
 name|bp
 parameter_list|)
-block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_REMFREE
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"BUF_UNLOCK %p while B_REMFREE is still set."
-operator|,
-name|bp
-operator|)
-argument_list|)
-expr_stmt|;
-name|lockmgr
-argument_list|(
-operator|&
-operator|(
-name|bp
-operator|)
-operator|->
-name|b_lock
-argument_list|,
-name|LK_RELEASE
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+value|do {						\ 	KASSERT(((bp)->b_flags& B_REMFREE) == 0,			\ 	    ("BUF_UNLOCK %p while B_REMFREE is still set.", (bp)));	\ 									\ 	(void)_lockmgr_args(&(bp)->b_lock, LK_RELEASE, NULL,		\ 	    LK_WMESG_DEFAULT, LK_PRIO_DEFAULT, LK_TIMO_DEFAULT,		\ 	    LOCK_FILE, LOCK_LINE);					\ } while (0)
+end_define
 
 begin_comment
 comment|/*  * Check if a buffer lock is recursed.  */
@@ -1240,7 +1151,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|(lockmgr_recursed(&(bp)->b_lock))
+value|lockmgr_recursed(&(bp)->b_lock)
 end_define
 
 begin_comment
@@ -1255,7 +1166,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|(lockstatus(&(bp)->b_lock))
+value|lockstatus(&(bp)->b_lock)
 end_define
 
 begin_comment
@@ -1270,7 +1181,47 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|(lockdestroy(&(bp)->b_lock))
+value|lockdestroy(&(bp)->b_lock)
+end_define
+
+begin_comment
+comment|/*  * Use macro wrappers in order to exploit consumers tracking.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUF_LOCK
+parameter_list|(
+name|bp
+parameter_list|,
+name|locktype
+parameter_list|,
+name|interlock
+parameter_list|)
+define|\
+value|_BUF_LOCK((bp), (locktype), (interlock), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUF_TIMELOCK
+parameter_list|(
+name|bp
+parameter_list|,
+name|locktype
+parameter_list|,
+name|interlock
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|catch
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|_BUF_TIMELOCK((bp), (locktype), (interlock), (wmesg), (catch),	\ 	    (timo), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_comment
@@ -1342,8 +1293,6 @@ name|BUF_ASSERT_HELD
 parameter_list|(
 name|bp
 parameter_list|)
-define|\
-value|_lockmgr_assert(&(bp)->b_lock, KA_HELD, LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -1353,8 +1302,6 @@ name|BUF_ASSERT_UNHELD
 parameter_list|(
 name|bp
 parameter_list|)
-define|\
-value|_lockmgr_assert(&(bp)->b_lock, KA_UNHELD, LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_else
@@ -1435,41 +1382,16 @@ begin_comment
 comment|/*  * When initiating asynchronous I/O, change ownership of the lock to the  * kernel. Once done, the lock may legally released by biodone. The  * original owning process can no longer acquire it recursively, but must  * wait until the I/O is completed and the lock has been freed by biodone.  */
 end_comment
 
-begin_function_decl
-specifier|static
-name|__inline
-name|void
+begin_define
+define|#
+directive|define
 name|BUF_KERNPROC
 parameter_list|(
-name|struct
-name|buf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|BUF_KERNPROC
-parameter_list|(
-name|struct
-name|buf
-modifier|*
 name|bp
 parameter_list|)
-block|{
-name|lockmgr_disown
-argument_list|(
-operator|&
-name|bp
-operator|->
-name|b_lock
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+define|\
+value|_lockmgr_disown(&(bp)->b_lock, LOCK_FILE, LOCK_LINE)
+end_define
 
 begin_endif
 endif|#
