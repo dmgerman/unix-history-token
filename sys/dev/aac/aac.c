@@ -5447,7 +5447,7 @@ name|cm
 operator|->
 name|cm_flags
 operator||=
-name|AAC_CMD_DATAOUT
+name|AAC_CMD_DATAIN
 expr_stmt|;
 name|cm
 operator|->
@@ -5550,7 +5550,7 @@ name|cm
 operator|->
 name|cm_flags
 operator||=
-name|AAC_CMD_DATAIN
+name|AAC_CMD_DATAOUT
 expr_stmt|;
 name|cm
 operator|->
