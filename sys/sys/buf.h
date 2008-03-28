@@ -951,7 +951,6 @@ name|mtx
 modifier|*
 name|interlock
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|file
@@ -1051,7 +1050,6 @@ parameter_list|,
 name|int
 name|timo
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|file
