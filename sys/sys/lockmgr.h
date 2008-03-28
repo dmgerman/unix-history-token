@@ -826,6 +826,17 @@ define|\
 value|((lkp)->lk_exclusivecount> 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|lockmgr_waiters
+parameter_list|(
+name|lkp
+parameter_list|)
+define|\
+value|((lkp)->lk_waitcount != 0)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

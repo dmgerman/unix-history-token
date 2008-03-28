@@ -7089,7 +7089,7 @@ comment|/*  * Disassociate a buffer from a vnode.  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|brelvp
 parameter_list|(
 name|struct
@@ -7107,9 +7107,6 @@ name|struct
 name|vnode
 modifier|*
 name|vp
-decl_stmt|;
-name|int
-name|waiters
 decl_stmt|;
 name|CTR3
 argument_list|(
@@ -7253,12 +7250,6 @@ name|b_bufobj
 operator|=
 name|NULL
 expr_stmt|;
-name|waiters
-operator|=
-name|bp
-operator|->
-name|b_waiters
-expr_stmt|;
 name|BO_UNLOCK
 argument_list|(
 name|bo
@@ -7269,11 +7260,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|waiters
-operator|)
-return|;
 block|}
 end_function
 
