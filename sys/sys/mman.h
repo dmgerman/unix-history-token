@@ -619,6 +619,17 @@ begin_comment
 comment|/* Page has been modified */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MINCORE_SUPER
+value|0x20
+end_define
+
+begin_comment
+comment|/* Page is a "super" page */
+end_comment
+
 begin_comment
 comment|/*  * Anonymous object constant for shm_open().  */
 end_comment

@@ -19542,6 +19542,10 @@ operator|=
 operator|*
 name|pdep
 expr_stmt|;
+name|val
+operator|=
+name|MINCORE_SUPER
+operator|:
 comment|/* Compute the physical address of the 4KB page. */
 name|pa
 operator|=
@@ -19616,7 +19620,7 @@ literal|0
 condition|)
 block|{
 name|val
-operator|=
+operator||=
 name|MINCORE_INCORE
 expr_stmt|;
 if|if
