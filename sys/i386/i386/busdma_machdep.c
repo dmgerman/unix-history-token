@@ -2400,7 +2400,7 @@ name|dmat
 operator|->
 name|flags
 argument_list|,
-name|ENOMEM
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
