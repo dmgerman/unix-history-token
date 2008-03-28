@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sm_inter.h"
+file|<nlm/sm_inter.h>
 end_include
 
 begin_include

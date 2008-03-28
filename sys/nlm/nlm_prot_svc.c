@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"nlm_prot.h"
+file|<nlm/nlm_prot.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nlm.h"
+file|<nlm/nlm.h>
 end_include
 
 begin_include

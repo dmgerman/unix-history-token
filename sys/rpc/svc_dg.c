@@ -134,7 +134,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"rpc_com.h"
+file|<rpc/rpc_com.h>
 end_include
 
 begin_function_decl

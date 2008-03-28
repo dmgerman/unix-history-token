@@ -85,8 +85,28 @@ end_include
 begin_include
 include|#
 directive|include
-file|"rpc_com.h"
+file|<rpc/rpc_com.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|700000
+end_if
+
+begin_define
+define|#
+directive|define
+name|strchr
+value|index
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*%  * WARNING: Don't even consider trying to compile this on a system where  * sizeof(int)< 4.  sizeof(int)> 4 is fine; all the world's not a VAX.  */
