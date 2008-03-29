@@ -298,14 +298,6 @@ name|lowervp
 decl_stmt|;
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-comment|/* XXX */
-name|struct
 name|null_node_hashhead
 modifier|*
 name|hd
@@ -319,9 +311,6 @@ name|struct
 name|vnode
 modifier|*
 name|vp
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
@@ -371,6 +360,7 @@ operator|==
 name|mp
 condition|)
 block|{
+comment|/* 			 * Since we have the lower node locked the nullfs 			 * node can not be in the process of recycling.  If 			 * it had been recycled before we grabed the lower 			 * lock it would not have been found on the hash. 			 */
 name|vp
 operator|=
 name|NULLTOV
@@ -378,7 +368,7 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-name|VI_LOCK
+name|vref
 argument_list|(
 name|vp
 argument_list|)
@@ -387,37 +377,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|null_hashmtx
-argument_list|)
-expr_stmt|;
-comment|/* 			 * We need to clear the OWEINACT flag here as this 			 * may lead vget() to try to lock our vnode which 			 * is already locked via lowervp. 			 */
-name|vp
-operator|->
-name|v_iflag
-operator|&=
-operator|~
-name|VI_OWEINACT
-expr_stmt|;
-name|error
-operator|=
-name|vget
-argument_list|(
-name|vp
-argument_list|,
-name|LK_INTERLOCK
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-comment|/* 			 * Since we have the lower node locked the nullfs 			 * node can not be in the process of recycling.  If 			 * it had been recycled before we grabed the lower 			 * lock it would not have been found on the hash. 			 */
-if|if
-condition|(
-name|error
-condition|)
-name|panic
-argument_list|(
-literal|"null_hashget: vget error %d"
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 return|return
@@ -468,14 +427,6 @@ name|xp
 decl_stmt|;
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-comment|/* XXX */
-name|struct
 name|null_node_hashhead
 modifier|*
 name|hd
@@ -489,9 +440,6 @@ name|struct
 name|vnode
 modifier|*
 name|ovp
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 name|hd
 operator|=
@@ -545,7 +493,7 @@ argument_list|(
 name|oxp
 argument_list|)
 expr_stmt|;
-name|VI_LOCK
+name|vref
 argument_list|(
 name|ovp
 argument_list|)
@@ -554,35 +502,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|null_hashmtx
-argument_list|)
-expr_stmt|;
-name|ovp
-operator|->
-name|v_iflag
-operator|&=
-operator|~
-name|VI_OWEINACT
-expr_stmt|;
-name|error
-operator|=
-name|vget
-argument_list|(
-name|ovp
-argument_list|,
-name|LK_INTERLOCK
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-name|panic
-argument_list|(
-literal|"null_hashins: vget error %d"
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 return|return
