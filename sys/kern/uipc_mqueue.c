@@ -3343,22 +3343,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|vget
-argument_list|(
-name|vd
-operator|->
-name|mv_vnode
-argument_list|,
-literal|0
-argument_list|,
-name|curthread
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
 operator|*
 name|vpp
 operator|=
@@ -3366,7 +3350,7 @@ name|vd
 operator|->
 name|mv_vnode
 expr_stmt|;
-name|vn_lock
+name|vget
 argument_list|(
 operator|*
 name|vpp
@@ -3374,6 +3358,8 @@ argument_list|,
 name|LK_RETRY
 operator||
 name|LK_EXCLUSIVE
+argument_list|,
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
@@ -3381,8 +3367,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-comment|/* XXX if this can happen, we're in trouble */
 block|}
 name|error
 operator|=
