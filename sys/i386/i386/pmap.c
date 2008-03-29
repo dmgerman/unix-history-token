@@ -11461,12 +11461,25 @@ decl_stmt|;
 name|vm_page_t
 name|free
 decl_stmt|;
-if|#
-directive|if
+name|KASSERT
+argument_list|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_FICTITIOUS
+operator|)
+operator|==
 literal|0
-block|KASSERT((m->flags& PG_FICTITIOUS) == 0, 	    ("pmap_remove_all: page %p is fictitious", m));
-endif|#
-directive|endif
+argument_list|,
+operator|(
+literal|"pmap_remove_all: page %p is fictitious"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
