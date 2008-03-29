@@ -449,11 +449,16 @@ name|EOF
 value|(-1)
 comment|/*  * FOPEN_MAX is a minimum maximum, and is the number of streams that  * stdio can provide without attempting to allocate further resources  * (which could fail).  Do not use this for anything.  */
 comment|/* must be == _POSIX_STREAM_MAX<limits.h> */
+ifndef|#
+directive|ifndef
+name|FOPEN_MAX
 define|#
 directive|define
 name|FOPEN_MAX
 value|20
 comment|/* must be<= OPEN_MAX<sys/syslimits.h> */
+endif|#
+directive|endif
 define|#
 directive|define
 name|FILENAME_MAX
