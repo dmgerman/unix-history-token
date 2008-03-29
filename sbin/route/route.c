@@ -3985,6 +3985,8 @@ literal|'g'
 condition|)
 name|exit
 argument_list|(
+name|ret
+operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
