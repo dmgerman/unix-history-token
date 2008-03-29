@@ -2961,7 +2961,6 @@ operator|->
 name|iod_sleeptimo
 argument_list|)
 expr_stmt|;
-comment|/*		mtx_unlock(&Giant, MTX_DEF);*/
 if|if
 condition|(
 name|iod
@@ -2988,7 +2987,12 @@ name|iod_sleeptimo
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*	mtx_lock(&Giant, MTX_DEF);*/
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|kthread_exit
 argument_list|(
 literal|0
