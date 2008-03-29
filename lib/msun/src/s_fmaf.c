@@ -17,6 +17,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|"math.h"
+end_include
+
 begin_comment
 comment|/*  * Fused multiply-add: Compute x * y + z with a single rounding error.  *  * A double has more than twice as much precision than a float, so  * direct double-precision arithmetic suffices.  *  * XXX We are relying on the compiler to convert from double to float  *     using the current rounding mode and with the appropriate  *     side-effects.  But on at least one platform (gcc 3.4.2/sparc64),  *     this appears to be too much to ask for.  The precision  *     reduction should be done manually.  */
 end_comment
