@@ -3604,7 +3604,6 @@ argument_list|(
 name|hook
 argument_list|)
 condition|)
-block|{
 comment|/* it'll probably be ng_deadnode */
 name|_NG_NODE_UNREF
 argument_list|(
@@ -3616,13 +3615,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|hook
-operator|->
-name|hk_node
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 name|NG_FREE_HOOK
 argument_list|(
 name|hook
