@@ -590,6 +590,7 @@ name|k
 operator|==
 literal|1
 condition|)
+block|{
 if|if
 condition|(
 name|x
@@ -623,6 +624,7 @@ operator|-
 name|e
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|k

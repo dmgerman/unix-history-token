@@ -465,15 +465,18 @@ name|f
 operator|==
 name|zero
 condition|)
+block|{
 if|if
 condition|(
 name|k
 operator|==
 literal|0
 condition|)
+block|{
 return|return
 name|zero
 return|;
+block|}
 else|else
 block|{
 name|c
@@ -489,6 +492,7 @@ name|ln2_hi
 operator|+
 name|c
 return|;
+block|}
 block|}
 name|R
 operator|=
