@@ -3920,7 +3920,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check that the vnode is still valid, and if so  * acquire requested lock.  */
+comment|/*  * Acquire the requested lock and then check for validity.  LK_RETRY  * permits vn_lock to return doomed vnodes.  */
 end_comment
 
 begin_function
@@ -3946,60 +3946,23 @@ block|{
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * With no lock type requested we're just polling for validity. 	 */
-if|if
-condition|(
+name|VNASSERT
+argument_list|(
 operator|(
 name|flags
 operator|&
 name|LK_TYPE_MASK
 operator|)
-operator|==
+operator|!=
 literal|0
-condition|)
-block|{
-name|error
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|LK_INTERLOCK
-operator|)
-operator|==
-literal|0
-condition|)
-name|VI_LOCK
-argument_list|(
+argument_list|,
 name|vp
+argument_list|,
+operator|(
+literal|"vn_lock called with no locktype."
+operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_iflag
-operator|&
-name|VI_DOOMED
-condition|)
-name|error
-operator|=
-name|ENOENT
-expr_stmt|;
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 do|do
 block|{
 name|error
