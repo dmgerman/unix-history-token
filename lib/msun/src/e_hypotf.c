@@ -418,9 +418,13 @@ name|SET_FLOAT_WORD
 argument_list|(
 name|t1
 argument_list|,
+operator|(
 name|ha
 operator|+
 literal|0x00800000
+operator|)
+operator|&
+literal|0xfffff000
 argument_list|)
 expr_stmt|;
 name|t2
