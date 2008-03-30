@@ -128,6 +128,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/interrupt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -159,6 +171,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|struct
+name|unrhdr
+modifier|*
+name|cpuset_unr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|cpuset
 modifier|*
@@ -167,11 +189,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|struct
-name|unrhdr
+name|cpuset_t
 modifier|*
-name|cpuset_unr
+name|cpuset_root
 decl_stmt|;
 end_decl_stmt
 
@@ -1090,7 +1110,7 @@ specifier|static
 name|struct
 name|cpuset
 modifier|*
-name|cpuset_root
+name|cpuset_refroot
 parameter_list|(
 name|struct
 name|cpuset
@@ -1144,7 +1164,7 @@ specifier|static
 name|struct
 name|cpuset
 modifier|*
-name|cpuset_base
+name|cpuset_refbase
 parameter_list|(
 name|struct
 name|cpuset
@@ -1404,7 +1424,7 @@ argument_list|)
 expr_stmt|;
 name|set
 operator|=
-name|cpuset_base
+name|cpuset_refbase
 argument_list|(
 name|curthread
 operator|->
@@ -1572,7 +1592,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|EDEADLK
 operator|)
 return|;
 return|return
@@ -1816,7 +1836,7 @@ argument_list|)
 condition|)
 name|error
 operator|=
-name|EINVAL
+name|EDEADLK
 expr_stmt|;
 comment|/* 		 * Verify that a new set won't leave an existing thread 		 * mask without a cpu to run on.  It can, however, restrict 		 * the set. 		 */
 block|}
@@ -1848,7 +1868,7 @@ argument_list|)
 condition|)
 name|error
 operator|=
-name|EINVAL
+name|EDEADLK
 expr_stmt|;
 block|}
 name|thread_unlock
@@ -2069,7 +2089,6 @@ comment|/*  * Apply an anonymous mask to a single thread.  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|cpuset_setthread
 parameter_list|(
@@ -2138,22 +2157,22 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|set
+operator|=
+name|NULL
+expr_stmt|;
 name|thread_lock
 argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|set
-operator|=
-name|td
-operator|->
-name|td_cpuset
-expr_stmt|;
 name|error
 operator|=
 name|cpuset_shadow
 argument_list|(
-name|set
+name|td
+operator|->
+name|td_cpuset
 argument_list|,
 name|nset
 argument_list|,
@@ -2167,12 +2186,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|cpuset_rel
-argument_list|(
+name|set
+operator|=
 name|td
 operator|->
 name|td_cpuset
-argument_list|)
 expr_stmt|;
 name|td
 operator|->
@@ -2198,6 +2216,15 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|set
+condition|)
+name|cpuset_rel
+argument_list|(
+name|set
 argument_list|)
 expr_stmt|;
 name|out
@@ -2338,6 +2365,13 @@ expr_stmt|;
 name|cpuset_zero
 operator|=
 name|set
+expr_stmt|;
+name|cpuset_root
+operator|=
+operator|&
+name|set
+operator|->
+name|cs_mask
 expr_stmt|;
 comment|/* 	 * Now derive a default, modifiable set from that to give out. 	 */
 name|set
@@ -2544,7 +2578,7 @@ argument_list|)
 expr_stmt|;
 name|root
 operator|=
-name|cpuset_root
+name|cpuset_refroot
 argument_list|(
 name|td
 operator|->
@@ -2587,24 +2621,6 @@ operator|)
 return|;
 name|error
 operator|=
-name|cpuset_setproc
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-name|set
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-name|error
-operator|=
 name|copyout
 argument_list|(
 operator|&
@@ -2622,6 +2638,24 @@ name|set
 operator|->
 name|cs_id
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|cpuset_setproc
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+name|set
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|cpuset_rel
@@ -2883,7 +2917,7 @@ argument_list|)
 expr_stmt|;
 name|set
 operator|=
-name|cpuset_base
+name|cpuset_refbase
 argument_list|(
 name|ttd
 operator|->
@@ -2918,7 +2952,7 @@ name|CPU_LEVEL_ROOT
 case|:
 name|nset
 operator|=
-name|cpuset_root
+name|cpuset_refroot
 argument_list|(
 name|set
 argument_list|)
@@ -3185,7 +3219,7 @@ name|CPU_LEVEL_ROOT
 condition|)
 name|nset
 operator|=
-name|cpuset_root
+name|cpuset_refroot
 argument_list|(
 name|set
 argument_list|)
@@ -3193,7 +3227,7 @@ expr_stmt|;
 else|else
 name|nset
 operator|=
-name|cpuset_base
+name|cpuset_refbase
 argument_list|(
 name|set
 argument_list|)
@@ -3652,7 +3686,7 @@ name|CPU_LEVEL_ROOT
 condition|)
 name|nset
 operator|=
-name|cpuset_root
+name|cpuset_refroot
 argument_list|(
 name|set
 argument_list|)
@@ -3660,7 +3694,7 @@ expr_stmt|;
 else|else
 name|nset
 operator|=
-name|cpuset_base
+name|cpuset_refbase
 argument_list|(
 name|set
 argument_list|)

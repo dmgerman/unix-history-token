@@ -211,6 +211,22 @@ parameter_list|)
 value|__extension__ ({		\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		if (((c)->__bits[__i]&			\ 		    (p)->__bits[__i]) != 0)		\ 			break;				\ 	__i != _NCPUWORDS;				\ })
 end_define
 
+begin_comment
+comment|/* Compare two sets, returns 0 if equal 1 otherwise. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_CMP
+parameter_list|(
+name|p
+parameter_list|,
+name|c
+parameter_list|)
+value|__extension__ ({			\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		if (((c)->__bits[__i] !=		\ 		    (p)->__bits[__i]))			\ 			break;				\ 	__i != _NCPUWORDS;				\ })
+end_define
+
 begin_define
 define|#
 directive|define
@@ -431,6 +447,14 @@ begin_comment
 comment|/* No modification allowed. */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|cpuset_t
+modifier|*
+name|cpuset_root
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|struct
 name|cpuset
@@ -461,6 +485,19 @@ name|cpuset_rel
 parameter_list|(
 name|struct
 name|cpuset
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cpuset_setthread
+parameter_list|(
+name|lwpid_t
+name|id
+parameter_list|,
+name|cpuset_t
 modifier|*
 parameter_list|)
 function_decl|;
