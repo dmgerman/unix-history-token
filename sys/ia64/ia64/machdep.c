@@ -406,17 +406,6 @@ directive|include
 file|<i386/include/specialreg.h>
 end_include
 
-begin_comment
-comment|/* XXX fc.i kluge (quick fix) */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ia64_icache_sync_kluge
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|u_int64_t
 name|processor_frequency
@@ -515,6 +504,13 @@ end_decl_stmt
 begin_decl_stmt
 name|u_int64_t
 name|ia64_port_base
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ia64_inval_icache_needed
 decl_stmt|;
 end_decl_stmt
 
@@ -998,8 +994,7 @@ break|break;
 case|case
 literal|0x20
 case|:
-comment|/* XXX fc.i kluge (quick fix) */
-name|ia64_icache_sync_kluge
+name|ia64_inval_icache_needed
 operator|=
 literal|1
 expr_stmt|;
@@ -6761,6 +6756,49 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ia64_invalidate_icache
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|,
+name|vm_offset_t
+name|sz
+parameter_list|)
+block|{
+name|vm_offset_t
+name|lim
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ia64_inval_icache_needed
+condition|)
+return|return;
+name|lim
+operator|=
+name|va
+operator|+
+name|sz
+expr_stmt|;
+while|while
+condition|(
+name|va
+operator|<
+name|lim
+condition|)
+block|{
+asm|__asm __volatile("fc.i %0" :: "r"(va));
+name|va
+operator|+=
+literal|32
+expr_stmt|;
+comment|/* XXX */
+block|}
 block|}
 end_function
 
