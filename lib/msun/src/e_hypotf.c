@@ -196,7 +196,7 @@ name|x
 operator|+
 literal|0.0F
 argument_list|)
-operator|+
+operator|-
 name|fabsf
 argument_list|(
 name|y

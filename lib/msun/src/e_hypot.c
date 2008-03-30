@@ -203,7 +203,7 @@ name|x
 operator|+
 literal|0.0
 argument_list|)
-operator|+
+operator|-
 name|fabs
 argument_list|(
 name|y
