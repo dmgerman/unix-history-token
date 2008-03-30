@@ -969,6 +969,11 @@ name|bkpt
 decl_stmt|,
 name|watchpt
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|why
+decl_stmt|;
 comment|/* 	 * Don't handle the trap if the console is unavailable (i.e. it 	 * is in graphics mode). 	 */
 if|if
 condition|(
@@ -1080,6 +1085,21 @@ name|db_dot
 argument_list|)
 expr_stmt|;
 block|}
+name|why
+operator|=
+name|kdb_why
+expr_stmt|;
+name|db_script_kdbenter
+argument_list|(
+name|why
+operator|!=
+name|KDB_WHY_UNSET
+condition|?
+name|why
+else|:
+literal|"unknown"
+argument_list|)
+expr_stmt|;
 name|db_command_loop
 argument_list|()
 expr_stmt|;

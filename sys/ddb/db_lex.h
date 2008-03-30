@@ -33,6 +33,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+modifier|*
+name|db_get_line
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|db_inject_line
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|command
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|db_read_line
 parameter_list|(
@@ -229,6 +251,13 @@ define|#
 directive|define
 name|tDOTDOT
 value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|tSEMI
+value|21
 end_define
 
 begin_endif
