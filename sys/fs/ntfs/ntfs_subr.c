@@ -2209,6 +2209,8 @@ operator|&
 name|ip
 operator|->
 name|i_interlock
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
