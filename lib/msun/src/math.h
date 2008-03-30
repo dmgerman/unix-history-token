@@ -3036,10 +3036,41 @@ literal|0
 end_if
 
 begin_endif
-unit|long double	powl(long double, long double); long double	remainderl(long double, long double); long double	remquol(long double, long double, int *);
+unit|long double	powl(long double, long double);
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|long
+name|double
+name|remainderl
+parameter_list|(
+name|long
+name|double
+parameter_list|,
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|double
+name|remquol
+parameter_list|(
+name|long
+name|double
+parameter_list|,
+name|long
+name|double
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|long
