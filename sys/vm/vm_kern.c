@@ -598,20 +598,13 @@ name|ret
 operator|!=
 name|KERN_SUCCESS
 condition|)
-block|{
-name|printf
+name|panic
 argument_list|(
-literal|"kmem_suballoc: bad status return of %d.\n"
+literal|"kmem_suballoc: bad status return of %d"
 argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"kmem_suballoc"
-argument_list|)
-expr_stmt|;
-block|}
 operator|*
 name|max
 operator|=
