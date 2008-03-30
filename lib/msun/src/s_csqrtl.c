@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007 David Schultz<das@FreeBSD.ORG>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007-2008 David Schultz<das@FreeBSD.ORG>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -54,35 +54,40 @@ name|on
 end_pragma
 
 begin_comment
-comment|/* We risk spurious overflow for components>= DBL_MAX / (1 + sqrt(2)). */
+comment|/* We risk spurious overflow for components>= LDBL_MAX / (1 + sqrt(2)). */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|THRESH
-value|0x1.a827999fcef32p+1022
+value|(LDBL_MAX / 2.414213562373095048801688724209698L)
 end_define
 
 begin_function
+name|long
 name|double
 name|complex
-name|csqrt
+name|csqrtl
 parameter_list|(
+name|long
 name|double
 name|complex
 name|z
 parameter_list|)
 block|{
+name|long
 name|double
 name|complex
 name|result
 decl_stmt|;
+name|long
 name|double
 name|a
 decl_stmt|,
 name|b
 decl_stmt|;
+name|long
 name|double
 name|t
 decl_stmt|;
@@ -91,14 +96,14 @@ name|scale
 decl_stmt|;
 name|a
 operator|=
-name|creal
+name|creall
 argument_list|(
 name|z
 argument_list|)
 expr_stmt|;
 name|b
 operator|=
-name|cimag
+name|cimagl
 argument_list|(
 name|z
 argument_list|)
@@ -112,7 +117,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpack
+name|cpackl
 argument_list|(
 literal|0
 argument_list|,
@@ -129,7 +134,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpack
+name|cpackl
 argument_list|(
 name|INFINITY
 argument_list|,
@@ -162,7 +167,7 @@ expr_stmt|;
 comment|/* raise invalid if b is not a NaN */
 return|return
 operator|(
-name|cpack
+name|cpackl
 argument_list|(
 name|a
 argument_list|,
@@ -190,16 +195,16 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpack
+name|cpackl
 argument_list|(
-name|fabs
+name|fabsl
 argument_list|(
 name|b
 operator|-
 name|b
 argument_list|)
 argument_list|,
-name|copysign
+name|copysignl
 argument_list|(
 name|a
 argument_list|,
@@ -211,11 +216,11 @@ return|;
 else|else
 return|return
 operator|(
-name|cpack
+name|cpackl
 argument_list|(
 name|a
 argument_list|,
-name|copysign
+name|copysignl
 argument_list|(
 name|b
 operator|-
@@ -231,14 +236,14 @@ comment|/* 	 * The remaining special case (b is NaN) is handled just fine by 	 *
 comment|/* Scale to avoid overflow. */
 if|if
 condition|(
-name|fabs
+name|fabsl
 argument_list|(
 name|a
 argument_list|)
 operator|>=
 name|THRESH
 operator|||
-name|fabs
+name|fabsl
 argument_list|(
 name|b
 argument_list|)
@@ -276,12 +281,12 @@ condition|)
 block|{
 name|t
 operator|=
-name|sqrt
+name|sqrtl
 argument_list|(
 operator|(
 name|a
 operator|+
-name|hypot
+name|hypotl
 argument_list|(
 name|a
 argument_list|,
@@ -294,7 +299,7 @@ argument_list|)
 expr_stmt|;
 name|result
 operator|=
-name|cpack
+name|cpackl
 argument_list|(
 name|t
 argument_list|,
@@ -312,13 +317,13 @@ else|else
 block|{
 name|t
 operator|=
-name|sqrt
+name|sqrtl
 argument_list|(
 operator|(
 operator|-
 name|a
 operator|+
-name|hypot
+name|hypotl
 argument_list|(
 name|a
 argument_list|,
@@ -331,9 +336,9 @@ argument_list|)
 expr_stmt|;
 name|result
 operator|=
-name|cpack
+name|cpackl
 argument_list|(
-name|fabs
+name|fabsl
 argument_list|(
 name|b
 argument_list|)
@@ -344,7 +349,7 @@ operator|*
 name|t
 operator|)
 argument_list|,
-name|copysign
+name|copysignl
 argument_list|(
 name|t
 argument_list|,
@@ -373,29 +378,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|LDBL_MANT_DIG
-operator|==
-literal|53
-end_if
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|csqrt
-argument_list|,
-name|csqrtl
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

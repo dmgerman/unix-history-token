@@ -247,6 +247,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|long
+name|double
+name|complex
+name|csqrtl
+parameter_list|(
+name|long
+name|double
+name|complex
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro
