@@ -1360,9 +1360,6 @@ if|if
 condition|(
 operator|!
 name|Fake
-operator|&&
-operator|!
-name|IgnoreDeps
 condition|)
 block|{
 name|char
@@ -1779,6 +1776,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* if (!IgnoreDeps) */
 if|if
 condition|(
 name|code
