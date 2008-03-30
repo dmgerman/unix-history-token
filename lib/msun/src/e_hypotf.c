@@ -133,22 +133,20 @@ operator|=
 name|y
 expr_stmt|;
 block|}
-name|SET_FLOAT_WORD
+name|a
+operator|=
+name|fabsf
 argument_list|(
 name|a
-argument_list|,
-name|ha
 argument_list|)
 expr_stmt|;
-comment|/* a<- |a| */
-name|SET_FLOAT_WORD
+name|b
+operator|=
+name|fabsf
 argument_list|(
 name|b
-argument_list|,
-name|hb
 argument_list|)
 expr_stmt|;
-comment|/* b<- |b| */
 if|if
 condition|(
 operator|(
