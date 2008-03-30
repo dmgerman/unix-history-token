@@ -272,7 +272,7 @@ name|SCSI_LOW_DEBUGGER
 parameter_list|(
 name|dev
 parameter_list|)
-value|kdb_enter(dev)
+value|kdb_enter_why(KDB_WHY_CAM, dev)
 end_define
 
 begin_define

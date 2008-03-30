@@ -862,8 +862,10 @@ name|l
 operator|==
 name|H_HUP
 condition|)
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_BREAK
+argument_list|,
 literal|"Break sequence on console"
 argument_list|)
 expr_stmt|;
@@ -877,8 +879,10 @@ operator|&
 name|alt_break_state
 argument_list|)
 condition|)
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_BREAK
+argument_list|,
 literal|"Break sequence on console"
 argument_list|)
 expr_stmt|;
@@ -961,8 +965,10 @@ name|l
 operator|==
 name|H_HUP
 condition|)
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_BREAK
+argument_list|,
 literal|"Break sequence on console"
 argument_list|)
 expr_stmt|;
@@ -976,8 +982,10 @@ operator|&
 name|alt_break_state
 argument_list|)
 condition|)
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_BREAK
+argument_list|,
 literal|"Break sequence on console"
 argument_list|)
 expr_stmt|;

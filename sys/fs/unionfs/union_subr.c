@@ -5006,8 +5006,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KDB
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_UNIONFS
+argument_list|,
 literal|"unionfs_checkuppervp: on non-unionfs-node.\n"
 argument_list|)
 expr_stmt|;
@@ -5083,8 +5085,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KDB
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_UNIONFS
+argument_list|,
 literal|"unionfs_checklowervp: on non-unionfs-node.\n"
 argument_list|)
 expr_stmt|;

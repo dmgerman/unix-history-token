@@ -449,8 +449,10 @@ operator|==
 name|UART_DEV_CONSOLE
 condition|)
 block|{
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_BREAK
+argument_list|,
 literal|"Line break on console"
 argument_list|)
 expr_stmt|;
@@ -651,8 +653,10 @@ operator|->
 name|sc_altbrk
 argument_list|)
 condition|)
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_BREAK
+argument_list|,
 literal|"Break sequence on console"
 argument_list|)
 expr_stmt|;

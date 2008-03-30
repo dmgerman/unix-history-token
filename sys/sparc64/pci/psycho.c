@@ -3999,8 +3999,10 @@ name|sc
 init|=
 name|arg
 decl_stmt|;
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_POWERFAIL
+argument_list|,
 literal|"powerfail"
 argument_list|)
 expr_stmt|;

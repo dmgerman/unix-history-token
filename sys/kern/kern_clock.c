@@ -2111,8 +2111,10 @@ argument_list|)
 name|kdb_backtrace
 argument_list|()
 expr_stmt|;
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_WATCHDOG
+argument_list|,
 literal|"watchdog timeout"
 argument_list|)
 expr_stmt|;

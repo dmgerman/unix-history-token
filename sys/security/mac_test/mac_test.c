@@ -401,7 +401,7 @@ name|func
 parameter_list|,
 name|string
 parameter_list|)
-value|kdb_enter((string))
+value|kdb_enter_why(KDB_WHY_MAC, (string))
 end_define
 
 begin_else

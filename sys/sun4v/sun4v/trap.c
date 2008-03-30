@@ -1384,8 +1384,10 @@ operator|==
 literal|11
 operator|)
 condition|)
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_TRAPSIG
+argument_list|,
 literal|"trapsig"
 argument_list|)
 expr_stmt|;

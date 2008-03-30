@@ -2041,8 +2041,10 @@ if|if
 condition|(
 name|debugger_on_panic
 condition|)
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_PANIC
+argument_list|,
 literal|"panic"
 argument_list|)
 expr_stmt|;

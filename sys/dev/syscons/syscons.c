@@ -18289,8 +18289,10 @@ if|if
 condition|(
 name|enable_kdbkey
 condition|)
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_BREAK
+argument_list|,
 literal|"manual escape to debugger"
 argument_list|)
 expr_stmt|;

@@ -5019,8 +5019,10 @@ if|if
 condition|(
 name|witness_kdb
 condition|)
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_WITNESS
+argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
@@ -6671,8 +6673,10 @@ name|witness_kdb
 operator|&&
 name|n
 condition|)
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_WITNESS
+argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;

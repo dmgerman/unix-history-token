@@ -967,8 +967,10 @@ argument_list|(
 literal|"gdb"
 argument_list|)
 expr_stmt|;
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_BREAK
+argument_list|,
 literal|"Break sequence on dcons gdb port"
 argument_list|)
 expr_stmt|;
@@ -977,8 +979,10 @@ endif|#
 directive|endif
 block|}
 else|else
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_BREAK
+argument_list|,
 literal|"Break sequence on dcons console port"
 argument_list|)
 expr_stmt|;

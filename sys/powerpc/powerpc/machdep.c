@@ -1773,8 +1773,10 @@ name|boothowto
 operator|&
 name|RB_KDB
 condition|)
-name|kdb_enter
+name|kdb_enter_why
 argument_list|(
+name|KDB_WHY_BOOTFLAGS
+argument_list|,
 literal|"Boot flags requested debugger"
 argument_list|)
 expr_stmt|;
