@@ -696,16 +696,8 @@ name|load
 operator|=
 name|mpt_core_load
 block|,
-operator|.
-name|attach
-operator|=
-name|mpt_core_attach
-block|,
-operator|.
-name|enable
-operator|=
-name|mpt_core_enable
-block|,
+comment|//	.attach		= mpt_core_attach,
+comment|//	.enable		= mpt_core_enable,
 operator|.
 name|event
 operator|=
@@ -9237,6 +9229,16 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mpt_core_attach
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
+name|mpt_core_enable
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -9823,7 +9825,7 @@ name|mpt
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|MPT_UNLOCK
@@ -11630,7 +11632,7 @@ name|mpt_enable_ioc
 argument_list|(
 name|mpt
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 operator|!=
 name|MPT_OK
