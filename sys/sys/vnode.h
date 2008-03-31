@@ -2675,6 +2675,25 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vn_commname
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vn
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|u_int
+name|buflen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vaccess
 parameter_list|(
 name|enum
