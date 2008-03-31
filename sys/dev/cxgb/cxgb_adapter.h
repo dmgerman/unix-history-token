@@ -515,12 +515,35 @@ name|FL_Q_SIZE
 value|4096
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|JUMBO_Q_SIZE
+value|256
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|JUMBO_Q_SIZE
 value|1024
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
