@@ -4938,6 +4938,28 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+comment|/* XXX: audit dirfd */
+comment|/* 	 * Only one of the O_EXEC, O_RDONLY, O_WRONLY and O_RDWR may 	 * be specified. 	 */
+if|if
+condition|(
+name|flags
+operator|&
+name|O_EXEC
+condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|O_ACCMODE
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -4953,6 +4975,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+else|else
 name|flags
 operator|=
 name|FFLAGS

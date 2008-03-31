@@ -987,6 +987,16 @@ if|if
 condition|(
 name|fmode
 operator|&
+name|FEXEC
+condition|)
+name|mode
+operator||=
+name|VEXEC
+expr_stmt|;
+if|if
+condition|(
+name|fmode
+operator|&
 name|O_APPEND
 condition|)
 name|mode
