@@ -1875,6 +1875,164 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*   * Structure used to respond to a RequestSupplementAdapterInfo fib.  */
+end_comment
+
+begin_struct
+struct|struct
+name|vpd_info
+block|{
+name|u_int8_t
+name|AssemblyPn
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|u_int8_t
+name|FruPn
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|u_int8_t
+name|BatteryFruPn
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|u_int8_t
+name|EcVersionString
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|u_int8_t
+name|Tsid
+index|[
+literal|12
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|MFG_PCBA_SERIAL_NUMBER_WIDTH
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|MFG_WWN_WIDTH
+value|8
+end_define
+
+begin_struct
+struct|struct
+name|aac_supplement_adapter_info
+block|{
+comment|/* The assigned Adapter Type Text, extra byte for null termination */
+name|int8_t
+name|AdapterTypeText
+index|[
+literal|17
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* Pad for the text above */
+name|int8_t
+name|Pad
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Size in bytes of the memory that is flashed */
+name|u_int32_t
+name|FlashMemoryByteSize
+decl_stmt|;
+comment|/* The assigned IMAGEID_xxx for this adapter */
+name|u_int32_t
+name|FlashImageId
+decl_stmt|;
+comment|/* 	 * The maximum number of Phys available on a SATA/SAS 	 * Controller, 0 otherwise 	 */
+name|u_int32_t
+name|MaxNumberPorts
+decl_stmt|;
+comment|/* Version of expansion area */
+name|u_int32_t
+name|Version
+decl_stmt|;
+name|u_int32_t
+name|FeatureBits
+decl_stmt|;
+name|u_int8_t
+name|SlotNumber
+decl_stmt|;
+name|u_int8_t
+name|ReservedPad0
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_int8_t
+name|BuildDate
+index|[
+literal|12
+index|]
+decl_stmt|;
+comment|/* The current number of Ports on a SAS controller, 0 otherwise */
+name|u_int32_t
+name|CurrentNumberPorts
+decl_stmt|;
+name|struct
+name|vpd_info
+name|VpdInfo
+decl_stmt|;
+comment|/* Firmware Revision (Vmaj.min-dash.) */
+name|struct
+name|FsaRevision
+name|FlashFirmwareRevision
+decl_stmt|;
+name|u_int32_t
+name|RaidTypeMorphOptions
+decl_stmt|;
+comment|/* Firmware's boot code Revision (Vmaj.min-dash.) */
+name|struct
+name|FsaRevision
+name|FlashFirmwareBootRevision
+decl_stmt|;
+comment|/* PCBA serial no. from th MFG sector */
+name|u_int8_t
+name|MfgPcbaSerialNo
+index|[
+name|MFG_PCBA_SERIAL_NUMBER_WIDTH
+index|]
+decl_stmt|;
+comment|/* WWN from the MFG sector */
+name|u_int8_t
+name|MfgWWNName
+index|[
+name|MFG_WWN_WIDTH
+index|]
+decl_stmt|;
+comment|/* Growth Area for future expansion ((7*4) - 12 - 8)/4 = 2 words */
+name|u_int32_t
+name|ReservedGrowth
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Monitor/Kernel interface.  */
 end_comment
 
