@@ -16,6 +16,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -184,7 +196,7 @@ name|slen
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 operator|<
 literal|0
