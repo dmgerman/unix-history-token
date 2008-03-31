@@ -1648,22 +1648,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Debugging levels:  *  0 - quiet, only emit warnings  *  1 - noisy, emit major function points and things done  *  2 - extremely noisy, emit trace items in loops, etc.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|AAC_DEBUG
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|aac_debug_enable
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
-name|debug
+name|fwprintf
 parameter_list|(
-name|level
+name|sc
+parameter_list|,
+name|flags
 parameter_list|,
 name|fmt
 parameter_list|,
@@ -1671,18 +1676,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {								\ 	if (level<=AAC_DEBUG) printf("%s: " fmt "\n", __func__ , ##args); \ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|debug_called
-parameter_list|(
-name|level
-parameter_list|)
-define|\
-value|do {								\ 	if (level<= AAC_DEBUG) printf("%s: called\n", __func__);	\ 	} while (0)
+value|do {									\ 	if (!aac_debug_enable)						\ 		break;							\ 	if (sc != NULL)							\ 		device_printf(((struct aac_softc *)sc)->aac_dev,	\ 		    "%s: " fmt "\n", __func__, ##args);			\ 	else								\ 		printf("%s: " fmt "\n", __func__, ##args);		\ } while(0)
 end_define
 
 begin_function_decl
@@ -1776,23 +1770,16 @@ end_else
 begin_define
 define|#
 directive|define
-name|debug
+name|fwprintf
 parameter_list|(
-name|level
+name|sc
+parameter_list|,
+name|flags
 parameter_list|,
 name|fmt
 parameter_list|,
 name|args
 modifier|...
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|debug_called
-parameter_list|(
-name|level
 parameter_list|)
 end_define
 
