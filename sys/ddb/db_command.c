@@ -812,6 +812,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|"textdump"
+block|,
+name|db_textdump_cmd
+block|,
+name|CS_OWN
+block|,
+literal|0
+block|}
+block|,
+block|{
 operator|(
 name|char
 operator|*

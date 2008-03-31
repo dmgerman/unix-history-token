@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2007 Robert N. M. Watson  * All rights reserved.  *
 end_comment
 
 begin_comment
-comment|/*-  * Kernel text-dump support: write a series of text files to the dump  * partition for later recovery, including captured DDB output, kernel  * configuration, message buffer, and panic message.  This allows for a more  * compact representation of critical debugging information than traditional  * binary dumps, as well as allowing dump information to be used without  * access to kernel symbols, source code, etc.  *  * Storage Layout  * --------------  *  * Crash dumps are aligned to the end of the dump or swap partition in order  * to minimize the chances of swap duing fsck eating into the dump.  However,  * unlike a memory dump, we don't know the size of the textdump a priori, so  * can't just write it out sequentially in order from a known starting point  * calculated with respect to the end of the partition.  In order to address  * this, we actually write out the textdump in reverse block order, allowing  * us to directly align it to the end of the partition and then write out the  * dump header and trailer before and after it once done.  savecore(8) must  * know to reverse the order of the blocks in order to produce a readable  * file.  *  * Data is written out in the ustar file format so that we can write data  * incrementally as a stream without reference to previous files.  *  * TODO  * ----  *  * - Allow subsytems to register to submit files for inclusion in the text  *   dump in a generic way.  */
+comment|/*-  * Kernel text-dump support: allow a series of text files to be written to  * the dump partition for later recovery, including captured DDB output, the  * kernel configuration, message buffer, panic message, etc.  This allows for  * a more compact representation of critical debugging information than  * traditional binary dumps, as well as allowing dump information to be used  * without access to kernel symbols, source code, etc.  *  * Storage Layout  * --------------  *  * Crash dumps are aligned to the end of the dump or swap partition in order  * to minimize the chances of swap duing fsck eating into the dump.  However,  * unlike a memory dump, we don't know the size of the textdump a priori, so  * can't just write it out sequentially in order from a known starting point  * calculated with respect to the end of the partition.  In order to address  * this, we actually write out the textdump in reverse block order, allowing  * us to directly align it to the end of the partition and then write out the  * dump header and trailer before and after it once done.  savecore(8) must  * know to reverse the order of the blocks in order to produce a readable  * file.  *  * Data is written out in the 'tar' file format, as it provides the facility  * to write data incrementally as a stream without reference to previous  * files.  *  * TODO  * ----  *  * - Allow subsytems to register to submit files for inclusion in the text  *   dump in a generic way.  */
 end_comment
 
 begin_include
@@ -767,7 +767,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Calculate and fill in the checksum for a ustar header.  */
+comment|/*  * Calculate and fill in the checksum for a tar header.  */
 end_comment
 
 begin_function
@@ -1140,9 +1140,13 @@ operator|)
 return|;
 name|textdump_error
 operator|=
-name|dump_write
+name|di
+operator|->
+name|dumper
 argument_list|(
 name|di
+operator|->
+name|priv
 argument_list|,
 name|buffer
 argument_list|,
@@ -1166,7 +1170,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Interfaces to save and restore the dump offset, so that printers can go  * back to rewrite a header if required, while avoiding their knowing about  * the global layout of the blocks.  *  * If we ever want to support writing textdumps to tape or other  * stream-oriented target, we'll need to remove this.  */
+comment|/*  * Interfaces to save and restore the dump offset, so that printers can go  * back to rewrite a header if required, while avoiding their knowing about  * the global layout of the blocks.  */
 end_comment
 
 begin_function
@@ -2048,9 +2052,13 @@ condition|)
 operator|(
 name|void
 operator|)
-name|dump_write
+name|di
+operator|->
+name|dumper
 argument_list|(
 name|di
+operator|->
+name|priv
 argument_list|,
 name|NULL
 argument_list|,

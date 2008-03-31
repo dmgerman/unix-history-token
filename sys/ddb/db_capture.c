@@ -124,6 +124,17 @@ name|DB_CAPTURE_MAXBUFSIZE
 value|512*1024
 end_define
 
+begin_define
+define|#
+directive|define
+name|DB_CAPTURE_FILENAME
+value|"ddb.txt"
+end_define
+
+begin_comment
+comment|/* Captured DDB output. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -163,6 +174,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Next location to write in buffer. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|db_capture_bufpadding
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Amount of zero padding. */
 end_comment
 
 begin_decl_stmt
@@ -273,6 +295,34 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Various compile-time assertions: defaults must be even multiples of  * textdump block size.  We also perform run-time checking of  * user-configurable values.  */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|DB_CAPTURE_DEFAULTBUFSIZE
+operator|%
+name|TEXTDUMP_BLOCKSIZE
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|DB_CAPTURE_MAXBUFSIZE
+operator|%
+name|TEXTDUMP_BLOCKSIZE
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Boot-time allocation of the DDB capture buffer, if any.  */
 end_comment
 
@@ -293,6 +343,15 @@ literal|"debug.ddb.capture.bufsize"
 argument_list|,
 operator|&
 name|db_capture_bufsize
+argument_list|)
+expr_stmt|;
+name|db_capture_bufsize
+operator|=
+name|roundup
+argument_list|(
+name|db_capture_bufsize
+argument_list|,
+name|TEXTDUMP_BLOCKSIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -398,6 +457,15 @@ operator|(
 name|error
 operator|)
 return|;
+name|size
+operator|=
+name|roundup
+argument_list|(
+name|size
+argument_list|,
+name|TEXTDUMP_BLOCKSIZE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|size
@@ -821,6 +889,52 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Zero out any bytes left in the last block of the DDB capture buffer.  This  * is run shortly before writing the blocks to disk, rather than when output  * capture is stopped, in order to avoid injecting nul's into the middle of  * output.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|db_capture_zeropad
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int
+name|len
+decl_stmt|;
+name|len
+operator|=
+name|min
+argument_list|(
+name|TEXTDUMP_BLOCKSIZE
+argument_list|,
+operator|(
+name|db_capture_bufsize
+operator|-
+name|db_capture_bufoff
+operator|)
+operator|%
+name|TEXTDUMP_BLOCKSIZE
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|db_capture_buf
+operator|+
+name|db_capture_bufoff
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|db_capture_bufpadding
+operator|=
+name|len
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Reset capture state, which flushes buffers.  */
 end_comment
 
@@ -837,6 +951,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|db_capture_bufoff
+operator|=
+literal|0
+expr_stmt|;
+name|db_capture_bufpadding
 operator|=
 literal|0
 expr_stmt|;
@@ -875,7 +993,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Terminate DDB output capture.  */
+comment|/*  * Terminate DDB output capture--real work is deferred to db_capture_dump,  * which executes outside of the DDB context.  We don't zero pad here because  * capture may be started again before the dump takes place.  */
 end_comment
 
 begin_function
@@ -901,6 +1019,91 @@ expr_stmt|;
 return|return;
 block|}
 name|db_capture_inprogress
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Dump DDB(4) captured output (and resets capture buffers).  */
+end_comment
+
+begin_function
+name|void
+name|db_capture_dump
+parameter_list|(
+name|struct
+name|dumperinfo
+modifier|*
+name|di
+parameter_list|)
+block|{
+name|u_int
+name|offset
+decl_stmt|;
+if|if
+condition|(
+name|db_capture_bufoff
+operator|==
+literal|0
+condition|)
+return|return;
+name|db_capture_zeropad
+argument_list|()
+expr_stmt|;
+name|textdump_mkustar
+argument_list|(
+name|textdump_block_buffer
+argument_list|,
+name|DB_CAPTURE_FILENAME
+argument_list|,
+name|db_capture_bufoff
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|textdump_writenextblock
+argument_list|(
+name|di
+argument_list|,
+name|textdump_block_buffer
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|offset
+operator|=
+literal|0
+init|;
+name|offset
+operator|<
+name|db_capture_bufoff
+operator|+
+name|db_capture_bufpadding
+condition|;
+name|offset
+operator|+=
+name|TEXTDUMP_BLOCKSIZE
+control|)
+operator|(
+name|void
+operator|)
+name|textdump_writenextblock
+argument_list|(
+name|di
+argument_list|,
+name|db_capture_buf
+operator|+
+name|offset
+argument_list|)
+expr_stmt|;
+name|db_capture_bufoff
+operator|=
+literal|0
+expr_stmt|;
+name|db_capture_bufpadding
 operator|=
 literal|0
 expr_stmt|;
