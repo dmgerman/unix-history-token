@@ -288,7 +288,7 @@ decl_stmt|;
 name|int
 name|ad_sectors
 decl_stmt|;
-name|u_int32_t
+name|u_int64_t
 name|ad_size
 decl_stmt|;
 name|int
@@ -1318,6 +1318,11 @@ directive|define
 name|AAC_FLAGS_ARRAY_64BIT
 value|(1<< 13)
 comment|/* 64-bit array size */
+define|#
+directive|define
+name|AAC_FLAGS_LBA_64BIT
+value|(1<< 14)
+comment|/* 64-bit LBA support */
 name|u_int32_t
 name|supported_options
 decl_stmt|;

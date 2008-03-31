@@ -3372,6 +3372,9 @@ union|;
 name|u_int32_t
 name|AlterEgoId
 decl_stmt|;
+name|u_int32_t
+name|CapacityHigh
+decl_stmt|;
 block|}
 name|__packed
 struct|;

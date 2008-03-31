@@ -1325,6 +1325,33 @@ if|if
 condition|(
 name|sc
 operator|->
+name|ad_controller
+operator|->
+name|flags
+operator|&
+name|AAC_FLAGS_LBA_64BIT
+condition|)
+name|sc
+operator|->
+name|ad_size
+operator|+=
+operator|(
+name|u_int64_t
+operator|)
+name|sc
+operator|->
+name|ad_container
+operator|->
+name|co_mntobj
+operator|.
+name|CapacityHigh
+operator|<<
+literal|32
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
 name|ad_size
 operator|>=
 operator|(
@@ -1419,8 +1446,11 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%uMB (%u sectors)\n"
+literal|"%juMB (%ju sectors)\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sc
 operator|->
 name|ad_size
@@ -1435,6 +1465,9 @@ operator|/
 name|AAC_BLOCK_SIZE
 operator|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sc
 operator|->
 name|ad_size
