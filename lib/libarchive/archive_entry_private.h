@@ -259,7 +259,7 @@ decl_stmt|;
 name|char
 name|strmode
 index|[
-literal|11
+literal|12
 index|]
 decl_stmt|;
 block|}
