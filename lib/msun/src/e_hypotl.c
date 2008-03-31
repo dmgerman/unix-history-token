@@ -660,9 +660,8 @@ operator|.
 name|bits
 operator|.
 name|manl
-operator|&=
-operator|~
-literal|0xffffffffULL
+operator|=
+literal|0
 expr_stmt|;
 name|t1
 operator|=
