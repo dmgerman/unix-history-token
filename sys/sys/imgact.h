@@ -69,6 +69,10 @@ name|int
 name|envc
 decl_stmt|;
 comment|/* count of environment strings */
+name|int
+name|fd
+decl_stmt|;
+comment|/* file descriptor of the executable */
 block|}
 struct|;
 end_struct
