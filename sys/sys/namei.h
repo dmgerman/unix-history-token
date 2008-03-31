@@ -118,6 +118,10 @@ modifier|*
 name|ni_topdir
 decl_stmt|;
 comment|/* logical top directory */
+name|int
+name|ni_dirfd
+decl_stmt|;
+comment|/* starting directory for *at functions */
 comment|/* 	 * Results: returned from/manipulated by lookup 	 */
 name|struct
 name|vnode
@@ -549,38 +553,32 @@ begin_comment
 comment|/*  * Initialization of a nameidata structure.  */
 end_comment
 
-begin_function_decl
-specifier|static
-name|void
+begin_define
+define|#
+directive|define
 name|NDINIT
 parameter_list|(
-name|struct
-name|nameidata
-modifier|*
+name|ndp
 parameter_list|,
-name|u_long
+name|op
 parameter_list|,
-name|u_long
+name|flags
 parameter_list|,
-name|enum
-name|uio_seg
+name|segflg
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|namep
 parameter_list|,
-name|struct
-name|thread
-modifier|*
+name|td
 parameter_list|)
-function_decl|;
-end_function_decl
+define|\
+value|NDINIT_AT(ndp, op, flags, segflg, namep, AT_FDCWD, td)
+end_define
 
 begin_function
 specifier|static
 name|__inline
 name|void
-name|NDINIT
+name|NDINIT_AT
 parameter_list|(
 name|struct
 name|nameidata
@@ -601,6 +599,9 @@ specifier|const
 name|char
 modifier|*
 name|namep
+parameter_list|,
+name|int
+name|dirfd
 parameter_list|,
 name|struct
 name|thread
@@ -635,6 +636,12 @@ operator|->
 name|ni_dirp
 operator|=
 name|namep
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_dirfd
+operator|=
+name|dirfd
 expr_stmt|;
 name|ndp
 operator|->
