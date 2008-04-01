@@ -1589,7 +1589,7 @@ name|mh
 operator|->
 name|mh_dev
 argument_list|,
-literal|"load %s firmware image (%u bytes)\n"
+literal|"load %s firmware image (%zu bytes)\n"
 argument_list|,
 name|helper
 argument_list|,
@@ -1894,7 +1894,7 @@ name|mh
 operator|->
 name|mh_dev
 argument_list|,
-literal|"load %s firmware image (%u bytes)\n"
+literal|"load %s firmware image (%zu bytes)\n"
 argument_list|,
 name|firmware
 argument_list|,
