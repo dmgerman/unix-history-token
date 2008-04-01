@@ -282,6 +282,16 @@ comment|/* Once only: stop on EOF */
 end_comment
 
 begin_decl_stmt
+name|int
+name|Oflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Do not use TCP options */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|Pflag
@@ -748,7 +758,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46e:DEdhi:jklnoP:p:rSs:tT:Uuvw:X:x:z"
+literal|"46e:DEdhi:jklnoOP:p:rSs:tT:Uuvw:X:x:z"
 argument_list|)
 operator|)
 operator|!=
@@ -997,6 +1007,14 @@ case|case
 literal|'o'
 case|:
 name|oflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'O'
+case|:
+name|Oflag
 operator|=
 literal|1
 expr_stmt|;
@@ -2911,6 +2929,41 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|Oflag
+condition|)
+block|{
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|IPPROTO_TCP
+argument_list|,
+name|TCP_NOOPT
+argument_list|,
+operator|&
+name|Oflag
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Oflag
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"disable TCP options"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|bind
 argument_list|(
 name|s
@@ -4112,6 +4165,41 @@ literal|"set IP ToS"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|Oflag
+condition|)
+block|{
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|IPPROTO_TCP
+argument_list|,
+name|TCP_NOOPT
+argument_list|,
+operator|&
+name|Oflag
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Oflag
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"disable TCP options"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4250,7 +4338,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ 	\t-D		Enable the debug socket option\n\ 	\t-d		Detach from stdin\n\ 	\t-h		This help text\n\ 	\t-i secs\t	Delay interval for lines sent, ports scanned\n\ 	\t-k		Keep inbound sockets open for multiple connects\n\ 	\t-l		Listen mode, for inbound connects\n\ 	\t-n		Suppress name/port resolutions\n\ 	\t-P proxyuser\tUsername for proxy authentication\n\ 	\t-p port\t	Specify local port for remote connects\n\ 	\t-r		Randomize remote ports\n\ 	\t-S		Enable the TCP MD5 signature option\n\ 	\t-s addr\t	Local source address\n\ 	\t-T ToS\t	Set IP Type of Service\n\ 	\t-t		Answer TELNET negotiation\n\ 	\t-U		Use UNIX domain socket\n\ 	\t-u		UDP mode\n\ 	\t-v		Verbose\n\ 	\t-w secs\t	Timeout for connects and final net reads\n\ 	\t-X proto	Proxy protocol: \"4\", \"5\" (SOCKS) or \"connect\"\n\ 	\t-x addr[:port]\tSpecify proxy address and port\n\ 	\t-z		Zero-I/O mode [used for scanning]\n\ 	Port numbers can be individual or ranges: lo-hi [inclusive]\n"
+literal|"\ 	\t-D		Enable the debug socket option\n\ 	\t-d		Detach from stdin\n\ 	\t-h		This help text\n\ 	\t-i secs\t	Delay interval for lines sent, ports scanned\n\ 	\t-k		Keep inbound sockets open for multiple connects\n\ 	\t-l		Listen mode, for inbound connects\n\ 	\t-n		Suppress name/port resolutions\n\ 	\t-O		Disable TCP options\n\ 	\t-P proxyuser\tUsername for proxy authentication\n\ 	\t-p port\t	Specify local port for remote connects\n\ 	\t-r		Randomize remote ports\n\ 	\t-S		Enable the TCP MD5 signature option\n\ 	\t-s addr\t	Local source address\n\ 	\t-T ToS\t	Set IP Type of Service\n\ 	\t-t		Answer TELNET negotiation\n\ 	\t-U		Use UNIX domain socket\n\ 	\t-u		UDP mode\n\ 	\t-v		Verbose\n\ 	\t-w secs\t	Timeout for connects and final net reads\n\ 	\t-X proto	Proxy protocol: \"4\", \"5\" (SOCKS) or \"connect\"\n\ 	\t-x addr[:port]\tSpecify proxy address and port\n\ 	\t-z		Zero-I/O mode [used for scanning]\n\ 	Port numbers can be individual or ranges: lo-hi [inclusive]\n"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4405,7 +4493,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: nc [-46DEdhklnrStUuvz] [-e policy] [-i interval] [-P proxy_username] [-p source_port]\n"
+literal|"usage: nc [-46DEdhklnorStUuvz] [-e policy] [-i interval] [-P proxy_username] [-p source_port]\n"
 argument_list|)
 expr_stmt|;
 else|#
@@ -4414,7 +4502,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: nc [-46DdhklnrStUuvz] [-i interval] [-P proxy_username] [-p source_port]\n"
+literal|"usage: nc [-46DdhklnorStUuvz] [-i interval] [-P proxy_username] [-p source_port]\n"
 argument_list|)
 expr_stmt|;
 endif|#
