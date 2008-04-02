@@ -1372,14 +1372,6 @@ name|vm_offset_t
 name|va
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|pmap
-condition|)
-return|return
-name|NULL
-return|;
 return|return
 operator|(
 operator|&
@@ -1482,10 +1474,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pml4e
-operator|==
-name|NULL
-operator|||
 operator|(
 operator|*
 name|pml4e
