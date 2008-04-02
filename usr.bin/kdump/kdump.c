@@ -7807,7 +7807,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: kdump [-dEnlHRrsT] [-f trfile] "
-literal|"[-m maxdata] [-p pid] [-t [cnistuw]]\n"
+literal|"[-m maxdata] [-p pid] [-t trstr]\n"
 argument_list|)
 expr_stmt|;
 name|exit
