@@ -885,7 +885,7 @@ name|_get_curthread
 argument_list|()
 expr_stmt|;
 comment|/* force to resolve _umtx_op PLT */
-name|_umtx_op
+name|_umtx_op_err
 argument_list|(
 operator|(
 expr|struct

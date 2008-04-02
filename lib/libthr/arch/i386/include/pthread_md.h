@@ -228,6 +228,13 @@ return|;
 block|}
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|HAS__UMTX_OP_ERR
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif

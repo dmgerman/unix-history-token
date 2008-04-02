@@ -2819,6 +2819,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|int
+name|_umtx_op_err
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+name|op
+parameter_list|,
+name|u_long
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 specifier|inline
