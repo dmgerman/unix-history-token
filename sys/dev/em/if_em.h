@@ -24,16 +24,6 @@ comment|/* Tunables */
 end_comment
 
 begin_comment
-comment|/* Set FAST Interrupt handling as default */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_FAST_IRQ
-end_define
-
-begin_comment
 comment|/*  * EM_TXD: Maximum number of Transmit Descriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of transmit descriptors allocated by the driver.  *   Increasing this value allows the driver to queue more transmits. Each  *   descriptor is 16 bytes.  *   Since TDLEN should be multiple of 128bytes, the number of transmit  *   desscriptors should meet the following condition.  *      (num_tx_desc * sizeof(struct e1000_tx_desc)) % 128 == 0  */
 end_comment
 

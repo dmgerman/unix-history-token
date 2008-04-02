@@ -362,7 +362,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_null_mng_mode - No-op function, return false  *  @hw: pointer to the HW structure  **/
+comment|/**  *  e1000_null_mng_mode - No-op function, return FALSE  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -1005,7 +1005,13 @@ argument_list|(
 literal|"Programming MAC Address into RAR[0]\n"
 argument_list|)
 expr_stmt|;
-name|e1000_rar_set_generic
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|rar_set
 argument_list|(
 name|hw
 argument_list|,
@@ -3629,7 +3635,7 @@ argument_list|(
 literal|"e1000_poll_fiber_serdes_link_generic"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we have a signal (the cable is plugged in, or assumed true for 	 * serdes media) then poll for a "Link-Up" indication in the Device 	 * Status Register.  Time-out if a link isn't seen in 500 milliseconds 	 * seconds (Auto-negotiation should complete in less than 500 	 * milliseconds even if the other end is doing it in SW). 	 */
+comment|/* 	 * If we have a signal (the cable is plugged in, or assumed TRUE for 	 * serdes media) then poll for a "Link-Up" indication in the Device 	 * Status Register.  Time-out if a link isn't seen in 500 milliseconds 	 * seconds (Auto-negotiation should complete in less than 500 	 * milliseconds even if the other end is doing it in SW). 	 */
 for|for
 control|(
 name|i

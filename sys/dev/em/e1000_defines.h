@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_ifndef
@@ -991,13 +991,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_CTRL_EXT_LSECCK
-value|0x00001000
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_I2CCMD_REG_ADDR_SHIFT
 value|16
 end_define
@@ -1397,48 +1390,6 @@ define|#
 directive|define
 name|E1000_RXDEXT_STATERR_RXE
 value|0x80000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECH
-value|0x01000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_MASK
-value|0x60000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_NO_ERROR
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_NO_SA_MATCH
-value|0x20000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_REPLAY_DETECT
-value|0x40000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXDEXT_LSECE_BAD_SIG
-value|0x60000000
 end_define
 
 begin_comment
@@ -4099,28 +4050,6 @@ begin_comment
 comment|/* Extended desc bits for Linksec and timesync */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|E1000_TXD_CMD_LINKSEC
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* Apply LinkSec on packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_TXD_EXTCMD_TSTAMP
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* IEEE1588 Timestamp packet */
-end_comment
-
 begin_comment
 comment|/* Transmit Control */
 end_comment
@@ -5273,61 +5202,6 @@ begin_comment
 comment|/* ME hardware reset occurs */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|E1000_ICR_RXQ0
-value|0x00100000
-end_define
-
-begin_comment
-comment|/* Rx Queue 0 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_RXQ1
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* Rx Queue 1 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_TXQ0
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* Tx Queue 0 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_TXQ1
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* Tx Queue 1 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_ICR_OTHER
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* Other Interrupts */
-end_comment
-
 begin_comment
 comment|/* Extended Interrupt Cause Read */
 end_comment
@@ -5792,61 +5666,6 @@ directive|define
 name|E1000_IMS_EPRST
 value|E1000_ICR_EPRST
 end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_RXQ0
-value|E1000_ICR_RXQ0
-end_define
-
-begin_comment
-comment|/* Rx Queue 0 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_RXQ1
-value|E1000_ICR_RXQ1
-end_define
-
-begin_comment
-comment|/* Rx Queue 1 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_TXQ0
-value|E1000_ICR_TXQ0
-end_define
-
-begin_comment
-comment|/* Tx Queue 0 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_TXQ1
-value|E1000_ICR_TXQ1
-end_define
-
-begin_comment
-comment|/* Tx Queue 1 Interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_IMS_OTHER
-value|E1000_ICR_OTHER
-end_define
-
-begin_comment
-comment|/* Other Interrupts */
-end_comment
 
 begin_comment
 comment|/* Extended Interrupt Mask Set */
@@ -10313,15 +10132,6 @@ define|#
 directive|define
 name|E1000_GEN_POLL_TIMEOUT
 value|640
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNREFERENCED_PARAMETER
-parameter_list|(
-name|_p
-parameter_list|)
 end_define
 
 begin_endif

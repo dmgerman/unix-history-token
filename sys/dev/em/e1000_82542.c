@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
@@ -18,7 +18,7 @@ file|"e1000_api.h"
 end_include
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_phy_params_82542
 parameter_list|(
@@ -31,7 +31,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_nvm_params_82542
 parameter_list|(
@@ -44,7 +44,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_mac_params_82542
 parameter_list|(
@@ -57,7 +57,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_get_bus_info_82542
 parameter_list|(
@@ -70,7 +70,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_reset_hw_82542
 parameter_list|(
@@ -83,7 +83,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_hw_82542
 parameter_list|(
@@ -96,7 +96,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_setup_link_82542
 parameter_list|(
@@ -109,7 +109,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_led_on_82542
 parameter_list|(
@@ -122,7 +122,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_led_off_82542
 parameter_list|(
@@ -135,7 +135,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
+name|void
+name|e1000_rar_set_82542
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+modifier|*
+name|addr
+parameter_list|,
+name|u32
+name|index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|e1000_clear_hw_cntrs_82542
 parameter_list|(
@@ -163,7 +183,7 @@ comment|/**  *  e1000_init_phy_params_82542 - Init PHY func ptrs.  *  @hw: point
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_phy_params_82542
 parameter_list|(
@@ -210,7 +230,7 @@ comment|/**  *  e1000_init_nvm_params_82542 - Init NVM func ptrs.  *  @hw: point
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_nvm_params_82542
 parameter_list|(
@@ -229,16 +249,6 @@ operator|&
 name|hw
 operator|->
 name|nvm
-decl_stmt|;
-name|struct
-name|e1000_functions
-modifier|*
-name|func
-init|=
-operator|&
-name|hw
-operator|->
-name|func
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -276,33 +286,43 @@ operator|=
 literal|64
 expr_stmt|;
 comment|/* Function Pointers */
-name|func
+name|nvm
 operator|->
-name|read_nvm
+name|ops
+operator|.
+name|read
 operator|=
 name|e1000_read_nvm_microwire
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|release_nvm
+name|ops
+operator|.
+name|release
 operator|=
 name|e1000_stop_nvm
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|write_nvm
+name|ops
+operator|.
+name|write
 operator|=
 name|e1000_write_nvm_microwire
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|update_nvm
+name|ops
+operator|.
+name|update
 operator|=
 name|e1000_update_nvm_checksum_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|validate_nvm
+name|ops
+operator|.
+name|validate
 operator|=
 name|e1000_validate_nvm_checksum_generic
 expr_stmt|;
@@ -317,7 +337,7 @@ comment|/**  *  e1000_init_mac_params_82542 - Init MAC func ptrs.  *  @hw: point
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_mac_params_82542
 parameter_list|(
@@ -336,16 +356,6 @@ operator|&
 name|hw
 operator|->
 name|mac
-decl_stmt|;
-name|struct
-name|e1000_functions
-modifier|*
-name|func
-init|=
-operator|&
-name|hw
-operator|->
-name|func
 decl_stmt|;
 name|s32
 name|ret_val
@@ -382,105 +392,144 @@ name|E1000_RAR_ENTRIES
 expr_stmt|;
 comment|/* Function pointers */
 comment|/* bus type/speed/width */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|get_bus_info
 operator|=
 name|e1000_get_bus_info_82542
 expr_stmt|;
 comment|/* reset */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|reset_hw
 operator|=
 name|e1000_reset_hw_82542
 expr_stmt|;
 comment|/* hw initialization */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|init_hw
 operator|=
 name|e1000_init_hw_82542
 expr_stmt|;
 comment|/* link setup */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|setup_link
 operator|=
 name|e1000_setup_link_82542
 expr_stmt|;
 comment|/* phy/fiber/serdes setup */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|setup_physical_interface
 operator|=
 name|e1000_setup_fiber_serdes_link_generic
 expr_stmt|;
 comment|/* check for link */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|check_for_link
 operator|=
 name|e1000_check_for_fiber_link_generic
 expr_stmt|;
 comment|/* multicast address update */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|update_mc_addr_list
 operator|=
 name|e1000_update_mc_addr_list_generic
 expr_stmt|;
 comment|/* writing VFTA */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|write_vfta
 operator|=
 name|e1000_write_vfta_generic
 expr_stmt|;
 comment|/* clearing VFTA */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|clear_vfta
 operator|=
 name|e1000_clear_vfta_generic
 expr_stmt|;
 comment|/* setting MTA */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|mta_set
 operator|=
 name|e1000_mta_set_generic
 expr_stmt|;
-comment|/* turn on/off LED */
-name|func
+comment|/* set RAR */
+name|mac
 operator|->
+name|ops
+operator|.
+name|rar_set
+operator|=
+name|e1000_rar_set_82542
+expr_stmt|;
+comment|/* turn on/off LED */
+name|mac
+operator|->
+name|ops
+operator|.
 name|led_on
 operator|=
 name|e1000_led_on_82542
 expr_stmt|;
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|led_off
 operator|=
 name|e1000_led_off_82542
 expr_stmt|;
 comment|/* remove device */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|remove_device
 operator|=
 name|e1000_remove_device_generic
 expr_stmt|;
 comment|/* clear hardware counters */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|clear_hw_cntrs
 operator|=
 name|e1000_clear_hw_cntrs_82542
 expr_stmt|;
 comment|/* link info */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|get_link_up_info
 operator|=
 name|e1000_get_speed_and_duplex_fiber_serdes_generic
@@ -534,25 +583,31 @@ argument_list|)
 expr_stmt|;
 name|hw
 operator|->
-name|func
+name|mac
 operator|.
-name|init_mac_params
+name|ops
+operator|.
+name|init_params
 operator|=
 name|e1000_init_mac_params_82542
 expr_stmt|;
 name|hw
 operator|->
-name|func
+name|nvm
 operator|.
-name|init_nvm_params
+name|ops
+operator|.
+name|init_params
 operator|=
 name|e1000_init_nvm_params_82542
 expr_stmt|;
 name|hw
 operator|->
-name|func
+name|phy
 operator|.
-name|init_phy_params
+name|ops
+operator|.
+name|init_params
 operator|=
 name|e1000_init_phy_params_82542
 expr_stmt|;
@@ -564,7 +619,7 @@ comment|/**  *  e1000_get_bus_info_82542 - Obtain bus information for adapter  *
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_get_bus_info_82542
 parameter_list|(
@@ -614,7 +669,7 @@ comment|/**  *  e1000_reset_hw_82542 - Reset hardware  *  @hw: pointer to the HW
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_reset_hw_82542
 parameter_list|(
@@ -737,7 +792,13 @@ operator||
 name|E1000_CTRL_RST
 argument_list|)
 expr_stmt|;
-name|e1000_reload_nvm
+name|hw
+operator|->
+name|nvm
+operator|.
+name|ops
+operator|.
+name|reload
 argument_list|(
 name|hw
 argument_list|)
@@ -799,7 +860,7 @@ comment|/**  *  e1000_init_hw_82542 - Initialize hardware  *  @hw: pointer to th
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_hw_82542
 parameter_list|(
@@ -861,7 +922,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|e1000_clear_vfta
+name|mac
+operator|->
+name|ops
+operator|.
+name|clear_vfta
 argument_list|(
 name|hw
 argument_list|)
@@ -1047,7 +1112,7 @@ comment|/**  *  e1000_setup_link_82542 - Setup flow control and link settings  *
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_setup_link_82542
 parameter_list|(
@@ -1066,16 +1131,6 @@ operator|&
 name|hw
 operator|->
 name|mac
-decl_stmt|;
-name|struct
-name|e1000_functions
-modifier|*
-name|func
-init|=
-operator|&
-name|hw
-operator|->
-name|func
 decl_stmt|;
 name|s32
 name|ret_val
@@ -1154,8 +1209,10 @@ expr_stmt|;
 comment|/* Call the necessary subroutine to configure the link. */
 name|ret_val
 operator|=
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|setup_physical_interface
 argument_list|(
 name|hw
@@ -1234,7 +1291,7 @@ comment|/**  *  e1000_led_on_82542 - Turn on SW controllable LED  *  @hw: pointe
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_led_on_82542
 parameter_list|(
@@ -1287,7 +1344,7 @@ comment|/**  *  e1000_led_off_82542 - Turn off SW controllable LED  *  @hw: poin
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_led_off_82542
 parameter_list|(
@@ -1333,6 +1390,170 @@ expr_stmt|;
 return|return
 name|E1000_SUCCESS
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_rar_set_82542 - Set receive address register  *  @hw: pointer to the HW structure  *  @addr: pointer to the receive address  *  @index: receive address array register  *  *  Sets the receive address array register at index to the address passed  *  in by addr.  **/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|e1000_rar_set_82542
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+modifier|*
+name|addr
+parameter_list|,
+name|u32
+name|index
+parameter_list|)
+block|{
+name|u32
+name|rar_low
+decl_stmt|,
+name|rar_high
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_rar_set_82542"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * HW expects these in little endian so we reverse the byte order 	 * from network order (big endian) to little endian 	 */
+name|rar_low
+operator|=
+operator|(
+operator|(
+name|u32
+operator|)
+name|addr
+index|[
+literal|0
+index|]
+operator||
+operator|(
+operator|(
+name|u32
+operator|)
+name|addr
+index|[
+literal|1
+index|]
+operator|<<
+literal|8
+operator|)
+operator||
+operator|(
+operator|(
+name|u32
+operator|)
+name|addr
+index|[
+literal|2
+index|]
+operator|<<
+literal|16
+operator|)
+operator||
+operator|(
+operator|(
+name|u32
+operator|)
+name|addr
+index|[
+literal|3
+index|]
+operator|<<
+literal|24
+operator|)
+operator|)
+expr_stmt|;
+name|rar_high
+operator|=
+operator|(
+operator|(
+name|u32
+operator|)
+name|addr
+index|[
+literal|4
+index|]
+operator||
+operator|(
+operator|(
+name|u32
+operator|)
+name|addr
+index|[
+literal|5
+index|]
+operator|<<
+literal|8
+operator|)
+operator|)
+expr_stmt|;
+comment|/* If MAC address zero, no need to set the AV bit */
+if|if
+condition|(
+name|rar_low
+operator|||
+name|rar_high
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|hw
+operator|->
+name|mac
+operator|.
+name|disable_av
+condition|)
+name|rar_high
+operator||=
+name|E1000_RAH_AV
+expr_stmt|;
+block|}
+name|E1000_WRITE_REG_ARRAY
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_RA
+argument_list|,
+operator|(
+name|index
+operator|<<
+literal|1
+operator|)
+argument_list|,
+name|rar_low
+argument_list|)
+expr_stmt|;
+name|E1000_WRITE_REG_ARRAY
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_RA
+argument_list|,
+operator|(
+operator|(
+name|index
+operator|<<
+literal|1
+operator|)
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|rar_high
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1605,7 +1826,7 @@ comment|/**  *  e1000_clear_hw_cntrs_82542 - Clear device specific hardware coun
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|e1000_clear_hw_cntrs_82542
 parameter_list|(

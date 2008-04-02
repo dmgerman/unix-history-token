@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2001-2008, Intel Corporation All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Intel Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_ifdef
@@ -261,7 +261,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"6.8.4"
+literal|"6.8.8"
 decl_stmt|;
 end_decl_stmt
 
@@ -2040,11 +2040,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EM_FAST_IRQ
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EM_LEGACY_IRQ
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -2230,7 +2230,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EM_FAST_IRQ */
+comment|/* EM_LEGACY_IRQ */
 end_comment
 
 begin_ifdef
@@ -2599,11 +2599,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EM_FAST_IRQ
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EM_LEGACY_IRQ
+end_ifndef
 
 begin_comment
 comment|/* How many packets rxeof tries to clean at a time */
@@ -3320,9 +3320,9 @@ name|em_tx_abs_int_delay_dflt
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|EM_FAST_IRQ
+ifndef|#
+directive|ifndef
+name|EM_LEGACY_IRQ
 comment|/* Sysctls for limiting the amount of work done in the taskqueue */
 name|em_add_rx_process_limit
 argument_list|(
@@ -5965,6 +5965,11 @@ name|adapter
 argument_list|)
 expr_stmt|;
 comment|/* 	** The timer is set to 5 every time start queues a packet. 	** Then txeof keeps resetting it as long as it cleans at 	** least one descriptor. 	** Finally, anytime all descriptors are clean the timer is 	** set to 0. 	*/
+name|EM_TX_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5982,7 +5987,14 @@ operator|->
 name|watchdog_timer
 operator|)
 condition|)
+block|{
+name|EM_TX_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* If we are in this routine because of pause frames, then 	 * don't reset the hardware. 	 */
 if|if
 condition|(
@@ -6004,6 +6016,11 @@ operator|->
 name|watchdog_timer
 operator|=
 name|EM_TX_TIMEOUT
+expr_stmt|;
+name|EM_TX_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -6727,14 +6744,6 @@ name|get_link_status
 operator|=
 literal|1
 expr_stmt|;
-name|e1000_check_for_link
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|)
-expr_stmt|;
 name|em_update_link_status
 argument_list|(
 name|adapter
@@ -6803,9 +6812,9 @@ block|}
 endif|#
 directive|endif
 comment|/* DEVICE_POLLING */
-ifndef|#
-directive|ifndef
-name|EM_FAST_IRQ
+ifdef|#
+directive|ifdef
+name|EM_LEGACY_IRQ
 comment|/*********************************************************************  *  *  Legacy Interrupt Service routine    *  *********************************************************************/
 specifier|static
 name|void
@@ -6976,14 +6985,6 @@ name|get_link_status
 operator|=
 literal|1
 expr_stmt|;
-name|e1000_check_for_link
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|)
-expr_stmt|;
 name|em_update_link_status
 argument_list|(
 name|adapter
@@ -7083,11 +7084,6 @@ name|adapter
 operator|->
 name|ifp
 expr_stmt|;
-name|EM_CORE_LOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7099,38 +7095,18 @@ operator|&
 name|IFF_DRV_RUNNING
 operator|)
 condition|)
-block|{
-name|EM_CORE_UNLOCK
+return|return;
+name|EM_CORE_LOCK
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|callout_stop
 argument_list|(
 operator|&
 name|adapter
 operator|->
 name|timer
-argument_list|)
-expr_stmt|;
-name|adapter
-operator|->
-name|hw
-operator|.
-name|mac
-operator|.
-name|get_link_status
-operator|=
-literal|1
-expr_stmt|;
-name|e1000_check_for_link
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
 argument_list|)
 expr_stmt|;
 name|em_update_link_status
@@ -7164,30 +7140,6 @@ name|adapter
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700000
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NET_LOCK_GIANT
-argument_list|)
-define|#
-directive|define
-name|NET_LOCK_GIANT
-parameter_list|()
-define|#
-directive|define
-name|NET_UNLOCK_GIANT
-parameter_list|()
-endif|#
-directive|endif
-endif|#
-directive|endif
 comment|/* Combined RX/TX handler, used by Legacy and MSI */
 specifier|static
 name|void
@@ -7217,9 +7169,6 @@ name|adapter
 operator|->
 name|ifp
 decl_stmt|;
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -7580,6 +7529,17 @@ operator||
 name|E1000_ICR_LSC
 operator|)
 condition|)
+block|{
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|get_link_status
+operator|=
+literal|1
+expr_stmt|;
 name|taskqueue_enqueue
 argument_list|(
 name|taskqueue_fast
@@ -7590,6 +7550,7 @@ operator|->
 name|link_task
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|reg_icr
@@ -7833,14 +7794,6 @@ expr_stmt|;
 name|EM_CORE_LOCK
 argument_list|(
 name|adapter
-argument_list|)
-expr_stmt|;
-name|e1000_check_for_link
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
 argument_list|)
 expr_stmt|;
 name|em_update_link_status
@@ -8836,6 +8789,7 @@ block|}
 elseif|else
 endif|#
 directive|endif
+comment|/* 	** Timesync needs to check the packet header  	** so call checksum code to do so, but don't 	** penalize the code if not defined. 	*/
 if|if
 condition|(
 name|m_head
@@ -10694,14 +10648,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|e1000_check_for_link
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|)
-expr_stmt|;
 name|em_update_link_status
 argument_list|(
 name|adapter
@@ -10795,6 +10741,16 @@ name|adapter
 parameter_list|)
 block|{
 name|struct
+name|e1000_hw
+modifier|*
+name|hw
+init|=
+operator|&
+name|adapter
+operator|->
+name|hw
+decl_stmt|;
+name|struct
 name|ifnet
 modifier|*
 name|ifp
@@ -10810,35 +10766,118 @@ name|adapter
 operator|->
 name|dev
 decl_stmt|;
+name|u32
+name|link_check
+init|=
+literal|0
+decl_stmt|;
+comment|/* Get the cached link value or read phy for real */
+switch|switch
+condition|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|media_type
+condition|)
+block|{
+case|case
+name|e1000_media_type_copper
+case|:
 if|if
 condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|get_link_status
+condition|)
+block|{
+comment|/* Do the work to read phy */
+name|e1000_check_for_link
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+name|link_check
+operator|=
+operator|!
+name|hw
+operator|->
+name|mac
+operator|.
+name|get_link_status
+expr_stmt|;
+block|}
+else|else
+name|link_check
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+name|e1000_media_type_fiber
+case|:
+name|e1000_check_for_link
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+name|link_check
+operator|=
+operator|(
 name|E1000_READ_REG
 argument_list|(
-operator|&
-name|adapter
-operator|->
 name|hw
 argument_list|,
 name|E1000_STATUS
 argument_list|)
 operator|&
 name|E1000_STATUS_LU
-condition|)
-block|{
+operator|)
+expr_stmt|;
+break|break;
+case|case
+name|e1000_media_type_internal_serdes
+case|:
+name|e1000_check_for_link
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+name|link_check
+operator|=
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|serdes_has_link
+expr_stmt|;
+break|break;
+default|default:
+case|case
+name|e1000_media_type_unknown
+case|:
+break|break;
+block|}
+comment|/* Now check for a transition */
 if|if
 condition|(
+name|link_check
+operator|&&
+operator|(
 name|adapter
 operator|->
 name|link_active
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|e1000_get_speed_and_duplex
 argument_list|(
-operator|&
-name|adapter
-operator|->
 name|hw
 argument_list|,
 operator|&
@@ -10865,10 +10904,8 @@ operator|)
 operator|&&
 operator|(
 operator|(
-name|adapter
-operator|->
 name|hw
-operator|.
+operator|->
 name|mac
 operator|.
 name|type
@@ -10877,10 +10914,8 @@ name|e1000_82571
 operator|)
 operator|||
 operator|(
-name|adapter
-operator|->
 name|hw
-operator|.
+operator|->
 name|mac
 operator|.
 name|type
@@ -10897,9 +10932,6 @@ name|tarc0
 operator|=
 name|E1000_READ_REG
 argument_list|(
-operator|&
-name|adapter
-operator|->
 name|hw
 argument_list|,
 name|E1000_TARC
@@ -10915,9 +10947,6 @@ name|SPEED_MODE_BIT
 expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
-operator|&
-name|adapter
-operator|->
 name|hw
 argument_list|,
 name|E1000_TARC
@@ -10988,16 +11017,19 @@ name|LINK_STATE_UP
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
+operator|!
+name|link_check
+operator|&&
+operator|(
 name|adapter
 operator|->
 name|link_active
 operator|==
 literal|1
+operator|)
 condition|)
 block|{
 name|ifp
@@ -11033,6 +11065,13 @@ name|link_active
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Link down, disable watchdog */
+name|adapter
+operator|->
+name|watchdog_timer
+operator|=
+name|FALSE
+expr_stmt|;
 name|if_link_state_change
 argument_list|(
 name|ifp
@@ -11040,7 +11079,6 @@ argument_list|,
 name|LINK_STATE_DOWN
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/*********************************************************************  *  *  This routine disables all traffic on the adapter by issuing a  *  global reset on the MAC and deallocates TX/RX buffers.  *  *  This routine should always be called with BOTH the CORE  *  and TX locks.  **********************************************************************/
@@ -11826,9 +11864,9 @@ name|ENXIO
 operator|)
 return|;
 block|}
-ifndef|#
-directive|ifndef
-name|EM_FAST_IRQ
+ifdef|#
+directive|ifdef
+name|EM_LEGACY_IRQ
 comment|/* We do Legacy setup */
 if|if
 condition|(
@@ -12012,7 +12050,7 @@ literal|"handler: %d\n"
 argument|, error); 		taskqueue_free(adapter->tq); 		adapter->tq = NULL; 		return (error); 	}
 endif|#
 directive|endif
-comment|/* EM_FAST_IRQ */
+comment|/* EM_LEGACY_IRQ */
 argument|return (
 literal|0
 argument|); }
@@ -12421,10 +12459,7 @@ argument|static void em_transmit_checksum_setup(struct adapter *adapter, struct 
 literal|0
 argument|;
 comment|/* Setup checksum offload context. */
-argument|curr_txd = adapter->next_avail_tx_desc; 	tx_buffer =&adapter->tx_buffer_area[curr_txd]; 	TXD = (struct e1000_context_desc *)&adapter->tx_desc_base[curr_txd];  	*txd_lower = E1000_TXD_CMD_DEXT |
-comment|/* Extended descr type */
-argument|E1000_TXD_DTYP_D;
-comment|/* Data descr */
+argument|curr_txd = adapter->next_avail_tx_desc; 	tx_buffer =&adapter->tx_buffer_area[curr_txd]; 	TXD = (struct e1000_context_desc *)&adapter->tx_desc_base[curr_txd];
 comment|/* 	 * Determine where frame payload starts. 	 * Jump over vlan headers if already present, 	 * helpful for QinQ too. 	 */
 argument|eh = mtod(mp, struct ether_vlan_header *); 	if (eh->evl_encap_proto == htons(ETHERTYPE_VLAN)) { 		etype = ntohs(eh->evl_proto); 		ehdrlen = ETHER_HDR_LEN + ETHER_VLAN_ENCAP_LEN; 	} else { 		etype = ntohs(eh->evl_encap_proto); 		ehdrlen = ETHER_HDR_LEN; 	}
 comment|/* 	 * We only support TCP/UDP for IPv4 and IPv6 for the moment. 	 * TODO: Support SCTP too when it hits the tree. 	 */
@@ -12461,7 +12496,11 @@ argument|); 			TXD->upper_setup.tcp_fields.tucso = 			    hdr_len + offsetof(str
 literal|8
 argument|; 		}
 comment|/* Fall Thru */
-argument|} 	default: 		break; 	}  	TXD->tcp_seg_setup.data = htole32(
+argument|} 	default: 		break; 	}  	*txd_lower = E1000_TXD_CMD_DEXT |
+comment|/* Extended descr type */
+argument|E1000_TXD_DTYP_D;
+comment|/* Data descr */
+argument|TXD->tcp_seg_setup.data = htole32(
 literal|0
 argument|); 	TXD->cmd_and_length = 	    htole32(adapter->txd_cmd | E1000_TXD_CMD_DEXT | cmd); 	tx_buffer->m_head = NULL; 	tx_buffer->next_eop = -
 literal|1
@@ -12847,9 +12886,9 @@ comment|/* Advance our pointers to the next descriptor. */
 argument|if (++i == adapter->num_rx_desc) 			i =
 literal|0
 argument|; 		if (m != NULL) { 			adapter->next_rx_desc_to_check = i;
-ifndef|#
-directive|ifndef
-name|EM_FAST_IRQ
+ifdef|#
+directive|ifdef
+name|EM_LEGACY_IRQ
 argument|EM_CORE_UNLOCK(adapter); 			(*ifp->if_input)(ifp, m); 			EM_CORE_LOCK(adapter);
 else|#
 directive|else
@@ -12961,22 +13000,6 @@ literal|0
 argument|]&
 literal|1
 argument|) || (!bcmp(addr, zero_addr, ETHER_ADDR_LEN))) { 		return (FALSE); 	}  	return (TRUE); }
-comment|/*  * NOTE: the following routines using the e1000   * 	naming style are provided to the shared  *	code which expects that rather than 'em'  */
-argument|void e1000_write_pci_cfg(struct e1000_hw *hw, u32 reg, u16 *value) { 	pci_write_config(((struct e1000_osdep *)hw->back)->dev, reg, *value,
-literal|2
-argument|); }  void e1000_read_pci_cfg(struct e1000_hw *hw, u32 reg, u16 *value) { 	*value = pci_read_config(((struct e1000_osdep *)hw->back)->dev, reg,
-literal|2
-argument|); }  void e1000_pci_set_mwi(struct e1000_hw *hw) { 	pci_write_config(((struct e1000_osdep *)hw->back)->dev, PCIR_COMMAND, 	    (hw->bus.pci_cmd_word | CMD_MEM_WRT_INVALIDATE),
-literal|2
-argument|); }  void e1000_pci_clear_mwi(struct e1000_hw *hw) { 	pci_write_config(((struct e1000_osdep *)hw->back)->dev, PCIR_COMMAND, 	    (hw->bus.pci_cmd_word& ~CMD_MEM_WRT_INVALIDATE),
-literal|2
-argument|); }
-comment|/*  * Read the PCI Express capabilities  */
-argument|int e1000_read_pcie_cap_reg(struct e1000_hw *hw, u32 reg, u16 *value) { 	int	error = E1000_SUCCESS; 	u16	cap_off;  	switch (hw->mac.type) {  		case e1000_82571: 		case e1000_82572: 		case e1000_82573: 		case e1000_80003es2lan: 			cap_off =
-literal|0xE0
-argument|; 			e1000_read_pci_cfg(hw, cap_off + reg, value); 			break; 		default: 			error = ~E1000_NOT_IMPLEMENTED; 			break; 	}  	return (error);	 }  int e1000_alloc_zeroed_dev_spec_struct(struct e1000_hw *hw, u32 size) { 	int32_t error =
-literal|0
-argument|;  	hw->dev_spec = malloc(size, M_DEVBUF, M_NOWAIT | M_ZERO); 	if (hw->dev_spec == NULL) 		error = ENOMEM;  	return (error); }  void e1000_free_dev_spec_struct(struct e1000_hw *hw) { 	if (hw->dev_spec != NULL) 		free(hw->dev_spec, M_DEVBUF); 	return; }
 comment|/*  * Enable PCI Wake On Lan capability  */
 argument|void em_enable_wakeup(device_t dev) { 	u16     cap, status; 	u8      id;
 comment|/* First find the capabilities pointer*/
@@ -13235,9 +13258,9 @@ literal|0
 argument|, em_sysctl_int_delay,
 literal|"I"
 argument|, description); }
-ifdef|#
-directive|ifdef
-name|EM_FAST_IRQ
+ifndef|#
+directive|ifndef
+name|EM_LEGACY_IRQ
 argument|static void em_add_rx_process_limit(struct adapter *adapter, const char *name, 	const char *description, int *limit, int value) { 	*limit = value; 	SYSCTL_ADD_INT(device_get_sysctl_ctx(adapter->dev), 	    SYSCTL_CHILDREN(device_get_sysctl_tree(adapter->dev)), 	    OID_AUTO, name, CTLTYPE_INT|CTLFLAG_RW, limit, value, description); }
 end_function
 
