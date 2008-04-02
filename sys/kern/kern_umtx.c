@@ -14613,7 +14613,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|do_rwlock_wrlock
+name|do_rw_wrlock
 argument_list|(
 name|td
 argument_list|,
@@ -14680,10 +14680,6 @@ argument_list|,
 name|uap
 operator|->
 name|obj
-argument_list|,
-name|uap
-operator|->
-name|val
 argument_list|,
 operator|&
 name|timeout
