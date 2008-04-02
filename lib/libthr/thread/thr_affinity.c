@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|<pthread_np.h>
 end_include
 
 begin_include
