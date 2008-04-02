@@ -3686,6 +3686,14 @@ operator|->
 name|v_interlock
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+name|BO_MTX
+argument_list|(
+name|bo
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|vnode_zone
