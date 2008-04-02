@@ -1447,7 +1447,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|callout_reset
+name|callout_reset_curcpu
 argument_list|(
 operator|&
 name|td

@@ -2162,7 +2162,7 @@ name|kn
 operator|->
 name|kn_hook
 expr_stmt|;
-name|callout_reset
+name|callout_reset_curcpu
 argument_list|(
 name|calloutp
 argument_list|,
@@ -2283,7 +2283,7 @@ name|kn_hook
 operator|=
 name|calloutp
 expr_stmt|;
-name|callout_reset
+name|callout_reset_curcpu
 argument_list|(
 name|calloutp
 argument_list|,
