@@ -1679,9 +1679,7 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-name|dev
-operator|->
-name|si_devsw
+name|dsw
 operator|->
 name|d_gianttrick
 operator|->
@@ -1770,9 +1768,7 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-name|dev
-operator|->
-name|si_devsw
+name|dsw
 operator|->
 name|d_gianttrick
 operator|->
