@@ -633,6 +633,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|pthread_getaffinity_np
+value|_pthread_getaffinity_np
+end_define
+
+begin_define
+define|#
+directive|define
 name|pthread_getconcurrency
 value|_pthread_getconcurrency
 end_define
@@ -978,6 +985,13 @@ define|#
 directive|define
 name|pthread_set_name_np
 value|_pthread_set_name_np
+end_define
+
+begin_define
+define|#
+directive|define
+name|pthread_setaffinity_np
+value|_pthread_setaffinity_np
 end_define
 
 begin_define

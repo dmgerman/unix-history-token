@@ -2445,35 +2445,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|_pthread_getaffinity_np
-parameter_list|(
-name|pthread_t
-parameter_list|,
-name|size_t
-parameter_list|,
-name|cpuset_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_pthread_setaffinity_np
-parameter_list|(
-name|pthread_t
-parameter_list|,
-name|size_t
-parameter_list|,
-specifier|const
-name|cpuset_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* #include<fcntl.h> */
 end_comment
