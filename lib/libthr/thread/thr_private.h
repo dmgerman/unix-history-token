@@ -841,25 +841,9 @@ begin_struct
 struct|struct
 name|pthread_rwlock
 block|{
-name|pthread_mutex_t
+name|struct
+name|urwlock
 name|lock
-decl_stmt|;
-comment|/* monitor lock */
-name|pthread_cond_t
-name|read_signal
-decl_stmt|;
-name|pthread_cond_t
-name|write_signal
-decl_stmt|;
-specifier|volatile
-name|int32_t
-name|state
-decl_stmt|;
-name|int
-name|blocked_writers
-decl_stmt|;
-name|int
-name|blocked_readers
 decl_stmt|;
 name|struct
 name|pthread
