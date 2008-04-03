@@ -2169,8 +2169,6 @@ name|char
 name|locname
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|dp
@@ -2399,7 +2397,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|locname
 argument_list|,
@@ -2411,7 +2409,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strncat
+name|strlcat
 argument_list|(
 name|locname
 argument_list|,
@@ -2499,13 +2497,6 @@ literal|0
 operator|)
 condition|)
 continue|continue;
-name|locname
-index|[
-name|namelen
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 if|if
 condition|(
 name|namelen
@@ -2538,7 +2529,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strncat
+name|strlcat
 argument_list|(
 name|locname
 argument_list|,
@@ -2546,12 +2537,7 @@ name|dp
 operator|->
 name|d_name
 argument_list|,
-operator|(
-name|int
-operator|)
-name|dp
-operator|->
-name|d_namlen
+name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
 name|mkentry
