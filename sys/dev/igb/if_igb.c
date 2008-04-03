@@ -5116,6 +5116,8 @@ condition|)
 name|igb_start_locked
 argument_list|(
 name|txr
+argument_list|,
+name|ifp
 argument_list|)
 expr_stmt|;
 name|IGB_TX_UNLOCK
