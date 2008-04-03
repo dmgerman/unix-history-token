@@ -186,7 +186,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|.text; .align 2; .globl x; .type x,@function; x:
+value|.text; .align 4; .globl x; .type x,@function; x:
 end_define
 
 begin_ifdef
