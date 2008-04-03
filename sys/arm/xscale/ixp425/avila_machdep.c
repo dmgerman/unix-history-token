@@ -773,6 +773,8 @@ name|kernel_l1pt
 decl_stmt|;
 name|int
 name|loop
+decl_stmt|,
+name|i
 decl_stmt|;
 name|u_int
 name|l1pagetable
@@ -800,7 +802,7 @@ argument_list|()
 expr_stmt|;
 name|lastaddr
 operator|=
-name|fake_reload_metadata
+name|fake_preload_metadata
 argument_list|()
 expr_stmt|;
 name|pcpu_init
