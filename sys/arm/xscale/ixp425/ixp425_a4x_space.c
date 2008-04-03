@@ -92,14 +92,6 @@ end_comment
 begin_expr_stmt
 name|bs_protos
 argument_list|(
-name|ixp425
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|bs_protos
-argument_list|(
 name|a4x
 argument_list|)
 expr_stmt|;
@@ -141,36 +133,36 @@ comment|/* mapping/unmapping */
 operator|.
 name|bs_map
 operator|=
-name|ixp425_bs_map
+name|generic_bs_map
 block|,
 operator|.
 name|bs_unmap
 operator|=
-name|ixp425_bs_unmap
+name|generic_bs_unmap
 block|,
 operator|.
 name|bs_subregion
 operator|=
-name|ixp425_bs_subregion
+name|generic_bs_subregion
 block|,
 comment|/* allocation/deallocation */
 operator|.
 name|bs_alloc
 operator|=
-name|ixp425_bs_alloc
+name|generic_bs_alloc
 block|,
 comment|/* XXX not implemented */
 operator|.
 name|bs_free
 operator|=
-name|ixp425_bs_free
+name|generic_bs_free
 block|,
 comment|/* XXX not implemented */
 comment|/* barrier */
 operator|.
 name|bs_barrier
 operator|=
-name|ixp425_bs_barrier
+name|generic_bs_barrier
 block|,
 comment|/* read (single) */
 operator|.
