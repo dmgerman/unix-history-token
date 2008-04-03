@@ -425,11 +425,9 @@ literal|"from"
 block|,
 literal|"export"
 block|,
-literal|"union"
-block|,
 literal|"acls"
 block|,
-literal|"exec"
+literal|"noexec"
 block|,
 literal|"noatime"
 block|,
