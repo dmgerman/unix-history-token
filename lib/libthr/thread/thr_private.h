@@ -1208,7 +1208,7 @@ parameter_list|(
 name|thrd
 parameter_list|)
 define|\
-value|(thrd)->critical_count--;			\ 	_thr_ast(thrd);
+value|do {						\ 		(thrd)->critical_count--;		\ 		_thr_ast(thrd);				\ 	} while (0)
 end_define
 
 begin_define
