@@ -1343,6 +1343,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|head
+operator|=
+name|NULL
+expr_stmt|;
 name|prev
 operator|=
 operator|&
