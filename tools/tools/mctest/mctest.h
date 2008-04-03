@@ -124,6 +124,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|int
+name|SERVER_PORT
+init|=
+literal|9999
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
 name|DEFAULT_PORT
 init|=
 literal|6666
