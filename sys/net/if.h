@@ -753,6 +753,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFCAP_WOL_UCAST
+value|0x0800
+end_define
+
+begin_comment
+comment|/* wake on any unicast frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_WOL_MCAST
+value|0x1000
+end_define
+
+begin_comment
+comment|/* wake on any multicast frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_WOL_MAGIC
+value|0x2000
+end_define
+
+begin_comment
+comment|/* wake on any Magic Packet */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFCAP_HWCSUM
 value|(IFCAP_RXCSUM | IFCAP_TXCSUM)
 end_define
@@ -762,6 +795,13 @@ define|#
 directive|define
 name|IFCAP_TSO
 value|(IFCAP_TSO4 | IFCAP_TSO6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCAP_WOL
+value|(IFCAP_WOL_UCAST | IFCAP_WOL_MCAST | IFCAP_WOL_MAGIC)
 end_define
 
 begin_define
