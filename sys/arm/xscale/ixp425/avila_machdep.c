@@ -958,9 +958,7 @@ name|i
 operator|++
 index|]
 operator|=
-name|KERNBASE
-operator|+
-literal|0x00200000
+name|KERNVIRTADDR
 expr_stmt|;
 name|fake_preload
 index|[
@@ -993,9 +991,7 @@ operator|)
 operator|&
 name|end
 operator|-
-name|KERNBASE
-operator|-
-literal|0x00200000
+name|KERNVIRTADDR
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1182,10 +1178,6 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|KERNEL_TEXT_BASE
-value|(KERNBASE + 0x00200000)
 name|freemempos
 operator|=
 literal|0x10200000
