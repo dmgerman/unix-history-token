@@ -17424,7 +17424,7 @@ operator|++
 expr_stmt|;
 name|m_freem
 argument_list|(
-name|adapter
+name|rxr
 operator|->
 name|fmp
 argument_list|)
