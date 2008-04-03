@@ -1259,10 +1259,6 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|KERNEL_TEXT_BASE
-value|(KERNBASE)
 name|freemempos
 operator|=
 operator|(
