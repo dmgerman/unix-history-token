@@ -1390,10 +1390,11 @@ name|int
 name|wait
 parameter_list|)
 block|{
+comment|/* Inform UMA that this allocator uses kernel_map/object. */
 operator|*
 name|flags
 operator|=
-name|UMA_SLAB_PRIV
+name|UMA_SLAB_KERNEL
 expr_stmt|;
 return|return
 operator|(
