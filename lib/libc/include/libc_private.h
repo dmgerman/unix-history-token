@@ -593,6 +593,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Without back-compat translation */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|__sys_fcntl
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
