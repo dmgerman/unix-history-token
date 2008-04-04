@@ -96,35 +96,35 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\n"
+literal|"usage: ddb script scriptname\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ddb script scriptname\n"
+literal|"       ddb script scriptname=script\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ddb script scriptname=script\n"
+literal|"       ddb scripts\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ddb scripts\n"
+literal|"       ddb unscript scriptname\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ddb unscript scriptname\n"
+literal|"       ddb pathname\n"
 argument_list|)
 expr_stmt|;
 name|exit
