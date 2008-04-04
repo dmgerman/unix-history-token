@@ -1039,10 +1039,10 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|COLORLS
-literal|"usage: ls [-ABCFGHILPRSTUWZabcdfghiklmnopqrstuwx1]"
+literal|"usage: ls [-ABCFGHILPRSTUWZabcdfghiklmnopqrstuwx1] [-D format]"
 else|#
 directive|else
-literal|"usage: ls [-ABCFHILPRSTUWZabcdfghiklmnopqrstuwx1]"
+literal|"usage: ls [-ABCFHILPRSTUWZabcdfghiklmnopqrstuwx1] [-D format]"
 endif|#
 directive|endif
 literal|" [file ...]\n"
