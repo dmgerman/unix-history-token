@@ -188,6 +188,18 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+name|f_timeformat
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user-specified time format */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|f_notabs
 decl_stmt|;

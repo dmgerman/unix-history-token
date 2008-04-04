@@ -720,7 +720,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s %*u %-*s  %-*s  "
+literal|"%s %*u %-*s  %-*s	 "
 argument_list|,
 name|buf
 argument_list|,
@@ -1863,6 +1863,16 @@ name|SIXMONTHS
 value|((365 / 2) * 86400)
 if|if
 condition|(
+name|f_timeformat
+condition|)
+comment|/* user specified format */
+name|format
+operator|=
+name|f_timeformat
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|f_sectime
 condition|)
 comment|/* mmm dd hh:mm:ss yyyy || dd mmm hh:mm:ss yyyy */
@@ -1870,9 +1880,9 @@ name|format
 operator|=
 name|d_first
 condition|?
-literal|"%e %b %T %Y "
+literal|"%e %b %T %Y"
 else|:
-literal|"%b %e %T %Y "
+literal|"%b %e %T %Y"
 expr_stmt|;
 elseif|else
 if|if
@@ -1894,9 +1904,9 @@ name|format
 operator|=
 name|d_first
 condition|?
-literal|"%e %b %R "
+literal|"%e %b %R"
 else|:
-literal|"%b %e %R "
+literal|"%b %e %R"
 expr_stmt|;
 else|else
 comment|/* mmm dd  yyyy || dd mmm  yyyy */
@@ -1904,9 +1914,9 @@ name|format
 operator|=
 name|d_first
 condition|?
-literal|"%e %b  %Y "
+literal|"%e %b  %Y"
 else|:
-literal|"%b %e  %Y "
+literal|"%b %e	 %Y"
 expr_stmt|;
 name|strftime
 argument_list|(
@@ -1929,6 +1939,13 @@ expr_stmt|;
 name|fputs
 argument_list|(
 name|longstring
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+name|fputc
+argument_list|(
+literal|' '
 argument_list|,
 name|stdout
 argument_list|)

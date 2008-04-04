@@ -623,6 +623,17 @@ comment|/* sort by time vice name */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+name|f_timeformat
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user-specified time format */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|f_sizesort
@@ -935,7 +946,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ABCFGHILPRSTUWZabcdfghiklmnopqrstuwx"
+literal|"1ABCD:FGHILPRSTUWZabcdfghiklmnopqrstuwx"
 argument_list|)
 operator|)
 operator|!=
@@ -991,6 +1002,14 @@ operator|=
 name|f_singlecol
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'D'
+case|:
+name|f_timeformat
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
