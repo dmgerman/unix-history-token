@@ -5546,7 +5546,7 @@ value|96
 end_define
 
 begin_comment
-comment|/*  *	vm_map_pmap_enter:  *  *	Preload read-only mappings for the given object's resident pages into  *	the given map.  This eliminates the soft faults on process startup and  *	immediately after an mmap(2).  Unless the given flags include  *	MAP_PREFAULT_MADVISE, cached pages are not reactivated and mapped.  */
+comment|/*  *	vm_map_pmap_enter:  *  *	Preload read-only mappings for the given object's resident pages into  *	the given map.  This eliminates the soft faults on process startup and  *	immediately after an mmap(2).  Because these are speculative mappings,  *	cached pages are not reactivated and mapped.  */
 end_comment
 
 begin_function
