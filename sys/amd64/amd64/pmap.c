@@ -13050,17 +13050,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|pte
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* 	 * Page Directory table entry not valid, we need a new PT page 	 */
-if|if
-condition|(
-name|pte
-operator|==
-name|NULL
-condition|)
 name|panic
 argument_list|(
 literal|"pmap_enter: invalid page directory va=%#lx"
