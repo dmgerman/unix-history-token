@@ -816,7 +816,7 @@ argument_list|()
 expr_stmt|;
 name|lastaddr
 operator|=
-name|fake_reload_metadata
+name|fake_preload_metadata
 argument_list|()
 expr_stmt|;
 name|physmem
