@@ -678,6 +678,23 @@ name|long
 name|strsize
 decl_stmt|;
 comment|/* Size in bytes of string table */
+ifdef|#
+directive|ifdef
+name|__mips__
+name|Elf_Word
+name|local_gotno
+decl_stmt|;
+comment|/* Number of local GOT entries */
+name|Elf_Word
+name|symtabno
+decl_stmt|;
+comment|/* Number of dynamic symbols */
+name|Elf_Word
+name|gotsym
+decl_stmt|;
+comment|/* First dynamic symbol in GOT */
+endif|#
+directive|endif
 specifier|const
 name|Elf_Verneed
 modifier|*
