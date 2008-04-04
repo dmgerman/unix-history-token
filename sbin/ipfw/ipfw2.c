@@ -241,6 +241,9 @@ end_include
 
 begin_decl_stmt
 name|int
+name|do_value_as_ip
+decl_stmt|,
+comment|/* show table value as IP */
 name|do_resolv
 decl_stmt|,
 comment|/* Would try to resolve all */
@@ -25359,8 +25362,6 @@ name|a
 operator|++
 control|)
 block|{
-comment|/* Heuristic to print it the right way */
-comment|/* values< 64k are printed as numbers */
 name|unsigned
 name|int
 name|tval
@@ -25378,9 +25379,7 @@ name|value
 expr_stmt|;
 if|if
 condition|(
-name|tval
-operator|>
-literal|0xffff
+name|do_value_as_ip
 condition|)
 block|{
 name|char
@@ -25415,7 +25414,7 @@ argument_list|,
 literal|127
 argument_list|)
 expr_stmt|;
-comment|/* inet_ntoa expects host order */
+comment|/* inet_ntoa expects network order */
 name|tval
 operator|=
 name|htonl
@@ -25486,14 +25485,7 @@ index|]
 operator|.
 name|masklen
 argument_list|,
-name|tbl
-operator|->
-name|ent
-index|[
-name|a
-index|]
-operator|.
-name|value
+name|tval
 argument_list|)
 expr_stmt|;
 block|}
@@ -26068,7 +26060,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"abcdefhnNqs:STtv"
+literal|"abcdefhinNqs:STtv"
 argument_list|)
 operator|)
 operator|!=
@@ -26148,6 +26140,14 @@ argument_list|()
 expr_stmt|;
 break|break;
 comment|/* NOTREACHED */
+case|case
+literal|'i'
+case|:
+name|do_value_as_ip
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'n'
 case|:
