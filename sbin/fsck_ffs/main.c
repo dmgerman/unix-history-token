@@ -2548,6 +2548,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XX: We need the following line until we clean up 		 * nmount parsing of root mounts and NFS root mounts. 		 */
 name|build_iovec
 argument_list|(
 operator|&
