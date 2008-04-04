@@ -411,7 +411,9 @@ name|fd
 operator|->
 name|fd_vnode
 argument_list|,
-literal|0
+name|LK_EXCLUSIVE
+operator||
+name|LK_CANRECURSE
 argument_list|,
 name|td
 argument_list|)
@@ -425,6 +427,14 @@ operator|=
 name|fd
 operator|->
 name|fd_vnode
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+operator|*
+name|vpp
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
