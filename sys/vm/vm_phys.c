@@ -2550,12 +2550,6 @@ operator|>=
 name|seg
 operator|->
 name|start
-operator|&&
-name|pa
-operator|<
-name|seg
-operator|->
-name|end
 condition|)
 name|m_set
 operator|=
