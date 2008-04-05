@@ -720,7 +720,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s %*u %-*s  %-*s	 "
+literal|"%s %*u %-*s  %-*s  "
 argument_list|,
 name|buf
 argument_list|,
@@ -1916,7 +1916,7 @@ name|d_first
 condition|?
 literal|"%e %b  %Y"
 else|:
-literal|"%b %e	 %Y"
+literal|"%b %e  %Y"
 expr_stmt|;
 name|strftime
 argument_list|(
