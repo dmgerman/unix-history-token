@@ -1832,6 +1832,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
+comment|/* 	 * This is silly - we should look at dv_type but that value is 	 * arch dependant and we can't use it here. 	 */
 ifndef|#
 directive|ifndef
 name|__i386__
@@ -1846,6 +1847,28 @@ operator|->
 name|dv_name
 argument_list|,
 literal|"net"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+else|#
+directive|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|f
+operator|->
+name|f_dev
+operator|->
+name|dv_name
+argument_list|,
+literal|"pxe"
 argument_list|)
 operator|!=
 literal|0
