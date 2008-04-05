@@ -1405,6 +1405,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 operator|*
