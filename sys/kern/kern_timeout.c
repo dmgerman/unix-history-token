@@ -2535,7 +2535,7 @@ argument_list|(
 operator|&
 name|cc
 operator|->
-name|cc_curr
+name|cc_waiting
 argument_list|)
 expr_stmt|;
 return|return
@@ -2576,7 +2576,7 @@ argument_list|(
 operator|&
 name|cc
 operator|->
-name|cc_curr
+name|cc_waiting
 argument_list|)
 expr_stmt|;
 name|sq_locked
@@ -2606,7 +2606,7 @@ argument_list|(
 operator|&
 name|cc
 operator|->
-name|cc_curr
+name|cc_waiting
 argument_list|,
 operator|&
 name|cc
@@ -2627,7 +2627,7 @@ argument_list|(
 operator|&
 name|cc
 operator|->
-name|cc_curr
+name|cc_waiting
 argument_list|,
 literal|0
 argument_list|)
@@ -2750,7 +2750,7 @@ argument_list|(
 operator|&
 name|cc
 operator|->
-name|cc_curr
+name|cc_waiting
 argument_list|)
 expr_stmt|;
 name|c
