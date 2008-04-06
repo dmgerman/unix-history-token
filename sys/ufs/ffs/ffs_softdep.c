@@ -4241,6 +4241,9 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
+name|uio_yield
+argument_list|()
+expr_stmt|;
 name|bwillwrite
 argument_list|()
 expr_stmt|;
