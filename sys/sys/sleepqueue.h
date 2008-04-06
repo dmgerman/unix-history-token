@@ -101,6 +101,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SLEEPQ_LK
+value|0x04
+end_define
+
+begin_comment
+comment|/* Used by a lockmgr. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SLEEPQ_INTERRUPTIBLE
 value|0x100
 end_define

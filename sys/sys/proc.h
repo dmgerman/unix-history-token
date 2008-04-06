@@ -539,7 +539,11 @@ comment|/* (k) Count of non-spin locks. */
 name|short
 name|td_rw_rlocks
 decl_stmt|;
-comment|/* (k) count of rwlock read locks. */
+comment|/* (k) Count of rwlock read locks. */
+name|short
+name|td_lk_slocks
+decl_stmt|;
+comment|/* (k) Count of lockmgr shared locks. */
 name|struct
 name|turnstile
 modifier|*

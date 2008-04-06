@@ -1640,7 +1640,8 @@ name|VN_LOCK_AREC
 parameter_list|(
 name|vp
 parameter_list|)
-value|((vp)->v_vnlock->lk_flags |= LK_CANRECURSE)
+define|\
+value|((vp)->v_vnlock->lock_object.lo_flags |= LK_CANRECURSE)
 end_define
 
 begin_define
@@ -1650,7 +1651,8 @@ name|VN_LOCK_ASHARE
 parameter_list|(
 name|vp
 parameter_list|)
-value|((vp)->v_vnlock->lk_flags&= ~LK_NOSHARE)
+define|\
+value|((vp)->v_vnlock->lock_object.lo_flags&= ~LK_NOSHARE)
 end_define
 
 begin_endif

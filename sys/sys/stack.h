@@ -15,39 +15,17 @@ directive|define
 name|_SYS_STACK_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|STACK_MAX
-value|18
-end_define
-
-begin_comment
-comment|/* Don't change, stack_ktr relies on this. */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/_stack.h>
+end_include
 
 begin_struct_decl
 struct_decl|struct
 name|sbuf
 struct_decl|;
 end_struct_decl
-
-begin_struct
-struct|struct
-name|stack
-block|{
-name|int
-name|depth
-decl_stmt|;
-name|vm_offset_t
-name|pcs
-index|[
-name|STACK_MAX
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/* MI Routines. */
