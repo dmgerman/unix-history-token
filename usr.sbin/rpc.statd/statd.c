@@ -1596,7 +1596,7 @@ name|NC_TPI_CLTS
 condition|)
 name|listen
 argument_list|(
-name|sock
+name|fd
 argument_list|,
 name|SOMAXCONN
 argument_list|)
