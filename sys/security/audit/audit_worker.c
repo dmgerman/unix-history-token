@@ -497,7 +497,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|send_trigger
+name|audit_send_trigger
 argument_list|(
 name|AUDIT_TRIGGER_LOW_SPACE
 argument_list|)
@@ -553,7 +553,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|send_trigger
+name|audit_send_trigger
 argument_list|(
 name|AUDIT_TRIGGER_ROTATE_KERNEL
 argument_list|)
@@ -792,7 +792,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|send_trigger
+name|audit_send_trigger
 argument_list|(
 name|AUDIT_TRIGGER_NO_SPACE
 argument_list|)

@@ -462,7 +462,7 @@ end_function
 
 begin_function
 name|int
-name|send_trigger
+name|audit_send_trigger
 parameter_list|(
 name|unsigned
 name|int

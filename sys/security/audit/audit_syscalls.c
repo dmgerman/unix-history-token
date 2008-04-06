@@ -1610,7 +1610,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|send_trigger
+name|audit_send_trigger
 argument_list|(
 name|udata
 operator|.
