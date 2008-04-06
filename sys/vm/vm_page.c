@@ -3750,7 +3750,7 @@ name|m
 operator|==
 name|NULL
 operator|&&
-name|vm_reserv_reclaim
+name|vm_reserv_reclaim_inactive
 argument_list|()
 condition|)
 block|{
