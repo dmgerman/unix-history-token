@@ -786,7 +786,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|acpi_probe_order
 parameter_list|(
 name|ACPI_HANDLE
@@ -7066,12 +7066,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine the probe order for a given device and return non-zero if it  * should be attached immediately.  */
+comment|/*  * Determine the probe order for a given device.  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|acpi_probe_order
 parameter_list|(
 name|ACPI_HANDLE
@@ -7085,10 +7085,7 @@ block|{
 name|ACPI_OBJECT_TYPE
 name|type
 decl_stmt|;
-name|u_int
-name|addr
-decl_stmt|;
-comment|/*      * 1. I/O port and memory system resource holders      * 2. Embedded controllers (to handle early accesses)      * 3. PCI Link Devices      * 11 - 266. Host-PCI bridges sorted by _ADR      * 280. CPUs      */
+comment|/*      * 1. I/O port and memory system resource holders      * 2. Embedded controllers (to handle early accesses)      * 3. PCI Link Devices      * ACPI_DEV_BASE_ORDER. Host-PCI bridges      * ACPI_DEV_BASE_ORDER + 10. CPUs      */
 name|AcpiGetType
 argument_list|(
 name|handle
@@ -7158,50 +7155,11 @@ argument_list|,
 literal|"PNP0A03"
 argument_list|)
 condition|)
-block|{
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|acpi_GetInteger
-argument_list|(
-name|handle
-argument_list|,
-literal|"_ADR"
-argument_list|,
-operator|&
-name|addr
-argument_list|)
-argument_list|)
-condition|)
 operator|*
 name|order
 operator|=
-literal|11
-operator|+
-name|ACPI_ADR_PCI_SLOT
-argument_list|(
-name|addr
-argument_list|)
-operator|*
-operator|(
-name|PCI_FUNCMAX
-operator|+
-literal|1
-operator|)
-operator|+
-name|ACPI_ADR_PCI_FUNC
-argument_list|(
-name|addr
-argument_list|)
+name|ACPI_DEV_BASE_ORDER
 expr_stmt|;
-else|else
-operator|*
-name|order
-operator|=
-literal|11
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -7212,13 +7170,10 @@ condition|)
 operator|*
 name|order
 operator|=
-literal|280
+name|ACPI_DEV_BASE_ORDER
+operator|+
+literal|10
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -7403,7 +7358,7 @@ operator|!=
 name|NULL
 condition|)
 break|break;
-comment|/*  	     * Create a placeholder device for this node.  Sort the 	     * placeholder so that the probe/attach passes will run 	     * breadth-first.  Orders less than ACPI_DEV_BASE_ORDER 	     * are reserved for special objects (i.e., system 	     * resources).  Orders between ACPI_DEV_BASE_ORDER and 300 	     * are used for Host-PCI bridges (and effectively all 	     * their children) and CPUs.  Larger values are used for 	     * all other devices. 	     */
+comment|/*  	     * Create a placeholder device for this node.  Sort the 	     * placeholder so that the probe/attach passes will run 	     * breadth-first.  Orders less than ACPI_DEV_BASE_ORDER 	     * are reserved for special objects (i.e., system 	     * resources).  Orders between ACPI_DEV_BASE_ORDER and 100 	     * are used for Host-PCI bridges (and effectively all 	     * their children) and CPUs.  Larger values are used for 	     * all other devices. 	     */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -7421,7 +7376,7 @@ name|level
 operator|*
 literal|10
 operator|+
-literal|300
+literal|100
 expr_stmt|;
 name|acpi_probe_order
 argument_list|(
