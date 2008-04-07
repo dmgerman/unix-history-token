@@ -5498,7 +5498,7 @@ operator|=
 name|TCPOPT_EOL
 expr_stmt|;
 block|}
-comment|/* 	 * According to RFC 793 (STD0007): 	 *   "The content of the header beyond the End-of-Option option 	 *    must be header padding (i.e., zero)." 	 *   and later: "The padding is composed of zeros." 	 * While EOLs are zeros use an explicit 0x00 here to not confuse 	 * people with padding of EOLs. 	 */
+comment|/* 	 * According to RFC 793 (STD0007): 	 *   "The content of the header beyond the End-of-Option option 	 *    must be header padding (i.e., zero)." 	 *   and later: "The padding is composed of zeros." 	 */
 while|while
 condition|(
 name|optlen
