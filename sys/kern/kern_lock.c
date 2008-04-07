@@ -370,7 +370,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((x)& LK_SHARE)&& (((x)& LK_EXCLUSIVE_WAITERS) == 0 ||	\ 	curthread->td_lk_slocks))
+value|(((x)& LK_SHARE)&& (((x)& LK_EXCLUSIVE_WAITERS) == 0 ||	\ 	curthread->td_lk_slocks || (curthread->td_pflags& TDP_DEADLKTREAT)))
 end_define
 
 begin_define

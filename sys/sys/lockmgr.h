@@ -680,49 +680,49 @@ begin_define
 define|#
 directive|define
 name|LK_INIT_MASK
-value|0x000FF
+value|0x0000FF
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_CANRECURSE
-value|0x00001
+value|0x000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_NODUP
-value|0x00002
+value|0x000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_NOPROFILE
-value|0x00004
+value|0x000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_NOSHARE
-value|0x00008
+value|0x000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_NOWITNESS
-value|0x00010
+value|0x000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_QUIET
-value|0x00020
+value|0x000020
 end_define
 
 begin_comment
@@ -733,42 +733,42 @@ begin_define
 define|#
 directive|define
 name|LK_EATTR_MASK
-value|0x0FF00
+value|0x00FF00
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_INTERLOCK
-value|0x00100
+value|0x000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_NOWAIT
-value|0x00200
+value|0x000200
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_RETRY
-value|0x00400
+value|0x000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_SLEEPFAIL
-value|0x00800
+value|0x000800
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_TIMELOCK
-value|0x01000
+value|0x001000
 end_define
 
 begin_comment
@@ -779,56 +779,56 @@ begin_define
 define|#
 directive|define
 name|LK_TYPE_MASK
-value|0xF0000
+value|0xFF0000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_DOWNGRADE
-value|0x10000
+value|0x010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_DRAIN
-value|0x20000
+value|0x020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_EXCLOTHER
-value|0x30000
+value|0x040000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_EXCLUSIVE
-value|0x40000
+value|0x080000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_RELEASE
-value|0x50000
+value|0x100000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_SHARED
-value|0x60000
+value|0x200000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_UPGRADE
-value|0x70000
+value|0x400000
 end_define
 
 begin_define
