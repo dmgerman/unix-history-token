@@ -123,7 +123,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_write_1(sc->sc_ioport, 0, val)
+value|bus_write_1(sc->sc_ioport, 0x00, val)
 end_define
 
 begin_define
@@ -157,7 +157,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_write_1(sc->sc_ioport, 4, val)
+value|bus_write_1(sc->sc_ioport, 0x04, val)
 end_define
 
 begin_define
