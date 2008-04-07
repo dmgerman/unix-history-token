@@ -14923,8 +14923,6 @@ name|flag
 operator|&
 name|AT_SYMLINK_NOFOLLOW
 operator|)
-operator|==
-literal|0
 condition|?
 name|NOFOLLOW
 else|:
