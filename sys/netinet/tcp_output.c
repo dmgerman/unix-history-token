@@ -5508,13 +5508,13 @@ condition|)
 block|{
 name|optlen
 operator|+=
-literal|1
+name|TCPOLEN_PAD
 expr_stmt|;
 operator|*
 name|optp
 operator|++
 operator|=
-literal|0x00
+name|TCPOPT_PAD
 expr_stmt|;
 block|}
 name|KASSERT
