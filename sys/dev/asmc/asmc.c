@@ -2533,7 +2533,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|200
+literal|100
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Wait up to 5 seconds for SMS initialization. 	 */

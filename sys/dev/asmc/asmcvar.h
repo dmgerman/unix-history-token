@@ -299,7 +299,7 @@ begin_define
 define|#
 directive|define
 name|ASMC_SMS_INIT2
-value|0x00
+value|0xf8
 end_define
 
 begin_define
