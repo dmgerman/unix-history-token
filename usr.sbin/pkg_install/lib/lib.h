@@ -180,6 +180,39 @@ value|"/bin/rmdir"
 end_define
 
 begin_comment
+comment|/* Where the ports lives by default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEF_PORTS_DIR
+value|"/usr/ports"
+end_define
+
+begin_comment
+comment|/* just in case we change the environment variable name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PORTSDIR
+value|"PORTSDIR"
+end_define
+
+begin_comment
+comment|/* macro to get name of directory where the ports lives */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PORTS_DIR
+value|(getenv(PORTSDIR) ? getenv(PORTSDIR) : DEF_PORTS_DIR)
+end_define
+
+begin_comment
 comment|/* Where we put logging information by default, else ${PKG_DBDIR} if set */
 end_comment
 
@@ -303,8 +336,28 @@ argument_list|)
 operator|&&
 name|__FreeBSD_version
 operator|>=
-literal|700000
+literal|800000
 end_if
+
+begin_define
+define|#
+directive|define
+name|INDEX_FNAME
+value|"INDEX-8"
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|700000
+end_elif
 
 begin_define
 define|#

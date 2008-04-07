@@ -53,7 +53,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"hvIRfFnrp:P:SMt:C:K"
+literal|"hviIRfFnrp:P:SMt:C:K"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,14 @@ name|Boolean
 name|FailOnAlreadyInstalled
 init|=
 name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|IgnoreDeps
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -457,11 +465,19 @@ literal|"/packages-6-stable"
 block|}
 block|,
 block|{
-literal|700000
+literal|700100
 block|,
 literal|799000
 block|,
 literal|"/packages-7-stable"
+block|}
+block|,
+block|{
+literal|800000
+block|,
+literal|899000
+block|,
+literal|"/packages-8-current"
 block|}
 block|,
 block|{
@@ -503,18 +519,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|usage
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -779,6 +792,14 @@ case|:
 name|Chroot
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|IgnoreDeps
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -1715,7 +1736,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_add [-vInfFrRMSK] [-t template] [-p prefix] [-P prefix] [-C chrootdir]"
+literal|"usage: pkg_add [-viInfFrRMSK] [-t template] [-p prefix] [-P prefix] [-C chrootdir]"
 argument_list|,
 literal|"               pkg-name [pkg-name ...]"
 argument_list|)

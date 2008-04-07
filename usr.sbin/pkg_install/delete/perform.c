@@ -1220,6 +1220,12 @@ operator|(
 name|p
 operator|->
 name|next
+operator|!=
+name|NULL
+operator|&&
+name|p
+operator|->
+name|next
 operator|->
 name|type
 operator|==
