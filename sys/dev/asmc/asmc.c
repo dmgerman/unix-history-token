@@ -957,6 +957,20 @@ parameter_list|)
 value|device_printf(dev, str)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ASMC_DPRINTF
+parameter_list|(
+name|str
+parameter_list|)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -2573,16 +2587,8 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"WARNING: Sudden Motion Sensor "
-literal|"not initialized!\n"
-argument_list|)
-expr_stmt|;
 goto|goto
-name|nosms
+name|out
 goto|;
 block|}
 name|buf
@@ -2623,6 +2629,15 @@ literal|50
 argument_list|)
 expr_stmt|;
 block|}
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"WARNING: Sudden Motion Sensor not initialized!\n"
+argument_list|)
+expr_stmt|;
+name|out
+label|:
 name|asmc_sms_calibrate
 argument_list|(
 name|dev
