@@ -9490,6 +9490,21 @@ name|ip6
 decl_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|tp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|INP_LOCK_ASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Don't bother if destination was broadcast/multicast. */
 if|if
 condition|(
@@ -10262,6 +10277,13 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|t_iobc
@@ -10705,6 +10727,13 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
+name|INP_LOCK_ASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
 comment|/* Initialize. */
 ifdef|#
 directive|ifdef
@@ -11762,6 +11791,13 @@ name|tp
 operator|->
 name|snd_cwnd
 decl_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
 name|tcp_timer_activate
 argument_list|(
 name|tp
