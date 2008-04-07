@@ -294,7 +294,7 @@ name|fs_ncg
 condition|)
 name|panic
 argument_list|(
-literal|"ffs_freefile: range: dev = %s, ino = %lu, fs = %s"
+literal|"ufs_gjournal_modref: range: dev = %s, ino = %lu, fs = %s"
 argument_list|,
 name|devtoname
 argument_list|(
