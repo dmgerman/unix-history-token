@@ -37,14 +37,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|Boolean
-name|Verbose
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Boolean
 name|Fake
 init|=
 name|FALSE
@@ -66,6 +58,18 @@ init|=
 name|FALSE
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|Verbose
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Allow multiple levels of verbose. */
+end_comment
 
 end_unit
 

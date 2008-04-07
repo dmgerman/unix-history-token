@@ -1404,10 +1404,6 @@ block|}
 elseif|else
 if|if
 condition|(
-name|source
-operator|==
-name|NULL
-operator|&&
 name|OUTPUT
 argument_list|(
 literal|'?'

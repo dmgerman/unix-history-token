@@ -289,18 +289,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|usage
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -363,8 +360,7 @@ case|case
 literal|'v'
 case|:
 name|Verbose
-operator|=
-name|TRUE
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -803,19 +799,19 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_create [-YNOhvyz] [-P pkgs] [-C conflicts] [-p prefix] "
+literal|"usage: pkg_create [-YNOhjvyz] [-C conflicts] [-P pkgs] [-p prefix]"
 argument_list|,
-literal|"                  [-i iscript] [-I piscript] [-k dscript] [-K pdscript] "
+literal|"                  [-i iscript] [-I piscript] [-k dscript] [-K pdscript]"
 argument_list|,
-literal|"                  [-r rscript] [-t template] [-X excludefile] "
+literal|"                  [-r rscript] [-s srcdir] [-S basedir]"
 argument_list|,
-literal|"                  [-D displayfile] [-m mtreefile] [-o origin] "
+literal|"                  [-t template] [-X excludefile]"
 argument_list|,
-literal|"                  [-s srcdir] [-S basedir] "
+literal|"                  [-D displayfile] [-m mtreefile] [-o originpath]"
 argument_list|,
 literal|"                  -c comment -d description -f packlist pkg-filename"
 argument_list|,
-literal|"       pkg_create [-EGYNhvxyzR] -b pkg-name [pkg-filename]"
+literal|"       pkg_create [-EGYNRhvxy] -b pkg-name [pkg-filename]"
 argument_list|)
 expr_stmt|;
 name|exit
