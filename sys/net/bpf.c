@@ -1052,6 +1052,97 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Allow the buffer model to indicate that the current store buffer is  * immutable, regardless of the appearance of space.  Return (1) if the  * buffer is writable, and (0) if not.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|bpf_canwritebuf
+parameter_list|(
+name|struct
+name|bpf_d
+modifier|*
+name|d
+parameter_list|)
+block|{
+name|BPFD_LOCK_ASSERT
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|d
+operator|->
+name|bd_bufmode
+condition|)
+block|{
+case|case
+name|BPF_BUFMODE_ZBUF
+case|:
+return|return
+operator|(
+name|bpf_zerocopy_canwritebuf
+argument_list|(
+name|d
+argument_list|)
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Notify buffer model that an attempt to write to the store buffer has  * resulted in a dropped packet, in which case the buffer may be considered  * full.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bpf_buffull
+parameter_list|(
+name|struct
+name|bpf_d
+modifier|*
+name|d
+parameter_list|)
+block|{
+name|BPFD_LOCK_ASSERT
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|d
+operator|->
+name|bd_bufmode
+condition|)
+block|{
+case|case
+name|BPF_BUFMODE_ZBUF
+case|:
+name|bpf_zerocopy_buffull
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Notify the buffer model that a buffer has moved into the hold position.  */
+end_comment
+
 begin_function
 name|void
 name|bpf_bufheld
@@ -6654,7 +6745,7 @@ name|d
 operator|->
 name|bd_bufsize
 expr_stmt|;
-comment|/* 	 * Round up the end of the previous packet to the next longword. 	 */
+comment|/* 	 * Round up the end of the previous packet to the next longword. 	 * 	 * Drop the packet if there's no room and no hope of room 	 * If the packet would overflow the storage buffer or the storage 	 * buffer is considered immutable by the buffer model, try to rotate 	 * the buffer and wakeup pending processes. 	 */
 name|curlen
 operator|=
 name|BPF_WORDALIGN
@@ -6673,9 +6764,14 @@ operator|>
 name|d
 operator|->
 name|bd_bufsize
+operator|||
+operator|!
+name|bpf_canwritebuf
+argument_list|(
+name|d
+argument_list|)
 condition|)
 block|{
-comment|/* 		 * This packet will overflow the storage buffer. 		 * Rotate the buffers if we can, then wakeup any 		 * pending reads. 		 */
 if|if
 condition|(
 name|d
@@ -6685,7 +6781,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * We haven't completed the previous read yet, 			 * so drop the packet. 			 */
+comment|/* 			 * There's no room in the store buffer, and no 			 * prospect of room, so drop the packet.  Notify the 			 * buffer model. 			 */
+name|bpf_buffull
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 operator|++
 name|d
 operator|->

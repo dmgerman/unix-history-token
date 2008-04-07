@@ -159,7 +159,7 @@ value|512
 end_define
 
 begin_comment
-comment|/*  * struct zbuf describes a memory buffer loaned by a user process to the  * kernel.  We represent this as a series of pages managed using an array of  * sf_bufs.  Even though the memory is contiguous in user space, it may not  * be mapped contiguously in the kernel (i.e., a set of physically  * non-contiguous pages in the direct map region) so we must implement  * scatter-gather copying.  One significant mitigating factor is that on  * systems with a direct memory map, we can avoid TLB misses.  *  * At the front of the shared memor region is a bpf_zbuf_header, which  * contains shared control data to allow user space and the kernel to  * synchronize; this is included in zb_size, but not bpf_bufsize, so that BPF  * knows that the space is not available.  */
+comment|/*  * struct zbuf describes a memory buffer loaned by a user process to the  * kernel.  We represent this as a series of pages managed using an array of  * sf_bufs.  Even though the memory is contiguous in user space, it may not  * be mapped contiguously in the kernel (i.e., a set of physically  * non-contiguous pages in the direct map region) so we must implement  * scatter-gather copying.  One significant mitigating factor is that on  * systems with a direct memory map, we can avoid TLB misses.  *  * At the front of the shared memory region is a bpf_zbuf_header, which  * contains shared control data to allow user space and the kernel to  * synchronize; this is included in zb_size, but not bpf_bufsize, so that BPF  * knows that the space is not available.  */
 end_comment
 
 begin_struct
@@ -178,6 +178,10 @@ name|u_int
 name|zb_numpages
 decl_stmt|;
 comment|/* Number of pages. */
+name|int
+name|zb_flags
+decl_stmt|;
+comment|/* Flags on zbuf. */
 name|struct
 name|sf_buf
 modifier|*
@@ -194,6 +198,21 @@ comment|/* Shared header. */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * When a buffer has been assigned to userspace, flag it as such, as the  * buffer may remain in the store position as a result of the user process  * not yet having acknowledged the buffer in the hold position yet.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZBUF_FLAG_IMMUTABLE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Set when owned by user. */
+end_comment
 
 begin_comment
 comment|/*  * Release a page we've previously wired.  */
@@ -846,6 +865,23 @@ operator|*
 operator|)
 name|buf
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|zb
+operator|->
+name|zb_flags
+operator|&
+name|ZBUF_FLAG_IMMUTABLE
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"bpf_zerocopy_append_bytes: ZBUF_FLAG_IMMUTABLE"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Scatter-gather copy to user pages mapped into kernel address space 	 * using sf_bufs: copy up to a page at a time. 	 */
 name|offset
 operator|+=
@@ -1063,6 +1099,23 @@ operator|*
 operator|)
 name|buf
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|zb
+operator|->
+name|zb_flags
+operator|&
+name|ZBUF_FLAG_IMMUTABLE
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"bpf_zerocopy_append_mbuf: ZBUF_FLAG_IMMUTABLE"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Scatter gather both from an mbuf chain and to a user page set 	 * mapped into kernel address space using sf_bufs.  If we're lucky, 	 * each mbuf requires one copy operation, but if page alignment and 	 * mbuf alignment work out less well, we'll be doing two copies per 	 * mbuf. 	 */
 name|offset
 operator|+=
@@ -1248,7 +1301,106 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Notification from the BPF framework that a buffer has moved into the held  * slot on a descriptor.  Zero-copy BPF will update the shared page to let  * the user process know.  */
+comment|/*  * Notification from the BPF framework that a buffer in the store position is  * rejecting packets and may be considered full.  We mark the buffer as  * immutable and assign to userspace so that it is immediately available for  * the user process to access.  */
+end_comment
+
+begin_function
+name|void
+name|bpf_zerocopy_buffull
+parameter_list|(
+name|struct
+name|bpf_d
+modifier|*
+name|d
+parameter_list|)
+block|{
+name|struct
+name|zbuf
+modifier|*
+name|zb
+decl_stmt|;
+name|KASSERT
+argument_list|(
+name|d
+operator|->
+name|bd_bufmode
+operator|==
+name|BPF_BUFMODE_ZBUF
+argument_list|,
+operator|(
+literal|"bpf_zerocopy_buffull: not in zbuf mode"
+operator|)
+argument_list|)
+expr_stmt|;
+name|zb
+operator|=
+operator|(
+expr|struct
+name|zbuf
+operator|*
+operator|)
+name|d
+operator|->
+name|bd_sbuf
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|zb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"bpf_zerocopy_buffull: zb == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|zb
+operator|->
+name|zb_flags
+operator|&
+name|ZBUF_FLAG_IMMUTABLE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|zb
+operator|->
+name|zb_flags
+operator||=
+name|ZBUF_FLAG_IMMUTABLE
+expr_stmt|;
+name|zb
+operator|->
+name|zb_header
+operator|->
+name|bzh_kernel_len
+operator|=
+name|d
+operator|->
+name|bd_slen
+expr_stmt|;
+name|atomic_add_rel_int
+argument_list|(
+operator|&
+name|zb
+operator|->
+name|zb_header
+operator|->
+name|bzh_kernel_gen
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Notification from the BPF framework that a buffer has moved into the held  * slot on a descriptor.  Zero-copy BPF will update the shared page to let  * the user process know and flag the buffer as immutable if it hasn't  * already been marked immutable due to filling while it was in the store  * position.  *  * Note: identical logic as in bpf_zerocopy_buffull(), except that we operate  * on bd_hbuf and bd_hlen.  */
 end_comment
 
 begin_function
@@ -1301,6 +1453,25 @@ literal|"bpf_zerocopy_bufheld: zb == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|zb
+operator|->
+name|zb_flags
+operator|&
+name|ZBUF_FLAG_IMMUTABLE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|zb
+operator|->
+name|zb_flags
+operator||=
+name|ZBUF_FLAG_IMMUTABLE
+expr_stmt|;
 name|zb
 operator|->
 name|zb_header
@@ -1323,6 +1494,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1406,6 +1578,81 @@ return|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Query from the BPF framework as to whether or not the buffer current in  * the store position can actually be written to.  This may return false if  * the store buffer is assigned to userspace before the hold buffer is  * acknowledged.  */
+end_comment
+
+begin_function
+name|int
+name|bpf_zerocopy_canwritebuf
+parameter_list|(
+name|struct
+name|bpf_d
+modifier|*
+name|d
+parameter_list|)
+block|{
+name|struct
+name|zbuf
+modifier|*
+name|zb
+decl_stmt|;
+name|KASSERT
+argument_list|(
+name|d
+operator|->
+name|bd_bufmode
+operator|==
+name|BPF_BUFMODE_ZBUF
+argument_list|,
+operator|(
+literal|"bpf_zerocopy_canwritebuf: not in zbuf mode"
+operator|)
+argument_list|)
+expr_stmt|;
+name|zb
+operator|=
+operator|(
+expr|struct
+name|zbuf
+operator|*
+operator|)
+name|d
+operator|->
+name|bd_sbuf
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|zb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"bpf_zerocopy_canwritebuf: bd_sbuf NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|zb
+operator|->
+name|zb_flags
+operator|&
+name|ZBUF_FLAG_IMMUTABLE
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+literal|1
 operator|)
 return|;
 block|}
