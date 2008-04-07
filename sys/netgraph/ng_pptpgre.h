@@ -64,6 +64,24 @@ comment|/* to lower layers */
 end_comment
 
 begin_comment
+comment|/* Session hooks: prefix plus hex session ID, e.g., "session_3e14" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPTPGRE_HOOK_SESSION_P
+value|"session_"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_PPTPGRE_HOOK_SESSION_F
+value|"session_%04x"
+end_define
+
+begin_comment
 comment|/* Configuration for a session */
 end_comment
 
