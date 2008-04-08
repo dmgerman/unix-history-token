@@ -569,11 +569,12 @@ name|auto_mode
 operator|=
 name|TRUE
 expr_stmt|;
+comment|/* 	 * XXX: After a cursory glance at various Intel specification 	 * XXX: updates it seems like these tests for errata is bogus. 	 * XXX: As far as I can tell, the failure mode is benign, in 	 * XXX: that cpus with no errata will have their bottom two 	 * XXX: STPCLK# rates disabled, so rather than waste more time 	 * XXX: hunting down intel docs, just document it and punt. /phk 	 */
 switch|switch
 condition|(
 name|cpu_id
 operator|&
-literal|0xf
+literal|0xff
 condition|)
 block|{
 case|case
