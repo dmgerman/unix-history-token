@@ -640,7 +640,8 @@ name|p
 parameter_list|,
 name|v
 parameter_list|)
-value|atomic_add_32((uint32_t *)p, (uint32_t)v)
+define|\
+value|atomic_add_32((volatile uint32_t *)(volatile void *)p, v)
 end_define
 
 begin_define
@@ -652,7 +653,8 @@ name|p
 parameter_list|,
 name|v
 parameter_list|)
-value|atomic_subtract_32((uint32_t *)p, (uint32_t)v)
+define|\
+value|atomic_subtract_32((volatile uint32_t *)(volatile void *)p, v)
 end_define
 
 begin_define
