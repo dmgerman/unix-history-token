@@ -647,6 +647,17 @@ name|BSTP_INFO_RECIEVED
 value|1
 end_define
 
+begin_comment
+comment|/* compat */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSTP_INFO_RECEIVED
+value|1
+end_define
+
 begin_define
 define|#
 directive|define
