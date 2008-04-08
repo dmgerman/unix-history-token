@@ -373,35 +373,12 @@ name|ABT_STACK_SIZE
 value|1
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPKDB
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|UND_STACK_SIZE
-value|2
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|UND_STACK_SIZE
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
