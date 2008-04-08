@@ -52,6 +52,10 @@ name|ATA_PROTO_ATAPI_16
 value|0x8001
 define|#
 directive|define
+name|ATA_PROTO_CFA
+value|0x848a
+define|#
+directive|define
 name|ATA_ATAPI_TYPE_MASK
 value|0x1f00
 define|#
