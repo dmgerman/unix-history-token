@@ -2386,13 +2386,6 @@ name|LINUX_F_UNLCK
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
-name|LINUX_AT_FDCWD
-value|-100
-end_define
-
 begin_comment
 comment|/*  * mount flags  */
 end_comment

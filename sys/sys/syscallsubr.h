@@ -277,6 +277,7 @@ name|char
 modifier|*
 name|prefix
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -292,6 +293,9 @@ name|pathbuf
 parameter_list|,
 name|int
 name|create
+parameter_list|,
+name|int
+name|dirfd
 parameter_list|)
 function_decl|;
 end_function_decl

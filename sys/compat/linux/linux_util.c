@@ -162,12 +162,15 @@ parameter_list|,
 name|pbuf
 parameter_list|,
 name|cflag
+parameter_list|,
+name|dfd
 parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path
@@ -183,6 +186,9 @@ name|pbuf
 decl_stmt|;
 name|int
 name|cflag
+decl_stmt|;
+name|int
+name|dfd
 decl_stmt|;
 block|{
 return|return
@@ -200,6 +206,8 @@ argument_list|,
 name|pbuf
 argument_list|,
 name|cflag
+argument_list|,
+name|dfd
 argument_list|)
 operator|)
 return|;

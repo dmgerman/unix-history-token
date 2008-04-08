@@ -90,6 +90,7 @@ name|struct
 name|thread
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -101,6 +102,8 @@ modifier|*
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -108,7 +111,7 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|LCONVPATH_SEG
+name|LCONVPATH_AT
 parameter_list|(
 name|td
 parameter_list|,
@@ -118,10 +121,10 @@ name|pathp
 parameter_list|,
 name|i
 parameter_list|,
-name|seg
+name|dfd
 parameter_list|)
 define|\
-value|do {								\ 		int _error;						\ 									\ 		_error = linux_emul_convpath(td, upath, seg,		\ 		    pathp, i);						\ 		if (*(pathp) == NULL)					\ 			return (_error);				\ 	} while (0)
+value|do {								\ 		int _error;						\ 									\ 		_error = linux_emul_convpath(td, upath, UIO_USERSPACE,	\ 		    pathp, i, dfd);					\ 		if (*(pathp) == NULL)					\ 			return (_error);				\ 	} while (0)
 end_define
 
 begin_define
@@ -138,7 +141,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|LCONVPATH_SEG(td, upath, pathp, i, UIO_USERSPACE)
+value|LCONVPATH_AT(td, upath, pathp, i, AT_FDCWD)
 end_define
 
 begin_define
@@ -158,6 +161,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|LCONVPATHEXIST_AT
+parameter_list|(
+name|td
+parameter_list|,
+name|upath
+parameter_list|,
+name|pathp
+parameter_list|,
+name|dfd
+parameter_list|)
+value|LCONVPATH_AT(td, upath, pathp, 0, dfd)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LCONVPATHCREAT
 parameter_list|(
 name|td
@@ -167,6 +186,22 @@ parameter_list|,
 name|pathp
 parameter_list|)
 value|LCONVPATH(td, upath, pathp, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCONVPATHCREAT_AT
+parameter_list|(
+name|td
+parameter_list|,
+name|upath
+parameter_list|,
+name|pathp
+parameter_list|,
+name|dfd
+parameter_list|)
+value|LCONVPATH_AT(td, upath, pathp, 1, dfd)
 end_define
 
 begin_define

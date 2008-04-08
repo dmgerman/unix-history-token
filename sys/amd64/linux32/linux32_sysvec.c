@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/imgact.h>
 end_include
 
@@ -4258,6 +4264,8 @@ operator|&
 name|rpath
 argument_list|,
 literal|0
+argument_list|,
+name|AT_FDCWD
 argument_list|)
 expr_stmt|;
 if|if

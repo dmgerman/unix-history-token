@@ -4548,6 +4548,7 @@ name|char
 modifier|*
 name|prefix
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -4563,6 +4564,9 @@ name|pathbuf
 parameter_list|,
 name|int
 name|create
+parameter_list|,
+name|int
+name|dirfd
 parameter_list|)
 block|{
 name|struct
@@ -4733,6 +4737,29 @@ expr_stmt|;
 goto|goto
 name|keeporig
 goto|;
+block|}
+if|if
+condition|(
+name|dirfd
+operator|!=
+name|AT_FDCWD
+condition|)
+block|{
+comment|/* 		 * We want the original because the "prefix" is 		 * included in the already opened dirfd. 		 */
+name|bcopy
+argument_list|(
+name|ptr
+argument_list|,
+name|buf
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 	 * We know that there is a / somewhere in this pathname. 	 * Search backwards for it, to find the file's parent dir 	 * to see if it exists in the alternate tree. If it does, 	 * and we want to create a file (cflag is set). We don't 	 * need to worry about the root comparison in this case. 	 */
 if|if
