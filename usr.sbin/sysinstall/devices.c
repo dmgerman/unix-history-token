@@ -580,6 +580,20 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"ipw"
+argument_list|,
+literal|"Intel PRO/Wireless 2100 IEEE 802.11 adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"iwi"
+argument_list|,
+literal|"Intel PRO/Wireless 2200BG/2225BG/2915ABG adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"ixgb"
 argument_list|,
 literal|"Intel(R) PRO/10Gb Ethernet card"
@@ -604,6 +618,13 @@ argument_list|(
 literal|"lge"
 argument_list|,
 literal|"Level 1 LXT1001 Gigabit Ethernet card"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"malo"
+argument_list|,
+literal|"Marvell Libertas 88W8335 802.11 wireless adapter"
 argument_list|)
 block|,
 name|NETWORK
@@ -650,6 +671,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"ral"
+argument_list|,
+literal|"Ralink Technology IEEE 802.11 wireless adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"ray"
 argument_list|,
 literal|"Raytheon Raylink 802.11 wireless adapter"
@@ -674,6 +702,13 @@ argument_list|(
 literal|"rue"
 argument_list|,
 literal|"RealTek USB Ethernet card"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"rum"
+argument_list|,
+literal|"Ralink Technology USB IEEE 802.11 wireless adapter"
 argument_list|)
 block|,
 name|NETWORK
@@ -760,6 +795,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"ural"
+argument_list|,
+literal|"Ralink Technology RT2500USB 802.11 wireless adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"vge"
 argument_list|,
 literal|"VIA VT612x PCI Gigabit Ethernet card"
@@ -802,6 +844,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"wpi"
+argument_list|,
+literal|"Intel 3945ABG IEEE 802.11 wireless adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"xe"
 argument_list|,
 literal|"Xircom/Intel EtherExpress Pro100/16 Ethernet card"
@@ -812,6 +861,13 @@ argument_list|(
 literal|"xl"
 argument_list|,
 literal|"3COM 3c90x / 3c90xB PCI Ethernet card"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
+literal|"zyd"
+argument_list|,
+literal|"ZyDAS ZD1211/ZD1211B USB 802.11 wireless adapter"
 argument_list|)
 block|,
 name|NETWORK
