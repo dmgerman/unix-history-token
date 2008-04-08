@@ -3275,7 +3275,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|bus_space_read_1(rman_get_bustag((res)), \ 			 rman_get_bushandle((res)), (offset))
+value|bus_read_1((res), (offset))
 end_define
 
 begin_define
@@ -3288,7 +3288,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|bus_space_read_2(rman_get_bustag((res)), \ 			 rman_get_bushandle((res)), (offset))
+value|bus_read_2((res), (offset))
 end_define
 
 begin_define
@@ -3301,7 +3301,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|bus_space_read_4(rman_get_bustag((res)), \ 			 rman_get_bushandle((res)), (offset))
+value|bus_read_4((res), (offset))
 end_define
 
 begin_define
@@ -3318,7 +3318,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_2(rman_get_bustag((res)), \ 			       rman_get_bushandle((res)), \ 			       (offset), (addr), (count))
+value|bus_read_multi_2((res), (offset), (addr), (count))
 end_define
 
 begin_define
@@ -3335,7 +3335,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_stream_2(rman_get_bustag((res)), \ 				      rman_get_bushandle((res)), \ 				      (offset), (addr), (count))
+value|bus_read_multi_stream_2((res), (offset), (addr), (count))
 end_define
 
 begin_define
@@ -3352,7 +3352,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_4(rman_get_bustag((res)), \ 			       rman_get_bushandle((res)), \ 			       (offset), (addr), (count))
+value|bus_read_multi_4((res), (offset), (addr), (count))
 end_define
 
 begin_define
@@ -3369,7 +3369,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_stream_4(rman_get_bustag((res)), \ 				      rman_get_bushandle((res)), \ 				      (offset), (addr), (count))
+value|bus_read_multi_stream_4((res), (offset), (addr), (count))
 end_define
 
 begin_define
@@ -3384,7 +3384,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_1(rman_get_bustag((res)), \ 			  rman_get_bushandle((res)), (offset), (value))
+value|bus_write_1((res), (offset), (value))
 end_define
 
 begin_define
@@ -3399,7 +3399,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_2(rman_get_bustag((res)), \ 			  rman_get_bushandle((res)), (offset), (value))
+value|bus_write_2((res), (offset), (value))
 end_define
 
 begin_define
@@ -3414,7 +3414,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_4(rman_get_bustag((res)), \ 			  rman_get_bushandle((res)), (offset), (value))
+value|bus_write_4((res), (offset), (value))
 end_define
 
 begin_define
@@ -3431,7 +3431,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_2(rman_get_bustag((res)), \ 				rman_get_bushandle((res)), \ 				(offset), (addr), (count))
+value|bus_write_multi_2((res), (offset), (addr), (count))
 end_define
 
 begin_define
@@ -3448,7 +3448,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_stream_2(rman_get_bustag((res)), \ 				       rman_get_bushandle((res)), \ 				       (offset), (addr), (count))
+value|bus_write_multi_stream_2((res), (offset), (addr), (count))
 end_define
 
 begin_define
@@ -3465,7 +3465,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_4(rman_get_bustag((res)), \ 				rman_get_bushandle((res)), \ 				(offset), (addr), (count))
+value|bus_write_multi_4((res), (offset), (addr), (count))
 end_define
 
 begin_define
@@ -3482,7 +3482,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_stream_4(rman_get_bustag((res)), \ 				       rman_get_bushandle((res)), \ 				       (offset), (addr), (count))
+value|bus_write_multi_stream_4((res), (offset), (addr), (count))
 end_define
 
 begin_define
