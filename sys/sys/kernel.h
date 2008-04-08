@@ -474,11 +474,6 @@ init|=
 literal|0xb380000
 block|,
 comment|/* Configure GEOM classes */
-name|SI_SUB_MOUNT_ROOT
-init|=
-literal|0xb400000
-block|,
-comment|/* root mount*/
 name|SI_SUB_SWAP
 init|=
 literal|0xc000000
