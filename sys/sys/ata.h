@@ -2409,6 +2409,20 @@ name|IOCATASMODE
 value|_IOW('a', 103, int)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IOCATAGSPINDOWN
+value|_IOR('a', 104, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCATASSPINDOWN
+value|_IOW('a', 105, int)
+end_define
+
 begin_struct
 struct|struct
 name|ata_ioc_raid_config

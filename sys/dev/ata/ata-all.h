@@ -2194,6 +2194,17 @@ name|max_iosize
 decl_stmt|;
 comment|/* max IO size */
 name|int
+name|spindown
+decl_stmt|;
+comment|/* idle spindown timeout */
+name|struct
+name|callout
+name|spindown_timer
+decl_stmt|;
+name|int
+name|spindown_state
+decl_stmt|;
+name|int
 name|flags
 decl_stmt|;
 define|#
