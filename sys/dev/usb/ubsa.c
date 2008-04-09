@@ -1018,6 +1018,13 @@ block|,
 name|USB_PRODUCT_NOVATEL_U740
 block|}
 block|,
+comment|/* Novatel Wireless Merlin v740 */
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_V740
+block|}
+block|,
 comment|/* Option Vodafone MC3G */
 block|{
 name|USB_VENDOR_OPTION
