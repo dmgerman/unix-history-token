@@ -4441,6 +4441,8 @@ decl_stmt|;
 name|SVCPOOL
 modifier|*
 name|pool
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|sockopt
@@ -4779,7 +4781,7 @@ name|sin
 operator|.
 name|sin_family
 operator|=
-name|AF_INET6
+name|AF_INET
 expr_stmt|;
 name|sin
 operator|.
@@ -4826,11 +4828,13 @@ argument_list|(
 literal|"Can't start NLM - unable to contact NSM\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 name|pool
 operator|=
