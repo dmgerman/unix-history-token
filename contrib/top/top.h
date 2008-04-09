@@ -22,12 +22,16 @@ begin_comment
 comment|/* Number of lines of header information on the standard screen */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+specifier|extern
+name|int
 name|Header_lines
-value|7
-end_define
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 7 */
+end_comment
 
 begin_comment
 comment|/* Maximum number of columns allowed for display */
@@ -135,6 +139,13 @@ specifier|extern
 name|enum
 name|displaymodes
 name|displaymode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pcpu_stats
 decl_stmt|;
 end_decl_stmt
 

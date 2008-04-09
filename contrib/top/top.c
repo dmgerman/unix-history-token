@@ -182,6 +182,14 @@ name|overstrike
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|pcpu_stats
+init|=
+name|No
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* signal handling routines */
 end_comment
@@ -1178,7 +1186,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"CSIHbijnquvs:d:U:m:o:t"
+literal|"CSIHPbijnpquvs:d:U:m:o:t"
 argument_list|)
 operator|)
 operator|!=
@@ -1583,6 +1591,22 @@ operator|!
 name|ps
 operator|.
 name|jail
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|pcpu_stats
+operator|=
+name|Yes
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|pcpu_stats
+operator|=
+name|No
 expr_stmt|;
 break|break;
 default|default:
