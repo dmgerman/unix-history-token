@@ -204,8 +204,9 @@ comment|/* PIL_AST */
 literal|"stop"
 block|,
 comment|/* PIL_STOP */
-literal|"stray"
+literal|"preempt"
 block|,
+comment|/* PIL_PREEMPT */
 literal|"stray"
 block|,
 literal|"stray"

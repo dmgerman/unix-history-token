@@ -133,6 +133,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPI_PREEMPT
+value|PIL_PREEMPT
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPI_STOP
 value|PIL_STOP
 end_define

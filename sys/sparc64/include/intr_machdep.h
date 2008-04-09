@@ -129,6 +129,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PIL_PREEMPT
+value|6
+end_define
+
+begin_comment
+comment|/* preempt idle thread cpu ipi */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PIL_FAST
 value|13
 end_define
