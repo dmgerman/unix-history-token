@@ -6486,7 +6486,7 @@ comment|/*  * Definition of the bits fields in the ng_queue flag word.  * Define
 end_comment
 
 begin_comment
-comment|/*-  Safety Barrier--------+ (adjustable to suit taste) (not used yet)                        |                        V +-------+-------+-------+-------+-------+-------+-------+-------+   | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |   | |A|c|t|i|v|e| |R|e|a|d|e|r| |C|o|u|n|t| | | | | | | | | |P|A|   | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |O|W| +-------+-------+-------+-------+-------+-------+-------+-------+   \___________________________ ____________________________/ | |                             V                                | |                   [active reader count]                      | |                                                              | |             Operation Pending -------------------------------+ |                                                                |           Active Writer ---------------------------------------+   */
+comment|/*-  Safety Barrier--------+ (adjustable to suit taste) (not used yet)                        |                        V +-------+-------+-------+-------+-------+-------+-------+-------+   | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |   | |A|c|t|i|v|e| |R|e|a|d|e|r| |C|o|u|n|t| | | | | | | | | |P|A|   | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |O|W| +-------+-------+-------+-------+-------+-------+-------+-------+   \___________________________ ____________________________/ | |                             V                                | |                   [active reader count]                      | |                                                              | |             Operation Pending -------------------------------+ |                                                                |           Active Writer ---------------------------------------+  Node queue has such semantics: - All flags modifications are atomic. - Reader count can be incremented only if there is no writer or pending flags.   As soon as this can't be done with single operation, it is implemented with   spin loop and atomic_cmpset(). - Writer flag can be set only if there is no any bits set.   It is implemented with atomic_cmpset(). - Pending flag can be set any time, but to avoid collision on queue processing   all queue fields are protected by the mutex. - Queue processing thread reads queue holding the mutex, but releases it while   processing. When queue is empty pending flag is removed. */
 end_comment
 
 begin_define
@@ -6656,7 +6656,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Taking into account the current state of the queue and node, possibly take  * the next entry off the queue and return it. Return NULL if there was  * nothing we could return, either because there really was nothing there, or  * because the node was in a state where it cannot yet process the next item  * on the queue.  *  * This MUST MUST MUST be called with the mutex held.  */
+comment|/*  * Taking into account the current state of the queue and node, possibly take  * the next entry off the queue and return it. Return NULL if there was  * nothing we could return, either because there really was nothing there, or  * because the node was in a state where it cannot yet process the next item  * on the queue.  */
 end_comment
 
 begin_function
@@ -6678,6 +6678,7 @@ block|{
 name|item_p
 name|item
 decl_stmt|;
+comment|/* This MUST be called with the mutex held. */
 name|mtx_assert
 argument_list|(
 operator|&
@@ -6688,7 +6689,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is nothing queued, then just return. 	 * No point in continuing. 	 */
+comment|/* If there is nothing queued, then just return. */
 if|if
 condition|(
 operator|!
@@ -6756,7 +6757,7 @@ operator|&
 name|WRITER_ACTIVE
 condition|)
 block|{
-comment|/* It's a reader but we can't use it. */
+comment|/* There is writer, reader can't proceed. */
 name|CTR4
 argument_list|(
 name|KTR_NET
@@ -6787,7 +6788,7 @@ return|;
 block|}
 if|if
 condition|(
-name|atomic_cmpset_long
+name|atomic_cmpset_acq_long
 argument_list|(
 operator|&
 name|ngq
@@ -6806,6 +6807,7 @@ name|cpu_spinwait
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* We have got reader lock for the node. */
 operator|*
 name|rw
 operator|=
@@ -6815,7 +6817,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|atomic_cmpset_long
+name|atomic_cmpset_acq_long
 argument_list|(
 operator|&
 name|ngq
@@ -6830,6 +6832,7 @@ name|WRITER_ACTIVE
 argument_list|)
 condition|)
 block|{
+comment|/* We have got writer lock for the node. */
 operator|*
 name|rw
 operator|=
@@ -6838,6 +6841,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* There is somebody other, writer can't proceed. */
 name|CTR4
 argument_list|(
 name|KTR_NET
@@ -6961,7 +6965,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Queue a packet to be picked up by someone else.  * We really don't care who, but we can't or don't want to hang around  * to process it ourselves. We are probably an interrupt routine..  * If the queue could be run, flag the netisr handler to start.  */
+comment|/*  * Queue a packet to be picked up later by someone else.  * If the queue could be run now, add node to the queue handler's worklist.  */
 end_comment
 
 begin_function
@@ -7090,6 +7094,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Acquire reader lock on node. If node is busy, queue the packet. */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -7144,7 +7152,7 @@ break|break;
 comment|/* Node is not ready for reader. */
 if|if
 condition|(
-name|atomic_cmpset_long
+name|atomic_cmpset_acq_long
 argument_list|(
 operator|&
 name|ngq
@@ -7210,6 +7218,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Acquire writer lock on node. If node is busy, queue the packet. */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -7244,7 +7256,7 @@ expr_stmt|;
 comment|/* Writer needs completely idle node. */
 if|if
 condition|(
-name|atomic_cmpset_long
+name|atomic_cmpset_acq_long
 argument_list|(
 operator|&
 name|ngq
@@ -7359,6 +7371,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Release reader lock. */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -7371,7 +7387,7 @@ modifier|*
 name|ngq
 parameter_list|)
 block|{
-name|atomic_subtract_long
+name|atomic_subtract_rel_long
 argument_list|(
 operator|&
 name|ngq
@@ -7383,6 +7399,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Release writer lock. */
+end_comment
 
 begin_function
 specifier|static
@@ -7396,7 +7416,7 @@ modifier|*
 name|ngq
 parameter_list|)
 block|{
-name|atomic_clear_long
+name|atomic_clear_rel_long
 argument_list|(
 operator|&
 name|ngq
@@ -7408,6 +7428,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Purge node queue. Called on node shutdown. */
+end_comment
 
 begin_function
 specifier|static
