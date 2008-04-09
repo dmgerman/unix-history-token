@@ -511,13 +511,6 @@ operator||=
 name|O_NOFOLLOW
 expr_stmt|;
 comment|/* XXX LINUX_O_NOATIME: unable to be easily implemented. */
-if|if
-condition|(
-name|dirfd
-operator|!=
-operator|-
-literal|1
-condition|)
 name|error
 operator|=
 name|kern_openat
@@ -525,22 +518,6 @@ argument_list|(
 name|td
 argument_list|,
 name|dirfd
-argument_list|,
-name|path
-argument_list|,
-name|UIO_SYSSPACE
-argument_list|,
-name|bsd_flags
-argument_list|,
-name|mode
-argument_list|)
-expr_stmt|;
-else|else
-name|error
-operator|=
-name|kern_open
-argument_list|(
-name|td
 argument_list|,
 name|path
 argument_list|,
@@ -989,8 +966,7 @@ name|linux_common_open
 argument_list|(
 name|td
 argument_list|,
-operator|-
-literal|1
+name|AT_FDCWD
 argument_list|,
 name|path
 argument_list|,
